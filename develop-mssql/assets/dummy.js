@@ -87,6 +87,14 @@ define('dummy/browserify', ['exports', 'npm:dexie', 'npm:node-uuid'], function (
 // In order to use NPM pacakges inside the addon, we have to import
 // them from somewhere in /app directory.
 // See: https://github.com/ef4/ember-browserify#using-ember-browserify-in-addons
+define('dummy/components/advlimit-dialog-content', ['exports', 'ember-flexberry/components/advlimit-dialog-content'], function (exports, _emberFlexberryComponentsAdvlimitDialogContent) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryComponentsAdvlimitDialogContent['default'];
+    }
+  });
+});
 define('dummy/components/app-version', ['exports', 'ember-cli-app-version/components/app-version', 'dummy/config/environment'], function (exports, _emberCliAppVersionComponentsAppVersion, _dummyConfigEnvironment) {
 
   var name = _dummyConfigEnvironment['default'].APP.name;
@@ -214,6 +222,14 @@ define('dummy/components/feature-result-item', ['exports', 'ember-flexberry-gis/
     enumerable: true,
     get: function get() {
       return _emberFlexberryGisComponentsFeatureResultItem['default'];
+    }
+  });
+});
+define('dummy/components/filters-dialog-content', ['exports', 'ember-flexberry/components/filters-dialog-content'], function (exports, _emberFlexberryComponentsFiltersDialogContent) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryComponentsFiltersDialogContent['default'];
     }
   });
 });
@@ -510,6 +526,14 @@ define('dummy/components/flexberry-table', ['exports', 'ember-flexberry-gis/comp
     enumerable: true,
     get: function get() {
       return _emberFlexberryGisComponentsFlexberryTable['default'];
+    }
+  });
+});
+define('dummy/components/flexberry-text-cell', ['exports', 'ember-flexberry/components/flexberry-text-cell'], function (exports, _emberFlexberryComponentsFlexberryTextCell) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryComponentsFlexberryTextCell['default'];
     }
   });
 });
@@ -1456,6 +1480,14 @@ define('dummy/components/object-list-view-single-column-cell', ['exports', 'embe
 define('dummy/components/object-list-view', ['exports', 'ember-flexberry/components/object-list-view'], function (exports, _emberFlexberryComponentsObjectListView) {
   exports['default'] = _emberFlexberryComponentsObjectListView['default'];
 });
+define('dummy/components/olv-filter-interval', ['exports', 'ember-flexberry/components/olv-filter-interval'], function (exports, _emberFlexberryComponentsOlvFilterInterval) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryComponentsOlvFilterInterval['default'];
+    }
+  });
+});
 define('dummy/components/olv-setconfigdialogbutton', ['exports', 'ember-flexberry/components/olv-setconfigdialogbutton'], function (exports, _emberFlexberryComponentsOlvSetconfigdialogbutton) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -1570,6 +1602,9 @@ define('dummy/components/zoomslider-control', ['exports', 'ember-flexberry-gis/c
       return _emberFlexberryGisComponentsZoomsliderControl['default'];
     }
   });
+});
+define('dummy/controllers/advlimit-dialog', ['exports', 'ember-flexberry/controllers/advlimit-dialog'], function (exports, _emberFlexberryControllersAdvlimitDialog) {
+  exports['default'] = _emberFlexberryControllersAdvlimitDialog['default'];
 });
 define('dummy/controllers/api-test-map', ['exports', 'ember', 'dummy/controllers/map'], function (exports, _ember, _dummyControllersMap) {
 
@@ -1914,6 +1949,9 @@ define('dummy/controllers/edit-form', ['exports', 'ember-flexberry/controllers/e
       return _emberFlexberryControllersEditForm['default'];
     }
   });
+});
+define('dummy/controllers/filters-dialog', ['exports', 'ember-flexberry/controllers/filters-dialog'], function (exports, _emberFlexberryControllersFiltersDialog) {
+  exports['default'] = _emberFlexberryControllersFiltersDialog['default'];
 });
 define('dummy/controllers/flexberry-file-view-dialog', ['exports', 'ember-flexberry/controllers/flexberry-file-view-dialog'], function (exports, _emberFlexberryControllersFlexberryFileViewDialog) {
   exports['default'] = _emberFlexberryControllersFlexberryFileViewDialog['default'];
@@ -12335,6 +12373,14 @@ define('dummy/models/custom-inflector-rules', ['exports', 'ember-inflector'], fu
 /**
   @module ember-flexberry-gis-dummy
 */
+define('dummy/models/flexberry-adv-limit', ['exports', 'ember-flexberry/models/flexberry-adv-limit'], function (exports, _emberFlexberryModelsFlexberryAdvLimit) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryModelsFlexberryAdvLimit['default'];
+    }
+  });
+});
 define('dummy/models/i-c-s-soft-s-t-o-r-m-n-e-t-business-audit-objects-audit-entity', ['exports', 'ember-flexberry-data/models/i-c-s-soft-s-t-o-r-m-n-e-t-business-audit-objects-audit-entity'], function (exports, _emberFlexberryDataModelsICSSoftSTORMNETBusinessAuditObjectsAuditEntity) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -12851,6 +12897,14 @@ define('dummy/serializers/base', ['exports', 'ember-flexberry-data/serializers/b
     }
   });
 });
+define('dummy/serializers/flexberry-adv-limit', ['exports', 'ember-flexberry/serializers/flexberry-adv-limit'], function (exports, _emberFlexberrySerializersFlexberryAdvLimit) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberrySerializersFlexberryAdvLimit['default'];
+    }
+  });
+});
 define('dummy/serializers/i-c-s-soft-s-t-o-r-m-n-e-t-business-audit-objects-audit-entity-offline', ['exports', 'ember-flexberry-data/serializers/i-c-s-soft-s-t-o-r-m-n-e-t-business-audit-objects-audit-entity-offline'], function (exports, _emberFlexberryDataSerializersICSSoftSTORMNETBusinessAuditObjectsAuditEntityOffline) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -13035,6 +13089,9 @@ define('dummy/serializers/offline', ['exports', 'ember-flexberry-data/serializer
     }
   });
 });
+define('dummy/services/adv-limit', ['exports', 'ember-flexberry/services/adv-limit'], function (exports, _emberFlexberryServicesAdvLimit) {
+  exports['default'] = _emberFlexberryServicesAdvLimit['default'];
+});
 define('dummy/services/ajax', ['exports', 'ember-ajax/services/ajax'], function (exports, _emberAjaxServicesAjax) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -13121,72 +13178,13 @@ define('dummy/services/local-storage', ['exports', 'ember-flexberry-gis/services
     }
   });
 });
-define('dummy/services/log', ['exports', 'ember', 'ember-flexberry/services/log', 'dummy/config/environment'], function (exports, _ember, _emberFlexberryServicesLog, _dummyConfigEnvironment) {
-
-  var enabled = _ember['default'].get(_dummyConfigEnvironment['default'], 'APP.log.enabled');
-  if (_ember['default'].typeOf(enabled) === 'boolean') {
-    _emberFlexberryServicesLog['default'].reopen({
-      enabled: enabled
-    });
-  }
-
-  var storeErrorMessages = _ember['default'].get(_dummyConfigEnvironment['default'], 'APP.log.storeErrorMessages');
-  if (_ember['default'].typeOf(storeErrorMessages) === 'boolean') {
-    _emberFlexberryServicesLog['default'].reopen({
-      storeErrorMessages: storeErrorMessages
-    });
-  }
-
-  var storeWarnMessages = _ember['default'].get(_dummyConfigEnvironment['default'], 'APP.log.storeWarnMessages');
-  if (_ember['default'].typeOf(storeWarnMessages) === 'boolean') {
-    _emberFlexberryServicesLog['default'].reopen({
-      storeWarnMessages: storeWarnMessages
-    });
-  }
-
-  var storeLogMessages = _ember['default'].get(_dummyConfigEnvironment['default'], 'APP.log.storeLogMessages');
-  if (_ember['default'].typeOf(storeLogMessages) === 'boolean') {
-    _emberFlexberryServicesLog['default'].reopen({
-      storeLogMessages: storeLogMessages
-    });
-  }
-
-  var storeInfoMessages = _ember['default'].get(_dummyConfigEnvironment['default'], 'APP.log.storeInfoMessages');
-  if (_ember['default'].typeOf(storeInfoMessages) === 'boolean') {
-    _emberFlexberryServicesLog['default'].reopen({
-      storeInfoMessages: storeInfoMessages
-    });
-  }
-
-  var storeDebugMessages = _ember['default'].get(_dummyConfigEnvironment['default'], 'APP.log.storeDebugMessages');
-  if (_ember['default'].typeOf(storeDebugMessages) === 'boolean') {
-    _emberFlexberryServicesLog['default'].reopen({
-      storeDebugMessages: storeDebugMessages
-    });
-  }
-
-  var storeDeprecationMessages = _ember['default'].get(_dummyConfigEnvironment['default'], 'APP.log.storeDeprecationMessages');
-  if (_ember['default'].typeOf(storeDeprecationMessages) === 'boolean') {
-    _emberFlexberryServicesLog['default'].reopen({
-      storeDeprecationMessages: storeDeprecationMessages
-    });
-  }
-
-  var storePromiseErrors = _ember['default'].get(_dummyConfigEnvironment['default'], 'APP.log.storePromiseErrors');
-  if (_ember['default'].typeOf(storePromiseErrors) === 'boolean') {
-    _emberFlexberryServicesLog['default'].reopen({
-      storePromiseErrors: storePromiseErrors
-    });
-  }
-
-  var showPromiseErrors = _ember['default'].get(_dummyConfigEnvironment['default'], 'APP.log.showPromiseErrors');
-  if (_ember['default'].typeOf(showPromiseErrors) === 'boolean') {
-    _emberFlexberryServicesLog['default'].reopen({
-      showPromiseErrors: showPromiseErrors
-    });
-  }
-
-  exports['default'] = _emberFlexberryServicesLog['default'];
+define('dummy/services/log', ['exports', 'ember-flexberry/services/log'], function (exports, _emberFlexberryServicesLog) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryServicesLog['default'];
+    }
+  });
 });
 define('dummy/services/lookup-events', ['exports', 'ember-flexberry/services/lookup-events'], function (exports, _emberFlexberryServicesLookupEvents) {
   exports['default'] = _emberFlexberryServicesLookupEvents['default'];
@@ -13322,6 +13320,142 @@ define('dummy/services/validations', ['exports', 'ember'], function (exports, _e
       set(this, 'cache', {});
     }
   });
+});
+define("dummy/templates/advlimit-dialog-content", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template((function () {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": ["wrong-type"]
+        },
+        "revision": "Ember@2.4.6",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 6,
+            "column": 0
+          }
+        },
+        "moduleName": "dummy/templates/advlimit-dialog-content.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+        dom.insertBoundary(fragment, 0);
+        return morphs;
+      },
+      statements: [["inline", "advlimit-dialog-content", [], ["model", ["subexpr", "@mut", [["get", "model", ["loc", [null, [2, 8], [2, 13]]]]], [], []], "close", ["subexpr", "action", ["closeModalDialog"], [], ["loc", [null, [3, 8], [3, 35]]]], "message", ["subexpr", "@mut", [["get", "message", ["loc", [null, [4, 10], [4, 17]]]]], [], []]], ["loc", [null, [1, 0], [5, 2]]]]],
+      locals: [],
+      templates: []
+    };
+  })());
+});
+define("dummy/templates/advlimit-dialog", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template((function () {
+    var child0 = (function () {
+      return {
+        meta: {
+          "fragmentReason": {
+            "name": "missing-wrapper",
+            "problems": ["wrong-type"]
+          },
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 10,
+              "column": 0
+            }
+          },
+          "moduleName": "dummy/templates/advlimit-dialog.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("  ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [["inline", "outlet", ["modal-content"], [], ["loc", [null, [9, 2], [9, 28]]]]],
+        locals: [],
+        templates: []
+      };
+    })();
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": ["wrong-type"]
+        },
+        "revision": "Ember@2.4.6",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 11,
+            "column": 0
+          }
+        },
+        "moduleName": "dummy/templates/advlimit-dialog.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [["block", "modal-dialog", [], ["title", ["subexpr", "@mut", [["get", "title", ["loc", [null, [2, 8], [2, 13]]]]], [], []], "sizeClass", "small", "close", "removeModalDialog", "created", "createdModalDialog", "useOkButton", false, "useCloseButton", false], 0, null, ["loc", [null, [1, 0], [10, 17]]]]],
+      locals: [],
+      templates: [child0]
+    };
+  })());
 });
 define("dummy/templates/api-test-map", ["exports"], function (exports) {
   exports["default"] = Ember.HTMLBars.template((function () {
@@ -14661,7 +14795,7 @@ define("dummy/templates/colsconfig-dialog", ["exports"], function (exports) {
               "column": 0
             },
             "end": {
-              "line": 10,
+              "line": 11,
               "column": 0
             }
           },
@@ -14686,7 +14820,7 @@ define("dummy/templates/colsconfig-dialog", ["exports"], function (exports) {
           morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
           return morphs;
         },
-        statements: [["inline", "outlet", ["modal-content"], [], ["loc", [null, [9, 2], [9, 28]]]]],
+        statements: [["inline", "outlet", ["modal-content"], [], ["loc", [null, [10, 2], [10, 28]]]]],
         locals: [],
         templates: []
       };
@@ -14705,7 +14839,7 @@ define("dummy/templates/colsconfig-dialog", ["exports"], function (exports) {
             "column": 0
           },
           "end": {
-            "line": 11,
+            "line": 12,
             "column": 0
           }
         },
@@ -14728,7 +14862,7 @@ define("dummy/templates/colsconfig-dialog", ["exports"], function (exports) {
         dom.insertBoundary(fragment, null);
         return morphs;
       },
-      statements: [["block", "modal-dialog", [], ["title", ["subexpr", "if", [["get", "model.exportParams.isExportExcel", ["loc", [null, [2, 12], [2, 44]]]], ["subexpr", "t", ["components.colsconfig-dialog-content.export-modal-dialog-title"], [], ["loc", [null, [2, 45], [2, 113]]]], ["subexpr", "t", ["components.colsconfig-dialog-content.title"], [], ["loc", [null, [2, 114], [2, 162]]]]], [], ["loc", [null, [2, 8], [2, 163]]]], "sizeClass", "small", "close", "removeModalDialog", "created", "createdModalDialog", "useOkButton", false, "useCloseButton", false], 0, null, ["loc", [null, [1, 0], [10, 17]]]]],
+      statements: [["block", "modal-dialog", [], ["title", ["subexpr", "if", [["get", "model.exportParams.isExportExcel", ["loc", [null, [2, 12], [2, 44]]]], ["subexpr", "t", ["components.colsconfig-dialog-content.export-modal-dialog-title"], [], ["loc", [null, [2, 45], [2, 113]]]], ["subexpr", "t", ["components.colsconfig-dialog-content.title"], [], ["loc", [null, [2, 114], [2, 162]]]]], [], ["loc", [null, [2, 8], [2, 163]]]], "sizeClass", "small", "close", "removeModalDialog", "created", "createdModalDialog", "useOkButton", false, "useCloseButton", false, "componentName", ["subexpr", "@mut", [["get", "model.componentName", ["loc", [null, [8, 16], [8, 35]]]]], [], []]], 0, null, ["loc", [null, [1, 0], [11, 17]]]]],
       locals: [],
       templates: [child0]
     };
@@ -14792,6 +14926,175 @@ define("dummy/templates/components-examples/flexberry-boundingbox/settings-examp
       statements: [["inline", "t", ["forms.components-examples.flexberry-boundingbox.settings-example.caption"], [], ["loc", [null, [1, 22], [1, 102]]]], ["inline", "flexberry-boundingbox", [], ["mapModel", ["subexpr", "@mut", [["get", "model", ["loc", [null, [4, 13], [4, 18]]]]], [], []], "minLat", ["subexpr", "@mut", [["get", "minLat", ["loc", [null, [5, 11], [5, 17]]]]], [], []], "minLng", ["subexpr", "@mut", [["get", "minLng", ["loc", [null, [6, 11], [6, 17]]]]], [], []], "maxLat", ["subexpr", "@mut", [["get", "maxLat", ["loc", [null, [7, 11], [7, 17]]]]], [], []], "maxLng", ["subexpr", "@mut", [["get", "maxLng", ["loc", [null, [8, 11], [8, 17]]]]], [], []], "boundingBoxChange", ["subexpr", "action", ["onBoundingBoxChange"], [], ["loc", [null, [9, 22], [9, 52]]]]], ["loc", [null, [3, 2], [10, 4]]]]],
       locals: [],
       templates: []
+    };
+  })());
+});
+define("dummy/templates/components/advlimit-dialog-content", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template((function () {
+    var child0 = (function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 17,
+              "column": 6
+            },
+            "end": {
+              "line": 21,
+              "column": 6
+            }
+          },
+          "moduleName": "dummy/templates/components/advlimit-dialog-content.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("        ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          var el2 = dom.createTextNode("\n          ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n        ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element0 = dom.childAt(fragment, [1]);
+          var morphs = new Array(3);
+          morphs[0] = dom.createAttrMorph(element0, 'class');
+          morphs[1] = dom.createElementMorph(element0);
+          morphs[2] = dom.createMorphAt(element0, 1, 1);
+          return morphs;
+        },
+        statements: [["attribute", "class", ["concat", ["ui small button cols-config-save", ["subexpr", "unless", [["get", "model.advLimitName", ["loc", [null, [18, 61], [18, 79]]]], " disabled"], [], ["loc", [null, [18, 52], [18, 93]]]]]]], ["element", "action", ["saveAdvLimit"], [], ["loc", [null, [18, 95], [18, 120]]]], ["inline", "t", ["components.advlimit-dialog-content.save"], [], ["loc", [null, [19, 10], [19, 57]]]]],
+        locals: [],
+        templates: []
+      };
+    })();
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.4.6",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 38,
+            "column": 0
+          }
+        },
+        "moduleName": "dummy/templates/components/advlimit-dialog-content.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2, "class", "flexberry-colsconfig content");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "ui action input flexberry-advlimit-input");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment("");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3, "class", "ui action input flexberry-advlimit-input");
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment("");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment("");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4, "class", "ui right floated button cols-config-apply");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4, "class", "ui button cols-config-check");
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n    ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element1 = dom.childAt(fragment, [0]);
+        var element2 = dom.childAt(element1, [1]);
+        var element3 = dom.childAt(element2, [3]);
+        var element4 = dom.childAt(element3, [5]);
+        var element5 = dom.childAt(element3, [7]);
+        var morphs = new Array(9);
+        morphs[0] = dom.createAttrMorph(element1, 'class');
+        morphs[1] = dom.createMorphAt(dom.childAt(element2, [1]), 1, 1);
+        morphs[2] = dom.createMorphAt(element3, 1, 1);
+        morphs[3] = dom.createMorphAt(element3, 3, 3);
+        morphs[4] = dom.createElementMorph(element4);
+        morphs[5] = dom.createMorphAt(element4, 1, 1);
+        morphs[6] = dom.createElementMorph(element5);
+        morphs[7] = dom.createMorphAt(element5, 1, 1);
+        morphs[8] = dom.createMorphAt(element2, 5, 5);
+        return morphs;
+      },
+      statements: [["attribute", "class", ["concat", ["ui form ", ["get", "appState.state", ["loc", [null, [1, 22], [1, 36]]]]]]], ["inline", "flexberry-textarea", [], ["value", ["subexpr", "@mut", [["get", "model.advLimit", ["loc", [null, [5, 14], [5, 28]]]]], [], []], "class", ["subexpr", "@mut", [["get", "class", ["loc", [null, [6, 14], [6, 19]]]]], [], []], "rows", "10"], ["loc", [null, [4, 6], [8, 8]]]], ["inline", "input", [], ["type", "input", "class", "setting-name-input fluid", "value", ["subexpr", "@mut", [["get", "model.advLimitName", ["loc", [null, [14, 14], [14, 32]]]]], [], []], "placeholder", ["subexpr", "t", ["components.advlimit-dialog-content.enter-limit-name"], [], ["loc", [null, [15, 20], [15, 77]]]]], ["loc", [null, [11, 6], [16, 8]]]], ["block", "if", [["get", "advLimit.isAdvLimitServiceEnabled", ["loc", [null, [17, 12], [17, 45]]]]], [], 0, null, ["loc", [null, [17, 6], [21, 13]]]], ["element", "action", ["apply"], [], ["loc", [null, [22, 61], [22, 79]]]], ["inline", "t", ["components.advlimit-dialog-content.use"], [], ["loc", [null, [23, 8], [23, 54]]]], ["element", "action", ["check"], [], ["loc", [null, [25, 47], [25, 65]]]], ["inline", "t", ["components.advlimit-dialog-content.check"], [], ["loc", [null, [26, 8], [26, 56]]]], ["inline", "ui-message", [], ["type", ["subexpr", "@mut", [["get", "message.type", ["loc", [null, [30, 11], [30, 23]]]]], [], []], "visible", ["subexpr", "@mut", [["get", "message.visible", ["loc", [null, [31, 14], [31, 29]]]]], [], []], "caption", ["subexpr", "@mut", [["get", "message.caption", ["loc", [null, [32, 14], [32, 29]]]]], [], []], "message", ["subexpr", "@mut", [["get", "message.message", ["loc", [null, [33, 14], [33, 29]]]]], [], []], "closeable", ["subexpr", "@mut", [["get", "message.closeable", ["loc", [null, [34, 16], [34, 33]]]]], [], []]], ["loc", [null, [29, 4], [35, 6]]]]],
+      locals: [],
+      templates: [child0]
     };
   })());
 });
@@ -14886,11 +15189,11 @@ define("dummy/templates/components/colsconfig-dialog-content", ["exports"], func
             "loc": {
               "source": null,
               "start": {
-                "line": 29,
+                "line": 30,
                 "column": 14
               },
               "end": {
-                "line": 37,
+                "line": 38,
                 "column": 14
               }
             },
@@ -14954,7 +15257,7 @@ define("dummy/templates/components/colsconfig-dialog-content", ["exports"], func
             morphs[0] = dom.createMorphAt(dom.childAt(fragment, [3]), 0, 0);
             return morphs;
           },
-          statements: [["inline", "parse-cols-config-sorting", [["get", "colDescs.sortOrder", ["loc", [null, [31, 62], [31, 80]]]]], [], ["loc", [null, [31, 34], [31, 82]]]]],
+          statements: [["inline", "parse-cols-config-sorting", [["get", "colDescs.sortOrder", ["loc", [null, [32, 62], [32, 80]]]]], [], ["loc", [null, [32, 34], [32, 82]]]]],
           locals: [],
           templates: []
         };
@@ -14970,7 +15273,7 @@ define("dummy/templates/components/colsconfig-dialog-content", ["exports"], func
               "column": 8
             },
             "end": {
-              "line": 57,
+              "line": 58,
               "column": 8
             }
           },
@@ -14985,25 +15288,31 @@ define("dummy/templates/components/colsconfig-dialog-content", ["exports"], func
           var el1 = dom.createTextNode("          ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("tr");
+          var el2 = dom.createTextNode("\n            \n            ");
+          dom.appendChild(el1, el2);
           var el2 = dom.createElement("td");
+          var el3 = dom.createTextNode("\n              ");
+          dom.appendChild(el2, el3);
           var el3 = dom.createElement("i");
           dom.setAttribute(el3, "colsConfigHidden", "false");
           dom.setAttribute(el3, "style", "cursor:pointer");
           dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n            ");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n            ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("td");
           var el3 = dom.createTextNode("\n              ");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("button");
-          var el4 = dom.createTextNode("\n                ");
-          dom.appendChild(el3, el4);
+          dom.setAttribute(el3, "type", "button");
           var el4 = dom.createElement("i");
           dom.setAttribute(el4, "class", "chevron up icon");
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode("\n              ");
-          dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("button");
+          dom.setAttribute(el3, "type", "button");
           var el4 = dom.createTextNode("\n                ");
           dom.appendChild(el3, el4);
           var el4 = dom.createElement("i");
@@ -15015,11 +15324,17 @@ define("dummy/templates/components/colsconfig-dialog-content", ["exports"], func
           var el3 = dom.createTextNode("\n            ");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n            ");
+          dom.appendChild(el1, el2);
           var el2 = dom.createElement("td");
-          var el3 = dom.createTextNode("\n              ");
+          var el3 = dom.createTextNode(" \n              ");
           dom.appendChild(el2, el3);
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n            ");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n            ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("td");
           dom.setAttribute(el2, "class", "sort-direction-cell");
@@ -15065,14 +15380,14 @@ define("dummy/templates/components/colsconfig-dialog-content", ["exports"], func
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
           var element1 = dom.childAt(fragment, [1]);
-          var element2 = dom.childAt(element1, [0, 0]);
-          var element3 = dom.childAt(element1, [1]);
+          var element2 = dom.childAt(element1, [1, 1]);
+          var element3 = dom.childAt(element1, [3]);
           var element4 = dom.childAt(element3, [1]);
           var element5 = dom.childAt(element3, [2]);
-          var element6 = dom.childAt(element1, [2]);
-          var element7 = dom.childAt(element1, [4]);
+          var element6 = dom.childAt(element1, [5]);
+          var element7 = dom.childAt(element1, [8]);
           var element8 = dom.childAt(element7, [1]);
-          var element9 = dom.childAt(element1, [5]);
+          var element9 = dom.childAt(element1, [9]);
           var element10 = dom.childAt(element9, [1]);
           var morphs = new Array(16);
           morphs[0] = dom.createAttrMorph(element1, 'propName');
@@ -15084,7 +15399,7 @@ define("dummy/templates/components/colsconfig-dialog-content", ["exports"], func
           morphs[6] = dom.createElementMorph(element5);
           morphs[7] = dom.createAttrMorph(element6, 'class');
           morphs[8] = dom.createMorphAt(element6, 1, 1);
-          morphs[9] = dom.createMorphAt(dom.childAt(element1, [3]), 1, 1);
+          morphs[9] = dom.createMorphAt(dom.childAt(element1, [7]), 1, 1);
           morphs[10] = dom.createAttrMorph(element7, 'class');
           morphs[11] = dom.createAttrMorph(element8, 'class');
           morphs[12] = dom.createMorphAt(element8, 1, 1);
@@ -15093,7 +15408,7 @@ define("dummy/templates/components/colsconfig-dialog-content", ["exports"], func
           morphs[15] = dom.createMorphAt(element10, 1, 1);
           return morphs;
         },
-        statements: [["attribute", "propName", ["concat", [["get", "colDesc.propName", ["loc", [null, [16, 26], [16, 42]]]]]]], ["attribute", "class", ["concat", ["large ", ["subexpr", "if", [["get", "colDesc.hide", ["loc", [null, [17, 38], [17, 50]]]], "hide", "unhide"], [], ["loc", [null, [17, 33], [17, 68]]]], " icon"]]], ["element", "action", ["invertVisibility", ["get", "n", ["loc", [null, [17, 126], [17, 127]]]]], [], ["loc", [null, [17, 98], [17, 129]]]], ["attribute", "class", ["concat", ["ui icon tiny button", ["subexpr", "if", [["subexpr", "eq", [["get", "n", ["loc", [null, [19, 78], [19, 79]]]], 0], [], ["loc", [null, [19, 74], [19, 82]]]], " disabled"], [], ["loc", [null, [19, 69], [19, 96]]]]]]], ["element", "action", ["rowUp", ["get", "n", ["loc", [null, [19, 39], [19, 40]]]]], [], ["loc", [null, [19, 22], [19, 42]]]], ["attribute", "class", ["concat", ["ui icon tiny button row-down-button no-margin", ["subexpr", "if", [["subexpr", "eq", [["get", "colDesc", ["loc", [null, [22, 107], [22, 114]]]], ["get", "model.colDescs.lastObject", ["loc", [null, [22, 115], [22, 140]]]]], [], ["loc", [null, [22, 103], [22, 141]]]], " disabled"], [], ["loc", [null, [22, 98], [22, 155]]]]]]], ["element", "action", ["rowDown", ["get", "n", ["loc", [null, [22, 42], [22, 43]]]]], [], ["loc", [null, [22, 23], [22, 45]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "colDesc.hide", ["loc", [null, [26, 29], [26, 41]]]], "disabled"], [], ["loc", [null, [26, 24], [26, 54]]]]]]], ["block", "if", [["get", "model.exportParams.isExportExcel", ["loc", [null, [27, 20], [27, 52]]]]], [], 0, 1, ["loc", [null, [27, 14], [27, 148]]]], ["block", "ui-dropdown", [], ["class", ["subexpr", "concat", ["ui compact selection dropdown sort-direction-dropdown", ["subexpr", "if", [["get", "colDesc.hide", ["loc", [null, [29, 103], [29, 115]]]], " disabled", ""], [], ["loc", [null, [29, 99], [29, 131]]]], ["subexpr", "if", [["get", "colDesc.isHasMany", ["loc", [null, [29, 136], [29, 153]]]], " hidden", ""], [], ["loc", [null, [29, 132], [29, 167]]]]], [], ["loc", [null, [29, 35], [29, 168]]]], "onChange", ["subexpr", "action", ["setSortOrder", ["get", "n", ["loc", [null, [29, 201], [29, 202]]]]], [], ["loc", [null, [29, 178], [29, 203]]]]], 2, null, ["loc", [null, [29, 14], [37, 30]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "colDesc.hide", ["loc", [null, [38, 33], [38, 45]]]], "disabled", ""], [], ["loc", [null, [38, 28], [38, 61]]]]]]], ["attribute", "class", ["concat", ["ui input ", ["subexpr", "if", [["get", "colDesc.hide", ["loc", [null, [39, 40], [39, 52]]]], "disabled", ""], [], ["loc", [null, [39, 35], [39, 68]]]]]]], ["inline", "input", [], ["size", "2", "class", ["subexpr", "concat", ["sort-priority-input", ["subexpr", "if", [["get", "colDesc.sortOrder", ["loc", [null, [42, 58], [42, 75]]]], "", " hidden"], [], ["loc", [null, [42, 54], [42, 89]]]]], [], ["loc", [null, [42, 24], [42, 90]]]], "value", ["subexpr", "@mut", [["get", "colDesc.sortPriority", ["loc", [null, [43, 24], [43, 44]]]]], [], []]], ["loc", [null, [40, 16], [44, 18]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "colDesc.hide", ["loc", [null, [47, 29], [47, 41]]]], "disabled", ""], [], ["loc", [null, [47, 24], [47, 57]]]]]]], ["attribute", "class", ["concat", ["ui input ", ["subexpr", "if", [["subexpr", "or", [["get", "colDesc.hide", ["loc", [null, [48, 44], [48, 56]]]], ["subexpr", "or", [["get", "model.exportParams.isExportExcel", ["loc", [null, [48, 61], [48, 93]]]], ["subexpr", "or", [["get", "colDesc.fixed", ["loc", [null, [48, 98], [48, 111]]]], ["subexpr", "not", [["get", "model.saveColWidthState", ["loc", [null, [48, 117], [48, 140]]]]], [], ["loc", [null, [48, 112], [48, 141]]]]], [], ["loc", [null, [48, 94], [48, 142]]]]], [], ["loc", [null, [48, 57], [48, 143]]]]], [], ["loc", [null, [48, 40], [48, 144]]]], "disabled", ""], [], ["loc", [null, [48, 35], [48, 160]]]]]]], ["inline", "input", [], ["size", "2", "class", "column-width-input", "value", ["subexpr", "@mut", [["get", "colDesc.columnWidth", ["loc", [null, [52, 24], [52, 43]]]]], [], []]], ["loc", [null, [49, 16], [53, 18]]]]],
+        statements: [["attribute", "propName", ["concat", [["get", "colDesc.propName", ["loc", [null, [16, 26], [16, 42]]]]]]], ["attribute", "class", ["concat", ["large ", ["subexpr", "if", [["get", "colDesc.hide", ["loc", [null, [19, 35], [19, 47]]]], "hide", "unhide"], [], ["loc", [null, [19, 30], [19, 65]]]], " icon"]]], ["element", "action", ["invertVisibility", ["get", "n", ["loc", [null, [19, 123], [19, 124]]]]], [], ["loc", [null, [19, 95], [19, 126]]]], ["attribute", "class", ["concat", ["ui icon tiny button", ["subexpr", "if", [["subexpr", "eq", [["get", "n", ["loc", [null, [22, 92], [22, 93]]]], 0], [], ["loc", [null, [22, 88], [22, 96]]]], " disabled"], [], ["loc", [null, [22, 83], [22, 110]]]]]]], ["element", "action", ["rowUp", ["get", "n", ["loc", [null, [22, 39], [22, 40]]]]], [], ["loc", [null, [22, 22], [22, 42]]]], ["attribute", "class", ["concat", ["ui icon tiny button row-down-button no-margin", ["subexpr", "if", [["subexpr", "eq", [["get", "colDesc", ["loc", [null, [22, 269], [22, 276]]]], ["get", "model.colDescs.lastObject", ["loc", [null, [22, 277], [22, 302]]]]], [], ["loc", [null, [22, 265], [22, 303]]]], " disabled"], [], ["loc", [null, [22, 260], [22, 317]]]]]]], ["element", "action", ["rowDown", ["get", "n", ["loc", [null, [22, 190], [22, 191]]]]], [], ["loc", [null, [22, 171], [22, 193]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "colDesc.hide", ["loc", [null, [26, 28], [26, 40]]]], "disabled"], [], ["loc", [null, [26, 23], [26, 53]]]]]]], ["block", "if", [["get", "model.exportParams.isExportExcel", ["loc", [null, [27, 20], [27, 52]]]]], [], 0, 1, ["loc", [null, [27, 14], [27, 148]]]], ["block", "ui-dropdown", [], ["class", ["subexpr", "concat", ["ui compact selection dropdown sort-direction-dropdown", ["subexpr", "if", [["get", "colDesc.hide", ["loc", [null, [30, 103], [30, 115]]]], " disabled", ""], [], ["loc", [null, [30, 99], [30, 131]]]], ["subexpr", "if", [["get", "colDesc.isHasMany", ["loc", [null, [30, 136], [30, 153]]]], " hidden", ""], [], ["loc", [null, [30, 132], [30, 167]]]]], [], ["loc", [null, [30, 35], [30, 168]]]], "onChange", ["subexpr", "action", ["setSortOrder", ["get", "colDesc", ["loc", [null, [30, 201], [30, 208]]]]], [], ["loc", [null, [30, 178], [30, 209]]]]], 2, null, ["loc", [null, [30, 14], [38, 30]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "colDesc.hide", ["loc", [null, [39, 33], [39, 45]]]], "disabled", ""], [], ["loc", [null, [39, 28], [39, 61]]]]]]], ["attribute", "class", ["concat", ["ui input ", ["subexpr", "if", [["get", "colDesc.hide", ["loc", [null, [40, 40], [40, 52]]]], "disabled", ""], [], ["loc", [null, [40, 35], [40, 68]]]]]]], ["inline", "input", [], ["size", "2", "class", ["subexpr", "concat", ["sort-priority-input", ["subexpr", "if", [["get", "colDesc.sortOrder", ["loc", [null, [43, 58], [43, 75]]]], "", " hidden"], [], ["loc", [null, [43, 54], [43, 89]]]]], [], ["loc", [null, [43, 24], [43, 90]]]], "value", ["subexpr", "@mut", [["get", "colDesc.sortPriority", ["loc", [null, [44, 24], [44, 44]]]]], [], []]], ["loc", [null, [41, 16], [45, 18]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "colDesc.hide", ["loc", [null, [48, 29], [48, 41]]]], "disabled", ""], [], ["loc", [null, [48, 24], [48, 57]]]]]]], ["attribute", "class", ["concat", ["ui input ", ["subexpr", "if", [["subexpr", "or", [["get", "colDesc.hide", ["loc", [null, [49, 44], [49, 56]]]], ["subexpr", "or", [["get", "model.exportParams.isExportExcel", ["loc", [null, [49, 61], [49, 93]]]], ["subexpr", "or", [["get", "colDesc.fixed", ["loc", [null, [49, 98], [49, 111]]]], ["subexpr", "not", [["get", "model.saveColWidthState", ["loc", [null, [49, 117], [49, 140]]]]], [], ["loc", [null, [49, 112], [49, 141]]]]], [], ["loc", [null, [49, 94], [49, 142]]]]], [], ["loc", [null, [49, 57], [49, 143]]]]], [], ["loc", [null, [49, 40], [49, 144]]]], "disabled", ""], [], ["loc", [null, [49, 35], [49, 160]]]]]]], ["inline", "input", [], ["size", "2", "class", "column-width-input", "value", ["subexpr", "@mut", [["get", "colDesc.columnWidth", ["loc", [null, [53, 24], [53, 43]]]]], [], []]], ["loc", [null, [50, 16], [54, 18]]]]],
         locals: ["colDesc", "n"],
         templates: [child0, child1, child2]
       };
@@ -15106,11 +15421,11 @@ define("dummy/templates/components/colsconfig-dialog-content", ["exports"], func
           "loc": {
             "source": null,
             "start": {
-              "line": 60,
+              "line": 61,
               "column": 10
             },
             "end": {
-              "line": 73,
+              "line": 74,
               "column": 10
             }
           },
@@ -15150,7 +15465,7 @@ define("dummy/templates/components/colsconfig-dialog-content", ["exports"], func
           morphs[1] = dom.createMorphAt(element0, 3, 3);
           return morphs;
         },
-        statements: [["inline", "flexberry-checkbox", [], ["label", ["subexpr", "t", ["components.colsconfig-dialog-content.det-separate-cols"], [], ["loc", [null, [64, 22], [64, 82]]]], "value", ["subexpr", "@mut", [["get", "model.exportParams.detSeparateCols", ["loc", [null, [65, 22], [65, 56]]]]], [], []]], ["loc", [null, [63, 14], [66, 16]]]], ["inline", "flexberry-checkbox", [], ["label", ["subexpr", "t", ["components.colsconfig-dialog-content.det-separate-rows"], [], ["loc", [null, [68, 22], [68, 82]]]], "value", ["subexpr", "@mut", [["get", "model.exportParams.detSeparateRows", ["loc", [null, [69, 22], [69, 56]]]]], [], []]], ["loc", [null, [67, 14], [70, 16]]]]],
+        statements: [["inline", "flexberry-checkbox", [], ["label", ["subexpr", "t", ["components.colsconfig-dialog-content.det-separate-cols"], [], ["loc", [null, [65, 22], [65, 82]]]], "value", ["subexpr", "@mut", [["get", "model.exportParams.detSeparateCols", ["loc", [null, [66, 22], [66, 56]]]]], [], []]], ["loc", [null, [64, 14], [67, 16]]]], ["inline", "flexberry-checkbox", [], ["label", ["subexpr", "t", ["components.colsconfig-dialog-content.det-separate-rows"], [], ["loc", [null, [69, 22], [69, 82]]]], "value", ["subexpr", "@mut", [["get", "model.exportParams.detSeparateRows", ["loc", [null, [70, 22], [70, 56]]]]], [], []]], ["loc", [null, [68, 14], [71, 16]]]]],
         locals: [],
         templates: []
       };
@@ -15168,7 +15483,7 @@ define("dummy/templates/components/colsconfig-dialog-content", ["exports"], func
             "column": 0
           },
           "end": {
-            "line": 125,
+            "line": 126,
             "column": 0
           }
         },
@@ -15400,7 +15715,7 @@ define("dummy/templates/components/colsconfig-dialog-content", ["exports"], func
         morphs[22] = dom.createMorphAt(element12, 3, 3);
         return morphs;
       },
-      statements: [["attribute", "class", ["concat", ["ui form ", ["get", "appState.state", ["loc", [null, [1, 22], [1, 36]]]]]]], ["attribute", "title", ["concat", [["subexpr", "t", ["components.colsconfig-dialog-content.dont-show-columns"], [], ["loc", [null, [6, 43], [6, 105]]]]]]], ["attribute", "title", ["concat", [["subexpr", "t", ["components.colsconfig-dialog-content.columns-order"], [], ["loc", [null, [7, 94], [7, 152]]]]]]], ["attribute", "title", ["concat", [["subexpr", "t", ["components.colsconfig-dialog-content.column-name"], [], ["loc", [null, [8, 22], [8, 78]]]]]]], ["inline", "t", ["components.colsconfig-dialog-content.column-name"], [], ["loc", [null, [8, 103], [8, 159]]]], ["attribute", "title", ["concat", [["subexpr", "t", ["components.colsconfig-dialog-content.sort-direction"], [], ["loc", [null, [9, 45], [9, 104]]]]]]], ["attribute", "title", ["concat", [["subexpr", "t", ["components.colsconfig-dialog-content.sort-priority"], [], ["loc", [null, [10, 44], [10, 102]]]]]]], ["attribute", "title", ["concat", [["subexpr", "t", ["components.colsconfig-dialog-content.column-width"], [], ["loc", [null, [11, 43], [11, 100]]]]]]], ["block", "each", [["get", "model.colDescs", ["loc", [null, [15, 16], [15, 30]]]]], [], 0, null, ["loc", [null, [15, 8], [57, 17]]]], ["block", "if", [["get", "model.exportParams.isExportExcel", ["loc", [null, [60, 16], [60, 48]]]]], [], 1, null, ["loc", [null, [60, 10], [73, 17]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "model.exportParams.isExportExcel", ["loc", [null, [74, 26], [74, 58]]]], "hidden", ""], [], ["loc", [null, [74, 21], [74, 72]]]]]]], ["inline", "t", ["components.colsconfig-dialog-content.col-width-on"], [], ["loc", [null, [75, 52], [75, 109]]]], ["inline", "flexberry-checkbox", [], ["class", "toggle", "value", ["subexpr", "@mut", [["get", "model.saveColWidthState", ["loc", [null, [79, 22], [79, 45]]]]], [], []]], ["loc", [null, [77, 14], [80, 16]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "model.exportParams.isExportExcel", ["loc", [null, [83, 27], [83, 59]]]], "hidden", ""], [], ["loc", [null, [83, 22], [83, 73]]]]]]], ["inline", "t", ["components.colsconfig-dialog-content.per-page"], [], ["loc", [null, [84, 52], [84, 105]]]], ["inline", "input", [], ["size", "2", "class", "per-page-input", "value", ["subexpr", "@mut", [["get", "model.perPageValue", ["loc", [null, [90, 24], [90, 42]]]]], [], []]], ["loc", [null, [87, 16], [91, 18]]]], ["inline", "input", [], ["type", "input", "class", "setting-name-input", "value", ["subexpr", "@mut", [["get", "model.settingName", ["loc", [null, [101, 24], [101, 41]]]]], [], []], "placeholder", ["subexpr", "t", ["components.colsconfig-dialog-content.enter-setting-name"], [], ["loc", [null, [102, 30], [102, 91]]]]], ["loc", [null, [98, 16], [103, 18]]]], ["attribute", "class", ["concat", ["ui small button cols-config-save", ["subexpr", "unless", [["get", "model.settingName", ["loc", [null, [104, 69], [104, 86]]]], " disabled"], [], ["loc", [null, [104, 60], [104, 100]]]]]]], ["element", "action", ["saveColsSetting"], [], ["loc", [null, [104, 102], [104, 130]]]], ["inline", "t", ["components.colsconfig-dialog-content.save"], [], ["loc", [null, [105, 18], [105, 67]]]], ["element", "action", ["apply"], [], ["loc", [null, [110, 69], [110, 87]]]], ["inline", "if", [["get", "model.exportParams.isExportExcel", ["loc", [null, [110, 93], [110, 125]]]], ["subexpr", "t", ["components.colsconfig-dialog-content.export"], [], ["loc", [null, [110, 126], [110, 175]]]], ["subexpr", "t", ["components.colsconfig-dialog-content.use"], [], ["loc", [null, [110, 176], [110, 222]]]]], [], ["loc", [null, [110, 88], [110, 224]]]], ["inline", "ui-message", [], ["type", ["subexpr", "@mut", [["get", "type", ["loc", [null, [116, 13], [116, 17]]]]], [], []], "closeable", ["subexpr", "@mut", [["get", "closeable", ["loc", [null, [117, 18], [117, 27]]]]], [], []], "visible", ["subexpr", "@mut", [["get", "visible", ["loc", [null, [118, 16], [118, 23]]]]], [], []], "caption", ["subexpr", "@mut", [["get", "caption", ["loc", [null, [119, 16], [119, 23]]]]], [], []], "message", ["subexpr", "@mut", [["get", "message", ["loc", [null, [120, 16], [120, 23]]]]], [], []]], ["loc", [null, [115, 6], [121, 8]]]]],
+      statements: [["attribute", "class", ["concat", ["ui form ", ["get", "appState.state", ["loc", [null, [1, 22], [1, 36]]]]]]], ["attribute", "title", ["concat", [["subexpr", "t", ["components.colsconfig-dialog-content.dont-show-columns"], [], ["loc", [null, [6, 43], [6, 105]]]]]]], ["attribute", "title", ["concat", [["subexpr", "t", ["components.colsconfig-dialog-content.columns-order"], [], ["loc", [null, [7, 94], [7, 152]]]]]]], ["attribute", "title", ["concat", [["subexpr", "t", ["components.colsconfig-dialog-content.column-name"], [], ["loc", [null, [8, 22], [8, 78]]]]]]], ["inline", "t", ["components.colsconfig-dialog-content.column-name"], [], ["loc", [null, [8, 103], [8, 159]]]], ["attribute", "title", ["concat", [["subexpr", "t", ["components.colsconfig-dialog-content.sort-direction"], [], ["loc", [null, [9, 45], [9, 104]]]]]]], ["attribute", "title", ["concat", [["subexpr", "t", ["components.colsconfig-dialog-content.sort-priority"], [], ["loc", [null, [10, 44], [10, 102]]]]]]], ["attribute", "title", ["concat", [["subexpr", "t", ["components.colsconfig-dialog-content.column-width"], [], ["loc", [null, [11, 43], [11, 100]]]]]]], ["block", "each", [["get", "model.colDescs", ["loc", [null, [15, 16], [15, 30]]]]], [], 0, null, ["loc", [null, [15, 8], [58, 17]]]], ["block", "if", [["get", "model.exportParams.isExportExcel", ["loc", [null, [61, 16], [61, 48]]]]], [], 1, null, ["loc", [null, [61, 10], [74, 17]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "model.exportParams.isExportExcel", ["loc", [null, [75, 26], [75, 58]]]], "hidden", ""], [], ["loc", [null, [75, 21], [75, 72]]]]]]], ["inline", "t", ["components.colsconfig-dialog-content.col-width-on"], [], ["loc", [null, [76, 52], [76, 109]]]], ["inline", "flexberry-checkbox", [], ["class", "toggle", "value", ["subexpr", "@mut", [["get", "model.saveColWidthState", ["loc", [null, [80, 22], [80, 45]]]]], [], []]], ["loc", [null, [78, 14], [81, 16]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "model.exportParams.isExportExcel", ["loc", [null, [84, 27], [84, 59]]]], "hidden", ""], [], ["loc", [null, [84, 22], [84, 73]]]]]]], ["inline", "t", ["components.colsconfig-dialog-content.per-page"], [], ["loc", [null, [85, 52], [85, 105]]]], ["inline", "input", [], ["size", "2", "class", "per-page-input", "value", ["subexpr", "@mut", [["get", "model.perPageValue", ["loc", [null, [91, 24], [91, 42]]]]], [], []]], ["loc", [null, [88, 16], [92, 18]]]], ["inline", "input", [], ["type", "input", "class", "setting-name-input", "value", ["subexpr", "@mut", [["get", "model.settingName", ["loc", [null, [102, 24], [102, 41]]]]], [], []], "placeholder", ["subexpr", "t", ["components.colsconfig-dialog-content.enter-setting-name"], [], ["loc", [null, [103, 30], [103, 91]]]]], ["loc", [null, [99, 16], [104, 18]]]], ["attribute", "class", ["concat", ["ui small button cols-config-save", ["subexpr", "unless", [["get", "model.settingName", ["loc", [null, [105, 69], [105, 86]]]], " disabled"], [], ["loc", [null, [105, 60], [105, 100]]]]]]], ["element", "action", ["saveColsSetting"], [], ["loc", [null, [105, 102], [105, 130]]]], ["inline", "t", ["components.colsconfig-dialog-content.save"], [], ["loc", [null, [106, 18], [106, 67]]]], ["element", "action", ["apply"], [], ["loc", [null, [111, 69], [111, 87]]]], ["inline", "if", [["get", "model.exportParams.isExportExcel", ["loc", [null, [111, 93], [111, 125]]]], ["subexpr", "t", ["components.colsconfig-dialog-content.export"], [], ["loc", [null, [111, 126], [111, 175]]]], ["subexpr", "t", ["components.colsconfig-dialog-content.use"], [], ["loc", [null, [111, 176], [111, 222]]]]], [], ["loc", [null, [111, 88], [111, 224]]]], ["inline", "ui-message", [], ["type", ["subexpr", "@mut", [["get", "type", ["loc", [null, [117, 13], [117, 17]]]]], [], []], "closeable", ["subexpr", "@mut", [["get", "closeable", ["loc", [null, [118, 18], [118, 27]]]]], [], []], "visible", ["subexpr", "@mut", [["get", "visible", ["loc", [null, [119, 16], [119, 23]]]]], [], []], "caption", ["subexpr", "@mut", [["get", "caption", ["loc", [null, [120, 16], [120, 23]]]]], [], []], "message", ["subexpr", "@mut", [["get", "message", ["loc", [null, [121, 16], [121, 23]]]]], [], []]], ["loc", [null, [116, 6], [122, 8]]]]],
       locals: [],
       templates: [child0, child1]
     };
@@ -15502,6 +15817,334 @@ define("dummy/templates/components/css-picker", ["exports"], function (exports) 
         return morphs;
       },
       statements: [["block", "each", [["get", "_items", ["loc", [null, [1, 8], [1, 14]]]]], [], 0, null, ["loc", [null, [1, 0], [6, 9]]]]],
+      locals: [],
+      templates: [child0]
+    };
+  })());
+});
+define("dummy/templates/components/filters-dialog-content", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template((function () {
+    var child0 = (function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.4.6",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 21,
+                "column": 18
+              },
+              "end": {
+                "line": 28,
+                "column": 18
+              }
+            },
+            "moduleName": "dummy/templates/components/filters-dialog-content.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode("                    ");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createComment("");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createTextNode("\n");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var morphs = new Array(1);
+            morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+            return morphs;
+          },
+          statements: [["inline", "component", ["flexberry-dropdown"], ["value", ["subexpr", "@mut", [["get", "column.filter.condition", ["loc", [null, [23, 28], [23, 51]]]]], [], []], "items", ["subexpr", "@mut", [["get", "column.filter.conditions", ["loc", [null, [24, 28], [24, 52]]]]], [], []], "placeholder", "", "needChecksOnValue", false], ["loc", [null, [22, 20], [27, 22]]]]],
+          locals: [],
+          templates: []
+        };
+      })();
+      var child1 = (function () {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.4.6",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 33,
+                "column": 18
+              },
+              "end": {
+                "line": 38,
+                "column": 18
+              }
+            },
+            "moduleName": "dummy/templates/components/filters-dialog-content.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode("                    ");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createComment("");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createTextNode("\n");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var morphs = new Array(1);
+            morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+            return morphs;
+          },
+          statements: [["inline", "component", [["get", "column.filter.component.name", ["loc", [null, [34, 32], [34, 60]]]]], ["value", ["subexpr", "@mut", [["get", "column.filter.pattern", ["loc", [null, [35, 28], [35, 49]]]]], [], []], "dynamicProperties", ["subexpr", "@mut", [["get", "column.filter.component.properties", ["loc", [null, [36, 40], [36, 74]]]]], [], []]], ["loc", [null, [34, 20], [37, 22]]]]],
+          locals: [],
+          templates: []
+        };
+      })();
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 14,
+              "column": 10
+            },
+            "end": {
+              "line": 42,
+              "column": 10
+            }
+          },
+          "moduleName": "dummy/templates/components/filters-dialog-content.hbs"
+        },
+        isEmpty: false,
+        arity: 1,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("            ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("tr");
+          dom.setAttribute(el1, "class", "object-list-view-filters");
+          var el2 = dom.createTextNode("\n              ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("th");
+          dom.setAttribute(el2, "class", "full-width");
+          var el3 = dom.createTextNode("\n                  ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createComment("");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n              ");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n              ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("th");
+          var el3 = dom.createTextNode("\n                ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("td");
+          dom.setAttribute(el3, "class", "overflowed-cell");
+          var el4 = dom.createTextNode("\n");
+          dom.appendChild(el3, el4);
+          var el4 = dom.createComment("");
+          dom.appendChild(el3, el4);
+          var el4 = dom.createTextNode("                ");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n              ");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n              ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("th");
+          var el3 = dom.createTextNode("\n                ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("td");
+          dom.setAttribute(el3, "class", "overflowed-cell");
+          var el4 = dom.createTextNode("\n");
+          dom.appendChild(el3, el4);
+          var el4 = dom.createComment("");
+          dom.appendChild(el3, el4);
+          var el4 = dom.createTextNode("                ");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n              ");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n            ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element0 = dom.childAt(fragment, [1]);
+          var morphs = new Array(3);
+          morphs[0] = dom.createMorphAt(dom.childAt(element0, [1]), 1, 1);
+          morphs[1] = dom.createMorphAt(dom.childAt(element0, [3, 1]), 1, 1);
+          morphs[2] = dom.createMorphAt(dom.childAt(element0, [5, 1]), 1, 1);
+          return morphs;
+        },
+        statements: [["content", "column.header", ["loc", [null, [17, 18], [17, 35]]]], ["block", "if", [["get", "column.filter.conditions", ["loc", [null, [21, 24], [21, 48]]]]], [], 0, null, ["loc", [null, [21, 18], [28, 25]]]], ["block", "if", [["get", "column.filter.component.name", ["loc", [null, [33, 24], [33, 52]]]]], [], 1, null, ["loc", [null, [33, 18], [38, 25]]]]],
+        locals: ["column"],
+        templates: [child0, child1]
+      };
+    })();
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.4.6",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 56,
+            "column": 0
+          }
+        },
+        "moduleName": "dummy/templates/components/filters-dialog-content.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1, "class", "ui form");
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2, "class", "flexberry-colsconfig content");
+        var el3 = dom.createTextNode("\n      ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("table");
+        dom.setAttribute(el3, "class", "ui unstackable fixed selectable celled table");
+        var el4 = dom.createTextNode("\n\n        ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("thead");
+        dom.setAttribute(el4, "class", "full-width");
+        var el5 = dom.createTextNode("\n          ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("tr");
+        var el6 = dom.createTextNode("\n            ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("th");
+        var el7 = dom.createComment("");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n            ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("th");
+        dom.setAttribute(el6, "class", "filter-dropdown");
+        var el7 = dom.createComment("");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n            ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("th");
+        dom.setAttribute(el6, "class", "filter-input");
+        var el7 = dom.createComment("");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n\n        ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("tbody");
+        dom.setAttribute(el4, "class", "full-width");
+        var el5 = dom.createTextNode("\n");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("        ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n        \n        ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("tfoot");
+        dom.setAttribute(el4, "class", "full-width");
+        var el5 = dom.createTextNode("\n          ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("tr");
+        var el6 = dom.createTextNode("\n            ");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("th");
+        dom.setAttribute(el6, "colspan", "2");
+        var el7 = dom.createTextNode("\n              ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("div");
+        dom.setAttribute(el7, "class", "ui right floated button cols-config-apply");
+        var el8 = dom.createComment("");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n              ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createElement("div");
+        dom.setAttribute(el7, "class", "ui right floated button cols-config-apply");
+        var el8 = dom.createComment("");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n            ");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createTextNode("\n          ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element1 = dom.childAt(fragment, [0, 1, 1]);
+        var element2 = dom.childAt(element1, [1, 1]);
+        var element3 = dom.childAt(element1, [5, 1, 1]);
+        var element4 = dom.childAt(element3, [1]);
+        var element5 = dom.childAt(element3, [3]);
+        var morphs = new Array(8);
+        morphs[0] = dom.createMorphAt(dom.childAt(element2, [1]), 0, 0);
+        morphs[1] = dom.createMorphAt(dom.childAt(element2, [3]), 0, 0);
+        morphs[2] = dom.createMorphAt(dom.childAt(element2, [5]), 0, 0);
+        morphs[3] = dom.createMorphAt(dom.childAt(element1, [3]), 1, 1);
+        morphs[4] = dom.createElementMorph(element4);
+        morphs[5] = dom.createMorphAt(element4, 0, 0);
+        morphs[6] = dom.createElementMorph(element5);
+        morphs[7] = dom.createMorphAt(element5, 0, 0);
+        return morphs;
+      },
+      statements: [["inline", "t", ["components.filters-dialog-content.column-name"], [], ["loc", [null, [7, 16], [7, 69]]]], ["inline", "t", ["components.filters-dialog-content.column-condition"], [], ["loc", [null, [8, 40], [8, 98]]]], ["inline", "t", ["components.filters-dialog-content.column-value"], [], ["loc", [null, [9, 37], [9, 91]]]], ["block", "each", [["get", "_filterColumnsWithoutEnter", ["loc", [null, [14, 18], [14, 44]]]]], [], 0, null, ["loc", [null, [14, 10], [42, 19]]]], ["element", "action", ["applyFilters"], [], ["loc", [null, [48, 69], [48, 94]]]], ["inline", "t", ["components.filters-dialog-content.apply"], [], ["loc", [null, [48, 95], [48, 142]]]], ["element", "action", ["clearFiltersFields"], [], ["loc", [null, [49, 69], [49, 100]]]], ["inline", "t", ["components.filters-dialog-content.clear"], [], ["loc", [null, [49, 101], [49, 148]]]]],
       locals: [],
       templates: [child0]
     };
@@ -16219,7 +16862,7 @@ define("dummy/templates/components/flexberry-dropdown", ["exports"], function (e
               morphs[1] = dom.createMorphAt(element0, 0, 0);
               return morphs;
             },
-            statements: [["attribute", "data-value", ["concat", [["get", "value", ["loc", [null, [45, 40], [45, 45]]]]]]], ["content", "value", ["loc", [null, [45, 49], [45, 58]]]]],
+            statements: [["attribute", "data-value", ["concat", [["subexpr", "if", [["get", "displayCaptions", ["loc", [null, [45, 43], [45, 58]]]], ["get", "key", ["loc", [null, [45, 59], [45, 62]]]], ["get", "value", ["loc", [null, [45, 63], [45, 68]]]]], [], ["loc", [null, [45, 38], [45, 70]]]]]]], ["content", "value", ["loc", [null, [45, 72], [45, 81]]]]],
             locals: [],
             templates: []
           };
@@ -18441,7 +19084,7 @@ define("dummy/templates/components/flexberry-groupedit", ["exports"], function (
             "column": 0
           },
           "end": {
-            "line": 59,
+            "line": 60,
             "column": 0
           }
         },
@@ -18470,7 +19113,7 @@ define("dummy/templates/components/flexberry-groupedit", ["exports"], function (
         dom.insertBoundary(fragment, 0);
         return morphs;
       },
-      statements: [["inline", "groupedit-toolbar", [], ["componentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [2, 16], [2, 29]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [3, 11], [3, 19]]]]], [], []], "buttonClass", ["subexpr", "@mut", [["get", "buttonClass", ["loc", [null, [4, 14], [4, 25]]]]], [], []], "createNewButton", ["subexpr", "@mut", [["get", "createNewButton", ["loc", [null, [5, 18], [5, 33]]]]], [], []], "deleteButton", ["subexpr", "@mut", [["get", "deleteButton", ["loc", [null, [6, 15], [6, 27]]]]], [], []], "defaultSettingsButton", ["subexpr", "@mut", [["get", "defaultSettingsButton", ["loc", [null, [7, 24], [7, 45]]]]], [], []], "confirmDeleteRows", ["subexpr", "@mut", [["get", "confirmDeleteRows", ["loc", [null, [8, 20], [8, 37]]]]], [], []], "sorting", ["subexpr", "@mut", [["get", "sorting", ["loc", [null, [9, 10], [9, 17]]]]], [], []], "customButtonAction", "customButtonAction", "customButtons", ["subexpr", "@mut", [["get", "customButtons", ["loc", [null, [11, 16], [11, 29]]]]], [], []], "orderedProperty", ["subexpr", "@mut", [["get", "orderedProperty", ["loc", [null, [12, 18], [12, 33]]]]], [], []]], ["loc", [null, [1, 0], [13, 2]]]], ["inline", "object-list-view", [], ["class", "groupedit-container", "orderedProperty", ["subexpr", "@mut", [["get", "orderedProperty", ["loc", [null, [16, 18], [16, 33]]]]], [], []], "placeholder", ["subexpr", "@mut", [["get", "placeholder", ["loc", [null, [17, 14], [17, 25]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [18, 11], [18, 19]]]]], [], []], "buttonClass", ["subexpr", "@mut", [["get", "buttonClass", ["loc", [null, [19, 14], [19, 25]]]]], [], []], "tableStriped", ["subexpr", "@mut", [["get", "tableStriped", ["loc", [null, [20, 15], [20, 27]]]]], [], []], "columnsWidthAutoresize", ["subexpr", "@mut", [["get", "columnsWidthAutoresize", ["loc", [null, [21, 25], [21, 47]]]]], [], []], "minAutoColumnWidth", ["subexpr", "@mut", [["get", "minAutoColumnWidth", ["loc", [null, [22, 21], [22, 39]]]]], [], []], "customTableClass", ["subexpr", "@mut", [["get", "customTableClass", ["loc", [null, [23, 19], [23, 35]]]]], [], []], "cellComponent", ["subexpr", "@mut", [["get", "cellComponent", ["loc", [null, [24, 16], [24, 29]]]]], [], []], "singleColumnCellComponent", ["subexpr", "@mut", [["get", "singleColumnCellComponent", ["loc", [null, [25, 28], [25, 53]]]]], [], []], "singleColumnHeaderTitle", ["subexpr", "@mut", [["get", "singleColumnHeaderTitle", ["loc", [null, [26, 26], [26, 49]]]]], [], []], "showValidationMessagesInRow", ["subexpr", "@mut", [["get", "showValidationMessagesInRow", ["loc", [null, [27, 30], [27, 57]]]]], [], []], "showAsteriskInRow", ["subexpr", "@mut", [["get", "showAsteriskInRow", ["loc", [null, [28, 20], [28, 37]]]]], [], []], "showCheckBoxInRow", ["subexpr", "@mut", [["get", "showCheckBoxInRow", ["loc", [null, [29, 20], [29, 37]]]]], [], []], "showDeleteButtonInRow", ["subexpr", "@mut", [["get", "showDeleteButtonInRow", ["loc", [null, [30, 24], [30, 45]]]]], [], []], "showEditMenuItemInRow", ["subexpr", "@mut", [["get", "showEditMenuItemInRow", ["loc", [null, [31, 24], [31, 45]]]]], [], []], "showDeleteMenuItemInRow", ["subexpr", "@mut", [["get", "showDeleteMenuItemInRow", ["loc", [null, [32, 26], [32, 49]]]]], [], []], "sendMenuItemAction", ["subexpr", "action", ["sendMenuItemAction"], [], ["loc", [null, [33, 21], [33, 50]]]], "menuInRowAdditionalItems", ["subexpr", "@mut", [["get", "menuInRowAdditionalItems", ["loc", [null, [34, 27], [34, 51]]]]], [], []], "rowClickable", ["subexpr", "@mut", [["get", "rowClickable", ["loc", [null, [35, 15], [35, 27]]]]], [], []], "orderable", ["subexpr", "@mut", [["get", "orderable", ["loc", [null, [36, 12], [36, 21]]]]], [], []], "editOnSeparateRoute", ["subexpr", "@mut", [["get", "editOnSeparateRoute", ["loc", [null, [37, 22], [37, 41]]]]], [], []], "saveBeforeRouteLeave", ["subexpr", "@mut", [["get", "saveBeforeRouteLeave", ["loc", [null, [38, 23], [38, 43]]]]], [], []], "sorting", ["subexpr", "@mut", [["get", "sorting", ["loc", [null, [39, 10], [39, 17]]]]], [], []], "modelName", ["subexpr", "@mut", [["get", "modelName", ["loc", [null, [40, 12], [40, 21]]]]], [], []], "mainModelProjection", ["subexpr", "@mut", [["get", "mainModelProjection", ["loc", [null, [41, 22], [41, 41]]]]], [], []], "modelProjection", ["subexpr", "@mut", [["get", "modelProjection", ["loc", [null, [42, 18], [42, 33]]]]], [], []], "content", ["subexpr", "@mut", [["get", "content", ["loc", [null, [43, 10], [43, 17]]]]], [], []], "sortByColumn", ["subexpr", "action", [["subexpr", "if", [["get", "this.attrs.sortByColumn", ["loc", [null, [44, 27], [44, 50]]]], ["get", "this.attrs.sortByColumn", ["loc", [null, [44, 51], [44, 74]]]], "sortByColumn"], [], ["loc", [null, [44, 23], [44, 90]]]]], [], ["loc", [null, [44, 15], [44, 91]]]], "addColumnToSorting", ["subexpr", "action", [["subexpr", "if", [["get", "this.attrs.addColumnToSorting", ["loc", [null, [45, 33], [45, 62]]]], ["get", "this.attrs.addColumnToSorting", ["loc", [null, [45, 63], [45, 92]]]], "addColumnToSorting"], [], ["loc", [null, [45, 29], [45, 114]]]]], [], ["loc", [null, [45, 21], [45, 115]]]], "action", "groupEditRowClick", "componentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [47, 16], [47, 29]]]]], [], []], "allowColumnResize", ["subexpr", "@mut", [["get", "allowColumnResize", ["loc", [null, [48, 20], [48, 37]]]]], [], []], "configurateRow", ["subexpr", "@mut", [["get", "this.attrs.configurateRow", ["loc", [null, [49, 17], [49, 42]]]]], [], []], "confirmDeleteRow", ["subexpr", "@mut", [["get", "confirmDeleteRow", ["loc", [null, [50, 19], [50, 35]]]]], [], []], "configurateSelectedRows", ["subexpr", "@mut", [["get", "this.attrs.configurateSelectedRows", ["loc", [null, [51, 26], [51, 60]]]]], [], []], "beforeDeleteRecord", ["subexpr", "@mut", [["get", "beforeDeleteRecord", ["loc", [null, [52, 21], [52, 39]]]]], [], []], "searchForContentChange", ["subexpr", "@mut", [["get", "searchForContentChange", ["loc", [null, [53, 25], [53, 47]]]]], [], []], "immediateDelete", false, "notUseUserSettings", ["subexpr", "@mut", [["get", "notUseUserSettings", ["loc", [null, [55, 21], [55, 39]]]]], [], []], "defaultSortingButton", ["subexpr", "@mut", [["get", "defaultSortingButton", ["loc", [null, [56, 23], [56, 43]]]]], [], []], "overflowedComponents", ["subexpr", "@mut", [["get", "overflowedComponents", ["loc", [null, [57, 23], [57, 43]]]]], [], []]], ["loc", [null, [14, 0], [58, 2]]]]],
+      statements: [["inline", "groupedit-toolbar", [], ["componentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [2, 16], [2, 29]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [3, 11], [3, 19]]]]], [], []], "buttonClass", ["subexpr", "@mut", [["get", "buttonClass", ["loc", [null, [4, 14], [4, 25]]]]], [], []], "createNewButton", ["subexpr", "@mut", [["get", "createNewButton", ["loc", [null, [5, 18], [5, 33]]]]], [], []], "deleteButton", ["subexpr", "@mut", [["get", "deleteButton", ["loc", [null, [6, 15], [6, 27]]]]], [], []], "defaultSettingsButton", ["subexpr", "@mut", [["get", "defaultSettingsButton", ["loc", [null, [7, 24], [7, 45]]]]], [], []], "confirmDeleteRows", ["subexpr", "@mut", [["get", "confirmDeleteRows", ["loc", [null, [8, 20], [8, 37]]]]], [], []], "sorting", ["subexpr", "@mut", [["get", "sorting", ["loc", [null, [9, 10], [9, 17]]]]], [], []], "customButtonAction", "customButtonAction", "customButtons", ["subexpr", "@mut", [["get", "customButtons", ["loc", [null, [11, 16], [11, 29]]]]], [], []], "orderedProperty", ["subexpr", "@mut", [["get", "orderedProperty", ["loc", [null, [12, 18], [12, 33]]]]], [], []]], ["loc", [null, [1, 0], [13, 2]]]], ["inline", "object-list-view", [], ["class", "groupedit-container", "orderedProperty", ["subexpr", "@mut", [["get", "orderedProperty", ["loc", [null, [16, 18], [16, 33]]]]], [], []], "placeholder", ["subexpr", "@mut", [["get", "placeholder", ["loc", [null, [17, 14], [17, 25]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [18, 11], [18, 19]]]]], [], []], "buttonClass", ["subexpr", "@mut", [["get", "buttonClass", ["loc", [null, [19, 14], [19, 25]]]]], [], []], "tableStriped", ["subexpr", "@mut", [["get", "tableStriped", ["loc", [null, [20, 15], [20, 27]]]]], [], []], "columnsWidthAutoresize", ["subexpr", "@mut", [["get", "columnsWidthAutoresize", ["loc", [null, [21, 25], [21, 47]]]]], [], []], "minAutoColumnWidth", ["subexpr", "@mut", [["get", "minAutoColumnWidth", ["loc", [null, [22, 21], [22, 39]]]]], [], []], "customTableClass", ["subexpr", "@mut", [["get", "customTableClass", ["loc", [null, [23, 19], [23, 35]]]]], [], []], "cellComponent", ["subexpr", "@mut", [["get", "cellComponent", ["loc", [null, [24, 16], [24, 29]]]]], [], []], "singleColumnCellComponent", ["subexpr", "@mut", [["get", "singleColumnCellComponent", ["loc", [null, [25, 28], [25, 53]]]]], [], []], "singleColumnHeaderTitle", ["subexpr", "@mut", [["get", "singleColumnHeaderTitle", ["loc", [null, [26, 26], [26, 49]]]]], [], []], "showValidationMessagesInRow", ["subexpr", "@mut", [["get", "showValidationMessagesInRow", ["loc", [null, [27, 30], [27, 57]]]]], [], []], "showAsteriskInRow", ["subexpr", "@mut", [["get", "showAsteriskInRow", ["loc", [null, [28, 20], [28, 37]]]]], [], []], "showCheckBoxInRow", ["subexpr", "@mut", [["get", "showCheckBoxInRow", ["loc", [null, [29, 20], [29, 37]]]]], [], []], "showDeleteButtonInRow", ["subexpr", "@mut", [["get", "showDeleteButtonInRow", ["loc", [null, [30, 24], [30, 45]]]]], [], []], "showEditMenuItemInRow", ["subexpr", "@mut", [["get", "showEditMenuItemInRow", ["loc", [null, [31, 24], [31, 45]]]]], [], []], "showDeleteMenuItemInRow", ["subexpr", "@mut", [["get", "showDeleteMenuItemInRow", ["loc", [null, [32, 26], [32, 49]]]]], [], []], "sendMenuItemAction", ["subexpr", "action", ["sendMenuItemAction"], [], ["loc", [null, [33, 21], [33, 50]]]], "menuInRowAdditionalItems", ["subexpr", "@mut", [["get", "menuInRowAdditionalItems", ["loc", [null, [34, 27], [34, 51]]]]], [], []], "rowClickable", ["subexpr", "@mut", [["get", "rowClickable", ["loc", [null, [35, 15], [35, 27]]]]], [], []], "orderable", ["subexpr", "@mut", [["get", "orderable", ["loc", [null, [36, 12], [36, 21]]]]], [], []], "editOnSeparateRoute", ["subexpr", "@mut", [["get", "editOnSeparateRoute", ["loc", [null, [37, 22], [37, 41]]]]], [], []], "saveBeforeRouteLeave", ["subexpr", "@mut", [["get", "saveBeforeRouteLeave", ["loc", [null, [38, 23], [38, 43]]]]], [], []], "sorting", ["subexpr", "@mut", [["get", "sorting", ["loc", [null, [39, 10], [39, 17]]]]], [], []], "modelName", ["subexpr", "@mut", [["get", "modelName", ["loc", [null, [40, 12], [40, 21]]]]], [], []], "mainModelProjection", ["subexpr", "@mut", [["get", "mainModelProjection", ["loc", [null, [41, 22], [41, 41]]]]], [], []], "modelProjection", ["subexpr", "@mut", [["get", "modelProjection", ["loc", [null, [42, 18], [42, 33]]]]], [], []], "content", ["subexpr", "@mut", [["get", "content", ["loc", [null, [43, 10], [43, 17]]]]], [], []], "sortByColumn", ["subexpr", "action", [["subexpr", "if", [["get", "this.attrs.sortByColumn", ["loc", [null, [44, 27], [44, 50]]]], ["get", "this.attrs.sortByColumn", ["loc", [null, [44, 51], [44, 74]]]], "sortByColumn"], [], ["loc", [null, [44, 23], [44, 90]]]]], [], ["loc", [null, [44, 15], [44, 91]]]], "addColumnToSorting", ["subexpr", "action", [["subexpr", "if", [["get", "this.attrs.addColumnToSorting", ["loc", [null, [45, 33], [45, 62]]]], ["get", "this.attrs.addColumnToSorting", ["loc", [null, [45, 63], [45, 92]]]], "addColumnToSorting"], [], ["loc", [null, [45, 29], [45, 114]]]]], [], ["loc", [null, [45, 21], [45, 115]]]], "action", "groupEditRowClick", "componentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [47, 16], [47, 29]]]]], [], []], "allowColumnResize", ["subexpr", "@mut", [["get", "allowColumnResize", ["loc", [null, [48, 20], [48, 37]]]]], [], []], "configurateRow", ["subexpr", "@mut", [["get", "this.attrs.configurateRow", ["loc", [null, [49, 17], [49, 42]]]]], [], []], "confirmDeleteRow", ["subexpr", "@mut", [["get", "confirmDeleteRow", ["loc", [null, [50, 19], [50, 35]]]]], [], []], "configurateSelectedRows", ["subexpr", "@mut", [["get", "this.attrs.configurateSelectedRows", ["loc", [null, [51, 26], [51, 60]]]]], [], []], "beforeDeleteRecord", ["subexpr", "@mut", [["get", "beforeDeleteRecord", ["loc", [null, [52, 21], [52, 39]]]]], [], []], "searchForContentChange", ["subexpr", "@mut", [["get", "searchForContentChange", ["loc", [null, [53, 25], [53, 47]]]]], [], []], "immediateDelete", false, "notUseUserSettings", ["subexpr", "@mut", [["get", "notUseUserSettings", ["loc", [null, [55, 21], [55, 39]]]]], [], []], "defaultSortingButton", ["subexpr", "@mut", [["get", "defaultSortingButton", ["loc", [null, [56, 23], [56, 43]]]]], [], []], "overflowedComponents", ["subexpr", "@mut", [["get", "overflowedComponents", ["loc", [null, [57, 23], [57, 43]]]]], [], []], "fixedHeader", ["subexpr", "@mut", [["get", "fixedHeader", ["loc", [null, [58, 14], [58, 25]]]]], [], []]], ["loc", [null, [14, 0], [59, 2]]]]],
       locals: [],
       templates: []
     };
@@ -18748,7 +19391,7 @@ define("dummy/templates/components/flexberry-lookup", ["exports"], function (exp
           morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
           return morphs;
         },
-        statements: [["inline", "flexberry-dropdown", [], ["placeholder", ["subexpr", "@mut", [["get", "placeholder", ["loc", [null, [3, 16], [3, 27]]]]], [], []], "class", "search", "value", ["subexpr", "@mut", [["get", "displayValue", ["loc", [null, [5, 10], [5, 22]]]]], [], []], "readonly", ["subexpr", "if", [["get", "readonly", ["loc", [null, [6, 17], [6, 25]]]], "readonly"], [], ["loc", [null, [6, 13], [6, 37]]]], "needChecksOnValue", false, "isSearch", true, "isSearchReadOnly", ["subexpr", "@mut", [["get", "dropdownIsSearch", ["loc", [null, [9, 21], [9, 37]]]]], [], []]], ["loc", [null, [2, 2], [10, 4]]]]],
+        statements: [["inline", "flexberry-dropdown", [], ["placeholder", ["subexpr", "@mut", [["get", "placeholder", ["loc", [null, [3, 16], [3, 27]]]]], [], []], "class", ["subexpr", "concat", ["search ", ["get", "dropdownClass", ["loc", [null, [4, 28], [4, 41]]]]], [], ["loc", [null, [4, 10], [4, 42]]]], "value", ["subexpr", "@mut", [["get", "displayValue", ["loc", [null, [5, 10], [5, 22]]]]], [], []], "readonly", ["subexpr", "if", [["get", "readonly", ["loc", [null, [6, 17], [6, 25]]]], "readonly"], [], ["loc", [null, [6, 13], [6, 37]]]], "needChecksOnValue", false, "isSearch", true, "isSearchReadOnly", ["subexpr", "@mut", [["get", "dropdownIsSearch", ["loc", [null, [9, 21], [9, 37]]]]], [], []]], ["loc", [null, [2, 2], [10, 4]]]]],
         locals: [],
         templates: []
       };
@@ -18763,11 +19406,11 @@ define("dummy/templates/components/flexberry-lookup", ["exports"], function (exp
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 21,
+                  "line": 22,
                   "column": 6
                 },
                 "end": {
-                  "line": 28,
+                  "line": 30,
                   "column": 6
                 }
               },
@@ -18795,14 +19438,15 @@ define("dummy/templates/components/flexberry-lookup", ["exports"], function (exp
             },
             buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
               var element0 = dom.childAt(fragment, [1]);
-              var morphs = new Array(4);
+              var morphs = new Array(5);
               morphs[0] = dom.createAttrMorph(element0, 'class');
               morphs[1] = dom.createAttrMorph(element0, 'title');
-              morphs[2] = dom.createElementMorph(element0);
-              morphs[3] = dom.createUnsafeMorphAt(element0, 1, 1);
+              morphs[2] = dom.createAttrMorph(element0, 'type');
+              morphs[3] = dom.createElementMorph(element0);
+              morphs[4] = dom.createUnsafeMorphAt(element0, 1, 1);
               return morphs;
             },
-            statements: [["attribute", "class", ["concat", ["ui ui-preview ", ["subexpr", "if", [["get", "isBlocked", ["loc", [null, [23, 36], [23, 45]]]], " disabled"], [], ["loc", [null, [23, 31], [23, 59]]]], " ", ["get", "previewButtonClass", ["loc", [null, [23, 62], [23, 80]]]], " ", ["subexpr", "if", [["subexpr", "or", [["get", "modalIsBeforeToShow", ["loc", [null, [23, 92], [23, 111]]]], ["get", "modalIsStartToShow", ["loc", [null, [23, 112], [23, 130]]]]], [], ["loc", [null, [23, 88], [23, 131]]]], " loading"], [], ["loc", [null, [23, 83], [23, 144]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.flexberry-lookup.preview-button-text"], [], ["loc", [null, [24, 16], [24, 71]]]]], ["element", "action", ["preview"], [], ["loc", [null, [25, 10], [25, 30]]]], ["content", "previewText", ["loc", [null, [26, 10], [26, 27]]]]],
+            statements: [["attribute", "class", ["concat", ["ui ui-preview ", ["subexpr", "if", [["get", "isBlocked", ["loc", [null, [24, 36], [24, 45]]]], " disabled"], [], ["loc", [null, [24, 31], [24, 59]]]], " ", ["get", "previewButtonClass", ["loc", [null, [24, 62], [24, 80]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.flexberry-lookup.preview-button-text"], [], ["loc", [null, [25, 16], [25, 71]]]]], ["attribute", "type", ["subexpr", "if", [["get", "autocomplete", ["loc", [null, [26, 20], [26, 32]]]], "button", ""], [], ["loc", [null, [26, 15], [26, 46]]]]], ["element", "action", ["preview"], [], ["loc", [null, [27, 10], [27, 30]]]], ["content", "previewText", ["loc", [null, [28, 10], [28, 27]]]]],
             locals: [],
             templates: []
           };
@@ -18814,11 +19458,11 @@ define("dummy/templates/components/flexberry-lookup", ["exports"], function (exp
             "loc": {
               "source": null,
               "start": {
-                "line": 20,
+                "line": 21,
                 "column": 4
               },
               "end": {
-                "line": 29,
+                "line": 31,
                 "column": 4
               }
             },
@@ -18841,7 +19485,7 @@ define("dummy/templates/components/flexberry-lookup", ["exports"], function (exp
             dom.insertBoundary(fragment, null);
             return morphs;
           },
-          statements: [["block", "if", [["subexpr", "and", [["get", "previewFormRoute", ["loc", [null, [21, 17], [21, 33]]]], ["get", "value", ["loc", [null, [21, 34], [21, 39]]]]], [], ["loc", [null, [21, 12], [21, 40]]]]], [], 0, null, ["loc", [null, [21, 6], [28, 13]]]]],
+          statements: [["block", "if", [["subexpr", "and", [["get", "previewFormRoute", ["loc", [null, [22, 17], [22, 33]]]], ["get", "value", ["loc", [null, [22, 34], [22, 39]]]]], [], ["loc", [null, [22, 12], [22, 40]]]]], [], 0, null, ["loc", [null, [22, 6], [30, 13]]]]],
           locals: [],
           templates: [child0]
         };
@@ -18857,7 +19501,7 @@ define("dummy/templates/components/flexberry-lookup", ["exports"], function (exp
               "column": 0
             },
             "end": {
-              "line": 43,
+              "line": 47,
               "column": 0
             }
           },
@@ -18872,7 +19516,6 @@ define("dummy/templates/components/flexberry-lookup", ["exports"], function (exp
           var el1 = dom.createTextNode("  ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
-          dom.setAttribute(el1, "class", "ui fluid action input");
           var el2 = dom.createTextNode("\n    ");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
@@ -18912,20 +19555,23 @@ define("dummy/templates/components/flexberry-lookup", ["exports"], function (exp
           var element1 = dom.childAt(fragment, [1]);
           var element2 = dom.childAt(element1, [5]);
           var element3 = dom.childAt(element1, [7]);
-          var morphs = new Array(10);
-          morphs[0] = dom.createMorphAt(element1, 1, 1);
-          morphs[1] = dom.createMorphAt(element1, 3, 3);
-          morphs[2] = dom.createAttrMorph(element2, 'class');
-          morphs[3] = dom.createAttrMorph(element2, 'title');
-          morphs[4] = dom.createElementMorph(element2);
-          morphs[5] = dom.createUnsafeMorphAt(element2, 1, 1);
-          morphs[6] = dom.createAttrMorph(element3, 'class');
-          morphs[7] = dom.createAttrMorph(element3, 'title');
-          morphs[8] = dom.createElementMorph(element3);
-          morphs[9] = dom.createUnsafeMorphAt(element3, 1, 1);
+          var morphs = new Array(13);
+          morphs[0] = dom.createAttrMorph(element1, 'class');
+          morphs[1] = dom.createMorphAt(element1, 1, 1);
+          morphs[2] = dom.createMorphAt(element1, 3, 3);
+          morphs[3] = dom.createAttrMorph(element2, 'class');
+          morphs[4] = dom.createAttrMorph(element2, 'title');
+          morphs[5] = dom.createAttrMorph(element2, 'type');
+          morphs[6] = dom.createElementMorph(element2);
+          morphs[7] = dom.createUnsafeMorphAt(element2, 1, 1);
+          morphs[8] = dom.createAttrMorph(element3, 'class');
+          morphs[9] = dom.createAttrMorph(element3, 'title');
+          morphs[10] = dom.createAttrMorph(element3, 'type');
+          morphs[11] = dom.createElementMorph(element3);
+          morphs[12] = dom.createUnsafeMorphAt(element3, 1, 1);
           return morphs;
         },
-        statements: [["inline", "input", [], ["type", "text", "class", ["subexpr", "concat", ["lookup-field ", ["subexpr", "if", [["get", "autocomplete", ["loc", [null, [15, 40], [15, 52]]]], "prompt"], [], ["loc", [null, [15, 36], [15, 62]]]]], [], ["loc", [null, [15, 12], [15, 63]]]], "placeholder", ["subexpr", "@mut", [["get", "placeholder", ["loc", [null, [16, 18], [16, 29]]]]], [], []], "value", ["subexpr", "@mut", [["get", "displayValue", ["loc", [null, [17, 12], [17, 24]]]]], [], []], "readonly", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [18, 23], [18, 31]]]], ["subexpr", "not", [["get", "autocomplete", ["loc", [null, [18, 37], [18, 49]]]]], [], ["loc", [null, [18, 32], [18, 50]]]]], [], ["loc", [null, [18, 19], [18, 51]]]], "readonly"], [], ["loc", [null, [18, 15], [18, 63]]]]], ["loc", [null, [13, 4], [19, 6]]]], ["block", "if", [["get", "showPreviewButton", ["loc", [null, [20, 10], [20, 27]]]]], [], 0, null, ["loc", [null, [20, 4], [29, 11]]]], ["attribute", "class", ["concat", ["ui ui-change ", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [31, 35], [31, 43]]]], ["get", "isBlocked", ["loc", [null, [31, 44], [31, 53]]]]], [], ["loc", [null, [31, 31], [31, 54]]]], " disabled"], [], ["loc", [null, [31, 26], [31, 68]]]], " ", ["get", "chooseButtonClass", ["loc", [null, [31, 71], [31, 88]]]], " ", ["subexpr", "if", [["subexpr", "or", [["get", "modalIsBeforeToShow", ["loc", [null, [31, 100], [31, 119]]]], ["get", "modalIsStartToShow", ["loc", [null, [31, 120], [31, 138]]]]], [], ["loc", [null, [31, 96], [31, 139]]]], " loading"], [], ["loc", [null, [31, 91], [31, 152]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.flexberry-lookup.choose-button-text"], [], ["loc", [null, [32, 12], [32, 66]]]]], ["element", "action", ["choose", ["get", "chooseData", ["loc", [null, [33, 24], [33, 34]]]]], [], ["loc", [null, [33, 6], [33, 36]]]], ["content", "chooseText", ["loc", [null, [34, 6], [34, 22]]]], ["attribute", "class", ["concat", ["ui ui-clear ", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [37, 34], [37, 42]]]], ["get", "isBlocked", ["loc", [null, [37, 43], [37, 52]]]]], [], ["loc", [null, [37, 30], [37, 53]]]], " disabled"], [], ["loc", [null, [37, 25], [37, 67]]]], " ", ["get", "removeButtonClass", ["loc", [null, [37, 70], [37, 87]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.flexberry-lookup.remove-button-text"], [], ["loc", [null, [38, 12], [38, 66]]]]], ["element", "action", ["remove", ["get", "removeData", ["loc", [null, [39, 24], [39, 34]]]]], [], ["loc", [null, [39, 6], [39, 36]]]], ["content", "removeText", ["loc", [null, [40, 6], [40, 22]]]]],
+        statements: [["attribute", "class", ["concat", ["ui fluid action input ", ["subexpr", "if", [["get", "readonly", ["loc", [null, [12, 41], [12, 49]]]], "disabled"], [], ["loc", [null, [12, 36], [12, 62]]]]]]], ["inline", "input", [], ["type", "text", "class", ["subexpr", "concat", ["lookup-field ", ["subexpr", "if", [["get", "autocomplete", ["loc", [null, [15, 40], [15, 52]]]], "prompt"], [], ["loc", [null, [15, 36], [15, 62]]]]], [], ["loc", [null, [15, 12], [15, 63]]]], "placeholder", ["subexpr", "@mut", [["get", "placeholder", ["loc", [null, [16, 18], [16, 29]]]]], [], []], "value", ["subexpr", "@mut", [["get", "displayValue", ["loc", [null, [17, 12], [17, 24]]]]], [], []], "focusOut", ["subexpr", "action", ["onInputFocusOut"], [], ["loc", [null, [18, 15], [18, 41]]]], "readonly", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [19, 23], [19, 31]]]], ["subexpr", "not", [["get", "autocomplete", ["loc", [null, [19, 37], [19, 49]]]]], [], ["loc", [null, [19, 32], [19, 50]]]]], [], ["loc", [null, [19, 19], [19, 51]]]], "readonly"], [], ["loc", [null, [19, 15], [19, 63]]]]], ["loc", [null, [13, 4], [20, 6]]]], ["block", "if", [["get", "showPreviewButton", ["loc", [null, [21, 10], [21, 27]]]]], [], 0, null, ["loc", [null, [21, 4], [31, 11]]]], ["attribute", "class", ["concat", ["ui ui-change ", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [33, 35], [33, 43]]]], ["get", "isBlocked", ["loc", [null, [33, 44], [33, 53]]]]], [], ["loc", [null, [33, 31], [33, 54]]]], " disabled"], [], ["loc", [null, [33, 26], [33, 68]]]], " ", ["get", "chooseButtonClass", ["loc", [null, [33, 71], [33, 88]]]], " ", ["subexpr", "if", [["subexpr", "or", [["get", "modalIsBeforeToShow", ["loc", [null, [33, 100], [33, 119]]]], ["get", "modalIsStartToShow", ["loc", [null, [33, 120], [33, 138]]]]], [], ["loc", [null, [33, 96], [33, 139]]]], " loading"], [], ["loc", [null, [33, 91], [33, 152]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.flexberry-lookup.choose-button-text"], [], ["loc", [null, [34, 12], [34, 66]]]]], ["attribute", "type", ["subexpr", "if", [["get", "autocomplete", ["loc", [null, [35, 16], [35, 28]]]], "button", ""], [], ["loc", [null, [35, 11], [35, 42]]]]], ["element", "action", ["choose", ["get", "chooseData", ["loc", [null, [36, 24], [36, 34]]]]], [], ["loc", [null, [36, 6], [36, 36]]]], ["content", "chooseText", ["loc", [null, [37, 6], [37, 22]]]], ["attribute", "class", ["concat", ["ui ui-clear ", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [40, 34], [40, 42]]]], ["get", "isBlocked", ["loc", [null, [40, 43], [40, 52]]]]], [], ["loc", [null, [40, 30], [40, 53]]]], " disabled"], [], ["loc", [null, [40, 25], [40, 67]]]], " ", ["get", "removeButtonClass", ["loc", [null, [40, 70], [40, 87]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.flexberry-lookup.remove-button-text"], [], ["loc", [null, [41, 12], [41, 66]]]]], ["attribute", "type", ["subexpr", "if", [["get", "autocomplete", ["loc", [null, [42, 16], [42, 28]]]], "button", ""], [], ["loc", [null, [42, 11], [42, 42]]]]], ["element", "action", ["remove", ["get", "removeData", ["loc", [null, [43, 24], [43, 34]]]]], [], ["loc", [null, [43, 6], [43, 36]]]], ["content", "removeText", ["loc", [null, [44, 6], [44, 22]]]]],
         locals: [],
         templates: [child0]
       };
@@ -18938,11 +19584,11 @@ define("dummy/templates/components/flexberry-lookup", ["exports"], function (exp
           "loc": {
             "source": null,
             "start": {
-              "line": 44,
+              "line": 48,
               "column": 0
             },
             "end": {
-              "line": 46,
+              "line": 50,
               "column": 0
             }
           },
@@ -18985,7 +19631,7 @@ define("dummy/templates/components/flexberry-lookup", ["exports"], function (exp
             "column": 0
           },
           "end": {
-            "line": 47,
+            "line": 51,
             "column": 0
           }
         },
@@ -19011,7 +19657,7 @@ define("dummy/templates/components/flexberry-lookup", ["exports"], function (exp
         dom.insertBoundary(fragment, null);
         return morphs;
       },
-      statements: [["block", "if", [["get", "dropdown", ["loc", [null, [1, 6], [1, 14]]]]], [], 0, 1, ["loc", [null, [1, 0], [43, 7]]]], ["block", "if", [["subexpr", "and", [["subexpr", "not", [["get", "readonly", ["loc", [null, [44, 16], [44, 24]]]]], [], ["loc", [null, [44, 11], [44, 25]]]], ["get", "autocomplete", ["loc", [null, [44, 26], [44, 38]]]]], [], ["loc", [null, [44, 6], [44, 39]]]]], [], 2, null, ["loc", [null, [44, 0], [46, 7]]]]],
+      statements: [["block", "if", [["get", "dropdown", ["loc", [null, [1, 6], [1, 14]]]]], [], 0, 1, ["loc", [null, [1, 0], [47, 7]]]], ["block", "if", [["get", "autocomplete", ["loc", [null, [48, 6], [48, 18]]]]], [], 2, null, ["loc", [null, [48, 0], [50, 7]]]]],
       locals: [],
       templates: [child0, child1, child2]
     };
@@ -19563,99 +20209,6 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
   exports["default"] = Ember.HTMLBars.template((function () {
     var child0 = (function () {
       var child0 = (function () {
-        return {
-          meta: {
-            "fragmentReason": false,
-            "revision": "Ember@2.4.6",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 101,
-                "column": 6
-              },
-              "end": {
-                "line": 104,
-                "column": 6
-              }
-            },
-            "moduleName": "dummy/templates/components/flexberry-objectlistview.hbs"
-          },
-          isEmpty: false,
-          arity: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createElement("button");
-            dom.setAttribute(el1, "class", "ui button prev-page-button");
-            var el2 = dom.createTextNode("\n        ");
-            dom.appendChild(el1, el2);
-            dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element4 = dom.childAt(fragment, [1]);
-            var morphs = new Array(1);
-            morphs[0] = dom.createElementMorph(element4);
-            return morphs;
-          },
-          statements: [["element", "action", ["previousPage", ["get", "this.attrs.previousPage", ["loc", [null, [102, 75], [102, 98]]]]], [], ["loc", [null, [102, 51], [102, 100]]]]],
-          locals: [],
-          templates: []
-        };
-      })();
-      var child1 = (function () {
-        return {
-          meta: {
-            "fragmentReason": false,
-            "revision": "Ember@2.4.6",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 104,
-                "column": 6
-              },
-              "end": {
-                "line": 107,
-                "column": 6
-              }
-            },
-            "moduleName": "dummy/templates/components/flexberry-objectlistview.hbs"
-          },
-          isEmpty: false,
-          arity: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createElement("button");
-            dom.setAttribute(el1, "class", "ui disabled button prev-page-button");
-            dom.setAttribute(el1, "disabled", "disabled");
-            var el2 = dom.createTextNode("\n        ");
-            dom.appendChild(el1, el2);
-            dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element3 = dom.childAt(fragment, [1]);
-            var morphs = new Array(1);
-            morphs[0] = dom.createElementMorph(element3);
-            return morphs;
-          },
-          statements: [["element", "action", ["previousPage", ["get", "this.attrs.previousPage", ["loc", [null, [105, 84], [105, 107]]]]], [], ["loc", [null, [105, 60], [105, 109]]]]],
-          locals: [],
-          templates: []
-        };
-      })();
-      var child2 = (function () {
         var child0 = (function () {
           return {
             meta: {
@@ -19664,11 +20217,11 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 109,
+                  "line": 118,
                   "column": 8
                 },
                 "end": {
-                  "line": 111,
+                  "line": 120,
                   "column": 8
                 }
               },
@@ -19708,12 +20261,12 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
                 "loc": {
                   "source": null,
                   "start": {
-                    "line": 112,
-                    "column": 10
+                    "line": 120,
+                    "column": 8
                   },
                   "end": {
-                    "line": 114,
-                    "column": 10
+                    "line": 122,
+                    "column": 8
                   }
                 },
                 "moduleName": "dummy/templates/components/flexberry-objectlistview.hbs"
@@ -19724,11 +20277,12 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
               hasRendered: false,
               buildFragment: function buildFragment(dom) {
                 var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("            ");
+                var el1 = dom.createTextNode("          ");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("button");
+                dom.setAttribute(el1, "type", "button");
                 dom.setAttribute(el1, "class", "ui disabled active button");
-                dom.setAttribute(el1, "disabled", "disabled");
+                dom.setAttribute(el1, "disabled", "");
                 var el2 = dom.createComment("");
                 dom.appendChild(el1, el2);
                 dom.appendChild(el0, el1);
@@ -19741,7 +20295,7 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
                 morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 0, 0);
                 return morphs;
               },
-              statements: [["content", "page.number", ["loc", [null, [113, 74], [113, 89]]]]],
+              statements: [["content", "page.number", ["loc", [null, [121, 75], [121, 90]]]]],
               locals: [],
               templates: []
             };
@@ -19754,12 +20308,12 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
                 "loc": {
                   "source": null,
                   "start": {
-                    "line": 114,
-                    "column": 10
+                    "line": 122,
+                    "column": 8
                   },
                   "end": {
-                    "line": 116,
-                    "column": 10
+                    "line": 124,
+                    "column": 8
                   }
                 },
                 "moduleName": "dummy/templates/components/flexberry-objectlistview.hbs"
@@ -19770,25 +20324,26 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
               hasRendered: false,
               buildFragment: function buildFragment(dom) {
                 var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("            ");
+                var el1 = dom.createTextNode("          ");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("button");
+                dom.setAttribute(el1, "type", "button");
                 dom.setAttribute(el1, "class", "ui button");
                 var el2 = dom.createComment("");
                 dom.appendChild(el1, el2);
                 dom.appendChild(el0, el1);
-                var el1 = dom.createTextNode("\n");
+                var el1 = dom.createTextNode("\n        ");
                 dom.appendChild(el0, el1);
                 return el0;
               },
               buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-                var element2 = dom.childAt(fragment, [1]);
+                var element0 = dom.childAt(fragment, [1]);
                 var morphs = new Array(2);
-                morphs[0] = dom.createElementMorph(element2);
-                morphs[1] = dom.createMorphAt(element2, 0, 0);
+                morphs[0] = dom.createElementMorph(element0);
+                morphs[1] = dom.createMorphAt(element0, 0, 0);
                 return morphs;
               },
-              statements: [["element", "action", ["gotoPage", ["get", "this.attrs.gotoPage", ["loc", [null, [115, 58], [115, 77]]]], ["get", "page.number", ["loc", [null, [115, 78], [115, 89]]]]], [], ["loc", [null, [115, 38], [115, 91]]]], ["content", "page.number", ["loc", [null, [115, 92], [115, 107]]]]],
+              statements: [["element", "action", ["gotoPage", ["get", "this.attrs.gotoPage", ["loc", [null, [123, 70], [123, 89]]]], ["get", "page.number", ["loc", [null, [123, 90], [123, 101]]]]], [], ["loc", [null, [123, 50], [123, 103]]]], ["content", "page.number", ["loc", [null, [123, 104], [123, 119]]]]],
               locals: [],
               templates: []
             };
@@ -19800,11 +20355,11 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 111,
+                  "line": 120,
                   "column": 8
                 },
                 "end": {
-                  "line": 117,
+                  "line": 124,
                   "column": 8
                 }
               },
@@ -19827,7 +20382,7 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
               dom.insertBoundary(fragment, null);
               return morphs;
             },
-            statements: [["block", "if", [["get", "page.isCurrent", ["loc", [null, [112, 16], [112, 30]]]]], [], 0, 1, ["loc", [null, [112, 10], [116, 17]]]]],
+            statements: [["block", "if", [["get", "page.isCurrent", ["loc", [null, [120, 18], [120, 32]]]]], [], 0, 1, ["loc", [null, [120, 8], [124, 8]]]]],
             locals: [],
             templates: [child0, child1]
           };
@@ -19839,11 +20394,11 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
             "loc": {
               "source": null,
               "start": {
-                "line": 108,
+                "line": 117,
                 "column": 6
               },
               "end": {
-                "line": 118,
+                "line": 125,
                 "column": 6
               }
             },
@@ -19866,105 +20421,12 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
             dom.insertBoundary(fragment, null);
             return morphs;
           },
-          statements: [["block", "if", [["get", "page.isEllipsis", ["loc", [null, [109, 14], [109, 29]]]]], [], 0, 1, ["loc", [null, [109, 8], [117, 15]]]]],
+          statements: [["block", "if", [["get", "page.isEllipsis", ["loc", [null, [118, 14], [118, 29]]]]], [], 0, 1, ["loc", [null, [118, 8], [124, 15]]]]],
           locals: ["page"],
           templates: [child0, child1]
         };
       })();
-      var child3 = (function () {
-        return {
-          meta: {
-            "fragmentReason": false,
-            "revision": "Ember@2.4.6",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 119,
-                "column": 6
-              },
-              "end": {
-                "line": 122,
-                "column": 6
-              }
-            },
-            "moduleName": "dummy/templates/components/flexberry-objectlistview.hbs"
-          },
-          isEmpty: false,
-          arity: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createElement("button");
-            dom.setAttribute(el1, "class", "ui button next-page-button");
-            var el2 = dom.createTextNode("\n        ");
-            dom.appendChild(el1, el2);
-            dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element1 = dom.childAt(fragment, [1]);
-            var morphs = new Array(1);
-            morphs[0] = dom.createElementMorph(element1);
-            return morphs;
-          },
-          statements: [["element", "action", ["nextPage", ["get", "this.attrs.nextPage", ["loc", [null, [120, 71], [120, 90]]]]], [], ["loc", [null, [120, 51], [120, 92]]]]],
-          locals: [],
-          templates: []
-        };
-      })();
-      var child4 = (function () {
-        return {
-          meta: {
-            "fragmentReason": false,
-            "revision": "Ember@2.4.6",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 122,
-                "column": 6
-              },
-              "end": {
-                "line": 125,
-                "column": 6
-              }
-            },
-            "moduleName": "dummy/templates/components/flexberry-objectlistview.hbs"
-          },
-          isEmpty: false,
-          arity: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createElement("button");
-            dom.setAttribute(el1, "class", "ui disabled button next-page-button");
-            dom.setAttribute(el1, "disabled", "disabled");
-            var el2 = dom.createTextNode("\n        ");
-            dom.appendChild(el1, el2);
-            dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element0 = dom.childAt(fragment, [1]);
-            var morphs = new Array(1);
-            morphs[0] = dom.createElementMorph(element0);
-            return morphs;
-          },
-          statements: [["element", "action", ["nextPage", ["get", "this.attrs.nextPage", ["loc", [null, [123, 80], [123, 99]]]]], [], ["loc", [null, [123, 60], [123, 101]]]]],
-          locals: [],
-          templates: []
-        };
-      })();
-      var child5 = (function () {
+      var child1 = (function () {
         var child0 = (function () {
           return {
             meta: {
@@ -19973,11 +20435,11 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 130,
+                  "line": 136,
                   "column": 10
                 },
                 "end": {
-                  "line": 134,
+                  "line": 140,
                   "column": 10
                 }
               },
@@ -20002,7 +20464,7 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
               morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
               return morphs;
             },
-            statements: [["inline", "concat", [["subexpr", "t", ["components.flexberry-objectlistview.showing-entries.showing"], [], ["loc", [null, [132, 14], [132, 79]]]], ["get", "currentIntervalRecords", ["loc", [null, [132, 80], [132, 102]]]], ["subexpr", "t", ["components.flexberry-objectlistview.showing-entries.of"], [], ["loc", [null, [132, 103], [132, 163]]]], ["get", "recordsTotalCount", ["loc", [null, [132, 164], [132, 181]]]], ["subexpr", "t", ["components.flexberry-objectlistview.showing-entries.entries"], [], ["loc", [null, [132, 182], [132, 247]]]]], [], ["loc", [null, [131, 12], [133, 14]]]]],
+            statements: [["inline", "concat", [["subexpr", "t", ["components.flexberry-objectlistview.showing-entries.showing"], [], ["loc", [null, [138, 14], [138, 79]]]], ["get", "currentIntervalRecords", ["loc", [null, [138, 80], [138, 102]]]], ["subexpr", "t", ["components.flexberry-objectlistview.showing-entries.of"], [], ["loc", [null, [138, 103], [138, 163]]]], ["get", "recordsTotalCount", ["loc", [null, [138, 164], [138, 181]]]], ["subexpr", "t", ["components.flexberry-objectlistview.showing-entries.entries"], [], ["loc", [null, [138, 182], [138, 247]]]]], [], ["loc", [null, [137, 12], [139, 14]]]]],
             locals: [],
             templates: []
           };
@@ -20014,11 +20476,11 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
             "loc": {
               "source": null,
               "start": {
-                "line": 128,
+                "line": 134,
                 "column": 6
               },
               "end": {
-                "line": 136,
+                "line": 142,
                 "column": 6
               }
             },
@@ -20050,7 +20512,7 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
             morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 1, 1);
             return morphs;
           },
-          statements: [["block", "if", [["subexpr", "and", [["get", "currentIntervalRecords", ["loc", [null, [130, 21], [130, 43]]]], ["get", "recordsTotalCount", ["loc", [null, [130, 44], [130, 61]]]]], [], ["loc", [null, [130, 16], [130, 62]]]]], [], 0, null, ["loc", [null, [130, 10], [134, 17]]]]],
+          statements: [["block", "if", [["subexpr", "and", [["get", "currentIntervalRecords", ["loc", [null, [136, 21], [136, 43]]]], ["get", "recordsTotalCount", ["loc", [null, [136, 44], [136, 61]]]]], [], ["loc", [null, [136, 16], [136, 62]]]]], [], 0, null, ["loc", [null, [136, 10], [140, 17]]]]],
           locals: [],
           templates: [child0]
         };
@@ -20062,11 +20524,11 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
           "loc": {
             "source": null,
             "start": {
-              "line": 98,
+              "line": 108,
               "column": 0
             },
             "end": {
-              "line": 140,
+              "line": 146,
               "column": 0
             }
           },
@@ -20086,15 +20548,25 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("div");
           dom.setAttribute(el2, "class", "ui basic buttons");
+          var el3 = dom.createTextNode("\n      ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("button");
+          dom.setAttribute(el3, "type", "button");
+          var el4 = dom.createTextNode("\n      ");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
           var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
-          var el3 = dom.createComment("");
+          var el3 = dom.createTextNode("      ");
           dom.appendChild(el2, el3);
-          var el3 = dom.createComment("");
+          var el3 = dom.createElement("button");
+          dom.setAttribute(el3, "type", "button");
+          var el4 = dom.createTextNode("\n      ");
+          dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("    ");
+          var el3 = dom.createTextNode("\n    ");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("\n    ");
@@ -20120,20 +20592,26 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element5 = dom.childAt(fragment, [1]);
-          var element6 = dom.childAt(element5, [1]);
-          var element7 = dom.childAt(element5, [3]);
-          var morphs = new Array(5);
-          morphs[0] = dom.createMorphAt(element6, 1, 1);
-          morphs[1] = dom.createMorphAt(element6, 2, 2);
-          morphs[2] = dom.createMorphAt(element6, 3, 3);
-          morphs[3] = dom.createMorphAt(element7, 1, 1);
-          morphs[4] = dom.createMorphAt(element7, 3, 3);
+          var element1 = dom.childAt(fragment, [1]);
+          var element2 = dom.childAt(element1, [1]);
+          var element3 = dom.childAt(element2, [1]);
+          var element4 = dom.childAt(element2, [5]);
+          var element5 = dom.childAt(element1, [3]);
+          var morphs = new Array(9);
+          morphs[0] = dom.createAttrMorph(element3, 'class');
+          morphs[1] = dom.createAttrMorph(element3, 'disabled');
+          morphs[2] = dom.createElementMorph(element3);
+          morphs[3] = dom.createMorphAt(element2, 3, 3);
+          morphs[4] = dom.createAttrMorph(element4, 'class');
+          morphs[5] = dom.createAttrMorph(element4, 'disabled');
+          morphs[6] = dom.createElementMorph(element4);
+          morphs[7] = dom.createMorphAt(element5, 1, 1);
+          morphs[8] = dom.createMorphAt(element5, 3, 3);
           return morphs;
         },
-        statements: [["block", "if", [["get", "hasPreviousPage", ["loc", [null, [101, 12], [101, 27]]]]], [], 0, 1, ["loc", [null, [101, 6], [107, 13]]]], ["block", "each", [["get", "pages", ["loc", [null, [108, 14], [108, 19]]]]], [], 2, null, ["loc", [null, [108, 6], [118, 15]]]], ["block", "if", [["get", "hasNextPage", ["loc", [null, [119, 12], [119, 23]]]]], [], 3, 4, ["loc", [null, [119, 6], [125, 13]]]], ["block", "if", [["get", "showShowingEntries", ["loc", [null, [128, 12], [128, 30]]]]], [], 5, null, ["loc", [null, [128, 6], [136, 13]]]], ["inline", "flexberry-dropdown", [], ["items", ["subexpr", "@mut", [["get", "perPageValues", ["loc", [null, [137, 33], [137, 46]]]]], [], []], "value", ["subexpr", "@mut", [["get", "perPageValue", ["loc", [null, [137, 53], [137, 65]]]]], [], []], "class", "compact selection", "onChange", ["subexpr", "action", ["perPageClick"], [], ["loc", [null, [137, 101], [137, 124]]]], "needChecksOnValue", false, "direction", "upward"], ["loc", [null, [137, 6], [137, 169]]]]],
+        statements: [["attribute", "class", ["concat", ["ui ", ["subexpr", "unless", [["get", "hasPreviousPage", ["loc", [null, [113, 27], [113, 42]]]], "disabled"], [], ["loc", [null, [113, 18], [113, 55]]]], " button prev-page-button"]]], ["attribute", "disabled", ["subexpr", "not", [["get", "hasPreviousPage", ["loc", [null, [114, 23], [114, 38]]]]], [], ["loc", [null, [114, 17], [114, 40]]]]], ["element", "action", ["previousPage", ["get", "this.attrs.previousPage", ["loc", [null, [115, 32], [115, 55]]]]], [], ["loc", [null, [115, 8], [115, 57]]]], ["block", "each", [["get", "pages", ["loc", [null, [117, 14], [117, 19]]]]], [], 0, null, ["loc", [null, [117, 6], [125, 15]]]], ["attribute", "class", ["concat", ["ui ", ["subexpr", "unless", [["get", "hasNextPage", ["loc", [null, [128, 27], [128, 38]]]], "disabled"], [], ["loc", [null, [128, 18], [128, 51]]]], " button next-page-button"]]], ["attribute", "disabled", ["subexpr", "not", [["get", "hasNextPage", ["loc", [null, [129, 23], [129, 34]]]]], [], ["loc", [null, [129, 17], [129, 36]]]]], ["element", "action", ["nextPage", ["get", "this.attrs.nextPage", ["loc", [null, [130, 28], [130, 47]]]]], [], ["loc", [null, [130, 8], [130, 49]]]], ["block", "if", [["get", "showShowingEntries", ["loc", [null, [134, 12], [134, 30]]]]], [], 1, null, ["loc", [null, [134, 6], [142, 13]]]], ["inline", "flexberry-dropdown", [], ["items", ["subexpr", "@mut", [["get", "perPageValues", ["loc", [null, [143, 33], [143, 46]]]]], [], []], "value", ["subexpr", "@mut", [["get", "perPageValue", ["loc", [null, [143, 53], [143, 65]]]]], [], []], "class", "compact selection", "onChange", ["subexpr", "action", ["perPageClick"], [], ["loc", [null, [143, 101], [143, 124]]]], "needChecksOnValue", false, "direction", "upward"], ["loc", [null, [143, 6], [143, 169]]]]],
         locals: [],
-        templates: [child0, child1, child2, child3, child4, child5]
+        templates: [child0, child1]
       };
     })();
     return {
@@ -20150,8 +20628,8 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
             "column": 0
           },
           "end": {
-            "line": 141,
-            "column": 0
+            "line": 146,
+            "column": 7
           }
         },
         "moduleName": "dummy/templates/components/flexberry-objectlistview.hbs"
@@ -20183,7 +20661,7 @@ define("dummy/templates/components/flexberry-objectlistview", ["exports"], funct
         dom.insertBoundary(fragment, null);
         return morphs;
       },
-      statements: [["inline", "olv-toolbar", [], ["class", "ui secondary menu no-margin", "createNewButton", ["subexpr", "@mut", [["get", "createNewButton", ["loc", [null, [3, 18], [3, 33]]]]], [], []], "enableCreateNewButton", ["subexpr", "not", [["get", "readonly", ["loc", [null, [4, 29], [4, 37]]]]], [], ["loc", [null, [4, 24], [4, 38]]]], "refreshButton", ["subexpr", "@mut", [["get", "refreshButton", ["loc", [null, [5, 16], [5, 29]]]]], [], []], "deleteButton", ["subexpr", "@mut", [["get", "deleteButton", ["loc", [null, [6, 15], [6, 27]]]]], [], []], "colsConfigButton", ["subexpr", "@mut", [["get", "colsConfigButton", ["loc", [null, [7, 19], [7, 35]]]]], [], []], "enableFilters", ["subexpr", "@mut", [["get", "enableFilters", ["loc", [null, [8, 16], [8, 29]]]]], [], []], "exportExcelButton", ["subexpr", "@mut", [["get", "exportExcelButton", ["loc", [null, [9, 20], [9, 37]]]]], [], []], "showFilters", ["subexpr", "@mut", [["get", "_showFilters", ["loc", [null, [10, 14], [10, 26]]]]], [], []], "filters", ["subexpr", "@mut", [["get", "filters", ["loc", [null, [11, 10], [11, 17]]]]], [], []], "toggleStateFilters", ["subexpr", "action", ["toggleStateFilters"], [], ["loc", [null, [12, 21], [12, 50]]]], "resetFilters", ["subexpr", "action", ["resetFilters", ["get", "this.attrs.resetFilters", ["loc", [null, [13, 38], [13, 61]]]]], [], ["loc", [null, [13, 15], [13, 62]]]], "filterButton", ["subexpr", "@mut", [["get", "filterButton", ["loc", [null, [14, 15], [14, 27]]]]], [], []], "filterText", ["subexpr", "@mut", [["get", "filterText", ["loc", [null, [15, 13], [15, 23]]]]], [], []], "buttonClass", ["subexpr", "@mut", [["get", "buttonClass", ["loc", [null, [16, 14], [16, 25]]]]], [], []], "enableDeleteButton", ["subexpr", "not", [["get", "readonly", ["loc", [null, [17, 26], [17, 34]]]]], [], ["loc", [null, [17, 21], [17, 35]]]], "componentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [18, 16], [18, 29]]]]], [], []], "modelController", ["subexpr", "@mut", [["get", "currentController", ["loc", [null, [19, 18], [19, 35]]]]], [], []], "customButtonAction", "customButtonAction", "customButtons", ["subexpr", "@mut", [["get", "customButtons", ["loc", [null, [21, 16], [21, 29]]]]], [], []], "editFormRoute", ["subexpr", "@mut", [["get", "editFormRoute", ["loc", [null, [22, 16], [22, 29]]]]], [], []], "showConfigDialog", "showConfigDialog", "confirmDeleteRows", ["subexpr", "@mut", [["get", "confirmDeleteRows", ["loc", [null, [24, 20], [24, 37]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "_inHierarchicalMode", ["loc", [null, [25, 21], [25, 40]]]]], [], []], "inExpandMode", ["subexpr", "@mut", [["get", "_inExpandMode", ["loc", [null, [26, 15], [26, 28]]]]], [], []], "availableHierarchicalMode", ["subexpr", "@mut", [["get", "_availableHierarchicalMode", ["loc", [null, [27, 28], [27, 54]]]]], [], []], "availableCollExpandMode", ["subexpr", "@mut", [["get", "_availableCollExpandMode", ["loc", [null, [28, 26], [28, 50]]]]], [], []], "switchHierarchicalMode", ["subexpr", "action", ["switchHierarchicalMode"], [], ["loc", [null, [29, 25], [29, 58]]]], "switchExpandMode", ["subexpr", "action", ["switchExpandMode"], [], ["loc", [null, [30, 19], [30, 46]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [31, 11], [31, 19]]]]], [], []]], ["loc", [null, [1, 0], [32, 2]]]], ["inline", "object-list-view", [], ["placeholder", ["subexpr", "@mut", [["get", "placeholder", ["loc", [null, [34, 14], [34, 25]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [35, 11], [35, 19]]]]], [], []], "columnsWidthAutoresize", ["subexpr", "@mut", [["get", "columnsWidthAutoresize", ["loc", [null, [36, 25], [36, 47]]]]], [], []], "minAutoColumnWidth", ["subexpr", "@mut", [["get", "minAutoColumnWidth", ["loc", [null, [37, 21], [37, 39]]]]], [], []], "buttonClass", ["subexpr", "@mut", [["get", "buttonClass", ["loc", [null, [38, 14], [38, 25]]]]], [], []], "tableStriped", ["subexpr", "@mut", [["get", "tableStriped", ["loc", [null, [39, 15], [39, 27]]]]], [], []], "customTableClass", ["subexpr", "@mut", [["get", "customTableClass", ["loc", [null, [40, 19], [40, 35]]]]], [], []], "cellComponent", ["subexpr", "@mut", [["get", "cellComponent", ["loc", [null, [41, 16], [41, 29]]]]], [], []], "singleColumnCellComponent", ["subexpr", "@mut", [["get", "singleColumnCellComponent", ["loc", [null, [42, 28], [42, 53]]]]], [], []], "singleColumnHeaderTitle", ["subexpr", "@mut", [["get", "singleColumnHeaderTitle", ["loc", [null, [43, 26], [43, 49]]]]], [], []], "showValidationMessagesInRow", ["subexpr", "and", [["subexpr", "not", [["get", "readonly", ["loc", [null, [44, 40], [44, 48]]]]], [], ["loc", [null, [44, 35], [44, 49]]]], ["get", "showValidationMessagesInRow", ["loc", [null, [44, 50], [44, 77]]]]], [], ["loc", [null, [44, 30], [44, 78]]]], "showAsteriskInRow", ["subexpr", "@mut", [["get", "showAsteriskInRow", ["loc", [null, [45, 20], [45, 37]]]]], [], []], "showCheckBoxInRow", ["subexpr", "@mut", [["get", "showCheckBoxInRow", ["loc", [null, [46, 20], [46, 37]]]]], [], []], "showDeleteButtonInRow", ["subexpr", "@mut", [["get", "showDeleteButtonInRow", ["loc", [null, [47, 24], [47, 45]]]]], [], []], "showEditButtonInRow", ["subexpr", "@mut", [["get", "showEditButtonInRow", ["loc", [null, [48, 22], [48, 41]]]]], [], []], "showEditMenuItemInRow", ["subexpr", "@mut", [["get", "showEditMenuItemInRow", ["loc", [null, [49, 24], [49, 45]]]]], [], []], "showDeleteMenuItemInRow", ["subexpr", "@mut", [["get", "showDeleteMenuItemInRow", ["loc", [null, [50, 26], [50, 49]]]]], [], []], "sendMenuItemAction", ["subexpr", "action", ["sendMenuItemAction"], [], ["loc", [null, [51, 21], [51, 50]]]], "menuInRowAdditionalItems", ["subexpr", "@mut", [["get", "menuInRowAdditionalItems", ["loc", [null, [52, 27], [52, 51]]]]], [], []], "rowClickable", ["subexpr", "and", [["subexpr", "not", [["get", "readonly", ["loc", [null, [53, 25], [53, 33]]]]], [], ["loc", [null, [53, 20], [53, 34]]]], ["get", "rowClickable", ["loc", [null, [53, 35], [53, 47]]]]], [], ["loc", [null, [53, 15], [53, 48]]]], "orderable", ["subexpr", "@mut", [["get", "orderable", ["loc", [null, [54, 12], [54, 21]]]]], [], []], "sorting", ["subexpr", "@mut", [["get", "sorting", ["loc", [null, [55, 10], [55, 17]]]]], [], []], "immediateDelete", true, "modelName", ["subexpr", "@mut", [["get", "modelName", ["loc", [null, [57, 12], [57, 21]]]]], [], []], "modelProjection", ["subexpr", "@mut", [["get", "modelProjection", ["loc", [null, [58, 18], [58, 33]]]]], [], []], "content", ["subexpr", "@mut", [["get", "content", ["loc", [null, [59, 10], [59, 17]]]]], [], []], "sortByColumn", ["subexpr", "action", [["subexpr", "if", [["get", "this.attrs.sortByColumn", ["loc", [null, [60, 27], [60, 50]]]], ["get", "this.attrs.sortByColumn", ["loc", [null, [60, 51], [60, 74]]]], "sortByColumn"], [], ["loc", [null, [60, 23], [60, 90]]]]], [], ["loc", [null, [60, 15], [60, 91]]]], "addColumnToSorting", ["subexpr", "action", [["subexpr", "if", [["get", "this.attrs.addColumnToSorting", ["loc", [null, [61, 33], [61, 62]]]], ["get", "this.attrs.addColumnToSorting", ["loc", [null, [61, 63], [61, 92]]]], "addColumnToSorting"], [], ["loc", [null, [61, 29], [61, 114]]]]], [], ["loc", [null, [61, 21], [61, 115]]]], "enableFilters", ["subexpr", "@mut", [["get", "enableFilters", ["loc", [null, [62, 16], [62, 29]]]]], [], []], "showFilters", ["subexpr", "@mut", [["get", "_showFilters", ["loc", [null, [63, 14], [63, 26]]]]], [], []], "filters", ["subexpr", "@mut", [["get", "filters", ["loc", [null, [64, 10], [64, 17]]]]], [], []], "applyFilters", ["subexpr", "action", [["subexpr", "if", [["get", "applyFilters", ["loc", [null, [65, 27], [65, 39]]]], ["get", "applyFilters", ["loc", [null, [65, 40], [65, 52]]]], "applyFilters"], [], ["loc", [null, [65, 23], [65, 68]]]]], [], ["loc", [null, [65, 15], [65, 69]]]], "componentForFilter", ["subexpr", "@mut", [["get", "componentForFilter", ["loc", [null, [66, 21], [66, 39]]]]], [], []], "conditionsByType", ["subexpr", "@mut", [["get", "conditionsByType", ["loc", [null, [67, 19], [67, 35]]]]], [], []], "filterByAnyMatch", ["subexpr", "action", [["subexpr", "if", [["get", "this.attrs.filterByAnyMatch", ["loc", [null, [68, 31], [68, 58]]]], ["get", "this.attrs.filterByAnyMatch", ["loc", [null, [68, 59], [68, 86]]]], "filterByAnyMatch"], [], ["loc", [null, [68, 27], [68, 106]]]]], [], ["loc", [null, [68, 19], [68, 107]]]], "filterByAnyWord", ["subexpr", "@mut", [["get", "filterByAnyWord", ["loc", [null, [69, 18], [69, 33]]]]], [], []], "filterByAllWords", ["subexpr", "@mut", [["get", "filterByAllWords", ["loc", [null, [70, 19], [70, 35]]]]], [], []], "configurateRow", ["subexpr", "@mut", [["get", "this.attrs.configurateRow", ["loc", [null, [71, 17], [71, 42]]]]], [], []], "configurateSelectedRows", ["subexpr", "@mut", [["get", "this.attrs.configurateSelectedRows", ["loc", [null, [72, 26], [72, 60]]]]], [], []], "confirmDeleteRow", ["subexpr", "@mut", [["get", "confirmDeleteRow", ["loc", [null, [73, 19], [73, 35]]]]], [], []], "beforeDeleteRecord", ["subexpr", "@mut", [["get", "beforeDeleteRecord", ["loc", [null, [74, 21], [74, 39]]]]], [], []], "beforeDeleteAllRecords", ["subexpr", "@mut", [["get", "beforeDeleteAllRecords", ["loc", [null, [75, 25], [75, 47]]]]], [], []], "action", "objectListViewRowClick", "componentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [77, 16], [77, 29]]]]], [], []], "allowColumnResize", ["subexpr", "@mut", [["get", "allowColumnResize", ["loc", [null, [78, 20], [78, 37]]]]], [], []], "selectedRecord", ["subexpr", "@mut", [["get", "selectedRecord", ["loc", [null, [79, 17], [79, 31]]]]], [], []], "notUseUserSettings", ["subexpr", "@mut", [["get", "notUseUserSettings", ["loc", [null, [80, 21], [80, 39]]]]], [], []], "hierarchicalIndent", ["subexpr", "@mut", [["get", "hierarchicalIndent", ["loc", [null, [81, 21], [81, 39]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "_inHierarchicalMode", ["loc", [null, [82, 21], [82, 40]]]]], [], []], "inExpandMode", ["subexpr", "@mut", [["get", "_inExpandMode", ["loc", [null, [83, 15], [83, 28]]]]], [], []], "disableHierarchicalMode", ["subexpr", "if", [["get", "hierarchyByAttribute", ["loc", [null, [84, 30], [84, 50]]]], true, ["get", "disableHierarchicalMode", ["loc", [null, [84, 56], [84, 79]]]]], [], ["loc", [null, [84, 26], [84, 80]]]], "loadRecords", ["subexpr", "action", ["loadRecords"], [], ["loc", [null, [85, 14], [85, 36]]]], "availableHierarchicalMode", ["subexpr", "action", ["availableHierarchicalMode"], [], ["loc", [null, [86, 28], [86, 64]]]], "useRowByRowLoading", ["subexpr", "@mut", [["get", "useRowByRowLoading", ["loc", [null, [87, 21], [87, 39]]]]], [], []], "useRowByRowLoadingProgress", ["subexpr", "@mut", [["get", "useRowByRowLoadingProgress", ["loc", [null, [88, 29], [88, 55]]]]], [], []], "eventsBus", ["subexpr", "@mut", [["get", "eventsBus", ["loc", [null, [89, 12], [89, 21]]]]], [], []], "onEditForm", ["subexpr", "@mut", [["get", "onEditForm", ["loc", [null, [90, 13], [90, 23]]]]], [], []], "customButtonInRowAction", "customButtonInRowAction", "customButtonsInRow", ["subexpr", "@mut", [["get", "customButtonsInRow", ["loc", [null, [92, 21], [92, 39]]]]], [], []], "defaultSortingButton", ["subexpr", "@mut", [["get", "defaultSortingButton", ["loc", [null, [93, 23], [93, 43]]]]], [], []], "defaultLeftPadding", ["subexpr", "@mut", [["get", "defaultLeftPadding", ["loc", [null, [94, 21], [94, 39]]]]], [], []], "overflowedComponents", ["subexpr", "@mut", [["get", "overflowedComponents", ["loc", [null, [95, 23], [95, 43]]]]], [], []], "fixedHeader", ["subexpr", "@mut", [["get", "fixedHeader", ["loc", [null, [96, 14], [96, 25]]]]], [], []]], ["loc", [null, [33, 0], [97, 2]]]], ["block", "unless", [["get", "_inHierarchicalMode", ["loc", [null, [98, 10], [98, 29]]]]], [], 0, null, ["loc", [null, [98, 0], [140, 11]]]]],
+      statements: [["inline", "olv-toolbar", [], ["class", "ui secondary menu no-margin", "createNewButton", ["subexpr", "@mut", [["get", "createNewButton", ["loc", [null, [3, 18], [3, 33]]]]], [], []], "enableCreateNewButton", ["subexpr", "not", [["get", "readonly", ["loc", [null, [4, 29], [4, 37]]]]], [], ["loc", [null, [4, 24], [4, 38]]]], "refreshButton", ["subexpr", "@mut", [["get", "refreshButton", ["loc", [null, [5, 16], [5, 29]]]]], [], []], "deleteButton", ["subexpr", "@mut", [["get", "deleteButton", ["loc", [null, [6, 15], [6, 27]]]]], [], []], "colsConfigButton", ["subexpr", "@mut", [["get", "colsConfigButton", ["loc", [null, [7, 19], [7, 35]]]]], [], []], "advLimitButton", ["subexpr", "@mut", [["get", "advLimitButton", ["loc", [null, [8, 17], [8, 31]]]]], [], []], "enableFilters", ["subexpr", "@mut", [["get", "enableFilters", ["loc", [null, [9, 16], [9, 29]]]]], [], []], "exportExcelButton", ["subexpr", "@mut", [["get", "exportExcelButton", ["loc", [null, [10, 20], [10, 37]]]]], [], []], "showFilters", ["subexpr", "@mut", [["get", "_showFilters", ["loc", [null, [11, 14], [11, 26]]]]], [], []], "showFiltersInModal", ["subexpr", "@mut", [["get", "showFiltersInModal", ["loc", [null, [12, 21], [12, 39]]]]], [], []], "filters", ["subexpr", "@mut", [["get", "filters", ["loc", [null, [13, 10], [13, 17]]]]], [], []], "toggleStateFilters", ["subexpr", "action", ["toggleStateFilters"], [], ["loc", [null, [14, 21], [14, 50]]]], "resetFilters", ["subexpr", "action", ["resetFilters", ["get", "this.attrs.resetFilters", ["loc", [null, [15, 38], [15, 61]]]]], [], ["loc", [null, [15, 15], [15, 62]]]], "filterButton", ["subexpr", "@mut", [["get", "filterButton", ["loc", [null, [16, 15], [16, 27]]]]], [], []], "filterText", ["subexpr", "@mut", [["get", "filterText", ["loc", [null, [17, 13], [17, 23]]]]], [], []], "buttonClass", ["subexpr", "@mut", [["get", "buttonClass", ["loc", [null, [18, 14], [18, 25]]]]], [], []], "enableDeleteButton", ["subexpr", "not", [["get", "readonly", ["loc", [null, [19, 26], [19, 34]]]]], [], ["loc", [null, [19, 21], [19, 35]]]], "inLookup", ["subexpr", "eq", [["get", "componentMode", ["loc", [null, [20, 15], [20, 28]]]], "lookupform"], [], ["loc", [null, [20, 11], [20, 42]]]], "componentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [21, 16], [21, 29]]]]], [], []], "lookupComponentName", ["subexpr", "@mut", [["get", "lookupComponentName", ["loc", [null, [22, 22], [22, 41]]]]], [], []], "modelController", ["subexpr", "@mut", [["get", "currentController", ["loc", [null, [23, 18], [23, 35]]]]], [], []], "customButtonAction", "customButtonAction", "customButtons", ["subexpr", "@mut", [["get", "customButtons", ["loc", [null, [25, 16], [25, 29]]]]], [], []], "editFormRoute", ["subexpr", "@mut", [["get", "editFormRoute", ["loc", [null, [26, 16], [26, 29]]]]], [], []], "showConfigDialog", "showConfigDialog", "showAdvLimitDialog", "showConfigDialog", "confirmDeleteRows", ["subexpr", "@mut", [["get", "confirmDeleteRows", ["loc", [null, [29, 20], [29, 37]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "inHierarchicalMode", ["loc", [null, [30, 21], [30, 39]]]]], [], []], "inExpandMode", ["subexpr", "@mut", [["get", "inExpandMode", ["loc", [null, [31, 15], [31, 27]]]]], [], []], "availableHierarchicalMode", ["subexpr", "@mut", [["get", "_availableHierarchicalMode", ["loc", [null, [32, 28], [32, 54]]]]], [], []], "availableCollExpandMode", ["subexpr", "@mut", [["get", "availableCollExpandMode", ["loc", [null, [33, 26], [33, 49]]]]], [], []], "switchHierarchicalMode", ["subexpr", "action", ["switchHierarchicalMode"], [], ["loc", [null, [34, 25], [34, 58]]]], "switchExpandMode", ["subexpr", "action", ["switchExpandMode"], [], ["loc", [null, [35, 19], [35, 46]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [36, 11], [36, 19]]]]], [], []]], ["loc", [null, [1, 0], [37, 2]]]], ["inline", "object-list-view", [], ["placeholder", ["subexpr", "@mut", [["get", "placeholder", ["loc", [null, [39, 14], [39, 25]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [40, 11], [40, 19]]]]], [], []], "columnsWidthAutoresize", ["subexpr", "@mut", [["get", "columnsWidthAutoresize", ["loc", [null, [41, 25], [41, 47]]]]], [], []], "minAutoColumnWidth", ["subexpr", "@mut", [["get", "minAutoColumnWidth", ["loc", [null, [42, 21], [42, 39]]]]], [], []], "buttonClass", ["subexpr", "@mut", [["get", "buttonClass", ["loc", [null, [43, 14], [43, 25]]]]], [], []], "tableStriped", ["subexpr", "@mut", [["get", "tableStriped", ["loc", [null, [44, 15], [44, 27]]]]], [], []], "customTableClass", ["subexpr", "@mut", [["get", "customTableClass", ["loc", [null, [45, 19], [45, 35]]]]], [], []], "cellComponent", ["subexpr", "@mut", [["get", "cellComponent", ["loc", [null, [46, 16], [46, 29]]]]], [], []], "singleColumnCellComponent", ["subexpr", "@mut", [["get", "singleColumnCellComponent", ["loc", [null, [47, 28], [47, 53]]]]], [], []], "singleColumnHeaderTitle", ["subexpr", "@mut", [["get", "singleColumnHeaderTitle", ["loc", [null, [48, 26], [48, 49]]]]], [], []], "createNewByPrototype", ["subexpr", "action", ["createNewByPrototype"], [], ["loc", [null, [49, 23], [49, 54]]]], "showValidationMessagesInRow", ["subexpr", "and", [["subexpr", "not", [["get", "readonly", ["loc", [null, [50, 40], [50, 48]]]]], [], ["loc", [null, [50, 35], [50, 49]]]], ["get", "showValidationMessagesInRow", ["loc", [null, [50, 50], [50, 77]]]]], [], ["loc", [null, [50, 30], [50, 78]]]], "showAsteriskInRow", ["subexpr", "@mut", [["get", "showAsteriskInRow", ["loc", [null, [51, 20], [51, 37]]]]], [], []], "showCheckBoxInRow", ["subexpr", "@mut", [["get", "showCheckBoxInRow", ["loc", [null, [52, 20], [52, 37]]]]], [], []], "showEditButtonInRow", ["subexpr", "@mut", [["get", "showEditButtonInRow", ["loc", [null, [53, 22], [53, 41]]]]], [], []], "showPrototypeButtonInRow", ["subexpr", "@mut", [["get", "showPrototypeButtonInRow", ["loc", [null, [54, 27], [54, 51]]]]], [], []], "showDeleteButtonInRow", ["subexpr", "@mut", [["get", "showDeleteButtonInRow", ["loc", [null, [55, 24], [55, 45]]]]], [], []], "showEditMenuItemInRow", ["subexpr", "@mut", [["get", "showEditMenuItemInRow", ["loc", [null, [56, 24], [56, 45]]]]], [], []], "showPrototypeMenuItemInRow", ["subexpr", "@mut", [["get", "showPrototypeMenuItemInRow", ["loc", [null, [57, 29], [57, 55]]]]], [], []], "showDeleteMenuItemInRow", ["subexpr", "@mut", [["get", "showDeleteMenuItemInRow", ["loc", [null, [58, 26], [58, 49]]]]], [], []], "sendMenuItemAction", ["subexpr", "action", ["sendMenuItemAction"], [], ["loc", [null, [59, 21], [59, 50]]]], "menuInRowAdditionalItems", ["subexpr", "@mut", [["get", "menuInRowAdditionalItems", ["loc", [null, [60, 27], [60, 51]]]]], [], []], "rowClickable", ["subexpr", "and", [["subexpr", "not", [["get", "readonly", ["loc", [null, [61, 25], [61, 33]]]]], [], ["loc", [null, [61, 20], [61, 34]]]], ["get", "rowClickable", ["loc", [null, [61, 35], [61, 47]]]]], [], ["loc", [null, [61, 15], [61, 48]]]], "orderable", ["subexpr", "@mut", [["get", "orderable", ["loc", [null, [62, 12], [62, 21]]]]], [], []], "sorting", ["subexpr", "@mut", [["get", "sorting", ["loc", [null, [63, 10], [63, 17]]]]], [], []], "immediateDelete", true, "modelName", ["subexpr", "@mut", [["get", "modelName", ["loc", [null, [65, 12], [65, 21]]]]], [], []], "modelProjection", ["subexpr", "@mut", [["get", "modelProjection", ["loc", [null, [66, 18], [66, 33]]]]], [], []], "content", ["subexpr", "@mut", [["get", "content", ["loc", [null, [67, 10], [67, 17]]]]], [], []], "sortByColumn", ["subexpr", "action", [["subexpr", "if", [["get", "this.attrs.sortByColumn", ["loc", [null, [68, 27], [68, 50]]]], ["get", "this.attrs.sortByColumn", ["loc", [null, [68, 51], [68, 74]]]], "sortByColumn"], [], ["loc", [null, [68, 23], [68, 90]]]]], [], ["loc", [null, [68, 15], [68, 91]]]], "addColumnToSorting", ["subexpr", "action", [["subexpr", "if", [["get", "this.attrs.addColumnToSorting", ["loc", [null, [69, 33], [69, 62]]]], ["get", "this.attrs.addColumnToSorting", ["loc", [null, [69, 63], [69, 92]]]], "addColumnToSorting"], [], ["loc", [null, [69, 29], [69, 114]]]]], [], ["loc", [null, [69, 21], [69, 115]]]], "enableFilters", ["subexpr", "@mut", [["get", "enableFilters", ["loc", [null, [70, 16], [70, 29]]]]], [], []], "showFilters", ["subexpr", "@mut", [["get", "_showFilters", ["loc", [null, [71, 14], [71, 26]]]]], [], []], "showFiltersInModal", ["subexpr", "@mut", [["get", "showFiltersInModal", ["loc", [null, [72, 21], [72, 39]]]]], [], []], "filters", ["subexpr", "@mut", [["get", "filters", ["loc", [null, [73, 10], [73, 17]]]]], [], []], "applyFilters", ["subexpr", "action", [["subexpr", "if", [["get", "applyFilters", ["loc", [null, [74, 27], [74, 39]]]], ["get", "applyFilters", ["loc", [null, [74, 40], [74, 52]]]], "applyFilters"], [], ["loc", [null, [74, 23], [74, 68]]]]], [], ["loc", [null, [74, 15], [74, 69]]]], "componentForFilter", ["subexpr", "@mut", [["get", "componentForFilter", ["loc", [null, [75, 21], [75, 39]]]]], [], []], "componentForFilterByCondition", ["subexpr", "@mut", [["get", "componentForFilterByCondition", ["loc", [null, [76, 32], [76, 61]]]]], [], []], "conditionsByType", ["subexpr", "@mut", [["get", "conditionsByType", ["loc", [null, [77, 19], [77, 35]]]]], [], []], "filterByAnyMatch", ["subexpr", "action", [["subexpr", "if", [["get", "this.attrs.filterByAnyMatch", ["loc", [null, [78, 31], [78, 58]]]], ["get", "this.attrs.filterByAnyMatch", ["loc", [null, [78, 59], [78, 86]]]], "filterByAnyMatch"], [], ["loc", [null, [78, 27], [78, 106]]]]], [], ["loc", [null, [78, 19], [78, 107]]]], "filterByAnyWord", ["subexpr", "@mut", [["get", "filterByAnyWord", ["loc", [null, [79, 18], [79, 33]]]]], [], []], "filterByAllWords", ["subexpr", "@mut", [["get", "filterByAllWords", ["loc", [null, [80, 19], [80, 35]]]]], [], []], "configurateRow", ["subexpr", "@mut", [["get", "this.attrs.configurateRow", ["loc", [null, [81, 17], [81, 42]]]]], [], []], "configurateSelectedRows", ["subexpr", "@mut", [["get", "this.attrs.configurateSelectedRows", ["loc", [null, [82, 26], [82, 60]]]]], [], []], "confirmDeleteRow", ["subexpr", "@mut", [["get", "confirmDeleteRow", ["loc", [null, [83, 19], [83, 35]]]]], [], []], "beforeDeleteRecord", ["subexpr", "@mut", [["get", "beforeDeleteRecord", ["loc", [null, [84, 21], [84, 39]]]]], [], []], "beforeDeleteAllRecords", ["subexpr", "@mut", [["get", "beforeDeleteAllRecords", ["loc", [null, [85, 25], [85, 47]]]]], [], []], "action", "objectListViewRowClick", "componentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [87, 16], [87, 29]]]]], [], []], "allowColumnResize", ["subexpr", "@mut", [["get", "allowColumnResize", ["loc", [null, [88, 20], [88, 37]]]]], [], []], "selectedRecord", ["subexpr", "@mut", [["get", "selectedRecord", ["loc", [null, [89, 17], [89, 31]]]]], [], []], "notUseUserSettings", ["subexpr", "@mut", [["get", "notUseUserSettings", ["loc", [null, [90, 21], [90, 39]]]]], [], []], "hierarchicalIndent", ["subexpr", "@mut", [["get", "hierarchicalIndent", ["loc", [null, [91, 21], [91, 39]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "inHierarchicalMode", ["loc", [null, [92, 21], [92, 39]]]]], [], []], "inExpandMode", ["subexpr", "@mut", [["get", "inExpandMode", ["loc", [null, [93, 15], [93, 27]]]]], [], []], "disableHierarchicalMode", ["subexpr", "if", [["get", "hierarchyByAttribute", ["loc", [null, [94, 30], [94, 50]]]], true, ["get", "disableHierarchicalMode", ["loc", [null, [94, 56], [94, 79]]]]], [], ["loc", [null, [94, 26], [94, 80]]]], "loadRecords", ["subexpr", "action", ["loadRecords"], [], ["loc", [null, [95, 14], [95, 36]]]], "availableHierarchicalMode", ["subexpr", "action", ["availableHierarchicalMode"], [], ["loc", [null, [96, 28], [96, 64]]]], "useRowByRowLoading", ["subexpr", "@mut", [["get", "useRowByRowLoading", ["loc", [null, [97, 21], [97, 39]]]]], [], []], "useRowByRowLoadingProgress", ["subexpr", "@mut", [["get", "useRowByRowLoadingProgress", ["loc", [null, [98, 29], [98, 55]]]]], [], []], "eventsBus", ["subexpr", "@mut", [["get", "eventsBus", ["loc", [null, [99, 12], [99, 21]]]]], [], []], "onEditForm", ["subexpr", "@mut", [["get", "onEditForm", ["loc", [null, [100, 13], [100, 23]]]]], [], []], "customButtonInRowAction", "customButtonInRowAction", "customButtonsInRow", ["subexpr", "@mut", [["get", "customButtonsInRow", ["loc", [null, [102, 21], [102, 39]]]]], [], []], "defaultSortingButton", ["subexpr", "@mut", [["get", "defaultSortingButton", ["loc", [null, [103, 23], [103, 43]]]]], [], []], "defaultLeftPadding", ["subexpr", "@mut", [["get", "defaultLeftPadding", ["loc", [null, [104, 21], [104, 39]]]]], [], []], "overflowedComponents", ["subexpr", "@mut", [["get", "overflowedComponents", ["loc", [null, [105, 23], [105, 43]]]]], [], []], "fixedHeader", ["subexpr", "@mut", [["get", "fixedHeader", ["loc", [null, [106, 14], [106, 25]]]]], [], []]], ["loc", [null, [38, 0], [107, 2]]]], ["block", "if", [["subexpr", "or", [["subexpr", "not", [["get", "inHierarchicalMode", ["loc", [null, [108, 15], [108, 33]]]]], [], ["loc", [null, [108, 10], [108, 34]]]], ["get", "hierarchyPaging", ["loc", [null, [108, 35], [108, 50]]]]], [], ["loc", [null, [108, 6], [108, 51]]]]], [], 0, null, ["loc", [null, [108, 0], [146, 7]]]]],
       locals: [],
       templates: [child0]
     };
@@ -20238,111 +20716,6 @@ define("dummy/templates/components/flexberry-simpledatetime", ["exports"], funct
     })();
     var child1 = (function () {
       var child0 = (function () {
-        var child0 = (function () {
-          return {
-            meta: {
-              "fragmentReason": false,
-              "revision": "Ember@2.4.6",
-              "loc": {
-                "source": null,
-                "start": {
-                  "line": 7,
-                  "column": 6
-                },
-                "end": {
-                  "line": 15,
-                  "column": 6
-                }
-              },
-              "moduleName": "dummy/templates/components/flexberry-simpledatetime.hbs"
-            },
-            isEmpty: false,
-            arity: 0,
-            cachedFragment: null,
-            hasRendered: false,
-            buildFragment: function buildFragment(dom) {
-              var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("        ");
-              dom.appendChild(el0, el1);
-              var el1 = dom.createElement("button");
-              dom.setAttribute(el1, "class", "ui ui-clear disabled button");
-              dom.setAttribute(el1, "disabled", "disabled");
-              var el2 = dom.createTextNode("\n          ");
-              dom.appendChild(el1, el2);
-              var el2 = dom.createElement("i");
-              dom.setAttribute(el2, "class", "remove icon");
-              dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n        ");
-              dom.appendChild(el1, el2);
-              dom.appendChild(el0, el1);
-              var el1 = dom.createTextNode("\n");
-              dom.appendChild(el0, el1);
-              return el0;
-            },
-            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-              var element1 = dom.childAt(fragment, [1]);
-              var morphs = new Array(2);
-              morphs[0] = dom.createAttrMorph(element1, 'title');
-              morphs[1] = dom.createElementMorph(element1);
-              return morphs;
-            },
-            statements: [["attribute", "title", ["subexpr", "t", ["components.flexberry-lookup.remove-button-text"], [], ["loc", [null, [10, 16], [10, 70]]]]], ["element", "action", ["remove"], ["bubbles", false], ["loc", [null, [12, 10], [12, 43]]]]],
-            locals: [],
-            templates: []
-          };
-        })();
-        var child1 = (function () {
-          return {
-            meta: {
-              "fragmentReason": false,
-              "revision": "Ember@2.4.6",
-              "loc": {
-                "source": null,
-                "start": {
-                  "line": 15,
-                  "column": 6
-                },
-                "end": {
-                  "line": 22,
-                  "column": 6
-                }
-              },
-              "moduleName": "dummy/templates/components/flexberry-simpledatetime.hbs"
-            },
-            isEmpty: false,
-            arity: 0,
-            cachedFragment: null,
-            hasRendered: false,
-            buildFragment: function buildFragment(dom) {
-              var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("        ");
-              dom.appendChild(el0, el1);
-              var el1 = dom.createElement("button");
-              dom.setAttribute(el1, "class", "ui ui-clear button");
-              var el2 = dom.createTextNode("\n          ");
-              dom.appendChild(el1, el2);
-              var el2 = dom.createElement("i");
-              dom.setAttribute(el2, "class", "remove icon");
-              dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n        ");
-              dom.appendChild(el1, el2);
-              dom.appendChild(el0, el1);
-              var el1 = dom.createTextNode("\n");
-              dom.appendChild(el0, el1);
-              return el0;
-            },
-            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-              var element0 = dom.childAt(fragment, [1]);
-              var morphs = new Array(2);
-              morphs[0] = dom.createAttrMorph(element0, 'title');
-              morphs[1] = dom.createElementMorph(element0);
-              return morphs;
-            },
-            statements: [["attribute", "title", ["subexpr", "t", ["components.flexberry-lookup.remove-button-text"], [], ["loc", [null, [18, 16], [18, 70]]]]], ["element", "action", ["remove"], ["bubbles", false], ["loc", [null, [19, 10], [19, 43]]]]],
-            locals: [],
-            templates: []
-          };
-        })();
         return {
           meta: {
             "fragmentReason": false,
@@ -20354,7 +20727,7 @@ define("dummy/templates/components/flexberry-simpledatetime", ["exports"], funct
                 "column": 4
               },
               "end": {
-                "line": 23,
+                "line": 15,
                 "column": 4
               }
             },
@@ -20366,20 +20739,34 @@ define("dummy/templates/components/flexberry-simpledatetime", ["exports"], funct
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createComment("");
+            var el1 = dom.createTextNode("      ");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createElement("button");
+            dom.setAttribute(el1, "type", "button");
+            var el2 = dom.createTextNode("\n        ");
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("i");
+            dom.setAttribute(el2, "class", "remove icon");
+            dom.appendChild(el1, el2);
+            var el2 = dom.createTextNode("\n      ");
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            var el1 = dom.createTextNode("\n");
             dom.appendChild(el0, el1);
             return el0;
           },
           buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var morphs = new Array(1);
-            morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
-            dom.insertBoundary(fragment, 0);
-            dom.insertBoundary(fragment, null);
+            var element0 = dom.childAt(fragment, [1]);
+            var morphs = new Array(4);
+            morphs[0] = dom.createAttrMorph(element0, 'class');
+            morphs[1] = dom.createAttrMorph(element0, 'title');
+            morphs[2] = dom.createAttrMorph(element0, 'disabled');
+            morphs[3] = dom.createElementMorph(element0);
             return morphs;
           },
-          statements: [["block", "if", [["get", "readonlyAttr", ["loc", [null, [7, 12], [7, 24]]]]], [], 0, 1, ["loc", [null, [7, 6], [22, 13]]]]],
+          statements: [["attribute", "class", ["concat", ["ui ui-clear ", ["subexpr", "if", [["get", "readonlyAttr", ["loc", [null, [8, 32], [8, 44]]]], "disabled"], [], ["loc", [null, [8, 27], [8, 57]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.flexberry-lookup.remove-button-text"], [], ["loc", [null, [9, 14], [9, 68]]]]], ["attribute", "disabled", ["get", "readonlyAttr", ["loc", [null, [10, 19], [10, 31]]]]], ["element", "action", ["remove"], ["bubbles", false], ["loc", [null, [12, 8], [12, 41]]]]],
           locals: [],
-          templates: [child0, child1]
+          templates: []
         };
       })();
       return {
@@ -20393,7 +20780,7 @@ define("dummy/templates/components/flexberry-simpledatetime", ["exports"], funct
               "column": 0
             },
             "end": {
-              "line": 25,
+              "line": 17,
               "column": 0
             }
           },
@@ -20426,14 +20813,14 @@ define("dummy/templates/components/flexberry-simpledatetime", ["exports"], funct
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element2 = dom.childAt(fragment, [1]);
-          var element3 = dom.childAt(element2, [1]);
+          var element1 = dom.childAt(fragment, [1]);
+          var element2 = dom.childAt(element1, [1]);
           var morphs = new Array(2);
-          morphs[0] = dom.createAttrMorph(element3, 'placeholder');
-          morphs[1] = dom.createMorphAt(element2, 3, 3);
+          morphs[0] = dom.createAttrMorph(element2, 'placeholder');
+          morphs[1] = dom.createMorphAt(element1, 3, 3);
           return morphs;
         },
-        statements: [["attribute", "placeholder", ["get", "placeholder", ["loc", [null, [5, 37], [5, 48]]]]], ["block", "if", [["get", "removeButton", ["loc", [null, [6, 10], [6, 22]]]]], [], 0, null, ["loc", [null, [6, 4], [23, 11]]]]],
+        statements: [["attribute", "placeholder", ["get", "placeholder", ["loc", [null, [5, 37], [5, 48]]]]], ["block", "if", [["get", "removeButton", ["loc", [null, [6, 10], [6, 22]]]]], [], 0, null, ["loc", [null, [6, 4], [15, 11]]]]],
         locals: [],
         templates: [child0]
       };
@@ -20452,7 +20839,7 @@ define("dummy/templates/components/flexberry-simpledatetime", ["exports"], funct
             "column": 0
           },
           "end": {
-            "line": 26,
+            "line": 18,
             "column": 0
           }
         },
@@ -20475,13 +20862,13 @@ define("dummy/templates/components/flexberry-simpledatetime", ["exports"], funct
         dom.insertBoundary(fragment, null);
         return morphs;
       },
-      statements: [["block", "if", [["subexpr", "and", [["get", "currentTypeSupported", ["loc", [null, [1, 11], [1, 31]]]], ["get", "useBrowserInput", ["loc", [null, [1, 32], [1, 47]]]]], [], ["loc", [null, [1, 6], [1, 48]]]]], [], 0, 1, ["loc", [null, [1, 0], [25, 7]]]]],
+      statements: [["block", "if", [["subexpr", "and", [["get", "currentTypeSupported", ["loc", [null, [1, 11], [1, 31]]]], ["get", "useBrowserInput", ["loc", [null, [1, 32], [1, 47]]]]], [], ["loc", [null, [1, 6], [1, 48]]]]], [], 0, 1, ["loc", [null, [1, 0], [17, 7]]]]],
       locals: [],
       templates: [child0, child1]
     };
   })());
 });
-define("dummy/templates/components/flexberry-simpleolv",["exports"],function(exports){exports["default"] = Ember.HTMLBars.template((function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":2,"column":2},"end":{"line":10,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","refresh icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element49=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element49,'class');morphs[1] = dom.createAttrMorph(element49,'title');morphs[2] = dom.createElementMorph(element49);morphs[3] = dom.createMorphAt(element49,1,1);return morphs;},statements:[["attribute","class",["concat",["ui refresh-button ",["get","buttonClass",["loc",[null,[4,33],[4,44]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.refresh-button-text"],[],["loc",[null,[5,12],[5,62]]]]],["element","action",["refresh"],[],["loc",[null,[6,6],[6,26]]]],["inline","t",["components.olv-toolbar.refresh-button-text"],[],["loc",[null,[7,8],[7,58]]]]],locals:[],templates:[]};})();var child1=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":12,"column":4},"end":{"line":20,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element48=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element48,'class');morphs[1] = dom.createAttrMorph(element48,'title');morphs[2] = dom.createElementMorph(element48);morphs[3] = dom.createMorphAt(element48,1,1);return morphs;},statements:[["attribute","class",["concat",["ui create-button ",["get","buttonClass",["loc",[null,[14,34],[14,45]]]]," disabled button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.add-button-text"],[],["loc",[null,[15,14],[15,60]]]]],["element","action",["createNew"],[],["loc",[null,[17,8],[17,30]]]],["inline","t",["components.olv-toolbar.add-button-text"],[],["loc",[null,[18,10],[18,56]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":20,"column":4},"end":{"line":27,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element47=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element47,'class');morphs[1] = dom.createAttrMorph(element47,'title');morphs[2] = dom.createElementMorph(element47);morphs[3] = dom.createMorphAt(element47,1,1);return morphs;},statements:[["attribute","class",["concat",["ui create-button ",["get","buttonClass",["loc",[null,[22,34],[22,45]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.add-button-text"],[],["loc",[null,[23,14],[23,60]]]]],["element","action",["createNew"],[],["loc",[null,[24,8],[24,30]]]],["inline","t",["components.olv-toolbar.add-button-text"],[],["loc",[null,[25,10],[25,56]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":11,"column":2},"end":{"line":28,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["subexpr","or",[["get","readonly",["loc",[null,[12,14],[12,22]]]],["subexpr","not",[["get","enableCreateNewButton",["loc",[null,[12,28],[12,49]]]]],[],["loc",[null,[12,23],[12,50]]]]],[],["loc",[null,[12,10],[12,51]]]]],[],0,1,["loc",[null,[12,4],[27,11]]]]],locals:[],templates:[child0,child1]};})();var child2=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":30,"column":4},"end":{"line":39,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","delete icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element46=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element46,'class');morphs[1] = dom.createAttrMorph(element46,'title');morphs[2] = dom.createElementMorph(element46);morphs[3] = dom.createMorphAt(element46,1,1);return morphs;},statements:[["attribute","class",["concat",["ui delete-button ",["get","buttonClass",["loc",[null,[32,34],[32,45]]]]," disabled button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.delete-button-text"],[],["loc",[null,[33,14],[33,63]]]]],["element","action",["delete"],[],["loc",[null,[35,8],[35,27]]]],["inline","t",["components.olv-toolbar.delete-button-text"],[],["loc",[null,[36,10],[36,59]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":39,"column":4},"end":{"line":47,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","delete icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element45=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element45,'class');morphs[1] = dom.createAttrMorph(element45,'title');morphs[2] = dom.createElementMorph(element45);morphs[3] = dom.createMorphAt(element45,1,1);return morphs;},statements:[["attribute","class",["concat",["ui delete-button ",["get","buttonClass",["loc",[null,[41,34],[41,45]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.delete-button-text"],[],["loc",[null,[42,14],[42,63]]]]],["element","action",["delete"],[],["loc",[null,[43,8],[43,27]]]],["inline","t",["components.olv-toolbar.delete-button-text"],[],["loc",[null,[44,10],[44,59]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":29,"column":2},"end":{"line":48,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["subexpr","or",[["get","readonly",["loc",[null,[30,14],[30,22]]]],["subexpr","not",[["get","isDeleteButtonEnabled",["loc",[null,[30,28],[30,49]]]]],[],["loc",[null,[30,23],[30,50]]]]],[],["loc",[null,[30,10],[30,51]]]]],[],0,1,["loc",[null,[30,4],[47,11]]]]],locals:[],templates:[child0,child1]};})();var child3=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":49,"column":2},"end":{"line":56,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","sitemap icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element44=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element44,'class');morphs[1] = dom.createAttrMorph(element44,'title');morphs[2] = dom.createElementMorph(element44);return morphs;},statements:[["attribute","class",["concat",["ui button icon hierarchical-button ",["get","buttonClass",["loc",[null,[51,50],[51,61]]]]," ",["subexpr","if",[["get","inHierarchicalMode",["loc",[null,[51,69],[51,87]]]],"active"],[],["loc",[null,[51,64],[51,98]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.hierarchy-button-text"],[],["loc",[null,[52,12],[52,64]]]]],["element","action",["switchHierarchicalMode"],[],["loc",[null,[53,6],[53,41]]]]],locals:[],templates:[]};})();var child4=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":65,"column":6},"end":{"line":73,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","or");dom.setAttribute(el1,"data-text","•");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n        ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n            ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","remove icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element41=dom.childAt(fragment,[3]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element41,'class');morphs[1] = dom.createAttrMorph(element41,'title');morphs[2] = dom.createElementMorph(element41);return morphs;},statements:[["attribute","class",["concat",["ui button removeFilter-button ",["get","buttonClass",["loc",[null,[68,49],[68,60]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.remove-filter-button-text"],[],["loc",[null,[69,16],[69,72]]]]],["element","action",["resetFilters",["get","this.attrs.resetFilters",["loc",[null,[70,34],[70,57]]]]],[],["loc",[null,[70,10],[70,59]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":57,"column":2},"end":{"line":75,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui icon buttons filter-active");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","filter icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element42=dom.childAt(fragment,[1]);var element43=dom.childAt(element42,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element43,'class');morphs[1] = dom.createAttrMorph(element43,'title');morphs[2] = dom.createElementMorph(element43);morphs[3] = dom.createMorphAt(element42,3,3);return morphs;},statements:[["attribute","class",["concat",["ui button ",["get","buttonClass",["loc",[null,[60,27],[60,38]]]]," ",["subexpr","if",[["get","showFilters",["loc",[null,[60,46],[60,57]]]],"active"],[],["loc",[null,[60,41],[60,68]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.filter-button-text"],[],["loc",[null,[61,14],[61,63]]]]],["element","action",["toggleStateFilters"],[],["loc",[null,[62,8],[62,39]]]],["block","if",[["get","filters",["loc",[null,[65,12],[65,19]]]]],[],0,null,["loc",[null,[65,6],[73,13]]]]],locals:[],templates:[child0]};})();var child5=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":76,"column":2},"end":{"line":99,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui action input");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","block-action-input");var el3=dom.createTextNode("\n        ");dom.appendChild(el2,el3);var el3=dom.createElement("input");dom.setAttribute(el3,"type","text");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","search icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","remove icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element37=dom.childAt(fragment,[1]);var element38=dom.childAt(element37,[1,1]);var element39=dom.childAt(element37,[3]);var element40=dom.childAt(element37,[5]);var morphs=new Array(9);morphs[0] = dom.createAttrMorph(element38,'value');morphs[1] = dom.createAttrMorph(element38,'placeholder');morphs[2] = dom.createAttrMorph(element38,'onkeyup');morphs[3] = dom.createAttrMorph(element39,'class');morphs[4] = dom.createAttrMorph(element39,'title');morphs[5] = dom.createElementMorph(element39);morphs[6] = dom.createAttrMorph(element40,'class');morphs[7] = dom.createAttrMorph(element40,'title');morphs[8] = dom.createElementMorph(element40);return morphs;},statements:[["attribute","value",["get","filterByAnyMatchText",["loc",[null,[81,18],[81,38]]]]],["attribute","placeholder",["subexpr","t",["components.olv-toolbar.filter-by-any-match-placeholder"],[],["loc",[null,[82,22],[82,84]]]]],["attribute","onkeyup",["subexpr","action",["filterByAnyMatch"],[],["loc",[null,[83,18],[83,47]]]]],["attribute","class",["concat",["ui ",["get","buttonClass",["loc",[null,[87,20],[87,31]]]]," icon button search-button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.search-button-text"],[],["loc",[null,[88,14],[88,63]]]]],["element","action",["filterByAnyMatch"],[],["loc",[null,[89,8],[89,37]]]],["attribute","class",["concat",["ui ",["get","buttonClass",["loc",[null,[93,20],[93,31]]]]," icon button clear-search-button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.clear-search-button-text"],[],["loc",[null,[94,14],[94,69]]]]],["element","action",["removeFilter"],[],["loc",[null,[95,8],[95,33]]]]],locals:[],templates:[]};})();var child6=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":100,"column":2},"end":{"line":113,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui buttons export-config");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","large file excel outline icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element35=dom.childAt(fragment,[1]);var element36=dom.childAt(element35,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element36,'class');morphs[1] = dom.createAttrMorph(element36,'title');morphs[2] = dom.createElementMorph(element36);morphs[3] = dom.createMorphAt(element35,3,3);return morphs;},statements:[["attribute","class",["concat",["ui button icon export-button ",["get","buttonClass",["loc",[null,[103,46],[103,57]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.export-excel-button-text"],[],["loc",[null,[104,14],[104,69]]]]],["element","action",["showExportDialog"],[],["loc",[null,[105,8],[105,37]]]],["inline","flexberry-menu",[],["items",["subexpr","@mut",[["get","exportExcelItems",["loc",[null,[109,14],[109,30]]]]],[],[]],"onItemClick",["subexpr","action",["onExportMenuItemClick"],[],["loc",[null,[110,20],[110,52]]]]],["loc",[null,[108,6],[111,8]]]]],locals:[],templates:[]};})();var child7=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":122,"column":6},"end":{"line":127,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","flexberry-menu",[],["items",["subexpr","@mut",[["get","colsSettingsItems",["loc",[null,[124,16],[124,33]]]]],[],[]],"onItemClick",["subexpr","action",["onMenuItemClick"],[],["loc",[null,[125,22],[125,48]]]]],["loc",[null,[123,8],[126,10]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":114,"column":2},"end":{"line":129,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui buttons cols-config");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"class","ui icon button config-button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","large table icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element33=dom.childAt(fragment,[1]);var element34=dom.childAt(element33,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element34,'title');morphs[1] = dom.createElementMorph(element34);morphs[2] = dom.createMorphAt(element33,3,3);return morphs;},statements:[["attribute","title",["subexpr","t",["components.colsconfig-dialog-content.title"],[],["loc",[null,[118,14],[118,64]]]]],["element","action",["showConfigDialog"],[],["loc",[null,[119,8],[119,37]]]],["block","if",[["get","colsSettingsItems",["loc",[null,[122,12],[122,29]]]]],[],0,null,["loc",[null,[122,6],[127,13]]]]],locals:[],templates:[child0]};})();var child8=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":130,"column":2},"end":{"line":138,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element32=dom.childAt(fragment,[1]);var morphs=new Array(5);morphs[0] = dom.createAttrMorph(element32,'class');morphs[1] = dom.createAttrMorph(element32,'title');morphs[2] = dom.createAttrMorph(element32,'disabled');morphs[3] = dom.createElementMorph(element32);morphs[4] = dom.createMorphAt(element32,1,1);return morphs;},statements:[["attribute","class",["concat",["ui ",["subexpr","if",[["get","customButton.buttonClasses",["loc",[null,[132,21],[132,47]]]],["get","customButton.buttonClasses",["loc",[null,[132,48],[132,74]]]],""],[],["loc",[null,[132,16],[132,79]]]]," button"]]],["attribute","title",["subexpr","if",[["get","customButton.buttonTitle",["loc",[null,[133,17],[133,41]]]],["get","customButton.buttonTitle",["loc",[null,[133,42],[133,66]]]]],[],["loc",[null,[133,12],[133,68]]]]],["attribute","disabled",["get","customButton.disabled",["loc",[null,[134,17],[134,38]]]]],["element","action",["customButtonAction",["get","customButton.buttonAction",["loc",[null,[135,36],[135,61]]]]],[],["loc",[null,[135,6],[135,63]]]],["inline","if",[["get","customButton.buttonName",["loc",[null,[136,11],[136,34]]]],["get","customButton.buttonName",["loc",[null,[136,35],[136,58]]]],["subexpr","t",["components.olv-toolbar.custom-button-text"],[],["loc",[null,[136,59],[136,106]]]]],[],["loc",[null,[136,6],[136,108]]]]],locals:["customButton"],templates:[]};})();var child9=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":174,"column":14},"end":{"line":182,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n                    ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","check-square-o icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element31=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element31,'class');morphs[1] = dom.createAttrMorph(element31,'title');morphs[2] = dom.createElementMorph(element31);return morphs;},statements:[["attribute","class",["concat",["ui check-all-at-page-button ",["get","buttonClass",["loc",[null,[176,55],[176,66]]]]," disabled button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.check-all-at-page-button-text"],[],["loc",[null,[177,24],[177,84]]]]],["element","action",["checkAllAtPage"],[],["loc",[null,[179,18],[179,45]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":182,"column":14},"end":{"line":189,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n                    ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","check-square-o icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element30=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element30,'class');morphs[1] = dom.createAttrMorph(element30,'title');morphs[2] = dom.createElementMorph(element30);return morphs;},statements:[["attribute","class",["concat",["ui check-all-at-page-button ",["get","buttonClass",["loc",[null,[184,55],[184,66]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.check-all-at-page-button-text"],[],["loc",[null,[185,24],[185,84]]]]],["element","action",["checkAllAtPage"],[],["loc",[null,[186,18],[186,45]]]]],locals:[],templates:[]};})();var child2=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":190,"column":14},"end":{"line":198,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n                    ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","check-all-square-o icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element29=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element29,'class');morphs[1] = dom.createAttrMorph(element29,'title');morphs[2] = dom.createElementMorph(element29);return morphs;},statements:[["attribute","class",["concat",["ui check-all-button ",["get","buttonClass",["loc",[null,[192,47],[192,58]]]]," ",["subexpr","if",[["get","allSelect",["loc",[null,[192,66],[192,75]]]],"activated"],[],["loc",[null,[192,61],[192,89]]]]," disabled button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.check-all-button-text"],[],["loc",[null,[193,24],[193,76]]]]],["element","action",["checkAll"],[],["loc",[null,[195,18],[195,39]]]]],locals:[],templates:[]};})();var child3=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":198,"column":14},"end":{"line":205,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n                    ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","check-all-square-o icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element28=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element28,'class');morphs[1] = dom.createAttrMorph(element28,'title');morphs[2] = dom.createElementMorph(element28);return morphs;},statements:[["attribute","class",["concat",["ui check-all-button ",["get","buttonClass",["loc",[null,[200,47],[200,58]]]]," ",["subexpr","if",[["get","allSelect",["loc",[null,[200,66],[200,75]]]],"activated"],[],["loc",[null,[200,61],[200,89]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.check-all-button-text"],[],["loc",[null,[201,24],[201,76]]]]],["element","action",["checkAll"],[],["loc",[null,[202,18],[202,39]]]]],locals:[],templates:[]};})();var child4=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":206,"column":14},"end":{"line":213,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n                    ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","sort icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element27=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element27,'class');morphs[1] = dom.createAttrMorph(element27,'title');morphs[2] = dom.createElementMorph(element27);return morphs;},statements:[["attribute","class",["concat",["ui clear-sorting-button ",["get","buttonClass",["loc",[null,[208,51],[208,62]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.clear-sorting-button-text"],[],["loc",[null,[209,24],[209,80]]]]],["element","action",["clearSorting"],[],["loc",[null,[210,18],[210,43]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":173,"column":12},"end":{"line":214,"column":12}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(3);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);morphs[2] = dom.createMorphAt(fragment,2,2,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["subexpr","or",[["get","readonly",["loc",[null,[174,24],[174,32]]]],["get","allSelect",["loc",[null,[174,33],[174,42]]]]],[],["loc",[null,[174,20],[174,43]]]]],[],0,1,["loc",[null,[174,14],[189,21]]]],["block","if",[["get","readonly",["loc",[null,[190,20],[190,28]]]]],[],2,3,["loc",[null,[190,14],[205,21]]]],["block","if",[["get","defaultSortingButton",["loc",[null,[206,20],[206,40]]]]],[],4,null,["loc",[null,[206,14],[213,21]]]]],locals:[],templates:[child0,child1,child2,child3,child4]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":171,"column":8},"end":{"line":216,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("th");dom.setAttribute(el1,"class","object-list-view-operations collapsing");dom.setAttribute(el1,"data-olv-header-property-name","OlvRowToolbar");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("          ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["get","showCheckBoxInRow",["loc",[null,[173,18],[173,35]]]]],[],0,null,["loc",[null,[173,12],[214,19]]]]],locals:[],templates:[child0]};})();var child10=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":222,"column":16},"end":{"line":224,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","t",[["get","column.keyLocale",["loc",[null,[223,22],[223,38]]]]],[],["loc",[null,[223,18],[223,40]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":224,"column":16},"end":{"line":226,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["content","column.header",["loc",[null,[225,18],[225,35]]]]],locals:[],templates:[]};})();var child2=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":230,"column":20},"end":{"line":234,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                      ▲");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element24=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element24,'title');morphs[1] = dom.createMorphAt(element24,1,1);return morphs;},statements:[["attribute","title",["concat",[["subexpr","t",["components.object-list-view.sort-ascending"],[],["loc",[null,[231,34],[231,84]]]]]]],["content","column.sortNumber",["loc",[null,[232,23],[232,44]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":234,"column":20},"end":{"line":238,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                      ▼");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element23=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element23,'title');morphs[1] = dom.createMorphAt(element23,1,1);return morphs;},statements:[["attribute","title",["concat",[["subexpr","t",["components.object-list-view.sort-descending"],[],["loc",[null,[235,34],[235,85]]]]]]],["content","column.sortNumber",["loc",[null,[236,23],[236,44]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":228,"column":16},"end":{"line":240,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"style","float:right;");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                  ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["get","column.sortAscending",["loc",[null,[230,26],[230,46]]]]],[],0,1,["loc",[null,[230,20],[238,27]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":218,"column":10},"end":{"line":243,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("th");dom.setAttribute(el1,"class","dt-head-left me class");var el2=dom.createTextNode("\n              ");dom.appendChild(el1,el2);var el2=dom.createElement("div");var el3=dom.createTextNode("\n                ");dom.appendChild(el2,el3);var el3=dom.createElement("span");var el4=dom.createTextNode("\n");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("                ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("              ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n            ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element25=dom.childAt(fragment,[1]);var element26=dom.childAt(element25,[1]);var morphs=new Array(5);morphs[0] = dom.createAttrMorph(element25,'onclick');morphs[1] = dom.createAttrMorph(element26,'data-olv-header-property-name');morphs[2] = dom.createAttrMorph(element26,'title');morphs[3] = dom.createMorphAt(dom.childAt(element26,[1]),1,1);morphs[4] = dom.createMorphAt(element26,3,3);return morphs;},statements:[["attribute","onclick",["subexpr","action",["headerCellClick",["get","column",["loc",[null,[219,82],[219,88]]]]],[],["loc",[null,[219,54],[219,91]]]]],["attribute","data-olv-header-property-name",["get","column.propName",["loc",[null,[220,51],[220,66]]]]],["attribute","title",["get","sortTitleCompute",["loc",[null,[220,77],[220,93]]]]],["block","if",[["get","column.keyLocale",["loc",[null,[222,22],[222,38]]]]],[],0,1,["loc",[null,[222,16],[226,23]]]],["block","if",[["get","column.sorted",["loc",[null,[228,22],[228,35]]]]],[],2,null,["loc",[null,[228,16],[240,23]]]]],locals:[],templates:[child0,child1,child2]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":217,"column":8},"end":{"line":244,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[218,20],[218,31]]]]],[],0,null,["loc",[null,[218,10],[243,21]]]]],locals:["column"],templates:[child0]};})();var child11=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":245,"column":8},"end":{"line":247,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("th");dom.setAttribute(el1,"class","object-list-view-menu collapsing");dom.setAttribute(el1,"data-olv-header-property-name","OlvRowMenu");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child12=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":253,"column":10},"end":{"line":255,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child1=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":259,"column":16},"end":{"line":267,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","component",["flexberry-dropdown"],["value",["subexpr","@mut",[["get","column.filter.condition",["loc",[null,[261,26],[261,49]]]]],[],[]],"items",["subexpr","@mut",[["get","column.filter.conditions",["loc",[null,[262,26],[262,50]]]]],[],[]],"class","compact fluid","placeholder","","needChecksOnValue",false],["loc",[null,[260,18],[266,20]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":257,"column":12},"end":{"line":269,"column":12}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("              ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"class","overflowed-cell");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("              ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element20=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element20,'style');morphs[1] = dom.createMorphAt(element20,1,1);return morphs;},statements:[["attribute","style",["get","defaultPaddingStyle",["loc",[null,[258,26],[258,45]]]]],["block","if",[["get","column.filter.conditions",["loc",[null,[259,22],[259,46]]]]],[],0,null,["loc",[null,[259,16],[267,23]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":256,"column":10},"end":{"line":270,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[257,22],[257,33]]]]],[],0,null,["loc",[null,[257,12],[269,23]]]]],locals:["column"],templates:[child0]};})();var child2=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":271,"column":10},"end":{"line":273,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child3=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":276,"column":10},"end":{"line":278,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child4=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":282,"column":16},"end":{"line":287,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","component",[["get","column.filter.component.name",["loc",[null,[283,30],[283,58]]]]],["value",["subexpr","@mut",[["get","column.filter.pattern",["loc",[null,[284,26],[284,47]]]]],[],[]],"dynamicProperties",["subexpr","@mut",[["get","column.filter.component.properties",["loc",[null,[285,38],[285,72]]]]],[],[]]],["loc",[null,[283,18],[286,20]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":280,"column":12},"end":{"line":289,"column":12}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("              ");dom.appendChild(el0,el1);var el1=dom.createElement("td");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("              ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element19=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element19,'style');morphs[1] = dom.createAttrMorph(element19,'class');morphs[2] = dom.createMorphAt(element19,1,1);return morphs;},statements:[["attribute","style",["get","defaultPaddingStyle",["loc",[null,[281,26],[281,45]]]]],["attribute","class",["concat",[["subexpr","if",[["subexpr","array-contains",[["get","overflowedComponents",["loc",[null,[281,76],[281,96]]]],["get","column.filter.component.name",["loc",[null,[281,97],[281,125]]]]],[],["loc",[null,[281,60],[281,126]]]],"overflowed-cell"],[],["loc",[null,[281,55],[281,146]]]]]]],["block","if",[["get","column.filter.component.name",["loc",[null,[282,22],[282,50]]]]],[],0,null,["loc",[null,[282,16],[287,23]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":279,"column":10},"end":{"line":290,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[280,22],[280,33]]]]],[],0,null,["loc",[null,[280,12],[289,23]]]]],locals:["column"],templates:[child0]};})();var child5=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":291,"column":10},"end":{"line":293,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":251,"column":6},"end":{"line":295,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");dom.setAttribute(el1,"class","object-list-view-filters");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n        ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");dom.setAttribute(el1,"class","object-list-view-filters");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element21=dom.childAt(fragment,[1]);var element22=dom.childAt(fragment,[3]);var morphs=new Array(6);morphs[0] = dom.createMorphAt(element21,1,1);morphs[1] = dom.createMorphAt(element21,2,2);morphs[2] = dom.createMorphAt(element21,3,3);morphs[3] = dom.createMorphAt(element22,1,1);morphs[4] = dom.createMorphAt(element22,2,2);morphs[5] = dom.createMorphAt(element22,3,3);return morphs;},statements:[["block","if",[["get","showHelperColumn",["loc",[null,[253,16],[253,32]]]]],[],0,null,["loc",[null,[253,10],[255,17]]]],["block","each",[["get","columns",["loc",[null,[256,18],[256,25]]]]],[],1,null,["loc",[null,[256,10],[270,19]]]],["block","if",[["get","showMenuColumn",["loc",[null,[271,16],[271,30]]]]],[],2,null,["loc",[null,[271,10],[273,17]]]],["block","if",[["get","showHelperColumn",["loc",[null,[276,16],[276,32]]]]],[],3,null,["loc",[null,[276,10],[278,17]]]],["block","each",[["get","columns",["loc",[null,[279,18],[279,25]]]]],[],4,null,["loc",[null,[279,10],[290,19]]]],["block","if",[["get","showMenuColumn",["loc",[null,[291,16],[291,30]]]]],[],5,null,["loc",[null,[291,10],[293,17]]]]],locals:[],templates:[child0,child1,child2,child3,child4,child5]};})();var child13=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":296,"column":6},"end":{"line":302,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createElement("td");dom.setAttribute(el2,"style","text-align:center;");var el3=dom.createTextNode("\n              ");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element18=dom.childAt(fragment,[1,1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element18,'colspan');morphs[1] = dom.createMorphAt(element18,1,1);return morphs;},statements:[["attribute","colspan",["concat",[["get","colspan",["loc",[null,[298,25],[298,32]]]]]]],["content","placeholder",["loc",[null,[299,14],[299,29]]]]],locals:[],templates:[]};})();var child14=(function(){var child0=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":309,"column":20},"end":{"line":313,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element14=dom.childAt(fragment,[1,1]);var morphs=new Array(1);morphs[0] = dom.createAttrMorph(element14,'class');return morphs;},statements:[["attribute","class",["concat",["asterisk small red icon ",["subexpr","unless",[["get","record.data.hasDirtyAttributes",["loc",[null,[311,67],[311,97]]]],"transparent"],[],["loc",[null,[311,58],[311,113]]]]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":314,"column":20},"end":{"line":322,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["inline","flexberry-checkbox",[],["readonly",["subexpr","or",[["get","readonly",["loc",[null,[317,39],[317,47]]]],["subexpr","not",[["get","record.rowConfig.canBeSelected",["loc",[null,[317,53],[317,83]]]]],[],["loc",[null,[317,48],[317,84]]]]],[],["loc",[null,[317,35],[317,85]]]],"onChange",["subexpr","action",["selectRow",["get","record",["loc",[null,[318,55],[318,61]]]]],[],["loc",[null,[318,35],[318,62]]]],"value",["subexpr","@mut",[["get","record.selected",["loc",[null,[319,32],[319,47]]]]],[],[]]],["loc",[null,[316,24],[320,26]]]]],locals:[],templates:[]};})();var child2=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":325,"column":24},"end":{"line":333,"column":24}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                          ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n                            ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","minus icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element13=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element13,'class');morphs[1] = dom.createAttrMorph(element13,'title');morphs[2] = dom.createElementMorph(element13);return morphs;},statements:[["attribute","class",["concat",["ui ui-delete object-list-view-row-delete-button ",["get","buttonClass",["loc",[null,[327,85],[327,96]]]]," disabled button"]]],["attribute","title",["subexpr","t",["components.object-list-view.menu-in-row.delete-menu-item-title"],[],["loc",[null,[328,34],[328,104]]]]],["element","action",["deleteRow",["get","record",["loc",[null,[330,49],[330,55]]]]],[],["loc",[null,[330,28],[330,57]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":333,"column":24},"end":{"line":340,"column":24}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                          ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n                            ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","minus icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element12=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element12,'class');morphs[1] = dom.createAttrMorph(element12,'title');morphs[2] = dom.createElementMorph(element12);return morphs;},statements:[["attribute","class",["concat",["ui ui-delete object-list-view-row-delete-button ",["get","buttonClass",["loc",[null,[335,85],[335,96]]]]," button"]]],["attribute","title",["subexpr","t",["components.object-list-view.menu-in-row.delete-menu-item-title"],[],["loc",[null,[336,34],[336,104]]]]],["element","action",["deleteRow",["get","record",["loc",[null,[337,49],[337,55]]]]],[],["loc",[null,[337,28],[337,57]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":323,"column":20},"end":{"line":342,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["subexpr","or",[["get","readonly",["loc",[null,[325,34],[325,42]]]],["subexpr","not",[["get","record.rowConfig.canBeDeleted",["loc",[null,[325,48],[325,77]]]]],[],["loc",[null,[325,43],[325,78]]]]],[],["loc",[null,[325,30],[325,79]]]]],[],0,1,["loc",[null,[325,24],[340,31]]]]],locals:[],templates:[child0,child1]};})();var child3=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":345,"column":24},"end":{"line":353,"column":24}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                          ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n                            ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","edit icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element11=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element11,'class');morphs[1] = dom.createAttrMorph(element11,'title');morphs[2] = dom.createElementMorph(element11);return morphs;},statements:[["attribute","class",["concat",["ui ui-edit object-list-view-row-edit-button ",["get","buttonClass",["loc",[null,[347,81],[347,92]]]]," disabled button"]]],["attribute","title",["subexpr","t",["components.object-list-view.menu-in-row.edit-menu-item-title"],[],["loc",[null,[348,34],[348,102]]]]],["element","action",["onRowClick",["get","record",["loc",[null,[350,50],[350,56]]]],["subexpr","hash",[],["column",null,"columnIndex",null,"rowEdit",true],["loc",[null,[350,57],[350,105]]]]],[],["loc",[null,[350,28],[350,107]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":353,"column":24},"end":{"line":360,"column":24}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                          ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n                            ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","edit icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element10=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element10,'class');morphs[1] = dom.createAttrMorph(element10,'title');morphs[2] = dom.createElementMorph(element10);return morphs;},statements:[["attribute","class",["concat",["ui ui-edit object-list-view-row-edit-button ",["get","buttonClass",["loc",[null,[355,81],[355,92]]]]," button"]]],["attribute","title",["subexpr","t",["components.object-list-view.menu-in-row.edit-menu-item-title"],[],["loc",[null,[356,34],[356,102]]]]],["element","action",["onRowClick",["get","record",["loc",[null,[357,50],[357,56]]]],["subexpr","hash",[],["column",null,"columnIndex",null,"rowEdit",true],["loc",[null,[357,57],[357,105]]]]],[],["loc",[null,[357,28],[357,107]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":343,"column":20},"end":{"line":362,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["get","readonly",["loc",[null,[345,30],[345,38]]]]],[],0,1,["loc",[null,[345,24],[360,31]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":307,"column":16},"end":{"line":364,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","object-list-view-helper-column-cell");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                  ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element15=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createMorphAt(element15,1,1);morphs[1] = dom.createMorphAt(element15,2,2);morphs[2] = dom.createMorphAt(element15,3,3);morphs[3] = dom.createMorphAt(element15,4,4);return morphs;},statements:[["block","if",[["get","showAsteriskInRow",["loc",[null,[309,26],[309,43]]]]],[],0,null,["loc",[null,[309,20],[313,27]]]],["block","if",[["get","showCheckBoxInRow",["loc",[null,[314,26],[314,43]]]]],[],1,null,["loc",[null,[314,20],[322,27]]]],["block","if",[["get","showDeleteButtonInRow",["loc",[null,[323,26],[323,47]]]]],[],2,null,["loc",[null,[323,20],[342,27]]]],["block","if",[["get","showEditButtonInRow",["loc",[null,[343,26],[343,45]]]]],[],3,null,["loc",[null,[343,20],[362,27]]]]],locals:[],templates:[child0,child1,child2,child3]};})();var child1=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":370,"column":20},"end":{"line":378,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","component",[["get","column.cellComponent.componentName",["loc",[null,[371,34],[371,68]]]]],["dynamicProperties",["subexpr","@mut",[["get","column.cellComponent.componentProperties",["loc",[null,[372,42],[372,82]]]]],[],[]],"relatedModel",["subexpr","@mut",[["get","record.data",["loc",[null,[373,37],[373,48]]]]],[],[]],"value",["subexpr","mut",[["subexpr","get",[["get","record.data",["loc",[null,[374,40],[374,51]]]],["get","column.propName",["loc",[null,[374,52],[374,67]]]]],[],["loc",[null,[374,35],[374,68]]]]],[],["loc",[null,[374,30],[374,69]]]],"readonly",["subexpr","readonly-cell",[["get","record.rowConfig.readonlyColumns",["loc",[null,[375,48],[375,80]]]],["get","column.propName",["loc",[null,[375,81],[375,96]]]],["get","readonly",["loc",[null,[375,97],[375,105]]]],["get","column.cellComponent.componentProperties.readonly",["loc",[null,[375,106],[375,155]]]]],[],["loc",[null,[375,33],[375,156]]]],"required",["subexpr","@mut",[["get","required",["loc",[null,[376,33],[376,41]]]]],[],[]]],["loc",[null,[371,22],[377,24]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":378,"column":20},"end":{"line":385,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","oveflow-text");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["inline","get-formatted",[["get","record.data",["loc",[null,[380,40],[380,51]]]],["get","column.propName",["loc",[null,[380,52],[380,67]]]]],["dateFormat",["subexpr","@mut",[["get","dateFormat",["loc",[null,[381,37],[381,47]]]]],[],[]],"moment",["subexpr","@mut",[["get","moment",["loc",[null,[382,33],[382,39]]]]],[],[]]],["loc",[null,[380,24],[383,26]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":367,"column":16},"end":{"line":387,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createElement("td");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                  ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element9=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element9,'class');morphs[1] = dom.createAttrMorph(element9,'style');morphs[2] = dom.createElementMorph(element9);morphs[3] = dom.createMorphAt(element9,1,1);return morphs;},statements:[["attribute","class",["concat",[["subexpr","if",[["subexpr","array-contains",[["get","overflowedComponents",["loc",[null,[368,50],[368,70]]]],["get","column.cellComponent.componentName",["loc",[null,[368,71],[368,105]]]]],[],["loc",[null,[368,34],[368,106]]]]," overflowed-cell"],[],["loc",[null,[368,29],[368,127]]]]]]],["attribute","style",["get","defaultPaddingStyle",["loc",[null,[369,92],[369,111]]]]],["element","action",["objectListViewRowClick",["get","record",["loc",[null,[369,54],[369,60]]]]],["preventDefault",false],["loc",[null,[369,20],[369,83]]]],["block","if",[["get","column.cellComponent.componentName",["loc",[null,[370,26],[370,60]]]]],[],0,1,["loc",[null,[370,20],[385,27]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":366,"column":14},"end":{"line":388,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[367,26],[367,37]]]]],[],0,null,["loc",[null,[367,16],[387,27]]]]],locals:["column"],templates:[child0]};})();var child2=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":394,"column":22},"end":{"line":399,"column":22}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","edit icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("span");var el3=dom.createComment("");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element6=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element6,'class');morphs[1] = dom.createElementMorph(element6);morphs[2] = dom.createMorphAt(dom.childAt(element6,[3]),0,0);return morphs;},statements:[["attribute","class",["concat",["item ",["subexpr","if",[["get","readonly",["loc",[null,[395,46],[395,54]]]],"disabled"],[],["loc",[null,[395,41],[395,67]]]]]]],["element","action",["objectListViewRowClick",["get","record",["loc",[null,[395,104],[395,110]]]],["subexpr","hash",[],["rowEdit",true],["loc",[null,[395,111],[395,130]]]]],[],["loc",[null,[395,69],[395,133]]]],["inline","t",["components.object-list-view.menu-in-row.edit-menu-item-title"],[],["loc",[null,[397,32],[397,100]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":400,"column":22},"end":{"line":405,"column":22}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","trash icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("span");var el3=dom.createComment("");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element5=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element5,'class');morphs[1] = dom.createElementMorph(element5);morphs[2] = dom.createMorphAt(dom.childAt(element5,[3]),0,0);return morphs;},statements:[["attribute","class",["concat",["item ",["subexpr","if",[["get","readonly",["loc",[null,[401,46],[401,54]]]],"disabled"],[],["loc",[null,[401,41],[401,67]]]]]]],["element","action",["deleteRow",["get","record",["loc",[null,[401,91],[401,97]]]]],[],["loc",[null,[401,69],[401,100]]]],["inline","t",["components.object-list-view.menu-in-row.delete-menu-item-title"],[],["loc",[null,[403,32],[403,102]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":389,"column":14},"end":{"line":409,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"class","object-list-view-menu");var el2=dom.createTextNode("\n                  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","right pointing ui icon dropdown button");var el3=dom.createTextNode("\n                    ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","list layout icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n                    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","left menu");var el4=dom.createTextNode("\n");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("                    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n                  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element7=dom.childAt(fragment,[1]);var element8=dom.childAt(element7,[1,3]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element7,'style');morphs[1] = dom.createMorphAt(element8,1,1);morphs[2] = dom.createMorphAt(element8,2,2);return morphs;},statements:[["attribute","style",["get","defaultPaddingStyle",["loc",[null,[390,58],[390,77]]]]],["block","if",[["subexpr","and",[["get","showEditMenuItemInRow",["loc",[null,[394,33],[394,54]]]],["get","record.rowConfig.canBeSelected",["loc",[null,[394,55],[394,85]]]]],[],["loc",[null,[394,28],[394,86]]]]],[],0,null,["loc",[null,[394,22],[399,29]]]],["block","if",[["subexpr","and",[["get","showDeleteMenuItemInRow",["loc",[null,[400,33],[400,56]]]],["get","record.rowConfig.canBeDeleted",["loc",[null,[400,57],[400,86]]]]],[],["loc",[null,[400,28],[400,87]]]]],[],1,null,["loc",[null,[400,22],[405,29]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":303,"column":8},"end":{"line":411,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");var el2=dom.createTextNode("\n              ");dom.appendChild(el1,el2);var el2=dom.createElement("td");var el3=dom.createTextNode("\n                ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","hidden");var el4=dom.createComment("");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("              ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("            ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element16=dom.childAt(fragment,[1]);var element17=dom.childAt(element16,[1]);var morphs=new Array(7);morphs[0] = dom.createAttrMorph(element16,'class');morphs[1] = dom.createAttrMorph(element17,'class');morphs[2] = dom.createAttrMorph(element17,'style');morphs[3] = dom.createMorphAt(dom.childAt(element17,[1]),0,0);morphs[4] = dom.createMorphAt(element17,3,3);morphs[5] = dom.createMorphAt(element16,3,3);morphs[6] = dom.createMorphAt(element16,4,4);return morphs;},statements:[["attribute","class",["concat",[["get","record.rowConfig.customClass",["loc",[null,[304,25],[304,53]]]]]]],["attribute","class",["concat",["object-list-view-helper-column ",["subexpr","unless",[["get","showHelperColumn",["loc",[null,[305,65],[305,81]]]],"hidden"],[],["loc",[null,[305,56],[305,92]]]]]]],["attribute","style",["get","defaultPaddingStyle",["loc",[null,[305,102],[305,121]]]]],["content","record.key",["loc",[null,[306,36],[306,50]]]],["block","if",[["get","showHelperColumn",["loc",[null,[307,22],[307,38]]]]],[],0,null,["loc",[null,[307,16],[364,23]]]],["block","each",[["get","columns",["loc",[null,[366,22],[366,29]]]]],[],1,null,["loc",[null,[366,14],[388,23]]]],["block","if",[["get","showMenuColumn",["loc",[null,[389,20],[389,34]]]]],[],2,null,["loc",[null,[389,14],[409,21]]]]],locals:["record"],templates:[child0,child1,child2]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":302,"column":6},"end":{"line":412,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","each",[["get","contentWithKeys",["loc",[null,[303,16],[303,31]]]]],["key","key"],0,null,["loc",[null,[303,8],[411,17]]]]],locals:[],templates:[child0]};})();var child15=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":418,"column":4},"end":{"line":421,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"class","ui button prev-page-button");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element4=dom.childAt(fragment,[1]);var morphs=new Array(1);morphs[0] = dom.createElementMorph(element4);return morphs;},statements:[["element","action",["previousPage",["get","this.attrs.previousPage",["loc",[null,[419,73],[419,96]]]]],[],["loc",[null,[419,49],[419,98]]]]],locals:[],templates:[]};})();var child16=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":421,"column":4},"end":{"line":424,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"class","ui disabled button prev-page-button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element3=dom.childAt(fragment,[1]);var morphs=new Array(1);morphs[0] = dom.createElementMorph(element3);return morphs;},statements:[["element","action",["previousPage",["get","this.attrs.previousPage",["loc",[null,[422,82],[422,105]]]]],[],["loc",[null,[422,58],[422,107]]]]],locals:[],templates:[]};})();var child17=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":426,"column":6},"end":{"line":428,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui button");var el2=dom.createTextNode("...");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child1=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":429,"column":8},"end":{"line":431,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui active button");var el2=dom.createComment("");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),0,0);return morphs;},statements:[["content","page.number",["loc",[null,[430,40],[430,55]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":431,"column":8},"end":{"line":433,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"class","ui button");var el2=dom.createComment("");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element2=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createElementMorph(element2);morphs[1] = dom.createMorphAt(element2,0,0);return morphs;},statements:[["element","action",["gotoPage",["get","this.attrs.gotoPage",["loc",[null,[432,56],[432,75]]]],["get","page.number",["loc",[null,[432,76],[432,87]]]]],[],["loc",[null,[432,36],[432,89]]]],["content","page.number",["loc",[null,[432,90],[432,105]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":428,"column":6},"end":{"line":434,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["get","page.isCurrent",["loc",[null,[429,14],[429,28]]]]],[],0,1,["loc",[null,[429,8],[433,15]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":425,"column":4},"end":{"line":435,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["get","page.isEllipsis",["loc",[null,[426,12],[426,27]]]]],[],0,1,["loc",[null,[426,6],[434,13]]]]],locals:["page"],templates:[child0,child1]};})();var child18=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":436,"column":4},"end":{"line":439,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"class","ui button next-page-button");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element1=dom.childAt(fragment,[1]);var morphs=new Array(1);morphs[0] = dom.createElementMorph(element1);return morphs;},statements:[["element","action",["nextPage",["get","this.attrs.nextPage",["loc",[null,[437,69],[437,88]]]]],[],["loc",[null,[437,49],[437,90]]]]],locals:[],templates:[]};})();var child19=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":439,"column":4},"end":{"line":442,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"class","ui disabled button next-page-button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element0=dom.childAt(fragment,[1]);var morphs=new Array(1);morphs[0] = dom.createElementMorph(element0);return morphs;},statements:[["element","action",["nextPage",["get","this.attrs.nextPage",["loc",[null,[440,78],[440,97]]]]],[],["loc",[null,[440,58],[440,99]]]]],locals:[],templates:[]};})();var child20=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":447,"column":8},"end":{"line":451,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","concat",[["subexpr","t",["components.flexberry-objectlistview.showing-entries.showing"],[],["loc",[null,[449,12],[449,77]]]],["get","currentIntervalRecords",["loc",[null,[449,78],[449,100]]]],["subexpr","t",["components.flexberry-objectlistview.showing-entries.of"],[],["loc",[null,[449,101],[449,161]]]],["get","recordsTotalCount",["loc",[null,[449,162],[449,179]]]],["subexpr","t",["components.flexberry-objectlistview.showing-entries.entries"],[],["loc",[null,[449,180],[449,245]]]]],[],["loc",[null,[448,10],[450,12]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":445,"column":4},"end":{"line":453,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","showing-entries");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["subexpr","and",[["get","currentIntervalRecords",["loc",[null,[447,19],[447,41]]]],["get","recordsTotalCount",["loc",[null,[447,42],[447,59]]]]],[],["loc",[null,[447,14],[447,60]]]]],[],0,null,["loc",[null,[447,8],[451,15]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":{"name":"missing-wrapper","problems":["multiple-nodes"]},"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":1,"column":0},"end":{"line":457,"column":0}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui secondary menu no-margin ");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","olv-toolbar-info-modal-dialog ui small basic modal");var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","ui icon header");var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createElement("i");dom.setAttribute(el4,"class","olvt icon");dom.appendChild(el3,el4);var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","center aligned ui grid");var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);var el4=dom.createElement("button");dom.setAttribute(el4,"class","ui icon button olv-toolbar-info-modal-dialog-copy-button");var el5=dom.createTextNode("\n        ");dom.appendChild(el4,el5);var el5=dom.createElement("i");dom.setAttribute(el5,"class","copy icon");dom.appendChild(el4,el5);var el5=dom.createTextNode("\n        ");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createTextNode("\n    ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);var el4=dom.createElement("div");dom.setAttribute(el4,"class","actions");var el5=dom.createTextNode("\n      ");dom.appendChild(el4,el5);var el5=dom.createElement("div");dom.setAttribute(el5,"class","olv-toolbar-info-modal-dialog-ok-button ui approve green inverted button");var el6=dom.createTextNode("\n        ");dom.appendChild(el5,el6);var el6=dom.createElement("i");dom.setAttribute(el6,"class","remove icon");dom.appendChild(el5,el6);var el6=dom.createTextNode("\n        ");dom.appendChild(el5,el6);var el6=dom.createComment("");dom.appendChild(el5,el6);var el6=dom.createTextNode("\n      ");dom.appendChild(el5,el6);dom.appendChild(el4,el5);var el5=dom.createTextNode("\n    ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","ui form");var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createElement("div");dom.setAttribute(el4,"class","olv-toolbar-info-modal-dialog-content center aligned ui field");var el5=dom.createTextNode("\n        ");dom.appendChild(el4,el5);var el5=dom.createElement("textarea");dom.setAttribute(el5,"cols","80");dom.setAttribute(el5,"rows","20");var el6=dom.createComment("");dom.appendChild(el5,el6);dom.appendChild(el4,el5);var el5=dom.createTextNode("\n      ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n\n");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","object-list-view-container");var el2=dom.createTextNode("\n  ");dom.appendChild(el1,el2);var el2=dom.createElement("table");var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("thead");var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createElement("tr");var el5=dom.createTextNode("\n");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createTextNode("      ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("tbody");var el4=dom.createTextNode("\n");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui secondary menu no-margin nav-bar");var el2=dom.createTextNode("\n  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","ui basic buttons");var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","right menu");var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("    ");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element50=dom.childAt(fragment,[0]);var element51=dom.childAt(element50,[11]);var element52=dom.childAt(element51,[3]);var element53=dom.childAt(element52,[1]);var element54=dom.childAt(fragment,[2,1]);var element55=dom.childAt(element54,[1,1]);var element56=dom.childAt(element54,[3]);var element57=dom.childAt(fragment,[4]);var element58=dom.childAt(element57,[1]);var element59=dom.childAt(element57,[3]);var morphs=new Array(26);morphs[0] = dom.createMorphAt(element50,1,1);morphs[1] = dom.createMorphAt(element50,2,2);morphs[2] = dom.createMorphAt(element50,3,3);morphs[3] = dom.createMorphAt(element50,4,4);morphs[4] = dom.createMorphAt(element50,5,5);morphs[5] = dom.createMorphAt(element50,6,6);morphs[6] = dom.createMorphAt(element50,7,7);morphs[7] = dom.createMorphAt(element50,8,8);morphs[8] = dom.createMorphAt(element50,9,9);morphs[9] = dom.createMorphAt(dom.childAt(element51,[1]),3,3);morphs[10] = dom.createAttrMorph(element53,'title');morphs[11] = dom.createElementMorph(element53);morphs[12] = dom.createMorphAt(element53,3,3);morphs[13] = dom.createMorphAt(dom.childAt(element52,[3,1]),3,3);morphs[14] = dom.createMorphAt(dom.childAt(element51,[5,1,1]),0,0);morphs[15] = dom.createAttrMorph(element54,'class');morphs[16] = dom.createMorphAt(element55,1,1);morphs[17] = dom.createMorphAt(element55,2,2);morphs[18] = dom.createMorphAt(element55,3,3);morphs[19] = dom.createMorphAt(element56,1,1);morphs[20] = dom.createMorphAt(element56,2,2);morphs[21] = dom.createMorphAt(element58,1,1);morphs[22] = dom.createMorphAt(element58,2,2);morphs[23] = dom.createMorphAt(element58,3,3);morphs[24] = dom.createMorphAt(element59,1,1);morphs[25] = dom.createMorphAt(element59,3,3);return morphs;},statements:[["block","if",[["get","refreshButton",["loc",[null,[2,8],[2,21]]]]],[],0,null,["loc",[null,[2,2],[10,9]]]],["block","if",[["get","createNewButton",["loc",[null,[11,8],[11,23]]]]],[],1,null,["loc",[null,[11,2],[28,9]]]],["block","if",[["get","deleteButton",["loc",[null,[29,8],[29,20]]]]],[],2,null,["loc",[null,[29,2],[48,9]]]],["block","if",[["get","availableHierarchicalMode",["loc",[null,[49,8],[49,33]]]]],[],3,null,["loc",[null,[49,2],[56,9]]]],["block","if",[["get","enableFilters",["loc",[null,[57,8],[57,21]]]]],[],4,null,["loc",[null,[57,2],[75,9]]]],["block","if",[["get","filterButton",["loc",[null,[76,8],[76,20]]]]],[],5,null,["loc",[null,[76,2],[99,9]]]],["block","if",[["get","exportExcelButton",["loc",[null,[100,8],[100,25]]]]],[],6,null,["loc",[null,[100,2],[113,9]]]],["block","if",[["get","colsConfigButton",["loc",[null,[114,8],[114,24]]]]],[],7,null,["loc",[null,[114,2],[129,9]]]],["block","each",[["get","customButtons",["loc",[null,[130,10],[130,23]]]]],[],8,null,["loc",[null,[130,2],[138,11]]]],["content","_infoModalDialogCaption",["loc",[null,[142,6],[142,33]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.copy"],[],["loc",[null,[147,12],[147,47]]]]],["element","action",["copyJSONContent"],[],["loc",[null,[148,6],[148,34]]]],["inline","t",["components.olv-toolbar.copy"],[],["loc",[null,[150,8],[150,43]]]],["inline","t",["components.olv-toolbar.close"],[],["loc",[null,[155,8],[155,44]]]],["content","_infoModalDialogContent",["loc",[null,[161,38],[161,65]]]],["attribute","class",["concat",["object-list-view ui unstackable celled ",["subexpr","if",[["get","readonly",["loc",[null,[168,60],[168,68]]]],"readonly"],[],["loc",[null,[168,55],[168,81]]]]," ",["get","tableClass",["loc",[null,[168,84],[168,94]]]]," table"]]],["block","if",[["get","showHelperColumn",["loc",[null,[171,14],[171,30]]]]],[],9,null,["loc",[null,[171,8],[216,15]]]],["block","each",[["get","columns",["loc",[null,[217,16],[217,23]]]]],[],10,null,["loc",[null,[217,8],[244,17]]]],["block","if",[["get","showMenuColumn",["loc",[null,[245,14],[245,28]]]]],[],11,null,["loc",[null,[245,8],[247,15]]]],["block","if",[["get","showFilters",["loc",[null,[251,12],[251,23]]]]],[],12,null,["loc",[null,[251,6],[295,13]]]],["block","unless",[["get","content",["loc",[null,[296,16],[296,23]]]]],[],13,14,["loc",[null,[296,6],[412,17]]]],["block","if",[["get","hasPreviousPage",["loc",[null,[418,10],[418,25]]]]],[],15,16,["loc",[null,[418,4],[424,11]]]],["block","each",[["get","pages",["loc",[null,[425,12],[425,17]]]]],[],17,null,["loc",[null,[425,4],[435,13]]]],["block","if",[["get","hasNextPage",["loc",[null,[436,10],[436,21]]]]],[],18,19,["loc",[null,[436,4],[442,11]]]],["block","if",[["get","showShowingEntries",["loc",[null,[445,10],[445,28]]]]],[],20,null,["loc",[null,[445,4],[453,11]]]],["inline","flexberry-dropdown",[],["items",["subexpr","@mut",[["get","perPageValues",["loc",[null,[454,31],[454,44]]]]],[],[]],"value",["subexpr","@mut",[["get","perPageValue",["loc",[null,[454,51],[454,63]]]]],[],[]],"class","compact selection","onChange",["subexpr","action",["perPageClick"],[],["loc",[null,[454,99],[454,122]]]],"needChecksOnValue",false,"direction","upward"],["loc",[null,[454,4],[454,167]]]]],locals:[],templates:[child0,child1,child2,child3,child4,child5,child6,child7,child8,child9,child10,child11,child12,child13,child14,child15,child16,child17,child18,child19,child20]};})());});
+define("dummy/templates/components/flexberry-simpleolv",["exports"],function(exports){exports["default"] = Ember.HTMLBars.template((function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":2,"column":2},"end":{"line":11,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","refresh icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element50=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element50,'class');morphs[1] = dom.createAttrMorph(element50,'title');morphs[2] = dom.createElementMorph(element50);morphs[3] = dom.createMorphAt(element50,1,1);return morphs;},statements:[["attribute","class",["concat",["ui refresh-button ",["get","buttonClass",["loc",[null,[5,33],[5,44]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.refresh-button-text"],[],["loc",[null,[6,12],[6,62]]]]],["element","action",["refresh"],[],["loc",[null,[7,6],[7,26]]]],["inline","t",["components.olv-toolbar.refresh-button-text"],[],["loc",[null,[8,8],[8,58]]]]],locals:[],templates:[]};})();var child1=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":13,"column":4},"end":{"line":22,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element49=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element49,'class');morphs[1] = dom.createAttrMorph(element49,'title');morphs[2] = dom.createElementMorph(element49);morphs[3] = dom.createMorphAt(element49,1,1);return morphs;},statements:[["attribute","class",["concat",["ui create-button ",["get","buttonClass",["loc",[null,[16,34],[16,45]]]]," disabled button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.add-button-text"],[],["loc",[null,[17,14],[17,60]]]]],["element","action",["createNew"],[],["loc",[null,[19,8],[19,30]]]],["inline","t",["components.olv-toolbar.add-button-text"],[],["loc",[null,[20,10],[20,56]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":22,"column":4},"end":{"line":30,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element48=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element48,'class');morphs[1] = dom.createAttrMorph(element48,'title');morphs[2] = dom.createElementMorph(element48);morphs[3] = dom.createMorphAt(element48,1,1);return morphs;},statements:[["attribute","class",["concat",["ui create-button ",["get","buttonClass",["loc",[null,[25,34],[25,45]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.add-button-text"],[],["loc",[null,[26,14],[26,60]]]]],["element","action",["createNew"],[],["loc",[null,[27,8],[27,30]]]],["inline","t",["components.olv-toolbar.add-button-text"],[],["loc",[null,[28,10],[28,56]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":12,"column":2},"end":{"line":31,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["subexpr","or",[["get","readonly",["loc",[null,[13,14],[13,22]]]],["subexpr","not",[["get","enableCreateNewButton",["loc",[null,[13,28],[13,49]]]]],[],["loc",[null,[13,23],[13,50]]]]],[],["loc",[null,[13,10],[13,51]]]]],[],0,1,["loc",[null,[13,4],[30,11]]]]],locals:[],templates:[child0,child1]};})();var child2=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":33,"column":4},"end":{"line":43,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","delete icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element47=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element47,'class');morphs[1] = dom.createAttrMorph(element47,'title');morphs[2] = dom.createElementMorph(element47);morphs[3] = dom.createMorphAt(element47,1,1);return morphs;},statements:[["attribute","class",["concat",["ui delete-button ",["get","buttonClass",["loc",[null,[36,34],[36,45]]]]," disabled button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.delete-button-text"],[],["loc",[null,[37,14],[37,63]]]]],["element","action",["delete"],[],["loc",[null,[39,8],[39,27]]]],["inline","t",["components.olv-toolbar.delete-button-text"],[],["loc",[null,[40,10],[40,59]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":43,"column":4},"end":{"line":52,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","delete icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element46=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element46,'class');morphs[1] = dom.createAttrMorph(element46,'title');morphs[2] = dom.createElementMorph(element46);morphs[3] = dom.createMorphAt(element46,1,1);return morphs;},statements:[["attribute","class",["concat",["ui delete-button ",["get","buttonClass",["loc",[null,[46,34],[46,45]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.delete-button-text"],[],["loc",[null,[47,14],[47,63]]]]],["element","action",["delete"],[],["loc",[null,[48,8],[48,27]]]],["inline","t",["components.olv-toolbar.delete-button-text"],[],["loc",[null,[49,10],[49,59]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":32,"column":2},"end":{"line":53,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["subexpr","or",[["get","readonly",["loc",[null,[33,14],[33,22]]]],["subexpr","not",[["get","isDeleteButtonEnabled",["loc",[null,[33,28],[33,49]]]]],[],["loc",[null,[33,23],[33,50]]]]],[],["loc",[null,[33,10],[33,51]]]]],[],0,1,["loc",[null,[33,4],[52,11]]]]],locals:[],templates:[child0,child1]};})();var child3=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":54,"column":2},"end":{"line":62,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","sitemap icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element45=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element45,'class');morphs[1] = dom.createAttrMorph(element45,'title');morphs[2] = dom.createElementMorph(element45);return morphs;},statements:[["attribute","class",["concat",["ui button icon hierarchical-button ",["get","buttonClass",["loc",[null,[57,50],[57,61]]]]," ",["subexpr","if",[["get","inHierarchicalMode",["loc",[null,[57,69],[57,87]]]],"active"],[],["loc",[null,[57,64],[57,98]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.hierarchy-button-text"],[],["loc",[null,[58,12],[58,64]]]]],["element","action",["switchHierarchicalMode"],[],["loc",[null,[59,6],[59,41]]]]],locals:[],templates:[]};})();var child4=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":72,"column":6},"end":{"line":81,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","or");dom.setAttribute(el1,"data-text","•");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n        ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n            ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","remove icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element42=dom.childAt(fragment,[3]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element42,'class');morphs[1] = dom.createAttrMorph(element42,'title');morphs[2] = dom.createElementMorph(element42);return morphs;},statements:[["attribute","class",["concat",["ui button removeFilter-button ",["get","buttonClass",["loc",[null,[76,49],[76,60]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.remove-filter-button-text"],[],["loc",[null,[77,16],[77,72]]]]],["element","action",["resetFilters",["get","this.attrs.resetFilters",["loc",[null,[78,34],[78,57]]]]],[],["loc",[null,[78,10],[78,59]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":63,"column":2},"end":{"line":83,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui icon buttons filter-active");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"type","button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","filter icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element43=dom.childAt(fragment,[1]);var element44=dom.childAt(element43,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element44,'class');morphs[1] = dom.createAttrMorph(element44,'title');morphs[2] = dom.createElementMorph(element44);morphs[3] = dom.createMorphAt(element43,3,3);return morphs;},statements:[["attribute","class",["concat",["ui button ",["get","buttonClass",["loc",[null,[67,27],[67,38]]]]," ",["subexpr","if",[["get","showFilters",["loc",[null,[67,46],[67,57]]]],"active"],[],["loc",[null,[67,41],[67,68]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.filter-button-text"],[],["loc",[null,[68,14],[68,63]]]]],["element","action",["toggleStateFilters"],[],["loc",[null,[69,8],[69,39]]]],["block","if",[["get","filters",["loc",[null,[72,12],[72,19]]]]],[],0,null,["loc",[null,[72,6],[81,13]]]]],locals:[],templates:[child0]};})();var child5=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":84,"column":2},"end":{"line":109,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui action input");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","block-action-input");var el3=dom.createTextNode("\n        ");dom.appendChild(el2,el3);var el3=dom.createElement("input");dom.setAttribute(el3,"type","text");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"type","button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","search icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"type","button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","remove icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element38=dom.childAt(fragment,[1]);var element39=dom.childAt(element38,[1,1]);var element40=dom.childAt(element38,[3]);var element41=dom.childAt(element38,[5]);var morphs=new Array(9);morphs[0] = dom.createAttrMorph(element39,'value');morphs[1] = dom.createAttrMorph(element39,'placeholder');morphs[2] = dom.createAttrMorph(element39,'onkeyup');morphs[3] = dom.createAttrMorph(element40,'class');morphs[4] = dom.createAttrMorph(element40,'title');morphs[5] = dom.createElementMorph(element40);morphs[6] = dom.createAttrMorph(element41,'class');morphs[7] = dom.createAttrMorph(element41,'title');morphs[8] = dom.createElementMorph(element41);return morphs;},statements:[["attribute","value",["get","filterByAnyMatchText",["loc",[null,[89,18],[89,38]]]]],["attribute","placeholder",["subexpr","t",["components.olv-toolbar.filter-by-any-match-placeholder"],[],["loc",[null,[90,22],[90,84]]]]],["attribute","onkeyup",["subexpr","action",["filterByAnyMatch"],[],["loc",[null,[91,18],[91,47]]]]],["attribute","class",["concat",["ui ",["get","buttonClass",["loc",[null,[96,20],[96,31]]]]," icon button search-button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.search-button-text"],[],["loc",[null,[97,14],[97,63]]]]],["element","action",["filterByAnyMatch"],[],["loc",[null,[98,8],[98,37]]]],["attribute","class",["concat",["ui ",["get","buttonClass",["loc",[null,[103,20],[103,31]]]]," icon button clear-search-button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.clear-search-button-text"],[],["loc",[null,[104,14],[104,69]]]]],["element","action",["removeFilter"],[],["loc",[null,[105,8],[105,33]]]]],locals:[],templates:[]};})();var child6=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":110,"column":2},"end":{"line":124,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui buttons export-config");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"type","button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","large file excel outline icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element36=dom.childAt(fragment,[1]);var element37=dom.childAt(element36,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element37,'class');morphs[1] = dom.createAttrMorph(element37,'title');morphs[2] = dom.createElementMorph(element37);morphs[3] = dom.createMorphAt(element36,3,3);return morphs;},statements:[["attribute","class",["concat",["ui button icon export-button ",["get","buttonClass",["loc",[null,[114,46],[114,57]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.export-excel-button-text"],[],["loc",[null,[115,14],[115,69]]]]],["element","action",["showExportDialog"],[],["loc",[null,[116,8],[116,37]]]],["inline","flexberry-menu",[],["items",["subexpr","@mut",[["get","exportExcelItems",["loc",[null,[120,14],[120,30]]]]],[],[]],"onItemClick",["subexpr","action",["onExportMenuItemClick"],[],["loc",[null,[121,20],[121,52]]]]],["loc",[null,[119,6],[122,8]]]]],locals:[],templates:[]};})();var child7=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":134,"column":6},"end":{"line":139,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","flexberry-menu",[],["items",["subexpr","@mut",[["get","colsSettingsItems",["loc",[null,[136,16],[136,33]]]]],[],[]],"onItemClick",["subexpr","action",["onMenuItemClick"],[],["loc",[null,[137,22],[137,48]]]]],["loc",[null,[135,8],[138,10]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":125,"column":2},"end":{"line":141,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui buttons cols-config");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"type","button");dom.setAttribute(el2,"class","ui icon button config-button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","large table icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element34=dom.childAt(fragment,[1]);var element35=dom.childAt(element34,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element35,'title');morphs[1] = dom.createElementMorph(element35);morphs[2] = dom.createMorphAt(element34,3,3);return morphs;},statements:[["attribute","title",["subexpr","t",["components.colsconfig-dialog-content.title"],[],["loc",[null,[130,14],[130,64]]]]],["element","action",["showConfigDialog"],[],["loc",[null,[131,8],[131,37]]]],["block","if",[["get","colsSettingsItems",["loc",[null,[134,12],[134,29]]]]],[],0,null,["loc",[null,[134,6],[139,13]]]]],locals:[],templates:[child0]};})();var child8=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":149,"column":6},"end":{"line":152,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("i");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n        ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element32=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element32,'class');morphs[1] = dom.createMorphAt(fragment,3,3,contextualElement);return morphs;},statements:[["attribute","class",["get","customButton.iconClasses",["loc",[null,[150,19],[150,43]]]]],["content","customButton.buttonName",["loc",[null,[151,8],[151,35]]]]],locals:[],templates:[]};})();var child1=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":152,"column":6},"end":{"line":154,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["content","customButton.buttonName",["loc",[null,[153,8],[153,35]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":154,"column":6},"end":{"line":156,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n      ");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","t",["components.olv-toolbar.custom-button-text"],[],["loc",[null,[155,8],[155,57]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":152,"column":6},"end":{"line":156,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["get","customButton.buttonName",["loc",[null,[152,16],[152,39]]]]],[],0,1,["loc",[null,[152,6],[156,6]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":142,"column":2},"end":{"line":158,"column":2}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element33=dom.childAt(fragment,[1]);var morphs=new Array(5);morphs[0] = dom.createAttrMorph(element33,'class');morphs[1] = dom.createAttrMorph(element33,'title');morphs[2] = dom.createAttrMorph(element33,'disabled');morphs[3] = dom.createElementMorph(element33);morphs[4] = dom.createMorphAt(element33,1,1);return morphs;},statements:[["attribute","class",["concat",["ui ",["subexpr","if",[["get","customButton.buttonClasses",["loc",[null,[145,21],[145,47]]]],["get","customButton.buttonClasses",["loc",[null,[145,48],[145,74]]]]],[],["loc",[null,[145,16],[145,76]]]]," button"]]],["attribute","title",["subexpr","if",[["get","customButton.buttonTitle",["loc",[null,[146,17],[146,41]]]],["get","customButton.buttonTitle",["loc",[null,[146,42],[146,66]]]]],[],["loc",[null,[146,12],[146,68]]]]],["attribute","disabled",["get","customButton.disabled",["loc",[null,[147,17],[147,38]]]]],["element","action",["customButtonAction",["get","customButton.buttonAction",["loc",[null,[148,36],[148,61]]]]],[],["loc",[null,[148,6],[148,63]]]],["block","if",[["get","customButton.iconClasses",["loc",[null,[149,12],[149,36]]]]],[],0,1,["loc",[null,[149,6],[156,13]]]]],locals:["customButton"],templates:[child0,child1]};})();var child9=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":195,"column":14},"end":{"line":204,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n                    ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","check-square-o icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element31=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element31,'class');morphs[1] = dom.createAttrMorph(element31,'title');morphs[2] = dom.createElementMorph(element31);return morphs;},statements:[["attribute","class",["concat",["ui check-all-at-page-button ",["get","buttonClass",["loc",[null,[198,55],[198,66]]]]," disabled button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.check-all-at-page-button-text"],[],["loc",[null,[199,24],[199,84]]]]],["element","action",["checkAllAtPage"],[],["loc",[null,[201,18],[201,45]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":204,"column":14},"end":{"line":212,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n                    ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","check-square-o icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element30=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element30,'class');morphs[1] = dom.createAttrMorph(element30,'title');morphs[2] = dom.createElementMorph(element30);return morphs;},statements:[["attribute","class",["concat",["ui check-all-at-page-button ",["get","buttonClass",["loc",[null,[207,55],[207,66]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.check-all-at-page-button-text"],[],["loc",[null,[208,24],[208,84]]]]],["element","action",["checkAllAtPage"],[],["loc",[null,[209,18],[209,45]]]]],locals:[],templates:[]};})();var child2=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":213,"column":14},"end":{"line":222,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n                    ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","check-all-square-o icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element29=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element29,'class');morphs[1] = dom.createAttrMorph(element29,'title');morphs[2] = dom.createElementMorph(element29);return morphs;},statements:[["attribute","class",["concat",["ui check-all-button ",["get","buttonClass",["loc",[null,[216,47],[216,58]]]]," ",["subexpr","if",[["get","allSelect",["loc",[null,[216,66],[216,75]]]],"activated"],[],["loc",[null,[216,61],[216,89]]]]," disabled button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.check-all-button-text"],[],["loc",[null,[217,24],[217,76]]]]],["element","action",["checkAll"],[],["loc",[null,[219,18],[219,39]]]]],locals:[],templates:[]};})();var child3=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":222,"column":14},"end":{"line":230,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n                    ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","check-all-square-o icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element28=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element28,'class');morphs[1] = dom.createAttrMorph(element28,'title');morphs[2] = dom.createElementMorph(element28);return morphs;},statements:[["attribute","class",["concat",["ui check-all-button ",["get","buttonClass",["loc",[null,[225,47],[225,58]]]]," ",["subexpr","if",[["get","allSelect",["loc",[null,[225,66],[225,75]]]],"activated"],[],["loc",[null,[225,61],[225,89]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.check-all-button-text"],[],["loc",[null,[226,24],[226,76]]]]],["element","action",["checkAll"],[],["loc",[null,[227,18],[227,39]]]]],locals:[],templates:[]};})();var child4=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":231,"column":14},"end":{"line":239,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n                    ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","sort icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element27=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element27,'class');morphs[1] = dom.createAttrMorph(element27,'title');morphs[2] = dom.createElementMorph(element27);return morphs;},statements:[["attribute","class",["concat",["ui clear-sorting-button ",["get","buttonClass",["loc",[null,[234,51],[234,62]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.clear-sorting-button-text"],[],["loc",[null,[235,24],[235,80]]]]],["element","action",["clearSorting"],[],["loc",[null,[236,18],[236,43]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":194,"column":12},"end":{"line":240,"column":12}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(3);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);morphs[2] = dom.createMorphAt(fragment,2,2,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["subexpr","or",[["get","readonly",["loc",[null,[195,24],[195,32]]]],["get","allSelect",["loc",[null,[195,33],[195,42]]]]],[],["loc",[null,[195,20],[195,43]]]]],[],0,1,["loc",[null,[195,14],[212,21]]]],["block","if",[["get","readonly",["loc",[null,[213,20],[213,28]]]]],[],2,3,["loc",[null,[213,14],[230,21]]]],["block","if",[["get","defaultSortingButton",["loc",[null,[231,20],[231,40]]]]],[],4,null,["loc",[null,[231,14],[239,21]]]]],locals:[],templates:[child0,child1,child2,child3,child4]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":192,"column":8},"end":{"line":242,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("th");dom.setAttribute(el1,"class","object-list-view-operations collapsing");dom.setAttribute(el1,"data-olv-header-property-name","OlvRowToolbar");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("          ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["get","showCheckBoxInRow",["loc",[null,[194,18],[194,35]]]]],[],0,null,["loc",[null,[194,12],[240,19]]]]],locals:[],templates:[child0]};})();var child10=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":248,"column":16},"end":{"line":250,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","t",[["get","column.keyLocale",["loc",[null,[249,22],[249,38]]]]],[],["loc",[null,[249,18],[249,40]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":250,"column":16},"end":{"line":252,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["content","column.header",["loc",[null,[251,18],[251,35]]]]],locals:[],templates:[]};})();var child2=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":256,"column":20},"end":{"line":260,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                      ▲");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element24=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element24,'title');morphs[1] = dom.createMorphAt(element24,1,1);return morphs;},statements:[["attribute","title",["concat",[["subexpr","t",["components.object-list-view.sort-ascending"],[],["loc",[null,[257,34],[257,84]]]]]]],["content","column.sortNumber",["loc",[null,[258,23],[258,44]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":260,"column":20},"end":{"line":264,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                      ▼");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element23=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element23,'title');morphs[1] = dom.createMorphAt(element23,1,1);return morphs;},statements:[["attribute","title",["concat",[["subexpr","t",["components.object-list-view.sort-descending"],[],["loc",[null,[261,34],[261,85]]]]]]],["content","column.sortNumber",["loc",[null,[262,23],[262,44]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":254,"column":16},"end":{"line":266,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"style","float:right;");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                  ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["get","column.sortAscending",["loc",[null,[256,26],[256,46]]]]],[],0,1,["loc",[null,[256,20],[264,27]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":244,"column":10},"end":{"line":269,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("th");dom.setAttribute(el1,"class","dt-head-left me class");var el2=dom.createTextNode("\n              ");dom.appendChild(el1,el2);var el2=dom.createElement("div");var el3=dom.createTextNode("\n                ");dom.appendChild(el2,el3);var el3=dom.createElement("span");var el4=dom.createTextNode("\n");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("                ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("              ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n            ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element25=dom.childAt(fragment,[1]);var element26=dom.childAt(element25,[1]);var morphs=new Array(5);morphs[0] = dom.createAttrMorph(element25,'onclick');morphs[1] = dom.createAttrMorph(element26,'data-olv-header-property-name');morphs[2] = dom.createAttrMorph(element26,'title');morphs[3] = dom.createMorphAt(dom.childAt(element26,[1]),1,1);morphs[4] = dom.createMorphAt(element26,3,3);return morphs;},statements:[["attribute","onclick",["subexpr","action",["headerCellClick",["get","column",["loc",[null,[245,82],[245,88]]]]],[],["loc",[null,[245,54],[245,91]]]]],["attribute","data-olv-header-property-name",["get","column.propName",["loc",[null,[246,51],[246,66]]]]],["attribute","title",["get","sortTitleCompute",["loc",[null,[246,77],[246,93]]]]],["block","if",[["get","column.keyLocale",["loc",[null,[248,22],[248,38]]]]],[],0,1,["loc",[null,[248,16],[252,23]]]],["block","if",[["get","column.sorted",["loc",[null,[254,22],[254,35]]]]],[],2,null,["loc",[null,[254,16],[266,23]]]]],locals:[],templates:[child0,child1,child2]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":243,"column":8},"end":{"line":270,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[244,20],[244,31]]]]],[],0,null,["loc",[null,[244,10],[269,21]]]]],locals:["column"],templates:[child0]};})();var child11=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":271,"column":8},"end":{"line":273,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("th");dom.setAttribute(el1,"class","object-list-view-menu collapsing");dom.setAttribute(el1,"data-olv-header-property-name","OlvRowMenu");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child12=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":279,"column":10},"end":{"line":281,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child1=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":285,"column":16},"end":{"line":295,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","flexberry-dropdown",[],["value",["subexpr","@mut",[["get","column.filter.condition",["loc",[null,[287,26],[287,49]]]]],[],[]],"items",["subexpr","@mut",[["get","column.filter.conditions",["loc",[null,[288,26],[288,50]]]]],[],[]],"displayCaptions",true,"class","compact fluid","placeholder",["subexpr","t",["components.object-list-view.filter-condition"],[],["loc",[null,[291,32],[291,82]]]],"needChecksOnValue",false,"onChange",["subexpr","action",["filterConditionChanged",["get","column.filter",["loc",[null,[293,62],[293,75]]]]],[],["loc",[null,[293,29],[293,76]]]]],["loc",[null,[286,18],[294,20]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":283,"column":12},"end":{"line":297,"column":12}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("              ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"class","overflowed-cell");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("              ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element20=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element20,'style');morphs[1] = dom.createMorphAt(element20,1,1);return morphs;},statements:[["attribute","style",["get","defaultPaddingStyle",["loc",[null,[284,26],[284,45]]]]],["block","if",[["get","column.filter.conditions",["loc",[null,[285,22],[285,46]]]]],[],0,null,["loc",[null,[285,16],[295,23]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":282,"column":10},"end":{"line":298,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[283,22],[283,33]]]]],[],0,null,["loc",[null,[283,12],[297,23]]]]],locals:["column"],templates:[child0]};})();var child2=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":299,"column":10},"end":{"line":301,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child3=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":304,"column":10},"end":{"line":306,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child4=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":310,"column":16},"end":{"line":319,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","component",[["get","column.filter.component.name",["loc",[null,[311,30],[311,58]]]]],["value",["subexpr","@mut",[["get","column.filter.pattern",["loc",[null,[312,26],[312,47]]]]],[],[]],"readonly",["subexpr","or",[["subexpr","eq",[["get","column.filter.condition",["loc",[null,[314,26],[314,49]]]],"empty"],[],["loc",[null,[314,22],[314,58]]]],["subexpr","eq",[["get","column.filter.condition",["loc",[null,[315,26],[315,49]]]],"nempty"],[],["loc",[null,[315,22],[315,59]]]]],[],["loc",[null,[313,29],[316,21]]]],"dynamicProperties",["subexpr","@mut",[["get","column.filter.component.properties",["loc",[null,[317,38],[317,72]]]]],[],[]]],["loc",[null,[311,18],[318,20]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":308,"column":12},"end":{"line":321,"column":12}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("              ");dom.appendChild(el0,el1);var el1=dom.createElement("td");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("              ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element19=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element19,'style');morphs[1] = dom.createAttrMorph(element19,'class');morphs[2] = dom.createMorphAt(element19,1,1);return morphs;},statements:[["attribute","style",["get","defaultPaddingStyle",["loc",[null,[309,26],[309,45]]]]],["attribute","class",["concat",[["subexpr","if",[["subexpr","array-contains",[["get","overflowedComponents",["loc",[null,[309,76],[309,96]]]],["get","column.filter.component.name",["loc",[null,[309,97],[309,125]]]]],[],["loc",[null,[309,60],[309,126]]]],"overflowed-cell"],[],["loc",[null,[309,55],[309,146]]]]]]],["block","if",[["get","column.filter.component.name",["loc",[null,[310,22],[310,50]]]]],[],0,null,["loc",[null,[310,16],[319,23]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":307,"column":10},"end":{"line":322,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[308,22],[308,33]]]]],[],0,null,["loc",[null,[308,12],[321,23]]]]],locals:["column"],templates:[child0]};})();var child5=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":323,"column":10},"end":{"line":325,"column":10}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":277,"column":6},"end":{"line":327,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");dom.setAttribute(el1,"class","object-list-view-filters");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n        ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");dom.setAttribute(el1,"class","object-list-view-filters");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element21=dom.childAt(fragment,[1]);var element22=dom.childAt(fragment,[3]);var morphs=new Array(7);morphs[0] = dom.createMorphAt(element21,1,1);morphs[1] = dom.createMorphAt(element21,2,2);morphs[2] = dom.createMorphAt(element21,3,3);morphs[3] = dom.createAttrMorph(element22,'onkeydown');morphs[4] = dom.createMorphAt(element22,1,1);morphs[5] = dom.createMorphAt(element22,2,2);morphs[6] = dom.createMorphAt(element22,3,3);return morphs;},statements:[["block","if",[["get","showHelperColumn",["loc",[null,[279,16],[279,32]]]]],[],0,null,["loc",[null,[279,10],[281,17]]]],["block","each",[["get","columns",["loc",[null,[282,18],[282,25]]]]],[],1,null,["loc",[null,[282,10],[298,19]]]],["block","if",[["get","showMenuColumn",["loc",[null,[299,16],[299,30]]]]],[],2,null,["loc",[null,[299,10],[301,17]]]],["attribute","onkeydown",["subexpr","action",["applyFiltersByEnter"],[],["loc",[null,[303,55],[303,87]]]]],["block","if",[["get","showHelperColumn",["loc",[null,[304,16],[304,32]]]]],[],3,null,["loc",[null,[304,10],[306,17]]]],["block","each",[["get","columns",["loc",[null,[307,18],[307,25]]]]],[],4,null,["loc",[null,[307,10],[322,19]]]],["block","if",[["get","showMenuColumn",["loc",[null,[323,16],[323,30]]]]],[],5,null,["loc",[null,[323,10],[325,17]]]]],locals:[],templates:[child0,child1,child2,child3,child4,child5]};})();var child13=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":328,"column":6},"end":{"line":334,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createElement("td");dom.setAttribute(el2,"style","text-align:center;");var el3=dom.createTextNode("\n              ");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element18=dom.childAt(fragment,[1,1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element18,'colspan');morphs[1] = dom.createMorphAt(element18,1,1);return morphs;},statements:[["attribute","colspan",["concat",[["get","colspan",["loc",[null,[330,25],[330,32]]]]]]],["content","placeholder",["loc",[null,[331,14],[331,29]]]]],locals:[],templates:[]};})();var child14=(function(){var child0=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":341,"column":20},"end":{"line":345,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element14=dom.childAt(fragment,[1,1]);var morphs=new Array(1);morphs[0] = dom.createAttrMorph(element14,'class');return morphs;},statements:[["attribute","class",["concat",["asterisk small red icon ",["subexpr","unless",[["get","record.data.hasDirtyAttributes",["loc",[null,[343,67],[343,97]]]],"transparent"],[],["loc",[null,[343,58],[343,113]]]]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":346,"column":20},"end":{"line":354,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["inline","flexberry-checkbox",[],["readonly",["subexpr","or",[["get","readonly",["loc",[null,[349,39],[349,47]]]],["subexpr","not",[["get","record.rowConfig.canBeSelected",["loc",[null,[349,53],[349,83]]]]],[],["loc",[null,[349,48],[349,84]]]]],[],["loc",[null,[349,35],[349,85]]]],"onChange",["subexpr","action",["selectRow",["get","record",["loc",[null,[350,55],[350,61]]]]],[],["loc",[null,[350,35],[350,62]]]],"value",["subexpr","@mut",[["get","record.selected",["loc",[null,[351,32],[351,47]]]]],[],[]]],["loc",[null,[348,24],[352,26]]]]],locals:[],templates:[]};})();var child2=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":357,"column":24},"end":{"line":366,"column":24}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                          ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n                            ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","minus icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element13=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element13,'class');morphs[1] = dom.createAttrMorph(element13,'title');morphs[2] = dom.createElementMorph(element13);return morphs;},statements:[["attribute","class",["concat",["ui ui-delete object-list-view-row-delete-button ",["get","buttonClass",["loc",[null,[360,85],[360,96]]]]," disabled button"]]],["attribute","title",["subexpr","t",["components.object-list-view.menu-in-row.delete-menu-item-title"],[],["loc",[null,[361,34],[361,104]]]]],["element","action",["deleteRow",["get","record",["loc",[null,[363,49],[363,55]]]]],[],["loc",[null,[363,28],[363,57]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":366,"column":24},"end":{"line":374,"column":24}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                          ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n                            ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","minus icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element12=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element12,'class');morphs[1] = dom.createAttrMorph(element12,'title');morphs[2] = dom.createElementMorph(element12);return morphs;},statements:[["attribute","class",["concat",["ui ui-delete object-list-view-row-delete-button ",["get","buttonClass",["loc",[null,[369,85],[369,96]]]]," button"]]],["attribute","title",["subexpr","t",["components.object-list-view.menu-in-row.delete-menu-item-title"],[],["loc",[null,[370,34],[370,104]]]]],["element","action",["deleteRow",["get","record",["loc",[null,[371,49],[371,55]]]]],[],["loc",[null,[371,28],[371,57]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":355,"column":20},"end":{"line":376,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["subexpr","or",[["get","readonly",["loc",[null,[357,34],[357,42]]]],["subexpr","not",[["get","record.rowConfig.canBeDeleted",["loc",[null,[357,48],[357,77]]]]],[],["loc",[null,[357,43],[357,78]]]]],[],["loc",[null,[357,30],[357,79]]]]],[],0,1,["loc",[null,[357,24],[374,31]]]]],locals:[],templates:[child0,child1]};})();var child3=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":379,"column":24},"end":{"line":388,"column":24}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                          ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n                            ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","edit icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element11=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element11,'class');morphs[1] = dom.createAttrMorph(element11,'title');morphs[2] = dom.createElementMorph(element11);return morphs;},statements:[["attribute","class",["concat",["ui ui-edit object-list-view-row-edit-button ",["get","buttonClass",["loc",[null,[382,81],[382,92]]]]," disabled button"]]],["attribute","title",["subexpr","t",["components.object-list-view.menu-in-row.edit-menu-item-title"],[],["loc",[null,[383,34],[383,102]]]]],["element","action",["objectListViewRowClick",["get","record",["loc",[null,[385,62],[385,68]]]],["subexpr","hash",[],["column",null,"columnIndex",null,"rowEdit",true],["loc",[null,[385,69],[385,117]]]]],[],["loc",[null,[385,28],[385,119]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":388,"column":24},"end":{"line":396,"column":24}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                          ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n                            ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","edit icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element10=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element10,'class');morphs[1] = dom.createAttrMorph(element10,'title');morphs[2] = dom.createElementMorph(element10);return morphs;},statements:[["attribute","class",["concat",["ui ui-edit object-list-view-row-edit-button ",["get","buttonClass",["loc",[null,[391,81],[391,92]]]]," button"]]],["attribute","title",["subexpr","t",["components.object-list-view.menu-in-row.edit-menu-item-title"],[],["loc",[null,[392,34],[392,102]]]]],["element","action",["objectListViewRowClick",["get","record",["loc",[null,[393,62],[393,68]]]],["subexpr","hash",[],["column",null,"columnIndex",null,"rowEdit",true],["loc",[null,[393,69],[393,117]]]]],[],["loc",[null,[393,28],[393,119]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":377,"column":20},"end":{"line":398,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["get","readonly",["loc",[null,[379,30],[379,38]]]]],[],0,1,["loc",[null,[379,24],[396,31]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":339,"column":16},"end":{"line":400,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","object-list-view-helper-column-cell");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                  ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element15=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createMorphAt(element15,1,1);morphs[1] = dom.createMorphAt(element15,2,2);morphs[2] = dom.createMorphAt(element15,3,3);morphs[3] = dom.createMorphAt(element15,4,4);return morphs;},statements:[["block","if",[["get","showAsteriskInRow",["loc",[null,[341,26],[341,43]]]]],[],0,null,["loc",[null,[341,20],[345,27]]]],["block","if",[["get","showCheckBoxInRow",["loc",[null,[346,26],[346,43]]]]],[],1,null,["loc",[null,[346,20],[354,27]]]],["block","if",[["get","showDeleteButtonInRow",["loc",[null,[355,26],[355,47]]]]],[],2,null,["loc",[null,[355,20],[376,27]]]],["block","if",[["get","showEditButtonInRow",["loc",[null,[377,26],[377,45]]]]],[],3,null,["loc",[null,[377,20],[398,27]]]]],locals:[],templates:[child0,child1,child2,child3]};})();var child1=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":406,"column":20},"end":{"line":414,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","component",[["get","column.cellComponent.componentName",["loc",[null,[407,34],[407,68]]]]],["dynamicProperties",["subexpr","@mut",[["get","column.cellComponent.componentProperties",["loc",[null,[408,42],[408,82]]]]],[],[]],"relatedModel",["subexpr","@mut",[["get","record.data",["loc",[null,[409,37],[409,48]]]]],[],[]],"value",["subexpr","mut",[["subexpr","get",[["get","record.data",["loc",[null,[410,40],[410,51]]]],["get","column.propName",["loc",[null,[410,52],[410,67]]]]],[],["loc",[null,[410,35],[410,68]]]]],[],["loc",[null,[410,30],[410,69]]]],"readonly",["subexpr","readonly-cell",[["get","record.rowConfig.readonlyColumns",["loc",[null,[411,48],[411,80]]]],["get","column.propName",["loc",[null,[411,81],[411,96]]]],["get","readonly",["loc",[null,[411,97],[411,105]]]],["get","column.cellComponent.componentProperties.readonly",["loc",[null,[411,106],[411,155]]]]],[],["loc",[null,[411,33],[411,156]]]],"required",["subexpr","@mut",[["get","required",["loc",[null,[412,33],[412,41]]]]],[],[]]],["loc",[null,[407,22],[413,24]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":414,"column":20},"end":{"line":421,"column":20}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","oveflow-text");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["inline","get-formatted",[["get","record.data",["loc",[null,[416,40],[416,51]]]],["get","column.propName",["loc",[null,[416,52],[416,67]]]]],["dateFormat",["subexpr","@mut",[["get","dateFormat",["loc",[null,[417,37],[417,47]]]]],[],[]],"moment",["subexpr","@mut",[["get","moment",["loc",[null,[418,33],[418,39]]]]],[],[]]],["loc",[null,[416,24],[419,26]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":403,"column":16},"end":{"line":423,"column":16}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createElement("td");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                  ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element9=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element9,'class');morphs[1] = dom.createAttrMorph(element9,'style');morphs[2] = dom.createElementMorph(element9);morphs[3] = dom.createMorphAt(element9,1,1);return morphs;},statements:[["attribute","class",["concat",[["subexpr","if",[["subexpr","array-contains",[["get","overflowedComponents",["loc",[null,[404,50],[404,70]]]],["get","column.cellComponent.componentName",["loc",[null,[404,71],[404,105]]]]],[],["loc",[null,[404,34],[404,106]]]]," overflowed-cell"],[],["loc",[null,[404,29],[404,127]]]]]]],["attribute","style",["get","defaultPaddingStyle",["loc",[null,[405,92],[405,111]]]]],["element","action",["objectListViewRowClick",["get","record",["loc",[null,[405,54],[405,60]]]]],["preventDefault",false],["loc",[null,[405,20],[405,83]]]],["block","if",[["get","column.cellComponent.componentName",["loc",[null,[406,26],[406,60]]]]],[],0,1,["loc",[null,[406,20],[421,27]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":402,"column":14},"end":{"line":424,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[403,26],[403,37]]]]],[],0,null,["loc",[null,[403,16],[423,27]]]]],locals:["column"],templates:[child0]};})();var child2=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":430,"column":22},"end":{"line":435,"column":22}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","edit icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("span");var el3=dom.createComment("");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element6=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element6,'class');morphs[1] = dom.createElementMorph(element6);morphs[2] = dom.createMorphAt(dom.childAt(element6,[3]),0,0);return morphs;},statements:[["attribute","class",["concat",["item ",["subexpr","if",[["get","readonly",["loc",[null,[431,46],[431,54]]]],"disabled"],[],["loc",[null,[431,41],[431,67]]]]]]],["element","action",["objectListViewRowClick",["get","record",["loc",[null,[431,104],[431,110]]]],["subexpr","hash",[],["rowEdit",true],["loc",[null,[431,111],[431,130]]]]],[],["loc",[null,[431,69],[431,133]]]],["inline","t",["components.object-list-view.menu-in-row.edit-menu-item-title"],[],["loc",[null,[433,32],[433,100]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":436,"column":22},"end":{"line":441,"column":22}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","trash icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("span");var el3=dom.createComment("");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element5=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element5,'class');morphs[1] = dom.createElementMorph(element5);morphs[2] = dom.createMorphAt(dom.childAt(element5,[3]),0,0);return morphs;},statements:[["attribute","class",["concat",["item ",["subexpr","if",[["get","readonly",["loc",[null,[437,46],[437,54]]]],"disabled"],[],["loc",[null,[437,41],[437,67]]]]]]],["element","action",["deleteRow",["get","record",["loc",[null,[437,91],[437,97]]]]],[],["loc",[null,[437,69],[437,100]]]],["inline","t",["components.object-list-view.menu-in-row.delete-menu-item-title"],[],["loc",[null,[439,32],[439,102]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":425,"column":14},"end":{"line":445,"column":14}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"class","object-list-view-menu");var el2=dom.createTextNode("\n                  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","right pointing ui icon dropdown button");var el3=dom.createTextNode("\n                    ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","list layout icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n                    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","left menu");var el4=dom.createTextNode("\n");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("                    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n                  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element7=dom.childAt(fragment,[1]);var element8=dom.childAt(element7,[1,3]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element7,'style');morphs[1] = dom.createMorphAt(element8,1,1);morphs[2] = dom.createMorphAt(element8,2,2);return morphs;},statements:[["attribute","style",["get","defaultPaddingStyle",["loc",[null,[426,58],[426,77]]]]],["block","if",[["subexpr","and",[["get","showEditMenuItemInRow",["loc",[null,[430,33],[430,54]]]],["get","record.rowConfig.canBeSelected",["loc",[null,[430,55],[430,85]]]]],[],["loc",[null,[430,28],[430,86]]]]],[],0,null,["loc",[null,[430,22],[435,29]]]],["block","if",[["subexpr","and",[["get","showDeleteMenuItemInRow",["loc",[null,[436,33],[436,56]]]],["get","record.rowConfig.canBeDeleted",["loc",[null,[436,57],[436,86]]]]],[],["loc",[null,[436,28],[436,87]]]]],[],1,null,["loc",[null,[436,22],[441,29]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":335,"column":8},"end":{"line":447,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");var el2=dom.createTextNode("\n              ");dom.appendChild(el1,el2);var el2=dom.createElement("td");var el3=dom.createTextNode("\n                ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","hidden");var el4=dom.createComment("");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("              ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("            ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element16=dom.childAt(fragment,[1]);var element17=dom.childAt(element16,[1]);var morphs=new Array(7);morphs[0] = dom.createAttrMorph(element16,'class');morphs[1] = dom.createAttrMorph(element17,'class');morphs[2] = dom.createAttrMorph(element17,'style');morphs[3] = dom.createMorphAt(dom.childAt(element17,[1]),0,0);morphs[4] = dom.createMorphAt(element17,3,3);morphs[5] = dom.createMorphAt(element16,3,3);morphs[6] = dom.createMorphAt(element16,4,4);return morphs;},statements:[["attribute","class",["concat",[["get","record.rowConfig.customClass",["loc",[null,[336,25],[336,53]]]]]]],["attribute","class",["concat",["object-list-view-helper-column ",["subexpr","unless",[["get","showHelperColumn",["loc",[null,[337,65],[337,81]]]],"hidden"],[],["loc",[null,[337,56],[337,92]]]]]]],["attribute","style",["get","defaultPaddingStyle",["loc",[null,[337,102],[337,121]]]]],["content","record.key",["loc",[null,[338,36],[338,50]]]],["block","if",[["get","showHelperColumn",["loc",[null,[339,22],[339,38]]]]],[],0,null,["loc",[null,[339,16],[400,23]]]],["block","each",[["get","columns",["loc",[null,[402,22],[402,29]]]]],[],1,null,["loc",[null,[402,14],[424,23]]]],["block","if",[["get","showMenuColumn",["loc",[null,[425,20],[425,34]]]]],[],2,null,["loc",[null,[425,14],[445,21]]]]],locals:["record"],templates:[child0,child1,child2]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":334,"column":6},"end":{"line":448,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","each",[["get","contentWithKeys",["loc",[null,[335,16],[335,31]]]]],["key","key"],0,null,["loc",[null,[335,8],[447,17]]]]],locals:[],templates:[child0]};})();var child15=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":454,"column":4},"end":{"line":457,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");dom.setAttribute(el1,"class","ui button prev-page-button");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element4=dom.childAt(fragment,[1]);var morphs=new Array(1);morphs[0] = dom.createElementMorph(element4);return morphs;},statements:[["element","action",["previousPage",["get","this.attrs.previousPage",["loc",[null,[455,87],[455,110]]]]],[],["loc",[null,[455,63],[455,112]]]]],locals:[],templates:[]};})();var child16=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":457,"column":4},"end":{"line":460,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");dom.setAttribute(el1,"class","ui disabled button prev-page-button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element3=dom.childAt(fragment,[1]);var morphs=new Array(1);morphs[0] = dom.createElementMorph(element3);return morphs;},statements:[["element","action",["previousPage",["get","this.attrs.previousPage",["loc",[null,[458,96],[458,119]]]]],[],["loc",[null,[458,72],[458,121]]]]],locals:[],templates:[]};})();var child17=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":462,"column":6},"end":{"line":464,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui button");var el2=dom.createTextNode("...");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child1=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":465,"column":8},"end":{"line":467,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui active button");var el2=dom.createComment("");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),0,0);return morphs;},statements:[["content","page.number",["loc",[null,[466,40],[466,55]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":467,"column":8},"end":{"line":469,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");dom.setAttribute(el1,"class","ui button");var el2=dom.createComment("");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element2=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createElementMorph(element2);morphs[1] = dom.createMorphAt(element2,0,0);return morphs;},statements:[["element","action",["gotoPage",["get","this.attrs.gotoPage",["loc",[null,[468,70],[468,89]]]],["get","page.number",["loc",[null,[468,90],[468,101]]]]],[],["loc",[null,[468,50],[468,103]]]],["content","page.number",["loc",[null,[468,104],[468,119]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":464,"column":6},"end":{"line":470,"column":6}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["get","page.isCurrent",["loc",[null,[465,14],[465,28]]]]],[],0,1,["loc",[null,[465,8],[469,15]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":461,"column":4},"end":{"line":471,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["get","page.isEllipsis",["loc",[null,[462,12],[462,27]]]]],[],0,1,["loc",[null,[462,6],[470,13]]]]],locals:["page"],templates:[child0,child1]};})();var child18=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":472,"column":4},"end":{"line":475,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");dom.setAttribute(el1,"class","ui button next-page-button");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element1=dom.childAt(fragment,[1]);var morphs=new Array(1);morphs[0] = dom.createElementMorph(element1);return morphs;},statements:[["element","action",["nextPage",["get","this.attrs.nextPage",["loc",[null,[473,83],[473,102]]]]],[],["loc",[null,[473,63],[473,104]]]]],locals:[],templates:[]};})();var child19=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":475,"column":4},"end":{"line":478,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");dom.setAttribute(el1,"class","ui disabled button next-page-button");dom.setAttribute(el1,"disabled","disabled");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element0=dom.childAt(fragment,[1]);var morphs=new Array(1);morphs[0] = dom.createElementMorph(element0);return morphs;},statements:[["element","action",["nextPage",["get","this.attrs.nextPage",["loc",[null,[476,92],[476,111]]]]],[],["loc",[null,[476,72],[476,113]]]]],locals:[],templates:[]};})();var child20=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":483,"column":8},"end":{"line":487,"column":8}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","concat",[["subexpr","t",["components.flexberry-objectlistview.showing-entries.showing"],[],["loc",[null,[485,12],[485,77]]]],["get","currentIntervalRecords",["loc",[null,[485,78],[485,100]]]],["subexpr","t",["components.flexberry-objectlistview.showing-entries.of"],[],["loc",[null,[485,101],[485,161]]]],["get","recordsTotalCount",["loc",[null,[485,162],[485,179]]]],["subexpr","t",["components.flexberry-objectlistview.showing-entries.entries"],[],["loc",[null,[485,180],[485,245]]]]],[],["loc",[null,[484,10],[486,12]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":481,"column":4},"end":{"line":489,"column":4}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","showing-entries");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["subexpr","and",[["get","currentIntervalRecords",["loc",[null,[483,19],[483,41]]]],["get","recordsTotalCount",["loc",[null,[483,42],[483,59]]]]],[],["loc",[null,[483,14],[483,60]]]]],[],0,null,["loc",[null,[483,8],[487,15]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":{"name":"missing-wrapper","problems":["multiple-nodes"]},"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":1,"column":0},"end":{"line":493,"column":0}},"moduleName":"dummy/templates/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui secondary menu no-margin ");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","olv-toolbar-info-modal-dialog ui small basic modal");var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","ui icon header");var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createElement("i");dom.setAttribute(el4,"class","olvt icon");dom.appendChild(el3,el4);var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","center aligned ui grid");var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);var el4=dom.createElement("button");dom.setAttribute(el4,"type","button");dom.setAttribute(el4,"class","ui icon button olv-toolbar-info-modal-dialog-copy-button");var el5=dom.createTextNode("\n        ");dom.appendChild(el4,el5);var el5=dom.createElement("i");dom.setAttribute(el5,"class","copy icon");dom.appendChild(el4,el5);var el5=dom.createTextNode("\n        ");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createTextNode("\n    ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);var el4=dom.createElement("div");dom.setAttribute(el4,"class","actions");var el5=dom.createTextNode("\n      ");dom.appendChild(el4,el5);var el5=dom.createElement("div");dom.setAttribute(el5,"class","olv-toolbar-info-modal-dialog-ok-button ui approve green inverted button");var el6=dom.createTextNode("\n        ");dom.appendChild(el5,el6);var el6=dom.createElement("i");dom.setAttribute(el6,"class","remove icon");dom.appendChild(el5,el6);var el6=dom.createTextNode("\n        ");dom.appendChild(el5,el6);var el6=dom.createComment("");dom.appendChild(el5,el6);var el6=dom.createTextNode("\n      ");dom.appendChild(el5,el6);dom.appendChild(el4,el5);var el5=dom.createTextNode("\n    ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","ui form");var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createElement("div");dom.setAttribute(el4,"class","olv-toolbar-info-modal-dialog-content center aligned ui field");var el5=dom.createTextNode("\n        ");dom.appendChild(el4,el5);var el5=dom.createElement("textarea");dom.setAttribute(el5,"cols","80");dom.setAttribute(el5,"rows","20");var el6=dom.createComment("");dom.appendChild(el5,el6);dom.appendChild(el4,el5);var el5=dom.createTextNode("\n      ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n\n");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","object-list-view-container");var el2=dom.createTextNode("\n  ");dom.appendChild(el1,el2);var el2=dom.createElement("table");var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("thead");var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createElement("tr");var el5=dom.createTextNode("\n");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createTextNode("      ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("tbody");var el4=dom.createTextNode("\n");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui secondary menu no-margin nav-bar");var el2=dom.createTextNode("\n  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","ui basic buttons");var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","right menu");var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("    ");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element51=dom.childAt(fragment,[0]);var element52=dom.childAt(element51,[11]);var element53=dom.childAt(element52,[3]);var element54=dom.childAt(element53,[1]);var element55=dom.childAt(fragment,[2,1]);var element56=dom.childAt(element55,[1,1]);var element57=dom.childAt(element55,[3]);var element58=dom.childAt(fragment,[4]);var element59=dom.childAt(element58,[1]);var element60=dom.childAt(element58,[3]);var morphs=new Array(26);morphs[0] = dom.createMorphAt(element51,1,1);morphs[1] = dom.createMorphAt(element51,2,2);morphs[2] = dom.createMorphAt(element51,3,3);morphs[3] = dom.createMorphAt(element51,4,4);morphs[4] = dom.createMorphAt(element51,5,5);morphs[5] = dom.createMorphAt(element51,6,6);morphs[6] = dom.createMorphAt(element51,7,7);morphs[7] = dom.createMorphAt(element51,8,8);morphs[8] = dom.createMorphAt(element51,9,9);morphs[9] = dom.createMorphAt(dom.childAt(element52,[1]),3,3);morphs[10] = dom.createAttrMorph(element54,'title');morphs[11] = dom.createElementMorph(element54);morphs[12] = dom.createMorphAt(element54,3,3);morphs[13] = dom.createMorphAt(dom.childAt(element53,[3,1]),3,3);morphs[14] = dom.createMorphAt(dom.childAt(element52,[5,1,1]),0,0);morphs[15] = dom.createAttrMorph(element55,'class');morphs[16] = dom.createMorphAt(element56,1,1);morphs[17] = dom.createMorphAt(element56,2,2);morphs[18] = dom.createMorphAt(element56,3,3);morphs[19] = dom.createMorphAt(element57,1,1);morphs[20] = dom.createMorphAt(element57,2,2);morphs[21] = dom.createMorphAt(element59,1,1);morphs[22] = dom.createMorphAt(element59,2,2);morphs[23] = dom.createMorphAt(element59,3,3);morphs[24] = dom.createMorphAt(element60,1,1);morphs[25] = dom.createMorphAt(element60,3,3);return morphs;},statements:[["block","if",[["get","refreshButton",["loc",[null,[2,8],[2,21]]]]],[],0,null,["loc",[null,[2,2],[11,9]]]],["block","if",[["get","createNewButton",["loc",[null,[12,8],[12,23]]]]],[],1,null,["loc",[null,[12,2],[31,9]]]],["block","if",[["get","deleteButton",["loc",[null,[32,8],[32,20]]]]],[],2,null,["loc",[null,[32,2],[53,9]]]],["block","if",[["get","availableHierarchicalMode",["loc",[null,[54,8],[54,33]]]]],[],3,null,["loc",[null,[54,2],[62,9]]]],["block","if",[["get","enableFilters",["loc",[null,[63,8],[63,21]]]]],[],4,null,["loc",[null,[63,2],[83,9]]]],["block","if",[["get","filterButton",["loc",[null,[84,8],[84,20]]]]],[],5,null,["loc",[null,[84,2],[109,9]]]],["block","if",[["get","exportExcelButton",["loc",[null,[110,8],[110,25]]]]],[],6,null,["loc",[null,[110,2],[124,9]]]],["block","if",[["get","colsConfigButton",["loc",[null,[125,8],[125,24]]]]],[],7,null,["loc",[null,[125,2],[141,9]]]],["block","each",[["get","customButtons",["loc",[null,[142,10],[142,23]]]]],[],8,null,["loc",[null,[142,2],[158,11]]]],["content","_infoModalDialogCaption",["loc",[null,[162,6],[162,33]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.copy"],[],["loc",[null,[168,12],[168,47]]]]],["element","action",["copyJSONContent"],[],["loc",[null,[169,6],[169,34]]]],["inline","t",["components.olv-toolbar.copy"],[],["loc",[null,[171,8],[171,43]]]],["inline","t",["components.olv-toolbar.close"],[],["loc",[null,[176,8],[176,44]]]],["content","_infoModalDialogContent",["loc",[null,[182,38],[182,65]]]],["attribute","class",["concat",["object-list-view ui unstackable celled ",["subexpr","if",[["get","readonly",["loc",[null,[189,60],[189,68]]]],"readonly"],[],["loc",[null,[189,55],[189,81]]]]," ",["get","tableClass",["loc",[null,[189,84],[189,94]]]]," table"]]],["block","if",[["get","showHelperColumn",["loc",[null,[192,14],[192,30]]]]],[],9,null,["loc",[null,[192,8],[242,15]]]],["block","each",[["get","columns",["loc",[null,[243,16],[243,23]]]]],[],10,null,["loc",[null,[243,8],[270,17]]]],["block","if",[["get","showMenuColumn",["loc",[null,[271,14],[271,28]]]]],[],11,null,["loc",[null,[271,8],[273,15]]]],["block","if",[["get","showFilters",["loc",[null,[277,12],[277,23]]]]],[],12,null,["loc",[null,[277,6],[327,13]]]],["block","unless",[["get","content",["loc",[null,[328,16],[328,23]]]]],[],13,14,["loc",[null,[328,6],[448,17]]]],["block","if",[["get","hasPreviousPage",["loc",[null,[454,10],[454,25]]]]],[],15,16,["loc",[null,[454,4],[460,11]]]],["block","each",[["get","pages",["loc",[null,[461,12],[461,17]]]]],[],17,null,["loc",[null,[461,4],[471,13]]]],["block","if",[["get","hasNextPage",["loc",[null,[472,10],[472,21]]]]],[],18,19,["loc",[null,[472,4],[478,11]]]],["block","if",[["get","showShowingEntries",["loc",[null,[481,10],[481,28]]]]],[],20,null,["loc",[null,[481,4],[489,11]]]],["inline","flexberry-dropdown",[],["items",["subexpr","@mut",[["get","perPageValues",["loc",[null,[490,31],[490,44]]]]],[],[]],"value",["subexpr","@mut",[["get","perPageValue",["loc",[null,[490,51],[490,63]]]]],[],[]],"class","compact selection","onChange",["subexpr","action",["perPageClick"],[],["loc",[null,[490,99],[490,122]]]],"needChecksOnValue",false,"direction","upward"],["loc",[null,[490,4],[490,167]]]]],locals:[],templates:[child0,child1,child2,child3,child4,child5,child6,child7,child8,child9,child10,child11,child12,child13,child14,child15,child16,child17,child18,child19,child20]};})());});
 define("dummy/templates/components/flexberry-tab-bar", ["exports"], function (exports) {
   exports["default"] = Ember.HTMLBars.template((function () {
     var child0 = (function () {
@@ -20665,6 +21052,58 @@ define("dummy/templates/components/flexberry-tab-bar", ["exports"], function (ex
       statements: [["block", "each", [["get", "tabs", ["loc", [null, [1, 8], [1, 12]]]]], [], 0, null, ["loc", [null, [1, 0], [12, 9]]]]],
       locals: [],
       templates: [child0]
+    };
+  })());
+});
+define("dummy/templates/components/flexberry-text-cell", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template((function () {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.4.6",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 2,
+            "column": 0
+          }
+        },
+        "moduleName": "dummy/templates/components/flexberry-text-cell.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1, "class", "flexberry-text-cell oveflow-text");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [0]);
+        var morphs = new Array(3);
+        morphs[0] = dom.createAttrMorph(element0, 'title');
+        morphs[1] = dom.createMorphAt(element0, 0, 0);
+        morphs[2] = dom.createMorphAt(element0, 1, 1);
+        return morphs;
+      },
+      statements: [["attribute", "title", ["get", "titleValue", ["loc", [null, [1, 54], [1, 64]]]]], ["content", "yield", ["loc", [null, [1, 67], [1, 76]]]], ["content", "displayValue", ["loc", [null, [1, 76], [1, 92]]]]],
+      locals: [],
+      templates: []
     };
   })());
 });
@@ -21896,7 +22335,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
               "column": 0
             },
             "end": {
-              "line": 8,
+              "line": 9,
               "column": 0
             }
           },
@@ -21911,6 +22350,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           var el1 = dom.createTextNode("  ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
+          dom.setAttribute(el1, "type", "button");
           var el2 = dom.createTextNode("\n      ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("i");
@@ -21932,7 +22372,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           morphs[3] = dom.createElementMorph(element6);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", ["ui ui-add ", ["get", "buttonClass", ["loc", [null, [3, 23], [3, 34]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.groupedit-toolbar.add-button-text"], [], ["loc", [null, [4, 10], [4, 62]]]]], ["attribute", "disabled", ["get", "readonly", ["loc", [null, [5, 15], [5, 23]]]]], ["element", "action", ["addRow"], [], ["loc", [null, [5, 26], [5, 45]]]]],
+        statements: [["attribute", "class", ["concat", ["ui ui-add ", ["get", "buttonClass", ["loc", [null, [4, 23], [4, 34]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.groupedit-toolbar.add-button-text"], [], ["loc", [null, [5, 10], [5, 62]]]]], ["attribute", "disabled", ["get", "readonly", ["loc", [null, [6, 15], [6, 23]]]]], ["element", "action", ["addRow"], [], ["loc", [null, [6, 26], [6, 45]]]]],
         locals: [],
         templates: []
       };
@@ -21945,11 +22385,11 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           "loc": {
             "source": null,
             "start": {
-              "line": 9,
+              "line": 10,
               "column": 0
             },
             "end": {
-              "line": 16,
+              "line": 18,
               "column": 0
             }
           },
@@ -21964,6 +22404,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           var el1 = dom.createTextNode("  ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
+          dom.setAttribute(el1, "type", "button");
           var el2 = dom.createTextNode("\n      ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("i");
@@ -21985,7 +22426,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           morphs[3] = dom.createElementMorph(element5);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", ["ui ui-delete ", ["subexpr", "if", [["get", "_isDeleteRowsEnabled", ["loc", [null, [11, 29], [11, 49]]]], "", "disabled"], [], ["loc", [null, [11, 24], [11, 65]]]], " ", ["get", "buttonClass", ["loc", [null, [11, 68], [11, 79]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.groupedit-toolbar.delete-button-text"], [], ["loc", [null, [12, 10], [12, 65]]]]], ["attribute", "disabled", ["get", "readonly", ["loc", [null, [13, 15], [13, 23]]]]], ["element", "action", ["deleteRows"], [], ["loc", [null, [13, 26], [13, 49]]]]],
+        statements: [["attribute", "class", ["concat", ["ui ui-delete ", ["subexpr", "unless", [["get", "_hasSelectedRows", ["loc", [null, [13, 33], [13, 49]]]], "disabled"], [], ["loc", [null, [13, 24], [13, 62]]]], " ", ["get", "buttonClass", ["loc", [null, [13, 65], [13, 76]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.groupedit-toolbar.delete-button-text"], [], ["loc", [null, [14, 10], [14, 65]]]]], ["attribute", "disabled", ["subexpr", "or", [["subexpr", "not", [["get", "_hasSelectedRows", ["loc", [null, [15, 23], [15, 39]]]]], [], ["loc", [null, [15, 18], [15, 40]]]], ["get", "readonly", ["loc", [null, [15, 41], [15, 49]]]]], [], ["loc", [null, [15, 13], [15, 51]]]]], ["element", "action", ["deleteRows"], [], ["loc", [null, [15, 52], [15, 75]]]]],
         locals: [],
         templates: []
       };
@@ -21998,11 +22439,11 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           "loc": {
             "source": null,
             "start": {
-              "line": 17,
+              "line": 19,
               "column": 0
             },
             "end": {
-              "line": 24,
+              "line": 27,
               "column": 0
             }
           },
@@ -22017,6 +22458,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           var el1 = dom.createTextNode("  ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
+          dom.setAttribute(el1, "type", "button");
           var el2 = dom.createTextNode("\n      ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("i");
@@ -22037,7 +22479,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           morphs[2] = dom.createElementMorph(element4);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", ["ui ui-clear-settings ", ["get", "buttonClass", ["loc", [null, [19, 34], [19, 45]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.groupedit-toolbar.clear-settings-button-text"], [], ["loc", [null, [20, 10], [20, 73]]]]], ["element", "action", ["setDefaultSettings"], [], ["loc", [null, [21, 4], [21, 35]]]]],
+        statements: [["attribute", "class", ["concat", ["ui ui-clear-settings ", ["get", "buttonClass", ["loc", [null, [22, 34], [22, 45]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.groupedit-toolbar.clear-settings-button-text"], [], ["loc", [null, [23, 10], [23, 73]]]]], ["element", "action", ["setDefaultSettings"], [], ["loc", [null, [24, 4], [24, 35]]]]],
         locals: [],
         templates: []
       };
@@ -22050,11 +22492,11 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           "loc": {
             "source": null,
             "start": {
-              "line": 26,
+              "line": 29,
               "column": 0
             },
             "end": {
-              "line": 42,
+              "line": 47,
               "column": 0
             }
           },
@@ -22069,6 +22511,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           var el1 = dom.createTextNode("  ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
+          dom.setAttribute(el1, "type", "button");
           var el2 = dom.createTextNode("\n      ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("i");
@@ -22080,6 +22523,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           var el1 = dom.createTextNode("\n\n  ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
+          dom.setAttribute(el1, "type", "button");
           var el2 = dom.createTextNode("\n      ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("i");
@@ -22106,7 +22550,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           morphs[7] = dom.createElementMorph(element3);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", ["ui ui-move-up ", ["get", "buttonClass", ["loc", [null, [28, 27], [28, 38]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.groupedit-toolbar.move-up-button-text"], [], ["loc", [null, [29, 10], [29, 66]]]]], ["attribute", "disabled", ["get", "readonly", ["loc", [null, [30, 15], [30, 23]]]]], ["element", "action", ["moveRow", -1], [], ["loc", [null, [31, 4], [31, 27]]]], ["attribute", "class", ["concat", ["ui ui-move-down ", ["get", "buttonClass", ["loc", [null, [36, 29], [36, 40]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.groupedit-toolbar.move-down-button-text"], [], ["loc", [null, [37, 10], [37, 68]]]]], ["attribute", "disabled", ["get", "readonly", ["loc", [null, [38, 15], [38, 23]]]]], ["element", "action", ["moveRow", 1], [], ["loc", [null, [39, 4], [39, 26]]]]],
+        statements: [["attribute", "class", ["concat", ["ui ui-move-up ", ["get", "buttonClass", ["loc", [null, [32, 27], [32, 38]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.groupedit-toolbar.move-up-button-text"], [], ["loc", [null, [33, 10], [33, 66]]]]], ["attribute", "disabled", ["subexpr", "or", [["subexpr", "not", [["get", "_hasSelectedRows", ["loc", [null, [34, 23], [34, 39]]]]], [], ["loc", [null, [34, 18], [34, 40]]]], ["get", "_disableMoveUpButton", ["loc", [null, [34, 41], [34, 61]]]], ["get", "readonly", ["loc", [null, [34, 62], [34, 70]]]]], [], ["loc", [null, [34, 13], [34, 72]]]]], ["element", "action", ["moveRow", -1], [], ["loc", [null, [35, 4], [35, 27]]]], ["attribute", "class", ["concat", ["ui ui-move-down ", ["get", "buttonClass", ["loc", [null, [41, 29], [41, 40]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.groupedit-toolbar.move-down-button-text"], [], ["loc", [null, [42, 10], [42, 68]]]]], ["attribute", "disabled", ["subexpr", "or", [["subexpr", "not", [["get", "_hasSelectedRows", ["loc", [null, [43, 23], [43, 39]]]]], [], ["loc", [null, [43, 18], [43, 40]]]], ["get", "_disableMoveDownButton", ["loc", [null, [43, 41], [43, 63]]]], ["get", "readonly", ["loc", [null, [43, 64], [43, 72]]]]], [], ["loc", [null, [43, 13], [43, 74]]]]], ["element", "action", ["moveRow", 1], [], ["loc", [null, [44, 4], [44, 26]]]]],
         locals: [],
         templates: []
       };
@@ -22120,11 +22564,11 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
             "loc": {
               "source": null,
               "start": {
-                "line": 50,
+                "line": 56,
                 "column": 2
               },
               "end": {
-                "line": 52,
+                "line": 58,
                 "column": 2
               }
             },
@@ -22150,7 +22594,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
             morphs[0] = dom.createAttrMorph(element0, 'class');
             return morphs;
           },
-          statements: [["attribute", "class", ["concat", [["get", "customButton.iconClasses", ["loc", [null, [51, 15], [51, 39]]]], " icon"]]]],
+          statements: [["attribute", "class", ["concat", [["get", "customButton.iconClasses", ["loc", [null, [57, 15], [57, 39]]]], " icon"]]]],
           locals: [],
           templates: []
         };
@@ -22163,11 +22607,11 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
             "loc": {
               "source": null,
               "start": {
-                "line": 52,
+                "line": 58,
                 "column": 2
               },
               "end": {
-                "line": 54,
+                "line": 60,
                 "column": 2
               }
             },
@@ -22192,7 +22636,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
             morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
             return morphs;
           },
-          statements: [["inline", "if", [["get", "customButton.buttonName", ["loc", [null, [53, 8], [53, 31]]]], ["get", "customButton.buttonName", ["loc", [null, [53, 32], [53, 55]]]], ["subexpr", "t", ["components.groupedit-toolbar.custom-button-text"], [], ["loc", [null, [53, 56], [53, 109]]]]], [], ["loc", [null, [53, 3], [53, 111]]]]],
+          statements: [["inline", "if", [["get", "customButton.buttonName", ["loc", [null, [59, 8], [59, 31]]]], ["get", "customButton.buttonName", ["loc", [null, [59, 32], [59, 55]]]], ["subexpr", "t", ["components.groupedit-toolbar.custom-button-text"], [], ["loc", [null, [59, 56], [59, 109]]]]], [], ["loc", [null, [59, 3], [59, 111]]]]],
           locals: [],
           templates: []
         };
@@ -22204,11 +22648,11 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           "loc": {
             "source": null,
             "start": {
-              "line": 44,
+              "line": 49,
               "column": 0
             },
             "end": {
-              "line": 56,
+              "line": 62,
               "column": 0
             }
           },
@@ -22223,6 +22667,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           var el1 = dom.createTextNode("  ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
+          dom.setAttribute(el1, "type", "button");
           var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
@@ -22244,7 +22689,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
           morphs[4] = dom.createMorphAt(element1, 1, 1);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", ["ui ", ["subexpr", "if", [["get", "customButton.buttonClasses", ["loc", [null, [46, 19], [46, 45]]]], ["get", "customButton.buttonClasses", ["loc", [null, [46, 46], [46, 72]]]], ""], [], ["loc", [null, [46, 14], [46, 77]]]], " ", ["subexpr", "if", [["get", "customButton.iconClasses", ["loc", [null, [46, 83], [46, 107]]]], " icon", ""], [], ["loc", [null, [46, 78], [46, 120]]]], " custom button"]]], ["attribute", "title", ["subexpr", "if", [["get", "customButton.buttonTitle", ["loc", [null, [47, 15], [47, 39]]]], ["get", "customButton.buttonTitle", ["loc", [null, [47, 40], [47, 64]]]]], [], ["loc", [null, [47, 10], [47, 66]]]]], ["attribute", "disabled", ["get", "customButton.disabled", ["loc", [null, [48, 15], [48, 36]]]]], ["element", "action", ["customButtonAction", ["get", "customButton.buttonAction", ["loc", [null, [49, 34], [49, 59]]]]], [], ["loc", [null, [49, 4], [49, 61]]]], ["block", "if", [["get", "customButton.iconClasses", ["loc", [null, [50, 8], [50, 32]]]]], [], 0, 1, ["loc", [null, [50, 2], [54, 9]]]]],
+        statements: [["attribute", "class", ["concat", ["ui ", ["subexpr", "if", [["get", "customButton.buttonClasses", ["loc", [null, [52, 19], [52, 45]]]], ["get", "customButton.buttonClasses", ["loc", [null, [52, 46], [52, 72]]]]], [], ["loc", [null, [52, 14], [52, 74]]]], " ", ["subexpr", "if", [["get", "customButton.iconClasses", ["loc", [null, [52, 80], [52, 104]]]], "icon"], [], ["loc", [null, [52, 75], [52, 113]]]], " custom button"]]], ["attribute", "title", ["subexpr", "if", [["get", "customButton.buttonTitle", ["loc", [null, [53, 15], [53, 39]]]], ["get", "customButton.buttonTitle", ["loc", [null, [53, 40], [53, 64]]]]], [], ["loc", [null, [53, 10], [53, 66]]]]], ["attribute", "disabled", ["get", "customButton.disabled", ["loc", [null, [54, 15], [54, 36]]]]], ["element", "action", ["customButtonAction", ["get", "customButton.buttonAction", ["loc", [null, [55, 34], [55, 59]]]]], [], ["loc", [null, [55, 4], [55, 61]]]], ["block", "if", [["get", "customButton.iconClasses", ["loc", [null, [56, 8], [56, 32]]]]], [], 0, 1, ["loc", [null, [56, 2], [60, 9]]]]],
         locals: ["customButton"],
         templates: [child0, child1]
       };
@@ -22263,7 +22708,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
             "column": 0
           },
           "end": {
-            "line": 57,
+            "line": 63,
             "column": 0
           }
         },
@@ -22302,7 +22747,7 @@ define("dummy/templates/components/groupedit-toolbar", ["exports"], function (ex
         dom.insertBoundary(fragment, null);
         return morphs;
       },
-      statements: [["block", "if", [["get", "createNewButton", ["loc", [null, [1, 6], [1, 21]]]]], [], 0, null, ["loc", [null, [1, 0], [8, 7]]]], ["block", "if", [["get", "deleteButton", ["loc", [null, [9, 6], [9, 18]]]]], [], 1, null, ["loc", [null, [9, 0], [16, 7]]]], ["block", "if", [["subexpr", "and", [["get", "defaultSettingsButton", ["loc", [null, [17, 11], [17, 32]]]], ["subexpr", "not", [["get", "orderedProperty", ["loc", [null, [17, 38], [17, 53]]]]], [], ["loc", [null, [17, 33], [17, 54]]]]], [], ["loc", [null, [17, 6], [17, 55]]]]], [], 2, null, ["loc", [null, [17, 0], [24, 7]]]], ["block", "if", [["get", "arrowsButtons", ["loc", [null, [26, 6], [26, 19]]]]], [], 3, null, ["loc", [null, [26, 0], [42, 7]]]], ["block", "each", [["get", "customButtons", ["loc", [null, [44, 8], [44, 21]]]]], [], 4, null, ["loc", [null, [44, 0], [56, 9]]]]],
+      statements: [["block", "if", [["get", "createNewButton", ["loc", [null, [1, 6], [1, 21]]]]], [], 0, null, ["loc", [null, [1, 0], [9, 7]]]], ["block", "if", [["get", "deleteButton", ["loc", [null, [10, 6], [10, 18]]]]], [], 1, null, ["loc", [null, [10, 0], [18, 7]]]], ["block", "if", [["subexpr", "and", [["get", "defaultSettingsButton", ["loc", [null, [19, 11], [19, 32]]]], ["subexpr", "not", [["get", "orderedProperty", ["loc", [null, [19, 38], [19, 53]]]]], [], ["loc", [null, [19, 33], [19, 54]]]]], [], ["loc", [null, [19, 6], [19, 55]]]]], [], 2, null, ["loc", [null, [19, 0], [27, 7]]]], ["block", "if", [["get", "arrowsButtons", ["loc", [null, [29, 6], [29, 19]]]]], [], 3, null, ["loc", [null, [29, 0], [47, 7]]]], ["block", "each", [["get", "customButtons", ["loc", [null, [49, 8], [49, 21]]]]], [], 4, null, ["loc", [null, [49, 0], [62, 9]]]]],
       locals: [],
       templates: [child0, child1, child2, child3, child4]
     };
@@ -22768,12 +23213,13 @@ define("dummy/templates/components/object-list-view-cell", ["exports"], function
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
         var element0 = dom.childAt(fragment, [0]);
-        var morphs = new Array(2);
-        morphs[0] = dom.createMorphAt(element0, 0, 0);
-        morphs[1] = dom.createMorphAt(element0, 1, 1);
+        var morphs = new Array(3);
+        morphs[0] = dom.createAttrMorph(element0, 'title');
+        morphs[1] = dom.createMorphAt(element0, 0, 0);
+        morphs[2] = dom.createMorphAt(element0, 1, 1);
         return morphs;
       },
-      statements: [["content", "yield", ["loc", [null, [1, 26], [1, 35]]]], ["content", "formattedValue", ["loc", [null, [1, 35], [1, 53]]]]],
+      statements: [["attribute", "title", ["get", "titleValue", ["loc", [null, [1, 34], [1, 44]]]]], ["content", "yield", ["loc", [null, [1, 47], [1, 56]]]], ["content", "displayValue", ["loc", [null, [1, 56], [1, 72]]]]],
       locals: [],
       templates: []
     };
@@ -22794,7 +23240,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 "column": 6
               },
               "end": {
-                "line": 12,
+                "line": 13,
                 "column": 6
               }
             },
@@ -22809,6 +23255,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             var el1 = dom.createTextNode("          ");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("button");
+            dom.setAttribute(el1, "type", "button");
             var el2 = dom.createTextNode("\n            ");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("i");
@@ -22821,16 +23268,16 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             return el0;
           },
           buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element18 = dom.childAt(fragment, [1]);
-            var element19 = dom.childAt(element18, [1]);
+            var element21 = dom.childAt(fragment, [1]);
+            var element22 = dom.childAt(element21, [1]);
             var morphs = new Array(4);
-            morphs[0] = dom.createAttrMorph(element18, 'class');
-            morphs[1] = dom.createAttrMorph(element18, 'title');
-            morphs[2] = dom.createElementMorph(element18);
-            morphs[3] = dom.createAttrMorph(element19, 'class');
+            morphs[0] = dom.createAttrMorph(element21, 'class');
+            morphs[1] = dom.createAttrMorph(element21, 'title');
+            morphs[2] = dom.createElementMorph(element21);
+            morphs[3] = dom.createAttrMorph(element22, 'class');
             return morphs;
           },
-          statements: [["attribute", "class", ["concat", ["ui ", ["get", "customButtonInRow.buttonClasses", ["loc", [null, [7, 24], [7, 55]]]], " button"]]], ["attribute", "title", ["subexpr", "if", [["get", "customButtonInRow.buttonTitle", ["loc", [null, [8, 23], [8, 52]]]], ["get", "customButtonInRow.buttonTitle", ["loc", [null, [8, 53], [8, 82]]]]], [], ["loc", [null, [8, 18], [8, 84]]]]], ["element", "action", ["customButtonInRowAction", ["get", "customButtonInRow.buttonAction", ["loc", [null, [9, 47], [9, 77]]]], ["get", "record.data", ["loc", [null, [9, 78], [9, 89]]]]], [], ["loc", [null, [9, 12], [9, 91]]]], ["attribute", "class", ["get", "customButtonInRow.buttonIcon", ["loc", [null, [10, 23], [10, 51]]]]]],
+          statements: [["attribute", "class", ["concat", ["ui ", ["get", "customButtonInRow.buttonClasses", ["loc", [null, [8, 24], [8, 55]]]], " button"]]], ["attribute", "title", ["subexpr", "if", [["get", "customButtonInRow.buttonTitle", ["loc", [null, [9, 23], [9, 52]]]], ["get", "customButtonInRow.buttonTitle", ["loc", [null, [9, 53], [9, 82]]]]], [], ["loc", [null, [9, 18], [9, 84]]]]], ["element", "action", ["customButtonInRowAction", ["get", "customButtonInRow.buttonAction", ["loc", [null, [10, 47], [10, 77]]]], ["get", "record.data", ["loc", [null, [10, 78], [10, 89]]]]], [], ["loc", [null, [10, 12], [10, 91]]]], ["attribute", "class", ["get", "customButtonInRow.buttonIcon", ["loc", [null, [11, 23], [11, 51]]]]]],
           locals: ["customButtonInRow"],
           templates: []
         };
@@ -22844,11 +23291,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 15,
+                  "line": 16,
                   "column": 10
                 },
                 "end": {
-                  "line": 19,
+                  "line": 20,
                   "column": 10
                 }
               },
@@ -22876,12 +23323,12 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               return el0;
             },
             buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-              var element16 = dom.childAt(fragment, [1, 1]);
+              var element19 = dom.childAt(fragment, [1, 1]);
               var morphs = new Array(1);
-              morphs[0] = dom.createAttrMorph(element16, 'class');
+              morphs[0] = dom.createAttrMorph(element19, 'class');
               return morphs;
             },
-            statements: [["attribute", "class", ["concat", ["asterisk small red icon ", ["subexpr", "unless", [["get", "record.data.hasDirtyAttributes", ["loc", [null, [17, 57], [17, 87]]]], "transparent"], [], ["loc", [null, [17, 48], [17, 103]]]]]]]],
+            statements: [["attribute", "class", ["concat", ["asterisk small red icon ", ["subexpr", "unless", [["get", "record.data.hasDirtyAttributes", ["loc", [null, [18, 57], [18, 87]]]], "transparent"], [], ["loc", [null, [18, 48], [18, 103]]]]]]]],
             locals: [],
             templates: []
           };
@@ -22894,11 +23341,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 20,
+                  "line": 21,
                   "column": 10
                 },
                 "end": {
-                  "line": 28,
+                  "line": 29,
                   "column": 10
                 }
               },
@@ -22930,7 +23377,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 1, 1);
               return morphs;
             },
-            statements: [["inline", "flexberry-checkbox", [], ["readonly", ["subexpr", "or", [["get", "readonly", ["loc", [null, [23, 29], [23, 37]]]], ["subexpr", "not", [["get", "record.rowConfig.canBeSelected", ["loc", [null, [23, 43], [23, 73]]]]], [], ["loc", [null, [23, 38], [23, 74]]]]], [], ["loc", [null, [23, 25], [23, 75]]]], "onChange", ["subexpr", "action", [["get", "selectRow", ["loc", [null, [24, 33], [24, 42]]]], ["get", "record", ["loc", [null, [24, 43], [24, 49]]]]], [], ["loc", [null, [24, 25], [24, 50]]]], "value", ["subexpr", "@mut", [["get", "record.selected", ["loc", [null, [25, 22], [25, 37]]]]], [], []]], ["loc", [null, [22, 14], [26, 16]]]]],
+            statements: [["inline", "flexberry-checkbox", [], ["readonly", ["subexpr", "or", [["get", "readonly", ["loc", [null, [24, 29], [24, 37]]]], ["subexpr", "not", [["get", "record.rowConfig.canBeSelected", ["loc", [null, [24, 43], [24, 73]]]]], [], ["loc", [null, [24, 38], [24, 74]]]]], [], ["loc", [null, [24, 25], [24, 75]]]], "onChange", ["subexpr", "action", [["get", "selectRow", ["loc", [null, [25, 33], [25, 42]]]], ["get", "record", ["loc", [null, [25, 43], [25, 49]]]]], [], ["loc", [null, [25, 25], [25, 50]]]], "value", ["subexpr", "@mut", [["get", "record.selected", ["loc", [null, [26, 22], [26, 37]]]]], [], []]], ["loc", [null, [23, 14], [27, 16]]]]],
             locals: [],
             templates: []
           };
@@ -22944,11 +23391,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 "loc": {
                   "source": null,
                   "start": {
-                    "line": 31,
+                    "line": 32,
                     "column": 14
                   },
                   "end": {
-                    "line": 39,
+                    "line": 40,
                     "column": 14
                   }
                 },
@@ -22963,11 +23410,219 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 var el1 = dom.createTextNode("                ");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("button");
+                dom.setAttribute(el1, "type", "button");
                 dom.setAttribute(el1, "disabled", "disabled");
                 var el2 = dom.createTextNode("\n                  ");
                 dom.appendChild(el1, el2);
                 var el2 = dom.createElement("i");
-                dom.setAttribute(el2, "class", "minus icon");
+                dom.setAttribute(el2, "class", "edit icon");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                ");
+                dom.appendChild(el1, el2);
+                dom.appendChild(el0, el1);
+                var el1 = dom.createTextNode("\n");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+                var element18 = dom.childAt(fragment, [1]);
+                var morphs = new Array(2);
+                morphs[0] = dom.createAttrMorph(element18, 'class');
+                morphs[1] = dom.createAttrMorph(element18, 'title');
+                return morphs;
+              },
+              statements: [["attribute", "class", ["concat", ["ui ui-edit object-list-view-row-edit-button ", ["get", "buttonClass", ["loc", [null, [35, 71], [35, 82]]]], " disabled button"]]], ["attribute", "title", ["subexpr", "t", ["components.object-list-view.menu-in-row.edit-menu-item-title"], [], ["loc", [null, [36, 24], [36, 92]]]]]],
+              locals: [],
+              templates: []
+            };
+          })();
+          var child1 = (function () {
+            return {
+              meta: {
+                "fragmentReason": false,
+                "revision": "Ember@2.4.6",
+                "loc": {
+                  "source": null,
+                  "start": {
+                    "line": 40,
+                    "column": 14
+                  },
+                  "end": {
+                    "line": 48,
+                    "column": 14
+                  }
+                },
+                "moduleName": "dummy/templates/components/object-list-view-row.hbs"
+              },
+              isEmpty: false,
+              arity: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              buildFragment: function buildFragment(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createTextNode("                ");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createElement("button");
+                dom.setAttribute(el1, "type", "button");
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("i");
+                dom.setAttribute(el2, "class", "edit icon");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                ");
+                dom.appendChild(el1, el2);
+                dom.appendChild(el0, el1);
+                var el1 = dom.createTextNode("\n");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+                var element17 = dom.childAt(fragment, [1]);
+                var morphs = new Array(3);
+                morphs[0] = dom.createAttrMorph(element17, 'class');
+                morphs[1] = dom.createAttrMorph(element17, 'title');
+                morphs[2] = dom.createElementMorph(element17);
+                return morphs;
+              },
+              statements: [["attribute", "class", ["concat", ["ui ui-edit object-list-view-row-edit-button ", ["get", "buttonClass", ["loc", [null, [43, 71], [43, 82]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.object-list-view.menu-in-row.edit-menu-item-title"], [], ["loc", [null, [44, 24], [44, 92]]]]], ["element", "action", ["onRowClick", ["get", "record", ["loc", [null, [45, 40], [45, 46]]]], ["subexpr", "hash", [], ["column", null, "columnIndex", null, "rowEdit", true], ["loc", [null, [45, 47], [45, 95]]]]], [], ["loc", [null, [45, 18], [45, 97]]]]],
+              locals: [],
+              templates: []
+            };
+          })();
+          return {
+            meta: {
+              "fragmentReason": false,
+              "revision": "Ember@2.4.6",
+              "loc": {
+                "source": null,
+                "start": {
+                  "line": 30,
+                  "column": 10
+                },
+                "end": {
+                  "line": 50,
+                  "column": 10
+                }
+              },
+              "moduleName": "dummy/templates/components/object-list-view-row.hbs"
+            },
+            isEmpty: false,
+            arity: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            buildFragment: function buildFragment(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createTextNode("            ");
+              dom.appendChild(el0, el1);
+              var el1 = dom.createElement("div");
+              dom.setAttribute(el1, "class", "cell");
+              var el2 = dom.createTextNode("\n");
+              dom.appendChild(el1, el2);
+              var el2 = dom.createComment("");
+              dom.appendChild(el1, el2);
+              var el2 = dom.createTextNode("            ");
+              dom.appendChild(el1, el2);
+              dom.appendChild(el0, el1);
+              var el1 = dom.createTextNode("\n");
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+              var morphs = new Array(1);
+              morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 1, 1);
+              return morphs;
+            },
+            statements: [["block", "if", [["get", "readonly", ["loc", [null, [32, 20], [32, 28]]]]], [], 0, 1, ["loc", [null, [32, 14], [48, 21]]]]],
+            locals: [],
+            templates: [child0, child1]
+          };
+        })();
+        var child3 = (function () {
+          var child0 = (function () {
+            return {
+              meta: {
+                "fragmentReason": false,
+                "revision": "Ember@2.4.6",
+                "loc": {
+                  "source": null,
+                  "start": {
+                    "line": 53,
+                    "column": 14
+                  },
+                  "end": {
+                    "line": 61,
+                    "column": 14
+                  }
+                },
+                "moduleName": "dummy/templates/components/object-list-view-row.hbs"
+              },
+              isEmpty: false,
+              arity: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              buildFragment: function buildFragment(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createTextNode("                ");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createElement("button");
+                dom.setAttribute(el1, "type", "button");
+                dom.setAttribute(el1, "disabled", "disabled");
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("i");
+                dom.setAttribute(el2, "class", "copy icon");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                ");
+                dom.appendChild(el1, el2);
+                dom.appendChild(el0, el1);
+                var el1 = dom.createTextNode("\n");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+                var element16 = dom.childAt(fragment, [1]);
+                var morphs = new Array(2);
+                morphs[0] = dom.createAttrMorph(element16, 'class');
+                morphs[1] = dom.createAttrMorph(element16, 'title');
+                return morphs;
+              },
+              statements: [["attribute", "class", ["concat", ["ui ui-edit object-list-view-row-prototype-button ", ["get", "buttonClass", ["loc", [null, [56, 76], [56, 87]]]], " disabled button"]]], ["attribute", "title", ["subexpr", "t", ["components.object-list-view.menu-in-row.prototype-menu-item-title"], [], ["loc", [null, [57, 24], [57, 97]]]]]],
+              locals: [],
+              templates: []
+            };
+          })();
+          var child1 = (function () {
+            return {
+              meta: {
+                "fragmentReason": false,
+                "revision": "Ember@2.4.6",
+                "loc": {
+                  "source": null,
+                  "start": {
+                    "line": 61,
+                    "column": 14
+                  },
+                  "end": {
+                    "line": 69,
+                    "column": 14
+                  }
+                },
+                "moduleName": "dummy/templates/components/object-list-view-row.hbs"
+              },
+              isEmpty: false,
+              arity: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              buildFragment: function buildFragment(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createTextNode("                ");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createElement("button");
+                dom.setAttribute(el1, "type", "button");
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("i");
+                dom.setAttribute(el2, "class", "copy icon");
                 dom.appendChild(el1, el2);
                 var el2 = dom.createTextNode("\n                ");
                 dom.appendChild(el1, el2);
@@ -22984,59 +23639,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 morphs[2] = dom.createElementMorph(element15);
                 return morphs;
               },
-              statements: [["attribute", "class", ["concat", ["ui ui-delete object-list-view-row-delete-button ", ["get", "buttonClass", ["loc", [null, [33, 75], [33, 86]]]], " disabled button"]]], ["attribute", "title", ["subexpr", "t", ["components.object-list-view.menu-in-row.delete-menu-item-title"], [], ["loc", [null, [34, 24], [34, 94]]]]], ["element", "action", [["get", "deleteRow", ["loc", [null, [36, 27], [36, 36]]]], ["get", "record", ["loc", [null, [36, 37], [36, 43]]]]], [], ["loc", [null, [36, 18], [36, 45]]]]],
-              locals: [],
-              templates: []
-            };
-          })();
-          var child1 = (function () {
-            return {
-              meta: {
-                "fragmentReason": false,
-                "revision": "Ember@2.4.6",
-                "loc": {
-                  "source": null,
-                  "start": {
-                    "line": 39,
-                    "column": 14
-                  },
-                  "end": {
-                    "line": 46,
-                    "column": 14
-                  }
-                },
-                "moduleName": "dummy/templates/components/object-list-view-row.hbs"
-              },
-              isEmpty: false,
-              arity: 0,
-              cachedFragment: null,
-              hasRendered: false,
-              buildFragment: function buildFragment(dom) {
-                var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("                ");
-                dom.appendChild(el0, el1);
-                var el1 = dom.createElement("button");
-                var el2 = dom.createTextNode("\n                  ");
-                dom.appendChild(el1, el2);
-                var el2 = dom.createElement("i");
-                dom.setAttribute(el2, "class", "minus icon");
-                dom.appendChild(el1, el2);
-                var el2 = dom.createTextNode("\n                ");
-                dom.appendChild(el1, el2);
-                dom.appendChild(el0, el1);
-                var el1 = dom.createTextNode("\n");
-                dom.appendChild(el0, el1);
-                return el0;
-              },
-              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-                var element14 = dom.childAt(fragment, [1]);
-                var morphs = new Array(3);
-                morphs[0] = dom.createAttrMorph(element14, 'class');
-                morphs[1] = dom.createAttrMorph(element14, 'title');
-                morphs[2] = dom.createElementMorph(element14);
-                return morphs;
-              },
-              statements: [["attribute", "class", ["concat", ["ui ui-delete object-list-view-row-delete-button ", ["get", "buttonClass", ["loc", [null, [41, 75], [41, 86]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.object-list-view.menu-in-row.delete-menu-item-title"], [], ["loc", [null, [42, 24], [42, 94]]]]], ["element", "action", [["get", "deleteRow", ["loc", [null, [43, 27], [43, 36]]]], ["get", "record", ["loc", [null, [43, 37], [43, 43]]]]], [], ["loc", [null, [43, 18], [43, 45]]]]],
+              statements: [["attribute", "class", ["concat", ["ui ui-edit object-list-view-row-prototype-button ", ["get", "buttonClass", ["loc", [null, [64, 76], [64, 87]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.object-list-view.menu-in-row.prototype-menu-item-title"], [], ["loc", [null, [65, 24], [65, 97]]]]], ["element", "action", [["get", "createNewByPrototype", ["loc", [null, [66, 27], [66, 47]]]], ["subexpr", "get", [["get", "record", ["loc", [null, [66, 53], [66, 59]]]], "data.id"], [], ["loc", [null, [66, 48], [66, 70]]]]], [], ["loc", [null, [66, 18], [66, 72]]]]],
               locals: [],
               templates: []
             };
@@ -23048,11 +23651,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 29,
+                  "line": 51,
                   "column": 10
                 },
                 "end": {
-                  "line": 48,
+                  "line": 71,
                   "column": 10
                 }
               },
@@ -23084,12 +23687,12 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 1, 1);
               return morphs;
             },
-            statements: [["block", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [31, 24], [31, 32]]]], ["subexpr", "not", [["get", "record.rowConfig.canBeDeleted", ["loc", [null, [31, 38], [31, 67]]]]], [], ["loc", [null, [31, 33], [31, 68]]]]], [], ["loc", [null, [31, 20], [31, 69]]]]], [], 0, 1, ["loc", [null, [31, 14], [46, 21]]]]],
+            statements: [["block", "if", [["get", "readonly", ["loc", [null, [53, 20], [53, 28]]]]], [], 0, 1, ["loc", [null, [53, 14], [69, 21]]]]],
             locals: [],
             templates: [child0, child1]
           };
         })();
-        var child3 = (function () {
+        var child4 = (function () {
           var child0 = (function () {
             return {
               meta: {
@@ -23098,11 +23701,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 "loc": {
                   "source": null,
                   "start": {
-                    "line": 51,
+                    "line": 74,
                     "column": 14
                   },
                   "end": {
-                    "line": 59,
+                    "line": 82,
                     "column": 14
                   }
                 },
@@ -23117,11 +23720,64 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 var el1 = dom.createTextNode("                ");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("button");
+                dom.setAttribute(el1, "type", "button");
                 dom.setAttribute(el1, "disabled", "disabled");
                 var el2 = dom.createTextNode("\n                  ");
                 dom.appendChild(el1, el2);
                 var el2 = dom.createElement("i");
-                dom.setAttribute(el2, "class", "edit icon");
+                dom.setAttribute(el2, "class", "minus icon");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                ");
+                dom.appendChild(el1, el2);
+                dom.appendChild(el0, el1);
+                var el1 = dom.createTextNode("\n");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+                var element14 = dom.childAt(fragment, [1]);
+                var morphs = new Array(2);
+                morphs[0] = dom.createAttrMorph(element14, 'class');
+                morphs[1] = dom.createAttrMorph(element14, 'title');
+                return morphs;
+              },
+              statements: [["attribute", "class", ["concat", ["ui ui-delete object-list-view-row-delete-button ", ["get", "buttonClass", ["loc", [null, [77, 75], [77, 86]]]], " disabled button"]]], ["attribute", "title", ["subexpr", "t", ["components.object-list-view.menu-in-row.delete-menu-item-title"], [], ["loc", [null, [78, 24], [78, 94]]]]]],
+              locals: [],
+              templates: []
+            };
+          })();
+          var child1 = (function () {
+            return {
+              meta: {
+                "fragmentReason": false,
+                "revision": "Ember@2.4.6",
+                "loc": {
+                  "source": null,
+                  "start": {
+                    "line": 82,
+                    "column": 14
+                  },
+                  "end": {
+                    "line": 90,
+                    "column": 14
+                  }
+                },
+                "moduleName": "dummy/templates/components/object-list-view-row.hbs"
+              },
+              isEmpty: false,
+              arity: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              buildFragment: function buildFragment(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createTextNode("                ");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createElement("button");
+                dom.setAttribute(el1, "type", "button");
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("i");
+                dom.setAttribute(el2, "class", "minus icon");
                 dom.appendChild(el1, el2);
                 var el2 = dom.createTextNode("\n                ");
                 dom.appendChild(el1, el2);
@@ -23138,59 +23794,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 morphs[2] = dom.createElementMorph(element13);
                 return morphs;
               },
-              statements: [["attribute", "class", ["concat", ["ui ui-edit object-list-view-row-edit-button ", ["get", "buttonClass", ["loc", [null, [53, 71], [53, 82]]]], " disabled button"]]], ["attribute", "title", ["subexpr", "t", ["components.object-list-view.menu-in-row.edit-menu-item-title"], [], ["loc", [null, [54, 24], [54, 92]]]]], ["element", "action", ["onRowClick", ["get", "record", ["loc", [null, [56, 40], [56, 46]]]], ["subexpr", "hash", [], ["column", null, "columnIndex", null, "rowEdit", true], ["loc", [null, [56, 47], [56, 95]]]]], [], ["loc", [null, [56, 18], [56, 97]]]]],
-              locals: [],
-              templates: []
-            };
-          })();
-          var child1 = (function () {
-            return {
-              meta: {
-                "fragmentReason": false,
-                "revision": "Ember@2.4.6",
-                "loc": {
-                  "source": null,
-                  "start": {
-                    "line": 59,
-                    "column": 14
-                  },
-                  "end": {
-                    "line": 66,
-                    "column": 14
-                  }
-                },
-                "moduleName": "dummy/templates/components/object-list-view-row.hbs"
-              },
-              isEmpty: false,
-              arity: 0,
-              cachedFragment: null,
-              hasRendered: false,
-              buildFragment: function buildFragment(dom) {
-                var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("                ");
-                dom.appendChild(el0, el1);
-                var el1 = dom.createElement("button");
-                var el2 = dom.createTextNode("\n                  ");
-                dom.appendChild(el1, el2);
-                var el2 = dom.createElement("i");
-                dom.setAttribute(el2, "class", "edit icon");
-                dom.appendChild(el1, el2);
-                var el2 = dom.createTextNode("\n                ");
-                dom.appendChild(el1, el2);
-                dom.appendChild(el0, el1);
-                var el1 = dom.createTextNode("\n");
-                dom.appendChild(el0, el1);
-                return el0;
-              },
-              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-                var element12 = dom.childAt(fragment, [1]);
-                var morphs = new Array(3);
-                morphs[0] = dom.createAttrMorph(element12, 'class');
-                morphs[1] = dom.createAttrMorph(element12, 'title');
-                morphs[2] = dom.createElementMorph(element12);
-                return morphs;
-              },
-              statements: [["attribute", "class", ["concat", ["ui ui-edit object-list-view-row-edit-button ", ["get", "buttonClass", ["loc", [null, [61, 71], [61, 82]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.object-list-view.menu-in-row.edit-menu-item-title"], [], ["loc", [null, [62, 24], [62, 92]]]]], ["element", "action", ["onRowClick", ["get", "record", ["loc", [null, [63, 40], [63, 46]]]], ["subexpr", "hash", [], ["column", null, "columnIndex", null, "rowEdit", true], ["loc", [null, [63, 47], [63, 95]]]]], [], ["loc", [null, [63, 18], [63, 97]]]]],
+              statements: [["attribute", "class", ["concat", ["ui ui-delete object-list-view-row-delete-button ", ["get", "buttonClass", ["loc", [null, [85, 75], [85, 86]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.object-list-view.menu-in-row.delete-menu-item-title"], [], ["loc", [null, [86, 24], [86, 94]]]]], ["element", "action", [["get", "deleteRow", ["loc", [null, [87, 27], [87, 36]]]], ["get", "record", ["loc", [null, [87, 37], [87, 43]]]]], [], ["loc", [null, [87, 18], [87, 45]]]]],
               locals: [],
               templates: []
             };
@@ -23202,11 +23806,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 49,
+                  "line": 72,
                   "column": 10
                 },
                 "end": {
-                  "line": 68,
+                  "line": 92,
                   "column": 10
                 }
               },
@@ -23238,7 +23842,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 1, 1);
               return morphs;
             },
-            statements: [["block", "if", [["get", "readonly", ["loc", [null, [51, 20], [51, 28]]]]], [], 0, 1, ["loc", [null, [51, 14], [66, 21]]]]],
+            statements: [["block", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [74, 24], [74, 32]]]], ["subexpr", "not", [["get", "record.rowConfig.canBeDeleted", ["loc", [null, [74, 38], [74, 67]]]]], [], ["loc", [null, [74, 33], [74, 68]]]]], [], ["loc", [null, [74, 20], [74, 69]]]]], [], 0, 1, ["loc", [null, [74, 14], [90, 21]]]]],
             locals: [],
             templates: [child0, child1]
           };
@@ -23250,11 +23854,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             "loc": {
               "source": null,
               "start": {
-                "line": 13,
+                "line": 14,
                 "column": 6
               },
               "end": {
-                "line": 70,
+                "line": 94,
                 "column": 6
               }
             },
@@ -23280,6 +23884,8 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             dom.appendChild(el1, el2);
             var el2 = dom.createComment("");
             dom.appendChild(el1, el2);
+            var el2 = dom.createComment("");
+            dom.appendChild(el1, el2);
             var el2 = dom.createTextNode("        ");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
@@ -23288,17 +23894,18 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             return el0;
           },
           buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element17 = dom.childAt(fragment, [1]);
-            var morphs = new Array(4);
-            morphs[0] = dom.createMorphAt(element17, 1, 1);
-            morphs[1] = dom.createMorphAt(element17, 2, 2);
-            morphs[2] = dom.createMorphAt(element17, 3, 3);
-            morphs[3] = dom.createMorphAt(element17, 4, 4);
+            var element20 = dom.childAt(fragment, [1]);
+            var morphs = new Array(5);
+            morphs[0] = dom.createMorphAt(element20, 1, 1);
+            morphs[1] = dom.createMorphAt(element20, 2, 2);
+            morphs[2] = dom.createMorphAt(element20, 3, 3);
+            morphs[3] = dom.createMorphAt(element20, 4, 4);
+            morphs[4] = dom.createMorphAt(element20, 5, 5);
             return morphs;
           },
-          statements: [["block", "if", [["get", "showAsteriskInRow", ["loc", [null, [15, 16], [15, 33]]]]], [], 0, null, ["loc", [null, [15, 10], [19, 17]]]], ["block", "if", [["get", "showCheckBoxInRow", ["loc", [null, [20, 16], [20, 33]]]]], [], 1, null, ["loc", [null, [20, 10], [28, 17]]]], ["block", "if", [["get", "showDeleteButtonInRow", ["loc", [null, [29, 16], [29, 37]]]]], [], 2, null, ["loc", [null, [29, 10], [48, 17]]]], ["block", "if", [["get", "showEditButtonInRow", ["loc", [null, [49, 16], [49, 35]]]]], [], 3, null, ["loc", [null, [49, 10], [68, 17]]]]],
+          statements: [["block", "if", [["get", "showAsteriskInRow", ["loc", [null, [16, 16], [16, 33]]]]], [], 0, null, ["loc", [null, [16, 10], [20, 17]]]], ["block", "if", [["get", "showCheckBoxInRow", ["loc", [null, [21, 16], [21, 33]]]]], [], 1, null, ["loc", [null, [21, 10], [29, 17]]]], ["block", "if", [["get", "showEditButtonInRow", ["loc", [null, [30, 16], [30, 35]]]]], [], 2, null, ["loc", [null, [30, 10], [50, 17]]]], ["block", "if", [["get", "showPrototypeButtonInRow", ["loc", [null, [51, 16], [51, 40]]]]], [], 3, null, ["loc", [null, [51, 10], [71, 17]]]], ["block", "if", [["get", "showDeleteButtonInRow", ["loc", [null, [72, 16], [72, 37]]]]], [], 4, null, ["loc", [null, [72, 10], [92, 17]]]]],
           locals: [],
-          templates: [child0, child1, child2, child3]
+          templates: [child0, child1, child2, child3, child4]
         };
       })();
       var child2 = (function () {
@@ -23313,11 +23920,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                     "loc": {
                       "source": null,
                       "start": {
-                        "line": 87,
+                        "line": 111,
                         "column": 14
                       },
                       "end": {
-                        "line": 91,
+                        "line": 115,
                         "column": 14
                       }
                     },
@@ -23332,6 +23939,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                     var el1 = dom.createTextNode("                ");
                     dom.appendChild(el0, el1);
                     var el1 = dom.createElement("button");
+                    dom.setAttribute(el1, "type", "button");
                     var el2 = dom.createTextNode("\n                  ");
                     dom.appendChild(el1, el2);
                     var el2 = dom.createElement("i");
@@ -23344,15 +23952,15 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                     return el0;
                   },
                   buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-                    var element9 = dom.childAt(fragment, [1]);
-                    var element10 = dom.childAt(element9, [1]);
+                    var element10 = dom.childAt(fragment, [1]);
+                    var element11 = dom.childAt(element10, [1]);
                     var morphs = new Array(3);
-                    morphs[0] = dom.createAttrMorph(element9, 'class');
-                    morphs[1] = dom.createElementMorph(element9);
-                    morphs[2] = dom.createAttrMorph(element10, 'class');
+                    morphs[0] = dom.createAttrMorph(element10, 'class');
+                    morphs[1] = dom.createElementMorph(element10);
+                    morphs[2] = dom.createAttrMorph(element11, 'class');
                     return morphs;
                   },
-                  statements: [["attribute", "class", ["concat", ["ui button hierarchy-expand icon mini compact ", ["get", "buttonClass", ["loc", [null, [88, 78], [88, 89]]]]]]], ["element", "action", ["expand"], ["bubbles", false], ["loc", [null, [88, 93], [88, 126]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "_expanded", ["loc", [null, [89, 33], [89, 42]]]], "minus", "plus"], [], ["loc", [null, [89, 28], [89, 59]]]], " hierarchy-expand icon"]]]],
+                  statements: [["attribute", "class", ["concat", ["ui button hierarchy-expand icon mini compact ", ["get", "buttonClass", ["loc", [null, [112, 92], [112, 103]]]]]]], ["element", "action", ["expand"], ["bubbles", false], ["loc", [null, [112, 107], [112, 140]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "_expanded", ["loc", [null, [113, 33], [113, 42]]]], "minus", "plus"], [], ["loc", [null, [113, 28], [113, 59]]]], " hierarchy-expand icon"]]]],
                   locals: [],
                   templates: []
                 };
@@ -23364,11 +23972,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                   "loc": {
                     "source": null,
                     "start": {
-                      "line": 79,
+                      "line": 103,
                       "column": 12
                     },
                     "end": {
-                      "line": 92,
+                      "line": 116,
                       "column": 12
                     }
                   },
@@ -23391,7 +23999,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                   dom.insertBoundary(fragment, null);
                   return morphs;
                 },
-                statements: [["block", "if", [["subexpr", "and", [["subexpr", "not", [["get", "index", ["loc", [null, [87, 30], [87, 35]]]]], [], ["loc", [null, [87, 25], [87, 36]]]], ["get", "inHierarchicalMode", ["loc", [null, [87, 37], [87, 55]]]], ["get", "hasRecords", ["loc", [null, [87, 56], [87, 66]]]]], [], ["loc", [null, [87, 20], [87, 67]]]]], [], 0, null, ["loc", [null, [87, 14], [91, 21]]]]],
+                statements: [["block", "if", [["subexpr", "and", [["subexpr", "not", [["get", "index", ["loc", [null, [111, 30], [111, 35]]]]], [], ["loc", [null, [111, 25], [111, 36]]]], ["get", "inHierarchicalMode", ["loc", [null, [111, 37], [111, 55]]]], ["get", "hasRecords", ["loc", [null, [111, 56], [111, 66]]]]], [], ["loc", [null, [111, 20], [111, 67]]]]], [], 0, null, ["loc", [null, [111, 14], [115, 21]]]]],
                 locals: [],
                 templates: [child0]
               };
@@ -23403,11 +24011,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 "loc": {
                   "source": null,
                   "start": {
-                    "line": 78,
+                    "line": 102,
                     "column": 10
                   },
                   "end": {
-                    "line": 93,
+                    "line": 117,
                     "column": 10
                   }
                 },
@@ -23430,7 +24038,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 dom.insertBoundary(fragment, null);
                 return morphs;
               },
-              statements: [["block", "component", [["get", "column.cellComponent.componentName", ["loc", [null, [79, 25], [79, 59]]]]], ["dynamicProperties", ["subexpr", "@mut", [["get", "column.cellComponent.componentProperties", ["loc", [null, [80, 32], [80, 72]]]]], [], []], "relatedModel", ["subexpr", "@mut", [["get", "record.data", ["loc", [null, [81, 27], [81, 38]]]]], [], []], "value", ["subexpr", "mut", [["subexpr", "get", [["get", "record.data", ["loc", [null, [82, 30], [82, 41]]]], ["get", "column.propName", ["loc", [null, [82, 42], [82, 57]]]]], [], ["loc", [null, [82, 25], [82, 58]]]]], [], ["loc", [null, [82, 20], [82, 59]]]], "readonly", ["subexpr", "readonly-cell", [["get", "record.rowConfig.readonlyColumns", ["loc", [null, [83, 38], [83, 70]]]], ["get", "column.propName", ["loc", [null, [83, 71], [83, 86]]]], ["get", "readonly", ["loc", [null, [83, 87], [83, 95]]]], ["get", "column.cellComponent.componentProperties.readonly", ["loc", [null, [83, 96], [83, 145]]]]], [], ["loc", [null, [83, 23], [83, 146]]]], "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [84, 23], [84, 31]]]]], [], []], "componentName", ["subexpr", "concat", ["(", ["get", "folvComponentName", ["loc", [null, [85, 40], [85, 57]]]], "_", ["get", "column.cellComponent.componentName", ["loc", [null, [85, 62], [85, 96]]]], "_", ["get", "column.propName", ["loc", [null, [85, 101], [85, 116]]]], ")"], [], ["loc", [null, [85, 28], [85, 121]]]]], 0, null, ["loc", [null, [79, 12], [92, 26]]]]],
+              statements: [["block", "component", [["get", "column.cellComponent.componentName", ["loc", [null, [103, 25], [103, 59]]]]], ["dynamicProperties", ["subexpr", "@mut", [["get", "column.cellComponent.componentProperties", ["loc", [null, [104, 32], [104, 72]]]]], [], []], "relatedModel", ["subexpr", "@mut", [["get", "record.data", ["loc", [null, [105, 27], [105, 38]]]]], [], []], "value", ["subexpr", "mut", [["subexpr", "get", [["get", "record.data", ["loc", [null, [106, 30], [106, 41]]]], ["get", "column.propName", ["loc", [null, [106, 42], [106, 57]]]]], [], ["loc", [null, [106, 25], [106, 58]]]]], [], ["loc", [null, [106, 20], [106, 59]]]], "readonly", ["subexpr", "readonly-cell", [["get", "record.rowConfig.readonlyColumns", ["loc", [null, [107, 38], [107, 70]]]], ["get", "column.propName", ["loc", [null, [107, 71], [107, 86]]]], ["get", "readonly", ["loc", [null, [107, 87], [107, 95]]]], ["get", "column.cellComponent.componentProperties.readonly", ["loc", [null, [107, 96], [107, 145]]]]], [], ["loc", [null, [107, 23], [107, 146]]]], "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [108, 23], [108, 31]]]]], [], []], "componentName", ["subexpr", "concat", ["(", ["get", "folvComponentName", ["loc", [null, [109, 40], [109, 57]]]], "_", ["get", "column.cellComponent.componentName", ["loc", [null, [109, 62], [109, 96]]]], "_", ["get", "column.propName", ["loc", [null, [109, 101], [109, 116]]]], ")"], [], ["loc", [null, [109, 28], [109, 121]]]]], 0, null, ["loc", [null, [103, 12], [116, 26]]]]],
               locals: [],
               templates: [child0]
             };
@@ -23444,11 +24052,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                   "loc": {
                     "source": null,
                     "start": {
-                      "line": 102,
+                      "line": 126,
                       "column": 12
                     },
                     "end": {
-                      "line": 107,
+                      "line": 131,
                       "column": 12
                     }
                   },
@@ -23473,7 +24081,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                   morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
                   return morphs;
                 },
-                statements: [["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "get", [["get", "record.data", ["loc", [null, [104, 27], [104, 38]]]], ["subexpr", "concat", ["errors.", ["get", "column.propName", ["loc", [null, [104, 57], [104, 72]]]]], [], ["loc", [null, [104, 39], [104, 73]]]]], [], ["loc", [null, [104, 22], [104, 74]]]], "pointing", "pointing"], ["loc", [null, [103, 14], [106, 16]]]]],
+                statements: [["inline", "flexberry-validationmessage", [], ["error", ["subexpr", "get", [["get", "record.data", ["loc", [null, [128, 27], [128, 38]]]], ["subexpr", "concat", ["errors.", ["get", "column.propName", ["loc", [null, [128, 57], [128, 72]]]]], [], ["loc", [null, [128, 39], [128, 73]]]]], [], ["loc", [null, [128, 22], [128, 74]]]], "pointing", "pointing"], ["loc", [null, [127, 14], [130, 16]]]]],
                 locals: [],
                 templates: []
               };
@@ -23485,11 +24093,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 "loc": {
                   "source": null,
                   "start": {
-                    "line": 93,
+                    "line": 117,
                     "column": 10
                   },
                   "end": {
-                    "line": 108,
+                    "line": 132,
                     "column": 10
                   }
                 },
@@ -23518,7 +24126,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 dom.insertBoundary(fragment, null);
                 return morphs;
               },
-              statements: [["inline", "component", [["get", "column.cellComponent.componentName", ["loc", [null, [94, 24], [94, 58]]]]], ["dynamicProperties", ["subexpr", "@mut", [["get", "column.cellComponent.componentProperties", ["loc", [null, [95, 32], [95, 72]]]]], [], []], "relatedModel", ["subexpr", "@mut", [["get", "record.data", ["loc", [null, [96, 27], [96, 38]]]]], [], []], "value", ["subexpr", "mut", [["subexpr", "get", [["get", "record.data", ["loc", [null, [97, 30], [97, 41]]]], ["get", "column.propName", ["loc", [null, [97, 42], [97, 57]]]]], [], ["loc", [null, [97, 25], [97, 58]]]]], [], ["loc", [null, [97, 20], [97, 59]]]], "readonly", ["subexpr", "readonly-cell", [["get", "record.rowConfig.readonlyColumns", ["loc", [null, [98, 38], [98, 70]]]], ["get", "column.propName", ["loc", [null, [98, 71], [98, 86]]]], ["get", "readonly", ["loc", [null, [98, 87], [98, 95]]]], ["get", "column.cellComponent.componentProperties.readonly", ["loc", [null, [98, 96], [98, 145]]]]], [], ["loc", [null, [98, 23], [98, 146]]]], "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [99, 23], [99, 31]]]]], [], []], "componentName", ["subexpr", "concat", ["(", ["get", "folvComponentName", ["loc", [null, [100, 40], [100, 57]]]], "_", ["get", "column.cellComponent.componentName", ["loc", [null, [100, 62], [100, 96]]]], "_", ["get", "column.propName", ["loc", [null, [100, 101], [100, 116]]]], ")"], [], ["loc", [null, [100, 28], [100, 121]]]]], ["loc", [null, [94, 12], [101, 14]]]], ["block", "if", [["get", "showValidationMessages", ["loc", [null, [102, 18], [102, 40]]]]], [], 0, null, ["loc", [null, [102, 12], [107, 19]]]]],
+              statements: [["inline", "component", [["get", "column.cellComponent.componentName", ["loc", [null, [118, 24], [118, 58]]]]], ["dynamicProperties", ["subexpr", "@mut", [["get", "column.cellComponent.componentProperties", ["loc", [null, [119, 32], [119, 72]]]]], [], []], "relatedModel", ["subexpr", "@mut", [["get", "record.data", ["loc", [null, [120, 27], [120, 38]]]]], [], []], "value", ["subexpr", "mut", [["subexpr", "get", [["get", "record.data", ["loc", [null, [121, 30], [121, 41]]]], ["get", "column.propName", ["loc", [null, [121, 42], [121, 57]]]]], [], ["loc", [null, [121, 25], [121, 58]]]]], [], ["loc", [null, [121, 20], [121, 59]]]], "readonly", ["subexpr", "readonly-cell", [["get", "record.rowConfig.readonlyColumns", ["loc", [null, [122, 38], [122, 70]]]], ["get", "column.propName", ["loc", [null, [122, 71], [122, 86]]]], ["get", "readonly", ["loc", [null, [122, 87], [122, 95]]]], ["get", "column.cellComponent.componentProperties.readonly", ["loc", [null, [122, 96], [122, 145]]]]], [], ["loc", [null, [122, 23], [122, 146]]]], "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [123, 23], [123, 31]]]]], [], []], "componentName", ["subexpr", "concat", ["(", ["get", "folvComponentName", ["loc", [null, [124, 40], [124, 57]]]], "_", ["get", "column.cellComponent.componentName", ["loc", [null, [124, 62], [124, 96]]]], "_", ["get", "column.propName", ["loc", [null, [124, 101], [124, 116]]]], ")"], [], ["loc", [null, [124, 28], [124, 121]]]]], ["loc", [null, [118, 12], [125, 14]]]], ["block", "if", [["get", "showValidationMessages", ["loc", [null, [126, 18], [126, 40]]]]], [], 0, null, ["loc", [null, [126, 12], [131, 19]]]]],
               locals: [],
               templates: [child0]
             };
@@ -23530,11 +24138,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 77,
+                  "line": 101,
                   "column": 8
                 },
                 "end": {
-                  "line": 109,
+                  "line": 133,
                   "column": 8
                 }
               },
@@ -23557,7 +24165,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               dom.insertBoundary(fragment, null);
               return morphs;
             },
-            statements: [["block", "if", [["get", "inHierarchicalMode", ["loc", [null, [78, 16], [78, 34]]]]], [], 0, 1, ["loc", [null, [78, 10], [108, 17]]]]],
+            statements: [["block", "if", [["get", "inHierarchicalMode", ["loc", [null, [102, 16], [102, 34]]]]], [], 0, 1, ["loc", [null, [102, 10], [132, 17]]]]],
             locals: [],
             templates: [child0, child1]
           };
@@ -23571,11 +24179,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 "loc": {
                   "source": null,
                   "start": {
-                    "line": 111,
+                    "line": 135,
                     "column": 12
                   },
                   "end": {
-                    "line": 119,
+                    "line": 144,
                     "column": 12
                   }
                 },
@@ -23590,6 +24198,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 var el1 = dom.createTextNode("              ");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("button");
+                dom.setAttribute(el1, "type", "button");
                 var el2 = dom.createTextNode("\n                  ");
                 dom.appendChild(el1, el2);
                 var el2 = dom.createElement("i");
@@ -23602,16 +24211,16 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
                 return el0;
               },
               buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-                var element6 = dom.childAt(fragment, [1]);
-                var element7 = dom.childAt(element6, [1]);
+                var element7 = dom.childAt(fragment, [1]);
+                var element8 = dom.childAt(element7, [1]);
                 var morphs = new Array(4);
-                morphs[0] = dom.createAttrMorph(element6, 'class');
-                morphs[1] = dom.createAttrMorph(element6, 'title');
-                morphs[2] = dom.createElementMorph(element6);
-                morphs[3] = dom.createAttrMorph(element7, 'class');
+                morphs[0] = dom.createAttrMorph(element7, 'class');
+                morphs[1] = dom.createAttrMorph(element7, 'title');
+                morphs[2] = dom.createElementMorph(element7);
+                morphs[3] = dom.createAttrMorph(element8, 'class');
                 return morphs;
               },
-              statements: [["attribute", "class", ["concat", ["ui button hierarchy-expand icon mini compact ", ["get", "buttonClass", ["loc", [null, [113, 70], [113, 81]]]]]]], ["attribute", "title", ["subexpr", "if", [["get", "_expanded", ["loc", [null, [114, 27], [114, 36]]]], ["subexpr", "t", ["components.object-list-view.hierarchy-buttons.minus-button-title"], [], ["loc", [null, [114, 37], [114, 107]]]], ["subexpr", "t", ["components.object-list-view.hierarchy-buttons.plus-button-title"], [], ["loc", [null, [115, 17], [115, 86]]]]], [], ["loc", [null, [114, 22], [115, 88]]]]], ["element", "action", ["expand"], ["bubbles", false], ["loc", [null, [116, 16], [116, 49]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "_expanded", ["loc", [null, [117, 33], [117, 42]]]], "minus", "plus"], [], ["loc", [null, [117, 28], [117, 59]]]], " hierarchy-expand icon"]]]],
+              statements: [["attribute", "class", ["concat", ["ui button hierarchy-expand icon mini compact ", ["get", "buttonClass", ["loc", [null, [138, 70], [138, 81]]]]]]], ["attribute", "title", ["subexpr", "if", [["get", "_expanded", ["loc", [null, [139, 27], [139, 36]]]], ["subexpr", "t", ["components.object-list-view.hierarchy-buttons.minus-button-title"], [], ["loc", [null, [139, 37], [139, 107]]]], ["subexpr", "t", ["components.object-list-view.hierarchy-buttons.plus-button-title"], [], ["loc", [null, [140, 17], [140, 86]]]]], [], ["loc", [null, [139, 22], [140, 88]]]]], ["element", "action", ["expand"], ["bubbles", false], ["loc", [null, [141, 16], [141, 49]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "_expanded", ["loc", [null, [142, 33], [142, 42]]]], "minus", "plus"], [], ["loc", [null, [142, 28], [142, 59]]]], " hierarchy-expand icon"]]]],
               locals: [],
               templates: []
             };
@@ -23623,11 +24232,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 109,
+                  "line": 133,
                   "column": 8
                 },
                 "end": {
-                  "line": 125,
+                  "line": 150,
                   "column": 8
                 }
               },
@@ -23659,13 +24268,13 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               return el0;
             },
             buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-              var element8 = dom.childAt(fragment, [1]);
+              var element9 = dom.childAt(fragment, [1]);
               var morphs = new Array(2);
-              morphs[0] = dom.createMorphAt(element8, 1, 1);
-              morphs[1] = dom.createMorphAt(element8, 3, 3);
+              morphs[0] = dom.createMorphAt(element9, 1, 1);
+              morphs[1] = dom.createMorphAt(element9, 3, 3);
               return morphs;
             },
-            statements: [["block", "if", [["subexpr", "and", [["subexpr", "not", [["get", "index", ["loc", [null, [111, 28], [111, 33]]]]], [], ["loc", [null, [111, 23], [111, 34]]]], ["get", "inHierarchicalMode", ["loc", [null, [111, 35], [111, 53]]]], ["get", "hasRecords", ["loc", [null, [111, 54], [111, 64]]]]], [], ["loc", [null, [111, 18], [111, 65]]]]], [], 0, null, ["loc", [null, [111, 12], [119, 19]]]], ["inline", "get-formatted", [["get", "record.data", ["loc", [null, [120, 28], [120, 39]]]], ["get", "column.propName", ["loc", [null, [120, 40], [120, 55]]]]], ["dateFormat", ["subexpr", "@mut", [["get", "dateFormat", ["loc", [null, [121, 25], [121, 35]]]]], [], []], "moment", ["subexpr", "@mut", [["get", "moment", ["loc", [null, [122, 21], [122, 27]]]]], [], []]], ["loc", [null, [120, 12], [123, 14]]]]],
+            statements: [["block", "if", [["subexpr", "and", [["subexpr", "not", [["get", "index", ["loc", [null, [135, 28], [135, 33]]]]], [], ["loc", [null, [135, 23], [135, 34]]]], ["get", "inHierarchicalMode", ["loc", [null, [135, 35], [135, 53]]]], ["get", "hasRecords", ["loc", [null, [135, 54], [135, 64]]]]], [], ["loc", [null, [135, 18], [135, 65]]]]], [], 0, null, ["loc", [null, [135, 12], [144, 19]]]], ["inline", "get-formatted", [["get", "record.data", ["loc", [null, [145, 28], [145, 39]]]], ["get", "column.propName", ["loc", [null, [145, 40], [145, 55]]]]], ["dateFormat", ["subexpr", "@mut", [["get", "dateFormat", ["loc", [null, [146, 25], [146, 35]]]]], [], []], "moment", ["subexpr", "@mut", [["get", "moment", ["loc", [null, [147, 21], [147, 27]]]]], [], []]], ["loc", [null, [145, 12], [148, 14]]]]],
             locals: [],
             templates: [child0]
           };
@@ -23677,11 +24286,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             "loc": {
               "source": null,
               "start": {
-                "line": 72,
+                "line": 96,
                 "column": 4
               },
               "end": {
-                "line": 127,
+                "line": 152,
                 "column": 4
               }
             },
@@ -23708,21 +24317,135 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             return el0;
           },
           buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element11 = dom.childAt(fragment, [1]);
+            var element12 = dom.childAt(fragment, [1]);
             var morphs = new Array(4);
-            morphs[0] = dom.createAttrMorph(element11, 'onclick');
-            morphs[1] = dom.createAttrMorph(element11, 'class');
-            morphs[2] = dom.createAttrMorph(element11, 'style');
-            morphs[3] = dom.createMorphAt(element11, 1, 1);
+            morphs[0] = dom.createAttrMorph(element12, 'class');
+            morphs[1] = dom.createAttrMorph(element12, 'style');
+            morphs[2] = dom.createElementMorph(element12);
+            morphs[3] = dom.createMorphAt(element12, 1, 1);
             return morphs;
           },
-          statements: [["attribute", "onclick", ["subexpr", "action", ["onRowClick", ["get", "record", ["loc", [null, [74, 38], [74, 44]]]], ["subexpr", "hash", [], ["column", ["get", "column", ["loc", [null, [74, 58], [74, 64]]]], "columnIndex", ["get", "index", ["loc", [null, [74, 77], [74, 82]]]]], ["loc", [null, [74, 45], [74, 83]]]]], ["preventDefault", false], ["loc", [null, [74, 16], [74, 106]]]]], ["attribute", "class", ["concat", ["field ", ["subexpr", "if", [["subexpr", "and", [["get", "showValidationMessages", ["loc", [null, [75, 31], [75, 53]]]], ["subexpr", "get", [["get", "record.data", ["loc", [null, [75, 59], [75, 70]]]], ["subexpr", "concat", ["errors.", ["get", "column.propName", ["loc", [null, [75, 89], [75, 104]]]], ".length"], [], ["loc", [null, [75, 71], [75, 115]]]]], [], ["loc", [null, [75, 54], [75, 116]]]]], [], ["loc", [null, [75, 26], [75, 117]]]], "error"], [], ["loc", [null, [75, 21], [75, 127]]]], " ", ["subexpr", "if", [["subexpr", "array-contains", [["get", "overflowedComponents", ["loc", [null, [75, 149], [75, 169]]]], ["get", "column.cellComponent.componentName", ["loc", [null, [75, 170], [75, 204]]]]], [], ["loc", [null, [75, 133], [75, 205]]]], " overflowed-cell"], [], ["loc", [null, [75, 128], [75, 226]]]]]]], ["attribute", "style", ["subexpr", "if", [["subexpr", "and", [["subexpr", "not", [["get", "index", ["loc", [null, [76, 29], [76, 34]]]]], [], ["loc", [null, [76, 24], [76, 35]]]], ["get", "inHierarchicalMode", ["loc", [null, [76, 36], [76, 54]]]]], [], ["loc", [null, [76, 19], [76, 55]]]], ["get", "hierarchicalIndentStyle", ["loc", [null, [76, 56], [76, 79]]]], ["get", "defaultPaddingStyle", ["loc", [null, [76, 80], [76, 99]]]]], [], ["loc", [null, [76, 14], [76, 101]]]]], ["block", "if", [["get", "column.cellComponent.componentName", ["loc", [null, [77, 14], [77, 48]]]]], [], 0, 1, ["loc", [null, [77, 8], [125, 15]]]]],
+          statements: [["attribute", "class", ["concat", ["field ", ["subexpr", "if", [["subexpr", "and", [["get", "showValidationMessages", ["loc", [null, [99, 31], [99, 53]]]], ["subexpr", "get", [["get", "record.data", ["loc", [null, [99, 59], [99, 70]]]], ["subexpr", "concat", ["errors.", ["get", "column.propName", ["loc", [null, [99, 89], [99, 104]]]], ".length"], [], ["loc", [null, [99, 71], [99, 115]]]]], [], ["loc", [null, [99, 54], [99, 116]]]]], [], ["loc", [null, [99, 26], [99, 117]]]], "error"], [], ["loc", [null, [99, 21], [99, 127]]]], " ", ["subexpr", "if", [["subexpr", "array-contains", [["get", "overflowedComponents", ["loc", [null, [99, 149], [99, 169]]]], ["get", "column.cellComponent.componentName", ["loc", [null, [99, 170], [99, 204]]]]], [], ["loc", [null, [99, 133], [99, 205]]]], " overflowed-cell"], [], ["loc", [null, [99, 128], [99, 226]]]]]]], ["attribute", "style", ["subexpr", "if", [["subexpr", "and", [["subexpr", "not", [["get", "index", ["loc", [null, [100, 29], [100, 34]]]]], [], ["loc", [null, [100, 24], [100, 35]]]], ["get", "inHierarchicalMode", ["loc", [null, [100, 36], [100, 54]]]]], [], ["loc", [null, [100, 19], [100, 55]]]], ["get", "hierarchicalIndentStyle", ["loc", [null, [100, 56], [100, 79]]]], ["get", "defaultPaddingStyle", ["loc", [null, [100, 80], [100, 99]]]]], [], ["loc", [null, [100, 14], [100, 101]]]]], ["element", "action", ["onRowClick", ["get", "record", ["loc", [null, [98, 30], [98, 36]]]], ["subexpr", "hash", [], ["column", ["get", "column", ["loc", [null, [98, 50], [98, 56]]]], "columnIndex", ["get", "index", ["loc", [null, [98, 69], [98, 74]]]]], ["loc", [null, [98, 37], [98, 75]]]]], ["preventDefault", false], ["loc", [null, [98, 8], [98, 98]]]], ["block", "if", [["get", "column.cellComponent.componentName", ["loc", [null, [101, 14], [101, 48]]]]], [], 0, 1, ["loc", [null, [101, 8], [150, 15]]]]],
           locals: ["column", "index"],
           templates: [child0, child1]
         };
       })();
       var child3 = (function () {
         var child0 = (function () {
+          var child0 = (function () {
+            return {
+              meta: {
+                "fragmentReason": false,
+                "revision": "Ember@2.4.6",
+                "loc": {
+                  "source": null,
+                  "start": {
+                    "line": 159,
+                    "column": 14
+                  },
+                  "end": {
+                    "line": 164,
+                    "column": 14
+                  }
+                },
+                "moduleName": "dummy/templates/components/object-list-view-row.hbs"
+              },
+              isEmpty: false,
+              arity: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              buildFragment: function buildFragment(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createTextNode("                ");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createElement("div");
+                dom.setAttribute(el1, "class", "item disabled edit-menu");
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("i");
+                dom.setAttribute(el2, "class", "edit icon");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("span");
+                var el3 = dom.createComment("");
+                dom.appendChild(el2, el3);
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                ");
+                dom.appendChild(el1, el2);
+                dom.appendChild(el0, el1);
+                var el1 = dom.createTextNode("\n");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+                var morphs = new Array(1);
+                morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1, 3]), 0, 0);
+                return morphs;
+              },
+              statements: [["inline", "t", ["components.object-list-view.menu-in-row.edit-menu-item-title"], [], ["loc", [null, [162, 24], [162, 92]]]]],
+              locals: [],
+              templates: []
+            };
+          })();
+          var child1 = (function () {
+            return {
+              meta: {
+                "fragmentReason": false,
+                "revision": "Ember@2.4.6",
+                "loc": {
+                  "source": null,
+                  "start": {
+                    "line": 164,
+                    "column": 14
+                  },
+                  "end": {
+                    "line": 169,
+                    "column": 14
+                  }
+                },
+                "moduleName": "dummy/templates/components/object-list-view-row.hbs"
+              },
+              isEmpty: false,
+              arity: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              buildFragment: function buildFragment(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createTextNode("                ");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createElement("div");
+                dom.setAttribute(el1, "class", "item edit-menu");
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("i");
+                dom.setAttribute(el2, "class", "edit icon");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("span");
+                var el3 = dom.createComment("");
+                dom.appendChild(el2, el3);
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                ");
+                dom.appendChild(el1, el2);
+                dom.appendChild(el0, el1);
+                var el1 = dom.createTextNode("\n");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+                var element4 = dom.childAt(fragment, [1]);
+                var morphs = new Array(2);
+                morphs[0] = dom.createElementMorph(element4);
+                morphs[1] = dom.createMorphAt(dom.childAt(element4, [3]), 0, 0);
+                return morphs;
+              },
+              statements: [["element", "action", ["onRowClick", ["get", "record", ["loc", [null, [165, 66], [165, 72]]]], ["subexpr", "hash", [], ["column", null, "columnIndex", null, "rowEdit", true], ["loc", [null, [165, 73], [165, 121]]]]], [], ["loc", [null, [165, 44], [165, 123]]]], ["inline", "t", ["components.object-list-view.menu-in-row.edit-menu-item-title"], [], ["loc", [null, [167, 24], [167, 92]]]]],
+              locals: [],
+              templates: []
+            };
+          })();
           return {
             meta: {
               "fragmentReason": false,
@@ -23730,11 +24453,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 133,
+                  "line": 158,
                   "column": 12
                 },
                 "end": {
-                  "line": 138,
+                  "line": 170,
                   "column": 12
                 }
               },
@@ -23746,41 +24469,137 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("              ");
-              dom.appendChild(el0, el1);
-              var el1 = dom.createElement("div");
-              var el2 = dom.createTextNode("\n                ");
-              dom.appendChild(el1, el2);
-              var el2 = dom.createElement("i");
-              dom.setAttribute(el2, "class", "edit icon");
-              dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n                ");
-              dom.appendChild(el1, el2);
-              var el2 = dom.createElement("span");
-              var el3 = dom.createComment("");
-              dom.appendChild(el2, el3);
-              dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n              ");
-              dom.appendChild(el1, el2);
-              dom.appendChild(el0, el1);
-              var el1 = dom.createTextNode("\n");
+              var el1 = dom.createComment("");
               dom.appendChild(el0, el1);
               return el0;
             },
             buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-              var element3 = dom.childAt(fragment, [1]);
-              var morphs = new Array(3);
-              morphs[0] = dom.createAttrMorph(element3, 'class');
-              morphs[1] = dom.createElementMorph(element3);
-              morphs[2] = dom.createMorphAt(dom.childAt(element3, [3]), 0, 0);
+              var morphs = new Array(1);
+              morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+              dom.insertBoundary(fragment, 0);
+              dom.insertBoundary(fragment, null);
               return morphs;
             },
-            statements: [["attribute", "class", ["concat", ["item ", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [134, 40], [134, 48]]]], ["subexpr", "not", [["get", "record.rowConfig.canBeDeleted", ["loc", [null, [134, 54], [134, 83]]]]], [], ["loc", [null, [134, 49], [134, 84]]]]], [], ["loc", [null, [134, 36], [134, 85]]]], "disabled"], [], ["loc", [null, [134, 31], [134, 98]]]], " edit-menu"]]], ["element", "action", ["onRowClick", ["get", "record", ["loc", [null, [134, 132], [134, 138]]]], ["subexpr", "hash", [], ["column", null, "columnIndex", null, "rowEdit", true], ["loc", [null, [134, 139], [134, 187]]]]], [], ["loc", [null, [134, 110], [134, 189]]]], ["inline", "t", ["components.object-list-view.menu-in-row.edit-menu-item-title"], [], ["loc", [null, [136, 22], [136, 90]]]]],
+            statements: [["block", "if", [["get", "readonly", ["loc", [null, [159, 20], [159, 28]]]]], [], 0, 1, ["loc", [null, [159, 14], [169, 21]]]]],
             locals: [],
-            templates: []
+            templates: [child0, child1]
           };
         })();
         var child1 = (function () {
+          var child0 = (function () {
+            return {
+              meta: {
+                "fragmentReason": false,
+                "revision": "Ember@2.4.6",
+                "loc": {
+                  "source": null,
+                  "start": {
+                    "line": 172,
+                    "column": 14
+                  },
+                  "end": {
+                    "line": 177,
+                    "column": 14
+                  }
+                },
+                "moduleName": "dummy/templates/components/object-list-view-row.hbs"
+              },
+              isEmpty: false,
+              arity: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              buildFragment: function buildFragment(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createTextNode("                ");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createElement("div");
+                dom.setAttribute(el1, "class", "item disabled prototype-menu");
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("i");
+                dom.setAttribute(el2, "class", "copy icon");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("span");
+                var el3 = dom.createComment("");
+                dom.appendChild(el2, el3);
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                ");
+                dom.appendChild(el1, el2);
+                dom.appendChild(el0, el1);
+                var el1 = dom.createTextNode("\n");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+                var morphs = new Array(1);
+                morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1, 3]), 0, 0);
+                return morphs;
+              },
+              statements: [["inline", "t", ["components.object-list-view.menu-in-row.prototype-menu-item-title"], [], ["loc", [null, [175, 24], [175, 97]]]]],
+              locals: [],
+              templates: []
+            };
+          })();
+          var child1 = (function () {
+            return {
+              meta: {
+                "fragmentReason": false,
+                "revision": "Ember@2.4.6",
+                "loc": {
+                  "source": null,
+                  "start": {
+                    "line": 177,
+                    "column": 14
+                  },
+                  "end": {
+                    "line": 182,
+                    "column": 14
+                  }
+                },
+                "moduleName": "dummy/templates/components/object-list-view-row.hbs"
+              },
+              isEmpty: false,
+              arity: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              buildFragment: function buildFragment(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createTextNode("                ");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createElement("div");
+                dom.setAttribute(el1, "class", "item prototype-menu");
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("i");
+                dom.setAttribute(el2, "class", "copy icon");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("span");
+                var el3 = dom.createComment("");
+                dom.appendChild(el2, el3);
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                ");
+                dom.appendChild(el1, el2);
+                dom.appendChild(el0, el1);
+                var el1 = dom.createTextNode("\n");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+                var element3 = dom.childAt(fragment, [1]);
+                var morphs = new Array(2);
+                morphs[0] = dom.createElementMorph(element3);
+                morphs[1] = dom.createMorphAt(dom.childAt(element3, [3]), 0, 0);
+                return morphs;
+              },
+              statements: [["element", "action", [["get", "createNewByPrototype", ["loc", [null, [178, 58], [178, 78]]]], ["subexpr", "get", [["get", "record", ["loc", [null, [178, 84], [178, 90]]]], "data.id"], [], ["loc", [null, [178, 79], [178, 101]]]]], [], ["loc", [null, [178, 49], [178, 103]]]], ["inline", "t", ["components.object-list-view.menu-in-row.prototype-menu-item-title"], [], ["loc", [null, [180, 24], [180, 97]]]]],
+              locals: [],
+              templates: []
+            };
+          })();
           return {
             meta: {
               "fragmentReason": false,
@@ -23788,11 +24607,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 139,
+                  "line": 171,
                   "column": 12
                 },
                 "end": {
-                  "line": 144,
+                  "line": 183,
                   "column": 12
                 }
               },
@@ -23804,41 +24623,137 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("              ");
-              dom.appendChild(el0, el1);
-              var el1 = dom.createElement("div");
-              var el2 = dom.createTextNode("\n                ");
-              dom.appendChild(el1, el2);
-              var el2 = dom.createElement("i");
-              dom.setAttribute(el2, "class", "trash icon");
-              dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n                ");
-              dom.appendChild(el1, el2);
-              var el2 = dom.createElement("span");
-              var el3 = dom.createComment("");
-              dom.appendChild(el2, el3);
-              dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n              ");
-              dom.appendChild(el1, el2);
-              dom.appendChild(el0, el1);
-              var el1 = dom.createTextNode("\n");
+              var el1 = dom.createComment("");
               dom.appendChild(el0, el1);
               return el0;
             },
             buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-              var element2 = dom.childAt(fragment, [1]);
-              var morphs = new Array(3);
-              morphs[0] = dom.createAttrMorph(element2, 'class');
-              morphs[1] = dom.createElementMorph(element2);
-              morphs[2] = dom.createMorphAt(dom.childAt(element2, [3]), 0, 0);
+              var morphs = new Array(1);
+              morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+              dom.insertBoundary(fragment, 0);
+              dom.insertBoundary(fragment, null);
               return morphs;
             },
-            statements: [["attribute", "class", ["concat", ["item ", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [140, 40], [140, 48]]]], ["subexpr", "not", [["get", "record.rowConfig.canBeDeleted", ["loc", [null, [140, 54], [140, 83]]]]], [], ["loc", [null, [140, 49], [140, 84]]]]], [], ["loc", [null, [140, 36], [140, 85]]]], "disabled"], [], ["loc", [null, [140, 31], [140, 98]]]], " delete-menu"]]], ["element", "action", [["get", "deleteRow", ["loc", [null, [140, 122], [140, 131]]]], ["get", "record", ["loc", [null, [140, 132], [140, 138]]]]], [], ["loc", [null, [140, 112], [140, 141]]]], ["inline", "t", ["components.object-list-view.menu-in-row.delete-menu-item-title"], [], ["loc", [null, [142, 22], [142, 92]]]]],
+            statements: [["block", "if", [["get", "readonly", ["loc", [null, [172, 20], [172, 28]]]]], [], 0, 1, ["loc", [null, [172, 14], [182, 21]]]]],
             locals: [],
-            templates: []
+            templates: [child0, child1]
           };
         })();
         var child2 = (function () {
+          var child0 = (function () {
+            return {
+              meta: {
+                "fragmentReason": false,
+                "revision": "Ember@2.4.6",
+                "loc": {
+                  "source": null,
+                  "start": {
+                    "line": 185,
+                    "column": 14
+                  },
+                  "end": {
+                    "line": 190,
+                    "column": 14
+                  }
+                },
+                "moduleName": "dummy/templates/components/object-list-view-row.hbs"
+              },
+              isEmpty: false,
+              arity: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              buildFragment: function buildFragment(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createTextNode("                ");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createElement("div");
+                dom.setAttribute(el1, "class", "item disabled delete-menu");
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("i");
+                dom.setAttribute(el2, "class", "trash icon");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("span");
+                var el3 = dom.createComment("");
+                dom.appendChild(el2, el3);
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                ");
+                dom.appendChild(el1, el2);
+                dom.appendChild(el0, el1);
+                var el1 = dom.createTextNode("\n");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+                var morphs = new Array(1);
+                morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1, 3]), 0, 0);
+                return morphs;
+              },
+              statements: [["inline", "t", ["components.object-list-view.menu-in-row.delete-menu-item-title"], [], ["loc", [null, [188, 24], [188, 94]]]]],
+              locals: [],
+              templates: []
+            };
+          })();
+          var child1 = (function () {
+            return {
+              meta: {
+                "fragmentReason": false,
+                "revision": "Ember@2.4.6",
+                "loc": {
+                  "source": null,
+                  "start": {
+                    "line": 190,
+                    "column": 14
+                  },
+                  "end": {
+                    "line": 195,
+                    "column": 14
+                  }
+                },
+                "moduleName": "dummy/templates/components/object-list-view-row.hbs"
+              },
+              isEmpty: false,
+              arity: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              buildFragment: function buildFragment(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createTextNode("                ");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createElement("div");
+                dom.setAttribute(el1, "class", "item delete-menu");
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("i");
+                dom.setAttribute(el2, "class", "trash icon");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                  ");
+                dom.appendChild(el1, el2);
+                var el2 = dom.createElement("span");
+                var el3 = dom.createComment("");
+                dom.appendChild(el2, el3);
+                dom.appendChild(el1, el2);
+                var el2 = dom.createTextNode("\n                ");
+                dom.appendChild(el1, el2);
+                dom.appendChild(el0, el1);
+                var el1 = dom.createTextNode("\n");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+                var element2 = dom.childAt(fragment, [1]);
+                var morphs = new Array(2);
+                morphs[0] = dom.createElementMorph(element2);
+                morphs[1] = dom.createMorphAt(dom.childAt(element2, [3]), 0, 0);
+                return morphs;
+              },
+              statements: [["element", "action", [["get", "deleteRow", ["loc", [null, [191, 55], [191, 64]]]], ["get", "record", ["loc", [null, [191, 65], [191, 71]]]]], [], ["loc", [null, [191, 46], [191, 73]]]], ["inline", "t", ["components.object-list-view.menu-in-row.delete-menu-item-title"], [], ["loc", [null, [193, 24], [193, 94]]]]],
+              locals: [],
+              templates: []
+            };
+          })();
           return {
             meta: {
               "fragmentReason": false,
@@ -23846,11 +24761,51 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 145,
+                  "line": 184,
                   "column": 12
                 },
                 "end": {
-                  "line": 150,
+                  "line": 196,
+                  "column": 12
+                }
+              },
+              "moduleName": "dummy/templates/components/object-list-view-row.hbs"
+            },
+            isEmpty: false,
+            arity: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            buildFragment: function buildFragment(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createComment("");
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+              var morphs = new Array(1);
+              morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+              dom.insertBoundary(fragment, 0);
+              dom.insertBoundary(fragment, null);
+              return morphs;
+            },
+            statements: [["block", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [185, 24], [185, 32]]]], ["subexpr", "not", [["get", "record.rowConfig.canBeDeleted", ["loc", [null, [185, 38], [185, 67]]]]], [], ["loc", [null, [185, 33], [185, 68]]]]], [], ["loc", [null, [185, 20], [185, 69]]]]], [], 0, 1, ["loc", [null, [185, 14], [195, 21]]]]],
+            locals: [],
+            templates: [child0, child1]
+          };
+        })();
+        var child3 = (function () {
+          return {
+            meta: {
+              "fragmentReason": false,
+              "revision": "Ember@2.4.6",
+              "loc": {
+                "source": null,
+                "start": {
+                  "line": 197,
+                  "column": 12
+                },
+                "end": {
+                  "line": 202,
                   "column": 12
                 }
               },
@@ -23892,7 +24847,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               morphs[2] = dom.createMorphAt(dom.childAt(element0, [3]), 0, 0);
               return morphs;
             },
-            statements: [["element", "action", [["get", "sendMenuItemAction", ["loc", [null, [146, 41], [146, 59]]]], ["get", "menuItem.actionName", ["loc", [null, [146, 60], [146, 79]]]], ["get", "record.data", ["loc", [null, [146, 80], [146, 91]]]]], [], ["loc", [null, [146, 32], [146, 93]]]], ["attribute", "class", ["concat", [["get", "menuItem.icon", ["loc", [null, [147, 28], [147, 41]]]]]]], ["content", "menuItem.title", ["loc", [null, [148, 22], [148, 40]]]]],
+            statements: [["element", "action", [["get", "sendMenuItemAction", ["loc", [null, [198, 41], [198, 59]]]], ["get", "menuItem.actionName", ["loc", [null, [198, 60], [198, 79]]]], ["get", "record.data", ["loc", [null, [198, 80], [198, 91]]]]], [], ["loc", [null, [198, 32], [198, 93]]]], ["attribute", "class", ["concat", [["get", "menuItem.icon", ["loc", [null, [199, 28], [199, 41]]]]]]], ["content", "menuItem.title", ["loc", [null, [200, 22], [200, 40]]]]],
             locals: ["menuItem"],
             templates: []
           };
@@ -23904,11 +24859,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             "loc": {
               "source": null,
               "start": {
-                "line": 128,
+                "line": 153,
                 "column": 4
               },
               "end": {
-                "line": 154,
+                "line": 206,
                 "column": 4
               }
             },
@@ -23945,6 +24900,8 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             dom.appendChild(el3, el4);
             var el4 = dom.createComment("");
             dom.appendChild(el3, el4);
+            var el4 = dom.createComment("");
+            dom.appendChild(el3, el4);
             var el4 = dom.createTextNode("          ");
             dom.appendChild(el3, el4);
             dom.appendChild(el2, el3);
@@ -23959,18 +24916,19 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             return el0;
           },
           buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element4 = dom.childAt(fragment, [1]);
-            var element5 = dom.childAt(element4, [1, 3]);
-            var morphs = new Array(4);
-            morphs[0] = dom.createAttrMorph(element4, 'style');
-            morphs[1] = dom.createMorphAt(element5, 1, 1);
-            morphs[2] = dom.createMorphAt(element5, 2, 2);
-            morphs[3] = dom.createMorphAt(element5, 3, 3);
+            var element5 = dom.childAt(fragment, [1]);
+            var element6 = dom.childAt(element5, [1, 3]);
+            var morphs = new Array(5);
+            morphs[0] = dom.createAttrMorph(element5, 'style');
+            morphs[1] = dom.createMorphAt(element6, 1, 1);
+            morphs[2] = dom.createMorphAt(element6, 2, 2);
+            morphs[3] = dom.createMorphAt(element6, 3, 3);
+            morphs[4] = dom.createMorphAt(element6, 4, 4);
             return morphs;
           },
-          statements: [["attribute", "style", ["get", "defaultPaddingStyle", ["loc", [null, [129, 48], [129, 67]]]]], ["block", "if", [["get", "showEditMenuItemInRow", ["loc", [null, [133, 18], [133, 39]]]]], [], 0, null, ["loc", [null, [133, 12], [138, 19]]]], ["block", "if", [["get", "showDeleteMenuItemInRow", ["loc", [null, [139, 18], [139, 41]]]]], [], 1, null, ["loc", [null, [139, 12], [144, 19]]]], ["block", "each", [["get", "menuInRowAdditionalItems", ["loc", [null, [145, 20], [145, 44]]]]], [], 2, null, ["loc", [null, [145, 12], [150, 21]]]]],
+          statements: [["attribute", "style", ["get", "defaultPaddingStyle", ["loc", [null, [154, 48], [154, 67]]]]], ["block", "if", [["get", "showEditMenuItemInRow", ["loc", [null, [158, 18], [158, 39]]]]], [], 0, null, ["loc", [null, [158, 12], [170, 19]]]], ["block", "if", [["get", "showPrototypeMenuItemInRow", ["loc", [null, [171, 18], [171, 44]]]]], [], 1, null, ["loc", [null, [171, 12], [183, 19]]]], ["block", "if", [["get", "showDeleteMenuItemInRow", ["loc", [null, [184, 18], [184, 41]]]]], [], 2, null, ["loc", [null, [184, 12], [196, 19]]]], ["block", "each", [["get", "menuInRowAdditionalItems", ["loc", [null, [197, 20], [197, 44]]]]], [], 3, null, ["loc", [null, [197, 12], [202, 21]]]]],
           locals: [],
-          templates: [child0, child1, child2]
+          templates: [child0, child1, child2, child3]
         };
       })();
       var child4 = (function () {
@@ -23982,11 +24940,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 157,
+                  "line": 209,
                   "column": 4
                 },
                 "end": {
-                  "line": 187,
+                  "line": 242,
                   "column": 4
                 }
               },
@@ -24011,7 +24969,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
               return morphs;
             },
-            statements: [["inline", "object-list-view-row", [], ["record", ["subexpr", "@mut", [["get", "record", ["loc", [null, [159, 15], [159, 21]]]]], [], []], "columns", ["subexpr", "@mut", [["get", "columns", ["loc", [null, [160, 16], [160, 23]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [161, 17], [161, 25]]]]], [], []], "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [162, 17], [162, 25]]]]], [], []], "showMenuColumn", ["subexpr", "@mut", [["get", "showMenuColumn", ["loc", [null, [163, 23], [163, 37]]]]], [], []], "sendMenuItemAction", ["subexpr", "@mut", [["get", "sendMenuItemAction", ["loc", [null, [164, 27], [164, 45]]]]], [], []], "menuInRowAdditionalItems", ["subexpr", "@mut", [["get", "menuInRowAdditionalItems", ["loc", [null, [165, 33], [165, 57]]]]], [], []], "showHelperColumn", ["subexpr", "@mut", [["get", "showHelperColumn", ["loc", [null, [166, 25], [166, 41]]]]], [], []], "defaultRowConfig", ["subexpr", "@mut", [["get", "defaultRowConfig", ["loc", [null, [167, 25], [167, 41]]]]], [], []], "showValidationMessages", ["subexpr", "@mut", [["get", "showValidationMessages", ["loc", [null, [168, 31], [168, 53]]]]], [], []], "showAsteriskInRow", ["subexpr", "@mut", [["get", "showAsteriskInRow", ["loc", [null, [169, 26], [169, 43]]]]], [], []], "showCheckBoxInRow", ["subexpr", "@mut", [["get", "showCheckBoxInRow", ["loc", [null, [170, 26], [170, 43]]]]], [], []], "showDeleteButtonInRow", ["subexpr", "@mut", [["get", "showDeleteButtonInRow", ["loc", [null, [171, 30], [171, 51]]]]], [], []], "showEditButtonInRow", ["subexpr", "@mut", [["get", "showEditButtonInRow", ["loc", [null, [172, 28], [172, 47]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "inHierarchicalMode", ["loc", [null, [173, 27], [173, 45]]]]], [], []], "inExpandMode", ["subexpr", "unbound", [["get", "inExpandMode", ["loc", [null, [174, 30], [174, 42]]]]], [], ["loc", [null, [174, 21], [174, 43]]]], "loadRecords", ["subexpr", "@mut", [["get", "loadRecords", ["loc", [null, [175, 20], [175, 31]]]]], [], []], "doRenderData", ["subexpr", "@mut", [["get", "record.doRenderData", ["loc", [null, [176, 21], [176, 40]]]]], [], []], "rowClick", ["subexpr", "@mut", [["get", "rowClick", ["loc", [null, [177, 17], [177, 25]]]]], [], []], "selectRow", ["subexpr", "@mut", [["get", "selectRow", ["loc", [null, [178, 18], [178, 27]]]]], [], []], "deleteRow", ["subexpr", "@mut", [["get", "deleteRow", ["loc", [null, [179, 18], [179, 27]]]]], [], []], "_currentLevel", ["subexpr", "@mut", [["get", "_currentLevel", ["loc", [null, [180, 22], [180, 35]]]]], [], []], "hierarchicalIndent", ["subexpr", "@mut", [["get", "_hierarchicalIndent", ["loc", [null, [181, 27], [181, 46]]]]], [], []], "defaultLeftPadding", ["subexpr", "@mut", [["get", "defaultLeftPadding", ["loc", [null, [182, 27], [182, 45]]]]], [], []], "overflowedComponents", ["subexpr", "@mut", [["get", "overflowedComponents", ["loc", [null, [183, 29], [183, 49]]]]], [], []], "folvComponentName", ["subexpr", "@mut", [["get", "folvComponentName", ["loc", [null, [184, 26], [184, 43]]]]], [], []], "hierarchyLoadedLevel", ["subexpr", "@mut", [["get", "hierarchyLoadedLevel", ["loc", [null, [185, 29], [185, 49]]]]], [], []]], ["loc", [null, [158, 6], [186, 8]]]]],
+            statements: [["inline", "object-list-view-row", [], ["record", ["subexpr", "@mut", [["get", "record", ["loc", [null, [211, 15], [211, 21]]]]], [], []], "columns", ["subexpr", "@mut", [["get", "columns", ["loc", [null, [212, 16], [212, 23]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [213, 17], [213, 25]]]]], [], []], "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [214, 17], [214, 25]]]]], [], []], "showMenuColumn", ["subexpr", "@mut", [["get", "showMenuColumn", ["loc", [null, [215, 23], [215, 37]]]]], [], []], "sendMenuItemAction", ["subexpr", "@mut", [["get", "sendMenuItemAction", ["loc", [null, [216, 27], [216, 45]]]]], [], []], "menuInRowAdditionalItems", ["subexpr", "@mut", [["get", "menuInRowAdditionalItems", ["loc", [null, [217, 33], [217, 57]]]]], [], []], "showHelperColumn", ["subexpr", "@mut", [["get", "showHelperColumn", ["loc", [null, [218, 25], [218, 41]]]]], [], []], "defaultRowConfig", ["subexpr", "@mut", [["get", "defaultRowConfig", ["loc", [null, [219, 25], [219, 41]]]]], [], []], "showValidationMessages", ["subexpr", "@mut", [["get", "showValidationMessages", ["loc", [null, [220, 31], [220, 53]]]]], [], []], "showAsteriskInRow", ["subexpr", "@mut", [["get", "showAsteriskInRow", ["loc", [null, [221, 26], [221, 43]]]]], [], []], "showCheckBoxInRow", ["subexpr", "@mut", [["get", "showCheckBoxInRow", ["loc", [null, [222, 26], [222, 43]]]]], [], []], "showEditButtonInRow", ["subexpr", "@mut", [["get", "showEditButtonInRow", ["loc", [null, [223, 28], [223, 47]]]]], [], []], "showPrototypeButtonInRow", ["subexpr", "@mut", [["get", "showPrototypeButtonInRow", ["loc", [null, [224, 33], [224, 57]]]]], [], []], "showDeleteButtonInRow", ["subexpr", "@mut", [["get", "showDeleteButtonInRow", ["loc", [null, [225, 30], [225, 51]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "inHierarchicalMode", ["loc", [null, [226, 27], [226, 45]]]]], [], []], "inExpandMode", ["subexpr", "unbound", [["get", "inExpandMode", ["loc", [null, [227, 30], [227, 42]]]]], [], ["loc", [null, [227, 21], [227, 43]]]], "loadRecords", ["subexpr", "@mut", [["get", "loadRecords", ["loc", [null, [228, 20], [228, 31]]]]], [], []], "doRenderData", ["subexpr", "@mut", [["get", "record.doRenderData", ["loc", [null, [229, 21], [229, 40]]]]], [], []], "rowClick", ["subexpr", "@mut", [["get", "rowClick", ["loc", [null, [230, 17], [230, 25]]]]], [], []], "selectRow", ["subexpr", "@mut", [["get", "selectRow", ["loc", [null, [231, 18], [231, 27]]]]], [], []], "createNewByPrototype", ["subexpr", "@mut", [["get", "createNewByPrototype", ["loc", [null, [232, 29], [232, 49]]]]], [], []], "deleteRow", ["subexpr", "@mut", [["get", "deleteRow", ["loc", [null, [233, 18], [233, 27]]]]], [], []], "_currentLevel", ["subexpr", "@mut", [["get", "_currentLevel", ["loc", [null, [234, 22], [234, 35]]]]], [], []], "hierarchicalIndent", ["subexpr", "@mut", [["get", "_hierarchicalIndent", ["loc", [null, [235, 27], [235, 46]]]]], [], []], "defaultLeftPadding", ["subexpr", "@mut", [["get", "defaultLeftPadding", ["loc", [null, [236, 27], [236, 45]]]]], [], []], "overflowedComponents", ["subexpr", "@mut", [["get", "overflowedComponents", ["loc", [null, [237, 29], [237, 49]]]]], [], []], "folvComponentName", ["subexpr", "@mut", [["get", "folvComponentName", ["loc", [null, [238, 26], [238, 43]]]]], [], []], "hierarchyLoadedLevel", ["subexpr", "@mut", [["get", "hierarchyLoadedLevel", ["loc", [null, [239, 29], [239, 49]]]]], [], []], "configurateRow", ["subexpr", "@mut", [["get", "configurateRow", ["loc", [null, [240, 23], [240, 37]]]]], [], []]], ["loc", [null, [210, 6], [241, 8]]]]],
             locals: ["record"],
             templates: []
           };
@@ -24023,11 +24981,11 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             "loc": {
               "source": null,
               "start": {
-                "line": 156,
+                "line": 208,
                 "column": 2
               },
               "end": {
-                "line": 188,
+                "line": 243,
                 "column": 2
               }
             },
@@ -24050,7 +25008,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             dom.insertBoundary(fragment, null);
             return morphs;
           },
-          statements: [["block", "each", [["get", "records", ["loc", [null, [157, 12], [157, 19]]]]], ["key", "key"], 0, null, ["loc", [null, [157, 4], [187, 13]]]]],
+          statements: [["block", "each", [["get", "records", ["loc", [null, [209, 12], [209, 19]]]]], ["key", "key"], 0, null, ["loc", [null, [209, 4], [242, 13]]]]],
           locals: [],
           templates: [child0]
         };
@@ -24069,7 +25027,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
               "column": 0
             },
             "end": {
-              "line": 189,
+              "line": 244,
               "column": 0
             }
           },
@@ -24119,22 +25077,22 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element20 = dom.childAt(fragment, [1]);
-          var element21 = dom.childAt(element20, [1]);
+          var element23 = dom.childAt(fragment, [1]);
+          var element24 = dom.childAt(element23, [1]);
           var morphs = new Array(9);
-          morphs[0] = dom.createAttrMorph(element20, 'class');
-          morphs[1] = dom.createAttrMorph(element21, 'class');
-          morphs[2] = dom.createAttrMorph(element21, 'style');
-          morphs[3] = dom.createMorphAt(dom.childAt(element21, [1]), 0, 0);
-          morphs[4] = dom.createMorphAt(element21, 3, 3);
-          morphs[5] = dom.createMorphAt(element21, 4, 4);
-          morphs[6] = dom.createMorphAt(element20, 3, 3);
-          morphs[7] = dom.createMorphAt(element20, 4, 4);
+          morphs[0] = dom.createAttrMorph(element23, 'class');
+          morphs[1] = dom.createAttrMorph(element24, 'class');
+          morphs[2] = dom.createAttrMorph(element24, 'style');
+          morphs[3] = dom.createMorphAt(dom.childAt(element24, [1]), 0, 0);
+          morphs[4] = dom.createMorphAt(element24, 3, 3);
+          morphs[5] = dom.createMorphAt(element24, 4, 4);
+          morphs[6] = dom.createMorphAt(element23, 3, 3);
+          morphs[7] = dom.createMorphAt(element23, 4, 4);
           morphs[8] = dom.createMorphAt(fragment, 3, 3, contextualElement);
           dom.insertBoundary(fragment, null);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", [["get", "record.rowConfig.customClass", ["loc", [null, [2, 15], [2, 43]]]]]]], ["attribute", "class", ["concat", ["object-list-view-helper-column ", ["subexpr", "unless", [["get", "showHelperColumn", ["loc", [null, [3, 55], [3, 71]]]], "hidden"], [], ["loc", [null, [3, 46], [3, 82]]]]]]], ["attribute", "style", ["get", "defaultPaddingStyle", ["loc", [null, [3, 92], [3, 111]]]]], ["content", "record.key", ["loc", [null, [4, 26], [4, 40]]]], ["block", "each", [["get", "customButtonsInRow", ["loc", [null, [5, 14], [5, 32]]]]], [], 0, null, ["loc", [null, [5, 6], [12, 15]]]], ["block", "if", [["get", "showHelperColumn", ["loc", [null, [13, 12], [13, 28]]]]], [], 1, null, ["loc", [null, [13, 6], [70, 13]]]], ["block", "each", [["get", "columns", ["loc", [null, [72, 12], [72, 19]]]]], [], 2, null, ["loc", [null, [72, 4], [127, 13]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [128, 10], [128, 24]]]]], [], 3, null, ["loc", [null, [128, 4], [154, 11]]]], ["block", "if", [["subexpr", "and", [["get", "_expanded", ["loc", [null, [156, 13], [156, 22]]]], ["get", "inHierarchicalMode", ["loc", [null, [156, 23], [156, 41]]]]], [], ["loc", [null, [156, 8], [156, 42]]]]], [], 4, null, ["loc", [null, [156, 2], [188, 9]]]]],
+        statements: [["attribute", "class", ["concat", [["get", "record.rowConfig.customClass", ["loc", [null, [2, 15], [2, 43]]]]]]], ["attribute", "class", ["concat", ["object-list-view-helper-column ", ["subexpr", "unless", [["get", "showHelperColumn", ["loc", [null, [3, 55], [3, 71]]]], "hidden"], [], ["loc", [null, [3, 46], [3, 82]]]]]]], ["attribute", "style", ["get", "defaultPaddingStyle", ["loc", [null, [3, 92], [3, 111]]]]], ["content", "record.key", ["loc", [null, [4, 26], [4, 40]]]], ["block", "each", [["get", "customButtonsInRow", ["loc", [null, [5, 14], [5, 32]]]]], [], 0, null, ["loc", [null, [5, 6], [13, 15]]]], ["block", "if", [["get", "showHelperColumn", ["loc", [null, [14, 12], [14, 28]]]]], [], 1, null, ["loc", [null, [14, 6], [94, 13]]]], ["block", "each", [["get", "columns", ["loc", [null, [96, 12], [96, 19]]]]], [], 2, null, ["loc", [null, [96, 4], [152, 13]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [153, 10], [153, 24]]]]], [], 3, null, ["loc", [null, [153, 4], [206, 11]]]], ["block", "if", [["subexpr", "and", [["get", "_expanded", ["loc", [null, [208, 13], [208, 22]]]], ["get", "inHierarchicalMode", ["loc", [null, [208, 23], [208, 41]]]]], [], ["loc", [null, [208, 8], [208, 42]]]]], [], 4, null, ["loc", [null, [208, 2], [243, 9]]]]],
         locals: [],
         templates: [child0, child1, child2, child3, child4]
       };
@@ -24153,7 +25111,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
             "column": 0
           },
           "end": {
-            "line": 190,
+            "line": 245,
             "column": 0
           }
         },
@@ -24176,7 +25134,7 @@ define("dummy/templates/components/object-list-view-row", ["exports"], function 
         dom.insertBoundary(fragment, null);
         return morphs;
       },
-      statements: [["block", "if", [["get", "doRenderData", ["loc", [null, [1, 6], [1, 18]]]]], [], 0, null, ["loc", [null, [1, 0], [189, 7]]]]],
+      statements: [["block", "if", [["get", "doRenderData", ["loc", [null, [1, 6], [1, 18]]]]], [], 0, null, ["loc", [null, [1, 0], [244, 7]]]]],
       locals: [],
       templates: [child0]
     };
@@ -24448,7 +25406,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
                   "column": 12
                 },
                 "end": {
-                  "line": 15,
+                  "line": 16,
                   "column": 12
                 }
               },
@@ -24463,6 +25421,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               var el1 = dom.createTextNode("              ");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("button");
+              dom.setAttribute(el1, "type", "button");
               dom.setAttribute(el1, "disabled", "disabled");
               var el2 = dom.createTextNode("\n                  ");
               dom.appendChild(el1, el2);
@@ -24484,7 +25443,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               morphs[2] = dom.createElementMorph(element14);
               return morphs;
             },
-            statements: [["attribute", "class", ["concat", ["ui check-all-at-page-button ", ["get", "buttonClass", ["loc", [null, [9, 53], [9, 64]]]], " disabled button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.check-all-at-page-button-text"], [], ["loc", [null, [10, 22], [10, 82]]]]], ["element", "action", ["checkAllAtPage"], [], ["loc", [null, [12, 16], [12, 43]]]]],
+            statements: [["attribute", "class", ["concat", ["ui check-all-at-page-button ", ["get", "buttonClass", ["loc", [null, [10, 53], [10, 64]]]], " disabled button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.check-all-at-page-button-text"], [], ["loc", [null, [11, 22], [11, 82]]]]], ["element", "action", ["checkAllAtPage"], [], ["loc", [null, [13, 16], [13, 43]]]]],
             locals: [],
             templates: []
           };
@@ -24497,11 +25456,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 15,
+                  "line": 16,
                   "column": 12
                 },
                 "end": {
-                  "line": 22,
+                  "line": 24,
                   "column": 12
                 }
               },
@@ -24516,6 +25475,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               var el1 = dom.createTextNode("              ");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("button");
+              dom.setAttribute(el1, "type", "button");
               var el2 = dom.createTextNode("\n                  ");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("i");
@@ -24536,7 +25496,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               morphs[2] = dom.createElementMorph(element13);
               return morphs;
             },
-            statements: [["attribute", "class", ["concat", ["ui check-all-at-page-button ", ["get", "buttonClass", ["loc", [null, [17, 53], [17, 64]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.check-all-at-page-button-text"], [], ["loc", [null, [18, 22], [18, 82]]]]], ["element", "action", ["checkAllAtPage"], [], ["loc", [null, [19, 16], [19, 43]]]]],
+            statements: [["attribute", "class", ["concat", ["ui check-all-at-page-button ", ["get", "buttonClass", ["loc", [null, [19, 53], [19, 64]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.check-all-at-page-button-text"], [], ["loc", [null, [20, 22], [20, 82]]]]], ["element", "action", ["checkAllAtPage"], [], ["loc", [null, [21, 16], [21, 43]]]]],
             locals: [],
             templates: []
           };
@@ -24550,11 +25510,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
                 "loc": {
                   "source": null,
                   "start": {
-                    "line": 24,
+                    "line": 26,
                     "column": 14
                   },
                   "end": {
-                    "line": 32,
+                    "line": 35,
                     "column": 14
                   }
                 },
@@ -24569,6 +25529,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
                 var el1 = dom.createTextNode("                ");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("button");
+                dom.setAttribute(el1, "type", "button");
                 dom.setAttribute(el1, "disabled", "disabled");
                 var el2 = dom.createTextNode("\n                    ");
                 dom.appendChild(el1, el2);
@@ -24590,7 +25551,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
                 morphs[2] = dom.createElementMorph(element12);
                 return morphs;
               },
-              statements: [["attribute", "class", ["concat", ["ui check-all-button ", ["get", "buttonClass", ["loc", [null, [26, 47], [26, 58]]]], " ", ["subexpr", "if", [["get", "allSelect", ["loc", [null, [26, 66], [26, 75]]]], "activated"], [], ["loc", [null, [26, 61], [26, 89]]]], " disabled button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.check-all-button-text"], [], ["loc", [null, [27, 24], [27, 76]]]]], ["element", "action", ["checkAll"], [], ["loc", [null, [29, 18], [29, 39]]]]],
+              statements: [["attribute", "class", ["concat", ["ui check-all-button ", ["get", "buttonClass", ["loc", [null, [29, 47], [29, 58]]]], " ", ["subexpr", "if", [["get", "allSelect", ["loc", [null, [29, 66], [29, 75]]]], "activated"], [], ["loc", [null, [29, 61], [29, 89]]]], " disabled button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.check-all-button-text"], [], ["loc", [null, [30, 24], [30, 76]]]]], ["element", "action", ["checkAll"], [], ["loc", [null, [32, 18], [32, 39]]]]],
               locals: [],
               templates: []
             };
@@ -24603,11 +25564,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
                 "loc": {
                   "source": null,
                   "start": {
-                    "line": 32,
+                    "line": 35,
                     "column": 14
                   },
                   "end": {
-                    "line": 39,
+                    "line": 43,
                     "column": 14
                   }
                 },
@@ -24622,6 +25583,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
                 var el1 = dom.createTextNode("                ");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("button");
+                dom.setAttribute(el1, "type", "button");
                 var el2 = dom.createTextNode("\n                    ");
                 dom.appendChild(el1, el2);
                 var el2 = dom.createElement("i");
@@ -24642,7 +25604,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
                 morphs[2] = dom.createElementMorph(element11);
                 return morphs;
               },
-              statements: [["attribute", "class", ["concat", ["ui check-all-button ", ["get", "buttonClass", ["loc", [null, [34, 47], [34, 58]]]], " ", ["subexpr", "if", [["get", "allSelect", ["loc", [null, [34, 66], [34, 75]]]], "activated"], [], ["loc", [null, [34, 61], [34, 89]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.check-all-button-text"], [], ["loc", [null, [35, 24], [35, 76]]]]], ["element", "action", ["checkAll"], [], ["loc", [null, [36, 18], [36, 39]]]]],
+              statements: [["attribute", "class", ["concat", ["ui check-all-button ", ["get", "buttonClass", ["loc", [null, [38, 47], [38, 58]]]], " ", ["subexpr", "if", [["get", "allSelect", ["loc", [null, [38, 66], [38, 75]]]], "activated"], [], ["loc", [null, [38, 61], [38, 89]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.check-all-button-text"], [], ["loc", [null, [39, 24], [39, 76]]]]], ["element", "action", ["checkAll"], [], ["loc", [null, [40, 18], [40, 39]]]]],
               locals: [],
               templates: []
             };
@@ -24654,11 +25616,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 23,
+                  "line": 25,
                   "column": 12
                 },
                 "end": {
-                  "line": 40,
+                  "line": 44,
                   "column": 12
                 }
               },
@@ -24681,7 +25643,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               dom.insertBoundary(fragment, null);
               return morphs;
             },
-            statements: [["block", "if", [["get", "readonly", ["loc", [null, [24, 20], [24, 28]]]]], [], 0, 1, ["loc", [null, [24, 14], [39, 21]]]]],
+            statements: [["block", "if", [["get", "readonly", ["loc", [null, [26, 20], [26, 28]]]]], [], 0, 1, ["loc", [null, [26, 14], [43, 21]]]]],
             locals: [],
             templates: [child0, child1]
           };
@@ -24694,11 +25656,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 41,
+                  "line": 45,
                   "column": 12
                 },
                 "end": {
-                  "line": 48,
+                  "line": 53,
                   "column": 12
                 }
               },
@@ -24713,6 +25675,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               var el1 = dom.createTextNode("              ");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("button");
+              dom.setAttribute(el1, "type", "button");
               var el2 = dom.createTextNode("\n                  ");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("i");
@@ -24733,7 +25696,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               morphs[2] = dom.createElementMorph(element10);
               return morphs;
             },
-            statements: [["attribute", "class", ["concat", ["ui clear-sorting-button ", ["get", "buttonClass", ["loc", [null, [43, 49], [43, 60]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.clear-sorting-button-text"], [], ["loc", [null, [44, 22], [44, 78]]]]], ["element", "action", ["clearSorting"], [], ["loc", [null, [45, 16], [45, 41]]]]],
+            statements: [["attribute", "class", ["concat", ["ui clear-sorting-button ", ["get", "buttonClass", ["loc", [null, [48, 49], [48, 60]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.clear-sorting-button-text"], [], ["loc", [null, [49, 22], [49, 78]]]]], ["element", "action", ["clearSorting"], [], ["loc", [null, [50, 16], [50, 41]]]]],
             locals: [],
             templates: []
           };
@@ -24749,7 +25712,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
                 "column": 10
               },
               "end": {
-                "line": 49,
+                "line": 54,
                 "column": 10
               }
             },
@@ -24778,7 +25741,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             dom.insertBoundary(fragment, null);
             return morphs;
           },
-          statements: [["block", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [7, 22], [7, 30]]]], ["get", "allSelect", ["loc", [null, [7, 31], [7, 40]]]]], [], ["loc", [null, [7, 18], [7, 41]]]]], [], 0, 1, ["loc", [null, [7, 12], [22, 19]]]], ["block", "if", [["subexpr", "not-eq", [["get", "class", ["loc", [null, [23, 26], [23, 31]]]], "groupedit-container"], [], ["loc", [null, [23, 18], [23, 54]]]]], [], 2, null, ["loc", [null, [23, 12], [40, 19]]]], ["block", "if", [["subexpr", "and", [["get", "defaultSortingButton", ["loc", [null, [41, 23], [41, 43]]]], ["subexpr", "not", [["get", "orderedProperty", ["loc", [null, [41, 49], [41, 64]]]]], [], ["loc", [null, [41, 44], [41, 65]]]]], [], ["loc", [null, [41, 18], [41, 66]]]]], [], 3, null, ["loc", [null, [41, 12], [48, 19]]]]],
+          statements: [["block", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [7, 22], [7, 30]]]], ["get", "allSelect", ["loc", [null, [7, 31], [7, 40]]]]], [], ["loc", [null, [7, 18], [7, 41]]]]], [], 0, 1, ["loc", [null, [7, 12], [24, 19]]]], ["block", "if", [["subexpr", "not-eq", [["get", "class", ["loc", [null, [25, 26], [25, 31]]]], "groupedit-container"], [], ["loc", [null, [25, 18], [25, 54]]]]], [], 2, null, ["loc", [null, [25, 12], [44, 19]]]], ["block", "if", [["subexpr", "and", [["get", "defaultSortingButton", ["loc", [null, [45, 23], [45, 43]]]], ["subexpr", "not", [["get", "orderedProperty", ["loc", [null, [45, 49], [45, 64]]]]], [], ["loc", [null, [45, 44], [45, 65]]]]], [], ["loc", [null, [45, 18], [45, 66]]]]], [], 3, null, ["loc", [null, [45, 12], [53, 19]]]]],
           locals: [],
           templates: [child0, child1, child2, child3]
         };
@@ -24794,7 +25757,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               "column": 6
             },
             "end": {
-              "line": 51,
+              "line": 56,
               "column": 6
             }
           },
@@ -24827,7 +25790,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
           morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 1, 1);
           return morphs;
         },
-        statements: [["block", "if", [["get", "showCheckBoxInRow", ["loc", [null, [6, 16], [6, 33]]]]], [], 0, null, ["loc", [null, [6, 10], [49, 17]]]]],
+        statements: [["block", "if", [["get", "showCheckBoxInRow", ["loc", [null, [6, 16], [6, 33]]]]], [], 0, null, ["loc", [null, [6, 10], [54, 17]]]]],
         locals: [],
         templates: [child0]
       };
@@ -24841,11 +25804,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             "loc": {
               "source": null,
               "start": {
-                "line": 56,
+                "line": 61,
                 "column": 12
               },
               "end": {
-                "line": 58,
+                "line": 63,
                 "column": 12
               }
             },
@@ -24870,7 +25833,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
             return morphs;
           },
-          statements: [["inline", "t", [["get", "column.keyLocale", ["loc", [null, [57, 18], [57, 34]]]]], [], ["loc", [null, [57, 14], [57, 36]]]]],
+          statements: [["inline", "t", [["get", "column.keyLocale", ["loc", [null, [62, 18], [62, 34]]]]], [], ["loc", [null, [62, 14], [62, 36]]]]],
           locals: [],
           templates: []
         };
@@ -24883,11 +25846,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             "loc": {
               "source": null,
               "start": {
-                "line": 58,
+                "line": 63,
                 "column": 12
               },
               "end": {
-                "line": 60,
+                "line": 65,
                 "column": 12
               }
             },
@@ -24912,7 +25875,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
             return morphs;
           },
-          statements: [["content", "column.header", ["loc", [null, [59, 14], [59, 31]]]]],
+          statements: [["content", "column.header", ["loc", [null, [64, 14], [64, 31]]]]],
           locals: [],
           templates: []
         };
@@ -24926,11 +25889,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 64,
+                  "line": 69,
                   "column": 16
                 },
                 "end": {
-                  "line": 68,
+                  "line": 73,
                   "column": 16
                 }
               },
@@ -24963,7 +25926,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               morphs[1] = dom.createMorphAt(element7, 1, 1);
               return morphs;
             },
-            statements: [["attribute", "title", ["concat", [["subexpr", "t", ["components.object-list-view.sort-ascending"], [], ["loc", [null, [65, 30], [65, 80]]]]]]], ["content", "column.sortNumber", ["loc", [null, [66, 19], [66, 40]]]]],
+            statements: [["attribute", "title", ["concat", [["subexpr", "t", ["components.object-list-view.sort-ascending"], [], ["loc", [null, [70, 30], [70, 80]]]]]]], ["content", "column.sortNumber", ["loc", [null, [71, 19], [71, 40]]]]],
             locals: [],
             templates: []
           };
@@ -24976,11 +25939,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 68,
+                  "line": 73,
                   "column": 16
                 },
                 "end": {
-                  "line": 72,
+                  "line": 77,
                   "column": 16
                 }
               },
@@ -25013,7 +25976,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               morphs[1] = dom.createMorphAt(element6, 1, 1);
               return morphs;
             },
-            statements: [["attribute", "title", ["concat", [["subexpr", "t", ["components.object-list-view.sort-descending"], [], ["loc", [null, [69, 30], [69, 81]]]]]]], ["content", "column.sortNumber", ["loc", [null, [70, 19], [70, 40]]]]],
+            statements: [["attribute", "title", ["concat", [["subexpr", "t", ["components.object-list-view.sort-descending"], [], ["loc", [null, [74, 30], [74, 81]]]]]]], ["content", "column.sortNumber", ["loc", [null, [75, 19], [75, 40]]]]],
             locals: [],
             templates: []
           };
@@ -25025,11 +25988,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             "loc": {
               "source": null,
               "start": {
-                "line": 62,
+                "line": 67,
                 "column": 12
               },
               "end": {
-                "line": 74,
+                "line": 79,
                 "column": 12
               }
             },
@@ -25062,7 +26025,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 1, 1);
             return morphs;
           },
-          statements: [["block", "if", [["get", "column.sortAscending", ["loc", [null, [64, 22], [64, 42]]]]], [], 0, 1, ["loc", [null, [64, 16], [72, 23]]]]],
+          statements: [["block", "if", [["get", "column.sortAscending", ["loc", [null, [69, 22], [69, 42]]]]], [], 0, 1, ["loc", [null, [69, 16], [77, 23]]]]],
           locals: [],
           templates: [child0, child1]
         };
@@ -25074,11 +26037,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
           "loc": {
             "source": null,
             "start": {
-              "line": 52,
+              "line": 57,
               "column": 6
             },
             "end": {
-              "line": 77,
+              "line": 82,
               "column": 6
             }
           },
@@ -25133,7 +26096,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
           morphs[5] = dom.createMorphAt(element9, 3, 3);
           return morphs;
         },
-        statements: [["attribute", "onclick", ["subexpr", "action", ["headerCellClick", ["get", "column", ["loc", [null, [53, 77], [53, 83]]]]], [], ["loc", [null, [53, 50], [53, 86]]]]], ["attribute", "width", ["get", "column.width", ["loc", [null, [53, 95], [53, 107]]]]], ["attribute", "data-olv-header-property-name", ["get", "column.propName", ["loc", [null, [54, 47], [54, 62]]]]], ["attribute", "title", ["get", "sortTitleCompute", ["loc", [null, [54, 73], [54, 89]]]]], ["block", "if", [["get", "column.keyLocale", ["loc", [null, [56, 18], [56, 34]]]]], [], 0, 1, ["loc", [null, [56, 12], [60, 19]]]], ["block", "if", [["get", "column.sorted", ["loc", [null, [62, 18], [62, 31]]]]], [], 2, null, ["loc", [null, [62, 12], [74, 19]]]]],
+        statements: [["attribute", "onclick", ["subexpr", "action", ["headerCellClick", ["get", "column", ["loc", [null, [58, 77], [58, 83]]]]], [], ["loc", [null, [58, 50], [58, 86]]]]], ["attribute", "width", ["get", "column.width", ["loc", [null, [58, 95], [58, 107]]]]], ["attribute", "data-olv-header-property-name", ["get", "column.propName", ["loc", [null, [59, 47], [59, 62]]]]], ["attribute", "title", ["get", "sortTitleCompute", ["loc", [null, [59, 73], [59, 89]]]]], ["block", "if", [["get", "column.keyLocale", ["loc", [null, [61, 18], [61, 34]]]]], [], 0, 1, ["loc", [null, [61, 12], [65, 19]]]], ["block", "if", [["get", "column.sorted", ["loc", [null, [67, 18], [67, 31]]]]], [], 2, null, ["loc", [null, [67, 12], [79, 19]]]]],
         locals: ["column"],
         templates: [child0, child1, child2]
       };
@@ -25146,11 +26109,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
           "loc": {
             "source": null,
             "start": {
-              "line": 78,
+              "line": 83,
               "column": 6
             },
             "end": {
-              "line": 80,
+              "line": 85,
               "column": 6
             }
           },
@@ -25189,11 +26152,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             "loc": {
               "source": null,
               "start": {
-                "line": 86,
+                "line": 91,
                 "column": 8
               },
               "end": {
-                "line": 88,
+                "line": 93,
                 "column": 8
               }
             },
@@ -25231,11 +26194,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 91,
+                  "line": 96,
                   "column": 12
                 },
                 "end": {
-                  "line": 99,
+                  "line": 106,
                   "column": 12
                 }
               },
@@ -25260,7 +26223,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
               return morphs;
             },
-            statements: [["inline", "component", ["flexberry-dropdown"], ["value", ["subexpr", "@mut", [["get", "column.filter.condition", ["loc", [null, [93, 22], [93, 45]]]]], [], []], "items", ["subexpr", "@mut", [["get", "column.filter.conditions", ["loc", [null, [94, 22], [94, 46]]]]], [], []], "class", "compact fluid", "placeholder", "", "needChecksOnValue", false], ["loc", [null, [92, 14], [98, 16]]]]],
+            statements: [["inline", "flexberry-dropdown", [], ["value", ["subexpr", "@mut", [["get", "column.filter.condition", ["loc", [null, [98, 22], [98, 45]]]]], [], []], "items", ["subexpr", "@mut", [["get", "column.filter.conditions", ["loc", [null, [99, 22], [99, 46]]]]], [], []], "displayCaptions", true, "class", "compact fluid", "placeholder", ["subexpr", "t", ["components.object-list-view.filter-condition"], [], ["loc", [null, [102, 28], [102, 78]]]], "needChecksOnValue", false, "onChange", ["subexpr", "action", ["filterConditionChanged", ["get", "column.filter", ["loc", [null, [104, 58], [104, 71]]]]], [], ["loc", [null, [104, 25], [104, 72]]]]], ["loc", [null, [97, 14], [105, 16]]]]],
             locals: [],
             templates: []
           };
@@ -25272,11 +26235,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             "loc": {
               "source": null,
               "start": {
-                "line": 89,
+                "line": 94,
                 "column": 8
               },
               "end": {
-                "line": 101,
+                "line": 108,
                 "column": 8
               }
             },
@@ -25310,7 +26273,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             morphs[1] = dom.createMorphAt(element3, 1, 1);
             return morphs;
           },
-          statements: [["attribute", "style", ["get", "defaultPaddingStyle", ["loc", [null, [90, 22], [90, 41]]]]], ["block", "if", [["get", "column.filter.conditions", ["loc", [null, [91, 18], [91, 42]]]]], [], 0, null, ["loc", [null, [91, 12], [99, 19]]]]],
+          statements: [["attribute", "style", ["get", "defaultPaddingStyle", ["loc", [null, [95, 22], [95, 41]]]]], ["block", "if", [["get", "column.filter.conditions", ["loc", [null, [96, 18], [96, 42]]]]], [], 0, null, ["loc", [null, [96, 12], [106, 19]]]]],
           locals: ["column"],
           templates: [child0]
         };
@@ -25323,11 +26286,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             "loc": {
               "source": null,
               "start": {
-                "line": 102,
+                "line": 109,
                 "column": 8
               },
               "end": {
-                "line": 104,
+                "line": 111,
                 "column": 8
               }
             },
@@ -25364,11 +26327,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             "loc": {
               "source": null,
               "start": {
-                "line": 107,
+                "line": 114,
                 "column": 8
               },
               "end": {
-                "line": 109,
+                "line": 116,
                 "column": 8
               }
             },
@@ -25406,11 +26369,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 112,
+                  "line": 119,
                   "column": 12
                 },
                 "end": {
-                  "line": 117,
+                  "line": 128,
                   "column": 12
                 }
               },
@@ -25435,7 +26398,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
               morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
               return morphs;
             },
-            statements: [["inline", "component", [["get", "column.filter.component.name", ["loc", [null, [113, 26], [113, 54]]]]], ["value", ["subexpr", "@mut", [["get", "column.filter.pattern", ["loc", [null, [114, 22], [114, 43]]]]], [], []], "dynamicProperties", ["subexpr", "@mut", [["get", "column.filter.component.properties", ["loc", [null, [115, 34], [115, 68]]]]], [], []]], ["loc", [null, [113, 14], [116, 16]]]]],
+            statements: [["inline", "component", [["get", "column.filter.component.name", ["loc", [null, [120, 26], [120, 54]]]]], ["value", ["subexpr", "@mut", [["get", "column.filter.pattern", ["loc", [null, [121, 22], [121, 43]]]]], [], []], "readonly", ["subexpr", "or", [["subexpr", "eq", [["get", "column.filter.condition", ["loc", [null, [123, 22], [123, 45]]]], "empty"], [], ["loc", [null, [123, 18], [123, 54]]]], ["subexpr", "eq", [["get", "column.filter.condition", ["loc", [null, [124, 22], [124, 45]]]], "nempty"], [], ["loc", [null, [124, 18], [124, 55]]]]], [], ["loc", [null, [122, 25], [125, 17]]]], "dynamicProperties", ["subexpr", "@mut", [["get", "column.filter.component.properties", ["loc", [null, [126, 34], [126, 68]]]]], [], []]], ["loc", [null, [120, 14], [127, 16]]]]],
             locals: [],
             templates: []
           };
@@ -25447,11 +26410,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             "loc": {
               "source": null,
               "start": {
-                "line": 110,
+                "line": 117,
                 "column": 8
               },
               "end": {
-                "line": 119,
+                "line": 130,
                 "column": 8
               }
             },
@@ -25485,7 +26448,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             morphs[2] = dom.createMorphAt(element2, 1, 1);
             return morphs;
           },
-          statements: [["attribute", "style", ["get", "defaultPaddingStyle", ["loc", [null, [111, 22], [111, 41]]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["subexpr", "array-contains", [["get", "overflowedComponents", ["loc", [null, [111, 72], [111, 92]]]], ["get", "column.filter.component.name", ["loc", [null, [111, 93], [111, 121]]]]], [], ["loc", [null, [111, 56], [111, 122]]]], "overflowed-cell"], [], ["loc", [null, [111, 51], [111, 142]]]]]]], ["block", "if", [["get", "column.filter.component.name", ["loc", [null, [112, 18], [112, 46]]]]], [], 0, null, ["loc", [null, [112, 12], [117, 19]]]]],
+          statements: [["attribute", "style", ["get", "defaultPaddingStyle", ["loc", [null, [118, 22], [118, 41]]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["subexpr", "array-contains", [["get", "overflowedComponents", ["loc", [null, [118, 72], [118, 92]]]], ["get", "column.filter.component.name", ["loc", [null, [118, 93], [118, 121]]]]], [], ["loc", [null, [118, 56], [118, 122]]]], "overflowed-cell"], [], ["loc", [null, [118, 51], [118, 142]]]]]]], ["block", "if", [["get", "column.filter.component.name", ["loc", [null, [119, 18], [119, 46]]]]], [], 0, null, ["loc", [null, [119, 12], [128, 19]]]]],
           locals: ["column"],
           templates: [child0]
         };
@@ -25498,11 +26461,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             "loc": {
               "source": null,
               "start": {
-                "line": 120,
+                "line": 131,
                 "column": 8
               },
               "end": {
-                "line": 122,
+                "line": 133,
                 "column": 8
               }
             },
@@ -25538,11 +26501,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
           "loc": {
             "source": null,
             "start": {
-              "line": 84,
+              "line": 89,
               "column": 4
             },
             "end": {
-              "line": 124,
+              "line": 135,
               "column": 4
             }
           },
@@ -25591,16 +26554,17 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
           var element4 = dom.childAt(fragment, [1]);
           var element5 = dom.childAt(fragment, [3]);
-          var morphs = new Array(6);
+          var morphs = new Array(7);
           morphs[0] = dom.createMorphAt(element4, 1, 1);
           morphs[1] = dom.createMorphAt(element4, 2, 2);
           morphs[2] = dom.createMorphAt(element4, 3, 3);
-          morphs[3] = dom.createMorphAt(element5, 1, 1);
-          morphs[4] = dom.createMorphAt(element5, 2, 2);
-          morphs[5] = dom.createMorphAt(element5, 3, 3);
+          morphs[3] = dom.createAttrMorph(element5, 'onkeydown');
+          morphs[4] = dom.createMorphAt(element5, 1, 1);
+          morphs[5] = dom.createMorphAt(element5, 2, 2);
+          morphs[6] = dom.createMorphAt(element5, 3, 3);
           return morphs;
         },
-        statements: [["block", "if", [["get", "showHelperColumn", ["loc", [null, [86, 14], [86, 30]]]]], [], 0, null, ["loc", [null, [86, 8], [88, 15]]]], ["block", "each", [["get", "columns", ["loc", [null, [89, 16], [89, 23]]]]], [], 1, null, ["loc", [null, [89, 8], [101, 17]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [102, 14], [102, 28]]]]], [], 2, null, ["loc", [null, [102, 8], [104, 15]]]], ["block", "if", [["get", "showHelperColumn", ["loc", [null, [107, 14], [107, 30]]]]], [], 3, null, ["loc", [null, [107, 8], [109, 15]]]], ["block", "each", [["get", "columns", ["loc", [null, [110, 16], [110, 23]]]]], [], 4, null, ["loc", [null, [110, 8], [119, 17]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [120, 14], [120, 28]]]]], [], 5, null, ["loc", [null, [120, 8], [122, 15]]]]],
+        statements: [["block", "if", [["get", "showHelperColumn", ["loc", [null, [91, 14], [91, 30]]]]], [], 0, null, ["loc", [null, [91, 8], [93, 15]]]], ["block", "each", [["get", "columns", ["loc", [null, [94, 16], [94, 23]]]]], [], 1, null, ["loc", [null, [94, 8], [108, 17]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [109, 14], [109, 28]]]]], [], 2, null, ["loc", [null, [109, 8], [111, 15]]]], ["attribute", "onkeydown", ["subexpr", "action", ["applyFiltersByEnter"], [], ["loc", [null, [113, 53], [113, 85]]]]], ["block", "if", [["get", "showHelperColumn", ["loc", [null, [114, 14], [114, 30]]]]], [], 3, null, ["loc", [null, [114, 8], [116, 15]]]], ["block", "each", [["get", "columns", ["loc", [null, [117, 16], [117, 23]]]]], [], 4, null, ["loc", [null, [117, 8], [130, 17]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [131, 14], [131, 28]]]]], [], 5, null, ["loc", [null, [131, 8], [133, 15]]]]],
         locals: [],
         templates: [child0, child1, child2, child3, child4, child5]
       };
@@ -25613,11 +26577,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
           "loc": {
             "source": null,
             "start": {
-              "line": 125,
+              "line": 136,
               "column": 4
             },
             "end": {
-              "line": 131,
+              "line": 142,
               "column": 4
             }
           },
@@ -25657,7 +26621,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
           morphs[1] = dom.createMorphAt(element1, 1, 1);
           return morphs;
         },
-        statements: [["attribute", "colspan", ["concat", [["get", "colspan", ["loc", [null, [127, 23], [127, 30]]]]]]], ["content", "placeholder", ["loc", [null, [128, 12], [128, 27]]]]],
+        statements: [["attribute", "colspan", ["concat", [["get", "colspan", ["loc", [null, [138, 23], [138, 30]]]]]]], ["content", "placeholder", ["loc", [null, [139, 12], [139, 27]]]]],
         locals: [],
         templates: []
       };
@@ -25671,11 +26635,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             "loc": {
               "source": null,
               "start": {
-                "line": 132,
+                "line": 143,
                 "column": 6
               },
               "end": {
-                "line": 164,
+                "line": 180,
                 "column": 6
               }
             },
@@ -25700,7 +26664,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
             return morphs;
           },
-          statements: [["inline", "object-list-view-row", [], ["record", ["subexpr", "@mut", [["get", "record", ["loc", [null, [134, 17], [134, 23]]]]], [], []], "columns", ["subexpr", "@mut", [["get", "columns", ["loc", [null, [135, 18], [135, 25]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [136, 19], [136, 27]]]]], [], []], "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [137, 19], [137, 27]]]]], [], []], "showMenuColumn", ["subexpr", "@mut", [["get", "showMenuColumn", ["loc", [null, [138, 25], [138, 39]]]]], [], []], "sendMenuItemAction", ["subexpr", "@mut", [["get", "sendMenuItemAction", ["loc", [null, [139, 29], [139, 47]]]]], [], []], "menuInRowAdditionalItems", ["subexpr", "@mut", [["get", "menuInRowAdditionalItems", ["loc", [null, [140, 35], [140, 59]]]]], [], []], "showHelperColumn", ["subexpr", "@mut", [["get", "showHelperColumn", ["loc", [null, [141, 27], [141, 43]]]]], [], []], "defaultRowConfig", ["subexpr", "@mut", [["get", "defaultRowConfig", ["loc", [null, [142, 27], [142, 43]]]]], [], []], "showValidationMessages", ["subexpr", "@mut", [["get", "showValidationMessagesInRow", ["loc", [null, [143, 33], [143, 60]]]]], [], []], "showAsteriskInRow", ["subexpr", "@mut", [["get", "showAsteriskInRow", ["loc", [null, [144, 28], [144, 45]]]]], [], []], "showCheckBoxInRow", ["subexpr", "@mut", [["get", "showCheckBoxInRow", ["loc", [null, [145, 28], [145, 45]]]]], [], []], "showDeleteButtonInRow", ["subexpr", "@mut", [["get", "showDeleteButtonInRow", ["loc", [null, [146, 32], [146, 53]]]]], [], []], "showEditButtonInRow", ["subexpr", "@mut", [["get", "showEditButtonInRow", ["loc", [null, [147, 30], [147, 49]]]]], [], []], "showDeleteMenuItemInRow", ["subexpr", "@mut", [["get", "showDeleteMenuItemInRow", ["loc", [null, [148, 34], [148, 57]]]]], [], []], "showEditMenuItemInRow", ["subexpr", "@mut", [["get", "showEditMenuItemInRow", ["loc", [null, [149, 32], [149, 53]]]]], [], []], "hierarchicalIndent", ["subexpr", "@mut", [["get", "hierarchicalIndent", ["loc", [null, [150, 29], [150, 47]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "inHierarchicalMode", ["loc", [null, [151, 29], [151, 47]]]]], [], []], "inExpandMode", ["subexpr", "unbound", [["get", "inExpandMode", ["loc", [null, [152, 32], [152, 44]]]]], [], ["loc", [null, [152, 23], [152, 45]]]], "loadRecords", ["subexpr", "@mut", [["get", "loadRecords", ["loc", [null, [153, 22], [153, 33]]]]], [], []], "doRenderData", ["subexpr", "@mut", [["get", "record.doRenderData", ["loc", [null, [154, 23], [154, 42]]]]], [], []], "rowClick", ["subexpr", "action", ["rowClick"], [], ["loc", [null, [155, 19], [155, 38]]]], "selectRow", ["subexpr", "action", ["selectRow"], [], ["loc", [null, [156, 20], [156, 40]]]], "deleteRow", ["subexpr", "action", ["deleteRow"], [], ["loc", [null, [157, 20], [157, 40]]]], "customButtonsInRow", ["subexpr", "@mut", [["get", "customButtonsInRow", ["loc", [null, [158, 29], [158, 47]]]]], [], []], "customButtonInRowAction", "customButtonInRowAction", "defaultLeftPadding", ["subexpr", "@mut", [["get", "defaultLeftPadding", ["loc", [null, [160, 29], [160, 47]]]]], [], []], "overflowedComponents", ["subexpr", "@mut", [["get", "overflowedComponents", ["loc", [null, [161, 31], [161, 51]]]]], [], []], "folvComponentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [162, 28], [162, 41]]]]], [], []]], ["loc", [null, [133, 8], [163, 10]]]]],
+          statements: [["inline", "object-list-view-row", [], ["record", ["subexpr", "@mut", [["get", "record", ["loc", [null, [145, 17], [145, 23]]]]], [], []], "columns", ["subexpr", "@mut", [["get", "columns", ["loc", [null, [146, 18], [146, 25]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [147, 19], [147, 27]]]]], [], []], "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [148, 19], [148, 27]]]]], [], []], "showMenuColumn", ["subexpr", "@mut", [["get", "showMenuColumn", ["loc", [null, [149, 25], [149, 39]]]]], [], []], "sendMenuItemAction", ["subexpr", "@mut", [["get", "sendMenuItemAction", ["loc", [null, [150, 29], [150, 47]]]]], [], []], "menuInRowAdditionalItems", ["subexpr", "@mut", [["get", "menuInRowAdditionalItems", ["loc", [null, [151, 35], [151, 59]]]]], [], []], "showHelperColumn", ["subexpr", "@mut", [["get", "showHelperColumn", ["loc", [null, [152, 27], [152, 43]]]]], [], []], "defaultRowConfig", ["subexpr", "@mut", [["get", "defaultRowConfig", ["loc", [null, [153, 27], [153, 43]]]]], [], []], "showValidationMessages", ["subexpr", "@mut", [["get", "showValidationMessagesInRow", ["loc", [null, [154, 33], [154, 60]]]]], [], []], "showAsteriskInRow", ["subexpr", "@mut", [["get", "showAsteriskInRow", ["loc", [null, [155, 28], [155, 45]]]]], [], []], "showCheckBoxInRow", ["subexpr", "@mut", [["get", "showCheckBoxInRow", ["loc", [null, [156, 28], [156, 45]]]]], [], []], "showEditButtonInRow", ["subexpr", "@mut", [["get", "showEditButtonInRow", ["loc", [null, [157, 30], [157, 49]]]]], [], []], "showPrototypeButtonInRow", ["subexpr", "@mut", [["get", "showPrototypeButtonInRow", ["loc", [null, [158, 35], [158, 59]]]]], [], []], "showDeleteButtonInRow", ["subexpr", "@mut", [["get", "showDeleteButtonInRow", ["loc", [null, [159, 32], [159, 53]]]]], [], []], "showEditMenuItemInRow", ["subexpr", "@mut", [["get", "showEditMenuItemInRow", ["loc", [null, [160, 32], [160, 53]]]]], [], []], "showPrototypeMenuItemInRow", ["subexpr", "@mut", [["get", "showPrototypeMenuItemInRow", ["loc", [null, [161, 37], [161, 63]]]]], [], []], "showDeleteMenuItemInRow", ["subexpr", "@mut", [["get", "showDeleteMenuItemInRow", ["loc", [null, [162, 34], [162, 57]]]]], [], []], "hierarchicalIndent", ["subexpr", "@mut", [["get", "hierarchicalIndent", ["loc", [null, [163, 29], [163, 47]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "inHierarchicalMode", ["loc", [null, [164, 29], [164, 47]]]]], [], []], "inExpandMode", ["subexpr", "unbound", [["get", "inExpandMode", ["loc", [null, [165, 32], [165, 44]]]]], [], ["loc", [null, [165, 23], [165, 45]]]], "loadRecords", ["subexpr", "@mut", [["get", "loadRecords", ["loc", [null, [166, 22], [166, 33]]]]], [], []], "doRenderData", ["subexpr", "@mut", [["get", "record.doRenderData", ["loc", [null, [167, 23], [167, 42]]]]], [], []], "rowClick", ["subexpr", "action", ["rowClick"], [], ["loc", [null, [168, 19], [168, 38]]]], "selectRow", ["subexpr", "action", ["selectRow"], [], ["loc", [null, [169, 20], [169, 40]]]], "createNewByPrototype", ["subexpr", "@mut", [["get", "createNewByPrototype", ["loc", [null, [170, 31], [170, 51]]]]], [], []], "deleteRow", ["subexpr", "action", ["deleteRow"], [], ["loc", [null, [171, 20], [171, 40]]]], "customButtonsInRow", ["subexpr", "@mut", [["get", "customButtonsInRow", ["loc", [null, [172, 29], [172, 47]]]]], [], []], "customButtonInRowAction", "customButtonInRowAction", "defaultLeftPadding", ["subexpr", "@mut", [["get", "defaultLeftPadding", ["loc", [null, [174, 29], [174, 47]]]]], [], []], "overflowedComponents", ["subexpr", "@mut", [["get", "overflowedComponents", ["loc", [null, [175, 31], [175, 51]]]]], [], []], "folvComponentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [176, 28], [176, 41]]]]], [], []], "hierarchyPaging", ["subexpr", "@mut", [["get", "hierarchyPaging", ["loc", [null, [177, 26], [177, 41]]]]], [], []], "configurateRow", ["subexpr", "@mut", [["get", "configurateRow", ["loc", [null, [178, 25], [178, 39]]]]], [], []]], ["loc", [null, [144, 8], [179, 10]]]]],
           locals: ["record"],
           templates: []
         };
@@ -25713,11 +26677,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             "loc": {
               "source": null,
               "start": {
-                "line": 165,
+                "line": 181,
                 "column": 6
               },
               "end": {
-                "line": 172,
+                "line": 188,
                 "column": 6
               }
             },
@@ -25762,7 +26726,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             morphs[1] = dom.createMorphAt(element0, 3, 3);
             return morphs;
           },
-          statements: [["attribute", "colspan", ["concat", [["get", "colspan", ["loc", [null, [167, 25], [167, 32]]]]]]], ["inline", "t", ["components.object-list-view.loading-text"], [], ["loc", [null, [169, 12], [169, 60]]]]],
+          statements: [["attribute", "colspan", ["concat", [["get", "colspan", ["loc", [null, [183, 25], [183, 32]]]]]]], ["inline", "t", ["components.object-list-view.loading-text"], [], ["loc", [null, [185, 12], [185, 60]]]]],
           locals: [],
           templates: []
         };
@@ -25774,11 +26738,11 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
           "loc": {
             "source": null,
             "start": {
-              "line": 131,
+              "line": 142,
               "column": 4
             },
             "end": {
-              "line": 173,
+              "line": 189,
               "column": 4
             }
           },
@@ -25804,7 +26768,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
           dom.insertBoundary(fragment, null);
           return morphs;
         },
-        statements: [["block", "each", [["get", "contentWithKeys", ["loc", [null, [132, 14], [132, 29]]]]], ["key", "key"], 0, null, ["loc", [null, [132, 6], [164, 15]]]], ["block", "if", [["get", "rowByRowLoadingProgress", ["loc", [null, [165, 12], [165, 35]]]]], [], 1, null, ["loc", [null, [165, 6], [172, 13]]]]],
+        statements: [["block", "each", [["get", "contentWithKeys", ["loc", [null, [143, 14], [143, 29]]]]], ["key", "key"], 0, null, ["loc", [null, [143, 6], [180, 15]]]], ["block", "if", [["get", "rowByRowLoadingProgress", ["loc", [null, [181, 12], [181, 35]]]]], [], 1, null, ["loc", [null, [181, 6], [188, 13]]]]],
         locals: [],
         templates: [child0, child1]
       };
@@ -25822,7 +26786,7 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
             "column": 0
           },
           "end": {
-            "line": 176,
+            "line": 192,
             "column": 0
           }
         },
@@ -25887,9 +26851,71 @@ define("dummy/templates/components/object-list-view", ["exports"], function (exp
         morphs[5] = dom.createMorphAt(element17, 2, 2);
         return morphs;
       },
-      statements: [["attribute", "class", ["concat", ["object-list-view ui unstackable celled ", ["subexpr", "if", [["get", "readonly", ["loc", [null, [1, 58], [1, 66]]]], "readonly"], [], ["loc", [null, [1, 53], [1, 79]]]], " ", ["get", "tableClass", ["loc", [null, [1, 82], [1, 92]]]], " table"]]], ["block", "if", [["get", "showHelperColumn", ["loc", [null, [4, 12], [4, 28]]]]], [], 0, null, ["loc", [null, [4, 6], [51, 13]]]], ["block", "each", [["get", "columns", ["loc", [null, [52, 14], [52, 21]]]]], [], 1, null, ["loc", [null, [52, 6], [77, 15]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [78, 12], [78, 26]]]]], [], 2, null, ["loc", [null, [78, 6], [80, 13]]]], ["block", "if", [["get", "showFilters", ["loc", [null, [84, 10], [84, 21]]]]], [], 3, null, ["loc", [null, [84, 4], [124, 11]]]], ["block", "unless", [["get", "content", ["loc", [null, [125, 14], [125, 21]]]]], [], 4, 5, ["loc", [null, [125, 4], [173, 15]]]]],
+      statements: [["attribute", "class", ["concat", ["object-list-view ui unstackable celled ", ["subexpr", "if", [["get", "readonly", ["loc", [null, [1, 58], [1, 66]]]], "readonly"], [], ["loc", [null, [1, 53], [1, 79]]]], " ", ["get", "tableClass", ["loc", [null, [1, 82], [1, 92]]]], " table"]]], ["block", "if", [["get", "showHelperColumn", ["loc", [null, [4, 12], [4, 28]]]]], [], 0, null, ["loc", [null, [4, 6], [56, 13]]]], ["block", "each", [["get", "columns", ["loc", [null, [57, 14], [57, 21]]]]], [], 1, null, ["loc", [null, [57, 6], [82, 15]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [83, 12], [83, 26]]]]], [], 2, null, ["loc", [null, [83, 6], [85, 13]]]], ["block", "if", [["subexpr", "and", [["subexpr", "not", [["get", "showFiltersInModal", ["loc", [null, [89, 20], [89, 38]]]]], [], ["loc", [null, [89, 15], [89, 39]]]], ["get", "showFilters", ["loc", [null, [89, 40], [89, 51]]]]], [], ["loc", [null, [89, 10], [89, 52]]]]], [], 3, null, ["loc", [null, [89, 4], [135, 11]]]], ["block", "unless", [["get", "content", ["loc", [null, [136, 14], [136, 21]]]]], [], 4, 5, ["loc", [null, [136, 4], [189, 15]]]]],
       locals: [],
       templates: [child0, child1, child2, child3, child4, child5]
+    };
+  })());
+});
+define("dummy/templates/components/olv-filter-interval", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template((function () {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": ["multiple-nodes"]
+        },
+        "revision": "Ember@2.4.6",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 14,
+            "column": 6
+          }
+        },
+        "moduleName": "dummy/templates/components/olv-filter-interval.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1, "style", "float: left; width: 45%;");
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1, "style", "float: right; width: 45%;");
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]), 1, 1);
+        morphs[1] = dom.createMorphAt(dom.childAt(fragment, [2]), 1, 1);
+        return morphs;
+      },
+      statements: [["inline", "flexberry-textbox", [], ["value", ["subexpr", "@mut", [["get", "from", ["loc", [null, [3, 10], [3, 14]]]]], [], []], "placeholder", ["subexpr", "@mut", [["get", "fromPlaceholder", ["loc", [null, [4, 16], [4, 31]]]]], [], []], "dynamicProperties", ["subexpr", "@mut", [["get", "dynProps", ["loc", [null, [5, 22], [5, 30]]]]], [], []]], ["loc", [null, [2, 2], [6, 4]]]], ["inline", "flexberry-textbox", [], ["value", ["subexpr", "@mut", [["get", "to", ["loc", [null, [10, 10], [10, 12]]]]], [], []], "placeholder", ["subexpr", "@mut", [["get", "toPlaceholder", ["loc", [null, [11, 16], [11, 29]]]]], [], []], "dynamicProperties", ["subexpr", "@mut", [["get", "dynProps", ["loc", [null, [12, 22], [12, 30]]]]], [], []]], ["loc", [null, [9, 2], [13, 4]]]]],
+      locals: [],
+      templates: []
     };
   })());
 });
@@ -25922,6 +26948,7 @@ define("dummy/templates/components/olv-setconfigdialogbutton", ["exports"], func
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("button");
+        dom.setAttribute(el1, "type", "button");
         dom.setAttribute(el1, "class", "ui button");
         var el2 = dom.createElement("i");
         dom.setAttribute(el2, "class", "large setting icon");
@@ -25938,7 +26965,7 @@ define("dummy/templates/components/olv-setconfigdialogbutton", ["exports"], func
         morphs[0] = dom.createElementMorph(element0);
         return morphs;
       },
-      statements: [["element", "action", ["choose", ["get", "chooseData", ["loc", [null, [1, 44], [1, 54]]]]], [], ["loc", [null, [1, 26], [1, 56]]]]],
+      statements: [["element", "action", ["choose", ["get", "chooseData", ["loc", [null, [1, 58], [1, 68]]]]], [], ["loc", [null, [1, 40], [1, 70]]]]],
       locals: [],
       templates: []
     };
@@ -25961,7 +26988,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
               "column": 0
             },
             "end": {
-              "line": 9,
+              "line": 10,
               "column": 0
             }
           },
@@ -25976,6 +27003,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           var el1 = dom.createTextNode("  ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
+          dom.setAttribute(el1, "type", "button");
           var el2 = dom.createTextNode("\n      ");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
@@ -25993,15 +27021,15 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element17 = dom.childAt(fragment, [1]);
+          var element20 = dom.childAt(fragment, [1]);
           var morphs = new Array(4);
-          morphs[0] = dom.createAttrMorph(element17, 'class');
-          morphs[1] = dom.createAttrMorph(element17, 'title');
-          morphs[2] = dom.createElementMorph(element17);
-          morphs[3] = dom.createMorphAt(element17, 1, 1);
+          morphs[0] = dom.createAttrMorph(element20, 'class');
+          morphs[1] = dom.createAttrMorph(element20, 'title');
+          morphs[2] = dom.createElementMorph(element20);
+          morphs[3] = dom.createMorphAt(element20, 1, 1);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", ["ui refresh-button ", ["get", "buttonClass", ["loc", [null, [3, 31], [3, 42]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.refresh-button-text"], [], ["loc", [null, [4, 10], [4, 60]]]]], ["element", "action", ["refresh"], [], ["loc", [null, [5, 4], [5, 24]]]], ["inline", "t", ["components.olv-toolbar.refresh-button-text"], [], ["loc", [null, [6, 6], [6, 56]]]]],
+        statements: [["attribute", "class", ["concat", ["ui refresh-button ", ["get", "buttonClass", ["loc", [null, [4, 31], [4, 42]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.refresh-button-text"], [], ["loc", [null, [5, 10], [5, 60]]]]], ["element", "action", ["refresh"], [], ["loc", [null, [6, 4], [6, 24]]]], ["inline", "t", ["components.olv-toolbar.refresh-button-text"], [], ["loc", [null, [7, 6], [7, 56]]]]],
         locals: [],
         templates: []
       };
@@ -26015,11 +27043,11 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
             "loc": {
               "source": null,
               "start": {
-                "line": 11,
+                "line": 12,
                 "column": 2
               },
               "end": {
-                "line": 19,
+                "line": 21,
                 "column": 2
               }
             },
@@ -26034,10 +27062,221 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
             var el1 = dom.createTextNode("    ");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("button");
+            dom.setAttribute(el1, "type", "button");
             dom.setAttribute(el1, "disabled", "disabled");
             var el2 = dom.createTextNode("\n        ");
             dom.appendChild(el1, el2);
             var el2 = dom.createComment("");
+            dom.appendChild(el1, el2);
+            var el2 = dom.createTextNode("\n    ");
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            var el1 = dom.createTextNode("\n");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var element19 = dom.childAt(fragment, [1]);
+            var morphs = new Array(4);
+            morphs[0] = dom.createAttrMorph(element19, 'class');
+            morphs[1] = dom.createAttrMorph(element19, 'title');
+            morphs[2] = dom.createElementMorph(element19);
+            morphs[3] = dom.createMorphAt(element19, 1, 1);
+            return morphs;
+          },
+          statements: [["attribute", "class", ["concat", ["ui create-button ", ["get", "buttonClass", ["loc", [null, [15, 32], [15, 43]]]], " disabled button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.add-button-text"], [], ["loc", [null, [16, 12], [16, 58]]]]], ["element", "action", ["createNew"], [], ["loc", [null, [18, 6], [18, 28]]]], ["inline", "t", ["components.olv-toolbar.add-button-text"], [], ["loc", [null, [19, 8], [19, 54]]]]],
+          locals: [],
+          templates: []
+        };
+      })();
+      var child1 = (function () {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.4.6",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 21,
+                "column": 2
+              },
+              "end": {
+                "line": 29,
+                "column": 2
+              }
+            },
+            "moduleName": "dummy/templates/components/olv-toolbar.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode("    ");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createElement("button");
+            dom.setAttribute(el1, "type", "button");
+            var el2 = dom.createTextNode("\n        ");
+            dom.appendChild(el1, el2);
+            var el2 = dom.createComment("");
+            dom.appendChild(el1, el2);
+            var el2 = dom.createTextNode("\n    ");
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            var el1 = dom.createTextNode("\n");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var element18 = dom.childAt(fragment, [1]);
+            var morphs = new Array(4);
+            morphs[0] = dom.createAttrMorph(element18, 'class');
+            morphs[1] = dom.createAttrMorph(element18, 'title');
+            morphs[2] = dom.createElementMorph(element18);
+            morphs[3] = dom.createMorphAt(element18, 1, 1);
+            return morphs;
+          },
+          statements: [["attribute", "class", ["concat", ["ui create-button ", ["get", "buttonClass", ["loc", [null, [24, 32], [24, 43]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.add-button-text"], [], ["loc", [null, [25, 12], [25, 58]]]]], ["element", "action", ["createNew"], [], ["loc", [null, [26, 6], [26, 28]]]], ["inline", "t", ["components.olv-toolbar.add-button-text"], [], ["loc", [null, [27, 8], [27, 54]]]]],
+          locals: [],
+          templates: []
+        };
+      })();
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 11,
+              "column": 0
+            },
+            "end": {
+              "line": 30,
+              "column": 0
+            }
+          },
+          "moduleName": "dummy/templates/components/olv-toolbar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [["block", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [12, 12], [12, 20]]]], ["subexpr", "not", [["get", "enableCreateNewButton", ["loc", [null, [12, 26], [12, 47]]]]], [], ["loc", [null, [12, 21], [12, 48]]]]], [], ["loc", [null, [12, 8], [12, 49]]]]], [], 0, 1, ["loc", [null, [12, 2], [29, 9]]]]],
+        locals: [],
+        templates: [child0, child1]
+      };
+    })();
+    var child2 = (function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.4.6",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 32,
+                "column": 2
+              },
+              "end": {
+                "line": 42,
+                "column": 2
+              }
+            },
+            "moduleName": "dummy/templates/components/olv-toolbar.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode("    ");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createElement("button");
+            dom.setAttribute(el1, "type", "button");
+            dom.setAttribute(el1, "disabled", "disabled");
+            var el2 = dom.createTextNode("\n        ");
+            dom.appendChild(el1, el2);
+            var el2 = dom.createComment("");
+            dom.appendChild(el1, el2);
+            var el2 = dom.createTextNode("\n        ");
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("i");
+            dom.setAttribute(el2, "class", "delete icon");
+            dom.appendChild(el1, el2);
+            var el2 = dom.createTextNode("\n    ");
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            var el1 = dom.createTextNode("\n");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var element17 = dom.childAt(fragment, [1]);
+            var morphs = new Array(4);
+            morphs[0] = dom.createAttrMorph(element17, 'class');
+            morphs[1] = dom.createAttrMorph(element17, 'title');
+            morphs[2] = dom.createElementMorph(element17);
+            morphs[3] = dom.createMorphAt(element17, 1, 1);
+            return morphs;
+          },
+          statements: [["attribute", "class", ["concat", ["ui delete-button ", ["get", "buttonClass", ["loc", [null, [35, 32], [35, 43]]]], " disabled button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.delete-button-text"], [], ["loc", [null, [36, 12], [36, 61]]]]], ["element", "action", ["delete"], [], ["loc", [null, [38, 6], [38, 25]]]], ["inline", "t", ["components.olv-toolbar.delete-button-text"], [], ["loc", [null, [39, 8], [39, 57]]]]],
+          locals: [],
+          templates: []
+        };
+      })();
+      var child1 = (function () {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.4.6",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 42,
+                "column": 2
+              },
+              "end": {
+                "line": 51,
+                "column": 2
+              }
+            },
+            "moduleName": "dummy/templates/components/olv-toolbar.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode("    ");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createElement("button");
+            dom.setAttribute(el1, "type", "button");
+            var el2 = dom.createTextNode("\n        ");
+            dom.appendChild(el1, el2);
+            var el2 = dom.createComment("");
+            dom.appendChild(el1, el2);
+            var el2 = dom.createTextNode("\n        ");
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("i");
+            dom.setAttribute(el2, "class", "delete icon");
             dom.appendChild(el1, el2);
             var el2 = dom.createTextNode("\n    ");
             dom.appendChild(el1, el2);
@@ -26055,59 +27294,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
             morphs[3] = dom.createMorphAt(element16, 1, 1);
             return morphs;
           },
-          statements: [["attribute", "class", ["concat", ["ui create-button ", ["get", "buttonClass", ["loc", [null, [13, 32], [13, 43]]]], " disabled button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.add-button-text"], [], ["loc", [null, [14, 12], [14, 58]]]]], ["element", "action", ["createNew"], [], ["loc", [null, [16, 6], [16, 28]]]], ["inline", "t", ["components.olv-toolbar.add-button-text"], [], ["loc", [null, [17, 8], [17, 54]]]]],
-          locals: [],
-          templates: []
-        };
-      })();
-      var child1 = (function () {
-        return {
-          meta: {
-            "fragmentReason": false,
-            "revision": "Ember@2.4.6",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 19,
-                "column": 2
-              },
-              "end": {
-                "line": 26,
-                "column": 2
-              }
-            },
-            "moduleName": "dummy/templates/components/olv-toolbar.hbs"
-          },
-          isEmpty: false,
-          arity: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("    ");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createElement("button");
-            var el2 = dom.createTextNode("\n        ");
-            dom.appendChild(el1, el2);
-            var el2 = dom.createComment("");
-            dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n    ");
-            dom.appendChild(el1, el2);
-            dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element15 = dom.childAt(fragment, [1]);
-            var morphs = new Array(4);
-            morphs[0] = dom.createAttrMorph(element15, 'class');
-            morphs[1] = dom.createAttrMorph(element15, 'title');
-            morphs[2] = dom.createElementMorph(element15);
-            morphs[3] = dom.createMorphAt(element15, 1, 1);
-            return morphs;
-          },
-          statements: [["attribute", "class", ["concat", ["ui create-button ", ["get", "buttonClass", ["loc", [null, [21, 32], [21, 43]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.add-button-text"], [], ["loc", [null, [22, 12], [22, 58]]]]], ["element", "action", ["createNew"], [], ["loc", [null, [23, 6], [23, 28]]]], ["inline", "t", ["components.olv-toolbar.add-button-text"], [], ["loc", [null, [24, 8], [24, 54]]]]],
+          statements: [["attribute", "class", ["concat", ["ui delete-button ", ["get", "buttonClass", ["loc", [null, [45, 32], [45, 43]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.delete-button-text"], [], ["loc", [null, [46, 12], [46, 61]]]]], ["element", "action", ["delete"], [], ["loc", [null, [47, 6], [47, 25]]]], ["inline", "t", ["components.olv-toolbar.delete-button-text"], [], ["loc", [null, [48, 8], [48, 57]]]]],
           locals: [],
           templates: []
         };
@@ -26119,11 +27306,11 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           "loc": {
             "source": null,
             "start": {
-              "line": 10,
+              "line": 31,
               "column": 0
             },
             "end": {
-              "line": 27,
+              "line": 52,
               "column": 0
             }
           },
@@ -26146,162 +27333,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           dom.insertBoundary(fragment, null);
           return morphs;
         },
-        statements: [["block", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [11, 12], [11, 20]]]], ["subexpr", "not", [["get", "enableCreateNewButton", ["loc", [null, [11, 26], [11, 47]]]]], [], ["loc", [null, [11, 21], [11, 48]]]]], [], ["loc", [null, [11, 8], [11, 49]]]]], [], 0, 1, ["loc", [null, [11, 2], [26, 9]]]]],
-        locals: [],
-        templates: [child0, child1]
-      };
-    })();
-    var child2 = (function () {
-      var child0 = (function () {
-        return {
-          meta: {
-            "fragmentReason": false,
-            "revision": "Ember@2.4.6",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 29,
-                "column": 2
-              },
-              "end": {
-                "line": 38,
-                "column": 2
-              }
-            },
-            "moduleName": "dummy/templates/components/olv-toolbar.hbs"
-          },
-          isEmpty: false,
-          arity: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("    ");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createElement("button");
-            dom.setAttribute(el1, "disabled", "disabled");
-            var el2 = dom.createTextNode("\n        ");
-            dom.appendChild(el1, el2);
-            var el2 = dom.createComment("");
-            dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n        ");
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("i");
-            dom.setAttribute(el2, "class", "delete icon");
-            dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n    ");
-            dom.appendChild(el1, el2);
-            dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element14 = dom.childAt(fragment, [1]);
-            var morphs = new Array(4);
-            morphs[0] = dom.createAttrMorph(element14, 'class');
-            morphs[1] = dom.createAttrMorph(element14, 'title');
-            morphs[2] = dom.createElementMorph(element14);
-            morphs[3] = dom.createMorphAt(element14, 1, 1);
-            return morphs;
-          },
-          statements: [["attribute", "class", ["concat", ["ui delete-button ", ["get", "buttonClass", ["loc", [null, [31, 32], [31, 43]]]], " disabled button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.delete-button-text"], [], ["loc", [null, [32, 12], [32, 61]]]]], ["element", "action", ["delete"], [], ["loc", [null, [34, 6], [34, 25]]]], ["inline", "t", ["components.olv-toolbar.delete-button-text"], [], ["loc", [null, [35, 8], [35, 57]]]]],
-          locals: [],
-          templates: []
-        };
-      })();
-      var child1 = (function () {
-        return {
-          meta: {
-            "fragmentReason": false,
-            "revision": "Ember@2.4.6",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 38,
-                "column": 2
-              },
-              "end": {
-                "line": 46,
-                "column": 2
-              }
-            },
-            "moduleName": "dummy/templates/components/olv-toolbar.hbs"
-          },
-          isEmpty: false,
-          arity: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("    ");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createElement("button");
-            var el2 = dom.createTextNode("\n        ");
-            dom.appendChild(el1, el2);
-            var el2 = dom.createComment("");
-            dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n        ");
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("i");
-            dom.setAttribute(el2, "class", "delete icon");
-            dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n    ");
-            dom.appendChild(el1, el2);
-            dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element13 = dom.childAt(fragment, [1]);
-            var morphs = new Array(4);
-            morphs[0] = dom.createAttrMorph(element13, 'class');
-            morphs[1] = dom.createAttrMorph(element13, 'title');
-            morphs[2] = dom.createElementMorph(element13);
-            morphs[3] = dom.createMorphAt(element13, 1, 1);
-            return morphs;
-          },
-          statements: [["attribute", "class", ["concat", ["ui delete-button ", ["get", "buttonClass", ["loc", [null, [40, 32], [40, 43]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.delete-button-text"], [], ["loc", [null, [41, 12], [41, 61]]]]], ["element", "action", ["delete"], [], ["loc", [null, [42, 6], [42, 25]]]], ["inline", "t", ["components.olv-toolbar.delete-button-text"], [], ["loc", [null, [43, 8], [43, 57]]]]],
-          locals: [],
-          templates: []
-        };
-      })();
-      return {
-        meta: {
-          "fragmentReason": false,
-          "revision": "Ember@2.4.6",
-          "loc": {
-            "source": null,
-            "start": {
-              "line": 28,
-              "column": 0
-            },
-            "end": {
-              "line": 47,
-              "column": 0
-            }
-          },
-          "moduleName": "dummy/templates/components/olv-toolbar.hbs"
-        },
-        isEmpty: false,
-        arity: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        buildFragment: function buildFragment(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createComment("");
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var morphs = new Array(1);
-          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
-          dom.insertBoundary(fragment, 0);
-          dom.insertBoundary(fragment, null);
-          return morphs;
-        },
-        statements: [["block", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [29, 12], [29, 20]]]], ["subexpr", "not", [["get", "isDeleteButtonEnabled", ["loc", [null, [29, 26], [29, 47]]]]], [], ["loc", [null, [29, 21], [29, 48]]]]], [], ["loc", [null, [29, 8], [29, 49]]]]], [], 0, 1, ["loc", [null, [29, 2], [46, 9]]]]],
+        statements: [["block", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [32, 12], [32, 20]]]], ["subexpr", "not", [["get", "isDeleteButtonEnabled", ["loc", [null, [32, 26], [32, 47]]]]], [], ["loc", [null, [32, 21], [32, 48]]]]], [], ["loc", [null, [32, 8], [32, 49]]]]], [], 0, 1, ["loc", [null, [32, 2], [51, 9]]]]],
         locals: [],
         templates: [child0, child1]
       };
@@ -26315,11 +27347,11 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
             "loc": {
               "source": null,
               "start": {
-                "line": 55,
+                "line": 61,
                 "column": 2
               },
               "end": {
-                "line": 62,
+                "line": 69,
                 "column": 2
               }
             },
@@ -26334,6 +27366,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
             var el1 = dom.createTextNode("    ");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("button");
+            dom.setAttribute(el1, "type", "button");
             var el2 = dom.createTextNode("\n        ");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("i");
@@ -26347,14 +27380,14 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
             return el0;
           },
           buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element11 = dom.childAt(fragment, [1]);
+            var element14 = dom.childAt(fragment, [1]);
             var morphs = new Array(3);
-            morphs[0] = dom.createAttrMorph(element11, 'class');
-            morphs[1] = dom.createAttrMorph(element11, 'title');
-            morphs[2] = dom.createElementMorph(element11);
+            morphs[0] = dom.createAttrMorph(element14, 'class');
+            morphs[1] = dom.createAttrMorph(element14, 'title');
+            morphs[2] = dom.createElementMorph(element14);
             return morphs;
           },
-          statements: [["attribute", "class", ["concat", ["ui button icon hierarchical-button ", ["get", "buttonClass", ["loc", [null, [57, 50], [57, 61]]]]]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.coll-expand-button-text"], [], ["loc", [null, [58, 12], [58, 66]]]]], ["element", "action", [["get", "switchExpandMode", ["loc", [null, [59, 15], [59, 31]]]]], [], ["loc", [null, [59, 6], [59, 33]]]]],
+          statements: [["attribute", "class", ["concat", ["ui button icon hierarchical-button ", ["get", "buttonClass", ["loc", [null, [64, 50], [64, 61]]]]]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.coll-expand-button-text"], [], ["loc", [null, [65, 12], [65, 66]]]]], ["element", "action", [["get", "switchExpandMode", ["loc", [null, [66, 15], [66, 31]]]]], [], ["loc", [null, [66, 6], [66, 33]]]]],
           locals: [],
           templates: []
         };
@@ -26366,11 +27399,11 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           "loc": {
             "source": null,
             "start": {
-              "line": 48,
+              "line": 53,
               "column": 0
             },
             "end": {
-              "line": 63,
+              "line": 70,
               "column": 0
             }
           },
@@ -26385,6 +27418,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           var el1 = dom.createTextNode("  ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
+          dom.setAttribute(el1, "type", "button");
           var el2 = dom.createTextNode("\n      ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("i");
@@ -26400,16 +27434,16 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element12 = dom.childAt(fragment, [1]);
+          var element15 = dom.childAt(fragment, [1]);
           var morphs = new Array(4);
-          morphs[0] = dom.createAttrMorph(element12, 'class');
-          morphs[1] = dom.createAttrMorph(element12, 'title');
-          morphs[2] = dom.createElementMorph(element12);
+          morphs[0] = dom.createAttrMorph(element15, 'class');
+          morphs[1] = dom.createAttrMorph(element15, 'title');
+          morphs[2] = dom.createElementMorph(element15);
           morphs[3] = dom.createMorphAt(fragment, 3, 3, contextualElement);
           dom.insertBoundary(fragment, null);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", ["ui button icon hierarchical-button ", ["get", "buttonClass", ["loc", [null, [50, 48], [50, 59]]]], " ", ["subexpr", "if", [["get", "inHierarchicalMode", ["loc", [null, [50, 67], [50, 85]]]], "active"], [], ["loc", [null, [50, 62], [50, 96]]]]]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.hierarchy-button-text"], [], ["loc", [null, [51, 10], [51, 62]]]]], ["element", "action", [["get", "switchHierarchicalMode", ["loc", [null, [52, 13], [52, 35]]]]], [], ["loc", [null, [52, 4], [52, 37]]]], ["block", "if", [["get", "availableCollExpandMode", ["loc", [null, [55, 8], [55, 31]]]]], [], 0, null, ["loc", [null, [55, 2], [62, 9]]]]],
+        statements: [["attribute", "class", ["concat", ["ui button icon hierarchical-button ", ["get", "buttonClass", ["loc", [null, [56, 48], [56, 59]]]], " ", ["subexpr", "if", [["get", "inHierarchicalMode", ["loc", [null, [56, 67], [56, 85]]]], "active"], [], ["loc", [null, [56, 62], [56, 96]]]]]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.hierarchy-button-text"], [], ["loc", [null, [57, 10], [57, 62]]]]], ["element", "action", [["get", "switchHierarchicalMode", ["loc", [null, [58, 13], [58, 35]]]]], [], ["loc", [null, [58, 4], [58, 37]]]], ["block", "if", [["get", "availableCollExpandMode", ["loc", [null, [61, 8], [61, 31]]]]], [], 0, null, ["loc", [null, [61, 2], [69, 9]]]]],
         locals: [],
         templates: [child0]
       };
@@ -26423,11 +27457,11 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
             "loc": {
               "source": null,
               "start": {
-                "line": 72,
+                "line": 80,
                 "column": 4
               },
               "end": {
-                "line": 80,
+                "line": 89,
                 "column": 4
               }
             },
@@ -26448,6 +27482,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
             var el1 = dom.createTextNode("\n      ");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("button");
+            dom.setAttribute(el1, "type", "button");
             var el2 = dom.createTextNode("\n          ");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("i");
@@ -26461,14 +27496,14 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
             return el0;
           },
           buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element8 = dom.childAt(fragment, [3]);
+            var element11 = dom.childAt(fragment, [3]);
             var morphs = new Array(3);
-            morphs[0] = dom.createAttrMorph(element8, 'class');
-            morphs[1] = dom.createAttrMorph(element8, 'title');
-            morphs[2] = dom.createElementMorph(element8);
+            morphs[0] = dom.createAttrMorph(element11, 'class');
+            morphs[1] = dom.createAttrMorph(element11, 'title');
+            morphs[2] = dom.createElementMorph(element11);
             return morphs;
           },
-          statements: [["attribute", "class", ["concat", ["ui button removeFilter-button ", ["get", "buttonClass", ["loc", [null, [75, 47], [75, 58]]]]]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.remove-filter-button-text"], [], ["loc", [null, [76, 14], [76, 70]]]]], ["element", "action", [["get", "resetFilters", ["loc", [null, [77, 17], [77, 29]]]]], [], ["loc", [null, [77, 8], [77, 31]]]]],
+          statements: [["attribute", "class", ["concat", ["ui button removeFilter-button ", ["get", "buttonClass", ["loc", [null, [84, 47], [84, 58]]]]]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.remove-filter-button-text"], [], ["loc", [null, [85, 14], [85, 70]]]]], ["element", "action", [["get", "resetFilters", ["loc", [null, [86, 17], [86, 29]]]]], [], ["loc", [null, [86, 8], [86, 31]]]]],
           locals: [],
           templates: []
         };
@@ -26480,11 +27515,11 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           "loc": {
             "source": null,
             "start": {
-              "line": 64,
+              "line": 71,
               "column": 0
             },
             "end": {
-              "line": 82,
+              "line": 91,
               "column": 0
             }
           },
@@ -26503,6 +27538,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           var el2 = dom.createTextNode("\n    ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("button");
+          dom.setAttribute(el2, "type", "button");
           var el3 = dom.createTextNode("\n        ");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("i");
@@ -26523,16 +27559,16 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element9 = dom.childAt(fragment, [1]);
-          var element10 = dom.childAt(element9, [1]);
+          var element12 = dom.childAt(fragment, [1]);
+          var element13 = dom.childAt(element12, [1]);
           var morphs = new Array(4);
-          morphs[0] = dom.createAttrMorph(element10, 'class');
-          morphs[1] = dom.createAttrMorph(element10, 'title');
-          morphs[2] = dom.createElementMorph(element10);
-          morphs[3] = dom.createMorphAt(element9, 3, 3);
+          morphs[0] = dom.createAttrMorph(element13, 'class');
+          morphs[1] = dom.createAttrMorph(element13, 'title');
+          morphs[2] = dom.createElementMorph(element13);
+          morphs[3] = dom.createMorphAt(element12, 3, 3);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", ["ui button ", ["get", "buttonClass", ["loc", [null, [67, 25], [67, 36]]]], " ", ["subexpr", "if", [["get", "showFilters", ["loc", [null, [67, 44], [67, 55]]]], "active"], [], ["loc", [null, [67, 39], [67, 66]]]]]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.filter-button-text"], [], ["loc", [null, [68, 12], [68, 61]]]]], ["element", "action", [["get", "toggleStateFilters", ["loc", [null, [69, 15], [69, 33]]]]], [], ["loc", [null, [69, 6], [69, 35]]]], ["block", "if", [["get", "filters", ["loc", [null, [72, 10], [72, 17]]]]], [], 0, null, ["loc", [null, [72, 4], [80, 11]]]]],
+        statements: [["attribute", "class", ["concat", ["ui button ", ["get", "buttonClass", ["loc", [null, [75, 25], [75, 36]]]], " ", ["subexpr", "if", [["get", "showFilters", ["loc", [null, [75, 44], [75, 55]]]], "active"], [], ["loc", [null, [75, 39], [75, 66]]]]]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.filter-button-text"], [], ["loc", [null, [76, 12], [76, 61]]]]], ["element", "action", ["showFiltersTool"], [], ["loc", [null, [77, 6], [77, 34]]]], ["block", "if", [["get", "filters", ["loc", [null, [80, 10], [80, 17]]]]], [], 0, null, ["loc", [null, [80, 4], [89, 11]]]]],
         locals: [],
         templates: [child0]
       };
@@ -26545,11 +27581,11 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           "loc": {
             "source": null,
             "start": {
-              "line": 83,
+              "line": 92,
               "column": 0
             },
             "end": {
-              "line": 103,
+              "line": 114,
               "column": 0
             }
           },
@@ -26575,6 +27611,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           var el2 = dom.createTextNode("\n    ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("button");
+          dom.setAttribute(el2, "type", "button");
           var el3 = dom.createTextNode("\n        ");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("i");
@@ -26586,6 +27623,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           var el2 = dom.createTextNode("\n    ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("button");
+          dom.setAttribute(el2, "type", "button");
           var el3 = dom.createTextNode("\n        ");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("i");
@@ -26602,20 +27640,20 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element5 = dom.childAt(fragment, [1]);
-          var element6 = dom.childAt(element5, [3]);
-          var element7 = dom.childAt(element5, [5]);
+          var element8 = dom.childAt(fragment, [1]);
+          var element9 = dom.childAt(element8, [3]);
+          var element10 = dom.childAt(element8, [5]);
           var morphs = new Array(7);
-          morphs[0] = dom.createMorphAt(dom.childAt(element5, [1]), 0, 0);
-          morphs[1] = dom.createAttrMorph(element6, 'class');
-          morphs[2] = dom.createAttrMorph(element6, 'title');
-          morphs[3] = dom.createElementMorph(element6);
-          morphs[4] = dom.createAttrMorph(element7, 'class');
-          morphs[5] = dom.createAttrMorph(element7, 'title');
-          morphs[6] = dom.createElementMorph(element7);
+          morphs[0] = dom.createMorphAt(dom.childAt(element8, [1]), 0, 0);
+          morphs[1] = dom.createAttrMorph(element9, 'class');
+          morphs[2] = dom.createAttrMorph(element9, 'title');
+          morphs[3] = dom.createElementMorph(element9);
+          morphs[4] = dom.createAttrMorph(element10, 'class');
+          morphs[5] = dom.createAttrMorph(element10, 'title');
+          morphs[6] = dom.createElementMorph(element10);
           return morphs;
         },
-        statements: [["inline", "input", [], ["type", "text", "placeholder", ["subexpr", "t", ["components.olv-toolbar.filter-by-any-match-placeholder"], [], ["loc", [null, [87, 18], [87, 78]]]], "value", ["subexpr", "@mut", [["get", "filterByAnyMatchText", ["loc", [null, [88, 12], [88, 32]]]]], [], []], "key-down", "keyDownFilterAction"], ["loc", [null, [85, 36], [89, 6]]]], ["attribute", "class", ["concat", ["ui ", ["get", "buttonClass", ["loc", [null, [91, 18], [91, 29]]]], " icon button search-button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.search-button-text"], [], ["loc", [null, [92, 12], [92, 61]]]]], ["element", "action", ["filterByAnyMatch"], [], ["loc", [null, [93, 6], [93, 35]]]], ["attribute", "class", ["concat", ["ui ", ["get", "buttonClass", ["loc", [null, [97, 18], [97, 29]]]], " icon button clear-search-button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.clear-search-button-text"], [], ["loc", [null, [98, 12], [98, 67]]]]], ["element", "action", ["removeFilter"], [], ["loc", [null, [99, 6], [99, 31]]]]],
+        statements: [["inline", "input", [], ["type", "text", "placeholder", ["subexpr", "t", ["components.olv-toolbar.filter-by-any-match-placeholder"], [], ["loc", [null, [96, 18], [96, 78]]]], "value", ["subexpr", "@mut", [["get", "filterByAnyMatchText", ["loc", [null, [97, 12], [97, 32]]]]], [], []], "key-down", "keyDownFilterAction"], ["loc", [null, [94, 36], [98, 6]]]], ["attribute", "class", ["concat", ["ui ", ["get", "buttonClass", ["loc", [null, [101, 18], [101, 29]]]], " icon button search-button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.search-button-text"], [], ["loc", [null, [102, 12], [102, 61]]]]], ["element", "action", ["filterByAnyMatch"], [], ["loc", [null, [103, 6], [103, 35]]]], ["attribute", "class", ["concat", ["ui ", ["get", "buttonClass", ["loc", [null, [108, 18], [108, 29]]]], " icon button clear-search-button"]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.clear-search-button-text"], [], ["loc", [null, [109, 12], [109, 67]]]]], ["element", "action", ["removeFilter"], [], ["loc", [null, [110, 6], [110, 31]]]]],
         locals: [],
         templates: []
       };
@@ -26628,11 +27666,11 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           "loc": {
             "source": null,
             "start": {
-              "line": 104,
+              "line": 115,
               "column": 0
             },
             "end": {
-              "line": 117,
+              "line": 129,
               "column": 0
             }
           },
@@ -26651,6 +27689,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           var el2 = dom.createTextNode("\n    ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("button");
+          dom.setAttribute(el2, "type", "button");
           var el3 = dom.createTextNode("\n        ");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("i");
@@ -26671,16 +27710,16 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element3 = dom.childAt(fragment, [1]);
-          var element4 = dom.childAt(element3, [1]);
+          var element6 = dom.childAt(fragment, [1]);
+          var element7 = dom.childAt(element6, [1]);
           var morphs = new Array(4);
-          morphs[0] = dom.createAttrMorph(element4, 'class');
-          morphs[1] = dom.createAttrMorph(element4, 'title');
-          morphs[2] = dom.createElementMorph(element4);
-          morphs[3] = dom.createMorphAt(element3, 3, 3);
+          morphs[0] = dom.createAttrMorph(element7, 'class');
+          morphs[1] = dom.createAttrMorph(element7, 'title');
+          morphs[2] = dom.createElementMorph(element7);
+          morphs[3] = dom.createMorphAt(element6, 3, 3);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", ["ui button icon export-button ", ["get", "buttonClass", ["loc", [null, [107, 44], [107, 55]]]]]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.export-excel-button-text"], [], ["loc", [null, [108, 12], [108, 67]]]]], ["element", "action", ["showExportDialog"], [], ["loc", [null, [109, 6], [109, 35]]]], ["inline", "flexberry-menu", [], ["items", ["subexpr", "@mut", [["get", "exportExcelItems", ["loc", [null, [113, 12], [113, 28]]]]], [], []], "onItemClick", ["subexpr", "action", ["onExportMenuItemClick"], [], ["loc", [null, [114, 18], [114, 50]]]]], ["loc", [null, [112, 4], [115, 6]]]]],
+        statements: [["attribute", "class", ["concat", ["ui button icon export-button ", ["get", "buttonClass", ["loc", [null, [119, 44], [119, 55]]]]]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.export-excel-button-text"], [], ["loc", [null, [120, 12], [120, 67]]]]], ["element", "action", ["showExportDialog"], [], ["loc", [null, [121, 6], [121, 35]]]], ["inline", "flexberry-menu", [], ["items", ["subexpr", "@mut", [["get", "exportExcelItems", ["loc", [null, [125, 12], [125, 28]]]]], [], []], "onItemClick", ["subexpr", "action", ["onExportMenuItemClick"], [], ["loc", [null, [126, 18], [126, 50]]]]], ["loc", [null, [124, 4], [127, 6]]]]],
         locals: [],
         templates: []
       };
@@ -26694,11 +27733,11 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
             "loc": {
               "source": null,
               "start": {
-                "line": 126,
+                "line": 139,
                 "column": 4
               },
               "end": {
-                "line": 131,
+                "line": 144,
                 "column": 4
               }
             },
@@ -26723,7 +27762,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
             morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
             return morphs;
           },
-          statements: [["inline", "flexberry-menu", [], ["items", ["subexpr", "@mut", [["get", "colsSettingsItems", ["loc", [null, [128, 14], [128, 31]]]]], [], []], "onItemClick", ["subexpr", "action", ["onMenuItemClick"], [], ["loc", [null, [129, 20], [129, 46]]]]], ["loc", [null, [127, 6], [130, 8]]]]],
+          statements: [["inline", "flexberry-menu", [], ["items", ["subexpr", "@mut", [["get", "colsSettingsItems", ["loc", [null, [141, 14], [141, 31]]]]], [], []], "onItemClick", ["subexpr", "action", ["onMenuItemClick"], [], ["loc", [null, [142, 20], [142, 46]]]]], ["loc", [null, [140, 6], [143, 8]]]]],
           locals: [],
           templates: []
         };
@@ -26735,11 +27774,11 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           "loc": {
             "source": null,
             "start": {
-              "line": 118,
+              "line": 130,
               "column": 0
             },
             "end": {
-              "line": 133,
+              "line": 146,
               "column": 0
             }
           },
@@ -26758,6 +27797,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           var el2 = dom.createTextNode("\n    ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("button");
+          dom.setAttribute(el2, "type", "button");
           dom.setAttribute(el2, "class", "ui icon button config-button");
           var el3 = dom.createTextNode("\n        ");
           dom.appendChild(el2, el3);
@@ -26779,20 +27819,62 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element1 = dom.childAt(fragment, [1]);
-          var element2 = dom.childAt(element1, [1]);
+          var element4 = dom.childAt(fragment, [1]);
+          var element5 = dom.childAt(element4, [1]);
           var morphs = new Array(3);
-          morphs[0] = dom.createAttrMorph(element2, 'title');
-          morphs[1] = dom.createElementMorph(element2);
-          morphs[2] = dom.createMorphAt(element1, 3, 3);
+          morphs[0] = dom.createAttrMorph(element5, 'title');
+          morphs[1] = dom.createElementMorph(element5);
+          morphs[2] = dom.createMorphAt(element4, 3, 3);
           return morphs;
         },
-        statements: [["attribute", "title", ["subexpr", "t", ["components.colsconfig-dialog-content.title"], [], ["loc", [null, [122, 12], [122, 62]]]]], ["element", "action", ["showConfigDialog"], [], ["loc", [null, [123, 6], [123, 35]]]], ["block", "if", [["get", "colsSettingsItems", ["loc", [null, [126, 10], [126, 27]]]]], [], 0, null, ["loc", [null, [126, 4], [131, 11]]]]],
+        statements: [["attribute", "title", ["subexpr", "t", ["components.colsconfig-dialog-content.title"], [], ["loc", [null, [135, 12], [135, 62]]]]], ["element", "action", ["showConfigDialog"], [], ["loc", [null, [136, 6], [136, 35]]]], ["block", "if", [["get", "colsSettingsItems", ["loc", [null, [139, 10], [139, 27]]]]], [], 0, null, ["loc", [null, [139, 4], [144, 11]]]]],
         locals: [],
         templates: [child0]
       };
     })();
     var child8 = (function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.4.6",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 156,
+                "column": 4
+              },
+              "end": {
+                "line": 161,
+                "column": 4
+              }
+            },
+            "moduleName": "dummy/templates/components/olv-toolbar.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode("      ");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createComment("");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createTextNode("\n");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var morphs = new Array(1);
+            morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+            return morphs;
+          },
+          statements: [["inline", "flexberry-menu", [], ["items", ["subexpr", "@mut", [["get", "advLimitItems", ["loc", [null, [158, 14], [158, 27]]]]], [], []], "onItemClick", ["subexpr", "action", ["onLimitMenuItemClick"], [], ["loc", [null, [159, 20], [159, 51]]]]], ["loc", [null, [157, 6], [160, 8]]]]],
+          locals: [],
+          templates: []
+        };
+      })();
       return {
         meta: {
           "fragmentReason": false,
@@ -26800,11 +27882,249 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           "loc": {
             "source": null,
             "start": {
-              "line": 134,
+              "line": 147,
               "column": 0
             },
             "end": {
-              "line": 142,
+              "line": 163,
+              "column": 0
+            }
+          },
+          "moduleName": "dummy/templates/components/olv-toolbar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("  ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1, "class", "ui buttons adv-limit-config");
+          var el2 = dom.createTextNode("\n    ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("button");
+          dom.setAttribute(el2, "type", "button");
+          dom.setAttribute(el2, "class", "ui icon button adv-limit-button");
+          var el3 = dom.createTextNode("\n        ");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("i");
+          dom.setAttribute(el3, "class", "large flask icon");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createTextNode("\n    ");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("  ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element2 = dom.childAt(fragment, [1]);
+          var element3 = dom.childAt(element2, [1]);
+          var morphs = new Array(3);
+          morphs[0] = dom.createAttrMorph(element3, 'title');
+          morphs[1] = dom.createElementMorph(element3);
+          morphs[2] = dom.createMorphAt(element2, 3, 3);
+          return morphs;
+        },
+        statements: [["attribute", "title", ["subexpr", "t", ["components.advlimit-dialog-content.title"], [], ["loc", [null, [152, 12], [152, 60]]]]], ["element", "action", ["showAdvLimitDialog"], [], ["loc", [null, [153, 6], [153, 37]]]], ["block", "if", [["get", "advLimitItems", ["loc", [null, [156, 10], [156, 23]]]]], [], 0, null, ["loc", [null, [156, 4], [161, 11]]]]],
+        locals: [],
+        templates: [child0]
+      };
+    })();
+    var child9 = (function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.4.6",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 171,
+                "column": 6
+              },
+              "end": {
+                "line": 174,
+                "column": 6
+              }
+            },
+            "moduleName": "dummy/templates/components/olv-toolbar.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode("        ");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createElement("i");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createTextNode("\n        ");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createComment("");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createTextNode("\n");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var element0 = dom.childAt(fragment, [1]);
+            var morphs = new Array(2);
+            morphs[0] = dom.createAttrMorph(element0, 'class');
+            morphs[1] = dom.createMorphAt(fragment, 3, 3, contextualElement);
+            return morphs;
+          },
+          statements: [["attribute", "class", ["get", "customButton.iconClasses", ["loc", [null, [172, 19], [172, 43]]]]], ["content", "customButton.buttonName", ["loc", [null, [173, 8], [173, 35]]]]],
+          locals: [],
+          templates: []
+        };
+      })();
+      var child1 = (function () {
+        var child0 = (function () {
+          return {
+            meta: {
+              "fragmentReason": false,
+              "revision": "Ember@2.4.6",
+              "loc": {
+                "source": null,
+                "start": {
+                  "line": 174,
+                  "column": 6
+                },
+                "end": {
+                  "line": 176,
+                  "column": 6
+                }
+              },
+              "moduleName": "dummy/templates/components/olv-toolbar.hbs"
+            },
+            isEmpty: false,
+            arity: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            buildFragment: function buildFragment(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createTextNode("        ");
+              dom.appendChild(el0, el1);
+              var el1 = dom.createComment("");
+              dom.appendChild(el0, el1);
+              var el1 = dom.createTextNode("\n");
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+              var morphs = new Array(1);
+              morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+              return morphs;
+            },
+            statements: [["content", "customButton.buttonName", ["loc", [null, [175, 8], [175, 35]]]]],
+            locals: [],
+            templates: []
+          };
+        })();
+        var child1 = (function () {
+          return {
+            meta: {
+              "fragmentReason": false,
+              "revision": "Ember@2.4.6",
+              "loc": {
+                "source": null,
+                "start": {
+                  "line": 176,
+                  "column": 6
+                },
+                "end": {
+                  "line": 178,
+                  "column": 6
+                }
+              },
+              "moduleName": "dummy/templates/components/olv-toolbar.hbs"
+            },
+            isEmpty: false,
+            arity: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            buildFragment: function buildFragment(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createTextNode("        ");
+              dom.appendChild(el0, el1);
+              var el1 = dom.createComment("");
+              dom.appendChild(el0, el1);
+              var el1 = dom.createTextNode("\n      ");
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+              var morphs = new Array(1);
+              morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+              return morphs;
+            },
+            statements: [["inline", "t", ["components.olv-toolbar.custom-button-text"], [], ["loc", [null, [177, 8], [177, 57]]]]],
+            locals: [],
+            templates: []
+          };
+        })();
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.4.6",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 174,
+                "column": 6
+              },
+              "end": {
+                "line": 178,
+                "column": 6
+              }
+            },
+            "moduleName": "dummy/templates/components/olv-toolbar.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createComment("");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var morphs = new Array(1);
+            morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+            dom.insertBoundary(fragment, 0);
+            dom.insertBoundary(fragment, null);
+            return morphs;
+          },
+          statements: [["block", "if", [["get", "customButton.buttonName", ["loc", [null, [174, 16], [174, 39]]]]], [], 0, 1, ["loc", [null, [174, 6], [178, 6]]]]],
+          locals: [],
+          templates: [child0, child1]
+        };
+      })();
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 164,
+              "column": 0
+            },
+            "end": {
+              "line": 180,
               "column": 0
             }
           },
@@ -26819,11 +28139,12 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           var el1 = dom.createTextNode("  ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
-          var el2 = dom.createTextNode("\n      ");
+          dom.setAttribute(el1, "type", "button");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n  ");
+          var el2 = dom.createTextNode("  ");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -26831,18 +28152,18 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element0 = dom.childAt(fragment, [1]);
+          var element1 = dom.childAt(fragment, [1]);
           var morphs = new Array(5);
-          morphs[0] = dom.createAttrMorph(element0, 'class');
-          morphs[1] = dom.createAttrMorph(element0, 'title');
-          morphs[2] = dom.createAttrMorph(element0, 'disabled');
-          morphs[3] = dom.createElementMorph(element0);
-          morphs[4] = dom.createMorphAt(element0, 1, 1);
+          morphs[0] = dom.createAttrMorph(element1, 'class');
+          morphs[1] = dom.createAttrMorph(element1, 'title');
+          morphs[2] = dom.createAttrMorph(element1, 'disabled');
+          morphs[3] = dom.createElementMorph(element1);
+          morphs[4] = dom.createMorphAt(element1, 1, 1);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", ["ui ", ["subexpr", "if", [["get", "customButton.buttonClasses", ["loc", [null, [136, 19], [136, 45]]]], ["get", "customButton.buttonClasses", ["loc", [null, [136, 46], [136, 72]]]], ""], [], ["loc", [null, [136, 14], [136, 77]]]], " button"]]], ["attribute", "title", ["subexpr", "if", [["get", "customButton.buttonTitle", ["loc", [null, [137, 15], [137, 39]]]], ["get", "customButton.buttonTitle", ["loc", [null, [137, 40], [137, 64]]]]], [], ["loc", [null, [137, 10], [137, 66]]]]], ["attribute", "disabled", ["get", "customButton.disabled", ["loc", [null, [138, 15], [138, 36]]]]], ["element", "action", ["customButtonAction", ["get", "customButton.buttonAction", ["loc", [null, [139, 34], [139, 59]]]]], [], ["loc", [null, [139, 4], [139, 61]]]], ["inline", "if", [["get", "customButton.buttonName", ["loc", [null, [140, 11], [140, 34]]]], ["get", "customButton.buttonName", ["loc", [null, [140, 35], [140, 58]]]], ["subexpr", "t", ["components.olv-toolbar.custom-button-text"], [], ["loc", [null, [140, 59], [140, 106]]]]], [], ["loc", [null, [140, 6], [140, 108]]]]],
+        statements: [["attribute", "class", ["concat", ["ui ", ["subexpr", "if", [["get", "customButton.buttonClasses", ["loc", [null, [167, 19], [167, 45]]]], ["get", "customButton.buttonClasses", ["loc", [null, [167, 46], [167, 72]]]]], [], ["loc", [null, [167, 14], [167, 74]]]], " button"]]], ["attribute", "title", ["subexpr", "if", [["get", "customButton.buttonTitle", ["loc", [null, [168, 15], [168, 39]]]], ["get", "customButton.buttonTitle", ["loc", [null, [168, 40], [168, 64]]]]], [], ["loc", [null, [168, 10], [168, 66]]]]], ["attribute", "disabled", ["get", "customButton.disabled", ["loc", [null, [169, 15], [169, 36]]]]], ["element", "action", ["customButtonAction", ["get", "customButton.buttonAction", ["loc", [null, [170, 34], [170, 59]]]]], [], ["loc", [null, [170, 4], [170, 61]]]], ["block", "if", [["get", "customButton.iconClasses", ["loc", [null, [171, 12], [171, 36]]]]], [], 0, 1, ["loc", [null, [171, 6], [178, 13]]]]],
         locals: ["customButton"],
-        templates: []
+        templates: [child0, child1]
       };
     })();
     return {
@@ -26859,7 +28180,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
             "column": 0
           },
           "end": {
-            "line": 167,
+            "line": 206,
             "column": 0
           }
         },
@@ -26871,6 +28192,8 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
@@ -26914,6 +28237,7 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("button");
+        dom.setAttribute(el3, "type", "button");
         dom.setAttribute(el3, "class", "ui button icon olv-toolbar-info-modal-dialog-copy-button");
         var el4 = dom.createTextNode("\n      ");
         dom.appendChild(el3, el4);
@@ -26973,10 +28297,10 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element18 = dom.childAt(fragment, [9]);
-        var element19 = dom.childAt(element18, [3]);
-        var element20 = dom.childAt(element19, [1]);
-        var morphs = new Array(15);
+        var element21 = dom.childAt(fragment, [10]);
+        var element22 = dom.childAt(element21, [3]);
+        var element23 = dom.childAt(element22, [1]);
+        var morphs = new Array(16);
         morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
         morphs[1] = dom.createMorphAt(fragment, 1, 1, contextualElement);
         morphs[2] = dom.createMorphAt(fragment, 2, 2, contextualElement);
@@ -26986,18 +28310,19 @@ define("dummy/templates/components/olv-toolbar", ["exports"], function (exports)
         morphs[6] = dom.createMorphAt(fragment, 6, 6, contextualElement);
         morphs[7] = dom.createMorphAt(fragment, 7, 7, contextualElement);
         morphs[8] = dom.createMorphAt(fragment, 8, 8, contextualElement);
-        morphs[9] = dom.createMorphAt(dom.childAt(element18, [1]), 3, 3);
-        morphs[10] = dom.createAttrMorph(element20, 'title');
-        morphs[11] = dom.createElementMorph(element20);
-        morphs[12] = dom.createMorphAt(element20, 1, 1);
-        morphs[13] = dom.createMorphAt(dom.childAt(element19, [3, 1]), 1, 1);
-        morphs[14] = dom.createMorphAt(dom.childAt(element18, [5, 1, 1]), 0, 0);
+        morphs[9] = dom.createMorphAt(fragment, 9, 9, contextualElement);
+        morphs[10] = dom.createMorphAt(dom.childAt(element21, [1]), 3, 3);
+        morphs[11] = dom.createAttrMorph(element23, 'title');
+        morphs[12] = dom.createElementMorph(element23);
+        morphs[13] = dom.createMorphAt(element23, 1, 1);
+        morphs[14] = dom.createMorphAt(dom.childAt(element22, [3, 1]), 1, 1);
+        morphs[15] = dom.createMorphAt(dom.childAt(element21, [5, 1, 1]), 0, 0);
         dom.insertBoundary(fragment, 0);
         return morphs;
       },
-      statements: [["block", "if", [["get", "refreshButton", ["loc", [null, [1, 6], [1, 19]]]]], [], 0, null, ["loc", [null, [1, 0], [9, 7]]]], ["block", "if", [["get", "createNewButton", ["loc", [null, [10, 6], [10, 21]]]]], [], 1, null, ["loc", [null, [10, 0], [27, 7]]]], ["block", "if", [["get", "deleteButton", ["loc", [null, [28, 6], [28, 18]]]]], [], 2, null, ["loc", [null, [28, 0], [47, 7]]]], ["block", "if", [["get", "availableHierarchicalMode", ["loc", [null, [48, 6], [48, 31]]]]], [], 3, null, ["loc", [null, [48, 0], [63, 7]]]], ["block", "if", [["get", "enableFilters", ["loc", [null, [64, 6], [64, 19]]]]], [], 4, null, ["loc", [null, [64, 0], [82, 7]]]], ["block", "if", [["get", "filterButton", ["loc", [null, [83, 6], [83, 18]]]]], [], 5, null, ["loc", [null, [83, 0], [103, 7]]]], ["block", "if", [["get", "exportExcelButton", ["loc", [null, [104, 6], [104, 23]]]]], [], 6, null, ["loc", [null, [104, 0], [117, 7]]]], ["block", "if", [["get", "colsConfigButton", ["loc", [null, [118, 6], [118, 22]]]]], [], 7, null, ["loc", [null, [118, 0], [133, 7]]]], ["block", "each", [["get", "customButtons", ["loc", [null, [134, 8], [134, 21]]]]], [], 8, null, ["loc", [null, [134, 0], [142, 9]]]], ["content", "_infoModalDialogCaption", ["loc", [null, [146, 4], [146, 31]]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.copy"], [], ["loc", [null, [151, 10], [151, 45]]]]], ["element", "action", ["copyJSONContent"], [], ["loc", [null, [152, 4], [152, 32]]]], ["inline", "t", ["components.olv-toolbar.copy"], [], ["loc", [null, [153, 6], [153, 41]]]], ["inline", "t", ["components.olv-toolbar.close"], [], ["loc", [null, [157, 6], [157, 42]]]], ["content", "_infoModalDialogContent", ["loc", [null, [163, 36], [163, 63]]]]],
+      statements: [["block", "if", [["get", "refreshButton", ["loc", [null, [1, 6], [1, 19]]]]], [], 0, null, ["loc", [null, [1, 0], [10, 7]]]], ["block", "if", [["get", "createNewButton", ["loc", [null, [11, 6], [11, 21]]]]], [], 1, null, ["loc", [null, [11, 0], [30, 7]]]], ["block", "if", [["get", "deleteButton", ["loc", [null, [31, 6], [31, 18]]]]], [], 2, null, ["loc", [null, [31, 0], [52, 7]]]], ["block", "if", [["get", "availableHierarchicalMode", ["loc", [null, [53, 6], [53, 31]]]]], [], 3, null, ["loc", [null, [53, 0], [70, 7]]]], ["block", "if", [["get", "enableFilters", ["loc", [null, [71, 6], [71, 19]]]]], [], 4, null, ["loc", [null, [71, 0], [91, 7]]]], ["block", "if", [["get", "filterButton", ["loc", [null, [92, 6], [92, 18]]]]], [], 5, null, ["loc", [null, [92, 0], [114, 7]]]], ["block", "if", [["get", "exportExcelButton", ["loc", [null, [115, 6], [115, 23]]]]], [], 6, null, ["loc", [null, [115, 0], [129, 7]]]], ["block", "if", [["get", "colsConfigButton", ["loc", [null, [130, 6], [130, 22]]]]], [], 7, null, ["loc", [null, [130, 0], [146, 7]]]], ["block", "if", [["get", "advLimitButton", ["loc", [null, [147, 6], [147, 20]]]]], [], 8, null, ["loc", [null, [147, 0], [163, 7]]]], ["block", "each", [["get", "customButtons", ["loc", [null, [164, 8], [164, 21]]]]], [], 9, null, ["loc", [null, [164, 0], [180, 9]]]], ["content", "_infoModalDialogCaption", ["loc", [null, [184, 4], [184, 31]]]], ["attribute", "title", ["subexpr", "t", ["components.olv-toolbar.copy"], [], ["loc", [null, [190, 10], [190, 45]]]]], ["element", "action", ["copyJSONContent"], [], ["loc", [null, [191, 4], [191, 32]]]], ["inline", "t", ["components.olv-toolbar.copy"], [], ["loc", [null, [192, 6], [192, 41]]]], ["inline", "t", ["components.olv-toolbar.close"], [], ["loc", [null, [196, 6], [196, 42]]]], ["content", "_infoModalDialogContent", ["loc", [null, [202, 36], [202, 63]]]]],
       locals: [],
-      templates: [child0, child1, child2, child3, child4, child5, child6, child7, child8]
+      templates: [child0, child1, child2, child3, child4, child5, child6, child7, child8, child9]
     };
   })());
 });
@@ -29209,6 +30534,142 @@ define("dummy/templates/error", ["exports"], function (exports) {
     };
   })());
 });
+define("dummy/templates/filters-dialog-content", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template((function () {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": ["wrong-type"]
+        },
+        "revision": "Ember@2.4.6",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 7,
+            "column": 0
+          }
+        },
+        "moduleName": "dummy/templates/filters-dialog-content.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+        dom.insertBoundary(fragment, 0);
+        return morphs;
+      },
+      statements: [["inline", "filters-dialog-content", [], ["componentName", ["subexpr", "@mut", [["get", "model.componentName", ["loc", [null, [2, 16], [2, 35]]]]], [], []], "filterColumns", ["subexpr", "@mut", [["get", "model.filterColumns", ["loc", [null, [3, 16], [3, 35]]]]], [], []], "close", ["subexpr", "action", ["closeModalDialog"], [], ["loc", [null, [4, 8], [4, 35]]]], "message", ["subexpr", "@mut", [["get", "message", ["loc", [null, [5, 10], [5, 17]]]]], [], []]], ["loc", [null, [1, 0], [6, 2]]]]],
+      locals: [],
+      templates: []
+    };
+  })());
+});
+define("dummy/templates/filters-dialog", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template((function () {
+    var child0 = (function () {
+      return {
+        meta: {
+          "fragmentReason": {
+            "name": "missing-wrapper",
+            "problems": ["wrong-type"]
+          },
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 10,
+              "column": 0
+            }
+          },
+          "moduleName": "dummy/templates/filters-dialog.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("  ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [["inline", "outlet", ["modal-content"], [], ["loc", [null, [9, 2], [9, 28]]]]],
+        locals: [],
+        templates: []
+      };
+    })();
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": ["wrong-type"]
+        },
+        "revision": "Ember@2.4.6",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 11,
+            "column": 0
+          }
+        },
+        "moduleName": "dummy/templates/filters-dialog.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [["block", "modal-dialog", [], ["title", ["subexpr", "@mut", [["get", "title", ["loc", [null, [2, 8], [2, 13]]]]], [], []], "sizeClass", "small", "close", "removeModalDialog", "created", "createdModalDialog", "useOkButton", false, "useCloseButton", false], 0, null, ["loc", [null, [1, 0], [10, 17]]]]],
+      locals: [],
+      templates: [child0]
+    };
+  })());
+});
 define("dummy/templates/flexberry-file-view-dialog", ["exports"], function (exports) {
   exports["default"] = Ember.HTMLBars.template((function () {
     var child0 = (function () {
@@ -29225,7 +30686,7 @@ define("dummy/templates/flexberry-file-view-dialog", ["exports"], function (expo
               "column": 0
             },
             "end": {
-              "line": 9,
+              "line": 10,
               "column": 0
             }
           },
@@ -29253,7 +30714,7 @@ define("dummy/templates/flexberry-file-view-dialog", ["exports"], function (expo
           morphs[1] = dom.createAttrMorph(element0, 'alt');
           return morphs;
         },
-        statements: [["attribute", "src", ["concat", [["get", "imageSrc", ["loc", [null, [8, 49], [8, 57]]]]]]], ["attribute", "alt", ["subexpr", "t", ["components.flexberry-file.preview-image-alternative-text"], [], ["loc", [null, [8, 65], [8, 129]]]]]],
+        statements: [["attribute", "src", ["concat", [["get", "imageSrc", ["loc", [null, [9, 49], [9, 57]]]]]]], ["attribute", "alt", ["subexpr", "t", ["components.flexberry-file.preview-image-alternative-text"], [], ["loc", [null, [9, 65], [9, 129]]]]]],
         locals: [],
         templates: []
       };
@@ -29272,7 +30733,7 @@ define("dummy/templates/flexberry-file-view-dialog", ["exports"], function (expo
             "column": 0
           },
           "end": {
-            "line": 10,
+            "line": 11,
             "column": 0
           }
         },
@@ -29295,7 +30756,7 @@ define("dummy/templates/flexberry-file-view-dialog", ["exports"], function (expo
         dom.insertBoundary(fragment, null);
         return morphs;
       },
-      statements: [["block", "modal-dialog", [], ["title", ["subexpr", "@mut", [["get", "title", ["loc", [null, [2, 8], [2, 13]]]]], [], []], "useOkButton", false, "close", "removeModalDialog", "created", "createdModalDialog", "viewImageContent", true, "sizeClass", ["subexpr", "@mut", [["get", "sizeClass", ["loc", [null, [7, 12], [7, 21]]]]], [], []]], 0, null, ["loc", [null, [1, 0], [9, 17]]]]],
+      statements: [["block", "modal-dialog", [], ["title", ["subexpr", "@mut", [["get", "title", ["loc", [null, [2, 8], [2, 13]]]]], [], []], "useOkButton", false, "close", "removeModalDialog", "created", "createdModalDialog", "viewImageContent", true, "sizeClass", ["subexpr", "@mut", [["get", "sizeClass", ["loc", [null, [7, 12], [7, 21]]]]], [], []], "settings", ["subexpr", "@mut", [["get", "settings", ["loc", [null, [8, 11], [8, 19]]]]], [], []]], 0, null, ["loc", [null, [1, 0], [10, 17]]]]],
       locals: [],
       templates: [child0]
     };
@@ -32157,7 +33618,7 @@ define("dummy/templates/lookup-dialog-content", ["exports"], function (exports) 
             "column": 0
           },
           "end": {
-            "line": 43,
+            "line": 44,
             "column": 0
           }
         },
@@ -32188,7 +33649,7 @@ define("dummy/templates/lookup-dialog-content", ["exports"], function (exports) 
         morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]), 1, 1);
         return morphs;
       },
-      statements: [["inline", "flexberry-objectlistview", [], ["class", "ui bottom attached", "modelProjection", ["subexpr", "@mut", [["get", "modelProjection", ["loc", [null, [4, 20], [4, 35]]]]], [], []], "content", ["subexpr", "@mut", [["get", "model", ["loc", [null, [5, 12], [5, 17]]]]], [], []], "selectedRecord", ["subexpr", "@mut", [["get", "currentLookupRow", ["loc", [null, [6, 19], [6, 35]]]]], [], []], "componentMode", "lookupform", "componentName", ["subexpr", "@mut", [["get", "folvComponentName", ["loc", [null, [8, 18], [8, 35]]]]], [], []], "showEditMenuItemInRow", false, "createNewButton", false, "showCheckBoxInRow", false, "colsConfigButton", false, "columnsWidthAutoresize", true, "filterByAnyMatch", ["subexpr", "action", ["filterByAnyMatch"], [], ["loc", [null, [16, 21], [16, 48]]]], "filterText", ["subexpr", "@mut", [["get", "filter", ["loc", [null, [17, 15], [17, 21]]]]], [], []], "filters", ["subexpr", "@mut", [["get", "filters", ["loc", [null, [18, 12], [18, 19]]]]], [], []], "applyFilters", ["subexpr", "action", ["applyFilters"], [], ["loc", [null, [19, 17], [19, 40]]]], "resetFilters", ["subexpr", "action", ["resetFilters"], [], ["loc", [null, [20, 17], [20, 40]]]], "customProperties", ["subexpr", "@mut", [["get", "customPropertiesData", ["loc", [null, [22, 21], [22, 41]]]]], [], []], "pages", ["subexpr", "@mut", [["get", "pages", ["loc", [null, [24, 10], [24, 15]]]]], [], []], "perPageValue", ["subexpr", "@mut", [["get", "perPageValue", ["loc", [null, [25, 17], [25, 29]]]]], [], []], "perPageValues", ["subexpr", "@mut", [["get", "perPageValues", ["loc", [null, [26, 18], [26, 31]]]]], [], []], "recordsTotalCount", ["subexpr", "@mut", [["get", "recordsTotalCount", ["loc", [null, [27, 22], [27, 39]]]]], [], []], "hasPreviousPage", ["subexpr", "@mut", [["get", "hasPreviousPage", ["loc", [null, [28, 20], [28, 35]]]]], [], []], "hasNextPage", ["subexpr", "@mut", [["get", "hasNextPage", ["loc", [null, [29, 16], [29, 27]]]]], [], []], "previousPage", ["subexpr", "action", ["previousPage"], [], ["loc", [null, [30, 17], [30, 40]]]], "gotoPage", ["subexpr", "action", ["gotoPage"], [], ["loc", [null, [31, 13], [31, 32]]]], "nextPage", ["subexpr", "action", ["nextPage"], [], ["loc", [null, [32, 13], [32, 32]]]], "disableHierarchicalMode", ["subexpr", "@mut", [["get", "disableHierarchicalMode", ["loc", [null, [34, 28], [34, 51]]]]], [], []], "sorting", ["subexpr", "@mut", [["get", "computedSorting", ["loc", [null, [35, 12], [35, 27]]]]], [], []], "orderable", true, "sortByColumn", ["subexpr", "action", ["sortByColumn"], [], ["loc", [null, [37, 17], [37, 40]]]], "addColumnToSorting", ["subexpr", "action", ["addColumnToSorting"], [], ["loc", [null, [38, 23], [38, 52]]]], "notUseUserSettings", ["subexpr", "@mut", [["get", "notUseUserSettings", ["loc", [null, [39, 23], [39, 41]]]]], [], []], "beforeDeleteAllRecords", ["subexpr", "action", ["beforeDeleteAllRecords"], [], ["loc", [null, [40, 27], [40, 60]]]]], ["loc", [null, [2, 2], [41, 4]]]]],
+      statements: [["inline", "flexberry-objectlistview", [], ["class", "ui bottom attached", "modelProjection", ["subexpr", "@mut", [["get", "modelProjection", ["loc", [null, [4, 20], [4, 35]]]]], [], []], "content", ["subexpr", "@mut", [["get", "model", ["loc", [null, [5, 12], [5, 17]]]]], [], []], "selectedRecord", ["subexpr", "@mut", [["get", "currentLookupRow", ["loc", [null, [6, 19], [6, 35]]]]], [], []], "componentMode", "lookupform", "componentName", ["subexpr", "@mut", [["get", "folvComponentName", ["loc", [null, [8, 18], [8, 35]]]]], [], []], "lookupComponentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [9, 24], [9, 37]]]]], [], []], "showEditMenuItemInRow", false, "createNewButton", false, "showCheckBoxInRow", false, "colsConfigButton", false, "columnsWidthAutoresize", true, "filterByAnyMatch", ["subexpr", "action", ["filterByAnyMatch"], [], ["loc", [null, [17, 21], [17, 48]]]], "filterText", ["subexpr", "@mut", [["get", "filter", ["loc", [null, [18, 15], [18, 21]]]]], [], []], "filters", ["subexpr", "@mut", [["get", "filters", ["loc", [null, [19, 12], [19, 19]]]]], [], []], "applyFilters", ["subexpr", "action", ["applyFilters"], [], ["loc", [null, [20, 17], [20, 40]]]], "resetFilters", ["subexpr", "action", ["resetFilters"], [], ["loc", [null, [21, 17], [21, 40]]]], "customProperties", ["subexpr", "@mut", [["get", "customPropertiesData", ["loc", [null, [23, 21], [23, 41]]]]], [], []], "pages", ["subexpr", "@mut", [["get", "pages", ["loc", [null, [25, 10], [25, 15]]]]], [], []], "perPageValue", ["subexpr", "@mut", [["get", "perPageValue", ["loc", [null, [26, 17], [26, 29]]]]], [], []], "perPageValues", ["subexpr", "@mut", [["get", "perPageValues", ["loc", [null, [27, 18], [27, 31]]]]], [], []], "recordsTotalCount", ["subexpr", "@mut", [["get", "recordsTotalCount", ["loc", [null, [28, 22], [28, 39]]]]], [], []], "hasPreviousPage", ["subexpr", "@mut", [["get", "hasPreviousPage", ["loc", [null, [29, 20], [29, 35]]]]], [], []], "hasNextPage", ["subexpr", "@mut", [["get", "hasNextPage", ["loc", [null, [30, 16], [30, 27]]]]], [], []], "previousPage", ["subexpr", "action", ["previousPage"], [], ["loc", [null, [31, 17], [31, 40]]]], "gotoPage", ["subexpr", "action", ["gotoPage"], [], ["loc", [null, [32, 13], [32, 32]]]], "nextPage", ["subexpr", "action", ["nextPage"], [], ["loc", [null, [33, 13], [33, 32]]]], "disableHierarchicalMode", ["subexpr", "@mut", [["get", "disableHierarchicalMode", ["loc", [null, [35, 28], [35, 51]]]]], [], []], "sorting", ["subexpr", "@mut", [["get", "computedSorting", ["loc", [null, [36, 12], [36, 27]]]]], [], []], "orderable", true, "sortByColumn", ["subexpr", "action", ["sortByColumn"], [], ["loc", [null, [38, 17], [38, 40]]]], "addColumnToSorting", ["subexpr", "action", ["addColumnToSorting"], [], ["loc", [null, [39, 23], [39, 52]]]], "notUseUserSettings", ["subexpr", "@mut", [["get", "notUseUserSettings", ["loc", [null, [40, 23], [40, 41]]]]], [], []], "beforeDeleteAllRecords", ["subexpr", "action", ["beforeDeleteAllRecords"], [], ["loc", [null, [41, 27], [41, 60]]]]], ["loc", [null, [2, 2], [42, 4]]]]],
       locals: [],
       templates: []
     };
@@ -32211,7 +33672,7 @@ define("dummy/templates/lookup-dialog", ["exports"], function (exports) {
               "column": 0
             },
             "end": {
-              "line": 11,
+              "line": 12,
               "column": 0
             }
           },
@@ -32236,7 +33697,7 @@ define("dummy/templates/lookup-dialog", ["exports"], function (exports) {
           morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
           return morphs;
         },
-        statements: [["inline", "outlet", ["modal-content"], [], ["loc", [null, [10, 2], [10, 28]]]]],
+        statements: [["inline", "outlet", ["modal-content"], [], ["loc", [null, [11, 2], [11, 28]]]]],
         locals: [],
         templates: []
       };
@@ -32255,7 +33716,7 @@ define("dummy/templates/lookup-dialog", ["exports"], function (exports) {
             "column": 0
           },
           "end": {
-            "line": 12,
+            "line": 13,
             "column": 0
           }
         },
@@ -32278,7 +33739,7 @@ define("dummy/templates/lookup-dialog", ["exports"], function (exports) {
         dom.insertBoundary(fragment, null);
         return morphs;
       },
-      statements: [["block", "modal-dialog", [], ["title", ["subexpr", "@mut", [["get", "title", ["loc", [null, [2, 8], [2, 13]]]]], [], []], "sizeClass", ["subexpr", "@mut", [["get", "sizeClass", ["loc", [null, [3, 12], [3, 21]]]]], [], []], "close", "removeModalDialog", "created", "createdModalDialog", "useOkButton", false, "useCloseButton", false, "componentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [8, 16], [8, 29]]]]], [], []]], 0, null, ["loc", [null, [1, 0], [11, 17]]]]],
+      statements: [["block", "modal-dialog", [], ["title", ["subexpr", "@mut", [["get", "title", ["loc", [null, [2, 8], [2, 13]]]]], [], []], "sizeClass", ["subexpr", "@mut", [["get", "modalDialogSettings.sizeClass", ["loc", [null, [3, 12], [3, 41]]]]], [], []], "close", "removeModalDialog", "created", "createdModalDialog", "useOkButton", ["subexpr", "@mut", [["get", "modalDialogSettings.useOkButton", ["loc", [null, [6, 14], [6, 45]]]]], [], []], "useCloseButton", ["subexpr", "@mut", [["get", "modalDialogSettings.useCloseButton", ["loc", [null, [7, 17], [7, 51]]]]], [], []], "componentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [8, 16], [8, 29]]]]], [], []], "settings", ["subexpr", "@mut", [["get", "modalDialogSettings.settings", ["loc", [null, [9, 11], [9, 39]]]]], [], []]], 0, null, ["loc", [null, [1, 0], [12, 17]]]]],
       locals: [],
       templates: [child0]
     };
@@ -33877,6 +35338,59 @@ define("dummy/templates/mobile/components/flexberry-lookup", ["exports"], functi
         };
       })();
       var child3 = (function () {
+        var child0 = (function () {
+          return {
+            meta: {
+              "fragmentReason": false,
+              "revision": "Ember@2.4.6",
+              "loc": {
+                "source": null,
+                "start": {
+                  "line": 32,
+                  "column": 6
+                },
+                "end": {
+                  "line": 40,
+                  "column": 6
+                }
+              },
+              "moduleName": "dummy/templates/mobile/components/flexberry-lookup.hbs"
+            },
+            isEmpty: false,
+            arity: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            buildFragment: function buildFragment(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createTextNode("        ");
+              dom.appendChild(el0, el1);
+              var el1 = dom.createElement("button");
+              var el2 = dom.createTextNode("\n          ");
+              dom.appendChild(el1, el2);
+              var el2 = dom.createComment("");
+              dom.appendChild(el1, el2);
+              var el2 = dom.createTextNode("\n        ");
+              dom.appendChild(el1, el2);
+              dom.appendChild(el0, el1);
+              var el1 = dom.createTextNode("\n");
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+              var element1 = dom.childAt(fragment, [1]);
+              var morphs = new Array(5);
+              morphs[0] = dom.createAttrMorph(element1, 'class');
+              morphs[1] = dom.createAttrMorph(element1, 'title');
+              morphs[2] = dom.createAttrMorph(element1, 'type');
+              morphs[3] = dom.createElementMorph(element1);
+              morphs[4] = dom.createUnsafeMorphAt(element1, 1, 1);
+              return morphs;
+            },
+            statements: [["attribute", "class", ["concat", ["ui ui-preview ", ["subexpr", "if", [["get", "isBlocked", ["loc", [null, [34, 36], [34, 45]]]], " disabled"], [], ["loc", [null, [34, 31], [34, 59]]]], " ", ["get", "previewButtonClass", ["loc", [null, [34, 62], [34, 80]]]], " button"]]], ["attribute", "title", ["subexpr", "t", ["components.flexberry-lookup.preview-button-text"], [], ["loc", [null, [35, 16], [35, 71]]]]], ["attribute", "type", ["subexpr", "if", [["get", "autocomplete", ["loc", [null, [36, 20], [36, 32]]]], "button", ""], [], ["loc", [null, [36, 15], [36, 46]]]]], ["element", "action", ["preview"], [], ["loc", [null, [37, 10], [37, 30]]]], ["content", "previewText", ["loc", [null, [38, 10], [38, 27]]]]],
+            locals: [],
+            templates: []
+          };
+        })();
         return {
           meta: {
             "fragmentReason": false,
@@ -33888,7 +35402,47 @@ define("dummy/templates/mobile/components/flexberry-lookup", ["exports"], functi
                 "column": 4
               },
               "end": {
-                "line": 37,
+                "line": 41,
+                "column": 4
+              }
+            },
+            "moduleName": "dummy/templates/mobile/components/flexberry-lookup.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createComment("");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var morphs = new Array(1);
+            morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+            dom.insertBoundary(fragment, 0);
+            dom.insertBoundary(fragment, null);
+            return morphs;
+          },
+          statements: [["block", "if", [["subexpr", "and", [["get", "previewFormRoute", ["loc", [null, [32, 17], [32, 33]]]], ["get", "value", ["loc", [null, [32, 34], [32, 39]]]]], [], ["loc", [null, [32, 12], [32, 40]]]]], [], 0, null, ["loc", [null, [32, 6], [40, 13]]]]],
+          locals: [],
+          templates: [child0]
+        };
+      })();
+      var child4 = (function () {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.4.6",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 42,
+                "column": 4
+              },
+              "end": {
+                "line": 49,
                 "column": 4
               }
             },
@@ -33903,6 +35457,7 @@ define("dummy/templates/mobile/components/flexberry-lookup", ["exports"], functi
             var el1 = dom.createTextNode("      ");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("button");
+            dom.setAttribute(el1, "type", "button");
             var el2 = dom.createTextNode("\n        ");
             dom.appendChild(el1, el2);
             var el2 = dom.createComment("");
@@ -33922,7 +35477,7 @@ define("dummy/templates/mobile/components/flexberry-lookup", ["exports"], functi
             morphs[2] = dom.createUnsafeMorphAt(element0, 1, 1);
             return morphs;
           },
-          statements: [["attribute", "class", ["concat", ["ui ui-clear ", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [33, 36], [33, 44]]]], ["get", "isBlocked", ["loc", [null, [33, 45], [33, 54]]]]], [], ["loc", [null, [33, 32], [33, 55]]]], " disabled"], [], ["loc", [null, [33, 27], [33, 69]]]], " ", ["get", "removeButtonClass", ["loc", [null, [33, 72], [33, 89]]]], " button"]]], ["element", "action", ["remove", ["get", "removeData", ["loc", [null, [34, 26], [34, 36]]]]], [], ["loc", [null, [34, 8], [34, 38]]]], ["content", "removeText", ["loc", [null, [35, 8], [35, 24]]]]],
+          statements: [["attribute", "class", ["concat", ["ui ui-clear ", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [45, 36], [45, 44]]]], ["get", "isBlocked", ["loc", [null, [45, 45], [45, 54]]]]], [], ["loc", [null, [45, 32], [45, 55]]]], " disabled"], [], ["loc", [null, [45, 27], [45, 69]]]], " ", ["get", "removeButtonClass", ["loc", [null, [45, 72], [45, 89]]]], " button"]]], ["element", "action", ["remove", ["get", "removeData", ["loc", [null, [46, 26], [46, 36]]]]], [], ["loc", [null, [46, 8], [46, 38]]]], ["content", "removeText", ["loc", [null, [47, 8], [47, 24]]]]],
           locals: [],
           templates: []
         };
@@ -33938,7 +35493,7 @@ define("dummy/templates/mobile/components/flexberry-lookup", ["exports"], functi
               "column": 0
             },
             "end": {
-              "line": 39,
+              "line": 51,
               "column": 0
             }
           },
@@ -33979,6 +35534,8 @@ define("dummy/templates/mobile/components/flexberry-lookup", ["exports"], functi
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("  ");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
@@ -33987,19 +35544,20 @@ define("dummy/templates/mobile/components/flexberry-lookup", ["exports"], functi
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element1 = dom.childAt(fragment, [1]);
-          var element2 = dom.childAt(element1, [1]);
-          var morphs = new Array(5);
-          morphs[0] = dom.createAttrMorph(element2, 'class');
-          morphs[1] = dom.createElementMorph(element2);
-          morphs[2] = dom.createMorphAt(dom.childAt(element2, [1]), 1, 1);
-          morphs[3] = dom.createMorphAt(element2, 3, 3);
-          morphs[4] = dom.createMorphAt(element1, 3, 3);
+          var element2 = dom.childAt(fragment, [1]);
+          var element3 = dom.childAt(element2, [1]);
+          var morphs = new Array(6);
+          morphs[0] = dom.createAttrMorph(element3, 'class');
+          morphs[1] = dom.createElementMorph(element3);
+          morphs[2] = dom.createMorphAt(dom.childAt(element3, [1]), 1, 1);
+          morphs[3] = dom.createMorphAt(element3, 3, 3);
+          morphs[4] = dom.createMorphAt(element2, 3, 3);
+          morphs[5] = dom.createMorphAt(element2, 4, 4);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", ["ui transparent ", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [15, 37], [15, 45]]]], ["get", "isBlocked", ["loc", [null, [15, 46], [15, 55]]]]], [], ["loc", [null, [15, 33], [15, 56]]]], " disabled"], [], ["loc", [null, [15, 28], [15, 70]]]], " ", ["subexpr", "if", [["subexpr", "or", [["get", "modalIsBeforeToShow", ["loc", [null, [15, 80], [15, 99]]]], ["get", "modalIsStartToShow", ["loc", [null, [15, 100], [15, 118]]]]], [], ["loc", [null, [15, 76], [15, 119]]]], " loading"], [], ["loc", [null, [15, 71], [15, 132]]]], " icon input "]]], ["element", "action", ["choose", ["get", "chooseData", ["loc", [null, [14, 24], [14, 34]]]]], [], ["loc", [null, [14, 6], [14, 36]]]], ["block", "if", [["get", "value", ["loc", [null, [17, 14], [17, 19]]]]], [], 0, 1, ["loc", [null, [17, 8], [25, 15]]]], ["block", "unless", [["get", "readonly", ["loc", [null, [27, 16], [27, 24]]]]], [], 2, null, ["loc", [null, [27, 6], [29, 17]]]], ["block", "unless", [["get", "readonly", ["loc", [null, [31, 14], [31, 22]]]]], [], 3, null, ["loc", [null, [31, 4], [37, 15]]]]],
+        statements: [["attribute", "class", ["concat", ["ui transparent ", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [15, 37], [15, 45]]]], ["get", "isBlocked", ["loc", [null, [15, 46], [15, 55]]]]], [], ["loc", [null, [15, 33], [15, 56]]]], " disabled"], [], ["loc", [null, [15, 28], [15, 70]]]], " ", ["subexpr", "if", [["subexpr", "or", [["get", "modalIsBeforeToShow", ["loc", [null, [15, 80], [15, 99]]]], ["get", "modalIsStartToShow", ["loc", [null, [15, 100], [15, 118]]]]], [], ["loc", [null, [15, 76], [15, 119]]]], " loading"], [], ["loc", [null, [15, 71], [15, 132]]]], " icon input "]]], ["element", "action", ["choose", ["get", "chooseData", ["loc", [null, [14, 24], [14, 34]]]]], [], ["loc", [null, [14, 6], [14, 36]]]], ["block", "if", [["get", "value", ["loc", [null, [17, 14], [17, 19]]]]], [], 0, 1, ["loc", [null, [17, 8], [25, 15]]]], ["block", "unless", [["get", "readonly", ["loc", [null, [27, 16], [27, 24]]]]], [], 2, null, ["loc", [null, [27, 6], [29, 17]]]], ["block", "if", [["get", "showPreviewButton", ["loc", [null, [31, 10], [31, 27]]]]], [], 3, null, ["loc", [null, [31, 4], [41, 11]]]], ["block", "unless", [["get", "readonly", ["loc", [null, [42, 14], [42, 22]]]]], [], 4, null, ["loc", [null, [42, 4], [49, 15]]]]],
         locals: [],
-        templates: [child0, child1, child2, child3]
+        templates: [child0, child1, child2, child3, child4]
       };
     })();
     return {
@@ -34016,7 +35574,7 @@ define("dummy/templates/mobile/components/flexberry-lookup", ["exports"], functi
             "column": 0
           },
           "end": {
-            "line": 40,
+            "line": 52,
             "column": 0
           }
         },
@@ -34039,464 +35597,13 @@ define("dummy/templates/mobile/components/flexberry-lookup", ["exports"], functi
         dom.insertBoundary(fragment, null);
         return morphs;
       },
-      statements: [["block", "if", [["get", "dropdown", ["loc", [null, [1, 6], [1, 14]]]]], [], 0, 1, ["loc", [null, [1, 0], [39, 7]]]]],
+      statements: [["block", "if", [["get", "dropdown", ["loc", [null, [1, 6], [1, 14]]]]], [], 0, 1, ["loc", [null, [1, 0], [51, 7]]]]],
       locals: [],
       templates: [child0, child1]
     };
   })());
 });
-define("dummy/templates/mobile/components/flexberry-objectlistview", ["exports"], function (exports) {
-  exports["default"] = Ember.HTMLBars.template((function () {
-    var child0 = (function () {
-      var child0 = (function () {
-        var child0 = (function () {
-          return {
-            meta: {
-              "fragmentReason": false,
-              "revision": "Ember@2.4.6",
-              "loc": {
-                "source": null,
-                "start": {
-                  "line": 100,
-                  "column": 8
-                },
-                "end": {
-                  "line": 102,
-                  "column": 8
-                }
-              },
-              "moduleName": "dummy/templates/mobile/components/flexberry-objectlistview.hbs"
-            },
-            isEmpty: false,
-            arity: 0,
-            cachedFragment: null,
-            hasRendered: false,
-            buildFragment: function buildFragment(dom) {
-              var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("          ");
-              dom.appendChild(el0, el1);
-              var el1 = dom.createElement("div");
-              dom.setAttribute(el1, "class", "ui button");
-              var el2 = dom.createTextNode("...");
-              dom.appendChild(el1, el2);
-              dom.appendChild(el0, el1);
-              var el1 = dom.createTextNode("\n");
-              dom.appendChild(el0, el1);
-              return el0;
-            },
-            buildRenderNodes: function buildRenderNodes() {
-              return [];
-            },
-            statements: [],
-            locals: [],
-            templates: []
-          };
-        })();
-        var child1 = (function () {
-          var child0 = (function () {
-            return {
-              meta: {
-                "fragmentReason": false,
-                "revision": "Ember@2.4.6",
-                "loc": {
-                  "source": null,
-                  "start": {
-                    "line": 103,
-                    "column": 10
-                  },
-                  "end": {
-                    "line": 105,
-                    "column": 10
-                  }
-                },
-                "moduleName": "dummy/templates/mobile/components/flexberry-objectlistview.hbs"
-              },
-              isEmpty: false,
-              arity: 0,
-              cachedFragment: null,
-              hasRendered: false,
-              buildFragment: function buildFragment(dom) {
-                var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("            ");
-                dom.appendChild(el0, el1);
-                var el1 = dom.createElement("button");
-                dom.setAttribute(el1, "class", "ui active button");
-                var el2 = dom.createComment("");
-                dom.appendChild(el1, el2);
-                dom.appendChild(el0, el1);
-                var el1 = dom.createTextNode("\n");
-                dom.appendChild(el0, el1);
-                return el0;
-              },
-              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-                var morphs = new Array(1);
-                morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 0, 0);
-                return morphs;
-              },
-              statements: [["content", "page.number", ["loc", [null, [104, 45], [104, 60]]]]],
-              locals: [],
-              templates: []
-            };
-          })();
-          var child1 = (function () {
-            return {
-              meta: {
-                "fragmentReason": false,
-                "revision": "Ember@2.4.6",
-                "loc": {
-                  "source": null,
-                  "start": {
-                    "line": 105,
-                    "column": 10
-                  },
-                  "end": {
-                    "line": 107,
-                    "column": 10
-                  }
-                },
-                "moduleName": "dummy/templates/mobile/components/flexberry-objectlistview.hbs"
-              },
-              isEmpty: false,
-              arity: 0,
-              cachedFragment: null,
-              hasRendered: false,
-              buildFragment: function buildFragment(dom) {
-                var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("            ");
-                dom.appendChild(el0, el1);
-                var el1 = dom.createElement("button");
-                dom.setAttribute(el1, "class", "ui button");
-                var el2 = dom.createComment("");
-                dom.appendChild(el1, el2);
-                dom.appendChild(el0, el1);
-                var el1 = dom.createTextNode("\n");
-                dom.appendChild(el0, el1);
-                return el0;
-              },
-              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-                var element0 = dom.childAt(fragment, [1]);
-                var morphs = new Array(2);
-                morphs[0] = dom.createElementMorph(element0);
-                morphs[1] = dom.createMorphAt(element0, 0, 0);
-                return morphs;
-              },
-              statements: [["element", "action", ["gotoPage", ["get", "this.attrs.gotoPage", ["loc", [null, [106, 58], [106, 77]]]], ["get", "page.number", ["loc", [null, [106, 78], [106, 89]]]]], [], ["loc", [null, [106, 38], [106, 91]]]], ["content", "page.number", ["loc", [null, [106, 92], [106, 107]]]]],
-              locals: [],
-              templates: []
-            };
-          })();
-          return {
-            meta: {
-              "fragmentReason": false,
-              "revision": "Ember@2.4.6",
-              "loc": {
-                "source": null,
-                "start": {
-                  "line": 102,
-                  "column": 8
-                },
-                "end": {
-                  "line": 108,
-                  "column": 8
-                }
-              },
-              "moduleName": "dummy/templates/mobile/components/flexberry-objectlistview.hbs"
-            },
-            isEmpty: false,
-            arity: 0,
-            cachedFragment: null,
-            hasRendered: false,
-            buildFragment: function buildFragment(dom) {
-              var el0 = dom.createDocumentFragment();
-              var el1 = dom.createComment("");
-              dom.appendChild(el0, el1);
-              return el0;
-            },
-            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-              var morphs = new Array(1);
-              morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
-              dom.insertBoundary(fragment, 0);
-              dom.insertBoundary(fragment, null);
-              return morphs;
-            },
-            statements: [["block", "if", [["get", "page.isCurrent", ["loc", [null, [103, 16], [103, 30]]]]], [], 0, 1, ["loc", [null, [103, 10], [107, 17]]]]],
-            locals: [],
-            templates: [child0, child1]
-          };
-        })();
-        return {
-          meta: {
-            "fragmentReason": false,
-            "revision": "Ember@2.4.6",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 99,
-                "column": 6
-              },
-              "end": {
-                "line": 109,
-                "column": 6
-              }
-            },
-            "moduleName": "dummy/templates/mobile/components/flexberry-objectlistview.hbs"
-          },
-          isEmpty: false,
-          arity: 1,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createComment("");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var morphs = new Array(1);
-            morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
-            dom.insertBoundary(fragment, 0);
-            dom.insertBoundary(fragment, null);
-            return morphs;
-          },
-          statements: [["block", "if", [["get", "page.isEllipsis", ["loc", [null, [100, 14], [100, 29]]]]], [], 0, 1, ["loc", [null, [100, 8], [108, 15]]]]],
-          locals: ["page"],
-          templates: [child0, child1]
-        };
-      })();
-      var child1 = (function () {
-        var child0 = (function () {
-          return {
-            meta: {
-              "fragmentReason": false,
-              "revision": "Ember@2.4.6",
-              "loc": {
-                "source": null,
-                "start": {
-                  "line": 115,
-                  "column": 10
-                },
-                "end": {
-                  "line": 119,
-                  "column": 10
-                }
-              },
-              "moduleName": "dummy/templates/mobile/components/flexberry-objectlistview.hbs"
-            },
-            isEmpty: false,
-            arity: 0,
-            cachedFragment: null,
-            hasRendered: false,
-            buildFragment: function buildFragment(dom) {
-              var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("            ");
-              dom.appendChild(el0, el1);
-              var el1 = dom.createComment("");
-              dom.appendChild(el0, el1);
-              var el1 = dom.createTextNode("\n");
-              dom.appendChild(el0, el1);
-              return el0;
-            },
-            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-              var morphs = new Array(1);
-              morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
-              return morphs;
-            },
-            statements: [["inline", "concat", [["subexpr", "t", ["components.flexberry-objectlistview.showing-entries.showing"], [], ["loc", [null, [117, 14], [117, 79]]]], ["get", "currentIntervalRecords", ["loc", [null, [117, 80], [117, 102]]]], ["subexpr", "t", ["components.flexberry-objectlistview.showing-entries.of"], [], ["loc", [null, [117, 103], [117, 163]]]], ["get", "recordsTotalCount", ["loc", [null, [117, 164], [117, 181]]]], ["subexpr", "t", ["components.flexberry-objectlistview.showing-entries.entries"], [], ["loc", [null, [117, 182], [117, 247]]]]], [], ["loc", [null, [116, 12], [118, 14]]]]],
-            locals: [],
-            templates: []
-          };
-        })();
-        return {
-          meta: {
-            "fragmentReason": false,
-            "revision": "Ember@2.4.6",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 113,
-                "column": 6
-              },
-              "end": {
-                "line": 121,
-                "column": 6
-              }
-            },
-            "moduleName": "dummy/templates/mobile/components/flexberry-objectlistview.hbs"
-          },
-          isEmpty: false,
-          arity: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createElement("div");
-            dom.setAttribute(el1, "class", "showing-entries");
-            var el2 = dom.createTextNode("\n");
-            dom.appendChild(el1, el2);
-            var el2 = dom.createComment("");
-            dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("        ");
-            dom.appendChild(el1, el2);
-            dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var morphs = new Array(1);
-            morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 1, 1);
-            return morphs;
-          },
-          statements: [["block", "if", [["subexpr", "and", [["get", "currentIntervalRecords", ["loc", [null, [115, 21], [115, 43]]]], ["get", "recordsTotalCount", ["loc", [null, [115, 44], [115, 61]]]]], [], ["loc", [null, [115, 16], [115, 62]]]]], [], 0, null, ["loc", [null, [115, 10], [119, 17]]]]],
-          locals: [],
-          templates: [child0]
-        };
-      })();
-      return {
-        meta: {
-          "fragmentReason": false,
-          "revision": "Ember@2.4.6",
-          "loc": {
-            "source": null,
-            "start": {
-              "line": 95,
-              "column": 0
-            },
-            "end": {
-              "line": 125,
-              "column": 0
-            }
-          },
-          "moduleName": "dummy/templates/mobile/components/flexberry-objectlistview.hbs"
-        },
-        isEmpty: false,
-        arity: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        buildFragment: function buildFragment(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("  ");
-          dom.appendChild(el0, el1);
-          var el1 = dom.createElement("div");
-          dom.setAttribute(el1, "class", "ui secondary menu no-margin nav-bar");
-          var el2 = dom.createTextNode("\n    ");
-          dom.appendChild(el1, el2);
-          var el2 = dom.createElement("div");
-          dom.setAttribute(el2, "class", "ui basic buttons");
-          var el3 = dom.createTextNode("\n      ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("button");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createComment("");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("      ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("button");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n    ");
-          dom.appendChild(el2, el3);
-          dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
-          dom.appendChild(el1, el2);
-          var el2 = dom.createElement("div");
-          dom.setAttribute(el2, "class", "right menu");
-          var el3 = dom.createTextNode("\n");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createComment("");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("      ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createComment("");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n    ");
-          dom.appendChild(el2, el3);
-          dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n  ");
-          dom.appendChild(el1, el2);
-          dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n");
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element1 = dom.childAt(fragment, [1]);
-          var element2 = dom.childAt(element1, [1]);
-          var element3 = dom.childAt(element2, [1]);
-          var element4 = dom.childAt(element2, [5]);
-          var element5 = dom.childAt(element1, [3]);
-          var morphs = new Array(7);
-          morphs[0] = dom.createAttrMorph(element3, 'class');
-          morphs[1] = dom.createElementMorph(element3);
-          morphs[2] = dom.createMorphAt(element2, 3, 3);
-          morphs[3] = dom.createAttrMorph(element4, 'class');
-          morphs[4] = dom.createElementMorph(element4);
-          morphs[5] = dom.createMorphAt(element5, 1, 1);
-          morphs[6] = dom.createMorphAt(element5, 3, 3);
-          return morphs;
-        },
-        statements: [["attribute", "class", ["concat", ["ui ", ["subexpr", "unless", [["get", "hasPreviousPage", ["loc", [null, [98, 33], [98, 48]]]], "disabled"], [], ["loc", [null, [98, 24], [98, 61]]]], " button prev-page-button"]]], ["element", "action", ["previousPage", ["get", "this.attrs.previousPage", ["loc", [null, [98, 111], [98, 134]]]]], [], ["loc", [null, [98, 87], [98, 136]]]], ["block", "each", [["get", "pages", ["loc", [null, [99, 14], [99, 19]]]]], [], 0, null, ["loc", [null, [99, 6], [109, 15]]]], ["attribute", "class", ["concat", ["ui ", ["subexpr", "unless", [["get", "hasNextPage", ["loc", [null, [110, 33], [110, 44]]]], "disabled"], [], ["loc", [null, [110, 24], [110, 57]]]], " button next-page-button"]]], ["element", "action", ["nextPage", ["get", "this.attrs.nextPage", ["loc", [null, [110, 103], [110, 122]]]]], [], ["loc", [null, [110, 83], [110, 124]]]], ["block", "if", [["get", "showShowingEntries", ["loc", [null, [113, 12], [113, 30]]]]], [], 1, null, ["loc", [null, [113, 6], [121, 13]]]], ["inline", "flexberry-dropdown", [], ["items", ["subexpr", "@mut", [["get", "perPageValues", ["loc", [null, [122, 33], [122, 46]]]]], [], []], "value", ["subexpr", "@mut", [["get", "perPageValue", ["loc", [null, [122, 53], [122, 65]]]]], [], []], "class", "compact selection", "onChange", ["subexpr", "action", ["perPageClick"], [], ["loc", [null, [122, 101], [122, 124]]]], "needChecksOnValue", false, "direction", "upward"], ["loc", [null, [122, 6], [122, 169]]]]],
-        locals: [],
-        templates: [child0, child1]
-      };
-    })();
-    return {
-      meta: {
-        "fragmentReason": {
-          "name": "missing-wrapper",
-          "problems": ["wrong-type", "multiple-nodes"]
-        },
-        "revision": "Ember@2.4.6",
-        "loc": {
-          "source": null,
-          "start": {
-            "line": 1,
-            "column": 0
-          },
-          "end": {
-            "line": 126,
-            "column": 0
-          }
-        },
-        "moduleName": "dummy/templates/mobile/components/flexberry-objectlistview.hbs"
-      },
-      isEmpty: false,
-      arity: 0,
-      cachedFragment: null,
-      hasRendered: false,
-      buildFragment: function buildFragment(dom) {
-        var el0 = dom.createDocumentFragment();
-        var el1 = dom.createComment("");
-        dom.appendChild(el0, el1);
-        var el1 = dom.createTextNode("\n");
-        dom.appendChild(el0, el1);
-        var el1 = dom.createComment("");
-        dom.appendChild(el0, el1);
-        var el1 = dom.createTextNode("\n");
-        dom.appendChild(el0, el1);
-        var el1 = dom.createComment("");
-        dom.appendChild(el0, el1);
-        return el0;
-      },
-      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var morphs = new Array(3);
-        morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
-        morphs[1] = dom.createMorphAt(fragment, 2, 2, contextualElement);
-        morphs[2] = dom.createMorphAt(fragment, 4, 4, contextualElement);
-        dom.insertBoundary(fragment, 0);
-        dom.insertBoundary(fragment, null);
-        return morphs;
-      },
-      statements: [["inline", "olv-toolbar", [], ["class", "ui secondary menu no-margin", "createNewButton", ["subexpr", "@mut", [["get", "createNewButton", ["loc", [null, [3, 18], [3, 33]]]]], [], []], "enableCreateNewButton", ["subexpr", "not", [["get", "readonly", ["loc", [null, [4, 29], [4, 37]]]]], [], ["loc", [null, [4, 24], [4, 38]]]], "refreshButton", ["subexpr", "@mut", [["get", "refreshButton", ["loc", [null, [5, 16], [5, 29]]]]], [], []], "deleteButton", ["subexpr", "@mut", [["get", "deleteButton", ["loc", [null, [6, 15], [6, 27]]]]], [], []], "colsConfigButton", ["subexpr", "@mut", [["get", "colsConfigButton", ["loc", [null, [7, 19], [7, 35]]]]], [], []], "enableFilters", ["subexpr", "@mut", [["get", "enableFilters", ["loc", [null, [8, 16], [8, 29]]]]], [], []], "exportExcelButton", ["subexpr", "@mut", [["get", "exportExcelButton", ["loc", [null, [9, 20], [9, 37]]]]], [], []], "showFilters", ["subexpr", "@mut", [["get", "_showFilters", ["loc", [null, [10, 14], [10, 26]]]]], [], []], "filters", ["subexpr", "@mut", [["get", "filters", ["loc", [null, [11, 10], [11, 17]]]]], [], []], "toggleStateFilters", ["subexpr", "action", ["toggleStateFilters"], [], ["loc", [null, [12, 21], [12, 50]]]], "resetFilters", ["subexpr", "action", ["resetFilters", ["get", "this.attrs.resetFilters", ["loc", [null, [13, 38], [13, 61]]]]], [], ["loc", [null, [13, 15], [13, 62]]]], "filterButton", ["subexpr", "@mut", [["get", "filterButton", ["loc", [null, [14, 15], [14, 27]]]]], [], []], "filterText", ["subexpr", "@mut", [["get", "filterText", ["loc", [null, [15, 13], [15, 23]]]]], [], []], "buttonClass", ["subexpr", "@mut", [["get", "buttonClass", ["loc", [null, [16, 14], [16, 25]]]]], [], []], "enableDeleteButton", ["subexpr", "not", [["get", "readonly", ["loc", [null, [17, 26], [17, 34]]]]], [], ["loc", [null, [17, 21], [17, 35]]]], "componentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [18, 16], [18, 29]]]]], [], []], "modelController", ["subexpr", "@mut", [["get", "currentController", ["loc", [null, [19, 18], [19, 35]]]]], [], []], "customButtonAction", "customButtonAction", "customButtons", ["subexpr", "@mut", [["get", "customButtons", ["loc", [null, [21, 16], [21, 29]]]]], [], []], "editFormRoute", ["subexpr", "@mut", [["get", "editFormRoute", ["loc", [null, [22, 16], [22, 29]]]]], [], []], "showConfigDialog", "showConfigDialog", "confirmDeleteRows", ["subexpr", "@mut", [["get", "confirmDeleteRows", ["loc", [null, [24, 20], [24, 37]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "_inHierarchicalMode", ["loc", [null, [25, 21], [25, 40]]]]], [], []], "inExpandMode", ["subexpr", "@mut", [["get", "_inExpandMode", ["loc", [null, [26, 15], [26, 28]]]]], [], []], "availableHierarchicalMode", ["subexpr", "@mut", [["get", "_availableHierarchicalMode", ["loc", [null, [27, 28], [27, 54]]]]], [], []], "availableCollExpandMode", ["subexpr", "@mut", [["get", "_availableCollExpandMode", ["loc", [null, [28, 26], [28, 50]]]]], [], []], "switchHierarchicalMode", ["subexpr", "action", ["switchHierarchicalMode"], [], ["loc", [null, [29, 25], [29, 58]]]], "switchExpandMode", ["subexpr", "action", ["switchExpandMode"], [], ["loc", [null, [30, 19], [30, 46]]]], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [31, 11], [31, 19]]]]], [], []]], ["loc", [null, [1, 0], [32, 2]]]], ["inline", "object-list-view", [], ["placeholder", ["subexpr", "@mut", [["get", "placeholder", ["loc", [null, [34, 14], [34, 25]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [35, 11], [35, 19]]]]], [], []], "columnsWidthAutoresize", true, "minAutoColumnWidth", ["subexpr", "@mut", [["get", "minAutoColumnWidth", ["loc", [null, [37, 21], [37, 39]]]]], [], []], "buttonClass", ["subexpr", "@mut", [["get", "buttonClass", ["loc", [null, [38, 14], [38, 25]]]]], [], []], "tableStriped", ["subexpr", "@mut", [["get", "tableStriped", ["loc", [null, [39, 15], [39, 27]]]]], [], []], "customTableClass", ["subexpr", "@mut", [["get", "customTableClass", ["loc", [null, [40, 19], [40, 35]]]]], [], []], "cellComponent", ["subexpr", "@mut", [["get", "cellComponent", ["loc", [null, [41, 16], [41, 29]]]]], [], []], "singleColumnCellComponent", ["subexpr", "@mut", [["get", "singleColumnCellComponent", ["loc", [null, [42, 28], [42, 53]]]]], [], []], "singleColumnHeaderTitle", ["subexpr", "@mut", [["get", "singleColumnHeaderTitle", ["loc", [null, [43, 26], [43, 49]]]]], [], []], "showValidationMessagesInRow", ["subexpr", "and", [["subexpr", "not", [["get", "readonly", ["loc", [null, [44, 40], [44, 48]]]]], [], ["loc", [null, [44, 35], [44, 49]]]], ["get", "showValidationMessagesInRow", ["loc", [null, [44, 50], [44, 77]]]]], [], ["loc", [null, [44, 30], [44, 78]]]], "showAsteriskInRow", ["subexpr", "@mut", [["get", "showAsteriskInRow", ["loc", [null, [45, 20], [45, 37]]]]], [], []], "showCheckBoxInRow", ["subexpr", "@mut", [["get", "showCheckBoxInRow", ["loc", [null, [46, 20], [46, 37]]]]], [], []], "showDeleteButtonInRow", ["subexpr", "@mut", [["get", "showDeleteButtonInRow", ["loc", [null, [47, 24], [47, 45]]]]], [], []], "showEditButtonInRow", ["subexpr", "@mut", [["get", "showEditButtonInRow", ["loc", [null, [48, 22], [48, 41]]]]], [], []], "showEditMenuItemInRow", ["subexpr", "@mut", [["get", "showEditMenuItemInRow", ["loc", [null, [49, 24], [49, 45]]]]], [], []], "showDeleteMenuItemInRow", ["subexpr", "@mut", [["get", "showDeleteMenuItemInRow", ["loc", [null, [50, 26], [50, 49]]]]], [], []], "sendMenuItemAction", ["subexpr", "action", ["sendMenuItemAction"], [], ["loc", [null, [51, 21], [51, 50]]]], "menuInRowAdditionalItems", ["subexpr", "@mut", [["get", "menuInRowAdditionalItems", ["loc", [null, [52, 27], [52, 51]]]]], [], []], "rowClickable", ["subexpr", "and", [["subexpr", "not", [["get", "readonly", ["loc", [null, [53, 25], [53, 33]]]]], [], ["loc", [null, [53, 20], [53, 34]]]], ["get", "rowClickable", ["loc", [null, [53, 35], [53, 47]]]]], [], ["loc", [null, [53, 15], [53, 48]]]], "orderable", ["subexpr", "@mut", [["get", "orderable", ["loc", [null, [54, 12], [54, 21]]]]], [], []], "sorting", ["subexpr", "@mut", [["get", "sorting", ["loc", [null, [55, 10], [55, 17]]]]], [], []], "immediateDelete", true, "modelName", ["subexpr", "@mut", [["get", "modelName", ["loc", [null, [57, 12], [57, 21]]]]], [], []], "modelProjection", ["subexpr", "@mut", [["get", "modelProjection", ["loc", [null, [58, 18], [58, 33]]]]], [], []], "content", ["subexpr", "@mut", [["get", "content", ["loc", [null, [59, 10], [59, 17]]]]], [], []], "sortByColumn", ["subexpr", "action", [["subexpr", "if", [["get", "this.attrs.sortByColumn", ["loc", [null, [60, 27], [60, 50]]]], ["get", "this.attrs.sortByColumn", ["loc", [null, [60, 51], [60, 74]]]], "sortByColumn"], [], ["loc", [null, [60, 23], [60, 90]]]]], [], ["loc", [null, [60, 15], [60, 91]]]], "addColumnToSorting", ["subexpr", "action", [["subexpr", "if", [["get", "this.attrs.addColumnToSorting", ["loc", [null, [61, 33], [61, 62]]]], ["get", "this.attrs.addColumnToSorting", ["loc", [null, [61, 63], [61, 92]]]], "addColumnToSorting"], [], ["loc", [null, [61, 29], [61, 114]]]]], [], ["loc", [null, [61, 21], [61, 115]]]], "enableFilters", ["subexpr", "@mut", [["get", "enableFilters", ["loc", [null, [62, 16], [62, 29]]]]], [], []], "showFilters", ["subexpr", "@mut", [["get", "_showFilters", ["loc", [null, [63, 14], [63, 26]]]]], [], []], "filters", ["subexpr", "@mut", [["get", "filters", ["loc", [null, [64, 10], [64, 17]]]]], [], []], "applyFilters", ["subexpr", "action", [["subexpr", "if", [["get", "applyFilters", ["loc", [null, [65, 27], [65, 39]]]], ["get", "applyFilters", ["loc", [null, [65, 40], [65, 52]]]], "applyFilters"], [], ["loc", [null, [65, 23], [65, 68]]]]], [], ["loc", [null, [65, 15], [65, 69]]]], "componentForFilter", ["subexpr", "@mut", [["get", "componentForFilter", ["loc", [null, [66, 21], [66, 39]]]]], [], []], "conditionsByType", ["subexpr", "@mut", [["get", "conditionsByType", ["loc", [null, [67, 19], [67, 35]]]]], [], []], "filterByAnyMatch", ["subexpr", "action", [["subexpr", "if", [["get", "this.attrs.filterByAnyMatch", ["loc", [null, [68, 31], [68, 58]]]], ["get", "this.attrs.filterByAnyMatch", ["loc", [null, [68, 59], [68, 86]]]], "filterByAnyMatch"], [], ["loc", [null, [68, 27], [68, 106]]]]], [], ["loc", [null, [68, 19], [68, 107]]]], "filterByAnyWord", ["subexpr", "@mut", [["get", "filterByAnyWord", ["loc", [null, [69, 18], [69, 33]]]]], [], []], "filterByAllWords", ["subexpr", "@mut", [["get", "filterByAllWords", ["loc", [null, [70, 19], [70, 35]]]]], [], []], "configurateRow", ["subexpr", "@mut", [["get", "this.attrs.configurateRow", ["loc", [null, [71, 17], [71, 42]]]]], [], []], "configurateSelectedRows", ["subexpr", "@mut", [["get", "this.attrs.configurateSelectedRows", ["loc", [null, [72, 26], [72, 60]]]]], [], []], "confirmDeleteRow", ["subexpr", "@mut", [["get", "confirmDeleteRow", ["loc", [null, [73, 19], [73, 35]]]]], [], []], "beforeDeleteRecord", ["subexpr", "@mut", [["get", "beforeDeleteRecord", ["loc", [null, [74, 21], [74, 39]]]]], [], []], "beforeDeleteAllRecords", ["subexpr", "@mut", [["get", "beforeDeleteAllRecords", ["loc", [null, [75, 25], [75, 47]]]]], [], []], "action", "objectListViewRowClick", "componentName", ["subexpr", "@mut", [["get", "componentName", ["loc", [null, [77, 16], [77, 29]]]]], [], []], "allowColumnResize", ["subexpr", "@mut", [["get", "allowColumnResize", ["loc", [null, [78, 20], [78, 37]]]]], [], []], "selectedRecord", ["subexpr", "@mut", [["get", "selectedRecord", ["loc", [null, [79, 17], [79, 31]]]]], [], []], "notUseUserSettings", ["subexpr", "@mut", [["get", "notUseUserSettings", ["loc", [null, [80, 21], [80, 39]]]]], [], []], "hierarchicalIndent", ["subexpr", "@mut", [["get", "hierarchicalIndent", ["loc", [null, [81, 21], [81, 39]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "_inHierarchicalMode", ["loc", [null, [82, 21], [82, 40]]]]], [], []], "inExpandMode", ["subexpr", "@mut", [["get", "_inExpandMode", ["loc", [null, [83, 15], [83, 28]]]]], [], []], "disableHierarchicalMode", ["subexpr", "if", [["get", "hierarchyByAttribute", ["loc", [null, [84, 30], [84, 50]]]], true, ["get", "disableHierarchicalMode", ["loc", [null, [84, 56], [84, 79]]]]], [], ["loc", [null, [84, 26], [84, 80]]]], "loadRecords", ["subexpr", "action", ["loadRecords"], [], ["loc", [null, [85, 14], [85, 36]]]], "availableHierarchicalMode", ["subexpr", "action", ["availableHierarchicalMode"], [], ["loc", [null, [86, 28], [86, 64]]]], "useRowByRowLoading", ["subexpr", "@mut", [["get", "useRowByRowLoading", ["loc", [null, [87, 21], [87, 39]]]]], [], []], "useRowByRowLoadingProgress", ["subexpr", "@mut", [["get", "useRowByRowLoadingProgress", ["loc", [null, [88, 29], [88, 55]]]]], [], []], "eventsBus", ["subexpr", "@mut", [["get", "eventsBus", ["loc", [null, [89, 12], [89, 21]]]]], [], []], "onEditForm", ["subexpr", "@mut", [["get", "onEditForm", ["loc", [null, [90, 13], [90, 23]]]]], [], []], "defaultSortingButton", ["subexpr", "@mut", [["get", "defaultSortingButton", ["loc", [null, [91, 23], [91, 43]]]]], [], []], "defaultLeftPadding", ["subexpr", "@mut", [["get", "defaultLeftPadding", ["loc", [null, [92, 21], [92, 39]]]]], [], []], "overflowedComponents", ["subexpr", "@mut", [["get", "overflowedComponents", ["loc", [null, [93, 23], [93, 43]]]]], [], []]], ["loc", [null, [33, 0], [94, 2]]]], ["block", "unless", [["get", "_inHierarchicalMode", ["loc", [null, [95, 10], [95, 29]]]]], [], 0, null, ["loc", [null, [95, 0], [125, 11]]]]],
-      locals: [],
-      templates: [child0]
-    };
-  })());
-});
-define("dummy/templates/mobile/components/flexberry-simpleolv",["exports"],function(exports){exports["default"] = Ember.HTMLBars.template((function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":2,"column":2},"end":{"line":10,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","refresh icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element39=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element39,'class');morphs[1] = dom.createAttrMorph(element39,'title');morphs[2] = dom.createElementMorph(element39);morphs[3] = dom.createMorphAt(element39,1,1);return morphs;},statements:[["attribute","class",["concat",["ui refresh-button ",["get","buttonClass",["loc",[null,[4,33],[4,44]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.refresh-button-text"],[],["loc",[null,[5,12],[5,62]]]]],["element","action",["refresh"],[],["loc",[null,[6,6],[6,26]]]],["inline","t",["components.olv-toolbar.refresh-button-text"],[],["loc",[null,[7,8],[7,58]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":11,"column":2},"end":{"line":18,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element38=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element38,'class');morphs[1] = dom.createAttrMorph(element38,'title');morphs[2] = dom.createElementMorph(element38);morphs[3] = dom.createMorphAt(element38,1,1);return morphs;},statements:[["attribute","class",["concat",["ui create-button ",["get","buttonClass",["loc",[null,[13,32],[13,43]]]]," ",["subexpr","if",[["get","readonly",["loc",[null,[13,51],[13,59]]]],"disabled",["subexpr","if",[["get","enableCreateNewButton",["loc",[null,[13,75],[13,96]]]],"","disabled"],[],["loc",[null,[13,71],[13,111]]]]],[],["loc",[null,[13,46],[13,113]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.add-button-text"],[],["loc",[null,[14,12],[14,58]]]]],["element","action",["createNew"],[],["loc",[null,[15,6],[15,28]]]],["inline","t",["components.olv-toolbar.add-button-text"],[],["loc",[null,[16,8],[16,54]]]]],locals:[],templates:[]};})();var child2=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":19,"column":2},"end":{"line":26,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element37=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element37,'class');morphs[1] = dom.createAttrMorph(element37,'title');morphs[2] = dom.createElementMorph(element37);morphs[3] = dom.createMorphAt(element37,1,1);return morphs;},statements:[["attribute","class",["concat",["ui delete-button ",["get","buttonClass",["loc",[null,[21,32],[21,43]]]]," ",["subexpr","if",[["get","readonly",["loc",[null,[21,51],[21,59]]]],"disabled",["subexpr","if",[["get","isDeleteButtonEnabled",["loc",[null,[21,75],[21,96]]]],"","disabled"],[],["loc",[null,[21,71],[21,111]]]]],[],["loc",[null,[21,46],[21,113]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.delete-button-text"],[],["loc",[null,[22,12],[22,61]]]]],["element","action",["delete"],[],["loc",[null,[23,7],[23,26]]]],["inline","t",["components.olv-toolbar.delete-button-text"],[],["loc",[null,[24,8],[24,57]]]]],locals:[],templates:[]};})();var child3=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":27,"column":2},"end":{"line":34,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","sitemap icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element36=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element36,'class');morphs[1] = dom.createAttrMorph(element36,'title');morphs[2] = dom.createElementMorph(element36);return morphs;},statements:[["attribute","class",["concat",["ui button icon hierarchical-button ",["get","buttonClass",["loc",[null,[29,50],[29,61]]]]," ",["subexpr","if",[["get","inHierarchicalMode",["loc",[null,[29,69],[29,87]]]],"active"],[],["loc",[null,[29,64],[29,98]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.hierarchy-button-text"],[],["loc",[null,[30,12],[30,64]]]]],["element","action",["switchHierarchicalMode"],[],["loc",[null,[31,6],[31,41]]]]],locals:[],templates:[]};})();var child4=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":43,"column":6},"end":{"line":51,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","or");dom.setAttribute(el1,"data-text","•");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n        ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n            ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","remove icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element33=dom.childAt(fragment,[3]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element33,'class');morphs[1] = dom.createAttrMorph(element33,'title');morphs[2] = dom.createElementMorph(element33);return morphs;},statements:[["attribute","class",["concat",["ui button removeFilter-button ",["get","buttonClass",["loc",[null,[46,49],[46,60]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.remove-filter-button-text"],[],["loc",[null,[47,16],[47,72]]]]],["element","action",["resetFilters",["get","this.attrs.resetFilters",["loc",[null,[48,34],[48,57]]]]],[],["loc",[null,[48,10],[48,59]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":35,"column":2},"end":{"line":53,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui icon buttons filter-active");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","filter icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element34=dom.childAt(fragment,[1]);var element35=dom.childAt(element34,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element35,'class');morphs[1] = dom.createAttrMorph(element35,'title');morphs[2] = dom.createElementMorph(element35);morphs[3] = dom.createMorphAt(element34,3,3);return morphs;},statements:[["attribute","class",["concat",["ui button ",["get","buttonClass",["loc",[null,[38,27],[38,38]]]]," ",["subexpr","if",[["get","showFilters",["loc",[null,[38,46],[38,57]]]],"active"],[],["loc",[null,[38,41],[38,68]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.filter-button-text"],[],["loc",[null,[39,14],[39,63]]]]],["element","action",["toggleStateFilters"],[],["loc",[null,[40,8],[40,39]]]],["block","if",[["get","filters",["loc",[null,[43,12],[43,19]]]]],[],0,null,["loc",[null,[43,6],[51,13]]]]],locals:[],templates:[child0]};})();var child5=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":54,"column":2},"end":{"line":77,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui action input");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","block-action-input");var el3=dom.createTextNode("\n        ");dom.appendChild(el2,el3);var el3=dom.createElement("input");dom.setAttribute(el3,"type","text");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","search icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","remove icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element29=dom.childAt(fragment,[1]);var element30=dom.childAt(element29,[1,1]);var element31=dom.childAt(element29,[3]);var element32=dom.childAt(element29,[5]);var morphs=new Array(9);morphs[0] = dom.createAttrMorph(element30,'value');morphs[1] = dom.createAttrMorph(element30,'placeholder');morphs[2] = dom.createAttrMorph(element30,'onkeyup');morphs[3] = dom.createAttrMorph(element31,'class');morphs[4] = dom.createAttrMorph(element31,'title');morphs[5] = dom.createElementMorph(element31);morphs[6] = dom.createAttrMorph(element32,'class');morphs[7] = dom.createAttrMorph(element32,'title');morphs[8] = dom.createElementMorph(element32);return morphs;},statements:[["attribute","value",["get","filterByAnyMatchText",["loc",[null,[59,18],[59,38]]]]],["attribute","placeholder",["subexpr","t",["components.olv-toolbar.filter-by-any-match-placeholder"],[],["loc",[null,[60,22],[60,84]]]]],["attribute","onkeyup",["subexpr","action",["filterByAnyMatch"],[],["loc",[null,[61,18],[61,47]]]]],["attribute","class",["concat",["ui ",["get","buttonClass",["loc",[null,[65,20],[65,31]]]]," icon button search-button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.search-button-text"],[],["loc",[null,[66,14],[66,63]]]]],["element","action",["filterByAnyMatch"],[],["loc",[null,[67,8],[67,37]]]],["attribute","class",["concat",["ui ",["get","buttonClass",["loc",[null,[71,20],[71,31]]]]," icon button clear-search-button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.clear-search-button-text"],[],["loc",[null,[72,14],[72,69]]]]],["element","action",["removeFilter"],[],["loc",[null,[73,8],[73,33]]]]],locals:[],templates:[]};})();var child6=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":78,"column":2},"end":{"line":91,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui buttons export-config");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","large file excel outline icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element27=dom.childAt(fragment,[1]);var element28=dom.childAt(element27,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element28,'class');morphs[1] = dom.createAttrMorph(element28,'title');morphs[2] = dom.createElementMorph(element28);morphs[3] = dom.createMorphAt(element27,3,3);return morphs;},statements:[["attribute","class",["concat",["ui button icon export-button ",["get","buttonClass",["loc",[null,[81,46],[81,57]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.export-excel-button-text"],[],["loc",[null,[82,14],[82,69]]]]],["element","action",["showExportDialog"],[],["loc",[null,[83,8],[83,37]]]],["inline","flexberry-menu",[],["items",["subexpr","@mut",[["get","exportExcelItems",["loc",[null,[87,14],[87,30]]]]],[],[]],"onItemClick",["subexpr","action",["onExportMenuItemClick"],[],["loc",[null,[88,20],[88,52]]]]],["loc",[null,[86,6],[89,8]]]]],locals:[],templates:[]};})();var child7=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":100,"column":6},"end":{"line":105,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","flexberry-menu",[],["items",["subexpr","@mut",[["get","colsSettingsItems",["loc",[null,[102,16],[102,33]]]]],[],[]],"onItemClick",["subexpr","action",["onMenuItemClick"],[],["loc",[null,[103,22],[103,48]]]]],["loc",[null,[101,8],[104,10]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":92,"column":2},"end":{"line":107,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui buttons cols-config");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"class","ui icon button config-button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","large table icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element25=dom.childAt(fragment,[1]);var element26=dom.childAt(element25,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element26,'title');morphs[1] = dom.createElementMorph(element26);morphs[2] = dom.createMorphAt(element25,3,3);return morphs;},statements:[["attribute","title",["subexpr","t",["components.colsconfig-dialog-content.title"],[],["loc",[null,[96,14],[96,64]]]]],["element","action",["showConfigDialog"],[],["loc",[null,[97,8],[97,37]]]],["block","if",[["get","colsSettingsItems",["loc",[null,[100,12],[100,29]]]]],[],0,null,["loc",[null,[100,6],[105,13]]]]],locals:[],templates:[child0]};})();var child8=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":108,"column":2},"end":{"line":116,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element24=dom.childAt(fragment,[1]);var morphs=new Array(5);morphs[0] = dom.createAttrMorph(element24,'class');morphs[1] = dom.createAttrMorph(element24,'title');morphs[2] = dom.createAttrMorph(element24,'disabled');morphs[3] = dom.createElementMorph(element24);morphs[4] = dom.createMorphAt(element24,1,1);return morphs;},statements:[["attribute","class",["concat",["ui ",["subexpr","if",[["get","customButton.buttonClasses",["loc",[null,[110,21],[110,47]]]],["get","customButton.buttonClasses",["loc",[null,[110,48],[110,74]]]],""],[],["loc",[null,[110,16],[110,79]]]]," button"]]],["attribute","title",["subexpr","if",[["get","customButton.buttonTitle",["loc",[null,[111,17],[111,41]]]],["get","customButton.buttonTitle",["loc",[null,[111,42],[111,66]]]]],[],["loc",[null,[111,12],[111,68]]]]],["attribute","disabled",["get","customButton.disabled",["loc",[null,[112,17],[112,38]]]]],["element","action",["customButtonAction",["get","customButton.buttonAction",["loc",[null,[113,36],[113,61]]]]],[],["loc",[null,[113,6],[113,63]]]],["inline","if",[["get","customButton.buttonName",["loc",[null,[114,11],[114,34]]]],["get","customButton.buttonName",["loc",[null,[114,35],[114,58]]]],["subexpr","t",["components.olv-toolbar.custom-button-text"],[],["loc",[null,[114,59],[114,106]]]]],[],["loc",[null,[114,6],[114,108]]]]],locals:["customButton"],templates:[]};})();var child9=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":165,"column":14},"end":{"line":172,"column":14}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n                    ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","sort icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element21=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element21,'class');morphs[1] = dom.createAttrMorph(element21,'title');morphs[2] = dom.createElementMorph(element21);return morphs;},statements:[["attribute","class",["concat",["ui clear-sorting-button-mobile ",["get","buttonClass",["loc",[null,[167,58],[167,69]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.clear-sorting-button-text"],[],["loc",[null,[168,24],[168,80]]]]],["element","action",["clearSorting"],["on","touchEnd"],["loc",[null,[169,18],[169,57]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":152,"column":12},"end":{"line":173,"column":12}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("              ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n                  ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","check-square-o icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n              ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n              ");dom.appendChild(el0,el1);var el1=dom.createElement("button");var el2=dom.createTextNode("\n                  ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","check-all-square-o icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n              ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element22=dom.childAt(fragment,[1]);var element23=dom.childAt(fragment,[3]);var morphs=new Array(7);morphs[0] = dom.createAttrMorph(element22,'class');morphs[1] = dom.createAttrMorph(element22,'title');morphs[2] = dom.createElementMorph(element22);morphs[3] = dom.createAttrMorph(element23,'class');morphs[4] = dom.createAttrMorph(element23,'title');morphs[5] = dom.createElementMorph(element23);morphs[6] = dom.createMorphAt(fragment,5,5,contextualElement);dom.insertBoundary(fragment,null);return morphs;},statements:[["attribute","class",["concat",["ui check-all-at-page-button-mobile ",["get","buttonClass",["loc",[null,[154,60],[154,71]]]]," ",["subexpr","if",[["subexpr","or",[["get","readonly",["loc",[null,[154,83],[154,91]]]],["get","allSelect",["loc",[null,[154,92],[154,101]]]]],[],["loc",[null,[154,79],[154,102]]]],"disabled"],[],["loc",[null,[154,74],[154,115]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.check-all-at-page-button-text"],[],["loc",[null,[155,22],[155,82]]]]],["element","action",["checkAllAtPage"],["on","touchEnd"],["loc",[null,[156,16],[156,57]]]],["attribute","class",["concat",["ui check-all-button-mobile ",["get","buttonClass",["loc",[null,[160,52],[160,63]]]]," ",["subexpr","if",[["get","allSelect",["loc",[null,[160,71],[160,80]]]],"activated"],[],["loc",[null,[160,66],[160,94]]]]," ",["subexpr","if",[["get","readonly",["loc",[null,[160,100],[160,108]]]],"disabled"],[],["loc",[null,[160,95],[160,121]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.check-all-button-text"],[],["loc",[null,[161,22],[161,74]]]]],["element","action",["checkAll"],["on","touchEnd"],["loc",[null,[162,16],[162,51]]]],["block","if",[["get","defaultSortingButton",["loc",[null,[165,20],[165,40]]]]],[],0,null,["loc",[null,[165,14],[172,21]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":150,"column":8},"end":{"line":175,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("th");dom.setAttribute(el1,"class","object-list-view-operations collapsing");dom.setAttribute(el1,"data-olv-header-property-name","OlvRowToolbar");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("          ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["get","showCheckBoxInRow",["loc",[null,[152,18],[152,35]]]]],[],0,null,["loc",[null,[152,12],[173,19]]]]],locals:[],templates:[child0]};})();var child10=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":181,"column":16},"end":{"line":183,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","t",[["get","column.keyLocale",["loc",[null,[182,22],[182,38]]]]],[],["loc",[null,[182,18],[182,40]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":183,"column":16},"end":{"line":185,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["content","column.header",["loc",[null,[184,18],[184,35]]]]],locals:[],templates:[]};})();var child2=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":189,"column":20},"end":{"line":193,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                      ▲");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element18=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element18,'title');morphs[1] = dom.createMorphAt(element18,1,1);return morphs;},statements:[["attribute","title",["concat",[["subexpr","t",["components.object-list-view.sort-ascending"],[],["loc",[null,[190,34],[190,84]]]]]]],["content","column.sortNumber",["loc",[null,[191,23],[191,44]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":193,"column":20},"end":{"line":197,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                      ▼");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element17=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element17,'title');morphs[1] = dom.createMorphAt(element17,1,1);return morphs;},statements:[["attribute","title",["concat",[["subexpr","t",["components.object-list-view.sort-descending"],[],["loc",[null,[194,34],[194,85]]]]]]],["content","column.sortNumber",["loc",[null,[195,23],[195,44]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":187,"column":16},"end":{"line":199,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"style","float:right;");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                  ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["get","column.sortAscending",["loc",[null,[189,26],[189,46]]]]],[],0,1,["loc",[null,[189,20],[197,27]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":177,"column":10},"end":{"line":202,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("th");dom.setAttribute(el1,"class","dt-head-left me class");var el2=dom.createTextNode("\n              ");dom.appendChild(el1,el2);var el2=dom.createElement("div");var el3=dom.createTextNode("\n                ");dom.appendChild(el2,el3);var el3=dom.createElement("span");var el4=dom.createTextNode("\n");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("                ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("              ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n            ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element19=dom.childAt(fragment,[1]);var element20=dom.childAt(element19,[1]);var morphs=new Array(5);morphs[0] = dom.createAttrMorph(element19,'onclick');morphs[1] = dom.createAttrMorph(element20,'data-olv-header-property-name');morphs[2] = dom.createAttrMorph(element20,'title');morphs[3] = dom.createMorphAt(dom.childAt(element20,[1]),1,1);morphs[4] = dom.createMorphAt(element20,3,3);return morphs;},statements:[["attribute","onclick",["subexpr","action",["headerCellClick",["get","column",["loc",[null,[178,82],[178,88]]]]],[],["loc",[null,[178,54],[178,91]]]]],["attribute","data-olv-header-property-name",["get","column.propName",["loc",[null,[179,51],[179,66]]]]],["attribute","title",["get","sortTitleCompute",["loc",[null,[179,77],[179,93]]]]],["block","if",[["get","column.keyLocale",["loc",[null,[181,22],[181,38]]]]],[],0,1,["loc",[null,[181,16],[185,23]]]],["block","if",[["get","column.sorted",["loc",[null,[187,22],[187,35]]]]],[],2,null,["loc",[null,[187,16],[199,23]]]]],locals:[],templates:[child0,child1,child2]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":176,"column":8},"end":{"line":203,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[177,20],[177,31]]]]],[],0,null,["loc",[null,[177,10],[202,21]]]]],locals:["column"],templates:[child0]};})();var child11=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":204,"column":8},"end":{"line":206,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("th");dom.setAttribute(el1,"class","object-list-view-menu collapsing");dom.setAttribute(el1,"data-olv-header-property-name","OlvRowMenu");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child12=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":212,"column":10},"end":{"line":214,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child1=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":218,"column":16},"end":{"line":226,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","component",["flexberry-dropdown"],["value",["subexpr","@mut",[["get","column.filter.condition",["loc",[null,[220,26],[220,49]]]]],[],[]],"items",["subexpr","@mut",[["get","column.filter.conditions",["loc",[null,[221,26],[221,50]]]]],[],[]],"class","compact fluid","placeholder","","needChecksOnValue",false],["loc",[null,[219,18],[225,20]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":216,"column":12},"end":{"line":228,"column":12}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("              ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"class","overflowed-cell");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("              ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element14=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element14,'style');morphs[1] = dom.createMorphAt(element14,1,1);return morphs;},statements:[["attribute","style",["get","defaultPaddingStyle",["loc",[null,[217,26],[217,45]]]]],["block","if",[["get","column.filter.conditions",["loc",[null,[218,22],[218,46]]]]],[],0,null,["loc",[null,[218,16],[226,23]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":215,"column":10},"end":{"line":229,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[216,22],[216,33]]]]],[],0,null,["loc",[null,[216,12],[228,23]]]]],locals:["column"],templates:[child0]};})();var child2=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":230,"column":10},"end":{"line":232,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child3=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":235,"column":10},"end":{"line":237,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child4=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":241,"column":16},"end":{"line":246,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","component",[["get","column.filter.component.name",["loc",[null,[242,30],[242,58]]]]],["value",["subexpr","@mut",[["get","column.filter.pattern",["loc",[null,[243,26],[243,47]]]]],[],[]],"dynamicProperties",["subexpr","@mut",[["get","column.filter.component.properties",["loc",[null,[244,38],[244,72]]]]],[],[]]],["loc",[null,[242,18],[245,20]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":239,"column":12},"end":{"line":248,"column":12}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("              ");dom.appendChild(el0,el1);var el1=dom.createElement("td");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("              ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element13=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element13,'style');morphs[1] = dom.createAttrMorph(element13,'class');morphs[2] = dom.createMorphAt(element13,1,1);return morphs;},statements:[["attribute","style",["get","defaultPaddingStyle",["loc",[null,[240,26],[240,45]]]]],["attribute","class",["concat",[["subexpr","if",[["subexpr","array-contains",[["get","overflowedComponents",["loc",[null,[240,76],[240,96]]]],["get","column.filter.component.name",["loc",[null,[240,97],[240,125]]]]],[],["loc",[null,[240,60],[240,126]]]],"overflowed-cell"],[],["loc",[null,[240,55],[240,146]]]]]]],["block","if",[["get","column.filter.component.name",["loc",[null,[241,22],[241,50]]]]],[],0,null,["loc",[null,[241,16],[246,23]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":238,"column":10},"end":{"line":249,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[239,22],[239,33]]]]],[],0,null,["loc",[null,[239,12],[248,23]]]]],locals:["column"],templates:[child0]};})();var child5=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":250,"column":10},"end":{"line":252,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":210,"column":6},"end":{"line":254,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n        ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element15=dom.childAt(fragment,[1]);var element16=dom.childAt(fragment,[3]);var morphs=new Array(6);morphs[0] = dom.createMorphAt(element15,1,1);morphs[1] = dom.createMorphAt(element15,2,2);morphs[2] = dom.createMorphAt(element15,3,3);morphs[3] = dom.createMorphAt(element16,1,1);morphs[4] = dom.createMorphAt(element16,2,2);morphs[5] = dom.createMorphAt(element16,3,3);return morphs;},statements:[["block","if",[["get","showHelperColumn",["loc",[null,[212,16],[212,32]]]]],[],0,null,["loc",[null,[212,10],[214,17]]]],["block","each",[["get","columns",["loc",[null,[215,18],[215,25]]]]],[],1,null,["loc",[null,[215,10],[229,19]]]],["block","if",[["get","showMenuColumn",["loc",[null,[230,16],[230,30]]]]],[],2,null,["loc",[null,[230,10],[232,17]]]],["block","if",[["get","showHelperColumn",["loc",[null,[235,16],[235,32]]]]],[],3,null,["loc",[null,[235,10],[237,17]]]],["block","each",[["get","columns",["loc",[null,[238,18],[238,25]]]]],[],4,null,["loc",[null,[238,10],[249,19]]]],["block","if",[["get","showMenuColumn",["loc",[null,[250,16],[250,30]]]]],[],5,null,["loc",[null,[250,10],[252,17]]]]],locals:[],templates:[child0,child1,child2,child3,child4,child5]};})();var child13=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":255,"column":6},"end":{"line":261,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createElement("td");dom.setAttribute(el2,"style","text-align:center;");var el3=dom.createTextNode("\n              ");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element12=dom.childAt(fragment,[1,1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element12,'colspan');morphs[1] = dom.createMorphAt(element12,1,1);return morphs;},statements:[["attribute","colspan",["concat",[["get","colspan",["loc",[null,[257,25],[257,32]]]]]]],["content","placeholder",["loc",[null,[258,14],[258,29]]]]],locals:[],templates:[]};})();var child14=(function(){var child0=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":268,"column":20},"end":{"line":272,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element8=dom.childAt(fragment,[1,1]);var morphs=new Array(1);morphs[0] = dom.createAttrMorph(element8,'class');return morphs;},statements:[["attribute","class",["concat",["asterisk small red icon ",["subexpr","unless",[["get","record.data.hasDirtyAttributes",["loc",[null,[270,67],[270,97]]]],"transparent"],[],["loc",[null,[270,58],[270,113]]]]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":273,"column":20},"end":{"line":281,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["inline","flexberry-checkbox",[],["readonly",["subexpr","or",[["get","readonly",["loc",[null,[276,39],[276,47]]]],["subexpr","not",[["get","record.rowConfig.canBeSelected",["loc",[null,[276,53],[276,83]]]]],[],["loc",[null,[276,48],[276,84]]]]],[],["loc",[null,[276,35],[276,85]]]],"onChange",["subexpr","action",["selectRow",["get","record",["loc",[null,[277,55],[277,61]]]]],[],["loc",[null,[277,35],[277,62]]]],"value",["subexpr","@mut",[["get","record.selected",["loc",[null,[278,32],[278,47]]]]],[],[]]],["loc",[null,[275,24],[279,26]]]]],locals:[],templates:[]};})();var child2=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":282,"column":20},"end":{"line":288,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createElement("button");var el3=dom.createTextNode("\n                          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","minus icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n                        ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element7=dom.childAt(fragment,[1,1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element7,'class');morphs[1] = dom.createElementMorph(element7);return morphs;},statements:[["attribute","class",["concat",["ui ui-delete ",["get","buttonClass",["loc",[null,[284,54],[284,65]]]]," ",["subexpr","if",[["subexpr","or",[["get","readonly",["loc",[null,[284,77],[284,85]]]],["subexpr","not",[["get","record.rowConfig.canBeDeleted",["loc",[null,[284,91],[284,120]]]]],[],["loc",[null,[284,86],[284,121]]]]],[],["loc",[null,[284,73],[284,122]]]],"disabled"],[],["loc",[null,[284,68],[284,135]]]]," button"]]],["element","action",["deleteRow",["get","record",["loc",[null,[284,165],[284,171]]]]],[],["loc",[null,[284,144],[284,173]]]]],locals:[],templates:[]};})();var child3=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":289,"column":20},"end":{"line":295,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createElement("button");var el3=dom.createTextNode("\n                          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","edit icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n                        ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element6=dom.childAt(fragment,[1,1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element6,'class');morphs[1] = dom.createElementMorph(element6);return morphs;},statements:[["attribute","class",["concat",["ui ui-edit ",["get","buttonClass",["loc",[null,[291,52],[291,63]]]]," ",["subexpr","if",[["get","readonly",["loc",[null,[291,71],[291,79]]]],"disabled"],[],["loc",[null,[291,66],[291,92]]]]," button"]]],["element","action",["objectListViewRowClick",["get","record",["loc",[null,[291,136],[291,142]]]],["subexpr","hash",[],["rowEdit",true],["loc",[null,[291,143],[291,162]]]]],[],["loc",[null,[291,101],[291,165]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":266,"column":16},"end":{"line":297,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","object-list-view-helper-column-cell");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                  ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element9=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createMorphAt(element9,1,1);morphs[1] = dom.createMorphAt(element9,2,2);morphs[2] = dom.createMorphAt(element9,3,3);morphs[3] = dom.createMorphAt(element9,4,4);return morphs;},statements:[["block","if",[["get","showAsteriskInRow",["loc",[null,[268,26],[268,43]]]]],[],0,null,["loc",[null,[268,20],[272,27]]]],["block","if",[["get","showCheckBoxInRow",["loc",[null,[273,26],[273,43]]]]],[],1,null,["loc",[null,[273,20],[281,27]]]],["block","if",[["get","showDeleteButtonInRow",["loc",[null,[282,26],[282,47]]]]],[],2,null,["loc",[null,[282,20],[288,27]]]],["block","if",[["get","showEditButtonInRow",["loc",[null,[289,26],[289,45]]]]],[],3,null,["loc",[null,[289,20],[295,27]]]]],locals:[],templates:[child0,child1,child2,child3]};})();var child1=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":303,"column":20},"end":{"line":311,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","component",[["get","column.cellComponent.componentName",["loc",[null,[304,34],[304,68]]]]],["dynamicProperties",["subexpr","@mut",[["get","column.cellComponent.componentProperties",["loc",[null,[305,42],[305,82]]]]],[],[]],"relatedModel",["subexpr","@mut",[["get","record.data",["loc",[null,[306,37],[306,48]]]]],[],[]],"value",["subexpr","mut",[["subexpr","get",[["get","record.data",["loc",[null,[307,40],[307,51]]]],["get","column.propName",["loc",[null,[307,52],[307,67]]]]],[],["loc",[null,[307,35],[307,68]]]]],[],["loc",[null,[307,30],[307,69]]]],"readonly",["subexpr","readonly-cell",[["get","record.rowConfig.readonlyColumns",["loc",[null,[308,48],[308,80]]]],["get","column.propName",["loc",[null,[308,81],[308,96]]]],["get","readonly",["loc",[null,[308,97],[308,105]]]],["get","column.cellComponent.componentProperties.readonly",["loc",[null,[308,106],[308,155]]]]],[],["loc",[null,[308,33],[308,156]]]],"required",["subexpr","@mut",[["get","required",["loc",[null,[309,33],[309,41]]]]],[],[]]],["loc",[null,[304,22],[310,24]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":311,"column":20},"end":{"line":318,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","oveflow-text");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["inline","get-formatted",[["get","record.data",["loc",[null,[313,40],[313,51]]]],["get","column.propName",["loc",[null,[313,52],[313,67]]]]],["dateFormat",["subexpr","@mut",[["get","dateFormat",["loc",[null,[314,37],[314,47]]]]],[],[]],"moment",["subexpr","@mut",[["get","moment",["loc",[null,[315,33],[315,39]]]]],[],[]]],["loc",[null,[313,24],[316,26]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":300,"column":16},"end":{"line":320,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createElement("td");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                  ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element5=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element5,'class');morphs[1] = dom.createAttrMorph(element5,'style');morphs[2] = dom.createElementMorph(element5);morphs[3] = dom.createMorphAt(element5,1,1);return morphs;},statements:[["attribute","class",["concat",[["subexpr","if",[["subexpr","array-contains",[["get","overflowedComponents",["loc",[null,[301,50],[301,70]]]],["get","column.cellComponent.componentName",["loc",[null,[301,71],[301,105]]]]],[],["loc",[null,[301,34],[301,106]]]]," overflowed-cell"],[],["loc",[null,[301,29],[301,127]]]]]]],["attribute","style",["get","defaultPaddingStyle",["loc",[null,[302,92],[302,111]]]]],["element","action",["objectListViewRowClick",["get","record",["loc",[null,[302,54],[302,60]]]]],["preventDefault",false],["loc",[null,[302,20],[302,83]]]],["block","if",[["get","column.cellComponent.componentName",["loc",[null,[303,26],[303,60]]]]],[],0,1,["loc",[null,[303,20],[318,27]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":299,"column":14},"end":{"line":321,"column":14}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[300,26],[300,37]]]]],[],0,null,["loc",[null,[300,16],[320,27]]]]],locals:["column"],templates:[child0]};})();var child2=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":327,"column":22},"end":{"line":332,"column":22}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","edit icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("span");var el3=dom.createComment("");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element2=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element2,'class');morphs[1] = dom.createElementMorph(element2);morphs[2] = dom.createMorphAt(dom.childAt(element2,[3]),0,0);return morphs;},statements:[["attribute","class",["concat",["item ",["subexpr","if",[["get","readonly",["loc",[null,[328,46],[328,54]]]],"disabled"],[],["loc",[null,[328,41],[328,67]]]]]]],["element","action",["objectListViewRowClick",["get","record",["loc",[null,[328,104],[328,110]]]],["subexpr","hash",[],["rowEdit",true],["loc",[null,[328,111],[328,130]]]]],[],["loc",[null,[328,69],[328,133]]]],["inline","t",["components.object-list-view.menu-in-row.edit-menu-item-title"],[],["loc",[null,[330,32],[330,100]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":333,"column":22},"end":{"line":338,"column":22}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","trash icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("span");var el3=dom.createComment("");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element1=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element1,'class');morphs[1] = dom.createElementMorph(element1);morphs[2] = dom.createMorphAt(dom.childAt(element1,[3]),0,0);return morphs;},statements:[["attribute","class",["concat",["item ",["subexpr","if",[["get","readonly",["loc",[null,[334,46],[334,54]]]],"disabled"],[],["loc",[null,[334,41],[334,67]]]]]]],["element","action",["deleteRow",["get","record",["loc",[null,[334,91],[334,97]]]]],[],["loc",[null,[334,69],[334,100]]]],["inline","t",["components.object-list-view.menu-in-row.delete-menu-item-title"],[],["loc",[null,[336,32],[336,102]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":322,"column":14},"end":{"line":342,"column":14}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"class","object-list-view-menu");var el2=dom.createTextNode("\n                  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","right pointing ui icon dropdown button");var el3=dom.createTextNode("\n                    ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","list layout icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n                    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","left menu");var el4=dom.createTextNode("\n");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("                    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n                  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element3=dom.childAt(fragment,[1]);var element4=dom.childAt(element3,[1,3]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element3,'style');morphs[1] = dom.createMorphAt(element4,1,1);morphs[2] = dom.createMorphAt(element4,2,2);return morphs;},statements:[["attribute","style",["get","defaultPaddingStyle",["loc",[null,[323,58],[323,77]]]]],["block","if",[["subexpr","and",[["get","showEditMenuItemInRow",["loc",[null,[327,33],[327,54]]]],["get","record.rowConfig.canBeSelected",["loc",[null,[327,55],[327,85]]]]],[],["loc",[null,[327,28],[327,86]]]]],[],0,null,["loc",[null,[327,22],[332,29]]]],["block","if",[["subexpr","and",[["get","showDeleteMenuItemInRow",["loc",[null,[333,33],[333,56]]]],["get","record.rowConfig.canBeDeleted",["loc",[null,[333,57],[333,86]]]]],[],["loc",[null,[333,28],[333,87]]]]],[],1,null,["loc",[null,[333,22],[338,29]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":262,"column":8},"end":{"line":344,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");var el2=dom.createTextNode("\n              ");dom.appendChild(el1,el2);var el2=dom.createElement("td");var el3=dom.createTextNode("\n                ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","hidden");var el4=dom.createComment("");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("              ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("            ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element10=dom.childAt(fragment,[1]);var element11=dom.childAt(element10,[1]);var morphs=new Array(7);morphs[0] = dom.createAttrMorph(element10,'class');morphs[1] = dom.createAttrMorph(element11,'class');morphs[2] = dom.createAttrMorph(element11,'style');morphs[3] = dom.createMorphAt(dom.childAt(element11,[1]),0,0);morphs[4] = dom.createMorphAt(element11,3,3);morphs[5] = dom.createMorphAt(element10,3,3);morphs[6] = dom.createMorphAt(element10,4,4);return morphs;},statements:[["attribute","class",["concat",[["get","record.rowConfig.customClass",["loc",[null,[263,25],[263,53]]]]]]],["attribute","class",["concat",["object-list-view-helper-column ",["subexpr","unless",[["get","showHelperColumn",["loc",[null,[264,65],[264,81]]]],"hidden"],[],["loc",[null,[264,56],[264,92]]]]]]],["attribute","style",["get","defaultPaddingStyle",["loc",[null,[264,102],[264,121]]]]],["content","record.key",["loc",[null,[265,36],[265,50]]]],["block","if",[["get","showHelperColumn",["loc",[null,[266,22],[266,38]]]]],[],0,null,["loc",[null,[266,16],[297,23]]]],["block","each",[["get","columns",["loc",[null,[299,22],[299,29]]]]],[],1,null,["loc",[null,[299,14],[321,23]]]],["block","if",[["get","showMenuColumn",["loc",[null,[322,20],[322,34]]]]],[],2,null,["loc",[null,[322,14],[342,21]]]]],locals:["record"],templates:[child0,child1,child2]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":261,"column":6},"end":{"line":345,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","each",[["get","contentWithKeys",["loc",[null,[262,16],[262,31]]]]],["key","key"],0,null,["loc",[null,[262,8],[344,17]]]]],locals:[],templates:[child0]};})();var child15=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":353,"column":6},"end":{"line":355,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui button");var el2=dom.createTextNode("...");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child1=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":356,"column":8},"end":{"line":358,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui active button");var el2=dom.createComment("");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),0,0);return morphs;},statements:[["content","page.number",["loc",[null,[357,40],[357,55]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":358,"column":8},"end":{"line":360,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"class","ui button");var el2=dom.createComment("");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element0=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createElementMorph(element0);morphs[1] = dom.createMorphAt(element0,0,0);return morphs;},statements:[["element","action",["gotoPage",["get","this.attrs.gotoPage",["loc",[null,[359,56],[359,75]]]],["get","page.number",["loc",[null,[359,76],[359,87]]]]],[],["loc",[null,[359,36],[359,89]]]],["content","page.number",["loc",[null,[359,90],[359,105]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":355,"column":6},"end":{"line":361,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["get","page.isCurrent",["loc",[null,[356,14],[356,28]]]]],[],0,1,["loc",[null,[356,8],[360,15]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":352,"column":4},"end":{"line":362,"column":4}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["get","page.isEllipsis",["loc",[null,[353,12],[353,27]]]]],[],0,1,["loc",[null,[353,6],[361,13]]]]],locals:["page"],templates:[child0,child1]};})();var child16=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":368,"column":8},"end":{"line":372,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","concat",[["subexpr","t",["components.flexberry-objectlistview.showing-entries.showing"],[],["loc",[null,[370,12],[370,77]]]],["get","currentIntervalRecords",["loc",[null,[370,78],[370,100]]]],["subexpr","t",["components.flexberry-objectlistview.showing-entries.of"],[],["loc",[null,[370,101],[370,161]]]],["get","recordsTotalCount",["loc",[null,[370,162],[370,179]]]],["subexpr","t",["components.flexberry-objectlistview.showing-entries.entries"],[],["loc",[null,[370,180],[370,245]]]]],[],["loc",[null,[369,10],[371,12]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":366,"column":4},"end":{"line":374,"column":4}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","showing-entries");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["subexpr","and",[["get","currentIntervalRecords",["loc",[null,[368,19],[368,41]]]],["get","recordsTotalCount",["loc",[null,[368,42],[368,59]]]]],[],["loc",[null,[368,14],[368,60]]]]],[],0,null,["loc",[null,[368,8],[372,15]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":{"name":"missing-wrapper","problems":["multiple-nodes"]},"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":1,"column":0},"end":{"line":378,"column":0}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui secondary menu no-margin ");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","olv-toolbar-info-modal-dialog ui small basic modal");var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","ui icon header");var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createElement("i");dom.setAttribute(el4,"class","olvt icon");dom.appendChild(el3,el4);var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","center aligned ui grid");var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);var el4=dom.createElement("button");dom.setAttribute(el4,"class","ui icon button");dom.setAttribute(el4,"id","OLVToolbarInfoCopyButton");var el5=dom.createTextNode("\n        ");dom.appendChild(el4,el5);var el5=dom.createElement("i");dom.setAttribute(el5,"class","copy icon");dom.appendChild(el4,el5);var el5=dom.createTextNode("\n        ");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createTextNode("\n    ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);var el4=dom.createElement("div");dom.setAttribute(el4,"class","actions");var el5=dom.createTextNode("\n      ");dom.appendChild(el4,el5);var el5=dom.createElement("div");dom.setAttribute(el5,"class","olv-toolbar-info-modal-dialog-ok-button ui approve green inverted button");var el6=dom.createTextNode("\n        ");dom.appendChild(el5,el6);var el6=dom.createElement("i");dom.setAttribute(el6,"class","remove icon");dom.appendChild(el5,el6);var el6=dom.createTextNode("\n        ");dom.appendChild(el5,el6);var el6=dom.createComment("");dom.appendChild(el5,el6);var el6=dom.createTextNode("\n      ");dom.appendChild(el5,el6);dom.appendChild(el4,el5);var el5=dom.createTextNode("\n    ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","ui form");var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createElement("div");dom.setAttribute(el4,"class","olv-toolbar-info-modal-dialog-content center aligned ui field");var el5=dom.createTextNode("\n        ");dom.appendChild(el4,el5);var el5=dom.createElement("textarea");dom.setAttribute(el5,"id","OLVToolbarInfoContent");dom.setAttribute(el5,"cols","80");dom.setAttribute(el5,"rows","20");var el6=dom.createComment("");dom.appendChild(el5,el6);dom.appendChild(el4,el5);var el5=dom.createTextNode("\n      ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n\n");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","object-list-view-container");var el2=dom.createTextNode("\n  ");dom.appendChild(el1,el2);var el2=dom.createElement("table");var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("thead");var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createElement("tr");var el5=dom.createTextNode("\n");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createTextNode("      ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("tbody");var el4=dom.createTextNode("\n");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui secondary menu no-margin nav-bar");var el2=dom.createTextNode("\n  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","ui basic buttons");var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("button");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("    ");dom.appendChild(el2,el3);var el3=dom.createElement("button");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","right menu");var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("    ");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element40=dom.childAt(fragment,[0]);var element41=dom.childAt(element40,[11]);var element42=dom.childAt(element41,[3]);var element43=dom.childAt(element42,[1]);var element44=dom.childAt(fragment,[2,1]);var element45=dom.childAt(element44,[1,1]);var element46=dom.childAt(element44,[3]);var element47=dom.childAt(fragment,[4]);var element48=dom.childAt(element47,[1]);var element49=dom.childAt(element48,[1]);var element50=dom.childAt(element48,[5]);var element51=dom.childAt(element47,[3]);var morphs=new Array(28);morphs[0] = dom.createMorphAt(element40,1,1);morphs[1] = dom.createMorphAt(element40,2,2);morphs[2] = dom.createMorphAt(element40,3,3);morphs[3] = dom.createMorphAt(element40,4,4);morphs[4] = dom.createMorphAt(element40,5,5);morphs[5] = dom.createMorphAt(element40,6,6);morphs[6] = dom.createMorphAt(element40,7,7);morphs[7] = dom.createMorphAt(element40,8,8);morphs[8] = dom.createMorphAt(element40,9,9);morphs[9] = dom.createMorphAt(dom.childAt(element41,[1]),3,3);morphs[10] = dom.createAttrMorph(element43,'title');morphs[11] = dom.createElementMorph(element43);morphs[12] = dom.createMorphAt(element43,3,3);morphs[13] = dom.createMorphAt(dom.childAt(element42,[3,1]),3,3);morphs[14] = dom.createMorphAt(dom.childAt(element41,[5,1,1]),0,0);morphs[15] = dom.createAttrMorph(element44,'class');morphs[16] = dom.createMorphAt(element45,1,1);morphs[17] = dom.createMorphAt(element45,2,2);morphs[18] = dom.createMorphAt(element45,3,3);morphs[19] = dom.createMorphAt(element46,1,1);morphs[20] = dom.createMorphAt(element46,2,2);morphs[21] = dom.createAttrMorph(element49,'class');morphs[22] = dom.createElementMorph(element49);morphs[23] = dom.createMorphAt(element48,3,3);morphs[24] = dom.createAttrMorph(element50,'class');morphs[25] = dom.createElementMorph(element50);morphs[26] = dom.createMorphAt(element51,1,1);morphs[27] = dom.createMorphAt(element51,3,3);return morphs;},statements:[["block","if",[["get","refreshButton",["loc",[null,[2,8],[2,21]]]]],[],0,null,["loc",[null,[2,2],[10,9]]]],["block","if",[["get","createNewButton",["loc",[null,[11,8],[11,23]]]]],[],1,null,["loc",[null,[11,2],[18,9]]]],["block","if",[["get","deleteButton",["loc",[null,[19,8],[19,20]]]]],[],2,null,["loc",[null,[19,2],[26,9]]]],["block","if",[["get","availableHierarchicalMode",["loc",[null,[27,8],[27,33]]]]],[],3,null,["loc",[null,[27,2],[34,9]]]],["block","if",[["get","enableFilters",["loc",[null,[35,8],[35,21]]]]],[],4,null,["loc",[null,[35,2],[53,9]]]],["block","if",[["get","filterButton",["loc",[null,[54,8],[54,20]]]]],[],5,null,["loc",[null,[54,2],[77,9]]]],["block","if",[["get","exportExcelButton",["loc",[null,[78,8],[78,25]]]]],[],6,null,["loc",[null,[78,2],[91,9]]]],["block","if",[["get","colsConfigButton",["loc",[null,[92,8],[92,24]]]]],[],7,null,["loc",[null,[92,2],[107,9]]]],["block","each",[["get","customButtons",["loc",[null,[108,10],[108,23]]]]],[],8,null,["loc",[null,[108,2],[116,11]]]],["content","_infoModalDialogCaption",["loc",[null,[120,6],[120,33]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.copy"],[],["loc",[null,[125,12],[125,47]]]]],["element","action",["copyJSONContent"],[],["loc",[null,[126,6],[126,34]]]],["inline","t",["components.olv-toolbar.copy"],[],["loc",[null,[129,8],[129,43]]]],["inline","t",["components.olv-toolbar.close"],[],["loc",[null,[134,8],[134,44]]]],["content","_infoModalDialogContent",["loc",[null,[140,65],[140,92]]]],["attribute","class",["concat",["object-list-view ui unstackable celled ",["subexpr","if",[["get","readonly",["loc",[null,[147,60],[147,68]]]],"readonly"],[],["loc",[null,[147,55],[147,81]]]]," ",["get","tableClass",["loc",[null,[147,84],[147,94]]]]," table"]]],["block","if",[["get","showHelperColumn",["loc",[null,[150,14],[150,30]]]]],[],9,null,["loc",[null,[150,8],[175,15]]]],["block","each",[["get","columns",["loc",[null,[176,16],[176,23]]]]],[],10,null,["loc",[null,[176,8],[203,17]]]],["block","if",[["get","showMenuColumn",["loc",[null,[204,14],[204,28]]]]],[],11,null,["loc",[null,[204,8],[206,15]]]],["block","if",[["get","showFilters",["loc",[null,[210,12],[210,23]]]]],[],12,null,["loc",[null,[210,6],[254,13]]]],["block","unless",[["get","content",["loc",[null,[255,16],[255,23]]]]],[],13,14,["loc",[null,[255,6],[345,17]]]],["attribute","class",["concat",["ui ",["subexpr","unless",[["get","hasPreviousPage",["loc",[null,[351,31],[351,46]]]],"disabled"],[],["loc",[null,[351,22],[351,59]]]]," button prev-page-button"]]],["element","action",["previousPage",["get","this.attrs.previousPage",["loc",[null,[351,109],[351,132]]]]],[],["loc",[null,[351,85],[351,134]]]],["block","each",[["get","pages",["loc",[null,[352,12],[352,17]]]]],[],15,null,["loc",[null,[352,4],[362,13]]]],["attribute","class",["concat",["ui ",["subexpr","unless",[["get","hasNextPage",["loc",[null,[363,31],[363,42]]]],"disabled"],[],["loc",[null,[363,22],[363,55]]]]," button next-page-button"]]],["element","action",["nextPage",["get","this.attrs.nextPage",["loc",[null,[363,101],[363,120]]]]],[],["loc",[null,[363,81],[363,122]]]],["block","if",[["get","showShowingEntries",["loc",[null,[366,10],[366,28]]]]],[],16,null,["loc",[null,[366,4],[374,11]]]],["inline","flexberry-dropdown",[],["items",["subexpr","@mut",[["get","perPageValues",["loc",[null,[375,31],[375,44]]]]],[],[]],"value",["subexpr","@mut",[["get","perPageValue",["loc",[null,[375,51],[375,63]]]]],[],[]],"class","compact selection","onChange",["subexpr","action",["perPageClick"],[],["loc",[null,[375,99],[375,122]]]],"needChecksOnValue",false,"direction","upward"],["loc",[null,[375,4],[375,167]]]]],locals:[],templates:[child0,child1,child2,child3,child4,child5,child6,child7,child8,child9,child10,child11,child12,child13,child14,child15,child16]};})());});
+define("dummy/templates/mobile/components/flexberry-simpleolv",["exports"],function(exports){exports["default"] = Ember.HTMLBars.template((function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":2,"column":2},"end":{"line":11,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","refresh icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element40=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element40,'class');morphs[1] = dom.createAttrMorph(element40,'title');morphs[2] = dom.createElementMorph(element40);morphs[3] = dom.createMorphAt(element40,1,1);return morphs;},statements:[["attribute","class",["concat",["ui refresh-button ",["get","buttonClass",["loc",[null,[5,33],[5,44]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.refresh-button-text"],[],["loc",[null,[6,12],[6,62]]]]],["element","action",["refresh"],[],["loc",[null,[7,6],[7,26]]]],["inline","t",["components.olv-toolbar.refresh-button-text"],[],["loc",[null,[8,8],[8,58]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":12,"column":2},"end":{"line":20,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element39=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element39,'class');morphs[1] = dom.createAttrMorph(element39,'title');morphs[2] = dom.createElementMorph(element39);morphs[3] = dom.createMorphAt(element39,1,1);return morphs;},statements:[["attribute","class",["concat",["ui create-button ",["get","buttonClass",["loc",[null,[15,32],[15,43]]]]," ",["subexpr","if",[["get","readonly",["loc",[null,[15,51],[15,59]]]],"disabled",["subexpr","if",[["get","enableCreateNewButton",["loc",[null,[15,75],[15,96]]]],"","disabled"],[],["loc",[null,[15,71],[15,111]]]]],[],["loc",[null,[15,46],[15,113]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.add-button-text"],[],["loc",[null,[16,12],[16,58]]]]],["element","action",["createNew"],[],["loc",[null,[17,6],[17,28]]]],["inline","t",["components.olv-toolbar.add-button-text"],[],["loc",[null,[18,8],[18,54]]]]],locals:[],templates:[]};})();var child2=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":21,"column":2},"end":{"line":29,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element38=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element38,'class');morphs[1] = dom.createAttrMorph(element38,'title');morphs[2] = dom.createElementMorph(element38);morphs[3] = dom.createMorphAt(element38,1,1);return morphs;},statements:[["attribute","class",["concat",["ui delete-button ",["get","buttonClass",["loc",[null,[24,32],[24,43]]]]," ",["subexpr","if",[["get","readonly",["loc",[null,[24,51],[24,59]]]],"disabled",["subexpr","if",[["get","isDeleteButtonEnabled",["loc",[null,[24,75],[24,96]]]],"","disabled"],[],["loc",[null,[24,71],[24,111]]]]],[],["loc",[null,[24,46],[24,113]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.delete-button-text"],[],["loc",[null,[25,12],[25,61]]]]],["element","action",["delete"],[],["loc",[null,[26,7],[26,26]]]],["inline","t",["components.olv-toolbar.delete-button-text"],[],["loc",[null,[27,8],[27,57]]]]],locals:[],templates:[]};})();var child3=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":30,"column":2},"end":{"line":38,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","sitemap icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element37=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element37,'class');morphs[1] = dom.createAttrMorph(element37,'title');morphs[2] = dom.createElementMorph(element37);return morphs;},statements:[["attribute","class",["concat",["ui button icon hierarchical-button ",["get","buttonClass",["loc",[null,[33,50],[33,61]]]]," ",["subexpr","if",[["get","inHierarchicalMode",["loc",[null,[33,69],[33,87]]]],"active"],[],["loc",[null,[33,64],[33,98]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.hierarchy-button-text"],[],["loc",[null,[34,12],[34,64]]]]],["element","action",["switchHierarchicalMode"],[],["loc",[null,[35,6],[35,41]]]]],locals:[],templates:[]};})();var child4=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":48,"column":6},"end":{"line":57,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","or");dom.setAttribute(el1,"data-text","•");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n        ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n            ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","remove icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element34=dom.childAt(fragment,[3]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element34,'class');morphs[1] = dom.createAttrMorph(element34,'title');morphs[2] = dom.createElementMorph(element34);return morphs;},statements:[["attribute","class",["concat",["ui button removeFilter-button ",["get","buttonClass",["loc",[null,[52,49],[52,60]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.remove-filter-button-text"],[],["loc",[null,[53,16],[53,72]]]]],["element","action",["resetFilters",["get","this.attrs.resetFilters",["loc",[null,[54,34],[54,57]]]]],[],["loc",[null,[54,10],[54,59]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":39,"column":2},"end":{"line":59,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui icon buttons filter-active");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"type","button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","filter icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element35=dom.childAt(fragment,[1]);var element36=dom.childAt(element35,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element36,'class');morphs[1] = dom.createAttrMorph(element36,'title');morphs[2] = dom.createElementMorph(element36);morphs[3] = dom.createMorphAt(element35,3,3);return morphs;},statements:[["attribute","class",["concat",["ui button ",["get","buttonClass",["loc",[null,[43,27],[43,38]]]]," ",["subexpr","if",[["get","showFilters",["loc",[null,[43,46],[43,57]]]],"active"],[],["loc",[null,[43,41],[43,68]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.filter-button-text"],[],["loc",[null,[44,14],[44,63]]]]],["element","action",["toggleStateFilters"],[],["loc",[null,[45,8],[45,39]]]],["block","if",[["get","filters",["loc",[null,[48,12],[48,19]]]]],[],0,null,["loc",[null,[48,6],[57,13]]]]],locals:[],templates:[child0]};})();var child5=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":60,"column":2},"end":{"line":85,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui action input");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","block-action-input");var el3=dom.createTextNode("\n        ");dom.appendChild(el2,el3);var el3=dom.createElement("input");dom.setAttribute(el3,"type","text");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"type","button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","search icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"type","button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","remove icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element30=dom.childAt(fragment,[1]);var element31=dom.childAt(element30,[1,1]);var element32=dom.childAt(element30,[3]);var element33=dom.childAt(element30,[5]);var morphs=new Array(9);morphs[0] = dom.createAttrMorph(element31,'value');morphs[1] = dom.createAttrMorph(element31,'placeholder');morphs[2] = dom.createAttrMorph(element31,'onkeyup');morphs[3] = dom.createAttrMorph(element32,'class');morphs[4] = dom.createAttrMorph(element32,'title');morphs[5] = dom.createElementMorph(element32);morphs[6] = dom.createAttrMorph(element33,'class');morphs[7] = dom.createAttrMorph(element33,'title');morphs[8] = dom.createElementMorph(element33);return morphs;},statements:[["attribute","value",["get","filterByAnyMatchText",["loc",[null,[65,18],[65,38]]]]],["attribute","placeholder",["subexpr","t",["components.olv-toolbar.filter-by-any-match-placeholder"],[],["loc",[null,[66,22],[66,84]]]]],["attribute","onkeyup",["subexpr","action",["filterByAnyMatch"],[],["loc",[null,[67,18],[67,47]]]]],["attribute","class",["concat",["ui ",["get","buttonClass",["loc",[null,[72,20],[72,31]]]]," icon button search-button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.search-button-text"],[],["loc",[null,[73,14],[73,63]]]]],["element","action",["filterByAnyMatch"],[],["loc",[null,[74,8],[74,37]]]],["attribute","class",["concat",["ui ",["get","buttonClass",["loc",[null,[79,20],[79,31]]]]," icon button clear-search-button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.clear-search-button-text"],[],["loc",[null,[80,14],[80,69]]]]],["element","action",["removeFilter"],[],["loc",[null,[81,8],[81,33]]]]],locals:[],templates:[]};})();var child6=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":86,"column":2},"end":{"line":100,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui buttons export-config");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"type","button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","large file excel outline icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element28=dom.childAt(fragment,[1]);var element29=dom.childAt(element28,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element29,'class');morphs[1] = dom.createAttrMorph(element29,'title');morphs[2] = dom.createElementMorph(element29);morphs[3] = dom.createMorphAt(element28,3,3);return morphs;},statements:[["attribute","class",["concat",["ui button icon export-button ",["get","buttonClass",["loc",[null,[90,46],[90,57]]]]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.export-excel-button-text"],[],["loc",[null,[91,14],[91,69]]]]],["element","action",["showExportDialog"],[],["loc",[null,[92,8],[92,37]]]],["inline","flexberry-menu",[],["items",["subexpr","@mut",[["get","exportExcelItems",["loc",[null,[96,14],[96,30]]]]],[],[]],"onItemClick",["subexpr","action",["onExportMenuItemClick"],[],["loc",[null,[97,20],[97,52]]]]],["loc",[null,[95,6],[98,8]]]]],locals:[],templates:[]};})();var child7=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":110,"column":6},"end":{"line":115,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","flexberry-menu",[],["items",["subexpr","@mut",[["get","colsSettingsItems",["loc",[null,[112,16],[112,33]]]]],[],[]],"onItemClick",["subexpr","action",["onMenuItemClick"],[],["loc",[null,[113,22],[113,48]]]]],["loc",[null,[111,8],[114,10]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":101,"column":2},"end":{"line":117,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui buttons cols-config");var el2=dom.createTextNode("\n      ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"type","button");dom.setAttribute(el2,"class","ui icon button config-button");var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","large table icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n      ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element26=dom.childAt(fragment,[1]);var element27=dom.childAt(element26,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element27,'title');morphs[1] = dom.createElementMorph(element27);morphs[2] = dom.createMorphAt(element26,3,3);return morphs;},statements:[["attribute","title",["subexpr","t",["components.colsconfig-dialog-content.title"],[],["loc",[null,[106,14],[106,64]]]]],["element","action",["showConfigDialog"],[],["loc",[null,[107,8],[107,37]]]],["block","if",[["get","colsSettingsItems",["loc",[null,[110,12],[110,29]]]]],[],0,null,["loc",[null,[110,6],[115,13]]]]],locals:[],templates:[child0]};})();var child8=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":125,"column":6},"end":{"line":128,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("i");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n        ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element24=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element24,'class');morphs[1] = dom.createMorphAt(fragment,3,3,contextualElement);return morphs;},statements:[["attribute","class",["get","customButton.iconClasses",["loc",[null,[126,19],[126,43]]]]],["content","customButton.buttonName",["loc",[null,[127,8],[127,35]]]]],locals:[],templates:[]};})();var child1=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":128,"column":6},"end":{"line":130,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["content","customButton.buttonName",["loc",[null,[129,8],[129,35]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":130,"column":6},"end":{"line":132,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n      ");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","t",["components.olv-toolbar.custom-button-text"],[],["loc",[null,[131,8],[131,57]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":128,"column":6},"end":{"line":132,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["get","customButton.buttonName",["loc",[null,[128,16],[128,39]]]]],[],0,1,["loc",[null,[128,6],[132,6]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":118,"column":2},"end":{"line":134,"column":2}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("    ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("    ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element25=dom.childAt(fragment,[1]);var morphs=new Array(5);morphs[0] = dom.createAttrMorph(element25,'class');morphs[1] = dom.createAttrMorph(element25,'title');morphs[2] = dom.createAttrMorph(element25,'disabled');morphs[3] = dom.createElementMorph(element25);morphs[4] = dom.createMorphAt(element25,1,1);return morphs;},statements:[["attribute","class",["concat",["ui ",["subexpr","if",[["get","customButton.buttonClasses",["loc",[null,[121,21],[121,47]]]],["get","customButton.buttonClasses",["loc",[null,[121,48],[121,74]]]]],[],["loc",[null,[121,16],[121,76]]]]," button"]]],["attribute","title",["subexpr","if",[["get","customButton.buttonTitle",["loc",[null,[122,17],[122,41]]]],["get","customButton.buttonTitle",["loc",[null,[122,42],[122,66]]]]],[],["loc",[null,[122,12],[122,68]]]]],["attribute","disabled",["get","customButton.disabled",["loc",[null,[123,17],[123,38]]]]],["element","action",["customButtonAction",["get","customButton.buttonAction",["loc",[null,[124,36],[124,61]]]]],[],["loc",[null,[124,6],[124,63]]]],["block","if",[["get","customButton.iconClasses",["loc",[null,[125,12],[125,36]]]]],[],0,1,["loc",[null,[125,6],[132,13]]]]],locals:["customButton"],templates:[child0,child1]};})();var child9=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":186,"column":14},"end":{"line":194,"column":14}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n                    ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","sort icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element21=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element21,'class');morphs[1] = dom.createAttrMorph(element21,'title');morphs[2] = dom.createElementMorph(element21);return morphs;},statements:[["attribute","class",["concat",["ui clear-sorting-button-mobile ",["get","buttonClass",["loc",[null,[189,58],[189,69]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.clear-sorting-button-text"],[],["loc",[null,[190,24],[190,80]]]]],["element","action",["clearSorting"],["on","touchEnd"],["loc",[null,[191,18],[191,57]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":171,"column":12},"end":{"line":195,"column":12}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("              ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n                  ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","check-square-o icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n              ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n              ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");var el2=dom.createTextNode("\n                  ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","check-all-square-o icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n              ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element22=dom.childAt(fragment,[1]);var element23=dom.childAt(fragment,[3]);var morphs=new Array(7);morphs[0] = dom.createAttrMorph(element22,'class');morphs[1] = dom.createAttrMorph(element22,'title');morphs[2] = dom.createElementMorph(element22);morphs[3] = dom.createAttrMorph(element23,'class');morphs[4] = dom.createAttrMorph(element23,'title');morphs[5] = dom.createElementMorph(element23);morphs[6] = dom.createMorphAt(fragment,5,5,contextualElement);dom.insertBoundary(fragment,null);return morphs;},statements:[["attribute","class",["concat",["ui check-all-at-page-button-mobile ",["get","buttonClass",["loc",[null,[174,60],[174,71]]]]," ",["subexpr","if",[["subexpr","or",[["get","readonly",["loc",[null,[174,83],[174,91]]]],["get","allSelect",["loc",[null,[174,92],[174,101]]]]],[],["loc",[null,[174,79],[174,102]]]],"disabled"],[],["loc",[null,[174,74],[174,115]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.check-all-at-page-button-text"],[],["loc",[null,[175,22],[175,82]]]]],["element","action",["checkAllAtPage"],["on","touchEnd"],["loc",[null,[176,16],[176,57]]]],["attribute","class",["concat",["ui check-all-button-mobile ",["get","buttonClass",["loc",[null,[181,52],[181,63]]]]," ",["subexpr","if",[["get","allSelect",["loc",[null,[181,71],[181,80]]]],"activated"],[],["loc",[null,[181,66],[181,94]]]]," ",["subexpr","if",[["get","readonly",["loc",[null,[181,100],[181,108]]]],"disabled"],[],["loc",[null,[181,95],[181,121]]]]," button"]]],["attribute","title",["subexpr","t",["components.olv-toolbar.check-all-button-text"],[],["loc",[null,[182,22],[182,74]]]]],["element","action",["checkAll"],["on","touchEnd"],["loc",[null,[183,16],[183,51]]]],["block","if",[["get","defaultSortingButton",["loc",[null,[186,20],[186,40]]]]],[],0,null,["loc",[null,[186,14],[194,21]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":169,"column":8},"end":{"line":197,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("th");dom.setAttribute(el1,"class","object-list-view-operations collapsing");dom.setAttribute(el1,"data-olv-header-property-name","OlvRowToolbar");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("          ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["get","showCheckBoxInRow",["loc",[null,[171,18],[171,35]]]]],[],0,null,["loc",[null,[171,12],[195,19]]]]],locals:[],templates:[child0]};})();var child10=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":203,"column":16},"end":{"line":205,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","t",[["get","column.keyLocale",["loc",[null,[204,22],[204,38]]]]],[],["loc",[null,[204,18],[204,40]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":205,"column":16},"end":{"line":207,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["content","column.header",["loc",[null,[206,18],[206,35]]]]],locals:[],templates:[]};})();var child2=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":211,"column":20},"end":{"line":215,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                      ▲");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element18=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element18,'title');morphs[1] = dom.createMorphAt(element18,1,1);return morphs;},statements:[["attribute","title",["concat",[["subexpr","t",["components.object-list-view.sort-ascending"],[],["loc",[null,[212,34],[212,84]]]]]]],["content","column.sortNumber",["loc",[null,[213,23],[213,44]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":215,"column":20},"end":{"line":219,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                      ▼");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element17=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element17,'title');morphs[1] = dom.createMorphAt(element17,1,1);return morphs;},statements:[["attribute","title",["concat",[["subexpr","t",["components.object-list-view.sort-descending"],[],["loc",[null,[216,34],[216,85]]]]]]],["content","column.sortNumber",["loc",[null,[217,23],[217,44]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":209,"column":16},"end":{"line":221,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"style","float:right;");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                  ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["get","column.sortAscending",["loc",[null,[211,26],[211,46]]]]],[],0,1,["loc",[null,[211,20],[219,27]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":199,"column":10},"end":{"line":224,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("th");dom.setAttribute(el1,"class","dt-head-left me class");var el2=dom.createTextNode("\n              ");dom.appendChild(el1,el2);var el2=dom.createElement("div");var el3=dom.createTextNode("\n                ");dom.appendChild(el2,el3);var el3=dom.createElement("span");var el4=dom.createTextNode("\n");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("                ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("              ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n            ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element19=dom.childAt(fragment,[1]);var element20=dom.childAt(element19,[1]);var morphs=new Array(5);morphs[0] = dom.createAttrMorph(element19,'onclick');morphs[1] = dom.createAttrMorph(element20,'data-olv-header-property-name');morphs[2] = dom.createAttrMorph(element20,'title');morphs[3] = dom.createMorphAt(dom.childAt(element20,[1]),1,1);morphs[4] = dom.createMorphAt(element20,3,3);return morphs;},statements:[["attribute","onclick",["subexpr","action",["headerCellClick",["get","column",["loc",[null,[200,82],[200,88]]]]],[],["loc",[null,[200,54],[200,91]]]]],["attribute","data-olv-header-property-name",["get","column.propName",["loc",[null,[201,51],[201,66]]]]],["attribute","title",["get","sortTitleCompute",["loc",[null,[201,77],[201,93]]]]],["block","if",[["get","column.keyLocale",["loc",[null,[203,22],[203,38]]]]],[],0,1,["loc",[null,[203,16],[207,23]]]],["block","if",[["get","column.sorted",["loc",[null,[209,22],[209,35]]]]],[],2,null,["loc",[null,[209,16],[221,23]]]]],locals:[],templates:[child0,child1,child2]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":198,"column":8},"end":{"line":225,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[199,20],[199,31]]]]],[],0,null,["loc",[null,[199,10],[224,21]]]]],locals:["column"],templates:[child0]};})();var child11=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":226,"column":8},"end":{"line":228,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("th");dom.setAttribute(el1,"class","object-list-view-menu collapsing");dom.setAttribute(el1,"data-olv-header-property-name","OlvRowMenu");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child12=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":234,"column":10},"end":{"line":236,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child1=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":240,"column":16},"end":{"line":248,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","component",["flexberry-dropdown"],["value",["subexpr","@mut",[["get","column.filter.condition",["loc",[null,[242,26],[242,49]]]]],[],[]],"items",["subexpr","@mut",[["get","column.filter.conditions",["loc",[null,[243,26],[243,50]]]]],[],[]],"class","compact fluid","placeholder","","needChecksOnValue",false],["loc",[null,[241,18],[247,20]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":238,"column":12},"end":{"line":250,"column":12}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("              ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"class","overflowed-cell");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("              ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element14=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element14,'style');morphs[1] = dom.createMorphAt(element14,1,1);return morphs;},statements:[["attribute","style",["get","defaultPaddingStyle",["loc",[null,[239,26],[239,45]]]]],["block","if",[["get","column.filter.conditions",["loc",[null,[240,22],[240,46]]]]],[],0,null,["loc",[null,[240,16],[248,23]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":237,"column":10},"end":{"line":251,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[238,22],[238,33]]]]],[],0,null,["loc",[null,[238,12],[250,23]]]]],locals:["column"],templates:[child0]};})();var child2=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":252,"column":10},"end":{"line":254,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child3=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":257,"column":10},"end":{"line":259,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child4=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":263,"column":16},"end":{"line":268,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","component",[["get","column.filter.component.name",["loc",[null,[264,30],[264,58]]]]],["value",["subexpr","@mut",[["get","column.filter.pattern",["loc",[null,[265,26],[265,47]]]]],[],[]],"dynamicProperties",["subexpr","@mut",[["get","column.filter.component.properties",["loc",[null,[266,38],[266,72]]]]],[],[]]],["loc",[null,[264,18],[267,20]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":261,"column":12},"end":{"line":270,"column":12}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("              ");dom.appendChild(el0,el1);var el1=dom.createElement("td");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("              ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element13=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element13,'style');morphs[1] = dom.createAttrMorph(element13,'class');morphs[2] = dom.createMorphAt(element13,1,1);return morphs;},statements:[["attribute","style",["get","defaultPaddingStyle",["loc",[null,[262,26],[262,45]]]]],["attribute","class",["concat",[["subexpr","if",[["subexpr","array-contains",[["get","overflowedComponents",["loc",[null,[262,76],[262,96]]]],["get","column.filter.component.name",["loc",[null,[262,97],[262,125]]]]],[],["loc",[null,[262,60],[262,126]]]],"overflowed-cell"],[],["loc",[null,[262,55],[262,146]]]]]]],["block","if",[["get","column.filter.component.name",["loc",[null,[263,22],[263,50]]]]],[],0,null,["loc",[null,[263,16],[268,23]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":260,"column":10},"end":{"line":271,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[261,22],[261,33]]]]],[],0,null,["loc",[null,[261,12],[270,23]]]]],locals:["column"],templates:[child0]};})();var child5=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":272,"column":10},"end":{"line":274,"column":10}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"rowspan","1");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":232,"column":6},"end":{"line":276,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n        ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element15=dom.childAt(fragment,[1]);var element16=dom.childAt(fragment,[3]);var morphs=new Array(6);morphs[0] = dom.createMorphAt(element15,1,1);morphs[1] = dom.createMorphAt(element15,2,2);morphs[2] = dom.createMorphAt(element15,3,3);morphs[3] = dom.createMorphAt(element16,1,1);morphs[4] = dom.createMorphAt(element16,2,2);morphs[5] = dom.createMorphAt(element16,3,3);return morphs;},statements:[["block","if",[["get","showHelperColumn",["loc",[null,[234,16],[234,32]]]]],[],0,null,["loc",[null,[234,10],[236,17]]]],["block","each",[["get","columns",["loc",[null,[237,18],[237,25]]]]],[],1,null,["loc",[null,[237,10],[251,19]]]],["block","if",[["get","showMenuColumn",["loc",[null,[252,16],[252,30]]]]],[],2,null,["loc",[null,[252,10],[254,17]]]],["block","if",[["get","showHelperColumn",["loc",[null,[257,16],[257,32]]]]],[],3,null,["loc",[null,[257,10],[259,17]]]],["block","each",[["get","columns",["loc",[null,[260,18],[260,25]]]]],[],4,null,["loc",[null,[260,10],[271,19]]]],["block","if",[["get","showMenuColumn",["loc",[null,[272,16],[272,30]]]]],[],5,null,["loc",[null,[272,10],[274,17]]]]],locals:[],templates:[child0,child1,child2,child3,child4,child5]};})();var child13=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":277,"column":6},"end":{"line":283,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");var el2=dom.createTextNode("\n          ");dom.appendChild(el1,el2);var el2=dom.createElement("td");dom.setAttribute(el2,"style","text-align:center;");var el3=dom.createTextNode("\n              ");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n          ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element12=dom.childAt(fragment,[1,1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element12,'colspan');morphs[1] = dom.createMorphAt(element12,1,1);return morphs;},statements:[["attribute","colspan",["concat",[["get","colspan",["loc",[null,[279,25],[279,32]]]]]]],["content","placeholder",["loc",[null,[280,14],[280,29]]]]],locals:[],templates:[]};})();var child14=(function(){var child0=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":290,"column":20},"end":{"line":294,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element8=dom.childAt(fragment,[1,1]);var morphs=new Array(1);morphs[0] = dom.createAttrMorph(element8,'class');return morphs;},statements:[["attribute","class",["concat",["asterisk small red icon ",["subexpr","unless",[["get","record.data.hasDirtyAttributes",["loc",[null,[292,67],[292,97]]]],"transparent"],[],["loc",[null,[292,58],[292,113]]]]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":295,"column":20},"end":{"line":303,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["inline","flexberry-checkbox",[],["readonly",["subexpr","or",[["get","readonly",["loc",[null,[298,39],[298,47]]]],["subexpr","not",[["get","record.rowConfig.canBeSelected",["loc",[null,[298,53],[298,83]]]]],[],["loc",[null,[298,48],[298,84]]]]],[],["loc",[null,[298,35],[298,85]]]],"onChange",["subexpr","action",["selectRow",["get","record",["loc",[null,[299,55],[299,61]]]]],[],["loc",[null,[299,35],[299,62]]]],"value",["subexpr","@mut",[["get","record.selected",["loc",[null,[300,32],[300,47]]]]],[],[]]],["loc",[null,[297,24],[301,26]]]]],locals:[],templates:[]};})();var child2=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":304,"column":20},"end":{"line":310,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"type","button");var el3=dom.createTextNode("\n                          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","minus icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n                        ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element7=dom.childAt(fragment,[1,1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element7,'class');morphs[1] = dom.createElementMorph(element7);return morphs;},statements:[["attribute","class",["concat",["ui ui-delete ",["get","buttonClass",["loc",[null,[306,68],[306,79]]]]," ",["subexpr","if",[["subexpr","or",[["get","readonly",["loc",[null,[306,91],[306,99]]]],["subexpr","not",[["get","record.rowConfig.canBeDeleted",["loc",[null,[306,105],[306,134]]]]],[],["loc",[null,[306,100],[306,135]]]]],[],["loc",[null,[306,87],[306,136]]]],"disabled"],[],["loc",[null,[306,82],[306,149]]]]," button"]]],["element","action",["deleteRow",["get","record",["loc",[null,[306,179],[306,185]]]]],[],["loc",[null,[306,158],[306,187]]]]],locals:[],templates:[]};})();var child3=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":311,"column":20},"end":{"line":317,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","cell");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createElement("button");dom.setAttribute(el2,"type","button");var el3=dom.createTextNode("\n                          ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","edit icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n                        ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element6=dom.childAt(fragment,[1,1]);var morphs=new Array(2);morphs[0] = dom.createAttrMorph(element6,'class');morphs[1] = dom.createElementMorph(element6);return morphs;},statements:[["attribute","class",["concat",["ui ui-edit ",["get","buttonClass",["loc",[null,[313,66],[313,77]]]]," ",["subexpr","if",[["get","readonly",["loc",[null,[313,85],[313,93]]]],"disabled"],[],["loc",[null,[313,80],[313,106]]]]," button"]]],["element","action",["objectListViewRowClick",["get","record",["loc",[null,[313,150],[313,156]]]],["subexpr","hash",[],["rowEdit",true],["loc",[null,[313,157],[313,176]]]]],[],["loc",[null,[313,115],[313,179]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":288,"column":16},"end":{"line":319,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","object-list-view-helper-column-cell");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                  ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element9=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createMorphAt(element9,1,1);morphs[1] = dom.createMorphAt(element9,2,2);morphs[2] = dom.createMorphAt(element9,3,3);morphs[3] = dom.createMorphAt(element9,4,4);return morphs;},statements:[["block","if",[["get","showAsteriskInRow",["loc",[null,[290,26],[290,43]]]]],[],0,null,["loc",[null,[290,20],[294,27]]]],["block","if",[["get","showCheckBoxInRow",["loc",[null,[295,26],[295,43]]]]],[],1,null,["loc",[null,[295,20],[303,27]]]],["block","if",[["get","showDeleteButtonInRow",["loc",[null,[304,26],[304,47]]]]],[],2,null,["loc",[null,[304,20],[310,27]]]],["block","if",[["get","showEditButtonInRow",["loc",[null,[311,26],[311,45]]]]],[],3,null,["loc",[null,[311,20],[317,27]]]]],locals:[],templates:[child0,child1,child2,child3]};})();var child1=(function(){var child0=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":325,"column":20},"end":{"line":333,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","component",[["get","column.cellComponent.componentName",["loc",[null,[326,34],[326,68]]]]],["dynamicProperties",["subexpr","@mut",[["get","column.cellComponent.componentProperties",["loc",[null,[327,42],[327,82]]]]],[],[]],"relatedModel",["subexpr","@mut",[["get","record.data",["loc",[null,[328,37],[328,48]]]]],[],[]],"value",["subexpr","mut",[["subexpr","get",[["get","record.data",["loc",[null,[329,40],[329,51]]]],["get","column.propName",["loc",[null,[329,52],[329,67]]]]],[],["loc",[null,[329,35],[329,68]]]]],[],["loc",[null,[329,30],[329,69]]]],"readonly",["subexpr","readonly-cell",[["get","record.rowConfig.readonlyColumns",["loc",[null,[330,48],[330,80]]]],["get","column.propName",["loc",[null,[330,81],[330,96]]]],["get","readonly",["loc",[null,[330,97],[330,105]]]],["get","column.cellComponent.componentProperties.readonly",["loc",[null,[330,106],[330,155]]]]],[],["loc",[null,[330,33],[330,156]]]],"required",["subexpr","@mut",[["get","required",["loc",[null,[331,33],[331,41]]]]],[],[]]],["loc",[null,[326,22],[332,24]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":333,"column":20},"end":{"line":340,"column":20}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","oveflow-text");var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["inline","get-formatted",[["get","record.data",["loc",[null,[335,40],[335,51]]]],["get","column.propName",["loc",[null,[335,52],[335,67]]]]],["dateFormat",["subexpr","@mut",[["get","dateFormat",["loc",[null,[336,37],[336,47]]]]],[],[]],"moment",["subexpr","@mut",[["get","moment",["loc",[null,[337,33],[337,39]]]]],[],[]]],["loc",[null,[335,24],[338,26]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":322,"column":16},"end":{"line":342,"column":16}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                  ");dom.appendChild(el0,el1);var el1=dom.createElement("td");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("                  ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element5=dom.childAt(fragment,[1]);var morphs=new Array(4);morphs[0] = dom.createAttrMorph(element5,'class');morphs[1] = dom.createAttrMorph(element5,'style');morphs[2] = dom.createElementMorph(element5);morphs[3] = dom.createMorphAt(element5,1,1);return morphs;},statements:[["attribute","class",["concat",[["subexpr","if",[["subexpr","array-contains",[["get","overflowedComponents",["loc",[null,[323,50],[323,70]]]],["get","column.cellComponent.componentName",["loc",[null,[323,71],[323,105]]]]],[],["loc",[null,[323,34],[323,106]]]]," overflowed-cell"],[],["loc",[null,[323,29],[323,127]]]]]]],["attribute","style",["get","defaultPaddingStyle",["loc",[null,[324,92],[324,111]]]]],["element","action",["objectListViewRowClick",["get","record",["loc",[null,[324,54],[324,60]]]]],["preventDefault",false],["loc",[null,[324,20],[324,83]]]],["block","if",[["get","column.cellComponent.componentName",["loc",[null,[325,26],[325,60]]]]],[],0,1,["loc",[null,[325,20],[340,27]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":321,"column":14},"end":{"line":343,"column":14}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","unless",[["get","column.hide",["loc",[null,[322,26],[322,37]]]]],[],0,null,["loc",[null,[322,16],[342,27]]]]],locals:["column"],templates:[child0]};})();var child2=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":349,"column":22},"end":{"line":354,"column":22}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","edit icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("span");var el3=dom.createComment("");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element2=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element2,'class');morphs[1] = dom.createElementMorph(element2);morphs[2] = dom.createMorphAt(dom.childAt(element2,[3]),0,0);return morphs;},statements:[["attribute","class",["concat",["item ",["subexpr","if",[["get","readonly",["loc",[null,[350,46],[350,54]]]],"disabled"],[],["loc",[null,[350,41],[350,67]]]]]]],["element","action",["objectListViewRowClick",["get","record",["loc",[null,[350,104],[350,110]]]],["subexpr","hash",[],["rowEdit",true],["loc",[null,[350,111],[350,130]]]]],[],["loc",[null,[350,69],[350,133]]]],["inline","t",["components.object-list-view.menu-in-row.edit-menu-item-title"],[],["loc",[null,[352,32],[352,100]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":355,"column":22},"end":{"line":360,"column":22}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("i");dom.setAttribute(el2,"class","trash icon");dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                          ");dom.appendChild(el1,el2);var el2=dom.createElement("span");var el3=dom.createComment("");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                        ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element1=dom.childAt(fragment,[1]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element1,'class');morphs[1] = dom.createElementMorph(element1);morphs[2] = dom.createMorphAt(dom.childAt(element1,[3]),0,0);return morphs;},statements:[["attribute","class",["concat",["item ",["subexpr","if",[["get","readonly",["loc",[null,[356,46],[356,54]]]],"disabled"],[],["loc",[null,[356,41],[356,67]]]]]]],["element","action",["deleteRow",["get","record",["loc",[null,[356,91],[356,97]]]]],[],["loc",[null,[356,69],[356,100]]]],["inline","t",["components.object-list-view.menu-in-row.delete-menu-item-title"],[],["loc",[null,[358,32],[358,102]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":344,"column":14},"end":{"line":364,"column":14}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("                ");dom.appendChild(el0,el1);var el1=dom.createElement("td");dom.setAttribute(el1,"class","object-list-view-menu");var el2=dom.createTextNode("\n                  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","right pointing ui icon dropdown button");var el3=dom.createTextNode("\n                    ");dom.appendChild(el2,el3);var el3=dom.createElement("i");dom.setAttribute(el3,"class","list layout icon");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n                    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","left menu");var el4=dom.createTextNode("\n");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("                    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n                  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n                ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element3=dom.childAt(fragment,[1]);var element4=dom.childAt(element3,[1,3]);var morphs=new Array(3);morphs[0] = dom.createAttrMorph(element3,'style');morphs[1] = dom.createMorphAt(element4,1,1);morphs[2] = dom.createMorphAt(element4,2,2);return morphs;},statements:[["attribute","style",["get","defaultPaddingStyle",["loc",[null,[345,58],[345,77]]]]],["block","if",[["subexpr","and",[["get","showEditMenuItemInRow",["loc",[null,[349,33],[349,54]]]],["get","record.rowConfig.canBeSelected",["loc",[null,[349,55],[349,85]]]]],[],["loc",[null,[349,28],[349,86]]]]],[],0,null,["loc",[null,[349,22],[354,29]]]],["block","if",[["subexpr","and",[["get","showDeleteMenuItemInRow",["loc",[null,[355,33],[355,56]]]],["get","record.rowConfig.canBeDeleted",["loc",[null,[355,57],[355,86]]]]],[],["loc",[null,[355,28],[355,87]]]]],[],1,null,["loc",[null,[355,22],[360,29]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":284,"column":8},"end":{"line":366,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("            ");dom.appendChild(el0,el1);var el1=dom.createElement("tr");var el2=dom.createTextNode("\n              ");dom.appendChild(el1,el2);var el2=dom.createElement("td");var el3=dom.createTextNode("\n                ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","hidden");var el4=dom.createComment("");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("              ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("            ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element10=dom.childAt(fragment,[1]);var element11=dom.childAt(element10,[1]);var morphs=new Array(7);morphs[0] = dom.createAttrMorph(element10,'class');morphs[1] = dom.createAttrMorph(element11,'class');morphs[2] = dom.createAttrMorph(element11,'style');morphs[3] = dom.createMorphAt(dom.childAt(element11,[1]),0,0);morphs[4] = dom.createMorphAt(element11,3,3);morphs[5] = dom.createMorphAt(element10,3,3);morphs[6] = dom.createMorphAt(element10,4,4);return morphs;},statements:[["attribute","class",["concat",[["get","record.rowConfig.customClass",["loc",[null,[285,25],[285,53]]]]]]],["attribute","class",["concat",["object-list-view-helper-column ",["subexpr","unless",[["get","showHelperColumn",["loc",[null,[286,65],[286,81]]]],"hidden"],[],["loc",[null,[286,56],[286,92]]]]]]],["attribute","style",["get","defaultPaddingStyle",["loc",[null,[286,102],[286,121]]]]],["content","record.key",["loc",[null,[287,36],[287,50]]]],["block","if",[["get","showHelperColumn",["loc",[null,[288,22],[288,38]]]]],[],0,null,["loc",[null,[288,16],[319,23]]]],["block","each",[["get","columns",["loc",[null,[321,22],[321,29]]]]],[],1,null,["loc",[null,[321,14],[343,23]]]],["block","if",[["get","showMenuColumn",["loc",[null,[344,20],[344,34]]]]],[],2,null,["loc",[null,[344,14],[364,21]]]]],locals:["record"],templates:[child0,child1,child2]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":283,"column":6},"end":{"line":367,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","each",[["get","contentWithKeys",["loc",[null,[284,16],[284,31]]]]],["key","key"],0,null,["loc",[null,[284,8],[366,17]]]]],locals:[],templates:[child0]};})();var child15=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":375,"column":6},"end":{"line":377,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("        ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui button");var el2=dom.createTextNode("...");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(){return [];},statements:[],locals:[],templates:[]};})();var child1=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":378,"column":8},"end":{"line":380,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui active button");var el2=dom.createComment("");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),0,0);return morphs;},statements:[["content","page.number",["loc",[null,[379,40],[379,55]]]]],locals:[],templates:[]};})();var child1=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":380,"column":8},"end":{"line":382,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createElement("button");dom.setAttribute(el1,"type","button");dom.setAttribute(el1,"class","ui button");var el2=dom.createComment("");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element0=dom.childAt(fragment,[1]);var morphs=new Array(2);morphs[0] = dom.createElementMorph(element0);morphs[1] = dom.createMorphAt(element0,0,0);return morphs;},statements:[["element","action",["gotoPage",["get","this.attrs.gotoPage",["loc",[null,[381,70],[381,89]]]],["get","page.number",["loc",[null,[381,90],[381,101]]]]],[],["loc",[null,[381,50],[381,103]]]],["content","page.number",["loc",[null,[381,104],[381,119]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":377,"column":6},"end":{"line":383,"column":6}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["get","page.isCurrent",["loc",[null,[378,14],[378,28]]]]],[],0,1,["loc",[null,[378,8],[382,15]]]]],locals:[],templates:[child0,child1]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":374,"column":4},"end":{"line":384,"column":4}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:1,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createComment("");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);dom.insertBoundary(fragment,0);dom.insertBoundary(fragment,null);return morphs;},statements:[["block","if",[["get","page.isEllipsis",["loc",[null,[375,12],[375,27]]]]],[],0,1,["loc",[null,[375,6],[383,13]]]]],locals:["page"],templates:[child0,child1]};})();var child16=(function(){var child0=(function(){return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":390,"column":8},"end":{"line":394,"column":8}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("          ");dom.appendChild(el0,el1);var el1=dom.createComment("");dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);return morphs;},statements:[["inline","concat",[["subexpr","t",["components.flexberry-objectlistview.showing-entries.showing"],[],["loc",[null,[392,12],[392,77]]]],["get","currentIntervalRecords",["loc",[null,[392,78],[392,100]]]],["subexpr","t",["components.flexberry-objectlistview.showing-entries.of"],[],["loc",[null,[392,101],[392,161]]]],["get","recordsTotalCount",["loc",[null,[392,162],[392,179]]]],["subexpr","t",["components.flexberry-objectlistview.showing-entries.entries"],[],["loc",[null,[392,180],[392,245]]]]],[],["loc",[null,[391,10],[393,12]]]]],locals:[],templates:[]};})();return {meta:{"fragmentReason":false,"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":388,"column":4},"end":{"line":396,"column":4}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createTextNode("      ");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","showing-entries");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("      ");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var morphs=new Array(1);morphs[0] = dom.createMorphAt(dom.childAt(fragment,[1]),1,1);return morphs;},statements:[["block","if",[["subexpr","and",[["get","currentIntervalRecords",["loc",[null,[390,19],[390,41]]]],["get","recordsTotalCount",["loc",[null,[390,42],[390,59]]]]],[],["loc",[null,[390,14],[390,60]]]]],[],0,null,["loc",[null,[390,8],[394,15]]]]],locals:[],templates:[child0]};})();return {meta:{"fragmentReason":{"name":"missing-wrapper","problems":["multiple-nodes"]},"revision":"Ember@2.4.6","loc":{"source":null,"start":{"line":1,"column":0},"end":{"line":400,"column":0}},"moduleName":"dummy/templates/mobile/components/flexberry-simpleolv.hbs"},isEmpty:false,arity:0,cachedFragment:null,hasRendered:false,buildFragment:function buildFragment(dom){var el0=dom.createDocumentFragment();var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui secondary menu no-margin ");var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createComment("");dom.appendChild(el1,el2);var el2=dom.createTextNode("  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","olv-toolbar-info-modal-dialog ui small basic modal");var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","ui icon header");var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createElement("i");dom.setAttribute(el4,"class","olvt icon");dom.appendChild(el3,el4);var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","center aligned ui grid");var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);var el4=dom.createElement("button");dom.setAttribute(el4,"type","button");dom.setAttribute(el4,"class","ui icon button");dom.setAttribute(el4,"id","OLVToolbarInfoCopyButton");var el5=dom.createTextNode("\n        ");dom.appendChild(el4,el5);var el5=dom.createElement("i");dom.setAttribute(el5,"class","copy icon");dom.appendChild(el4,el5);var el5=dom.createTextNode("\n        ");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createTextNode("\n    ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);var el4=dom.createElement("div");dom.setAttribute(el4,"class","actions");var el5=dom.createTextNode("\n      ");dom.appendChild(el4,el5);var el5=dom.createElement("div");dom.setAttribute(el5,"class","olv-toolbar-info-modal-dialog-ok-button ui approve green inverted button");var el6=dom.createTextNode("\n        ");dom.appendChild(el5,el6);var el6=dom.createElement("i");dom.setAttribute(el6,"class","remove icon");dom.appendChild(el5,el6);var el6=dom.createTextNode("\n        ");dom.appendChild(el5,el6);var el6=dom.createComment("");dom.appendChild(el5,el6);var el6=dom.createTextNode("\n      ");dom.appendChild(el5,el6);dom.appendChild(el4,el5);var el5=dom.createTextNode("\n    ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("div");dom.setAttribute(el3,"class","ui form");var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createElement("div");dom.setAttribute(el4,"class","olv-toolbar-info-modal-dialog-content center aligned ui field");var el5=dom.createTextNode("\n        ");dom.appendChild(el4,el5);var el5=dom.createElement("textarea");dom.setAttribute(el5,"id","OLVToolbarInfoContent");dom.setAttribute(el5,"cols","80");dom.setAttribute(el5,"rows","20");var el6=dom.createComment("");dom.appendChild(el5,el6);dom.appendChild(el4,el5);var el5=dom.createTextNode("\n      ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n\n");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","object-list-view-container");var el2=dom.createTextNode("\n  ");dom.appendChild(el1,el2);var el2=dom.createElement("table");var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("thead");var el4=dom.createTextNode("\n      ");dom.appendChild(el3,el4);var el4=dom.createElement("tr");var el5=dom.createTextNode("\n");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createComment("");dom.appendChild(el4,el5);var el5=dom.createTextNode("      ");dom.appendChild(el4,el5);dom.appendChild(el3,el4);var el4=dom.createTextNode("\n    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("tbody");var el4=dom.createTextNode("\n");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createComment("");dom.appendChild(el3,el4);var el4=dom.createTextNode("    ");dom.appendChild(el3,el4);dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);var el1=dom.createElement("div");dom.setAttribute(el1,"class","ui secondary menu no-margin nav-bar");var el2=dom.createTextNode("\n  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","ui basic buttons");var el3=dom.createTextNode("\n    ");dom.appendChild(el2,el3);var el3=dom.createElement("button");dom.setAttribute(el3,"type","button");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("    ");dom.appendChild(el2,el3);var el3=dom.createElement("button");dom.setAttribute(el3,"type","button");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n  ");dom.appendChild(el1,el2);var el2=dom.createElement("div");dom.setAttribute(el2,"class","right menu");var el3=dom.createTextNode("\n");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("    ");dom.appendChild(el2,el3);var el3=dom.createComment("");dom.appendChild(el2,el3);var el3=dom.createTextNode("\n  ");dom.appendChild(el2,el3);dom.appendChild(el1,el2);var el2=dom.createTextNode("\n");dom.appendChild(el1,el2);dom.appendChild(el0,el1);var el1=dom.createTextNode("\n");dom.appendChild(el0,el1);return el0;},buildRenderNodes:function buildRenderNodes(dom,fragment,contextualElement){var element41=dom.childAt(fragment,[0]);var element42=dom.childAt(element41,[11]);var element43=dom.childAt(element42,[3]);var element44=dom.childAt(element43,[1]);var element45=dom.childAt(fragment,[2,1]);var element46=dom.childAt(element45,[1,1]);var element47=dom.childAt(element45,[3]);var element48=dom.childAt(fragment,[4]);var element49=dom.childAt(element48,[1]);var element50=dom.childAt(element49,[1]);var element51=dom.childAt(element49,[5]);var element52=dom.childAt(element48,[3]);var morphs=new Array(28);morphs[0] = dom.createMorphAt(element41,1,1);morphs[1] = dom.createMorphAt(element41,2,2);morphs[2] = dom.createMorphAt(element41,3,3);morphs[3] = dom.createMorphAt(element41,4,4);morphs[4] = dom.createMorphAt(element41,5,5);morphs[5] = dom.createMorphAt(element41,6,6);morphs[6] = dom.createMorphAt(element41,7,7);morphs[7] = dom.createMorphAt(element41,8,8);morphs[8] = dom.createMorphAt(element41,9,9);morphs[9] = dom.createMorphAt(dom.childAt(element42,[1]),3,3);morphs[10] = dom.createAttrMorph(element44,'title');morphs[11] = dom.createElementMorph(element44);morphs[12] = dom.createMorphAt(element44,3,3);morphs[13] = dom.createMorphAt(dom.childAt(element43,[3,1]),3,3);morphs[14] = dom.createMorphAt(dom.childAt(element42,[5,1,1]),0,0);morphs[15] = dom.createAttrMorph(element45,'class');morphs[16] = dom.createMorphAt(element46,1,1);morphs[17] = dom.createMorphAt(element46,2,2);morphs[18] = dom.createMorphAt(element46,3,3);morphs[19] = dom.createMorphAt(element47,1,1);morphs[20] = dom.createMorphAt(element47,2,2);morphs[21] = dom.createAttrMorph(element50,'class');morphs[22] = dom.createElementMorph(element50);morphs[23] = dom.createMorphAt(element49,3,3);morphs[24] = dom.createAttrMorph(element51,'class');morphs[25] = dom.createElementMorph(element51);morphs[26] = dom.createMorphAt(element52,1,1);morphs[27] = dom.createMorphAt(element52,3,3);return morphs;},statements:[["block","if",[["get","refreshButton",["loc",[null,[2,8],[2,21]]]]],[],0,null,["loc",[null,[2,2],[11,9]]]],["block","if",[["get","createNewButton",["loc",[null,[12,8],[12,23]]]]],[],1,null,["loc",[null,[12,2],[20,9]]]],["block","if",[["get","deleteButton",["loc",[null,[21,8],[21,20]]]]],[],2,null,["loc",[null,[21,2],[29,9]]]],["block","if",[["get","availableHierarchicalMode",["loc",[null,[30,8],[30,33]]]]],[],3,null,["loc",[null,[30,2],[38,9]]]],["block","if",[["get","enableFilters",["loc",[null,[39,8],[39,21]]]]],[],4,null,["loc",[null,[39,2],[59,9]]]],["block","if",[["get","filterButton",["loc",[null,[60,8],[60,20]]]]],[],5,null,["loc",[null,[60,2],[85,9]]]],["block","if",[["get","exportExcelButton",["loc",[null,[86,8],[86,25]]]]],[],6,null,["loc",[null,[86,2],[100,9]]]],["block","if",[["get","colsConfigButton",["loc",[null,[101,8],[101,24]]]]],[],7,null,["loc",[null,[101,2],[117,9]]]],["block","each",[["get","customButtons",["loc",[null,[118,10],[118,23]]]]],[],8,null,["loc",[null,[118,2],[134,11]]]],["content","_infoModalDialogCaption",["loc",[null,[138,6],[138,33]]]],["attribute","title",["subexpr","t",["components.olv-toolbar.copy"],[],["loc",[null,[144,12],[144,47]]]]],["element","action",["copyJSONContent"],[],["loc",[null,[145,6],[145,34]]]],["inline","t",["components.olv-toolbar.copy"],[],["loc",[null,[148,8],[148,43]]]],["inline","t",["components.olv-toolbar.close"],[],["loc",[null,[153,8],[153,44]]]],["content","_infoModalDialogContent",["loc",[null,[159,65],[159,92]]]],["attribute","class",["concat",["object-list-view ui unstackable celled ",["subexpr","if",[["get","readonly",["loc",[null,[166,60],[166,68]]]],"readonly"],[],["loc",[null,[166,55],[166,81]]]]," ",["get","tableClass",["loc",[null,[166,84],[166,94]]]]," table"]]],["block","if",[["get","showHelperColumn",["loc",[null,[169,14],[169,30]]]]],[],9,null,["loc",[null,[169,8],[197,15]]]],["block","each",[["get","columns",["loc",[null,[198,16],[198,23]]]]],[],10,null,["loc",[null,[198,8],[225,17]]]],["block","if",[["get","showMenuColumn",["loc",[null,[226,14],[226,28]]]]],[],11,null,["loc",[null,[226,8],[228,15]]]],["block","if",[["get","showFilters",["loc",[null,[232,12],[232,23]]]]],[],12,null,["loc",[null,[232,6],[276,13]]]],["block","unless",[["get","content",["loc",[null,[277,16],[277,23]]]]],[],13,14,["loc",[null,[277,6],[367,17]]]],["attribute","class",["concat",["ui ",["subexpr","unless",[["get","hasPreviousPage",["loc",[null,[373,45],[373,60]]]],"disabled"],[],["loc",[null,[373,36],[373,73]]]]," button prev-page-button"]]],["element","action",["previousPage",["get","this.attrs.previousPage",["loc",[null,[373,123],[373,146]]]]],[],["loc",[null,[373,99],[373,148]]]],["block","each",[["get","pages",["loc",[null,[374,12],[374,17]]]]],[],15,null,["loc",[null,[374,4],[384,13]]]],["attribute","class",["concat",["ui ",["subexpr","unless",[["get","hasNextPage",["loc",[null,[385,45],[385,56]]]],"disabled"],[],["loc",[null,[385,36],[385,69]]]]," button next-page-button"]]],["element","action",["nextPage",["get","this.attrs.nextPage",["loc",[null,[385,115],[385,134]]]]],[],["loc",[null,[385,95],[385,136]]]],["block","if",[["get","showShowingEntries",["loc",[null,[388,10],[388,28]]]]],[],16,null,["loc",[null,[388,4],[396,11]]]],["inline","flexberry-dropdown",[],["items",["subexpr","@mut",[["get","perPageValues",["loc",[null,[397,31],[397,44]]]]],[],[]],"value",["subexpr","@mut",[["get","perPageValue",["loc",[null,[397,51],[397,63]]]]],[],[]],"class","compact selection","onChange",["subexpr","action",["perPageClick"],[],["loc",[null,[397,99],[397,122]]]],"needChecksOnValue",false,"direction","upward"],["loc",[null,[397,4],[397,167]]]]],locals:[],templates:[child0,child1,child2,child3,child4,child5,child6,child7,child8,child9,child10,child11,child12,child13,child14,child15,child16]};})());});
 define("dummy/templates/mobile/components/object-list-view-row", ["exports"], function (exports) {
   exports["default"] = Ember.HTMLBars.template((function () {
     var child0 = (function () {
@@ -34540,9 +35647,9 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
             return el0;
           },
           buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element6 = dom.childAt(fragment, [1, 1]);
+            var element8 = dom.childAt(fragment, [1, 1]);
             var morphs = new Array(1);
-            morphs[0] = dom.createAttrMorph(element6, 'class');
+            morphs[0] = dom.createAttrMorph(element8, 'class');
             return morphs;
           },
           statements: [["attribute", "class", ["concat", ["asterisk small red icon ", ["subexpr", "unless", [["get", "record.data.hasDirtyAttributes", ["loc", [null, [8, 55], [8, 85]]]], "transparent"], [], ["loc", [null, [8, 46], [8, 101]]]]]]]],
@@ -34599,64 +35706,6 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
           templates: []
         };
       })();
-      var child2 = (function () {
-        return {
-          meta: {
-            "fragmentReason": false,
-            "revision": "Ember@2.4.6",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 19,
-                "column": 8
-              },
-              "end": {
-                "line": 25,
-                "column": 8
-              }
-            },
-            "moduleName": "dummy/templates/mobile/components/object-list-view-row.hbs"
-          },
-          isEmpty: false,
-          arity: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("          ");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createElement("div");
-            dom.setAttribute(el1, "class", "cell");
-            var el2 = dom.createTextNode("\n            ");
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("button");
-            var el3 = dom.createTextNode("\n              ");
-            dom.appendChild(el2, el3);
-            var el3 = dom.createElement("i");
-            dom.setAttribute(el3, "class", "minus icon");
-            dom.appendChild(el2, el3);
-            var el3 = dom.createTextNode("\n            ");
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n          ");
-            dom.appendChild(el1, el2);
-            dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var element5 = dom.childAt(fragment, [1, 1]);
-            var morphs = new Array(2);
-            morphs[0] = dom.createAttrMorph(element5, 'class');
-            morphs[1] = dom.createElementMorph(element5);
-            return morphs;
-          },
-          statements: [["attribute", "class", ["concat", ["ui ", ["get", "buttonClass", ["loc", [null, [21, 32], [21, 43]]]], " ", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [21, 55], [21, 63]]]], ["subexpr", "not", [["get", "record.rowConfig.canBeDeleted", ["loc", [null, [21, 69], [21, 98]]]]], [], ["loc", [null, [21, 64], [21, 99]]]]], [], ["loc", [null, [21, 51], [21, 100]]]], "disabled"], [], ["loc", [null, [21, 46], [21, 113]]]], " button"]]], ["element", "action", [["get", "deleteRow", ["loc", [null, [21, 131], [21, 140]]]], ["get", "record", ["loc", [null, [21, 141], [21, 147]]]]], [], ["loc", [null, [21, 122], [21, 149]]]]],
-          locals: [],
-          templates: []
-        };
-      })();
       return {
         meta: {
           "fragmentReason": false,
@@ -34668,7 +35717,7 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
               "column": 4
             },
             "end": {
-              "line": 27,
+              "line": 20,
               "column": 4
             }
           },
@@ -34690,8 +35739,6 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createComment("");
-          dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("      ");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
@@ -34700,16 +35747,15 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element7 = dom.childAt(fragment, [1]);
-          var morphs = new Array(3);
-          morphs[0] = dom.createMorphAt(element7, 1, 1);
-          morphs[1] = dom.createMorphAt(element7, 2, 2);
-          morphs[2] = dom.createMorphAt(element7, 3, 3);
+          var element9 = dom.childAt(fragment, [1]);
+          var morphs = new Array(2);
+          morphs[0] = dom.createMorphAt(element9, 1, 1);
+          morphs[1] = dom.createMorphAt(element9, 2, 2);
           return morphs;
         },
-        statements: [["block", "if", [["get", "showAsteriskInRow", ["loc", [null, [6, 14], [6, 31]]]]], [], 0, null, ["loc", [null, [6, 8], [10, 15]]]], ["block", "if", [["get", "showCheckBoxInRow", ["loc", [null, [11, 14], [11, 31]]]]], [], 1, null, ["loc", [null, [11, 8], [18, 15]]]], ["block", "if", [["get", "showDeleteButtonInRow", ["loc", [null, [19, 14], [19, 35]]]]], [], 2, null, ["loc", [null, [19, 8], [25, 15]]]]],
+        statements: [["block", "if", [["get", "showAsteriskInRow", ["loc", [null, [6, 14], [6, 31]]]]], [], 0, null, ["loc", [null, [6, 8], [10, 15]]]], ["block", "if", [["get", "showCheckBoxInRow", ["loc", [null, [11, 14], [11, 31]]]]], [], 1, null, ["loc", [null, [11, 8], [18, 15]]]]],
         locals: [],
-        templates: [child0, child1, child2]
+        templates: [child0, child1]
       };
     })();
     var child1 = (function () {
@@ -34720,12 +35766,12 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
           "loc": {
             "source": null,
             "start": {
-              "line": 40,
-              "column": 6
+              "line": 33,
+              "column": 4
             },
             "end": {
-              "line": 44,
-              "column": 6
+              "line": 37,
+              "column": 4
             }
           },
           "moduleName": "dummy/templates/mobile/components/object-list-view-row.hbs"
@@ -34736,14 +35782,175 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("      ");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
-          var el2 = dom.createTextNode("\n          ");
+          dom.setAttribute(el1, "type", "button");
+          var el2 = dom.createTextNode("\n        ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("i");
           dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n      ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element6 = dom.childAt(fragment, [1]);
+          var element7 = dom.childAt(element6, [1]);
+          var morphs = new Array(3);
+          morphs[0] = dom.createAttrMorph(element6, 'class');
+          morphs[1] = dom.createElementMorph(element6);
+          morphs[2] = dom.createAttrMorph(element7, 'class');
+          return morphs;
+        },
+        statements: [["attribute", "class", ["concat", ["ui button icon mini ", ["get", "buttonClass", ["loc", [null, [34, 57], [34, 68]]]]]]], ["element", "action", ["expand"], ["bubbles", false], ["loc", [null, [34, 72], [34, 105]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "_expanded", ["loc", [null, [35, 23], [35, 32]]]], "minus", "plus"], [], ["loc", [null, [35, 18], [35, 49]]]], " hierarchy-expand icon"]]]],
+        locals: [],
+        templates: []
+      };
+    })();
+    var child2 = (function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 38,
+              "column": 4
+            },
+            "end": {
+              "line": 46,
+              "column": 4
+            }
+          },
+          "moduleName": "dummy/templates/mobile/components/object-list-view-row.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("      ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("button");
+          dom.setAttribute(el1, "type", "button");
           var el2 = dom.createTextNode("\n        ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("i");
+          dom.setAttribute(el2, "class", "edit icon");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n      ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element5 = dom.childAt(fragment, [1]);
+          var morphs = new Array(3);
+          morphs[0] = dom.createAttrMorph(element5, 'class');
+          morphs[1] = dom.createAttrMorph(element5, 'disabled');
+          morphs[2] = dom.createElementMorph(element5);
+          return morphs;
+        },
+        statements: [["attribute", "class", ["concat", ["ui ui-edit object-list-view-row-edit-button mobile ", ["get", "buttonClass", ["loc", [null, [41, 68], [41, 79]]]], " ", ["subexpr", "if", [["get", "readonly", ["loc", [null, [41, 87], [41, 95]]]], "disabled"], [], ["loc", [null, [41, 82], [41, 108]]]], " button"]]], ["attribute", "disabled", ["get", "readonly", ["loc", [null, [42, 19], [42, 27]]]]], ["element", "action", ["onRowClick", ["get", "record", ["loc", [null, [43, 30], [43, 36]]]], ["subexpr", "hash", [], ["column", null, "columnIndex", null, "rowEdit", true], ["loc", [null, [43, 37], [43, 85]]]]], ["bubbles", false], ["loc", [null, [43, 8], [43, 101]]]]],
+        locals: [],
+        templates: []
+      };
+    })();
+    var child3 = (function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 47,
+              "column": 4
+            },
+            "end": {
+              "line": 55,
+              "column": 4
+            }
+          },
+          "moduleName": "dummy/templates/mobile/components/object-list-view-row.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("      ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("button");
+          dom.setAttribute(el1, "type", "button");
+          var el2 = dom.createTextNode("\n        ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("i");
+          dom.setAttribute(el2, "class", "copy icon");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n      ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element4 = dom.childAt(fragment, [1]);
+          var morphs = new Array(3);
+          morphs[0] = dom.createAttrMorph(element4, 'class');
+          morphs[1] = dom.createAttrMorph(element4, 'disabled');
+          morphs[2] = dom.createElementMorph(element4);
+          return morphs;
+        },
+        statements: [["attribute", "class", ["concat", ["ui ui-edit object-list-view-row-prototype-button mobile ", ["get", "buttonClass", ["loc", [null, [50, 73], [50, 84]]]], " ", ["subexpr", "if", [["get", "readonly", ["loc", [null, [50, 92], [50, 100]]]], "disabled"], [], ["loc", [null, [50, 87], [50, 113]]]], " button"]]], ["attribute", "disabled", ["get", "readonly", ["loc", [null, [51, 19], [51, 27]]]]], ["element", "action", [["get", "createNewByPrototype", ["loc", [null, [52, 17], [52, 37]]]], ["subexpr", "get", [["get", "record", ["loc", [null, [52, 43], [52, 49]]]], "data.id"], [], ["loc", [null, [52, 38], [52, 60]]]]], ["bubbles", false], ["loc", [null, [52, 8], [52, 76]]]]],
+        locals: [],
+        templates: []
+      };
+    })();
+    var child4 = (function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 56,
+              "column": 4
+            },
+            "end": {
+              "line": 64,
+              "column": 4
+            }
+          },
+          "moduleName": "dummy/templates/mobile/components/object-list-view-row.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("      ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("button");
+          dom.setAttribute(el1, "type", "button");
+          var el2 = dom.createTextNode("\n        ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("i");
+          dom.setAttribute(el2, "class", "minus icon");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n      ");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -34752,19 +35959,18 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
           var element3 = dom.childAt(fragment, [1]);
-          var element4 = dom.childAt(element3, [1]);
           var morphs = new Array(3);
           morphs[0] = dom.createAttrMorph(element3, 'class');
-          morphs[1] = dom.createElementMorph(element3);
-          morphs[2] = dom.createAttrMorph(element4, 'class');
+          morphs[1] = dom.createAttrMorph(element3, 'disabled');
+          morphs[2] = dom.createElementMorph(element3);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", ["ui button icon mini ", ["get", "buttonClass", ["loc", [null, [41, 45], [41, 56]]]]]]], ["element", "action", ["expand"], ["bubbles", false], ["loc", [null, [41, 60], [41, 93]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "_expanded", ["loc", [null, [42, 25], [42, 34]]]], "minus", "plus"], [], ["loc", [null, [42, 20], [42, 51]]]], " hierarchy-expand icon"]]]],
+        statements: [["attribute", "class", ["concat", ["ui ui-edit object-list-view-row-delete-button mobile ", ["get", "buttonClass", ["loc", [null, [59, 70], [59, 81]]]], " ", ["subexpr", "if", [["subexpr", "or", [["get", "readonly", ["loc", [null, [59, 93], [59, 101]]]], ["subexpr", "not", [["get", "record.rowConfig.canBeDeleted", ["loc", [null, [59, 107], [59, 136]]]]], [], ["loc", [null, [59, 102], [59, 137]]]]], [], ["loc", [null, [59, 89], [59, 138]]]], "disabled"], [], ["loc", [null, [59, 84], [59, 151]]]], " button"]]], ["attribute", "disabled", ["subexpr", "or", [["get", "readonly", ["loc", [null, [60, 22], [60, 30]]]], ["subexpr", "not", [["get", "record.rowConfig.canBeDeleted", ["loc", [null, [60, 36], [60, 65]]]]], [], ["loc", [null, [60, 31], [60, 66]]]]], [], ["loc", [null, [60, 17], [60, 68]]]]], ["element", "action", [["get", "deleteRow", ["loc", [null, [61, 17], [61, 26]]]], ["get", "record", ["loc", [null, [61, 27], [61, 33]]]]], ["bubbles", false], ["loc", [null, [61, 8], [61, 49]]]]],
         locals: [],
         templates: []
       };
     })();
-    var child2 = (function () {
+    var child5 = (function () {
       var child0 = (function () {
         return {
           meta: {
@@ -34773,11 +35979,11 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
             "loc": {
               "source": null,
               "start": {
-                "line": 51,
+                "line": 71,
                 "column": 10
               },
               "end": {
-                "line": 56,
+                "line": 76,
                 "column": 10
               }
             },
@@ -34818,7 +36024,7 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
             morphs[1] = dom.createMorphAt(dom.childAt(element1, [3]), 0, 0);
             return morphs;
           },
-          statements: [["element", "action", [["get", "rowClick", ["loc", [null, [52, 40], [52, 48]]]], ["get", "record", ["loc", [null, [52, 49], [52, 55]]]]], [], ["loc", [null, [52, 30], [52, 58]]]], ["inline", "t", ["components.object-list-view.menu-in-row.edit-menu-item-title"], [], ["loc", [null, [54, 20], [54, 88]]]]],
+          statements: [["element", "action", [["get", "rowClick", ["loc", [null, [72, 40], [72, 48]]]], ["get", "record", ["loc", [null, [72, 49], [72, 55]]]]], [], ["loc", [null, [72, 30], [72, 58]]]], ["inline", "t", ["components.object-list-view.menu-in-row.edit-menu-item-title"], [], ["loc", [null, [74, 20], [74, 88]]]]],
           locals: [],
           templates: []
         };
@@ -34831,11 +36037,11 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
             "loc": {
               "source": null,
               "start": {
-                "line": 57,
+                "line": 77,
                 "column": 10
               },
               "end": {
-                "line": 62,
+                "line": 82,
                 "column": 10
               }
             },
@@ -34876,7 +36082,7 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
             morphs[1] = dom.createMorphAt(dom.childAt(element0, [3]), 0, 0);
             return morphs;
           },
-          statements: [["element", "action", [["get", "deleteRow", ["loc", [null, [58, 40], [58, 49]]]], ["get", "record", ["loc", [null, [58, 50], [58, 56]]]]], [], ["loc", [null, [58, 30], [58, 59]]]], ["inline", "t", ["components.object-list-view.menu-in-row.delete-menu-item-title"], [], ["loc", [null, [60, 20], [60, 90]]]]],
+          statements: [["element", "action", [["get", "deleteRow", ["loc", [null, [78, 40], [78, 49]]]], ["get", "record", ["loc", [null, [78, 50], [78, 56]]]]], [], ["loc", [null, [78, 30], [78, 59]]]], ["inline", "t", ["components.object-list-view.menu-in-row.delete-menu-item-title"], [], ["loc", [null, [80, 20], [80, 90]]]]],
           locals: [],
           templates: []
         };
@@ -34888,11 +36094,11 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
           "loc": {
             "source": null,
             "start": {
-              "line": 46,
+              "line": 66,
               "column": 2
             },
             "end": {
-              "line": 66,
+              "line": 86,
               "column": 2
             }
           },
@@ -34947,12 +36153,12 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
           morphs[1] = dom.createMorphAt(element2, 2, 2);
           return morphs;
         },
-        statements: [["block", "if", [["get", "showEditMenuItemInRow", ["loc", [null, [51, 16], [51, 37]]]]], [], 0, null, ["loc", [null, [51, 10], [56, 17]]]], ["block", "if", [["get", "showDeleteMenuItemInRow", ["loc", [null, [57, 16], [57, 39]]]]], [], 1, null, ["loc", [null, [57, 10], [62, 17]]]]],
+        statements: [["block", "if", [["get", "showEditMenuItemInRow", ["loc", [null, [71, 16], [71, 37]]]]], [], 0, null, ["loc", [null, [71, 10], [76, 17]]]], ["block", "if", [["get", "showDeleteMenuItemInRow", ["loc", [null, [77, 16], [77, 39]]]]], [], 1, null, ["loc", [null, [77, 10], [82, 17]]]]],
         locals: [],
         templates: [child0, child1]
       };
     })();
-    var child3 = (function () {
+    var child6 = (function () {
       var child0 = (function () {
         return {
           meta: {
@@ -34961,11 +36167,11 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
             "loc": {
               "source": null,
               "start": {
-                "line": 69,
+                "line": 89,
                 "column": 2
               },
               "end": {
-                "line": 91,
+                "line": 116,
                 "column": 2
               }
             },
@@ -34990,7 +36196,7 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
             morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
             return morphs;
           },
-          statements: [["inline", "object-list-view-row", [], ["record", ["subexpr", "@mut", [["get", "record", ["loc", [null, [71, 13], [71, 19]]]]], [], []], "columns", ["subexpr", "@mut", [["get", "columns", ["loc", [null, [72, 14], [72, 21]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [73, 15], [73, 23]]]]], [], []], "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [74, 15], [74, 23]]]]], [], []], "showMenuColumn", ["subexpr", "@mut", [["get", "showMenuColumn", ["loc", [null, [75, 21], [75, 35]]]]], [], []], "showHelperColumn", ["subexpr", "@mut", [["get", "showHelperColumn", ["loc", [null, [76, 23], [76, 39]]]]], [], []], "defaultRowConfig", ["subexpr", "@mut", [["get", "defaultRowConfig", ["loc", [null, [77, 23], [77, 39]]]]], [], []], "showValidationMessages", ["subexpr", "@mut", [["get", "showValidationMessages", ["loc", [null, [78, 29], [78, 51]]]]], [], []], "showAsteriskInRow", ["subexpr", "@mut", [["get", "showAsteriskInRow", ["loc", [null, [79, 24], [79, 41]]]]], [], []], "showCheckBoxInRow", ["subexpr", "@mut", [["get", "showCheckBoxInRow", ["loc", [null, [80, 24], [80, 41]]]]], [], []], "showDeleteButtonInRow", ["subexpr", "@mut", [["get", "showDeleteButtonInRow", ["loc", [null, [81, 28], [81, 49]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "inHierarchicalMode", ["loc", [null, [82, 25], [82, 43]]]]], [], []], "singleColumnCellComponent", ["subexpr", "@mut", [["get", "singleColumnCellComponent", ["loc", [null, [83, 32], [83, 57]]]]], [], []], "loadRecords", ["subexpr", "@mut", [["get", "loadRecords", ["loc", [null, [84, 18], [84, 29]]]]], [], []], "rowClick", ["subexpr", "@mut", [["get", "rowClick", ["loc", [null, [85, 15], [85, 23]]]]], [], []], "selectRow", ["subexpr", "@mut", [["get", "selectRow", ["loc", [null, [86, 16], [86, 25]]]]], [], []], "deleteRow", ["subexpr", "@mut", [["get", "deleteRow", ["loc", [null, [87, 16], [87, 25]]]]], [], []], "_currentLevel", ["subexpr", "@mut", [["get", "_currentLevel", ["loc", [null, [88, 20], [88, 33]]]]], [], []], "hierarchicalIndent", ["subexpr", "@mut", [["get", "_hierarchicalIndent", ["loc", [null, [89, 25], [89, 44]]]]], [], []]], ["loc", [null, [70, 4], [90, 6]]]]],
+          statements: [["inline", "object-list-view-row", [], ["record", ["subexpr", "@mut", [["get", "record", ["loc", [null, [91, 13], [91, 19]]]]], [], []], "columns", ["subexpr", "@mut", [["get", "columns", ["loc", [null, [92, 14], [92, 21]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [93, 15], [93, 23]]]]], [], []], "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [94, 15], [94, 23]]]]], [], []], "showMenuColumn", ["subexpr", "@mut", [["get", "showMenuColumn", ["loc", [null, [95, 21], [95, 35]]]]], [], []], "showHelperColumn", ["subexpr", "@mut", [["get", "showHelperColumn", ["loc", [null, [96, 23], [96, 39]]]]], [], []], "defaultRowConfig", ["subexpr", "@mut", [["get", "defaultRowConfig", ["loc", [null, [97, 23], [97, 39]]]]], [], []], "showValidationMessages", ["subexpr", "@mut", [["get", "showValidationMessages", ["loc", [null, [98, 29], [98, 51]]]]], [], []], "showAsteriskInRow", ["subexpr", "@mut", [["get", "showAsteriskInRow", ["loc", [null, [99, 24], [99, 41]]]]], [], []], "showCheckBoxInRow", ["subexpr", "@mut", [["get", "showCheckBoxInRow", ["loc", [null, [100, 24], [100, 41]]]]], [], []], "showDeleteButtonInRow", ["subexpr", "@mut", [["get", "showDeleteButtonInRow", ["loc", [null, [101, 28], [101, 49]]]]], [], []], "showEditButtonInRow", ["subexpr", "@mut", [["get", "showEditButtonInRow", ["loc", [null, [102, 26], [102, 45]]]]], [], []], "showPrototypeButtonInRow", ["subexpr", "@mut", [["get", "showPrototypeButtonInRow", ["loc", [null, [103, 31], [103, 55]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "inHierarchicalMode", ["loc", [null, [104, 25], [104, 43]]]]], [], []], "inExpandMode", ["subexpr", "unbound", [["get", "inExpandMode", ["loc", [null, [105, 28], [105, 40]]]]], [], ["loc", [null, [105, 19], [105, 41]]]], "singleColumnCellComponent", ["subexpr", "@mut", [["get", "singleColumnCellComponent", ["loc", [null, [106, 32], [106, 57]]]]], [], []], "loadRecords", ["subexpr", "@mut", [["get", "loadRecords", ["loc", [null, [107, 18], [107, 29]]]]], [], []], "rowClick", ["subexpr", "@mut", [["get", "rowClick", ["loc", [null, [108, 15], [108, 23]]]]], [], []], "selectRow", ["subexpr", "@mut", [["get", "selectRow", ["loc", [null, [109, 16], [109, 25]]]]], [], []], "deleteRow", ["subexpr", "@mut", [["get", "deleteRow", ["loc", [null, [110, 16], [110, 25]]]]], [], []], "createNewByPrototype", ["subexpr", "@mut", [["get", "createNewByPrototype", ["loc", [null, [111, 27], [111, 47]]]]], [], []], "_currentLevel", ["subexpr", "@mut", [["get", "_currentLevel", ["loc", [null, [112, 20], [112, 33]]]]], [], []], "hierarchicalIndent", ["subexpr", "@mut", [["get", "_hierarchicalIndent", ["loc", [null, [113, 25], [113, 44]]]]], [], []], "configurateRow", ["subexpr", "@mut", [["get", "configurateRow", ["loc", [null, [114, 21], [114, 35]]]]], [], []]], ["loc", [null, [90, 4], [115, 6]]]]],
           locals: ["record"],
           templates: []
         };
@@ -35002,11 +36208,11 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
           "loc": {
             "source": null,
             "start": {
-              "line": 68,
+              "line": 88,
               "column": 0
             },
             "end": {
-              "line": 92,
+              "line": 117,
               "column": 0
             }
           },
@@ -35029,7 +36235,7 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
           dom.insertBoundary(fragment, null);
           return morphs;
         },
-        statements: [["block", "each", [["get", "records", ["loc", [null, [69, 10], [69, 17]]]]], ["key", "key"], 0, null, ["loc", [null, [69, 2], [91, 11]]]]],
+        statements: [["block", "each", [["get", "records", ["loc", [null, [89, 10], [89, 17]]]]], ["key", "key"], 0, null, ["loc", [null, [89, 2], [116, 11]]]]],
         locals: [],
         templates: [child0]
       };
@@ -35048,7 +36254,7 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
             "column": 0
           },
           "end": {
-            "line": 93,
+            "line": 118,
             "column": 0
           }
         },
@@ -35078,10 +36284,10 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
         var el3 = dom.createTextNode("  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n  ");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("td");
-        var el3 = dom.createTextNode("\n      ");
+        var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
@@ -35089,7 +36295,13 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("    ");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -35104,26 +36316,29 @@ define("dummy/templates/mobile/components/object-list-view-row", ["exports"], fu
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element8 = dom.childAt(fragment, [0]);
-        var element9 = dom.childAt(element8, [1]);
-        var element10 = dom.childAt(element8, [3]);
-        var morphs = new Array(10);
-        morphs[0] = dom.createAttrMorph(element8, 'class');
-        morphs[1] = dom.createAttrMorph(element9, 'class');
-        morphs[2] = dom.createMorphAt(dom.childAt(element9, [1]), 0, 0);
-        morphs[3] = dom.createMorphAt(element9, 3, 3);
-        morphs[4] = dom.createAttrMorph(element10, 'onclick');
-        morphs[5] = dom.createAttrMorph(element10, 'style');
-        morphs[6] = dom.createMorphAt(element10, 1, 1);
-        morphs[7] = dom.createMorphAt(element10, 3, 3);
-        morphs[8] = dom.createMorphAt(element8, 5, 5);
-        morphs[9] = dom.createMorphAt(fragment, 2, 2, contextualElement);
+        var element10 = dom.childAt(fragment, [0]);
+        var element11 = dom.childAt(element10, [1]);
+        var element12 = dom.childAt(element10, [3]);
+        var morphs = new Array(13);
+        morphs[0] = dom.createAttrMorph(element10, 'class');
+        morphs[1] = dom.createAttrMorph(element11, 'class');
+        morphs[2] = dom.createMorphAt(dom.childAt(element11, [1]), 0, 0);
+        morphs[3] = dom.createMorphAt(element11, 3, 3);
+        morphs[4] = dom.createAttrMorph(element12, 'style');
+        morphs[5] = dom.createElementMorph(element12);
+        morphs[6] = dom.createMorphAt(element12, 1, 1);
+        morphs[7] = dom.createMorphAt(element12, 3, 3);
+        morphs[8] = dom.createMorphAt(element12, 4, 4);
+        morphs[9] = dom.createMorphAt(element12, 5, 5);
+        morphs[10] = dom.createMorphAt(element12, 6, 6);
+        morphs[11] = dom.createMorphAt(element10, 5, 5);
+        morphs[12] = dom.createMorphAt(fragment, 2, 2, contextualElement);
         dom.insertBoundary(fragment, null);
         return morphs;
       },
-      statements: [["attribute", "class", ["concat", [["get", "record.rowConfig.customClass", ["loc", [null, [1, 13], [1, 41]]]]]]], ["attribute", "class", ["concat", ["object-list-view-helper-column ", ["subexpr", "unless", [["get", "showHelperColumn", ["loc", [null, [2, 53], [2, 69]]]], "hidden"], [], ["loc", [null, [2, 44], [2, 80]]]]]]], ["content", "record.key", ["loc", [null, [3, 24], [3, 38]]]], ["block", "if", [["get", "showHelperColumn", ["loc", [null, [4, 10], [4, 26]]]]], [], 0, null, ["loc", [null, [4, 4], [27, 11]]]], ["attribute", "onclick", ["subexpr", "action", ["onRowClick", ["get", "record", ["loc", [null, [30, 34], [30, 40]]]], ["subexpr", "hash", [], ["column", ["get", "columns", ["loc", [null, [30, 54], [30, 61]]]]], ["loc", [null, [30, 41], [30, 62]]]]], ["preventDefault", false], ["loc", [null, [30, 12], [30, 85]]]]], ["attribute", "style", ["concat", ["padding-left:", ["get", "hierarchicalIndent", ["loc", [null, [31, 26], [31, 44]]]], "px;"]]], ["inline", "component", [["get", "singleColumnCellComponent.componentName", ["loc", [null, [32, 18], [32, 57]]]]], ["model", ["subexpr", "@mut", [["get", "record.data", ["loc", [null, [33, 14], [33, 25]]]]], [], []], "columns", ["subexpr", "@mut", [["get", "columns", ["loc", [null, [34, 16], [34, 23]]]]], [], []], "showValidationMessages", ["subexpr", "@mut", [["get", "showValidationMessages", ["loc", [null, [35, 31], [35, 53]]]]], [], []], "hasEditableValues", ["subexpr", "@mut", [["get", "hasEditableValues", ["loc", [null, [36, 26], [36, 43]]]]], [], []], "dynamicProperties", ["subexpr", "@mut", [["get", "singleColumnCellComponent.componentProperties", ["loc", [null, [37, 26], [37, 71]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [38, 17], [38, 25]]]]], [], []]], ["loc", [null, [32, 6], [39, 8]]]], ["block", "if", [["subexpr", "and", [["get", "inHierarchicalMode", ["loc", [null, [40, 17], [40, 35]]]], ["get", "hasRecords", ["loc", [null, [40, 36], [40, 46]]]]], [], ["loc", [null, [40, 12], [40, 47]]]]], [], 1, null, ["loc", [null, [40, 6], [44, 13]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [46, 8], [46, 22]]]]], [], 2, null, ["loc", [null, [46, 2], [66, 9]]]], ["block", "if", [["subexpr", "and", [["get", "_expanded", ["loc", [null, [68, 11], [68, 20]]]], ["get", "inHierarchicalMode", ["loc", [null, [68, 21], [68, 39]]]]], [], ["loc", [null, [68, 6], [68, 40]]]]], [], 3, null, ["loc", [null, [68, 0], [92, 7]]]]],
+      statements: [["attribute", "class", ["concat", [["get", "record.rowConfig.customClass", ["loc", [null, [1, 13], [1, 41]]]]]]], ["attribute", "class", ["concat", ["object-list-view-helper-column ", ["subexpr", "unless", [["get", "showHelperColumn", ["loc", [null, [2, 53], [2, 69]]]], "hidden"], [], ["loc", [null, [2, 44], [2, 80]]]]]]], ["content", "record.key", ["loc", [null, [3, 24], [3, 38]]]], ["block", "if", [["get", "showHelperColumn", ["loc", [null, [4, 10], [4, 26]]]]], [], 0, null, ["loc", [null, [4, 4], [20, 11]]]], ["attribute", "style", ["concat", ["padding-left:", ["get", "hierarchicalIndent", ["loc", [null, [24, 26], [24, 44]]]], "px;"]]], ["element", "action", ["onRowClick", ["get", "record", ["loc", [null, [23, 26], [23, 32]]]], ["subexpr", "hash", [], ["column", ["get", "columns", ["loc", [null, [23, 46], [23, 53]]]]], ["loc", [null, [23, 33], [23, 54]]]]], ["preventDefault", false], ["loc", [null, [23, 4], [23, 77]]]], ["inline", "component", [["get", "singleColumnCellComponent.componentName", ["loc", [null, [25, 16], [25, 55]]]]], ["model", ["subexpr", "@mut", [["get", "record.data", ["loc", [null, [26, 12], [26, 23]]]]], [], []], "columns", ["subexpr", "@mut", [["get", "columns", ["loc", [null, [27, 14], [27, 21]]]]], [], []], "showValidationMessages", ["subexpr", "@mut", [["get", "showValidationMessages", ["loc", [null, [28, 29], [28, 51]]]]], [], []], "hasEditableValues", ["subexpr", "@mut", [["get", "hasEditableValues", ["loc", [null, [29, 24], [29, 41]]]]], [], []], "dynamicProperties", ["subexpr", "@mut", [["get", "singleColumnCellComponent.componentProperties", ["loc", [null, [30, 24], [30, 69]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [31, 15], [31, 23]]]]], [], []]], ["loc", [null, [25, 4], [32, 6]]]], ["block", "if", [["subexpr", "and", [["get", "inHierarchicalMode", ["loc", [null, [33, 15], [33, 33]]]], ["get", "hasRecords", ["loc", [null, [33, 34], [33, 44]]]]], [], ["loc", [null, [33, 10], [33, 45]]]]], [], 1, null, ["loc", [null, [33, 4], [37, 11]]]], ["block", "if", [["get", "showEditButtonInRow", ["loc", [null, [38, 10], [38, 29]]]]], [], 2, null, ["loc", [null, [38, 4], [46, 11]]]], ["block", "if", [["get", "showPrototypeButtonInRow", ["loc", [null, [47, 10], [47, 34]]]]], [], 3, null, ["loc", [null, [47, 4], [55, 11]]]], ["block", "if", [["get", "showDeleteButtonInRow", ["loc", [null, [56, 10], [56, 31]]]]], [], 4, null, ["loc", [null, [56, 4], [64, 11]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [66, 8], [66, 22]]]]], [], 5, null, ["loc", [null, [66, 2], [86, 9]]]], ["block", "if", [["subexpr", "and", [["get", "_expanded", ["loc", [null, [88, 11], [88, 20]]]], ["get", "inHierarchicalMode", ["loc", [null, [88, 21], [88, 39]]]]], [], ["loc", [null, [88, 6], [88, 40]]]]], [], 6, null, ["loc", [null, [88, 0], [117, 7]]]]],
       locals: [],
-      templates: [child0, child1, child2, child3]
+      templates: [child0, child1, child2, child3, child4, child5, child6]
     };
   })());
 });
@@ -35138,96 +36353,11 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
             "loc": {
               "source": null,
               "start": {
-                "line": 2,
-                "column": 2
-              },
-              "end": {
-                "line": 10,
-                "column": 2
-              }
-            },
-            "moduleName": "dummy/templates/mobile/components/object-list-view.hbs"
-          },
-          isEmpty: false,
-          arity: 1,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("    ");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createComment("");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var morphs = new Array(1);
-            morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
-            return morphs;
-          },
-          statements: [["inline", "ui-message", [], ["type", "error", "closeable", true, "visible", true, "title", "Error occurred", "message", ["subexpr", "@mut", [["get", "currentError", ["loc", [null, [8, 14], [8, 26]]]]], [], []]], ["loc", [null, [3, 4], [9, 6]]]]],
-          locals: ["currentError"],
-          templates: []
-        };
-      })();
-      return {
-        meta: {
-          "fragmentReason": {
-            "name": "missing-wrapper",
-            "problems": ["wrong-type"]
-          },
-          "revision": "Ember@2.4.6",
-          "loc": {
-            "source": null,
-            "start": {
-              "line": 1,
-              "column": 0
-            },
-            "end": {
-              "line": 11,
-              "column": 0
-            }
-          },
-          "moduleName": "dummy/templates/mobile/components/object-list-view.hbs"
-        },
-        isEmpty: false,
-        arity: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        buildFragment: function buildFragment(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createComment("");
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var morphs = new Array(1);
-          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
-          dom.insertBoundary(fragment, 0);
-          dom.insertBoundary(fragment, null);
-          return morphs;
-        },
-        statements: [["block", "each", [["get", "errorMessages", ["loc", [null, [2, 10], [2, 23]]]]], [], 0, null, ["loc", [null, [2, 2], [10, 11]]]]],
-        locals: [],
-        templates: [child0]
-      };
-    })();
-    var child1 = (function () {
-      var child0 = (function () {
-        return {
-          meta: {
-            "fragmentReason": false,
-            "revision": "Ember@2.4.6",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 16,
+                "line": 5,
                 "column": 8
               },
               "end": {
-                "line": 18,
+                "line": 7,
                 "column": 8
               }
             },
@@ -35265,11 +36395,11 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
             "loc": {
               "source": null,
               "start": {
-                "line": 20,
+                "line": 9,
                 "column": 8
               },
               "end": {
-                "line": 22,
+                "line": 11,
                 "column": 8
               }
             },
@@ -35306,11 +36436,11 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
           "loc": {
             "source": null,
             "start": {
-              "line": 13,
+              "line": 2,
               "column": 2
             },
             "end": {
-              "line": 25,
+              "line": 14,
               "column": 2
             }
           },
@@ -35362,12 +36492,12 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
           morphs[2] = dom.createMorphAt(element5, 5, 5);
           return morphs;
         },
-        statements: [["block", "if", [["get", "showHelperColumn", ["loc", [null, [16, 14], [16, 30]]]]], [], 0, null, ["loc", [null, [16, 8], [18, 15]]]], ["content", "singleColumnHeaderTitle", ["loc", [null, [19, 84], [19, 111]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [20, 14], [20, 28]]]]], [], 1, null, ["loc", [null, [20, 8], [22, 15]]]]],
+        statements: [["block", "if", [["get", "showHelperColumn", ["loc", [null, [5, 14], [5, 30]]]]], [], 0, null, ["loc", [null, [5, 8], [7, 15]]]], ["content", "singleColumnHeaderTitle", ["loc", [null, [8, 84], [8, 111]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [9, 14], [9, 28]]]]], [], 1, null, ["loc", [null, [9, 8], [11, 15]]]]],
         locals: [],
         templates: [child0, child1]
       };
     })();
-    var child2 = (function () {
+    var child1 = (function () {
       var child0 = (function () {
         return {
           meta: {
@@ -35376,11 +36506,11 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
             "loc": {
               "source": null,
               "start": {
-                "line": 29,
+                "line": 18,
                 "column": 8
               },
               "end": {
-                "line": 33,
+                "line": 22,
                 "column": 8
               }
             },
@@ -35413,7 +36543,7 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
             morphs[0] = dom.createAttrMorph(element3, 'class');
             return morphs;
           },
-          statements: [["attribute", "class", ["concat", ["object-list-view-helper-column ", ["subexpr", "unless", [["get", "showHelperColumn", ["loc", [null, [30, 61], [30, 77]]]], "hidden"], [], ["loc", [null, [30, 52], [30, 88]]]]]]]],
+          statements: [["attribute", "class", ["concat", ["object-list-view-helper-column ", ["subexpr", "unless", [["get", "showHelperColumn", ["loc", [null, [19, 61], [19, 77]]]], "hidden"], [], ["loc", [null, [19, 52], [19, 88]]]]]]]],
           locals: [],
           templates: []
         };
@@ -35427,11 +36557,11 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 38,
+                  "line": 27,
                   "column": 14
                 },
                 "end": {
-                  "line": 48,
+                  "line": 39,
                   "column": 14
                 }
               },
@@ -35463,7 +36593,7 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
               morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 1, 1);
               return morphs;
             },
-            statements: [["inline", "component", ["flexberry-dropdown"], ["value", ["subexpr", "@mut", [["get", "column.filter.condition", ["loc", [null, [41, 26], [41, 49]]]]], [], []], "items", ["subexpr", "@mut", [["get", "column.filter.conditions", ["loc", [null, [42, 26], [42, 50]]]]], [], []], "class", "compact fluid", "placeholder", "", "needChecksOnValue", false], ["loc", [null, [40, 18], [46, 20]]]]],
+            statements: [["inline", "flexberry-dropdown", [], ["value", ["subexpr", "@mut", [["get", "column.filter.condition", ["loc", [null, [30, 26], [30, 49]]]]], [], []], "items", ["subexpr", "@mut", [["get", "column.filter.conditions", ["loc", [null, [31, 26], [31, 50]]]]], [], []], "displayCaptions", true, "class", "compact fluid", "placeholder", ["subexpr", "t", ["components.object-list-view.filter-condition"], [], ["loc", [null, [34, 32], [34, 82]]]], "needChecksOnValue", false, "onChange", ["subexpr", "action", ["filterConditionChanged", ["get", "column.filter", ["loc", [null, [36, 62], [36, 75]]]]], [], ["loc", [null, [36, 29], [36, 76]]]]], ["loc", [null, [29, 18], [37, 20]]]]],
             locals: [],
             templates: []
           };
@@ -35476,11 +36606,11 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
               "loc": {
                 "source": null,
                 "start": {
-                  "line": 49,
+                  "line": 40,
                   "column": 14
                 },
                 "end": {
-                  "line": 56,
+                  "line": 51,
                   "column": 14
                 }
               },
@@ -35512,7 +36642,7 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
               morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 1, 1);
               return morphs;
             },
-            statements: [["inline", "component", [["get", "column.filter.component.name", ["loc", [null, [51, 30], [51, 58]]]]], ["value", ["subexpr", "@mut", [["get", "column.filter.pattern", ["loc", [null, [52, 26], [52, 47]]]]], [], []], "dynamicProperties", ["subexpr", "@mut", [["get", "column.filter.component.properties", ["loc", [null, [53, 38], [53, 72]]]]], [], []]], ["loc", [null, [51, 18], [54, 20]]]]],
+            statements: [["inline", "component", [["get", "column.filter.component.name", ["loc", [null, [42, 30], [42, 58]]]]], ["value", ["subexpr", "@mut", [["get", "column.filter.pattern", ["loc", [null, [43, 26], [43, 47]]]]], [], []], "readonly", ["subexpr", "or", [["subexpr", "eq", [["get", "column.filter.condition", ["loc", [null, [45, 26], [45, 49]]]], "empty"], [], ["loc", [null, [45, 22], [45, 58]]]], ["subexpr", "eq", [["get", "column.filter.condition", ["loc", [null, [46, 26], [46, 49]]]], "nempty"], [], ["loc", [null, [46, 22], [46, 59]]]]], [], ["loc", [null, [44, 29], [47, 21]]]], "dynamicProperties", ["subexpr", "@mut", [["get", "column.filter.component.properties", ["loc", [null, [48, 38], [48, 72]]]]], [], []]], ["loc", [null, [42, 18], [49, 20]]]]],
             locals: [],
             templates: []
           };
@@ -35524,11 +36654,11 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
             "loc": {
               "source": null,
               "start": {
-                "line": 35,
+                "line": 24,
                 "column": 10
               },
               "end": {
-                "line": 58,
+                "line": 53,
                 "column": 10
               }
             },
@@ -35573,7 +36703,7 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
             morphs[2] = dom.createMorphAt(element2, 4, 4);
             return morphs;
           },
-          statements: [["content", "column.header", ["loc", [null, [37, 21], [37, 38]]]], ["block", "if", [["get", "column.filter.conditions", ["loc", [null, [38, 20], [38, 44]]]]], [], 0, null, ["loc", [null, [38, 14], [48, 21]]]], ["block", "if", [["get", "column.filter.component.name", ["loc", [null, [49, 20], [49, 48]]]]], [], 1, null, ["loc", [null, [49, 14], [56, 21]]]]],
+          statements: [["inline", "if", [["get", "column.keyLocale", ["loc", [null, [26, 26], [26, 42]]]], ["subexpr", "t", [["get", "column.keyLocale", ["loc", [null, [26, 46], [26, 62]]]]], [], ["loc", [null, [26, 43], [26, 63]]]], ["get", "column.header", ["loc", [null, [26, 64], [26, 77]]]]], [], ["loc", [null, [26, 21], [26, 79]]]], ["block", "if", [["get", "column.filter.conditions", ["loc", [null, [27, 20], [27, 44]]]]], [], 0, null, ["loc", [null, [27, 14], [39, 21]]]], ["block", "if", [["get", "column.filter.component.name", ["loc", [null, [40, 20], [40, 48]]]]], [], 1, null, ["loc", [null, [40, 14], [51, 21]]]]],
           locals: ["column"],
           templates: [child0, child1]
         };
@@ -35586,11 +36716,11 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
             "loc": {
               "source": null,
               "start": {
-                "line": 60,
+                "line": 55,
                 "column": 8
               },
               "end": {
-                "line": 62,
+                "line": 57,
                 "column": 8
               }
             },
@@ -35626,11 +36756,11 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
           "loc": {
             "source": null,
             "start": {
-              "line": 27,
+              "line": 16,
               "column": 4
             },
             "end": {
-              "line": 64,
+              "line": 59,
               "column": 4
             }
           },
@@ -35673,18 +36803,19 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
           var element4 = dom.childAt(fragment, [1]);
-          var morphs = new Array(3);
-          morphs[0] = dom.createMorphAt(element4, 1, 1);
-          morphs[1] = dom.createMorphAt(dom.childAt(element4, [3]), 1, 1);
-          morphs[2] = dom.createMorphAt(element4, 5, 5);
+          var morphs = new Array(4);
+          morphs[0] = dom.createAttrMorph(element4, 'onkeydown');
+          morphs[1] = dom.createMorphAt(element4, 1, 1);
+          morphs[2] = dom.createMorphAt(dom.childAt(element4, [3]), 1, 1);
+          morphs[3] = dom.createMorphAt(element4, 5, 5);
           return morphs;
         },
-        statements: [["block", "if", [["get", "showHelperColumn", ["loc", [null, [29, 14], [29, 30]]]]], [], 0, null, ["loc", [null, [29, 8], [33, 15]]]], ["block", "each", [["get", "columns", ["loc", [null, [35, 18], [35, 25]]]]], [], 1, null, ["loc", [null, [35, 10], [58, 19]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [60, 14], [60, 28]]]]], [], 2, null, ["loc", [null, [60, 8], [62, 15]]]]],
+        statements: [["attribute", "onkeydown", ["subexpr", "action", ["applyFiltersByEnter"], [], ["loc", [null, [17, 20], [17, 52]]]]], ["block", "if", [["get", "showHelperColumn", ["loc", [null, [18, 14], [18, 30]]]]], [], 0, null, ["loc", [null, [18, 8], [22, 15]]]], ["block", "each", [["get", "columns", ["loc", [null, [24, 18], [24, 25]]]]], [], 1, null, ["loc", [null, [24, 10], [53, 19]]]], ["block", "if", [["get", "showMenuColumn", ["loc", [null, [55, 14], [55, 28]]]]], [], 2, null, ["loc", [null, [55, 8], [57, 15]]]]],
         locals: [],
         templates: [child0, child1, child2]
       };
     })();
-    var child3 = (function () {
+    var child2 = (function () {
       return {
         meta: {
           "fragmentReason": false,
@@ -35692,11 +36823,11 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
           "loc": {
             "source": null,
             "start": {
-              "line": 65,
+              "line": 60,
               "column": 4
             },
             "end": {
-              "line": 71,
+              "line": 66,
               "column": 4
             }
           },
@@ -35736,12 +36867,12 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
           morphs[1] = dom.createMorphAt(element1, 1, 1);
           return morphs;
         },
-        statements: [["attribute", "colspan", ["concat", [["get", "colspan", ["loc", [null, [67, 23], [67, 30]]]]]]], ["content", "placeholder", ["loc", [null, [68, 12], [68, 27]]]]],
+        statements: [["attribute", "colspan", ["concat", [["get", "colspan", ["loc", [null, [62, 23], [62, 30]]]]]]], ["content", "placeholder", ["loc", [null, [63, 12], [63, 27]]]]],
         locals: [],
         templates: []
       };
     })();
-    var child4 = (function () {
+    var child3 = (function () {
       var child0 = (function () {
         return {
           meta: {
@@ -35750,11 +36881,11 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
             "loc": {
               "source": null,
               "start": {
-                "line": 72,
+                "line": 67,
                 "column": 6
               },
               "end": {
-                "line": 96,
+                "line": 98,
                 "column": 6
               }
             },
@@ -35779,7 +36910,7 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
             morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
             return morphs;
           },
-          statements: [["inline", "object-list-view-row", [], ["record", ["subexpr", "@mut", [["get", "record", ["loc", [null, [74, 17], [74, 23]]]]], [], []], "columns", ["subexpr", "@mut", [["get", "columns", ["loc", [null, [75, 18], [75, 25]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [76, 19], [76, 27]]]]], [], []], "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [77, 19], [77, 27]]]]], [], []], "showMenuColumn", ["subexpr", "@mut", [["get", "showMenuColumn", ["loc", [null, [78, 25], [78, 39]]]]], [], []], "showHelperColumn", ["subexpr", "@mut", [["get", "showHelperColumn", ["loc", [null, [79, 27], [79, 43]]]]], [], []], "defaultRowConfig", ["subexpr", "@mut", [["get", "defaultRowConfig", ["loc", [null, [80, 27], [80, 43]]]]], [], []], "showValidationMessages", ["subexpr", "@mut", [["get", "showValidationMessagesInRow", ["loc", [null, [81, 33], [81, 60]]]]], [], []], "showDeleteMenuItemInRow", ["subexpr", "@mut", [["get", "showDeleteMenuItemInRow", ["loc", [null, [82, 34], [82, 57]]]]], [], []], "showEditMenuItemInRow", ["subexpr", "@mut", [["get", "showEditMenuItemInRow", ["loc", [null, [83, 32], [83, 53]]]]], [], []], "showAsteriskInRow", ["subexpr", "@mut", [["get", "showAsteriskInRow", ["loc", [null, [84, 28], [84, 45]]]]], [], []], "showCheckBoxInRow", ["subexpr", "@mut", [["get", "showCheckBoxInRow", ["loc", [null, [85, 28], [85, 45]]]]], [], []], "showDeleteButtonInRow", ["subexpr", "@mut", [["get", "showDeleteButtonInRow", ["loc", [null, [86, 32], [86, 53]]]]], [], []], "hierarchicalIndent", ["subexpr", "@mut", [["get", "hierarchicalIndent", ["loc", [null, [87, 29], [87, 47]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "inHierarchicalMode", ["loc", [null, [88, 29], [88, 47]]]]], [], []], "singleColumnCellComponent", ["subexpr", "@mut", [["get", "singleColumnCellComponent", ["loc", [null, [89, 36], [89, 61]]]]], [], []], "loadRecords", ["subexpr", "@mut", [["get", "loadRecords", ["loc", [null, [90, 22], [90, 33]]]]], [], []], "doRenderData", ["subexpr", "@mut", [["get", "record.doRenderData", ["loc", [null, [91, 23], [91, 42]]]]], [], []], "rowClick", ["subexpr", "action", ["rowClick"], [], ["loc", [null, [92, 19], [92, 38]]]], "selectRow", ["subexpr", "action", ["selectRow"], [], ["loc", [null, [93, 20], [93, 40]]]], "deleteRow", ["subexpr", "action", ["deleteRow"], [], ["loc", [null, [94, 20], [94, 40]]]]], ["loc", [null, [73, 8], [95, 10]]]]],
+          statements: [["inline", "object-list-view-row", [], ["record", ["subexpr", "@mut", [["get", "record", ["loc", [null, [69, 17], [69, 23]]]]], [], []], "columns", ["subexpr", "@mut", [["get", "columns", ["loc", [null, [70, 18], [70, 25]]]]], [], []], "readonly", ["subexpr", "@mut", [["get", "readonly", ["loc", [null, [71, 19], [71, 27]]]]], [], []], "required", ["subexpr", "@mut", [["get", "required", ["loc", [null, [72, 19], [72, 27]]]]], [], []], "showMenuColumn", ["subexpr", "@mut", [["get", "showMenuColumn", ["loc", [null, [73, 25], [73, 39]]]]], [], []], "showHelperColumn", ["subexpr", "@mut", [["get", "showHelperColumn", ["loc", [null, [74, 27], [74, 43]]]]], [], []], "defaultRowConfig", ["subexpr", "@mut", [["get", "defaultRowConfig", ["loc", [null, [75, 27], [75, 43]]]]], [], []], "showValidationMessages", ["subexpr", "@mut", [["get", "showValidationMessagesInRow", ["loc", [null, [76, 33], [76, 60]]]]], [], []], "showDeleteMenuItemInRow", ["subexpr", "@mut", [["get", "showDeleteMenuItemInRow", ["loc", [null, [77, 34], [77, 57]]]]], [], []], "showEditMenuItemInRow", ["subexpr", "@mut", [["get", "showEditMenuItemInRow", ["loc", [null, [78, 32], [78, 53]]]]], [], []], "showAsteriskInRow", ["subexpr", "@mut", [["get", "showAsteriskInRow", ["loc", [null, [79, 28], [79, 45]]]]], [], []], "showCheckBoxInRow", ["subexpr", "@mut", [["get", "showCheckBoxInRow", ["loc", [null, [80, 28], [80, 45]]]]], [], []], "showDeleteButtonInRow", ["subexpr", "@mut", [["get", "showDeleteButtonInRow", ["loc", [null, [81, 32], [81, 53]]]]], [], []], "showEditButtonInRow", ["subexpr", "@mut", [["get", "showEditButtonInRow", ["loc", [null, [82, 30], [82, 49]]]]], [], []], "showPrototypeButtonInRow", ["subexpr", "@mut", [["get", "showPrototypeButtonInRow", ["loc", [null, [83, 35], [83, 59]]]]], [], []], "inExpandMode", ["subexpr", "unbound", [["get", "inExpandMode", ["loc", [null, [84, 32], [84, 44]]]]], [], ["loc", [null, [84, 23], [84, 45]]]], "hierarchicalIndent", ["subexpr", "@mut", [["get", "hierarchicalIndent", ["loc", [null, [85, 29], [85, 47]]]]], [], []], "inHierarchicalMode", ["subexpr", "@mut", [["get", "inHierarchicalMode", ["loc", [null, [86, 29], [86, 47]]]]], [], []], "singleColumnCellComponent", ["subexpr", "@mut", [["get", "singleColumnCellComponent", ["loc", [null, [87, 36], [87, 61]]]]], [], []], "loadRecords", ["subexpr", "@mut", [["get", "loadRecords", ["loc", [null, [88, 22], [88, 33]]]]], [], []], "doRenderData", ["subexpr", "@mut", [["get", "record.doRenderData", ["loc", [null, [89, 23], [89, 42]]]]], [], []], "rowClick", ["subexpr", "action", ["rowClick"], [], ["loc", [null, [90, 19], [90, 38]]]], "selectRow", ["subexpr", "action", ["selectRow"], [], ["loc", [null, [91, 20], [91, 40]]]], "deleteRow", ["subexpr", "action", ["deleteRow"], [], ["loc", [null, [92, 20], [92, 40]]]], "createNewByPrototype", ["subexpr", "@mut", [["get", "createNewByPrototype", ["loc", [null, [93, 31], [93, 51]]]]], [], []], "hierarchyPaging", ["subexpr", "@mut", [["get", "hierarchyPaging", ["loc", [null, [94, 26], [94, 41]]]]], [], []], "fixedHeader", ["subexpr", "@mut", [["get", "fixedHeader", ["loc", [null, [95, 22], [95, 33]]]]], [], []], "configurateRow", ["subexpr", "@mut", [["get", "configurateRow", ["loc", [null, [96, 25], [96, 39]]]]], [], []]], ["loc", [null, [68, 8], [97, 10]]]]],
           locals: ["record"],
           templates: []
         };
@@ -35792,11 +36923,11 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
             "loc": {
               "source": null,
               "start": {
-                "line": 97,
+                "line": 99,
                 "column": 6
               },
               "end": {
-                "line": 104,
+                "line": 106,
                 "column": 6
               }
             },
@@ -35841,7 +36972,7 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
             morphs[1] = dom.createMorphAt(element0, 3, 3);
             return morphs;
           },
-          statements: [["attribute", "colspan", ["concat", [["get", "colspan", ["loc", [null, [99, 25], [99, 32]]]]]]], ["inline", "t", ["components.object-list-view.loading-text"], [], ["loc", [null, [101, 12], [101, 60]]]]],
+          statements: [["attribute", "colspan", ["concat", [["get", "colspan", ["loc", [null, [101, 25], [101, 32]]]]]]], ["inline", "t", ["components.object-list-view.loading-text"], [], ["loc", [null, [103, 12], [103, 60]]]]],
           locals: [],
           templates: []
         };
@@ -35853,11 +36984,11 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
           "loc": {
             "source": null,
             "start": {
-              "line": 71,
+              "line": 66,
               "column": 4
             },
             "end": {
-              "line": 105,
+              "line": 107,
               "column": 4
             }
           },
@@ -35883,7 +37014,7 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
           dom.insertBoundary(fragment, null);
           return morphs;
         },
-        statements: [["block", "each", [["get", "contentWithKeys", ["loc", [null, [72, 14], [72, 29]]]]], ["key", "key"], 0, null, ["loc", [null, [72, 6], [96, 15]]]], ["block", "if", [["get", "rowByRowLoadingProgress", ["loc", [null, [97, 12], [97, 35]]]]], [], 1, null, ["loc", [null, [97, 6], [104, 13]]]]],
+        statements: [["block", "each", [["get", "contentWithKeys", ["loc", [null, [67, 14], [67, 29]]]]], ["key", "key"], 0, null, ["loc", [null, [67, 6], [98, 15]]]], ["block", "if", [["get", "rowByRowLoadingProgress", ["loc", [null, [99, 12], [99, 35]]]]], [], 1, null, ["loc", [null, [99, 6], [106, 13]]]]],
         locals: [],
         templates: [child0, child1]
       };
@@ -35891,8 +37022,7 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
     return {
       meta: {
         "fragmentReason": {
-          "name": "missing-wrapper",
-          "problems": ["wrong-type", "multiple-nodes"]
+          "name": "triple-curlies"
         },
         "revision": "Ember@2.4.6",
         "loc": {
@@ -35902,7 +37032,7 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
             "column": 0
           },
           "end": {
-            "line": 108,
+            "line": 110,
             "column": 0
           }
         },
@@ -35914,8 +37044,6 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
-        var el1 = dom.createComment("");
-        dom.appendChild(el0, el1);
         var el1 = dom.createElement("table");
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
@@ -35941,20 +37069,18 @@ define("dummy/templates/mobile/components/object-list-view", ["exports"], functi
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element6 = dom.childAt(fragment, [1]);
+        var element6 = dom.childAt(fragment, [0]);
         var element7 = dom.childAt(element6, [3]);
-        var morphs = new Array(5);
-        morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
-        morphs[1] = dom.createAttrMorph(element6, 'class');
-        morphs[2] = dom.createMorphAt(element6, 1, 1);
-        morphs[3] = dom.createMorphAt(element7, 1, 1);
-        morphs[4] = dom.createMorphAt(element7, 2, 2);
-        dom.insertBoundary(fragment, 0);
+        var morphs = new Array(4);
+        morphs[0] = dom.createAttrMorph(element6, 'class');
+        morphs[1] = dom.createMorphAt(element6, 1, 1);
+        morphs[2] = dom.createMorphAt(element7, 1, 1);
+        morphs[3] = dom.createMorphAt(element7, 2, 2);
         return morphs;
       },
-      statements: [["block", "if", [["get", "errorMessages", ["loc", [null, [1, 6], [1, 19]]]]], [], 0, null, ["loc", [null, [1, 0], [11, 7]]]], ["attribute", "class", ["concat", ["object-list-view ui unstackable celled ", ["subexpr", "if", [["get", "readonly", ["loc", [null, [12, 58], [12, 66]]]], "readonly"], [], ["loc", [null, [12, 53], [12, 79]]]], " ", ["get", "tableClass", ["loc", [null, [12, 82], [12, 92]]]], " table"]]], ["block", "if", [["get", "singleColumnHeaderTitle", ["loc", [null, [13, 8], [13, 31]]]]], [], 1, null, ["loc", [null, [13, 2], [25, 9]]]], ["block", "if", [["get", "showFilters", ["loc", [null, [27, 10], [27, 21]]]]], [], 2, null, ["loc", [null, [27, 4], [64, 11]]]], ["block", "unless", [["get", "content", ["loc", [null, [65, 14], [65, 21]]]]], [], 3, 4, ["loc", [null, [65, 4], [105, 15]]]]],
+      statements: [["attribute", "class", ["concat", ["object-list-view ui unstackable celled ", ["subexpr", "if", [["get", "readonly", ["loc", [null, [1, 58], [1, 66]]]], "readonly"], [], ["loc", [null, [1, 53], [1, 79]]]], " ", ["get", "tableClass", ["loc", [null, [1, 82], [1, 92]]]], " table"]]], ["block", "if", [["get", "singleColumnHeaderTitle", ["loc", [null, [2, 8], [2, 31]]]]], [], 0, null, ["loc", [null, [2, 2], [14, 9]]]], ["block", "if", [["get", "showFilters", ["loc", [null, [16, 10], [16, 21]]]]], [], 1, null, ["loc", [null, [16, 4], [59, 11]]]], ["block", "unless", [["get", "content", ["loc", [null, [60, 14], [60, 21]]]]], [], 2, 3, ["loc", [null, [60, 4], [107, 15]]]]],
       locals: [],
-      templates: [child0, child1, child2, child3, child4]
+      templates: [child0, child1, child2, child3]
     };
   })());
 });
@@ -37630,11 +38756,27 @@ define('dummy/transforms/json', ['exports', 'ember-flexberry-gis/transforms/json
     }
   });
 });
+define('dummy/utils/batch-queries', ['exports', 'ember-flexberry-data/utils/batch-queries'], function (exports, _emberFlexberryDataUtilsBatchQueries) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryDataUtilsBatchQueries['default'];
+    }
+  });
+});
 define('dummy/utils/check-zoom', ['exports', 'ember-flexberry-gis/utils/check-zoom'], function (exports, _emberFlexberryGisUtilsCheckZoom) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
     get: function get() {
       return _emberFlexberryGisUtilsCheckZoom['default'];
+    }
+  });
+});
+define('dummy/utils/cut-string-by-length', ['exports', 'ember-flexberry/utils/cut-string-by-length'], function (exports, _emberFlexberryUtilsCutStringByLength) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryUtilsCutStringByLength['default'];
     }
   });
 });
@@ -37815,7 +38957,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance","getIntersectionAndArea":"http://134.209.30.115:1818/odata/GetIntersectionAndArea"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.2+78d69e52"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.2+08daf994"});
 }
 
 /* jshint ignore:end */
