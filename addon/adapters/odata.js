@@ -23,7 +23,7 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
 
     const getUrl = this._buildURL(modelName, null);
     const queryAdapter = new ODataQueryAdapter(getUrl, store);
-    const fullUrl = queryAdapter.getODataFullUrl(query).replace('/map','http://localhost:6500');
+    const fullUrl = queryAdapter.getODataFullUrl(query);
 
     requestBody += '\r\nGET ' + fullUrl + ' HTTP/1.1\r\n';
     requestBody += 'Content-Type: application/json;type=entry\r\n';
@@ -33,12 +33,6 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
 
     const headers = Ember.$.extend({}, this.get('headers'));
     headers['Content-Type'] = `multipart/mixed;boundary=${boundary}`;
-    let session = this.get('session');
-    let token = session.get('data.authenticated.token') || session.get('data.authenticated.access_token');
-    if (!Ember.isNone(token)) {
-      headers['Authorization'] =  'Bearer ' + token;
-    }
-
     const httpMethod = 'POST';
 
     const options = {
@@ -57,13 +51,18 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
       const result = batchResponses.filter(r => r.contentType === 'application/http')[0];
 
       const normalizedRecords = { data: Ember.A(), included: Ember.A() };
-      result.response.body.value.forEach(record => {
-        const normalized = store.normalize(modelName, record);
-        normalizedRecords.data.addObject(normalized.data);
-        if (normalized.included) {
-          normalizedRecords.included.addObjects(normalized.included);
-        }
-      });
+      let odataValue = result.response.body.value;
+      if (!Ember.isNone(odataValue)) {
+        odataValue.forEach(record => {
+          const normalized = store.normalize(modelName, record);
+          normalizedRecords.data.addObject(normalized.data);
+          if (normalized.included) {
+            normalizedRecords.included.addObjects(normalized.included);
+          }
+        });
+      } else {
+        console.log('Error batch: ' + result.response.body);
+      }
 
       return resolve(store.push(normalizedRecords));
     }).fail(reject));
