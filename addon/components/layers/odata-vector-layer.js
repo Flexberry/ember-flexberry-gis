@@ -283,7 +283,8 @@ export default BaseVectorLayer.extend({
       }
 
       obj.build.predicate = filter;
-      let objs = obj.store.query(obj.modelName, obj.build);
+      let adapter = Ember.getOwner(this).lookup('adapter:application');
+      let objs = adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
       objs.then(res => {
         let features = Ember.A();
         let models = res.toArray();
@@ -631,7 +632,8 @@ export default BaseVectorLayer.extend({
         obj.build.predicate = new Query.SimplePredicate('id', Query.FilterOperator.Eq, null);
       }
 
-      let objs = obj.store.query(obj.modelName, obj.build);
+      let adapter = Ember.getOwner(this).lookup('adapter:application');
+      let objs = adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
 
       objs.then(res => {
         const options = this.get('options');
@@ -847,7 +849,8 @@ export default BaseVectorLayer.extend({
             }
           }
 
-          let objs = obj.store.query(obj.modelName, obj.build);
+          let adapter = Ember.getOwner(this).lookup('adapter:application');
+          let objs = adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
 
           objs.then(res => {
             let models = res.toArray();
@@ -895,7 +898,8 @@ export default BaseVectorLayer.extend({
             }
           }
 
-          let objs = obj.store.query(obj.modelName, obj.build);
+          let adapter = Ember.getOwner(this).lookup('adapter:application');
+          let objs =adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
 
           objs.then(res => {
             let models = res.toArray();
@@ -953,9 +957,6 @@ export default BaseVectorLayer.extend({
 
             let obj = this.get('_buildStoreModelProjectionGeom');
 
-            let adapter = Ember.getOwner(this).lookup('adapter:application');
-            adapter.batchLoadModel(obj.modelName, obj.projectionName, '0002f24d-b2b8-414c-a242-2c7102ba04d1', obj.store).then(e=>console.log(e));
-
             obj.build.predicate = null;
             let crs = this.get('crs');
             let geojsonReader = new jsts.io.GeoJSONReader();
@@ -971,7 +972,8 @@ export default BaseVectorLayer.extend({
               obj.build.predicate = query.intersects(this.geomToEWKT(bounds));
               leafletObject.isLoadBounds = bounds;
               loadedBounds = bounds;
-              let objs = obj.store.query(obj.modelName, obj.build);
+              let adapter = Ember.getOwner(this).lookup('adapter:application');
+              let objs = adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
               if (leafletObject.statusLoadLayer) {
                 leafletObject.promiseLoadLayer = objs;
               }
@@ -1002,7 +1004,8 @@ export default BaseVectorLayer.extend({
             let newPart = queryNewBounds.intersects(this.geomToEWKT(loadedBounds));
 
             obj.build.predicate = new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart);
-            let objs = obj.store.query(obj.modelName, obj.build);
+            let adapter = Ember.getOwner(this).lookup('adapter:application');
+            let objs = adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
             if (leafletObject.statusLoadLayer) {
               leafletObject.promiseLoadLayer = objs;
             }
