@@ -445,7 +445,6 @@ export default BaseVectorLayer.extend({
   */
   save() {
     let _this = this;
-    const promises = Ember.A();
     let leafletObject = _this.get(&#x27;_leafletObject&#x27;);
     leafletObject.eachLayer(function (layer) {
       if (Ember.get(layer, &#x27;model.hasDirtyAttributes&#x27;)) {
@@ -468,20 +467,15 @@ export default BaseVectorLayer.extend({
 
           Ember.set(layer, &#x27;feature.geometry.coordinates&#x27;, geometryObject);
         }
-
-        promises.addObject(layer.model.save());
       }
     }, leafletObject);
 
-    leafletObject.deletedModels.forEach(model =&gt; {
-      promises.addObject(model.save());
-    });
-
-    leafletObject.deletedModels.clear();
-
-    if (promises.length &gt; 0) {
-      Ember.RSVP.all(promises).then((e) =&gt; {
-        let insertedIds = [];
+    let modelsLayer = leafletObject.models;
+    const store = this.get(&#x27;store&#x27;);
+    if (modelsLayer.length &gt; 0) {
+      let insertedIds = [];
+      store.batchUpdate(modelsLayer).then((models) =&gt; {
+        modelsLayer.clear();
         leafletObject.eachLayer(function (layer) {
           if (layer.state === state.insert) {
             insertedIds.push(layer);
@@ -492,7 +486,7 @@ export default BaseVectorLayer.extend({
         _this._setLayerState();
         leafletObject.fire(&#x27;save:success&#x27;, { layers: insertedIds });
       }).catch(function (e) {
-        console.log(&#x27;Error: &#x27; + e);
+        console.log(&#x27;Error save: &#x27; + e);
         leafletObject.fire(&#x27;save:failed&#x27;, e);
       });
     }
@@ -520,6 +514,7 @@ export default BaseVectorLayer.extend({
       Ember.set(layer, &#x27;feature.geometry.coordinates&#x27;, geometryObject.coordinates);
       layer.model.set(geometryField, geometryObject);
       layer.state = state.update;
+      leafletObject.models.push(layer.model);
     }
 
     return leafletObject;
@@ -532,12 +527,13 @@ export default BaseVectorLayer.extend({
     @param layer
   */
   removeLayer(layer) {
-    L.FeatureGroup.prototype.removeLayer.call(this, layer);
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
     if (layer.state !== state.insert) {
       layer.model.deleteRecord();
       layer.model.set(&#x27;hasChanged&#x27;, true);
       layer.state = state.remove;
-      this.deletedModels.addObject(layer.model);
+      leafletObject.models.push(layer.model);
     }
   },
 
@@ -584,6 +580,7 @@ export default BaseVectorLayer.extend({
     this._setLayerProperties(layer, model, geometryObject);
     let leafletObject = this.get(&#x27;_leafletObject&#x27;);
     L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
+    leafletObject.models.push(layer.model);
     return leafletObject;
   },
 
@@ -693,7 +690,7 @@ export default BaseVectorLayer.extend({
       }
 
       obj.build.predicate = filter;
-      let objs = obj.store.query(obj.modelName, obj.build);
+      let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
       objs.then(res =&gt; {
         let features = Ember.A();
         let models = res.toArray();
@@ -1011,7 +1008,7 @@ export default BaseVectorLayer.extend({
         obj.build.predicate = new Query.SimplePredicate(&#x27;id&#x27;, Query.FilterOperator.Eq, null);
       }
 
-      let objs = obj.store.query(obj.modelName, obj.build);
+      let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
 
       objs.then(res =&gt; {
         const options = this.get(&#x27;options&#x27;);
@@ -1034,12 +1031,12 @@ export default BaseVectorLayer.extend({
         layer.addLayer = this.get(&#x27;addLayer&#x27;).bind(this);
         layer.editLayerObjectProperties = this.get(&#x27;editLayerObjectProperties&#x27;).bind(this);
         layer.editLayer = this.get(&#x27;editLayer&#x27;).bind(this);
-        layer.removeLayer = this.get(&#x27;removeLayer&#x27;);
+        layer.removeLayer = this.get(&#x27;removeLayer&#x27;).bind(this);
         layer.modelName = obj.modelName;
         layer.projectionName = obj.projectionName;
         layer.editformname = obj.modelName + this.get(&#x27;postfixForEditForm&#x27;);
-        layer.deletedModels = Ember.A();
         layer.loadLayerFeatures = this.get(&#x27;loadLayerFeatures&#x27;).bind(this);
+        layer.models = Ember.A();
 
         let leafletMap = this.get(&#x27;leafletMap&#x27;);
         if (!Ember.isNone(leafletMap)) {
@@ -1139,6 +1136,7 @@ export default BaseVectorLayer.extend({
     const projectionName = this.get(&#x27;projectionName&#x27;);
     const geometryField = this.get(&#x27;geometryField&#x27;) || &#x27;geometry&#x27;;
     const store = this.get(&#x27;store&#x27;);
+    const adapter = Ember.getOwner(this).lookup(&#x27;adapter:application&#x27;);
 
     if (!modelName) {
       return;
@@ -1152,7 +1150,8 @@ export default BaseVectorLayer.extend({
       store: store,
       modelName: modelName,
       geometryField: geometryField,
-      projectionName: projectionName
+      projectionName: projectionName,
+      adapter: adapter
     };
   }),
 
@@ -1227,7 +1226,7 @@ export default BaseVectorLayer.extend({
             }
           }
 
-          let objs = obj.store.query(obj.modelName, obj.build);
+          let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
 
           objs.then(res =&gt; {
             let models = res.toArray();
@@ -1275,7 +1274,7 @@ export default BaseVectorLayer.extend({
             }
           }
 
-          let objs = obj.store.query(obj.modelName, obj.build);
+          let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
 
           objs.then(res =&gt; {
             let models = res.toArray();
@@ -1332,6 +1331,7 @@ export default BaseVectorLayer.extend({
             }
 
             let obj = this.get(&#x27;_buildStoreModelProjectionGeom&#x27;);
+
             obj.build.predicate = null;
             let crs = this.get(&#x27;crs&#x27;);
             let geojsonReader = new jsts.io.GeoJSONReader();
@@ -1347,7 +1347,7 @@ export default BaseVectorLayer.extend({
               obj.build.predicate = query.intersects(this.geomToEWKT(bounds));
               leafletObject.isLoadBounds = bounds;
               loadedBounds = bounds;
-              let objs = obj.store.query(obj.modelName, obj.build);
+              let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
               if (leafletObject.statusLoadLayer) {
                 leafletObject.promiseLoadLayer = objs;
               }
@@ -1378,7 +1378,7 @@ export default BaseVectorLayer.extend({
             let newPart = queryNewBounds.intersects(this.geomToEWKT(loadedBounds));
 
             obj.build.predicate = new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart);
-            let objs = obj.store.query(obj.modelName, obj.build);
+            let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
             if (leafletObject.statusLoadLayer) {
               leafletObject.promiseLoadLayer = objs;
             }

@@ -5022,7 +5022,7 @@ lang {
 }
 .ui.small.button {
   border: none;
-  font-size: 12px;
+  font-size: 14px;
 }
 .ui.small.button:hover {
   background: #d01919;
@@ -5096,9 +5096,12 @@ div.ui.secondary.menu.no-margin {
 .ui.button.delete-button {
   border: none;
   font-size: 0px;
-  padding-top: 10px;
+  padding-right: 10px;
   padding-left: 10px;
   height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .ui.button.delete-button:hover {
   background: none;
@@ -5106,6 +5109,8 @@ div.ui.secondary.menu.no-margin {
 }
 .ui.button.icon.hierarchical-button {
   border: 0px;
+  padding: 0 5px 0;
+  font-size: 1.5rem;
 }
 .ui.button.icon.hierarchical-button:hover {
   background: #FFFFFF;
@@ -5151,6 +5156,16 @@ div.ui.secondary.menu.no-margin {
   background-color: #FF7500;
   border: 1px solid #FF7500;
   color: #FFFFFF;
+}
+.ui.secondary.menu .ui.buttons.export-config .export-button,
+.ui.secondary.menu .ui.buttons.cols-config .config-button,
+.ui.secondary.menu .ui.buttons.adv-limit-config .adv-limit-button {
+  padding-right: 0em;
+}
+.ui.secondary.menu .ui.buttons.export-config .dropdown.button,
+.ui.secondary.menu .ui.buttons.cols-config .dropdown.button,
+.ui.secondary.menu .ui.buttons.adv-limit-config .dropdown.button {
+  padding-left: 0.2em;
 }
 /**************************************
       Edit panel buttons section
@@ -5253,13 +5268,15 @@ div.ui.secondary.menu.no-margin {
   content: '';
 }
 .flexberry-lookup .ui.action.input .ui.button.ui-change,
-.flexberry-lookup .ui.action.input .ui.button.ui-clear {
+.flexberry-lookup .ui.action.input .ui.button.ui-clear,
+.flexberry-lookup .ui.action.input .ui.ui-preview.button {
   padding: 0em 0.3em 0em 0.3em;
   font-size: 1em;
   border: none;
 }
 .flexberry-lookup .ui.action.input .ui.button.ui-change i.icon,
-.flexberry-lookup .ui.action.input .ui.button.ui-clear i.icon {
+.flexberry-lookup .ui.action.input .ui.button.ui-clear i.icon,
+.flexberry-lookup .ui.action.input .ui.ui-preview.button i.icon {
   margin: 0px 3px 0px 3px;
 }
 .flexberry-lookup .ui.fluid.action.input .ui.button.ui-clear:hover {
@@ -5523,9 +5540,11 @@ div.ui.secondary.menu.no-margin {
 }
 .flexberry-colsconfig.content .cols-config-apply:hover {
   border: 1px solid #7dd4b4;
+  border-radius: 5px;
 }
 .flexberry-colsconfig.content .cols-config-save {
   border: 1px solid #7ba7d9;
+  border-radius: 5px !important;
 }
 .flexberry-colsconfig.content .cols-config-save:hover {
   border: 1px solid #7dd4b4;
@@ -5533,13 +5552,15 @@ div.ui.secondary.menu.no-margin {
 }
 .ui.icon.button > .large.table.icon,
 .large.file.excel {
-  margin-top: -4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .ui.buttons > .ui.button:not(.basic):not(.inverted),
 .ui.buttons:not(.basic):not(.inverted) > .button {
   border: none;
   background: none!important;
-  padding: 0.7400em 0.8571em!important;
+  padding: 0.7400em 0.8571em;
 }
 .ui.basic.buttons .active.button {
   color: #999!important;
@@ -5551,11 +5572,9 @@ div.ui.secondary.menu.no-margin {
 }
 .ui.icon.tiny.button {
   border: 1px solid #7ba7d9;
-  margin: 2px 15px;
 }
 .ui.icon.tiny.button.no-margin {
   border: 1px solid #7ba7d9;
-  margin: 2px 15px;
 }
 .ui.buttons:not(.basic):not(.inverted) {
   box-shadow: none;
@@ -11118,10 +11137,12 @@ i.icon.table:before {
   font-family: 'Crimean';
   content: "\e819";
 }
+i.icon.large.file.excel.outline {
+  font-size: 24px;
+}
 i.icon.file.excel.outline:before {
   font-family: 'Crimean';
   content: "\e80a";
-  font-size: 20px;
 }
 i.icon.filter:before {
   font-family: 'Crimean';
@@ -12901,6 +12922,15 @@ span.lookup-field {
   border-color: #E0B4B4;
   color: #9F3A38;
   box-shadow: none;
+}
+.ui.form .flexberry-advlimit-input {
+  width: 100%;
+}
+.ui.form .flexberry-advlimit-input .flexberry-textarea {
+  width: 100%;
+}
+.ui.form .flexberry-advlimit-input .flexberry-textarea textarea {
+  resize: none;
 }
 /*!
  * # Semantic UI - Label
@@ -24990,6 +25020,10 @@ div.ui.secondary.menu.no-margin.nav-bar .right.menu {
   flex-wrap: wrap-reverse;
   justify-content: flex-end;
 }
+div.ui.secondary.menu.no-margin.nav-bar .right.menu {
+  flex-basis: 0px;
+  flex-grow: 1;
+}
 .ui.menu.flexberry-maptoolbar {
   margin-top: 10px;
 }
@@ -34964,10 +34998,6 @@ select.ui.dropdown {
 .ui.search.dropdown > .text {
   cursor: pointer;
 }
-.ui.dropdown.icon.button > .dropdown.icon {
-  margin-left: -20px;
-  margin-top: -4px;
-}
 .ui.icon.dropdown > .icon.dropdown:before {
   font-size: 20px;
 }
@@ -34988,8 +35018,8 @@ select.ui.dropdown {
 }
 .ui.buttons.cols-config > .ui.dropdown:last-child .menu,
 .ui.buttons.export-config > .ui.dropdown:last-child .menu {
-  left: auto;
-  right: -5em;
+  left: -2em;
+  right: auto;
 }
 .flexberry-dropdown {
   max-width: 100%;
@@ -36332,6 +36362,10 @@ select.ui.dropdown {
 /*******************************
          Theme Overrides
 *******************************/
+.ui.modal > .header:not(.ui) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .ui.modal > .close {
   top: 0rem;
   right: -0.2rem;
