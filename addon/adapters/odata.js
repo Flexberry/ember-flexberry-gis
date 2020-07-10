@@ -3,7 +3,6 @@ import { Projection, Adapter } from 'ember-flexberry-data';
 import ODataQueryAdapter from 'ember-flexberry-data/query/odata-adapter';
 import { getResponseMeta, getBatchResponses, parseBatchResponse } from 'ember-flexberry-data/utils/batch-queries';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
-import Builder from 'ember-flexberry-data/query/builder';
 
 export default Adapter.Odata.extend(Projection.AdapterMixin, {
   batchLoadModel(modelName, query, store) {
