@@ -124,6 +124,11 @@ export default BaseVectorLayer.extend({
       layer.model.set('hasChanged', true);
       layer.state = state.remove;
       leafletObject.models.push(layer.model);
+    } else {
+      var ind = leafletObject.models.indexOf(layer.model)
+      if (ind !== -1) {
+        leafletObject.models.splice(ind, 1);
+      }
     }
   },
 
