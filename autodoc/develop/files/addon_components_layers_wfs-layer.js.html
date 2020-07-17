@@ -682,10 +682,13 @@ export default BaseVectorLayer.extend({
       this._getFeature({
         filter
       }).then(res =&gt; {
-        let mapModel = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;);
-        res.forEach(feature =&gt; {
-          feature = featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), feature, feature.leafletLayer, mapModel);
-        });
+        if (this.get(&#x27;typeGeometry&#x27;) === &#x27;polygon&#x27;) {
+          let mapModel = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;);
+          res.forEach(feature =&gt; {
+            feature = featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), feature, feature.leafletLayer, mapModel);
+          });
+        }
+
         resolve(res);
       });
     });

@@ -12343,7 +12343,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 284,
+            "line": 287,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -12388,7 +12388,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 353,
+            "line": 356,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "_query",
@@ -12419,7 +12419,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 388,
+            "line": 391,
             "description": "Get an array of link parameter restrictions.",
             "itemtype": "method",
             "name": "getFilterParameters",
@@ -12443,7 +12443,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 416,
+            "line": 419,
             "description": "Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "loadLayerFeatures",
@@ -12463,7 +12463,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 489,
+            "line": 492,
             "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "getLayerFeatures",
@@ -12483,7 +12483,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 554,
+            "line": 557,
             "description": "Initializes DOM-related component's properties.",
             "class": "WfsLayerComponent",
             "module": "ember-flexberry-gis"
@@ -46342,15 +46342,15 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:388"
+            "line": " addon/components/layers/wfs-layer.js:391"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:416"
+            "line": " addon/components/layers/wfs-layer.js:419"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:489"
+            "line": " addon/components/layers/wfs-layer.js:492"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -46882,7 +46882,7 @@
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/layers/wfs-layer.js:554"
+            "line": " addon/components/layers/wfs-layer.js:557"
         },
         {
             "message": "Missing item type\nPerforms 'getFeatureInfo' request to WMS-service related to layer.",
