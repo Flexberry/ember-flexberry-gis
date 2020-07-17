@@ -103,7 +103,10 @@ export default BaseVectorLayer.extend({
       };
       Ember.set(layer, 'feature.geometry.coordinates', geometryObject.coordinates);
       layer.model.set(geometryField, geometryObject);
-      layer.state = state.update;
+      if (layer.state !== state.insert) {
+        layer.state = state.update;
+      }
+
       leafletObject.models.push(layer.model);
     }
 
