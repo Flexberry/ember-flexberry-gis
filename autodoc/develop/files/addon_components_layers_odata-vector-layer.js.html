@@ -473,18 +473,39 @@ export default BaseVectorLayer.extend({
     let modelsLayer = leafletObject.models;
     const store = this.get(&#x27;store&#x27;);
     if (modelsLayer.length &gt; 0) {
-      let insertedIds = [];
+      let insertedIds = leafletObject.getLayers().map((layer) =&gt; {
+        if (layer.state === state.insert) {
+          return layer.feature.properties.primarykey;
+        }
+      });
+      let insertedLayer = leafletObject.getLayers().filter(layer =&gt; {
+        return layer.state === state.insert;
+      });
+
       store.batchUpdate(modelsLayer).then((models) =&gt; {
         modelsLayer.clear();
-        leafletObject.eachLayer(function (layer) {
-          if (layer.state === state.insert) {
-            insertedIds.push(layer);
-          }
+        let insertedModelId = [];
 
-          layer.state = state.exist;
+        models.forEach(model =&gt; {
+          let ids = insertedIds.filter(id =&gt; {
+            return model.get(&#x27;id&#x27;) === id;
+          });
+          if (ids.length &gt; 0) {
+            insertedModelId.push(ids[0]);
+          }
         });
-        _this._setLayerState();
-        leafletObject.fire(&#x27;save:success&#x27;, { layers: insertedIds });
+
+        insertedLayer.forEach(function (layer) {
+          L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
+        });
+
+        if (insertedModelId.length &gt; 0) {
+          _this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;)._getModelLayerFeature(_this.layerModel.get(&#x27;id&#x27;), insertedModelId, true)
+          .then(([, lObject, featureLayer]) =&gt; {
+            _this._setLayerState();
+            leafletObject.fire(&#x27;save:success&#x27;, { layers: featureLayer });
+          });
+        }
       }).catch(function (e) {
         console.log(&#x27;Error save: &#x27; + e);
         leafletObject.fire(&#x27;save:failed&#x27;, e);
@@ -513,8 +534,12 @@ export default BaseVectorLayer.extend({
       };
       Ember.set(layer, &#x27;feature.geometry.coordinates&#x27;, geometryObject.coordinates);
       layer.model.set(geometryField, geometryObject);
-      layer.state = state.update;
-      leafletObject.models.push(layer.model);
+      if (layer.state !== state.insert) {
+        layer.state = state.update;
+      }
+
+      var id = leafletObject.getLayerId(layer);
+      leafletObject.models[id] = layer.model;
     }
 
     return leafletObject;
@@ -529,16 +554,21 @@ export default BaseVectorLayer.extend({
   removeLayer(layer) {
     let leafletObject = this.get(&#x27;_leafletObject&#x27;);
     L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
-    if (layer.state !== state.insert) {
+    var id = leafletObject.getLayerId(layer);
+
+    if (id in leafletObject.models) {
+      if (layer.state === state.insert) {
+        delete leafletObject.models[id];
+      } else {
+        layer.model.deleteRecord();
+        layer.model.set(&#x27;hasChanged&#x27;, true);
+        layer.state = state.remove;
+      }
+    } else {
       layer.model.deleteRecord();
       layer.model.set(&#x27;hasChanged&#x27;, true);
       layer.state = state.remove;
-      leafletObject.models.push(layer.model);
-    } else {
-      var ind = leafletObject.models.indexOf(layer.model);
-      if (ind !== -1) {
-        leafletObject.models.splice(ind, 1);
-      }
+      leafletObject.models[id] = layer.model;
     }
   },
 
@@ -585,7 +615,8 @@ export default BaseVectorLayer.extend({
     this._setLayerProperties(layer, model, geometryObject);
     let leafletObject = this.get(&#x27;_leafletObject&#x27;);
     L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
-    leafletObject.models.push(layer.model);
+    var id = leafletObject.getLayerId(layer);
+    leafletObject.models[id] = layer.model;
     return leafletObject;
   },
 
