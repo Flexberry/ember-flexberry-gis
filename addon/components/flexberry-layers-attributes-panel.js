@@ -1099,7 +1099,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let editedProperty = tabModel.propertyLink[rowId];
 
       this.set('_editRowData', editedProperty);
-      this.set('_editRowDataCopy', Ember.copy(JSON.parse(JSON.stringify(editedProperty)), false));
+      this.set('_editRowDataCopy', Ember.copy(editedProperty, false));
       this.set('_editRowTabModel', tabModel);
       this.set('_editRowLayer', tabModel.featureLink[rowId]);
 
