@@ -306,8 +306,9 @@ export default BaseVectorLayer.extend({
     @method _getFeature
     @param filter
     @param maxFeatures
+    @param isIdentify
   */
-  _getFeature(filter, maxFeatures) {
+  _getFeature(filter, maxFeatures, isIdentify = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let obj = this.get('_buildStoreModelProjectionGeom');
 
@@ -315,9 +316,19 @@ export default BaseVectorLayer.extend({
         obj.build.top = maxFeatures;
       }
 
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      let intersectionArea = config.APP.intersectionArea
+      if (isIdentify && obj.build.select.indexOf(intersectionArea) === -1) {
+        obj.build.select.push(intersectionArea)
+      }
+
       obj.build.predicate = filter;
       let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
       objs.then(res => {
+        if (isIdentify && obj.build.select.indexOf(intersectionArea) > 0) {
+          obj.build.select.pop();
+        }
+
         let features = Ember.A();
         let models = res.toArray();
         let layer = L.featureGroup();
@@ -386,7 +397,7 @@ export default BaseVectorLayer.extend({
     let geometryField = this.get('geometryField') || 'geometry';
     let pred = new Query.GeometryPredicate(geometryField);
     let predicate = pred.intersects(this.geomToEWKT(e.polygonLayer));
-    let featuresPromise = this._getFeature(predicate);
+    let featuresPromise = this._getFeature(predicate, null, true);
     return featuresPromise;
   },
 
