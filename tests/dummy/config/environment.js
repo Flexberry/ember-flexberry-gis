@@ -26,6 +26,8 @@ module.exports = function (environment) {
       // when it is created
       backendUrl: backendUrl,
 
+      intersectionArea: 'intersectionArea',
+
       // It's a custom property, used to prevent duplicate backend urls in sources.
       backendUrls: {
         root: backendUrl,
