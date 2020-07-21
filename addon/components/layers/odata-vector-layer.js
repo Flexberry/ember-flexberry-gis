@@ -89,7 +89,6 @@ export default BaseVectorLayer.extend({
           L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
         });
 
-        var result;
         if (insertedModelId.length > 0) {
           _this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(_this.layerModel.get('id'), insertedModelId, true)
           .then(([, lObject, featureLayer]) => {
@@ -99,7 +98,6 @@ export default BaseVectorLayer.extend({
         } else {
           leafletObject.fire('save:success', { layers: [] });
         }
-
       }).catch(function (e) {
         console.log('Error save: ' + e);
         leafletObject.fire('save:failed', e);
