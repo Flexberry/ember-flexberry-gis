@@ -841,17 +841,13 @@ export default BaseVectorLayer.extend({
           if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {// load features by id
             let loadIds = getLoadedFeatures(featureIds);
 
-            if (loadIds.length !== featureIds.length) {
-              let remainingFeat = featureIds.filter((item) => {
-                return loadIds.indexOf(item) === -1;
-              });
+            let remainingFeat = featureIds.filter((item) => {
+              return loadIds.indexOf(item) === -1;
+            });
 
-              if (!Ember.isEmpty(remainingFeat)) {
-                obj.build.predicate = makeFilterEqOr(remainingFeat);
-              } else { // If objects is already loaded, do fake request
-                obj.build.predicate = new Query.SimplePredicate('id', Query.FilterOperator.Eq, null);
-              }
-            } else {
+            if (!Ember.isEmpty(remainingFeat)) {
+              obj.build.predicate = makeFilterEqOr(remainingFeat);
+            } else { // If objects is already loaded, return leafletObject
               resolve(leafletObject);
               return;
             }
