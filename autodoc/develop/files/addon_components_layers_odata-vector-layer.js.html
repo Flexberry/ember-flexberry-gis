@@ -505,6 +505,8 @@ export default BaseVectorLayer.extend({
             _this._setLayerState();
             leafletObject.fire(&#x27;save:success&#x27;, { layers: featureLayer });
           });
+        } else {
+          leafletObject.fire(&#x27;save:success&#x27;, { layers: [] });
         }
       }).catch(function (e) {
         console.log(&#x27;Error save: &#x27; + e);
