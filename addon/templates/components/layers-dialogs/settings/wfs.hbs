@@ -97,6 +97,16 @@
 </div>
 <div class="field">
   <label>
+    {{t "components.layers-dialogs.settings.wfs.typeGeometry.caption"}}
+  </label>
+  {{flexberry-dropdown
+    class="compact"
+    items=typeGeometry
+    value=settings.typeGeometry
+  }}
+</div>
+<div class="field">
+  <label>
     {{t "components.layers-dialogs.settings.wfs.max-features-textbox.caption"}}
   </label>
   {{flexberry-textbox

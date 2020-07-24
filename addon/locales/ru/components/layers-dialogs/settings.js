@@ -42,6 +42,22 @@ export default {
         'format': 'Формат',
         'layers': 'Слои'
       },
+
+      'labels-settings':{
+        'sign-map-objects-label': 'Подписывать объекты карты',
+        'field-caption': 'Атрибуты слоя',
+        'no-fields': 'Поля не загружены',
+        'label': 'Надпись',
+        'font-caption': 'Шрифт',
+        'location-caption': 'Расположение',
+        'scale-range-caption': 'Видимость в пределах масштаба',
+        'availableLineLocation': {
+          'over': 'Над линией',
+          'along': 'Поверх линии',
+          'under': 'Под линией'
+        },
+        'error': 'Слой должен быть добавлен на карту'
+      }
     },
   },
 
@@ -78,12 +94,6 @@ export default {
     },
     'geometry-type-textbox': {
       'caption': 'Тип геометрии'
-    },
-    'coords-function-textbox': {
-      'caption': 'Метод преобразования координат'
-    },
-    'latlng-function-textbox': {
-      'caption': 'Метод преобразования широты и долготы'
     },
     'min-zoom': {
       'caption': 'Минимальное приближение карты'

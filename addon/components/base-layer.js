@@ -6,6 +6,7 @@ import Ember from 'ember';
 import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
+import { checkMapZoomLayer } from '../utils/check-zoom';
 
 const {
   assert
@@ -88,7 +89,7 @@ export default Ember.Component.extend(
       @type Object
     */
     defaultLeafletOptionsCallbacks: {
-      coordsToLatLng: function(coords) {
+      coordsToLatLng: function (coords) {
         let crs = this.get('crs');
         let point = new L.Point(coords[0], coords[1]);
         let latlng = crs.projection.unproject(point);
@@ -180,6 +181,13 @@ export default Ember.Component.extend(
     }),
 
     /**
+      @property _pane
+      @type String
+      @readOnly
+    */
+    _pane: null,
+
+    /**
       This layer bounding box.
 
       @property bounds
@@ -197,6 +205,50 @@ export default Ember.Component.extend(
     promiseLoad: null,
 
     /**
+      Creates map pane
+      @method _createPane
+      @private
+    */
+    _createPane(name) {
+      let leafletMap = this.get('leafletMap');
+      let pane = leafletMap.createPane(name);
+      let layer = this;
+
+      L.DomEvent.on(pane, 'click', function (e) {
+        if (e._stopped) { return; }
+
+        let l = layer;
+
+        if (l.leafletMap.hasLayer(l._leafletObject) && checkMapZoomLayer(l)) {
+          var point = l.leafletMap.mouseEventToLayerPoint(e);
+
+          let intersect = false;
+          l._leafletObject.eachLayer(function (layer) {
+            intersect = intersect || layer._containsPoint(point);
+          });
+
+          if (intersect) { return; }
+        }
+
+        var target = e.target;
+        var ev = new MouseEvent(e.type, e);
+
+        let removed = { node: target, pointerEvents: target.style.pointerEvents };
+        target.style.pointerEvents = 'none';
+        target = document.elementFromPoint(e.clientX, e.clientY);
+
+        if (target && target !== pane && target.parentElement && target.parentElement.classList.value.indexOf('leaflet-vectorLayer') !== -1) {
+          let stopped = !target.dispatchEvent(ev);
+          if (stopped || ev._stopped) {
+            L.DomEvent.stop(e);
+          }
+        }
+
+        removed.node.style.pointerEvents = removed.pointerEvents;
+      });
+    },
+
+    /**
       Creates leaflet layer related to layer type.
 
       @method _createLayer
@@ -210,6 +262,7 @@ export default Ember.Component.extend(
       }).then(({
         leafletLayer
       }) => {
+        leafletLayer.leafletMap = this.get('leafletMap');
         this.set('_leafletObject', leafletLayer);
 
         if (Ember.isPresent(this.get('layerModel'))) {
@@ -226,11 +279,6 @@ export default Ember.Component.extend(
         }
 
         this.sendAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel') });
-
-        // After saving, arrange layers by index.
-        leafletLayer.on('save:success', () => {
-          this._fixZIndexFire();
-        });
 
         return leafletLayer;
       }).catch((errorMessage) => {
@@ -337,8 +385,6 @@ export default Ember.Component.extend(
 
       const index = this.get('index');
       leafletLayer.setZIndex(index);
-
-      this._fixZIndexFire();
     },
 
     /**
@@ -405,6 +451,18 @@ export default Ember.Component.extend(
         return;
       }
 
+      let thisPane = this.get('_pane');
+      if (thisPane) {
+        let leafletMap = this.get('leafletMap');
+        if (thisPane && !Ember.isNone(leafletMap)) {
+          let pane = leafletMap.getPane(thisPane);
+          if (!pane || Ember.isNone(pane)) {
+            this._createPane(thisPane);
+            this._setLayerZIndex();
+          }
+        }
+      }
+
       leafletContainer.addLayer(leafletLayer);
       let leafletMap = this.get('leafletMap');
       if (!Ember.isNone(leafletMap)) {
@@ -448,7 +506,6 @@ export default Ember.Component.extend(
     */
     _visibilityDidChange: Ember.observer('visibility', function () {
       this._setLayerVisibility();
-      this._fixZIndexFire();
     }),
 
     /**
@@ -476,20 +533,6 @@ export default Ember.Component.extend(
       // so we must restore opacity to user defined value.
       this._setLayerOpacity();
     }),
-
-    /**
-      Rebuild layers.
-
-      @method _fixZIndexFire
-      @private
-    */
-    _fixZIndexFire: function () {
-      const leafletMap = this.get('leafletMap');
-
-      if (!Ember.isNone(leafletMap)) {
-        leafletMap.fire('fixZIndex');
-      }
-    },
 
     /**
       Handles 'flexberry-map:identify' event of leaflet map.
@@ -646,15 +689,6 @@ export default Ember.Component.extend(
         leafletMap.on('flexberry-map:load', (e) => {
           if (!Ember.isNone(this.promiseLoad)) {
             e.results.push(this.get('_leafletLayerPromise'));
-
-            if (e.loadFunc.length === 0) {
-              e.loadFunc.push(() => {
-
-                if (!Ember.isNone(leafletMap.fire)) {
-                  leafletMap.fire('fixZIndex');
-                }
-              });
-            }
           }
 
         }, this);
@@ -885,12 +919,12 @@ export default Ember.Component.extend(
     @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
    */
 
-   /**
-    Component's action invoking before the layer destroying.
+  /**
+   Component's action invoking before the layer destroying.
 
-    @method sendingActions.layerDestroy
-    @param {Object} eventObject Action param
-    @param {Object} eventObject.leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
-    @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
-   */
+   @method sendingActions.layerDestroy
+   @param {Object} eventObject Action param
+   @param {Object} eventObject.leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
+   @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
+  */
 );

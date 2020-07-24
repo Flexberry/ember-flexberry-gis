@@ -10,7 +10,6 @@ import LeafletMapLoaderMixin from '../mixins/leaflet-map/map-loader';
 import LeafletMapToolsMixin from '../mixins/leaflet-map/map-tools';
 import LeafletMapCommandsMixin from '../mixins/leaflet-map/map-commands';
 import LeafletMapSidebarMixin from '../mixins/leaflet-map/map-sidebar';
-import Renderer from '../objects/custom-renderer';
 
 import layout from '../templates/components/flexberry-map';
 
@@ -412,7 +411,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       @method localeDidChange
       @private
     */
-    _localeDidChange: Ember.observer('i18n.locale', function() {
+    _localeDidChange: Ember.observer('i18n.locale', function () {
       let i18n = this.get('i18n');
       let $leafletContainer = this.get('_$leafletContainer');
 
@@ -448,7 +447,6 @@ let FlexberryMapComponent = Ember.Component.extend(
       this.set('_$leafletContainer', $leafletContainer);
 
       let options = this.get('options');
-      options.renderer = new Renderer();
 
       // Create leaflet map.
       let leafletMap = L.map($leafletContainer[0], options);
@@ -470,22 +468,22 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       const mapApi = this.get('mapApi');
       if (Ember.isNone(mapApi.getFromApi('runQuery'))) {
-        mapApi.addToApi('runQuery',  this._runQuery.bind(this));
+        mapApi.addToApi('runQuery', this._runQuery.bind(this));
         this.set('_hasQueryApi', true);
       }
 
       if (Ember.isNone(mapApi.getFromApi('createObject'))) {
-        mapApi.addToApi('createObject',  this._createObject.bind(this));
+        mapApi.addToApi('createObject', this._createObject.bind(this));
         this.set('_hasCreateObjectApi', true);
       }
 
       if (Ember.isNone(mapApi.getFromApi('leafletMap'))) {
-        mapApi.addToApi('leafletMap',  leafletMap);
+        mapApi.addToApi('leafletMap', leafletMap);
         this.set('_hasLeafletMap', true);
       }
 
       if (Ember.isNone(mapApi.getFromApi('serviceLayer'))) {
-        mapApi.addToApi('serviceLayer',  this.get('serviceLayer'));
+        mapApi.addToApi('serviceLayer', this.get('serviceLayer'));
         this.set('_hasServiceLayer', true);
       }
 
