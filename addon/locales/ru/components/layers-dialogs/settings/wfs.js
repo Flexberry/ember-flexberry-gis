@@ -52,5 +52,8 @@ export default {
   },
   'max-zoom': {
     'caption': 'Максимальное приближение карты'
+  },
+  'typeGeometry': {
+    'caption': 'Тип геометрии'
   }
 };

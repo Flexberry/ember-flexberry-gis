@@ -141,6 +141,10 @@ export default BaseVectorLayer.extend({
 
     let pane = this.get('_pane');
     if (pane) {
+      if (layer instanceof L.Marker) {
+        layer.options.shadowPane = pane;
+      }
+
       layer.options.pane = pane;
       layer.options.renderer = this.get('_renderer');
     }
@@ -221,13 +225,6 @@ export default BaseVectorLayer.extend({
         })
         .on('load', (e) => {
           this._setLayerState();
-          if (e.layers && e.layers.forEach) {
-            e.layers.forEach((layer) => {
-              layer.minZoom = this.get('minZoom');
-              layer.maxZoom = this.get('maxZoom');
-              layer.leafletMap = this.get('leafletMap');
-            });
-          }
         });
 
       let promiseLoad = new Ember.RSVP.Promise((resolve, reject) => {

@@ -39,6 +39,22 @@ export default {
         'version': 'Version',
         'format': 'Format',
         'layers': 'Layers'
+      },
+
+      'labels-settings':{
+        'sign-map-objects-label': 'Sign map objects',
+        'field-caption': 'Layer\'s attributes',
+        'no-fields': 'Fields isn\'t loaded',
+        'label': 'Label',
+        'font-caption': 'Font',
+        'location-caption': 'Location',
+        'scale-range-caption': 'Visibility within scale',
+        'availableLineLocation': {
+          'over': 'Over the line',
+          'along': 'Along the line',
+          'under': 'Under the line'
+        },
+        'error': 'The layer must be added to the map'
       }
     }
   },

@@ -3,47 +3,9 @@
 */
 
 import Ember from 'ember';
-import { checkMapZoom } from '../utils/check-zoom';
 
 export function initialize() {
   L.Marker.include({
-    /**
-      Set position when zoom changed.
-      @method _setPos
-      @param {Object} pos position
-      @private
-    */
-    _setPos: function (pos) {
-      if (!this._eventParents || (this._eventParents && checkMapZoom(this))) {
-        if (this._icon) {
-          if (L.DomUtil.hasClass(this._icon, 'hidden')) {
-            L.DomUtil.removeClass(this._icon, 'hidden');
-          }
-
-          L.DomUtil.setPosition(this._icon, pos);
-          this._icon.style.zIndex = this._zIndex;
-        }
-
-        if (this._shadow) {
-          if (L.DomUtil.hasClass(this._icon, 'hidden')) {
-            L.DomUtil.removeClass(this._icon, 'hidden');
-          }
-
-          L.DomUtil.setPosition(this._shadow, pos);
-        }
-
-        this._zIndex = pos.y + this.options.zIndexOffset;
-      } else {
-        if (this._icon) {
-          L.DomUtil.addClass(this._icon, 'hidden');
-        }
-
-        if (this._shadow) {
-          L.DomUtil.addClass(this._shadow, 'hidden');
-        }
-      }
-    },
-
     /**
       Style for marker.
       @method setStyle
