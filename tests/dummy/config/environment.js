@@ -26,13 +26,14 @@ module.exports = function (environment) {
       // when it is created
       backendUrl: backendUrl,
 
+      intersectionArea: 'intersectionArea',
+
       // It's a custom property, used to prevent duplicate backend urls in sources.
       backendUrls: {
         root: backendUrl,
         api: backendUrl + '/odata',
         featureExportApi: backendUrl + '/api/featureexport',
-        getNearDistance: backendUrl + '/odata/GetNearDistance',
-        getIntersectionAndArea: backendUrl + '/odata/GetIntersectionAndArea'
+        getNearDistance: backendUrl + '/odata/GetNearDistance'
       },
 
       // Log service settings.

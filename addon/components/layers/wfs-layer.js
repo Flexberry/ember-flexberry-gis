@@ -269,10 +269,13 @@ export default BaseVectorLayer.extend({
       this._getFeature({
         filter
       }).then(res => {
-        let mapModel = this.get('mapApi').getFromApi('mapModel');
-        res.forEach(feature => {
-          feature = featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), feature, feature.leafletLayer, mapModel);
-        });
+        if (this.get('typeGeometry') === 'polygon') {
+          let mapModel = this.get('mapApi').getFromApi('mapModel');
+          res.forEach(feature => {
+            feature = featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), feature, feature.leafletLayer, mapModel);
+          });
+        }
+
         resolve(res);
       });
     });
@@ -452,16 +455,12 @@ export default BaseVectorLayer.extend({
         if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {// load features by id
           let loadIds = getLoadedFeatures(featureIds);
 
-          if (loadIds.length !== featureIds.length) {
-            let remainingFeat = featureIds.filter((item) => {
-              return loadIds.indexOf(item) === -1;
-            });
-            if (!Ember.isEmpty(remainingFeat)) {
-              filter = makeFilterEqOr(remainingFeat);
-            } else { // If objects is already loaded, do fake request
-              filter = new L.Filter.GmlObjectID(null);
-            }
-          } else {
+          let remainingFeat = featureIds.filter((item) => {
+            return loadIds.indexOf(item) === -1;
+          });
+          if (!Ember.isEmpty(remainingFeat)) {
+            filter = makeFilterEqOr(remainingFeat);
+          } else { // If objects is already loaded, return leafletObject
             resolve(leafletObject);
             return;
           }
