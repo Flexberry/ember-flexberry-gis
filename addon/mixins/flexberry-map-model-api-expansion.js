@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import rhumbOperations from '../utils/rhumb-operations';
 import { getLeafletCrs } from '../utils/leaflet-crs';
+import jsts from 'npm:jsts';
 
 export default Ember.Mixin.create(rhumbOperations, {
 
@@ -61,7 +62,146 @@ export default Ember.Mixin.create(rhumbOperations, {
   },
 
   /**
-    Create polygon object by rhumb.
+    Create multi-circuit object.
+
+    @method createMulti
+    @param {array} objects Array of objects to union.
+    Example:
+    let objects = [
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [[56.18425, 58.07197],
+                [56.21068, 58.07197],
+                [56.21068, 58.07987],
+                [56.18425, 58.07987],
+                [56.18425, 58.07197]]
+            ]
+          },
+          "crs": {
+            "type": "name",
+            "properties": {
+              "name": "EPSG:4326"
+            }
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [[56.19712, 58.06770],
+                [56.22322, 58.06770],
+                [56.22322, 58.07551],
+                [56.19712, 58.07551],
+                [56.19712, 58.06770]]
+            ]
+          },
+          "crs": {
+            "type": "name",
+            "properties": {
+              "name": "EPSG:4326"
+            }
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [[56.21644, 58.07864],
+                [56.23197, 58.07864],
+                [56.23197, 58.08608],
+                [56.21644, 58.08608],
+                [56.21644, 58.07864]]
+            ]
+          },
+          "crs": {
+            "type": "name",
+            "properties": {
+              "name": "EPSG:4326"
+            }
+          }
+        }];
+    @returns {Object} new multi-circuit object.
+  */
+  createMulti(objects)
+  {
+    let geojsonReader = new jsts.io.GeoJSONReader();
+    let geojsonWriter = new jsts.io.GeoJSONWriter();
+    let geometries = [];
+    let separateObjects = [];
+    let resultObject = null;
+
+    if (objects.length === 0) {
+      throw 'error: data is empty';
+    } else if (objects.length === 1) {
+      return objects[0];
+    }
+
+    objects.forEach((element, i) => {
+      if (!Ember.isNone(element.crs)) {
+        objects[i] = element.crs.properties.name.toUpperCase() === 'EPSG:4326' ? element
+        : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
+      } else { throw "error: object must have 'crs' attribute"; }
+    }, this);
+
+    //read the geometry of features
+    objects.forEach((element, i) => {
+      geometries.push(geojsonReader.read(element.geometry));
+      if (i !== 0 && geometries[i].getGeometryType() !== geometries[i - 1].getGeometryType())
+        { throw 'error: type mismatch. Objects must have the same type'; }
+    });
+
+    //check the intersections and calculate the difference between objects
+    for (let i = 0; i < geometries.length; i++) {
+      let current = geometries[i];
+      for (var j = 0; j < geometries.length; j++) {
+        if (i !== j) {
+          if (geometries[i].intersects(geometries[j])) {
+            current = current.difference(geometries[j]);
+          }
+        }
+      }
+
+      separateObjects.push(current);
+    }
+
+    //union the objects
+    separateObjects.forEach((element, i) => {
+      if (i === 0) {
+        resultObject = element;
+      } else {
+        resultObject = resultObject.union(element);
+      }
+    });
+
+    let unionres = geojsonWriter.write(resultObject);
+
+    const multiObj = {
+      type: 'Feature',
+      geometry: {
+        type: unionres.type,
+        coordinates: unionres.coordinates
+      },
+      crs: {
+        type: 'name',
+        properties: {
+          name: 'EPSG:4326'
+        }
+      }
+    };
+
+    return multiObj;
+  },
+
+  /**
+    Create Object by rhumb.
 
     @method createPolygonObjectRhumb
     @param {string} layerId Layer id.
@@ -79,11 +219,12 @@ export default Ember.Mixin.create(rhumbOperations, {
             { rhumb: 'ЮЗ', angle: 86.0047147391561, distance: 16532.122718537685 }
           ]
         };
-    @returns {Object} New featureLayer.
+    @returns {Object} New GeoJSON Feature.
   */
   createPolygonObjectRhumb(layerId, data) {
     let [, leafletObject] = this._getModelLeafletObject(layerId);
     const obj = this.createObjectRhumb(data, leafletObject.options.crs, this);
-    return this.addObjectToLayer(layerId, obj, data.crs);
+
+    return obj;
   }
 });
