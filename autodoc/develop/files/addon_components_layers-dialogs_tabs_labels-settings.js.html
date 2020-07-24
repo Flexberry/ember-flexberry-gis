@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/initializers/leaflet-marker.js - Flexberry Documentation</title>
+    <title>addon/components/layers-dialogs/tabs/labels-settings.js - Flexberry Documentation</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -403,103 +403,506 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>addon/initializers/leaflet-marker.js <small>File</small></h1>
+    <h1>addon/components/layers-dialogs/tabs/labels-settings.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
-/**
-  @module ember-flexberry
-*/
-
 import Ember from &#x27;ember&#x27;;
+import layout from &#x27;../../../templates/components/layers-dialogs/tabs/labels-settings&#x27;;
 
-export function initialize() {
-  L.Marker.include({
-    /**
-      Style for marker.
-      @method setStyle
-      @param {Object} style style for marker
-      @returns {Object} Returns L.Marker.
+export default Ember.Component.extend({
+  /**
+    Reference to component&#x27;s template.
+  */
+  layout,
 
-      style: {isImage: false,
-          options: {
-            className: classCss,
-            html: text
-          }
-      }
-    */
-    setStyle: function (style) {
-      if (Ember.isNone(this.styleIsSet) || !this.styleIsSet) {
-        if (!Ember.isNone(style) &amp;&amp; !Ember.isNone(style.isImage) &amp;&amp; (style.isImage === &#x27;false&#x27; || !style.isImage)) {
-          let html = this._parseString(style.options.html);
-          let label = this._createStringLabel(html, this);
-          let opt = Object.assign({}, style.options);
-          opt.html = label;
-          this.setIcon(new L.divIcon(opt));
-          this.style = opt;
-          this.styleIsSet = true;
-        } else if (!Ember.isNone(style) &amp;&amp; !Ember.isNone(style.options)) {
-          this.setIcon(new L.Icon(style.options));
-        } else {
-          this.setIcon(new L.Icon.Default());
+  /**
+    &quot;signMapObjectsLabel&quot; checkbox label locale key.
+
+    @property signMapObjectsLabel
+    @type String
+    @default &#x27;components.layers-dialogs.settings.group.tab.labels-settings.sign-map-objects-label&#x27;
+  */
+  _signMapObjectsLabel: &#x27;components.layers-dialogs.settings.group.tab.labels-settings.sign-map-objects-label&#x27;,
+
+  /**
+    displayPropertyIsCallback textbox css class.
+
+    @property displayPropertyIsCallbackClass
+    @type String
+    @default &#x27;toggle&#x27;
+  */
+  _signMapObjectsClass: &#x27;toggle&#x27;,
+
+  /**
+    Indicates when leaflet&#x27;s layer object is loading.
+
+    @property _leafletObjectIsLoading
+    @type Boolean
+    @default false
+    @private
+  */
+  _leafletObjectIsLoading: false,
+
+  /**
+    Leaflet&#x27;s layer object.
+
+    @property _leafletObject
+    @type Object
+    @default undefined
+    @private
+  */
+  _leafletObject: undefined,
+
+  /**
+    Fields caption
+
+    @property _fieldsCaption
+    @type String
+    @default &#x27;components.layers-dialogs.settings.group.tab.labels-settings.field-caption&#x27;
+  */
+  _fieldsCaption: &#x27;components.layers-dialogs.settings.group.tab.labels-settings.field-caption&#x27;,
+
+  /**
+    Placeholder when fields isn&#x27;t loaded
+
+    @property _noFields
+    @type String
+    @default &#x27;components.layers-dialogs.settings.group.tab.labels-settings.no-fields&#x27;
+  */
+  _noFields: &#x27;components.layers-dialogs.settings.group.tab.labels-settings.no-fields&#x27;,
+
+  /**
+    Available layer&#x27;s properties.
+
+    @property _availableLayerProperties
+    @type Object
+    @default undefined
+  */
+  _availableLayerProperties: undefined,
+
+  /**
+    Contains selected field.
+
+    @property _selectedField
+    @type String
+    @default undefined
+    @private
+  */
+  _selectedField: undefined,
+
+  /**
+    Label
+
+    @property _label
+    @type String
+    @default &#x27;components.layers-dialogs.settings.group.tab.labels-settings.field-caption&#x27;
+  */
+  _label: &#x27;components.layers-dialogs.settings.group.tab.labels-settings.label&#x27;,
+
+  /**
+    Class for operator buttons.
+
+    @property operatorButtonClass
+    @type String
+    @default &#x27;filter-operator-button&#x27;
+  */
+  _operatorButtonClass: &#x27;filter-operator-button&#x27;,
+
+  /**
+    Class for operator buttons.
+
+    @property _fontCaption
+    @type String
+    @default &#x27;components.layers-dialogs.settings.group.tab.labels-settings.font-caption
+  */
+  _fontCaption: &#x27;components.layers-dialogs.settings.group.tab.labels-settings.font-caption&#x27;,
+
+  /**
+    Available font families.
+
+    @property _availableFontFamilies
+    @type String[]
+    @default null
+    @private
+  */
+  _availableFontFamilies: null,
+
+  /**
+    Available font sizes.
+
+    @property _availableFontSizes
+    @type String[]
+    @default null
+    @private
+  */
+  _availableFontSizes: null,
+
+  /**
+    Hash containing location label.
+
+    @property _locationCaption
+    @type String
+    @default &#x27;components.layers-dialogs.settings.group.tab.labels-settings.location-caption&#x27;
+    @private
+  */
+  _locationCaption: &#x27;components.layers-dialogs.settings.group.tab.labels-settings.location-caption&#x27;,
+
+  /**
+    Hash containing location label.
+
+    @property _scaleRangeCaption
+    @type String
+    @default null
+    @private
+  */
+  _scaleRangeCaption: &#x27;components.layers-dialogs.settings.group.tab.labels-settings.scale-range-caption&#x27;,
+
+  /**
+    Containing available location of the line layer.
+
+    @property _itemsLineLocation
+    @type Object[]
+    @default null
+    @private
+  */
+  _itemsLineLocation: null,
+
+  /**
+    Containing available location of the line layer.
+
+    @property _availableLineLocation
+    @type String[]
+    @default null
+    @private
+  */
+  _availableLineLocation: Ember.computed(&#x27;i18n.locale&#x27;, function() {
+    let result = [];
+    let i18n = this.get(&#x27;i18n&#x27;);
+    let over = i18n.t(&#x60;components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.over&#x60;).toString();
+    let along = i18n.t(&#x60;components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.along&#x60;).toString();
+    let under = i18n.t(&#x60;components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.under&#x60;).toString();
+    result = Ember.A([over, along, under]);
+    let itemLineLocation = {
+      over: over,
+      along: along,
+      under: under
+    };
+    this.set(&#x27;_itemsLineLocation&#x27;, itemLineLocation);
+    return result;
+  }),
+
+  /**
+    Location of the line layer.
+
+    @property _lineLocationSelect
+    @type String
+    @default null
+    @private
+  */
+  _lineLocationSelect: Ember.computed(&#x27;value.location.lineLocationSelect&#x27;, &#x27;_itemsLineLocation&#x27;, function() {
+    let location = this.get(&#x27;value.location.lineLocationSelect&#x27;);
+    let items = this.get(&#x27;_itemsLineLocation&#x27;);
+    let result = items.over;
+    let setting = &#x27;over&#x27;;
+    if (!Ember.isNone(items)) {
+      for (var key in items) {
+        if (key === location) {
+          result = items[key];
+          setting = key;
+          break;
         }
-      } else {
-        if (!Ember.isNone(this.style) &amp;&amp; !Ember.isNone(this.style.html)) {
-          this.setIcon(new L.divIcon(this.style));
-        }
-
-        this.styleIsSet = false;
       }
-
-      return this;
-    },
-
-    /**
-      Create array of strings and feature properies.
-      @method _parseString
-      @param {String} expression String for parsing
-    */
-    _parseString(expression) {
-      if (Ember.isBlank(expression)) {
-        return null;
-      }
-
-      let exp = expression.trim();
-      let reg = /&#x27;(.+?)&#x27;/g;
-      let expResult = exp.split(reg).filter(x =&gt; x !== &#x27;&#x27;);
-      return expResult ?  expResult : null;
-    },
-
-    /**
-      Create label string.
-      @method _createStringLabel
-      @param {Array} expResult Create array of strings and feature properies
-    */
-    _createStringLabel(expResult, featureLayer) {
-      let label = &#x27;&#x27;;
-      let isProp = false;
-      expResult.forEach(function(element) {
-        for (let key in featureLayer.feature.properties) {
-          if (key === element &amp;&amp; !Ember.isNone(featureLayer.feature.properties[key]) &amp;&amp; !Ember.isBlank(featureLayer.feature.properties[key])) {
-            label += featureLayer.feature.properties[key];
-            isProp = true;
-          }
-        }
-
-        label += !isProp ?  element : &#x27;&#x27;;
-        isProp = false;
-      });
-
-      return label;
     }
-  });
-}
 
-export default {
-  name: &#x27;leaflet-marker&#x27;,
-  initialize
-};
+    if (Ember.isNone(location)) {
+      this.set(&#x27;value.location.lineLocationSelect&#x27;, setting);
+    }
+
+    return result;
+  }),
+
+  /**
+    Containing array of strings and feature properies.
+
+    @property _arrLabelString
+    @type Object[]
+    @default null
+    @private
+  */
+  _arrLabelString: null,
+
+  _error: Ember.computed(&#x27;_leafletObject&#x27;, &#x27;leafletMap&#x27;, function() {
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    return !leafletMap.hasLayer(leafletObject);
+  }),
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    // There is no easy way to programmatically get list of all available system fonts (in JavaScript),
+    // so we can only list some web-safe fonts statically (see https://www.w3schools.com/csSref/css_websafe_fonts.asp).
+    this.set(&#x27;_availableFontFamilies&#x27;, Ember.A([
+      &#x27;Georgia&#x27;,
+      &#x27;Palatino Linotype&#x27;,
+      &#x27;Times New Roman&#x27;,
+      &#x27;Arial&#x27;,
+      &#x27;Arial Black&#x27;,
+      &#x27;Comic Sans MS&#x27;,
+      &#x27;Impact&#x27;,
+      &#x27;Lucida Sans Unicode&#x27;,
+      &#x27;Tahoma&#x27;,
+      &#x27;Trebuchet MS&#x27;,
+      &#x27;Verdana&#x27;,
+      &#x27;Courier New&#x27;,
+      &#x27;Lucida Console&#x27;
+    ]));
+
+    // Same situation with available font sizes.
+    this.set(&#x27;_availableFontSizes&#x27;, Ember.A([&#x27;8&#x27;, &#x27;9&#x27;, &#x27;10&#x27;, &#x27;11&#x27;, &#x27;12&#x27;, &#x27;14&#x27;, &#x27;16&#x27;, &#x27;18&#x27;, &#x27;20&#x27;, &#x27;22&#x27;, &#x27;24&#x27;, &#x27;26&#x27;, &#x27;28&#x27;, &#x27;36&#x27;, &#x27;48&#x27;, &#x27;72&#x27;]));
+  },
+
+  /**
+    Gets all layers&#x27;s properties, makes some initializations.
+
+    @method getAllProperties
+  */
+  getAllProperties() {
+    let _this = this;
+    let leafletObject = _this.get(&#x27;_leafletObject&#x27;);
+    if (Ember.isNone(leafletObject)) {
+      let type = _this.get(&#x27;layerType&#x27;);
+      let leafletObjectMethod = _this.get(&#x27;leafletObjectMethod&#x27;);
+      if (!(Ember.isBlank(leafletObjectMethod) || Ember.isBlank(type))) {
+        _this.set(&#x27;_leafletObjectIsLoading&#x27;, true);
+        leafletObjectMethod().then(leafletObject =&gt; {
+          _this.set(&#x27;_leafletObject&#x27;, leafletObject);
+          _this.set(&#x27;_leafletObjectIsLoading&#x27;, false);
+          let layerClass = Ember.getOwner(_this).knownForType(&#x27;layer&#x27;, type);
+          if (!Ember.isBlank(layerClass)) {
+            let allProperties = Ember.A(layerClass.getLayerProperties(leafletObject));
+
+            let localizedProperties = this.get(&#x60;value.featuresPropertiesSettings.localizedProperties.${this.get(&#x27;i18n.locale&#x27;)}&#x60;) || {};
+            let excludedProperties = this.get(&#x60;value.featuresPropertiesSettings.excludedProperties&#x60;);
+            excludedProperties = Ember.isArray(excludedProperties) ? Ember.A(excludedProperties) : Ember.A();
+            let availableLayerProperties = {};
+            for (var propertyName of allProperties) {
+              if (excludedProperties.contains(propertyName)) {
+                continue;
+              }
+
+              let propertyCaption = Ember.get(localizedProperties, propertyName);
+              availableLayerProperties[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;
+            }
+
+            _this.set(&#x27;_availableLayerProperties&#x27;, availableLayerProperties);
+          }
+        }).catch(() =&gt; {
+          _this.set(&#x27;_leafletObjectIsLoading&#x27;, false);
+        });
+      }
+    }
+  },
+
+  /**
+    Paste specified string into label string.
+
+    @method _pasteIntoLabelString
+    @param {String} pasteString String for pasting
+    @param {Integer} caretShift Caret shift after string is pasted
+    @private
+  */
+  _pasteIntoLabelString(pasteString, caretShift) {
+    let textarea = this.$(&#x27;.edit-label-textarea&#x27;)[0];
+    let labelString = this.get(&#x27;value.labelSettingsString&#x27;) || &#x27;&#x27;;
+    let newLabelString = &#x27;&#x27;;
+    let caretPosition = 0;
+    if (labelString.length &gt; 0) {
+      newLabelString = &#x60;${labelString.slice(0, textarea.selectionStart)}${pasteString}${labelString.slice(textarea.selectionEnd)}&#x60;;
+      caretPosition = textarea.selectionStart + pasteString.length;
+    } else {
+      newLabelString = pasteString;
+      caretPosition = pasteString.length;
+    }
+
+    caretPosition = caretPosition + (caretShift || 0);
+    this.set(&#x27;value.labelSettingsString&#x27;, newLabelString);
+    Ember.run.scheduleOnce(&#x27;afterRender&#x27;, this, function () {
+      textarea.focus();
+      textarea.setSelectionRange(caretPosition, caretPosition);
+    });
+  },
+
+  /**
+    Hook, working after element was inserted.
+
+    @method didInsertElement
+  */
+  didInsertElement() {
+    this.getAllProperties();
+    if (this.get(&#x27;value.signMapObjects&#x27;)) {
+      this.$(&#x27;textarea&#x27;).removeAttr(&#x27;readonly&#x27;);
+    } else {
+      this.$(&#x27;textarea&#x27;).attr(&#x27;readonly&#x27;, true);
+    }
+  },
+
+  actions: {
+    /**
+      Handles onLineLocationSelect - dropdown change.
+      @method actions.onLineLocationSelect
+    */
+    onLineLocationSelect(location) {
+      let items = this.get(&#x27;_itemsLineLocation&#x27;);
+      let result = &#x27;over&#x27;;
+      if (!Ember.isNone(items)) {
+        for (var key in items) {
+          if (items[key] === location) {
+            result = key;
+            break;
+          }
+        }
+      }
+
+      this.set(&#x27;value.location.lineLocationSelect&#x27;, result);
+    },
+
+    /**
+      Handles signMapObjects-checkbox change.
+      @method actions.signMapObjectsCheckboxDidChange
+    */
+    signMapObjectsCheckboxDidChange() {
+      if (!this.get(&#x27;value.signMapObjects&#x27;)) {
+        this.$(&#x27;textarea&#x27;).removeAttr(&#x27;readonly&#x27;);
+      } else {
+        this.$(&#x27;textarea&#x27;).attr(&#x27;readonly&#x27;, true);
+      }
+    },
+
+    /**
+      This action is called when an item in Fields list is pressed.
+
+      @method actions.fieldClick
+      @param {String} text Selected field
+    */
+    fieldClick(text) {
+      if (this.get(&#x27;_selectedField&#x27;) !== text &amp;&amp; this.get(&#x27;value.signMapObjects&#x27;)) {
+        this.set(&#x27;values&#x27;, Ember.A());
+        this.set(&#x27;_selectedField&#x27;, text);
+      }
+    },
+
+    /**
+      Paste selected field or field value into filter string.
+
+      @method actions.pasteFieldValue
+      @param {String} value
+    */
+    pasteFieldValue(value) {
+      if (this.get(&#x27;value.signMapObjects&#x27;)) {
+        if (Ember.isNone(value)) {
+          this._pasteIntoLabelString(&#x27;NULL&#x27;);
+          return;
+        }
+
+        let newString = &#x60;&#x27;${value}&#x27;&#x60;;
+        this._pasteIntoLabelString(newString);
+      }
+    },
+
+    /**
+      This action is called when Clear button is pressed.
+
+      @method actions.clearLabel
+    */
+    clearLabel() {
+      this.set(&#x27;value.labelSettingsString&#x27;, undefined);
+    },
+
+    /**
+      Handler for bold font button&#x27;s &#x27;click&#x27; action.
+
+      @method actions.onBoldFontButtonClick
+    */
+    onBoldFontButtonClick() {
+      let previousFontWeight = this.get(&#x27;value.options.captionFontWeight&#x27;);
+      this.set(&#x27;value.options.captionFontWeight&#x27;, previousFontWeight !== &#x27;bold&#x27; ? &#x27;bold&#x27; : &#x27;normal&#x27;);
+    },
+
+    /**
+      Handler for italic font button&#x27;s &#x27;click&#x27; action.
+
+      @method actions.onItalicFontButtonClick
+    */
+    onItalicFontButtonClick() {
+      let previousFontWeight = this.get(&#x27;value.options.captionFontStyle&#x27;);
+      this.set(&#x27;value.options.captionFontStyle&#x27;, previousFontWeight !== &#x27;italic&#x27; ? &#x27;italic&#x27; : &#x27;normal&#x27;);
+    },
+
+    /**
+      Handler for underline font button&#x27;s &#x27;click&#x27; action.
+
+      @method actions.onUnderlineFontButtonClick
+    */
+    onUnderlineFontButtonClick() {
+      let previousFontWeight = this.get(&#x27;value.options.captionFontDecoration&#x27;);
+      this.set(&#x27;value.options.captionFontDecoration&#x27;, previousFontWeight !== &#x27;underline&#x27; ? &#x27;underline&#x27; : &#x27;none&#x27;);
+    },
+
+    /**
+      Handler for left font button&#x27;s &#x27;click&#x27; action.
+
+      @method actions.onLeftFontButtonClick
+    */
+    onLeftFontButtonClick() {
+      let previousFontWeight = this.get(&#x27;value.options.captionFontAlign&#x27;);
+      this.set(&#x27;value.options.captionFontAlign&#x27;, previousFontWeight !== &#x27;left&#x27; ? &#x27;left&#x27; : &#x27;auto&#x27;);
+    },
+
+    /**
+      Handler for center font button&#x27;s &#x27;click&#x27; action.
+
+      @method actions.onCenterFontButtonClick
+    */
+    onCenterFontButtonClick() {
+      let previousFontWeight = this.get(&#x27;value.options.captionFontAlign&#x27;);
+      this.set(&#x27;value.options.captionFontAlign&#x27;, previousFontWeight !== &#x27;center&#x27; ? &#x27;center&#x27; : &#x27;auto&#x27;);
+    },
+
+    /**
+      Handler for right font button&#x27;s &#x27;click&#x27; action.
+
+      @method actions.onRightFontButtonClick
+    */
+    onRightFontButtonClick() {
+      let previousFontWeight = this.get(&#x27;value.options.captionFontAlign&#x27;);
+      this.set(&#x27;value.options.captionFontAlign&#x27;, previousFontWeight !== &#x27;right&#x27; ? &#x27;right&#x27; : &#x27;auto&#x27;);
+    },
+
+    /**
+      Handler for font colorpicker&#x27;s &#x27;change&#x27; action.
+
+      @method actions.onCaptionFontColorChange
+    */
+    onCaptionFontColorChange(e) {
+      this.set(&#x27;value.options.captionFontColor&#x27;, e.newValue);
+    },
+
+    /**
+      Handler for font colorpicker&#x27;s &#x27;change&#x27; action.
+
+      @method actions.onCaptionFontColorChange
+    */
+    onLocationPointButtonClick(num) {
+      this.set(&#x27;value.location.locationPoint&#x27;, num);
+    }
+  }
+});
 
     </pre>
 </div>

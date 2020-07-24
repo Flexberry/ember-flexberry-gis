@@ -37453,6 +37453,25 @@ form.flexberry-geometry-add-mode-import-form,
   content: "\e812";
   font-family: Crimean;
 }
+/******************************************************************
+         flexberry-edit-layer-dialog label-settings
+         override styles for Row
+*******************************************************************/
+.ui.grid > .location:last-child {
+  padding-bottom: 1rem;
+}
+.ui.grid > .location:first-child {
+  padding-top: 1rem;
+}
+.ui.grid > .location {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
 .ui.modal.flexberry-geometry-add-mode-rhumb-dialog .rhumb {
   width: 33%;
   margin: 3% 0;

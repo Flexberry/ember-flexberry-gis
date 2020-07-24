@@ -458,6 +458,30 @@ const createCommonLegendSettings = function () {
   };
 };
 
+const createcommonLabelSettings = function () {
+  return {
+    signMapObjects: false,
+    labelSettingsString: null,
+    options: {
+      captionFontFamily: &#x27;Times New Roman&#x27;,
+      captionFontSize: &#x27;12&#x27;,
+      captionFontWeight: &#x27;normal&#x27;,
+      captionFontStyle: &#x27;normal&#x27;,
+      captionFontDecoration: &#x27;none&#x27;,
+      captionFontColor: &#x27;#000000&#x27;,
+      captionFontAlign: &#x27;left&#x27;
+    },
+    location: {
+      locationPoint: &#x27;overRight&#x27;,
+      lineLocationSelect: &#x27;Over the line&#x27;
+    },
+    scaleRange: {
+      minScaleRange: null,
+      maxScaleRange: null
+    }
+  };
+};
+
 /**
   Class describing base layer metadata.
 
@@ -510,6 +534,8 @@ export default Ember.Object.extend({
     if (availableOperations.contains(&#x27;legend&#x27;)) {
       Ember.set(settings, &#x27;legendSettings&#x27;, createCommonLegendSettings());
     }
+
+    Ember.set(settings, &#x27;labelSettings&#x27;, createcommonLabelSettings());
 
     return settings;
   },

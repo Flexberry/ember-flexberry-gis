@@ -549,7 +549,16 @@ export default WmsSettingsComponent.extend({
       return format !== &#x27;base&#x27; &amp;&amp; format !== &#x27;scheme&#x27;;
     });
     this.set(&#x27;_availableInfoFormats&#x27;, Ember.A(availableFormats));
-  }
+  },
+
+  /**
+    Available geometry types.
+
+    @property typeGeometry
+    @type Array
+    @default []
+  */
+  typeGeometry: [&#x27;polygon&#x27;, &#x27;polyline&#x27;, &#x27;marker&#x27;]
 });
 
     </pre>

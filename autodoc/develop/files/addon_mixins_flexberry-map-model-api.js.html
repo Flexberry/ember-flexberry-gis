@@ -529,6 +529,10 @@ export default Ember.Mixin.create({
             map.addLayer(layerShape);
           }
         });
+        let labelLayer = leafletObject._labelsLayer;
+        if (layer.get(&#x27;settingsAsObject.labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(labelLayer) &amp;&amp; !map.hasLayer(labelLayer)) {
+          map.addLayer(labelLayer);
+        }
       });
     }
   },
@@ -556,6 +560,10 @@ export default Ember.Mixin.create({
           map.removeLayer(layerShape);
         }
       });
+      let labelLayer = leafletObject._labelsLayer;
+      if (layer.get(&#x27;settingsAsObject.labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(labelLayer) &amp;&amp; map.hasLayer(labelLayer)) {
+        map.removeLayer(labelLayer);
+      }
     }
   },
 
@@ -1042,6 +1050,23 @@ export default Ember.Mixin.create({
               });
             }
           });
+          let labelLayer = leafletObject._labelsLayer;
+          if (layer.get(&#x27;settingsAsObject.labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(labelLayer) &amp;&amp; !map.hasLayer(labelLayer)) {
+            objectIds.forEach(objectId =&gt; {
+              let objects = Object.values(labelLayer._layers).filter(shape =&gt; {
+                return this._getLayerFeatureId(layer, shape) === objectId;
+              });
+              if (objects.length &gt; 0) {
+                objects.forEach(obj =&gt; {
+                  if (visibility) {
+                    map.addLayer(obj);
+                  } else {
+                    map.removeLayer(obj);
+                  }
+                });
+              }
+            });
+          }
         });
       }
     }
