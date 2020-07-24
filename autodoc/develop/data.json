@@ -42997,7 +42997,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 7,
+            "line": 8,
             "description": "Add object to layer.",
             "itemtype": "method",
             "name": "addObjectToLayer",
@@ -43027,8 +43027,28 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 63,
-            "description": "Create polygon object by rhumb.",
+            "line": 64,
+            "description": "Create multi-circuit object.",
+            "itemtype": "method",
+            "name": "createMulti",
+            "params": [
+                {
+                    "name": "objects",
+                    "description": "Array of objects to union.\nExample:\nlet objects = [\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.18425, 58.07197],\n            [56.21068, 58.07197],\n            [56.21068, 58.07987],\n            [56.18425, 58.07987],\n            [56.18425, 58.07197]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    },\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.19712, 58.06770],\n            [56.22322, 58.06770],\n            [56.22322, 58.07551],\n            [56.19712, 58.07551],\n            [56.19712, 58.06770]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    },\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.21644, 58.07864],\n            [56.23197, 58.07864],\n            [56.23197, 58.08608],\n            [56.21644, 58.08608],\n            [56.21644, 58.07864]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    }];",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "new multi-circuit object.",
+                "type": "Object"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api-expansion.js",
+            "line": 203,
+            "description": "Create Object by rhumb.",
             "itemtype": "method",
             "name": "createPolygonObjectRhumb",
             "params": [
@@ -43044,7 +43064,7 @@
                 }
             ],
             "return": {
-                "description": "New featureLayer.",
+                "description": "New GeoJSON Feature.",
                 "type": "Object"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
@@ -47353,11 +47373,15 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:7"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:8"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:63"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:64"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:203"
         },
         {
             "message": "replacing incorrect tag: returns with return",
