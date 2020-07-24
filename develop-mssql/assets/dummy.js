@@ -832,6 +832,14 @@ define('dummy/components/layers-dialogs/tabs/identification-settings', ['exports
     }
   });
 });
+define('dummy/components/layers-dialogs/tabs/labels-settings', ['exports', 'ember-flexberry-gis/components/layers-dialogs/tabs/labels-settings'], function (exports, _emberFlexberryGisComponentsLayersDialogsTabsLabelsSettings) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisComponentsLayersDialogsTabsLabelsSettings['default'];
+    }
+  });
+});
 define('dummy/components/layers-dialogs/tabs/legend-settings', ['exports', 'ember-flexberry-gis/components/layers-dialogs/tabs/legend-settings'], function (exports, _emberFlexberryGisComponentsLayersDialogsTabsLegendSettings) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -3553,6 +3561,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/l
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/components/layers-dialogs/tabs/identification-settings.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers-dialogs/tabs/labels-settings.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/components/layers-dialogs/tabs');
+  test('modules/ember-flexberry-gis/components/layers-dialogs/tabs/labels-settings.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/components/layers-dialogs/tabs/labels-settings.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers-dialogs/tabs/labels-settings.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/components/layers-dialogs/tabs/labels-settings.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/components/layers-dialogs/tabs/labels-settings.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers-dialogs/tabs/legend-settings.jscs-test', ['exports'], function (exports) {
@@ -38952,7 +38973,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.2+6e90312b"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.2+be96b88f"});
 }
 
 /* jshint ignore:end */
