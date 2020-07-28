@@ -1059,47 +1059,47 @@ export default BaseVectorLayer.extend({
         obj.build.predicate = new Query.SimplePredicate(&#x27;id&#x27;, Query.FilterOperator.Eq, null);
       }
 
-      const options = this.get(&#x27;options&#x27;);
-      let layer = L.featureGroup();
+      let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
 
-      layer.options.crs = crs;
-      layer.options.style = this.get(&#x27;styleSettings&#x27;);
-      layer.options.continueLoading = continueLoading;
-      layer.options.showExisting = showExisting;
-      if (!showExisting &amp;&amp; continueLoading &amp;&amp; visibility &amp;&amp; checkMapZoomLayer(this)) {
-        layer.isLoadBounds = bounds;
-      }
-
-      L.setOptions(layer, options);
-      layer.minZoom = this.get(&#x27;minZoom&#x27;);
-      layer.maxZoom = this.get(&#x27;maxZoom&#x27;);
-      layer.save = this.get(&#x27;save&#x27;).bind(this);
-      layer.geometryField = obj.geometryField;
-      layer.addLayer = this.get(&#x27;addLayer&#x27;).bind(this);
-      layer.editLayerObjectProperties = this.get(&#x27;editLayerObjectProperties&#x27;).bind(this);
-      layer.editLayer = this.get(&#x27;editLayer&#x27;).bind(this);
-      layer.removeLayer = this.get(&#x27;removeLayer&#x27;);
-      layer.modelName = obj.modelName;
-      layer.projectionName = obj.projectionName;
-      layer.editformname = obj.modelName + this.get(&#x27;postfixForEditForm&#x27;);
-      layer.deletedModels = Ember.A();
-      layer.loadLayerFeatures = this.get(&#x27;loadLayerFeatures&#x27;).bind(this);
-
-      let leafletMap = this.get(&#x27;leafletMap&#x27;);
-      if (!Ember.isNone(leafletMap)) {
-        let thisPane = this.get(&#x27;_pane&#x27;);
-        let pane = leafletMap.getPane(thisPane);
-        if (!pane || Ember.isNone(pane)) {
-          this._createPane(thisPane);
-          layer.options.pane = thisPane;
-          layer.options.renderer = this.get(&#x27;_renderer&#x27;);
-          this._setLayerZIndex();
-        }
-      }
-
-      let objs = obj.store.query(obj.modelName, obj.build);
       objs.then(res =&gt; {
+        const options = this.get(&#x27;options&#x27;);
         let models = res.toArray();
+        let layer = L.featureGroup();
+
+        layer.options.crs = crs;
+        layer.options.style = this.get(&#x27;styleSettings&#x27;);
+        layer.options.continueLoading = continueLoading;
+        layer.options.showExisting = showExisting;
+        if (!showExisting &amp;&amp; continueLoading &amp;&amp; visibility &amp;&amp; checkMapZoomLayer(this)) {
+          layer.isLoadBounds = bounds;
+        }
+
+        L.setOptions(layer, options);
+        layer.minZoom = this.get(&#x27;minZoom&#x27;);
+        layer.maxZoom = this.get(&#x27;maxZoom&#x27;);
+        layer.save = this.get(&#x27;save&#x27;).bind(this);
+        layer.geometryField = obj.geometryField;
+        layer.addLayer = this.get(&#x27;addLayer&#x27;).bind(this);
+        layer.editLayerObjectProperties = this.get(&#x27;editLayerObjectProperties&#x27;).bind(this);
+        layer.editLayer = this.get(&#x27;editLayer&#x27;).bind(this);
+        layer.removeLayer = this.get(&#x27;removeLayer&#x27;).bind(this);
+        layer.modelName = obj.modelName;
+        layer.projectionName = obj.projectionName;
+        layer.editformname = obj.modelName + this.get(&#x27;postfixForEditForm&#x27;);
+        layer.loadLayerFeatures = this.get(&#x27;loadLayerFeatures&#x27;).bind(this);
+        layer.models = Ember.A();
+
+        let leafletMap = this.get(&#x27;leafletMap&#x27;);
+        if (!Ember.isNone(leafletMap)) {
+          let thisPane = this.get(&#x27;_pane&#x27;);
+          let pane = leafletMap.getPane(thisPane);
+          if (!pane || Ember.isNone(pane)) {
+            this._createPane(thisPane);
+            layer.options.pane = thisPane;
+            layer.options.renderer = this.get(&#x27;_renderer&#x27;);
+            this._setLayerZIndex();
+          }
+        }
 
         models.forEach(model =&gt; {
           this.addLayerObject(layer, model);
@@ -1109,10 +1109,11 @@ export default BaseVectorLayer.extend({
         this._setLayerState();
         let promiseLoad = Ember.RSVP.resolve();
         this.set(&#x27;promiseLoad&#x27;, promiseLoad);
-      }).catch((e) =&gt; {
-      });
 
-      resolve(layer);
+        resolve(layer);
+      }).catch((e) =&gt; {
+        reject(e);
+      });
     });
   },
 
