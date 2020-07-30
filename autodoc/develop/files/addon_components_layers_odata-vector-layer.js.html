@@ -488,7 +488,7 @@ export default BaseVectorLayer.extend({
 
         models.forEach(model =&gt; {
           let ids = insertedIds.filter(id =&gt; {
-            return model.get(&#x27;id&#x27;) === id;
+            return Ember.isNone(model) ? false : model.get(&#x27;id&#x27;) === id;
           });
           if (ids.length &gt; 0) {
             insertedModelId.push(ids[0]);
@@ -512,6 +512,8 @@ export default BaseVectorLayer.extend({
         console.log(&#x27;Error save: &#x27; + e);
         leafletObject.fire(&#x27;save:failed&#x27;, e);
       });
+    } else {
+      leafletObject.fire(&#x27;save:success&#x27;, { layers: [] });
     }
 
     return leafletObject;
