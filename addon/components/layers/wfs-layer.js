@@ -153,6 +153,15 @@ export default BaseVectorLayer.extend({
     leafletObject.baseAddLayer(layer);
   },
 
+  _removeLayer(layer) {
+    let leafletObject = this.get('_leafletObject');
+    leafletObject.baseRemoveLayer(layer);
+
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+      L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
+    }
+  },
+
   /**
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer
@@ -207,6 +216,10 @@ export default BaseVectorLayer.extend({
           wfsLayer.on('save:success', this._setLayerState, this);
           Ember.set(wfsLayer, 'baseAddLayer', wfsLayer.addLayer);
           wfsLayer.addLayer = this.get('_addLayer').bind(this);
+
+          Ember.set(wfsLayer, 'baseRemoveLayer', wfsLayer.removeLayer);
+          wfsLayer.removeLayer = this.get('_removeLayer').bind(this);
+
           if (!Ember.isNone(leafletMap)) {
             let thisPane = this.get('_pane');
             let pane = leafletMap.getPane(thisPane);
