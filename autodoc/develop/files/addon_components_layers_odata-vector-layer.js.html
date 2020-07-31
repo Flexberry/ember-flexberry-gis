@@ -574,6 +574,10 @@ export default BaseVectorLayer.extend({
       layer.state = state.remove;
       leafletObject.models[id] = layer.model;
     }
+
+    if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;)) &amp;&amp; !Ember.isNone(this.get(&#x27;_leafletObject._labelsLayer&#x27;))) {
+      L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
+    }
   },
 
   /**

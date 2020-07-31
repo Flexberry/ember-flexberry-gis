@@ -1064,30 +1064,76 @@ export default BaseLayer.extend({
   /**
     Create array of strings and feature properies.
 
-    @method _parseString
-    @param {String} expression String for parsing
+    @method _applyProperty
+    @param {String} str String for parsing
+    @param {Object} layer layer
+    @return {String} string with replaced property
   */
-  _parseString(expression) {
-    if (Ember.isBlank(expression)) {
-      return null;
+  _applyProperty(str, layer) {
+    let parser = new DOMParser();
+    let xmlDoc = parser.parseFromString(str, &#x27;text/html&#x27;);
+    let propName = xmlDoc.getElementsByTagName(&#x27;propertyname&#x27;);
+    if (propName.length &gt; 0) {
+      for (var prop of propName) {
+        let property = prop.innerHTML;
+        if (!Ember.isNone(property)) {
+          for (let key in layer.feature.properties) {
+            if (key === property &amp;&amp; !Ember.isNone(layer.feature.properties[key]) &amp;&amp; !Ember.isBlank(layer.feature.properties[key])) {
+              str = str.replace(prop.outerHTML, layer.feature.properties[key]);
+            }
+          }
+        }
+      }
     }
 
-    let exp = expression.trim();
-    let reg = /&#x27;(.+?)&#x27;/g;
-    let expResult = exp.split(reg).filter(x =&gt; x !== &#x27;&#x27;);
-    return expResult ? expResult : null;
+    return str;
+  },
+
+  /**
+    Apply function.
+
+    @method _applyFunction
+    @param {String} str String for parsing
+    @return {String} string with applied and replaced function
+  */
+  _applyFunction(str) {
+    let parser = new DOMParser();
+    let xmlDoc = parser.parseFromString(str, &#x27;text/html&#x27;);
+    let func = xmlDoc.getElementsByTagName(&#x27;function&#x27;);
+    if (func.length &gt; 0) {
+      for (var item of func) {
+        let nameFunc = item.getAttribute(&#x27;name&#x27;);
+        if (!Ember.isNone(nameFunc)) {
+          switch (nameFunc) {
+            case &#x27;toFixed&#x27;:
+              let attr = item.getAttribute(&#x27;attr&#x27;);
+              let property = item.innerHTML;
+              let numProp = Number.parseFloat(property);
+              let numAttr = Number.parseFloat(attr);
+              if (!Ember.isNone(attr) &amp;&amp; !Ember.isNone(property) &amp;&amp; !Number.isNaN(numProp) &amp;&amp; !Number.isNaN(numAttr)) {
+                let newStr = numProp.toFixed(numAttr);
+                str = str.replace(item.outerHTML, newStr);
+              }
+
+              break;
+          }
+        }
+      }
+    }
+
+    return str;
   },
 
   /**
     Create label string for every object of layer.
 
     @method _createStringLabel
-    @param {Array} expResult Create array of strings and feature properies
     @param {Object} labelsLayer Labels layer
   */
-  _createStringLabel(expResult, labelsLayer) {
+  _createStringLabel(labelsLayer) {
     let optionsLabel = this.get(&#x27;labelSettings.options&#x27;);
     let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    let labelSettingsString = this.get(&#x27;labelSettings.labelSettingsString&#x27;);
     let style = Ember.String.htmlSafe(
       &#x60;font-family: ${Ember.get(optionsLabel, &#x27;captionFontFamily&#x27;)}; &#x60; +
       &#x60;font-size: ${Ember.get(optionsLabel, &#x27;captionFontSize&#x27;)}px; &#x60; +
@@ -1104,21 +1150,7 @@ export default BaseLayer.extend({
       let intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
       let staticLoad = this.get(&#x27;showExisting&#x27;) !== false &amp;&amp; intersectBBox;
       if (!layer._label &amp;&amp; (dynamicLoad || staticLoad)) {
-        let label = &#x27;&#x27;;
-        let isProp = false;
-
-        expResult.forEach(function (element) {
-          for (let key in layer.feature.properties) {
-            if (key === element &amp;&amp; !Ember.isNone(layer.feature.properties[key]) &amp;&amp; !Ember.isBlank(layer.feature.properties[key])) {
-              label += layer.feature.properties[key];
-              isProp = true;
-            }
-          }
-
-          label += !isProp ? element : &#x27;&#x27;;
-          isProp = false;
-        });
-
+        let label = this._applyFunction(this._applyProperty(labelSettingsString, layer));
         this._createLabel(label, layer, style, labelsLayer);
       }
     });
@@ -1510,8 +1542,7 @@ export default BaseLayer.extend({
   */
   _showLabels() {
     let labelSettingsString = this.get(&#x27;labelSettings.labelSettingsString&#x27;);
-    let arrLabelString = this._parseString(labelSettingsString);
-    if (!Ember.isNone(arrLabelString)) {
+    if (!Ember.isNone(labelSettingsString)) {
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
       let leafletObject = this.get(&#x27;_leafletObject&#x27;);
       let labelsLayer = this.get(&#x27;_labelsLayer&#x27;);
@@ -1539,7 +1570,7 @@ export default BaseLayer.extend({
         leafletObject._labelsLayer = labelsLayer;
       }
 
-      this._createStringLabel(arrLabelString, labelsLayer);
+      this._createStringLabel(labelsLayer);
       this.set(&#x27;_labelsLayer&#x27;, labelsLayer);
       if (this.get(&#x27;settings.typeGeometry&#x27;) === &#x27;polyline&#x27;) {
         this._updatePositionLabelForLine();
@@ -1555,8 +1586,6 @@ export default BaseLayer.extend({
   _showLabelsMovingMap() {
     let labelsLayer = this.get(&#x27;_labelsLayer&#x27;);
     if (this.get(&#x27;leafletMap&#x27;).hasLayer(labelsLayer)) {
-      let labelSettingsString = this.get(&#x27;labelSettings.labelSettingsString&#x27;);
-      let arrLabelString = this._parseString(labelSettingsString);
       this._addLabelsToLeafletContainer();
     }
   },
