@@ -708,7 +708,7 @@ export default BaseLayer.extend({
               break;
           }
         }
-      };
+      }
     }
 
     return str;
