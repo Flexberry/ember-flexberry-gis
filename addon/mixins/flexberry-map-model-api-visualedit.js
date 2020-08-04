@@ -64,12 +64,14 @@ export default Ember.Mixin.create(SnapDraw, {
             return layerFeatureId === featureId;
           });
 
-          if (!featureLayerLoad) resolve(featureLayerLoad);
+          if (!featureLayerLoad) {
+            resolve(featureLayerLoad);
+          }
 
           let editTools = this._getEditTools();
 
-          this.disableLayerEditing(leafletMap);        
-          
+          this.disableLayerEditing(leafletMap);
+
           featureLayerLoad.enableEdit(leafletMap);
           featureLayerLoad.layerId = layerId;
 
@@ -176,7 +178,7 @@ export default Ember.Mixin.create(SnapDraw, {
 
           this._checkAndEnableSnap(snap, snapLayers, snapDistance, true);
           editTools.once('editable:disable', this._stopSnap, this);
-          resolve(newLayer);          
+          resolve(newLayer);
         };
 
         editTools.on('editable:drawing:end', finishDraw, this);
@@ -187,7 +189,7 @@ export default Ember.Mixin.create(SnapDraw, {
           editTools.stopDrawing();
         }
 
-        this.disableLayerEditing(leafletMap);        
+        this.disableLayerEditing(leafletMap);
 
         switch (layerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
           case 'polygon':
@@ -212,7 +214,10 @@ export default Ember.Mixin.create(SnapDraw, {
 
   _checkAndEnableSnap(snap, snapLayers, snapDistance, edit) {
     if (snap) {
-      let layers = snapLayers.map((id) => { let [layerModel, leafletObject] = this._getModelLeafletObject(id); return leafletObject; }).filter(l => !!l);;
+      let layers = snapLayers.map((id) => {
+        let [, leafletObject] = this._getModelLeafletObject(id);
+        return leafletObject;
+      }).filter(l => !!l);
       layers.forEach((l, i) => {
         l.on('load', this._setSnappingFeatures, this);
       });
@@ -229,13 +234,15 @@ export default Ember.Mixin.create(SnapDraw, {
     editTools.off('editable:drawing:move', this._handleSnapping, this);
     editTools.off('editable:drawing:click', this._drawClick, this);
 
+    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     leafletMap.off('editable:vertex:drag', this._handleSnapping, this);
 
     let layers = this.get('_snapLayersGroups');
     if (layers) {
       layers.forEach((l, i) => {
-        if (l)
+        if (l) {
           l.off('load', this._setSnappingFeatures, this);
+        }
       });
     }
 
@@ -244,6 +251,7 @@ export default Ember.Mixin.create(SnapDraw, {
 
   _startSnap(edit) {
     let editTools = this._getEditTools();
+    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
     editTools.off('editable:drawing:move', this._handleSnapping, this);
     editTools.off('editable:drawing:click', this._drawClick, this);
@@ -251,9 +259,7 @@ export default Ember.Mixin.create(SnapDraw, {
 
     if (edit) {
       leafletMap.on('editable:vertex:drag', this._handleSnapping, this);
-    }
-    else {
-      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    } else {
       // маркер, который будет показывать возможную точку прилипания
       this.set('_snapMarker', L.marker(leafletMap.getCenter(), {
         icon: editTools.createVertexIcon({ className: 'leaflet-div-icon leaflet-drawing-icon' }),

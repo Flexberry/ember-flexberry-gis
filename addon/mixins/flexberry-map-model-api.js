@@ -1265,16 +1265,19 @@ export default Ember.Mixin.create(SnapDraw, {
       Ember.$(leafletMap._container).css('cursor', 'crosshair');
 
       var getCoord = (e) => {
-        if (snap) this._drawClick(e);
+        if (snap) {
+          this._drawClick(e);
+        }
 
-        leafletMap.off('mousemove', this._handleSnapping, this)
+        leafletMap.off('mousemove', this._handleSnapping, this);
         let layers = this.get('_snapLayersGroups');
         if (layers) {
           layers.forEach((l, i) => {
             l.off('load', this._setSnappingFeatures, this);
           });
         }
-        this._cleanupSnapping();        
+
+        this._cleanupSnapping();
 
         Ember.$(leafletMap._container).css('cursor', '');
         let crs = Ember.get(leafletMap, 'options.crs');
@@ -1286,23 +1289,27 @@ export default Ember.Mixin.create(SnapDraw, {
       };
 
       if (snap) {
-        let layers = snapLayers.map((id) => { let [layerModel, leafletObject] = this._getModelLeafletObject(id); return leafletObject; }).filter(l => !!l);
+        let layers = snapLayers.map((id) => {
+          let [, leafletObject] = this._getModelLeafletObject(id);
+          return leafletObject;
+        }).filter(l => !!l);
+
         layers.forEach((l, i) => {
           l.on('load', this._setSnappingFeatures, this);
         });
+
         this.set('_snapLayersGroups', layers);
         this._setSnappingFeatures();
         this.set('_snapDistance', snapDistance);
-        
+
         let editTools = this._getEditTools();
         leafletMap.on('mousemove', this._handleSnapping, this);
         this.set('_snapMarker', L.marker(leafletMap.getCenter(), {
           icon: editTools.createVertexIcon({ className: 'leaflet-div-icon leaflet-drawing-icon' }),
           opacity: 1,
           zIndexOffset: 1000
-        }));  
+        }));
       }
-
 
       leafletMap.once('click', getCoord);
     });
