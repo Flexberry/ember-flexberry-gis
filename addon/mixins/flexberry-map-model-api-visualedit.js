@@ -4,7 +4,9 @@ import WfsLayer from '../layers/wfs';
 import OdataLayer from '../layers/odata-vector';
 import state from '../utils/state';
 
-export default Ember.Mixin.create({
+import SnapDraw from './snap-draw';
+
+export default Ember.Mixin.create(SnapDraw, {
 
   /**
     Change layer object properties.
@@ -35,7 +37,7 @@ export default Ember.Mixin.create({
     @param {string} featureId Object ID.
     @return {Promise} Feature layer.
   */
-  startChangeLayerObject(layerId, featureId) {
+  startChangeLayerObject(layerId, featureId, snap, snapLayers, snapDistance) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, [featureId]).then(([layerModel, leafletObject, featureLayer]) => {
         let leafletMap = this.get('mapApi').getFromApi('leafletMap');
@@ -62,16 +64,23 @@ export default Ember.Mixin.create({
             return layerFeatureId === featureId;
           });
 
+          if (!featureLayerLoad) resolve(featureLayerLoad);
+
           let editTools = this._getEditTools();
 
+          this.disableLayerEditing(leafletMap);        
+          
           featureLayerLoad.enableEdit(leafletMap);
           featureLayerLoad.layerId = layerId;
 
+          this._checkAndEnableSnap(snap, snapLayers, snapDistance, true);
           editTools.on('editable:editing', (e) => {
             if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayerLoad))) {
               leafletObject.editLayer(e.layer);
             }
           });
+
+          editTools.once('editable:disable', this._stopSnap, this);
 
           resolve(featureLayerLoad);
         });
@@ -94,6 +103,7 @@ export default Ember.Mixin.create({
     editTools.off('editable:drawing:end');
     editTools.off('editable:editing');
     editTools.stopDrawing();
+    this._stopSnap();
 
     if (!Ember.isNone(layer.layerId)) {
       let [layerModel, leafletObject] = this._getModelLeafletObject(layer.layerId);
@@ -143,9 +153,12 @@ export default Ember.Mixin.create({
     @method startNewObject
     @param {String} layerId Id of layer in that should started editing
     @param {Object} properties New layer properties
+    @param {Boolean} snap Snap or not
+    @param {Array} snapLayers Layers for snap
+    @param {Integer} snapDistance in pixels
     @returns {Object} Layer object
   */
-  startNewObject(layerId, properties) {
+  startNewObject(layerId, properties, snap, snapLayers, snapDistance) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       try {
         let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
@@ -159,7 +172,11 @@ export default Ember.Mixin.create({
           newLayer.feature = { type: 'Feature', properties: Ember.merge(defaultProperties, properties) };
           newLayer.remove();
           leafletObject.addLayer(newLayer);
-          resolve(newLayer);
+          this._stopSnap();
+
+          this._checkAndEnableSnap(snap, snapLayers, snapDistance, true);
+          editTools.once('editable:disable', this._stopSnap, this);
+          resolve(newLayer);          
         };
 
         editTools.on('editable:drawing:end', finishDraw, this);
@@ -169,6 +186,8 @@ export default Ember.Mixin.create({
         if (editTools.drawing()) {
           editTools.stopDrawing();
         }
+
+        this.disableLayerEditing(leafletMap);        
 
         switch (layerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
           case 'polygon':
@@ -183,12 +202,68 @@ export default Ember.Mixin.create({
           default:
             throw 'Unknown layer type: ' + layerModel.get('settingsAsObject.typeGeometry');
         }
-
+        this._checkAndEnableSnap(snap, snapLayers, snapDistance, false);
         newLayer.layerId = layerId;
       } catch (error) {
         reject(error);
       }
     });
+  },
+
+  _checkAndEnableSnap(snap, snapLayers, snapDistance, edit) {
+    if (snap) {
+      let layers = snapLayers.map((id) => { let [layerModel, leafletObject] = this._getModelLeafletObject(id); return leafletObject; }).filter(l => !!l);;
+      layers.forEach((l, i) => {
+        l.on('load', this._setSnappingFeatures, this);
+      });
+      this.set('_snapLayersGroups', layers);
+      this._setSnappingFeatures();
+      this.set('_snapDistance', snapDistance);
+
+      this._startSnap(edit);
+    }
+  },
+
+  _stopSnap() {
+    let editTools = this._getEditTools();
+    editTools.off('editable:drawing:move', this._handleSnapping, this);
+    editTools.off('editable:drawing:click', this._drawClick, this);
+
+    leafletMap.off('editable:vertex:drag', this._handleSnapping, this);
+
+    let layers = this.get('_snapLayersGroups');
+    if (layers) {
+      layers.forEach((l, i) => {
+        if (l)
+          l.off('load', this._setSnappingFeatures, this);
+      });
+    }
+
+    this._cleanupSnapping();
+  },
+
+  _startSnap(edit) {
+    let editTools = this._getEditTools();
+
+    editTools.off('editable:drawing:move', this._handleSnapping, this);
+    editTools.off('editable:drawing:click', this._drawClick, this);
+    leafletMap.off('editable:vertex:drag', this._handleSnapping, this);
+
+    if (edit) {
+      leafletMap.on('editable:vertex:drag', this._handleSnapping, this);
+    }
+    else {
+      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+      // маркер, который будет показывать возможную точку прилипания
+      this.set('_snapMarker', L.marker(leafletMap.getCenter(), {
+        icon: editTools.createVertexIcon({ className: 'leaflet-div-icon leaflet-drawing-icon' }),
+        opacity: 1,
+        zIndexOffset: 1000
+      }));
+
+      editTools.on('editable:drawing:move', this._handleSnapping, this);
+      editTools.on('editable:drawing:click', this._drawClick, this);
+    }
   },
 
   /**
@@ -308,7 +383,7 @@ export default Ember.Mixin.create({
     @param {Object} featureLayer Feature layer.
     @return nothing
   */
-  startChangeMultyLayerObject(layerId, featureLayer) {
+  startChangeMultyLayerObject(layerId, featureLayer, snap, snapLayers, snapDistance) {
     let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
 
     let editTools = this._getEditTools();
@@ -319,6 +394,7 @@ export default Ember.Mixin.create({
       editTools.off('editable:drawing:end', disableDraw, this);
       editTools.stopDrawing();
 
+      this._stopSnap();
       var featureCollection = {
         type: 'FeatureCollection',
         features: [featureLayer.toGeoJSON(), newLayer.toGeoJSON()]
@@ -352,5 +428,7 @@ export default Ember.Mixin.create({
       default:
         throw 'Unknown layer type: ' + layerModel.get('settingsAsObject.typeGeometry');
     }
+
+    this._checkAndEnableSnap(snap, snapLayers, snapDistance, false);
   }
 });
