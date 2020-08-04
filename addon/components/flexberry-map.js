@@ -10,7 +10,6 @@ import LeafletMapLoaderMixin from '../mixins/leaflet-map/map-loader';
 import LeafletMapToolsMixin from '../mixins/leaflet-map/map-tools';
 import LeafletMapCommandsMixin from '../mixins/leaflet-map/map-commands';
 import LeafletMapSidebarMixin from '../mixins/leaflet-map/map-sidebar';
-import jsts from 'npm:jsts';
 
 import layout from '../templates/components/flexberry-map';
 
@@ -488,11 +487,6 @@ let FlexberryMapComponent = Ember.Component.extend(
         this.set('_hasServiceLayer', true);
       }
 
-      if (Ember.isNone(mapApi.getFromApi('jsts'))) {
-        mapApi.addToApi('jsts', jsts);
-        this.set('_hasJsts', true);
-      }
-
       Ember.run.scheduleOnce('afterRender', this, function () {
         this.load(leafletMap, mapApi);
       });
@@ -657,10 +651,6 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       if (this.get('_hasServiceLayer')) {
         this.get('mapApi').addToApi('serviceLayer', undefined);
-      }
-
-      if (this.get('_hasJsts')) {
-        this.get('mapApi').addToApi('jsts', undefined);
       }
 
       this.sendAction('leafletDestroy');
