@@ -12,7 +12,6 @@ import WfsLayer from '../layers/wfs';
 import OdataLayer from '../layers/odata-vector';
 import html2canvasClone from '../utils/html2canvas-clone';
 import state from '../utils/state';
-import jsts from 'npm:jsts';
 
 export default Ember.Mixin.create({
   /**
@@ -1273,13 +1272,5 @@ export default Ember.Mixin.create({
 
       leafletMap.once('click', getCoord);
     });
-  },
-
-  getJstsFromGeoJson(geometry) {
-    return new jsts.io.GeoJSONReader().read(geometry);
-  },
-
-  getGeoJsonFromJsts(geometry) {
-    return new jsts.io.GeoJSONWriter().write(geometry);
   }
 });
