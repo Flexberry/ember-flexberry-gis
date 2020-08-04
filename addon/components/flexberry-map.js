@@ -10,7 +10,7 @@ import LeafletMapLoaderMixin from '../mixins/leaflet-map/map-loader';
 import LeafletMapToolsMixin from '../mixins/leaflet-map/map-tools';
 import LeafletMapCommandsMixin from '../mixins/leaflet-map/map-commands';
 import LeafletMapSidebarMixin from '../mixins/leaflet-map/map-sidebar';
-
+import jsts from 'npm:jsts';
 
 import layout from '../templates/components/flexberry-map';
 
