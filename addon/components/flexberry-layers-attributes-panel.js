@@ -732,15 +732,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   availableGeometryAddModes: ['manual', 'rhumb', 'draw', 'geoprovider', 'import'],
 
   /**
-    Minimum distance for snapping in pixels.
-
-    @property snapDistance
-    @type Number
-    @default 20
-  */
-  snapDistance: 20,
-
-  /**
     Flag: indicates whether moveDialog has been requested
 
     @property _moveDialogHasBeenRequested
@@ -1421,7 +1412,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let leafletMap = this.get('leafletMap');
       let editTools = this._getEditTools();
       Ember.set(leafletMap, 'editTools', editTools);
-      this.set('snapMarker', L.marker(leafletMap.getCenter(), {
+      this.set('_snapMarker', L.marker(leafletMap.getCenter(), {
         icon: leafletMap.editTools.createVertexIcon({ className: 'leaflet-div-icon leaflet-drawing-icon' }),
         opacity: 1,
         zIndexOffset: 1000

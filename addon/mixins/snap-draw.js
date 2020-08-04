@@ -9,11 +9,30 @@ import rhumbDistance from 'npm:@turf/rhumb-distance';
 
 export default Ember.Mixin.create({
 
-    /** GroupLayers for snap (wfs, odata) */
+    /** 
+      GroupLayers for snap (wfs, odata) 
+
+      @property _snapLayersGroups
+      @type Array
+    */
     _snapLayersGroups: null,
 
-    /** Object. Leaflet layers group by group layer id */
+    /**
+      Leaflet layers group by group layer id.
+
+      @property _snapLayers
+      @type Object
+    */
     _snapLayers: null,
+
+    /**
+      Minimum distance for snapping in pixels.
+
+      @property _snapDistance
+      @type Number
+      @default 20
+    */
+    _snapDistance: 20,
 
     /**
       @property _snapLeafletLayers
@@ -103,7 +122,7 @@ export default Ember.Mixin.create({
         let previousSnap = this.get('_snapLatLng') || {};
 
         if (closestLayer && closestLayer.distance < snapDistance) {
-            
+
             let isMarker = closestLayer.layer instanceof L.Marker || closestLayer.layer instanceof L.CircleMarker;
             let currentSnap = (isMarker ? closestLayer.latlng : this._checkSnapToVertex(closestLayer)) || {};
 
