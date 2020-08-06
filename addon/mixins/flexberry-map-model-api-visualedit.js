@@ -35,6 +35,9 @@ export default Ember.Mixin.create(SnapDraw, {
     @method startChangeLayerObject
     @param {string} layerId Layer ID.
     @param {string} featureId Object ID.
+    @param {Boolean} snap Snap or not
+    @param {Array} snapLayers Layers for snap
+    @param {Integer} snapDistance in pixels
     @return {Promise} Feature layer.
   */
   startChangeLayerObject(layerId, featureId, snap, snapLayers, snapDistance) {
@@ -65,7 +68,7 @@ export default Ember.Mixin.create(SnapDraw, {
           });
 
           if (!featureLayerLoad) {
-            resolve(featureLayerLoad);
+            reject(`Object '${featureId}' not found`);
           }
 
           let editTools = this._getEditTools();
@@ -213,6 +216,8 @@ export default Ember.Mixin.create(SnapDraw, {
   },
 
   _checkAndEnableSnap(snap, snapLayers, snapDistance, edit) {
+    this._stopSnap();
+
     if (snap) {
       let layers = snapLayers.map((id) => {
         let [, leafletObject] = this._getModelLeafletObject(id);
@@ -252,10 +257,6 @@ export default Ember.Mixin.create(SnapDraw, {
   _startSnap(edit) {
     let editTools = this._getEditTools();
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-
-    editTools.off('editable:drawing:move', this._handleSnapping, this);
-    editTools.off('editable:drawing:click', this._drawClick, this);
-    leafletMap.off('editable:vertex:drag', this._handleSnapping, this);
 
     if (edit) {
       leafletMap.on('editable:vertex:drag', this._handleSnapping, this);
@@ -387,6 +388,9 @@ export default Ember.Mixin.create(SnapDraw, {
     @method startChangeMultyLayerObject
     @param {string} layerId Layer id.
     @param {Object} featureLayer Feature layer.
+    @param {Boolean} snap Snap or not
+    @param {Array} snapLayers Layers for snap
+    @param {Integer} snapDistance in pixels
     @return nothing
   */
   startChangeMultyLayerObject(layerId, featureLayer, snap, snapLayers, snapDistance) {
@@ -413,11 +417,18 @@ export default Ember.Mixin.create(SnapDraw, {
       featureLayer.setLatLngs(combinedLeaflet.getLatLngs());
       featureLayer.disableEdit();
       featureLayer.enableEdit();
-      editTools.featuresLayer.clearLayers();
+
+      newLayer.remove();
 
       // We note that the shape was edited.
       leafletObject.editLayer(featureLayer);
+
+      this._checkAndEnableSnap(snap, snapLayers, snapDistance, true);
+      editTools.once('editable:disable', this._stopSnap, this);
     };
+
+    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    this.disableLayerEditing(leafletMap);
 
     editTools.on('editable:drawing:end', disableDraw, this);
 
