@@ -787,7 +787,7 @@ export default BaseVectorLayer.extend({
     const projectionName = this.get('projectionName');
     const geometryField = this.get('geometryField') || 'geometry';
     const store = this.get('store');
-    const adapter = this.get('store').adapterFor('application');//this.get('adapter');
+    const adapter = this.get('store').adapterFor('application');
 
     if (!modelName) {
       return;
