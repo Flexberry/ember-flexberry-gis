@@ -7,6 +7,7 @@ import sinon from 'sinon';
 let app;
 let options;
 let param;
+let odataServerFake;
 
 moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata vector layer', {
   unit: true,
@@ -45,9 +46,33 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
       leafletOptions: leafletOptions
     };
     param = Ember.$.extend(param, options);
+
+    odataServerFake = sinon.fakeServer.create();
+    odataServerFake.autoRespond = true;
+
+    odataServerFake.respondWith('POST', 'http://134.209.30.115:1818/odata/$batch',
+      function (request) {
+        request.respond(200, { 'Content-Type': 'multipart/mixed; boundary=batchresponse_3942662d-07b6-4e24-b466-fba5d37ca181' },
+        '--batchresponse_3942662d-07b6-4e24-b466-fba5d37ca181\r\n' +
+        'Content-Type: application/http\r\n' +
+        'Content-Transfer-Encoding: binary\r\n' +
+        '\r\n' +
+        'HTTP/1.1 200 OK\r\n' +
+        'Content-Type: application/json; charset=utf-8; odata.metadata=minimal\r\n' +
+        'OData-Version: 4.0\r\n' +
+        '\r\n' +
+        '{\r\n' +
+        '  "@odata.context":"http://134.209.30.115:1818/odata/$metadata#ModelTest(__PrimaryKey)","value":[\r\n' +
+        '\r\n' +
+        '  ]\r\n' +
+        '}\r\n' +
+        '--batchresponse_3942662d-07b6-4e24-b466-fba5d37ca181--');
+      }
+    );
   },
   afterEach: function () {
     Ember.run(app, 'destroy');
+    odataServerFake.restore();
   }
 });
 
@@ -77,22 +102,13 @@ test('loadLayerFeatures() with featureIds=null', function(assert) {
   assert.expect(2);
   var done = assert.async(2);
   Ember.run(() => {
-    let adapter = app.__container__.lookup('adapter:application');
-    let batchLoadModel = () => {
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        resolve(Ember.A());
-      });
-    };
-
-    adapter = { batchLoadModel };
     let store = app.__container__.lookup('service:store');
     store.createRecord('new-platform-flexberry-g-i-s-map-layer');
     Ember.$.extend(param, {
       'modelName': 'new-platform-flexberry-g-i-s-map-layer',
       'projectionName':'MapLayerL',
       'geometryField': 'geometryField',
-      'store': store,
-      'adapter': adapter });
+      'store': store });
 
     let component = this.subject(param);
 

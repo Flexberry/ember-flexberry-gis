@@ -787,7 +787,7 @@ export default BaseVectorLayer.extend({
     const projectionName = this.get('projectionName');
     const geometryField = this.get('geometryField') || 'geometry';
     const store = this.get('store');
-    const adapter = this.get('adapter');
+    const adapter = this.get('store').adapterFor('application');//this.get('adapter');
 
     if (!modelName) {
       return;
@@ -874,7 +874,11 @@ export default BaseVectorLayer.extend({
           let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
 
           objs.then(res => {
-            let models = res.toArray();
+            let models = res;
+            if (typeof res.toArray === 'function') {
+              models = res.toArray();
+            }
+
             models.forEach(model => {
               this.addLayerObject(leafletObject, model);
             });
@@ -961,7 +965,7 @@ export default BaseVectorLayer.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    this.set('adapter', this.get('store').adapterFor('application'));
+    //this.set('adapter', this.get('store').adapterFor('application'));
 
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
