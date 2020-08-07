@@ -28,6 +28,8 @@ export default BaseVectorLayer.extend({
 
   postfixForEditForm: '-e',
 
+  adapter: null,
+
   /**
     Saves layer changes.
 
@@ -644,10 +646,11 @@ export default BaseVectorLayer.extend({
       let crs = this.get('crs');
 
       let visibility = this.get('layerModel.visibility');
-      let bounds = L.rectangle(this.get('leafletMap').getBounds());
+      let bounds;
       let continueLoading = this.get('continueLoading');
       let showExisting = this.get('showExisting');
       if (!showExisting && continueLoading && visibility && checkMapZoomLayer(this)) {
+        bounds = L.rectangle(this.get('leafletMap').getBounds());
         let query = new Query.GeometryPredicate(obj.geometryField);
         obj.build.predicate = query.intersects(this.geomToEWKT(bounds));
       } else {
@@ -784,7 +787,7 @@ export default BaseVectorLayer.extend({
     const projectionName = this.get('projectionName');
     const geometryField = this.get('geometryField') || 'geometry';
     const store = this.get('store');
-    const adapter = Ember.getOwner(this).lookup('adapter:application');
+    const adapter = this.get('adapter');
 
     if (!modelName) {
       return;
@@ -832,9 +835,7 @@ export default BaseVectorLayer.extend({
             if (loadedFeatures.length > 0) {
               let equals = Ember.A();
               loadedFeatures.forEach((id) => {
-                if (featureIds.includes(id)) {
-                  equals.pushObject(new Query.SimplePredicate('id', Query.FilterOperator.Eq, id));
-                }
+                equals.pushObject(new Query.SimplePredicate('id', Query.FilterOperator.Eq, id));
               });
 
               if (equals.length === 1) {
@@ -960,6 +961,8 @@ export default BaseVectorLayer.extend({
   didInsertElement() {
     this._super(...arguments);
 
+    this.set('adapter', this.get('store').adapterFor('application'));
+
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       let loadedBounds = leafletMap.getBounds();
@@ -1037,24 +1040,6 @@ export default BaseVectorLayer.extend({
               leafletObject.fire('load', {});
               this._setLayerState();
             });
-          } else if (notContinueLoad && this.get('layerModel.visibility') && Ember.isNone(leafletObject.isLoaded)) {// loaded for not ContinueLoad
-            leafletObject.isLoaded = true;
-            let e = {
-              featureIds: null,
-              layer: this.get('layerModel.id'),
-              load: true,
-              results: Ember.A()
-            };
-            this.loadLayerFeatures(e);
-            if (leafletObject.statusLoadLayer) {
-              leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve, reject) => {
-                leafletObject.once('load', () => {
-                  resolve();
-                }).once('error', (e) => {
-                  reject();
-                });
-              });
-            }
           } else if (leafletObject.statusLoadLayer) {
             leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
           }

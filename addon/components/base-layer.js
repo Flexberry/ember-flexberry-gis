@@ -465,7 +465,7 @@ export default Ember.Component.extend(
 
       leafletContainer.addLayer(leafletLayer);
       let leafletMap = this.get('leafletMap');
-      if (!Ember.isNone(leafletMap)) {
+      if (!Ember.isNone(leafletMap) && leafletLayer.options.continueLoading) {
         leafletMap.fire('moveend');
       }
     },

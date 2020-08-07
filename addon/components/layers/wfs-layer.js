@@ -632,24 +632,6 @@ export default BaseVectorLayer.extend({
                 });
               });
             }
-          } else if (notContinueLoad && this.get('layerModel.visibility') && Ember.isNone(leafletObject.isLoaded)) {// loaded for not ContinueLoad
-            leafletObject.isLoaded = true;
-            let e = {
-              featureIds: null,
-              layer: this.get('layerModel.id'),
-              load: true,
-              results: Ember.A()
-            };
-            this.loadLayerFeatures(e);
-            if (leafletObject.statusLoadLayer) {
-              leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve, reject) => {
-                leafletObject.once('load', () => {
-                  resolve();
-                }).once('error', (e) => {
-                  reject();
-                });
-              });
-            }
           } else if (leafletObject.statusLoadLayer) {
             leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
           }
