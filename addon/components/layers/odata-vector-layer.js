@@ -28,8 +28,6 @@ export default BaseVectorLayer.extend({
 
   postfixForEditForm: '-e',
 
-  adapter: null,
-
   /**
     Saves layer changes.
 
@@ -964,8 +962,6 @@ export default BaseVectorLayer.extend({
   */
   didInsertElement() {
     this._super(...arguments);
-
-    //this.set('adapter', this.get('store').adapterFor('application'));
 
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
