@@ -46,3 +46,76 @@ test('uploadFile should send post request with fileName and data to backend and 
   configStub.restore();
   server.restore();
 });
+
+test('test method getRhumb', function (assert) {
+  //Arrange
+  let done = assert.async(1);
+  let subject = mapApiMixinObject.create({
+    _getModelLayerFeature(layerId, objectId) {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        resolve([null, null, 
+          [
+            { 
+              _latlngs : 
+              [
+                [
+                  { lng: 0, lat:0 },
+                  { lng: 5, lat:5 },
+                  { lng: 10, lat:10 },
+                  { lng: 20, lat:20 }
+                ]
+              ]
+            }
+          ]
+        ]);
+      });
+    }
+  });
+  const resObj = {
+    type: 'LineString',
+    startPoint: { lng: 0, lat:0 },
+    crs: 'EPSG:4326',
+    skip: 1,
+    rhumbCoordinates:
+    [
+        {
+        rhumb: 'СВ',
+        angle: 44.96359274789586,
+        distance: 785768.813079895
+        },
+        {
+          rhumb: 'СВ',
+          angle: 44.74445374906895,
+          distance: 782784.4348582322
+        },
+        {
+          rhumb: 'СВ',
+          angle: 43.96540227096858,
+          distance: 1544892.9354244978
+        },
+        {
+          rhumb: 'ЮЗ',
+          angle: 44.40609174830968,
+          distance: 3112971.6381611135
+        }
+    ],
+    coordinates: 
+    [
+      [
+        { lng: 0, lat:0 },
+        { lng: 5, lat:5 },
+        { lng: 10, lat:10 },
+        { lng: 20, lat:20 }
+      ]
+    ]
+  };
+
+
+  //Act
+    subject.getRhumb('','').then(
+    (t) => {
+      //Assert
+      assert.deepEqual(t, resObj);
+      done();
+    });
+});
