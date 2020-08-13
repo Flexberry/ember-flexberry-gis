@@ -53,10 +53,10 @@ test('test method getRhumb', function (assert) {
   let subject = mapApiMixinObject.create({
     _getModelLayerFeature(layerId, objectId) {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        resolve([null, null, 
+        resolve([null, null,
           [
-            { 
-              _latlngs : 
+            {
+              _latlngs:
               [
                 [
                   { lng: 0, lat:0 },
@@ -79,9 +79,9 @@ test('test method getRhumb', function (assert) {
     rhumbCoordinates:
     [
         {
-        rhumb: 'СВ',
-        angle: 44.96359274789586,
-        distance: 785768.813079895
+          rhumb: 'СВ',
+          angle: 44.96359274789586,
+          distance: 785768.813079895
         },
         {
           rhumb: 'СВ',
@@ -99,7 +99,7 @@ test('test method getRhumb', function (assert) {
           distance: 3112971.6381611135
         }
     ],
-    coordinates: 
+    coordinates:
     [
       [
         { lng: 0, lat:0 },
@@ -110,12 +110,12 @@ test('test method getRhumb', function (assert) {
     ]
   };
 
-
   //Act
-    subject.getRhumb('','').then(
-    (t) => {
-      //Assert
-      assert.deepEqual(t, resObj);
-      done();
-    });
+  subject.getRhumb('','').then(
+  (t) => {
+
+    //Assert
+    assert.deepEqual(t, resObj);
+    done();
+  });
 });
