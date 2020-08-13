@@ -111,7 +111,7 @@ test('test method getRhumb', function (assert) {
   };
 
   //Act
-  subject.getRhumb('','').then(
+  subject.getRhumb('', '').then(
   (t) => {
 
     //Assert
