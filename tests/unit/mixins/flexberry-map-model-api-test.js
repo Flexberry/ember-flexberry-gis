@@ -195,3 +195,29 @@ test('return current center of polyline', function(assert) {
   //Assert
   assert.deepEqual(result, obj2.getBounds().getCenter());
 });
+
+module('Unit | Mixin | get type layer');
+
+test('test method getTypeLayer', function(assert) {
+  //Arrange
+  let subject = mapApiMixinObject.create();
+  let obj2 = { type: 'wfs' };
+  let configStub = sinon.stub(Ember, 'getOwner');
+  configStub.returns({
+    knownForType(st, className) {
+      switch( className ){
+        case 'wfs':
+          return new WFS();
+        case 'odata':
+          return new odataVector();
+      }
+    }
+  });
+
+  //Act
+  let result = subject._getTypeLayer(obj2);
+
+  //Assert
+  assert.ok(result instanceof WFS);
+  configStub.restore();
+});
