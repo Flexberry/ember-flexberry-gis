@@ -50,64 +50,41 @@ test('uploadFile should send post request with fileName and data to backend and 
 test('test method getRhumb for LineString', function (assert) {
   //Arrange
   let done = assert.async(1);
+  let testPolygon = L.polygon([[-41, -111.04], [45, -111.04], [45, -104.05], [41, -104.05]]);
   let subject = mapApiMixinObject.create({
     _getModelLayerFeature(layerId, objectId) {
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        resolve([null, null,
-          [
-            {
-              _latlngs:
-              [
-                [
-                  { lng: 0, lat:0 },
-                  { lng: 5, lat:5 },
-                  { lng: 10, lat:10 },
-                  { lng: 20, lat:20 }
-                ]
-              ]
-            }
-          ]
-        ]);
-      });
+      return Ember.RSVP.Promise.resolve([null, null, [testPolygon]]);
     }
   });
   const resObj = {
     type: 'LineString',
-    startPoint: { lng: 0, lat:0 },
+    startPoint: testPolygon._latlngs[0][0],
     crs: 'EPSG:4326',
     skip: 1,
     rhumbCoordinates:
     [
         {
-          rhumb: 'СВ',
-          angle: 44.96359274789586,
-          distance: 785768.813079895
+          rhumb: 'СЗ',
+          angle: 0,
+          distance: 9562776.900083829
         },
         {
           rhumb: 'СВ',
-          angle: 44.74445374906895,
-          distance: 782784.4348582322
+          angle: 90,
+          distance: 549601.2989213171
         },
         {
-          rhumb: 'СВ',
-          angle: 43.96540227096858,
-          distance: 1544892.9354244978
+          rhumb: 'ЮВ',
+          angle: 0,
+          distance: 444780.32093413227
         },
         {
           rhumb: 'ЮЗ',
-          angle: 44.40609174830968,
-          distance: 3112971.6381611135
+          angle: 4.438440688327262,
+          distance: 9145423.193341617
         }
     ],
-    coordinates:
-    [
-      [
-        { lng: 0, lat:0 },
-        { lng: 5, lat:5 },
-        { lng: 10, lat:10 },
-        { lng: 20, lat:20 }
-      ]
-    ]
+    coordinates: testPolygon._latlngs
   };
 
   //Act
@@ -122,71 +99,48 @@ test('test method getRhumb for LineString', function (assert) {
     });
 });
 
-test('test method getRhumb for Poligon', function (assert) {
+test('test method getRhumb for Polygon', function (assert) {
   //Arrange
   let done = assert.async(1);
+  let testPolygon = L.polygon([
+    [
+      [[-41, -111.04], [45, -111.04], [45, -104.05], [41, -104.05]]
+    ]
+  ]);
   let subject = mapApiMixinObject.create({
     _getModelLayerFeature(layerId, objectId) {
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        resolve([null, null,
-          [
-            {
-              _latlngs:
-              [
-                [
-                  [
-                    { lng: 0, lat:0 },
-                    { lng: 5, lat:5 },
-                    { lng: 10, lat:10 },
-                    { lng: 20, lat:20 }
-                  ]
-                ]
-              ]
-            }
-          ]
-        ]);
-      });
+      return Ember.RSVP.Promise.resolve([null, null, [testPolygon]]);
     }
   });
   const resObj = {
     type: 'Polygon',
-    startPoint: { lng: 0, lat:0 },
+    startPoint: testPolygon._latlngs[0][0][0],
     crs: 'EPSG:4326',
     skip: 1,
     rhumbCoordinates:
     [
         {
-          rhumb: 'СВ',
-          angle: 44.96359274789586,
-          distance: 785768.813079895
+          rhumb: 'СЗ',
+          angle: 0,
+          distance: 9562776.900083829
         },
         {
           rhumb: 'СВ',
-          angle: 44.74445374906895,
-          distance: 782784.4348582322
+          angle: 90,
+          distance: 549601.2989213171
         },
         {
-          rhumb: 'СВ',
-          angle: 43.96540227096858,
-          distance: 1544892.9354244978
+          rhumb: 'ЮВ',
+          angle: 0,
+          distance: 444780.32093413227
         },
         {
           rhumb: 'ЮЗ',
-          angle: 44.40609174830968,
-          distance: 3112971.6381611135
+          angle: 4.438440688327262,
+          distance: 9145423.193341617
         }
     ],
-    coordinates:
-    [
-      [
-        [
-          { lng: 0, lat:0 },
-          { lng: 5, lat:5 },
-          { lng: 10, lat:10 },
-          { lng: 20, lat:20 }
-        ]
-      ]
-    ]
+    coordinates: testPolygon._latlngs
   };
 
   //Act
@@ -206,110 +160,38 @@ module('Unit | Mixin | get object center');
 test('return current center of point', function(assert) {
   //Arrange
   let subject = mapApiMixinObject.create();
-  const object = {
-    feature: {
-      geometry: {
-        type: 'Point'
-      }
-    },
-    _latlng: { lat:0, long:0 }
-  };
-
+  let obj2 = L.marker([1, 1]);
+  obj2.feature = obj2.toGeoJSON();
+  
   //Act
-  let result = subject.getObjectCenter(object);
+  let result = subject.getObjectCenter(obj2);
 
   //Assert
-  assert.deepEqual(result, { lat:0, long:0 });
+  assert.deepEqual(result, obj2._latlng);
 });
 
-test('return current center of not point', function(assert) {
+test('return current center of polygon', function(assert) {
   //Arrange
   let subject = mapApiMixinObject.create();
-  const object = {
-    feature: {
-      geometry: {
-        type: 'not Point'
-      }
-    },
-    getBounds() {
-      return {
-        getCenter() {
-          return { lat: 5, long: 5 };
-        }
-      };
-    }
-  };
-
+  let obj2 = L.polygon([[1, 1]]);
+  obj2.feature = obj2.toGeoJSON();
+  
   //Act
-  let result = subject.getObjectCenter(object);
+  let result = subject.getObjectCenter(obj2);
 
   //Assert
-  assert.deepEqual(result, { lat:5, long:5 });
+  assert.deepEqual(result, obj2.getBounds().getCenter());
 });
 
-test('return undefined on point', function(assert) {
+test('return current center of polyline', function(assert) {
   //Arrange
   let subject = mapApiMixinObject.create();
-  const object = {
-    feature: {
-      geometry: {
-        type: 'Point'
-      }
-    }
-  };
-
+  let obj2 = L.polyline([[1, 1]]);
+  obj2.feature = obj2.toGeoJSON();
+  
   //Act
-  let result = subject.getObjectCenter(object);
+  let result = subject.getObjectCenter(obj2);
 
   //Assert
-  assert.deepEqual(result, undefined);
-});
-
-test('return error on getBounds of not point', function(assert) {
-  //Arrange
-  let subject = mapApiMixinObject.create();
-  const object = {
-    feature: {
-      geometry: {
-        type: 'not Point'
-      }
-    }
-  };
-
-  //Act
-  let result;
-  try {
-    subject.getObjectCenter(object);
-  }
-  catch (e) {
-    result = e;
-  }
-
-  //Assert
-  assert.ok(result);
-});
-
-test('return error on getCenter of not point', function(assert) {
-  //Arrange
-  let subject = mapApiMixinObject.create();
-  const object = {
-    feature: {
-      geometry: {
-        type: 'not Point'
-      }
-    },
-    getBounds() {}
-  };
-
-  //Act
-  let result;
-  try {
-    subject.getObjectCenter(object);
-  }
-  catch (e) {
-    result = e;
-  }
-
-  //Assert
-  assert.ok(result);
+  assert.deepEqual(result, obj2.getBounds().getCenter());
 });
