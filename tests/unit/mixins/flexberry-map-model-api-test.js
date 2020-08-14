@@ -162,7 +162,7 @@ test('return current center of point', function(assert) {
   let subject = mapApiMixinObject.create();
   let obj2 = L.marker([1, 1]);
   obj2.feature = obj2.toGeoJSON();
-  
+
   //Act
   let result = subject.getObjectCenter(obj2);
 
@@ -175,7 +175,7 @@ test('return current center of polygon', function(assert) {
   let subject = mapApiMixinObject.create();
   let obj2 = L.polygon([[1, 1]]);
   obj2.feature = obj2.toGeoJSON();
-  
+
   //Act
   let result = subject.getObjectCenter(obj2);
 
@@ -188,7 +188,7 @@ test('return current center of polyline', function(assert) {
   let subject = mapApiMixinObject.create();
   let obj2 = L.polyline([[1, 1]]);
   obj2.feature = obj2.toGeoJSON();
-  
+
   //Act
   let result = subject.getObjectCenter(obj2);
 
