@@ -2,7 +2,7 @@ import Ember from 'ember';
 import { module, test } from 'qunit';
 import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api';
 import sinon from 'sinon';
-import odataVector from 'ember-flexberry-gis/layers/odata-vector';
+import ODataVector from 'ember-flexberry-gis/layers/odata-vector';
 import WFS from 'ember-flexberry-gis/layers/wfs';
 
 module('Unit | Mixin | flexberry map model api test');
@@ -211,7 +211,7 @@ test('test method getTypeLayer', function(assert) {
         case 'wfs':
           return new WFS();
         case 'odata':
-          return new odataVector();
+          return new ODataVector();
       }
     }
   });
