@@ -223,9 +223,13 @@ export default Ember.Component.extend(
           var point = l.leafletMap.mouseEventToLayerPoint(e);
 
           let intersect = false;
-          l._leafletObject.eachLayer(function (layer) {
-            intersect = intersect || layer._containsPoint(point);
-          });
+          if (l._leafletObject && typeof (l._leafletObject.eachLayer) === 'function') {
+            l._leafletObject.eachLayer(function (layer) {
+              if (typeof (layer._containsPoint) === 'function') {
+                intersect = intersect || layer._containsPoint(point);
+              }
+            });
+          }
 
           if (intersect) { return; }
         }
