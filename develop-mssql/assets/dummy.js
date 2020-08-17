@@ -28,7 +28,7 @@ define('dummy/adapters/application-offline', ['exports', 'ember-flexberry-data',
 /**
   @module ember-flexberry-gis-dummy
 */
-define('dummy/adapters/application', ['exports', 'ember-flexberry-data', 'dummy/config/environment'], function (exports, _emberFlexberryData, _dummyConfigEnvironment) {
+define('dummy/adapters/application', ['exports', 'ember-flexberry-data', 'dummy/config/environment', 'ember-flexberry-gis/adapters/odata'], function (exports, _emberFlexberryData, _dummyConfigEnvironment, _emberFlexberryGisAdaptersOdata) {
 
   /**
     Application adapter.
@@ -37,7 +37,7 @@ define('dummy/adapters/application', ['exports', 'ember-flexberry-data', 'dummy/
     @extends OdataAdapter
     @uses AdapterMixin
   */
-  exports['default'] = _emberFlexberryData.Adapter.Odata.extend(_emberFlexberryData.Projection.AdapterMixin, {
+  exports['default'] = _emberFlexberryGisAdaptersOdata['default'].extend(_emberFlexberryData.Projection.AdapterMixin, {
     /**
       Host address to which all requests will be sent.
        @property host
@@ -39000,7 +39000,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.2+f9f1b9ac"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.2+5a4220ed"});
 }
 
 /* jshint ignore:end */

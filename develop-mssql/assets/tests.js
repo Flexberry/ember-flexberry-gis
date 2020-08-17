@@ -3638,18 +3638,45 @@ define('dummy/tests/unit/components/layers/group-layer-test.jshint', ['exports']
     assert.ok(true, 'unit/components/layers/group-layer-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports', 'ember', 'ember-qunit', 'dummy/tests/helpers/start-app', 'ember-flexberry-data'], function (exports, _ember, _emberQunit, _dummyTestsHelpersStartApp, _emberFlexberryData) {
+define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports', 'ember', 'ember-qunit', 'dummy/tests/helpers/start-app', 'ember-flexberry-data', 'sinon'], function (exports, _ember, _emberQunit, _dummyTestsHelpersStartApp, _emberFlexberryData, _sinon) {
 
   var app = undefined;
+  var options = undefined;
+  var param = undefined;
+  var odataServerFake = undefined;
 
   (0, _emberQunit.moduleForComponent)('layers/odata-vector-layer', 'Unit | Component | layers/odata vector layer', {
     unit: true,
-    needs: ['service:map-api', 'config:environment', 'model:new-platform-flexberry-g-i-s-link-parameter'],
+    needs: ['service:map-api', 'config:environment', 'model:new-platform-flexberry-g-i-s-link-parameter', 'model:new-platform-flexberry-g-i-s-map', 'model:new-platform-flexberry-g-i-s-map-layer', 'adapter:application'],
     beforeEach: function beforeEach() {
       app = (0, _dummyTestsHelpersStartApp['default'])();
+
+      options = {
+        geometryField: 'shape',
+        showExisting: false,
+        withCredentials: false,
+        crs: L.CRS.EPSG3857,
+        continueLoading: false
+      };
+
+      var leafletOptions = ['geometryField', 'crs', 'maxFeatures', 'showExisting', 'style', 'forceMulti', 'withCredentials', 'continueLoading'];
+
+      param = {
+        format: 'GeoJSON',
+        leafletOptions: leafletOptions
+      };
+      param = _ember['default'].$.extend(param, options);
+
+      odataServerFake = _sinon['default'].fakeServer.create();
+      odataServerFake.autoRespond = true;
+
+      odataServerFake.respondWith('POST', 'http://134.209.30.115:1818/odata/$batch', function (request) {
+        request.respond(200, { 'Content-Type': 'multipart/mixed; boundary=batchresponse_3942662d-07b6-4e24-b466-fba5d37ca181' }, '--batchresponse_3942662d-07b6-4e24-b466-fba5d37ca181\r\n' + 'Content-Type: application/http\r\n' + 'Content-Transfer-Encoding: binary\r\n' + '\r\n' + 'HTTP/1.1 200 OK\r\n' + 'Content-Type: application/json; charset=utf-8; odata.metadata=minimal\r\n' + 'OData-Version: 4.0\r\n' + '\r\n' + '{\r\n' + '  "@odata.context":"http://134.209.30.115:1818/odata/$metadata#ModelTest(__PrimaryKey)","value":[\r\n' + '\r\n' + '  ]\r\n' + '}\r\n' + '--batchresponse_3942662d-07b6-4e24-b466-fba5d37ca181--');
+      });
     },
     afterEach: function afterEach() {
       _ember['default'].run(app, 'destroy');
+      odataServerFake.restore();
     }
   });
 
@@ -3673,6 +3700,54 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       var firstValue = result[0];
       assert.ok(firstValue instanceof _emberFlexberryData.Query.SimplePredicate);
       assert.equal(firstValue.toString(), '(testField eq id1)');
+      done();
+    });
+  });
+
+  (0, _emberQunit.test)('loadLayerFeatures() with featureIds=null', function (assert) {
+    var _this2 = this;
+
+    assert.expect(2);
+    var done = assert.async(2);
+    _ember['default'].run(function () {
+      var store = app.__container__.lookup('service:store');
+      store.createRecord('new-platform-flexberry-g-i-s-map-layer');
+      _ember['default'].$.extend(param, {
+        'modelName': 'new-platform-flexberry-g-i-s-map-layer',
+        'projectionName': 'MapLayerL',
+        'geometryField': 'geometryField',
+        'store': store });
+
+      var component = _this2.subject(param);
+
+      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
+      getmapApiStub.returns(mapModel);
+
+      var getPkFieldStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
+      getPkFieldStub.returns('123');
+
+      var e = {
+        featureIds: null,
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: _ember['default'].A()
+      };
+
+      var leafletLayerPromiseResolved = assert.async();
+      component.get('_leafletLayerPromise').then(function (leafletLayer) {
+        var _leafletObject = L.featureGroup();
+        _leafletObject.options.showExisting = false;
+        component.set('_leafletObject', _leafletObject);
+
+        component.loadLayerFeatures(e).then(function (layers) {
+          assert.ok(layers, 'Load with null featureIds');
+          done();
+        });
+      })['finally'](function () {
+        leafletLayerPromiseResolved();
+      });
+
+      assert.ok(component, 'Create odata-layer');
       done();
     });
   });
