@@ -8,14 +8,14 @@ module('Unit | Mixin | test method');
 
 let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiMixin);
 
-test('test method hideAllLayerObjects continueLoading - true', function(assert) {
+test('test method hideAllLayerObjects', function(assert) {
   //Arrange
   let map = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
     zoom: 13
   });
   let labelsLayer = L.featureGroup().addTo(map);
-  labelsLayer.addLayer(L.marker([1,1]));
+  labelsLayer.addLayer(L.marker([1, 1]));
   let leafletObject = L.featureGroup().addTo(map);
   leafletObject.addLayer(L.polygon([[1, 1]]));
   leafletObject._labelsLayer = labelsLayer;
