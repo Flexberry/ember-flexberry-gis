@@ -1042,24 +1042,6 @@ export default BaseVectorLayer.extend({
                 });
               });
             }
-          } else if (notContinueLoad &amp;&amp; this.get(&#x27;layerModel.visibility&#x27;) &amp;&amp; Ember.isNone(leafletObject.isLoaded)) {// loaded for not ContinueLoad
-            leafletObject.isLoaded = true;
-            let e = {
-              featureIds: null,
-              layer: this.get(&#x27;layerModel.id&#x27;),
-              load: true,
-              results: Ember.A()
-            };
-            this.loadLayerFeatures(e);
-            if (leafletObject.statusLoadLayer) {
-              leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve, reject) =&gt; {
-                leafletObject.once(&#x27;load&#x27;, () =&gt; {
-                  resolve();
-                }).once(&#x27;error&#x27;, (e) =&gt; {
-                  reject();
-                });
-              });
-            }
           } else if (leafletObject.statusLoadLayer) {
             leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
           }
