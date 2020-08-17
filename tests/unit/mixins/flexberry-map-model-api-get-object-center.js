@@ -26,10 +26,10 @@ test('return current center of polygon', function(assert) {
   obj2.feature = obj2.toGeoJSON();
 
   //Act
-  let result = subject.getObjectCenter(obj2);
+  let result = subject.getObjectCenter(obj2).toString();
 
   //Assert
-  assert.deepEqual(result, obj2.getBounds().getCenter());
+  assert.equal(result, 'LatLng(1, 1)');
 });
 
 test('return current center of polyline', function(assert) {
@@ -39,8 +39,8 @@ test('return current center of polyline', function(assert) {
   obj2.feature = obj2.toGeoJSON();
 
   //Act
-  let result = subject.getObjectCenter(obj2);
+  let result = subject.getObjectCenter(obj2).toString();
 
   //Assert
-  assert.deepEqual(result, obj2.getBounds().getCenter());
+  assert.equal(result, 'LatLng(1, 1)');
 });

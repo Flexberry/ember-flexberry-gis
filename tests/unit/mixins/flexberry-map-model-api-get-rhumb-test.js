@@ -47,7 +47,7 @@ test('test method getRhumb for LineString', function (assert) {
   };
 
   //Act
-  let promise = subject.getRhumb('', '');
+  let promise = subject.getRhumb();
 
   //Assert
   assert.ok(promise instanceof Ember.RSVP.Promise);
@@ -103,7 +103,7 @@ test('test method getRhumb for Polygon', function (assert) {
   };
 
   //Act
-  let promise = subject.getRhumb('', '');
+  let promise = subject.getRhumb();
 
   //Assert
   assert.ok(promise instanceof Ember.RSVP.Promise);

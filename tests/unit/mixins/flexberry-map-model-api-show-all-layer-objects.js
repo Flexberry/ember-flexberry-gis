@@ -39,6 +39,8 @@ test('test method showAllLayerObjects continueLoading - true', function(assert) 
     assert.equal(spyHasLayer.callCount, 1);
     assert.equal(spyAddLayer.callCount, 0);
     done();
+    spyHasLayer.restore();
+    spyAddLayer.restore();
   });
 });
 
@@ -84,5 +86,8 @@ test('test method showAllLayerObjects continueLoading - false', function(assert)
     assert.equal(spyAddLayer.callCount, 1);
     assert.equal(spyRemoveLayer.callCount, 2);
     done();
+    spyHasLayer.restore();
+    spyAddLayer.restore();
+    spyRemoveLayer.restore();
   });
 });
