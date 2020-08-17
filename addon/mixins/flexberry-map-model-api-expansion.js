@@ -130,8 +130,7 @@ export default Ember.Mixin.create(rhumbOperations, {
         }];
     @returns {Object} new multi-circuit object.
   */
-  createMulti(objects)
-  {
+  createMulti(objects, failIfInvalid = true) {
     let geojsonReader = new jsts.io.GeoJSONReader();
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let geometries = [];
@@ -146,16 +145,31 @@ export default Ember.Mixin.create(rhumbOperations, {
 
     objects.forEach((element, i) => {
       if (!Ember.isNone(element.crs)) {
-        objects[i] = element.crs.properties.name.toUpperCase() === 'EPSG:4326' ? element
-        : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
+        objects[i] =
+          element.crs.properties.name.toUpperCase() === 'EPSG:4326'
+            ? element
+            : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
       } else { throw "error: object must have 'crs' attribute"; }
     }, this);
 
     //read the geometry of features
     objects.forEach((element, i) => {
-      geometries.push(geojsonReader.read(element.geometry));
-      if (i !== 0 && geometries[i].getGeometryType() !== geometries[i - 1].getGeometryType())
-        { throw 'error: type mismatch. Objects must have the same type'; }
+      let g = geojsonReader.read(element.geometry);
+
+      if (g.isValid()) {
+        geometries.push(g);
+        let j = geometries.length - 1;
+        if (j !== 0 && this.getGeometryKind(geometries[j]) !== this.getGeometryKind(geometries[j - 1])) {
+          throw 'error: type mismatch. Objects must have the same type';
+        }
+      } else {
+        console.error('invalid geometry (object ' + i + ')');
+        console.error(element.geometry);
+
+        if (failIfInvalid) {
+          throw 'error: invalid geometry';
+        }
+      }
     });
 
     //check the intersections and calculate the difference between objects
@@ -170,6 +184,10 @@ export default Ember.Mixin.create(rhumbOperations, {
       }
 
       separateObjects.push(current);
+    }
+
+    if (separateObjects.length === 0) {
+      return null;
     }
 
     //union the objects
@@ -198,6 +216,31 @@ export default Ember.Mixin.create(rhumbOperations, {
     };
 
     return multiObj;
+  },
+
+  /**
+    Get geometry kind by geometry
+    @param {geometry} g geometry
+    @returns {int} kind
+  */
+  getGeometryKind(g) {
+    let type = g.getGeometryType();
+
+    switch (type) {
+      case 'Polygon':
+      case 'MultiPolygon':
+        return 1;
+        break;
+      case 'LineString':
+      case 'MultiLineString':
+        return 2;
+        break;
+      case 'Point':
+        return 3;
+        break;
+    }
+
+    return 0;
   },
 
   /**
