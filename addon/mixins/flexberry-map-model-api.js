@@ -1208,7 +1208,7 @@ export default Ember.Mixin.create({
                   arr1.push(arr2);
                 } else {
                   let cords = proj4(firstDefinition, secondDefinition, pair);
-                  arr1.push([cords[1], coords[0]]);
+                  arr1.push([cords[1], cords[0]]);
                 }
               });
               coordinatesArray.push(arr1);

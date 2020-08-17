@@ -41,7 +41,7 @@ export default Ember.Mixin.create(rhumbOperations, {
       crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
     }
 
-    let coordsToLatLng = function(coords) {
+    let coordsToLatLng = function (coords) {
       return crs.unproject(L.point(coords));
     };
 
@@ -146,10 +146,11 @@ export default Ember.Mixin.create(rhumbOperations, {
     objects.forEach((element, i) => {
       if (!Ember.isNone(element.crs)) {
         objects[i] =
-          element.crs.properties.name.toUpperCase() === 'EPSG:4326'
-            ? element
-            : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
-      } else { throw "error: object must have 'crs' attribute"; }
+          element.crs.properties.name.toUpperCase() === 'EPSG:4326' ? element
+          : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
+      } else {
+        throw "error: object must have 'crs' attribute";
+      }
     }, this);
 
     //read the geometry of features
@@ -230,14 +231,11 @@ export default Ember.Mixin.create(rhumbOperations, {
       case 'Polygon':
       case 'MultiPolygon':
         return 1;
-        break;
       case 'LineString':
       case 'MultiLineString':
         return 2;
-        break;
       case 'Point':
         return 3;
-        break;
     }
 
     return 0;
