@@ -12,6 +12,7 @@ import WfsLayer from '../layers/wfs';
 import OdataLayer from '../layers/odata-vector';
 import html2canvasClone from '../utils/html2canvas-clone';
 import state from '../utils/state';
+import jsts from 'npm:jsts';
 
 export default Ember.Mixin.create({
   /**
@@ -429,15 +430,16 @@ export default Ember.Mixin.create({
       this._getModelLayerFeature(layerId, [featureId]).then(([, leafletLayer, featureLayer]) => {
         if (leafletLayer && featureLayer) {
           result = Object.assign({}, featureLayer[0].feature.properties);
-          result.geometry = featureLayer[0].feature.geometry.coordinates;
           if (crsName) {
             let NewObjCrs = this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer[0].feature, crsName);
             result.geometry = NewObjCrs.geometry.coordinates;
+          } else {
+            result.geometry = featureLayer[0].feature.geometry.coordinates;
           }
 
-          let obj = leafletLayer.options.crs.code === 'EPSG:4326' ?
-            featureLayer[0].feature : this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer[0].feature);
-          result.area = area(obj);
+          let jstsGeoJSONReader = new jsts.io.GeoJSONReader();
+          let jstsGeoJSON = jstsGeoJSONReader.read(featureLayer[0].toGeoJSON());
+          result.area = jstsGeoJSON.geometry.getArea();
           resolve(result);
         }
       }).catch((e) => {
