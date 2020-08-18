@@ -17,7 +17,7 @@ test('test method getRhumb for LineString', function (assert) {
   });
   const resObj = {
     type: 'LineString',
-    startPoint: testPolygon._latlngs[0][0],
+    startPoint: L.latLng(-41, -111.04),
     crs: 'EPSG:4326',
     skip: 1,
     rhumbCoordinates:
@@ -73,7 +73,7 @@ test('test method getRhumb for Polygon', function (assert) {
   });
   const resObj = {
     type: 'Polygon',
-    startPoint: testPolygon._latlngs[0][0][0],
+    startPoint: L.latLng(-41, -111.04),
     crs: 'EPSG:4326',
     skip: 1,
     rhumbCoordinates:
