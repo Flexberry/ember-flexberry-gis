@@ -23,12 +23,12 @@ test('return current center of point', function(assert) {
 test('return current center of polygon', function(assert) {
   //Arrange
   let subject = mapApiMixinObject.create();
-  let obj2 = L.polygon([[1, 1]]);
+  let obj2 = L.polygon([[1, 1], [1, 2], [3, 1], [3, 0]]);
   obj2.feature = obj2.toGeoJSON();
 
   //Act
   let result = subject.getObjectCenter(obj2);
-  let resObj = L.latLng(1, 1);
+  let resObj = L.latLng(2, 1);
 
   //Assert
   assert.deepEqual(result, resObj);
@@ -37,12 +37,12 @@ test('return current center of polygon', function(assert) {
 test('return current center of polyline', function(assert) {
   //Arrange
   let subject = mapApiMixinObject.create();
-  let obj2 = L.polyline([[1, 1]]);
+  let obj2 = L.polyline([[1, 1], [3, 3], [5, 5]]);
   obj2.feature = obj2.toGeoJSON();
 
   //Act
   let result = subject.getObjectCenter(obj2);
-  let resObj = L.latLng(1, 1);
+  let resObj = L.latLng(3, 3);
 
   //Assert
   assert.deepEqual(result, resObj);
