@@ -379,7 +379,7 @@ test('getMergedGeometry should return geoJson feature in EPSG:4326', function(as
     type: 'MultiPolygon',
     properties: {},
     coordinates: [[[
-      [56.3273334503174, 58.6397715654894], [56.3273334503174, 58.6383198334056],[56.3220977783203, 58.6383198334056],
+      [56.3273334503174, 58.6397715654894], [56.3273334503174, 58.6383198334056], [56.3220977783203, 58.6383198334056],
       [56.3220977783203, 58.6397715654894], [56.3273334503174, 58.6397715654894]
     ]]]
   };
@@ -417,14 +417,14 @@ test('getMergedGeometry should return geoJson feature in EPSG:4326', function(as
   };
 
   let feature1Layer1 = L.geoJSON(geoJson1Layer1).getLayers()[0];
-  feature1Layer1.options.crs = {code: 'EPSG:4326'};
+  feature1Layer1.options.crs = { code: 'EPSG:4326' };
   let feature2Layer1 = L.geoJSON(geoJson2Layer1).getLayers()[0];
-  feature2Layer1.options.crs = {code: 'EPSG:4326'};
+  feature2Layer1.options.crs = { code: 'EPSG:4326' };
 
   let feature1Layer2 = L.geoJSON(geoJson1Layer2).getLayers()[0];
-  feature1Layer2.options.crs = {code: 'EPSG:4326'};
+  feature1Layer2.options.crs = { code: 'EPSG:4326' };
   let feature2Layer2 = L.geoJSON(geoJson2Layer2).getLayers()[0];
-  feature2Layer2.options.crs = {code: 'EPSG:4326'};
+  feature2Layer2.options.crs = { code: 'EPSG:4326' };
 
   let map = this.subject();
   let _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
@@ -434,7 +434,7 @@ test('getMergedGeometry should return geoJson feature in EPSG:4326', function(as
     })
   );
 
-  _getModelLayerFeatureStub.withArgs( '2', ['1', '2']).returns(
+  _getModelLayerFeatureStub.withArgs('2', ['1', '2']).returns(
     new Ember.RSVP.Promise((resolve, reject) => {
       resolve([null, null, [feature1Layer2, feature2Layer2]]);
     })
