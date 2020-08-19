@@ -1203,19 +1203,18 @@ export default Ember.Mixin.create({
                   let arr2 = [];
                   pair.forEach(cords => {
                     let transformedCords = proj4(firstDefinition, secondDefinition, cords);
-                    arr2.push([transformedCords[1], transformedCords[0]]);
+                    arr2.push(transformedCords);
                   });
                   arr1.push(arr2);
                 } else {
                   let cords = proj4(firstDefinition, secondDefinition, pair);
-                  arr1.push([cords[1], cords[0]]);
+                  arr1.push(cords);
                 }
               });
               coordinatesArray.push(arr1);
             });
           } else {
-            let p = proj4(firstDefinition, secondDefinition, result.geometry.coordinates);
-            coordinatesArray = [p[1], p[0]];
+            coordinatesArray = proj4(firstDefinition, secondDefinition, result.geometry.coordinates);
           }
 
           result.geometry.coordinates = coordinatesArray;
@@ -1310,7 +1309,7 @@ export default Ember.Mixin.create({
     @param {String} layerBId Second layer ID.
     @param {Array} objectBIds Second layer object IDs.
     @param {Boolean} failIfInvalid Fail when has invalid geometry.
-    @return {Promise} Coordinates EPSG:4326
+    @return {Promise} GeoJson Feature in EPSG:4326
   */
   getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, failIfInvalid = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
@@ -1323,15 +1322,15 @@ export default Ember.Mixin.create({
         const rejected = result.filter((item) => { return item.state === 'rejected'; }).length > 0;
 
         if (rejected) {
-          reject('Ошибка загрузки объектов');
+          reject('Error loading objects');
         }
 
         let count = 0;
 
-        let resultObjs = [];
+        let resultObjs = Ember.A();
 
         result.forEach((r, i) => {
-          let geometries = [];
+          let geometries = Ember.A();
           r.value[2].forEach((obj, ind) => {
             if (Ember.get(obj, 'feature.geometry') && Ember.get(obj, 'options.crs.code')) {
               let feature = {
@@ -1361,7 +1360,7 @@ export default Ember.Mixin.create({
         });
 
         let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, failIfInvalid) : null;
-        resolve(resultObj ? resultObj.geometry.coordinates : null);
+        resolve(resultObj ? resultObj : null);
       }).catch((e) => {
         reject(e);
       });
