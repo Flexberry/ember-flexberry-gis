@@ -234,13 +234,16 @@ export default Ember.Mixin.create({
     @returns {[layerModel, leafletObject, featureLayer]} Get [layerModel, leafletObject, featureLayer] or [layerModel, leafletObject, undefined].
     @private
   */
-  _getModelLayerFeature(layerId, featureIds, load = false) {
+  _getModelLayerFeature(layerId, featureIds, load = false, orderBy = null, top = null, skip = null) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletMap = this.get('mapApi').getFromApi('leafletMap');
       let e = {
         featureIds: featureIds,
         layer: layerId,
         load: load,
+        top: top,
+        skip: skip,
+        orderBy: orderBy,
         results: Ember.A()
       };
 

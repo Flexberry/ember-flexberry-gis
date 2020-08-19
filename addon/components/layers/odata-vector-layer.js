@@ -891,6 +891,29 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Get count of features.
+
+    @method getCountFeatures
+    @return {Promise} count of features.
+  */
+  getCountFeatures() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      const store = this.get('store');
+      const modelName = this.get('modelName');
+      const projectionName = this.get('projectionName');
+      let queryBuilder = new Query.Builder(store)
+      .from(modelName)
+      .selectByProjection(projectionName)
+      .top(1)
+      .count();
+
+      store.query(modelName, queryBuilder.build()).then((result) => {
+        resolve(result.meta.count);
+      });
+    });
+  },
+
+  /**
     Handles 'flexberry-map:getLayerFeatures' event of leaflet map.
 
     @method getLayerFeatures
@@ -917,6 +940,10 @@ export default BaseVectorLayer.extend({
             } else {
               obj.build.predicate = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
             }
+          } else if (!Ember.isNone(e.skip) && !Ember.isNone(e.top) && !Ember.isNone(e.orderBy)) {
+            obj.build.orderBy = e.orderBy;
+            obj.build.skip = e.skip;
+            obj.build.top = e.top;
           }
 
           let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);

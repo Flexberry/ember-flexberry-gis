@@ -12,6 +12,7 @@ import WfsLayer from '../layers/wfs';
 import OdataLayer from '../layers/odata-vector';
 import html2canvasClone from '../utils/html2canvas-clone';
 import state from '../utils/state';
+import ClipperLib from 'npm:clipper-lib';
 
 export default Ember.Mixin.create({
   /**
@@ -1272,5 +1273,218 @@ export default Ember.Mixin.create({
 
       leafletMap.once('click', getCoord);
     });
+  },
+
+  /**
+    Get count of features.
+    @method _getCount
+    @param {String} layerAId First layer ID.
+    @return {Promise} count of features.
+  */
+  _getCount(layerId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+      let e = {
+        layer: layerId,
+        results: Ember.A()
+      };
+
+      leafletMap.fire('flexberry-map:getCountFeatures', e);
+      if (Ember.isNone(e.results)) {
+        reject(`Layer '${layerId}' not found`);
+        return;
+      }
+
+      if (e.results[0] instanceof Ember.RSVP.Promise) {
+        e.results[0].then((res) => {
+          resolve(res);
+        });
+      }
+    });
+  },
+
+  /**
+    Get count of features.
+    @method _getPromisesLoadFeatures
+    @param {String} layerId Layer ID.
+    @return {Promise} array promises.
+  */
+  _getPromisesLoadFeatures(layerId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let layerModel = this.getLayerModel(layerId);
+      let layerType = this._getTypeLayer(layerModel);
+      let promises = Ember.A();
+      if (layerType instanceof OdataLayer) {
+        this._getCount(layerId).then((res) => {
+          let count = res;
+          let maxFeatures = 10000;
+          let skip = 0;
+          do {
+            promises.push(this._getModelLayerFeature(layerId, null, false, 'id', maxFeatures, skip));
+            count -= maxFeatures;
+            skip += maxFeatures;
+          } while (count - maxFeatures >= 0);
+
+          resolve(promises);
+        });
+      } else {
+        promises.push(this._getModelLayerFeature(layerId, null));
+      }
+    });
+  },
+
+  _addToArray(layerId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this._getPromisesLoadFeatures(layerId).then((loadArr) =>{
+        Ember.RSVP.all(loadArr).then((res) => {
+          if (!Ember.isEmpty(res)) {
+            let layerObject = res[0][1];
+            let subj = Ember.A();
+            res.forEach((objs) => {
+              if (!Ember.isEmpty(objs[2])) {
+                objs[2].forEach((layer) =>{
+                  let obj = layer.feature;
+                  let feature = layerObject.options.crs.code === 'EPSG:4326' ? obj : this._convertObjectCoordinates(layerObject.options.crs.code, obj);
+                  let featureLayer = L.GeoJSON.geometryToLayer(feature);
+                  subj.push(this._transformToPoints(featureLayer.getLatLngs()));
+                });
+              }
+            });
+
+            resolve(subj);
+          }
+        });
+      });
+    });
+  },
+
+  /**
+    Compare layers.
+    @method compareLayers
+    @param {String} layerAId First layer ID.
+    @param {String} layerBId Second layer ID.
+    @param {Enum} condition Comparison conditions.
+    @return {Promise} array features.
+  */
+  compareLayers(layerAId, layerBId, condition) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      Ember.RSVP.all([
+        this._addToArray(layerAId),
+        this._addToArray(layerBId)
+      ]).then((res) => {
+        let subj = res[0];
+        let clip = res[1];
+        let solution = ClipperLib.Paths();
+        let cpr = new ClipperLib.Clipper();
+        for(let s = 0, slen = subj.length; s<slen; s++) {
+          if (Ember.isArray(subj[s])) {
+            for(let k = 0, klen = subj[s].length; k<klen; k++) {
+              cpr.AddPaths(subj[s][k], ClipperLib.PolyType.ptSubject, true);
+            }
+          } else {
+            cpr.AddPaths(subj[s], ClipperLib.PolyType.ptSubject, true);
+          }
+        }
+        for(let c = 0, clen = clip.length; c < clen; c++) {
+          if (Ember.isArray(clip[c])) {
+            for(let k = 0, klen = clip[c].length; k<klen; k++) {
+              cpr.AddPaths(clip[c][k], ClipperLib.PolyType.ptClip, true);
+            }
+          } else {
+            cpr.AddPaths(clip[c], ClipperLib.PolyType.ptClip, true);
+          }
+        }
+        cpr.Execute(2, solution); // 2 - be difference
+        if (!Ember.isEmpty(solutuin)) {
+          let _solution = L.polygon(this._transformToLatLngs(solution));
+          let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+          _solution.addTo(serviceLayer);
+        }
+      });
+
+      /*let result = Ember.A();
+      let promises = Ember.A();
+      Ember.RSVP.all([
+        this._getPromisesLoadFeatures(layerAId),
+        this._getPromisesLoadFeatures(layerBId)
+      ]).then((loadArr) => {
+        Ember.RSVP.all(loadArr).then((res) => {
+
+        });
+      });*/
+
+
+      /*Ember.RSVP.all([
+        this._getModelLayerFeature(layerAId, ['1f1c6ecd-55e7-4557-be88-2dd70c57e8ce']),
+        this._getModelLayerFeature(layerBId, ['6dde5cde-3a07-4a02-87d4-97e644fd5869'])
+      ]).then((res) => {
+        let objA = res[0][2][0].feature;
+        let objB = res[1][2][0].feature;
+        let layerObjectA = res[0][1];
+        let layerObjectB = res[1][1];
+
+        let featureA = layerObjectA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
+        let featureLayerA = L.GeoJSON.geometryToLayer(featureA);
+
+        let featureB = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
+        let featureLayerB = L.GeoJSON.geometryToLayer(featureB);
+
+        let typeA = featureLayerA.toGeoJSON().geometry.type;
+        let typeB = featureLayerB.toGeoJSON().geometry.type;
+        var subj = this._transformToPoints(featureLayerA.getLatLngs(), typeA);
+        var clip = this._transformToPoints(featureLayerB.getLatLngs(), typeB);
+
+        var solution = ClipperLib.Paths();
+
+        var cpr = new ClipperLib.Clipper();
+
+        for(var s = 0, slen = subj.length; s<slen; s++) {
+          cpr.AddPaths(subj[s], ClipperLib.PolyType.ptSubject, true);
+        }
+        for(var c = 0, clen = clip.length; c < clen; c++) {
+          cpr.AddPaths(clip[c], ClipperLib.PolyType.ptClip, true);
+        }
+
+        cpr.Execute(2, solution);
+
+        var _solution = L.polygon(this._transformToLatLngs(solution));
+
+        let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+        _solution.addTo(serviceLayer);
+      }).catch((e) => {
+        reject(e);
+      });*/
+    });
+  },
+
+  _transformToPoints(latlngs) {
+    if (Array.isArray(latlngs[0]) || (!(latlngs instanceof L.LatLng) && (latlngs[0] instanceof L.LatLng))) {
+      let coords = [];
+      for (let i = 0; i < latlngs.length; i++) {
+        coords.push(this._transformToPoints(latlngs[i]));
+      }
+
+      return coords;
+    }
+
+    const leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    const latLng = latlngs instanceof L.LatLng ? latlngs : L.latLng(latlngs[1], latlngs[0]);
+    const point = leafletMap.latLngToLayerPoint(latLng)
+    return {X: point.x, Y: point.y};
+  },
+
+  _transformToLatLngs(coordinates) {
+    if (Array.isArray(coordinates[0]) || (!(coordinates instanceof ClipperLib.IntPoint) && (coordinates[0] instanceof ClipperLib.IntPoint))) {
+      let latLngs = [];
+      for (let i = 0; i < coordinates.length; i++) {
+        latLngs.push(this._transformToLatLngs(coordinates[i]));
+      }
+
+      return latLngs;
+    }
+
+    const leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    const point = L.point(coordinates.X, coordinates.Y);
+    return leafletMap.layerPointToLatLng(point);
   }
 });
