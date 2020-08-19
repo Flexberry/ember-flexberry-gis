@@ -1202,8 +1202,8 @@ export default Ember.Mixin.create({
                 if (result.geometry.type === 'MultiPolygon') {
                   let arr2 = [];
                   pair.forEach(cords => {
-                    let transformedCords = proj4(firstDefinition, secondDefinition, cords);
-                    arr2.push(transformedCords);
+                    let transdormedCords = proj4(firstDefinition, secondDefinition, cords);
+                    arr2.push(transdormedCords);
                   });
                   arr1.push(arr2);
                 } else {
