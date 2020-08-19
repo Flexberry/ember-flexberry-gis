@@ -1,4 +1,4 @@
-import { QUnit, moduleForModel, test } from 'ember-qunit';
+import { moduleForModel, test } from 'ember-qunit';
 import sinon from 'sinon';
 import Ember from 'ember';
 
@@ -443,7 +443,6 @@ test('getMergedGeometry should return geoJson feature in EPSG:4326', function(as
   let result = map.getMergedGeometry('1', ['1', '2'], '2', ['1', '2']);
 
   result.then((feature) => {
-    QUnit.dump.maxDepth = 6;
     assert.deepEqual(feature, geoJsonUnion);
     done();
   });
