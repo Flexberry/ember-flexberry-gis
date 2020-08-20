@@ -2,11 +2,13 @@ import Ember from 'ember';
 import { initialize } from 'dummy/instance-initializers/open-map';
 import { module, test } from 'qunit';
 import destroyApp from '../../helpers/destroy-app';
+import MapApi  from 'ember-flexberry-gis/services/map-api';
 
 module('Unit | Instance Initializer | open map', {
   beforeEach: function() {
     Ember.run(() => {
       this.application = Ember.Application.create();
+      this.application.register('service:map-api', MapApi);
       this.appInstance = this.application.buildInstance();
     });
   },
