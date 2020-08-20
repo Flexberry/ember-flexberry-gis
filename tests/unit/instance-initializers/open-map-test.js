@@ -3,6 +3,7 @@ import { initialize } from 'dummy/instance-initializers/open-map';
 import { module, test } from 'qunit';
 import destroyApp from '../../helpers/destroy-app';
 import MapApi  from 'ember-flexberry-gis/services/map-api';
+import sinon from 'sinon';
 
 module('Unit | Instance Initializer | open map', {
   beforeEach: function() {
@@ -18,10 +19,25 @@ module('Unit | Instance Initializer | open map', {
   }
 });
 
-// Replace this with your real tests.
 test('it works', function(assert) {
-  initialize(this.appInstance);
+  //Arrange
+  let configStub = sinon.stub(Ember, 'getOwner');
+  configStub.returns({
+    _lookupFactory() {
+      return {
+        'APP': {
+          'mapApiService': true
+        }
+      };
+    }
+  });
 
-  // you would normally confirm the results of the initializer here
+  //Action
+  initialize(this.appInstance);
+  let openMap = this.appInstance.lookup('service:map-api').getFromApi('open-map');
+
+  //Assert
+  assert.ok((typeof openMap) === 'function');
   assert.ok(true);
+  configStub.restore();
 });
