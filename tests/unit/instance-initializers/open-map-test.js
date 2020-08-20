@@ -41,3 +41,43 @@ test('it works', function(assert) {
   assert.ok(true);
   configStub.restore();
 });
+
+test('it works', function(assert) {
+  //Arrange
+  let done = assert.async(1);
+  let configStub = sinon.stub(Ember, 'getOwner');
+  configStub.returns({
+    _lookupFactory() {
+      return {
+        'APP': {
+          'mapApiService': true
+        }
+      };
+    }
+  });
+  initialize(this.appInstance);
+  let openMap = this.appInstance.lookup('service:map-api').getFromApi('open-map');
+  let testObj = { transitionTo() { return true; } };
+  let spyTransitionTo = sinon.spy(testObj, 'transitionTo');
+  let stubLookup = sinon.stub(this.appInstance, 'lookup');
+  stubLookup.withArgs('service:map-store').returns({
+    getMapById() { return Ember.RSVP.resolve({}); }
+  });
+  stubLookup.withArgs('router:main').returns(testObj);
+
+  //Action
+  let res = openMap('d3434', { test: true });
+
+  //Assert
+  assert.ok(res instanceof Ember.RSVP.Promise);
+  res.then(()=> {
+    assert.equal(spyTransitionTo.callCount, 1);
+    assert.equal(stubLookup.withArgs('service:map-store').callCount, 1);
+    assert.equal(stubLookup.withArgs('router:main').callCount, 1);
+    assert.deepEqual(spyTransitionTo.args[0][2], { queryParams: { test: true } });
+    done();
+    stubLookup.restore();
+    spyTransitionTo.restore();
+  });
+  configStub.restore();
+});

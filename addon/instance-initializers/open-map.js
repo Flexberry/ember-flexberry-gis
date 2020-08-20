@@ -1,3 +1,5 @@
+import Ember from 'ember';
+
 export function initialize(appInstance) {
   let mapApi = appInstance.lookup('service:map-api');
   mapApi.addToApi('open-map', openMap.bind(appInstance));
@@ -17,23 +19,20 @@ export function initialize(appInstance) {
       };
 */
 function openMap(mapId, options) {
-  let service = this.lookup('service:map-store');
-  if (mapId) {
-    service.getMapById(mapId).then(()=> {
-      let router = this.lookup('route:index');
-      if (options) {
-        router.transitionTo('map', mapId, {
-          queryParams: options
-        });
-      } else {
-        router.transitionTo('map', mapId);
-      }
-    }).catch(()=> {
-      console.error('map is not exists');
-    });
-  } else {
-    console.error('mapId is not exists');
-  }
+  return new Ember.RSVP.Promise((resolve, reject) => {
+    if (mapId) {
+      let service = this.lookup('service:map-store');
+      service.getMapById(mapId).then((data)=> {
+        let router = this.lookup('router:main');
+        let queryParams = Object.assign({}, options);
+        resolve(router.transitionTo('map', data, { queryParams: queryParams }));
+      }).catch(()=> {
+        reject('map is not exists');
+      });
+    } else {
+      reject('mapId is not exists');
+    }
+  });
 }
 
 export default {
