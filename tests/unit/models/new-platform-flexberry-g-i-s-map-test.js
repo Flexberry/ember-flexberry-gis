@@ -237,34 +237,6 @@ test('getIntersectionArea', function(assert) {
   });
 });
 
-test('getRhumb', function(assert) {
-  let map = this.subject();
-  let _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
-  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(
-    new Ember.RSVP.Promise((resolve, reject) => {
-      resolve([null, null, objB]);
-    })
-  );
-
-  map.getRhumb('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233').then((e) => {
-    let rhumb = [
-      { rhumb: 'СВ', angle: 54.60899873173304, distance: 1847.0014093569546 },
-      { rhumb: 'ЮВ', angle: 18.46239009698718, distance: 1002.3048264780921 },
-      { rhumb: 'ЮЗ', angle: 86.26658375754084, distance: 1827.228836727564 }
-    ];
-    let result = {
-      type: 'Polygon',
-      crs: 'EPSG:4326',
-      skip: 1,
-      startPoint: L.latLng(58.72884, 55.80677),
-      rhumbCoordinates: rhumb,
-      coordinates: objB[0]._latlngs
-    };
-
-    assert.deepEqual(e, result, 'Rhumb');
-  });
-});
-
 test('getDistanceBetweenObjects', function(assert) {
   let map = this.subject();
   let _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
