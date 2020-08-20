@@ -9,8 +9,7 @@ let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiMixin);
 test('test method getRhumb for LineString', function (assert) {
   //Arrange
   let done = assert.async(1);
-  let coordinates = [[-41, -111.04], [45, -111.04], [45, -104.05], [41, -104.05]];
-  let testPolygon = L.polygon(coordinates);
+  let testPolygon = L.polygon([[-41, -111.04], [45, -111.04], [45, -104.05], [41, -104.05]]);
   let subject = mapApiMixinObject.create({
     _getModelLayerFeature(layerId, objectId) {
       return Ember.RSVP.Promise.resolve([null, null, [testPolygon]]);
@@ -70,8 +69,7 @@ test('test method getRhumb for LineString', function (assert) {
 test('test method getRhumb for Polygon', function (assert) {
   //Arrange
   let done = assert.async(1);
-  let coordinates = [[[[-41, -111.04], [45, -111.04], [45, -104.05], [41, -104.05]]]];
-  let testPolygon = L.polygon(coordinates);
+  let testPolygon = L.polygon([[[[-41, -111.04], [45, -111.04], [45, -104.05], [41, -104.05]]]]);
   let subject = mapApiMixinObject.create({
     _getModelLayerFeature(layerId, objectId) {
       return Ember.RSVP.Promise.resolve([null, null, [testPolygon]]);
