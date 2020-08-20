@@ -23,16 +23,16 @@ function openMap(mapId, options) {
       let router = this.lookup('route:index');
       if (options) {
         router.transitionTo('map', mapId, {
-          queryParams: options 
+          queryParams: options
         });
       } else {
         router.transitionTo('map', mapId);
       }
     }).catch(()=> {
-      console.error("map is not exists");
+      console.error('map is not exists');
     });
   } else {
-    console.error("mapId is not exists");
+    console.error('mapId is not exists');
   }
 }
 
