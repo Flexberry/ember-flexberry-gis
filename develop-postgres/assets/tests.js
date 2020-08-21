@@ -4636,6 +4636,184 @@ define('dummy/tests/unit/mixins/dynamic-properties-test.jshint', ['exports'], fu
     assert.ok(true, 'unit/mixins/dynamic-properties-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/mixins/flexberry-map-model-api-get-object-center-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi) {
+
+  (0, _qunit.module)('Unit | Mixin | get object center');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  (0, _qunit.test)('return current center of point', function (assert) {
+    //Arrange
+    var subject = mapApiMixinObject.create();
+    var obj2 = L.marker([1, 1]);
+    obj2.feature = obj2.toGeoJSON();
+
+    //Act
+    var result = subject.getObjectCenter(obj2);
+    var resObj = L.latLng(1, 1);
+
+    //Assert
+    assert.deepEqual(result, resObj);
+  });
+
+  (0, _qunit.test)('return current center of polygon', function (assert) {
+    //Arrange
+    var subject = mapApiMixinObject.create();
+    var obj2 = L.polygon([[1, 1], [1, 2], [3, 1], [3, 0]]);
+    obj2.feature = obj2.toGeoJSON();
+
+    //Act
+    var result = subject.getObjectCenter(obj2);
+    var resObj = L.latLng(2, 1);
+
+    //Assert
+    assert.deepEqual(result, resObj);
+  });
+
+  (0, _qunit.test)('return current center of polyline', function (assert) {
+    //Arrange
+    var subject = mapApiMixinObject.create();
+    var obj2 = L.polyline([[1, 1], [3, 3], [5, 5]]);
+    obj2.feature = obj2.toGeoJSON();
+
+    //Act
+    var result = subject.getObjectCenter(obj2);
+    var resObj = L.latLng(3, 3);
+
+    //Assert
+    assert.deepEqual(result, resObj);
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-get-object-center-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-get-object-center-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-get-object-center-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-get-object-center-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-get-object-center-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-get-object-center-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi) {
+
+  (0, _qunit.module)('Unit | Mixin | method get rhumb');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  (0, _qunit.test)('test method getRhumb for LineString', function (assert) {
+    //Arrange
+    var done = assert.async(1);
+    var testPolygon = L.polygon([[-41, -111.04], [45, -111.04], [45, -104.05], [41, -104.05]]);
+    var subject = mapApiMixinObject.create({
+      _getModelLayerFeature: function _getModelLayerFeature(layerId, objectId) {
+        return _ember['default'].RSVP.Promise.resolve([null, null, [testPolygon]]);
+      }
+    });
+    var resObj = {
+      type: 'LineString',
+      startPoint: L.latLng(-41, -111.04),
+      crs: 'EPSG:4326',
+      skip: 1,
+      rhumbCoordinates: [{
+        rhumb: 'СЗ',
+        angle: 0,
+        distance: 9562776.900083829
+      }, {
+        rhumb: 'СВ',
+        angle: 90,
+        distance: 549601.2989213171
+      }, {
+        rhumb: 'ЮВ',
+        angle: 0,
+        distance: 444780.32093413227
+      }, {
+        rhumb: 'ЮЗ',
+        angle: 4.438440688327262,
+        distance: 9145423.193341617
+      }],
+      coordinates: [[L.latLng(-41, -111.04), L.latLng(45, -111.04), L.latLng(45, -104.05), L.latLng(41, -104.05)]]
+    };
+
+    //Act
+    var promise = subject.getRhumb();
+
+    //Assert
+    assert.ok(promise instanceof _ember['default'].RSVP.Promise);
+    promise.then(function (t) {
+      assert.deepEqual(t, resObj);
+      done();
+    });
+  });
+
+  (0, _qunit.test)('test method getRhumb for Polygon', function (assert) {
+    //Arrange
+    var done = assert.async(1);
+    var testPolygon = L.polygon([[[[-41, -111.04], [45, -111.04], [45, -104.05], [41, -104.05]]]]);
+    var subject = mapApiMixinObject.create({
+      _getModelLayerFeature: function _getModelLayerFeature(layerId, objectId) {
+        return _ember['default'].RSVP.Promise.resolve([null, null, [testPolygon]]);
+      }
+    });
+    var resObj = {
+      type: 'Polygon',
+      startPoint: L.latLng(-41, -111.04),
+      crs: 'EPSG:4326',
+      skip: 1,
+      rhumbCoordinates: [{
+        rhumb: 'СЗ',
+        angle: 0,
+        distance: 9562776.900083829
+      }, {
+        rhumb: 'СВ',
+        angle: 90,
+        distance: 549601.2989213171
+      }, {
+        rhumb: 'ЮВ',
+        angle: 0,
+        distance: 444780.32093413227
+      }, {
+        rhumb: 'ЮЗ',
+        angle: 4.438440688327262,
+        distance: 9145423.193341617
+      }],
+      coordinates: [[[L.latLng(-41, -111.04), L.latLng(45, -111.04), L.latLng(45, -104.05), L.latLng(41, -104.05)]]]
+    };
+
+    //Act
+    var promise = subject.getRhumb();
+
+    //Assert
+    assert.ok(promise instanceof _ember['default'].RSVP.Promise);
+    promise.then(function (t) {
+      assert.deepEqual(t, resObj);
+      done();
+    });
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-get-rhumb-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-get-rhumb-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-get-rhumb-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-get-rhumb-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/mixins/flexberry-map-model-api-savelayer-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/flexberry-map-model-api-savelayer', 'qunit'], function (exports, _ember, _emberFlexberryGisMixinsFlexberryMapModelApiSavelayer, _qunit) {
 
   (0, _qunit.module)('Unit | Mixin | flexberry map model api savelayer');
@@ -5346,28 +5524,6 @@ define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['export
       assert.equal(e[0].area, 'Intersection not found', 'Not area intersect');
     })['catch'](function (e) {
       assert.ok(e, 'Not intersect');
-    });
-  });
-
-  (0, _emberQunit.test)('getRhumb', function (assert) {
-    var map = this.subject();
-    var _getModelLayerFeatureStub = _sinon['default'].stub(map, '_getModelLayerFeature');
-    _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
-      resolve([null, null, objB]);
-    }));
-
-    map.getRhumb('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233').then(function (e) {
-      var rhumb = [{ rhumb: 'СВ', angle: 54.60899873173304, distance: 1847.0014093569546 }, { rhumb: 'ЮВ', angle: 18.46239009698718, distance: 1002.3048264780921 }, { rhumb: 'ЮЗ', angle: 86.26658375754084, distance: 1827.228836727564 }];
-      var result = {
-        type: 'Polygon',
-        crs: 'EPSG:4326',
-        skip: 1,
-        startPoint: L.latLng(58.72884, 55.80677),
-        rhumbCoordinates: rhumb,
-        coordinates: objB[0]._latlngs
-      };
-
-      assert.deepEqual(e, result, 'Rhumb');
     });
   });
 
