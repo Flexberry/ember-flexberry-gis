@@ -15,11 +15,7 @@ test('test method getDistanceBetweenObjects between polyline and polygon', funct
   secondObj.feature = secondObj.toGeoJSON();
   let subject = mapApiMixinObject.create({
     _getModelLayerFeature(layerId) {
-      if (layerId === '1') {
-        return Ember.RSVP.resolve([null, null, [firstObj]]);
-      } else {
-        return Ember.RSVP.resolve([null, null, [secondObj]]);
-      }
+      return Ember.RSVP.resolve([null, null, [layerId === '1' ? firstObj : secondObj]]);
     }
   });
 
@@ -43,11 +39,7 @@ test('test method getDistanceBetweenObjects between marker and polygon', functio
   secondObj.feature = secondObj.toGeoJSON();
   let subject = mapApiMixinObject.create({
     _getModelLayerFeature(layerId) {
-      if (layerId === '1') {
-        return Ember.RSVP.resolve([null, null, [firstObj]]);
-      } else {
-        return Ember.RSVP.resolve([null, null, [secondObj]]);
-      }
+      return Ember.RSVP.resolve([null, null, [layerId === '1' ? firstObj : secondObj]]);
     }
   });
 
@@ -71,11 +63,7 @@ test('test method getDistanceBetweenObjects between marker and marker', function
   secondObj.feature = secondObj.toGeoJSON();
   let subject = mapApiMixinObject.create({
     _getModelLayerFeature(layerId) {
-      if (layerId === '1') {
-        return Ember.RSVP.resolve([null, null, [firstObj]]);
-      } else {
-        return Ember.RSVP.resolve([null, null, [secondObj]]);
-      }
+      return Ember.RSVP.resolve([null, null, [layerId === '1' ? firstObj : secondObj]]);
     }
   });
 
