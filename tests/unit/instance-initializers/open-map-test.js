@@ -19,7 +19,7 @@ module('Unit | Instance Initializer | open map', {
   }
 });
 
-test('it works', function(assert) {
+test('map api added function Open Map', function(assert) {
   //Arrange
   let configStub = sinon.stub(Ember, 'getOwner');
   configStub.returns({
@@ -42,7 +42,7 @@ test('it works', function(assert) {
   configStub.restore();
 });
 
-test('it works', function(assert) {
+test('Test for function Open Map', function(assert) {
   //Arrange
   let done = assert.async(1);
   let configStub = sinon.stub(Ember, 'getOwner');
