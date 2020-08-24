@@ -19,7 +19,7 @@ module('Unit | Instance Initializer | open map', {
   }
 });
 
-test('map api added function Open Map ', function(assert) {
+test('map api added function Open Map', function(assert) {
   //Arrange
   let configStub = sinon.stub(Ember, 'getOwner');
   configStub.returns({
