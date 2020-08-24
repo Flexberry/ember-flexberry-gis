@@ -19,3 +19,4 @@ testem.log
 /.githooks
 jsconfig.json
 typings/ember/ember.d.ts
+/package-lock.json
