@@ -445,5 +445,6 @@ test('getMergedGeometry should return geoJson feature in EPSG:4326', function(as
   result.then((feature) => {
     assert.deepEqual(feature, geoJsonUnion);
     done();
+    _getModelLayerFeatureStub.restore();
   });
 });

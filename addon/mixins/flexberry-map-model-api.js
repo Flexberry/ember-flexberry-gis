@@ -1275,13 +1275,13 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Convert object id array to array of load object promises
-    @method splitObjectIds
+    Loading features by packages
+    @method loadingFeaturesByPackages
     @param {String} layerId Layer ID.
     @param {Array} objectIds Object IDs.
     @return {Promise}
   */
-  splitObjectIds(layerId, objectIds) {
+  loadingFeaturesByPackages(layerId, objectIds) {
     let packageSize = 100;
 
     let layerPromises = [];
@@ -1313,13 +1313,13 @@ export default Ember.Mixin.create({
   */
   getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, failIfInvalid = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let layerAPromises = this.splitObjectIds(layerAId, objectAIds);
-      let layerBPromises = this.splitObjectIds(layerBId, objectBIds);
+      let layerAPromises = this.loadingFeaturesByPackages(layerAId, objectAIds);
+      let layerBPromises = this.loadingFeaturesByPackages(layerBId, objectBIds);
 
       Ember.RSVP.allSettled(
         layerAPromises.concat(layerBPromises)
-      ).then((result) => {
-        const rejected = result.filter((item) => { return item.state === 'rejected'; }).length > 0;
+      ).then((layerFeatures) => {
+        const rejected = layerFeatures.filter((item) => { return item.state === 'rejected'; }).length > 0;
 
         if (rejected) {
           reject('Error loading objects');
@@ -1329,7 +1329,7 @@ export default Ember.Mixin.create({
 
         let resultObjs = Ember.A();
 
-        result.forEach((r, i) => {
+        layerFeatures.forEach((r, i) => {
           let geometries = Ember.A();
           r.value[2].forEach((obj, ind) => {
             if (Ember.get(obj, 'feature.geometry') && Ember.get(obj, 'options.crs.code')) {
@@ -1355,8 +1355,6 @@ export default Ember.Mixin.create({
           if (merged) {
             resultObjs.pushObject(merged);
           }
-
-          console.log('Merged: ' + count + ' parts');
         });
 
         let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, failIfInvalid) : null;
