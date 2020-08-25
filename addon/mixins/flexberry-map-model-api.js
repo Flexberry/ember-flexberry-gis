@@ -1272,5 +1272,96 @@ export default Ember.Mixin.create({
 
       leafletMap.once('click', getCoord);
     });
-  }
+  },
+
+  /**
+    Loading features by packages
+    @method loadingFeaturesByPackages
+    @param {String} layerId Layer ID.
+    @param {Array} objectIds Object IDs.
+    @return {Promise}
+  */
+  loadingFeaturesByPackages(layerId, objectIds) {
+    let packageSize = 100;
+
+    let layerPromises = [];
+
+    let startPackage = 0;
+    while (startPackage < objectIds.length) {
+      let endPackage = (startPackage + packageSize) <= objectIds.length ? startPackage + packageSize : objectIds.length;
+      let objectsPackage = [];
+      for (var i = startPackage; i < endPackage; i++) {
+        objectsPackage.push(objectIds[i]);
+      }
+
+      layerPromises.push(this._getModelLayerFeature(layerId, objectsPackage));
+      startPackage = endPackage;
+    }
+
+    return layerPromises;
+  },
+
+  /**
+    Calculate geometry
+    @method getMergedGeometry
+    @param {String} layerAId First layer ID.
+    @param {Array} objectAIds First layer object IDs.
+    @param {String} layerBId Second layer ID.
+    @param {Array} objectBIds Second layer object IDs.
+    @param {Boolean} failIfInvalid Fail when has invalid geometry.
+    @return {Promise} GeoJson Feature in EPSG:4326
+  */
+  getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, failIfInvalid = false) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let layerAPromises = this.loadingFeaturesByPackages(layerAId, objectAIds);
+      let layerBPromises = this.loadingFeaturesByPackages(layerBId, objectBIds);
+
+      Ember.RSVP.allSettled(
+        layerAPromises.concat(layerBPromises)
+      ).then((layerFeatures) => {
+        const rejected = layerFeatures.filter((item) => { return item.state === 'rejected'; }).length > 0;
+
+        if (rejected) {
+          reject('Error loading objects');
+        }
+
+        let count = 0;
+
+        let resultObjs = Ember.A();
+
+        layerFeatures.forEach((r, i) => {
+          let geometries = Ember.A();
+          r.value[2].forEach((obj, ind) => {
+            if (Ember.get(obj, 'feature.geometry') && Ember.get(obj, 'options.crs.code')) {
+              let feature = {
+                type: 'Feature',
+                geometry: obj.feature.geometry,
+                crs: {
+                  type: 'name',
+                  properties: {
+                    name: obj.options.crs.code
+                  }
+                }
+              };
+
+              geometries.pushObject(feature);
+            }
+          });
+
+          count += 1;
+
+          // если вся геометрия невалидна, то будет null
+          let merged = this.createMulti(geometries, failIfInvalid);
+          if (merged) {
+            resultObjs.pushObject(merged);
+          }
+        });
+
+        let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, failIfInvalid) : null;
+        resolve(resultObj ? resultObj : null);
+      }).catch((e) => {
+        reject(e);
+      });
+    });
+  },
 });
