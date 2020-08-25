@@ -5142,6 +5142,46 @@ define('dummy/tests/unit/mixins/leaflet-properties-test.jshint', ['exports'], fu
     assert.ok(true, 'unit/mixins/leaflet-properties-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/mixins/map-model-api-getmergegeometry-test-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'qunit'], function (exports, _ember, _emberFlexberryGisMixinsFlexberryMapModelApi, _qunit) {
+
+  (0, _qunit.module)('Unit | Mixin | map model api getmergegeometry test');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  (0, _qunit.test)('splitObjectIds should return 1 and 3 promisses', function (assert) {
+    var subject = mapApiMixinObject.create({
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        return _ember['default'].RSVP.resolve([null, null, null]);
+      }
+    });
+
+    // 220
+    var result220 = subject.loadingFeaturesByPackages('1', ['1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1']);
+
+    // 20
+    var result20 = subject.loadingFeaturesByPackages('1', ['1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1']);
+
+    assert.equal(result220.length, 3);
+    assert.equal(result20.length, 1);
+  });
+});
+define('dummy/tests/unit/mixins/map-model-api-getmergegeometry-test-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/map-model-api-getmergegeometry-test-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/map-model-api-getmergegeometry-test-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/map-model-api-getmergegeometry-test-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/map-model-api-getmergegeometry-test-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/map-model-api-getmergegeometry-test-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-layer-link-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
 
   (0, _emberQunit.moduleForModel)('new-platform-flexberry-g-i-s-layer-link', 'Unit | Model | new-platform-flexberry-g-i-s-layer-link', {
@@ -5603,6 +5643,77 @@ define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['export
     var resultObj = map.createMulti([objA, objB, objC]);
 
     assert.deepEqual(resultObj, multiObject, 'multi object');
+  });
+
+  (0, _emberQunit.test)('getMergedGeometry should return geoJson feature in EPSG:4326', function (assert) {
+    assert.expect(1);
+    var done = assert.async(1);
+
+    var geoJson1Layer1 = {
+      type: 'MultiPolygon',
+      properties: {},
+      coordinates: [[[[56.3252305984497, 58.6398609008772], [56.3221406936646, 58.6398609008771], [56.3221406936646, 58.6412232372209], [56.3252305984497, 58.6412232372209], [56.3252305984497, 58.6398609008772]]]]
+    };
+
+    var geoJson2Layer1 = {
+      type: 'MultiPolygon',
+      properties: {},
+      coordinates: [[[[56.3305950164795, 58.6398385670516], [56.3272905349732, 58.6398385670516], [56.3272905349732, 58.6412679030864], [56.3305950164795, 58.6412679030864], [56.3305950164795, 58.6398385670516]]]]
+    };
+
+    var geoJson1Layer2 = {
+      type: 'MultiPolygon',
+      properties: {},
+      coordinates: [[[[56.3273334503174, 58.6397715654894], [56.3273334503174, 58.6383198334056], [56.3220977783203, 58.6383198334056], [56.3220977783203, 58.6397715654894], [56.3273334503174, 58.6397715654894]]]]
+    };
+
+    var geoJson2Layer2 = {
+      type: 'MultiPolygon',
+      properties: {},
+      coordinates: [[[[56.331582069397, 58.6397827324254], [56.331582069397, 58.6383086660018], [56.3278484344483, 58.6383198334056], [56.3278484344483, 58.6397603985499], [56.331582069397, 58.6397827324254]]]]
+    };
+
+    var geoJsonUnion = {
+      type: 'Feature',
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [[[[56.3252305984497, 58.6398609008772], [56.3221406936646, 58.6398609008771], [56.3221406936646, 58.6412232372209], [56.3252305984497, 58.6412232372209], [56.3252305984497, 58.6398609008772]]], [[[56.3305950164795, 58.6398385670516], [56.3272905349732, 58.6398385670516], [56.3272905349732, 58.6412679030864], [56.3305950164795, 58.6412679030864], [56.3305950164795, 58.6398385670516]]], [[[56.3273334503174, 58.6397715654894], [56.3273334503174, 58.6383198334056], [56.3220977783203, 58.6383198334056], [56.3220977783203, 58.6397715654894], [56.3273334503174, 58.6397715654894]]], [[[56.331582069397, 58.6397827324254], [56.331582069397, 58.6383086660018], [56.3278484344483, 58.6383198334056], [56.3278484344483, 58.6397603985499], [56.331582069397, 58.6397827324254]]]]
+      },
+      crs: {
+        type: 'name',
+        properties: {
+          name: 'EPSG:4326'
+        }
+      }
+    };
+
+    var feature1Layer1 = L.geoJSON(geoJson1Layer1).getLayers()[0];
+    feature1Layer1.options.crs = { code: 'EPSG:4326' };
+    var feature2Layer1 = L.geoJSON(geoJson2Layer1).getLayers()[0];
+    feature2Layer1.options.crs = { code: 'EPSG:4326' };
+
+    var feature1Layer2 = L.geoJSON(geoJson1Layer2).getLayers()[0];
+    feature1Layer2.options.crs = { code: 'EPSG:4326' };
+    var feature2Layer2 = L.geoJSON(geoJson2Layer2).getLayers()[0];
+    feature2Layer2.options.crs = { code: 'EPSG:4326' };
+
+    var map = this.subject();
+    var _getModelLayerFeatureStub = _sinon['default'].stub(map, '_getModelLayerFeature');
+    _getModelLayerFeatureStub.withArgs('1', ['1', '2']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
+      resolve([null, null, [feature1Layer1, feature2Layer1]]);
+    }));
+
+    _getModelLayerFeatureStub.withArgs('2', ['1', '2']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
+      resolve([null, null, [feature1Layer2, feature2Layer2]]);
+    }));
+
+    var result = map.getMergedGeometry('1', ['1', '2'], '2', ['1', '2']);
+
+    result.then(function (feature) {
+      assert.deepEqual(feature, geoJsonUnion);
+      done();
+      _getModelLayerFeatureStub.restore();
+    });
   });
 });
 define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test.jscs-test', ['exports'], function (exports) {

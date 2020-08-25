@@ -43071,7 +43071,25 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 203,
+            "line": 222,
+            "description": "Get geometry kind by geometry",
+            "params": [
+                {
+                    "name": "g",
+                    "description": "geometry",
+                    "type": "Geometry"
+                }
+            ],
+            "return": {
+                "description": "kind",
+                "type": "Int"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api-expansion.js",
+            "line": 244,
             "description": "Create Object by rhumb.",
             "itemtype": "method",
             "name": "createPolygonObjectRhumb",
@@ -44077,6 +44095,71 @@
             ],
             "return": {
                 "description": "Coordinate.",
+                "type": "Promise"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 1277,
+            "description": "Loading features by packages",
+            "itemtype": "method",
+            "name": "loadingFeaturesByPackages",
+            "params": [
+                {
+                    "name": "layerId",
+                    "description": "Layer ID.",
+                    "type": "String"
+                },
+                {
+                    "name": "objectIds",
+                    "description": "Object IDs.",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Promise"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 1304,
+            "description": "Calculate geometry",
+            "itemtype": "method",
+            "name": "getMergedGeometry",
+            "params": [
+                {
+                    "name": "layerAId",
+                    "description": "First layer ID.",
+                    "type": "String"
+                },
+                {
+                    "name": "objectAIds",
+                    "description": "First layer object IDs.",
+                    "type": "Array"
+                },
+                {
+                    "name": "layerBId",
+                    "description": "Second layer ID.",
+                    "type": "String"
+                },
+                {
+                    "name": "objectBIds",
+                    "description": "Second layer object IDs.",
+                    "type": "Array"
+                },
+                {
+                    "name": "failIfInvalid",
+                    "description": "Fail when has invalid geometry.",
+                    "type": "Boolean"
+                }
+            ],
+            "return": {
+                "description": "GeoJson Feature in EPSG:4326",
                 "type": "Promise"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
@@ -47405,7 +47488,11 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:203"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:222"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:244"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -49094,6 +49181,10 @@
         {
             "message": "Missing item type\nService for Map loading from store",
             "line": " addon/mixins/flexberry-boundingbox-map-loader.js:14"
+        },
+        {
+            "message": "Missing item type\nGet geometry kind by geometry",
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:222"
         },
         {
             "message": "Missing item type\nGet [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.",

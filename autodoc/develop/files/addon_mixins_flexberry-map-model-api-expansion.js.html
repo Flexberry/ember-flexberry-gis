@@ -451,7 +451,7 @@ export default Ember.Mixin.create(rhumbOperations, {
       crs = getLeafletCrs(&#x27;{ &quot;code&quot;: &quot;&#x27; + crsName.toUpperCase() + &#x27;&quot;, &quot;definition&quot;: &quot;&quot; }&#x27;, this);
     }
 
-    let coordsToLatLng = function(coords) {
+    let coordsToLatLng = function (coords) {
       return crs.unproject(L.point(coords));
     };
 
@@ -540,8 +540,7 @@ export default Ember.Mixin.create(rhumbOperations, {
         }];
     @returns {Object} new multi-circuit object.
   */
-  createMulti(objects)
-  {
+  createMulti(objects, failIfInvalid = true) {
     let geojsonReader = new jsts.io.GeoJSONReader();
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let geometries = [];
@@ -556,16 +555,32 @@ export default Ember.Mixin.create(rhumbOperations, {
 
     objects.forEach((element, i) =&gt; {
       if (!Ember.isNone(element.crs)) {
-        objects[i] = element.crs.properties.name.toUpperCase() === &#x27;EPSG:4326&#x27; ? element
-        : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
-      } else { throw &quot;error: object must have &#x27;crs&#x27; attribute&quot;; }
+        objects[i] =
+          element.crs.properties.name.toUpperCase() === &#x27;EPSG:4326&#x27; ? element
+          : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
+      } else {
+        throw &quot;error: object must have &#x27;crs&#x27; attribute&quot;;
+      }
     }, this);
 
     //read the geometry of features
     objects.forEach((element, i) =&gt; {
-      geometries.push(geojsonReader.read(element.geometry));
-      if (i !== 0 &amp;&amp; geometries[i].getGeometryType() !== geometries[i - 1].getGeometryType())
-        { throw &#x27;error: type mismatch. Objects must have the same type&#x27;; }
+      let g = geojsonReader.read(element.geometry);
+
+      if (g.isValid()) {
+        geometries.push(g);
+        let j = geometries.length - 1;
+        if (j !== 0 &amp;&amp; this.getGeometryKind(geometries[j]) !== this.getGeometryKind(geometries[j - 1])) {
+          throw &#x27;error: type mismatch. Objects must have the same type&#x27;;
+        }
+      } else {
+        console.error(&#x27;invalid geometry (object &#x27; + i + &#x27;)&#x27;);
+        console.error(element.geometry);
+
+        if (failIfInvalid) {
+          throw &#x27;error: invalid geometry&#x27;;
+        }
+      }
     });
 
     //check the intersections and calculate the difference between objects
@@ -580,6 +595,10 @@ export default Ember.Mixin.create(rhumbOperations, {
       }
 
       separateObjects.push(current);
+    }
+
+    if (separateObjects.length === 0) {
+      return null;
     }
 
     //union the objects
@@ -608,6 +627,28 @@ export default Ember.Mixin.create(rhumbOperations, {
     };
 
     return multiObj;
+  },
+
+  /**
+    Get geometry kind by geometry
+    @param {geometry} g geometry
+    @returns {int} kind
+  */
+  getGeometryKind(g) {
+    let type = g.getGeometryType();
+
+    switch (type) {
+      case &#x27;Polygon&#x27;:
+      case &#x27;MultiPolygon&#x27;:
+        return 1;
+      case &#x27;LineString&#x27;:
+      case &#x27;MultiLineString&#x27;:
+        return 2;
+      case &#x27;Point&#x27;:
+        return 3;
+    }
+
+    return 0;
   },
 
   /**
