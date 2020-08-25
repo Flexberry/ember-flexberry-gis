@@ -42639,7 +42639,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 94,
+            "line": 96,
             "description": "Injected ember storage.",
             "itemtype": "property",
             "name": "folded",
@@ -42649,7 +42649,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 103,
+            "line": 105,
             "description": "Handles click on favorite icon.",
             "itemtype": "method",
             "name": "addToFavorite",
@@ -42664,7 +42664,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 154,
+            "line": 156,
             "description": "Handles click on checkbox in favorite list.",
             "itemtype": "method",
             "name": "addToCompareGeometries",
@@ -42679,7 +42679,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 176,
+            "line": 178,
             "description": "Handles compare features button.",
             "itemtype": "method",
             "name": "OnCompareTwoGeometries",
@@ -42688,7 +42688,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 190,
+            "line": 192,
             "description": "Habdles click on exit comare panel icon",
             "itemtype": "method",
             "name": "closeComparePanel",
@@ -42697,7 +42697,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 200,
+            "line": 202,
             "description": "Method checks id layerModel in array.\nif it is returns its index.",
             "itemtype": "method",
             "name": "isLayerModelInArray",
@@ -42706,7 +42706,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 216,
+            "line": 218,
             "description": "Adding new featre to leayer model array of features.",
             "itemtype": "method",
             "name": "addNewFeatureToLayerModel",
@@ -42715,7 +42715,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 227,
+            "line": 229,
             "description": "Adding new layer model and new feature to array.",
             "itemtype": "method",
             "name": "addNewFeatureToNewLayerModel",
@@ -42724,7 +42724,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 239,
+            "line": 241,
             "description": "Remove feature from fav features list.",
             "itemtype": "method",
             "name": "removeFeatureFromLayerModel",
@@ -42733,7 +42733,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 255,
+            "line": 257,
             "description": "Get features from array of ids.",
             "itemtype": "method",
             "name": "fromIdArrayToFeatureArray",
@@ -42742,7 +42742,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 286,
+            "line": 288,
             "description": "Get [layerModel, featureLayer] by layer id or layer id and object id.",
             "params": [
                 {
@@ -47476,7 +47476,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/favorites-features.js:286"
+            "line": " addon/mixins/favorites-features.js:288"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -49176,7 +49176,7 @@
         },
         {
             "message": "Missing item type\nGet [layerModel, featureLayer] by layer id or layer id and object id.",
-            "line": " addon/mixins/favorites-features.js:286"
+            "line": " addon/mixins/favorites-features.js:288"
         },
         {
             "message": "Missing item type\nService for Map loading from store",

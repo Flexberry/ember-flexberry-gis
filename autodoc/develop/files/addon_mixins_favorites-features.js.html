@@ -473,7 +473,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     @type Observer
     @private
   */
-  _onTwoObjectToCompareChange: Ember.observer(&#x27;twoObjectToCompare.[]&#x27;, function() {
+  _onTwoObjectToCompareChange: Ember.observer(&#x27;twoObjectToCompare.[]&#x27;, function () {
     if (this.get(&#x27;twoObjectToCompare&#x27;).length === 2) {
       this.set(&#x27;compareBtnDisabled&#x27;, false);
     } else {
@@ -488,17 +488,19 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     @private
     @readonly
   */
-  _onLeafletMapDidChange: Ember.observer(&#x27;leafletMap&#x27;, function() {
+  _onLeafletMapDidChange: Ember.observer(&#x27;leafletMap&#x27;, function () {
     let leafletMap = this.get(&#x27;leafletMap&#x27;);
-    leafletMap.on(&#x27;flexberry-map:load&#x27;, (e) =&gt; {
-      Ember.RSVP.allSettled(e.results).then(() =&gt; {
-        let store = this.get(&#x27;store&#x27;);
-        let idFeaturesArray = store.findAll(&#x27;i-i-s-r-g-i-s-p-k-favorite-features&#x27;);
-        idFeaturesArray.then((result) =&gt; {
-          this.fromIdArrayToFeatureArray(result);
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.on(&#x27;flexberry-map:load&#x27;, (e) =&gt; {
+        Ember.RSVP.allSettled(e.results).then(() =&gt; {
+          let store = this.get(&#x27;store&#x27;);
+          let idFeaturesArray = store.findAll(&#x27;i-i-s-r-g-i-s-p-k-favorite-features&#x27;);
+          idFeaturesArray.then((result) =&gt; {
+            this.fromIdArrayToFeatureArray(result);
+          });
         });
       });
-    });
+    }
   }),
 
   /**
@@ -524,8 +526,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         if (layerModelIndex !== false) {
           favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
           let record = store.peekAll(&#x27;i-i-s-r-g-i-s-p-k-favorite-features&#x27;)
-          .filterBy(&#x27;objectKey&#x27;, feature.properties.primarykey)
-          .filterBy(&#x27;objectLayerKey&#x27;, feature.layerModel.id);
+            .filterBy(&#x27;objectKey&#x27;, feature.properties.primarykey)
+            .filterBy(&#x27;objectLayerKey&#x27;, feature.layerModel.id);
           record[0].destroyRecord();
         }
 
