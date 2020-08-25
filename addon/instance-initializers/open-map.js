@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export function initialize(appInstance) {
   let mapApi = appInstance.lookup('service:map-api');
-  mapApi.addToApi('open-map', openMap.bind(appInstance));
+  mapApi.addToApi('openMap', openMap.bind(appInstance));
 }
 
 /**

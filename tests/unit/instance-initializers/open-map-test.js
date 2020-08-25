@@ -46,7 +46,7 @@ test('map api added function Open Map', function(assert) {
 
   //Action
   initialize(this.appInstance);
-  let openMap = this.appInstance.lookup('service:map-api').getFromApi('open-map');
+  let openMap = this.appInstance.lookup('service:map-api').getFromApi('openMap');
 
   //Assert
   assert.ok((typeof openMap) === 'function');
@@ -68,7 +68,7 @@ test('Test for function Open Map', function(assert) {
     }
   });
   initialize(this.appInstance);
-  let openMap = this.appInstance.lookup('service:map-api').getFromApi('open-map');
+  let openMap = this.appInstance.lookup('service:map-api').getFromApi('openMap');
   let mapStoreStub = sinon.stub(this.appInstance.lookup('service:map-store'), 'getMapById');
   let routerStub = sinon.stub(this.appInstance.lookup('router:main'), 'transitionTo');
   mapStoreStub.returns(Ember.RSVP.resolve({}));
