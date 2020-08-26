@@ -66,8 +66,8 @@ test('_coordsToPoints should return array of points to the power of 8', function
   let result = subject._coordsToPoints(featureLayer);
 
   assert.deepEqual(result, [[[
-    {'X': 51405932148539, 'Y': 650739217766284}, {'X': 51386550956231, 'Y': 650741865679820},
-    {'X': 51383979020180, 'Y': 650727905179395}
+    { 'X': 51405932148539, 'Y': 650739217766284 }, { 'X': 51386550956231, 'Y': 650741865679820 },
+    { 'X': 51383979020180, 'Y': 650727905179395 }
   ]]]);
 });
 
@@ -109,8 +109,8 @@ test('_addToArrayPointsAndFeature should return points and features', function(a
   result.then((arrayPointsAndFeature) => {
     assert.deepEqual(arrayPointsAndFeature.arrPoints[0],
       [[[
-        {'X': 51405932148539, 'Y': 650739217766284}, {'X': 51386550956231, 'Y': 650741865679820},
-        {'X': 51383979020180, 'Y': 650727905179395}
+        { 'X': 51405932148539, 'Y': 650739217766284 }, { 'X': 51386550956231, 'Y': 650741865679820 },
+        { 'X': 51383979020180, 'Y': 650727905179395 }
       ]]]
     );
     assert.ok(arrayPointsAndFeature.features[0]);
