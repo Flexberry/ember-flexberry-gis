@@ -675,7 +675,7 @@ export default Ember.Component.extend(
         return this.get('layerModel.id') !== layerId;
       });
       if(!isExists){
-        e.results.pushObject(cancelEdit());
+        e.results.pushObject(this.cancelEdit());
       }
     },
 

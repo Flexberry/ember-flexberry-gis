@@ -1061,14 +1061,14 @@ export default BaseVectorLayer.extend({
       let featuersIds = [];
       let leafletObject = this.get('_leafletObject');
       Object.values(leafletObject.models).forEach(layer => {
-        if(layer.state === state.inserted){
+        if (layer.state === state.inserted) {
           layer.removeLayer(layer);
         } else if (layer.state === state.deleted || layer.state === state.updated) {
           layer.removeLayer(layer);
-          featuersIds.push(layer.layerId)
+          featuersIds.push(layer.layerId);
         }
       });
-      if(featuersIds.length === 0) {
+      if (featuersIds.length === 0) {
         resolve();
       } else {
         let e = {
