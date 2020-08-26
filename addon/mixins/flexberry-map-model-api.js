@@ -1346,7 +1346,7 @@ export default Ember.Mixin.create({
   */
   _addToArrayPointsAndFeature(layerId, crsName) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getPromisesLoadFeatures(layerId).then((loadArr) =>{
+      this._getPromisesLoadFeatures(layerId).then((loadArr) => {
         Ember.RSVP.all(loadArr).then((res) => {
           if (!Ember.isEmpty(res)) {
             let layerObject = res[0][1];
@@ -1354,9 +1354,12 @@ export default Ember.Mixin.create({
             let features = Ember.A();
             res.forEach((objs) => {
               if (!Ember.isEmpty(objs[2])) {
-                objs[2].forEach((layer) =>{
+                objs[2].forEach((layer) => {
                   let obj = layer.feature;
-                  //let feature = layerObject.options.crs.code === 'EPSG:4326' ? obj : this._convertObjectCoordinates(layerObject.options.crs.code, obj);
+                  if (!Ember.isNone(crsName)) {
+                    obj = this._convertObjectCoordinates(layerObject.options.crs.code, obj, crsName);
+                  }
+
                   let featureLayer = L.GeoJSON.geometryToLayer(obj);
                   arrPoints.push(this._coordsToPoints(featureLayer.getLatLngs()));
                   features.push(layer);
@@ -1385,36 +1388,42 @@ export default Ember.Mixin.create({
   differenceLayers(layerAId, layerBId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let result = Ember.A();
-      Ember.RSVP.all([
-        this._addToArrayPointsAndFeature(layerAId),
-        this._addToArrayPointsAndFeature(layerBId)
-      ]).then((res) => {
+      let crsA = this._getModelLeafletObject(layerAId)[1].options.crs.code;
+      let crsB = this._getModelLeafletObject(layerBId)[1].options.crs.code;
+      let arrayPointsAndFeaturePromises = [this._addToArrayPointsAndFeature(layerAId), this._addToArrayPointsAndFeature(layerBId)];
+      if (crsA !== crsB) {
+        arrayPointsAndFeaturePromises = [this._addToArrayPointsAndFeature(layerAId), this._addToArrayPointsAndFeature(layerBId, crsA)];
+      }
+
+      Ember.RSVP.all(arrayPointsAndFeaturePromises).then((res) => {
         let subj = res[0].arrPoints;
         let clip = res[1].arrPoints;
         let solution = ClipperLib.Paths();
         let cpr = new ClipperLib.Clipper();
-        for(let s = 0, slen = subj.length; s<slen; s++) {
+        for (let s = 0, slen = subj.length; s < slen; s++) {
           if (Ember.isArray(subj[s])) {
-            for(let k = 0, klen = subj[s].length; k<klen; k++) {
+            for (let k = 0, klen = subj[s].length; k < klen; k++) {
               cpr.AddPaths(subj[s][k], ClipperLib.PolyType.ptSubject, true);
             }
           } else {
             cpr.AddPaths(subj[s], ClipperLib.PolyType.ptSubject, true);
           }
         }
-        for(let c = 0, clen = clip.length; c < clen; c++) {
+
+        for (let c = 0, clen = clip.length; c < clen; c++) {
           if (Ember.isArray(clip[c])) {
-            for(let k = 0, klen = clip[c].length; k<klen; k++) {
+            for (let k = 0, klen = clip[c].length; k < klen; k++) {
               cpr.AddPaths(clip[c][k], ClipperLib.PolyType.ptClip, true);
             }
           } else {
             cpr.AddPaths(clip[c], ClipperLib.PolyType.ptClip, true);
           }
         }
+
         cpr.Execute(ClipperLib.ClipType.ctDifference, solution);
         if (!Ember.isEmpty(solution)) {
           let jstsGeoJSONReader = new jsts.io.GeoJSONReader();
-          let diffNotNullArea = solution.filter((geom)=>{
+          let diffNotNullArea = solution.filter((geom) => {
             return ClipperLib.Clipper.Area(geom) !== 0;
           }).map((geom) => {
             let feature = {
@@ -1452,7 +1461,7 @@ export default Ember.Mixin.create({
     @param {String} layerBId Second layer ID.
     @param {String} condition Comparison conditions ["contains", "intersects", "notIntersects"].
     @param {Boolean} showOnMap flag indicates if difference area will be displayed on map.
-    @return {Promise} array features.
+    @return {Promise} array of objects with {areaDifference, objectDifference, id of layerB, that matches the condition}.
   */
   compareLayers(layerAId, layerBId, condition, showOnMap) {
     return new Ember.RSVP.Promise((resolve, reject) => {
@@ -1462,73 +1471,83 @@ export default Ember.Mixin.create({
       if (!cond.includes(condition)) {
         reject('The comparison condition is set incorrectly. It must be ["contains", "intersects", "notIntersects"].');
       } else if (condition === cond[2]) {
-          diffLayerPromise = this.differenceLayers(layerBId, layerAId);
+        diffLayerPromise = this.differenceLayers(layerBId, layerAId);
       }
+
       diffLayerPromise.then((res) => {
-        let jstsGeoJSONReader = new jsts.io.GeoJSONReader();
-        res.diffFeatures.forEach((diff) => {
-          if (!cond.includes(condition)) {
-            reject('The comparison condition is set incorrectly. It must be ["contains", "intersects", "notIntersects"].');
-          }
-
-          let layerFeatures = res.layerB;
-          let object = {
-            areaDifference: diff.area
-          };
-          let i = 0;
-          let count = layerFeatures.length;
-          layerFeatures.every((feat) => {
-            let jstsFeat = jstsGeoJSONReader.read(feat.feature);
-            if (jstsFeat.geometry.isValid()) {
-              if (condition === cond[0] && jstsFeat.geometry.contains(diff.jstsGeometry)) {
-                object.id = jstsFeat.properties.primarykey;
-                return false;
-              } else if (condition === cond[1] && jstsFeat.geometry.intersects(diff.jstsGeometry) && !jstsFeat.geometry.contains(diff.jstsGeometry)) {
-                object.id = jstsFeat.properties.primarykey;
-                return false;
-              } else if (condition === cond[2] && jstsFeat.geometry.intersects(diff.jstsGeometry)) {
-                object.id = jstsFeat.properties.primarykey;
-                return false;
-              } else {
-                return true;
-              }
-              /*switch(condition) {
-                case cond[0]:
-                  if (jstsFeat.geometry.contains(diff.jstsGeometry)) {
-                    object.id = jstsFeat.properties.primarykey;
-                    return false;
-                  }
-
-                  break;
-                case cond[1]:
-                  if (jstsFeat.geometry.intersects(diff.jstsGeometry) && !jstsFeat.geometry.contains(diff.jstsGeometry)) {
-                    object.id = jstsFeat.properties.primarykey;
-                    return false;
-                  }
-
-                  return true;
-                  break;
-
-                default:
-                  return true;
-              }*/
+        if (res.hasOwnProperty('diffFeatures')) {
+          let jstsGeoJSONReader = new jsts.io.GeoJSONReader();
+          res.diffFeatures.forEach((diff) => {
+            if (!cond.includes(condition)) {
+              reject('The comparison condition is set incorrectly. It must be ["contains", "intersects", "notIntersects"].');
             }
-          });
 
-          if (showOnMap) {
-            let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
-            let crs = layerFeatures[0].options.crs;
+            let layerFeatures = res.layerB;
+            if (condition === cond[2]) {
+              layerFeatures = res.layerA;
+            }
+
+            let crs = res.layerA[0].options.crs;
             let coordsToLatLng = function(coords) {
               return crs.unproject(L.point(coords));
             };
-            let featureLayer = L.geoJSON(diff.feature, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
-            object.objectDifference = featureLayer;
-            featureLayer.addTo(serviceLayer);
-          }
 
-          result.pushObject(object);
-        });
+            let featureLayer = L.geoJSON(diff.feature, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
+            let object = {
+              areaDifference: diff.area,
+              objectDifference: featureLayer
+            };
+
+            let filterByCondition = layerFeatures.every((feat) => {
+              let jstsFeat = jstsGeoJSONReader.read(feat.feature);
+              if (jstsFeat.geometry.isValid()) {
+                switch (condition) {
+                  case cond[0]:
+                    if (jstsFeat.geometry.contains(diff.jstsGeometry)) {
+                      object.id = jstsFeat.properties.primarykey;
+                      return false;
+                    } else {
+                      return true;
+                    }
+
+                    break;
+                  case cond[1]:
+                    if (jstsFeat.geometry.intersects(diff.jstsGeometry) && !jstsFeat.geometry.contains(diff.jstsGeometry)) {
+                      object.id = jstsFeat.properties.primarykey;
+                      return false;
+                    } else {
+                      return true;
+                    }
+
+                    break;
+                  case cond[2]:
+                    if (jstsFeat.geometry.intersects(diff.jstsGeometry)) {
+                      object.id = jstsFeat.properties.primarykey;
+                      return false;
+                    } else {
+                      return true;
+                    }
+
+                    break;
+                  default:
+                    return true;
+                }
+              } else {
+                return true;
+              }
+            });
+
+            if (showOnMap) {
+              let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+              featureLayer.addTo(serviceLayer);
+            }
+
+            result.pushObject(object);
+          });
           resolve(result);
+        } else {
+          reject(res);
+        }
       }).catch((e) => {
         reject(e);
       });
@@ -1536,8 +1555,8 @@ export default Ember.Mixin.create({
   },
 
   _pointAmplifier() {
-		return Math.pow(10,8);
-	},
+    return Math.pow(10, 8);
+  },
 
   _coordsToPoints(polygons) {
     let amp = this._pointAmplifier();
@@ -1550,8 +1569,8 @@ export default Ember.Mixin.create({
       return coords;
     }
 
-    return {X: Math.round(polygons.lng * amp), Y: Math.round(polygons.lat * amp)};
-	},
+    return { X: Math.round(polygons.lng * amp), Y: Math.round(polygons.lat * amp) };
+  },
 
   _pointsToCoords(points) {
     let amp = this._pointAmplifier();
@@ -1571,5 +1590,5 @@ export default Ember.Mixin.create({
     }
 
     return [points.X / amp, points.Y / amp];
-	}
+  }
 });
