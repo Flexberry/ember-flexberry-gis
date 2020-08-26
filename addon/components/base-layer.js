@@ -217,22 +217,30 @@ export default Ember.Component.extend(
       L.DomEvent.on(pane, 'click', function (e) {
         if (e._stopped) { return; }
 
-        let l = layer;
+        var target = e.target;
 
+        // Проблема с пробрасыванием кликов была только из-за введения разных canvas. Если клик попал на другой элемент, то работает стандартная логика
+        if (target.tagName.toLowerCase() !== 'canvas') {
+          return;
+        }
+
+        let l = layer;
         if (l.leafletMap.hasLayer(l._leafletObject) && checkMapZoomLayer(l)) {
           var point = l.leafletMap.mouseEventToLayerPoint(e);
 
           let intersect = false;
-          l._leafletObject.eachLayer(function (layer) {
-            intersect = intersect || layer._containsPoint(point);
-          });
+          if (l._leafletObject && typeof (l._leafletObject.eachLayer) === 'function') {
+            l._leafletObject.eachLayer(function (layer) {
+              if (typeof (layer._containsPoint) === 'function') {
+                intersect = intersect || layer._containsPoint(point);
+              }
+            });
+          }
 
           if (intersect) { return; }
         }
 
-        var target = e.target;
         var ev = new MouseEvent(e.type, e);
-
         let removed = { node: target, pointerEvents: target.style.pointerEvents };
         target.style.pointerEvents = 'none';
         target = document.elementFromPoint(e.clientX, e.clientY);
@@ -465,7 +473,7 @@ export default Ember.Component.extend(
 
       leafletContainer.addLayer(leafletLayer);
       let leafletMap = this.get('leafletMap');
-      if (!Ember.isNone(leafletMap)) {
+      if (!Ember.isNone(leafletMap) && leafletLayer.options.continueLoading) {
         leafletMap.fire('moveend');
       }
     },
