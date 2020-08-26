@@ -21,7 +21,7 @@ test('return current center of point', function(assert) {
   });
 
   //Act
-  let result = subject.cancelLayerEdit(['1','2','3']);
+  let result = subject.cancelLayerEdit(['1', '2', '3']);
 
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise);
