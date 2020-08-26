@@ -82,6 +82,23 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Cancel edit for layer objects.
+
+    @method cancelLayerEdit
+    @param {[Object]} layerIds array id of layer object.
+    @return Promise
+  */
+  cancelLayerEdit(layerIds) {
+    let e = {
+      layerIds: layerIds,
+      results: Ember.A()
+    };
+    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    leafletMap.fire('flexberry-map:cancelEdit', e);
+    return Ember.RSVP.all(e.results);
+  },
+
+  /**
     Cancel edit for layer object.
 
     @method cancelEdit

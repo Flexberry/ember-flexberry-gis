@@ -665,6 +665,38 @@ export default Ember.Component.extend(
     },
 
     /**
+      Handles 'flexberry-map:cancelEdit' event of leaflet map.
+
+      @method _cancelEdit
+      @param {Object} e Event object.
+    */
+    _cancelEdit(e) {
+      console.log('id = ' + this.get('layerModel.id'));
+      let isExists = e.layerIds.every(layerId => {
+        if(this.get('layerModel.id') === layerId){
+          return false;
+        }
+        return true;
+      });
+      if(!isExists){
+        e.results.pushObject(cancelEdit());
+      }
+      else {
+
+      }
+    },
+
+    /**
+      Handles 'flexberry-map:cancelEdit' event of leaflet map.
+
+      @method cancelEdit
+      @returns {Promise} Promise
+    */
+    cancelEdit() {
+      return new Ember.RSVP.resolve();
+    },
+
+    /**
       Initializes component.
     */
     init() {
@@ -693,6 +725,7 @@ export default Ember.Component.extend(
         leafletMap.on('flexberry-map:search', this._search, this);
         leafletMap.on('flexberry-map:query', this._query, this);
         leafletMap.on('flexberry-map:createObject', this._createObject, this);
+        leafletMap.on('flexberry-map:cancelEdit', this._cancelEdit, this);
 
         leafletMap.on('flexberry-map:load', (e) => {
           if (!Ember.isNone(this.promiseLoad)) {
@@ -716,6 +749,7 @@ export default Ember.Component.extend(
         leafletMap.off('flexberry-map:search', this._search, this);
         leafletMap.off('flexberry-map:query', this._query, this);
         leafletMap.off('flexberry-map:createObject', this._createObject, this);
+        leafletMap.off('flexberry-map:cancelEdit', this._cancelEdit, this);
       }
 
       // Destroy leaflet layer.

@@ -1048,5 +1048,36 @@ export default BaseVectorLayer.extend({
 
       leafletMap.on('moveend', continueLoad);
     }
+  },
+
+  /**
+    Handles 'flexberry-map:cancelEdit' event of leaflet map.
+
+    @method cancelEdit
+    @returns {Ember.RSVP.Promise} Returns promise.
+  */
+  cancelEdit() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let featuersIds = [];
+      let leafletObject = this.get('_leafletObject');
+      Object.values(leafletObject.models).forEach(layer => {
+        if(layer.state === state.inserted){
+          layer.removeLayer(layer);
+        } else if (layer.state === state.deleted || layer.state === state.updated) {
+          layer.removeLayer(layer);
+          featuersIds.push(layer.layerId)
+        }
+      });
+      if(featuersIds.length === 0) {
+        resolve();
+      } else {
+        let e = {
+          featureIds: featuersIds,
+          layer: leafletObject.layerId,
+          results: Ember.A()
+        };
+        this.loadLayerFeatures(e).then(() => { resolve(); }).catch((e) => reject(e));
+      }
+    });
   }
 });
