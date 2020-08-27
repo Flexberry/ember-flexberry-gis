@@ -4487,6 +4487,112 @@ define('dummy/tests/unit/initializers/local-storage-test.jshint', ['exports'], f
     assert.ok(true, 'unit/initializers/local-storage-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/instance-initializers/open-map-test', ['exports', 'ember', 'dummy/instance-initializers/open-map', 'qunit', 'dummy/tests/helpers/destroy-app', 'ember-flexberry-gis/services/map-api', 'ember-flexberry-gis/services/map-store', 'sinon'], function (exports, _ember, _dummyInstanceInitializersOpenMap, _qunit, _dummyTestsHelpersDestroyApp, _emberFlexberryGisServicesMapApi, _emberFlexberryGisServicesMapStore, _sinon) {
+
+  (0, _qunit.module)('Unit | Instance Initializer | open map', {
+    beforeEach: function beforeEach() {
+      var _this = this;
+
+      _ember['default'].run(function () {
+        _this.application = _ember['default'].Application.create();
+        _this.application.register('service:map-api', _emberFlexberryGisServicesMapApi['default']);
+        var objStore = _ember['default'].Service.extend({
+          createRecord: function createRecord() {
+            return {
+              get: function get() {
+                return { pushObject: function pushObject() {} };
+              }
+            };
+          }
+        });
+        _this.application.register('service:store', objStore);
+        _this.application.register('service:map-store', _emberFlexberryGisServicesMapStore['default']);
+        _this.appInstance = _this.application.buildInstance();
+      });
+    },
+    afterEach: function afterEach() {
+      _ember['default'].run(this.appInstance, 'destroy');
+      (0, _dummyTestsHelpersDestroyApp['default'])(this.application);
+    }
+  });
+
+  (0, _qunit.test)('map api added function Open Map', function (assert) {
+    //Arrange
+    var configStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    configStub.returns({
+      _lookupFactory: function _lookupFactory() {
+        return {
+          'APP': {
+            'mapApiService': true
+          }
+        };
+      }
+    });
+
+    //Action
+    (0, _dummyInstanceInitializersOpenMap.initialize)(this.appInstance);
+    var openMap = this.appInstance.lookup('service:map-api').getFromApi('openMap');
+
+    //Assert
+    assert.ok(typeof openMap === 'function');
+    assert.ok(true);
+    configStub.restore();
+  });
+
+  (0, _qunit.test)('Test for function Open Map', function (assert) {
+    //Arrange
+    var done = assert.async(1);
+    var configStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    configStub.returns({
+      _lookupFactory: function _lookupFactory() {
+        return {
+          'APP': {
+            'mapApiService': true
+          }
+        };
+      }
+    });
+    (0, _dummyInstanceInitializersOpenMap.initialize)(this.appInstance);
+    var openMap = this.appInstance.lookup('service:map-api').getFromApi('openMap');
+    var mapStoreStub = _sinon['default'].stub(this.appInstance.lookup('service:map-store'), 'getMapById');
+    var routerStub = _sinon['default'].stub(this.appInstance.lookup('router:main'), 'transitionTo');
+    mapStoreStub.returns(_ember['default'].RSVP.resolve({}));
+    routerStub.returns(true);
+
+    //Action
+    var res = openMap('d3434', { test: true });
+
+    //Assert
+    assert.ok(res instanceof _ember['default'].RSVP.Promise);
+    res.then(function () {
+      assert.equal(mapStoreStub.callCount, 1);
+      assert.equal(routerStub.callCount, 1);
+      assert.equal(mapStoreStub.args[0][0], 'd3434');
+      assert.deepEqual(routerStub.args[0][2], { queryParams: { test: true } });
+      done();
+      mapStoreStub.restore();
+      routerStub.restore();
+    });
+    configStub.restore();
+  });
+});
+define('dummy/tests/unit/instance-initializers/open-map-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/instance-initializers');
+  test('unit/instance-initializers/open-map-test.js should pass jscs', function () {
+    ok(true, 'unit/instance-initializers/open-map-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/instance-initializers/open-map-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/instance-initializers/open-map-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/instance-initializers/open-map-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/mixins/dynamic-properties-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/dynamic-properties', 'qunit'], function (exports, _ember, _emberFlexberryGisMixinsDynamicProperties, _qunit) {
 
   var ClassWithDynamicPropertiesMixin = _ember['default'].Object.extend(_emberFlexberryGisMixinsDynamicProperties['default'], {});
