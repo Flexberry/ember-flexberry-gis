@@ -1650,6 +1650,13 @@
             },
             "namespaces": {}
         },
+        "addon/instance-initializers/open-map.js": {
+            "name": "addon/instance-initializers/open-map.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/instance-initializers/owner.js": {
             "name": "addon/instance-initializers/owner.js",
             "modules": {},
@@ -38842,6 +38849,27 @@
                     "name": "applicationInstance",
                     "description": "Ember application instance.",
                     "type": "<a href=\"http://emberjs.com/api/classes/Ember.ApplicationInstance.html\">Ember.ApplicationInstance</a>"
+                }
+            ],
+            "class": "ApplicationInstanceInitializer",
+            "module": "ember-flexberry"
+        },
+        {
+            "file": "addon/instance-initializers/open-map.js",
+            "line": 8,
+            "description": "Open map if there is exists.",
+            "itemtype": "method",
+            "name": "openMap",
+            "params": [
+                {
+                    "name": "mapId",
+                    "description": "Map id.",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "Parametrs of maps.\nExample:\nvar options = {\n      zoom: 14,\n      lat: 0,\n      long: 0\n    };",
+                    "type": "Object"
                 }
             ],
             "class": "ApplicationInstanceInitializer",
