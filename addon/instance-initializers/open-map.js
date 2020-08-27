@@ -22,10 +22,10 @@ function openMap(mapId, options) {
   return new Ember.RSVP.Promise((resolve, reject) => {
     if (mapId) {
       let service = this.lookup('service:map-store');
-      service.getMapById(mapId).then((data)=> {
+      service.getMapById(mapId).then((mapModel)=> {
         let router = this.lookup('router:main');
         let queryParams = Object.assign({}, options);
-        resolve(router.transitionTo('map', data, { queryParams: queryParams }));
+        resolve(router.transitionTo('map', mapModel, { queryParams: queryParams }));
       }).catch(()=> {
         reject('map is not exists');
       });
