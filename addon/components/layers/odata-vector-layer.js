@@ -1075,13 +1075,15 @@ export default BaseVectorLayer.extend({
             }
           }
         } else if (model.currentState.dirtyType === 'updated' || model.currentState.dirtyType === 'deleted') {
-          if(!Ember.isNone(layer)){
+          if (!Ember.isNone(layer)) {
             if (!Ember.isNone(layer.editor)) {
               let editLayer = layer.editor.editLayer;
               editTools.editLayer.removeLayer(editLayer);
             }
+            
             leafletObject.removeLayer(layer);
           }
+
           model.rollbackAttributes();
           delete leafletObject.models[layerId];
           featuersIds.push(model.id);
