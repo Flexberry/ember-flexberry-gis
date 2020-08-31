@@ -741,7 +741,7 @@ export default Ember.Mixin.create({
       featureLayer.setLatLngs(combinedLeaflet.getLatLngs());
       featureLayer.disableEdit();
       featureLayer.enableEdit();
-      editTools.featuresLayer.clearLayers();
+      newLayer.remove();
 
       // We note that the shape was edited.
       leafletObject.editLayer(featureLayer);
