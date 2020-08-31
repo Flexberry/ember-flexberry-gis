@@ -1080,10 +1080,8 @@ export default BaseVectorLayer.extend({
               let editLayer = layer.editor.editLayer;
               editTools.editLayer.removeLayer(editLayer);
             }
-            
             leafletObject.removeLayer(layer);
           }
-
           model.rollbackAttributes();
           delete leafletObject.models[layerId];
           featuersIds.push(model.id);

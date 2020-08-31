@@ -671,7 +671,6 @@ export default BaseVectorLayer.extend({
             let editLayer = layer.editor.editLayer;
             editTools.editLayer.removeLayer(editLayer);
           }
-          
           leafletObject.removeLayer(layer);
           featuersIds.push(layer.feature.properties.primarykey);
         }
