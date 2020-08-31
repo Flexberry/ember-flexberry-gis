@@ -339,7 +339,7 @@ export default BaseVectorLayer.extend({
       let build = queryBuilder.build();
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
       let intersectionArea = config.APP.intersectionArea;
-      if (isIdentify && obj.build.select.indexOf(intersectionArea) === -1) {
+      if (isIdentify && build.select.indexOf(intersectionArea) === -1) {
         build.select.push(intersectionArea);
       }
 
