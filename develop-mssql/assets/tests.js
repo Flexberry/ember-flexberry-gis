@@ -5582,6 +5582,111 @@ define('dummy/tests/unit/mixins/map-model-api-comparelayers-test.jshint', ['expo
     assert.ok(true, 'unit/mixins/map-model-api-comparelayers-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/mixins/map-model-api-getlayerobjectoptions-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'sinon'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _sinon) {
+
+  (0, _qunit.module)('Unit | Mixin | flexberry-map-model-api getLayerObjectOptions');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  var crsFactory32640 = {
+    code: 'EPSG:32640',
+    definition: '+proj=utm +zone=40 +datum=WGS84 +units=m +no_defs',
+    create: function create() {
+      var crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
+        scale: function scale(zoom) {
+          return 256 * Math.pow(2, zoom);
+        },
+        zoom: function zoom(scale) {
+          return Math.log(scale / 256) / Math.LN2;
+        }
+      });
+      return crs;
+    }
+  };
+
+  var crs32640 = crsFactory32640.create();
+
+  var geoJson32640 = {
+    type: 'MultiPolygon',
+    properties: {},
+    coordinates: [[[[514059.321485393, 6507392.17766284], [513865.509562311, 6507418.6567982], [513839.790201802, 6507279.05179395], [513740.187971532, 6507317.79141744], [513721.727135932, 6507264.36084561], [513663.282762761, 6507443.48435832], [513802.186924293, 6507539.53170715], [514050.141524955, 6507525.35628219], [514059.321485393, 6507392.17766284]]]]
+  };
+
+  var geoJson4326 = {
+    type: 'MultiPolygon',
+    properties: {},
+    coordinates: [[[[57.24265119051584, 58.706458371940684], [57.23930783675451, 58.70670243628802], [57.23885536193849, 58.705449470295804], [57.23713874882379, 58.705800565222816], [57.23681688374202, 58.705321292241], [57.23581910198846, 58.706931847023135], [57.23822236061096, 58.70779003629061], [57.24250106747296, 58.70765474411314], [57.24265119051584, 58.706458371940684]]]]
+  };
+
+  (0, _qunit.test)('getLayerObjectOptions should return properties of feature, projected geometry, and correct area', function (assert) {
+    assert.expect(3);
+    var done = assert.async(1);
+
+    var featureLayer = L.geoJSON(geoJson32640).getLayers()[0];
+    featureLayer.feature.properties.foo = 'bar';
+
+    var subject = mapApiMixinObject.create({
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        return _ember['default'].RSVP.resolve([null, { options: { crs: crs32640 } }, [featureLayer]]);
+      }
+    });
+
+    var result = subject.getLayerObjectOptions();
+
+    result.then(function (options) {
+      assert.equal(options.foo, 'bar');
+      assert.equal(options.area.toFixed(2), 61177.16);
+      assert.deepEqual(options.geometry, geoJson32640.coordinates);
+      done();
+    });
+  });
+
+  (0, _qunit.test)('getLayerObjectOptions return projected geometry if specified crsName', function (assert) {
+    assert.expect(2);
+    var done = assert.async(1);
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'],
+          'epsg32640': crsFactory32640
+        };
+      }
+    });
+
+    var featureLayer = L.geoJSON(geoJson32640).getLayers()[0];
+    var subject = mapApiMixinObject.create({
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        return _ember['default'].RSVP.resolve([null, { options: { crs: crs32640 } }, [featureLayer]]);
+      }
+    });
+
+    var result = subject.getLayerObjectOptions(null, null, 'EPSG:4326');
+    result.then(function (options) {
+      assert.equal(options.area.toFixed(2), 61177.16);
+      assert.deepEqual(options.geometry, geoJson4326.coordinates);
+      done();
+      ownerStub.restore();
+    });
+  });
+});
+define('dummy/tests/unit/mixins/map-model-api-getlayerobjectoptions-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/map-model-api-getlayerobjectoptions-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/map-model-api-getlayerobjectoptions-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/map-model-api-getlayerobjectoptions-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/map-model-api-getlayerobjectoptions-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/map-model-api-getlayerobjectoptions-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/mixins/map-model-api-getmergegeometry-test-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'qunit'], function (exports, _ember, _emberFlexberryGisMixinsFlexberryMapModelApi, _qunit) {
 
   (0, _qunit.module)('Unit | Mixin | map model api getmergegeometry test');
