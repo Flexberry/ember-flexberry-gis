@@ -5,7 +5,7 @@
 import Ember from 'ember';
 import BaseVectorLayer from '../base-vector-layer';
 import { checkMapZoomLayer, checkMapZoom } from '../../utils/check-zoom';
-import featureWithAreaIntersect from '../../utils/feature-with-area-intersect';
+import { intersectionArea } from '../../utils/feature-with-area-intersect';
 import jsts from 'npm:jsts';
 
 /**
@@ -281,15 +281,18 @@ export default BaseVectorLayer.extend({
 
       this._getFeature({
         filter
-      }).then(res => {
+      }).then(filteredFeatures => {
         if (this.get('typeGeometry') === 'polygon') {
-          let mapModel = this.get('mapApi').getFromApi('mapModel');
-          res.forEach(feature => {
-            feature = featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), feature, feature.leafletLayer, mapModel);
+          let projectedIdentifyPolygon = e.polygonLayer.toProjectedGeoJSON(this.get('crs'));
+          filteredFeatures.forEach(feature => {
+            feature.properties = feature.properties || {};
+            feature.properties.intersectionArea = intersectionArea(projectedIdentifyPolygon, feature.leafletLayer.toProjectedGeoJSON(this.get('crs')));
           });
         }
 
-        resolve(res);
+        resolve(filteredFeatures);
+      }).catch((message) => {
+        reject(message);
       });
     });
   },
