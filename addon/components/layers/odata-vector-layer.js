@@ -13,6 +13,11 @@ import wkt from 'npm:@terraformer/wkt';
 const { Builder } = Query;
 
 /**
+  For batch reading
+*/
+const maxBatchFeatures = 10000;
+
+/**
   Investment layer component for leaflet map.
 
   @class ODataVectorLayerComponent
@@ -320,25 +325,26 @@ export default BaseVectorLayer.extend({
   */
   _getFeature(filter, maxFeatures, isIdentify = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let obj = this.get('_buildStoreModelProjectionGeom');
+      let obj = this.get('_adapterStoreModelProjectionGeom');
+
+      let queryBuilder = new Builder(obj.store)
+      .from(obj.modelName)
+      .selectByProjection(obj.projectionName);
 
       if (!Ember.isNone(maxFeatures)) {
-        obj.build.top = maxFeatures;
+        queryBuilder.top(maxFeatures);
       }
 
+      queryBuilder.where(filter);
+      let build = queryBuilder.build();
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
       let intersectionArea = config.APP.intersectionArea;
       if (isIdentify && obj.build.select.indexOf(intersectionArea) === -1) {
-        obj.build.select.push(intersectionArea);
+        build.select.push(intersectionArea);
       }
 
-      obj.build.predicate = filter;
-      let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
+      let objs = obj.adapter.batchLoadModel(obj.modelName, build, obj.store);
       objs.then(res => {
-        if (isIdentify && obj.build.select.indexOf(intersectionArea) > 0) {
-          obj.build.select.pop();
-        }
-
         let features = Ember.A();
         let models = res.toArray();
         let layer = L.featureGroup();
@@ -640,23 +646,26 @@ export default BaseVectorLayer.extend({
   */
   createVectorLayer(options) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let obj = this.get('_buildStoreModelProjectionGeom');
+      let obj = this.get('_adapterStoreModelProjectionGeom');
       let crs = this.get('crs');
 
       let visibility = this.get('layerModel.visibility');
       let bounds;
       let continueLoading = this.get('continueLoading');
       let showExisting = this.get('showExisting');
+      let queryBuilder = new Builder(obj.store)
+      .from(obj.modelName)
+      .selectByProjection(obj.projectionName);
       if (!showExisting && continueLoading && visibility && checkMapZoomLayer(this)) {
         bounds = L.rectangle(this.get('leafletMap').getBounds());
         let query = new Query.GeometryPredicate(obj.geometryField);
-        obj.build.predicate = query.intersects(this.geomToEWKT(bounds));
+        queryBuilder.where(query.intersects(this.geomToEWKT(bounds)));
       } else {
         // Fake request
-        obj.build.predicate = new Query.SimplePredicate('id', Query.FilterOperator.Eq, null);
+        queryBuilder.where(new Query.SimplePredicate('id', Query.FilterOperator.Eq, null));
       }
 
-      let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
+      let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 
       objs.then(res => {
         const options = this.get('options');
@@ -780,7 +789,7 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  _buildStoreModelProjectionGeom: Ember.computed('modelName', 'projectionName', 'geometryField', 'store', function () {
+  _adapterStoreModelProjectionGeom: Ember.computed('modelName', 'projectionName', 'geometryField', 'store', function () {
     const modelName = this.get('modelName');
     const projectionName = this.get('projectionName');
     const geometryField = this.get('geometryField') || 'geometry';
@@ -795,7 +804,6 @@ export default BaseVectorLayer.extend({
       .from(modelName)
       .selectByProjection(projectionName);
     return {
-      build: builder.build(),
       store: store,
       modelName: modelName,
       geometryField: geometryField,
@@ -846,8 +854,11 @@ export default BaseVectorLayer.extend({
             return null;
           };
 
-          let obj = this.get('_buildStoreModelProjectionGeom');
-          obj.build.predicate = null;
+          let obj = this.get('_adapterStoreModelProjectionGeom');
+          let queryBuilder = new Builder(obj.store)
+          .from(obj.modelName)
+          .selectByProjection(obj.projectionName);
+
           if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {// load features by id
             let loadIds = getLoadedFeatures(featureIds);
 
@@ -856,7 +867,7 @@ export default BaseVectorLayer.extend({
             });
 
             if (!Ember.isEmpty(remainingFeat)) {
-              obj.build.predicate = makeFilterEqOr(remainingFeat);
+              queryBuilder.where(makeFilterEqOr(remainingFeat));
             } else { // If objects is already loaded, return leafletObject
               resolve(leafletObject);
               return;
@@ -865,11 +876,11 @@ export default BaseVectorLayer.extend({
             let alreadyLoaded = getLoadedFeatures(null);
             let filterEqOr = makeFilterEqOr(alreadyLoaded);
             if (!Ember.isNone(filterEqOr)) {
-              obj.build.predicate = new Query.NotPredicate(makeFilterEqOr(alreadyLoaded));
+              queryBuilder.where(new Query.NotPredicate(makeFilterEqOr(alreadyLoaded)));
             }
           }
 
-          let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
+          let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 
           objs.then(res => {
             let models = res;
@@ -894,6 +905,29 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Get count of features.
+
+    @method getCountFeatures
+    @return {Promise} count of features.
+  */
+  getCountFeatures() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      const store = this.get('store');
+      const modelName = this.get('modelName');
+      const projectionName = this.get('projectionName');
+      let queryBuilder = new Builder(store)
+      .from(modelName)
+      .selectByProjection(projectionName)
+      .top(1)
+      .count();
+
+      store.query(modelName, queryBuilder.build()).then((result) => {
+        resolve(result.meta.count);
+      });
+    });
+  },
+
+  /**
     Handles 'flexberry-map:getLayerFeatures' event of leaflet map.
 
     @method getLayerFeatures
@@ -906,8 +940,21 @@ export default BaseVectorLayer.extend({
         let leafletObject = this.get('_leafletObject');
         let featureIds = e.featureIds;
         if (!leafletObject.options.showExisting) {
-          let obj = this.get('_buildStoreModelProjectionGeom');
-          obj.build.predicate = null;
+          let obj = this.get('_adapterStoreModelProjectionGeom');
+
+          let getLoadedFeatures = (loadedModels) => {
+            let models = loadedModels;
+            if (typeof loadedModels.toArray === 'function') {
+              models = loadedModels.toArray();
+            }
+
+            let result = [];
+            models.forEach(model => {
+              result.push(this.addLayerObject(leafletObject, model, false));
+            });
+
+            return result;
+          };
 
           if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
             let equals = Ember.A();
@@ -915,25 +962,63 @@ export default BaseVectorLayer.extend({
               equals.pushObject(new Query.SimplePredicate('id', Query.FilterOperator.Eq, id));
             });
 
+            let queryBuilder = new Builder(obj.store)
+            .from(obj.modelName)
+            .selectByProjection(obj.projectionName);
+
             if (equals.length === 1) {
-              obj.build.predicate = equals[0];
+              queryBuilder.where(equals[0]);
             } else {
-              obj.build.predicate = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
+              queryBuilder.where(new Query.ComplexPredicate(Query.Condition.Or, ...equals));
             }
-          }
 
-          let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
+            let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 
-          objs.then(res => {
-            let models = res.toArray();
-            let result = [];
-            models.forEach(model => {
-              result.push(this.addLayerObject(leafletObject, model, false));
+            objs.then(res => {
+              resolve(getLoadedFeatures(res));
+            }).catch((e) => {
+              reject('error');
             });
-            resolve(result);
-          }).catch((e) => {
-            reject('error');
-          });
+          } else { // all layer
+            this.getCountFeatures().then((res) => {
+              let promises = Ember.A();
+              let count = res;
+              let skip = 0;
+              do {
+                let queryBuilder = new Builder(obj.store)
+                .from(obj.modelName)
+                .selectByProjection(obj.projectionName)
+                .top(maxBatchFeatures)
+                .skip(skip)
+                .orderBy('id');
+
+                promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
+                count -= maxBatchFeatures;
+                skip += maxBatchFeatures;
+              } while (count - maxBatchFeatures >= 0);
+
+              if (count > 0) {
+                let queryBuilder = new Builder(obj.store)
+                .from(obj.modelName)
+                .selectByProjection(obj.projectionName)
+                .top(count)
+                .skip(skip)
+                .orderBy('id');
+
+                promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
+              }
+
+              Ember.RSVP.all(promises).then((res) => {
+                let result = [];
+                res.forEach((loadedModels) => {
+                  result = result.concat(getLoadedFeatures(loadedModels));
+                });
+                resolve(result);
+              }).catch((e) => {
+                reject('error');
+              });
+            });
+          }
         } else {
           if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
             let objects = [];
@@ -978,9 +1063,10 @@ export default BaseVectorLayer.extend({
               leafletObject.showLayerObjects = false;
             }
 
-            let obj = this.get('_buildStoreModelProjectionGeom');
-
-            obj.build.predicate = null;
+            let obj = this.get('_adapterStoreModelProjectionGeom');
+            let queryBuilder = new Builder(obj.store)
+            .from(obj.modelName)
+            .selectByProjection(obj.projectionName);
             let crs = this.get('crs');
             let geojsonReader = new jsts.io.GeoJSONReader();
             if (loadedBounds instanceof L.LatLngBounds) {
@@ -992,10 +1078,10 @@ export default BaseVectorLayer.extend({
 
             if (Ember.isNone(leafletObject.isLoadBounds)) {
               let query = new Query.GeometryPredicate(obj.geometryField);
-              obj.build.predicate = query.intersects(this.geomToEWKT(bounds));
+              queryBuilder.where(query.intersects(this.geomToEWKT(bounds)));
               leafletObject.isLoadBounds = bounds;
               loadedBounds = bounds;
-              let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
+              let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
               if (leafletObject.statusLoadLayer) {
                 leafletObject.promiseLoadLayer = objs;
               }
@@ -1026,8 +1112,8 @@ export default BaseVectorLayer.extend({
             let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
             let newPart = queryNewBounds.intersects(this.geomToEWKT(loadedBounds));
 
-            obj.build.predicate = new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart);
-            let objs = obj.adapter.batchLoadModel(obj.modelName, obj.build, obj.store);
+            queryBuilder.where(new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart));
+            let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
             if (leafletObject.statusLoadLayer) {
               leafletObject.promiseLoadLayer = objs;
             }
