@@ -1376,23 +1376,20 @@ export default Ember.Mixin.create({
   */
   _addToArrayPointsAndFeature(layerId, crsName) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, null).then((res) => {
-        if (!Ember.isEmpty(res)) {
-          let layerObject = res[1];
+      this._getModelLayerFeature(layerId, null).then(([, layerObject, layerFeatures]) => {
+        if (!Ember.isEmpty(layerFeatures)) {
           let arrPoints = Ember.A();
           let features = Ember.A();
-          if (!Ember.isEmpty(res[2])) {
-            res[2].forEach((layer) => {
-              let obj = layer.feature;
-              if (!Ember.isNone(crsName)) {
-                obj = this._convertObjectCoordinates(layerObject.options.crs.code, obj, crsName);
-              }
+          layerFeatures.forEach((layer) => {
+            let obj = layer.feature;
+            if (!Ember.isNone(crsName)) {
+              obj = this._convertObjectCoordinates(layerObject.options.crs.code, obj, crsName);
+            }
 
-              let featureLayer = L.GeoJSON.geometryToLayer(obj);
-              arrPoints.push(this._coordsToPoints(featureLayer.getLatLngs()));
-              features.push(layer);
-            });
-          }
+            let featureLayer = L.GeoJSON.geometryToLayer(obj);
+            arrPoints.push(this._coordsToPoints(featureLayer.getLatLngs()));
+            features.push(layer);
+          });
 
           resolve({ arrPoints, features });
         } else {
