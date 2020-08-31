@@ -453,6 +453,14 @@
 
                     <ul class="index-list methods extends">
                             <li class="index-item method inherited">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__addToArrayPointsAndFeature" data-tablink="_addToArrayPointsAndFeature">_addToArrayPointsAndFeature</a>
+
+                            </li>
+                            <li class="index-item method inherited">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__coordsToPoints" data-tablink="_coordsToPoints">_coordsToPoints</a>
+
+                            </li>
+                            <li class="index-item method inherited">
                                 <a href="#" data-tabid="#methods" data-anchor="#method__getDistanceBetweenObjects" data-tablink="_getDistanceBetweenObjects">_getDistanceBetweenObjects</a>
 
                             </li>
@@ -466,6 +474,14 @@
                             </li>
                             <li class="index-item method inherited">
                                 <a href="#" data-tabid="#methods" data-anchor="#method__getTypeLayer" data-tablink="_getTypeLayer">_getTypeLayer</a>
+
+                            </li>
+                            <li class="index-item method inherited">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__pointAmplifier" data-tablink="_pointAmplifier">_pointAmplifier</a>
+
+                            </li>
+                            <li class="index-item method inherited">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__pointsToCoords" data-tablink="_pointsToCoords">_pointsToCoords</a>
 
                             </li>
                             <li class="index-item method private inherited">
@@ -572,6 +588,10 @@
                                 <a href="#" data-tabid="#methods" data-anchor="#method_comapreGeometriesPanelObserver" data-tablink="comapreGeometriesPanelObserver">comapreGeometriesPanelObserver</a>
 
                             </li>
+                            <li class="index-item method inherited">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_compareLayers" data-tablink="compareLayers">compareLayers</a>
+
+                            </li>
                             <li class="index-item method private inherited">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_convertObjectCoordinates" data-tablink="convertObjectCoordinates">convertObjectCoordinates</a>
 
@@ -602,6 +622,10 @@
                             </li>
                             <li class="index-item method inherited">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_deleteLayerObjects." data-tablink="deleteLayerObjects.">deleteLayerObjects.</a>
+
+                            </li>
+                            <li class="index-item method inherited">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_differenceLayers" data-tablink="differenceLayers">differenceLayers</a>
 
                             </li>
                             <li class="index-item method inherited">
@@ -828,6 +852,143 @@
             <div id="methods" class="tab-pane">
                 <h2 class="off-left">Methods</h2>
 
+                    <div id="method__addToArrayPointsAndFeature" class="method item inherited">
+                        <h3 class="name"><code>_addToArrayPointsAndFeature</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>layerId</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>crsName</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method__addToArrayPointsAndFeature">FlexberryMaplayerActionsHandlerMixin</a>:
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1370"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1370</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            Add to array points and feature.
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">layerId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Layer ID.
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">crsName</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Name of coordinate reference system, in which to conver coordinates.
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        array of points and feature.
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <div id="method__coordsToPoints" class="method item inherited">
+                        <h3 class="name"><code>_coordsToPoints</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>polygons</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method__coordsToPoints">FlexberryMaplayerActionsHandlerMixin</a>:
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1595"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1595</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            Transform coordinates in points.
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">polygons</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Array of coordinates.
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
+                                        Array of points.
+                                </div>
+                            </div>
+                    
+                    </div>
                     <div id="method__getDistanceBetweenObjects" class="method item inherited">
                         <h3 class="name"><code>_getDistanceBetweenObjects</code></h3>
                     
@@ -855,7 +1016,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method__getDistanceBetweenObjects">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l376"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:376</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l378"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:378</code></a>
                             </p>
                     
                     
@@ -971,7 +1132,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method__getLayerFeatureId">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l560"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:560</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l562"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:562</code></a>
                             </p>
                     
                     
@@ -1043,7 +1204,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method__getTypeLayer">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l523"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:523</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l525"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:525</code></a>
                             </p>
                     
                     
@@ -1077,6 +1238,108 @@
                                 <div class="returns-description">
                                             <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
                                         layer type
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <div id="method__pointAmplifier" class="method item inherited">
+                        <h3 class="name"><code>_pointAmplifier</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method__pointAmplifier">FlexberryMaplayerActionsHandlerMixin</a>:
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1586"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1586</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            Exponentiation.
+                        </div>
+                    
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>:
+                                        100000000.
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <div id="method__pointsToCoords" class="method item inherited">
+                        <h3 class="name"><code>_pointsToCoords</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>points</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method__pointsToCoords">FlexberryMaplayerActionsHandlerMixin</a>:
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1615"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1615</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            Transform points in coordinates.
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">points</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Array of points.
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
+                                        Array of coordinates.
                                 </div>
                             </div>
                     
@@ -1236,7 +1499,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method__setVisibilityObjects">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l581"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:581</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l583"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:583</code></a>
                             </p>
                     
                     
@@ -3039,7 +3302,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_clearServiceLayer">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l777"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:777</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l779"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:779</code></a>
                             </p>
                     
                     
@@ -3092,6 +3355,107 @@
                     
                     
                     </div>
+                    <div id="method_compareLayers" class="method item inherited">
+                        <h3 class="name"><code>compareLayers</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>layerAId</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>layerBId</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>condition</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>showOnMap</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_compareLayers">FlexberryMaplayerActionsHandlerMixin</a>:
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1486"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1486</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            Compare layers.
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">layerAId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            First layer ID.
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">layerBId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Second layer ID.
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">condition</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Comparison conditions ["contains", "intersects", "notIntersects"].
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">showOnMap</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            flag indicates if difference area will be displayed on map.
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        array of objects with {areaDifference, objectDifference, id of layerB, that matches the condition}.
+                                </div>
+                            </div>
+                    
+                    </div>
                     <div id="method_convertObjectCoordinates" class="method item private inherited">
                         <h3 class="name"><code>convertObjectCoordinates</code></h3>
                     
@@ -3117,7 +3481,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_convertObjectCoordinates">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1153"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1153</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1155"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1155</code></a>
                             </p>
                     
                     
@@ -3182,7 +3546,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_copyObject">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l665"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:665</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l667"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:667</code></a>
                             </p>
                     
                     
@@ -3489,7 +3853,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_createNewLayer.">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l160"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:160</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l162"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:162</code></a>
                             </p>
                     
                     
@@ -3641,7 +4005,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_deleteLayerObject.">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l178"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:178</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l180"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:180</code></a>
                             </p>
                     
                     
@@ -3715,7 +4079,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_deleteLayerObjects.">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l189"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:189</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l191"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:191</code></a>
                             </p>
                     
                     
@@ -3762,6 +4126,81 @@
                             </div>
                     
                     </div>
+                    <div id="method_differenceLayers" class="method item inherited">
+                        <h3 class="name"><code>differenceLayers</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>layerAId</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>layerBId</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_differenceLayers">FlexberryMaplayerActionsHandlerMixin</a>:
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1404"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1404</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            Difference layers.
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">layerAId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            First layer ID.
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">layerBId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Second layer ID.
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        array of Object { diffFeatures, layerAFeatures, layerBFeatures }.
+                                </div>
+                            </div>
+                    
+                    </div>
                     <div id="method_downloadSnapShot" class="method item inherited">
                         <h3 class="name"><code>downloadSnapShot</code></h3>
                     
@@ -3786,7 +4225,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_downloadSnapShot">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l906"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:906</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l908"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:908</code></a>
                             </p>
                     
                     
@@ -3969,7 +4408,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_editLayerObject">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1065"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1065</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1067"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1067</code></a>
                             </p>
                     
                     
@@ -4070,7 +4509,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_getAreaExtends">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l489"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:489</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l491"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:491</code></a>
                             </p>
                     
                     
@@ -4162,7 +4601,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_getCoordPoint">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1252"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1252</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1254"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1254</code></a>
                             </p>
                     
                     
@@ -4233,7 +4672,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_getDistanceBetweenObjects">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l394"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:394</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l396"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:396</code></a>
                             </p>
                     
                     
@@ -4337,7 +4776,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_getIntersectionArea">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l720"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:720</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l722"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:722</code></a>
                             </p>
                     
                     
@@ -4445,7 +4884,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_getIntersectionObjects">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l222"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:222</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l224"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:224</code></a>
                             </p>
                     
                     
@@ -4595,7 +5034,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_getLayerObjectOptions">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l418"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:418</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l420"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:420</code></a>
                             </p>
                     
                     
@@ -4689,7 +5128,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_getMergedGeometry">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1304"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1304</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1306"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1306</code></a>
                             </p>
                     
                     
@@ -4797,7 +5236,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_getNearObject">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l284"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:284</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l286"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:286</code></a>
                             </p>
                     
                     
@@ -4882,7 +5321,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_getRhumb">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l943"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:943</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l945"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:945</code></a>
                             </p>
                     
                     
@@ -4954,7 +5393,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_getSnapShot">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l787"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:787</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l789"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:789</code></a>
                             </p>
                     
                     
@@ -5025,7 +5464,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_hideAllLayerObjects">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l130"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:130</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l132"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:132</code></a>
                             </p>
                     
                     
@@ -5089,7 +5528,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_hideLayerObjects">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l58"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:58</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l60"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:60</code></a>
                             </p>
                     
                     
@@ -5160,7 +5599,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_hideLayers.">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l35"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:35</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l37"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:37</code></a>
                             </p>
                     
                     
@@ -5262,7 +5701,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_isContainsObject">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l449"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:449</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l451"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:451</code></a>
                             </p>
                     
                     
@@ -5357,7 +5796,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_layerToGroup">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1043"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1043</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1045"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1045</code></a>
                             </p>
                     
                     
@@ -5431,7 +5870,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_loadingFeaturesByPackages">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1277"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1277</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1279"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1279</code></a>
                             </p>
                     
                     
@@ -5878,7 +6317,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_showAllLayerObjects">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l70"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:70</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l72"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:72</code></a>
                             </p>
                     
                     
@@ -5972,7 +6411,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_showLayerObjects">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l46"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:46</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l48"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:48</code></a>
                             </p>
                     
                     
@@ -6267,7 +6706,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_uploadFile">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1123"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1123</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1125"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1125</code></a>
                             </p>
                     
                     
@@ -6598,7 +7037,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#property_mapApi">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l17"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:17</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l19"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:19</code></a>
                             </p>
                     
                     
