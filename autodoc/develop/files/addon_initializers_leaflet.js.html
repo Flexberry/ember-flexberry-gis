@@ -423,6 +423,131 @@
 export function initialize(application, baseURL) {
   // Set up leaflet images path (see index.js file where leaflet is imported into application&#x27;s vendor.js).
   L.Icon.Default.imagePath = (baseURL || &#x27;/&#x27;) + &#x27;assets/images/&#x27;;
+
+  // Add custom leaflet functions
+  let latLngToCoords = function(latlng, crs, precision) {
+    var coord = crs.project(latlng);
+    return latlng.alt !== undefined ?
+      [coord.x, coord.y, latlng.alt] :
+      [coord.x, coord.y];
+  };
+
+  let latLngsToCoords = function(latlngs, crs, levelsDeep, closed, precision) {
+    var coords = [];
+
+    for (var i = 0, len = latlngs.length; i &lt; len; i++) {
+      coords.push(levelsDeep ?
+        latLngsToCoords(latlngs[i], crs, levelsDeep - 1, closed, precision) :
+        latLngToCoords(latlngs[i], crs, precision));
+    }
+
+    if (!levelsDeep &amp;&amp; closed) {
+      coords.push(coords[0]);
+    }
+
+    return coords;
+  };
+
+  let PointToGeoJSON = {
+    toProjectedGeoJSON: function (crs, precision) {
+      return L.GeoJSON.getFeature(this, {
+        type: &#x27;Point&#x27;,
+        coordinates: latLngToCoords(this.getLatLng(), crs, precision)
+      });
+    }
+  };
+
+  L.Marker.include(PointToGeoJSON);
+  L.Circle.include(PointToGeoJSON);
+  L.CircleMarker.include(PointToGeoJSON);
+
+  L.Polyline.include({
+    toProjectedGeoJSON: function (crs, precision) {
+      var multi = !L.LineUtil.isFlat(this._latlngs);
+
+      var coords = latLngsToCoords(this._latlngs, crs, multi ? 1 : 0, false, precision);
+
+      return L.GeoJSON.getFeature(this, {
+        type: (multi ? &#x27;Multi&#x27; : &#x27;&#x27;) + &#x27;LineString&#x27;,
+        coordinates: coords
+      });
+    }
+  });
+
+  L.Polygon.include({
+    toProjectedGeoJSON: function (crs, precision) {
+      var holes = !L.LineUtil.isFlat(this._latlngs);
+      var multi = holes &amp;&amp; !L.LineUtil.isFlat(this._latlngs[0]);
+      var coords = latLngsToCoords(this._latlngs, crs, multi ? 2 : holes ? 1 : 0, true, precision);
+
+      if (!holes) {
+        coords = [coords];
+      }
+
+      return L.GeoJSON.getFeature(this, {
+        type: (multi ? &#x27;Multi&#x27; : &#x27;&#x27;) + &#x27;Polygon&#x27;,
+        coordinates: coords
+      });
+    }
+  });
+
+  L.LayerGroup.include({
+    toProjectedMultiPoint: function (crs, precision) {
+      var coords = [];
+
+      this.eachLayer(function (layer) {
+        coords.push(layer.toProjectedGeoJSON(crs, precision).geometry.coordinates);
+      });
+
+      return L.GeoJSON.getFeature(this, {
+        type: &#x27;MultiPoint&#x27;,
+        coordinates: coords
+      });
+    },
+
+    toProjectedGeoJSON: function (crs, precision) {
+
+      var type = this.feature &amp;&amp; this.feature.geometry &amp;&amp; this.feature.geometry.type;
+
+      if (type === &#x27;MultiPoint&#x27;) {
+        return this.toProjectedMultiPoint(crs, precision);
+      }
+
+      var isGeometryCollection = type === &#x27;GeometryCollection&#x27;;
+      var jsons = [];
+
+      this.eachLayer(function (layer) {
+        if (layer.toProjectedGeoJSON) {
+          var json = layer.toProjectedGeoJSON(crs, precision);
+          if (isGeometryCollection) {
+            jsons.push(json.geometry);
+          } else {
+            var feature = L.GeoJSON.asFeature(json);
+
+            // Squash nested feature collections
+            if (feature.type === &#x27;FeatureCollection&#x27;) {
+              jsons.push.apply(jsons, feature.features);
+            } else {
+              jsons.push(feature);
+            }
+          }
+        }
+      });
+
+      if (isGeometryCollection) {
+        return L.GeoJSON.getFeature(this, {
+          geometries: jsons,
+          type: &#x27;GeometryCollection&#x27;
+        });
+      }
+
+      return {
+        type: &#x27;FeatureCollection&#x27;,
+        features: jsons
+      };
+    }
+  });
+
 }
 
 export default {

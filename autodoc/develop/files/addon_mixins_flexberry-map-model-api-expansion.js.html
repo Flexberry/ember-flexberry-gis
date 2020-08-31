@@ -421,7 +421,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     @method addObjectToLayer
     @param {string} layerId Layer ID.
     @param {string} crsName Name of coordinate reference system, in which to give coordinates.
-    @param {Object} object Object.
+    @param {GeoJson} object geoJson object that should be added to specified layer.
     Example:
     var object = {
       type: &#x27;Feature&#x27;,

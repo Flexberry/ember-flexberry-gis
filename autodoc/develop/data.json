@@ -3194,6 +3194,13 @@
             },
             "namespaces": {}
         },
+        "addon/utils/feature-with-area-intersect.js": {
+            "name": "addon/utils/feature-with-area-intersect.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/utils/get-bounds-from-polygon.js": {
             "name": "addon/utils/get-bounds-from-polygon.js",
             "modules": {},
@@ -12381,7 +12388,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 297,
+            "line": 300,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -12426,7 +12433,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 366,
+            "line": 369,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "_query",
@@ -12457,7 +12464,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 401,
+            "line": 404,
             "description": "Get an array of link parameter restrictions.",
             "itemtype": "method",
             "name": "getFilterParameters",
@@ -12481,7 +12488,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 429,
+            "line": 432,
             "description": "Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "loadLayerFeatures",
@@ -12501,7 +12508,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 498,
+            "line": 501,
             "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "getLayerFeatures",
@@ -12521,7 +12528,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 563,
+            "line": 566,
             "description": "Initializes DOM-related component's properties.",
             "class": "WfsLayerComponent",
             "module": "ember-flexberry-gis"
@@ -43086,8 +43093,8 @@
                 },
                 {
                     "name": "object",
-                    "description": "Object.\nExample:\nvar object = {\n  type: 'Feature',\n  geometry: {\n    type: 'LineString',\n    coordinates: [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]\n    },\n  properties: {\n    name: 'test_polygon'\n  }\n};",
-                    "type": "Object"
+                    "description": "geoJson object that should be added to specified layer.\nExample:\nvar object = {\n  type: 'Feature',\n  geometry: {\n    type: 'LineString',\n    coordinates: [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]\n    },\n  properties: {\n    name: 'test_polygon'\n  }\n};",
+                    "type": "GeoJson"
                 }
             ],
             "return": {
@@ -43744,7 +43751,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 451,
+            "line": 452,
             "description": "Check if object A contains object B.",
             "itemtype": "method",
             "name": "isContainsObject",
@@ -43779,7 +43786,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 491,
+            "line": 492,
             "description": "Calculate the area of ​​object B that extends beyond the boundaries of object A.",
             "itemtype": "method",
             "name": "getAreaExtends",
@@ -43814,7 +43821,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 525,
+            "line": 526,
             "description": "Get layer type.",
             "itemtype": "method",
             "name": "_getTypeLayer",
@@ -43834,7 +43841,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 562,
+            "line": 563,
             "description": "Get object id by object and layer.",
             "itemtype": "method",
             "name": "_getLayerFeatureId",
@@ -43859,7 +43866,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 583,
+            "line": 584,
             "description": "Determine the visibility of the specified objects by id for the layer.",
             "itemtype": "method",
             "name": "_setVisibilityObjects",
@@ -43887,7 +43894,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 667,
+            "line": 668,
             "description": "To copy Object from Source layer to Destination.",
             "itemtype": "method",
             "name": "copyObject",
@@ -43912,7 +43919,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 722,
+            "line": 723,
             "description": "Calculate the area of intersection between object A and objects in array B.",
             "itemtype": "method",
             "name": "getIntersectionArea",
@@ -43952,7 +43959,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 779,
+            "line": 780,
             "description": "Cleans the service layer.",
             "itemtype": "method",
             "name": "clearServiceLayer",
@@ -43964,7 +43971,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 789,
+            "line": 790,
             "description": "Create image for layer object.",
             "itemtype": "method",
             "name": "getSnapShot",
@@ -43984,7 +43991,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 908,
+            "line": 909,
             "description": "Download image for layer object.",
             "itemtype": "method",
             "name": "downloadSnapShot",
@@ -44004,7 +44011,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 945,
+            "line": 946,
             "description": "Get the object rhumb.",
             "itemtype": "method",
             "name": "getRhumb",
@@ -44029,7 +44036,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1045,
+            "line": 1046,
             "description": "Add a layer to the group.",
             "itemtype": "method",
             "name": "layerToGroup",
@@ -44053,7 +44060,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1067,
+            "line": 1068,
             "description": "Edit object layer.",
             "itemtype": "method",
             "name": "editLayerObject",
@@ -44088,7 +44095,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1125,
+            "line": 1126,
             "description": "Upload file.",
             "itemtype": "method",
             "name": "uploadFile",
@@ -44108,7 +44115,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1155,
+            "line": 1156,
             "description": "Convert coordinates of object to wgs84, or other crsName.",
             "itemtype": "method",
             "name": "convertObjectCoordinates",
@@ -44130,7 +44137,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1254,
+            "line": 1255,
             "description": "Get coordinates point.",
             "itemtype": "method",
             "name": "getCoordPoint",
@@ -44150,7 +44157,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1279,
+            "line": 1280,
             "description": "Loading features by packages",
             "itemtype": "method",
             "name": "loadingFeaturesByPackages",
@@ -44175,7 +44182,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1306,
+            "line": 1307,
             "description": "Calculate geometry",
             "itemtype": "method",
             "name": "getMergedGeometry",
@@ -44215,7 +44222,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1370,
+            "line": 1371,
             "description": "Add to array points and feature.",
             "itemtype": "method",
             "name": "_addToArrayPointsAndFeature",
@@ -44240,7 +44247,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1404,
+            "line": 1405,
             "description": "Difference layers.",
             "itemtype": "method",
             "name": "differenceLayers",
@@ -44265,7 +44272,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1486,
+            "line": 1487,
             "description": "Compare layers.",
             "itemtype": "method",
             "name": "compareLayers",
@@ -44300,7 +44307,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1586,
+            "line": 1587,
             "description": "Exponentiation.",
             "itemtype": "method",
             "name": "_pointAmplifier",
@@ -44313,7 +44320,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1595,
+            "line": 1596,
             "description": "Transform coordinates in points.",
             "itemtype": "method",
             "name": "_coordsToPoints",
@@ -44333,7 +44340,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1615,
+            "line": 1616,
             "description": "Transform points in coordinates.",
             "itemtype": "method",
             "name": "_pointsToCoords",
@@ -47084,6 +47091,63 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/utils/feature-with-area-intersect.js",
+            "line": 4,
+            "description": "Calculate intersection of geoLayer with featureA geometry and set area of that intersection to geoLayer.properties.intersectionArea",
+            "params": [
+                {
+                    "name": "featureA",
+                    "description": "Layer id.",
+                    "type": "GeoJSON"
+                },
+                {
+                    "name": "UNKNOWN",
+                    "description": "",
+                    "type": "GeoLayer"
+                },
+                {
+                    "name": "UNKNOWN",
+                    "description": "",
+                    "type": "LeafletLayer"
+                },
+                {
+                    "name": "UNKNOWN",
+                    "description": "",
+                    "type": "MapModel"
+                }
+            ],
+            "return": {
+                "description": "geoLayer"
+            },
+            "access": "private",
+            "tagname": "",
+            "class": "Utils.Layers",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/utils/feature-with-area-intersect.js",
+            "line": 37,
+            "description": "Calculate intersection area of two geoJson features, features should be in same crs",
+            "params": [
+                {
+                    "name": "geoJsonA",
+                    "description": "",
+                    "type": "GeoJSON"
+                },
+                {
+                    "name": "geoJsonB",
+                    "description": "",
+                    "type": "GeoJSON"
+                }
+            ],
+            "return": {
+                "description": "area of intersection of features in measure units of coordinate references systems",
+                "type": "Double"
+            },
+            "class": "Utils.Layers",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/utils/get-bounds-from-polygon.js",
             "line": 7,
             "description": "Used for getting bounds from boundingBox polygon.",
@@ -47390,15 +47454,15 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:401"
+            "line": " addon/components/layers/wfs-layer.js:404"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:429"
+            "line": " addon/components/layers/wfs-layer.js:432"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:498"
+            "line": " addon/components/layers/wfs-layer.js:501"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -47698,11 +47762,11 @@
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:1045"
+            "line": " addon/mixins/flexberry-map-model-api.js:1046"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:1045"
+            "line": " addon/mixins/flexberry-map-model-api.js:1046"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -47775,6 +47839,26 @@
         {
             "message": "replacing incorrect tag: returns with return",
             "line": " addon/services/param-gradient.js:49"
+        },
+        {
+            "message": "param name missing: {geoLayer}",
+            "line": " addon/utils/feature-with-area-intersect.js:4"
+        },
+        {
+            "message": "param name missing: {leafletLayer}",
+            "line": " addon/utils/feature-with-area-intersect.js:4"
+        },
+        {
+            "message": "param name missing: {mapModel}",
+            "line": " addon/utils/feature-with-area-intersect.js:4"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/utils/feature-with-area-intersect.js:4"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/utils/feature-with-area-intersect.js:37"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -47942,7 +48026,7 @@
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/layers/wfs-layer.js:563"
+            "line": " addon/components/layers/wfs-layer.js:566"
         },
         {
             "message": "Missing item type\nPerforms 'getFeatureInfo' request to WMS-service related to layer.",
@@ -49475,6 +49559,14 @@
         {
             "message": "Missing item type\nSerializes deserialized attribute value.",
             "line": " addon/transforms/json.js:24"
+        },
+        {
+            "message": "Missing item type\nCalculate intersection of geoLayer with featureA geometry and set area of that intersection to geoLayer.properties.intersectionArea",
+            "line": " addon/utils/feature-with-area-intersect.js:4"
+        },
+        {
+            "message": "Missing item type\nCalculate intersection area of two geoJson features, features should be in same crs",
+            "line": " addon/utils/feature-with-area-intersect.js:37"
         },
         {
             "message": "Missing item type\nCallback function which is called when the Document has been cloned for rendering, can be used to modify\nthe contents that will be rendered without affecting the original source document.",

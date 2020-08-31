@@ -415,7 +415,7 @@
 import Ember from &#x27;ember&#x27;;
 import BaseVectorLayer from &#x27;../base-vector-layer&#x27;;
 import { checkMapZoomLayer, checkMapZoom } from &#x27;../../utils/check-zoom&#x27;;
-import featureWithAreaIntersect from &#x27;../../utils/feature-with-area-intersect&#x27;;
+import { intersectionArea } from &#x27;../../utils/feature-with-area-intersect&#x27;;
 import jsts from &#x27;npm:jsts&#x27;;
 
 /**
@@ -691,15 +691,18 @@ export default BaseVectorLayer.extend({
 
       this._getFeature({
         filter
-      }).then(res =&gt; {
+      }).then(filteredFeatures =&gt; {
         if (this.get(&#x27;typeGeometry&#x27;) === &#x27;polygon&#x27;) {
-          let mapModel = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;);
-          res.forEach(feature =&gt; {
-            feature = featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), feature, feature.leafletLayer, mapModel);
+          let projectedIdentifyPolygon = e.polygonLayer.toProjectedGeoJSON(this.get(&#x27;crs&#x27;));
+          filteredFeatures.forEach(feature =&gt; {
+            feature.properties = feature.properties || {};
+            feature.properties.intersectionArea = intersectionArea(projectedIdentifyPolygon, feature.leafletLayer.toProjectedGeoJSON(this.get(&#x27;crs&#x27;)));
           });
         }
 
-        resolve(res);
+        resolve(filteredFeatures);
+      }).catch((message) =&gt; {
+        reject(message);
       });
     });
   },
