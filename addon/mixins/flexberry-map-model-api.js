@@ -1368,67 +1368,6 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Get count of features.
-    @method _getCount
-    @param {String} layerId layer ID.
-    @return {Promise} count of features.
-  */
-  _getCount(layerId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-      let e = {
-        layer: layerId,
-        results: Ember.A()
-      };
-
-      leafletMap.fire('flexberry-map:getCountFeatures', e);
-      if (Ember.isNone(e.results)) {
-        reject(`Layer '${layerId}' not found`);
-        return;
-      }
-
-      if (e.results[0] instanceof Ember.RSVP.Promise) {
-        e.results[0].then((res) => {
-          resolve(res);
-        });
-      }
-    });
-  },
-
-  /**
-    Get promises load features.
-    @method _getPromisesLoadFeatures
-    @param {String} layerId Layer ID.
-    @return {Promise} array promises.
-  */
-  _getPromisesLoadFeatures(layerId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      let layerModel = this.getLayerModel(layerId);
-      let layerType = this._getTypeLayer(layerModel);
-      let promises = Ember.A();
-      if (layerType instanceof OdataLayer) {
-        this._getCount(layerId).then((res) => {
-          let count = res;
-          let maxFeatures = 10000;
-          let skip = 0;
-          do {
-            promises.push(this._getModelLayerFeature(layerId, null, false, 'id', maxFeatures, skip));
-            count -= maxFeatures;
-            skip += maxFeatures;
-          } while (count - maxFeatures >= 0);
-
-          resolve(promises);
-        }).catch((e) => {
-          reject(e);
-        });
-      } else {
-        promises.push(this._getModelLayerFeature(layerId, null));
-        resolve(promises);
-      }
-    });
-  },
-
-  /**
     Add to array points and feature.
     @method _addToArrayPointsAndFeature
     @param {String} layerId Layer ID.
@@ -1437,32 +1376,28 @@ export default Ember.Mixin.create({
   */
   _addToArrayPointsAndFeature(layerId, crsName) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getPromisesLoadFeatures(layerId).then((loadArr) => {
-        Ember.RSVP.all(loadArr).then((res) => {
-          if (!Ember.isEmpty(res)) {
-            let layerObject = res[0][1];
-            let arrPoints = Ember.A();
-            let features = Ember.A();
-            res.forEach((objs) => {
-              if (!Ember.isEmpty(objs[2])) {
-                objs[2].forEach((layer) => {
-                  let obj = layer.feature;
-                  if (!Ember.isNone(crsName)) {
-                    obj = this._convertObjectCoordinates(layerObject.options.crs.code, obj, crsName);
-                  }
-
-                  let featureLayer = L.GeoJSON.geometryToLayer(obj);
-                  arrPoints.push(this._coordsToPoints(featureLayer.getLatLngs()));
-                  features.push(layer);
-                });
+      this._getModelLayerFeature(layerId, null).then((res) => {
+        if (!Ember.isEmpty(res)) {
+          let layerObject = res[1];
+          let arrPoints = Ember.A();
+          let features = Ember.A();
+          if (!Ember.isEmpty(res[2])) {
+            res[2].forEach((layer) => {
+              let obj = layer.feature;
+              if (!Ember.isNone(crsName)) {
+                obj = this._convertObjectCoordinates(layerObject.options.crs.code, obj, crsName);
               }
-            });
 
-            resolve({ arrPoints, features });
-          } else {
-            reject('Error to load objects');
+              let featureLayer = L.GeoJSON.geometryToLayer(obj);
+              arrPoints.push(this._coordsToPoints(featureLayer.getLatLngs()));
+              features.push(layer);
+            });
           }
-        });
+
+          resolve({ arrPoints, features });
+        } else {
+          reject('Error to load objects');
+        }
       }).catch((e) => {
         reject(e);
       });
@@ -1487,31 +1422,37 @@ export default Ember.Mixin.create({
       }
 
       Ember.RSVP.all(arrayPointsAndFeaturePromises).then((res) => {
-        let subj = res[0].arrPoints;
-        let clip = res[1].arrPoints;
+        let subj = res[0].arrPoints; // layer A
+        let clip = res[1].arrPoints; // layer B
         let solution = ClipperLib.Paths();
-        let cpr = new ClipperLib.Clipper();
+        let cpr = new ClipperLib.Clipper(); // The Clipper constructor creates an instance of the Clipper class
+
+        // Add 'Subject' paths - layer A
         for (let s = 0, slen = subj.length; s < slen; s++) {
-          if (Ember.isArray(subj[s])) {
+          if (Ember.isArray(subj[s])) { // multipolygon
             for (let k = 0, klen = subj[s].length; k < klen; k++) {
               cpr.AddPaths(subj[s][k], ClipperLib.PolyType.ptSubject, true);
             }
-          } else {
+          } else { // polygon
             cpr.AddPaths(subj[s], ClipperLib.PolyType.ptSubject, true);
           }
         }
 
+        // Add 'Clipping' paths - layer B
         for (let c = 0, clen = clip.length; c < clen; c++) {
-          if (Ember.isArray(clip[c])) {
+          if (Ember.isArray(clip[c])) { // multipolygon
             for (let k = 0, klen = clip[c].length; k < klen; k++) {
               cpr.AddPaths(clip[c][k], ClipperLib.PolyType.ptClip, true);
             }
-          } else {
+          } else { // polygon
             cpr.AddPaths(clip[c], ClipperLib.PolyType.ptClip, true);
           }
         }
 
+        // Performing the clipping operation - Difference, result operation be return in solution
         cpr.Execute(ClipperLib.ClipType.ctDifference, solution);
+
+        // filtering 'solution' by area !== 0, transformating of geometry in jsts for comparison and calculate area, filtering after transformation by area > 0
         if (!Ember.isEmpty(solution)) {
           let jstsGeoJSONReader = new jsts.io.GeoJSONReader();
           let diffNotNullArea = solution.filter((geom) => {

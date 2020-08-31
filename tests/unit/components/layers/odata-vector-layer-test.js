@@ -143,3 +143,45 @@ test('loadLayerFeatures() with featureIds=null', function(assert) {
     done();
   });
 });
+
+test('getLayerFeatures() with featureIds=null', function(assert) {
+  assert.expect(2);
+  var done = assert.async(2);
+  Ember.run(() => {
+    let store = app.__container__.lookup('service:store');
+    store.createRecord('new-platform-flexberry-g-i-s-map-layer');
+    Ember.$.extend(param, {
+      'modelName': 'new-platform-flexberry-g-i-s-map-layer',
+      'projectionName':'MapLayerL',
+      'geometryField': 'geometryField',
+      'store': store });
+
+    let component = this.subject(param);
+
+    let getCountFeaturesStub = sinon.stub(component, 'getCountFeatures');
+    getCountFeaturesStub.returns(Ember.RSVP.resolve(123));
+
+    let e = {
+      featureIds: null,
+      layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+      results: Ember.A()
+    };
+
+    let leafletLayerPromiseResolved = assert.async();
+    component.get('_leafletLayerPromise').then((leafletLayer) => {
+      let _leafletObject = L.featureGroup();
+      _leafletObject.options.showExisting = false;
+      component.set('_leafletObject', _leafletObject);
+
+      component.getLayerFeatures(e).then((layers) => {
+        assert.ok(layers, 'Load with null featureIds');
+        done();
+      });
+    }).finally(() => {
+      leafletLayerPromiseResolved();
+    });
+
+    assert.ok(component, 'Create odata-layer');
+    done();
+  });
+});

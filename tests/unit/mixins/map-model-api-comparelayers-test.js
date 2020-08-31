@@ -94,13 +94,13 @@ test('_addToArrayPointsAndFeature should return points and features', function(a
 
   let featureLayer = L.geoJSON(geoJson32640).getLayers()[0];
   let subject = mapApiMixinObject.create({
-    _getPromisesLoadFeatures() {
-      return Ember.RSVP.resolve([
+    _getModelLayerFeature() {
+      return Ember.RSVP.resolve(
         new Ember.RSVP.resolve([
           null,
           { options: { crs: crs32640 } },
           [featureLayer]])
-      ]);
+      );
     }
   });
 
@@ -126,21 +126,21 @@ test('differenceLayers should return the difference of layers', function(assert)
   let featureLayer2 = L.geoJSON(feature2).getLayers()[0];
 
   let subject = mapApiMixinObject.create({
-    _getPromisesLoadFeatures(layer) {
+    _getModelLayerFeature(layer) {
       if (layer === '1') {
-        return Ember.RSVP.resolve([
+        return Ember.RSVP.resolve(
           new Ember.RSVP.resolve([
             null,
             { options: { crs: crs32640 } },
             [featureLayer1]])
-        ]);
+        );
       } else {
-        return Ember.RSVP.resolve([
+        return Ember.RSVP.resolve(
           new Ember.RSVP.resolve([
             null,
             { options: { crs: crs32640 } },
             [featureLayer2]])
-        ]);
+        );
       }
     },
     _getModelLeafletObject() {
@@ -177,21 +177,21 @@ test('differenceLayers should return NOT difference', function(assert) {
   let featureLayer1 = L.geoJSON(feature1).getLayers()[0];
 
   let subject = mapApiMixinObject.create({
-    _getPromisesLoadFeatures(layer) {
+    _getModelLayerFeature(layer) {
       if (layer === '1') {
-        return Ember.RSVP.resolve([
+        return Ember.RSVP.resolve(
           new Ember.RSVP.resolve([
             null,
             { options: { crs: crs32640 } },
             [featureLayer1]])
-        ]);
+        );
       } else {
-        return Ember.RSVP.resolve([
+        return Ember.RSVP.resolve(
           new Ember.RSVP.resolve([
             null,
             { options: { crs: crs32640 } },
             [featureLayer1]])
-        ]);
+        );
       }
     },
     _getModelLeafletObject() {
@@ -229,21 +229,21 @@ test('compareLayers should return array of objects', function(assert) {
   featureLayer2.feature.properties.primarykey = '002';
 
   let subject = mapApiMixinObject.create({
-    _getPromisesLoadFeatures(layer) {
+    _getModelLayerFeature(layer) {
       if (layer === '1') {
-        return Ember.RSVP.resolve([
+        return Ember.RSVP.resolve(
           new Ember.RSVP.resolve([
             null,
             { options: { crs: crs32640 } },
             [featureLayer1]])
-        ]);
+        );
       } else if ('2') {
-        return Ember.RSVP.resolve([
+        return Ember.RSVP.resolve(
           new Ember.RSVP.resolve([
             null,
             { options: { crs: crs32640 } },
             [featureLayer2, featureLayer3, featureLayer4]])
-        ]);
+        );
       }
     },
     _getModelLeafletObject() {

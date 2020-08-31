@@ -536,21 +536,6 @@ export default BaseLayer.extend({
   },
 
   /**
-    Handles 'flexberry-map:getOrLoadLayerFeatures' event of leaflet map.
-
-    @method _getOrLoadLayerFeatures
-    @param {Object} e Event object.
-    @returns {Object[]} results Objects.
-  */
-  _getCountFeatures(e) {
-    if (this.get('layerModel.id') !== e.layer) {
-      return;
-    }
-
-    e.results.push(this.getCountFeatures());
-  },
-
-  /**
     Initializes DOM-related component's properties.
   */
   didInsertElement() {
@@ -559,7 +544,6 @@ export default BaseLayer.extend({
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       leafletMap.on('flexberry-map:getOrLoadLayerFeatures', this._getOrLoadLayerFeatures, this);
-      leafletMap.on('flexberry-map:getCountFeatures', this._getCountFeatures, this);
       leafletMap.on('zoomend', this._checkZoomPane, this);
     }
   },
