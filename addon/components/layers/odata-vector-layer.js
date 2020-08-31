@@ -1060,12 +1060,31 @@ export default BaseVectorLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let featuersIds = [];
       let leafletObject = this.get('_leafletObject');
-      Object.values(leafletObject.models).forEach(layer => {
-        if (layer.state === state.inserted) {
-          layer.removeLayer(layer);
-        } else if (layer.state === state.deleted || layer.state === state.updated) {
-          layer.removeLayer(layer);
-          featuersIds.push(layer.layerId);
+      let editTools = leafletObject.leafletMap.editTools;
+      leafletObject.models.forEach((model, layerId) => {
+        let layer = leafletObject.getLayer(layerId);
+        if (model.currentState.dirtyType === 'created') {
+          leafletObject.removeLayer(layer);
+          delete leafletObject.models[layerId];
+          if (editTools.featuresLayer.getLayers().length !== 0) {
+            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+            if (!Ember.isNone(editorLayerId)) {
+              let editLayer = editTools.featuresLayer.getLayer(editorLayerId).editor.editLayer;
+              editTools.editLayer.removeLayer(editLayer);
+              editTools.featuresLayer.removeLayer(layer);
+            }
+          }
+        } else if (model.currentState.dirtyType === 'updated' || model.currentState.dirtyType === 'deleted') {
+          if(!Ember.isNone(layer)){
+            if (!Ember.isNone(layer.editor)) {
+              let editLayer = layer.editor.editLayer;
+              editTools.editLayer.removeLayer(editLayer);
+            }
+            leafletObject.removeLayer(layer);
+          }
+          model.rollbackAttributes();
+          delete leafletObject.models[layerId];
+          featuersIds.push(model.id);
         }
       });
       if (featuersIds.length === 0) {

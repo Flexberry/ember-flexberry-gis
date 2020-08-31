@@ -653,14 +653,29 @@ export default BaseVectorLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let featuersIds = [];
       let leafletObject = this.get('_leafletObject');
+      let editTools = leafletObject.leafletMap.editTools;
       Object.values(leafletObject.changes).forEach(layer => {
-        if (layer.state === state.inserted) {
-          layer.removeLayer(layer);
-        } else if (layer.state === state.deleted || layer.state === state.updated) {
-          layer.removeLayer(layer);
-          featuersIds.push(layer.layerId);
+        let id = leafletObject.getLayerId(layer);
+        if (layer.state === state.insert) {
+          leafletObject.removeLayer(layer);
+          if (editTools.featuresLayer.getLayers().length !== 0) {
+            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+            if (!Ember.isNone(editorLayerId)) {
+              let editLayer = editTools.featuresLayer.getLayer(editorLayerId).editor.editLayer;
+              editTools.editLayer.removeLayer(editLayer);
+              editTools.featuresLayer.removeLayer(layer);
+            }
+          }
+        } else if (layer.state === state.update || layer.state === state.remove) {
+          if (!Ember.isNone(layer.editor)) {
+            let editLayer = layer.editor.editLayer;
+            editTools.editLayer.removeLayer(editLayer);
+          }
+          leafletObject.removeLayer(layer);
+          featuersIds.push(layer.feature.properties.primarykey);
         }
       });
+      leafletObject.changes = {};
       if (featuersIds.length === 0) {
         resolve();
       } else {
