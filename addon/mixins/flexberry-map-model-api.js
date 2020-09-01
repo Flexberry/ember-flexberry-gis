@@ -428,18 +428,20 @@ export default Ember.Mixin.create({
   getLayerObjectOptions(layerId, featureId, crsName) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let result;
-      this._getModelLayerFeature(layerId, [featureId]).then(([, leafletLayer, featureLayer]) => {
+      this._getModelLayerFeature(layerId, [featureId]).then(([, leafletLayer, features]) => {
+        let featureLayer = features[0];
         if (leafletLayer && featureLayer) {
-          result = Object.assign({}, featureLayer[0].feature.properties);
+          result = Object.assign({}, featureLayer.feature.properties);
           if (crsName) {
-            let NewObjCrs = this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer[0].feature, crsName);
+            let NewObjCrs = this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer.feature, crsName);
             result.geometry = NewObjCrs.geometry.coordinates;
           } else {
-            result.geometry = featureLayer[0].feature.geometry.coordinates;
+            result.geometry = featureLayer.feature.geometry.coordinates;
           }
 
           let jstsGeoJSONReader = new jsts.io.GeoJSONReader();
-          let jstsGeoJSON = jstsGeoJSONReader.read(featureLayer[0].toGeoJSON());
+          let featureLayerGeoJSON = featureLayer.toProjectedGeoJSON(leafletLayer.options.crs);
+          let jstsGeoJSON = jstsGeoJSONReader.read(featureLayerGeoJSON);
           result.area = jstsGeoJSON.geometry.getArea();
           resolve(result);
         }
