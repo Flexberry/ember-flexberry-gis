@@ -5606,28 +5606,44 @@ define('dummy/tests/unit/mixins/map-model-api-getlayerobjectoptions-test', ['exp
 
   var crs32640 = crsFactory32640.create();
 
+  var coordinates32640 = [[[[514059.321485393, 6507392.17766284], [513865.509562311, 6507418.6567982], [513839.790201802, 6507279.05179395], [513740.187971532, 6507317.79141744], [513721.727135932, 6507264.36084561], [513663.282762761, 6507443.48435832], [513802.186924293, 6507539.53170715], [514050.141524955, 6507525.35628219], [514059.321485393, 6507392.17766284]]]];
+
+  var coordinates4326 = [[[[57.24265119051584, 58.706458371940684], [57.23930783675451, 58.70670243628802], [57.23885536193849, 58.705449470295804], [57.23713874882379, 58.705800565222816], [57.23681688374202, 58.705321292241], [57.23581910198846, 58.706931847023135], [57.23822236061096, 58.70779003629061], [57.24250106747296, 58.70765474411314], [57.24265119051584, 58.706458371940684]]]];
+
   var geoJson32640 = {
-    type: 'MultiPolygon',
-    properties: {},
-    coordinates: [[[[514059.321485393, 6507392.17766284], [513865.509562311, 6507418.6567982], [513839.790201802, 6507279.05179395], [513740.187971532, 6507317.79141744], [513721.727135932, 6507264.36084561], [513663.282762761, 6507443.48435832], [513802.186924293, 6507539.53170715], [514050.141524955, 6507525.35628219], [514059.321485393, 6507392.17766284]]]]
+    type: 'Feature',
+    properties: {
+      foo: 'bar'
+    },
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: coordinates32640
+    }
   };
 
-  var geoJson4326 = {
-    type: 'MultiPolygon',
-    properties: {},
-    coordinates: [[[[57.24265119051584, 58.706458371940684], [57.23930783675451, 58.70670243628802], [57.23885536193849, 58.705449470295804], [57.23713874882379, 58.705800565222816], [57.23681688374202, 58.705321292241], [57.23581910198846, 58.706931847023135], [57.23822236061096, 58.70779003629061], [57.24250106747296, 58.70765474411314], [57.24265119051584, 58.706458371940684]]]]
-  };
+  var featureLayer = L.polygon(coordinates4326);
+  featureLayer.feature = geoJson32640;
+  featureLayer.toProjectedGeoJSON = function () {};
 
   (0, _qunit.test)('getLayerObjectOptions should return properties of feature, projected geometry, and correct area', function (assert) {
-    assert.expect(3);
+    assert.expect(4);
     var done = assert.async(1);
-
-    var featureLayer = L.geoJSON(geoJson32640).getLayers()[0];
-    featureLayer.feature.properties.foo = 'bar';
 
     var subject = mapApiMixinObject.create({
       _getModelLayerFeature: function _getModelLayerFeature() {
         return _ember['default'].RSVP.resolve([null, { options: { crs: crs32640 } }, [featureLayer]]);
+      }
+    });
+
+    var toProjectedGeoJSONStub = _sinon['default'].stub(featureLayer, 'toProjectedGeoJSON');
+    toProjectedGeoJSONStub.returns({
+      type: 'Feature',
+      properties: {
+        foo: 'bar'
+      },
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: coordinates32640
       }
     });
 
@@ -5636,7 +5652,9 @@ define('dummy/tests/unit/mixins/map-model-api-getlayerobjectoptions-test', ['exp
     result.then(function (options) {
       assert.equal(options.foo, 'bar');
       assert.equal(options.area.toFixed(2), 61177.16);
-      assert.deepEqual(options.geometry, geoJson32640.coordinates);
+      assert.deepEqual(options.geometry, coordinates32640);
+      assert.ok(toProjectedGeoJSONStub.calledWith(crs32640));
+      toProjectedGeoJSONStub.restore();
       done();
     });
   });
@@ -5654,7 +5672,18 @@ define('dummy/tests/unit/mixins/map-model-api-getlayerobjectoptions-test', ['exp
       }
     });
 
-    var featureLayer = L.geoJSON(geoJson32640).getLayers()[0];
+    var toProjectedGeoJSONStub = _sinon['default'].stub(featureLayer, 'toProjectedGeoJSON');
+    toProjectedGeoJSONStub.returns({
+      type: 'Feature',
+      properties: {
+        foo: 'bar'
+      },
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: coordinates32640
+      }
+    });
+
     var subject = mapApiMixinObject.create({
       _getModelLayerFeature: function _getModelLayerFeature() {
         return _ember['default'].RSVP.resolve([null, { options: { crs: crs32640 } }, [featureLayer]]);
@@ -5664,9 +5693,10 @@ define('dummy/tests/unit/mixins/map-model-api-getlayerobjectoptions-test', ['exp
     var result = subject.getLayerObjectOptions(null, null, 'EPSG:4326');
     result.then(function (options) {
       assert.equal(options.area.toFixed(2), 61177.16);
-      assert.deepEqual(options.geometry, geoJson4326.coordinates);
+      assert.deepEqual(options.geometry, coordinates4326);
       done();
       ownerStub.restore();
+      toProjectedGeoJSONStub.restore();
     });
   });
 });
