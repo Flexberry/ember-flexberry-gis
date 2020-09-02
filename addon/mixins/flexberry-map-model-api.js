@@ -1257,9 +1257,10 @@ export default Ember.Mixin.create(SnapDraw, {
     @param {Boolean} snap Snap or not
     @param {Array} snapLayers Layers for snap
     @param {Integer} snapDistance in pixels
+    @param {Boolean} snapOnlyVertex or segments too
     @return {Promise} Coordinate.
   */
-  getCoordPoint(crsName, snap, snapLayers, snapDistance) {
+  getCoordPoint(crsName, snap, snapLayers, snapDistance, snapOnlyVertex) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       const leafletMap = this.get('mapApi').getFromApi('leafletMap');
       Ember.$(leafletMap._container).css('cursor', 'crosshair');
@@ -1300,7 +1301,14 @@ export default Ember.Mixin.create(SnapDraw, {
 
         this.set('_snapLayersGroups', layers);
         this._setSnappingFeatures();
-        this.set('_snapDistance', snapDistance);
+
+        if (snapDistance) {
+          this.set('_snapDistance', snapDistance);
+        }
+
+        if (!Ember.isNone(snapOnlyVertex)) {
+          this.set('_snapOnlyVertex', snapOnlyVertex);
+        }
 
         let editTools = this._getEditTools();
         leafletMap.on('mousemove', this._handleSnapping, this);

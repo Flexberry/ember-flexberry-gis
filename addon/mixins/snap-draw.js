@@ -27,6 +27,15 @@ export default Ember.Mixin.create({
   _snapDistance: 20,
 
   /**
+  Snap only vertex / snap vertex and segment
+
+  @property _snapOnlyVertex
+  @type Boolean
+  @default true
+*/
+  _snapOnlyVertex: true,
+
+  /**
     @property _snapLeafletLayers
     @type Array
     @readOnly
@@ -49,6 +58,7 @@ export default Ember.Mixin.create({
   _cleanupSnapping() {
     this.set('_snapLayersGroups', null);
     this.set('_snapLayers', {});
+    this.set('_snapOnlyVertex', true);
     this.set('_editedFeatureId', null);
     let snapMarker = this.get('_snapMarker');
     if (snapMarker) {
@@ -101,6 +111,7 @@ export default Ember.Mixin.create({
     let snapMarker = e.vertex || this.get('_snapMarker');
 
     let snapDistance = this.get('_snapDistance');
+    let snapOnlyVertex = this.get('_snapOnlyVertex');
 
     let point = leafletMap.latLngToLayerPoint(e.latlng);
     let topLeftPoint = leafletMap.layerPointToLatLng(L.point(point.x - snapDistance, point.y - snapDistance));
@@ -114,7 +125,7 @@ export default Ember.Mixin.create({
     if (closestLayer && closestLayer.distance < snapDistance) {
 
       let isMarker = closestLayer.layer instanceof L.Marker || closestLayer.layer instanceof L.CircleMarker;
-      let currentSnap = (isMarker ? closestLayer.latlng : this._checkSnapToVertex(closestLayer)) || {};
+      let currentSnap = (isMarker || snapOnlyVertex ? closestLayer.latlng : this._checkSnapToVertex(closestLayer)) || {};
 
       // snap the marker
       snapMarker.setLatLng(currentSnap);
@@ -207,6 +218,7 @@ export default Ember.Mixin.create({
   */
   _calculateDistance(latlng, layer) {
     let map = this.get('leafletMap') || this.get('mapApi').getFromApi('leafletMap');
+    let snapOnlyVertex = this.get('_snapOnlyVertex');
     let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
     let isPolygon = layer instanceof L.Polygon;
 
@@ -221,6 +233,7 @@ export default Ember.Mixin.create({
     }
 
     let closestSegment;
+    let closestPoint;
     let shortestDistance;
 
     let loopThroughCoords = (coords) => {
@@ -231,23 +244,35 @@ export default Ember.Mixin.create({
         }
 
         let segmentPointA = coord;
-        let nextIndex = index + 1 === coords.length ? (isPolygon ? 0 : undefined) : index + 1;
-        let segmentPointB = coords[nextIndex];
+        let segmentPointB;
+        let distance;
+        if (snapOnlyVertex) {
+          distance = this._getPixelDistance(map, latlng, segmentPointA);
+        } else {
+          let nextIndex = index + 1 === coords.length ? (isPolygon ? 0 : undefined) : index + 1;
+          if (nextIndex) {
+            segmentPointB = coords[nextIndex];
+          }
 
-        if (segmentPointB) {
-          let distance = this._getPixelDistanceToSegment(map, latlng, segmentPointA, segmentPointB);
+          if (segmentPointB) {
+            distance = this._getPixelDistanceToSegment(map, latlng, segmentPointA, segmentPointB);
+          }
+        }
 
-          if (shortestDistance === undefined || distance < shortestDistance) {
-            shortestDistance = distance;
+        if (distance && (shortestDistance === undefined || distance < shortestDistance)) {
+          shortestDistance = distance;
+          if (segmentPointB) {
             closestSegment = [segmentPointA, segmentPointB];
           }
+
+          closestPoint = segmentPointA;
         }
       });
     };
 
     loopThroughCoords(latlngs);
 
-    let closestSegmentPoint = this._getClosestPointOnSegment(map, latlng, closestSegment[0], closestSegment[1]);
+    let closestSegmentPoint = snapOnlyVertex ? closestPoint : this._getClosestPointOnSegment(map, latlng, closestSegment[0], closestSegment[1]);
 
     return {
       latlng: Object.assign({}, closestSegmentPoint),
