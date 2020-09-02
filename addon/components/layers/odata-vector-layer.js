@@ -1063,7 +1063,8 @@ export default BaseVectorLayer.extend({
       let editTools = leafletObject.leafletMap.editTools;
       leafletObject.models.forEach((model, layerId) => {
         let layer = leafletObject.getLayer(layerId);
-        if (model.currentState.dirtyType === 'created') {
+        let dirtyType = model.get('dirtyType');
+        if (dirtyType === 'created') {
           leafletObject.removeLayer(layer);
           delete leafletObject.models[layerId];
           if (editTools.featuresLayer.getLayers().length !== 0) {
@@ -1075,7 +1076,7 @@ export default BaseVectorLayer.extend({
               editTools.featuresLayer.removeLayer(layer);
             }
           }
-        } else if (model.currentState.dirtyType === 'updated' || model.currentState.dirtyType === 'deleted') {
+        } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
           if (!Ember.isNone(layer)) {
             if (!Ember.isNone(layer.editor)) {
               let editLayer = layer.editor.editLayer;
@@ -1087,7 +1088,7 @@ export default BaseVectorLayer.extend({
 
           model.rollbackAttributes();
           delete leafletObject.models[layerId];
-          featuersIds.push(model.id);
+          featuersIds.push(model.get('id'));
         }
       });
       if (featuersIds.length === 0) {
