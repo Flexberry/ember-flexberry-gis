@@ -5,7 +5,7 @@
 import Ember from 'ember';
 import BaseVectorLayer from '../base-vector-layer';
 import { checkMapZoomLayer, checkMapZoom } from '../../utils/check-zoom';
-import featureWithAreaIntersect from '../../utils/feature-with-area-intersect';
+import { intersectionArea } from '../../utils/feature-with-area-intersect';
 import jsts from 'npm:jsts';
 
 /**
@@ -281,15 +281,18 @@ export default BaseVectorLayer.extend({
 
       this._getFeature({
         filter
-      }).then(res => {
+      }).then(filteredFeatures => {
         if (this.get('typeGeometry') === 'polygon') {
-          let mapModel = this.get('mapApi').getFromApi('mapModel');
-          res.forEach(feature => {
-            feature = featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), feature, feature.leafletLayer, mapModel);
+          let projectedIdentifyPolygon = e.polygonLayer.toProjectedGeoJSON(this.get('crs'));
+          filteredFeatures.forEach(feature => {
+            feature.properties = feature.properties || {};
+            feature.properties.intersectionArea = intersectionArea(projectedIdentifyPolygon, feature.leafletLayer.toProjectedGeoJSON(this.get('crs')));
           });
         }
 
-        resolve(res);
+        resolve(filteredFeatures);
+      }).catch((message) => {
+        reject(message);
       });
     });
   },
@@ -623,24 +626,6 @@ export default BaseVectorLayer.extend({
             let filter = new L.Filter.And(newPart, oldPart);
             leafletObject.loadFeatures(filter);
 
-            if (leafletObject.statusLoadLayer) {
-              leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve, reject) => {
-                leafletObject.once('load', () => {
-                  resolve();
-                }).once('error', (e) => {
-                  reject();
-                });
-              });
-            }
-          } else if (notContinueLoad && this.get('layerModel.visibility') && Ember.isNone(leafletObject.isLoaded)) {// loaded for not ContinueLoad
-            leafletObject.isLoaded = true;
-            let e = {
-              featureIds: null,
-              layer: this.get('layerModel.id'),
-              load: true,
-              results: Ember.A()
-            };
-            this.loadLayerFeatures(e);
             if (leafletObject.statusLoadLayer) {
               leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve, reject) => {
                 leafletObject.once('load', () => {

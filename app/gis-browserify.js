@@ -30,3 +30,4 @@ import * as rhumbBearing from 'npm:@turf/rhumb-bearing';
 import * as sideBySide from 'npm:leaflet-side-by-side';
 import * as jsts from 'npm:jsts';
 import * as wkt from 'npm:@terraformer/wkt';
+import * as clipper from 'npm:clipper-lib';
