@@ -16,7 +16,6 @@ import SnapDraw from './snap-draw';
 import ClipperLib from 'npm:clipper-lib';
 import jsts from 'npm:jsts';
 
-
 export default Ember.Mixin.create(SnapDraw, {
   /**
     Service for managing map API.
