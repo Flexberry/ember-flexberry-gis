@@ -680,7 +680,7 @@ export default Ember.Component.extend(
       Handles 'flexberry-map:cancelEdit' event of leaflet map.
 
       @method cancelEdit
-      @returns {Promise} Promise
+      @return {Ember.RSVP.Promise} Returns promise.
     */
     cancelEdit() {
       return new Ember.RSVP.resolve();

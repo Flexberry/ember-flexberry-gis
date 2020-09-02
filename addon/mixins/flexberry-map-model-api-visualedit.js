@@ -86,7 +86,7 @@ export default Ember.Mixin.create({
 
     @method cancelLayerEdit
     @param {[String]} layerIds array id of layer object.
-    @return Promise
+    @return {Ember.RSVP.Promise} Returns promise.
   */
   cancelLayerEdit(layerIds) {
     let e = {
