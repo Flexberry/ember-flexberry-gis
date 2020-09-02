@@ -1068,8 +1068,9 @@ export default BaseVectorLayer.extend({
           delete leafletObject.models[layerId];
           if (editTools.featuresLayer.getLayers().length !== 0) {
             let editorLayerId = editTools.featuresLayer.getLayerId(layer);
-            if (!Ember.isNone(editorLayerId)) {
-              let editLayer = editTools.featuresLayer.getLayer(editorLayerId).editor.editLayer;
+            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+            if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
+              let editLayer = featureLayer.editor.editLayer;
               editTools.editLayer.removeLayer(editLayer);
               editTools.featuresLayer.removeLayer(layer);
             }

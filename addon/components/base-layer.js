@@ -671,10 +671,7 @@ export default Ember.Component.extend(
       @param {Object} e Event object.
     */
     _cancelEdit(e) {
-      let isExists = e.layerIds.every(layerId => {
-        return this.get('layerModel.id') !== layerId;
-      });
-      if (!isExists) {
+      if (e.layerIds.indexOf(this.get('layerModel.id')) !== -1) {
         e.results.pushObject(this.cancelEdit());
       }
     },
