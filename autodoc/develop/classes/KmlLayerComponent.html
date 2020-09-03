@@ -467,6 +467,10 @@
                                 <a href="#" data-tabid="#methods" data-anchor="#method__applyProperty" data-tablink="_applyProperty">_applyProperty</a>
 
                             </li>
+                            <li class="index-item method inherited">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__cancelEdit" data-tablink="_cancelEdit">_cancelEdit</a>
+
+                            </li>
                             <li class="index-item method private inherited">
                                 <a href="#" data-tabid="#methods" data-anchor="#method__checkZoomPane" data-tablink="_checkZoomPane">_checkZoomPane</a>
 
@@ -609,6 +613,10 @@
                             </li>
                             <li class="index-item method private inherited">
                                 <a href="#" data-tabid="#methods" data-anchor="#method__zoomMinDidChange" data-tablink="_zoomMinDidChange">_zoomMinDidChange</a>
+
+                            </li>
+                            <li class="index-item method inherited">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_cancelEdit" data-tablink="cancelEdit">cancelEdit</a>
 
                             </li>
                             <li class="index-item method inherited">
@@ -1154,6 +1162,57 @@
                                         string with replaced property
                                 </div>
                             </div>
+                    
+                    </div>
+                    <div id="method__cancelEdit" class="method item inherited">
+                        <h3 class="name"><code>_cancelEdit</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>e</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/BaseLayerComponent.html#method__cancelEdit">BaseLayerComponent</a>:
+                            <a href="../files/addon_components_base-layer.js.html#l667"><code>addon&#x2F;components&#x2F;base-layer.js:667</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            Handles 'flexberry-map:cancelEdit' event of leaflet map.
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">e</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Event object.
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
                     
                     </div>
                     <div id="method__checkZoomPane" class="method item private inherited">
@@ -2699,6 +2758,46 @@
                     
                     
                     </div>
+                    <div id="method_cancelEdit" class="method item inherited">
+                        <h3 class="name"><code>cancelEdit</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                            <span class="returns-inline">
+                                <span class="type">Ember.RSVP.Promise</span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/BaseLayerComponent.html#method_cancelEdit">BaseLayerComponent</a>:
+                            <a href="../files/addon_components_base-layer.js.html#l679"><code>addon&#x2F;components&#x2F;base-layer.js:679</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            Handles 'flexberry-map:cancelEdit' event of leaflet map.
+                        </div>
+                    
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type">Ember.RSVP.Promise</span>:
+                                        Returns promise.
+                                </div>
+                            </div>
+                    
+                    </div>
                     <div id="method_createClusterLayer" class="method item inherited">
                         <h3 class="name"><code>createClusterLayer</code></h3>
                     
@@ -3070,7 +3169,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerComponent.html#method_getBoundingBox">BaseLayerComponent</a>:
-                            <a href="../files/addon_components_base-layer.js.html#l816"><code>addon&#x2F;components&#x2F;base-layer.js:816</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l840"><code>addon&#x2F;components&#x2F;base-layer.js:840</code></a>
                             </p>
                     
                     
@@ -3171,7 +3270,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerComponent.html#method_getLeafletObjectPromise">BaseLayerComponent</a>:
-                            <a href="../files/addon_components_base-layer.js.html#l725"><code>addon&#x2F;components&#x2F;base-layer.js:725</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l749"><code>addon&#x2F;components&#x2F;base-layer.js:749</code></a>
                             </p>
                     
                     
@@ -3317,7 +3416,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerComponent.html#method_injectLeafletLayersIntoGeoJSON">BaseLayerComponent</a>:
-                            <a href="../files/addon_components_base-layer.js.html#l862"><code>addon&#x2F;components&#x2F;base-layer.js:862</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l886"><code>addon&#x2F;components&#x2F;base-layer.js:886</code></a>
                             </p>
                     
                     
@@ -3390,7 +3489,7 @@
                                     LeafletOptionsMixin
                                 </a>
                                 but overwritten in
-                            <a href="../files/addon_components_base-layer.js.html#l836"><code>addon&#x2F;components&#x2F;base-layer.js:836</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l860"><code>addon&#x2F;components&#x2F;base-layer.js:860</code></a>
                             </p>
                     
                     
@@ -3686,7 +3785,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerComponent.html#method_returnLeafletObject">BaseLayerComponent</a>:
-                            <a href="../files/addon_components_base-layer.js.html#l738"><code>addon&#x2F;components&#x2F;base-layer.js:738</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l762"><code>addon&#x2F;components&#x2F;base-layer.js:762</code></a>
                             </p>
                     
                     
@@ -3846,7 +3945,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerComponent.html#method_sendingActions.layerDestroy">BaseLayerComponent</a>:
-                            <a href="../files/addon_components_base-layer.js.html#l930"><code>addon&#x2F;components&#x2F;base-layer.js:930</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l954"><code>addon&#x2F;components&#x2F;base-layer.js:954</code></a>
                             </p>
                     
                     
@@ -3919,7 +4018,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerComponent.html#method_sendingActions.layerInit">BaseLayerComponent</a>:
-                            <a href="../files/addon_components_base-layer.js.html#l921"><code>addon&#x2F;components&#x2F;base-layer.js:921</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l945"><code>addon&#x2F;components&#x2F;base-layer.js:945</code></a>
                             </p>
                     
                     

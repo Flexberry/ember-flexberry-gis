@@ -417,6 +417,7 @@ import BaseVectorLayer from &#x27;../base-vector-layer&#x27;;
 import { checkMapZoomLayer, checkMapZoom } from &#x27;../../utils/check-zoom&#x27;;
 import { intersectionArea } from &#x27;../../utils/feature-with-area-intersect&#x27;;
 import jsts from &#x27;npm:jsts&#x27;;
+import state from &#x27;../../utils/state&#x27;;
 
 /**
   WFS layer component for leaflet map.
@@ -1053,6 +1054,54 @@ export default BaseVectorLayer.extend({
 
       leafletMap.on(&#x27;moveend&#x27;, continueLoad);
     }
+  },
+
+  /**
+    Handles &#x27;flexberry-map:cancelEdit&#x27; event of leaflet map.
+
+    @method cancelEdit
+    @returns {Ember.RSVP.Promise} Returns promise.
+  */
+  cancelEdit() {
+    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+      let featuersIds = [];
+      let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+      let editTools = leafletObject.leafletMap.editTools;
+      Object.values(leafletObject.changes).forEach(layer =&gt; {
+        let id = leafletObject.getLayerId(layer);
+        if (layer.state === state.insert) {
+          leafletObject.removeLayer(layer);
+          if (editTools.featuresLayer.getLayers().length !== 0) {
+            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+            if (!Ember.isNone(editorLayerId) &amp;&amp; !Ember.isNone(featureLayer) &amp;&amp; !Ember.isNone(featureLayer.editor)) {
+              let editLayer = featureLayer.editor.editLayer;
+              editTools.editLayer.removeLayer(editLayer);
+              editTools.featuresLayer.removeLayer(layer);
+            }
+          }
+        } else if (layer.state === state.update || layer.state === state.remove) {
+          if (!Ember.isNone(layer.editor)) {
+            let editLayer = layer.editor.editLayer;
+            editTools.editLayer.removeLayer(editLayer);
+          }
+
+          leafletObject.removeLayer(layer);
+          featuersIds.push(layer.feature.properties.primarykey);
+        }
+      });
+      leafletObject.changes = {};
+      if (featuersIds.length === 0) {
+        resolve();
+      } else {
+        let e = {
+          featureIds: featuersIds,
+          layer: leafletObject.layerId,
+          results: Ember.A()
+        };
+        this.loadLayerFeatures(e).then(() =&gt; { resolve(); }).catch((e) =&gt; reject(e));
+      }
+    });
   }
 });
 

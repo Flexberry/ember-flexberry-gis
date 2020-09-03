@@ -1544,6 +1544,60 @@ export default BaseVectorLayer.extend({
 
       leafletMap.on(&#x27;moveend&#x27;, continueLoad);
     }
+  },
+
+  /**
+    Handles &#x27;flexberry-map:cancelEdit&#x27; event of leaflet map.
+
+    @method cancelEdit
+    @returns {Ember.RSVP.Promise} Returns promise.
+  */
+  cancelEdit() {
+    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+      let featuersIds = [];
+      let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+      let editTools = leafletObject.leafletMap.editTools;
+      leafletObject.models.forEach((model, layerId) =&gt; {
+        let layer = leafletObject.getLayer(layerId);
+        let dirtyType = model.get(&#x27;dirtyType&#x27;);
+        if (dirtyType === &#x27;created&#x27;) {
+          leafletObject.removeLayer(layer);
+          delete leafletObject.models[layerId];
+          if (editTools.featuresLayer.getLayers().length !== 0) {
+            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+            if (!Ember.isNone(editorLayerId) &amp;&amp; !Ember.isNone(featureLayer) &amp;&amp; !Ember.isNone(featureLayer.editor)) {
+              let editLayer = featureLayer.editor.editLayer;
+              editTools.editLayer.removeLayer(editLayer);
+              editTools.featuresLayer.removeLayer(layer);
+            }
+          }
+        } else if (dirtyType === &#x27;updated&#x27; || dirtyType === &#x27;deleted&#x27;) {
+          if (!Ember.isNone(layer)) {
+            if (!Ember.isNone(layer.editor)) {
+              let editLayer = layer.editor.editLayer;
+              editTools.editLayer.removeLayer(editLayer);
+            }
+
+            leafletObject.removeLayer(layer);
+          }
+
+          model.rollbackAttributes();
+          delete leafletObject.models[layerId];
+          featuersIds.push(model.get(&#x27;id&#x27;));
+        }
+      });
+      if (featuersIds.length === 0) {
+        resolve();
+      } else {
+        let e = {
+          featureIds: featuersIds,
+          layer: leafletObject.layerId,
+          results: Ember.A()
+        };
+        this.loadLayerFeatures(e).then(() =&gt; { resolve(); }).catch((e) =&gt; reject(e));
+      }
+    });
   }
 });
 
