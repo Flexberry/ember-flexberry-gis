@@ -1134,5 +1134,59 @@ export default BaseVectorLayer.extend({
 
       leafletMap.on('moveend', continueLoad);
     }
+  },
+
+  /**
+    Handles 'flexberry-map:cancelEdit' event of leaflet map.
+
+    @method cancelEdit
+    @returns {Ember.RSVP.Promise} Returns promise.
+  */
+  cancelEdit() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let featuersIds = [];
+      let leafletObject = this.get('_leafletObject');
+      let editTools = leafletObject.leafletMap.editTools;
+      leafletObject.models.forEach((model, layerId) => {
+        let layer = leafletObject.getLayer(layerId);
+        let dirtyType = model.get('dirtyType');
+        if (dirtyType === 'created') {
+          leafletObject.removeLayer(layer);
+          delete leafletObject.models[layerId];
+          if (editTools.featuresLayer.getLayers().length !== 0) {
+            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+            if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
+              let editLayer = featureLayer.editor.editLayer;
+              editTools.editLayer.removeLayer(editLayer);
+              editTools.featuresLayer.removeLayer(layer);
+            }
+          }
+        } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
+          if (!Ember.isNone(layer)) {
+            if (!Ember.isNone(layer.editor)) {
+              let editLayer = layer.editor.editLayer;
+              editTools.editLayer.removeLayer(editLayer);
+            }
+
+            leafletObject.removeLayer(layer);
+          }
+
+          model.rollbackAttributes();
+          delete leafletObject.models[layerId];
+          featuersIds.push(model.get('id'));
+        }
+      });
+      if (featuersIds.length === 0) {
+        resolve();
+      } else {
+        let e = {
+          featureIds: featuersIds,
+          layer: leafletObject.layerId,
+          results: Ember.A()
+        };
+        this.loadLayerFeatures(e).then(() => { resolve(); }).catch((e) => reject(e));
+      }
+    });
   }
 });
