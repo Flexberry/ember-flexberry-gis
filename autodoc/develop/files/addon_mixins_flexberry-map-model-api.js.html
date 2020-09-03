@@ -422,10 +422,11 @@ import WfsLayer from &#x27;../layers/wfs&#x27;;
 import OdataLayer from &#x27;../layers/odata-vector&#x27;;
 import html2canvasClone from &#x27;../utils/html2canvas-clone&#x27;;
 import state from &#x27;../utils/state&#x27;;
+import SnapDraw from &#x27;./snap-draw&#x27;;
 import ClipperLib from &#x27;npm:clipper-lib&#x27;;
 import jsts from &#x27;npm:jsts&#x27;;
 
-export default Ember.Mixin.create({
+export default Ember.Mixin.create(SnapDraw, {
   /**
     Service for managing map API.
     @property mapApi
@@ -1668,14 +1669,32 @@ export default Ember.Mixin.create({
     Get coordinates point.
     @method getCoordPoint
     @param {String} crsName Name of coordinate reference system, in which to give coordinates.
+    @param {Boolean} snap Snap or not
+    @param {Array} snapLayers Layers for snap
+    @param {Integer} snapDistance in pixels
+    @param {Boolean} snapOnlyVertex or segments too
     @return {Promise} Coordinate.
   */
-  getCoordPoint(crsName) {
+  getCoordPoint(crsName, snap, snapLayers, snapDistance, snapOnlyVertex) {
     return new Ember.RSVP.Promise((resolve, reject) =&gt; {
       const leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
       Ember.$(leafletMap._container).css(&#x27;cursor&#x27;, &#x27;crosshair&#x27;);
 
       var getCoord = (e) =&gt; {
+        if (snap) {
+          this._drawClick(e);
+        }
+
+        leafletMap.off(&#x27;mousemove&#x27;, this._handleSnapping, this);
+        let layers = this.get(&#x27;_snapLayersGroups&#x27;);
+        if (layers) {
+          layers.forEach((l, i) =&gt; {
+            l.off(&#x27;load&#x27;, this._setSnappingFeatures, this);
+          });
+        }
+
+        this._cleanupSnapping();
+
         Ember.$(leafletMap._container).css(&#x27;cursor&#x27;, &#x27;&#x27;);
         let crs = Ember.get(leafletMap, &#x27;options.crs&#x27;);
         if (!Ember.isNone(crsName)) {
@@ -1684,6 +1703,36 @@ export default Ember.Mixin.create({
 
         resolve(crs.project(e.latlng));
       };
+
+      if (snap) {
+        let layers = snapLayers.map((id) =&gt; {
+          let [, leafletObject] = this._getModelLeafletObject(id);
+          return leafletObject;
+        }).filter(l =&gt; !!l);
+
+        layers.forEach((l, i) =&gt; {
+          l.on(&#x27;load&#x27;, this._setSnappingFeatures, this);
+        });
+
+        this.set(&#x27;_snapLayersGroups&#x27;, layers);
+        this._setSnappingFeatures();
+
+        if (snapDistance) {
+          this.set(&#x27;_snapDistance&#x27;, snapDistance);
+        }
+
+        if (!Ember.isNone(snapOnlyVertex)) {
+          this.set(&#x27;_snapOnlyVertex&#x27;, snapOnlyVertex);
+        }
+
+        let editTools = this._getEditTools();
+        leafletMap.on(&#x27;mousemove&#x27;, this._handleSnapping, this);
+        this.set(&#x27;_snapMarker&#x27;, L.marker(leafletMap.getCenter(), {
+          icon: editTools.createVertexIcon({ className: &#x27;leaflet-div-icon leaflet-drawing-icon&#x27; }),
+          opacity: 1,
+          zIndexOffset: 1000
+        }));
+      }
 
       leafletMap.once(&#x27;click&#x27;, getCoord);
     });

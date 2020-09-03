@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/mixins/flexberry-map-model-api-visualedit.js - Flexberry Documentation</title>
+    <title>addon/mixins/snap-draw.js - Flexberry Documentation</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -403,491 +403,342 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>addon/mixins/flexberry-map-model-api-visualedit.js <small>File</small></h1>
+    <h1>addon/mixins/snap-draw.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
 import Ember from &#x27;ember&#x27;;
-import turfCombine from &#x27;npm:@turf/combine&#x27;;
-import WfsLayer from &#x27;../layers/wfs&#x27;;
-import OdataLayer from &#x27;../layers/odata-vector&#x27;;
-import state from &#x27;../utils/state&#x27;;
 
-import SnapDraw from &#x27;./snap-draw&#x27;;
+export default Ember.Mixin.create({
+  /**
+    GroupLayers for snap (wfs, odata)
 
-export default Ember.Mixin.create(SnapDraw, {
+    @property _snapLayersGroups
+    @type Array
+  */
+  _snapLayersGroups: null,
 
   /**
-    Change layer object properties.
+    Leaflet layers group by group layer id.
 
-    @method changeLayerObjectProperties
-    @param {string} layerId Layer ID.
-    @param {string} featureId Object ID.
-    @param {Object} properties Object properties.
-    @return {Promise} Layer object.
+    @property _snapLayers
+    @type Object
   */
-  changeLayerObjectProperties(layerId, featureId, properties) {
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      this._getModelLayerFeature(layerId, [featureId], true).then(([, leafletObject, featureLayer]) =&gt; {
-        Object.assign(featureLayer[0].feature.properties, properties);
-        leafletObject.editLayer(featureLayer[0]);
-        resolve(featureLayer[0]);
-      }).catch((e) =&gt; {
-        reject(e);
-      });
-    });
-  },
+  _snapLayers: null,
 
   /**
-    Start change layer object.
+    Minimum distance for snapping in pixels.
 
-    @method startChangeLayerObject
-    @param {string} layerId Layer ID.
-    @param {string} featureId Object ID.
-    @param {Boolean} snap Snap or not
-    @param {Array} snapLayers Layers for snap
-    @param {Integer} snapDistance in pixels
-    @param {Boolean} snapOnlyVertex or segments too
-    @return {Promise} Feature layer.
+    @property _snapDistance
+    @type Number
+    @default 20
   */
-  startChangeLayerObject(layerId, featureId, snap, snapLayers, snapDistance, snapOnlyVertex) {
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      this._getModelLayerFeature(layerId, [featureId]).then(([layerModel, leafletObject, featureLayer]) =&gt; {
-        let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-        leafletObject.statusLoadLayer = true;
-        let bounds;
-        if (featureLayer[0] instanceof L.Marker) {
-          let featureGroup = L.featureGroup().addLayer(featureLayer[0]);
-          bounds = featureGroup.getBounds();
-        } else {
-          bounds = featureLayer[0].getBounds();
-        }
-
-        leafletMap.fitBounds(bounds);
-        if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
-          leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
-        }
-
-        leafletObject.promiseLoadLayer.then(() =&gt; {
-          leafletObject.statusLoadLayer = false;
-          leafletObject.promiseLoadLayer = null;
-          let layers = leafletObject._layers;
-          let featureLayerLoad = Object.values(layers).find(feature =&gt; {
-            const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
-            return layerFeatureId === featureId;
-          });
-
-          if (!featureLayerLoad) {
-            reject(&#x60;Object &#x27;${featureId}&#x27; not found&#x60;);
-          }
-
-          let editTools = this._getEditTools();
-
-          this.disableLayerEditing(leafletMap);
-
-          featureLayerLoad.enableEdit(leafletMap);
-          featureLayerLoad.layerId = layerId;
-
-          this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, true);
-          editTools.on(&#x27;editable:editing&#x27;, (e) =&gt; {
-            if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayerLoad))) {
-              leafletObject.editLayer(e.layer);
-            }
-          });
-
-          editTools.once(&#x27;editable:disable&#x27;, this._stopSnap, this);
-
-          resolve(featureLayerLoad);
-        });
-      }).catch((e) =&gt; {
-        reject(e);
-      });
-    });
-  },
+  _snapDistance: 20,
 
   /**
-    Cancel edit for layer objects.
+  Snap only vertex / snap vertex and segment
 
-    @method cancelLayerEdit
-    @param {[String]} layerIds array id of layer object.
-    @return {Ember.RSVP.Promise} Returns promise.
-  */
-  cancelLayerEdit(layerIds) {
-    let e = {
-      layerIds: layerIds,
-      results: Ember.A()
-    };
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    let editTools = this._getEditTools();
-    editTools.off(&#x27;editable:drawing:end&#x27;);
-    editTools.off(&#x27;editable:editing&#x27;);
-    editTools.stopDrawing();
-    leafletMap.fire(&#x27;flexberry-map:cancelEdit&#x27;, e);
-    return Ember.RSVP.all(e.results);
-  },
+  @property _snapOnlyVertex
+  @type Boolean
+  @default true
+*/
+  _snapOnlyVertex: true,
 
   /**
-    Cancel edit for layer object.
-
-    @method cancelEdit
-    @param {Object} layer layer object.
-    @return nothing
+    @property _snapLeafletLayers
+    @type Array
+    @readOnly
   */
-  cancelEdit(layer) {
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    let editTools = this._getEditTools();
-    editTools.off(&#x27;editable:drawing:end&#x27;);
-    editTools.off(&#x27;editable:editing&#x27;);
-    editTools.stopDrawing();
-    this._stopSnap();
+  _snapLeafletLayers: Ember.computed(&#x27;_snapLayers&#x27;, function () {
+    let layers = [];
+    let featuresByLayer = this.get(&#x27;_snapLayers&#x27;);
+    for (var layer in featuresByLayer) {
+      layers.push(...featuresByLayer[layer]);
+    }
 
-    if (!Ember.isNone(layer) &amp;&amp; !Ember.isNone(layer.layerId)) {
-      let [layerModel, leafletObject] = this._getModelLeafletObject(layer.layerId);
-      if (!Ember.isNone(leafletObject)) {
-        let className = Ember.get(layerModel, &#x27;type&#x27;);
-        let layerType = Ember.getOwner(this).knownForType(&#x27;layer&#x27;, className);
-        if (layerType instanceof OdataLayer) {
-          let model = Ember.get(layer, &#x27;model&#x27;);
-          model.rollbackAttributes();
-        }
+    return layers;
+  }),
 
-        if (layer.state === state.insert) {
-          leafletObject.removeLayer(layer);
-          if (editTools.featuresLayer.getLayers().length !== 0) {
-            let id = editTools.featuresLayer.getLayerId(layer);
-            let editLayer = editTools.featuresLayer.getLayer(id).editor.editLayer;
-            editTools.editLayer.removeLayer(editLayer);
-            editTools.featuresLayer.removeLayer(layer);
-          }
-        } else if (layer.state === state.update) {
-          let editLayer = layer.editor.editLayer;
-          editTools.editLayer.removeLayer(editLayer);
-          let map = Ember.get(leafletObject, &#x27;_map&#x27;);
-          map.removeLayer(layer);
-          let id = leafletObject.getLayerId(layer);
-          delete leafletObject._layers[id];
-          if (layerType instanceof WfsLayer) {
-            let filter = new L.Filter.EQ(&#x27;primarykey&#x27;, Ember.get(layer, &#x27;feature.properties.primarykey&#x27;));
-            leafletObject.loadFeatures(filter);
-            delete leafletObject.changes[id];
-          } else if (layerType instanceof OdataLayer) {
-            let e = {
-              featureIds: [Ember.get(layer, &#x27;feature.properties.primarykey&#x27;)]
-            };
-            leafletObject.loadLayerFeatures(e);
-          }
-        }
-      }
-
-      layer.layerId = null;
+  /**
+    Cleaning after snapping.
+    @method _cleanupSnapping
+    @private
+  */
+  _cleanupSnapping() {
+    this.set(&#x27;_snapLayersGroups&#x27;, null);
+    this.set(&#x27;_snapLayers&#x27;, {});
+    this.set(&#x27;_snapOnlyVertex&#x27;, true);
+    this.set(&#x27;_editedFeatureId&#x27;, null);
+    let snapMarker = this.get(&#x27;_snapMarker&#x27;);
+    if (snapMarker) {
+      snapMarker.remove();
     }
   },
 
-  /**
-    Start visual creating of feature
-
-    @method startNewObject
-    @param {String} layerId Id of layer in that should started editing
-    @param {Object} properties New layer properties
-    @param {Boolean} snap Snap or not
-    @param {Array} snapLayers Layers for snap
-    @param {Integer} snapDistance in pixels
-    @param {Boolean} snapOnlyVertex or segments too
-    @returns {Object} Layer object
-  */
-  startNewObject(layerId, properties, snap, snapLayers, snapDistance, snapOnlyVertex) {
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      try {
-        let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
-        let editTools = this._getEditTools();
-        let newLayer;
-
-        let finishDraw = () =&gt; {
-          editTools.off(&#x27;editable:drawing:end&#x27;, finishDraw, this);
-          editTools.stopDrawing();
-          let defaultProperties = layerModel.get(&#x27;settingsAsObject.defaultProperties&#x27;) || {};
-          newLayer.feature = { type: &#x27;Feature&#x27;, properties: Ember.merge(defaultProperties, properties) };
-          newLayer.remove();
-          leafletObject.addLayer(newLayer);
-          this._stopSnap();
-
-          this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, true);
-          editTools.once(&#x27;editable:disable&#x27;, this._stopSnap, this);
-          resolve(newLayer);
-        };
-
-        editTools.on(&#x27;editable:drawing:end&#x27;, finishDraw, this);
-
-        let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-        leafletMap.fire(&#x27;flexberry-map:switchToDefaultMapTool&#x27;);
-        if (editTools.drawing()) {
-          editTools.stopDrawing();
-        }
-
-        this.disableLayerEditing(leafletMap);
-
-        switch (layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;).toLowerCase()) {
-          case &#x27;polygon&#x27;:
-            newLayer = editTools.startPolygon();
-            break;
-          case &#x27;polyline&#x27;:
-            newLayer = editTools.startPolyline();
-            break;
-          case &#x27;marker&#x27;:
-            newLayer = editTools.startMarker();
-            break;
-          default:
-            throw &#x27;Unknown layer type: &#x27; + layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;);
-        }
-        this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, false);
-        newLayer.layerId = layerId;
-      } catch (error) {
-        reject(error);
-      }
-    });
-  },
-
-  _checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, edit) {
-    this._stopSnap();
-
-    if (snap) {
-      let layers = snapLayers.map((id) =&gt; {
-        let [, leafletObject] = this._getModelLeafletObject(id);
-        return leafletObject;
-      }).filter(l =&gt; !!l);
-      layers.forEach((l, i) =&gt; {
-        l.on(&#x27;load&#x27;, this._setSnappingFeatures, this);
+  _setSnappingFeatures(e) {
+    if (e) {
+      let features = [];
+      e.target.eachLayer((layer) =&gt; {
+        features.pushObject(layer);
       });
-      this.set(&#x27;_snapLayersGroups&#x27;, layers);
-      this._setSnappingFeatures();
-
-      if (snapDistance) {
-        this.set(&#x27;_snapDistance&#x27;, snapDistance);
-      }
-
-      if (!Ember.isNone(snapOnlyVertex)) {
-        this.set(&#x27;_snapOnlyVertex&#x27;, snapOnlyVertex);
-      }
-
-      this._startSnap(edit);
-    }
-  },
-
-  _stopSnap() {
-    let editTools = this._getEditTools();
-    editTools.off(&#x27;editable:drawing:move&#x27;, this._handleSnapping, this);
-    editTools.off(&#x27;editable:drawing:click&#x27;, this._drawClick, this);
-
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    leafletMap.off(&#x27;editable:vertex:drag&#x27;, this._handleSnapping, this);
-
-    let layers = this.get(&#x27;_snapLayersGroups&#x27;);
-    if (layers) {
-      layers.forEach((l, i) =&gt; {
-        if (l) {
-          l.off(&#x27;load&#x27;, this._setSnappingFeatures, this);
-        }
-      });
-    }
-
-    this._cleanupSnapping();
-  },
-
-  _startSnap(edit) {
-    let editTools = this._getEditTools();
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-
-    if (edit) {
-      leafletMap.on(&#x27;editable:vertex:drag&#x27;, this._handleSnapping, this);
+      let propId = e.target._leaflet_id;
+      this.set(&#x60;_snapLayers.${propId}&#x60;, features);
     } else {
-      // маркер, который будет показывать возможную точку прилипания
-      this.set(&#x27;_snapMarker&#x27;, L.marker(leafletMap.getCenter(), {
-        icon: editTools.createVertexIcon({ className: &#x27;leaflet-div-icon leaflet-drawing-icon&#x27; }),
-        opacity: 1,
-        zIndexOffset: 1000
-      }));
+      this.set(&#x27;_snapLayers&#x27;, {});
+      let snapLayers = this.get(&#x27;_snapLayersGroups&#x27;);
 
-      editTools.on(&#x27;editable:drawing:move&#x27;, this._handleSnapping, this);
-      editTools.on(&#x27;editable:drawing:click&#x27;, this._drawClick, this);
-    }
-  },
-
-  /**
-    Get editTools.
-
-    @method _getEditTools
-    @return {Object} EditTools.
-    @private
-  */
-  _getEditTools() {
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    let editTools = Ember.get(leafletMap, &#x27;editTools&#x27;);
-    if (Ember.isNone(editTools)) {
-      editTools = new L.Editable(leafletMap);
-      Ember.set(leafletMap, &#x27;editTools&#x27;, editTools);
-    }
-
-    return editTools;
-  },
-
-  /**
-    Return leaflet layer thats corresponds to passed layerId.
-
-    @method getLayerModel
-    @param {String} layerId Layer ID
-    @returns {Object} Layer
-  */
-  getLayerModel(layerId) {
-    const layer = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, layerId);
-    if (Ember.isNone(layer)) {
-      throw &#x60;Layer &#x27;${layerId}&#x27; not found&#x60;;
-    }
-
-    return layer;
-  },
-
-  /**
-    Get [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.
-
-    @param {string} layerId Layer id.
-    @param {Object[]} featureIds Array object id.
-    @param {Boolean} load flag which indicate load or get feature
-    @returns {[layerModel, leafletObject, featureLayer]} Get [layerModel, leafletObject, featureLayer] or [layerModel, leafletObject, undefined].
-    @private
-  */
-  _getModelLayerFeature(layerId, featureIds, load = false) {
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-      let e = {
-        featureIds: featureIds,
-        layer: layerId,
-        load: load,
-        results: Ember.A()
-      };
-
-      leafletMap.fire(&#x27;flexberry-map:getOrLoadLayerFeatures&#x27;, e);
-      if (Ember.isEmpty(e.results)) {
-        reject(&#x60;Layer &#x27;${layerId}&#x27; not found&#x60;);
+      if (!Array.isArray(snapLayers) || snapLayers.length === 0) {
         return;
       }
 
-      let features = Ember.get(e.results[0], &#x27;features&#x27;);
-      if (features instanceof Ember.RSVP.Promise) {
-        features.then((layerObject) =&gt; {
-          if (Ember.isEmpty(layerObject) || Ember.isNone(layerObject)) {
-            reject(&#x60;Object &#x27;${featureIds}&#x27; not found&#x60;);
-            return;
-          }
-
-          let featureLayer = [];
-          if (load) {
-            let layers = layerObject._layers;
-            if (!Ember.isNone(featureIds) &amp;&amp; featureIds.length === 1) {
-              let obj = Object.values(layers).find(feature =&gt; {
-                const layerFeatureId = this._getLayerFeatureId(e.results[0].layerModel, feature);
-                return layerFeatureId === featureIds[0];
-              });
-
-              featureLayer.push(obj);
-            }
-          } else {
-            featureLayer = layerObject;
-          }
-
-          resolve([e.results[0].layerModel, e.results[0].leafletObject, featureLayer]);
-        }).catch(() =&gt; {
-          reject(&#x60;Object &#x27;${featureIds}&#x27; not found&#x60;);
+      snapLayers.forEach((leafletObject, i) =&gt; {
+        let features = [];
+        leafletObject.eachLayer((layer) =&gt; {
+          features.pushObject(layer);
         });
-      } else {
-        reject(&#x27;Result is not promise&#x27;);
-      }
-    });
+        let propId = leafletObject._leaflet_id;
+        this.set(&#x60;_snapLayers.${propId}&#x60;, features);
+      });
+    }
   },
 
   /**
-    Get [layerModel, leafletObject] by layer id.
-
-    @param {string} layerId Layer id.
-    @returns {[layerModel, leafletObject]} Get [layerModel, leafletObject].
+    Handles snapping.
+    @method _handleSnapping
+    @param {Object} e Event object.
     @private
   */
-  _getModelLeafletObject(layerId) {
-    let layerModel = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, layerId);
-    if (Ember.isNone(layerModel)) {
-      throw &#x60;Layer &#x27;${layerId}&#x27; not found&#x60;;
+  _handleSnapping(e) {
+    let leafletMap = this.get(&#x27;leafletMap&#x27;) || this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+
+    let snapList = this.get(&#x27;_snapLeafletLayers&#x27;);
+    if (!Array.isArray(snapList) || snapList.length === 0) {
+      return;
     }
 
-    let leafletObject = layerModel.get(&#x27;_leafletObject&#x27;);
-    return [layerModel, leafletObject];
+    let isDraw = Ember.isNone(e.vertex);
+    let snapMarker = e.vertex || this.get(&#x27;_snapMarker&#x27;);
+
+    let snapDistance = this.get(&#x27;_snapDistance&#x27;);
+    let snapOnlyVertex = this.get(&#x27;_snapOnlyVertex&#x27;);
+
+    let point = leafletMap.latLngToLayerPoint(e.latlng);
+    let topLeftPoint = leafletMap.layerPointToLatLng(L.point(point.x - snapDistance, point.y - snapDistance));
+    let bottomRightPoint = leafletMap.layerPointToLatLng(L.point(point.x + snapDistance, point.y + snapDistance));
+    let pointBounds = L.latLngBounds(topLeftPoint, bottomRightPoint);
+
+    let closestLayer = this._findClosestLayer(e.latlng, pointBounds, snapList);
+
+    let previousSnap = this.get(&#x27;_snapLatLng&#x27;) || {};
+
+    if (closestLayer &amp;&amp; closestLayer.distance &lt; snapDistance) {
+
+      let isMarker = closestLayer.layer instanceof L.Marker || closestLayer.layer instanceof L.CircleMarker;
+      let currentSnap = (isMarker || snapOnlyVertex ? closestLayer.latlng : this._checkSnapToVertex(closestLayer)) || {};
+
+      // snap the marker
+      snapMarker.setLatLng(currentSnap);
+
+      if (previousSnap.lat !== currentSnap.lat || previousSnap.lng !== currentSnap.lng) {
+        this.set(&#x27;_snapLatLng&#x27;, currentSnap);
+        if (isDraw) {
+          snapMarker.addTo(leafletMap);
+        }
+      }
+    } else if (previousSnap) {
+      this.set(&#x27;_snapLatLng&#x27;, undefined);
+      if (isDraw) {
+        snapMarker.remove();
+      }
+    }
   },
 
   /**
-    Start creating multy objects.
-
-    @method startChangeMultyLayerObject
-    @param {string} layerId Layer id.
-    @param {Object} featureLayer Feature layer.
-    @param {Boolean} snap Snap or not
-    @param {Array} snapLayers Layers for snap
-    @param {Integer} snapDistance in pixels
-    @param {Boolean} snapOnlyVertex or segments too
-    @return nothing
+  Handles clicks when drawing new geometry.
+  @method _drawClick
+  @param {Object} e Event object.
+  @private
   */
-  startChangeMultyLayerObject(layerId, featureLayer, snap, snapLayers, snapDistance, snapOnlyVertex) {
-    let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
+  _drawClick(e) {
+    let snapMarker = this.get(&#x27;_snapMarker&#x27;);
+    let isSnap = !Ember.isNone(Ember.get(snapMarker, &#x27;_map&#x27;));
+    if (isSnap) {
+      var latlng = snapMarker.getLatLng();
+      e.latlng.lat = latlng.lat;
+      e.latlng.lng = latlng.lng;
+    }
+  },
 
-    let editTools = this._getEditTools();
-    let newLayer;
-    featureLayer.layerId = layerId;
+  /**
+    Check if vertex is in snap distance.
+    @method _checkSnapToVertex
+    @param {Object} closestLayer Snap layer.
+    @private
+  */
+  _checkSnapToVertex(closestLayer) {
+    let leafletMap = this.get(&#x27;leafletMap&#x27;) || this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+    let segmentPointA = closestLayer.segment[0];
+    let segmentPointB = closestLayer.segment[1];
 
-    const disableDraw = () =&gt; {
-      editTools.off(&#x27;editable:drawing:end&#x27;, disableDraw, this);
-      editTools.stopDrawing();
+    let snapPoint = closestLayer.latlng;
+    let distanceA = this._getPixelDistance(leafletMap, segmentPointA, snapPoint);
+    let distanceB = this._getPixelDistance(leafletMap, segmentPointB, snapPoint);
 
-      this._stopSnap();
-      var featureCollection = {
-        type: &#x27;FeatureCollection&#x27;,
-        features: [featureLayer.toGeoJSON(), newLayer.toGeoJSON()]
+    let closestVertex = distanceA &lt; distanceB ? segmentPointA : segmentPointB;
+    let shortestDistance = distanceA &lt; distanceB ? distanceA : distanceB;
+
+    let priorityDistance = this.get(&#x27;_snapDistance&#x27;);
+
+    // The latlng we need to snap to.
+    let snapResult = shortestDistance &lt; priorityDistance ? closestVertex : snapPoint;
+
+    return Object.assign({}, snapResult);
+  },
+
+  /**
+    Finds closest layer to the specified point.
+    @method _findClosestLayer
+    @param {Object} latlng Point&#x27;s coordinates
+    @param {Object} bounds Point&#x27;s latLngBounds
+    @param {Array} layers Array of layers for snapping.
+    @private
+  */
+  _findClosestLayer(latlng, bounds, layers) {
+    let closestLayer = {};
+
+    layers.filter(l =&gt; l._bounds.intersects(bounds)).forEach((layer, index) =&gt; {
+      let layerDistance = this._calculateDistance(latlng, layer);
+
+      if (Ember.isNone(closestLayer.distance) || layerDistance.distance &lt; closestLayer.distance) {
+        closestLayer = layerDistance;
+        closestLayer.layer = layer;
+      }
+    });
+
+    return closestLayer;
+  },
+
+  /**
+    Calculates distance between layer and point.
+    @method _calculateDistance
+    @param {Object} latlng Point&#x27;s coordinates
+    @param {Object} layer Leaflet layer.
+    @private
+  */
+  _calculateDistance(latlng, layer) {
+    let map = this.get(&#x27;leafletMap&#x27;) || this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+    let snapOnlyVertex = this.get(&#x27;_snapOnlyVertex&#x27;);
+    let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
+    let isPolygon = layer instanceof L.Polygon;
+
+    // The coords of the layer.
+    let latlngs = isMarker ? layer.getLatLng() : layer.getLatLngs();
+
+    if (isMarker) {
+      return {
+        latlng: Object.assign({}, latlngs),
+        distance: this._getPixelDistance(map, latlngs, latlng),
       };
-
-      // Coordinate union.
-      let fcCombined = turfCombine.default(featureCollection);
-      const featureCombined = L.geoJSON(fcCombined);
-      const combinedLeaflet = featureCombined.getLayers()[0];
-      featureLayer.setLatLngs(combinedLeaflet.getLatLngs());
-      featureLayer.disableEdit();
-      featureLayer.enableEdit();
-
-      newLayer.remove();
-
-      // We note that the shape was edited.
-      leafletObject.editLayer(featureLayer);
-
-      this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, true);
-      editTools.once(&#x27;editable:disable&#x27;, this._stopSnap, this);
-    };
-
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    this.disableLayerEditing(leafletMap);
-
-    editTools.on(&#x27;editable:drawing:end&#x27;, disableDraw, this);
-
-    switch (layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;).toLowerCase()) {
-      case &#x27;polygon&#x27;:
-        newLayer = editTools.startPolygon();
-        break;
-      case &#x27;polyline&#x27;:
-        newLayer = editTools.startPolyline();
-        break;
-      case &#x27;marker&#x27;:
-        newLayer = editTools.startMarker();
-        break;
-      default:
-        throw &#x27;Unknown layer type: &#x27; + layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;);
     }
 
-    this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, false);
+    let closestSegment;
+    let closestPoint;
+    let shortestDistance;
+
+    let loopThroughCoords = (coords) =&gt; {
+      coords.forEach((coord, index) =&gt; {
+        if (coord instanceof Array) {
+          loopThroughCoords(coord);
+          return;
+        }
+
+        let segmentPointA = coord;
+        let segmentPointB;
+        let distance;
+        if (snapOnlyVertex) {
+          distance = this._getPixelDistance(map, latlng, segmentPointA);
+        } else {
+          let nextIndex = index + 1 === coords.length ? (isPolygon ? 0 : undefined) : index + 1;
+          if (nextIndex) {
+            segmentPointB = coords[nextIndex];
+          }
+
+          if (segmentPointB) {
+            distance = this._getPixelDistanceToSegment(map, latlng, segmentPointA, segmentPointB);
+          }
+        }
+
+        if (distance &amp;&amp; (shortestDistance === undefined || distance &lt; shortestDistance)) {
+          shortestDistance = distance;
+          if (segmentPointB) {
+            closestSegment = [segmentPointA, segmentPointB];
+          }
+
+          closestPoint = segmentPointA;
+        }
+      });
+    };
+
+    loopThroughCoords(latlngs);
+
+    let closestSegmentPoint = snapOnlyVertex ? closestPoint : this._getClosestPointOnSegment(map, latlng, closestSegment[0], closestSegment[1]);
+
+    return {
+      latlng: Object.assign({}, closestSegmentPoint),
+      segment: closestSegment,
+      distance: shortestDistance,
+    };
+  },
+
+  /**
+    Finds point on segment closest to the specified point.
+    @method _getClosestPointOnSegment
+    @param {Object} map Leaflet map.
+    @param {Object} latlng Point&#x27;s coordinates.
+    @param {Object} firstlatlng Coordinates of first segment&#x27;s point.
+    @param {Object} secondlatlng Coordinates of second segment&#x27;s point.
+    @private
+  */
+  _getClosestPointOnSegment(map, latlng, firstlatlng, secondlatlng) {
+    let maxzoom = map.getMaxZoom();
+    if (maxzoom === Infinity) {
+      maxzoom = map.getZoom();
+    }
+
+    let point = map.project(latlng, maxzoom);
+    let segmentPointA = map.project(firstlatlng, maxzoom);
+    let segmentPointB = map.project(secondlatlng, maxzoom);
+    let closest = L.LineUtil.closestPointOnSegment(point, segmentPointA, segmentPointB);
+    return map.unproject(closest, maxzoom);
+  },
+
+  /**
+    Calculates distance in pixels between point and segment.
+    @method _getPixelDistanceToSegment
+    @param {Object} map Leaflet map.
+    @param {Object} latlng Point&#x27;s coordinates.
+    @param {Object} firstlatlng Coordinates of first segment&#x27;s point.
+    @param {Object} secondlatlng Coordinates of second segment&#x27;s point.
+    @private
+  */
+  _getPixelDistanceToSegment(map, latlng, firstlatlng, secondlatlng) {
+    let point = map.latLngToLayerPoint(latlng);
+    let segmentPointA = map.latLngToLayerPoint(firstlatlng);
+    let segmentPointB = map.latLngToLayerPoint(secondlatlng);
+    return L.LineUtil.pointToSegmentDistance(point, segmentPointA, segmentPointB);
+  },
+
+  /**
+    Calculates distance in pixels between two points.
+    @method _getPixelDistance
+    @param {Object} map Leaflet map.
+    @param {Object} firstlatlng Coordinates of first segment&#x27;s point.
+    @param {Object} secondlatlng Coordinates of second segment&#x27;s point.
+    @private
+  */
+  _getPixelDistance(map, firstlatlng, secondlatlng) {
+    return map.latLngToLayerPoint(firstlatlng).distanceTo(map.latLngToLayerPoint(secondlatlng));
   }
 });
 
