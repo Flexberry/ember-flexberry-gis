@@ -49,7 +49,7 @@ module.exports = {
 
     // Import leaflet plugins.
 
-	  // leaflet-areaselect.
+    // leaflet-areaselect.
     app.import(app.bowerDirectory + '/leaflet-areaselect/src/leaflet-areaselect.js');
     app.import(app.bowerDirectory + '/leaflet-areaselect/src/leaflet-areaselect.css');
 
