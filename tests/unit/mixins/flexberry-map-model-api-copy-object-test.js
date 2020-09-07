@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import { module, test } from 'qunit';
 import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api';
-import sinon from 'sinon';
 
 module('Unit | Mixin | method copyObject');
 
