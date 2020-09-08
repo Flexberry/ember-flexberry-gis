@@ -642,8 +642,6 @@ export default BaseLayer.extend({
     this._super(...arguments);
 
     this.get('_leafletLayerPromise').then((leafletLayer) => {
-
-
       this._checkZoomPane();
     });
   },
@@ -680,7 +678,7 @@ export default BaseLayer.extend({
 
   /**
     Create array of strings and feature properies.
- 
+
     @method _applyProperty
     @param {String} str String for parsing
     @param {Object} layer layer
@@ -936,7 +934,7 @@ export default BaseLayer.extend({
 
   /**
     Set label for line object
-  
+
     @method _setLabelLine
     @param {Object} layer
     @param {Object} svg
@@ -1006,7 +1004,7 @@ export default BaseLayer.extend({
 
   /**
     Set align for line object's label
-  
+
     @method _setAlignForLine
     @param {Object} layer
     @param {Object} svg
@@ -1038,7 +1036,7 @@ export default BaseLayer.extend({
 
   /**
     Add text for line object
-  
+
     @method _addTextForLine
     @param {Object} layer
     @param {String} text
@@ -1113,7 +1111,7 @@ export default BaseLayer.extend({
 
   /**
     Update position for line object's label
-  
+
     @method _updatePositionLabelForLine
   */
   _updatePositionLabelForLine() {
@@ -1225,7 +1223,7 @@ export default BaseLayer.extend({
 
   /**
     Removes labels from it's leaflet container.
-  
+
     @method _removeLabelsFromLeafletContainer
     @private
   */
@@ -1241,7 +1239,7 @@ export default BaseLayer.extend({
 
   /**
     Sets leaflet layer's visibility.
-  
+
     @method _setLayerVisibility
     @private
   */
