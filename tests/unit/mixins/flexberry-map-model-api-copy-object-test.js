@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { module, test } from 'qunit';
 import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api';
+import sinon from 'sinon';
 
 module('Unit | Mixin | method copyObject');
 
@@ -20,25 +21,39 @@ test('test method copyObject', function(assert) {
       typeGeometry: 'polygon'
     }
   });
+  let getModelLayerFeature = () => { return Ember.RSVP.resolve([{}, sourceLeafletLayer, [polygon]]); };
+
+  let getModelLeafletObject = () => { return [destinationLayerModel, destinationLeafletLayer]; };
+
   let subject = mapApiMixinObject.create({
-    _getModelLayerFeature() { return Ember.RSVP.resolve([{}, sourceLeafletLayer, [polygon]]); },
-    _getModelLeafletObject() { return [destinationLayerModel, destinationLeafletLayer]; }
+    _getModelLayerFeature() {},
+    _getModelLeafletObject() {}
   });
+  let getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+  let getMLObject = sinon.stub(subject, '_getModelLeafletObject', getModelLeafletObject);
 
   //Act
   let result = subject.copyObject({
-    layerId: '',
-    objectId: '',
+    layerId: '1',
+    objectId: '1',
     shouldRemove: true
   }, {
-    layerId: '',
+    layerId: '2',
     properties: {}
   });
 
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise);
   result.then((data)=> {
-    assert.deepEqual(data.getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]]);
+    assert.deepEqual(data.getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]], 'Check latLngs');
+    assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
+    assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+    assert.equal(getMLFeature.args[0][1], '1', 'Check call second arg to method _getModelLayerFeature');
+    assert.equal(getMLFeature.args[0][2], true, 'Check call third arg to method _getModelLayerFeature');
+    assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
+    assert.equal(getMLObject.args[0][0], '2', 'Check call first arg to method _getModelLeafletObject');
     done();
+    getMLFeature.restore();
+    getMLObject.restore();
   });
 });

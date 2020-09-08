@@ -34,23 +34,28 @@ test('test method editLayerObject with EPSG:4326', function(assert) {
       return ['epsg4326', 'epsg3395'];
     }
   });
+  let getModelLayerFeature = () => { return Ember.RSVP.resolve([{}, leafletLayer, [leafletObject]]); };
+
   let subject = mapApiMixinObject.create({
-    _getModelLayerFeature() {
-      return Ember.RSVP.resolve([null, leafletLayer, [leafletObject]]);
-    }
+    _getModelLayerFeature() {}
   });
   let spyEditLayer = sinon.spy(leafletLayer, 'editLayer');
+  let getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
 
   //Act
-  let result = subject.editLayerObject(null, null, geoJsonObject, 'EPSG:4326');
+  let result = subject.editLayerObject('1', '1', geoJsonObject, 'EPSG:4326');
 
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise);
   result.then((res)=> {
     assert.equal(spyEditLayer.callCount, 1);
     assert.deepEqual(res._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]]);
+    assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
+    assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+    assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Check call second arg to method _getModelLayerFeature');
     done();
     spyEditLayer.restore();
+    getMLFeature.restore();
     ownerStub.restore();
   });
 });
@@ -70,22 +75,26 @@ test('test method editLayerObject with EPSG:3395', function(assert) {
       return ['epsg4326', 'epsg3395'];
     }
   });
+  let getModelLayerFeature = () => { return Ember.RSVP.resolve([{}, leafletLayer, [leafletObject]]); };
+
   let subject = mapApiMixinObject.create({
-    _getModelLayerFeature() {
-      return Ember.RSVP.resolve([null, leafletLayer, [leafletObject]]);
-    }
+    _getModelLayerFeature() {}
   });
   let spyEditLayer = sinon.spy(leafletLayer, 'editLayer');
   let spyUnProject = sinon.spy(L.CRS.EPSG3395, 'unproject');
+  let getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
 
   //Act
-  let result = subject.editLayerObject(null, null, geoJsonObject, 'EPSG:3395');
+  let result = subject.editLayerObject('1', '1', geoJsonObject, 'EPSG:3395');
 
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise);
   result.then((res)=> {
     assert.equal(spyEditLayer.callCount, 1);
     assert.equal(spyUnProject.callCount, 5);
+    assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
+    assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+    assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Check call second arg to method _getModelLayerFeature');
     assert.deepEqual(res._latlngs,
       [
         [
@@ -97,6 +106,7 @@ test('test method editLayerObject with EPSG:3395', function(assert) {
       ]);
     done();
     spyUnProject.restore();
+    getMLFeature.restore();
     spyEditLayer.restore();
     ownerStub.restore();
   });
