@@ -257,6 +257,15 @@ export default Ember.Component.extend(
     },
 
     /**
+      Set features callback
+
+      @method _setFeaturesProcessCallback
+      @private
+    */
+    _setFeaturesProcessCallback() {
+    },
+
+    /**
       Creates leaflet layer related to layer type.
 
       @method _createLayer
@@ -287,6 +296,13 @@ export default Ember.Component.extend(
         }
 
         this.sendAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel') });
+
+        const layerInitCallback = this.get('mapApi').getFromApi('layerInitCallback');
+        if (typeof layerInitCallback === 'function') {
+          layerInitCallback(this);
+        }
+
+        this._setFeaturesProcessCallback();
 
         return leafletLayer;
       }).catch((errorMessage) => {
@@ -368,10 +384,6 @@ export default Ember.Component.extend(
       this._setLayerStyle();
       this._setLayerOpacity();
       this._setLayerZIndex();
-      const layerInitCallback = this.get('mapApi').getFromApi('layerInitCallback');
-      if (typeof layerInitCallback === 'function') {
-        layerInitCallback(this);
-      }
     },
 
     /**

@@ -96,10 +96,10 @@ export default BaseVectorLayer.extend({
 
         if (insertedModelId.length > 0) {
           _this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(_this.layerModel.get('id'), insertedModelId, true)
-          .then(([, lObject, featureLayer]) => {
-            _this._setLayerState();
-            leafletObject.fire('save:success', { layers: featureLayer });
-          });
+            .then(([, lObject, featureLayer]) => {
+              _this._setLayerState();
+              leafletObject.fire('save:success', { layers: featureLayer });
+            });
         } else {
           leafletObject.fire('save:success', { layers: [] });
         }
@@ -328,8 +328,8 @@ export default BaseVectorLayer.extend({
       let obj = this.get('_adapterStoreModelProjectionGeom');
 
       let queryBuilder = new Builder(obj.store)
-      .from(obj.modelName)
-      .selectByProjection(obj.projectionName);
+        .from(obj.modelName)
+        .selectByProjection(obj.projectionName);
 
       if (!Ember.isNone(maxFeatures)) {
         queryBuilder.top(maxFeatures);
@@ -584,6 +584,15 @@ export default BaseVectorLayer.extend({
     return props;
   },
 
+  _addLayersOnMap(layers) {
+    let leafletObject = this.get('_leafletObject');
+    layers.forEach((layer) => {
+      L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
+    });
+
+    this._super(...arguments);
+  },
+
   /**
     Adds layer object.
 
@@ -654,8 +663,8 @@ export default BaseVectorLayer.extend({
       let continueLoading = this.get('continueLoading');
       let showExisting = this.get('showExisting');
       let queryBuilder = new Builder(obj.store)
-      .from(obj.modelName)
-      .selectByProjection(obj.projectionName);
+        .from(obj.modelName)
+        .selectByProjection(obj.projectionName);
       if (!showExisting && continueLoading && visibility && checkMapZoomLayer(this)) {
         bounds = L.rectangle(this.get('leafletMap').getBounds());
         let query = new Query.GeometryPredicate(obj.geometryField);
@@ -665,60 +674,62 @@ export default BaseVectorLayer.extend({
         queryBuilder.where(new Query.SimplePredicate('id', Query.FilterOperator.Eq, null));
       }
 
+      const options = this.get('options');
+      let layer = L.featureGroup();
+
+      layer.options.crs = crs;
+      layer.options.style = this.get('styleSettings');
+      layer.options.continueLoading = continueLoading;
+      layer.options.showExisting = showExisting;
+      if (!showExisting && continueLoading && visibility && checkMapZoomLayer(this)) {
+        layer.isLoadBounds = bounds;
+      }
+
+      L.setOptions(layer, options);
+      layer.minZoom = this.get('minZoom');
+      layer.maxZoom = this.get('maxZoom');
+      layer.save = this.get('save').bind(this);
+      layer.geometryField = obj.geometryField;
+      layer.addLayer = this.get('addLayer').bind(this);
+      layer.editLayerObjectProperties = this.get('editLayerObjectProperties').bind(this);
+      layer.editLayer = this.get('editLayer').bind(this);
+      layer.removeLayer = this.get('removeLayer').bind(this);
+      layer.modelName = obj.modelName;
+      layer.projectionName = obj.projectionName;
+      layer.editformname = obj.modelName + this.get('postfixForEditForm');
+      layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
+      layer.models = Ember.A();
+
+      let leafletMap = this.get('leafletMap');
+      if (!Ember.isNone(leafletMap)) {
+        let thisPane = this.get('_pane');
+        let pane = leafletMap.getPane(thisPane);
+        if (!pane || Ember.isNone(pane)) {
+          this._createPane(thisPane);
+          layer.options.pane = thisPane;
+          layer.options.renderer = this.get('_renderer');
+          this._setLayerZIndex();
+        }
+      }
+
+      resolve(layer);
+
       let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 
       objs.then(res => {
-        const options = this.get('options');
         let models = res.toArray();
-        let layer = L.featureGroup();
 
-        layer.options.crs = crs;
-        layer.options.style = this.get('styleSettings');
-        layer.options.continueLoading = continueLoading;
-        layer.options.showExisting = showExisting;
-        if (!showExisting && continueLoading && visibility && checkMapZoomLayer(this)) {
-          layer.isLoadBounds = bounds;
-        }
-
-        L.setOptions(layer, options);
-        layer.minZoom = this.get('minZoom');
-        layer.maxZoom = this.get('maxZoom');
-        layer.save = this.get('save').bind(this);
-        layer.geometryField = obj.geometryField;
-        layer.addLayer = this.get('addLayer').bind(this);
-        layer.editLayerObjectProperties = this.get('editLayerObjectProperties').bind(this);
-        layer.editLayer = this.get('editLayer').bind(this);
-        layer.removeLayer = this.get('removeLayer').bind(this);
-        layer.modelName = obj.modelName;
-        layer.projectionName = obj.projectionName;
-        layer.editformname = obj.modelName + this.get('postfixForEditForm');
-        layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
-        layer.models = Ember.A();
-
-        let leafletMap = this.get('leafletMap');
-        if (!Ember.isNone(leafletMap)) {
-          let thisPane = this.get('_pane');
-          let pane = leafletMap.getPane(thisPane);
-          if (!pane || Ember.isNone(pane)) {
-            this._createPane(thisPane);
-            layer.options.pane = thisPane;
-            layer.options.renderer = this.get('_renderer');
-            this._setLayerZIndex();
-          }
-        }
-
+        let innerLayers = [];
         models.forEach(model => {
-          this.addLayerObject(layer, model);
+          let l = this.addLayerObject(layer, model, false);
+          innerLayers.push(l);
         });
 
-        layer.fire('load', {});
+        layer.fire('load', { layers: innerLayers });
+
         this._setLayerState();
         let promiseLoad = Ember.RSVP.resolve();
         this.set('promiseLoad', promiseLoad);
-
-        resolve(layer);
-      }).catch((e) => {
-        reject(e);
       });
     });
   },
@@ -856,8 +867,8 @@ export default BaseVectorLayer.extend({
 
           let obj = this.get('_adapterStoreModelProjectionGeom');
           let queryBuilder = new Builder(obj.store)
-          .from(obj.modelName)
-          .selectByProjection(obj.projectionName);
+            .from(obj.modelName)
+            .selectByProjection(obj.projectionName);
 
           if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {// load features by id
             let loadIds = getLoadedFeatures(featureIds);
@@ -888,11 +899,13 @@ export default BaseVectorLayer.extend({
               models = res.toArray();
             }
 
+            let innerLayers = [];
             models.forEach(model => {
-              this.addLayerObject(leafletObject, model);
+              let l = this.addLayerObject(leafletObject, model, false);
+              innerLayers.push(l);
             });
             this._setLayerState();
-            leafletObject.fire('load', {});
+            leafletObject.fire('load', { layers: innerLayers });
             resolve(leafletObject);
           });
         } else {
@@ -916,10 +929,10 @@ export default BaseVectorLayer.extend({
       const modelName = this.get('modelName');
       const projectionName = this.get('projectionName');
       let queryBuilder = new Builder(store)
-      .from(modelName)
-      .selectByProjection(projectionName)
-      .top(1)
-      .count();
+        .from(modelName)
+        .selectByProjection(projectionName)
+        .top(1)
+        .count();
 
       store.query(modelName, queryBuilder.build()).then((result) => {
         resolve(result.meta.count);
@@ -950,7 +963,7 @@ export default BaseVectorLayer.extend({
 
             let result = [];
             models.forEach(model => {
-              result.push(this.addLayerObject(leafletObject, model, false));
+              result.push(this.addLayerObject(leafletObject, model));
             });
 
             return result;
@@ -963,8 +976,8 @@ export default BaseVectorLayer.extend({
             });
 
             let queryBuilder = new Builder(obj.store)
-            .from(obj.modelName)
-            .selectByProjection(obj.projectionName);
+              .from(obj.modelName)
+              .selectByProjection(obj.projectionName);
 
             if (equals.length === 1) {
               queryBuilder.where(equals[0]);
@@ -986,11 +999,11 @@ export default BaseVectorLayer.extend({
               let skip = 0;
               do {
                 let queryBuilder = new Builder(obj.store)
-                .from(obj.modelName)
-                .selectByProjection(obj.projectionName)
-                .top(maxBatchFeatures)
-                .skip(skip)
-                .orderBy('id');
+                  .from(obj.modelName)
+                  .selectByProjection(obj.projectionName)
+                  .top(maxBatchFeatures)
+                  .skip(skip)
+                  .orderBy('id');
 
                 promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
                 count -= maxBatchFeatures;
@@ -999,11 +1012,11 @@ export default BaseVectorLayer.extend({
 
               if (count > 0) {
                 let queryBuilder = new Builder(obj.store)
-                .from(obj.modelName)
-                .selectByProjection(obj.projectionName)
-                .top(count)
-                .skip(skip)
-                .orderBy('id');
+                  .from(obj.modelName)
+                  .selectByProjection(obj.projectionName)
+                  .top(count)
+                  .skip(skip)
+                  .orderBy('id');
 
                 promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
               }
@@ -1065,8 +1078,8 @@ export default BaseVectorLayer.extend({
 
             let obj = this.get('_adapterStoreModelProjectionGeom');
             let queryBuilder = new Builder(obj.store)
-            .from(obj.modelName)
-            .selectByProjection(obj.projectionName);
+              .from(obj.modelName)
+              .selectByProjection(obj.projectionName);
             let crs = this.get('crs');
             let geojsonReader = new jsts.io.GeoJSONReader();
             if (loadedBounds instanceof L.LatLngBounds) {
@@ -1088,10 +1101,13 @@ export default BaseVectorLayer.extend({
 
               objs.then(res => {
                 let models = res.toArray();
+                let innerLayers = [];
                 models.forEach(model => {
-                  this.addLayerObject(leafletObject, model);
+                  let l = this.addLayerObject(leafletObject, model, false);
+                  innerLayers.push(l);
                 });
-                leafletObject.fire('load', {});
+                leafletObject.fire('load', { layers: innerLayers });
+
                 this._setLayerState();
               });
               return;
@@ -1120,10 +1136,12 @@ export default BaseVectorLayer.extend({
 
             objs.then(res => {
               let models = res.toArray();
+              let innerLayers = [];
               models.forEach(model => {
-                this.addLayerObject(leafletObject, model);
+                let l = this.addLayerObject(leafletObject, model, false);
+                innerLayers.push(l);
               });
-              leafletObject.fire('load', {});
+              leafletObject.fire('load', { layers: innerLayers });
               this._setLayerState();
             });
           } else if (leafletObject.statusLoadLayer) {

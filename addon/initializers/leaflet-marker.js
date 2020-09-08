@@ -35,11 +35,13 @@ export function initialize() {
           this.setIcon(new L.Icon.Default());
         }
       } else {
-        if (!Ember.isNone(this.style) && !Ember.isNone(this.style.html)) {
-          this.setIcon(new L.divIcon(this.style));
-        }
+        if (Ember.isNone(this.styleIsSet)) {
+          if (!Ember.isNone(this.style) && !Ember.isNone(this.style.html)) {
+            this.setIcon(new L.divIcon(this.style));
+          }
 
-        this.styleIsSet = false;
+          this.styleIsSet = false;
+        }
       }
 
       return this;
@@ -58,7 +60,7 @@ export function initialize() {
       let exp = expression.trim();
       let reg = /'(.+?)'/g;
       let expResult = exp.split(reg).filter(x => x !== '');
-      return expResult ?  expResult : null;
+      return expResult ? expResult : null;
     },
 
     /**
@@ -77,7 +79,7 @@ export function initialize() {
           }
         }
 
-        label += !isProp ?  element : '';
+        label += !isProp ? element : '';
         isProp = false;
       });
 
