@@ -717,7 +717,10 @@ export default BaseVectorLayer.extend({
       let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 
       objs.then(res => {
-        let models = res.toArray();
+        let models = [];
+        if (res && typeof res.toArray === 'function') {
+          models = res.toArray();
+        }
 
         let innerLayers = [];
         models.forEach(model => {
