@@ -966,7 +966,7 @@ export default BaseVectorLayer.extend({
 
             let result = [];
             models.forEach(model => {
-              result.push(this.addLayerObject(leafletObject, model));
+              result.push(this.addLayerObject(leafletObject, model, false));
             });
 
             return result;
