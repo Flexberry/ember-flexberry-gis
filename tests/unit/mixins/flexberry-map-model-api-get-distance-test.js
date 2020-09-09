@@ -48,7 +48,7 @@ test('test method getDistanceBetweenObjects between marker and polygon', functio
   let getModelLayerFeature = (layerId) => { return Ember.RSVP.resolve([null, null, [layerId === '1' ? firstObj : secondObj]]); };
 
   let subject = mapApiMixinObject.create({
-    _getModelLayerFeature(layerId) {}
+    _getModelLayerFeature() {}
   });
   let getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
 
@@ -79,7 +79,7 @@ test('test method getDistanceBetweenObjects between marker and marker', function
   let getModelLayerFeature = (layerId) => { return Ember.RSVP.resolve([null, null, [layerId === '1' ? firstObj : secondObj]]); };
 
   let subject = mapApiMixinObject.create({
-    _getModelLayerFeature(layerId) {}
+    _getModelLayerFeature() {}
   });
   let getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
 

@@ -11,7 +11,7 @@ test('test method deleteLayerObjects', function(assert) {
   //Arrange
   let done = assert.async(1);
   let testLeafletObject = L.featureGroup();
-  let polygon = L.polygon([1, 1]).addTo(testLeafletObject);
+  let polygon = L.polygon([[1, 1], [2, 5], [2, 5]]).addTo(testLeafletObject);
   polygon.id = '1';
   let obj = { _deleteLayerFromAttrPanel:  function() {} };
   let getModelLayerFeature = () => { return Ember.RSVP.resolve([null, testLeafletObject]); };
