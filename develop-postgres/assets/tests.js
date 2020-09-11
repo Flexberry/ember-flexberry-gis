@@ -4786,6 +4786,626 @@ define('dummy/tests/unit/mixins/dynamic-properties-test.jshint', ['exports'], fu
     assert.ok(true, 'unit/mixins/dynamic-properties-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/mixins/flexberry-map-model-api-convert-object-coord-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'ember-flexberry-gis/coordinate-reference-systems/epsg-3395'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _emberFlexberryGisCoordinateReferenceSystemsEpsg3395) {
+
+  (0, _qunit.module)('Unit | Mixin | test method _convertObjectCoordinates');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+  var geoJsonObject = L.polygon([[0, 100], [0, 101], [1, 101], [1, 100]]).toGeoJSON();
+
+  (0, _qunit.test)('test method _convertObjectCoordinates with EPSG:4326', function (assert) {
+    //Arrange
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'],
+          'epsg3395': _emberFlexberryGisCoordinateReferenceSystemsEpsg3395['default']
+        };
+      }
+    });
+    var subject = mapApiMixinObject.create();
+
+    //Act
+    var result = subject._convertObjectCoordinates('EPSG:4326', geoJsonObject);
+
+    //Assert
+    assert.deepEqual(result.geometry.coordinates, [[[100, 0], [101, 0], [101, 1], [100, 1], [100, 0]]]);
+    ownerStub.restore();
+  });
+
+  (0, _qunit.test)('test method _convertObjectCoordinates with EPSG:3395', function (assert) {
+    //Arrange
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'],
+          'epsg3395': _emberFlexberryGisCoordinateReferenceSystemsEpsg3395['default']
+        };
+      }
+    });
+    var subject = mapApiMixinObject.create();
+
+    //Act
+    var result = subject._convertObjectCoordinates('EPSG:4326', geoJsonObject, 'EPSG:3395');
+
+    //Assert
+    assert.deepEqual(result.geometry.coordinates, [[[11131949.079327356, 7.081154551613622e-10], [11243268.57012063, 7.081154551613622e-10], [11243268.57012063, 110579.9652218976], [11131949.079327356, 110579.9652218976], [11131949.079327356, 7.081154551613622e-10]]]);
+    ownerStub.restore();
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-convert-object-coord-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-convert-object-coord-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-convert-object-coord-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-convert-object-coord-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-convert-object-coord-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-convert-object-coord-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-copy-object-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon) {
+
+  (0, _qunit.module)('Unit | Mixin | method copyObject');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  (0, _qunit.test)('test method copyObject', function (assert) {
+    //Arrange
+    var done = assert.async(1);
+    var sourceLeafletLayer = L.featureGroup();
+    var destinationLeafletLayer = L.featureGroup();
+    var polygon = L.polygon([[1, 1], [5, 1], [2, 2], [3, 5]]);
+    polygon.feature = {
+      properties: {}
+    };
+    var destinationLayerModel = _ember['default'].A({
+      settingsAsObject: {
+        typeGeometry: 'polygon'
+      }
+    });
+    var getModelLayerFeature = function getModelLayerFeature() {
+      return _ember['default'].RSVP.resolve([{}, sourceLeafletLayer, [polygon]]);
+    };
+
+    var getModelLeafletObject = function getModelLeafletObject() {
+      return [destinationLayerModel, destinationLeafletLayer];
+    };
+
+    var subject = mapApiMixinObject.create({
+      _getModelLayerFeature: function _getModelLayerFeature() {},
+      _getModelLeafletObject: function _getModelLeafletObject() {}
+    });
+    var getMLFeature = _sinon['default'].stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+    var getMLObject = _sinon['default'].stub(subject, '_getModelLeafletObject', getModelLeafletObject);
+
+    //Act
+    var result = subject.copyObject({
+      layerId: '1',
+      objectId: '1',
+      shouldRemove: true
+    }, {
+      layerId: '2',
+      properties: {}
+    });
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (data) {
+      assert.deepEqual(data.getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]], 'Check latLngs');
+      assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][1], '1', 'Check call second arg to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][2], true, 'Check call third arg to method _getModelLayerFeature');
+      assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
+      assert.equal(getMLObject.args[0][0], '2', 'Check call first arg to method _getModelLeafletObject');
+      done();
+      getMLFeature.restore();
+      getMLObject.restore();
+    });
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-copy-object-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-copy-object-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-copy-object-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-copy-object-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-copy-object-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-copy-object-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-delete-layer-objects-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon) {
+
+  (0, _qunit.module)('Unit | Mixin | method deleteLayerObjects');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  (0, _qunit.test)('test method deleteLayerObjects', function (assert) {
+    //Arrange
+    var done = assert.async(1);
+    var testLeafletObject = L.featureGroup();
+    var polygon = L.polygon([[1, 1], [2, 5], [2, 5]]).addTo(testLeafletObject);
+    polygon.id = '1';
+    var obj = { _deleteLayerFromAttrPanel: function _deleteLayerFromAttrPanel() {} };
+    var getModelLayerFeature = function getModelLayerFeature() {
+      return _ember['default'].RSVP.resolve([null, testLeafletObject]);
+    };
+
+    var subject = mapApiMixinObject.create({
+      _getModelLayerFeature: function _getModelLayerFeature() {},
+      mapApi: { getFromApi: function getFromApi() {
+          return obj._deleteLayerFromAttrPanel;
+        } },
+      _getLayerFeatureId: function _getLayerFeatureId(layer, shape) {
+        return shape.id;
+      }
+    });
+    var getMLFeature = _sinon['default'].stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+    var spyDeleteLayerFromAttrPanelFunc = _sinon['default'].spy(obj, '_deleteLayerFromAttrPanel');
+    var spyRemoveLayer = _sinon['default'].spy(testLeafletObject, 'removeLayer');
+
+    //Act
+    var result = subject.deleteLayerObjects('1', ['1']);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function () {
+      assert.equal(spyDeleteLayerFromAttrPanelFunc.callCount, 1);
+      assert.equal(getMLFeature.callCount, 1);
+      assert.equal(getMLFeature.args[0][0], '1');
+      assert.deepEqual(getMLFeature.args[0][1], ['1']);
+      assert.equal(spyRemoveLayer.callCount, 1);
+      assert.equal(spyRemoveLayer.args[0][0].id, '1');
+      assert.equal(testLeafletObject.getLayers().length, 0);
+      done();
+      spyDeleteLayerFromAttrPanelFunc.restore();
+      spyRemoveLayer.restore();
+      getMLFeature.restore();
+    });
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-delete-layer-objects-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-delete-layer-objects-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-delete-layer-objects-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-delete-layer-objects-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-delete-layer-objects-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-delete-layer-objects-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-edit-layer-object-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'ember-flexberry-gis/coordinate-reference-systems/epsg-3395'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _emberFlexberryGisCoordinateReferenceSystemsEpsg3395) {
+
+  (0, _qunit.module)('Unit | Mixin | test method editLayerObject');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+  var geoJsonObject = L.polygon([[0, 100], [0, 101], [1, 101], [1, 100]]).toGeoJSON();
+  var leafletObject = L.polygon([[1, 0], [2, 3], [3, 1], [3, 0]]);
+  var leafletLayer = {
+    options: {
+      crs: {
+        code: 'EPSG:4326'
+      }
+    },
+    editLayer: function editLayer() {}
+  };
+
+  (0, _qunit.test)('test method editLayerObject with EPSG:4326', function (assert) {
+    //Arrange
+    var done = assert.async(1);
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'],
+          'epsg3395': _emberFlexberryGisCoordinateReferenceSystemsEpsg3395['default']
+        };
+      },
+      knownNamesForType: function knownNamesForType() {
+        return ['epsg4326', 'epsg3395'];
+      }
+    });
+    var getModelLayerFeature = function getModelLayerFeature() {
+      return _ember['default'].RSVP.resolve([{}, leafletLayer, [leafletObject]]);
+    };
+
+    var subject = mapApiMixinObject.create({
+      _getModelLayerFeature: function _getModelLayerFeature() {}
+    });
+    var spyEditLayer = _sinon['default'].spy(leafletLayer, 'editLayer');
+    var getMLFeature = _sinon['default'].stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+
+    //Act
+    var result = subject.editLayerObject('1', '1', geoJsonObject, 'EPSG:4326');
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (res) {
+      assert.equal(spyEditLayer.callCount, 1);
+      assert.deepEqual(res._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]]);
+      assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+      assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Check call second arg to method _getModelLayerFeature');
+      done();
+      spyEditLayer.restore();
+      getMLFeature.restore();
+      ownerStub.restore();
+    });
+  });
+
+  (0, _qunit.test)('test method editLayerObject with EPSG:3395', function (assert) {
+    //Arrange
+    var done = assert.async(1);
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'],
+          'epsg3395': _emberFlexberryGisCoordinateReferenceSystemsEpsg3395['default']
+        };
+      },
+      knownNamesForType: function knownNamesForType() {
+        return ['epsg4326', 'epsg3395'];
+      }
+    });
+    var getModelLayerFeature = function getModelLayerFeature() {
+      return _ember['default'].RSVP.resolve([{}, leafletLayer, [leafletObject]]);
+    };
+
+    var subject = mapApiMixinObject.create({
+      _getModelLayerFeature: function _getModelLayerFeature() {}
+    });
+    var spyEditLayer = _sinon['default'].spy(leafletLayer, 'editLayer');
+    var spyUnProject = _sinon['default'].spy(L.CRS.EPSG3395, 'unproject');
+    var getMLFeature = _sinon['default'].stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+
+    //Act
+    var result = subject.editLayerObject('1', '1', geoJsonObject, 'EPSG:3395');
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (res) {
+      assert.equal(spyEditLayer.callCount, 1);
+      assert.equal(spyUnProject.callCount, 5);
+      assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+      assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Check call second arg to method _getModelLayerFeature');
+      assert.deepEqual(res._latlngs, [[L.latLng(0, 0.0008983152841195215), L.latLng(0, 0.0009072984369607167), L.latLng(0.00000904328947124462, 0.0009072984369607167), L.latLng(0.00000904328947124462, 0.0008983152841195215)]]);
+      done();
+      spyUnProject.restore();
+      getMLFeature.restore();
+      spyEditLayer.restore();
+      ownerStub.restore();
+    });
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-edit-layer-object-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-edit-layer-object-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-edit-layer-object-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-edit-layer-object-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-edit-layer-object-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-edit-layer-object-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-expansion-add-object-to-layer-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api-expansion', 'sinon', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'ember-flexberry-gis/coordinate-reference-systems/epsg-3395'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApiExpansion, _sinon, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _emberFlexberryGisCoordinateReferenceSystemsEpsg3395) {
+
+  (0, _qunit.module)('Unit | Mixin | test method addObjectToLayer');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApiExpansion['default']);
+  var geoJsonObject = L.polygon([[0, 100], [0, 101], [1, 101], [1, 100]]).toGeoJSON();
+
+  (0, _qunit.test)('test method addObjectToLayer with EPSG:4326', function (assert) {
+    //Arrange
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'],
+          'epsg3395': _emberFlexberryGisCoordinateReferenceSystemsEpsg3395['default']
+        };
+      }
+    });
+    var leafletObject = L.featureGroup();
+    leafletObject.options = { crs: { code: 'EPSG:4326' } };
+    var getModelLeafletObject = function getModelLeafletObject() {
+      return [{ id: 1 }, leafletObject];
+    };
+
+    var subject = mapApiMixinObject.create({
+      _getModelLeafletObject: function _getModelLeafletObject() {}
+    });
+    var getMLObject = _sinon['default'].stub(subject, '_getModelLeafletObject', getModelLeafletObject);
+
+    //Act
+    var result = subject.addObjectToLayer('1', geoJsonObject);
+
+    //Assert
+    assert.equal(leafletObject.getLayers().length, 1);
+    assert.equal(result.layerId, '1');
+    assert.deepEqual(result._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]]);
+    assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
+    assert.equal(getMLObject.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
+    ownerStub.restore();
+    getMLObject.restore();
+  });
+
+  (0, _qunit.test)('test method addObjectToLayer with EPSG:3395', function (assert) {
+    //Arrange
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'],
+          'epsg3395': _emberFlexberryGisCoordinateReferenceSystemsEpsg3395['default']
+        };
+      },
+      knownNamesForType: function knownNamesForType() {
+        return ['epsg4326', 'epsg3395'];
+      }
+    });
+    var leafletObject = L.featureGroup();
+    leafletObject.options = { crs: { code: 'EPSG:4326' } };
+    var getModelLeafletObject = function getModelLeafletObject() {
+      return [{ id: 1 }, leafletObject];
+    };
+
+    var subject = mapApiMixinObject.create({
+      _getModelLeafletObject: function _getModelLeafletObject() {}
+    });
+    var getMLObject = _sinon['default'].stub(subject, '_getModelLeafletObject', getModelLeafletObject);
+
+    //Act
+    var result = subject.addObjectToLayer('1', geoJsonObject, 'EPSG:3395');
+
+    //Assert
+    assert.equal(leafletObject.getLayers().length, 1);
+    assert.equal(result.layerId, '1');
+    assert.deepEqual(result._latlngs, [[L.latLng(0, 0.0008983152841195215), L.latLng(0, 0.0009072984369607167), L.latLng(0.00000904328947124462, 0.0009072984369607167), L.latLng(0.00000904328947124462, 0.0008983152841195215)]]);
+    assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
+    assert.equal(getMLObject.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
+    ownerStub.restore();
+    getMLObject.restore();
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-expansion-add-object-to-layer-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-expansion-add-object-to-layer-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-expansion-add-object-to-layer-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-expansion-add-object-to-layer-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-expansion-add-object-to-layer-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-expansion-add-object-to-layer-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-between-objects-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi) {
+
+  (0, _qunit.module)('Unit | Mixin | test method _getDistanceBetweenObjects');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  (0, _qunit.test)('test method _getDistanceBetweenObjects between polyline and polygon', function (assert) {
+    //Arrange
+    var firstObj = L.polyline([[1.001, 1.001], [1.003, 1.003], [1.005, 1.005]]);
+    firstObj.feature = firstObj.toGeoJSON();
+    var secondObj = L.polygon([[1.001, 1.001], [1.001, 1.002], [1.003, 1.001], [1.003, 0]]);
+    secondObj.feature = secondObj.toGeoJSON();
+    var subject = mapApiMixinObject.create();
+
+    //Act
+    var result = subject._getDistanceBetweenObjects(firstObj, secondObj);
+
+    //Assert
+    assert.equal(result, 55820.041009409564);
+  });
+
+  (0, _qunit.test)('test method _getDistanceBetweenObjects between marker and polygon', function (assert) {
+    //Arrange
+    var firstObj = L.marker([1.001, 1.001]);
+    firstObj.feature = firstObj.toGeoJSON();
+    var secondObj = L.polygon([[1.001, 1.001], [1.001, 1.002], [1.003, 1.001], [1.003, 0]]);
+    secondObj.feature = secondObj.toGeoJSON();
+    var subject = mapApiMixinObject.create();
+
+    //Act
+    var result = subject._getDistanceBetweenObjects(firstObj, secondObj);
+
+    //Assert
+    assert.equal(result, 55597.65129192688);
+  });
+
+  (0, _qunit.test)('test method _getDistanceBetweenObjects between marker and marker', function (assert) {
+    //Arrange
+    var firstObj = L.marker([1.001, 1.001]);
+    firstObj.feature = firstObj.toGeoJSON();
+    var secondObj = L.marker([1.001, 1.002]);
+    secondObj.feature = secondObj.toGeoJSON();
+    var subject = mapApiMixinObject.create();
+
+    //Act
+    var result = subject._getDistanceBetweenObjects(firstObj, secondObj);
+
+    //Assert
+    assert.equal(result, 111.19508023354534);
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-between-objects-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-get-distance-between-objects-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-get-distance-between-objects-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-between-objects-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-get-distance-between-objects-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-get-distance-between-objects-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon) {
+
+  (0, _qunit.module)('Unit | Mixin | test method _getDistanceBetweenObjects');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  (0, _qunit.test)('test method getDistanceBetweenObjects between polyline and polygon', function (assert) {
+    //Arrange
+    var done = assert.async(1);
+    var firstObj = L.polyline([[1.001, 1.001], [1.003, 1.003], [1.005, 1.005]]);
+    firstObj.feature = firstObj.toGeoJSON();
+    var secondObj = L.polygon([[1.001, 1.001], [1.001, 1.002], [1.003, 1.001], [1.003, 0]]);
+    secondObj.feature = secondObj.toGeoJSON();
+    var getModelLayerFeature = function getModelLayerFeature(layerId) {
+      return _ember['default'].RSVP.resolve([null, null, [layerId === '1' ? firstObj : secondObj]]);
+    };
+
+    var subject = mapApiMixinObject.create({
+      _getModelLayerFeature: function _getModelLayerFeature() {}
+    });
+    var getMLFeature = _sinon['default'].stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+
+    //Act
+    var result = subject.getDistanceBetweenObjects('1', '4', '2', '3');
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (res) {
+      assert.equal(res, 55820.041009409564);
+      assert.equal(getMLFeature.callCount, 2, 'Check call count to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][1], '4', 'Check call second arg to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[1][0], '2', 'Check call first arg to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[1][1], '3', 'Check call second arg to method _getModelLayerFeature');
+      done();
+      getMLFeature.restore();
+    });
+  });
+
+  (0, _qunit.test)('test method getDistanceBetweenObjects between marker and polygon', function (assert) {
+    //Arrange
+    var done = assert.async(1);
+    var firstObj = L.marker([1.001, 1.001]);
+    firstObj.feature = firstObj.toGeoJSON();
+    var secondObj = L.polygon([[1.001, 1.001], [1.001, 1.002], [1.003, 1.001], [1.003, 0]]);
+    secondObj.feature = secondObj.toGeoJSON();
+    var getModelLayerFeature = function getModelLayerFeature(layerId) {
+      return _ember['default'].RSVP.resolve([null, null, [layerId === '1' ? firstObj : secondObj]]);
+    };
+
+    var subject = mapApiMixinObject.create({
+      _getModelLayerFeature: function _getModelLayerFeature() {}
+    });
+    var getMLFeature = _sinon['default'].stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+
+    //Act
+    var result = subject.getDistanceBetweenObjects('1', '4', '2', '3');
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (res) {
+      assert.equal(res, 55597.65129192688);
+      assert.equal(getMLFeature.callCount, 2, 'Check call count to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][1], '4', 'Check call second arg to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[1][0], '2', 'Check call first arg to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[1][1], '3', 'Check call second arg to method _getModelLayerFeature');
+      done();
+      getMLFeature.restore();
+    });
+  });
+
+  (0, _qunit.test)('test method getDistanceBetweenObjects between marker and marker', function (assert) {
+    //Arrange
+    var done = assert.async(1);
+    var firstObj = L.marker([1.001, 1.001]);
+    firstObj.feature = firstObj.toGeoJSON();
+    var secondObj = L.marker([1.001, 1.002]);
+    secondObj.feature = secondObj.toGeoJSON();
+    var getModelLayerFeature = function getModelLayerFeature(layerId) {
+      return _ember['default'].RSVP.resolve([null, null, [layerId === '1' ? firstObj : secondObj]]);
+    };
+
+    var subject = mapApiMixinObject.create({
+      _getModelLayerFeature: function _getModelLayerFeature() {}
+    });
+    var getMLFeature = _sinon['default'].stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+
+    //Act
+    var result = subject.getDistanceBetweenObjects('1', '4', '2', '3');
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (res) {
+      assert.equal(res, 111.19508023354534);
+      assert.equal(getMLFeature.callCount, 2, 'Check call count to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][1], '4', 'Check call second arg to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[1][0], '2', 'Check call first arg to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[1][1], '3', 'Check call second arg to method _getModelLayerFeature');
+      done();
+      getMLFeature.restore();
+    });
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-get-distance-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-get-distance-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-get-distance-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-get-distance-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/mixins/flexberry-map-model-api-get-object-center-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi) {
 
   (0, _qunit.module)('Unit | Mixin | get object center');
