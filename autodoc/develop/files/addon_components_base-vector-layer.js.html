@@ -522,6 +522,41 @@ export default BaseLayer.extend({
     }
   },
 
+  _setFeaturesProcessCallback() {
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    leafletObject.on(&#x27;load&#x27;, (loaded) =&gt; {
+      this._featuresProcessCallback(loaded.layers);
+    });
+  },
+
+  _featuresProcessCallback(layers) {
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+
+    if (!layers) {
+      return;
+    }
+
+    let featuresProcessCallback = Ember.get(leafletObject, &#x27;featuresProcessCallback&#x27;);
+    let p = typeof featuresProcessCallback === &#x27;function&#x27; ? featuresProcessCallback(layers) : Ember.RSVP.resolve();
+    p.then(() =&gt; {
+      this._addLayersOnMap(layers);
+
+      if (this.get(&#x27;labelSettings.signMapObjects&#x27;)) {
+        this._addLabelsToLeafletContainer(layers);
+      }
+    });
+  },
+
+  /**
+    Add layers after features callback
+
+    @method _addLayersOnMap
+    @private
+  */
+  _addLayersOnMap(layers) {
+    this._setLayerState();
+  },
+
   /**
     Sets leaflet layer&#x27;s opacity.
 
@@ -973,7 +1008,7 @@ export default BaseLayer.extend({
       let mapPane = leafletMap._mapPane;
       if (!Ember.isNone(mapPane) &amp;&amp; !Ember.isNone(pane)) {
         let existPaneDomElem = Ember.$(mapPane).children(&#x60;[class*=&#x27;${thisPane}&#x27;]&#x60;).length;
-        if (existPaneDomElem &gt; 0  &amp;&amp; !checkMapZoom(leafletObject)) {
+        if (existPaneDomElem &gt; 0 &amp;&amp; !checkMapZoom(leafletObject)) {
           L.DomUtil.remove(pane);
         } else if (existPaneDomElem === 0 &amp;&amp; checkMapZoom(leafletObject)) {
           mapPane.appendChild(pane);
@@ -1007,11 +1042,6 @@ export default BaseLayer.extend({
     if (!Ember.isNone(leafletMap)) {
       leafletMap.off(&#x27;flexberry-map:getOrLoadLayerFeatures&#x27;, this._getOrLoadLayerFeatures, this);
 
-      //for label
-      if (this.get(&#x27;showExisting&#x27;) !== false) {
-        leafletMap.off(&#x27;moveend&#x27;, this._showLabelsMovingMap, this);
-      }
-
       if (this.get(&#x27;settings.typeGeometry&#x27;) === &#x27;polyline&#x27;) {
         leafletMap.off(&#x27;zoomend&#x27;, this._updatePositionLabelForLine, this);
       }
@@ -1021,12 +1051,7 @@ export default BaseLayer.extend({
   _createLayer() {
     this._super(...arguments);
 
-    // add labels
     this.get(&#x27;_leafletLayerPromise&#x27;).then((leafletLayer) =&gt; {
-      if (this.get(&#x27;labelSettings.signMapObjects&#x27;)) {
-        this._addLabelsToLeafletContainer();
-      }
-
       this._checkZoomPane();
     });
   },
@@ -1129,10 +1154,10 @@ export default BaseLayer.extend({
 
     @method _createStringLabel
     @param {Object} labelsLayer Labels layer
+    @param {Array} layers new layers for add labels
   */
-  _createStringLabel(labelsLayer) {
+  _createStringLabel(labelsLayer, layers) {
     let optionsLabel = this.get(&#x27;labelSettings.options&#x27;);
-    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
     let labelSettingsString = this.get(&#x27;labelSettings.labelSettingsString&#x27;);
     let style = Ember.String.htmlSafe(
       &#x60;font-family: ${Ember.get(optionsLabel, &#x27;captionFontFamily&#x27;)}; &#x60; +
@@ -1145,15 +1170,17 @@ export default BaseLayer.extend({
 
     let leafletMap = this.get(&#x27;leafletMap&#x27;);
     let bbox = leafletMap.getBounds();
-    leafletObject.eachLayer((layer) =&gt; {
-      let dynamicLoad = this.get(&#x27;showExisting&#x27;) === false &amp;&amp; this.get(&#x27;continueLoading&#x27;);
-      let intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
-      let staticLoad = this.get(&#x27;showExisting&#x27;) !== false &amp;&amp; intersectBBox;
-      if (!layer._label &amp;&amp; (dynamicLoad || staticLoad)) {
-        let label = this._applyFunction(this._applyProperty(labelSettingsString, layer));
-        this._createLabel(label, layer, style, labelsLayer);
-      }
-    });
+    if (layers) {
+      layers.forEach((layer) =&gt; {
+        let dynamicLoad = this.get(&#x27;showExisting&#x27;) === false &amp;&amp; this.get(&#x27;continueLoading&#x27;);
+        let intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
+        let staticLoad = this.get(&#x27;showExisting&#x27;) !== false &amp;&amp; intersectBBox;
+        if (!layer._label &amp;&amp; (dynamicLoad || staticLoad)) {
+          let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
+          this._createLabel(label, layer, style, labelsLayer);
+        }
+      });
+    }
   },
 
   /**
@@ -1210,11 +1237,6 @@ export default BaseLayer.extend({
       iconWidth = 12;
       iconHeight = 12;
       html = Ember.$(layer._svgConteiner).html();
-    }
-
-    const layerLabelCallback = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;layerLabelCallback&#x27;);
-    if (typeof layerLabelCallback === &#x27;function&#x27;) {
-      html = layerLabelCallback(this, layer, text);
     }
 
     if (!latlng) {
@@ -1539,8 +1561,9 @@ export default BaseLayer.extend({
     Show lables
 
     @method _showLabels
+    @param {Array} layers new layers for add labels
   */
-  _showLabels() {
+  _showLabels(layers) {
     let labelSettingsString = this.get(&#x27;labelSettings.labelSettingsString&#x27;);
     if (!Ember.isNone(labelSettingsString)) {
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
@@ -1559,10 +1582,6 @@ export default BaseLayer.extend({
         labelsLayer.leafletMap = leafletMap;
         leafletObject._labelsLayer = labelsLayer;
 
-        if (this.get(&#x27;showExisting&#x27;) !== false) {
-          leafletMap.on(&#x27;moveend&#x27;, this._showLabelsMovingMap, this);
-        }
-
         if (this.get(&#x27;settings.typeGeometry&#x27;) === &#x27;polyline&#x27;) {
           leafletMap.on(&#x27;zoomend&#x27;, this._updatePositionLabelForLine, this);
         }
@@ -1570,7 +1589,7 @@ export default BaseLayer.extend({
         leafletObject._labelsLayer = labelsLayer;
       }
 
-      this._createStringLabel(labelsLayer);
+      this._createStringLabel(labelsLayer, layers);
       this.set(&#x27;_labelsLayer&#x27;, labelsLayer);
       if (this.get(&#x27;settings.typeGeometry&#x27;) === &#x27;polyline&#x27;) {
         this._updatePositionLabelForLine();
@@ -1579,24 +1598,13 @@ export default BaseLayer.extend({
   },
 
   /**
-    Show labels when map moving
-
-    @method _showLabelsMovingMap
-  */
-  _showLabelsMovingMap() {
-    let labelsLayer = this.get(&#x27;_labelsLayer&#x27;);
-    if (this.get(&#x27;leafletMap&#x27;).hasLayer(labelsLayer)) {
-      this._addLabelsToLeafletContainer();
-    }
-  },
-
-  /**
     Adds labels to it&#x27;s leaflet container.
 
     @method _addLabelsToLeafletContainer
+    @param {Array} layers new layers for add labels
     @private
   */
-  _addLabelsToLeafletContainer() {
+  _addLabelsToLeafletContainer(layers) {
     let labelsLayer = this.get(&#x27;_labelsLayer&#x27;);
     let leafletMap = this.get(&#x27;leafletMap&#x27;);
 
@@ -1613,13 +1621,13 @@ export default BaseLayer.extend({
     }
 
     if (Ember.isNone(labelsLayer)) {
-      this._showLabels();
+      this._showLabels(layers);
       labelsLayer = this.get(&#x27;_labelsLayer&#x27;);
       leafletMap.addLayer(labelsLayer);
     } else if (!leafletMap.hasLayer(labelsLayer)) {
       leafletMap.addLayer(labelsLayer);
     } else {
-      this._showLabels();
+      this._showLabels(layers);
     }
   },
 

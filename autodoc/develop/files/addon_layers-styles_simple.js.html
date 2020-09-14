@@ -464,13 +464,15 @@ export default BaseLayerStyle.extend({
     @param {Object} options.style Hash containing style settings.
   */
   _renderOnLeafletPath({ path, style }) {
-    let pathStyle = style.path || {};
-    pathStyle = Ember.$.extend(true, {}, pathStyle, {
-      // Fill must be disabled for non polygon layers, because filled polylines and other lines-like geometries looks ugly in leaflet.
-      fill: pathStyle.fill === true &amp;&amp; path instanceof L.Polygon
-    });
+    if (Ember.isNone(path.styleIsSet) || !path.styleIsSet) {
+      let pathStyle = style.path || {};
+      pathStyle = Ember.$.extend(true, {}, pathStyle, {
+        // Fill must be disabled for non polygon layers, because filled polylines and other lines-like geometries looks ugly in leaflet.
+        fill: pathStyle.fill === true &amp;&amp; path instanceof L.Polygon
+      });
 
-    path.setStyle(pathStyle);
+      path.setStyle(pathStyle);
+    }
   },
 
   /**

@@ -506,10 +506,10 @@ export default BaseVectorLayer.extend({
 
         if (insertedModelId.length &gt; 0) {
           _this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;)._getModelLayerFeature(_this.layerModel.get(&#x27;id&#x27;), insertedModelId, true)
-          .then(([, lObject, featureLayer]) =&gt; {
-            _this._setLayerState();
-            leafletObject.fire(&#x27;save:success&#x27;, { layers: featureLayer });
-          });
+            .then(([, lObject, featureLayer]) =&gt; {
+              _this._setLayerState();
+              leafletObject.fire(&#x27;save:success&#x27;, { layers: featureLayer });
+            });
         } else {
           leafletObject.fire(&#x27;save:success&#x27;, { layers: [] });
         }
@@ -738,8 +738,8 @@ export default BaseVectorLayer.extend({
       let obj = this.get(&#x27;_adapterStoreModelProjectionGeom&#x27;);
 
       let queryBuilder = new Builder(obj.store)
-      .from(obj.modelName)
-      .selectByProjection(obj.projectionName);
+        .from(obj.modelName)
+        .selectByProjection(obj.projectionName);
 
       if (!Ember.isNone(maxFeatures)) {
         queryBuilder.top(maxFeatures);
@@ -994,6 +994,15 @@ export default BaseVectorLayer.extend({
     return props;
   },
 
+  _addLayersOnMap(layers) {
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    layers.forEach((layer) =&gt; {
+      L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
+    });
+
+    this._super(...arguments);
+  },
+
   /**
     Adds layer object.
 
@@ -1064,8 +1073,8 @@ export default BaseVectorLayer.extend({
       let continueLoading = this.get(&#x27;continueLoading&#x27;);
       let showExisting = this.get(&#x27;showExisting&#x27;);
       let queryBuilder = new Builder(obj.store)
-      .from(obj.modelName)
-      .selectByProjection(obj.projectionName);
+        .from(obj.modelName)
+        .selectByProjection(obj.projectionName);
       if (!showExisting &amp;&amp; continueLoading &amp;&amp; visibility &amp;&amp; checkMapZoomLayer(this)) {
         bounds = L.rectangle(this.get(&#x27;leafletMap&#x27;).getBounds());
         let query = new Query.GeometryPredicate(obj.geometryField);
@@ -1075,60 +1084,65 @@ export default BaseVectorLayer.extend({
         queryBuilder.where(new Query.SimplePredicate(&#x27;id&#x27;, Query.FilterOperator.Eq, null));
       }
 
+      const options = this.get(&#x27;options&#x27;);
+      let layer = L.featureGroup();
+
+      layer.options.crs = crs;
+      layer.options.style = this.get(&#x27;styleSettings&#x27;);
+      layer.options.continueLoading = continueLoading;
+      layer.options.showExisting = showExisting;
+      if (!showExisting &amp;&amp; continueLoading &amp;&amp; visibility &amp;&amp; checkMapZoomLayer(this)) {
+        layer.isLoadBounds = bounds;
+      }
+
+      L.setOptions(layer, options);
+      layer.minZoom = this.get(&#x27;minZoom&#x27;);
+      layer.maxZoom = this.get(&#x27;maxZoom&#x27;);
+      layer.save = this.get(&#x27;save&#x27;).bind(this);
+      layer.geometryField = obj.geometryField;
+      layer.addLayer = this.get(&#x27;addLayer&#x27;).bind(this);
+      layer.editLayerObjectProperties = this.get(&#x27;editLayerObjectProperties&#x27;).bind(this);
+      layer.editLayer = this.get(&#x27;editLayer&#x27;).bind(this);
+      layer.removeLayer = this.get(&#x27;removeLayer&#x27;).bind(this);
+      layer.modelName = obj.modelName;
+      layer.projectionName = obj.projectionName;
+      layer.editformname = obj.modelName + this.get(&#x27;postfixForEditForm&#x27;);
+      layer.loadLayerFeatures = this.get(&#x27;loadLayerFeatures&#x27;).bind(this);
+      layer.models = Ember.A();
+
+      let leafletMap = this.get(&#x27;leafletMap&#x27;);
+      if (!Ember.isNone(leafletMap)) {
+        let thisPane = this.get(&#x27;_pane&#x27;);
+        let pane = leafletMap.getPane(thisPane);
+        if (!pane || Ember.isNone(pane)) {
+          this._createPane(thisPane);
+          layer.options.pane = thisPane;
+          layer.options.renderer = this.get(&#x27;_renderer&#x27;);
+          this._setLayerZIndex();
+        }
+      }
+
+      resolve(layer);
+
       let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 
       objs.then(res =&gt; {
-        const options = this.get(&#x27;options&#x27;);
-        let models = res.toArray();
-        let layer = L.featureGroup();
-
-        layer.options.crs = crs;
-        layer.options.style = this.get(&#x27;styleSettings&#x27;);
-        layer.options.continueLoading = continueLoading;
-        layer.options.showExisting = showExisting;
-        if (!showExisting &amp;&amp; continueLoading &amp;&amp; visibility &amp;&amp; checkMapZoomLayer(this)) {
-          layer.isLoadBounds = bounds;
+        let models = [];
+        if (res &amp;&amp; typeof res.toArray === &#x27;function&#x27;) {
+          models = res.toArray();
         }
 
-        L.setOptions(layer, options);
-        layer.minZoom = this.get(&#x27;minZoom&#x27;);
-        layer.maxZoom = this.get(&#x27;maxZoom&#x27;);
-        layer.save = this.get(&#x27;save&#x27;).bind(this);
-        layer.geometryField = obj.geometryField;
-        layer.addLayer = this.get(&#x27;addLayer&#x27;).bind(this);
-        layer.editLayerObjectProperties = this.get(&#x27;editLayerObjectProperties&#x27;).bind(this);
-        layer.editLayer = this.get(&#x27;editLayer&#x27;).bind(this);
-        layer.removeLayer = this.get(&#x27;removeLayer&#x27;).bind(this);
-        layer.modelName = obj.modelName;
-        layer.projectionName = obj.projectionName;
-        layer.editformname = obj.modelName + this.get(&#x27;postfixForEditForm&#x27;);
-        layer.loadLayerFeatures = this.get(&#x27;loadLayerFeatures&#x27;).bind(this);
-        layer.models = Ember.A();
-
-        let leafletMap = this.get(&#x27;leafletMap&#x27;);
-        if (!Ember.isNone(leafletMap)) {
-          let thisPane = this.get(&#x27;_pane&#x27;);
-          let pane = leafletMap.getPane(thisPane);
-          if (!pane || Ember.isNone(pane)) {
-            this._createPane(thisPane);
-            layer.options.pane = thisPane;
-            layer.options.renderer = this.get(&#x27;_renderer&#x27;);
-            this._setLayerZIndex();
-          }
-        }
-
+        let innerLayers = [];
         models.forEach(model =&gt; {
-          this.addLayerObject(layer, model);
+          let l = this.addLayerObject(layer, model, false);
+          innerLayers.push(l);
         });
 
-        layer.fire(&#x27;load&#x27;, {});
+        layer.fire(&#x27;load&#x27;, { layers: innerLayers });
+
         this._setLayerState();
         let promiseLoad = Ember.RSVP.resolve();
         this.set(&#x27;promiseLoad&#x27;, promiseLoad);
-
-        resolve(layer);
-      }).catch((e) =&gt; {
-        reject(e);
       });
     });
   },
@@ -1266,8 +1280,8 @@ export default BaseVectorLayer.extend({
 
           let obj = this.get(&#x27;_adapterStoreModelProjectionGeom&#x27;);
           let queryBuilder = new Builder(obj.store)
-          .from(obj.modelName)
-          .selectByProjection(obj.projectionName);
+            .from(obj.modelName)
+            .selectByProjection(obj.projectionName);
 
           if (Ember.isArray(featureIds) &amp;&amp; !Ember.isNone(featureIds)) {// load features by id
             let loadIds = getLoadedFeatures(featureIds);
@@ -1298,11 +1312,13 @@ export default BaseVectorLayer.extend({
               models = res.toArray();
             }
 
+            let innerLayers = [];
             models.forEach(model =&gt; {
-              this.addLayerObject(leafletObject, model);
+              let l = this.addLayerObject(leafletObject, model, false);
+              innerLayers.push(l);
             });
             this._setLayerState();
-            leafletObject.fire(&#x27;load&#x27;, {});
+            leafletObject.fire(&#x27;load&#x27;, { layers: innerLayers });
             resolve(leafletObject);
           });
         } else {
@@ -1326,10 +1342,10 @@ export default BaseVectorLayer.extend({
       const modelName = this.get(&#x27;modelName&#x27;);
       const projectionName = this.get(&#x27;projectionName&#x27;);
       let queryBuilder = new Builder(store)
-      .from(modelName)
-      .selectByProjection(projectionName)
-      .top(1)
-      .count();
+        .from(modelName)
+        .selectByProjection(projectionName)
+        .top(1)
+        .count();
 
       store.query(modelName, queryBuilder.build()).then((result) =&gt; {
         resolve(result.meta.count);
@@ -1373,8 +1389,8 @@ export default BaseVectorLayer.extend({
             });
 
             let queryBuilder = new Builder(obj.store)
-            .from(obj.modelName)
-            .selectByProjection(obj.projectionName);
+              .from(obj.modelName)
+              .selectByProjection(obj.projectionName);
 
             if (equals.length === 1) {
               queryBuilder.where(equals[0]);
@@ -1396,11 +1412,11 @@ export default BaseVectorLayer.extend({
               let skip = 0;
               do {
                 let queryBuilder = new Builder(obj.store)
-                .from(obj.modelName)
-                .selectByProjection(obj.projectionName)
-                .top(maxBatchFeatures)
-                .skip(skip)
-                .orderBy(&#x27;id&#x27;);
+                  .from(obj.modelName)
+                  .selectByProjection(obj.projectionName)
+                  .top(maxBatchFeatures)
+                  .skip(skip)
+                  .orderBy(&#x27;id&#x27;);
 
                 promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
                 count -= maxBatchFeatures;
@@ -1409,11 +1425,11 @@ export default BaseVectorLayer.extend({
 
               if (count &gt; 0) {
                 let queryBuilder = new Builder(obj.store)
-                .from(obj.modelName)
-                .selectByProjection(obj.projectionName)
-                .top(count)
-                .skip(skip)
-                .orderBy(&#x27;id&#x27;);
+                  .from(obj.modelName)
+                  .selectByProjection(obj.projectionName)
+                  .top(count)
+                  .skip(skip)
+                  .orderBy(&#x27;id&#x27;);
 
                 promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
               }
@@ -1475,8 +1491,8 @@ export default BaseVectorLayer.extend({
 
             let obj = this.get(&#x27;_adapterStoreModelProjectionGeom&#x27;);
             let queryBuilder = new Builder(obj.store)
-            .from(obj.modelName)
-            .selectByProjection(obj.projectionName);
+              .from(obj.modelName)
+              .selectByProjection(obj.projectionName);
             let crs = this.get(&#x27;crs&#x27;);
             let geojsonReader = new jsts.io.GeoJSONReader();
             if (loadedBounds instanceof L.LatLngBounds) {
@@ -1498,10 +1514,13 @@ export default BaseVectorLayer.extend({
 
               objs.then(res =&gt; {
                 let models = res.toArray();
+                let innerLayers = [];
                 models.forEach(model =&gt; {
-                  this.addLayerObject(leafletObject, model);
+                  let l = this.addLayerObject(leafletObject, model, false);
+                  innerLayers.push(l);
                 });
-                leafletObject.fire(&#x27;load&#x27;, {});
+                leafletObject.fire(&#x27;load&#x27;, { layers: innerLayers });
+
                 this._setLayerState();
               });
               return;
@@ -1530,10 +1549,12 @@ export default BaseVectorLayer.extend({
 
             objs.then(res =&gt; {
               let models = res.toArray();
+              let innerLayers = [];
               models.forEach(model =&gt; {
-                this.addLayerObject(leafletObject, model);
+                let l = this.addLayerObject(leafletObject, model, false);
+                innerLayers.push(l);
               });
-              leafletObject.fire(&#x27;load&#x27;, {});
+              leafletObject.fire(&#x27;load&#x27;, { layers: innerLayers });
               this._setLayerState();
             });
           } else if (leafletObject.statusLoadLayer) {

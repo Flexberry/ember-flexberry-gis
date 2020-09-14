@@ -547,21 +547,31 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  _addLayer(layer) {
+  _addLayersOnMap(layers) {
     let leafletObject = this.get(&#x27;_leafletObject&#x27;);
-
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
     let pane = this.get(&#x27;_pane&#x27;);
-    if (pane) {
-      if (layer instanceof L.Marker) {
-        layer.options.shadowPane = pane;
+
+    layers.forEach((layer) =&gt; {
+      if (pane) {
+        if (layer instanceof L.Marker) {
+          layer.options.shadowPane = pane;
+        }
+
+        layer.options.pane = pane;
+        layer.options.renderer = this.get(&#x27;_renderer&#x27;);
       }
 
-      layer.options.pane = pane;
-      layer.options.renderer = this.get(&#x27;_renderer&#x27;);
-    }
+      layer.leafletMap = leafletMap;
 
-    layer.leafletMap = this.get(&#x27;leafletMap&#x27;);
-    leafletObject.baseAddLayer(layer);
+      leafletObject.baseAddLayer(layer);
+    });
+
+    this._super(...arguments);
+  },
+
+  _addLayer(layer) {
+    // не добавляем слой, пока не пройдет promise загрузки
   },
 
   _removeLayer(layer) {

@@ -444,7 +444,7 @@ export function initialize() {
         } else {
           this.setIcon(new L.Icon.Default());
         }
-      } else {
+      } else if (Ember.isNone(this.styleIsSet)) {
         if (!Ember.isNone(this.style) &amp;&amp; !Ember.isNone(this.style.html)) {
           this.setIcon(new L.divIcon(this.style));
         }
@@ -468,7 +468,7 @@ export function initialize() {
       let exp = expression.trim();
       let reg = /&#x27;(.+?)&#x27;/g;
       let expResult = exp.split(reg).filter(x =&gt; x !== &#x27;&#x27;);
-      return expResult ?  expResult : null;
+      return expResult ? expResult : null;
     },
 
     /**
@@ -487,7 +487,7 @@ export function initialize() {
           }
         }
 
-        label += !isProp ?  element : &#x27;&#x27;;
+        label += !isProp ? element : &#x27;&#x27;;
         isProp = false;
       });
 
