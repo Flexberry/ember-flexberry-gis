@@ -34,14 +34,12 @@ export function initialize() {
         } else {
           this.setIcon(new L.Icon.Default());
         }
-      } else {
-        if (Ember.isNone(this.styleIsSet)) {
-          if (!Ember.isNone(this.style) && !Ember.isNone(this.style.html)) {
-            this.setIcon(new L.divIcon(this.style));
-          }
-
-          this.styleIsSet = false;
+      } else if (Ember.isNone(this.styleIsSet)) {
+        if (!Ember.isNone(this.style) && !Ember.isNone(this.style.html)) {
+          this.setIcon(new L.divIcon(this.style));
         }
+
+        this.styleIsSet = false;
       }
 
       return this;

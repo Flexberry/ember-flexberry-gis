@@ -766,7 +766,7 @@ export default BaseLayer.extend({
         let intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
         let staticLoad = this.get('showExisting') !== false && intersectBBox;
         if (!layer._label && (dynamicLoad || staticLoad)) {
-          let label = layer.labelVal || this._applyFunction(this._applyProperty(labelSettingsString, layer));
+          let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
           this._createLabel(label, layer, style, labelsLayer);
         }
       });
