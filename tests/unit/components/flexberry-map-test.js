@@ -18,6 +18,22 @@ test('it should create leaflet map on didInsertElement', function (assert) {
   assert.ok(component.get('_leafletObject') instanceof L.Map);
 });
 
+test('test fun queryToMap', function (assert) {
+  let component = this.subject();
+  let done = assert.async();
+  this.render();
+  let e = {results: Ember.A()};
+  let res = component._queryToMap('', '', e)
+
+  assert.ok(res instanceof Ember.RSVP.Promise);
+  res.then(()=> {
+    console.log(e);
+    assert.equal(e.results.length, 0);
+    done();
+  });
+});
+
+
 test('should compute center from lat/lng', function (assert) {
   let lat = 10;
   let lng = 10;

@@ -283,18 +283,35 @@ let FlexberryMapComponent = Ember.Component.extend(
       @private
     */
     _runQuery(queryFilter, mapObjectSetting) {
-      let serviceLayer = this.get('serviceLayer');
       let leafletMap = this.get('_leafletObject');
 
       let e = {
-        queryFilter: queryFilter,
-        mapObjectSetting: mapObjectSetting,
-        results: Ember.A(),
-        serviceLayer: serviceLayer
+        results: Ember.A()
       };
 
       // Show map loader.
       leafletMap.flexberryMap.loader.show({ content: this.get('i18n').t('map-tools.identify.loader-message') });
+
+      this._queryToMap(queryFilter, mapObjectSetting, e).then(() => {
+        this._finishQuery(e);
+      });
+    },
+
+    /**
+      Removes injected additional methods from initialized leaflet map.
+      Runs search query related to the specified URL params: 'queryFilter' and 'mapObjectSetting'.
+
+      @method _queryToMap
+      @returns {Ember.RSVP.Promise} 
+      @private
+    */
+     _queryToMap(queryFilter, mapObjectSetting, e) {
+      let serviceLayer = this.get('serviceLayer');
+      let leafletMap = this.get('_leafletObject');
+
+      e.queryFilter = queryFilter;
+      e.mapObjectSetting = mapObjectSetting;
+      e.serviceLayer = serviceLayer;
 
       leafletMap.fire('flexberry-map:query', e);
 
@@ -317,10 +334,7 @@ let FlexberryMapComponent = Ember.Component.extend(
         promises.pushObject(features);
       });
 
-      // Wait for all promises to be settled & call '_finishQuery' hook.
-      Ember.RSVP.allSettled(promises).then(() => {
-        this._finishQuery(e);
-      });
+      return Ember.RSVP.allSettled(promises);
     },
 
     _createObject(queryFilter, mapObjectSetting) {
@@ -470,6 +484,11 @@ let FlexberryMapComponent = Ember.Component.extend(
       if (Ember.isNone(mapApi.getFromApi('runQuery'))) {
         mapApi.addToApi('runQuery', this._runQuery.bind(this));
         this.set('_hasQueryApi', true);
+      }
+
+      if (Ember.isNone(mapApi.getFromApi('queryToMap'))) {
+        mapApi.addToApi('queryToMap', this._queryToMap.bind(this));
+        this.set('_hasQueryToMap', true);
       }
 
       if (Ember.isNone(mapApi.getFromApi('createObject'))) {
@@ -639,6 +658,10 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       if (this.get('_hasQueryApi')) {
         this.get('mapApi').addToApi('runQuery', undefined);
+      }
+
+      if (this.get('_hasQueryToMap')) {
+        this.get('mapApi').addToApi('queryToMap', undefined);
       }
 
       if (this.get('_hasCreateObjectApi')) {
