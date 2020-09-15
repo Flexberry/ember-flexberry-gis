@@ -302,10 +302,10 @@ let FlexberryMapComponent = Ember.Component.extend(
       Runs search query related to the specified URL params: 'queryFilter' and 'mapObjectSetting'.
 
       @method _queryToMap
-      @returns {Ember.RSVP.Promise} 
+      @returns {Ember.RSVP.Promise}
       @private
     */
-     _queryToMap(queryFilter, mapObjectSetting, e) {
+    _queryToMap(queryFilter, mapObjectSetting, e) {
       let serviceLayer = this.get('serviceLayer');
       let leafletMap = this.get('_leafletObject');
 

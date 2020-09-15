@@ -22,8 +22,8 @@ test('test fun queryToMap', function (assert) {
   let component = this.subject();
   let done = assert.async();
   this.render();
-  let e = {results: Ember.A()};
-  let res = component._queryToMap('', '', e)
+  let e = { results: Ember.A() };
+  let res = component._queryToMap('', '', e);
 
   assert.ok(res instanceof Ember.RSVP.Promise);
   res.then(()=> {
@@ -32,7 +32,6 @@ test('test fun queryToMap', function (assert) {
     done();
   });
 });
-
 
 test('should compute center from lat/lng', function (assert) {
   let lat = 10;
