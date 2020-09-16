@@ -180,7 +180,7 @@ export default Ember.Mixin.create(rhumbOperations, {
       for (var j = 0; j < geometries.length; j++) {
         if (i !== j) {
           if (geometries[i].intersects(geometries[j])) {
-            if(isUnion){
+            if (isUnion) {
               current = current.union(geometries[j]);
             } else {
               current = current.difference(geometries[j]);
