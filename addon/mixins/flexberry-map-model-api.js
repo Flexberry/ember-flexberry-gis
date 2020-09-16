@@ -1365,7 +1365,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @param {Boolean} failIfInvalid Fail when has invalid geometry.
     @return {Promise} GeoJson Feature in EPSG:4326
   */
-  getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, failIfInvalid = false) {
+  getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, isUnion = false, failIfInvalid = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let layerAPromises = this.loadingFeaturesByPackages(layerAId, objectAIds);
       let layerBPromises = this.loadingFeaturesByPackages(layerBId, objectBIds);
@@ -1405,13 +1405,13 @@ export default Ember.Mixin.create(SnapDraw, {
           count += 1;
 
           // если вся геометрия невалидна, то будет null
-          let merged = this.createMulti(geometries, failIfInvalid);
+          let merged = this.createMulti(geometries, isUnion, failIfInvalid);
           if (merged) {
             resultObjs.pushObject(merged);
           }
         });
 
-        let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, failIfInvalid) : null;
+        let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, isUnion, failIfInvalid) : null;
         resolve(resultObj ? resultObj : null);
       }).catch((e) => {
         reject(e);
