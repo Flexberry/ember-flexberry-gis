@@ -304,35 +304,35 @@ let FlexberryMapComponent = Ember.Component.extend(
       return new Ember.RSVP.Promise((resolve) => {
         let serviceLayer = this.get('serviceLayer');
         let leafletMap = this.get('_leafletObject');
-  
+
         let e = {
           results: Ember.A(),
           queryFilter: queryFilter,
           mapObjectSetting: mapObjectSetting,
           serviceLayer: serviceLayer
         };
-  
+
         leafletMap.fire('flexberry-map:query', e);
-  
+
         // Promises array could be totally changed in 'flexberry-map:query' event handlers, we should prevent possible errors.
         e.results = Ember.isArray(e.results) ? e.results : Ember.A();
         let promises = Ember.A();
-  
+
         // Handle each result.
         // Detach promises from already received features.
         e.results.forEach((result) => {
           if (Ember.isNone(result)) {
             return;
           }
-  
+
           let features = Ember.get(result, 'features');
           if (!(features instanceof Ember.RSVP.Promise)) {
             return;
           }
-  
+
           promises.pushObject(features);
         });
-  
+
         Ember.RSVP.allSettled(promises).then(()=> {
           resolve(e);
         });
