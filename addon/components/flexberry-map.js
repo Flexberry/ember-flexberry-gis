@@ -285,56 +285,58 @@ let FlexberryMapComponent = Ember.Component.extend(
     _runQuery(queryFilter, mapObjectSetting) {
       let leafletMap = this.get('_leafletObject');
 
-      let e = {
-        results: Ember.A()
-      };
-
       // Show map loader.
       leafletMap.flexberryMap.loader.show({ content: this.get('i18n').t('map-tools.identify.loader-message') });
 
-      this._queryToMap(queryFilter, mapObjectSetting, e).then(() => {
+      this._queryToMap(queryFilter, mapObjectSetting).then((e) => {
         this._finishQuery(e);
       });
     },
 
     /**
-      Removes injected additional methods from initialized leaflet map.
       Runs search query related to the specified URL params: 'queryFilter' and 'mapObjectSetting'.
 
       @method _queryToMap
       @returns {Ember.RSVP.Promise}
       @private
     */
-    _queryToMap(queryFilter, mapObjectSetting, e) {
-      let serviceLayer = this.get('serviceLayer');
-      let leafletMap = this.get('_leafletObject');
-
-      e.queryFilter = queryFilter;
-      e.mapObjectSetting = mapObjectSetting;
-      e.serviceLayer = serviceLayer;
-
-      leafletMap.fire('flexberry-map:query', e);
-
-      // Promises array could be totally changed in 'flexberry-map:query' event handlers, we should prevent possible errors.
-      e.results = Ember.isArray(e.results) ? e.results : Ember.A();
-      let promises = Ember.A();
-
-      // Handle each result.
-      // Detach promises from already received features.
-      e.results.forEach((result) => {
-        if (Ember.isNone(result)) {
-          return;
-        }
-
-        let features = Ember.get(result, 'features');
-        if (!(features instanceof Ember.RSVP.Promise)) {
-          return;
-        }
-
-        promises.pushObject(features);
+    _queryToMap(queryFilter, mapObjectSetting) {
+      return new Ember.RSVP.Promise((resolve) => {
+        let serviceLayer = this.get('serviceLayer');
+        let leafletMap = this.get('_leafletObject');
+  
+        let e = {
+          results: Ember.A(),
+          queryFilter: queryFilter,
+          mapObjectSetting: mapObjectSetting,
+          serviceLayer: serviceLayer
+        };
+  
+        leafletMap.fire('flexberry-map:query', e);
+  
+        // Promises array could be totally changed in 'flexberry-map:query' event handlers, we should prevent possible errors.
+        e.results = Ember.isArray(e.results) ? e.results : Ember.A();
+        let promises = Ember.A();
+  
+        // Handle each result.
+        // Detach promises from already received features.
+        e.results.forEach((result) => {
+          if (Ember.isNone(result)) {
+            return;
+          }
+  
+          let features = Ember.get(result, 'features');
+          if (!(features instanceof Ember.RSVP.Promise)) {
+            return;
+          }
+  
+          promises.pushObject(features);
+        });
+  
+        Ember.RSVP.allSettled(promises).then(()=> {
+          resolve(e);
+        });
       });
-
-      return Ember.RSVP.allSettled(promises);
     },
 
     _createObject(queryFilter, mapObjectSetting) {

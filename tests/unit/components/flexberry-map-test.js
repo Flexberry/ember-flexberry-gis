@@ -22,11 +22,10 @@ test('test fun queryToMap', function (assert) {
   let component = this.subject();
   let done = assert.async();
   this.render();
-  let e = { results: Ember.A() };
-  let res = component._queryToMap('', '', e);
+  let res = component._queryToMap('', '');
 
   assert.ok(res instanceof Ember.RSVP.Promise);
-  res.then(()=> {
+  res.then((e)=> {
     console.log(e);
     assert.equal(e.results.length, 0);
     done();
