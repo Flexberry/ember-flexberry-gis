@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
+import sinon from 'sinon';
 
 moduleForComponent('flexberry-map', 'Unit | Component | flexberry map', {
   unit: true,
@@ -18,17 +19,36 @@ test('it should create leaflet map on didInsertElement', function (assert) {
   assert.ok(component.get('_leafletObject') instanceof L.Map);
 });
 
-test('test fun queryToMap', function (assert) {
-  let component = this.subject();
-  let done = assert.async();
-  this.render();
-  let res = component._queryToMap('', '');
+test('test function queryToMap', function (assert) {
+  let leafletMap = L.map(document.createElement('div'), {
+    center: [51.505, -0.09],
+    zoom: 13
+  });
+  let testObj = {
+    query(e) {
+      e.results.push({ features: Ember.RSVP.resolve([{ id: '1' }]) });
+    }
+  };
+  let querySpy = sinon.spy(testObj, 'query');
+  leafletMap.on('flexberry-map:query', testObj.query, this);
+  let component = this.subject({
+    _leafletObject: leafletMap
+  });
+  let done = assert.async(2);
+
+  let res = component._queryToMap('1', '2');
 
   assert.ok(res instanceof Ember.RSVP.Promise);
   res.then((e)=> {
-    console.log(e);
-    assert.equal(e.results.length, 0);
-    done();
+    assert.equal(e.results.length, 1);
+    assert.equal(e.queryFilter, '1');
+    assert.equal(e.mapObjectSetting, '2');
+    e.results[0].features.then((result)=> {
+      assert.equal(result[0].id, 1);
+      assert.equal(querySpy.callCount, 1);
+      done(1);
+    });
+    done(1);
   });
 });
 
