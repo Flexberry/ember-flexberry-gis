@@ -182,6 +182,10 @@ export default BaseVectorLayer.extend({
     @param layer
   */
   addLayer(layer) {
+    if (layer.state && layer.state !== state.insert) {
+      return;
+    }
+
     const model = this.get('store').createRecord(this.get('modelName'), layer.feature.properties || {});
     const geometryField = this.get('geometryField') || 'geometry';
     const geometryObject = {};
@@ -588,6 +592,7 @@ export default BaseVectorLayer.extend({
     let leafletObject = this.get('_leafletObject');
     layers.forEach((layer) => {
       L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
+      leafletObject.addLayer(layer);
     });
 
     this._super(...arguments);
