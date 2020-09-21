@@ -525,25 +525,33 @@ export default BaseLayer.extend({
   _setFeaturesProcessCallback() {
     let leafletObject = this.get(&#x27;_leafletObject&#x27;);
     leafletObject.on(&#x27;load&#x27;, (loaded) =&gt; {
-      this._featuresProcessCallback(loaded.layers);
+      let promise = this._featuresProcessCallback(loaded.layers);
+      if (loaded.results &amp;&amp; Ember.isArray(loaded.results)) {
+        loaded.results.push(promise);
+      }
     });
   },
 
   _featuresProcessCallback(layers) {
-    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    return new Ember.RSVP.Promise((resolve) =&gt; {
+      let leafletObject = this.get(&#x27;_leafletObject&#x27;);
 
-    if (!layers) {
-      return;
-    }
-
-    let featuresProcessCallback = Ember.get(leafletObject, &#x27;featuresProcessCallback&#x27;);
-    let p = typeof featuresProcessCallback === &#x27;function&#x27; ? featuresProcessCallback(layers) : Ember.RSVP.resolve();
-    p.then(() =&gt; {
-      this._addLayersOnMap(layers);
-
-      if (this.get(&#x27;labelSettings.signMapObjects&#x27;)) {
-        this._addLabelsToLeafletContainer(layers);
+      if (!layers) {
+        resolve();
+        return;
       }
+
+      let featuresProcessCallback = Ember.get(leafletObject, &#x27;featuresProcessCallback&#x27;);
+      let p = typeof featuresProcessCallback === &#x27;function&#x27; ? featuresProcessCallback(layers) : Ember.RSVP.resolve();
+      p.then(() =&gt; {
+        this._addLayersOnMap(layers);
+
+        if (this.get(&#x27;labelSettings.signMapObjects&#x27;)) {
+          this._addLabelsToLeafletContainer(layers);
+        }
+
+        resolve();
+      });
     });
   },
 
@@ -1590,7 +1598,11 @@ export default BaseLayer.extend({
       }
 
       this._createStringLabel(labelsLayer, layers);
-      this.set(&#x27;_labelsLayer&#x27;, labelsLayer);
+      if (Ember.isNone(this.get(&#x27;_labelsLayer&#x27;))) {
+        this.set(&#x27;_labelsLayer&#x27;, labelsLayer);
+        this._checkZoomPane();
+      }
+
       if (this.get(&#x27;settings.typeGeometry&#x27;) === &#x27;polyline&#x27;) {
         this._updatePositionLabelForLine();
       }
@@ -1665,7 +1677,7 @@ export default BaseLayer.extend({
         this._removeLabelsFromLeafletContainer();
       }
     }
-  },
+  }
 });
 
     </pre>

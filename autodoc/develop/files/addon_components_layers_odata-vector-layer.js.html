@@ -592,6 +592,13 @@ export default BaseVectorLayer.extend({
     @param layer
   */
   addLayer(layer) {
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+
+    if (layer.state &amp;&amp; layer.state !== state.insert) {
+      L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
+      return;
+    }
+
     const model = this.get(&#x27;store&#x27;).createRecord(this.get(&#x27;modelName&#x27;), layer.feature.properties || {});
     const geometryField = this.get(&#x27;geometryField&#x27;) || &#x27;geometry&#x27;;
     const geometryObject = {};
@@ -626,7 +633,6 @@ export default BaseVectorLayer.extend({
     model.set(&#x27;id&#x27;, generateUniqueId());
     layer.state = state.insert;
     this._setLayerProperties(layer, model, geometryObject);
-    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
     L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
     var id = leafletObject.getLayerId(layer);
     leafletObject.models[id] = layer.model;
@@ -997,7 +1003,7 @@ export default BaseVectorLayer.extend({
   _addLayersOnMap(layers) {
     let leafletObject = this.get(&#x27;_leafletObject&#x27;);
     layers.forEach((layer) =&gt; {
-      L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
+      leafletObject.addLayer(layer);
     });
 
     this._super(...arguments);

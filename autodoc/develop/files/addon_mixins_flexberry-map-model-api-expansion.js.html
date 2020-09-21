@@ -464,11 +464,15 @@ export default Ember.Mixin.create(rhumbOperations, {
 
     let newObj = geoJSON.getLayers()[0];
 
-    leafletObject.addLayer(newObj);
+    let e = { layers: [newObj], results: Ember.A() };
+    leafletObject.fire(&#x27;load&#x27;, e);
 
-    newObj.layerId = layerId;
-
-    return newObj;
+    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+      Ember.RSVP.allSettled(e.results).then(() =&gt; {
+        newObj.layerId = layerId;
+        resolve(newObj);
+      });
+    });
   },
 
   /**
@@ -557,7 +561,7 @@ export default Ember.Mixin.create(rhumbOperations, {
       if (!Ember.isNone(element.crs)) {
         objects[i] =
           element.crs.properties.name.toUpperCase() === &#x27;EPSG:4326&#x27; ? element
-          : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
+            : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
       } else {
         throw &quot;error: object must have &#x27;crs&#x27; attribute&quot;;
       }
