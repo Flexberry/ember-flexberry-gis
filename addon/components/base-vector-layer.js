@@ -1188,7 +1188,11 @@ export default BaseLayer.extend({
       }
 
       this._createStringLabel(labelsLayer, layers);
-      this.set('_labelsLayer', labelsLayer);
+      if (Ember.isNone(this.get('_labelsLayer'))) {
+        this.set('_labelsLayer', labelsLayer);
+        this._checkZoomPane();
+      }
+
       if (this.get('settings.typeGeometry') === 'polyline') {
         this._updatePositionLabelForLine();
       }
