@@ -709,13 +709,24 @@ export default Ember.Mixin.create(SnapDraw, {
             properties: Object.assign({}, sourceFeature.feature.properties, destination.properties || {})
           };
 
-          destLeafletLayer.addLayer(destFeature);
-
-          if (source.shouldRemove) {
-            sourceLeafletLayer.removeLayer(sourceFeature);
+          if (sourceLeafletLayer.geometryField) {
+            delete destFeature.feature.properties[sourceLeafletLayer.geometryField];
           }
 
-          resolve(destFeature);
+          if (destLeafletLayer.geometryField) {
+            delete destFeature.feature.properties[destLeafletLayer.geometryField];
+          }
+
+          let e = { layers: [destFeature], results: Ember.A() };
+          destLeafletLayer.fire('load', e);
+
+          Ember.RSVP.allSettled(e.results).then(() => {
+            if (source.shouldRemove) {
+              sourceLeafletLayer.removeLayer(sourceFeature);
+            }
+
+            resolve(destFeature);
+          });
         }
       }).catch((e) => {
         reject(e);
