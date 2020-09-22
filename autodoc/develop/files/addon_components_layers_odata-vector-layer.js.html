@@ -1324,8 +1324,13 @@ export default BaseVectorLayer.extend({
               innerLayers.push(l);
             });
             this._setLayerState();
-            leafletObject.fire(&#x27;load&#x27;, { layers: innerLayers });
-            resolve(leafletObject);
+
+            let e = { layers: innerLayers, results: Ember.A() };
+            leafletObject.fire(&#x27;load&#x27;, e);
+
+            Ember.RSVP.allSettled(e.results).then(() =&gt; {
+              resolve(leafletObject);
+            });
           });
         } else {
           resolve(leafletObject);

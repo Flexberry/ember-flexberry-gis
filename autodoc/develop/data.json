@@ -12107,7 +12107,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 929,
+            "line": 934,
             "description": "Get count of features.",
             "itemtype": "method",
             "name": "getCountFeatures",
@@ -12120,7 +12120,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 952,
+            "line": 957,
             "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "getLayerFeatures",
@@ -12140,14 +12140,14 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1067,
+            "line": 1072,
             "description": "Initializes DOM-related component's properties.",
             "class": "ODataVectorLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1166,
+            "line": 1171,
             "description": "Handles 'flexberry-map:cancelEdit' event of leaflet map.",
             "itemtype": "method",
             "name": "cancelEdit",
@@ -47678,11 +47678,11 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:952"
+            "line": " addon/components/layers/odata-vector-layer.js:957"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:1166"
+            "line": " addon/components/layers/odata-vector-layer.js:1171"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -48266,7 +48266,7 @@
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/layers/odata-vector-layer.js:1067"
+            "line": " addon/components/layers/odata-vector-layer.js:1072"
         },
         {
             "message": "Missing item type\nPerforms 'getFeature' request to WFS-service related to layer.",
