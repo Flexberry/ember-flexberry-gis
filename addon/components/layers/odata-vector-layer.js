@@ -1072,7 +1072,7 @@ export default BaseVectorLayer.extend({
             if (leafletObject.statusLoadLayer) {
               leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
             }
-  
+
             return;
           }
 
@@ -1082,7 +1082,7 @@ export default BaseVectorLayer.extend({
           let unionJsts = loadedBoundsJsts.union(boundsJsts);
           let geojsonWriter = new jsts.io.GeoJSONWriter();
           loadedBounds = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
-        } 
+        }
         else {
           loadedBounds = bounds;
         }
@@ -1093,7 +1093,7 @@ export default BaseVectorLayer.extend({
         let newPart = queryNewBounds.intersects(this.geomToEWKT(loadedBounds));
 
         queryBuilder.where(oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart);
-        
+
         let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 
         let promise = new Ember.RSVP.Promise((resolve, reject) => {
@@ -1104,14 +1104,14 @@ export default BaseVectorLayer.extend({
               let l = this.addLayerObject(leafletObject, model, false);
               innerLayers.push(l);
             });
-            
+
             let e = { layers: innerLayers, results: Ember.A() };
             leafletObject.fire('load', e);
 
             Ember.RSVP.allSettled(e.results).then(() => {
               this._setLayerState();
               resolve();
-            });            
+            });
           });
         });
 
@@ -1133,7 +1133,7 @@ export default BaseVectorLayer.extend({
     this._super(...arguments);
 
     let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {      
+    if (!Ember.isNone(leafletMap)) {
       leafletMap.on('moveend', () => { this.continueLoad(); });
     }
   },
