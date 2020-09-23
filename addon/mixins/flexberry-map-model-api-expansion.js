@@ -132,9 +132,10 @@ export default Ember.Mixin.create(rhumbOperations, {
             }
           }
         }];
+    @param {Boolean} isUnion Get union or difference.
     @returns {Object} new multi-circuit object.
   */
-  createMulti(objects, failIfInvalid = true) {
+  createMulti(objects, isUnion = false, failIfInvalid = true) {
     let geojsonReader = new jsts.io.GeoJSONReader();
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let geometries = [];
@@ -183,7 +184,11 @@ export default Ember.Mixin.create(rhumbOperations, {
       for (var j = 0; j < geometries.length; j++) {
         if (i !== j) {
           if (geometries[i].intersects(geometries[j])) {
-            current = current.difference(geometries[j]);
+            if (isUnion) {
+              current = current.union(geometries[j]);
+            } else {
+              current = current.difference(geometries[j]);
+            }
           }
         }
       }
