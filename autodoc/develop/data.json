@@ -42993,6 +42993,11 @@
                     "name": "objects",
                     "description": "Array of objects to union.\nExample:\nlet objects = [\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.18425, 58.07197],\n            [56.21068, 58.07197],\n            [56.21068, 58.07987],\n            [56.18425, 58.07987],\n            [56.18425, 58.07197]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    },\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.19712, 58.06770],\n            [56.22322, 58.06770],\n            [56.22322, 58.07551],\n            [56.19712, 58.07551],\n            [56.19712, 58.06770]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    },\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.21644, 58.07864],\n            [56.23197, 58.07864],\n            [56.23197, 58.08608],\n            [56.21644, 58.08608],\n            [56.21644, 58.07864]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    }];",
                     "type": "Array"
+                },
+                {
+                    "name": "isUnion",
+                    "description": "Get union or difference.",
+                    "type": "Boolean"
                 }
             ],
             "return": {
@@ -43004,7 +43009,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 226,
+            "line": 231,
             "description": "Get geometry kind by geometry",
             "params": [
                 {
@@ -43022,7 +43027,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 248,
+            "line": 253,
             "description": "Create Object by rhumb.",
             "itemtype": "method",
             "name": "createPolygonObjectRhumb",
@@ -47986,11 +47991,11 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:226"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:231"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:248"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:253"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -49706,7 +49711,7 @@
         },
         {
             "message": "Missing item type\nGet geometry kind by geometry",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:226"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:231"
         },
         {
             "message": "Missing item type\nGet [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.",
