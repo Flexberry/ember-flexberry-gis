@@ -1082,8 +1082,7 @@ export default BaseVectorLayer.extend({
           let unionJsts = loadedBoundsJsts.union(boundsJsts);
           let geojsonWriter = new jsts.io.GeoJSONWriter();
           loadedBounds = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
-        }
-        else {
+        } else {
           loadedBounds = bounds;
         }
 
