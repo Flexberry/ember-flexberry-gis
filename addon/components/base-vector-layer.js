@@ -140,6 +140,7 @@ export default BaseLayer.extend({
           this._addLabelsToLeafletContainer(layers);
         }
 
+        leafletObject.fire('loadCompleted');
         resolve();
       });
     });
@@ -576,6 +577,42 @@ export default BaseLayer.extend({
       leafletObject: this.get('_leafletObject'),
       features: e.load ? this.loadLayerFeatures(e) : this.getLayerFeatures(e)
     });
+  },
+
+  /**
+    Handles zoomend
+  */
+  continueLoad() {
+  },
+
+  reload() {
+    let leafletObject = this.get('_leafletObject');
+    let map = this.get('leafletMap');
+
+    leafletObject.eachLayer((layerShape) => {
+      if (map.hasLayer(layerShape)) {
+        map.removeLayer(layerShape);
+      }
+    });
+    leafletObject.clearLayers();
+
+    if (leafletObject.models) {
+      leafletObject.models.clear();
+    }
+
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+      leafletObject._labelsLayer.eachLayer((layerShape) => {
+        if (map.hasLayer(layerShape)) {
+          map.removeLayer(layerShape);
+        }
+      });
+      leafletObject._labelsLayer.clearLayers();
+    }
+
+    this.set('loadedBounds', null);
+    let load = this.continueLoad();
+
+    return load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
   },
 
   /**
