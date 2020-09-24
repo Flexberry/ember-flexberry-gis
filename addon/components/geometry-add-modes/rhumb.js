@@ -422,7 +422,6 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
       let translateDirection = (direction) => {
         let factories = this.get('_objectDirections');
-        let _curDirection = this.get('_curDirection');
         let res = null;
 
         if (!Ember.isNone(direction)) {
