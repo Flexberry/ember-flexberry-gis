@@ -44,7 +44,6 @@ test('test function queryToMap', function (assert) {
     assert.deepEqual(querySpy.args[0][1], e);
     e.results[0].features.then((result)=> {
       assert.equal(result[0].id, 1);
-      
       done(1);
     });
     done(1);
