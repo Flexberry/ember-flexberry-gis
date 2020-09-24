@@ -630,7 +630,6 @@ let FlexberryMapComponent = Ember.Component.extend(
       // See 'destroyLeafletMap' implementations in mixins which are mixed to 'leaflet-map'.
       this._super(...arguments);
 
-      Ember.set('editable', null);
       leafletMap.off('moveend', this._moveend, this);
       leafletMap.off('zoomend', this._zoomend, this);
 
