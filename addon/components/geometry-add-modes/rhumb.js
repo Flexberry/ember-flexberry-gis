@@ -435,8 +435,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         }
 
         return res;
-      }
-
+      };
 
       let points = [];
       for (let i = 0; i < this._tableData.length; i++) {
