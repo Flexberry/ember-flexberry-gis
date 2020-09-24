@@ -131,11 +131,6 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   _availableDirection: null,
 
   /**
-    Current direction.
-  */
-  _curDirection: null,
-
-  /**
     Object direction.
 
     @property _objectDirections
