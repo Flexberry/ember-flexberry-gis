@@ -123,7 +123,7 @@ test('test method getRhumb for Polygon without hole', function (assert) {
     startPoint: [3, 7],
     crs: 'EPSG:4326',
     skip: 0,
-    isNep: false,
+    isHole: false,
     points:
     [
         {
@@ -175,7 +175,7 @@ test('test method getRhumb for Polygon with hole', function (assert) {
     startPoint: [3, 7],
     crs: 'EPSG:4326',
     skip: 0,
-    isNep: false,
+    isHole: false,
     points:
     [
         {
@@ -204,7 +204,7 @@ test('test method getRhumb for Polygon with hole', function (assert) {
     startPoint: [4, 4],
     crs: 'EPSG:4326',
     skip: 0,
-    isNep: true,
+    isHole: true,
     points:
     [
         {
@@ -260,7 +260,7 @@ test('test method getRhumb for MultiPolygon with part', function (assert) {
     startPoint: [3, 7],
     crs: 'EPSG:4326',
     skip: 0,
-    isNep: false,
+    isHole: false,
     points:
     [
         {
@@ -289,7 +289,7 @@ test('test method getRhumb for MultiPolygon with part', function (assert) {
     startPoint: [9, 3],
     crs: 'EPSG:4326',
     skip: 0,
-    isNep: false,
+    isHole: false,
     points:
     [
         {
@@ -346,7 +346,7 @@ test('test method getRhumb for MultiPolygon with part and hole', function (asser
     startPoint: [3, 7],
     crs: 'EPSG:4326',
     skip: 0,
-    isNep: false,
+    isHole: false,
     points:
     [
         {
@@ -375,7 +375,7 @@ test('test method getRhumb for MultiPolygon with part and hole', function (asser
     startPoint: [4, 4],
     crs: 'EPSG:4326',
     skip: 0,
-    isNep: true,
+    isHole: true,
     points:
     [
         {
@@ -404,7 +404,7 @@ test('test method getRhumb for MultiPolygon with part and hole', function (asser
     startPoint: [9, 3],
     crs: 'EPSG:4326',
     skip: 0,
-    isNep: false,
+    isHole: false,
     points:
     [
         {

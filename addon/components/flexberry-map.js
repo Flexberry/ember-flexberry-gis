@@ -104,7 +104,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     leafletOptions: [
 
       // Map state options.
-      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs', 'preferCanvas',
+      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs', 'preferCanvas', 'editable',
 
       // Interaction options.
       'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
@@ -167,6 +167,15 @@ let FlexberryMapComponent = Ember.Component.extend(
       @default null
     */
     zoom: null,
+
+    /**
+      Editable.
+
+      @property editable
+      @type Boolean
+      @default true
+    */
+    editable: true,
 
     /**
       Forces the map's zoom level to always be a multiple of this.
@@ -490,12 +499,6 @@ let FlexberryMapComponent = Ember.Component.extend(
       Ember.run.scheduleOnce('afterRender', this, function () {
         this.load(leafletMap, mapApi);
       });
-
-      let editTools = Ember.get(leafletMap, 'editTools');
-      if (Ember.isNone(editTools)) {
-        editTools = new L.Editable(leafletMap);
-        Ember.set(leafletMap, 'editTools', editTools);
-      }
     },
 
     /**
@@ -627,6 +630,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       // See 'destroyLeafletMap' implementations in mixins which are mixed to 'leaflet-map'.
       this._super(...arguments);
 
+      Ember.set('editable', null);
       leafletMap.off('moveend', this._moveend, this);
       leafletMap.off('zoomend', this._zoomend, this);
 
@@ -657,11 +661,6 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       if (this.get('_hasServiceLayer')) {
         this.get('mapApi').addToApi('serviceLayer', undefined);
-      }
-
-      let editTools = Ember.get(leafletMap, 'editTools');
-      if (!Ember.isNone(editTools)) {
-        Ember.set(leafletMap, 'editTools', null);
       }
 
       this.sendAction('leafletDestroy');

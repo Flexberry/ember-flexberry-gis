@@ -1043,7 +1043,7 @@ export default Ember.Mixin.create(SnapDraw, {
       case 'Polygon':
         for (let i = 0; i < coords.length; i++) {
           result.push(coordToRhumbs('Polygon', coords[i]));
-          result[i].isNep = i > 0 ? true : false;
+          result[i].isHole = i > 0 ? true : false;
         }
 
         break;
@@ -1052,7 +1052,7 @@ export default Ember.Mixin.create(SnapDraw, {
         for (let i = 0; i < coords.length; i++) {
           for (let j = 0; j < coords[i].length; j++) {
             result.push(coordToRhumbs('Polygon', coords[i][j]));
-            result[result.length - 1].isNep = j > 0 ? true : false;
+            result[result.length - 1].isHole = j > 0 ? true : false;
           }
         }
 
