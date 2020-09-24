@@ -24,13 +24,9 @@ test('test function queryToMap', function (assert) {
     center: [51.505, -0.09],
     zoom: 13
   });
-  let testObj = {
-    query(e) {
-      e.results.push({ features: Ember.RSVP.resolve([{ id: '1' }]) });
-    }
-  };
-  let querySpy = sinon.spy(testObj, 'query');
-  leafletMap.on('flexberry-map:query', testObj.query, this);
+  let querySpy = sinon.stub(leafletMap, 'fire', (st, e) => {
+    e.results.push({ features: Ember.RSVP.resolve([{ id: '1' }]) });
+  });
   let component = this.subject({
     _leafletObject: leafletMap
   });
@@ -43,9 +39,12 @@ test('test function queryToMap', function (assert) {
     assert.equal(e.results.length, 1);
     assert.equal(e.queryFilter, '1');
     assert.equal(e.mapObjectSetting, '2');
+    assert.equal(querySpy.callCount, 1);
+    assert.equal(querySpy.args[0][0], 'flexberry-map:query');
+    assert.deepEqual(querySpy.args[0][1], e);
     e.results[0].features.then((result)=> {
       assert.equal(result[0].id, 1);
-      assert.equal(querySpy.callCount, 1);
+      
       done(1);
     });
     done(1);
