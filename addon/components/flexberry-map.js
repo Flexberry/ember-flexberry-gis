@@ -490,6 +490,12 @@ let FlexberryMapComponent = Ember.Component.extend(
       Ember.run.scheduleOnce('afterRender', this, function () {
         this.load(leafletMap, mapApi);
       });
+
+      let editTools = Ember.get(leafletMap, 'editTools');
+      if (Ember.isNone(editTools)) {
+        editTools = new L.Editable(leafletMap);
+        Ember.set(leafletMap, 'editTools', editTools);
+      }
     },
 
     /**
@@ -651,6 +657,11 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       if (this.get('_hasServiceLayer')) {
         this.get('mapApi').addToApi('serviceLayer', undefined);
+      }
+
+      let editTools = Ember.get(leafletMap, 'editTools');
+      if (!Ember.isNone(editTools)) {
+        Ember.set(leafletMap, 'editTools', null);
       }
 
       this.sendAction('leafletDestroy');
