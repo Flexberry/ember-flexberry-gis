@@ -26,12 +26,12 @@ test('test method getRhumb for LineString', function (assert) {
     points:
     [
         {
-          rhumb: 'ЮВ',
+          rhumb: 'SE',
           angle: 0,
           distance: 444780.3209341317
         },
         {
-          rhumb: 'СВ',
+          rhumb: 'NE',
           angle: 90,
           distance: 555213.4562030523
         }
@@ -67,12 +67,12 @@ test('test method getRhumb for MultiLineString', function (assert) {
     points:
     [
         {
-          rhumb: 'ЮВ',
+          rhumb: 'SE',
           angle: 0,
           distance: 444780.3209341317
         },
         {
-          rhumb: 'СВ',
+          rhumb: 'NE',
           angle: 90,
           distance: 555213.4562030523
         }
@@ -86,12 +86,12 @@ test('test method getRhumb for MultiLineString', function (assert) {
     points:
     [
         {
-          rhumb: 'ЮВ',
+          rhumb: 'SE',
           angle: 0,
           distance: 444780.3209341316
         },
         {
-          rhumb: 'СВ',
+          rhumb: 'NE',
           angle: 90,
           distance: 443087.797530127
         }
@@ -127,22 +127,22 @@ test('test method getRhumb for Polygon without hole', function (assert) {
     points:
     [
         {
-          rhumb: 'ЮВ',
+          rhumb: 'SE',
           angle: 0,
           distance: 444780.3209341317
         },
         {
-          rhumb: 'СВ',
+          rhumb: 'NE',
           angle: 90,
           distance: 555213.4562030523
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 0,
           distance: 444780.3209341317
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 90,
           distance: 551831.2448362056
         }
@@ -179,22 +179,22 @@ test('test method getRhumb for Polygon with hole', function (assert) {
     points:
     [
         {
-          rhumb: 'ЮВ',
+          rhumb: 'SE',
           angle: 0,
           distance: 444780.3209341317
         },
         {
-          rhumb: 'СВ',
+          rhumb: 'NE',
           angle: 90,
           distance: 555213.4562030523
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 0,
           distance: 444780.3209341317
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 90,
           distance: 551831.2448362056
         }
@@ -208,22 +208,22 @@ test('test method getRhumb for Polygon with hole', function (assert) {
     points:
     [
         {
-          rhumb: 'СВ',
+          rhumb: 'NE',
           angle: 90,
           distance: 110924.21460672919
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 0,
           distance: 111195.08023353288
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 90,
           distance: 110771.94938253175
         },
         {
-          rhumb: 'ЮВ',
+          rhumb: 'SE',
           angle: 0,
           distance: 111195.08023353288
         }
@@ -264,22 +264,22 @@ test('test method getRhumb for MultiPolygon with part', function (assert) {
     points:
     [
         {
-          rhumb: 'ЮВ',
+          rhumb: 'SE',
           angle: 0,
           distance: 444780.3209341317
         },
         {
-          rhumb: 'СВ',
+          rhumb: 'NE',
           angle: 90,
           distance: 555213.4562030523
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 0,
           distance: 444780.3209341317
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 90,
           distance: 551831.2448362056
         }
@@ -293,22 +293,22 @@ test('test method getRhumb for MultiPolygon with part', function (assert) {
     points:
     [
         {
-          rhumb: 'ЮВ',
+          rhumb: 'SE',
           angle: 0,
           distance: 111195.08023353288
         },
         {
-          rhumb: 'СВ',
+          rhumb: 'NE',
           angle: 90,
           distance: 111127.34319504516
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 0,
           distance: 111195.08023353288
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 90,
           distance: 111042.69124061048
         }
@@ -350,22 +350,22 @@ test('test method getRhumb for MultiPolygon with part and hole', function (asser
     points:
     [
         {
-          rhumb: 'ЮВ',
+          rhumb: 'SE',
           angle: 0,
           distance: 444780.3209341317
         },
         {
-          rhumb: 'СВ',
+          rhumb: 'NE',
           angle: 90,
           distance: 555213.4562030523
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 0,
           distance: 444780.3209341317
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 90,
           distance: 551831.2448362056
         }
@@ -379,22 +379,22 @@ test('test method getRhumb for MultiPolygon with part and hole', function (asser
     points:
     [
         {
-          rhumb: 'СВ',
+          rhumb: 'NE',
           angle: 90,
           distance: 110924.21460672919
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 0,
           distance: 111195.08023353288
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 90,
           distance: 110771.94938253175
         },
         {
-          rhumb: 'ЮВ',
+          rhumb: 'SE',
           angle: 0,
           distance: 111195.08023353288
         }
@@ -408,22 +408,22 @@ test('test method getRhumb for MultiPolygon with part and hole', function (asser
     points:
     [
         {
-          rhumb: 'ЮВ',
+          rhumb: 'SE',
           angle: 0,
           distance: 111195.08023353288
         },
         {
-          rhumb: 'СВ',
+          rhumb: 'NE',
           angle: 90,
           distance: 111127.34319504516
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 0,
           distance: 111195.08023353288
         },
         {
-          rhumb: 'СЗ',
+          rhumb: 'NW',
           angle: 90,
           distance: 111042.69124061048
         }

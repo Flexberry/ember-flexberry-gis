@@ -983,20 +983,20 @@ export default Ember.Mixin.create(SnapDraw, {
 
       // Calculates rhumb.
       if (bearing <= 90 && bearing >= 0) {
-        // СВ
-        rhumb = 'СВ';
+        // NE
+        rhumb = 'NE';
         angle = bearing;
       } else if (bearing <= 180 && bearing >= 90) {
-        // ЮВ
-        rhumb = 'ЮВ';
+        // SE
+        rhumb = 'SE';
         angle = (180 - bearing);
       } else if (bearing >= -180 && bearing <= -90) {
-        // ЮЗ
-        rhumb = 'ЮЗ';
+        // SW
+        rhumb = 'SW';
         angle = (180 + bearing);
       } if (bearing <= 0 && bearing >= -90) {
-        // СЗ
-        rhumb = 'СЗ';
+        // NW
+        rhumb = 'NW';
         angle = (-1 * bearing);
       }
 
