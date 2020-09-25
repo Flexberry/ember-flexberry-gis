@@ -59,10 +59,10 @@ test('test method getRhumb for LineString', function (assert) {
   let promise = subject.getRhumb();
 
   //Assert
-  assert.ok(promise instanceof Ember.RSVP.Promise, 'Является ли результат работы функции Promise');
+  assert.ok(promise instanceof Ember.RSVP.Promise, 'Check result instance of Promise');
   promise.then(
     (t) => {
-      assert.deepEqual(t, resObj, 'Сравнение тестового объекта и результирующего');
+      assert.deepEqual(t, resObj, 'Equals rezult object with test object');
       done();
     });
 });
@@ -122,10 +122,10 @@ test('test method getRhumb for Polygon', function (assert) {
   let promise = subject.getRhumb();
 
   //Assert
-  assert.ok(promise instanceof Ember.RSVP.Promise, 'Является ли результат работы функции Promise');
+  assert.ok(promise instanceof Ember.RSVP.Promise, 'Check result instance of Promise');
   promise.then(
     (t) => {
-      assert.deepEqual(t, resObj, 'Сравнение тестового объекта и результирующего');
+      assert.deepEqual(t, resObj, 'Equals rezult object with test object');
       done();
     });
 });

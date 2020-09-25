@@ -19,7 +19,7 @@ test('test method _getDistanceBetweenObjects between polyline and polygon', func
   let result = subject._getDistanceBetweenObjects(firstObj, secondObj);
 
   //Assert
-  assert.equal(result, 55820.041009409564, 'Сравнение тестовой дистанции и результирующей дистанции');
+  assert.equal(result, 55820.041009409564, 'Equals rezult distance with test distance');
 });
 
 test('test method _getDistanceBetweenObjects between marker and polygon', function(assert) {
@@ -35,7 +35,7 @@ test('test method _getDistanceBetweenObjects between marker and polygon', functi
   let result = subject._getDistanceBetweenObjects(firstObj, secondObj);
 
   //Assert
-  assert.equal(result, 55597.65129192688, 'Сравнение тестовой дистанции и результирующей дистанции');
+  assert.equal(result, 55597.65129192688, 'Equals rezult distance with test distance');
 });
 
 test('test method _getDistanceBetweenObjects between marker and marker', function(assert) {
@@ -51,5 +51,5 @@ test('test method _getDistanceBetweenObjects between marker and marker', functio
   let result = subject._getDistanceBetweenObjects(firstObj, secondObj);
 
   //Assert
-  assert.equal(result, 111.19508023354534, 'Сравнение тестовой дистанции и результирующей дистанции');
+  assert.equal(result, 111.19508023354534, 'Equals rezult distance with test distance');
 });

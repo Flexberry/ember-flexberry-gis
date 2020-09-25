@@ -30,15 +30,15 @@ test('test method deleteLayerObjects', function(assert) {
   let result = subject.deleteLayerObjects('1', ['1']);
 
   //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise);
+  assert.ok(result instanceof Ember.RSVP.Promise, 'Check result instance of Promise');
   result.then(()=> {
-    assert.equal(spyDeleteLayerFromAttrPanelFunc.callCount, 1, 'Количество вызовов _deleteLayerFromAttrPanel = 1');
-    assert.equal(getMLFeature.callCount, 1, 'Количество вызовов _getModelLayerFeature = 1');
-    assert.equal(getMLFeature.args[0][0], '1', 'Первый аргумент в функции _getModelLayerFeature = 1');
-    assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Второй аргумент в функции _getModelLayerFeature = [1]');
-    assert.equal(spyRemoveLayer.callCount, 1, 'Количество вызовов removeLayer = 1');
-    assert.equal(spyRemoveLayer.args[0][0].id, '1', 'Первый аргумент в функции removeLayer = 1');
-    assert.equal(testLeafletObject.getLayers().length, 0, 'Количесво слоев в объекте = 1');
+    assert.equal(spyDeleteLayerFromAttrPanelFunc.callCount, 1, 'Check call count to method _deleteLayerFromAttrPanel');
+    assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
+    assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+    assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Check call second arg to method _getModelLayerFeature');
+    assert.equal(spyRemoveLayer.callCount, 1, 'Check call count to method removeLayer');
+    assert.equal(spyRemoveLayer.args[0][0].id, '1', 'Check call first arg to method removeLayer');
+    assert.equal(testLeafletObject.getLayers().length, 0, 'Count layers in object');
     done();
     spyDeleteLayerFromAttrPanelFunc.restore();
     spyRemoveLayer.restore();

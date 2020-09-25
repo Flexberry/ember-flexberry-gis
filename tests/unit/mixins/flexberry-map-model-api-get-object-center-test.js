@@ -18,7 +18,7 @@ test('return current center of point', function(assert) {
   let resObj = L.latLng(1, 1);
 
   //Assert
-  assert.deepEqual(result, resObj, 'Сравнение тестового объекта и результирующего');
+  assert.deepEqual(result, resObj, 'Equals rezult object with test object');
 });
 
 test('return current center of polygon', function(assert) {
@@ -33,7 +33,7 @@ test('return current center of polygon', function(assert) {
   let resObj = L.latLng(2, 1);
 
   //Assert
-  assert.deepEqual(result, resObj, 'Сравнение тестового объекта и результирующего');
+  assert.deepEqual(result, resObj, 'Equals rezult object with test object');
 });
 
 test('return current center of polyline', function(assert) {
@@ -48,5 +48,5 @@ test('return current center of polyline', function(assert) {
   let resObj = L.latLng(3, 3);
 
   //Assert
-  assert.deepEqual(result, resObj, 'Сравнение тестового объекта и результирующего');
+  assert.deepEqual(result, resObj, 'Equals rezult object with test object');
 });
