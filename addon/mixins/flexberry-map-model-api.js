@@ -958,7 +958,49 @@ export default Ember.Mixin.create(SnapDraw, {
   },
 
   /**
-    Get the object rhumb.
+    Get a rhumb object for [LineString, MultiLineString, Polygon, MultiPolygon]. Parameters is object in GeoJSON
+    format and name of coordinate reference system. Calculates rhumb between points. Use @turf/rhumb-bearing and
+    @turf/rhumb-distance libraries to calculate angle and distance between points. Distance calculation is
+    approximate and in meters. Names of direction is [NE, SE, NW, SW]. Angle calculation in degree.
+    Returns array of object:
+
+    ```javascript
+    [{
+      type - type of object is [LineString, Polygon],
+      crs - name of coordinate reference system of start point,
+      startPoint - coordinates of start point,
+      skip - how many rhumb skip from beginning (always 0),
+      points - array objects of rhumbs,
+      hole - if this part is hole then true else false. Only Polygon and MultiPolygon have it.
+    }]
+    ```
+
+    Objects of rhumbs consist from angle, distance and direction of rhumb. Example:
+
+    ```javascript
+    {
+      rhumb: 'NE',
+      angle: 45,
+      distance: 1000
+    }
+    ```
+
+    Example of method call:
+
+    ```javascript
+    var feature = {
+      type: "Feature",
+      geometry:
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [[56.09419, 58.08895], [56.093588, 58.088632], [56.094269, 58.088632], [56.094269, 58.088902], [56.09419, 58.08895]]
+        ]
+      }
+    };
+
+    var result = mapApi.mapModel.getRhumb(feature, 'EPSG:4326');
+    ```
     @method  getRhumb
     @param {Object} feature GeoJson Feature.
     @param {string} crsName Name of coordinate reference system, in which to give coordinates.
@@ -968,11 +1010,11 @@ export default Ember.Mixin.create(SnapDraw, {
     let coords = feature.geometry.coordinates;
     let result = [];
 
-    var calcRhumb = function (point1, point2) {
+    let calcRhumb = function (point1, point2) {
       const pointFrom = helpers.point([point2[0], point2[1]]);
       const pointTo = helpers.point([point1[0], point1[1]]);
 
-      // We get the distance and translate into meters. Сalculate distance is the approximate.
+      // We get the distance and translate into meters. Distance calculattion is approximate.
       const distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
 
       // Get the angle.
@@ -1018,7 +1060,7 @@ export default Ember.Mixin.create(SnapDraw, {
         point1 = coords[i];
         n = !Ember.isNone(coords[i + 1]) ? i + 1 : 0;
         point2 = coords[n];
-        rhumbs.push(calcRhumb(point1, point2));
+        rhumbs.push(_calcRhumb(point1, point2));
       }
 
       return {
