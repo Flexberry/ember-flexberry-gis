@@ -50,7 +50,15 @@ test('test method editLayerObject with EPSG:4326', function(assert) {
   assert.ok(result instanceof Ember.RSVP.Promise, 'Check result instance of Promise');
   result.then((res)=> {
     assert.equal(spyEditLayer.callCount, 1, 'Check call count to method editLayer');
-    assert.deepEqual(res._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]], 'Equals rezult coordinates with test coordinates');
+    assert.deepEqual(res._latlngs,
+      [
+        [
+          L.latLng(0, 100),
+          L.latLng(0, 101),
+          L.latLng(1, 101),
+          L.latLng(1, 100)
+        ]
+      ], 'Equals rezult coordinates with test coordinates');
     assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
     assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
     assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Check call second arg to method _getModelLayerFeature');
