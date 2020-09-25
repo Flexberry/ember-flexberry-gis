@@ -1010,7 +1010,7 @@ export default Ember.Mixin.create(SnapDraw, {
     let coords = feature.geometry.coordinates;
     let result = [];
 
-    let calcRhumb = function (point1, point2) {
+    var calcRhumb = function (point1, point2) {
       const pointFrom = helpers.point([point2[0], point2[1]]);
       const pointTo = helpers.point([point1[0], point1[1]]);
 
@@ -1060,7 +1060,7 @@ export default Ember.Mixin.create(SnapDraw, {
         point1 = coords[i];
         n = !Ember.isNone(coords[i + 1]) ? i + 1 : 0;
         point2 = coords[n];
-        rhumbs.push(_calcRhumb(point1, point2));
+        rhumbs.push(calcRhumb(point1, point2));
       }
 
       return {
