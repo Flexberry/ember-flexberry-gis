@@ -9,6 +9,7 @@ let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiMixin);
 
 test('test method copyObject', function(assert) {
   //Arrange
+  assert.expect(8);
   let done = assert.async(1);
   let sourceLeafletLayer = L.featureGroup();
   let destinationLeafletLayer = L.featureGroup();

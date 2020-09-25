@@ -21,6 +21,7 @@ let leafletLayer = {
 
 test('test method editLayerObject with EPSG:4326', function(assert) {
   //Arrange
+  assert.expect(6);
   let done = assert.async(1);
   let ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
@@ -48,8 +49,8 @@ test('test method editLayerObject with EPSG:4326', function(assert) {
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise);
   result.then((res)=> {
-    assert.equal(spyEditLayer.callCount, 1);
-    assert.deepEqual(res._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]]);
+    assert.equal(spyEditLayer.callCount, 1, 'Количесво слоев в объекте = 1');
+    assert.deepEqual(res._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]], 'Сравнение результирующих координат и тестовых');
     assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
     assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
     assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Check call second arg to method _getModelLayerFeature');
@@ -62,6 +63,7 @@ test('test method editLayerObject with EPSG:4326', function(assert) {
 
 test('test method editLayerObject with EPSG:3395', function(assert) {
   //Arrange
+  assert.expect(7);
   let done = assert.async(1);
   let ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
@@ -90,8 +92,8 @@ test('test method editLayerObject with EPSG:3395', function(assert) {
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise);
   result.then((res)=> {
-    assert.equal(spyEditLayer.callCount, 1);
-    assert.equal(spyUnProject.callCount, 5);
+    assert.equal(spyEditLayer.callCount, 1, 'Количество вызовов editLayer = 1');
+    assert.equal(spyUnProject.callCount, 5, 'Количество вызовов unproject = 5');
     assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
     assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
     assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Check call second arg to method _getModelLayerFeature');
@@ -103,7 +105,7 @@ test('test method editLayerObject with EPSG:3395', function(assert) {
           L.latLng(0.00000904328947124462, 0.0009072984369607167),
           L.latLng(0.00000904328947124462, 0.0008983152841195215)
         ]
-      ]);
+      ], 'Сравнение результирующих координат и тестовых');
     done();
     spyUnProject.restore();
     getMLFeature.restore();

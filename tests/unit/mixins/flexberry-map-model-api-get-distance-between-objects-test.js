@@ -8,6 +8,7 @@ let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiMixin);
 
 test('test method _getDistanceBetweenObjects between polyline and polygon', function(assert) {
   //Arrange
+  assert.expect(1);
   let firstObj = L.polyline([[1.001, 1.001], [1.003, 1.003], [1.005, 1.005]]);
   firstObj.feature = firstObj.toGeoJSON();
   let secondObj = L.polygon([[1.001, 1.001], [1.001, 1.002], [1.003, 1.001], [1.003, 0]]);
@@ -18,11 +19,12 @@ test('test method _getDistanceBetweenObjects between polyline and polygon', func
   let result = subject._getDistanceBetweenObjects(firstObj, secondObj);
 
   //Assert
-  assert.equal(result, 55820.041009409564);
+  assert.equal(result, 55820.041009409564, 'Сравнение тестовой дистанции и результирующей дистанции');
 });
 
 test('test method _getDistanceBetweenObjects between marker and polygon', function(assert) {
   //Arrange
+  assert.expect(1);
   let firstObj = L.marker([1.001, 1.001]);
   firstObj.feature = firstObj.toGeoJSON();
   let secondObj = L.polygon([[1.001, 1.001], [1.001, 1.002], [1.003, 1.001], [1.003, 0]]);
@@ -33,11 +35,12 @@ test('test method _getDistanceBetweenObjects between marker and polygon', functi
   let result = subject._getDistanceBetweenObjects(firstObj, secondObj);
 
   //Assert
-  assert.equal(result, 55597.65129192688);
+  assert.equal(result, 55597.65129192688, 'Сравнение тестовой дистанции и результирующей дистанции');
 });
 
 test('test method _getDistanceBetweenObjects between marker and marker', function(assert) {
   //Arrange
+  assert.expect(1);
   let firstObj = L.marker([1.001, 1.001]);
   firstObj.feature = firstObj.toGeoJSON();
   let secondObj = L.marker([1.001, 1.002]);
@@ -48,5 +51,5 @@ test('test method _getDistanceBetweenObjects between marker and marker', functio
   let result = subject._getDistanceBetweenObjects(firstObj, secondObj);
 
   //Assert
-  assert.equal(result, 111.19508023354534);
+  assert.equal(result, 111.19508023354534, 'Сравнение тестовой дистанции и результирующей дистанции');
 });

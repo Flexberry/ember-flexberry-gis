@@ -8,6 +8,7 @@ let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiMixin);
 
 test('test method getRhumb for LineString', function (assert) {
   //Arrange
+  assert.expect(2);
   let done = assert.async(1);
   let testPolygon = L.polygon([[-41, -111.04], [45, -111.04], [45, -104.05], [41, -104.05]]);
   let subject = mapApiMixinObject.create({
@@ -58,16 +59,17 @@ test('test method getRhumb for LineString', function (assert) {
   let promise = subject.getRhumb();
 
   //Assert
-  assert.ok(promise instanceof Ember.RSVP.Promise);
+  assert.ok(promise instanceof Ember.RSVP.Promise, 'Является ли результат работы функции Promise');
   promise.then(
     (t) => {
-      assert.deepEqual(t, resObj);
+      assert.deepEqual(t, resObj, 'Сравнение тестового объекта и результирующего');
       done();
     });
 });
 
 test('test method getRhumb for Polygon', function (assert) {
   //Arrange
+  assert.expect(2);
   let done = assert.async(1);
   let testPolygon = L.polygon([[[[-41, -111.04], [45, -111.04], [45, -104.05], [41, -104.05]]]]);
   let subject = mapApiMixinObject.create({
@@ -120,10 +122,10 @@ test('test method getRhumb for Polygon', function (assert) {
   let promise = subject.getRhumb();
 
   //Assert
-  assert.ok(promise instanceof Ember.RSVP.Promise);
+  assert.ok(promise instanceof Ember.RSVP.Promise, 'Является ли результат работы функции Promise');
   promise.then(
     (t) => {
-      assert.deepEqual(t, resObj);
+      assert.deepEqual(t, resObj, 'Сравнение тестового объекта и результирующего');
       done();
     });
 });

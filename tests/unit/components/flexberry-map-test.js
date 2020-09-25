@@ -20,6 +20,7 @@ test('it should create leaflet map on didInsertElement', function (assert) {
 });
 
 test('test function queryToMap', function (assert) {
+  assert.expect(8);
   let leafletMap = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
     zoom: 13
@@ -34,16 +35,16 @@ test('test function queryToMap', function (assert) {
 
   let res = component._queryToMap('1', '2');
 
-  assert.ok(res instanceof Ember.RSVP.Promise);
+  assert.ok(res instanceof Ember.RSVP.Promise, 'Является ли результат работы функции Promise');
   res.then((e)=> {
-    assert.equal(e.results.length, 1);
-    assert.equal(e.queryFilter, '1');
-    assert.equal(e.mapObjectSetting, '2');
-    assert.equal(querySpy.callCount, 1);
-    assert.equal(querySpy.args[0][0], 'flexberry-map:query');
-    assert.deepEqual(querySpy.args[0][1], e);
+    assert.equal(e.results.length, 1, 'Длина массива results = 1');
+    assert.equal(e.queryFilter, '1', 'Правильно ли передан параметр queryFilter');
+    assert.equal(e.mapObjectSetting, '2', 'Правильно ли передан параметр mapObjectSetting');
+    assert.equal(querySpy.callCount, 1, 'Колличество вызовов функции fire');
+    assert.equal(querySpy.args[0][0], 'flexberry-map:query', 'Первый аргумент переданный в фукнциию fire - flexberry-map:query');
+    assert.deepEqual(querySpy.args[0][1], e, 'Второй аргумент переданный в фукнциию fire - e');
     e.results[0].features.then((result)=> {
-      assert.equal(result[0].id, 1);
+      assert.equal(result[0].id, 1, 'Проверка результата');
       done(1);
     });
     done(1);

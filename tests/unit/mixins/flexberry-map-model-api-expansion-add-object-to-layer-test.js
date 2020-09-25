@@ -12,6 +12,7 @@ let geoJsonObject = L.polygon([[0, 100], [0, 101], [1, 101], [1, 100]]).toGeoJSO
 
 test('test method addObjectToLayer with EPSG:4326', function(assert) {
   //Arrange
+  assert.expect(5);
   let ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
     knownForType() {
@@ -34,9 +35,9 @@ test('test method addObjectToLayer with EPSG:4326', function(assert) {
   let result = subject.addObjectToLayer('1', geoJsonObject);
 
   //Assert
-  assert.equal(leafletObject.getLayers().length, 1);
-  assert.equal(result.layerId, '1');
-  assert.deepEqual(result._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]]);
+  assert.equal(leafletObject.getLayers().length, 1, 'Количесво слоев в объекте = 1');
+  assert.equal(result.layerId, '1', 'Id слоя = 1');
+  assert.deepEqual(result._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]], 'Сравнение результирующих координат и тестовых');
   assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
   assert.equal(getMLObject.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
   ownerStub.restore();
@@ -45,6 +46,7 @@ test('test method addObjectToLayer with EPSG:4326', function(assert) {
 
 test('test method addObjectToLayer with EPSG:3395', function(assert) {
   //Arrange
+  assert.expect(5);
   let ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
     knownForType() {
@@ -70,8 +72,8 @@ test('test method addObjectToLayer with EPSG:3395', function(assert) {
   let result = subject.addObjectToLayer('1', geoJsonObject, 'EPSG:3395');
 
   //Assert
-  assert.equal(leafletObject.getLayers().length, 1);
-  assert.equal(result.layerId, '1');
+  assert.equal(leafletObject.getLayers().length, 1, 'Количесво слоев в объекте = 1');
+  assert.equal(result.layerId, '1', 'Id слоя = 1');
   assert.deepEqual(result._latlngs,
     [
       [
@@ -80,7 +82,7 @@ test('test method addObjectToLayer with EPSG:3395', function(assert) {
         L.latLng(0.00000904328947124462, 0.0009072984369607167),
         L.latLng(0.00000904328947124462, 0.0008983152841195215)
       ]
-    ]);
+    ], 'Сравнение результирующих координат и тестовых');
   assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
   assert.equal(getMLObject.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
   ownerStub.restore();

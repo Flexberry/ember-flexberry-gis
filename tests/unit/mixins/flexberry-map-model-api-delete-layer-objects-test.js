@@ -9,6 +9,7 @@ let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiMixin);
 
 test('test method deleteLayerObjects', function(assert) {
   //Arrange
+  assert.expect(8);
   let done = assert.async(1);
   let testLeafletObject = L.featureGroup();
   let polygon = L.polygon([[1, 1], [2, 5], [2, 5]]).addTo(testLeafletObject);
@@ -31,13 +32,13 @@ test('test method deleteLayerObjects', function(assert) {
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise);
   result.then(()=> {
-    assert.equal(spyDeleteLayerFromAttrPanelFunc.callCount, 1);
-    assert.equal(getMLFeature.callCount, 1);
-    assert.equal(getMLFeature.args[0][0], '1');
-    assert.deepEqual(getMLFeature.args[0][1], ['1']);
-    assert.equal(spyRemoveLayer.callCount, 1);
-    assert.equal(spyRemoveLayer.args[0][0].id, '1');
-    assert.equal(testLeafletObject.getLayers().length, 0);
+    assert.equal(spyDeleteLayerFromAttrPanelFunc.callCount, 1, 'Количество вызовов _deleteLayerFromAttrPanel = 1');
+    assert.equal(getMLFeature.callCount, 1, 'Количество вызовов _getModelLayerFeature = 1');
+    assert.equal(getMLFeature.args[0][0], '1', 'Первый аргумент в функции _getModelLayerFeature = 1');
+    assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Второй аргумент в функции _getModelLayerFeature = [1]');
+    assert.equal(spyRemoveLayer.callCount, 1, 'Количество вызовов removeLayer = 1');
+    assert.equal(spyRemoveLayer.args[0][0].id, '1', 'Первый аргумент в функции removeLayer = 1');
+    assert.equal(testLeafletObject.getLayers().length, 0, 'Количесво слоев в объекте = 1');
     done();
     spyDeleteLayerFromAttrPanelFunc.restore();
     spyRemoveLayer.restore();
