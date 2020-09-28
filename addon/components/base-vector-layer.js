@@ -115,25 +115,33 @@ export default BaseLayer.extend({
   _setFeaturesProcessCallback() {
     let leafletObject = this.get('_leafletObject');
     leafletObject.on('load', (loaded) => {
-      this._featuresProcessCallback(loaded.layers);
+      let promise = this._featuresProcessCallback(loaded.layers);
+      if (loaded.results && Ember.isArray(loaded.results)) {
+        loaded.results.push(promise);
+      }
     });
   },
 
   _featuresProcessCallback(layers) {
-    let leafletObject = this.get('_leafletObject');
+    return new Ember.RSVP.Promise((resolve) => {
+      let leafletObject = this.get('_leafletObject');
 
-    if (!layers) {
-      return;
-    }
-
-    let featuresProcessCallback = Ember.get(leafletObject, 'featuresProcessCallback');
-    let p = typeof featuresProcessCallback === 'function' ? featuresProcessCallback(layers) : Ember.RSVP.resolve();
-    p.then(() => {
-      this._addLayersOnMap(layers);
-
-      if (this.get('labelSettings.signMapObjects')) {
-        this._addLabelsToLeafletContainer(layers);
+      if (!layers) {
+        resolve();
+        return;
       }
+
+      let featuresProcessCallback = Ember.get(leafletObject, 'featuresProcessCallback');
+      let p = typeof featuresProcessCallback === 'function' ? featuresProcessCallback(layers) : Ember.RSVP.resolve();
+      p.then(() => {
+        this._addLayersOnMap(layers);
+
+        if (this.get('labelSettings.signMapObjects')) {
+          this._addLabelsToLeafletContainer(layers);
+        }
+
+        resolve();
+      });
     });
   },
 
@@ -1180,7 +1188,11 @@ export default BaseLayer.extend({
       }
 
       this._createStringLabel(labelsLayer, layers);
-      this.set('_labelsLayer', labelsLayer);
+      if (Ember.isNone(this.get('_labelsLayer'))) {
+        this.set('_labelsLayer', labelsLayer);
+        this._checkZoomPane();
+      }
+
       if (this.get('settings.typeGeometry') === 'polyline') {
         this._updatePositionLabelForLine();
       }
@@ -1255,5 +1267,5 @@ export default BaseLayer.extend({
         this._removeLabelsFromLeafletContainer();
       }
     }
-  },
+  }
 });

@@ -54,11 +54,15 @@ export default Ember.Mixin.create(rhumbOperations, {
 
     let newObj = geoJSON.getLayers()[0];
 
-    leafletObject.addLayer(newObj);
+    let e = { layers: [newObj], results: Ember.A() };
+    leafletObject.fire('load', e);
 
-    newObj.layerId = layerId;
-
-    return newObj;
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      Ember.RSVP.allSettled(e.results).then(() => {
+        newObj.layerId = layerId;
+        resolve(newObj);
+      });
+    });
   },
 
   /**
@@ -128,9 +132,10 @@ export default Ember.Mixin.create(rhumbOperations, {
             }
           }
         }];
+    @param {Boolean} isUnion Get union or difference.
     @returns {Object} new multi-circuit object.
   */
-  createMulti(objects, failIfInvalid = true) {
+  createMulti(objects, isUnion = false, failIfInvalid = true) {
     let geojsonReader = new jsts.io.GeoJSONReader();
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let geometries = [];
@@ -147,7 +152,7 @@ export default Ember.Mixin.create(rhumbOperations, {
       if (!Ember.isNone(element.crs)) {
         objects[i] =
           element.crs.properties.name.toUpperCase() === 'EPSG:4326' ? element
-          : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
+            : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
       } else {
         throw "error: object must have 'crs' attribute";
       }
@@ -179,7 +184,11 @@ export default Ember.Mixin.create(rhumbOperations, {
       for (var j = 0; j < geometries.length; j++) {
         if (i !== j) {
           if (geometries[i].intersects(geometries[j])) {
-            current = current.difference(geometries[j]);
+            if (isUnion) {
+              current = current.union(geometries[j]);
+            } else {
+              current = current.difference(geometries[j]);
+            }
           }
         }
       }
@@ -255,9 +264,9 @@ export default Ember.Mixin.create(rhumbOperations, {
           startPoint: [85, 79],
           skip:0,
           points: [
-            { rhumb: 'ЮВ', angle: 86.76787457562546, distance: 8182.6375760837955 },
-            { rhumb: 'СВ', angle: 79.04259420114585, distance: 8476.868426796427 },
-            { rhumb: 'ЮЗ', angle: 86.0047147391561, distance: 16532.122718537685 }
+            { rhumb: 'SE', angle: 86.76787457562546, distance: 8182.6375760837955 },
+            { rhumb: 'NE', angle: 79.04259420114585, distance: 8476.868426796427 },
+            { rhumb: 'SW', angle: 86.0047147391561, distance: 16532.122718537685 }
           ]
         };
     @returns {Object} New GeoJSON Feature.
