@@ -536,15 +536,37 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   },
 
   /**
-    List of cardinal points.
+    Availble direction.
+  */
+  _availableDirection: null,
 
-    @property _cardinalPoints
+  /**
+    Object direction.
+
+    @property _objectDirections
     @type string[]
-    @default [&#x27;СВ&#x27;, &#x27;ЮВ&#x27;, &#x27;ЮЗ&#x27;, &#x27;СЗ&#x27;]
+    @default [&#x27;Polygon&#x27;, &#x27;Line&#x27;]
     @readonly
     @private
   */
-  _cardinalPoints: [&#x27;СВ&#x27;, &#x27;ЮВ&#x27;, &#x27;ЮЗ&#x27;, &#x27;СЗ&#x27;],
+  _objectDirections: Ember.A([
+    {
+      captionPath: &#x27;components.geometry-add-modes.rhumb.NE&#x27;,
+      type: &#x27;NE&#x27;
+    },
+    {
+      captionPath: &#x27;components.geometry-add-modes.rhumb.SE&#x27;,
+      type: &#x27;SE&#x27;
+    },
+    {
+      captionPath: &#x27;components.geometry-add-modes.rhumb.SW&#x27;,
+      type: &#x27;SW&#x27;
+    },
+    {
+      captionPath: &#x27;components.geometry-add-modes.rhumb.NW&#x27;,
+      type: &#x27;NW&#x27;
+    }
+  ]),
 
   /**
     Data table.
@@ -687,6 +709,17 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     }
 
     this.set(&#x27;_availableType&#x27;, availableType);
+
+    let directionItems = this.get(&#x27;directionItems&#x27;);
+    let availableDirection = [];
+
+    if (!Ember.isNone(directionItems)) {
+      directionItems.forEach((item) =&gt; {
+        availableDirection.push(item.caption);
+      });
+    }
+
+    this.set(&#x27;_availableDirection&#x27;, availableDirection);
   },
 
   /**
@@ -700,6 +733,29 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     let _objectTypes = this.get(&#x27;_objectTypes&#x27;);
 
     let result = Ember.A(_objectTypes);
+    result.forEach((item) =&gt; {
+      let caption = Ember.get(item, &#x27;caption&#x27;);
+      let captionPath = Ember.get(item, &#x27;captionPath&#x27;);
+
+      if (!caption &amp;&amp; captionPath) {
+        Ember.set(item, &#x27;caption&#x27;, i18n.t(captionPath));
+      }
+    });
+
+    return result;
+  }),
+
+  /**
+    Direction items metadata.
+
+    @property directionItems
+    @type Object[]
+  */
+  directionItems: Ember.computed(&#x27;_objectDirections.[]&#x27;, &#x27;_objectDirections.@each.active&#x27;, &#x27;i18n&#x27;, function () {
+    let i18n = this.get(&#x27;i18n&#x27;);
+    let _objectDirections = this.get(&#x27;_objectDirections&#x27;);
+
+    let result = Ember.A(_objectDirections);
     result.forEach((item) =&gt; {
       let caption = Ember.get(item, &#x27;caption&#x27;);
       let captionPath = Ember.get(item, &#x27;captionPath&#x27;);
@@ -774,11 +830,22 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
       const startPoints = this._dataForm.startPoint.split(&#x27; &#x27;);
 
+      let translateDirection = (direction) =&gt; {
+        let factories = this.get(&#x27;_objectDirections&#x27;);
+        let res = null;
+
+        if (!Ember.isNone(direction)) {
+          res = factories.filter((factory) =&gt; factory.caption.toString() === direction)[0].type;
+        }
+
+        return res;
+      };
+
       let points = [];
       for (let i = 0; i &lt; this._tableData.length; i++) {
         let item = this._tableData[i];
         let data = {
-          rhumb: &#x60;${item.direction}&#x60;,
+          rhumb: &#x60;${translateDirection(item.direction)}&#x60;,
           angle: item.rhumb,
           distance: item.distance
         };

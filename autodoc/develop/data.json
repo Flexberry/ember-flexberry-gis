@@ -10353,11 +10353,18 @@
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
             "line": 128,
-            "description": "List of cardinal points.",
+            "description": "Availble direction.",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 133,
+            "description": "Object direction.",
             "itemtype": "property",
-            "name": "_cardinalPoints",
+            "name": "_objectDirections",
             "type": "string[]",
-            "default": "['СВ', 'ЮВ', 'ЮЗ', 'СЗ']",
+            "default": "['Polygon', 'Line']",
             "readonly": "",
             "access": "private",
             "tagname": "",
@@ -10366,7 +10373,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 139,
+            "line": 161,
             "description": "Data table.",
             "itemtype": "property",
             "name": "_tableData",
@@ -10379,7 +10386,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 149,
+            "line": 171,
             "description": "Object types.",
             "itemtype": "property",
             "name": "_objectTypes",
@@ -10393,28 +10400,28 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 169,
+            "line": 191,
             "description": "Availble type.",
             "class": "FlexberryGeometryAddModeRhumbComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 174,
+            "line": 196,
             "description": "Current type.",
             "class": "FlexberryGeometryAddModeRhumbComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 179,
+            "line": 201,
             "description": "Set _dataForm.objectType.",
             "class": "FlexberryGeometryAddModeRhumbComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 195,
+            "line": 217,
             "description": "Form fields.",
             "itemtype": "property",
             "name": "_dataForm",
@@ -10427,7 +10434,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 211,
+            "line": 233,
             "description": "Fields for adding a new record.",
             "itemtype": "property",
             "name": "_dataFormTable",
@@ -10440,7 +10447,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 282,
+            "line": 315,
             "description": "Type items metadata.",
             "itemtype": "property",
             "name": "typeItems",
@@ -10450,14 +10457,24 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 306,
+            "line": 338,
+            "description": "Direction items metadata.",
+            "itemtype": "property",
+            "name": "directionItems",
+            "type": "Object[]",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 362,
             "description": "Handles button click.",
             "class": "FlexberryGeometryAddModeRhumbComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 316,
+            "line": 372,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGeometryAddModeRhumbComponent/sendingActions.complete:method\"}}'complete' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onApprove",
@@ -10466,7 +10483,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 406,
+            "line": 473,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.deny:method\"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onDeny",
@@ -10475,7 +10492,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 415,
+            "line": 482,
             "description": "The button for adding a new record to the table.",
             "itemtype": "method",
             "name": "actions.onAddRow",
@@ -10484,7 +10501,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 479,
+            "line": 546,
             "description": "Button to delete a record in a table.",
             "itemtype": "method",
             "name": "actions.OnRemoveRow",
@@ -10493,7 +10510,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 505,
+            "line": 572,
             "description": "Button to edit a record in a table.",
             "itemtype": "method",
             "name": "actions.OnEditRow",
@@ -10502,7 +10519,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 551,
+            "line": 618,
             "description": "Handles click on checkbox.",
             "itemtype": "method",
             "name": "actions.onRhumbSkipChange",
@@ -10511,7 +10528,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 598,
+            "line": 665,
             "description": "Count order number of rhumbs.",
             "itemtype": "method",
             "name": "_countSkip",
@@ -10520,7 +10537,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 610,
+            "line": 677,
             "description": "Count number of binding rhumbs.",
             "itemtype": "method",
             "name": "_countSkip",
@@ -10529,7 +10546,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 623,
+            "line": 690,
             "description": "Сlear form.",
             "itemtype": "method",
             "name": "_dropForm",
@@ -10538,7 +10555,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 639,
+            "line": 706,
             "description": "Сlear form.",
             "itemtype": "method",
             "name": "_dropTableValidForm",
@@ -10547,7 +10564,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 648,
+            "line": 715,
             "description": "Clear form validation.",
             "itemtype": "method",
             "name": "_dropTableForm",
@@ -10556,7 +10573,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 657,
+            "line": 724,
             "description": "Number check.",
             "itemtype": "method",
             "name": "_validFloatNumber",
@@ -10565,7 +10582,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 667,
+            "line": 734,
             "description": "Starp point check.",
             "itemtype": "method",
             "name": "_validStartPoint",
@@ -10574,7 +10591,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 677,
+            "line": 744,
             "description": "Component's action invoking when new geometry was added.",
             "itemtype": "method",
             "name": "sendingActions.complete",
@@ -32778,6 +32795,17 @@
         {
             "file": "addon/components/flexberry-map.js",
             "line": 171,
+            "description": "Editable.",
+            "itemtype": "property",
+            "name": "editable",
+            "type": "Boolean",
+            "default": "true",
+            "class": "FlexberryMapComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-map.js",
+            "line": 180,
             "description": "Forces the map's zoom level to always be a multiple of this.",
             "itemtype": "property",
             "name": "zoomSnap",
@@ -32788,7 +32816,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 180,
+            "line": 189,
             "description": "Controls how much the map's zoom level will change after a zoomIn(), zoomOut(),\npressing + or - on the keyboard, or using the zoom controls.",
             "itemtype": "property",
             "name": "zoomDelta",
@@ -32799,7 +32827,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 190,
+            "line": 199,
             "description": "Flag: indicates whether all paths should be rendered on a 'Canvas' renderer instead of 'SVG'.",
             "itemtype": "property",
             "name": "preferCanvas",
@@ -32810,7 +32838,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 199,
+            "line": 208,
             "description": "Array of map layers.",
             "itemtype": "property",
             "name": "layers",
@@ -32820,7 +32848,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 207,
+            "line": 216,
             "description": "JSON object with query parameters",
             "itemtype": "property",
             "name": "queryFilter",
@@ -32831,7 +32859,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 216,
+            "line": 225,
             "description": "Service for managing map API.",
             "itemtype": "property",
             "name": "mapApi",
@@ -32841,7 +32869,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 223,
+            "line": 232,
             "description": "Injects additional methods into initialized leaflet map.",
             "itemtype": "method",
             "name": "_injectMapLoaderMethods",
@@ -32859,7 +32887,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 276,
+            "line": 285,
             "description": "Removes injected additional methods from initialized leaflet map.\nRuns search query related to the specified URL params: 'queryFilter' and 'mapObjectSetting'.\nShows map loader, triggeres leaflet map event 'flexberry-map:query', then starts query and waits for all query requests to be finished,\nand finally calls to '_finishQuery' hook.",
             "itemtype": "method",
             "name": "_runQuery",
@@ -32870,7 +32898,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 344,
+            "line": 353,
             "description": "Handles search query finish.\nShows query results on map, hides map loader, triggers 'queryFinished' action and related leaflet map event 'flexberry-map:queryFinished'.",
             "itemtype": "method",
             "name": "_finishQuery",
@@ -32893,7 +32921,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 386,
+            "line": 395,
             "description": "Handles leaflet map's moveend event.",
             "itemtype": "method",
             "name": "_moveend",
@@ -32911,7 +32939,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 397,
+            "line": 406,
             "description": "Handles leaflet map's zoomend event.",
             "itemtype": "method",
             "name": "_zoomend",
@@ -32929,7 +32957,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 408,
+            "line": 417,
             "description": "Observes changhes in application's current locale, and refreshes some GUI related to it.",
             "itemtype": "method",
             "name": "localeDidChange",
@@ -32940,7 +32968,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 428,
+            "line": 437,
             "description": "Handles leaflet map container's resize.\nInitializes in 'initLeafletMap' hook.",
             "itemtype": "property",
             "name": "_onLeafletContainerResize",
@@ -32953,14 +32981,14 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 439,
+            "line": 448,
             "description": "Initializes DOM-related component's properties.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 495,
+            "line": 504,
             "description": "Run an array of prommis.",
             "params": [
                 {
@@ -32974,14 +33002,14 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 528,
+            "line": 537,
             "description": "Destroys DOM-related component's properties.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 542,
+            "line": 551,
             "description": "Performs some initialization before leaflet map will be initialized.",
             "params": [
                 {
@@ -32995,7 +33023,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 559,
+            "line": 568,
             "description": "Performs some clean up before leaflet map will be destroyed.",
             "params": [
                 {
@@ -33009,7 +33037,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 576,
+            "line": 585,
             "description": "Initializes leaflet map related properties.",
             "params": [
                 {
@@ -33023,7 +33051,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 615,
+            "line": 624,
             "description": "Destroys leaflet map.",
             "params": [
                 {
@@ -33037,7 +33065,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 659,
+            "line": 668,
             "description": "Initializes map's service layer.",
             "params": [
                 {
@@ -33051,7 +33079,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 672,
+            "line": 681,
             "description": "Destroys map's service layer.",
             "params": [
                 {
@@ -33065,7 +33093,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 687,
+            "line": 696,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) initialized.",
             "itemtype": "method",
             "name": "sendingActions.leafletInit",
@@ -33088,7 +33116,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 695,
+            "line": 704,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) destroyed.",
             "itemtype": "method",
             "name": "sendingActions.leafletDestroy",
@@ -33097,7 +33125,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 701,
+            "line": 710,
             "description": "Component's action invoking when map's service layer initialized.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerInit",
@@ -33113,7 +33141,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 708,
+            "line": 717,
             "description": "Component's action invoking when maps's service layer destroyed.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerDestroy",
@@ -33122,7 +33150,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 714,
+            "line": 723,
             "description": "Component's action invoking when query on map load finished.",
             "itemtype": "method",
             "name": "sendingActions.queryFinished",
@@ -33138,7 +33166,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 722,
+            "line": 731,
             "description": "Handles edit dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.edit:method\"}}'edit'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onEditDialogApprove",
@@ -43039,7 +43067,7 @@
                 },
                 {
                     "name": "data",
-                    "description": "Coordinate objects.\nExample:\nvar data = {\n      type: 'LineString',\n      crs: 'EPSG:3857',\n      properties: { name: 'test_polygon' },\n      startPoint: [85, 79],\n      skip:0,\n      points: [\n        { rhumb: 'ЮВ', angle: 86.76787457562546, distance: 8182.6375760837955 },\n        { rhumb: 'СВ', angle: 79.04259420114585, distance: 8476.868426796427 },\n        { rhumb: 'ЮЗ', angle: 86.0047147391561, distance: 16532.122718537685 }\n      ]\n    };",
+                    "description": "Coordinate objects.\nExample:\nvar data = {\n      type: 'LineString',\n      crs: 'EPSG:3857',\n      properties: { name: 'test_polygon' },\n      startPoint: [85, 79],\n      skip:0,\n      points: [\n        { rhumb: 'SE', angle: 86.76787457562546, distance: 8182.6375760837955 },\n        { rhumb: 'NE', angle: 79.04259420114585, distance: 8476.868426796427 },\n        { rhumb: 'SW', angle: 86.0047147391561, distance: 16532.122718537685 }\n      ]\n    };",
                     "type": "Object"
                 }
             ],
@@ -43975,31 +44003,32 @@
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
             "line": 960,
-            "description": "Get the object rhumb.",
+            "description": "Get a rhumb object for [LineString, MultiLineString, Polygon, MultiPolygon]. Parameters is object in GeoJSON\nformat and name of coordinate reference system. Calculates rhumb between points. Use @turf/rhumb-bearing and",
+            "turf": "/rhumb-distance libraries to calculate angle and distance between points. Distance calculation is\napproximate and in meters. Names of direction is [NE, SE, NW, SW]. Angle calculation in degree.\nReturns array of object:\n\n```javascript\n[{\n  type - type of object is [LineString, Polygon],\n  crs - name of coordinate reference system of start point,\n  startPoint - coordinates of start point,\n  skip - how many rhumb skip from beginning (always 0),\n  points - array objects of rhumbs,\n  hole - if this part is hole then true else false. Only Polygon and MultiPolygon have it.\n}]\n```\n\nObjects of rhumbs consist from angle, distance and direction of rhumb. Example:\n\n```javascript\n{\n  rhumb: 'NE',\n  angle: 45,\n  distance: 1000\n}\n```\n\nExample of method call:\n\n```javascript\nvar feature = {\n  type: \"Feature\",\n  geometry:\n  {\n    \"type\": \"Polygon\",\n    \"coordinates\": [\n      [[56.09419, 58.08895], [56.093588, 58.088632], [56.094269, 58.088632], [56.094269, 58.088902], [56.09419, 58.08895]]\n    ]\n  }\n};\n\nvar result = mapApi.mapModel.getRhumb(feature, 'EPSG:4326');\n```",
             "itemtype": "method",
             "name": "getRhumb",
             "params": [
                 {
-                    "name": "layerId",
-                    "description": "Layer ID.",
-                    "type": "String"
+                    "name": "feature",
+                    "description": "GeoJson Feature.",
+                    "type": "Object"
                 },
                 {
-                    "name": "objectId",
-                    "description": "Object ID.",
+                    "name": "crsName",
+                    "description": "Name of coordinate reference system, in which to give coordinates.",
                     "type": "String"
                 }
             ],
             "return": {
-                "description": "Object rhumb.",
-                "type": "Promise"
+                "description": "Array object rhumb.",
+                "type": "Array"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1060,
+            "line": 1107,
             "description": "Add a layer to the group.",
             "itemtype": "method",
             "name": "layerToGroup",
@@ -44023,7 +44052,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1082,
+            "line": 1129,
             "description": "Edit object layer.",
             "itemtype": "method",
             "name": "editLayerObject",
@@ -44058,7 +44087,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1140,
+            "line": 1187,
             "description": "Upload file.",
             "itemtype": "method",
             "name": "uploadFile",
@@ -44078,7 +44107,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1170,
+            "line": 1217,
             "description": "Convert coordinates of object to wgs84, or other crsName.",
             "itemtype": "method",
             "name": "convertObjectCoordinates",
@@ -44100,7 +44129,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1269,
+            "line": 1316,
             "description": "Get coordinates point.",
             "itemtype": "method",
             "name": "getCoordPoint",
@@ -44140,7 +44169,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1342,
+            "line": 1389,
             "description": "Loading features by packages",
             "itemtype": "method",
             "name": "loadingFeaturesByPackages",
@@ -44165,7 +44194,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1369,
+            "line": 1416,
             "description": "Calculate geometry",
             "itemtype": "method",
             "name": "getMergedGeometry",
@@ -44205,7 +44234,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1433,
+            "line": 1480,
             "description": "Add to array points and feature.",
             "itemtype": "method",
             "name": "_addToArrayPointsAndFeature",
@@ -44230,7 +44259,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1467,
+            "line": 1514,
             "description": "Difference layers.",
             "itemtype": "method",
             "name": "differenceLayers",
@@ -44255,7 +44284,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1549,
+            "line": 1596,
             "description": "Compare layers.",
             "itemtype": "method",
             "name": "compareLayers",
@@ -44290,7 +44319,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1649,
+            "line": 1696,
             "description": "Exponentiation.",
             "itemtype": "method",
             "name": "_pointAmplifier",
@@ -44303,7 +44332,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1658,
+            "line": 1705,
             "description": "Transform coordinates in points.",
             "itemtype": "method",
             "name": "_coordsToPoints",
@@ -44323,7 +44352,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1678,
+            "line": 1725,
             "description": "Transform points in coordinates.",
             "itemtype": "method",
             "name": "_pointsToCoords",
@@ -47535,7 +47564,7 @@
             "params": [
                 {
                     "name": "data",
-                    "description": "Coordinate objects.\nExample:\nvar data = {\n      type: 'LineString',\n      properties: { name: 'test_polygon' },\n      startPoint: [85, 79],\n      skip:0,\n      points: [\n        { rhumb: 'ЮВ', angle: 86.76787457562546, distance: 8182.6375760837955 },\n        { rhumb: 'СВ', angle: 79.04259420114585, distance: 8476.868426796427 },\n        { rhumb: 'ЮЗ', angle: 86.0047147391561, distance: 16532.122718537685 }\n      ]\n    };",
+                    "description": "Coordinate objects.\nExample:\nvar data = {\n      type: 'LineString',\n      properties: { name: 'test_polygon' },\n      startPoint: [85, 79],\n      skip:0,\n      points: [\n        { rhumb: 'SE', angle: 86.76787457562546, distance: 8182.6375760837955 },\n        { rhumb: 'NE', angle: 79.04259420114585, distance: 8476.868426796427 },\n        { rhumb: 'SW', angle: 86.0047147391561, distance: 16532.122718537685 }\n      ]\n    };",
                     "type": "Object"
                 }
             ],
@@ -47795,7 +47824,7 @@
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/components/flexberry-map.js:495"
+            "line": " addon/components/flexberry-map.js:504"
         },
         {
             "message": "unknown tag: computed",
@@ -48014,12 +48043,16 @@
             "line": " addon/mixins/flexberry-map-model-api-visualedit.js:403"
         },
         {
-            "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:1060"
+            "message": "unknown tag: turf",
+            "line": " addon/mixins/flexberry-map-model-api.js:960"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:1060"
+            "line": " addon/mixins/flexberry-map-model-api.js:1107"
+        },
+        {
+            "message": "replacing incorrect tag: parm with param",
+            "line": " addon/mixins/flexberry-map-model-api.js:1107"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -48226,20 +48259,24 @@
             "line": " addon/components/geometry-add-modes/rhumb.js:38"
         },
         {
+            "message": "Missing item type\nAvailble direction.",
+            "line": " addon/components/geometry-add-modes/rhumb.js:128"
+        },
+        {
             "message": "Missing item type\nAvailble type.",
-            "line": " addon/components/geometry-add-modes/rhumb.js:169"
+            "line": " addon/components/geometry-add-modes/rhumb.js:191"
         },
         {
             "message": "Missing item type\nCurrent type.",
-            "line": " addon/components/geometry-add-modes/rhumb.js:174"
+            "line": " addon/components/geometry-add-modes/rhumb.js:196"
         },
         {
             "message": "Missing item type\nSet _dataForm.objectType.",
-            "line": " addon/components/geometry-add-modes/rhumb.js:179"
+            "line": " addon/components/geometry-add-modes/rhumb.js:201"
         },
         {
             "message": "Missing item type\nHandles button click.",
-            "line": " addon/components/geometry-add-modes/rhumb.js:306"
+            "line": " addon/components/geometry-add-modes/rhumb.js:362"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -49423,39 +49460,39 @@
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/flexberry-map.js:439"
+            "line": " addon/components/flexberry-map.js:448"
         },
         {
             "message": "Missing item type\nRun an array of prommis.",
-            "line": " addon/components/flexberry-map.js:495"
+            "line": " addon/components/flexberry-map.js:504"
         },
         {
             "message": "Missing item type\nDestroys DOM-related component's properties.",
-            "line": " addon/components/flexberry-map.js:528"
+            "line": " addon/components/flexberry-map.js:537"
         },
         {
             "message": "Missing item type\nPerforms some initialization before leaflet map will be initialized.",
-            "line": " addon/components/flexberry-map.js:542"
+            "line": " addon/components/flexberry-map.js:551"
         },
         {
             "message": "Missing item type\nPerforms some clean up before leaflet map will be destroyed.",
-            "line": " addon/components/flexberry-map.js:559"
+            "line": " addon/components/flexberry-map.js:568"
         },
         {
             "message": "Missing item type\nInitializes leaflet map related properties.",
-            "line": " addon/components/flexberry-map.js:576"
+            "line": " addon/components/flexberry-map.js:585"
         },
         {
             "message": "Missing item type\nDestroys leaflet map.",
-            "line": " addon/components/flexberry-map.js:615"
+            "line": " addon/components/flexberry-map.js:624"
         },
         {
             "message": "Missing item type\nInitializes map's service layer.",
-            "line": " addon/components/flexberry-map.js:659"
+            "line": " addon/components/flexberry-map.js:668"
         },
         {
             "message": "Missing item type\nDestroys map's service layer.",
-            "line": " addon/components/flexberry-map.js:672"
+            "line": " addon/components/flexberry-map.js:681"
         },
         {
             "message": "Missing item type\nReference to component's template.",

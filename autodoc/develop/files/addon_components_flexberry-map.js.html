@@ -514,7 +514,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     leafletOptions: [
 
       // Map state options.
-      &#x27;center&#x27;, &#x27;zoom&#x27;, &#x27;minZoom&#x27;, &#x27;maxZoom&#x27;, &#x27;maxBounds&#x27;, &#x27;maxBoundsViscosity&#x27;, &#x27;crs&#x27;, &#x27;preferCanvas&#x27;,
+      &#x27;center&#x27;, &#x27;zoom&#x27;, &#x27;minZoom&#x27;, &#x27;maxZoom&#x27;, &#x27;maxBounds&#x27;, &#x27;maxBoundsViscosity&#x27;, &#x27;crs&#x27;, &#x27;preferCanvas&#x27;, &#x27;editable&#x27;,
 
       // Interaction options.
       &#x27;dragging&#x27;, &#x27;touchZoom&#x27;, &#x27;scrollWheelZoom&#x27;, &#x27;doubleClickZoom&#x27;, &#x27;boxZoom&#x27;,
@@ -577,6 +577,15 @@ let FlexberryMapComponent = Ember.Component.extend(
       @default null
     */
     zoom: null,
+
+    /**
+      Editable.
+
+      @property editable
+      @type Boolean
+      @default true
+    */
+    editable: true,
 
     /**
       Forces the map&#x27;s zoom level to always be a multiple of this.
