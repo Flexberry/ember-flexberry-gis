@@ -9,6 +9,7 @@ let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiMixin);
 
 test('test method copyObject', function(assert) {
   //Arrange
+  assert.expect(8);
   let done = assert.async(1);
   let sourceLeafletLayer = L.featureGroup();
   let destinationLeafletLayer = L.featureGroup();
@@ -43,7 +44,7 @@ test('test method copyObject', function(assert) {
   });
 
   //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise);
+  assert.ok(result instanceof Ember.RSVP.Promise, 'Check result instance of Promise');
   result.then((data)=> {
     assert.deepEqual(data.getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]], 'Check latLngs');
     assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');

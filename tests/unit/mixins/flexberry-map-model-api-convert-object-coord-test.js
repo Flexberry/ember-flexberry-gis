@@ -12,6 +12,7 @@ let geoJsonObject = L.polygon([[0, 100], [0, 101], [1, 101], [1, 100]]).toGeoJSO
 
 test('test method _convertObjectCoordinates with EPSG:4326', function(assert) {
   //Arrange
+  assert.expect(1);
   let ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
     knownForType() {
@@ -27,12 +28,13 @@ test('test method _convertObjectCoordinates with EPSG:4326', function(assert) {
   let result = subject._convertObjectCoordinates('EPSG:4326', geoJsonObject);
 
   //Assert
-  assert.deepEqual(result.geometry.coordinates, [[[100, 0], [101, 0], [101, 1], [100, 1], [100, 0]]]);
+  assert.deepEqual(result.geometry.coordinates, [[[100, 0], [101, 0], [101, 1], [100, 1], [100, 0]]], 'Equals rezult coordinates with test coordinates');
   ownerStub.restore();
 });
 
 test('test method _convertObjectCoordinates with EPSG:3395', function(assert) {
   //Arrange
+  assert.expect(1);
   let ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
     knownForType() {
@@ -56,6 +58,6 @@ test('test method _convertObjectCoordinates with EPSG:3395', function(assert) {
       [11131949.079327356, 110579.9652218976],
       [11131949.079327356, 7.081154551613622e-10]
     ]
-  ]);
+  ], 'Equals rezult coordinates with test coordinates');
   ownerStub.restore();
 });
