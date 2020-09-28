@@ -19,9 +19,9 @@ import { getLeafletCrs } from '../utils/leaflet-crs';
         startPoint: [85, 79],
         skip:0,
         points: [
-          { rhumb: 'ЮВ', angle: 86.76787457562546, distance: 8182.6375760837955 },
-          { rhumb: 'СВ', angle: 79.04259420114585, distance: 8476.868426796427 },
-          { rhumb: 'ЮЗ', angle: 86.0047147391561, distance: 16532.122718537685 }
+          { rhumb: 'SE', angle: 86.76787457562546, distance: 8182.6375760837955 },
+          { rhumb: 'NE', angle: 79.04259420114585, distance: 8476.868426796427 },
+          { rhumb: 'SW', angle: 86.0047147391561, distance: 16532.122718537685 }
         ]
       };
   @returns {Object} New featureLayer.
@@ -45,16 +45,16 @@ const createObjectRhumb = (data, layerCrs, that) => {
     let result;
 
     switch (rhumb) {
-      case 'СВ':
+      case 'NE':
         result = parseFloat(angle);
         break;
-      case 'ЮВ':
+      case 'SE':
         result = 180 - parseFloat(angle);
         break;
-      case 'ЮЗ':
+      case 'SW':
         result = parseFloat(angle) - 180;
         break;
-      case 'СЗ':
+      case 'NW':
         result = parseFloat(angle) * -1;
         break;
     }

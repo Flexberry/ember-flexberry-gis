@@ -32,12 +32,12 @@
           </div>
         </div>
         <div class="rhumb">
-          <div class="field">         
+          <div class="field">
             {{flexberry-edit-crs
               crsCaption=coordinatesSystemFieldLabel
               coordinateReferenceSystem=settings.layerCRS
             }}
-          </div>       
+          </div>
         </div>
         <div class="rhumb last">
           <div class="field {{if _formValid.typeObjectValid "error" ""}}">
@@ -75,7 +75,7 @@
             <td>
               <div class="field {{if _addValid.directionValid "error"}}">
                 {{flexberry-dropdown
-                  items=_cardinalPoints
+                  items=_availableDirection
                   value=_dataFormTable.direction
                 }}
               </div>
@@ -145,7 +145,7 @@
                 <td>
                   <div class="field {{if row.directionValid "error"}}">
                     {{flexberry-dropdown
-                      items=_cardinalPoints
+                      items=_availableDirection
                       value=row.direction
                       readonly=row.readonly
                     }}
@@ -184,7 +184,7 @@
                   {{flexberry-button
                     iconClass="trash icon"
                     click=(action "OnRemoveRow" row.id)
-                  }}                
+                  }}
                 </td>
               {{/block-slot}}
             {{/flexberry-table}}
