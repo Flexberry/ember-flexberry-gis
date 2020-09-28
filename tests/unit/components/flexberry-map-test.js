@@ -37,14 +37,14 @@ test('test function queryToMap', function (assert) {
 
   assert.ok(res instanceof Ember.RSVP.Promise, 'Является ли результат работы функции Promise');
   res.then((e)=> {
-    assert.equal(e.results.length, 1, 'Длина массива results = 1');
-    assert.equal(e.queryFilter, '1', 'Правильно ли передан параметр queryFilter');
-    assert.equal(e.mapObjectSetting, '2', 'Правильно ли передан параметр mapObjectSetting');
-    assert.equal(querySpy.callCount, 1, 'Колличество вызовов функции fire');
-    assert.equal(querySpy.args[0][0], 'flexberry-map:query', 'Первый аргумент переданный в фукнциию fire - flexberry-map:query');
-    assert.deepEqual(querySpy.args[0][1], e, 'Второй аргумент переданный в фукнциию fire - e');
+    assert.equal(e.results.length, 1, 'Length results equals 1');
+    assert.equal(e.queryFilter, '1', 'Check parameter queryFilter');
+    assert.equal(e.mapObjectSetting, '2', 'Check parameter mapObjectSetting');
+    assert.equal(querySpy.callCount, 1, 'Count call method fire');
+    assert.equal(querySpy.args[0][0], 'flexberry-map:query', 'Check call first arg to method fire');
+    assert.deepEqual(querySpy.args[0][1], e, 'Check call second arg to method fire');
     e.results[0].features.then((result)=> {
-      assert.equal(result[0].id, 1, 'Проверка результата');
+      assert.equal(result[0].id, 1, 'Cherck result id');
       done(1);
     });
     done(1);
