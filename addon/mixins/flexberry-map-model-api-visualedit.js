@@ -199,12 +199,17 @@ export default Ember.Mixin.create(SnapDraw, {
           let defaultProperties = layerModel.get('settingsAsObject.defaultProperties') || {};
           newLayer.feature = { type: 'Feature', properties: Ember.merge(defaultProperties, properties) };
           newLayer.remove();
-          leafletObject.addLayer(newLayer);
-          this._stopSnap();
 
-          this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, true);
-          editTools.once('editable:disable', this._stopSnap, this);
-          resolve(newLayer);
+          let e = { layers: [newLayer], results: Ember.A() };
+          leafletObject.fire('load', e);
+
+          Ember.RSVP.allSettled(e.results).then(() => {
+            this._stopSnap();
+
+            this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, true);
+            editTools.once('editable:disable', this._stopSnap, this);
+            resolve(newLayer);
+          });
         };
 
         editTools.on('editable:drawing:end', finishDraw, this);

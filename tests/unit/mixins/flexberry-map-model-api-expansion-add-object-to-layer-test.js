@@ -12,7 +12,7 @@ let geoJsonObject = L.polygon([[0, 100], [0, 101], [1, 101], [1, 100]]).toGeoJSO
 
 test('test method addObjectToLayer with EPSG:4326', function(assert) {
   //Arrange
-  assert.expect(5);
+  let done = assert.async(1);
   let ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
     knownForType() {
@@ -32,21 +32,25 @@ test('test method addObjectToLayer with EPSG:4326', function(assert) {
   let getMLObject = sinon.stub(subject, '_getModelLeafletObject', getModelLeafletObject);
 
   //Act
-  let result = subject.addObjectToLayer('1', geoJsonObject);
+  let promise = subject.addObjectToLayer('1', geoJsonObject);
 
-  //Assert
-  assert.equal(leafletObject.getLayers().length, 1);
-  assert.equal(result.layerId, '1');
-  assert.deepEqual(result._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]]);
-  assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
-  assert.equal(getMLObject.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
-  ownerStub.restore();
-  getMLObject.restore();
+  assert.ok(promise instanceof Ember.RSVP.Promise);
+
+  promise.then((result) => {
+    assert.equal(leafletObject.getLayers().length, 0, 'Layers count');
+    assert.equal(result.layerId, '1', 'Layer id');
+    assert.deepEqual(result._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]]);
+    assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
+    assert.equal(getMLObject.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
+    ownerStub.restore();
+    getMLObject.restore();
+    done();
+  });
 });
 
 test('test method addObjectToLayer with EPSG:3395', function(assert) {
   //Arrange
-  assert.expect(5);
+  let done = assert.async(1);
   let ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
     knownForType() {
@@ -69,22 +73,23 @@ test('test method addObjectToLayer with EPSG:3395', function(assert) {
   let getMLObject = sinon.stub(subject, '_getModelLeafletObject', getModelLeafletObject);
 
   //Act
-  let result = subject.addObjectToLayer('1', geoJsonObject, 'EPSG:3395');
-
-  //Assert
-  assert.equal(leafletObject.getLayers().length, 1);
-  assert.equal(result.layerId, '1');
-  assert.deepEqual(result._latlngs,
-    [
+  subject.addObjectToLayer('1', geoJsonObject, 'EPSG:3395').then((result) => {
+    //Assert
+    assert.equal(leafletObject.getLayers().length, 0);
+    assert.equal(result.layerId, '1');
+    assert.deepEqual(result._latlngs,
       [
-        L.latLng(0, 0.0008983152841195215),
-        L.latLng(0, 0.0009072984369607167),
-        L.latLng(0.00000904328947124462, 0.0009072984369607167),
-        L.latLng(0.00000904328947124462, 0.0008983152841195215)
-      ]
-    ]);
-  assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
-  assert.equal(getMLObject.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
-  ownerStub.restore();
-  getMLObject.restore();
+        [
+          L.latLng(0, 0.0008983152841195215),
+          L.latLng(0, 0.0009072984369607167),
+          L.latLng(0.00000904328947124462, 0.0009072984369607167),
+          L.latLng(0.00000904328947124462, 0.0008983152841195215)
+        ]
+      ]);
+    assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
+    assert.equal(getMLObject.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
+    ownerStub.restore();
+    getMLObject.restore();
+    done();
+  });
 });
