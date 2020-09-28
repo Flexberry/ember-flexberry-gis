@@ -32898,7 +32898,22 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 353,
+            "line": 305,
+            "description": "Runs search query related to the specified URL params: 'queryFilter' and 'mapObjectSetting'.",
+            "itemtype": "method",
+            "name": "_queryToMap",
+            "return": {
+                "description": "",
+                "type": "Ember.RSVP.Promise"
+            },
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryMapComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-map.js",
+            "line": 369,
             "description": "Handles search query finish.\nShows query results on map, hides map loader, triggers 'queryFinished' action and related leaflet map event 'flexberry-map:queryFinished'.",
             "itemtype": "method",
             "name": "_finishQuery",
@@ -32921,7 +32936,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 395,
+            "line": 411,
             "description": "Handles leaflet map's moveend event.",
             "itemtype": "method",
             "name": "_moveend",
@@ -32939,7 +32954,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 406,
+            "line": 422,
             "description": "Handles leaflet map's zoomend event.",
             "itemtype": "method",
             "name": "_zoomend",
@@ -32957,7 +32972,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 417,
+            "line": 433,
             "description": "Observes changhes in application's current locale, and refreshes some GUI related to it.",
             "itemtype": "method",
             "name": "localeDidChange",
@@ -32968,7 +32983,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 437,
+            "line": 453,
             "description": "Handles leaflet map container's resize.\nInitializes in 'initLeafletMap' hook.",
             "itemtype": "property",
             "name": "_onLeafletContainerResize",
@@ -32981,14 +32996,14 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 448,
+            "line": 464,
             "description": "Initializes DOM-related component's properties.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 504,
+            "line": 525,
             "description": "Run an array of prommis.",
             "params": [
                 {
@@ -33002,14 +33017,14 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 537,
+            "line": 558,
             "description": "Destroys DOM-related component's properties.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 551,
+            "line": 572,
             "description": "Performs some initialization before leaflet map will be initialized.",
             "params": [
                 {
@@ -33023,7 +33038,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 568,
+            "line": 589,
             "description": "Performs some clean up before leaflet map will be destroyed.",
             "params": [
                 {
@@ -33037,7 +33052,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 585,
+            "line": 606,
             "description": "Initializes leaflet map related properties.",
             "params": [
                 {
@@ -33051,7 +33066,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 624,
+            "line": 645,
             "description": "Destroys leaflet map.",
             "params": [
                 {
@@ -33065,7 +33080,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 668,
+            "line": 693,
             "description": "Initializes map's service layer.",
             "params": [
                 {
@@ -33079,7 +33094,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 681,
+            "line": 706,
             "description": "Destroys map's service layer.",
             "params": [
                 {
@@ -33093,7 +33108,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 696,
+            "line": 721,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) initialized.",
             "itemtype": "method",
             "name": "sendingActions.leafletInit",
@@ -33116,7 +33131,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 704,
+            "line": 729,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) destroyed.",
             "itemtype": "method",
             "name": "sendingActions.leafletDestroy",
@@ -33125,7 +33140,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 710,
+            "line": 735,
             "description": "Component's action invoking when map's service layer initialized.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerInit",
@@ -33141,7 +33156,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 717,
+            "line": 742,
             "description": "Component's action invoking when maps's service layer destroyed.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerDestroy",
@@ -33150,7 +33165,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 723,
+            "line": 748,
             "description": "Component's action invoking when query on map load finished.",
             "itemtype": "method",
             "name": "sendingActions.queryFinished",
@@ -33166,7 +33181,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 731,
+            "line": 756,
             "description": "Handles edit dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.edit:method\"}}'edit'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onEditDialogApprove",
@@ -47823,8 +47838,12 @@
             "line": " addon/components/flexberry-layers-attributes-panel.js:499"
         },
         {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/components/flexberry-map.js:305"
+        },
+        {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/components/flexberry-map.js:504"
+            "line": " addon/components/flexberry-map.js:525"
         },
         {
             "message": "unknown tag: computed",
@@ -49460,39 +49479,39 @@
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/flexberry-map.js:448"
+            "line": " addon/components/flexberry-map.js:464"
         },
         {
             "message": "Missing item type\nRun an array of prommis.",
-            "line": " addon/components/flexberry-map.js:504"
+            "line": " addon/components/flexberry-map.js:525"
         },
         {
             "message": "Missing item type\nDestroys DOM-related component's properties.",
-            "line": " addon/components/flexberry-map.js:537"
+            "line": " addon/components/flexberry-map.js:558"
         },
         {
             "message": "Missing item type\nPerforms some initialization before leaflet map will be initialized.",
-            "line": " addon/components/flexberry-map.js:551"
+            "line": " addon/components/flexberry-map.js:572"
         },
         {
             "message": "Missing item type\nPerforms some clean up before leaflet map will be destroyed.",
-            "line": " addon/components/flexberry-map.js:568"
+            "line": " addon/components/flexberry-map.js:589"
         },
         {
             "message": "Missing item type\nInitializes leaflet map related properties.",
-            "line": " addon/components/flexberry-map.js:585"
+            "line": " addon/components/flexberry-map.js:606"
         },
         {
             "message": "Missing item type\nDestroys leaflet map.",
-            "line": " addon/components/flexberry-map.js:624"
+            "line": " addon/components/flexberry-map.js:645"
         },
         {
             "message": "Missing item type\nInitializes map's service layer.",
-            "line": " addon/components/flexberry-map.js:668"
+            "line": " addon/components/flexberry-map.js:693"
         },
         {
             "message": "Missing item type\nDestroys map's service layer.",
-            "line": " addon/components/flexberry-map.js:681"
+            "line": " addon/components/flexberry-map.js:706"
         },
         {
             "message": "Missing item type\nReference to component's template.",

@@ -3493,7 +3493,7 @@ define('dummy/tests/unit/components/base-vector-layer-test.jshint', ['exports'],
     assert.ok(true, 'unit/components/base-vector-layer-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/components/flexberry-map-test', ['exports', 'ember', 'ember-qunit'], function (exports, _ember, _emberQunit) {
+define('dummy/tests/unit/components/flexberry-map-test', ['exports', 'ember', 'ember-qunit', 'sinon'], function (exports, _ember, _emberQunit, _sinon) {
 
   (0, _emberQunit.moduleForComponent)('flexberry-map', 'Unit | Component | flexberry map', {
     unit: true,
@@ -3504,6 +3504,38 @@ define('dummy/tests/unit/components/flexberry-map-test', ['exports', 'ember', 'e
     var component = this.subject();
     this.render();
     assert.ok(component.get('_leafletObject') instanceof L.Map);
+  });
+
+  (0, _emberQunit.test)('test function queryToMap', function (assert) {
+    assert.expect(8);
+    var leafletMap = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    var querySpy = _sinon['default'].stub(leafletMap, 'fire', function (st, e) {
+      e.results.push({ features: _ember['default'].RSVP.resolve([{ id: '1' }]) });
+    });
+    var component = this.subject({
+      _leafletObject: leafletMap
+    });
+    var done = assert.async(2);
+
+    var res = component._queryToMap('1', '2');
+
+    assert.ok(res instanceof _ember['default'].RSVP.Promise, 'Является ли результат работы функции Promise');
+    res.then(function (e) {
+      assert.equal(e.results.length, 1, 'Length results equals 1');
+      assert.equal(e.queryFilter, '1', 'Check parameter queryFilter');
+      assert.equal(e.mapObjectSetting, '2', 'Check parameter mapObjectSetting');
+      assert.equal(querySpy.callCount, 1, 'Count call method fire');
+      assert.equal(querySpy.args[0][0], 'flexberry-map:query', 'Check call first arg to method fire');
+      assert.deepEqual(querySpy.args[0][1], e, 'Check call second arg to method fire');
+      e.results[0].features.then(function (result) {
+        assert.equal(result[0].id, 1, 'Cherck result id');
+        done(1);
+      });
+      done(1);
+    });
   });
 
   (0, _emberQunit.test)('should compute center from lat/lng', function (assert) {
@@ -4795,6 +4827,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-convert-object-coord-tes
 
   (0, _qunit.test)('test method _convertObjectCoordinates with EPSG:4326', function (assert) {
     //Arrange
+    assert.expect(1);
     var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
     ownerStub.returns({
       knownForType: function knownForType() {
@@ -4810,12 +4843,13 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-convert-object-coord-tes
     var result = subject._convertObjectCoordinates('EPSG:4326', geoJsonObject);
 
     //Assert
-    assert.deepEqual(result.geometry.coordinates, [[[100, 0], [101, 0], [101, 1], [100, 1], [100, 0]]]);
+    assert.deepEqual(result.geometry.coordinates, [[[100, 0], [101, 0], [101, 1], [100, 1], [100, 0]]], 'Equals rezult coordinates with test coordinates');
     ownerStub.restore();
   });
 
   (0, _qunit.test)('test method _convertObjectCoordinates with EPSG:3395', function (assert) {
     //Arrange
+    assert.expect(1);
     var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
     ownerStub.returns({
       knownForType: function knownForType() {
@@ -4831,7 +4865,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-convert-object-coord-tes
     var result = subject._convertObjectCoordinates('EPSG:4326', geoJsonObject, 'EPSG:3395');
 
     //Assert
-    assert.deepEqual(result.geometry.coordinates, [[[11131949.079327356, 7.081154551613622e-10], [11243268.57012063, 7.081154551613622e-10], [11243268.57012063, 110579.9652218976], [11131949.079327356, 110579.9652218976], [11131949.079327356, 7.081154551613622e-10]]]);
+    assert.deepEqual(result.geometry.coordinates, [[[11131949.079327356, 7.081154551613622e-10], [11243268.57012063, 7.081154551613622e-10], [11243268.57012063, 110579.9652218976], [11131949.079327356, 110579.9652218976], [11131949.079327356, 7.081154551613622e-10]]], 'Equals rezult coordinates with test coordinates');
     ownerStub.restore();
   });
 });
@@ -4860,6 +4894,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-copy-object-test', ['exp
 
   (0, _qunit.test)('test method copyObject', function (assert) {
     //Arrange
+    assert.expect(8);
     var done = assert.async(1);
     var sourceLeafletLayer = L.featureGroup();
     var destinationLeafletLayer = L.featureGroup();
@@ -4898,7 +4933,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-copy-object-test', ['exp
     });
 
     //Assert
-    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Check result instance of Promise');
     result.then(function (data) {
       assert.deepEqual(data.getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]], 'Check latLngs');
       assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
@@ -5049,6 +5084,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-delete-layer-objects-tes
 
   (0, _qunit.test)('test method deleteLayerObjects', function (assert) {
     //Arrange
+    assert.expect(8);
     var done = assert.async(1);
     var testLeafletObject = L.featureGroup();
     var polygon = L.polygon([[1, 1], [2, 5], [2, 5]]).addTo(testLeafletObject);
@@ -5075,15 +5111,15 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-delete-layer-objects-tes
     var result = subject.deleteLayerObjects('1', ['1']);
 
     //Assert
-    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Check result instance of Promise');
     result.then(function () {
-      assert.equal(spyDeleteLayerFromAttrPanelFunc.callCount, 1);
-      assert.equal(getMLFeature.callCount, 1);
-      assert.equal(getMLFeature.args[0][0], '1');
-      assert.deepEqual(getMLFeature.args[0][1], ['1']);
-      assert.equal(spyRemoveLayer.callCount, 1);
-      assert.equal(spyRemoveLayer.args[0][0].id, '1');
-      assert.equal(testLeafletObject.getLayers().length, 0);
+      assert.equal(spyDeleteLayerFromAttrPanelFunc.callCount, 1, 'Check call count to method _deleteLayerFromAttrPanel');
+      assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+      assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Check call second arg to method _getModelLayerFeature');
+      assert.equal(spyRemoveLayer.callCount, 1, 'Check call count to method removeLayer');
+      assert.equal(spyRemoveLayer.args[0][0].id, '1', 'Check call first arg to method removeLayer');
+      assert.equal(testLeafletObject.getLayers().length, 0, 'Count layers in object');
       done();
       spyDeleteLayerFromAttrPanelFunc.restore();
       spyRemoveLayer.restore();
@@ -5126,6 +5162,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-edit-layer-object-test',
 
   (0, _qunit.test)('test method editLayerObject with EPSG:4326', function (assert) {
     //Arrange
+    assert.expect(6);
     var done = assert.async(1);
     var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
     ownerStub.returns({
@@ -5153,10 +5190,10 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-edit-layer-object-test',
     var result = subject.editLayerObject('1', '1', geoJsonObject, 'EPSG:4326');
 
     //Assert
-    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Check result instance of Promise');
     result.then(function (res) {
-      assert.equal(spyEditLayer.callCount, 1);
-      assert.deepEqual(res._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]]);
+      assert.equal(spyEditLayer.callCount, 1, 'Check call count to method editLayer');
+      assert.deepEqual(res._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]], 'Equals rezult coordinates with test coordinates');
       assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
       assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
       assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Check call second arg to method _getModelLayerFeature');
@@ -5169,6 +5206,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-edit-layer-object-test',
 
   (0, _qunit.test)('test method editLayerObject with EPSG:3395', function (assert) {
     //Arrange
+    assert.expect(7);
     var done = assert.async(1);
     var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
     ownerStub.returns({
@@ -5197,14 +5235,14 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-edit-layer-object-test',
     var result = subject.editLayerObject('1', '1', geoJsonObject, 'EPSG:3395');
 
     //Assert
-    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Check result instance of Promise');
     result.then(function (res) {
-      assert.equal(spyEditLayer.callCount, 1);
-      assert.equal(spyUnProject.callCount, 5);
+      assert.equal(spyEditLayer.callCount, 1, 'Check call count to method editLayer');
+      assert.equal(spyUnProject.callCount, 5, 'Check call count to method unproject');
       assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
       assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
       assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Check call second arg to method _getModelLayerFeature');
-      assert.deepEqual(res._latlngs, [[L.latLng(0, 0.0008983152841195215), L.latLng(0, 0.0009072984369607167), L.latLng(0.00000904328947124462, 0.0009072984369607167), L.latLng(0.00000904328947124462, 0.0008983152841195215)]]);
+      assert.deepEqual(res._latlngs, [[L.latLng(0, 0.0008983152841195215), L.latLng(0, 0.0009072984369607167), L.latLng(0.00000904328947124462, 0.0009072984369607167), L.latLng(0.00000904328947124462, 0.0008983152841195215)]], 'Equals rezult coordinates with test coordinates');
       done();
       spyUnProject.restore();
       getMLFeature.restore();
@@ -5342,6 +5380,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-between-obj
 
   (0, _qunit.test)('test method _getDistanceBetweenObjects between polyline and polygon', function (assert) {
     //Arrange
+    assert.expect(1);
     var firstObj = L.polyline([[1.001, 1.001], [1.003, 1.003], [1.005, 1.005]]);
     firstObj.feature = firstObj.toGeoJSON();
     var secondObj = L.polygon([[1.001, 1.001], [1.001, 1.002], [1.003, 1.001], [1.003, 0]]);
@@ -5352,11 +5391,12 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-between-obj
     var result = subject._getDistanceBetweenObjects(firstObj, secondObj);
 
     //Assert
-    assert.equal(result, 55820.041009409564);
+    assert.equal(result, 55820.041009409564, 'Equals rezult distance with test distance');
   });
 
   (0, _qunit.test)('test method _getDistanceBetweenObjects between marker and polygon', function (assert) {
     //Arrange
+    assert.expect(1);
     var firstObj = L.marker([1.001, 1.001]);
     firstObj.feature = firstObj.toGeoJSON();
     var secondObj = L.polygon([[1.001, 1.001], [1.001, 1.002], [1.003, 1.001], [1.003, 0]]);
@@ -5367,11 +5407,12 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-between-obj
     var result = subject._getDistanceBetweenObjects(firstObj, secondObj);
 
     //Assert
-    assert.equal(result, 55597.65129192688);
+    assert.equal(result, 55597.65129192688, 'Equals rezult distance with test distance');
   });
 
   (0, _qunit.test)('test method _getDistanceBetweenObjects between marker and marker', function (assert) {
     //Arrange
+    assert.expect(1);
     var firstObj = L.marker([1.001, 1.001]);
     firstObj.feature = firstObj.toGeoJSON();
     var secondObj = L.marker([1.001, 1.002]);
@@ -5382,7 +5423,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-between-obj
     var result = subject._getDistanceBetweenObjects(firstObj, secondObj);
 
     //Assert
-    assert.equal(result, 111.19508023354534);
+    assert.equal(result, 111.19508023354534, 'Equals rezult distance with test distance');
   });
 });
 define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-between-objects-test.jscs-test', ['exports'], function (exports) {
@@ -5410,6 +5451,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-test', ['ex
 
   (0, _qunit.test)('test method getDistanceBetweenObjects between polyline and polygon', function (assert) {
     //Arrange
+    assert.expect(7);
     var done = assert.async(1);
     var firstObj = L.polyline([[1.001, 1.001], [1.003, 1.003], [1.005, 1.005]]);
     firstObj.feature = firstObj.toGeoJSON();
@@ -5428,9 +5470,9 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-test', ['ex
     var result = subject.getDistanceBetweenObjects('1', '4', '2', '3');
 
     //Assert
-    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Check result instance of Promise');
     result.then(function (res) {
-      assert.equal(res, 55820.041009409564);
+      assert.equal(res, 55820.041009409564, 'Equals rezult distance with test distance');
       assert.equal(getMLFeature.callCount, 2, 'Check call count to method _getModelLayerFeature');
       assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
       assert.equal(getMLFeature.args[0][1], '4', 'Check call second arg to method _getModelLayerFeature');
@@ -5443,6 +5485,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-test', ['ex
 
   (0, _qunit.test)('test method getDistanceBetweenObjects between marker and polygon', function (assert) {
     //Arrange
+    assert.expect(7);
     var done = assert.async(1);
     var firstObj = L.marker([1.001, 1.001]);
     firstObj.feature = firstObj.toGeoJSON();
@@ -5461,9 +5504,9 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-test', ['ex
     var result = subject.getDistanceBetweenObjects('1', '4', '2', '3');
 
     //Assert
-    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Check result instance of Promise');
     result.then(function (res) {
-      assert.equal(res, 55597.65129192688);
+      assert.equal(res, 55597.65129192688, 'Equals rezult distance with test distance');
       assert.equal(getMLFeature.callCount, 2, 'Check call count to method _getModelLayerFeature');
       assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
       assert.equal(getMLFeature.args[0][1], '4', 'Check call second arg to method _getModelLayerFeature');
@@ -5476,6 +5519,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-test', ['ex
 
   (0, _qunit.test)('test method getDistanceBetweenObjects between marker and marker', function (assert) {
     //Arrange
+    assert.expect(7);
     var done = assert.async(1);
     var firstObj = L.marker([1.001, 1.001]);
     firstObj.feature = firstObj.toGeoJSON();
@@ -5494,7 +5538,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-test', ['ex
     var result = subject.getDistanceBetweenObjects('1', '4', '2', '3');
 
     //Assert
-    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Check result instance of Promise');
     result.then(function (res) {
       assert.equal(res, 111.19508023354534);
       assert.equal(getMLFeature.callCount, 2, 'Check call count to method _getModelLayerFeature');
@@ -5532,6 +5576,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-object-center-test',
 
   (0, _qunit.test)('return current center of point', function (assert) {
     //Arrange
+    assert.expect(1);
     var subject = mapApiMixinObject.create();
     var obj2 = L.marker([1, 1]);
     obj2.feature = obj2.toGeoJSON();
@@ -5541,11 +5586,12 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-object-center-test',
     var resObj = L.latLng(1, 1);
 
     //Assert
-    assert.deepEqual(result, resObj);
+    assert.deepEqual(result, resObj, 'Equals rezult object with test object');
   });
 
   (0, _qunit.test)('return current center of polygon', function (assert) {
     //Arrange
+    assert.expect(1);
     var subject = mapApiMixinObject.create();
     var obj2 = L.polygon([[1, 1], [1, 2], [3, 1], [3, 0]]);
     obj2.feature = obj2.toGeoJSON();
@@ -5555,11 +5601,12 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-object-center-test',
     var resObj = L.latLng(2, 1);
 
     //Assert
-    assert.deepEqual(result, resObj);
+    assert.deepEqual(result, resObj, 'Equals rezult object with test object');
   });
 
   (0, _qunit.test)('return current center of polyline', function (assert) {
     //Arrange
+    assert.expect(1);
     var subject = mapApiMixinObject.create();
     var obj2 = L.polyline([[1, 1], [3, 3], [5, 5]]);
     obj2.feature = obj2.toGeoJSON();
@@ -5569,7 +5616,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-object-center-test',
     var resObj = L.latLng(3, 3);
 
     //Assert
-    assert.deepEqual(result, resObj);
+    assert.deepEqual(result, resObj, 'Equals rezult object with test object');
   });
 });
 define('dummy/tests/unit/mixins/flexberry-map-model-api-get-object-center-test.jscs-test', ['exports'], function (exports) {
