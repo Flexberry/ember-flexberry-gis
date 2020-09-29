@@ -1,4 +1,5 @@
 import Ember from 'ember';
+
 import DS from 'ember-data';
 import { moduleForComponent, test } from 'ember-qunit';
 import startApp from 'dummy/tests/helpers/start-app';
