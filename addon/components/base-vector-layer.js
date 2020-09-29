@@ -596,10 +596,6 @@ export default BaseLayer.extend({
     });
     leafletObject.clearLayers();
 
-    if (leafletObject.models) {
-      leafletObject.models.clear();
-    }
-
     if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
       leafletObject._labelsLayer.eachLayer((layerShape) => {
         if (map.hasLayer(layerShape)) {

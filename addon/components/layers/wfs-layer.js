@@ -235,9 +235,10 @@ export default BaseVectorLayer.extend({
             }
           }
 
-          resolve(wfsLayer);
+          let load = this.continueLoad(wfsLayer);
+          wfsLayer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
 
-          this.continueLoad();
+          resolve(wfsLayer);
         })
         .once('error', (e) => {
           reject(e.error || e);
@@ -562,10 +563,13 @@ export default BaseVectorLayer.extend({
   /**
     Handles zoomend
   */
-  continueLoad() {
+  continueLoad(leafletObject) {
     let loadedBounds = this.get('loadedBounds');
 
-    let leafletObject = this.get('_leafletObject');
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
+
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletObject)) {
       let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);

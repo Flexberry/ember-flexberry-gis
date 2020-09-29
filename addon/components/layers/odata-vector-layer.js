@@ -352,7 +352,11 @@ export default BaseVectorLayer.extend({
       let objs = obj.adapter.batchLoadModel(obj.modelName, build, obj.store);
       objs.then(res => {
         let features = Ember.A();
-        let models = res.toArray();
+        let models = res;
+        if (typeof res.toArray === 'function') {
+          models = res.toArray();
+        }
+
         let layer = L.featureGroup();
 
         models.forEach(model => {
@@ -703,9 +707,10 @@ export default BaseVectorLayer.extend({
         }
       }
 
-      resolve(layer);
+      let load = this.continueLoad(layer);
+      layer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
 
-      this.continueLoad();
+      resolve(layer);
     });
   },
 
@@ -1038,10 +1043,13 @@ export default BaseVectorLayer.extend({
   /**
     Handles zoomend
   */
-  continueLoad() {
+  continueLoad(leafletObject) {
     let loadedBounds = this.get('loadedBounds');
 
-    let leafletObject = this.get('_leafletObject');
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
+
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletObject)) {
       let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
@@ -1097,7 +1105,11 @@ export default BaseVectorLayer.extend({
 
         let promise = new Ember.RSVP.Promise((resolve, reject) => {
           objs.then(res => {
-            let models = res.toArray();
+            let models = res;
+            if (typeof res.toArray === 'function') {
+              models = res.toArray();
+            }
+
             let innerLayers = [];
             models.forEach(model => {
               let l = this.addLayerObject(leafletObject, model, false);
@@ -1123,6 +1135,16 @@ export default BaseVectorLayer.extend({
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
       }
     }
+  },
+
+  reload() {
+    let leafletObject = this.get('_leafletObject');
+
+    if (leafletObject.models) {
+      leafletObject.models.clear();
+    }
+
+    return this._super(...arguments);
   },
 
   /**
