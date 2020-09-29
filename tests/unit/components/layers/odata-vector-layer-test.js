@@ -35,8 +35,8 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
 
     let testModel = Projection.Model.extend(testModelMixin);
     testModel.defineProjection('TestModelL', 'test-model', {
-        name: Projection.attr(''),
-        shape: Projection.attr('')
+      name: Projection.attr(''),
+      shape: Projection.attr('')
     });
 
     let testSerializer = Serializer.Odata.extend({
