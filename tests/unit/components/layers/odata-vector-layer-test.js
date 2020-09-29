@@ -10,6 +10,8 @@ let app;
 let options;
 let param;
 let odataServerFake;
+let bounds;
+let store;
 
 moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata vector layer', {
   unit: true,
@@ -73,6 +75,36 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
       leafletOptions: leafletOptions
     };
     param = Ember.$.extend(param, options);
+
+    bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
+    let getBounds = function() {
+      return bounds;
+    };
+
+    let getPane = function() {
+      return undefined;
+    };
+
+    let createPane = function() {
+      return {};
+    };
+
+    store = app.__container__.lookup('service:store');
+    Ember.$.extend(param, {
+      'modelName': 'test-model',
+      'projectionName':'TestModelL',
+      'geometryField': 'shape',
+      'typeName': 'test-model',
+      'odataClass': 'TestModel',
+      'continueLoading': true,
+      'store': store,
+      'layerModel': { 'type': 'odata-vector', 'visibility': true },
+      'leafletMap': {
+        getBounds,
+        getPane,
+        createPane
+      }
+    });
 
     odataServerFake = sinon.fakeServer.create();
     odataServerFake.autoRespond = true;
@@ -175,16 +207,8 @@ test('getFilterParameters return SimplePredicate on single value in array', func
 
 test('loadLayerFeatures() with featureIds=null', function(assert) {
   assert.expect(2);
-  var done = assert.async(2);
+  var done = assert.async(3);
   Ember.run(() => {
-    let store = app.__container__.lookup('service:store');
-    store.createRecord('new-platform-flexberry-g-i-s-map-layer');
-    Ember.$.extend(param, {
-      'modelName': 'new-platform-flexberry-g-i-s-map-layer',
-      'projectionName':'MapLayerL',
-      'geometryField': 'geometryField',
-      'store': store });
-
     let component = this.subject(param);
 
     let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
@@ -200,18 +224,15 @@ test('loadLayerFeatures() with featureIds=null', function(assert) {
       results: Ember.A()
     };
 
-    let leafletLayerPromiseResolved = assert.async();
     component.get('_leafletLayerPromise').then((leafletLayer) => {
-      let _leafletObject = L.featureGroup();
-      _leafletObject.options.showExisting = false;
-      component.set('_leafletObject', _leafletObject);
+      component.set('_leafletObject', leafletLayer);
 
       component.loadLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Load with null featureIds');
         done();
       });
     }).finally(() => {
-      leafletLayerPromiseResolved();
+      done();
     });
 
     assert.ok(component, 'Create odata-layer');
@@ -223,37 +244,6 @@ test('getLayerFeatures() with featureIds=null', function(assert) {
   assert.expect(2);
   var done = assert.async(3);
   Ember.run(() => {
-    let store = app.__container__.lookup('service:store');
-
-    let bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
-    let getBounds = function() {
-      return bounds;
-    };
-
-    let getPane = function() {
-      return undefined;
-    };
-
-    let createPane = function() {
-      return {};
-    };
-
-    Ember.$.extend(param, {
-      'modelName': 'test-model',
-      'projectionName':'TestModelL',
-      'geometryField': 'shape',
-      'typeName': 'test-model',
-      'odataClass': 'TestModel',
-      'continueLoading': true,
-      'store': store,
-      'layerModel': { 'type': 'odata-vector', 'visibility': true },
-      'leafletMap': {
-        getBounds,
-        getPane,
-        createPane
-      }
-    });
-
     let component = this.subject(param);
 
     let getCountFeaturesStub = sinon.stub(component, 'getCountFeatures');
@@ -268,20 +258,10 @@ test('getLayerFeatures() with featureIds=null', function(assert) {
     component.get('_leafletLayerPromise').then((leafletLayer) => {
       component.set('_leafletObject', leafletLayer);
 
-      let promise = component.getLayerFeatures(e).then(Ember.run((layers) => {
-        // не дожидается выполнения
-        assert.ok(layers, 'Create odata-layer');
+      component.getLayerFeatures(e).then((layers) => {
+        assert.ok(layers, 'Get with null featureIds');
         done();
-      }));
-
-      Ember.run.later(() => {
-        console.log(promise._state);
-        console.log(promise._result);
-        assert.ok(promise._result, 'Create odata-layer');
-        // сюда не дает поставить done и не хочет ждать этого assert. Ожидаемое количество async и assert увеличивала. не помогает
-        //done();
-      }, 5000);
-
+      });
     }).finally(() => {
       done();
     });
@@ -296,38 +276,6 @@ test('continueLoad()', function(assert) {
   var done = assert.async(3);
 
   Ember.run(() => {
-    let store = app.__container__.lookup('service:store');
-    store.createRecord('test-model');
-
-    let bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
-    let getBounds = function() {
-      return bounds;
-    };
-
-    let getPane = function() {
-      return undefined;
-    };
-
-    let createPane = function() {
-      return {};
-    };
-
-    Ember.$.extend(param, {
-      'modelName': 'test-model',
-      'projectionName':'TestModelL',
-      'geometryField': 'shape',
-      'typeName': 'test-model',
-      'odataClass': 'TestModel',
-      'continueLoading': true,
-      'store': store,
-      'layerModel': { 'type': 'odata-vector', 'visibility': true },
-      'leafletMap': {
-        getBounds,
-        getPane,
-        createPane
-      }
-    });
-
     let component = this.subject(param);
     Ember.run(() => {
       component.get('_leafletLayerPromise').then((leafletLayer) => {
