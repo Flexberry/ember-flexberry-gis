@@ -126,12 +126,14 @@ test('test method latlngToPolygonJsts and geometryToJsts for Polygon with hole',
   assert.equal(resultToJsts.getNumGeometries(), 1);
   assert.equal(resultToJsts.getExteriorRing().getCoordinates().toString(), '(10, 35, undefined),(45, 45, undefined),(40, 15, undefined)' +
     ',(20, 10, undefined),(10, 35, undefined)');
-  assert.equal(resultToJsts.getInteriorRingN(0).getCoordinates().toString(), '(30, 20, undefined),(35, 35, undefined),(20, 30, undefined),(30, 20, undefined)');
+  assert.equal(resultToJsts.getInteriorRingN(0).getCoordinates().toString(), '(30, 20, undefined),(35, 35, undefined),(20, 30, undefined),' +
+    '(30, 20, undefined)');
   assert.equal(resultToJsts.getGeometryType(), 'Polygon');
   assert.equal(resultFromGeoJSON.getNumGeometries(), 1);
   assert.equal(resultFromGeoJSON.getExteriorRing().getCoordinates().toString(), '(10, 35, undefined),(45, 45, undefined),(40, 15, undefined)' +
     ',(20, 10, undefined),(10, 35, undefined)');
-  assert.equal(resultFromGeoJSON.getInteriorRingN(0).getCoordinates().toString(), '(30, 20, undefined),(35, 35, undefined),(20, 30, undefined),(30, 20, undefined)');
+  assert.equal(resultFromGeoJSON.getInteriorRingN(0).getCoordinates().toString(), '(30, 20, undefined),(35, 35, undefined),(20, 30, undefined),' +
+    '(30, 20, undefined)');
   assert.equal(resultFromGeoJSON.getGeometryType(), 'Polygon');
 });
 
@@ -164,7 +166,8 @@ test('test method latlngToPolygonJsts and geometryToJsts for MultiPolygon withou
     ',(5, 15, undefined)');
   assert.equal(resultToJsts.getGeometryType(), 'MultiPolygon');
   assert.equal(resultFromGeoJSON.getNumGeometries(), 2);
-  assert.equal(resultFromGeoJSON.getGeometryN(0).getCoordinates().toString(), '(20, 30, undefined),(40, 45, undefined),(40, 10, undefined),(20, 30, undefined)');
+  assert.equal(resultFromGeoJSON.getGeometryN(0).getCoordinates().toString(), '(20, 30, undefined),(40, 45, undefined),(40, 10, undefined),' +
+    '(20, 30, undefined)');
   assert.equal(resultFromGeoJSON.getGeometryN(1).getCoordinates().toString(), '(5, 15, undefined),(10, 40, undefined),(20, 10, undefined),(10, 5, undefined)' +
     ',(5, 15, undefined)');
   assert.equal(resultFromGeoJSON.getGeometryType(), 'MultiPolygon');
@@ -201,12 +204,15 @@ test('test method latlngToPolygonJsts and geometryToJsts for MultiPolygon with h
   assert.equal(resultToJsts.getGeometryN(0).getCoordinates().toString(), '(40, 40, undefined),(45, 20, undefined),(30, 45, undefined),(40, 40, undefined)');
   assert.equal(resultToJsts.getGeometryN(1).getExteriorRing().getCoordinates().toString(), '(35, 20, undefined),(30, 10, undefined),(10, 10, undefined)' +
     ',(5, 30, undefined),(20, 45, undefined),(35, 20, undefined)');
-  assert.equal(resultToJsts.getGeometryN(1).getInteriorRingN(0).getCoordinates().toString(), '(20, 30, undefined),(15, 20, undefined),(25, 20, undefined),(20, 30, undefined)');
+  assert.equal(resultToJsts.getGeometryN(1).getInteriorRingN(0).getCoordinates().toString(), '(20, 30, undefined),(15, 20, undefined),(25, 20, undefined),' +
+    '(20, 30, undefined)');
   assert.equal(resultToJsts.getGeometryType(), 'MultiPolygon');
   assert.equal(resultFromGeoJSON.getNumGeometries(), 2);
-  assert.equal(resultFromGeoJSON.getGeometryN(0).getCoordinates().toString(), '(40, 40, undefined),(45, 20, undefined),(30, 45, undefined),(40, 40, undefined)');
+  assert.equal(resultFromGeoJSON.getGeometryN(0).getCoordinates().toString(), '(40, 40, undefined),(45, 20, undefined),(30, 45, undefined),' +
+    '(40, 40, undefined)');
   assert.equal(resultFromGeoJSON.getGeometryN(1).getExteriorRing().getCoordinates().toString(), '(35, 20, undefined),(30, 10, undefined),(10, 10, undefined)' +
     ',(5, 30, undefined),(20, 45, undefined),(35, 20, undefined)');
-  assert.equal(resultFromGeoJSON.getGeometryN(1).getInteriorRingN(0).getCoordinates().toString(), '(20, 30, undefined),(15, 20, undefined),(25, 20, undefined),(20, 30, undefined)');
+  assert.equal(resultFromGeoJSON.getGeometryN(1).getInteriorRingN(0).getCoordinates().toString(), '(20, 30, undefined),(15, 20, undefined),' +
+    '(25, 20, undefined),(20, 30, undefined)');
   assert.equal(resultFromGeoJSON.getGeometryType(), 'MultiPolygon');
 });
