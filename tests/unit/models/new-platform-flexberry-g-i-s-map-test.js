@@ -1,6 +1,7 @@
 import { moduleForModel, test } from 'ember-qunit';
 import sinon from 'sinon';
 import Ember from 'ember';
+import { geometryToJsts } from 'ember-flexberry-gis/utils/layer-to-jsts';
 
 moduleForModel('new-platform-flexberry-g-i-s-map', 'Unit | Model | new-platform-flexberry-g-i-s-map', {
   // Specify the other units that are required for this test.
@@ -459,6 +460,30 @@ test('getMergedGeometry with difference should return geoJson feature in EPSG:43
   let feature2Layer2 = L.geoJSON(geoJson2Layer2).getLayers()[0];
   feature2Layer2.options.crs = { code: 'EPSG:4326' };
 
+  feature1Layer1.toJsts = function () { };
+  let toJstsStub1 = sinon.stub(feature1Layer1, 'toJsts');
+  let objJsts1 = geometryToJsts(geoJson1Layer1);
+  objJsts1.setSRID(4326);
+  toJstsStub1.returns(objJsts1);
+
+  feature2Layer1.toJsts = function () { };
+  let toJstsStub2 = sinon.stub(feature2Layer1, 'toJsts');
+  let objJsts2 = geometryToJsts(geoJson2Layer1);
+  objJsts2.setSRID(4326);
+  toJstsStub2.returns(objJsts2);
+
+  feature1Layer2.toJsts = function () { };
+  let toJstsStub3 = sinon.stub(feature1Layer2, 'toJsts');
+  let objJsts3 = geometryToJsts(geoJson1Layer2);
+  objJsts3.setSRID(4326);
+  toJstsStub3.returns(objJsts3);
+
+  feature2Layer2.toJsts = function () { };
+  let toJstsStub4 = sinon.stub(feature2Layer2, 'toJsts');
+  let objJsts4 = geometryToJsts(geoJson2Layer2);
+  objJsts4.setSRID(4326);
+  toJstsStub4.returns(objJsts4);
+
   let map = this.subject();
   let _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('1', ['1', '2']).returns(
@@ -472,6 +497,8 @@ test('getMergedGeometry with difference should return geoJson feature in EPSG:43
       resolve([null, null, [feature1Layer2, feature2Layer2]]);
     })
   );
+
+
 
   let result = map.getMergedGeometry('1', ['1', '2'], '2', ['1', '2']);
 
@@ -549,6 +576,30 @@ test('getMergedGeometry with union should return geoJson feature in EPSG:4326', 
   feature1Layer2.options.crs = { code: 'EPSG:4326' };
   let feature2Layer2 = L.geoJSON(geoJson2Layer2).getLayers()[0];
   feature2Layer2.options.crs = { code: 'EPSG:4326' };
+
+  feature1Layer1.toJsts = function () { };
+  let toJstsStub1 = sinon.stub(feature1Layer1, 'toJsts');
+  let objJsts1 = geometryToJsts(geoJson1Layer1);
+  objJsts1.setSRID(4326);
+  toJstsStub1.returns(objJsts1);
+
+  feature2Layer1.toJsts = function () { };
+  let toJstsStub2 = sinon.stub(feature2Layer1, 'toJsts');
+  let objJsts2 = geometryToJsts(geoJson2Layer1);
+  objJsts2.setSRID(4326);
+  toJstsStub2.returns(objJsts2);
+
+  feature1Layer2.toJsts = function () { };
+  let toJstsStub3 = sinon.stub(feature1Layer2, 'toJsts');
+  let objJsts3 = geometryToJsts(geoJson1Layer2);
+  objJsts3.setSRID(4326);
+  toJstsStub3.returns(objJsts3);
+
+  feature2Layer2.toJsts = function () { };
+  let toJstsStub4 = sinon.stub(feature2Layer2, 'toJsts');
+  let objJsts4 = geometryToJsts(geoJson2Layer2);
+  objJsts4.setSRID(4326);
+  toJstsStub4.returns(objJsts4);
 
   let map = this.subject();
   let _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');

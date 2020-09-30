@@ -2,6 +2,8 @@
   @module ember-flexberry-gis
 */
 
+import { latLngToCoords, latLngsToCoords } from '../utils/lat-lng-to-coord';
+
 /**
   Registers options for leaflet library.
 
@@ -15,29 +17,6 @@ export function initialize(application, baseURL) {
   L.Icon.Default.imagePath = (baseURL || '/') + 'assets/images/';
 
   // Add custom leaflet functions
-  let latLngToCoords = function(latlng, crs, precision) {
-    var coord = crs.project(latlng);
-    return latlng.alt !== undefined ?
-      [coord.x, coord.y, latlng.alt] :
-      [coord.x, coord.y];
-  };
-
-  let latLngsToCoords = function(latlngs, crs, levelsDeep, closed, precision) {
-    var coords = [];
-
-    for (var i = 0, len = latlngs.length; i < len; i++) {
-      coords.push(levelsDeep ?
-        latLngsToCoords(latlngs[i], crs, levelsDeep - 1, closed, precision) :
-        latLngToCoords(latlngs[i], crs, precision));
-    }
-
-    if (!levelsDeep && closed) {
-      coords.push(coords[0]);
-    }
-
-    return coords;
-  };
-
   let PointToGeoJSON = {
     toProjectedGeoJSON: function (crs, precision) {
       return L.GeoJSON.getFeature(this, {
