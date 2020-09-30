@@ -645,6 +645,36 @@ export default BaseVectorLayer.extend({
     }
   },
 
+  reload() {
+    let leafletObject = this.get('_leafletObject');
+    let editTools = leafletObject.leafletMap.editTools;
+
+    if (leafletObject.changes) {
+      Object.values(leafletObject.changes).forEach(layer => {
+        if (layer.state === state.insert) {
+          if (editTools.featuresLayer.getLayers().length !== 0) {
+            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+            if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
+              let editLayer = featureLayer.editor.editLayer;
+              editTools.editLayer.removeLayer(editLayer);
+              editTools.featuresLayer.removeLayer(layer);
+            }
+          }
+        } else if (layer.state === state.update || layer.state === state.remove) {
+          if (!Ember.isNone(layer.editor)) {
+            let editLayer = layer.editor.editLayer;
+            editTools.editLayer.removeLayer(editLayer);
+          }
+        }
+      });
+    }
+
+    leafletObject.changes = {};
+
+    return this._super(...arguments);
+  },
+
   /**
     Initializes DOM-related component's properties.
   */

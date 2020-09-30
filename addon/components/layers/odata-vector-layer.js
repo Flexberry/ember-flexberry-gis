@@ -1141,7 +1141,33 @@ export default BaseVectorLayer.extend({
     let leafletObject = this.get('_leafletObject');
 
     if (leafletObject.models) {
-      leafletObject.models.clear();
+      let editTools = leafletObject.leafletMap.editTools;
+      leafletObject.models.forEach((model, layerId) => {
+        let layer = leafletObject.getLayer(layerId);
+        let dirtyType = model.get('dirtyType');
+        if (dirtyType === 'created') {
+          delete leafletObject.models[layerId];
+          if (editTools.featuresLayer.getLayers().length !== 0) {
+            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+            if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
+              let editLayer = featureLayer.editor.editLayer;
+              editTools.editLayer.removeLayer(editLayer);
+              editTools.featuresLayer.removeLayer(layer);
+            }
+          }
+        } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
+          if (!Ember.isNone(layer)) {
+            if (!Ember.isNone(layer.editor)) {
+              let editLayer = layer.editor.editLayer;
+              editTools.editLayer.removeLayer(editLayer);
+            }
+          }
+
+          model.rollbackAttributes();
+          delete leafletObject.models[layerId];
+        }
+      });
     }
 
     return this._super(...arguments);
