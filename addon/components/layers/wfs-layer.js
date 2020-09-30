@@ -645,36 +645,6 @@ export default BaseVectorLayer.extend({
     }
   },
 
-  reload() {
-    let leafletObject = this.get('_leafletObject');
-    let editTools = leafletObject.leafletMap.editTools;
-
-    if (leafletObject.changes) {
-      Object.values(leafletObject.changes).forEach(layer => {
-        if (layer.state === state.insert) {
-          if (editTools.featuresLayer.getLayers().length !== 0) {
-            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
-            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
-            if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
-              let editLayer = featureLayer.editor.editLayer;
-              editTools.editLayer.removeLayer(editLayer);
-              editTools.featuresLayer.removeLayer(layer);
-            }
-          }
-        } else if (layer.state === state.update || layer.state === state.remove) {
-          if (!Ember.isNone(layer.editor)) {
-            let editLayer = layer.editor.editLayer;
-            editTools.editLayer.removeLayer(editLayer);
-          }
-        }
-      });
-    }
-
-    leafletObject.changes = {};
-
-    return this._super(...arguments);
-  },
-
   /**
     Initializes DOM-related component's properties.
   */
@@ -687,6 +657,45 @@ export default BaseVectorLayer.extend({
     }
   },
 
+  clearChanges() {
+    let leafletObject = this.get('_leafletObject');
+    let editTools = leafletObject.leafletMap.editTools;
+
+    let featuresIds = [];
+    Object.values(leafletObject.changes).forEach(layer => {
+      if (layer.state === state.insert) {
+        if (leafletObject.hasLayer(layer)) {
+          leafletObject.removeLayer(layer);
+        }
+
+        if (editTools.featuresLayer.getLayers().length !== 0) {
+          let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+          let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+          if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
+            let editLayer = featureLayer.editor.editLayer;
+            editTools.editLayer.removeLayer(editLayer);
+            editTools.featuresLayer.removeLayer(layer);
+          }
+        }
+      } else if (layer.state === state.update || layer.state === state.remove) {
+        if (!Ember.isNone(layer.editor)) {
+          let editLayer = layer.editor.editLayer;
+          editTools.editLayer.removeLayer(editLayer);
+        }
+
+        if (leafletObject.hasLayer(layer)) {
+          leafletObject.removeLayer(layer);
+        }
+
+        featuresIds.push(layer.feature.properties.primarykey);
+      }
+    });
+
+    leafletObject.changes = {};
+
+    return featuresIds;
+  },
+
   /**
     Handles 'flexberry-map:cancelEdit' event of leaflet map.
 
@@ -695,38 +704,13 @@ export default BaseVectorLayer.extend({
   */
   cancelEdit() {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let featuersIds = [];
       let leafletObject = this.get('_leafletObject');
-      let editTools = leafletObject.leafletMap.editTools;
-      Object.values(leafletObject.changes).forEach(layer => {
-        let id = leafletObject.getLayerId(layer);
-        if (layer.state === state.insert) {
-          leafletObject.removeLayer(layer);
-          if (editTools.featuresLayer.getLayers().length !== 0) {
-            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
-            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
-            if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
-              let editLayer = featureLayer.editor.editLayer;
-              editTools.editLayer.removeLayer(editLayer);
-              editTools.featuresLayer.removeLayer(layer);
-            }
-          }
-        } else if (layer.state === state.update || layer.state === state.remove) {
-          if (!Ember.isNone(layer.editor)) {
-            let editLayer = layer.editor.editLayer;
-            editTools.editLayer.removeLayer(editLayer);
-          }
-
-          leafletObject.removeLayer(layer);
-          featuersIds.push(layer.feature.properties.primarykey);
-        }
-      });
-      leafletObject.changes = {};
-      if (featuersIds.length === 0) {
+      let featuresIds = this.clearChanges();
+      if (featuresIds.length === 0) {
         resolve();
       } else {
         let e = {
-          featureIds: featuersIds,
+          featureIds: featuresIds,
           layer: leafletObject.layerId,
           results: Ember.A()
         };

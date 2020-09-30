@@ -585,7 +585,15 @@ export default BaseLayer.extend({
   continueLoad() {
   },
 
+  /*
+    Clear changes. Needs for CancelEdit and Reload
+  */
+  clearChanges() {
+  },
+
   reload() {
+    this.clearChanges();
+
     let leafletObject = this.get('_leafletObject');
     let map = this.get('leafletMap');
 

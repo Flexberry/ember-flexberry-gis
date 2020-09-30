@@ -1137,42 +1137,6 @@ export default BaseVectorLayer.extend({
     }
   },
 
-  reload() {
-    let leafletObject = this.get('_leafletObject');
-
-    if (leafletObject.models) {
-      let editTools = leafletObject.leafletMap.editTools;
-      leafletObject.models.forEach((model, layerId) => {
-        let layer = leafletObject.getLayer(layerId);
-        let dirtyType = model.get('dirtyType');
-        if (dirtyType === 'created') {
-          delete leafletObject.models[layerId];
-          if (editTools.featuresLayer.getLayers().length !== 0) {
-            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
-            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
-            if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
-              let editLayer = featureLayer.editor.editLayer;
-              editTools.editLayer.removeLayer(editLayer);
-              editTools.featuresLayer.removeLayer(layer);
-            }
-          }
-        } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
-          if (!Ember.isNone(layer)) {
-            if (!Ember.isNone(layer.editor)) {
-              let editLayer = layer.editor.editLayer;
-              editTools.editLayer.removeLayer(editLayer);
-            }
-          }
-
-          model.rollbackAttributes();
-          delete leafletObject.models[layerId];
-        }
-      });
-    }
-
-    return this._super(...arguments);
-  },
-
   /**
     Initializes DOM-related component's properties.
   */
@@ -1185,6 +1149,50 @@ export default BaseVectorLayer.extend({
     }
   },
 
+  clearChanges() {
+    let leafletObject = this.get('_leafletObject');
+    let editTools = leafletObject.leafletMap.editTools;
+
+    let featuresIds = [];
+    leafletObject.models.forEach((model, layerId) => {
+      let layer = leafletObject.getLayer(layerId);
+      let dirtyType = model.get('dirtyType');
+      if (dirtyType === 'created') {
+        if (leafletObject.hasLayer(layer)) {
+          leafletObject.removeLayer(layer);
+        }
+
+        delete leafletObject.models[layerId];
+        if (editTools.featuresLayer.getLayers().length !== 0) {
+          let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+          let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+          if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
+            let editLayer = featureLayer.editor.editLayer;
+            editTools.editLayer.removeLayer(editLayer);
+            editTools.featuresLayer.removeLayer(layer);
+          }
+        }
+      } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
+        if (!Ember.isNone(layer)) {
+          if (!Ember.isNone(layer.editor)) {
+            let editLayer = layer.editor.editLayer;
+            editTools.editLayer.removeLayer(editLayer);
+          }
+
+          if (leafletObject.hasLayer(layer)) {
+            leafletObject.removeLayer(layer);
+          }
+        }
+
+        model.rollbackAttributes();
+        delete leafletObject.models[layerId];
+        featuresIds.push(model.get('id'));
+      }
+    });
+
+    return featuresIds;
+  },
+
   /**
     Handles 'flexberry-map:cancelEdit' event of leaflet map.
 
@@ -1193,44 +1201,13 @@ export default BaseVectorLayer.extend({
   */
   cancelEdit() {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let featuersIds = [];
       let leafletObject = this.get('_leafletObject');
-      let editTools = leafletObject.leafletMap.editTools;
-      leafletObject.models.forEach((model, layerId) => {
-        let layer = leafletObject.getLayer(layerId);
-        let dirtyType = model.get('dirtyType');
-        if (dirtyType === 'created') {
-          leafletObject.removeLayer(layer);
-          delete leafletObject.models[layerId];
-          if (editTools.featuresLayer.getLayers().length !== 0) {
-            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
-            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
-            if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
-              let editLayer = featureLayer.editor.editLayer;
-              editTools.editLayer.removeLayer(editLayer);
-              editTools.featuresLayer.removeLayer(layer);
-            }
-          }
-        } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
-          if (!Ember.isNone(layer)) {
-            if (!Ember.isNone(layer.editor)) {
-              let editLayer = layer.editor.editLayer;
-              editTools.editLayer.removeLayer(editLayer);
-            }
-
-            leafletObject.removeLayer(layer);
-          }
-
-          model.rollbackAttributes();
-          delete leafletObject.models[layerId];
-          featuersIds.push(model.get('id'));
-        }
-      });
-      if (featuersIds.length === 0) {
+      let featuresIds = this.clearChanges();
+      if (featuresIds.length === 0) {
         resolve();
       } else {
         let e = {
-          featureIds: featuersIds,
+          featureIds: featuresIds,
           layer: leafletObject.layerId,
           results: Ember.A()
         };
