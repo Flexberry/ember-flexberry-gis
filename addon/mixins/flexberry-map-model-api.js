@@ -15,7 +15,6 @@ import state from '../utils/state';
 import SnapDraw from './snap-draw';
 import ClipperLib from 'npm:clipper-lib';
 import jsts from 'npm:jsts';
-import { reject } from 'lodash';
 
 export default Ember.Mixin.create(SnapDraw, {
   /**
@@ -594,7 +593,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @param {boolean} [visibility=false] visibility Object Visibility.
   */
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Ember.RSVP.Promise((resolve) => {
       if (Ember.isArray(objectIds)) {
         let [layer, leafletObject] = this._getModelLeafletObject(layerId);
         if (Ember.isNone(layer)) {
@@ -611,11 +610,7 @@ export default Ember.Mixin.create(SnapDraw, {
             let showExisting = leafletObject.options.showExisting;
             let continueLoading = leafletObject.options.continueLoading;
             if (!showExisting && !continueLoading) {
-              leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve) => {
-                this._getModelLayerFeature(layerId, objectIds, true).then(() => {
-                  resolve();
-                });
-              });
+              leafletObject.reload();
             } else {
               leafletObject.showLayerObjects = visibility;
               leafletObject.statusLoadLayer = true;
@@ -646,7 +641,7 @@ export default Ember.Mixin.create(SnapDraw, {
               }
             });
             let labelLayer = leafletObject._labelsLayer;
-            if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer) && !map.hasLayer(labelLayer)) {
+            if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer)) {
               objectIds.forEach(objectId => {
                 let objects = Object.values(labelLayer._layers).filter(shape => {
                   return this._getLayerFeatureId(layer, shape) === objectId;

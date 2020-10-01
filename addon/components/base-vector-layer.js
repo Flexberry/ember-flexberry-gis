@@ -1262,9 +1262,13 @@ export default BaseLayer.extend({
     if (Ember.isNone(labelsLayer)) {
       this._showLabels(layers);
       labelsLayer = this.get('_labelsLayer');
-      leafletMap.addLayer(labelsLayer);
+      if(this.get('visibility')) {
+        leafletMap.addLayer(labelsLayer);
+      }
     } else if (!leafletMap.hasLayer(labelsLayer)) {
-      leafletMap.addLayer(labelsLayer);
+      if(this.get('visibility')) {
+        leafletMap.addLayer(labelsLayer);
+      }
     } else {
       this._showLabels(layers);
     }
