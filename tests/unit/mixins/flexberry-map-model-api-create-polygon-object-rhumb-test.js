@@ -8,6 +8,24 @@ module('Unit | Mixin | test method createPolygonObjectRhumb');
 let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiMixin);
 let crs4326 = crsFactory4326.create();
 
+let crsFactory32640 = {
+  code: 'EPSG:32640',
+  definition: '+proj=utm +zone=40 +datum=WGS84 +units=m +no_defs',
+  create() {
+    let crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
+      scale: function (zoom) {
+        return 256 * Math.pow(2, zoom);
+      },
+      zoom: function (scale) {
+        return Math.log(scale / 256) / Math.LN2;
+      }
+    });
+    return crs;
+  }
+};
+
+let crs32640 = crsFactory32640.create();
+
 test('test method createPolygonObjectRhumb for LineString', function (assert) {
   //Arrange
   const testLiseString = {
@@ -20,12 +38,12 @@ test('test method createPolygonObjectRhumb for LineString', function (assert) {
         {
           rhumb: 'SE',
           angle: 0,
-          distance: 444780.3209341317
+          distance: 10
         },
         {
           rhumb: 'NE',
           angle: 90,
-          distance: 555213.4562030523
+          distance: 10
         }
     ]
   };
@@ -36,8 +54,14 @@ test('test method createPolygonObjectRhumb for LineString', function (assert) {
     geometry: {
       type: 'LineString',
       coordinates: [
-          [3, 7], [3, 2.9999999999999996], [8, 3]
+          [3, 7], [-7, 7.000000000000001], [-6.999999999999999, 17]
       ]
+    },
+    crs: {
+      properties: {
+        name: 'EPSG:4326'
+      },
+      type: 'name'
     }
   };
   let subject = mapApiMixinObject.create({
@@ -58,8 +82,8 @@ test('test method createPolygonObjectRhumb for Polygon', function (assert) {
   //Arrange
   const testLiseString = {
     type: 'Polygon',
-    startPoint: [3, 7],
-    crs: 'EPSG:4326',
+    startPoint: [30, 70],
+    crs: 'EPSG:32640',
     skip: 0,
     hole: false,
     points:
@@ -67,22 +91,22 @@ test('test method createPolygonObjectRhumb for Polygon', function (assert) {
         {
           rhumb: 'SE',
           angle: 0,
-          distance: 444780.3209341317
+          distance: 10
         },
         {
           rhumb: 'NE',
           angle: 90,
-          distance: 555213.4562030523
+          distance: 10
         },
         {
           rhumb: 'NW',
           angle: 0,
-          distance: 444780.3209341317
+          distance: 10
         },
         {
           rhumb: 'NW',
           angle: 90,
-          distance: 551831.2448362056
+          distance: 10
         }
     ]
   };
@@ -93,14 +117,20 @@ test('test method createPolygonObjectRhumb for Polygon', function (assert) {
     geometry: {
       type: 'Polygon',
       coordinates: [
-          [[3, 7], [3, 2.9999999999999996], [8, 3], [8, 7], [3, 7]]
+          [[30, 70], [20, 70], [20, 80], [30, 80], [30, 70]]
       ]
+    },
+    crs: {
+      properties: {
+        name: 'EPSG:32640'
+      },
+      type: 'name'
     }
   };
   let subject = mapApiMixinObject.create({
     _getModelLeafletObject() {
       return [null,
-        { options: { crs: crs4326 } }];
+        { options: { crs: crs32640 } }];
     }
   });
 
