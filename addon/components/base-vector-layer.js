@@ -693,18 +693,20 @@ export default BaseLayer.extend({
     @return {String} string with replaced property
   */
   _applyProperty(str, layer) {
-    let parser = new DOMParser();
-    let xmlDoc = parser.parseFromString(str, 'text/html');
-    let propName = xmlDoc.getElementsByTagName('propertyname');
+    let propName = Ember.$(str).find('propertyname');
+    if (propName.length === 0) { // if main node
+      propName = Ember.$(str + ' propertyname');
+    }
+
     if (propName.length > 0) {
       for (var prop of propName) {
         let property = prop.innerHTML;
-        if (!Ember.isNone(property)) {
-          for (let key in layer.feature.properties) {
-            if (key === property && !Ember.isNone(layer.feature.properties[key]) && !Ember.isBlank(layer.feature.properties[key])) {
-              str = str.replace(prop.outerHTML, layer.feature.properties[key]);
-            }
-          }
+        if (prop.localName !== 'propertyname') {
+          property = prop.innerText;
+        }
+
+        if (property && layer.feature.properties.hasOwnProperty(property) && !Ember.isNone(layer.feature.properties[property])) {
+          str = str.replace(prop.outerHTML, layer.feature.properties[property]);
         }
       }
     }
@@ -720,16 +722,18 @@ export default BaseLayer.extend({
     @return {String} string with applied and replaced function
   */
   _applyFunction(str) {
-    let parser = new DOMParser();
-    let xmlDoc = parser.parseFromString(str, 'text/html');
-    let func = xmlDoc.getElementsByTagName('function');
+    let func = Ember.$(str).find('function');
+    if (func.length === 0) { // if main node
+      func = Ember.$(str + ' function');
+    }
+
     if (func.length > 0) {
       for (var item of func) {
-        let nameFunc = item.getAttribute('name');
+        let nameFunc = Ember.$(item).attr('name');
         if (!Ember.isNone(nameFunc)) {
           switch (nameFunc) {
             case 'toFixed':
-              let attr = item.getAttribute('attr');
+              let attr = Ember.$(item).attr('attr');
               let property = item.innerHTML;
               let numProp = Number.parseFloat(property);
               let numAttr = Number.parseFloat(attr);
