@@ -251,11 +251,14 @@ export default Ember.Mixin.create(rhumbOperations, {
   },
 
   /**
-    Create Object by rhumb.
+    Create object by rhumb for [LineString, Polygon]. Start point coordinates convert in crs of layer.
+    Accepts angles in degrees, converting them to radians. Accepts names of direction is [NE, SE, NW, SW].
+    Accepts distance in units accepted for CRS of layer. Calculation rhumb by point, distance and angle.
+    Returns coordinates skipping 'skip' from the first rhumb in crs of layer.
 
     @method createPolygonObjectRhumb
     @param {string} layerId Layer id.
-    @param {Object} data Coordinate objects.
+    @param {Object} data Rhumbs parameters.
     Example:
     var data = {
           type: 'LineString',
@@ -269,7 +272,7 @@ export default Ember.Mixin.create(rhumbOperations, {
             { rhumb: 'SW', angle: 86.0047147391561, distance: 16532.122718537685 }
           ]
         };
-    @returns {Object} New GeoJSON Feature.
+    @returns {Object} New GeoJSON Feature in crs of layer.
   */
   createPolygonObjectRhumb(layerId, data) {
     let [, leafletObject] = this._getModelLeafletObject(layerId);

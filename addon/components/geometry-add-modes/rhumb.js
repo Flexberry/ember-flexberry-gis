@@ -459,7 +459,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       };
 
       let geoJSON = null;
-      if (crsCode !== 'EPSG:4326') {
+      if (crsRhumb.code !== 'EPSG:4326') {
         geoJSON = L.geoJSON(rhumbObj, { coordsToLatLng: coordsToLatLng.bind(this) });
       } else {
         geoJSON = L.geoJSON(rhumbObj);
