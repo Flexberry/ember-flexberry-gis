@@ -411,6 +411,7 @@
 import Ember from &#x27;ember&#x27;;
 import rhumbOperations from &#x27;../utils/rhumb-operations&#x27;;
 import { getLeafletCrs } from &#x27;../utils/leaflet-crs&#x27;;
+import { geometryToJsts } from &#x27;../utils/layer-to-jsts&#x27;;
 import jsts from &#x27;npm:jsts&#x27;;
 
 export default Ember.Mixin.create(rhumbOperations, {
@@ -476,11 +477,12 @@ export default Ember.Mixin.create(rhumbOperations, {
   },
 
   /**
-    Create multi-circuit object.
+    Create multi-circuit object. Transforms geometries into JSTS objects. Checks whether types and crs are same.
+    If geometries intersects, it unions or differents geometries depending on the parameter isUnion.
+    After that, it merges all geometries that don&#x27;t intersects. Using GeoJSONWriter converts jsts object to geoJSON.
 
-    @method createMulti
-    @param {array} objects Array of objects to union.
-    Example:
+    Example of method call:
+    &#x60;&#x60;&#x60;javascript
     let objects = [
         {
           &quot;type&quot;: &quot;Feature&quot;,
@@ -542,49 +544,40 @@ export default Ember.Mixin.create(rhumbOperations, {
             }
           }
         }];
-    @param {Boolean} isUnion Get union or difference.
-    @returns {Object} new multi-circuit object.
+    var result = mapApi.mapModel.createMulti(objects, true);
+    &#x60;&#x60;&#x60;
+
+    @method createMulti
+    @param {array} objects Array of objects in GeoJSON format.
+    @param {Boolean} isUnion Flag: indicates whether to union geometries or to different.
+    @param {Boolean} failIfInvalid Flag: indicates whether to throw error if invalid geometries.
+    @returns {Object} New multi-circuit object in GeoJSO format.
   */
   createMulti(objects, isUnion = false, failIfInvalid = true) {
-    let geojsonReader = new jsts.io.GeoJSONReader();
-    let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let geometries = [];
+    return this._getMulti(objects, isUnion, failIfInvalid, true);
+  },
+
+  _getMulti(objects, isUnion = false, failIfInvalid = true, isJsts = false) {
     let separateObjects = [];
     let resultObject = null;
-
-    if (objects.length === 0) {
-      throw &#x27;error: data is empty&#x27;;
-    } else if (objects.length === 1) {
-      return objects[0];
-    }
-
+    let geometries = [];
     objects.forEach((element, i) =&gt; {
-      if (!Ember.isNone(element.crs)) {
-        objects[i] =
-          element.crs.properties.name.toUpperCase() === &#x27;EPSG:4326&#x27; ? element
-            : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
-      } else {
-        throw &quot;error: object must have &#x27;crs&#x27; attribute&quot;;
+      let g = element;
+      if (isJsts) {
+        g = geometryToJsts(element.geometry);
+        g.setSRID(element.crs.properties.name.split(&#x27;:&#x27;)[1]);
       }
-    }, this);
-
-    //read the geometry of features
-    objects.forEach((element, i) =&gt; {
-      let g = geojsonReader.read(element.geometry);
 
       if (g.isValid()) {
         geometries.push(g);
         let j = geometries.length - 1;
         if (j !== 0 &amp;&amp; this.getGeometryKind(geometries[j]) !== this.getGeometryKind(geometries[j - 1])) {
           throw &#x27;error: type mismatch. Objects must have the same type&#x27;;
+        } else if (j !== 0 &amp;&amp; geometries[j].getSRID() !== geometries[j - 1].getSRID()) {
+          throw &#x27;error: CRS mismatch. Objects must have the same crs&#x27;;
         }
-      } else {
-        console.error(&#x27;invalid geometry (object &#x27; + i + &#x27;)&#x27;);
-        console.error(element.geometry);
-
-        if (failIfInvalid) {
-          throw &#x27;error: invalid geometry&#x27;;
-        }
+      } else if (failIfInvalid) {
+        throw &#x27;error: invalid geometry&#x27;;
       }
     });
 
@@ -619,7 +612,9 @@ export default Ember.Mixin.create(rhumbOperations, {
       }
     });
 
+    let geojsonWriter = new jsts.io.GeoJSONWriter();
     let unionres = geojsonWriter.write(resultObject);
+    let crsResult = &#x27;EPSG:&#x27; + geometries[0].getSRID();
 
     const multiObj = {
       type: &#x27;Feature&#x27;,
@@ -630,7 +625,7 @@ export default Ember.Mixin.create(rhumbOperations, {
       crs: {
         type: &#x27;name&#x27;,
         properties: {
-          name: &#x27;EPSG:4326&#x27;
+          name: crsResult
         }
       }
     };

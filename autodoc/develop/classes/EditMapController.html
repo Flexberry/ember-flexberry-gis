@@ -887,7 +887,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method__addToArrayPointsAndFeature">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1480"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1480</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1474"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1474</code></a>
                             </p>
                     
                     
@@ -959,7 +959,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method__coordsToPoints">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1705"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1705</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1699"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1699</code></a>
                             </p>
                     
                     
@@ -1268,7 +1268,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method__pointAmplifier">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1696"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1696</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1690"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1690</code></a>
                             </p>
                     
                     
@@ -1314,7 +1314,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method__pointsToCoords">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1725"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1725</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1719"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1719</code></a>
                             </p>
                     
                     
@@ -3042,7 +3042,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_addObjectToLayer">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l8"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:8</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l9"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:9</code></a>
                             </p>
                     
                     
@@ -3458,7 +3458,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_compareLayers">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1596"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1596</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1590"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1590</code></a>
                             </p>
                     
                     
@@ -3786,6 +3786,9 @@
                                     <li class="arg">
                                             <code>isUnion</code>
                                     </li>
+                                    <li class="arg">
+                                            <code>failIfInvalid</code>
+                                    </li>
                                 </ul><span class="paren">)</span>
                             </div>
                     
@@ -3802,7 +3805,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_createMulti">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l68"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:68</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l69"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:69</code></a>
                             </p>
                     
                     
@@ -3810,21 +3813,12 @@
                         </div>
                     
                         <div class="description">
-                            Create multi-circuit object.
-                        </div>
+                            Create multi-circuit object. Transforms geometries into JSTS objects. Checks whether types and crs are same.
+                    If geometries intersects, it unions or differents geometries depending on the parameter isUnion.
+                    After that, it merges all geometries that don't intersects. Using GeoJSONWriter converts jsts object to geoJSON.
                     
-                            <div class="params">
-                                <h4>Parameters:</h4>
-                    
-                                <ul class="params-list">
-                                    <li class="param">
-                                            <code class="param-name">objects</code>
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            Array of objects to union.
-                    Example:
+                    Example of method call:
+                    <code>&#x60;</code>javascript
                     let objects = [
                         {
                           "type": "Feature",
@@ -3886,6 +3880,21 @@
                             }
                           }
                         }];
+                    var result = mapApi.mapModel.createMulti(objects, true);
+                    <code>&#x60;</code>
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">objects</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Array of objects in GeoJSON format.
                                         </div>
                     
                                     </li>
@@ -3895,7 +3904,17 @@
                     
                     
                                         <div class="param-description">
-                                            Get union or difference.
+                                            Flag: indicates whether to union geometries or to different.
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">failIfInvalid</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Flag: indicates whether to throw error if invalid geometries.
                                         </div>
                     
                                     </li>
@@ -3907,7 +3926,7 @@
                     
                                 <div class="returns-description">
                                             <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
-                                        new multi-circuit object.
+                                        New multi-circuit object in GeoJSO format.
                                 </div>
                             </div>
                     
@@ -4000,7 +4019,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_createPolygonObjectRhumb">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l253"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:253</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l248"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:248</code></a>
                             </p>
                     
                     
@@ -4239,7 +4258,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_differenceLayers">FlexberryMaplayerActionsHandlerMixin</a>:
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1514"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1514</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1508"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1508</code></a>
                             </p>
                     
                     
@@ -5274,7 +5293,10 @@
                         </div>
                     
                         <div class="description">
-                            Calculate geometry
+                            Get merged geometry. Loads objects from a layers by packages of 100 units each.
+                    Waits when all objects successfully load. Transform objects into JSTS objects.
+                    First it merges geometry of objects on first layer using _getMulti method, then on second layer.
+                    Result of combining objects in each layer is merged into a common geometry using createMulti method.
                         </div>
                     
                             <div class="params">
@@ -5339,7 +5361,7 @@
                     
                                 <div class="returns-description">
                                             <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
-                                        GeoJson Feature in EPSG:4326
+                                        GeoJson Feature.
                                 </div>
                             </div>
                     

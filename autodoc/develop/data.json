@@ -1569,6 +1569,13 @@
             },
             "namespaces": {}
         },
+        "addon/initializers/leaflet-jsts.js": {
+            "name": "addon/initializers/leaflet-jsts.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/initializers/leaflet-marker.js": {
             "name": "addon/initializers/leaflet-marker.js",
             "modules": {},
@@ -3226,6 +3233,13 @@
         },
         "addon/utils/html2canvas-clone.js": {
             "name": "addon/utils/html2canvas-clone.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/utils/lat-lng-to-coord.js": {
+            "name": "addon/utils/lat-lng-to-coord.js",
             "modules": {},
             "classes": {},
             "fors": {},
@@ -38699,7 +38713,7 @@
         },
         {
             "file": "addon/initializers/leaflet.js",
-            "line": 5,
+            "line": 7,
             "description": "Registers options for leaflet library.",
             "itemtype": "method",
             "name": "leaflet.initialize",
@@ -43025,7 +43039,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 8,
+            "line": 9,
             "description": "Add object to layer.",
             "itemtype": "method",
             "name": "addObjectToLayer",
@@ -43055,24 +43069,29 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 68,
-            "description": "Create multi-circuit object.",
+            "line": 69,
+            "description": "Create multi-circuit object. Transforms geometries into JSTS objects. Checks whether types and crs are same.\nIf geometries intersects, it unions or differents geometries depending on the parameter isUnion.\nAfter that, it merges all geometries that don't intersects. Using GeoJSONWriter converts jsts object to geoJSON.\n\nExample of method call:\n```javascript\nlet objects = [\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.18425, 58.07197],\n            [56.21068, 58.07197],\n            [56.21068, 58.07987],\n            [56.18425, 58.07987],\n            [56.18425, 58.07197]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    },\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.19712, 58.06770],\n            [56.22322, 58.06770],\n            [56.22322, 58.07551],\n            [56.19712, 58.07551],\n            [56.19712, 58.06770]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    },\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.21644, 58.07864],\n            [56.23197, 58.07864],\n            [56.23197, 58.08608],\n            [56.21644, 58.08608],\n            [56.21644, 58.07864]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    }];\nvar result = mapApi.mapModel.createMulti(objects, true);\n```",
             "itemtype": "method",
             "name": "createMulti",
             "params": [
                 {
                     "name": "objects",
-                    "description": "Array of objects to union.\nExample:\nlet objects = [\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.18425, 58.07197],\n            [56.21068, 58.07197],\n            [56.21068, 58.07987],\n            [56.18425, 58.07987],\n            [56.18425, 58.07197]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    },\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.19712, 58.06770],\n            [56.22322, 58.06770],\n            [56.22322, 58.07551],\n            [56.19712, 58.07551],\n            [56.19712, 58.06770]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    },\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.21644, 58.07864],\n            [56.23197, 58.07864],\n            [56.23197, 58.08608],\n            [56.21644, 58.08608],\n            [56.21644, 58.07864]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    }];",
+                    "description": "Array of objects in GeoJSON format.",
                     "type": "Array"
                 },
                 {
                     "name": "isUnion",
-                    "description": "Get union or difference.",
+                    "description": "Flag: indicates whether to union geometries or to different.",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "failIfInvalid",
+                    "description": "Flag: indicates whether to throw error if invalid geometries.",
                     "type": "Boolean"
                 }
             ],
             "return": {
-                "description": "new multi-circuit object.",
+                "description": "New multi-circuit object in GeoJSO format.",
                 "type": "Object"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
@@ -43080,7 +43099,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 231,
+            "line": 226,
             "description": "Get geometry kind by geometry",
             "params": [
                 {
@@ -43098,7 +43117,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 253,
+            "line": 248,
             "description": "Create object by rhumb for [LineString, Polygon]. Start point coordinates convert in crs of layer.\nAccepts angles in degrees, converting them to radians. Accepts names of direction is [NE, SE, NW, SW].\nAccepts distance in units accepted for CRS of layer. Calculation rhumb by point, distance and angle.\nReturns coordinates skipping 'skip' from the first rhumb in crs of layer.",
             "itemtype": "method",
             "name": "createPolygonObjectRhumb",
@@ -44262,7 +44281,7 @@
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
             "line": 1416,
-            "description": "Calculate geometry",
+            "description": "Get merged geometry. Loads objects from a layers by packages of 100 units each.\nWaits when all objects successfully load. Transform objects into JSTS objects.\nFirst it merges geometry of objects on first layer using _getMulti method, then on second layer.\nResult of combining objects in each layer is merged into a common geometry using createMulti method.",
             "itemtype": "method",
             "name": "getMergedGeometry",
             "params": [
@@ -44293,7 +44312,7 @@
                 }
             ],
             "return": {
-                "description": "GeoJson Feature in EPSG:4326",
+                "description": "GeoJson Feature.",
                 "type": "Promise"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
@@ -44301,7 +44320,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1480,
+            "line": 1474,
             "description": "Add to array points and feature.",
             "itemtype": "method",
             "name": "_addToArrayPointsAndFeature",
@@ -44326,7 +44345,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1514,
+            "line": 1508,
             "description": "Difference layers.",
             "itemtype": "method",
             "name": "differenceLayers",
@@ -44351,7 +44370,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1596,
+            "line": 1590,
             "description": "Compare layers.",
             "itemtype": "method",
             "name": "compareLayers",
@@ -44386,7 +44405,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1696,
+            "line": 1690,
             "description": "Exponentiation.",
             "itemtype": "method",
             "name": "_pointAmplifier",
@@ -44399,7 +44418,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1705,
+            "line": 1699,
             "description": "Transform coordinates in points.",
             "itemtype": "method",
             "name": "_coordsToPoints",
@@ -44419,7 +44438,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1725,
+            "line": 1719,
             "description": "Transform points in coordinates.",
             "itemtype": "method",
             "name": "_pointsToCoords",
@@ -47523,6 +47542,86 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/utils/lat-lng-to-coord.js",
+            "line": 1,
+            "description": "Projects geographical coordinates point into coordinates in units accepted for this crs and specified precision.",
+            "itemtype": "method",
+            "name": "latLngToCoords",
+            "params": [
+                {
+                    "name": "latlng",
+                    "description": "Geographical coordinates.",
+                    "type": "Object"
+                },
+                {
+                    "name": "crs",
+                    "description": "Coordinate reference system in which to transform coordinates.",
+                    "type": "Object"
+                },
+                {
+                    "name": "precision",
+                    "description": "Number of decimal places for coordinates",
+                    "type": "Number"
+                },
+                {
+                    "name": "coordinatesFunction",
+                    "description": "Function for getting coordinates.",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "Array of coordinates.",
+                "type": "Array"
+            },
+            "class": "Utils.Layers",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/utils/lat-lng-to-coord.js",
+            "line": 22,
+            "description": "Projects geographical coordinates into coordinates in units accepted for this crs.",
+            "itemtype": "method",
+            "name": "latLngsToCoords",
+            "params": [
+                {
+                    "name": "latlngs",
+                    "description": "Array of geographical coordinates.",
+                    "type": "Array"
+                },
+                {
+                    "name": "crs",
+                    "description": "Coordinate reference system in which to transform coordinates.",
+                    "type": "Object"
+                },
+                {
+                    "name": "levelsDeep",
+                    "description": "Level of deep.",
+                    "type": "Number"
+                },
+                {
+                    "name": "closed",
+                    "description": "Determines whether the first point should be appended to the end of the array to close the feature.",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "precision",
+                    "description": "Number of decimal places for coordinates",
+                    "type": "Number"
+                },
+                {
+                    "name": "coordinatesFunction",
+                    "description": "Function for getting coordinates.",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "Array of coordinates.",
+                "type": "Array"
+            },
+            "class": "Utils.Layers",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/utils/leaflet-crs.js",
             "line": 7,
             "description": "Builds leaflet coordinate reference system (CRS).",
@@ -48083,19 +48182,19 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:8"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:9"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:68"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:69"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:231"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:226"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:253"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:248"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -48216,6 +48315,14 @@
         {
             "message": "replacing incorrect tag: returns with return",
             "line": " addon/utils/feature-with-area-intersect.js:37"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/utils/lat-lng-to-coord.js:1"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/utils/lat-lng-to-coord.js:22"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -49831,7 +49938,7 @@
         },
         {
             "message": "Missing item type\nGet geometry kind by geometry",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:231"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:226"
         },
         {
             "message": "Missing item type\nGet [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.",

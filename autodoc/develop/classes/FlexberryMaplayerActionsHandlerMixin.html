@@ -759,7 +759,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1480"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1480</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1474"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1474</code></a>
                             </p>
                     
                     
@@ -835,7 +835,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1705"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1705</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1699"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1699</code></a>
                             </p>
                     
                     
@@ -1160,7 +1160,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1696"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1696</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1690"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1690</code></a>
                             </p>
                     
                     
@@ -1210,7 +1210,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1725"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1725</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1719"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1719</code></a>
                             </p>
                     
                     
@@ -2563,7 +2563,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l8"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:8</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l9"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:9</code></a>
                             </p>
                     
                     
@@ -2933,7 +2933,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1596"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1596</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1590"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1590</code></a>
                             </p>
                     
                     
@@ -3259,6 +3259,9 @@
                                     <li class="arg">
                                             <code>isUnion</code>
                                     </li>
+                                    <li class="arg">
+                                            <code>failIfInvalid</code>
+                                    </li>
                                 </ul><span class="paren">)</span>
                             </div>
                     
@@ -3275,7 +3278,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l68"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:68</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l69"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:69</code></a>
                             </p>
                     
                     
@@ -3283,7 +3286,73 @@
                         </div>
                     
                         <div class="description">
-                            <p>Create multi-circuit object.</p>
+                            <p>Create multi-circuit object. Transforms geometries into JSTS objects. Checks whether types and crs are same.
+                    If geometries intersects, it unions or differents geometries depending on the parameter isUnion.
+                    After that, it merges all geometries that don't intersects. Using GeoJSONWriter converts jsts object to geoJSON.</p>
+                    <p>Example of method call:</p>
+                    <pre class="code prettyprint"><code class="language-javascript">let objects = [
+                        {
+                          "type": "Feature",
+                          "properties": {},
+                          "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [
+                              [[56.18425, 58.07197],
+                                [56.21068, 58.07197],
+                                [56.21068, 58.07987],
+                                [56.18425, 58.07987],
+                                [56.18425, 58.07197]]
+                            ]
+                          },
+                          "crs": {
+                            "type": "name",
+                            "properties": {
+                              "name": "EPSG:4326"
+                            }
+                          }
+                        },
+                        {
+                          "type": "Feature",
+                          "properties": {},
+                          "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [
+                              [[56.19712, 58.06770],
+                                [56.22322, 58.06770],
+                                [56.22322, 58.07551],
+                                [56.19712, 58.07551],
+                                [56.19712, 58.06770]]
+                            ]
+                          },
+                          "crs": {
+                            "type": "name",
+                            "properties": {
+                              "name": "EPSG:4326"
+                            }
+                          }
+                        },
+                        {
+                          "type": "Feature",
+                          "properties": {},
+                          "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [
+                              [[56.21644, 58.07864],
+                                [56.23197, 58.07864],
+                                [56.23197, 58.08608],
+                                [56.21644, 58.08608],
+                                [56.21644, 58.07864]]
+                            ]
+                          },
+                          "crs": {
+                            "type": "name",
+                            "properties": {
+                              "name": "EPSG:4326"
+                            }
+                          }
+                        }];
+                    var result = mapApi.mapModel.createMulti(objects, true);
+                    </code></pre>
                     
                         </div>
                     
@@ -3297,69 +3366,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Array of objects to union.
-                    Example:
-                    let objects = [
-                    {
-                    "type": "Feature",
-                    "properties": {},
-                    "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
-                    [[56.18425, 58.07197],
-                    [56.21068, 58.07197],
-                    [56.21068, 58.07987],
-                    [56.18425, 58.07987],
-                    [56.18425, 58.07197]]
-                    ]
-                    },
-                    "crs": {
-                    "type": "name",
-                    "properties": {
-                    "name": "EPSG:4326"
-                    }
-                    }
-                    },
-                    {
-                    "type": "Feature",
-                    "properties": {},
-                    "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
-                    [[56.19712, 58.06770],
-                    [56.22322, 58.06770],
-                    [56.22322, 58.07551],
-                    [56.19712, 58.07551],
-                    [56.19712, 58.06770]]
-                    ]
-                    },
-                    "crs": {
-                    "type": "name",
-                    "properties": {
-                    "name": "EPSG:4326"
-                    }
-                    }
-                    },
-                    {
-                    "type": "Feature",
-                    "properties": {},
-                    "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
-                    [[56.21644, 58.07864],
-                    [56.23197, 58.07864],
-                    [56.23197, 58.08608],
-                    [56.21644, 58.08608],
-                    [56.21644, 58.07864]]
-                    ]
-                    },
-                    "crs": {
-                    "type": "name",
-                    "properties": {
-                    "name": "EPSG:4326"
-                    }
-                    }
-                    }];</p>
+                                            <p>Array of objects in GeoJSON format.</p>
                     
                                         </div>
                     
@@ -3370,7 +3377,18 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Get union or difference.</p>
+                                            <p>Flag: indicates whether to union geometries or to different.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">failIfInvalid</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Flag: indicates whether to throw error if invalid geometries.</p>
                     
                                         </div>
                     
@@ -3383,7 +3401,7 @@
                     
                                 <div class="returns-description">
                                             <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
-                                        <p>new multi-circuit object.</p>
+                                        <p>New multi-circuit object in GeoJSO format.</p>
                     
                                 </div>
                             </div>
@@ -3479,7 +3497,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l253"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:253</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l248"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:248</code></a>
                             </p>
                     
                     
@@ -3730,7 +3748,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1514"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1514</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1508"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1508</code></a>
                             </p>
                     
                     
@@ -4803,7 +4821,10 @@
                         </div>
                     
                         <div class="description">
-                            <p>Calculate geometry</p>
+                            <p>Get merged geometry. Loads objects from a layers by packages of 100 units each.
+                    Waits when all objects successfully load. Transform objects into JSTS objects.
+                    First it merges geometry of objects on first layer using _getMulti method, then on second layer.
+                    Result of combining objects in each layer is merged into a common geometry using createMulti method.</p>
                     
                         </div>
                     
@@ -4874,7 +4895,7 @@
                     
                                 <div class="returns-description">
                                             <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
-                                        <p>GeoJson Feature in EPSG:4326</p>
+                                        <p>GeoJson Feature.</p>
                     
                                 </div>
                             </div>
