@@ -7091,7 +7091,7 @@ define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-object-setting-
     assert.ok(true, 'unit/models/new-platform-flexberry-g-i-s-map-object-setting-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['exports', 'ember-qunit', 'sinon', 'ember'], function (exports, _emberQunit, _sinon, _ember) {
+define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['exports', 'ember-qunit', 'sinon', 'ember', 'ember-flexberry-gis/utils/layer-to-jsts'], function (exports, _emberQunit, _sinon, _ember, _emberFlexberryGisUtilsLayerToJsts) {
 
   (0, _emberQunit.moduleForModel)('new-platform-flexberry-g-i-s-map', 'Unit | Model | new-platform-flexberry-g-i-s-map', {
     // Specify the other units that are required for this test.
@@ -7483,6 +7483,34 @@ define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['export
     var feature2Layer2 = L.geoJSON(geoJson2Layer2).getLayers()[0];
     feature2Layer2.options.crs = { code: 'EPSG:4326' };
 
+    feature1Layer1.toJsts = function () {};
+
+    var toJstsStub1 = _sinon['default'].stub(feature1Layer1, 'toJsts');
+    var objJsts1 = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(geoJson1Layer1);
+    objJsts1.setSRID(4326);
+    toJstsStub1.returns(objJsts1);
+
+    feature2Layer1.toJsts = function () {};
+
+    var toJstsStub2 = _sinon['default'].stub(feature2Layer1, 'toJsts');
+    var objJsts2 = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(geoJson2Layer1);
+    objJsts2.setSRID(4326);
+    toJstsStub2.returns(objJsts2);
+
+    feature1Layer2.toJsts = function () {};
+
+    var toJstsStub3 = _sinon['default'].stub(feature1Layer2, 'toJsts');
+    var objJsts3 = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(geoJson1Layer2);
+    objJsts3.setSRID(4326);
+    toJstsStub3.returns(objJsts3);
+
+    feature2Layer2.toJsts = function () {};
+
+    var toJstsStub4 = _sinon['default'].stub(feature2Layer2, 'toJsts');
+    var objJsts4 = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(geoJson2Layer2);
+    objJsts4.setSRID(4326);
+    toJstsStub4.returns(objJsts4);
+
     var map = this.subject();
     var _getModelLayerFeatureStub = _sinon['default'].stub(map, '_getModelLayerFeature');
     _getModelLayerFeatureStub.withArgs('1', ['1', '2']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
@@ -7553,6 +7581,34 @@ define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['export
     feature1Layer2.options.crs = { code: 'EPSG:4326' };
     var feature2Layer2 = L.geoJSON(geoJson2Layer2).getLayers()[0];
     feature2Layer2.options.crs = { code: 'EPSG:4326' };
+
+    feature1Layer1.toJsts = function () {};
+
+    var toJstsStub1 = _sinon['default'].stub(feature1Layer1, 'toJsts');
+    var objJsts1 = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(geoJson1Layer1);
+    objJsts1.setSRID(4326);
+    toJstsStub1.returns(objJsts1);
+
+    feature2Layer1.toJsts = function () {};
+
+    var toJstsStub2 = _sinon['default'].stub(feature2Layer1, 'toJsts');
+    var objJsts2 = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(geoJson2Layer1);
+    objJsts2.setSRID(4326);
+    toJstsStub2.returns(objJsts2);
+
+    feature1Layer2.toJsts = function () {};
+
+    var toJstsStub3 = _sinon['default'].stub(feature1Layer2, 'toJsts');
+    var objJsts3 = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(geoJson1Layer2);
+    objJsts3.setSRID(4326);
+    toJstsStub3.returns(objJsts3);
+
+    feature2Layer2.toJsts = function () {};
+
+    var toJstsStub4 = _sinon['default'].stub(feature2Layer2, 'toJsts');
+    var objJsts4 = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(geoJson2Layer2);
+    objJsts4.setSRID(4326);
+    toJstsStub4.returns(objJsts4);
 
     var map = this.subject();
     var _getModelLayerFeatureStub = _sinon['default'].stub(map, '_getModelLayerFeature');
@@ -8077,6 +8133,408 @@ define('dummy/tests/unit/services/map-store-test.jshint', ['exports'], function 
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/services/map-store-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/utils/lat-lng-to-coord-test', ['exports', 'ember-flexberry-gis/utils/lat-lng-to-coord', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'qunit', 'npm:jsts'], function (exports, _emberFlexberryGisUtilsLatLngToCoord, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _qunit, _npmJsts) {
+
+  (0, _qunit.module)('Unit | Utility | lat lng to coord');
+
+  var crs = _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'].create();
+  var precision = 0;
+
+  (0, _qunit.test)('test method latLngToCoords for Point', function (assert) {
+    //Arrange
+    var latlng = L.latLng(30, 10);
+    var latlngWithAlt = L.latLng(30, 10, 20);
+    var coordinatesFunction = function coordinatesFunction(coord, altitude) {
+      return altitude ? new _npmJsts['default'].geom.Coordinate(coord.x, coord.y, altitude) : new _npmJsts['default'].geom.Coordinate(coord.x, coord.y);
+    };
+
+    //Act
+    var resCoord = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngToCoords)(latlng, crs, precision);
+    var resCoordWithAlt = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngToCoords)(latlngWithAlt, crs, precision);
+    var resCoordWithFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngToCoords)(latlng, crs, precision, coordinatesFunction);
+    var resCoordWithAltAndFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngToCoords)(latlngWithAlt, crs, precision, coordinatesFunction);
+
+    //Assert
+    assert.deepEqual(resCoord, [10, 30]);
+    assert.deepEqual(resCoordWithAlt, [10, 30, 20]);
+    assert.deepEqual(resCoordWithFunc.toString(), '(10, 30, undefined)');
+    assert.deepEqual(resCoordWithAltAndFunc.toString(), '(10, 30, 20)');
+  });
+
+  (0, _qunit.test)('test method latLngsToCoords for LineString', function (assert) {
+    //Arrange
+    var latlngs = [L.latLng(30, 10), L.latLng(10, 30), L.latLng(40, 40)];
+    var latlngsWithAlt = [L.latLng(30, 10, 20), L.latLng(10, 30, 21), L.latLng(40, 40, 22)];
+    var coordinatesFunction = function coordinatesFunction(coord, altitude) {
+      return altitude ? new _npmJsts['default'].geom.Coordinate(coord.x, coord.y, altitude) : new _npmJsts['default'].geom.Coordinate(coord.x, coord.y);
+    };
+
+    var levelsDeep = 0;
+    var closed = false;
+
+    //Act
+    var resCoord = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngs, crs, levelsDeep, closed, precision);
+    var resCoordWithAlt = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngsWithAlt, crs, levelsDeep, closed, precision);
+    var resCoordWithFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngs, crs, levelsDeep, closed, precision, coordinatesFunction);
+    var resCoordWithAltAndFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngsWithAlt, crs, levelsDeep, closed, precision, coordinatesFunction);
+
+    //Assert
+    assert.deepEqual(resCoord, [[10, 30], [30, 10], [40, 40]]);
+    assert.deepEqual(resCoordWithAlt, [[10, 30, 20], [30, 10, 21], [40, 40, 22]]);
+    assert.deepEqual(resCoordWithFunc.toString(), '(10, 30, undefined),(30, 10, undefined),(40, 40, undefined)');
+    assert.deepEqual(resCoordWithAltAndFunc.toString(), '(10, 30, 20),(30, 10, 21),(40, 40, 22)');
+  });
+
+  (0, _qunit.test)('test method latLngsToCoords for MultiLineString', function (assert) {
+    //Arrange
+    var latlngs = [[L.latLng(10, 10), L.latLng(20, 20), L.latLng(10, 40)], [L.latLng(40, 40), L.latLng(30, 30), L.latLng(40, 20)]];
+    var latlngsWithAlt = [[L.latLng(10, 10, 20), L.latLng(20, 20, 21), L.latLng(10, 40, 22)], [L.latLng(40, 40, 23), L.latLng(30, 30, 24), L.latLng(40, 20, 25)]];
+    var coordinatesFunction = function coordinatesFunction(coord, altitude) {
+      return altitude ? new _npmJsts['default'].geom.Coordinate(coord.x, coord.y, altitude) : new _npmJsts['default'].geom.Coordinate(coord.x, coord.y);
+    };
+
+    var levelsDeep = 1;
+    var closed = false;
+
+    //Act
+    var resCoord = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngs, crs, levelsDeep, closed, precision);
+    var resCoordWithAlt = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngsWithAlt, crs, levelsDeep, closed, precision);
+    var resCoordWithFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngs, crs, levelsDeep, closed, precision, coordinatesFunction);
+    var resCoordWithAltAndFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngsWithAlt, crs, levelsDeep, closed, precision, coordinatesFunction);
+
+    //Assert
+    assert.deepEqual(resCoord, [[[10, 10], [20, 20], [40, 10]], [[40, 40], [30, 30], [20, 40]]]);
+    assert.deepEqual(resCoordWithAlt, [[[10, 10, 20], [20, 20, 21], [40, 10, 22]], [[40, 40, 23], [30, 30, 24], [20, 40, 25]]]);
+    assert.equal(resCoordWithFunc.length, 2);
+    assert.deepEqual(resCoordWithFunc[0].toString(), '(10, 10, undefined),(20, 20, undefined),(40, 10, undefined)');
+    assert.deepEqual(resCoordWithFunc[1].toString(), '(40, 40, undefined),(30, 30, undefined),(20, 40, undefined)');
+    assert.equal(resCoordWithAltAndFunc.length, 2);
+    assert.deepEqual(resCoordWithAltAndFunc[0].toString(), '(10, 10, 20),(20, 20, 21),(40, 10, 22)');
+    assert.deepEqual(resCoordWithAltAndFunc[1].toString(), '(40, 40, 23),(30, 30, 24),(20, 40, 25)');
+  });
+
+  (0, _qunit.test)('test method latLngsToCoords for Polygon without hole', function (assert) {
+    //Arrange
+    var latlngs = [[L.latLng(30, 10), L.latLng(40, 40), L.latLng(20, 40), L.latLng(10, 20)]];
+    var latlngsWithAlt = [[L.latLng(30, 10, 20), L.latLng(40, 40, 21), L.latLng(20, 40, 22), L.latLng(10, 20, 23)]];
+    var coordinatesFunction = function coordinatesFunction(coord, altitude) {
+      return altitude ? new _npmJsts['default'].geom.Coordinate(coord.x, coord.y, altitude) : new _npmJsts['default'].geom.Coordinate(coord.x, coord.y);
+    };
+
+    var levelsDeep = 1;
+    var closed = true;
+
+    //Act
+    var resCoord = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngs, crs, levelsDeep, closed, precision);
+    var resCoordWithAlt = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngsWithAlt, crs, levelsDeep, closed, precision);
+    var resCoordWithFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngs, crs, levelsDeep, closed, precision, coordinatesFunction);
+    var resCoordWithAltAndFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngsWithAlt, crs, levelsDeep, closed, precision, coordinatesFunction);
+
+    //Assert
+    assert.deepEqual(resCoord, [[[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]]);
+    assert.deepEqual(resCoordWithAlt, [[[10, 30, 20], [40, 40, 21], [40, 20, 22], [20, 10, 23], [10, 30, 20]]]);
+    assert.deepEqual(resCoordWithFunc.toString(), '(10, 30, undefined),(40, 40, undefined),(40, 20, undefined)' + ',(20, 10, undefined),(10, 30, undefined)');
+    assert.deepEqual(resCoordWithAltAndFunc.toString(), '(10, 30, 20),(40, 40, 21),(40, 20, 22)' + ',(20, 10, 23),(10, 30, 20)');
+  });
+
+  (0, _qunit.test)('test method latLngsToCoords for Polygon with hole', function (assert) {
+    //Arrange
+    var latlngs = [[L.latLng(35, 10), L.latLng(45, 45), L.latLng(15, 40), L.latLng(10, 20)], [L.latLng(20, 30), L.latLng(35, 35), L.latLng(30, 20)]];
+    var latlngsWithAlt = [[L.latLng(35, 10, 20), L.latLng(45, 45, 21), L.latLng(15, 40, 22), L.latLng(10, 20, 23)], [L.latLng(20, 30, 24), L.latLng(35, 35, 25), L.latLng(30, 20, 26)]];
+    var coordinatesFunction = function coordinatesFunction(coord, altitude) {
+      return altitude ? new _npmJsts['default'].geom.Coordinate(coord.x, coord.y, altitude) : new _npmJsts['default'].geom.Coordinate(coord.x, coord.y);
+    };
+
+    var levelsDeep = 1;
+    var closed = true;
+
+    //Act
+    var resCoord = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngs, crs, levelsDeep, closed, precision);
+    var resCoordWithAlt = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngsWithAlt, crs, levelsDeep, closed, precision);
+    var resCoordWithFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngs, crs, levelsDeep, closed, precision, coordinatesFunction);
+    var resCoordWithAltAndFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngsWithAlt, crs, levelsDeep, closed, precision, coordinatesFunction);
+
+    //Assert
+    assert.deepEqual(resCoord, [[[10, 35], [45, 45], [40, 15], [20, 10], [10, 35]], [[30, 20], [35, 35], [20, 30], [30, 20]]]);
+    assert.deepEqual(resCoordWithAlt, [[[10, 35, 20], [45, 45, 21], [40, 15, 22], [20, 10, 23], [10, 35, 20]], [[30, 20, 24], [35, 35, 25], [20, 30, 26], [30, 20, 24]]]);
+    assert.deepEqual(resCoordWithFunc[0].toString(), '(10, 35, undefined),(45, 45, undefined),(40, 15, undefined)' + ',(20, 10, undefined),(10, 35, undefined)');
+    assert.deepEqual(resCoordWithFunc[1].toString(), '(30, 20, undefined),(35, 35, undefined),(20, 30, undefined),' + '(30, 20, undefined)');
+    assert.deepEqual(resCoordWithAltAndFunc[0].toString(), '(10, 35, 20),(45, 45, 21),(40, 15, 22)' + ',(20, 10, 23),(10, 35, 20)');
+    assert.deepEqual(resCoordWithAltAndFunc[1].toString(), '(30, 20, 24),(35, 35, 25),(20, 30, 26),' + '(30, 20, 24)');
+  });
+
+  (0, _qunit.test)('test method latLngsToCoords for MultiPolygon without hole', function (assert) {
+    //Arrange
+    var latlngs = [[[L.latLng(30, 20), L.latLng(45, 40), L.latLng(10, 40)]], [[L.latLng(15, 5), L.latLng(40, 10), L.latLng(10, 20), L.latLng(5, 10)]]];
+    var latlngsWithAlt = [[[L.latLng(30, 20, 20), L.latLng(45, 40, 21), L.latLng(10, 40, 22)]], [[L.latLng(15, 5, 23), L.latLng(40, 10, 24), L.latLng(10, 20, 25), L.latLng(5, 10, 26)]]];
+    var coordinatesFunction = function coordinatesFunction(coord, altitude) {
+      return altitude ? new _npmJsts['default'].geom.Coordinate(coord.x, coord.y, altitude) : new _npmJsts['default'].geom.Coordinate(coord.x, coord.y);
+    };
+
+    var levelsDeep = 2;
+    var closed = true;
+
+    //Act
+    var resCoord = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngs, crs, levelsDeep, closed, precision);
+    var resCoordWithAlt = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngsWithAlt, crs, levelsDeep, closed, precision);
+    var resCoordWithFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngs, crs, levelsDeep, closed, precision, coordinatesFunction);
+    var resCoordWithAltAndFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngsWithAlt, crs, levelsDeep, closed, precision, coordinatesFunction);
+
+    //Assert
+    assert.deepEqual(resCoord, [[[[20, 30], [40, 45], [40, 10], [20, 30]]], [[[5, 15], [10, 40], [20, 10], [10, 5], [5, 15]]]]);
+    assert.deepEqual(resCoordWithAlt, [[[[20, 30, 20], [40, 45, 21], [40, 10, 22], [20, 30, 20]]], [[[5, 15, 23], [10, 40, 24], [20, 10, 25], [10, 5, 26], [5, 15, 23]]]]);
+    assert.deepEqual(resCoordWithFunc[0][0].toString(), '(20, 30, undefined),(40, 45, undefined),(40, 10, undefined),(20, 30, undefined)');
+    assert.deepEqual(resCoordWithFunc[1][0].toString(), '(5, 15, undefined),(10, 40, undefined),(20, 10, undefined),(10, 5, undefined)' + ',(5, 15, undefined)');
+    assert.deepEqual(resCoordWithAltAndFunc[0][0].toString(), '(20, 30, 20),(40, 45, 21),(40, 10, 22),(20, 30, 20)');
+    assert.deepEqual(resCoordWithAltAndFunc[1][0].toString(), '(5, 15, 23),(10, 40, 24),(20, 10, 25),(10, 5, 26)' + ',(5, 15, 23)');
+  });
+
+  (0, _qunit.test)('test method latLngsToCoords for MultiPolygon with hole', function (assert) {
+    //Arrange
+    var latlngs = [[[L.latLng(40, 40), L.latLng(20, 45), L.latLng(45, 30)]], [[L.latLng(20, 35), L.latLng(10, 30), L.latLng(10, 10), L.latLng(30, 5), L.latLng(45, 20)], [L.latLng(30, 20), L.latLng(20, 15), L.latLng(20, 25)]]];
+    var latlngsWithAlt = [[[L.latLng(40, 40, 20), L.latLng(20, 45, 21), L.latLng(45, 30, 22)]], [[L.latLng(20, 35, 24), L.latLng(10, 30, 25), L.latLng(10, 10, 26), L.latLng(30, 5, 27), L.latLng(45, 20, 28)], [L.latLng(30, 20, 29), L.latLng(20, 15, 30), L.latLng(20, 25, 31)]]];
+    var coordinatesFunction = function coordinatesFunction(coord, altitude) {
+      return altitude ? new _npmJsts['default'].geom.Coordinate(coord.x, coord.y, altitude) : new _npmJsts['default'].geom.Coordinate(coord.x, coord.y);
+    };
+
+    var levelsDeep = 2;
+    var closed = true;
+
+    //Act
+    var resCoord = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngs, crs, levelsDeep, closed, precision);
+    var resCoordWithAlt = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngsWithAlt, crs, levelsDeep, closed, precision);
+    var resCoordWithFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngs, crs, levelsDeep, closed, precision, coordinatesFunction);
+    var resCoordWithAltAndFunc = (0, _emberFlexberryGisUtilsLatLngToCoord.latLngsToCoords)(latlngsWithAlt, crs, levelsDeep, closed, precision, coordinatesFunction);
+
+    //Assert
+    assert.deepEqual(resCoord, [[[[40, 40], [45, 20], [30, 45], [40, 40]]], [[[35, 20], [30, 10], [10, 10], [5, 30], [20, 45], [35, 20]], [[20, 30], [15, 20], [25, 20], [20, 30]]]]);
+    assert.deepEqual(resCoordWithAlt, [[[[40, 40, 20], [45, 20, 21], [30, 45, 22], [40, 40, 20]]], [[[35, 20, 24], [30, 10, 25], [10, 10, 26], [5, 30, 27], [20, 45, 28], [35, 20, 24]], [[20, 30, 29], [15, 20, 30], [25, 20, 31], [20, 30, 29]]]]);
+    assert.deepEqual(resCoordWithFunc[0][0].toString(), '(40, 40, undefined),(45, 20, undefined),(30, 45, undefined),(40, 40, undefined)');
+    assert.deepEqual(resCoordWithFunc[1][0].toString(), '(35, 20, undefined),(30, 10, undefined),(10, 10, undefined)' + ',(5, 30, undefined),(20, 45, undefined),(35, 20, undefined)');
+    assert.deepEqual(resCoordWithFunc[1][1].toString(), '(20, 30, undefined),(15, 20, undefined),(25, 20, undefined),' + '(20, 30, undefined)');
+    assert.deepEqual(resCoordWithAltAndFunc[0][0].toString(), '(40, 40, 20),(45, 20, 21),(30, 45, 22),(40, 40, 20)');
+    assert.deepEqual(resCoordWithAltAndFunc[1][0].toString(), '(35, 20, 24),(30, 10, 25),(10, 10, 26)' + ',(5, 30, 27),(20, 45, 28),(35, 20, 24)');
+    assert.deepEqual(resCoordWithAltAndFunc[1][1].toString(), '(20, 30, 29),(15, 20, 30),(25, 20, 31),' + '(20, 30, 29)');
+  });
+});
+define('dummy/tests/unit/utils/lat-lng-to-coord-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/utils');
+  test('unit/utils/lat-lng-to-coord-test.js should pass jscs', function () {
+    ok(true, 'unit/utils/lat-lng-to-coord-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/utils/lat-lng-to-coord-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/utils/lat-lng-to-coord-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/utils/lat-lng-to-coord-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/utils/layer-to-jsts-test', ['exports', 'ember-flexberry-gis/utils/layer-to-jsts', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'qunit'], function (exports, _emberFlexberryGisUtilsLayerToJsts, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _qunit) {
+
+  (0, _qunit.module)('Unit | Utility | layer to jsts');
+
+  var crs = _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'].create();
+
+  (0, _qunit.test)('test method latlngToPointJsts and geometryToJsts for Point', function (assert) {
+    //Arrange
+    var latlng = L.latLng(30, 10);
+    var feature = {
+      type: 'Point',
+      coordinates: [10, 30]
+    };
+
+    //Act
+    var resultToJsts = (0, _emberFlexberryGisUtilsLayerToJsts.latlngToPointJsts)(latlng, crs);
+    var resultFromGeoJSON = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(feature);
+
+    //Assert
+    assert.equal(resultToJsts.getNumGeometries(), 1);
+    assert.equal(resultToJsts.getCoordinate().toString(), '(10, 30, undefined)');
+    assert.equal(resultToJsts.getGeometryType(), 'Point');
+    assert.equal(resultFromGeoJSON.getNumGeometries(), 1);
+    assert.equal(resultFromGeoJSON.getCoordinate().toString(), '(10, 30, undefined)');
+    assert.equal(resultFromGeoJSON.getGeometryType(), 'Point');
+  });
+
+  (0, _qunit.test)('test method latlngToPointJsts and geometryToJsts for Point with altitude', function (assert) {
+    //Arrange
+    var latlng = L.latLng(30, 10, 20);
+    var feature = {
+      type: 'Point',
+      coordinates: [10, 30, 20]
+    };
+
+    //Act
+    var resultToJsts = (0, _emberFlexberryGisUtilsLayerToJsts.latlngToPointJsts)(latlng, crs);
+    var resultFromGeoJSON = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(feature);
+
+    //Assert
+    assert.equal(resultToJsts.getNumGeometries(), 1);
+    assert.equal(resultToJsts.getCoordinate().toString(), '(10, 30, 20)');
+    assert.equal(resultToJsts.getGeometryType(), 'Point');
+    assert.equal(resultFromGeoJSON.getNumGeometries(), 1);
+    assert.equal(resultFromGeoJSON.getCoordinate().toString(), '(10, 30, 20)');
+    assert.equal(resultFromGeoJSON.getGeometryType(), 'Point');
+  });
+
+  (0, _qunit.test)('test method latlngToPolylineJsts and geometryToJsts for LineString', function (assert) {
+    //Arrange
+    var latlngs = [L.latLng(30, 10), L.latLng(10, 30), L.latLng(40, 40)];
+    var feature = {
+      type: 'LineString',
+      coordinates: [[10, 30], [30, 10], [40, 40]]
+    };
+
+    //Act
+    var resultToJsts = (0, _emberFlexberryGisUtilsLayerToJsts.latlngToPolylineJsts)(latlngs, crs);
+    var resultFromGeoJSON = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(feature);
+
+    //Assert
+    assert.equal(resultToJsts.getNumGeometries(), 1);
+    assert.equal(resultToJsts.getCoordinates().toString(), '(10, 30, undefined),(30, 10, undefined),(40, 40, undefined)');
+    assert.equal(resultToJsts.getGeometryType(), 'LineString');
+    assert.equal(resultFromGeoJSON.getNumGeometries(), 1);
+    assert.equal(resultFromGeoJSON.getCoordinates().toString(), '(10, 30, undefined),(30, 10, undefined),(40, 40, undefined)');
+    assert.equal(resultFromGeoJSON.getGeometryType(), 'LineString');
+  });
+
+  (0, _qunit.test)('test method latlngToPolylineJsts and geometryToJsts for MultiLineString', function (assert) {
+    //Arrange
+    var latlngs = [[L.latLng(10, 10), L.latLng(20, 20), L.latLng(10, 40)], [L.latLng(40, 40), L.latLng(30, 30), L.latLng(40, 20)]];
+    var feature = {
+      type: 'MultiLineString',
+      coordinates: [[[10, 10], [20, 20], [40, 10]], [[40, 40], [30, 30], [20, 40]]]
+    };
+
+    //Act
+    var resultToJsts = (0, _emberFlexberryGisUtilsLayerToJsts.latlngToPolylineJsts)(latlngs, crs);
+    var resultFromGeoJSON = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(feature);
+
+    //Assert
+    assert.equal(resultToJsts.getNumGeometries(), 2);
+    assert.equal(resultToJsts.getGeometryN(0).getCoordinates().toString(), '(10, 10, undefined),(20, 20, undefined),(40, 10, undefined)');
+    assert.equal(resultToJsts.getGeometryN(1).getCoordinates().toString(), '(40, 40, undefined),(30, 30, undefined),(20, 40, undefined)');
+    assert.equal(resultToJsts.getGeometryType(), 'MultiLineString');
+    assert.equal(resultFromGeoJSON.getNumGeometries(), 2);
+    assert.equal(resultFromGeoJSON.getGeometryN(0).getCoordinates().toString(), '(10, 10, undefined),(20, 20, undefined),(40, 10, undefined)');
+    assert.equal(resultFromGeoJSON.getGeometryN(1).getCoordinates().toString(), '(40, 40, undefined),(30, 30, undefined),(20, 40, undefined)');
+    assert.equal(resultFromGeoJSON.getGeometryType(), 'MultiLineString');
+  });
+
+  (0, _qunit.test)('test method latlngToPolygonJsts and geometryToJsts for Polygon without hole', function (assert) {
+    //Arrange
+    var latlngs = [[L.latLng(30, 10), L.latLng(40, 40), L.latLng(20, 40), L.latLng(10, 20)]];
+    var feature = {
+      type: 'Polygon',
+      coordinates: [[[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]]
+    };
+
+    //Act
+    var resultToJsts = (0, _emberFlexberryGisUtilsLayerToJsts.latlngToPolygonJsts)(latlngs, crs);
+    var resultFromGeoJSON = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(feature);
+
+    //Assert
+    assert.equal(resultToJsts.getNumGeometries(), 1);
+    assert.equal(resultToJsts.getGeometryN(0).getCoordinates().toString(), '(10, 30, undefined),(40, 40, undefined),(40, 20, undefined)' + ',(20, 10, undefined),(10, 30, undefined)');
+    assert.equal(resultToJsts.getGeometryType(), 'Polygon');
+    assert.equal(resultFromGeoJSON.getNumGeometries(), 1);
+    assert.equal(resultFromGeoJSON.getGeometryN(0).getCoordinates().toString(), '(10, 30, undefined),(40, 40, undefined),(40, 20, undefined)' + ',(20, 10, undefined),(10, 30, undefined)');
+    assert.equal(resultFromGeoJSON.getGeometryType(), 'Polygon');
+  });
+
+  (0, _qunit.test)('test method latlngToPolygonJsts and geometryToJsts for Polygon with hole', function (assert) {
+    //Arrange
+    var latlngs = [[L.latLng(35, 10), L.latLng(45, 45), L.latLng(15, 40), L.latLng(10, 20)], [L.latLng(20, 30), L.latLng(35, 35), L.latLng(30, 20)]];
+    var feature = {
+      type: 'Polygon',
+      coordinates: [[[10, 35], [45, 45], [40, 15], [20, 10], [10, 35]], [[30, 20], [35, 35], [20, 30], [30, 20]]]
+    };
+
+    //Act
+    var resultToJsts = (0, _emberFlexberryGisUtilsLayerToJsts.latlngToPolygonJsts)(latlngs, crs);
+    var resultFromGeoJSON = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(feature);
+
+    //Assert
+    assert.equal(resultToJsts.getNumGeometries(), 1);
+    assert.equal(resultToJsts.getExteriorRing().getCoordinates().toString(), '(10, 35, undefined),(45, 45, undefined),(40, 15, undefined)' + ',(20, 10, undefined),(10, 35, undefined)');
+    assert.equal(resultToJsts.getInteriorRingN(0).getCoordinates().toString(), '(30, 20, undefined),(35, 35, undefined),(20, 30, undefined),' + '(30, 20, undefined)');
+    assert.equal(resultToJsts.getGeometryType(), 'Polygon');
+    assert.equal(resultFromGeoJSON.getNumGeometries(), 1);
+    assert.equal(resultFromGeoJSON.getExteriorRing().getCoordinates().toString(), '(10, 35, undefined),(45, 45, undefined),(40, 15, undefined)' + ',(20, 10, undefined),(10, 35, undefined)');
+    assert.equal(resultFromGeoJSON.getInteriorRingN(0).getCoordinates().toString(), '(30, 20, undefined),(35, 35, undefined),(20, 30, undefined),' + '(30, 20, undefined)');
+    assert.equal(resultFromGeoJSON.getGeometryType(), 'Polygon');
+  });
+
+  (0, _qunit.test)('test method latlngToPolygonJsts and geometryToJsts for MultiPolygon without hole', function (assert) {
+    //Arrange
+    var latlngs = [[[L.latLng(30, 20), L.latLng(45, 40), L.latLng(10, 40)]], [[L.latLng(15, 5), L.latLng(40, 10), L.latLng(10, 20), L.latLng(5, 10)]]];
+    var feature = {
+      type: 'MultiPolygon',
+      coordinates: [[[[20, 30], [40, 45], [40, 10], [20, 30]]], [[[5, 15], [10, 40], [20, 10], [10, 5], [5, 15]]]]
+    };
+
+    //Act
+    var resultToJsts = (0, _emberFlexberryGisUtilsLayerToJsts.latlngToPolygonJsts)(latlngs, crs);
+    var resultFromGeoJSON = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(feature);
+
+    //Assert
+    assert.equal(resultToJsts.getNumGeometries(), 2);
+    assert.equal(resultToJsts.getGeometryN(0).getCoordinates().toString(), '(20, 30, undefined),(40, 45, undefined),(40, 10, undefined),(20, 30, undefined)');
+    assert.equal(resultToJsts.getGeometryN(1).getCoordinates().toString(), '(5, 15, undefined),(10, 40, undefined),(20, 10, undefined),(10, 5, undefined)' + ',(5, 15, undefined)');
+    assert.equal(resultToJsts.getGeometryType(), 'MultiPolygon');
+    assert.equal(resultFromGeoJSON.getNumGeometries(), 2);
+    assert.equal(resultFromGeoJSON.getGeometryN(0).getCoordinates().toString(), '(20, 30, undefined),(40, 45, undefined),(40, 10, undefined),' + '(20, 30, undefined)');
+    assert.equal(resultFromGeoJSON.getGeometryN(1).getCoordinates().toString(), '(5, 15, undefined),(10, 40, undefined),(20, 10, undefined),(10, 5, undefined)' + ',(5, 15, undefined)');
+    assert.equal(resultFromGeoJSON.getGeometryType(), 'MultiPolygon');
+  });
+
+  (0, _qunit.test)('test method latlngToPolygonJsts and geometryToJsts for MultiPolygon with hole', function (assert) {
+    //Arrange
+    var latlngs = [[[L.latLng(40, 40), L.latLng(20, 45), L.latLng(45, 30)]], [[L.latLng(20, 35), L.latLng(10, 30), L.latLng(10, 10), L.latLng(30, 5), L.latLng(45, 20)], [L.latLng(30, 20), L.latLng(20, 15), L.latLng(20, 25)]]];
+    var feature = {
+      type: 'MultiPolygon',
+      coordinates: [[[[40, 40], [45, 20], [30, 45], [40, 40]]], [[[35, 20], [30, 10], [10, 10], [5, 30], [20, 45], [35, 20]], [[20, 30], [15, 20], [25, 20], [20, 30]]]]
+    };
+
+    //Act
+    var resultToJsts = (0, _emberFlexberryGisUtilsLayerToJsts.latlngToPolygonJsts)(latlngs, crs);
+    var resultFromGeoJSON = (0, _emberFlexberryGisUtilsLayerToJsts.geometryToJsts)(feature);
+
+    //Assert
+    assert.equal(resultToJsts.getNumGeometries(), 2);
+    assert.equal(resultToJsts.getGeometryN(0).getCoordinates().toString(), '(40, 40, undefined),(45, 20, undefined),(30, 45, undefined),(40, 40, undefined)');
+    assert.equal(resultToJsts.getGeometryN(1).getExteriorRing().getCoordinates().toString(), '(35, 20, undefined),(30, 10, undefined),(10, 10, undefined)' + ',(5, 30, undefined),(20, 45, undefined),(35, 20, undefined)');
+    assert.equal(resultToJsts.getGeometryN(1).getInteriorRingN(0).getCoordinates().toString(), '(20, 30, undefined),(15, 20, undefined),(25, 20, undefined),' + '(20, 30, undefined)');
+    assert.equal(resultToJsts.getGeometryType(), 'MultiPolygon');
+    assert.equal(resultFromGeoJSON.getNumGeometries(), 2);
+    assert.equal(resultFromGeoJSON.getGeometryN(0).getCoordinates().toString(), '(40, 40, undefined),(45, 20, undefined),(30, 45, undefined),' + '(40, 40, undefined)');
+    assert.equal(resultFromGeoJSON.getGeometryN(1).getExteriorRing().getCoordinates().toString(), '(35, 20, undefined),(30, 10, undefined),(10, 10, undefined)' + ',(5, 30, undefined),(20, 45, undefined),(35, 20, undefined)');
+    assert.equal(resultFromGeoJSON.getGeometryN(1).getInteriorRingN(0).getCoordinates().toString(), '(20, 30, undefined),(15, 20, undefined),' + '(25, 20, undefined),(20, 30, undefined)');
+    assert.equal(resultFromGeoJSON.getGeometryType(), 'MultiPolygon');
+  });
+});
+define('dummy/tests/unit/utils/layer-to-jsts-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/utils');
+  test('unit/utils/layer-to-jsts-test.js should pass jscs', function () {
+    ok(true, 'unit/utils/layer-to-jsts-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/utils/layer-to-jsts-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/utils/layer-to-jsts-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/utils/layer-to-jsts-test.js should pass jshint.');
   });
 });
 define('dummy/tests/unit/utils/leaflet-opacity-test', ['exports', 'dummy/utils/leaflet-opacity', 'qunit'], function (exports, _dummyUtilsLeafletOpacity, _qunit) {

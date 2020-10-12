@@ -4993,6 +4993,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers
     assert.ok(true, 'modules/ember-flexberry-gis/initializers/leaflet-editable-measures.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers/leaflet-jsts.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/initializers');
+  test('modules/ember-flexberry-gis/initializers/leaflet-jsts.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/initializers/leaflet-jsts.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers/leaflet-jsts.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/initializers/leaflet-jsts.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/initializers/leaflet-jsts.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers/leaflet-marker.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/initializers');
   test('modules/ember-flexberry-gis/initializers/leaflet-marker.js should pass jscs', function () {
@@ -10245,6 +10258,32 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/html2c
     assert.ok(true, 'modules/ember-flexberry-gis/utils/html2canvas-clone.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/lat-lng-to-coord.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/utils');
+  test('modules/ember-flexberry-gis/utils/lat-lng-to-coord.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/utils/lat-lng-to-coord.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/lat-lng-to-coord.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/utils/lat-lng-to-coord.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/utils/lat-lng-to-coord.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/layer-to-jsts.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/utils');
+  test('modules/ember-flexberry-gis/utils/layer-to-jsts.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/utils/layer-to-jsts.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/layer-to-jsts.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/utils/layer-to-jsts.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/utils/layer-to-jsts.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/leaflet-crs.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/utils');
   test('modules/ember-flexberry-gis/utils/leaflet-crs.js should pass jscs', function () {
@@ -11068,6 +11107,20 @@ define('dummy/initializers/leaflet-editable-measures', ['exports', 'dummy/config
   };
 
   exports['default'] = _emberFlexberryGisInitializersLeafletEditableMeasures['default'];
+});
+define('dummy/initializers/leaflet-jsts', ['exports', 'ember-flexberry-gis/initializers/leaflet-jsts'], function (exports, _emberFlexberryGisInitializersLeafletJsts) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisInitializersLeafletJsts['default'];
+    }
+  });
+  Object.defineProperty(exports, 'initialize', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisInitializersLeafletJsts.initialize;
+    }
+  });
 });
 define('dummy/initializers/leaflet-marker', ['exports', 'ember-flexberry-gis/initializers/leaflet-marker'], function (exports, _emberFlexberryGisInitializersLeafletMarker) {
   Object.defineProperty(exports, 'default', {
@@ -38932,6 +38985,22 @@ define('dummy/utils/i18n/missing-message', ['exports', 'ember-i18n/utils/i18n/mi
     }
   });
 });
+define('dummy/utils/lat-lng-to-coord', ['exports', 'ember-flexberry-gis/utils/lat-lng-to-coord'], function (exports, _emberFlexberryGisUtilsLatLngToCoord) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisUtilsLatLngToCoord['default'];
+    }
+  });
+});
+define('dummy/utils/layer-to-jsts', ['exports', 'ember-flexberry-gis/utils/layer-to-jsts'], function (exports, _emberFlexberryGisUtilsLayerToJsts) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisUtilsLayerToJsts['default'];
+    }
+  });
+});
 define('dummy/utils/leaflet-opacity', ['exports', 'ember-flexberry-gis/utils/leaflet-opacity'], function (exports, _emberFlexberryGisUtilsLeafletOpacity) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -39053,7 +39122,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.2+62c52de7"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.2+213a57f6"});
 }
 
 /* jshint ignore:end */
