@@ -1,26 +1,56 @@
 import Ember from 'ember';
+
+import DS from 'ember-data';
 import { moduleForComponent, test } from 'ember-qunit';
 import startApp from 'dummy/tests/helpers/start-app';
-import { Query } from 'ember-flexberry-data';
+import { Query, Projection } from 'ember-flexberry-data';
 import sinon from 'sinon';
+import { Serializer } from 'ember-flexberry-data';
 
 let app;
 let options;
 let param;
 let odataServerFake;
+let bounds;
+let store;
 
 moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata vector layer', {
   unit: true,
   needs: [
     'service:map-api',
+    'service:layers-styles-renderer',
     'config:environment',
     'model:new-platform-flexberry-g-i-s-link-parameter',
     'model:new-platform-flexberry-g-i-s-map',
     'model:new-platform-flexberry-g-i-s-map-layer',
-    'adapter:application'
+    'adapter:application',
+    'layer:odata-vector'
   ],
   beforeEach: function () {
     app = startApp();
+
+    let testModelMixin = Ember.Mixin.create({
+      name: DS.attr('string', { defaultValue: '' }),
+      shape: DS.attr('json')
+    });
+
+    let testModel = Projection.Model.extend(testModelMixin);
+    testModel.defineProjection('TestModelL', 'test-model', {
+      name: Projection.attr(''),
+      shape: Projection.attr('')
+    });
+
+    let testSerializer = Serializer.Odata.extend({
+      primaryKey: '__PrimaryKey'
+    });
+
+    this.register('model:test-model', testModel);
+    this.register('mixin:test-model', testModelMixin);
+    this.register('serializer:test-model', testSerializer);
+
+    app.register('model:test-model', testModel);
+    app.register('mixin:test-model', testModelMixin);
+    app.register('serializer:test-model', testSerializer);
 
     options = {
       geometryField: 'shape',
@@ -47,26 +77,104 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     };
     param = Ember.$.extend(param, options);
 
+    bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
+    let getBounds = function() {
+      return bounds;
+    };
+
+    let getPane = function() {
+      return undefined;
+    };
+
+    let createPane = function() {
+      return {};
+    };
+
+    store = app.__container__.lookup('service:store');
+    Ember.$.extend(param, {
+      'modelName': 'test-model',
+      'projectionName':'TestModelL',
+      'geometryField': 'shape',
+      'typeName': 'test-model',
+      'odataClass': 'TestModel',
+      'continueLoading': true,
+      'store': store,
+      'layerModel': { 'type': 'odata-vector', 'visibility': true },
+      'leafletMap': {
+        getBounds,
+        getPane,
+        createPane
+      }
+    });
+
     odataServerFake = sinon.fakeServer.create();
     odataServerFake.autoRespond = true;
 
+    const responseText = `--batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json; charset=utf-8; odata.metadata=minimal
+    OData-Version: 4.0
+
+    {
+      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#IISRGISPKVydelUtverzhdenoPolygon32640s(__PrimaryKey,ID,Name,Shape)","value":[
+        {
+          "__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a79b", "Name":null,"Shape":{
+            "type":"MultiPolygon","coordinates":[
+              [
+                [
+                  [468709.463318981,6478884.81118851],
+            [468578.508624007,6478880.73565037],
+            [468541.567377907,6478925.23599015],
+            [468533.564191116,6478946.2331571],
+            [468614.492922407,6478979.21144234],
+            [468657.52589005,6478981.2057549],
+            [468672.503518996,6478963.71619159],
+            [468717.482394432,6478946.21010284],
+            [468709.463318981,6478884.81118851]
+                ]
+              ]
+            ],"crs":{
+              "type":"name","properties":{
+                "name":"EPSG:32640"
+              }
+            }
+          }
+      },
+
+      {
+          "__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a89b", "Name":null,"Shape":{
+            "type":"MultiPolygon","coordinates":[
+              [
+                [
+                  [468709.463318981,6478884.81118851],
+            [468578.508624007,6478880.73565037],
+            [468541.567377907,6478925.23599015],
+            [468533.564191116,6478946.2331571],
+            [468614.492922407,6478979.21144234],
+            [468657.52589005,6478981.2057549],
+            [468672.503518996,6478963.71619159],
+            [468717.482394432,6478946.21010284],
+            [468709.463318981,6478884.81118851]
+                ]
+              ]
+            ],"crs":{
+              "type":"name","properties":{
+                "name":"EPSG:32640"
+              }
+            }
+          }
+      }
+      ]
+    }
+    --batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f--`;
+
     odataServerFake.respondWith('POST', 'http://134.209.30.115:1818/odata/$batch',
       function (request) {
-        request.respond(200, { 'Content-Type': 'multipart/mixed; boundary=batchresponse_3942662d-07b6-4e24-b466-fba5d37ca181' },
-        '--batchresponse_3942662d-07b6-4e24-b466-fba5d37ca181\r\n' +
-        'Content-Type: application/http\r\n' +
-        'Content-Transfer-Encoding: binary\r\n' +
-        '\r\n' +
-        'HTTP/1.1 200 OK\r\n' +
-        'Content-Type: application/json; charset=utf-8; odata.metadata=minimal\r\n' +
-        'OData-Version: 4.0\r\n' +
-        '\r\n' +
-        '{\r\n' +
-        '  "@odata.context":"http://134.209.30.115:1818/odata/$metadata#ModelTest(__PrimaryKey)","value":[\r\n' +
-        '\r\n' +
-        '  ]\r\n' +
-        '}\r\n' +
-        '--batchresponse_3942662d-07b6-4e24-b466-fba5d37ca181--');
+        request.respond(200, { 'content-type': 'multipart/mixed; boundary=batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f' },
+        responseText);
       }
     );
   },
@@ -100,16 +208,8 @@ test('getFilterParameters return SimplePredicate on single value in array', func
 
 test('loadLayerFeatures() with featureIds=null', function(assert) {
   assert.expect(2);
-  var done = assert.async(2);
+  var done = assert.async(3);
   Ember.run(() => {
-    let store = app.__container__.lookup('service:store');
-    store.createRecord('new-platform-flexberry-g-i-s-map-layer');
-    Ember.$.extend(param, {
-      'modelName': 'new-platform-flexberry-g-i-s-map-layer',
-      'projectionName':'MapLayerL',
-      'geometryField': 'geometryField',
-      'store': store });
-
     let component = this.subject(param);
 
     let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
@@ -125,18 +225,15 @@ test('loadLayerFeatures() with featureIds=null', function(assert) {
       results: Ember.A()
     };
 
-    let leafletLayerPromiseResolved = assert.async();
     component.get('_leafletLayerPromise').then((leafletLayer) => {
-      let _leafletObject = L.featureGroup();
-      _leafletObject.options.showExisting = false;
-      component.set('_leafletObject', _leafletObject);
+      component.set('_leafletObject', leafletLayer);
 
       component.loadLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Load with null featureIds');
         done();
       });
     }).finally(() => {
-      leafletLayerPromiseResolved();
+      done();
     });
 
     assert.ok(component, 'Create odata-layer');
@@ -146,20 +243,12 @@ test('loadLayerFeatures() with featureIds=null', function(assert) {
 
 test('getLayerFeatures() with featureIds=null', function(assert) {
   assert.expect(2);
-  var done = assert.async(2);
+  var done = assert.async(3);
   Ember.run(() => {
-    let store = app.__container__.lookup('service:store');
-    store.createRecord('new-platform-flexberry-g-i-s-map-layer');
-    Ember.$.extend(param, {
-      'modelName': 'new-platform-flexberry-g-i-s-map-layer',
-      'projectionName':'MapLayerL',
-      'geometryField': 'geometryField',
-      'store': store });
-
     let component = this.subject(param);
 
     let getCountFeaturesStub = sinon.stub(component, 'getCountFeatures');
-    getCountFeaturesStub.returns(Ember.RSVP.resolve(123));
+    getCountFeaturesStub.returns(Ember.run(() => { return Ember.RSVP.resolve(123); }));
 
     let e = {
       featureIds: null,
@@ -167,18 +256,53 @@ test('getLayerFeatures() with featureIds=null', function(assert) {
       results: Ember.A()
     };
 
-    let leafletLayerPromiseResolved = assert.async();
     component.get('_leafletLayerPromise').then((leafletLayer) => {
-      let _leafletObject = L.featureGroup();
-      _leafletObject.options.showExisting = false;
-      component.set('_leafletObject', _leafletObject);
+      component.set('_leafletObject', leafletLayer);
 
       component.getLayerFeatures(e).then((layers) => {
-        assert.ok(layers, 'Load with null featureIds');
+        assert.ok(layers, 'Get with null featureIds');
         done();
       });
     }).finally(() => {
-      leafletLayerPromiseResolved();
+      done();
+    });
+
+    assert.ok(component, 'Create odata-layer');
+    done();
+  });
+});
+
+test('continueLoad()', function(assert) {
+  assert.expect(7);
+  var done = assert.async(3);
+
+  Ember.run(() => {
+    let component = this.subject(param);
+    Ember.run(() => {
+      component.get('_leafletLayerPromise').then((leafletLayer) => {
+        component.set('_leafletObject', leafletLayer);
+        leafletLayer.promiseLoadLayer.then(Ember.run(() => {
+          let loadedBounds = component.get('loadedBounds');
+          assert.ok(loadedBounds, 'loadedBounds');
+          assert.ok(loadedBounds.getBounds() instanceof L.LatLngBounds, 'loadedBounds.getBounds() is L.LatLngBounds');
+          assert.ok(JSON.stringify(loadedBounds.getBounds()) === JSON.stringify(bounds), 'loadedBounds get from map');
+
+          bounds = L.latLngBounds(L.latLng(58.46807257997011, 56.61014556884766), L.latLng(58.443780224452524, 56.44535064697266));
+
+          let load = component.continueLoad();
+          load.then(Ember.run(() => {
+            loadedBounds = component.get('loadedBounds');
+            assert.ok(loadedBounds, 'loadedBounds');
+            assert.ok(loadedBounds.getBounds() instanceof L.LatLngBounds, 'loadedBounds.getBounds() is L.LatLngBounds');
+            let strBounds = '{"_southWest":{"lat":58.443645,"lng":56.369991},"_northEast":{"lat":58.468073,"lng":56.610146}}';
+            assert.ok(JSON.stringify(loadedBounds.getBounds()) === strBounds, 'loadedBounds get from map');
+
+            done();
+          }));
+        }));
+      }).finally(() => {
+        done();
+      });
     });
 
     assert.ok(component, 'Create odata-layer');
