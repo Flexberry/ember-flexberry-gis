@@ -1,11 +1,18 @@
 import jsts from 'npm:jsts';
-import { latLngToCoords, latLngsToCoords } from '../utils/lat-lng-to-coord';
+import { latLngToCoords, latLngsToCoords } from './lat-lng-to-coord';
 
 let geometryFactory = new jsts.geom.GeometryFactory();
 
+// convert coordinates in jsts object
+let coordinatesFunction = function(coord, altitude) {
+  return altitude !== undefined ?
+    new jsts.geom.Coordinate(coord.x, coord.y, altitude) :
+    new jsts.geom.Coordinate(coord.x, coord.y);
+};
+
 // for point
 let latlngToPointJsts = function(latlng, crs, precision) {
-  let coord = latLngToCoords(latlng, crs, precision, true);
+  let coord = latLngToCoords(latlng, crs, precision, coordinatesFunction);
   let point = geometryFactory.createPoint(coord);
 
   if (point) {
@@ -22,7 +29,7 @@ let coordinatesToLineString = function (coordinates) {
 
 let latlngToPolylineJsts = function (latlngs, crs, precision) {
   let multi = !L.LineUtil.isFlat(latlngs);
-  let coords = latLngsToCoords(latlngs, crs, multi ? 1 : 0, false, precision, true);
+  let coords = latLngsToCoords(latlngs, crs, multi ? 1 : 0, false, precision, coordinatesFunction);
 
   let polyline;
   if (!multi) {
@@ -56,7 +63,7 @@ let coordinatesToPolygon = function(coordinates) {
 let latlngToPolygonJsts = function(latlngs, crs, precision) {
   let holes = !L.LineUtil.isFlat(latlngs);
   let multi = holes && !L.LineUtil.isFlat(latlngs[0]);
-  let coords = latLngsToCoords(latlngs, crs, multi ? 2 : holes ? 1 : 0, true, precision, true);
+  let coords = latLngsToCoords(latlngs, crs, multi ? 2 : holes ? 1 : 0, true, precision, coordinatesFunction);
 
   if (!holes) {
     coords = [coords];
@@ -79,7 +86,9 @@ let latlngToPolygonJsts = function(latlngs, crs, precision) {
 
 // all type
 let coordToJsts = function(coord) {
-  return new jsts.geom.Coordinate(coord[0], coord[1]);
+  return coord.length === 3 ?
+    new jsts.geom.Coordinate(coord[0], coord[1], coord[2]) :
+    new jsts.geom.Coordinate(coord[0], coord[1]);
 };
 
 let geometryToJsts = function(geometry) {

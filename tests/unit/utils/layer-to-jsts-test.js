@@ -27,6 +27,27 @@ test('test method latlngToPointJsts and geometryToJsts for Point', function(asse
   assert.equal(resultFromGeoJSON.getGeometryType(), 'Point');
 });
 
+test('test method latlngToPointJsts and geometryToJsts for Point with altitude', function(assert) {
+  //Arrange
+  let latlng = L.latLng(30, 10, 20);
+  let feature = {
+    type: 'Point',
+    coordinates: [10, 30, 20]
+  };
+
+  //Act
+  let resultToJsts = latlngToPointJsts(latlng, crs);
+  let resultFromGeoJSON = geometryToJsts(feature);
+
+  //Assert
+  assert.equal(resultToJsts.getNumGeometries(), 1);
+  assert.equal(resultToJsts.getCoordinate().toString(), '(10, 30, 20)');
+  assert.equal(resultToJsts.getGeometryType(), 'Point');
+  assert.equal(resultFromGeoJSON.getNumGeometries(), 1);
+  assert.equal(resultFromGeoJSON.getCoordinate().toString(), '(10, 30, 20)');
+  assert.equal(resultFromGeoJSON.getGeometryType(), 'Point');
+});
+
 test('test method latlngToPolylineJsts and geometryToJsts for LineString', function(assert) {
   //Arrange
   let latlngs = [L.latLng(30, 10), L.latLng(10, 30), L.latLng(40, 40)];
