@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import rhumbOperations from '../utils/rhumb-operations';
 import { getLeafletCrs } from '../utils/leaflet-crs';
+import { geometryToJsts } from '../utils/layer-to-jsts';
 import jsts from 'npm:jsts';
 
 export default Ember.Mixin.create(rhumbOperations, {
@@ -66,11 +67,12 @@ export default Ember.Mixin.create(rhumbOperations, {
   },
 
   /**
-    Create multi-circuit object.
+    Create multi-circuit object. Transforms geometries into JSTS objects. Checks whether types and crs are same.
+    If geometries intersects, it unions or differents geometries depending on the parameter isUnion.
+    After that, it merges all geometries that don't intersects. Using GeoJSONWriter converts jsts object to geoJSON.
 
-    @method createMulti
-    @param {array} objects Array of objects to union.
-    Example:
+    Example of method call:
+    ```javascript
     let objects = [
         {
           "type": "Feature",
@@ -132,49 +134,40 @@ export default Ember.Mixin.create(rhumbOperations, {
             }
           }
         }];
-    @param {Boolean} isUnion Get union or difference.
-    @returns {Object} new multi-circuit object.
+    var result = mapApi.mapModel.createMulti(objects, true);
+    ```
+
+    @method createMulti
+    @param {array} objects Array of objects in GeoJSON format.
+    @param {Boolean} isUnion Flag: indicates whether to union geometries or to different.
+    @param {Boolean} failIfInvalid Flag: indicates whether to throw error if invalid geometries.
+    @returns {Object} New multi-circuit object in GeoJSO format.
   */
   createMulti(objects, isUnion = false, failIfInvalid = true) {
-    let geojsonReader = new jsts.io.GeoJSONReader();
-    let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let geometries = [];
+    return this._getMulti(objects, isUnion, failIfInvalid, true);
+  },
+
+  _getMulti(objects, isUnion = false, failIfInvalid = true, isJsts = false) {
     let separateObjects = [];
     let resultObject = null;
-
-    if (objects.length === 0) {
-      throw 'error: data is empty';
-    } else if (objects.length === 1) {
-      return objects[0];
-    }
-
+    let geometries = [];
     objects.forEach((element, i) => {
-      if (!Ember.isNone(element.crs)) {
-        objects[i] =
-          element.crs.properties.name.toUpperCase() === 'EPSG:4326' ? element
-            : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
-      } else {
-        throw "error: object must have 'crs' attribute";
+      let g = element;
+      if (isJsts) {
+        g = geometryToJsts(element.geometry);
+        g.setSRID(element.crs.properties.name.split(':')[1]);
       }
-    }, this);
-
-    //read the geometry of features
-    objects.forEach((element, i) => {
-      let g = geojsonReader.read(element.geometry);
 
       if (g.isValid()) {
         geometries.push(g);
         let j = geometries.length - 1;
         if (j !== 0 && this.getGeometryKind(geometries[j]) !== this.getGeometryKind(geometries[j - 1])) {
           throw 'error: type mismatch. Objects must have the same type';
+        } else if (j !== 0 && geometries[j].getSRID() !== geometries[j - 1].getSRID()) {
+          throw 'error: CRS mismatch. Objects must have the same crs';
         }
-      } else {
-        console.error('invalid geometry (object ' + i + ')');
-        console.error(element.geometry);
-
-        if (failIfInvalid) {
-          throw 'error: invalid geometry';
-        }
+      } else if (failIfInvalid) {
+        throw 'error: invalid geometry';
       }
     });
 
@@ -209,7 +202,9 @@ export default Ember.Mixin.create(rhumbOperations, {
       }
     });
 
+    let geojsonWriter = new jsts.io.GeoJSONWriter();
     let unionres = geojsonWriter.write(resultObject);
+    let crsResult = 'EPSG:' + geometries[0].getSRID();
 
     const multiObj = {
       type: 'Feature',
@@ -220,7 +215,7 @@ export default Ember.Mixin.create(rhumbOperations, {
       crs: {
         type: 'name',
         properties: {
-          name: 'EPSG:4326'
+          name: crsResult
         }
       }
     };
