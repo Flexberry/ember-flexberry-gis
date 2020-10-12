@@ -5,7 +5,7 @@ let geometryFactory = new jsts.geom.GeometryFactory();
 
 // convert coordinates in jsts object
 let coordinatesFunction = function(coord, altitude) {
-  return altitude !== undefined ?
+  return altitude ?
     new jsts.geom.Coordinate(coord.x, coord.y, altitude) :
     new jsts.geom.Coordinate(coord.x, coord.y);
 };
@@ -88,7 +88,9 @@ let latlngToPolygonJsts = function(latlngs, crs, precision) {
 let coordToJsts = function(coord) {
   return coord.length === 3 ?
     new jsts.geom.Coordinate(coord[0], coord[1], coord[2]) :
-    new jsts.geom.Coordinate(coord[0], coord[1]);
+      coord.length === 2 ?
+        new jsts.geom.Coordinate(coord[0], coord[1]) :
+        null;
 };
 
 let geometryToJsts = function(geometry) {

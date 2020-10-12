@@ -13,7 +13,7 @@ test('test method latLngToCoords for Point', function(assert) {
   let latlng = L.latLng(30, 10);
   let latlngWithAlt = L.latLng(30, 10, 20);
   let coordinatesFunction = function(coord, altitude) {
-    return altitude !== undefined ?
+    return altitude ?
       new jsts.geom.Coordinate(coord.x, coord.y, altitude) :
       new jsts.geom.Coordinate(coord.x, coord.y);
   };
@@ -36,7 +36,7 @@ test('test method latLngsToCoords for LineString', function(assert) {
   let latlngs = [L.latLng(30, 10), L.latLng(10, 30), L.latLng(40, 40)];
   let latlngsWithAlt = [L.latLng(30, 10, 20), L.latLng(10, 30, 21), L.latLng(40, 40, 22)];
   let coordinatesFunction = function(coord, altitude) {
-    return altitude !== undefined ?
+    return altitude ?
       new jsts.geom.Coordinate(coord.x, coord.y, altitude) :
       new jsts.geom.Coordinate(coord.x, coord.y);
   };
@@ -68,7 +68,7 @@ test('test method latLngsToCoords for MultiLineString', function(assert) {
     [L.latLng(40, 40, 23), L.latLng(30, 30, 24), L.latLng(40, 20, 25)]
   ];
   let coordinatesFunction = function(coord, altitude) {
-    return altitude !== undefined ?
+    return altitude ?
       new jsts.geom.Coordinate(coord.x, coord.y, altitude) :
       new jsts.geom.Coordinate(coord.x, coord.y);
   };
@@ -108,7 +108,7 @@ test('test method latLngsToCoords for Polygon without hole', function(assert) {
     [L.latLng(30, 10, 20), L.latLng(40, 40, 21), L.latLng(20, 40, 22), L.latLng(10, 20, 23)]
   ];
   let coordinatesFunction = function(coord, altitude) {
-    return altitude !== undefined ?
+    return altitude ?
       new jsts.geom.Coordinate(coord.x, coord.y, altitude) :
       new jsts.geom.Coordinate(coord.x, coord.y);
   };
@@ -146,7 +146,7 @@ test('test method latLngsToCoords for Polygon with hole', function(assert) {
     [L.latLng(20, 30, 24), L.latLng(35, 35, 25), L.latLng(30, 20, 26)]
   ];
   let coordinatesFunction = function(coord, altitude) {
-    return altitude !== undefined ?
+    return altitude ?
       new jsts.geom.Coordinate(coord.x, coord.y, altitude) :
       new jsts.geom.Coordinate(coord.x, coord.y);
   };
@@ -190,7 +190,7 @@ test('test method latLngsToCoords for MultiPolygon without hole', function(asser
     [[L.latLng(15, 5, 23), L.latLng(40, 10, 24), L.latLng(10, 20, 25), L.latLng(5, 10, 26)]]
   ];
   let coordinatesFunction = function(coord, altitude) {
-    return altitude !== undefined ?
+    return altitude ?
       new jsts.geom.Coordinate(coord.x, coord.y, altitude) :
       new jsts.geom.Coordinate(coord.x, coord.y);
   };
@@ -246,7 +246,7 @@ test('test method latLngsToCoords for MultiPolygon with hole', function(assert) 
     ]
   ];
   let coordinatesFunction = function(coord, altitude) {
-    return altitude !== undefined ?
+    return altitude ?
       new jsts.geom.Coordinate(coord.x, coord.y, altitude) :
       new jsts.geom.Coordinate(coord.x, coord.y);
   };
