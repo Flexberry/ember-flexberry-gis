@@ -15,7 +15,6 @@ import state from '../utils/state';
 import SnapDraw from './snap-draw';
 import ClipperLib from 'npm:clipper-lib';
 import jsts from 'npm:jsts';
-import { reject } from 'lodash';
 
 export default Ember.Mixin.create(SnapDraw, {
   /**
@@ -617,12 +616,7 @@ export default Ember.Mixin.create(SnapDraw, {
                 });
               });
             } else {
-              leafletObject.showLayerObjects = visibility;
-              leafletObject.statusLoadLayer = true;
-              map.fire('moveend');
-              if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
-                leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
-              }
+              reject('Not working to layer with continueLoading');
             }
           } else {
             leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
@@ -646,7 +640,7 @@ export default Ember.Mixin.create(SnapDraw, {
               }
             });
             let labelLayer = leafletObject._labelsLayer;
-            if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer) && !map.hasLayer(labelLayer)) {
+            if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer)) {
               objectIds.forEach(objectId => {
                 let objects = Object.values(labelLayer._layers).filter(shape => {
                   return this._getLayerFeatureId(layer, shape) === objectId;
@@ -662,7 +656,7 @@ export default Ember.Mixin.create(SnapDraw, {
                 }
               });
             }
-            resolve();
+            resolve('sucsess');
           });
         }
       }
