@@ -550,6 +550,7 @@ export default BaseLayer.extend({
           this._addLabelsToLeafletContainer(layers);
         }
 
+        leafletObject.fire(&#x27;loadCompleted&#x27;);
         resolve();
       });
     });
@@ -986,6 +987,46 @@ export default BaseLayer.extend({
       leafletObject: this.get(&#x27;_leafletObject&#x27;),
       features: e.load ? this.loadLayerFeatures(e) : this.getLayerFeatures(e)
     });
+  },
+
+  /**
+    Handles zoomend
+  */
+  continueLoad() {
+  },
+
+  /*
+    Clear changes. Needs for CancelEdit and Reload
+  */
+  clearChanges() {
+  },
+
+  reload() {
+    this.clearChanges();
+
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    let map = this.get(&#x27;leafletMap&#x27;);
+
+    leafletObject.eachLayer((layerShape) =&gt; {
+      if (map.hasLayer(layerShape)) {
+        map.removeLayer(layerShape);
+      }
+    });
+    leafletObject.clearLayers();
+
+    if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;)) &amp;&amp; !Ember.isNone(this.get(&#x27;_leafletObject._labelsLayer&#x27;))) {
+      leafletObject._labelsLayer.eachLayer((layerShape) =&gt; {
+        if (map.hasLayer(layerShape)) {
+          map.removeLayer(layerShape);
+        }
+      });
+      leafletObject._labelsLayer.clearLayers();
+    }
+
+    this.set(&#x27;loadedBounds&#x27;, null);
+    let load = this.continueLoad();
+
+    return load &amp;&amp; load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
   },
 
   /**

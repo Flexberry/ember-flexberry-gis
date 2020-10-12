@@ -415,7 +415,7 @@
 import Ember from &#x27;ember&#x27;;
 import BaseVectorLayer from &#x27;ember-flexberry-gis/components/base-vector-layer&#x27;;
 import { Query } from &#x27;ember-flexberry-data&#x27;;
-import { checkMapZoomLayer, checkMapZoom } from &#x27;../../utils/check-zoom&#x27;;
+import { checkMapZoom } from &#x27;../../utils/check-zoom&#x27;;
 import state from &#x27;../../utils/state&#x27;;
 import generateUniqueId from &#x27;ember-flexberry-data/utils/generate-unique-id&#x27;;
 import jsts from &#x27;npm:jsts&#x27;;
@@ -762,7 +762,11 @@ export default BaseVectorLayer.extend({
       let objs = obj.adapter.batchLoadModel(obj.modelName, build, obj.store);
       objs.then(res =&gt; {
         let features = Ember.A();
-        let models = res.toArray();
+        let models = res;
+        if (typeof res.toArray === &#x27;function&#x27;) {
+          models = res.toArray();
+        }
+
         let layer = L.featureGroup();
 
         models.forEach(model =&gt; {
@@ -1074,21 +1078,8 @@ export default BaseVectorLayer.extend({
       let obj = this.get(&#x27;_adapterStoreModelProjectionGeom&#x27;);
       let crs = this.get(&#x27;crs&#x27;);
 
-      let visibility = this.get(&#x27;layerModel.visibility&#x27;);
-      let bounds;
       let continueLoading = this.get(&#x27;continueLoading&#x27;);
       let showExisting = this.get(&#x27;showExisting&#x27;);
-      let queryBuilder = new Builder(obj.store)
-        .from(obj.modelName)
-        .selectByProjection(obj.projectionName);
-      if (!showExisting &amp;&amp; continueLoading &amp;&amp; visibility &amp;&amp; checkMapZoomLayer(this)) {
-        bounds = L.rectangle(this.get(&#x27;leafletMap&#x27;).getBounds());
-        let query = new Query.GeometryPredicate(obj.geometryField);
-        queryBuilder.where(query.intersects(this.geomToEWKT(bounds)));
-      } else {
-        // Fake request
-        queryBuilder.where(new Query.SimplePredicate(&#x27;id&#x27;, Query.FilterOperator.Eq, null));
-      }
 
       const options = this.get(&#x27;options&#x27;);
       let layer = L.featureGroup();
@@ -1097,14 +1088,12 @@ export default BaseVectorLayer.extend({
       layer.options.style = this.get(&#x27;styleSettings&#x27;);
       layer.options.continueLoading = continueLoading;
       layer.options.showExisting = showExisting;
-      if (!showExisting &amp;&amp; continueLoading &amp;&amp; visibility &amp;&amp; checkMapZoomLayer(this)) {
-        layer.isLoadBounds = bounds;
-      }
 
       L.setOptions(layer, options);
       layer.minZoom = this.get(&#x27;minZoom&#x27;);
       layer.maxZoom = this.get(&#x27;maxZoom&#x27;);
       layer.save = this.get(&#x27;save&#x27;).bind(this);
+      layer.reload = this.get(&#x27;reload&#x27;).bind(this);
       layer.geometryField = obj.geometryField;
       layer.addLayer = this.get(&#x27;addLayer&#x27;).bind(this);
       layer.editLayerObjectProperties = this.get(&#x27;editLayerObjectProperties&#x27;).bind(this);
@@ -1128,28 +1117,10 @@ export default BaseVectorLayer.extend({
         }
       }
 
+      let load = this.continueLoad(layer);
+      layer.promiseLoadLayer = load &amp;&amp; load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
+
       resolve(layer);
-
-      let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
-
-      objs.then(res =&gt; {
-        let models = [];
-        if (res &amp;&amp; typeof res.toArray === &#x27;function&#x27;) {
-          models = res.toArray();
-        }
-
-        let innerLayers = [];
-        models.forEach(model =&gt; {
-          let l = this.addLayerObject(layer, model, false);
-          innerLayers.push(l);
-        });
-
-        layer.fire(&#x27;load&#x27;, { layers: innerLayers });
-
-        this._setLayerState();
-        let promiseLoad = Ember.RSVP.resolve();
-        this.set(&#x27;promiseLoad&#x27;, promiseLoad);
-      });
     });
   },
 
@@ -1480,6 +1451,103 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Handles zoomend
+  */
+  continueLoad(leafletObject) {
+    let loadedBounds = this.get(&#x27;loadedBounds&#x27;);
+
+    if (!leafletObject) {
+      leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    }
+
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    if (!Ember.isNone(leafletObject)) {
+      let show = this.get(&#x27;layerModel.visibility&#x27;) || (!Ember.isNone(leafletObject.showLayerObjects) &amp;&amp; leafletObject.showLayerObjects);
+      let continueLoad = !leafletObject.options.showExisting &amp;&amp; leafletObject.options.continueLoading;
+
+      if (continueLoad &amp;&amp; show &amp;&amp; checkMapZoom(leafletObject)) {
+        let bounds = L.rectangle(leafletMap.getBounds());
+        if (!Ember.isNone(leafletObject.showLayerObjects)) {
+          leafletObject.showLayerObjects = false;
+        }
+
+        let obj = this.get(&#x27;_adapterStoreModelProjectionGeom&#x27;);
+        let queryBuilder = new Builder(obj.store)
+          .from(obj.modelName)
+          .selectByProjection(obj.projectionName);
+
+        let oldPart;
+        if (!Ember.isNone(loadedBounds)) {
+          if (loadedBounds instanceof L.LatLngBounds) {
+            loadedBounds = L.rectangle(loadedBounds);
+          }
+
+          let geojsonReader = new jsts.io.GeoJSONReader();
+          let loadedBoundsJsts = geojsonReader.read(loadedBounds.toGeoJSON().geometry);
+          let boundsJsts = geojsonReader.read(bounds.toGeoJSON().geometry);
+
+          if (loadedBoundsJsts.contains(boundsJsts)) {
+            if (leafletObject.statusLoadLayer) {
+              leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+            }
+
+            return;
+          }
+
+          let queryOldBounds = new Query.GeometryPredicate(obj.geometryField);
+          oldPart = new Query.NotPredicate(queryOldBounds.intersects(this.geomToEWKT(loadedBounds)));
+
+          let unionJsts = loadedBoundsJsts.union(boundsJsts);
+          let geojsonWriter = new jsts.io.GeoJSONWriter();
+          loadedBounds = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
+        } else {
+          loadedBounds = bounds;
+        }
+
+        this.set(&#x27;loadedBounds&#x27;, loadedBounds);
+
+        let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
+        let newPart = queryNewBounds.intersects(this.geomToEWKT(loadedBounds));
+
+        queryBuilder.where(oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart);
+
+        let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
+
+        let promise = new Ember.RSVP.Promise((resolve, reject) =&gt; {
+          objs.then(res =&gt; {
+            let models = res;
+            if (typeof res.toArray === &#x27;function&#x27;) {
+              models = res.toArray();
+            }
+
+            let innerLayers = [];
+            models.forEach(model =&gt; {
+              let l = this.addLayerObject(leafletObject, model, false);
+              innerLayers.push(l);
+            });
+
+            let e = { layers: innerLayers, results: Ember.A() };
+            leafletObject.fire(&#x27;load&#x27;, e);
+
+            Ember.RSVP.allSettled(e.results).then(() =&gt; {
+              this._setLayerState();
+              resolve();
+            });
+          });
+        });
+
+        if (leafletObject.statusLoadLayer) {
+          leafletObject.promiseLoadLayer = promise;
+        }
+
+        return promise;
+      } else if (leafletObject.statusLoadLayer) {
+        leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+      }
+    }
+  },
+
+  /**
     Initializes DOM-related component&#x27;s properties.
   */
   didInsertElement() {
@@ -1487,95 +1555,52 @@ export default BaseVectorLayer.extend({
 
     let leafletMap = this.get(&#x27;leafletMap&#x27;);
     if (!Ember.isNone(leafletMap)) {
-      let loadedBounds = leafletMap.getBounds();
-      let continueLoad = () =&gt; {
-        let leafletObject = this.get(&#x27;_leafletObject&#x27;);
-        if (!Ember.isNone(leafletObject)) {
-          let show = this.get(&#x27;layerModel.visibility&#x27;) || (!Ember.isNone(leafletObject.showLayerObjects) &amp;&amp; leafletObject.showLayerObjects);
-          let continueLoad = !leafletObject.options.showExisting &amp;&amp; leafletObject.options.continueLoading;
-          let notContinueLoad = leafletObject.options.showExisting === false &amp;&amp; leafletObject.options.continueLoading === false;
-          if (continueLoad &amp;&amp; show &amp;&amp; checkMapZoom(leafletObject)) {
-            let bounds = L.rectangle(leafletMap.getBounds());
-            if (!Ember.isNone(leafletObject.showLayerObjects)) {
-              leafletObject.showLayerObjects = false;
-            }
+      leafletMap.on(&#x27;moveend&#x27;, () =&gt; { this.continueLoad(); });
+    }
+  },
 
-            let obj = this.get(&#x27;_adapterStoreModelProjectionGeom&#x27;);
-            let queryBuilder = new Builder(obj.store)
-              .from(obj.modelName)
-              .selectByProjection(obj.projectionName);
-            let crs = this.get(&#x27;crs&#x27;);
-            let geojsonReader = new jsts.io.GeoJSONReader();
-            if (loadedBounds instanceof L.LatLngBounds) {
-              loadedBounds = L.rectangle(loadedBounds);
-            }
+  clearChanges() {
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    let editTools = leafletObject.leafletMap.editTools;
 
-            let loadedBoundsJsts = geojsonReader.read(loadedBounds.toGeoJSON().geometry);
-            let boundsJsts = geojsonReader.read(bounds.toGeoJSON().geometry);
+    let featuresIds = [];
+    leafletObject.models.forEach((model, layerId) =&gt; {
+      let layer = leafletObject.getLayer(layerId);
+      let dirtyType = model.get(&#x27;dirtyType&#x27;);
+      if (dirtyType === &#x27;created&#x27;) {
+        if (leafletObject.hasLayer(layer)) {
+          leafletObject.removeLayer(layer);
+        }
 
-            if (Ember.isNone(leafletObject.isLoadBounds)) {
-              let query = new Query.GeometryPredicate(obj.geometryField);
-              queryBuilder.where(query.intersects(this.geomToEWKT(bounds)));
-              leafletObject.isLoadBounds = bounds;
-              loadedBounds = bounds;
-              let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
-              if (leafletObject.statusLoadLayer) {
-                leafletObject.promiseLoadLayer = objs;
-              }
-
-              objs.then(res =&gt; {
-                let models = res.toArray();
-                let innerLayers = [];
-                models.forEach(model =&gt; {
-                  let l = this.addLayerObject(leafletObject, model, false);
-                  innerLayers.push(l);
-                });
-                leafletObject.fire(&#x27;load&#x27;, { layers: innerLayers });
-
-                this._setLayerState();
-              });
-              return;
-            } else if (loadedBoundsJsts.contains(boundsJsts)) {
-              if (leafletObject.statusLoadLayer) {
-                leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
-              }
-
-              return;
-            }
-
-            let queryOldBounds = new Query.GeometryPredicate(obj.geometryField);
-            let oldPart = new Query.NotPredicate(queryOldBounds.intersects(this.geomToEWKT(loadedBounds)));
-
-            let unionJsts = loadedBoundsJsts.union(boundsJsts);
-            let geojsonWriter = new jsts.io.GeoJSONWriter();
-            loadedBounds = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
-            let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
-            let newPart = queryNewBounds.intersects(this.geomToEWKT(loadedBounds));
-
-            queryBuilder.where(new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart));
-            let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
-            if (leafletObject.statusLoadLayer) {
-              leafletObject.promiseLoadLayer = objs;
-            }
-
-            objs.then(res =&gt; {
-              let models = res.toArray();
-              let innerLayers = [];
-              models.forEach(model =&gt; {
-                let l = this.addLayerObject(leafletObject, model, false);
-                innerLayers.push(l);
-              });
-              leafletObject.fire(&#x27;load&#x27;, { layers: innerLayers });
-              this._setLayerState();
-            });
-          } else if (leafletObject.statusLoadLayer) {
-            leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+        delete leafletObject.models[layerId];
+        if (editTools.featuresLayer.getLayers().length !== 0) {
+          let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+          let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+          if (!Ember.isNone(editorLayerId) &amp;&amp; !Ember.isNone(featureLayer) &amp;&amp; !Ember.isNone(featureLayer.editor)) {
+            let editLayer = featureLayer.editor.editLayer;
+            editTools.editLayer.removeLayer(editLayer);
+            editTools.featuresLayer.removeLayer(layer);
           }
         }
-      };
+      } else if (dirtyType === &#x27;updated&#x27; || dirtyType === &#x27;deleted&#x27;) {
+        if (!Ember.isNone(layer)) {
+          if (!Ember.isNone(layer.editor)) {
+            let editLayer = layer.editor.editLayer;
+            editTools.editLayer.removeLayer(editLayer);
+          }
 
-      leafletMap.on(&#x27;moveend&#x27;, continueLoad);
-    }
+          if (leafletObject.hasLayer(layer)) {
+            leafletObject.removeLayer(layer);
+          }
+        }
+
+        model.rollbackAttributes();
+        delete leafletObject.models[layerId];
+        featuresIds.push(model.get(&#x27;id&#x27;));
+      }
+    });
+
+    return featuresIds;
   },
 
   /**
@@ -1586,44 +1611,13 @@ export default BaseVectorLayer.extend({
   */
   cancelEdit() {
     return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      let featuersIds = [];
       let leafletObject = this.get(&#x27;_leafletObject&#x27;);
-      let editTools = leafletObject.leafletMap.editTools;
-      leafletObject.models.forEach((model, layerId) =&gt; {
-        let layer = leafletObject.getLayer(layerId);
-        let dirtyType = model.get(&#x27;dirtyType&#x27;);
-        if (dirtyType === &#x27;created&#x27;) {
-          leafletObject.removeLayer(layer);
-          delete leafletObject.models[layerId];
-          if (editTools.featuresLayer.getLayers().length !== 0) {
-            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
-            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
-            if (!Ember.isNone(editorLayerId) &amp;&amp; !Ember.isNone(featureLayer) &amp;&amp; !Ember.isNone(featureLayer.editor)) {
-              let editLayer = featureLayer.editor.editLayer;
-              editTools.editLayer.removeLayer(editLayer);
-              editTools.featuresLayer.removeLayer(layer);
-            }
-          }
-        } else if (dirtyType === &#x27;updated&#x27; || dirtyType === &#x27;deleted&#x27;) {
-          if (!Ember.isNone(layer)) {
-            if (!Ember.isNone(layer.editor)) {
-              let editLayer = layer.editor.editLayer;
-              editTools.editLayer.removeLayer(editLayer);
-            }
-
-            leafletObject.removeLayer(layer);
-          }
-
-          model.rollbackAttributes();
-          delete leafletObject.models[layerId];
-          featuersIds.push(model.get(&#x27;id&#x27;));
-        }
-      });
-      if (featuersIds.length === 0) {
+      let featuresIds = this.clearChanges();
+      if (featuresIds.length === 0) {
         resolve();
       } else {
         let e = {
-          featureIds: featuersIds,
+          featureIds: featuresIds,
           layer: leafletObject.layerId,
           results: Ember.A()
         };

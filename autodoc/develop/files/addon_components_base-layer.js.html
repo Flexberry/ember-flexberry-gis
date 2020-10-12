@@ -1140,10 +1140,7 @@ export default Ember.Component.extend(
         leafletMap.on(&#x27;flexberry-map:cancelEdit&#x27;, this._cancelEdit, this);
 
         leafletMap.on(&#x27;flexberry-map:load&#x27;, (e) =&gt; {
-          if (!Ember.isNone(this.promiseLoad)) {
-            e.results.push(this.get(&#x27;_leafletLayerPromise&#x27;));
-          }
-
+          e.results.push(this.get(&#x27;_leafletLayerPromise&#x27;));
         }, this);
       }
     },

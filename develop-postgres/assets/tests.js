@@ -3670,18 +3670,43 @@ define('dummy/tests/unit/components/layers/group-layer-test.jshint', ['exports']
     assert.ok(true, 'unit/components/layers/group-layer-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports', 'ember', 'ember-qunit', 'dummy/tests/helpers/start-app', 'ember-flexberry-data', 'sinon'], function (exports, _ember, _emberQunit, _dummyTestsHelpersStartApp, _emberFlexberryData, _sinon) {
+define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports', 'ember', 'ember-data', 'ember-qunit', 'dummy/tests/helpers/start-app', 'ember-flexberry-data', 'sinon'], function (exports, _ember, _emberData, _emberQunit, _dummyTestsHelpersStartApp, _emberFlexberryData, _sinon) {
 
   var app = undefined;
   var options = undefined;
   var param = undefined;
   var odataServerFake = undefined;
+  var bounds = undefined;
+  var store = undefined;
 
   (0, _emberQunit.moduleForComponent)('layers/odata-vector-layer', 'Unit | Component | layers/odata vector layer', {
     unit: true,
-    needs: ['service:map-api', 'config:environment', 'model:new-platform-flexberry-g-i-s-link-parameter', 'model:new-platform-flexberry-g-i-s-map', 'model:new-platform-flexberry-g-i-s-map-layer', 'adapter:application'],
+    needs: ['service:map-api', 'service:layers-styles-renderer', 'config:environment', 'model:new-platform-flexberry-g-i-s-link-parameter', 'model:new-platform-flexberry-g-i-s-map', 'model:new-platform-flexberry-g-i-s-map-layer', 'adapter:application', 'layer:odata-vector'],
     beforeEach: function beforeEach() {
       app = (0, _dummyTestsHelpersStartApp['default'])();
+
+      var testModelMixin = _ember['default'].Mixin.create({
+        name: _emberData['default'].attr('string', { defaultValue: '' }),
+        shape: _emberData['default'].attr('json')
+      });
+
+      var testModel = _emberFlexberryData.Projection.Model.extend(testModelMixin);
+      testModel.defineProjection('TestModelL', 'test-model', {
+        name: _emberFlexberryData.Projection.attr(''),
+        shape: _emberFlexberryData.Projection.attr('')
+      });
+
+      var testSerializer = _emberFlexberryData.Serializer.Odata.extend({
+        primaryKey: '__PrimaryKey'
+      });
+
+      this.register('model:test-model', testModel);
+      this.register('mixin:test-model', testModelMixin);
+      this.register('serializer:test-model', testSerializer);
+
+      app.register('model:test-model', testModel);
+      app.register('mixin:test-model', testModelMixin);
+      app.register('serializer:test-model', testSerializer);
 
       options = {
         geometryField: 'shape',
@@ -3699,11 +3724,43 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       };
       param = _ember['default'].$.extend(param, options);
 
+      bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
+      var getBounds = function getBounds() {
+        return bounds;
+      };
+
+      var getPane = function getPane() {
+        return undefined;
+      };
+
+      var createPane = function createPane() {
+        return {};
+      };
+
+      store = app.__container__.lookup('service:store');
+      _ember['default'].$.extend(param, {
+        'modelName': 'test-model',
+        'projectionName': 'TestModelL',
+        'geometryField': 'shape',
+        'typeName': 'test-model',
+        'odataClass': 'TestModel',
+        'continueLoading': true,
+        'store': store,
+        'layerModel': { 'type': 'odata-vector', 'visibility': true },
+        'leafletMap': {
+          getBounds: getBounds,
+          getPane: getPane,
+          createPane: createPane
+        }
+      });
+
       odataServerFake = _sinon['default'].fakeServer.create();
       odataServerFake.autoRespond = true;
 
+      var responseText = '--batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f\n    Content-Type: application/http\n    Content-Transfer-Encoding: binary\n\n    HTTP/1.1 200 OK\n    Content-Type: application/json; charset=utf-8; odata.metadata=minimal\n    OData-Version: 4.0\n\n    {\n      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#IISRGISPKVydelUtverzhdenoPolygon32640s(__PrimaryKey,ID,Name,Shape)","value":[\n        {\n          "__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a79b", "Name":null,"Shape":{\n            "type":"MultiPolygon","coordinates":[\n              [\n                [\n                  [468709.463318981,6478884.81118851],\n            [468578.508624007,6478880.73565037],\n            [468541.567377907,6478925.23599015],\n            [468533.564191116,6478946.2331571],\n            [468614.492922407,6478979.21144234],\n            [468657.52589005,6478981.2057549],\n            [468672.503518996,6478963.71619159],\n            [468717.482394432,6478946.21010284],\n            [468709.463318981,6478884.81118851]\n                ]\n              ]\n            ],"crs":{\n              "type":"name","properties":{\n                "name":"EPSG:32640"\n              }\n            }\n          }\n      },\n\n      {\n          "__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a89b", "Name":null,"Shape":{\n            "type":"MultiPolygon","coordinates":[\n              [\n                [\n                  [468709.463318981,6478884.81118851],\n            [468578.508624007,6478880.73565037],\n            [468541.567377907,6478925.23599015],\n            [468533.564191116,6478946.2331571],\n            [468614.492922407,6478979.21144234],\n            [468657.52589005,6478981.2057549],\n            [468672.503518996,6478963.71619159],\n            [468717.482394432,6478946.21010284],\n            [468709.463318981,6478884.81118851]\n                ]\n              ]\n            ],"crs":{\n              "type":"name","properties":{\n                "name":"EPSG:32640"\n              }\n            }\n          }\n      }\n      ]\n    }\n    --batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f--';
+
       odataServerFake.respondWith('POST', 'http://134.209.30.115:1818/odata/$batch', function (request) {
-        request.respond(200, { 'Content-Type': 'multipart/mixed; boundary=batchresponse_3942662d-07b6-4e24-b466-fba5d37ca181' }, '--batchresponse_3942662d-07b6-4e24-b466-fba5d37ca181\r\n' + 'Content-Type: application/http\r\n' + 'Content-Transfer-Encoding: binary\r\n' + '\r\n' + 'HTTP/1.1 200 OK\r\n' + 'Content-Type: application/json; charset=utf-8; odata.metadata=minimal\r\n' + 'OData-Version: 4.0\r\n' + '\r\n' + '{\r\n' + '  "@odata.context":"http://134.209.30.115:1818/odata/$metadata#ModelTest(__PrimaryKey)","value":[\r\n' + '\r\n' + '  ]\r\n' + '}\r\n' + '--batchresponse_3942662d-07b6-4e24-b466-fba5d37ca181--');
+        request.respond(200, { 'content-type': 'multipart/mixed; boundary=batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f' }, responseText);
       });
     },
     afterEach: function afterEach() {
@@ -3740,16 +3797,8 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
     var _this2 = this;
 
     assert.expect(2);
-    var done = assert.async(2);
+    var done = assert.async(3);
     _ember['default'].run(function () {
-      var store = app.__container__.lookup('service:store');
-      store.createRecord('new-platform-flexberry-g-i-s-map-layer');
-      _ember['default'].$.extend(param, {
-        'modelName': 'new-platform-flexberry-g-i-s-map-layer',
-        'projectionName': 'MapLayerL',
-        'geometryField': 'geometryField',
-        'store': store });
-
       var component = _this2.subject(param);
 
       var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
@@ -3765,18 +3814,15 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
         results: _ember['default'].A()
       };
 
-      var leafletLayerPromiseResolved = assert.async();
       component.get('_leafletLayerPromise').then(function (leafletLayer) {
-        var _leafletObject = L.featureGroup();
-        _leafletObject.options.showExisting = false;
-        component.set('_leafletObject', _leafletObject);
+        component.set('_leafletObject', leafletLayer);
 
         component.loadLayerFeatures(e).then(function (layers) {
           assert.ok(layers, 'Load with null featureIds');
           done();
         });
       })['finally'](function () {
-        leafletLayerPromiseResolved();
+        done();
       });
 
       assert.ok(component, 'Create odata-layer');
@@ -3788,20 +3834,14 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
     var _this3 = this;
 
     assert.expect(2);
-    var done = assert.async(2);
+    var done = assert.async(3);
     _ember['default'].run(function () {
-      var store = app.__container__.lookup('service:store');
-      store.createRecord('new-platform-flexberry-g-i-s-map-layer');
-      _ember['default'].$.extend(param, {
-        'modelName': 'new-platform-flexberry-g-i-s-map-layer',
-        'projectionName': 'MapLayerL',
-        'geometryField': 'geometryField',
-        'store': store });
-
       var component = _this3.subject(param);
 
       var getCountFeaturesStub = _sinon['default'].stub(component, 'getCountFeatures');
-      getCountFeaturesStub.returns(_ember['default'].RSVP.resolve(123));
+      getCountFeaturesStub.returns(_ember['default'].run(function () {
+        return _ember['default'].RSVP.resolve(123);
+      }));
 
       var e = {
         featureIds: null,
@@ -3809,18 +3849,55 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
         results: _ember['default'].A()
       };
 
-      var leafletLayerPromiseResolved = assert.async();
       component.get('_leafletLayerPromise').then(function (leafletLayer) {
-        var _leafletObject = L.featureGroup();
-        _leafletObject.options.showExisting = false;
-        component.set('_leafletObject', _leafletObject);
+        component.set('_leafletObject', leafletLayer);
 
         component.getLayerFeatures(e).then(function (layers) {
-          assert.ok(layers, 'Load with null featureIds');
+          assert.ok(layers, 'Get with null featureIds');
           done();
         });
       })['finally'](function () {
-        leafletLayerPromiseResolved();
+        done();
+      });
+
+      assert.ok(component, 'Create odata-layer');
+      done();
+    });
+  });
+
+  (0, _emberQunit.test)('continueLoad()', function (assert) {
+    var _this4 = this;
+
+    assert.expect(7);
+    var done = assert.async(3);
+
+    _ember['default'].run(function () {
+      var component = _this4.subject(param);
+      _ember['default'].run(function () {
+        component.get('_leafletLayerPromise').then(function (leafletLayer) {
+          component.set('_leafletObject', leafletLayer);
+          leafletLayer.promiseLoadLayer.then(_ember['default'].run(function () {
+            var loadedBounds = component.get('loadedBounds');
+            assert.ok(loadedBounds, 'loadedBounds');
+            assert.ok(loadedBounds.getBounds() instanceof L.LatLngBounds, 'loadedBounds.getBounds() is L.LatLngBounds');
+            assert.ok(JSON.stringify(loadedBounds.getBounds()) === JSON.stringify(bounds), 'loadedBounds get from map');
+
+            bounds = L.latLngBounds(L.latLng(58.46807257997011, 56.61014556884766), L.latLng(58.443780224452524, 56.44535064697266));
+
+            var load = component.continueLoad();
+            load.then(_ember['default'].run(function () {
+              loadedBounds = component.get('loadedBounds');
+              assert.ok(loadedBounds, 'loadedBounds');
+              assert.ok(loadedBounds.getBounds() instanceof L.LatLngBounds, 'loadedBounds.getBounds() is L.LatLngBounds');
+              var strBounds = '{"_southWest":{"lat":58.443645,"lng":56.369991},"_northEast":{"lat":58.468073,"lng":56.610146}}';
+              assert.ok(JSON.stringify(loadedBounds.getBounds()) === strBounds, 'loadedBounds get from map');
+
+              done();
+            }));
+          }));
+        })['finally'](function () {
+          done();
+        });
       });
 
       assert.ok(component, 'Create odata-layer');
