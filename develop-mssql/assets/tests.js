@@ -4972,6 +4972,24 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-create-polygon-object-rh
   var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApiExpansion['default']);
   var crs4326 = _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'].create();
 
+  var crsFactory32640 = {
+    code: 'EPSG:32640',
+    definition: '+proj=utm +zone=40 +datum=WGS84 +units=m +no_defs',
+    create: function create() {
+      var crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
+        scale: function scale(zoom) {
+          return 256 * Math.pow(2, zoom);
+        },
+        zoom: function zoom(scale) {
+          return Math.log(scale / 256) / Math.LN2;
+        }
+      });
+      return crs;
+    }
+  };
+
+  var crs32640 = crsFactory32640.create();
+
   (0, _qunit.test)('test method createPolygonObjectRhumb for LineString', function (assert) {
     //Arrange
     var testLiseString = {
@@ -4982,11 +5000,11 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-create-polygon-object-rh
       points: [{
         rhumb: 'SE',
         angle: 0,
-        distance: 444780.3209341317
+        distance: 10
       }, {
         rhumb: 'NE',
         angle: 90,
-        distance: 555213.4562030523
+        distance: 10
       }]
     };
 
@@ -4995,7 +5013,13 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-create-polygon-object-rh
       properties: undefined,
       geometry: {
         type: 'LineString',
-        coordinates: [[3, 7], [3, 2.9999999999999996], [8, 3]]
+        coordinates: [[3, 7], [-7, 7.000000000000001], [-6.999999999999999, 17]]
+      },
+      crs: {
+        properties: {
+          name: 'EPSG:4326'
+        },
+        type: 'name'
       }
     };
     var subject = mapApiMixinObject.create({
@@ -5015,26 +5039,26 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-create-polygon-object-rh
     //Arrange
     var testLiseString = {
       type: 'Polygon',
-      startPoint: [3, 7],
-      crs: 'EPSG:4326',
+      startPoint: [30, 70],
+      crs: 'EPSG:32640',
       skip: 0,
       hole: false,
       points: [{
         rhumb: 'SE',
         angle: 0,
-        distance: 444780.3209341317
+        distance: 10
       }, {
         rhumb: 'NE',
         angle: 90,
-        distance: 555213.4562030523
+        distance: 10
       }, {
         rhumb: 'NW',
         angle: 0,
-        distance: 444780.3209341317
+        distance: 10
       }, {
         rhumb: 'NW',
         angle: 90,
-        distance: 551831.2448362056
+        distance: 10
       }]
     };
 
@@ -5043,12 +5067,18 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-create-polygon-object-rh
       properties: undefined,
       geometry: {
         type: 'Polygon',
-        coordinates: [[[3, 7], [3, 2.9999999999999996], [8, 3], [8, 7], [3, 7]]]
+        coordinates: [[[30, 70], [20, 70], [20, 80], [30, 80], [30, 70]]]
+      },
+      crs: {
+        properties: {
+          name: 'EPSG:32640'
+        },
+        type: 'name'
       }
     };
     var subject = mapApiMixinObject.create({
       _getModelLeafletObject: function _getModelLeafletObject() {
-        return [null, { options: { crs: crs4326 } }];
+        return [null, { options: { crs: crs32640 } }];
       }
     });
 
@@ -8136,6 +8166,217 @@ define('dummy/tests/unit/utils/polygon-intersect-check-test.jshint', ['exports']
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/utils/polygon-intersect-check-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/utils/rhumb-operations-test', ['exports', 'ember-flexberry-gis/utils/rhumb-operations', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'qunit', 'sinon', 'ember'], function (exports, _emberFlexberryGisUtilsRhumbOperations, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _qunit, _sinon, _ember) {
+
+  (0, _qunit.module)('Unit | Utility | rhumb operations');
+
+  var crsFactory32640 = {
+    code: 'EPSG:32640',
+    definition: '+proj=utm +zone=40 +datum=WGS84 +units=m +no_defs',
+    create: function create() {
+      var crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
+        scale: function scale(zoom) {
+          return 256 * Math.pow(2, zoom);
+        },
+        zoom: function zoom(scale) {
+          return Math.log(scale / 256) / Math.LN2;
+        }
+      });
+      return crs;
+    }
+  };
+
+  var crs32640 = crsFactory32640.create();
+
+  (0, _qunit.test)('test method createObjectRhumb for Polygon with startPoint in EPSG:32640', function (assert) {
+    //Arrange
+    var testObj = {
+      type: 'Polygon',
+      startPoint: [20, 20],
+      crs: 'EPSG:32640',
+      skip: 0,
+      points: [{ rhumb: 'SE', angle: 0, distance: 10 }, { rhumb: 'NE', angle: 90, distance: 10 }, { rhumb: 'NW', angle: 0, distance: 10 }, { rhumb: 'NW', angle: 90, distance: 10 }]
+    };
+
+    var resObj = {
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: [[[20, 20], [10, 20], [10, 30], [20, 30], [20, 20]]]
+      },
+      properties: undefined,
+      crs: {
+        type: 'name',
+        properties: {
+          name: 'EPSG:32640'
+        }
+      }
+    };
+
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': crsFactory32640,
+          'epsg32640': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default']
+        };
+      }
+    });
+
+    //Act
+    var result = (0, _emberFlexberryGisUtilsRhumbOperations.createObjectRhumb)(testObj, crs32640);
+
+    //Assert
+    assert.deepEqual(result, resObj);
+    ownerStub.restore();
+  });
+
+  (0, _qunit.test)('test method createObjectRhumb for Polygon with startPoint in EPSG:4326', function (assert) {
+    //Arrange
+    var testObj = {
+      type: 'Polygon',
+      startPoint: [7, 3],
+      crs: 'EPSG:4326',
+      skip: 0,
+      points: [{ rhumb: 'SE', angle: 0, distance: 1000 }, { rhumb: 'NE', angle: 90, distance: 1000 }, { rhumb: 'NW', angle: 0, distance: 1000 }, { rhumb: 'NW', angle: 90, distance: 1000 }]
+    };
+
+    var resObj = {
+      type: 'Feature',
+      properties: undefined,
+      geometry: {
+        type: 'Polygon',
+        coordinates: [[[-5936517.120908923, 517670.4443068467], [-5937517.120908923, 517670.4443068467], [-5937517.120908923, 518670.4443068467], [-5936517.120908923, 518670.4443068467], [-5936517.120908923, 517670.4443068467]]]
+      },
+      crs: {
+        type: 'name',
+        properties: {
+          name: 'EPSG:32640'
+        }
+      }
+    };
+
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': crsFactory32640,
+          'epsg32640': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default']
+        };
+      }
+    });
+
+    //Act
+    var result = (0, _emberFlexberryGisUtilsRhumbOperations.createObjectRhumb)(testObj, crs32640);
+
+    //Assert
+    assert.deepEqual(result, resObj);
+    ownerStub.restore();
+  });
+
+  (0, _qunit.test)('test method createObjectRhumb for LineString with startPoint in EPSG:32640', function (assert) {
+    //Arrange
+    var testObj = {
+      type: 'LineString',
+      startPoint: [20, 20],
+      crs: 'EPSG:32640',
+      skip: 0,
+      points: [{ rhumb: 'SE', angle: 0, distance: 10 }, { rhumb: 'NE', angle: 90, distance: 10 }, { rhumb: 'NW', angle: 0, distance: 10 }]
+    };
+
+    var resObj = {
+      type: 'Feature',
+      geometry: {
+        type: 'LineString',
+        coordinates: [[20, 20], [10, 20], [10, 30], [20, 30]]
+      },
+      properties: undefined,
+      crs: {
+        type: 'name',
+        properties: {
+          name: 'EPSG:32640'
+        }
+      }
+    };
+
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': crsFactory32640,
+          'epsg32640': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default']
+        };
+      }
+    });
+
+    //Act
+    var result = (0, _emberFlexberryGisUtilsRhumbOperations.createObjectRhumb)(testObj, crs32640);
+
+    //Assert
+    assert.deepEqual(result, resObj);
+    ownerStub.restore();
+  });
+
+  (0, _qunit.test)('test method createObjectRhumb for LineString with startPoint in EPSG:4326', function (assert) {
+    //Arrange
+    var testObj = {
+      type: 'LineString',
+      startPoint: [7, 3],
+      crs: 'EPSG:4326',
+      skip: 0,
+      points: [{ rhumb: 'SE', angle: 0, distance: 1000 }, { rhumb: 'NE', angle: 90, distance: 1000 }, { rhumb: 'NW', angle: 0, distance: 1000 }]
+    };
+
+    var resObj = {
+      type: 'Feature',
+      properties: undefined,
+      geometry: {
+        type: 'LineString',
+        coordinates: [[-5936517.120908923, 517670.4443068467], [-5937517.120908923, 517670.4443068467], [-5937517.120908923, 518670.4443068467], [-5936517.120908923, 518670.4443068467]]
+      },
+      crs: {
+        type: 'name',
+        properties: {
+          name: 'EPSG:32640'
+        }
+      }
+    };
+
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': crsFactory32640,
+          'epsg32640': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default']
+        };
+      }
+    });
+
+    //Act
+    var result = (0, _emberFlexberryGisUtilsRhumbOperations.createObjectRhumb)(testObj, crs32640);
+
+    //Assert
+    assert.deepEqual(result, resObj);
+    ownerStub.restore();
+  });
+});
+define('dummy/tests/unit/utils/rhumb-operations-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/utils');
+  test('unit/utils/rhumb-operations-test.js should pass jscs', function () {
+    ok(true, 'unit/utils/rhumb-operations-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/utils/rhumb-operations-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/utils/rhumb-operations-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/utils/rhumb-operations-test.js should pass jshint.');
   });
 });
 define('dummy/tests/views/components-examples/flexberry-maplayers/settings-example.jscs-test', ['exports'], function (exports) {
