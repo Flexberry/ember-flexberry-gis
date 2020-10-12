@@ -43071,7 +43071,7 @@
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
             "line": 253,
-            "description": "Create Object by rhumb.",
+            "description": "Create object by rhumb for [LineString, Polygon]. Start point coordinates convert in crs of layer.\nAccepts angles in degrees, converting them to radians. Accepts names of direction is [NE, SE, NW, SW].\nAccepts distance in units accepted for CRS of layer. Calculation rhumb by point, distance and angle.\nReturns coordinates skipping 'skip' from the first rhumb in crs of layer.",
             "itemtype": "method",
             "name": "createPolygonObjectRhumb",
             "params": [
@@ -43082,12 +43082,12 @@
                 },
                 {
                     "name": "data",
-                    "description": "Coordinate objects.\nExample:\nvar data = {\n      type: 'LineString',\n      crs: 'EPSG:3857',\n      properties: { name: 'test_polygon' },\n      startPoint: [85, 79],\n      skip:0,\n      points: [\n        { rhumb: 'SE', angle: 86.76787457562546, distance: 8182.6375760837955 },\n        { rhumb: 'NE', angle: 79.04259420114585, distance: 8476.868426796427 },\n        { rhumb: 'SW', angle: 86.0047147391561, distance: 16532.122718537685 }\n      ]\n    };",
+                    "description": "Rhumbs parameters.\nExample:\nvar data = {\n      type: 'LineString',\n      crs: 'EPSG:3857',\n      properties: { name: 'test_polygon' },\n      startPoint: [85, 79],\n      skip:0,\n      points: [\n        { rhumb: 'SE', angle: 86.76787457562546, distance: 8182.6375760837955 },\n        { rhumb: 'NE', angle: 79.04259420114585, distance: 8476.868426796427 },\n        { rhumb: 'SW', angle: 86.0047147391561, distance: 16532.122718537685 }\n      ]\n    };",
                     "type": "Object"
                 }
             ],
             "return": {
-                "description": "New GeoJSON Feature.",
+                "description": "New GeoJSON Feature in crs of layer.",
                 "type": "Object"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
@@ -47572,10 +47572,10 @@
         },
         {
             "file": "addon/utils/rhumb-operations.js",
-            "line": 10,
-            "description": "Create polygon object by rhumb.",
+            "line": 7,
+            "description": "Create object by rhumb for [LineString, Polygon]. Start point coordinates convert in crs of layer.\nAccepts angles in degrees, converting them to radians. Accepts names of direction is [NE, SE, NW, SW].\nAccepts distance in units accepted for CRS of layer. Calculation rhumb by point, distance and angle.\nReturns coordinates skipping 'skip' from the first rhumb in crs of layer.",
             "itemtype": "method",
-            "name": "createPolygonObjectRhumb",
+            "name": "createObjectRhumb",
             "params": [
                 {
                     "name": "data",
@@ -48167,7 +48167,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/utils/rhumb-operations.js:10"
+            "line": " addon/utils/rhumb-operations.js:7"
         },
         {
             "message": "Missing item type\nReference to component's template.",

@@ -4004,7 +4004,10 @@
                         </div>
                     
                         <div class="description">
-                            Create Object by rhumb.
+                            Create object by rhumb for [LineString, Polygon]. Start point coordinates convert in crs of layer.
+                    Accepts angles in degrees, converting them to radians. Accepts names of direction is [NE, SE, NW, SW].
+                    Accepts distance in units accepted for CRS of layer. Calculation rhumb by point, distance and angle.
+                    Returns coordinates skipping 'skip' from the first rhumb in crs of layer.
                         </div>
                     
                             <div class="params">
@@ -4027,7 +4030,7 @@
                     
                     
                                         <div class="param-description">
-                                            Coordinate objects.
+                                            Rhumbs parameters.
                     Example:
                     var data = {
                           type: 'LineString',
@@ -4052,7 +4055,7 @@
                     
                                 <div class="returns-description">
                                             <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
-                                        New GeoJSON Feature.
+                                        New GeoJSON Feature in crs of layer.
                                 </div>
                             </div>
                     
