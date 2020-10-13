@@ -1414,14 +1414,18 @@ export default Ember.Mixin.create(SnapDraw, {
   },
 
   /**
-    Calculate geometry
+    Get merged geometry. Loads objects from a layers by packages of 100 units each.
+    Waits when all objects successfully load. Transform objects into JSTS objects.
+    First it merges geometry of objects on first layer using _getMulti method, then on second layer.
+    Result of combining objects in each layer is merged into a common geometry using createMulti method.
+
     @method getMergedGeometry
     @param {String} layerAId First layer ID.
     @param {Array} objectAIds First layer object IDs.
     @param {String} layerBId Second layer ID.
     @param {Array} objectBIds Second layer object IDs.
     @param {Boolean} failIfInvalid Fail when has invalid geometry.
-    @return {Promise} GeoJson Feature in EPSG:4326
+    @return {Promise} GeoJson Feature.
   */
   getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, isUnion = false, failIfInvalid = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
@@ -1445,17 +1449,7 @@ export default Ember.Mixin.create(SnapDraw, {
           let geometries = Ember.A();
           r.value[2].forEach((obj, ind) => {
             if (Ember.get(obj, 'feature.geometry') && Ember.get(obj, 'options.crs.code')) {
-              let feature = {
-                type: 'Feature',
-                geometry: obj.feature.geometry,
-                crs: {
-                  type: 'name',
-                  properties: {
-                    name: obj.options.crs.code
-                  }
-                }
-              };
-
+              let feature = obj.toJsts(obj.options.crs);
               geometries.pushObject(feature);
             }
           });
@@ -1463,13 +1457,13 @@ export default Ember.Mixin.create(SnapDraw, {
           count += 1;
 
           // если вся геометрия невалидна, то будет null
-          let merged = this.createMulti(geometries, isUnion, failIfInvalid);
+          let merged = this._getMulti(geometries, isUnion, failIfInvalid);
           if (merged) {
             resultObjs.pushObject(merged);
           }
         });
 
-        let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, isUnion, failIfInvalid) : null;
+        let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, isUnion, failIfInvalid, true) : null;
         resolve(resultObj ? resultObj : null);
       }).catch((e) => {
         reject(e);

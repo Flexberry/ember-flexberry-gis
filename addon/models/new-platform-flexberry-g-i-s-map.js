@@ -7,6 +7,7 @@ import { Model as MapMixin, defineProjections } from '../mixins/regenerated/mode
 import MapModelApiMixin from '../mixins/flexberry-map-model-api';
 import MapModelApiVisualEditMixin from '../mixins/flexberry-map-model-api-visualedit';
 import MapModelApiSaveLayerMixin from '../mixins/flexberry-map-model-api-savelayer';
+import MapModelApiReloadLayerMixin from '../mixins/flexberry-map-model-api-reloadlayer';
 import MapModelApiExpansionMixin from '../mixins/flexberry-map-model-api-expansion';
 import MapModelApiCosmosMixin from '../mixins/flexberry-map-model-api-cosmos';
 import { Projection } from 'ember-flexberry-data';
@@ -29,6 +30,7 @@ let Model = Projection.Model.extend(
   MapModelApiMixin,
   MapModelApiVisualEditMixin,
   MapModelApiSaveLayerMixin,
+  MapModelApiReloadLayerMixin,
   MapModelApiExpansionMixin,
   MapModelApiCosmosMixin,
   {
