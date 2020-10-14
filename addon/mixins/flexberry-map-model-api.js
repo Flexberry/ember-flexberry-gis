@@ -584,13 +584,14 @@ export default Ember.Mixin.create(SnapDraw, {
     }
   },
 
- /**
+  /**
     Determine the visibility of the specified objects by id for the layer.
 
     @method _setVisibilityObjects
     @param {string} layerId Layer ID.
     @param {string[]} objectIds Array of objects IDs.
     @param {boolean} [visibility=false] visibility Object Visibility.
+    @return {Ember.RSVP.Promise}
   */
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
