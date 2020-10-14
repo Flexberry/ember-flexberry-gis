@@ -593,7 +593,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @param {boolean} [visibility=false] visibility Object Visibility.
   */
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Ember.RSVP.Promise((resolve) => {
       if (Ember.isArray(objectIds)) {
         let [layer, leafletObject] = this._getModelLeafletObject(layerId);
         if (Ember.isNone(layer)) {
@@ -610,11 +610,7 @@ export default Ember.Mixin.create(SnapDraw, {
             let showExisting = leafletObject.options.showExisting;
             let continueLoading = leafletObject.options.continueLoading;
             if (!showExisting && !continueLoading) {
-              leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve) => {
-                this._getModelLayerFeature(layerId, objectIds, true).then(() => {
-                  resolve();
-                });
-              });
+              leafletObject.reload();
             } else {
               reject('Not working to layer with continueLoading');
             }

@@ -35,7 +35,7 @@ secondTestLabelLayer.id = '2';
 
 test('Test to addLayers to map (visibility = true)', function(assert) {
   //Arrange
-  assert.expect(9);
+  assert.expect(5);
   let map = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
     zoom: 13
@@ -51,7 +51,6 @@ test('Test to addLayers to map (visibility = true)', function(assert) {
     _getModelLayerFeature() { return Ember.RSVP.resolve(); }
   });
   let getModelLeafletObjSpy = sinon.spy(subject, '_getModelLeafletObject');
-  let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
   let mapAddSpy = sinon.spy(map, 'addLayer');
 
   //Act
@@ -60,24 +59,19 @@ test('Test to addLayers to map (visibility = true)', function(assert) {
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise, 'Equals result = Promise');
   result.then((res)=> {
-    assert.equal(res, 'sucsess', 'Check result message');
     assert.equal(Object.values(map._layers).length, 5, 'Check count layers on Map');
     assert.equal(mapAddSpy.callCount, 5, 'Check call count to method addLayer');
     assert.equal(getModelLeafletObjSpy.callCount, 1, 'Check call count to method _getModelLeafletObject');
     assert.equal(getModelLeafletObjSpy.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
-    assert.equal(getModelLayerFeatureSpy.callCount, 1, 'Check call count to method _getModelLayerFeature');
-    assert.equal(getModelLayerFeatureSpy.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
-    assert.deepEqual(getModelLayerFeatureSpy.args[0][1], ['1', '2'], 'Check call second arg to method _getModelLayerFeature');
     done();
     getModelLeafletObjSpy.restore();
-    getModelLayerFeatureSpy.restore();
     mapAddSpy.restore();
   });
 });
 
-test('Test to removeLayers to map (visibility = false)', function(assert) {
+test('Test to addLayers to map (visibility = false)', function(assert) {
   //Arrange
-  assert.expect(7);
+  assert.expect(5);
   let map = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
     zoom: 13
@@ -95,7 +89,6 @@ test('Test to removeLayers to map (visibility = false)', function(assert) {
     _getModelLayerFeature() { return Ember.RSVP.resolve(); }
   });
   let getModelLeafletObjSpy = sinon.spy(subject, '_getModelLeafletObject');
-  let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
   let mapAddSpy = sinon.spy(map, 'removeLayer');
 
   //Act
@@ -104,55 +97,12 @@ test('Test to removeLayers to map (visibility = false)', function(assert) {
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise, 'Equals result = Promise');
   result.then((res)=> {
-    assert.equal(res, 'sucsess', 'Check result message');
-    assert.equal(Object.values(map._layers).length, 4, 'Check count layers on Map');
-    assert.equal(mapAddSpy.callCount, 4, 'Check call count to method removeLayer');
+    assert.equal(Object.values(map._layers).length, 6, 'Check count layers on Map');
+    assert.equal(mapAddSpy.callCount, 2, 'Check call count to method removeLayer');
     assert.equal(getModelLeafletObjSpy.callCount, 1, 'Check call count to method _getModelLeafletObject');
     assert.equal(getModelLeafletObjSpy.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
-    assert.equal(getModelLayerFeatureSpy.callCount, 0, 'Check call count to method _getModelLayerFeature');
     done();
     getModelLeafletObjSpy.restore();
-    getModelLayerFeatureSpy.restore();
-    mapAddSpy.restore();
-  });
-});
-
-test('Test to check fail message', function(assert) {
-  //Arrange
-  assert.expect(6);
-  let map = L.map(document.createElement('div'), {
-    center: [51.505, -0.09],
-    zoom: 13
-  });
-  let done = assert.async(1);
-  leafletObject.options.continueLoading = true;
-  let subject = mapApiMixinObject.create({
-    _getModelLeafletObject() { return [layerModel, leafletObject]; },
-    _getTypeLayer() { return new VectorLayer(); },
-    mapApi: {
-      getFromApi() { return map; }
-    },
-    _getLayerFeatureId(layer, shape) { return shape.id; },
-    _getModelLayerFeature() { return Ember.RSVP.resolve(); }
-  });
-  let getModelLeafletObjSpy = sinon.spy(subject, '_getModelLeafletObject');
-  let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
-  let mapAddSpy = sinon.spy(map, 'removeLayer');
-
-  //Act
-  let result = subject._setVisibilityObjects('1', ['1', '2'], true);
-
-  //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise, 'Equals result = Promise');
-  result.then(()=>{}).catch((res)=> {
-    assert.equal(res, 'Not working to layer with continueLoading', 'Check result message');
-    assert.equal(Object.values(map._layers).length, 0, 'Check count layers on Map');
-    assert.equal(mapAddSpy.callCount, 0, 'Check call count to method removeLayer');
-    assert.equal(getModelLeafletObjSpy.callCount, 1, 'Check call count to method _getModelLeafletObject');
-    assert.equal(getModelLayerFeatureSpy.callCount, 0, 'Check call count to method _getModelLayerFeature');
-    done();
-    getModelLeafletObjSpy.restore();
-    getModelLayerFeatureSpy.restore();
     mapAddSpy.restore();
   });
 });
