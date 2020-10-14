@@ -950,103 +950,150 @@ export default Ember.Mixin.create(SnapDraw, {
   },
 
   /**
-    Get the object rhumb.
+    Get a rhumb object for [LineString, MultiLineString, Polygon, MultiPolygon]. Parameters is object in GeoJSON
+    format and name of coordinate reference system. Calculates rhumb between points. Use @turf/rhumb-bearing and
+    @turf/rhumb-distance libraries to calculate angle and distance between points. Distance calculation is
+    approximate and in meters. Names of direction is [NE, SE, NW, SW]. Angle calculation in degree.
+    Returns array of object:
+
+    ```javascript
+    [{
+      type - type of object is [LineString, Polygon],
+      crs - name of coordinate reference system of start point,
+      startPoint - coordinates of start point,
+      skip - how many rhumb skip from beginning (always 0),
+      points - array objects of rhumbs,
+      hole - if this part is hole then true else false. Only Polygon and MultiPolygon have it.
+    }]
+    ```
+
+    Objects of rhumbs consist from angle, distance and direction of rhumb. Example:
+
+    ```javascript
+    {
+      rhumb: 'NE',
+      angle: 45,
+      distance: 1000
+    }
+    ```
+
+    Example of method call:
+
+    ```javascript
+    var feature = {
+      type: "Feature",
+      geometry:
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [[56.09419, 58.08895], [56.093588, 58.088632], [56.094269, 58.088632], [56.094269, 58.088902], [56.09419, 58.08895]]
+        ]
+      }
+    };
+
+    var result = mapApi.mapModel.getRhumb(feature, 'EPSG:4326');
+    ```
     @method  getRhumb
-    @param {string} layerId Layer ID.
-    @param {string} objectId Object ID.
-    @return {Promise} Object rhumb.
+    @param {Object} feature GeoJson Feature.
+    @param {string} crsName Name of coordinate reference system, in which to give coordinates.
+    @return {Array} Array object rhumb.
   */
-  getRhumb(layerId, objectId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, [objectId]).then(([, leafletObject, featureLayer]) => {
-        let cors = featureLayer[0]._latlngs;
-        let result = [];
+  getRhumb(feature, crsName) {
+    let coords = feature.geometry.coordinates;
+    let result = [];
 
-        var rowPush = function (vertexNum1, vertexNum2, point1, point2) {
-          const pointFrom = helpers.point([point2.lng, point2.lat]);
-          const pointTo = helpers.point([point1.lng, point1.lat]);
+    var calcRhumb = function (point1, point2) {
+      const pointFrom = helpers.point([point2[0], point2[1]]);
+      const pointTo = helpers.point([point1[0], point1[1]]);
 
-          // We get the distance and translate into meters.
-          const distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
+      // We get the distance and translate into meters. Distance calculattion is approximate.
+      const distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
 
-          // Get the angle.
-          const bearing = rhumbBearing.default(pointTo, pointFrom);
+      // Get the angle.
+      const bearing = rhumbBearing.default(pointTo, pointFrom);
 
-          let rhumb;
-          let angle;
+      let rhumb;
+      let angle;
 
-          // Calculates rhumb.
-          if (bearing <= 90 && bearing >= 0) {
-            // СВ
-            rhumb = 'СВ';
-            angle = bearing;
-          } else if (bearing <= 180 && bearing >= 90) {
-            // ЮВ
-            rhumb = 'ЮВ';
-            angle = (180 - bearing);
-          } else if (bearing >= -180 && bearing <= -90) {
-            // ЮЗ
-            rhumb = 'ЮЗ';
-            angle = (180 + bearing);
-          } if (bearing <= 0 && bearing >= -90) {
-            // СЗ
-            rhumb = 'СЗ';
-            angle = (-1 * bearing);
-          }
+      // Calculates rhumb.
+      if (bearing <= 90 && bearing >= 0) {
+        // NE
+        rhumb = 'NE';
+        angle = bearing;
+      } else if (bearing <= 180 && bearing >= 90) {
+        // SE
+        rhumb = 'SE';
+        angle = (180 - bearing);
+      } else if (bearing >= -180 && bearing <= -90) {
+        // SW
+        rhumb = 'SW';
+        angle = (180 + bearing);
+      } if (bearing <= 0 && bearing >= -90) {
+        // NW
+        rhumb = 'NW';
+        angle = (-1 * bearing);
+      }
 
-          return {
-            rhumb: rhumb,
-            angle: angle,
-            distance: distance
-          };
-        };
+      return {
+        rhumb: rhumb,
+        angle: angle,
+        distance: distance
+      };
+    };
 
-        let startPoint = null;
-        let type;
-        for (let i = 0; i < cors.length; i++) {
-          for (let j = 0; j < cors[i].length; j++) {
-            let n;
-            let point1;
-            let point2;
-            let item = cors[i][j];
+    let coordToRhumbs = function(type, coords) {
+      let startPoint = null;
+      let n;
+      let point1;
+      let point2;
+      let rhumbs = [];
+      for (let i = 0; i < coords.length - 1; i++) {
+        startPoint = i === 0 ? coords[i] : startPoint;
+        point1 = coords[i];
+        n = !Ember.isNone(coords[i + 1]) ? i + 1 : 0;
+        point2 = coords[n];
+        rhumbs.push(calcRhumb(point1, point2));
+      }
 
-            // Polygon.
-            if (!Ember.isNone(item.length)) {
-              type = 'Polygon';
-              for (let k = 0; k < item.length; k++) {
-                startPoint = k === 0 ? item[k] : startPoint;
-                point1 = item[k];
-                n = !Ember.isNone(item[k + 1]) ? k + 1 : 0;
-                point2 = item[n];
+      return {
+        type: type,
+        crs: crsName,
+        startPoint: startPoint,
+        skip: 0,
+        points: rhumbs
+      };
+    };
 
-                result.push(rowPush(k, n, point1, point2));
-              }
+    switch (feature.geometry.type) {
+      case 'LineString':
+        result.push(coordToRhumbs('LineString', coords));
+        break;
+      case 'MultiLineString':
+        for (let i = 0; i < coords.length; i++) {
+          result.push(coordToRhumbs('LineString', coords[i]));
+        }
 
-              // LineString.
-            } else {
-              type = 'LineString';
-              startPoint = j === 0 ? item : startPoint;
-              point1 = item;
-              n = !Ember.isNone(cors[i][j + 1]) ? j + 1 : 0;
-              point2 = cors[i][n];
+        break;
+      case 'Polygon':
+        for (let i = 0; i < coords.length; i++) {
+          result.push(coordToRhumbs('Polygon', coords[i]));
+          result[i].hole = i > 0 ? true : false;
+        }
 
-              result.push(rowPush(j, n, point1, point2));
-            }
+        break;
+      case 'MultiPolygon':
+        let k = 0;
+        for (let i = 0; i < coords.length; i++) {
+          for (let j = 0; j < coords[i].length; j++) {
+            result.push(coordToRhumbs('Polygon', coords[i][j]));
+            result[result.length - 1].hole = j > 0 ? true : false;
           }
         }
 
-        resolve({
-          type: type,
-          startPoint: startPoint,
-          crs: 'EPSG:4326',
-          skip: 1,
-          rhumbCoordinates: result,
-          coordinates: cors
-        });
-      }).catch((e) => {
-        reject(e);
-      });
-    });
+        break;
+    }
+
+    return result;
   },
 
   /**
@@ -1359,16 +1406,20 @@ export default Ember.Mixin.create(SnapDraw, {
   },
 
   /**
-    Calculate geometry
+    Get merged geometry. Loads objects from a layers by packages of 100 units each.
+    Waits when all objects successfully load. Transform objects into JSTS objects.
+    First it merges geometry of objects on first layer using _getMulti method, then on second layer.
+    Result of combining objects in each layer is merged into a common geometry using createMulti method.
+
     @method getMergedGeometry
     @param {String} layerAId First layer ID.
     @param {Array} objectAIds First layer object IDs.
     @param {String} layerBId Second layer ID.
     @param {Array} objectBIds Second layer object IDs.
     @param {Boolean} failIfInvalid Fail when has invalid geometry.
-    @return {Promise} GeoJson Feature in EPSG:4326
+    @return {Promise} GeoJson Feature.
   */
-  getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, failIfInvalid = false) {
+  getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, isUnion = false, failIfInvalid = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let layerAPromises = this.loadingFeaturesByPackages(layerAId, objectAIds);
       let layerBPromises = this.loadingFeaturesByPackages(layerBId, objectBIds);
@@ -1390,17 +1441,7 @@ export default Ember.Mixin.create(SnapDraw, {
           let geometries = Ember.A();
           r.value[2].forEach((obj, ind) => {
             if (Ember.get(obj, 'feature.geometry') && Ember.get(obj, 'options.crs.code')) {
-              let feature = {
-                type: 'Feature',
-                geometry: obj.feature.geometry,
-                crs: {
-                  type: 'name',
-                  properties: {
-                    name: obj.options.crs.code
-                  }
-                }
-              };
-
+              let feature = obj.toJsts(obj.options.crs);
               geometries.pushObject(feature);
             }
           });
@@ -1408,13 +1449,13 @@ export default Ember.Mixin.create(SnapDraw, {
           count += 1;
 
           // если вся геометрия невалидна, то будет null
-          let merged = this.createMulti(geometries, failIfInvalid);
+          let merged = this._getMulti(geometries, isUnion, failIfInvalid);
           if (merged) {
             resultObjs.pushObject(merged);
           }
         });
 
-        let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, failIfInvalid) : null;
+        let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, isUnion, failIfInvalid, true) : null;
         resolve(resultObj ? resultObj : null);
       }).catch((e) => {
         reject(e);

@@ -1,6 +1,7 @@
 import { moduleForModel, test } from 'ember-qunit';
 import sinon from 'sinon';
 import Ember from 'ember';
+import { geometryToJsts } from 'ember-flexberry-gis/utils/layer-to-jsts';
 
 moduleForModel('new-platform-flexberry-g-i-s-map', 'Unit | Model | new-platform-flexberry-g-i-s-map', {
   // Specify the other units that are required for this test.
@@ -257,7 +258,7 @@ test('getDistanceBetweenObjects', function(assert) {
   });
 });
 
-test('getmulticircuitobject', function(assert) {
+test('getmulticircuitobject with difference', function(assert) {
   let map = this.subject();
   let objA = {
     type: 'Feature',
@@ -320,12 +321,77 @@ test('getmulticircuitobject', function(assert) {
     }
   };
 
-  let resultObj = map.createMulti([objA, objB, objC]);
+  let resultObj = map.createMulti([objA, objB, objC], false);
 
   assert.deepEqual(resultObj, multiObject, 'multi object');
 });
 
-test('getMergedGeometry should return geoJson feature in EPSG:4326', function(assert) {
+test('getmulticircuitobject with union', function(assert) {
+  let map = this.subject();
+  let objA = {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'Polygon',
+      coordinates: [[[56.18425, 58.07197], [56.21068, 58.07197], [56.21068, 58.07987], [56.18425, 58.07987], [56.18425, 58.07197]]]
+    },
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:4326'
+      }
+    }
+  };
+  let objB = {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'Polygon',
+      coordinates: [[[56.19712, 58.06770], [56.22322, 58.06770], [56.22322, 58.07551], [56.19712, 58.07551], [56.19712, 58.06770]]]
+    },
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:4326'
+      }
+    }
+  };
+  let objC = {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'Polygon',
+      coordinates: [[[56.21644, 58.07864], [56.23197, 58.07864], [56.23197, 58.08608], [56.21644, 58.08608], [56.21644, 58.07864]]]
+    },
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:4326'
+      }
+    }
+  };
+  let multiObject = {
+    type: 'Feature',
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [[[[56.19712, 58.07197], [56.18425, 58.07197], [56.18425, 58.07987], [56.21068, 58.07987], [56.21068, 58.07551],
+  [56.22322, 58.07551], [56.22322, 58.0677], [56.19712, 58.0677], [56.19712, 58.07197]]],
+  [[[56.21644, 58.07864], [56.21644, 58.08608], [56.23197, 58.08608], [56.23197, 58.07864], [56.21644, 58.07864]]]]
+    },
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:4326'
+      }
+    }
+  };
+
+  let resultObj = map.createMulti([objA, objB, objC], true);
+
+  assert.deepEqual(resultObj, multiObject, 'multi object');
+});
+
+test('getMergedGeometry with difference should return geoJson feature in EPSG:4326', function(assert) {
   assert.expect(1);
   let done = assert.async(1);
 
@@ -333,8 +399,8 @@ test('getMergedGeometry should return geoJson feature in EPSG:4326', function(as
     type: 'MultiPolygon',
     properties: {},
     coordinates:[[[
-      [56.3252305984497, 58.6398609008772], [56.3221406936646, 58.6398609008771], [56.3221406936646, 58.6412232372209],
-      [56.3252305984497, 58.6412232372209], [56.3252305984497, 58.6398609008772]
+      [1.001, 2.002], [1.005, 2.002], [1.003, 2.003],
+      [1.001, 2.003], [1.001, 2.002]
     ]]]
   };
 
@@ -342,8 +408,8 @@ test('getMergedGeometry should return geoJson feature in EPSG:4326', function(as
     type: 'MultiPolygon',
     properties: {},
     coordinates:[[[
-      [56.3305950164795, 58.6398385670516], [56.3272905349732, 58.6398385670516], [56.3272905349732, 58.6412679030864],
-      [56.3305950164795, 58.6412679030864], [56.3305950164795, 58.6398385670516]
+      [1.003, 2.0025], [1.005, 2.0025], [1.003, 2.003],
+      [1.001, 2.003], [1.003, 2.0025]
     ]]]
   };
 
@@ -351,8 +417,8 @@ test('getMergedGeometry should return geoJson feature in EPSG:4326', function(as
     type: 'MultiPolygon',
     properties: {},
     coordinates: [[[
-      [56.3273334503174, 58.6397715654894], [56.3273334503174, 58.6383198334056], [56.3220977783203, 58.6383198334056],
-      [56.3220977783203, 58.6397715654894], [56.3273334503174, 58.6397715654894]
+      [1.001, 2.0033], [1.003, 2.0033], [1.005, 2.004],
+      [1.001, 2.004], [1.001, 2.0033]
     ]]]
   };
 
@@ -360,8 +426,8 @@ test('getMergedGeometry should return geoJson feature in EPSG:4326', function(as
     type: 'MultiPolygon',
     properties: {},
     coordinates: [[[
-      [56.331582069397, 58.6397827324254], [56.331582069397, 58.6383086660018], [56.3278484344483, 58.6383198334056],
-      [56.3278484344483, 58.6397603985499], [56.331582069397, 58.6397827324254]
+      [1.001, 2.0033], [1.003, 2.0033], [1.003, 2.0035],
+      [1.001, 2.0035], [1.001, 2.0033]
     ]]]
   };
 
@@ -370,14 +436,10 @@ test('getMergedGeometry should return geoJson feature in EPSG:4326', function(as
     geometry: {
       type: 'MultiPolygon',
       coordinates: [
-        [[[56.3252305984497, 58.6398609008772], [56.3221406936646, 58.6398609008771], [56.3221406936646, 58.6412232372209],
-        [56.3252305984497, 58.6412232372209], [56.3252305984497, 58.6398609008772]]],
-        [[[56.3305950164795, 58.6398385670516], [56.3272905349732, 58.6398385670516], [56.3272905349732, 58.6412679030864],
-        [56.3305950164795, 58.6412679030864], [56.3305950164795, 58.6398385670516]]],
-        [[[56.3273334503174, 58.6397715654894], [56.3273334503174, 58.6383198334056], [56.3220977783203, 58.6383198334056],
-        [56.3220977783203, 58.6397715654894], [56.3273334503174, 58.6397715654894]]],
-        [[[56.331582069397, 58.6397827324254], [56.331582069397, 58.6383086660018], [56.3278484344483, 58.6383198334056],
-        [56.3278484344483, 58.6397603985499], [56.331582069397, 58.6397827324254]]]
+        [[[1.0039999999999998, 2.0025], [1.005, 2.002], [1.001, 2.002], [1.001, 2.003],
+        [1.003, 2.0025], [1.0039999999999998, 2.0025]]],
+        [[[1.003, 2.003], [1.005, 2.0025], [1.0039999999999998, 2.0025], [1.003, 2.003]]],
+        [[[1.001, 2.0035], [1.001, 2.004], [1.005, 2.004], [1.003, 2.0033], [1.003, 2.0035], [1.001, 2.0035]]]
       ]
     },
     crs: {
@@ -398,6 +460,34 @@ test('getMergedGeometry should return geoJson feature in EPSG:4326', function(as
   let feature2Layer2 = L.geoJSON(geoJson2Layer2).getLayers()[0];
   feature2Layer2.options.crs = { code: 'EPSG:4326' };
 
+  feature1Layer1.toJsts = function () { };
+
+  let toJstsStub1 = sinon.stub(feature1Layer1, 'toJsts');
+  let objJsts1 = geometryToJsts(geoJson1Layer1);
+  objJsts1.setSRID(4326);
+  toJstsStub1.returns(objJsts1);
+
+  feature2Layer1.toJsts = function () { };
+
+  let toJstsStub2 = sinon.stub(feature2Layer1, 'toJsts');
+  let objJsts2 = geometryToJsts(geoJson2Layer1);
+  objJsts2.setSRID(4326);
+  toJstsStub2.returns(objJsts2);
+
+  feature1Layer2.toJsts = function () { };
+
+  let toJstsStub3 = sinon.stub(feature1Layer2, 'toJsts');
+  let objJsts3 = geometryToJsts(geoJson1Layer2);
+  objJsts3.setSRID(4326);
+  toJstsStub3.returns(objJsts3);
+
+  feature2Layer2.toJsts = function () { };
+
+  let toJstsStub4 = sinon.stub(feature2Layer2, 'toJsts');
+  let objJsts4 = geometryToJsts(geoJson2Layer2);
+  objJsts4.setSRID(4326);
+  toJstsStub4.returns(objJsts4);
+
   let map = this.subject();
   let _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('1', ['1', '2']).returns(
@@ -413,6 +503,125 @@ test('getMergedGeometry should return geoJson feature in EPSG:4326', function(as
   );
 
   let result = map.getMergedGeometry('1', ['1', '2'], '2', ['1', '2']);
+
+  result.then((feature) => {
+    assert.deepEqual(feature, geoJsonUnion);
+    done();
+    _getModelLayerFeatureStub.restore();
+  });
+});
+
+test('getMergedGeometry with union should return geoJson feature in EPSG:4326', function(assert) {
+  assert.expect(1);
+  let done = assert.async(1);
+
+  let geoJson1Layer1 = {
+    type: 'MultiPolygon',
+    properties: {},
+    coordinates:[[[
+      [1.001, 2.002], [1.005, 2.002], [1.003, 2.003],
+      [1.001, 2.003], [1.001, 2.002]
+    ]]]
+  };
+
+  let geoJson2Layer1 = {
+    type: 'MultiPolygon',
+    properties: {},
+    coordinates:[[[
+      [1.003, 2.0025], [1.005, 2.0025], [1.003, 2.003],
+      [1.001, 2.003], [1.003, 2.0025]
+    ]]]
+  };
+
+  let geoJson1Layer2 = {
+    type: 'MultiPolygon',
+    properties: {},
+    coordinates: [[[
+      [1.001, 2.0033], [1.003, 2.0033], [1.005, 2.004],
+      [1.001, 2.004], [1.001, 2.0033]
+    ]]]
+  };
+
+  let geoJson2Layer2 = {
+    type: 'MultiPolygon',
+    properties: {},
+    coordinates: [[[
+      [1.001, 2.0033], [1.003, 2.0033], [1.003, 2.0035],
+      [1.001, 2.0035], [1.001, 2.0033]
+    ]]]
+  };
+
+  let geoJsonUnion = {
+    type: 'Feature',
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [
+        [[[1.0039999999999998, 2.0025], [1.005, 2.002], [1.001, 2.002],
+        [1.001, 2.003], [1.003, 2.003], [1.005, 2.0025], [1.0039999999999998, 2.0025]]],
+        [[[1.003, 2.0033], [1.001, 2.0033], [1.001, 2.0035], [1.001, 2.004], [1.005, 2.004], [1.003, 2.0033]]]
+      ]
+    },
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:4326'
+      }
+    }
+  };
+
+  let feature1Layer1 = L.geoJSON(geoJson1Layer1).getLayers()[0];
+  feature1Layer1.options.crs = { code: 'EPSG:4326' };
+  let feature2Layer1 = L.geoJSON(geoJson2Layer1).getLayers()[0];
+  feature2Layer1.options.crs = { code: 'EPSG:4326' };
+
+  let feature1Layer2 = L.geoJSON(geoJson1Layer2).getLayers()[0];
+  feature1Layer2.options.crs = { code: 'EPSG:4326' };
+  let feature2Layer2 = L.geoJSON(geoJson2Layer2).getLayers()[0];
+  feature2Layer2.options.crs = { code: 'EPSG:4326' };
+
+  feature1Layer1.toJsts = function () { };
+
+  let toJstsStub1 = sinon.stub(feature1Layer1, 'toJsts');
+  let objJsts1 = geometryToJsts(geoJson1Layer1);
+  objJsts1.setSRID(4326);
+  toJstsStub1.returns(objJsts1);
+
+  feature2Layer1.toJsts = function () { };
+
+  let toJstsStub2 = sinon.stub(feature2Layer1, 'toJsts');
+  let objJsts2 = geometryToJsts(geoJson2Layer1);
+  objJsts2.setSRID(4326);
+  toJstsStub2.returns(objJsts2);
+
+  feature1Layer2.toJsts = function () { };
+
+  let toJstsStub3 = sinon.stub(feature1Layer2, 'toJsts');
+  let objJsts3 = geometryToJsts(geoJson1Layer2);
+  objJsts3.setSRID(4326);
+  toJstsStub3.returns(objJsts3);
+
+  feature2Layer2.toJsts = function () { };
+
+  let toJstsStub4 = sinon.stub(feature2Layer2, 'toJsts');
+  let objJsts4 = geometryToJsts(geoJson2Layer2);
+  objJsts4.setSRID(4326);
+  toJstsStub4.returns(objJsts4);
+
+  let map = this.subject();
+  let _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
+  _getModelLayerFeatureStub.withArgs('1', ['1', '2']).returns(
+    new Ember.RSVP.Promise((resolve, reject) => {
+      resolve([null, null, [feature1Layer1, feature2Layer1]]);
+    })
+  );
+
+  _getModelLayerFeatureStub.withArgs('2', ['1', '2']).returns(
+    new Ember.RSVP.Promise((resolve, reject) => {
+      resolve([null, null, [feature1Layer2, feature2Layer2]]);
+    })
+  );
+
+  let result = map.getMergedGeometry('1', ['1', '2'], '2', ['1', '2'], true);
 
   result.then((feature) => {
     assert.deepEqual(feature, geoJsonUnion);

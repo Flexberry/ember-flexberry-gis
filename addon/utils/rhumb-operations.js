@@ -3,14 +3,14 @@
 */
 
 import Ember from 'ember';
-import rhumbDestination from 'npm:@turf/rhumb-destination';
-import helpers from 'npm:@turf/helpers';
-import { getLeafletCrs } from '../utils/leaflet-crs';
 
 /**
-  Create polygon object by rhumb.
+  Create object by rhumb for [LineString, Polygon]. Start point coordinates convert in crs of layer.
+  Accepts angles in degrees, converting them to radians. Accepts names of direction is [NE, SE, NW, SW].
+  Accepts distance in units accepted for CRS of layer. Calculation rhumb by point, distance and angle.
+  Returns coordinates skipping 'skip' from the first rhumb in crs of layer.
 
-  @method createPolygonObjectRhumb
+  @method createObjectRhumb
   @param {Object} data Coordinate objects.
   Example:
   var data = {
@@ -19,9 +19,9 @@ import { getLeafletCrs } from '../utils/leaflet-crs';
         startPoint: [85, 79],
         skip:0,
         points: [
-          { rhumb: 'ЮВ', angle: 86.76787457562546, distance: 8182.6375760837955 },
-          { rhumb: 'СВ', angle: 79.04259420114585, distance: 8476.868426796427 },
-          { rhumb: 'ЮЗ', angle: 86.0047147391561, distance: 16532.122718537685 }
+          { rhumb: 'SE', angle: 86.76787457562546, distance: 8182.6375760837955 },
+          { rhumb: 'NE', angle: 79.04259420114585, distance: 8476.868426796427 },
+          { rhumb: 'SW', angle: 86.0047147391561, distance: 16532.122718537685 }
         ]
       };
   @returns {Object} New featureLayer.
@@ -41,42 +41,52 @@ const createObjectRhumb = (data, layerCrs, that) => {
     }
   }
 
+  // Get bearing in radian
   const getBearing = function (rhumb, angle) {
     let result;
 
     switch (rhumb) {
-      case 'СВ':
+      case 'NE':
         result = parseFloat(angle);
         break;
-      case 'ЮВ':
+      case 'SE':
         result = 180 - parseFloat(angle);
         break;
-      case 'ЮЗ':
+      case 'SW':
         result = parseFloat(angle) - 180;
         break;
-      case 'СЗ':
+      case 'NW':
         result = parseFloat(angle) * -1;
         break;
     }
 
-    return result;
+    return result * Math.PI / 180;
+  };
+
+  // Calculation rhumb by point, distance (unit metre) and angle (unit radian).
+  const rhumbToPoint = function (point, distance, angle) {
+    let x = point[0] + distance * Math.cos(angle);
+    let y = point[1] + distance * Math.sin(angle);
+
+    return [x, y];
   };
 
   let coors = [];
+  let startPointInCrs = data.startPoint;
 
-  // CRS
-  let startPointInCrs = helpers.point(data.startPoint);
-  if ((!Ember.isNone(data.crs) && data.crs !== 'EPSG:4326') || (Ember.isNone(data.crs) && layerCrs.code !== 'EPSG:4326')) {
+  // startPoint transformed in crs of layer.
+  if ((!Ember.isNone(data.crs) && data.crs !== layerCrs.code) || (Ember.isNone(data.crs))) {
+    let knownCrs = Ember.getOwner(that).knownForType('coordinate-reference-system');
+    let knownCrsArray = Ember.A(Object.values(knownCrs));
     if (!Ember.isNone(data.crs)) {
-      let crs = getLeafletCrs('{ "code": "' + data.crs + '", "definition": "" }', that);
+      let crs = knownCrsArray.findBy('code', data.crs).create();
       startPointInCrs = crs.unproject(L.point(data.startPoint[0], data.startPoint[1]));
     } else {
       startPointInCrs = layerCrs.unproject(L.point(data.startPoint[0], data.startPoint[1]));
     }
 
-    let crs = getLeafletCrs('{ "code": "EPSG:4326", "definition": "" }', that);
-    let point = crs.project(startPointInCrs);
-    startPointInCrs = helpers.point([point.x, point.y]);
+    let point = layerCrs.project(startPointInCrs);
+    startPointInCrs = [point.x, point.y];
   }
 
   let startPoint;
@@ -88,20 +98,17 @@ const createObjectRhumb = (data, layerCrs, that) => {
     const vertex = vertexCount[i];
     const bearing = getBearing(vertex.rhumb, vertex.angle);
 
-    // Convert to kilometers
-    vertex.distance = vertex.distance / 1000;
-
     if (Ember.isNone(startPoint)) {
-      startPoint = rhumbDestination.default(startPointInCrs, vertex.distance, bearing, { units: 'kilometers' });
+      startPoint = rhumbToPoint(startPointInCrs, vertex.distance, bearing);
       if (skip === 0) {
         if (type === 'Polygon') {
-          coordinates.push(startPointInCrs.geometry.coordinates);
+          coordinates.push(startPointInCrs);
         } else if (type === 'LineString') {
-          coors.push(startPointInCrs.geometry.coordinates);
+          coors.push(startPointInCrs);
         }
       }
     } else {
-      startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: 'kilometers' });
+      startPoint = rhumbToPoint(startPoint, vertex.distance, bearing);
     }
 
     if (skip !== 0) {
@@ -110,9 +117,9 @@ const createObjectRhumb = (data, layerCrs, that) => {
 
     if (skip === 0) {
       if (type === 'Polygon') {
-        coordinates.push(startPoint.geometry.coordinates);
+        coordinates.push(startPoint);
       } else if (type === 'LineString') {
-        coors.push(startPoint.geometry.coordinates);
+        coors.push(startPoint);
       }
     }
   }
@@ -127,7 +134,13 @@ const createObjectRhumb = (data, layerCrs, that) => {
       type: type,
       coordinates: coors
     },
-    properties: data.properties
+    properties: data.properties,
+    crs: {
+      type: 'name',
+      properties: {
+        name: layerCrs.code
+      }
+    }
   };
 
   return obj;

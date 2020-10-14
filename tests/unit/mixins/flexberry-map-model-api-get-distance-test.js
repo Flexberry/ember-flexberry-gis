@@ -9,6 +9,7 @@ let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiMixin);
 
 test('test method getDistanceBetweenObjects between polyline and polygon', function(assert) {
   //Arrange
+  assert.expect(7);
   let done = assert.async(1);
   let firstObj = L.polyline([[1.001, 1.001], [1.003, 1.003], [1.005, 1.005]]);
   firstObj.feature = firstObj.toGeoJSON();
@@ -25,9 +26,9 @@ test('test method getDistanceBetweenObjects between polyline and polygon', funct
   let result = subject.getDistanceBetweenObjects('1', '4', '2', '3');
 
   //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise);
+  assert.ok(result instanceof Ember.RSVP.Promise, 'Check result instance of Promise');
   result.then((res)=> {
-    assert.equal(res, 55820.041009409564);
+    assert.equal(res, 55820.041009409564, 'Equals rezult distance with test distance');
     assert.equal(getMLFeature.callCount, 2, 'Check call count to method _getModelLayerFeature');
     assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
     assert.equal(getMLFeature.args[0][1], '4', 'Check call second arg to method _getModelLayerFeature');
@@ -40,6 +41,7 @@ test('test method getDistanceBetweenObjects between polyline and polygon', funct
 
 test('test method getDistanceBetweenObjects between marker and polygon', function(assert) {
   //Arrange
+  assert.expect(7);
   let done = assert.async(1);
   let firstObj = L.marker([1.001, 1.001]);
   firstObj.feature = firstObj.toGeoJSON();
@@ -56,9 +58,9 @@ test('test method getDistanceBetweenObjects between marker and polygon', functio
   let result = subject.getDistanceBetweenObjects('1', '4', '2', '3');
 
   //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise);
+  assert.ok(result instanceof Ember.RSVP.Promise, 'Check result instance of Promise');
   result.then((res)=> {
-    assert.equal(res, 55597.65129192688);
+    assert.equal(res, 55597.65129192688, 'Equals rezult distance with test distance');
     assert.equal(getMLFeature.callCount, 2, 'Check call count to method _getModelLayerFeature');
     assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
     assert.equal(getMLFeature.args[0][1], '4', 'Check call second arg to method _getModelLayerFeature');
@@ -71,6 +73,7 @@ test('test method getDistanceBetweenObjects between marker and polygon', functio
 
 test('test method getDistanceBetweenObjects between marker and marker', function(assert) {
   //Arrange
+  assert.expect(7);
   let done = assert.async(1);
   let firstObj = L.marker([1.001, 1.001]);
   firstObj.feature = firstObj.toGeoJSON();
@@ -87,7 +90,7 @@ test('test method getDistanceBetweenObjects between marker and marker', function
   let result = subject.getDistanceBetweenObjects('1', '4', '2', '3');
 
   //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise);
+  assert.ok(result instanceof Ember.RSVP.Promise, 'Check result instance of Promise');
   result.then((res)=> {
     assert.equal(res, 111.19508023354534);
     assert.equal(getMLFeature.callCount, 2, 'Check call count to method _getModelLayerFeature');

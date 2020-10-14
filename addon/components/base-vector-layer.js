@@ -585,7 +585,15 @@ export default BaseLayer.extend({
   continueLoad() {
   },
 
+  /*
+    Clear changes. Needs for CancelEdit and Reload
+  */
+  clearChanges() {
+  },
+
   reload() {
+    this.clearChanges();
+
     let leafletObject = this.get('_leafletObject');
     let map = this.get('leafletMap');
 
@@ -595,10 +603,6 @@ export default BaseLayer.extend({
       }
     });
     leafletObject.clearLayers();
-
-    if (leafletObject.models) {
-      leafletObject.models.clear();
-    }
 
     if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
       leafletObject._labelsLayer.eachLayer((layerShape) => {

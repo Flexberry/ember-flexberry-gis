@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import rhumbOperations from '../utils/rhumb-operations';
 import { getLeafletCrs } from '../utils/leaflet-crs';
+import { geometryToJsts } from '../utils/layer-to-jsts';
 import jsts from 'npm:jsts';
 
 export default Ember.Mixin.create(rhumbOperations, {
@@ -66,11 +67,12 @@ export default Ember.Mixin.create(rhumbOperations, {
   },
 
   /**
-    Create multi-circuit object.
+    Create multi-circuit object. Transforms geometries into JSTS objects. Checks whether types and crs are same.
+    If geometries intersects, it unions or differents geometries depending on the parameter isUnion.
+    After that, it merges all geometries that don't intersects. Using GeoJSONWriter converts jsts object to geoJSON.
 
-    @method createMulti
-    @param {array} objects Array of objects to union.
-    Example:
+    Example of method call:
+    ```javascript
     let objects = [
         {
           "type": "Feature",
@@ -132,48 +134,40 @@ export default Ember.Mixin.create(rhumbOperations, {
             }
           }
         }];
-    @returns {Object} new multi-circuit object.
+    var result = mapApi.mapModel.createMulti(objects, true);
+    ```
+
+    @method createMulti
+    @param {array} objects Array of objects in GeoJSON format.
+    @param {Boolean} isUnion Flag: indicates whether to union geometries or to different.
+    @param {Boolean} failIfInvalid Flag: indicates whether to throw error if invalid geometries.
+    @returns {Object} New multi-circuit object in GeoJSO format.
   */
-  createMulti(objects, failIfInvalid = true) {
-    let geojsonReader = new jsts.io.GeoJSONReader();
-    let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let geometries = [];
+  createMulti(objects, isUnion = false, failIfInvalid = true) {
+    return this._getMulti(objects, isUnion, failIfInvalid, true);
+  },
+
+  _getMulti(objects, isUnion = false, failIfInvalid = true, isJsts = false) {
     let separateObjects = [];
     let resultObject = null;
-
-    if (objects.length === 0) {
-      throw 'error: data is empty';
-    } else if (objects.length === 1) {
-      return objects[0];
-    }
-
+    let geometries = [];
     objects.forEach((element, i) => {
-      if (!Ember.isNone(element.crs)) {
-        objects[i] =
-          element.crs.properties.name.toUpperCase() === 'EPSG:4326' ? element
-            : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
-      } else {
-        throw "error: object must have 'crs' attribute";
+      let g = element;
+      if (isJsts) {
+        g = geometryToJsts(element.geometry);
+        g.setSRID(element.crs.properties.name.split(':')[1]);
       }
-    }, this);
-
-    //read the geometry of features
-    objects.forEach((element, i) => {
-      let g = geojsonReader.read(element.geometry);
 
       if (g.isValid()) {
         geometries.push(g);
         let j = geometries.length - 1;
         if (j !== 0 && this.getGeometryKind(geometries[j]) !== this.getGeometryKind(geometries[j - 1])) {
           throw 'error: type mismatch. Objects must have the same type';
+        } else if (j !== 0 && geometries[j].getSRID() !== geometries[j - 1].getSRID()) {
+          throw 'error: CRS mismatch. Objects must have the same crs';
         }
-      } else {
-        console.error('invalid geometry (object ' + i + ')');
-        console.error(element.geometry);
-
-        if (failIfInvalid) {
-          throw 'error: invalid geometry';
-        }
+      } else if (failIfInvalid) {
+        throw 'error: invalid geometry';
       }
     });
 
@@ -183,7 +177,11 @@ export default Ember.Mixin.create(rhumbOperations, {
       for (var j = 0; j < geometries.length; j++) {
         if (i !== j) {
           if (geometries[i].intersects(geometries[j])) {
-            current = current.difference(geometries[j]);
+            if (isUnion) {
+              current = current.union(geometries[j]);
+            } else {
+              current = current.difference(geometries[j]);
+            }
           }
         }
       }
@@ -204,7 +202,9 @@ export default Ember.Mixin.create(rhumbOperations, {
       }
     });
 
+    let geojsonWriter = new jsts.io.GeoJSONWriter();
     let unionres = geojsonWriter.write(resultObject);
+    let crsResult = 'EPSG:' + geometries[0].getSRID();
 
     const multiObj = {
       type: 'Feature',
@@ -215,7 +215,7 @@ export default Ember.Mixin.create(rhumbOperations, {
       crs: {
         type: 'name',
         properties: {
-          name: 'EPSG:4326'
+          name: crsResult
         }
       }
     };
@@ -246,11 +246,14 @@ export default Ember.Mixin.create(rhumbOperations, {
   },
 
   /**
-    Create Object by rhumb.
+    Create object by rhumb for [LineString, Polygon]. Start point coordinates convert in crs of layer.
+    Accepts angles in degrees, converting them to radians. Accepts names of direction is [NE, SE, NW, SW].
+    Accepts distance in units accepted for CRS of layer. Calculation rhumb by point, distance and angle.
+    Returns coordinates skipping 'skip' from the first rhumb in crs of layer.
 
     @method createPolygonObjectRhumb
     @param {string} layerId Layer id.
-    @param {Object} data Coordinate objects.
+    @param {Object} data Rhumbs parameters.
     Example:
     var data = {
           type: 'LineString',
@@ -259,12 +262,12 @@ export default Ember.Mixin.create(rhumbOperations, {
           startPoint: [85, 79],
           skip:0,
           points: [
-            { rhumb: 'ЮВ', angle: 86.76787457562546, distance: 8182.6375760837955 },
-            { rhumb: 'СВ', angle: 79.04259420114585, distance: 8476.868426796427 },
-            { rhumb: 'ЮЗ', angle: 86.0047147391561, distance: 16532.122718537685 }
+            { rhumb: 'SE', angle: 86.76787457562546, distance: 8182.6375760837955 },
+            { rhumb: 'NE', angle: 79.04259420114585, distance: 8476.868426796427 },
+            { rhumb: 'SW', angle: 86.0047147391561, distance: 16532.122718537685 }
           ]
         };
-    @returns {Object} New GeoJSON Feature.
+    @returns {Object} New GeoJSON Feature in crs of layer.
   */
   createPolygonObjectRhumb(layerId, data) {
     let [, leafletObject] = this._getModelLeafletObject(layerId);

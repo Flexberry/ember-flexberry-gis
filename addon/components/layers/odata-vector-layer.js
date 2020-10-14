@@ -352,7 +352,11 @@ export default BaseVectorLayer.extend({
       let objs = obj.adapter.batchLoadModel(obj.modelName, build, obj.store);
       objs.then(res => {
         let features = Ember.A();
-        let models = res.toArray();
+        let models = res;
+        if (typeof res.toArray === 'function') {
+          models = res.toArray();
+        }
+
         let layer = L.featureGroup();
 
         models.forEach(model => {
@@ -703,9 +707,10 @@ export default BaseVectorLayer.extend({
         }
       }
 
-      resolve(layer);
+      let load = this.continueLoad(layer);
+      layer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
 
-      this.continueLoad();
+      resolve(layer);
     });
   },
 
@@ -1038,8 +1043,12 @@ export default BaseVectorLayer.extend({
   /**
     Handles zoomend
   */
-  continueLoad() {
+  continueLoad(leafletObject) {
     let loadedBounds = this.get('loadedBounds');
+
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
 
     let leafletObject = this.get('_leafletObject');
     let leafletMap = this.get('leafletMap');
@@ -1097,7 +1106,11 @@ export default BaseVectorLayer.extend({
 
         let promise = new Ember.RSVP.Promise((resolve, reject) => {
           objs.then(res => {
-            let models = res.toArray();
+            let models = res;
+            if (typeof res.toArray === 'function') {
+              models = res.toArray();
+            }
+
             let innerLayers = [];
             models.forEach(model => {
               let l = this.addLayerObject(leafletObject, model, false);
@@ -1137,6 +1150,50 @@ export default BaseVectorLayer.extend({
     }
   },
 
+  clearChanges() {
+    let leafletObject = this.get('_leafletObject');
+    let editTools = leafletObject.leafletMap.editTools;
+
+    let featuresIds = [];
+    leafletObject.models.forEach((model, layerId) => {
+      let layer = leafletObject.getLayer(layerId);
+      let dirtyType = model.get('dirtyType');
+      if (dirtyType === 'created') {
+        if (leafletObject.hasLayer(layer)) {
+          leafletObject.removeLayer(layer);
+        }
+
+        delete leafletObject.models[layerId];
+        if (editTools.featuresLayer.getLayers().length !== 0) {
+          let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+          let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+          if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
+            let editLayer = featureLayer.editor.editLayer;
+            editTools.editLayer.removeLayer(editLayer);
+            editTools.featuresLayer.removeLayer(layer);
+          }
+        }
+      } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
+        if (!Ember.isNone(layer)) {
+          if (!Ember.isNone(layer.editor)) {
+            let editLayer = layer.editor.editLayer;
+            editTools.editLayer.removeLayer(editLayer);
+          }
+
+          if (leafletObject.hasLayer(layer)) {
+            leafletObject.removeLayer(layer);
+          }
+        }
+
+        model.rollbackAttributes();
+        delete leafletObject.models[layerId];
+        featuresIds.push(model.get('id'));
+      }
+    });
+
+    return featuresIds;
+  },
+
   /**
     Handles 'flexberry-map:cancelEdit' event of leaflet map.
 
@@ -1145,44 +1202,13 @@ export default BaseVectorLayer.extend({
   */
   cancelEdit() {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let featuersIds = [];
       let leafletObject = this.get('_leafletObject');
-      let editTools = leafletObject.leafletMap.editTools;
-      leafletObject.models.forEach((model, layerId) => {
-        let layer = leafletObject.getLayer(layerId);
-        let dirtyType = model.get('dirtyType');
-        if (dirtyType === 'created') {
-          leafletObject.removeLayer(layer);
-          delete leafletObject.models[layerId];
-          if (editTools.featuresLayer.getLayers().length !== 0) {
-            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
-            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
-            if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
-              let editLayer = featureLayer.editor.editLayer;
-              editTools.editLayer.removeLayer(editLayer);
-              editTools.featuresLayer.removeLayer(layer);
-            }
-          }
-        } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
-          if (!Ember.isNone(layer)) {
-            if (!Ember.isNone(layer.editor)) {
-              let editLayer = layer.editor.editLayer;
-              editTools.editLayer.removeLayer(editLayer);
-            }
-
-            leafletObject.removeLayer(layer);
-          }
-
-          model.rollbackAttributes();
-          delete leafletObject.models[layerId];
-          featuersIds.push(model.get('id'));
-        }
-      });
-      if (featuersIds.length === 0) {
+      let featuresIds = this.clearChanges();
+      if (featuresIds.length === 0) {
         resolve();
       } else {
         let e = {
-          featureIds: featuersIds,
+          featureIds: featuresIds,
           layer: leafletObject.layerId,
           results: Ember.A()
         };
