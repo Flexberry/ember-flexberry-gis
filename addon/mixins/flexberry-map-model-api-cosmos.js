@@ -1,74 +1,158 @@
 import Ember from 'ember';
-import jsts from 'npm:jsts';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
 import { Query } from 'ember-flexberry-data';
 
 export default Ember.Mixin.create({
   /**
-    Produces metadata loading request cosmos.
-  */
-  _getMetadataCosmos() {
-    let metadataProjection = 'LayerMetadataE';
-    let metadataModelName = 'new-platform-flexberry-g-i-s-layer-metadata';
-    //let condition = new Query.StringPredicate('keywords').contains('cosmos')
-    let queryBuilder = new Query.Builder(this.get('store'))
-    .from(metadataModelName)
-    .selectByProjection(metadataProjection);
-    //.where(condition);
+    Keyword for cosmos images.
 
-    return this.get('store').query(metadataModelName, queryBuilder.build());
+    @property cosmosKeywords
+    @type String
+    @default 'cosmos'
+  */
+  cosmosKeywords: 'cosmos',
+
+  /**
+    Name of metadata model projection to be used as layer metadata properties limitation.
+
+    @property metadataProjection
+    @type String
+    @default 'LayerMetadataE'
+  */
+  metadataProjection: 'LayerMetadataE',
+
+  /**
+    Name of metadata model to be used as layer metadata record type.
+
+    @property metadataModelName
+    @type String
+    @default 'new-platform-flexberry-g-i-s-layer-metadata'
+  */
+  metadataModelName: 'new-platform-flexberry-g-i-s-layer-metadata',
+
+  /**
+    Produces query builder by metadata model name and metadata projection.
+
+    @method _getQueryBuilderLayerMetadata
+    @return {Object} Query builder
+  */
+  _getQueryBuilderLayerMetadata() {
+    let queryBuilder = new Query.Builder(this.get('store'))
+    .from(this.get('metadataModelName'))
+    .selectByProjection(this.get('metadataProjection'));
+    return queryBuilder;
   },
 
-  /*
-    Shows layers specified by IDs.
+  /**
+    Produces metadata loading request by queryBuilder.
+
+    @method _getMetadataModels
+    @param {Object} queryBuilder Query builder.
+    @return {Promise} models
+  */
+  _getMetadataModels(queryBuilder) {
+    if (Ember.isNone(queryBuilder)) {
+      return null;
+    }
+
+    return this.get('store').query(this.get('metadataModelName'), queryBuilder.build());
+  },
+
+  /**
+    Finds layers by feature geometry and atributes. If 'feature' parameter is specified, then search condition is created by feature geometry
+    which intersects layer's boundingBox. If 'atributes' parameter is specified, then search condition is created by combining attributes via OR,
+    field for search is anyText. Adds search condition for Keyword 'cosmos'. All conditions are combined via AND.
 
     @method findCosmos.
-    @param {Object} feature Array of layer IDs.
-    @return nothing
+    @param {Object} feature GeoJson Feature.
+    @param {Array} atributes Array of search strings.
+    @return {Promise} Array of layers models where feature geometry intersects layer's boundingBox and layers have desired atributes.
   */
-  findCosmos(feature) {
-    let crsName = feature.crs.properties.name;
-    if (Ember.isNone(crsName)) {
-      return "Error: feature must have 'crs' attribute";
-    }
+  findCosmos(feature, atributes) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let filter = Ember.A();
+      if (!Ember.isNone(feature)) {
+        if (!feature.hasOwnProperty('crs')) {
+          reject("Error: feature must have 'crs' attribute");
+        }
 
-    let knownCrs = Ember.getOwner(this).knownForType('coordinate-reference-system');
-    let knownCrsArray = Ember.A(Object.values(knownCrs));
-    let crsLayer = knownCrsArray.findBy('code', crsName).create();
+        let crsName = feature.crs.properties.name;
+        let knownCrs = Ember.getOwner(this).knownForType('coordinate-reference-system');
+        let knownCrsArray = Ember.A(Object.values(knownCrs));
+        let crsLayer = knownCrsArray.findBy('code', crsName).create();
 
-    let coordsToLatLng = function (coords) {
-      return crsLayer.unproject(L.point(coords));
-    };
+        let coordsToLatLng = function (coords) {
+          return crsLayer.unproject(L.point(coords));
+        };
 
-    let geoJSON = null;
-    if (crsName !== 'EPSG:4326') {
-      geoJSON = L.geoJSON(feature, { coordsToLatLng: coordsToLatLng.bind(this) });
-    } else {
-      geoJSON = L.geoJSON(feature);
-    }
+        let geoJSON = null;
+        if (crsName !== 'EPSG:4326') {
+          geoJSON = L.geoJSON(feature, { coordsToLatLng: coordsToLatLng.bind(this) });
+        } else {
+          geoJSON = L.geoJSON(feature);
+        }
 
-    let jstsGeoJSONReader = new jsts.io.GeoJSONReader();
-    let featureLayerGeoJSON = geoJSON.toProjectedGeoJSON(crsFactory4326.create());
-    let jstsGeoJSON = jstsGeoJSONReader.read(feature);
-    const cosmos = this.get('layerMetadata').filter((layer) => {
-      if (layer.get('keywords').indexOf('cosmos') !== -1 ) {
-        let bbox = layer.get('boundingbox');
-
+        let predicateBBox = new Query.GeographyPredicate('boundingBox');
+        filter.push(predicateBBox.intersects(geoJSON.getLayers()[0].toEWKT(crsFactory4326.create())));
       }
+
+      if (!Ember.isNone(atributes) && Ember.isArray(atributes)) {
+        let equals = Ember.A();
+        atributes.forEach((strSearch) => {
+          equals.push(new Query.StringPredicate('anyText').contains(strSearch));
+        });
+
+        if (equals.length === 1) {
+          filter.push(equals[0]);
+        } else {
+          filter.push(new Query.ComplexPredicate(Query.Condition.Or, ...equals));
+        }
+      }
+
+      if (filter.length === 0) {
+        reject("Error: failed to create a request condition");
+      }
+
+      filter.push(new Query.StringPredicate('keyWords').contains(this.get('cosmosKeywords')));
+      let condition = new Query.ComplexPredicate(Query.Condition.And, ...filter);
+      let queryBuilder = this._getQueryBuilderLayerMetadata().where(condition);
+
+      this._getMetadataModels(queryBuilder).then((meta) => {
+        let models = meta;
+        let result = [];
+        if (meta && typeof meta.toArray === 'function') {
+          models = meta.toArray();
+        }
+
+        models.forEach(model => {
+          result.push(model);
+        });
+
+        resolve(result);
+      }).catch((e) => {
+        reject(e);
+      });
     });
   },
 
   /**
-    Returns layerMetadata model thats corresponds to passed layerId.
+    Returns layerMetadata model thats corresponds to passed layer id.
 
-    @method getLayerMetadata
+    @method getLayerMetadataCosmos
     @param {String} layerId Layer ID
     @returns {Promisse} layerMetadata model
   */
-  getLayerMetadata(layerId) {
+  getLayerMetadataCosmos(layerId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getMetadataCosmos().then((meta) => {
-        const layer = meta.content.findBy('id', layerId);
+      let conditionKeywords = new Query.StringPredicate('keyWords').contains(this.get('cosmosKeywords'));
+      let queryBuilder = this._getQueryBuilderLayerMetadata().where(conditionKeywords);
+      this._getMetadataModels(queryBuilder).then((meta) => {
+        let models = [];
+        if (meta && typeof meta.toArray === 'function') {
+          models = meta.toArray();
+        }
+
+        const layer = models.findBy('id', layerId);
         if (Ember.isNone(layer)) {
           reject(`Layer metadata '${layerId}' not found`);
         }
