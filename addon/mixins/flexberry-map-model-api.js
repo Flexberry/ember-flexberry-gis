@@ -593,7 +593,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @param {boolean} [visibility=false] visibility Object Visibility.
   */
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
-    return new Ember.RSVP.Promise((resolve) => {
+    return new Ember.RSVP.Promise((resolve, reject) => {
       if (Ember.isArray(objectIds)) {
         let [layer, leafletObject] = this._getModelLeafletObject(layerId);
         if (Ember.isNone(layer)) {

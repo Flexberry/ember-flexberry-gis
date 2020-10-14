@@ -1049,8 +1049,7 @@ export default BaseVectorLayer.extend({
     if (!leafletObject) {
       leafletObject = this.get('_leafletObject');
     }
-
-    let leafletObject = this.get('_leafletObject');
+    
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletObject)) {
       let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
