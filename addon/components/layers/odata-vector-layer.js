@@ -707,6 +707,8 @@ export default BaseVectorLayer.extend({
         }
       }
 
+      // for check zoom
+      layer.leafletMap = leafletMap;
       let load = this.continueLoad(layer);
       layer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
 
