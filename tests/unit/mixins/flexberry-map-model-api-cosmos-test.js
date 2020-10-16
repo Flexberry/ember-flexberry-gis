@@ -1,199 +1,63 @@
 import Ember from 'ember';
 import FlexberryMapModelApiCosmosMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api-cosmos';
-import { moduleFor, test } from 'ember-qunit';
-import DS from 'ember-data';
+import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
+import FlexberryLeafletEWKT from 'ember-flexberry-gis/initializers/leaflet-ewkt';
 import startApp from 'dummy/tests/helpers/start-app';
-import { Query, Projection } from 'ember-flexberry-data';
+import { Query } from 'ember-flexberry-data';
+import { module, test } from 'qunit';
 import sinon from 'sinon';
-import { Serializer } from 'ember-flexberry-data';
 
 let app;
-let odataServerFake;
-let bounds;
 let store;
 
-moduleFor('flexberry-map-model-api-cosmos', 'Unit | Mixin | flexberry map model api cosmos', {
+module('Unit | Mixin | flexberry map model api cosmos', {
   unit: true,
   needs: [
-    'service:map-api',
-    'service:layers-styles-renderer',
     'config:environment',
-    'model:new-platform-flexberry-g-i-s-link-parameter',
-    'model:new-platform-flexberry-g-i-s-map',
-    'model:new-platform-flexberry-g-i-s-map-layer',
-    'adapter:application',
-    'layer:odata-vector'
+    'model:new-platform-flexberry-g-i-s-layer-metadata'
   ],
   beforeEach: function () {
-    app = startApp();
-
-    let testModelMixin = Ember.Mixin.create({
-      name: DS.attr('string', { defaultValue: '' }),
-      shape: DS.attr('json')
+    Ember.run(function() {
+      app = startApp();
+      app.deferReadiness();
+      FlexberryLeafletEWKT.initialize(app);
+      store = app.__container__.lookup('service:store');
     });
-
-    let testModel = Projection.Model.extend(testModelMixin);
-    testModel.defineProjection('TestModelL', 'test-model', {
-      name: Projection.attr(''),
-      shape: Projection.attr('')
-    });
-
-    let testSerializer = Serializer.Odata.extend({
-      primaryKey: '__PrimaryKey'
-    });
-
-    this.register('model:test-model', testModel);
-    this.register('mixin:test-model', testModelMixin);
-    this.register('serializer:test-model', testSerializer);
-
-    app.register('model:test-model', testModel);
-    app.register('mixin:test-model', testModelMixin);
-    app.register('serializer:test-model', testSerializer);
-
-    options = {
-      geometryField: 'shape',
-      showExisting: false,
-      withCredentials: false,
-      crs: L.CRS.EPSG3857,
-      continueLoading: false
-    };
-
-    let leafletOptions = [
-      'geometryField',
-      'crs',
-      'maxFeatures',
-      'showExisting',
-      'style',
-      'forceMulti',
-      'withCredentials',
-      'continueLoading'
-    ];
-
-    param = {
-      format: 'GeoJSON',
-      leafletOptions: leafletOptions
-    };
-    param = Ember.$.extend(param, options);
-
-    bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
-    let getBounds = function() {
-      return bounds;
-    };
-
-    let getPane = function() {
-      return undefined;
-    };
-
-    let createPane = function() {
-      return {};
-    };
-
-    store = app.__container__.lookup('service:store');
-    Ember.$.extend(param, {
-      'modelName': 'test-model',
-      'projectionName':'TestModelL',
-      'geometryField': 'shape',
-      'typeName': 'test-model',
-      'odataClass': 'TestModel',
-      'continueLoading': true,
-      'store': store,
-      'layerModel': { 'type': 'odata-vector', 'visibility': true },
-      'leafletMap': {
-        getBounds,
-        getPane,
-        createPane
-      }
-    });
-
-    odataServerFake = sinon.fakeServer.create();
-    odataServerFake.autoRespond = true;
-
-    const responseText = `--batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f
-    Content-Type: application/http
-    Content-Transfer-Encoding: binary
-
-    HTTP/1.1 200 OK
-    Content-Type: application/json; charset=utf-8; odata.metadata=minimal
-    OData-Version: 4.0
-
-    {
-      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#IISRGISPKVydelUtverzhdenoPolygon32640s(__PrimaryKey,ID,Name,Shape)","value":[
-        {
-          "__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a79b", "Name":null,"Shape":{
-            "type":"MultiPolygon","coordinates":[
-              [
-                [
-                  [468709.463318981,6478884.81118851],
-            [468578.508624007,6478880.73565037],
-            [468541.567377907,6478925.23599015],
-            [468533.564191116,6478946.2331571],
-            [468614.492922407,6478979.21144234],
-            [468657.52589005,6478981.2057549],
-            [468672.503518996,6478963.71619159],
-            [468717.482394432,6478946.21010284],
-            [468709.463318981,6478884.81118851]
-                ]
-              ]
-            ],"crs":{
-              "type":"name","properties":{
-                "name":"EPSG:32640"
-              }
-            }
-          }
-      },
-
-      {
-          "__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a89b", "Name":null,"Shape":{
-            "type":"MultiPolygon","coordinates":[
-              [
-                [
-                  [468709.463318981,6478884.81118851],
-            [468578.508624007,6478880.73565037],
-            [468541.567377907,6478925.23599015],
-            [468533.564191116,6478946.2331571],
-            [468614.492922407,6478979.21144234],
-            [468657.52589005,6478981.2057549],
-            [468672.503518996,6478963.71619159],
-            [468717.482394432,6478946.21010284],
-            [468709.463318981,6478884.81118851]
-                ]
-              ]
-            ],"crs":{
-              "type":"name","properties":{
-                "name":"EPSG:32640"
-              }
-            }
-          }
-      }
-      ]
-    }
-    --batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f--`;
-
-    odataServerFake.respondWith('POST', 'http://134.209.30.115:1818/odata/$batch',
-      function (request) {
-        request.respond(200, { 'content-type': 'multipart/mixed; boundary=batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f' },
-        responseText);
-      }
-    );
   },
   afterEach: function () {
     Ember.run(app, 'destroy');
-    odataServerFake.restore();
   }
 });
 
 let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiCosmosMixin);
+let metadataProjection = 'LayerMetadataE';
+let metadataModelName = 'new-platform-flexberry-g-i-s-layer-metadata';
+let crsFactory32640 = {
+  code: 'EPSG:32640',
+  definition: '+proj=utm +zone=40 +datum=WGS84 +units=m +no_defs',
+  create() {
+    let crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
+      scale: function (zoom) {
+        return 256 * Math.pow(2, zoom);
+      },
+      zoom: function (scale) {
+        return Math.log(scale / 256) / Math.LN2;
+      }
+    });
+    return crs;
+  }
+};
 
-// Replace this with your real tests.
-test('test method findCosmos for feature', function(assert) {
+test('test method findCosmos for only with parameter feature', function(assert) {
   //Arrange
+  assert.expect(12);
+  var done = assert.async(1);
   let feature = {
     type: 'Feature',
     geometry: {
       type: 'Polygon',
       coordinates:[
-        [[53.8349576870557,56.3315873558984],[53.7665178890887,57.13645345537],[55.2893925043467,57.1664744054687],
-        [55.3256528620248,56.3607070521691],[53.8349576870557,56.3315873558984]]
+        [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]
       ]
     },
     crs: {
@@ -203,11 +67,269 @@ test('test method findCosmos for feature', function(assert) {
       }
     }
   }
-  let subject = mapApiMixinObject.create();
+
+  let ownerStub = sinon.stub(Ember, 'getOwner');
+  ownerStub.returns({
+    knownForType() {
+      return {
+        'epsg4326': crsFactory4326
+      };
+    },
+    lookup() {
+      return null;
+    },
+    resolveRegistration() {
+      return {
+        APP: {
+          keywordForCosmos: 'cosmos'
+        }
+      }
+    }
+  });
+
+  let subject = mapApiMixinObject.create({
+    _getQueryBuilderLayerMetadata() {
+      return new Query.Builder(store, metadataModelName)
+      .from(metadataModelName)
+      .selectByProjection(metadataProjection);;
+      },
+      _getMetadataModels() {
+        return Ember.RSVP.resolve(['1']);
+      }
+    }
+  );
+  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
+  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
   //Act
-  let rhumbs = subject.findCosmos(feature, 'EPSG:4326');
+  subject.findCosmos(feature, null).then((layers) => {
+    //Assert
+    assert.ok(spyGetQueryBuilderLayerMetadata.called);
+    assert.ok(spyGetMetadataModels.called);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.ComplexPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._condition, 'and');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates.length, 2);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof Query.GeographyPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._attributePath, 'boundingBox');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._intersectsValue,
+      'SRID=4326;POLYGON((30 10, 40 40, 20 40, 10 20, 30 10))');
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof Query.StringPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'keyWords');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'cosmos');
+    assert.equal(layers.length, 1);
+    done();
+    ownerStub.restore();
+    spyGetMetadataModels.restore();
+    spyGetQueryBuilderLayerMetadata.restore()
+  });
+});
 
-  //Assert
-  assert.deepEqual(rhumbs, resObj);
+test('test method findCosmos for only with parameter atributes one', function(assert) {
+  //Arrange
+  assert.expect(12);
+  var done = assert.async(1);
+  let atributes = ['test'];
+
+  let ownerStub = sinon.stub(Ember, 'getOwner');
+  ownerStub.returns({
+    knownForType() {
+      return {
+        'epsg4326': crsFactory4326
+      };
+    },
+    lookup() {
+      return null;
+    },
+    resolveRegistration() {
+      return {
+        APP: {
+          keywordForCosmos: 'cosmos'
+        }
+      }
+    }
+  });
+
+  let subject = mapApiMixinObject.create({
+    _getQueryBuilderLayerMetadata() {
+      return new Query.Builder(store, metadataModelName)
+      .from(metadataModelName)
+      .selectByProjection(metadataProjection);;
+      },
+      _getMetadataModels() {
+        return Ember.RSVP.resolve(['1']);
+      }
+    }
+  );
+  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
+  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
+
+  //Act
+  subject.findCosmos(null, atributes).then((layers) => {
+    //Assert
+    assert.ok(spyGetQueryBuilderLayerMetadata.called);
+    assert.ok(spyGetMetadataModels.called);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.ComplexPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._condition, 'and');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates.length, 2);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof Query.StringPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._attributePath, 'anyText');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._containsValue, 'test');
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof Query.StringPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'keyWords');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'cosmos');
+    assert.equal(layers.length, 1);
+    done();
+    ownerStub.restore();
+    spyGetMetadataModels.restore();
+    spyGetQueryBuilderLayerMetadata.restore()
+  });
+});
+
+test('test method findCosmos for only with parameter atributes two', function(assert) {
+  //Arrange
+  assert.expect(18);
+  var done = assert.async(1);
+  let atributes = ['test1', 'test2'];
+
+  let ownerStub = sinon.stub(Ember, 'getOwner');
+  ownerStub.returns({
+    knownForType() {
+      return {
+        'epsg4326': crsFactory4326
+      };
+    },
+    lookup() {
+      return null;
+    },
+    resolveRegistration() {
+      return {
+        APP: {
+          keywordForCosmos: 'cosmos'
+        }
+      }
+    }
+  });
+
+  let subject = mapApiMixinObject.create({
+    _getQueryBuilderLayerMetadata() {
+      return new Query.Builder(store, metadataModelName)
+      .from(metadataModelName)
+      .selectByProjection(metadataProjection);;
+      },
+      _getMetadataModels() {
+        return Ember.RSVP.resolve(['1']);
+      }
+    }
+  );
+  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
+  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
+
+  //Act
+  subject.findCosmos(null, atributes).then((layers) => {
+    //Assert
+    assert.ok(spyGetQueryBuilderLayerMetadata.called);
+    assert.ok(spyGetMetadataModels.called);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.ComplexPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._condition, 'and');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates.length, 2);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof Query.ComplexPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._condition, 'or');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates.length, 2);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates[0] instanceof Query.StringPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates[0]._attributePath, 'anyText');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates[0]._containsValue, 'test1');
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates[1] instanceof Query.StringPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates[1]._attributePath, 'anyText');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates[1]._containsValue, 'test2');
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof Query.StringPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'keyWords');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'cosmos');
+    assert.equal(layers.length, 1);
+    done();
+    ownerStub.restore();
+    spyGetMetadataModels.restore();
+    spyGetQueryBuilderLayerMetadata.restore()
+  });
+});
+
+test('test method findCosmos for with feature and atributes', function(assert) {
+  //Arrange
+  assert.expect(15);
+  var done = assert.async(1);
+  let feature = {
+    type: 'Feature',
+    geometry: {
+      type: 'Polygon',
+      coordinates: [
+        [[-2568154.38200208,1238447.0003685],[-954618.679368619,4568735.95227168],[-2683586.25264709,5143088.31265003],
+        [-4878104.10393015,3114937.3173714],[-2568154.38200208,1238447.0003685]]
+      ]
+    },
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:32640'
+      }
+    }
+  };
+  let atributes = ['test'];
+
+  let ownerStub = sinon.stub(Ember, 'getOwner');
+  ownerStub.returns({
+    knownForType() {
+      return {
+        'epsg32640': crsFactory32640
+      };
+    },
+    lookup() {
+      return null;
+    },
+    resolveRegistration() {
+      return {
+        APP: {
+          keywordForCosmos: 'cosmos'
+        }
+      }
+    }
+  });
+
+  let subject = mapApiMixinObject.create({
+    _getQueryBuilderLayerMetadata() {
+      return new Query.Builder(store, metadataModelName)
+      .from(metadataModelName)
+      .selectByProjection(metadataProjection);;
+      },
+      _getMetadataModels() {
+        return Ember.RSVP.resolve(['1']);
+      }
+    }
+  );
+  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
+  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
+
+  //Act
+  subject.findCosmos(feature, atributes).then((layers) => {
+    //Assert
+    assert.ok(spyGetQueryBuilderLayerMetadata.called);
+    assert.ok(spyGetMetadataModels.called);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.ComplexPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._condition, 'and');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates.length, 3);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof Query.GeographyPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._attributePath, 'boundingBox');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._intersectsValue,
+      'SRID=4326;POLYGON((29.999999999999964 9.999999999999961, 40 39.999999999999964, 19.999999999999964 39.99999999999997, ' +
+      '10.000000000000059 19.999999999999943, 29.999999999999964 9.999999999999961))');
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof Query.StringPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'anyText');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'test');
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[2] instanceof Query.StringPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[2]._attributePath, 'keyWords');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[2]._containsValue, 'cosmos');
+    assert.equal(layers.length, 1);
+    done();
+    ownerStub.restore();
+    spyGetMetadataModels.restore();
+    spyGetQueryBuilderLayerMetadata.restore()
+  });
 });

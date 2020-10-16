@@ -113,7 +113,8 @@ export default Ember.Mixin.create({
         reject("Error: failed to create a request condition");
       }
 
-      filter.push(new Query.StringPredicate('keyWords').contains(this.get('cosmosKeywords')));
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      filter.push(new Query.StringPredicate('keyWords').contains(config.APP.keywordForCosmos));
       let condition = new Query.ComplexPredicate(Query.Condition.And, ...filter);
       let queryBuilder = this._getQueryBuilderLayerMetadata().where(condition);
 
@@ -133,34 +134,5 @@ export default Ember.Mixin.create({
         reject(e);
       });
     });
-  },
-
-  /**
-    Returns layerMetadata model thats corresponds to passed layer id.
-
-    @method getLayerMetadataCosmos
-    @param {String} layerId Layer ID
-    @returns {Promisse} layerMetadata model
-  */
-  getLayerMetadataCosmos(layerId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      let conditionKeywords = new Query.StringPredicate('keyWords').contains(this.get('cosmosKeywords'));
-      let queryBuilder = this._getQueryBuilderLayerMetadata().where(conditionKeywords);
-      this._getMetadataModels(queryBuilder).then((meta) => {
-        let models = [];
-        if (meta && typeof meta.toArray === 'function') {
-          models = meta.toArray();
-        }
-
-        const layer = models.findBy('id', layerId);
-        if (Ember.isNone(layer)) {
-          reject(`Layer metadata '${layerId}' not found`);
-        }
-
-        resolve(layer);
-      }).catch((e) => {
-        reject(e);
-      });
-    });
-  },
+  }
 });
