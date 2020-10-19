@@ -110,7 +110,7 @@ export default Ember.Mixin.create({
       }
 
       if (filter.length === 0) {
-        reject("Error: failed to create a request condition");
+        reject('Error: failed to create a request condition');
       }
 
       let config = Ember.getOwner(this).resolveRegistration('config:environment');

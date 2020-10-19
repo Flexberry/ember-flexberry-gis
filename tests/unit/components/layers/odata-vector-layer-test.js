@@ -6,6 +6,7 @@ import startApp from 'dummy/tests/helpers/start-app';
 import { Query, Projection } from 'ember-flexberry-data';
 import sinon from 'sinon';
 import { Serializer } from 'ember-flexberry-data';
+import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
 
 let app;
 let options;
@@ -294,7 +295,7 @@ test('continueLoad()', function(assert) {
             loadedBounds = component.get('loadedBounds');
             assert.ok(loadedBounds, 'loadedBounds');
             assert.ok(loadedBounds.getBounds() instanceof L.LatLngBounds, 'loadedBounds.getBounds() is L.LatLngBounds');
-            let strBounds = '{"_southWest":{"lat":58.443645,"lng":56.369991},"_northEast":{"lat":58.468073,"lng":56.610146}}';
+            let strBounds = '{"_southWest":{"lat":58.4436454695997,"lng":56.369991302490234},"_northEast":{"lat":58.46807257997011,"lng":56.61014556884766}}';
             assert.ok(JSON.stringify(loadedBounds.getBounds()) === strBounds, 'loadedBounds get from map');
 
             done();
@@ -306,6 +307,36 @@ test('continueLoad()', function(assert) {
     });
 
     assert.ok(component, 'Create odata-layer');
+    done();
+  });
+});
+
+test('test methos identify()', function(assert) {
+  assert.expect(3);
+  var done = assert.async(1);
+  Ember.run(() => {
+    let latlngs = [
+      [L.latLng(30, 10), L.latLng(40, 40), L.latLng(20, 40), L.latLng(10, 20)]
+    ];
+    let layer = L.polygon(latlngs);
+    let e = {
+      polygonLayer: layer
+    };
+    Ember.$.extend(param, {
+      crs: crsFactory4326.create(),
+      _getFeature() {
+        return Ember.RSVP.resolve(['1']);
+      }
+    });
+    let component = this.subject(param);
+    let spyGetFeature = sinon.spy(component, '_getFeature');
+
+    component.identify(e);
+
+    assert.ok(spyGetFeature.getCall(0).args[0] instanceof Query.GeometryPredicate);
+    assert.equal(spyGetFeature.getCall(0).args[0]._attributePath, 'shape');
+    assert.equal(spyGetFeature.getCall(0).args[0]._intersectsValue,
+      'SRID=4326;POLYGON((10 30, 40 40, 40 20, 20 10, 10 30))');
     done();
   });
 });

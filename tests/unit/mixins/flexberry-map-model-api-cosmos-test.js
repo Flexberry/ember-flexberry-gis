@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import FlexberryMapModelApiCosmosMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api-cosmos';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
-import FlexberryLeafletEWKT from 'ember-flexberry-gis/initializers/leaflet-ewkt';
 import startApp from 'dummy/tests/helpers/start-app';
 import { Query } from 'ember-flexberry-data';
 import { module, test } from 'qunit';
@@ -20,7 +19,6 @@ module('Unit | Mixin | flexberry map model api cosmos', {
     Ember.run(function() {
       app = startApp();
       app.deferReadiness();
-      FlexberryLeafletEWKT.initialize(app);
       store = app.__container__.lookup('service:store');
     });
   },
@@ -66,7 +64,7 @@ test('test method findCosmos for only with parameter feature', function(assert) 
         name: 'EPSG:4326'
       }
     }
-  }
+  };
 
   let ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
@@ -83,7 +81,7 @@ test('test method findCosmos for only with parameter feature', function(assert) 
         APP: {
           keywordForCosmos: 'cosmos'
         }
-      }
+      };
     }
   });
 
@@ -91,7 +89,7 @@ test('test method findCosmos for only with parameter feature', function(assert) 
     _getQueryBuilderLayerMetadata() {
       return new Query.Builder(store, metadataModelName)
       .from(metadataModelName)
-      .selectByProjection(metadataProjection);;
+      .selectByProjection(metadataProjection);
       },
       _getMetadataModels() {
         return Ember.RSVP.resolve(['1']);
@@ -120,7 +118,7 @@ test('test method findCosmos for only with parameter feature', function(assert) 
     done();
     ownerStub.restore();
     spyGetMetadataModels.restore();
-    spyGetQueryBuilderLayerMetadata.restore()
+    spyGetQueryBuilderLayerMetadata.restore();
   });
 });
 
@@ -145,7 +143,7 @@ test('test method findCosmos for only with parameter atributes one', function(as
         APP: {
           keywordForCosmos: 'cosmos'
         }
-      }
+      };
     }
   });
 
@@ -153,7 +151,7 @@ test('test method findCosmos for only with parameter atributes one', function(as
     _getQueryBuilderLayerMetadata() {
       return new Query.Builder(store, metadataModelName)
       .from(metadataModelName)
-      .selectByProjection(metadataProjection);;
+      .selectByProjection(metadataProjection);
       },
       _getMetadataModels() {
         return Ember.RSVP.resolve(['1']);
@@ -181,7 +179,7 @@ test('test method findCosmos for only with parameter atributes one', function(as
     done();
     ownerStub.restore();
     spyGetMetadataModels.restore();
-    spyGetQueryBuilderLayerMetadata.restore()
+    spyGetQueryBuilderLayerMetadata.restore();
   });
 });
 
@@ -206,7 +204,7 @@ test('test method findCosmos for only with parameter atributes two', function(as
         APP: {
           keywordForCosmos: 'cosmos'
         }
-      }
+      };
     }
   });
 
@@ -214,7 +212,7 @@ test('test method findCosmos for only with parameter atributes two', function(as
     _getQueryBuilderLayerMetadata() {
       return new Query.Builder(store, metadataModelName)
       .from(metadataModelName)
-      .selectByProjection(metadataProjection);;
+      .selectByProjection(metadataProjection);
       },
       _getMetadataModels() {
         return Ember.RSVP.resolve(['1']);
@@ -248,7 +246,7 @@ test('test method findCosmos for only with parameter atributes two', function(as
     done();
     ownerStub.restore();
     spyGetMetadataModels.restore();
-    spyGetQueryBuilderLayerMetadata.restore()
+    spyGetQueryBuilderLayerMetadata.restore();
   });
 });
 
@@ -289,7 +287,7 @@ test('test method findCosmos for with feature and atributes', function(assert) {
         APP: {
           keywordForCosmos: 'cosmos'
         }
-      }
+      };
     }
   });
 
@@ -297,7 +295,7 @@ test('test method findCosmos for with feature and atributes', function(assert) {
     _getQueryBuilderLayerMetadata() {
       return new Query.Builder(store, metadataModelName)
       .from(metadataModelName)
-      .selectByProjection(metadataProjection);;
+      .selectByProjection(metadataProjection);
       },
       _getMetadataModels() {
         return Ember.RSVP.resolve(['1']);
@@ -330,6 +328,6 @@ test('test method findCosmos for with feature and atributes', function(assert) {
     done();
     ownerStub.restore();
     spyGetMetadataModels.restore();
-    spyGetQueryBuilderLayerMetadata.restore()
+    spyGetQueryBuilderLayerMetadata.restore();
   });
 });
