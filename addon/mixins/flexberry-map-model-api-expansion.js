@@ -325,7 +325,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     @method trimLineToPolygon
     @param {object} polygonGeom Polygon object in GeoJSON format.
     @param {object} lineGeom Polyline object in GeoJSON format.
-    @returns {GeoJSON} New polyline from intersecr two objects in GeoJSON format.
+    @returns {Promise} New polyline from intersecr two objects in GeoJSON format.
   */
   trimLineToPolygon(polygonGeom, lineGeom) {
     return new Ember.RSVP.Promise((resolve, reject) => {
@@ -336,7 +336,7 @@ export default Ember.Mixin.create(rhumbOperations, {
       objects.forEach((element, i) => {
         let g = geometryToJsts(element.geometry);
         g.setSRID(element.crs.properties.name.split(':')[1]);
-  
+
         if (g.isValid()) {
           geometries.push(g);
           let j = geometries.length - 1;
@@ -358,6 +358,7 @@ export default Ember.Mixin.create(rhumbOperations, {
         reject('objects doesn\' not intersertc');
         return;
       }
+
       let crsResult = 'EPSG:' + geometries[0].getSRID();
 
       const multiObj = {
