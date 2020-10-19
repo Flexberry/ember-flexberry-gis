@@ -20,7 +20,6 @@
     "node": ">= 0.10.0"
   },
   "devDependencies": {
-    "@terraformer/wkt": "^2.0.7",
     "@turf/area": "^5.1.5",
     "@turf/boolean-contains": "^5.1.5",
     "@turf/boolean-equal": "^5.1.5",
