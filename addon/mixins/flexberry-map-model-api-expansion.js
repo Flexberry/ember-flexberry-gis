@@ -274,5 +274,107 @@ export default Ember.Mixin.create(rhumbOperations, {
     const obj = this.createObjectRhumb(data, leafletObject.options.crs, this);
 
     return obj;
+  },
+
+  /**
+    Create polyline object to interserct polyline to polygon. Transforms geometries into JSTS objects. Checks whether types and crs are same.
+    Intersects of two objects is the desired line. Using GeoJSONWriter converts jsts object to geoJSON.
+
+    Example of method call:
+    ```javascript
+    let aGeoJson = {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [[56.184253, 58.071975],
+            [56.210689,58.071975],
+            [56.2106895, 58.079873],
+            [56.184253, 58.079873],
+            [56.184253,58.071975]]
+        ]
+      },
+      "crs": {
+        "type": "name",
+        "properties": {
+          "name": "EPSG:4326"
+        }
+      }
+    };
+    let bGeoJson = {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [56.17, 58.071975],
+          [56.22, 58.071975]
+        ]
+      },
+      "crs": {
+        "type": "name",
+        "properties": {
+          "name": "EPSG:4326"
+        }
+      }
+    };
+    let result = mapApi.mapModel.trimLineToPolygon(aGeoJson, bGeoJson);
+    ```
+
+    @method trimLineToPolygon
+    @param {object} polygonGeom Polygon object in GeoJSON format.
+    @param {object} lineGeom Polyline object in GeoJSON format.
+    @returns {GeoJSON} New polyline from intersecr two objects in GeoJSON format.
+  */
+  trimLineToPolygon(polygonGeom, lineGeom) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let geometries = [];
+      let resultObject = null;
+      let objects = [polygonGeom, lineGeom];
+  
+      objects.forEach((element, i) => {
+        let g = geometryToJsts(element.geometry);
+        g.setSRID(element.crs.properties.name.split(':')[1]);
+  
+        if (g.isValid()) {
+          geometries.push(g);
+          let j = geometries.length - 1;
+          if (j !== 0 && geometries[j].getSRID() !== geometries[j - 1].getSRID()) {
+            reject('CRS mismatch. Objects must have the same crs');
+            return;
+          }
+        } else {
+          reject('invalid geometry');
+          return;
+        }
+      });
+      
+      resultObject = geometries[1].intersection(geometries[0]);
+      
+      let geojsonWriter = new jsts.io.GeoJSONWriter();
+      let unionres = geojsonWriter.write(resultObject);
+      if (unionres.coordinates.length === 0) {
+        reject('objects doesn\' not intersertc');
+        return;
+      }
+      let crsResult = 'EPSG:' + geometries[0].getSRID();
+  
+      const multiObj = {
+        type: 'Feature',
+        geometry: {
+          type: unionres.type,
+          coordinates: unionres.coordinates
+        },
+        crs: {
+          type: 'name',
+          properties: {
+            name: crsResult
+          }
+        }
+      };
+  
+      resolve(multiObj);
+    });
   }
 });
