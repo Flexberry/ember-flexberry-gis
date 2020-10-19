@@ -7,11 +7,11 @@ module('Unit | Mixin | test method trimLineToPolygon');
 let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiMixin);
 
 let aGeoJson = {
-  "type": "Feature",
-  "properties": {},
-  "geometry": {
-    "type": "Polygon",
-    "coordinates": [
+  'type': 'Feature',
+  'properties': {},
+  'geometry': {
+    'type': 'Polygon',
+    'coordinates': [
       [[56.184253, 58.071975],
         [56.210689,58.071975],
         [56.2106895, 58.079873],
@@ -19,27 +19,27 @@ let aGeoJson = {
         [56.184253,58.071975]]
     ]
   },
-  "crs": {
-    "type": "name",
-    "properties": {
-      "name": "EPSG:4326"
+  'crs': {
+    'type': 'name',
+    'properties': {
+      'name': 'EPSG:4326'
     }
   }
 };
 let bGeoJson = {
-  "type": "Feature",
-  "properties": {},
-  "geometry": {
-    "type": "LineString",
-    "coordinates": [
+  'type': 'Feature',
+  'properties': {},
+  'geometry': {
+    'type': 'LineString',
+    'coordinates': [
       [56.17, 58.071975],
       [56.22, 58.071975]
     ]
   },
-  "crs": {
-    "type": "name",
-    "properties": {
-      "name": "EPSG:4326"
+  'crs': {
+    'type': 'name',
+    'properties': {
+      'name': 'EPSG:4326'
     }
   }
 };
@@ -77,7 +77,7 @@ test('test method trimLineToPolygon. Error different crs', function(assert) {
 test('test method trimLineToPolygon. Error different crs', function(assert) {
   assert.expect(2);
   let done = assert.async(1);
-  aGeoJson.crs.properties.name = "EPSG:3395";
+  aGeoJson.crs.properties.name = 'EPSG:3395';
   let subject = mapApiMixinObject.create({});
 
   let promise = subject.trimLineToPolygon(aGeoJson, bGeoJson);
@@ -85,7 +85,7 @@ test('test method trimLineToPolygon. Error different crs', function(assert) {
   assert.ok(promise instanceof Ember.RSVP.Promise);
   promise.then().catch((result) => {
     assert.equal(result, 'CRS mismatch. Objects must have the same crs');
-    aGeoJson.crs.properties.name = "EPSG:4326";
+    aGeoJson.crs.properties.name = 'EPSG:4326';
     done();
   });
 });

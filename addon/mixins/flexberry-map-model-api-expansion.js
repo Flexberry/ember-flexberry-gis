@@ -332,7 +332,7 @@ export default Ember.Mixin.create(rhumbOperations, {
       let geometries = [];
       let resultObject = null;
       let objects = [polygonGeom, lineGeom];
-  
+
       objects.forEach((element, i) => {
         let g = geometryToJsts(element.geometry);
         g.setSRID(element.crs.properties.name.split(':')[1]);
@@ -349,9 +349,9 @@ export default Ember.Mixin.create(rhumbOperations, {
           return;
         }
       });
-      
+
       resultObject = geometries[1].intersection(geometries[0]);
-      
+
       let geojsonWriter = new jsts.io.GeoJSONWriter();
       let unionres = geojsonWriter.write(resultObject);
       if (unionres.coordinates.length === 0) {
@@ -359,7 +359,7 @@ export default Ember.Mixin.create(rhumbOperations, {
         return;
       }
       let crsResult = 'EPSG:' + geometries[0].getSRID();
-  
+
       const multiObj = {
         type: 'Feature',
         geometry: {
@@ -373,7 +373,7 @@ export default Ember.Mixin.create(rhumbOperations, {
           }
         }
       };
-  
+
       resolve(multiObj);
     });
   }
