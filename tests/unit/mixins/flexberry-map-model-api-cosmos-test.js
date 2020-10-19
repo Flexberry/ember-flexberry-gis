@@ -90,12 +90,11 @@ test('test method findCosmos for only with parameter feature', function(assert) 
       return new Query.Builder(store, metadataModelName)
       .from(metadataModelName)
       .selectByProjection(metadataProjection);
-      },
-      _getMetadataModels() {
-        return Ember.RSVP.resolve(['1']);
-      }
+    },
+    _getMetadataModels() {
+      return Ember.RSVP.resolve(['1']);
     }
-  );
+  });
   let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
   let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
@@ -152,12 +151,11 @@ test('test method findCosmos for only with parameter atributes one', function(as
       return new Query.Builder(store, metadataModelName)
       .from(metadataModelName)
       .selectByProjection(metadataProjection);
-      },
-      _getMetadataModels() {
-        return Ember.RSVP.resolve(['1']);
-      }
+    },
+    _getMetadataModels() {
+      return Ember.RSVP.resolve(['1']);
     }
-  );
+  });
   let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
   let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
@@ -213,12 +211,11 @@ test('test method findCosmos for only with parameter atributes two', function(as
       return new Query.Builder(store, metadataModelName)
       .from(metadataModelName)
       .selectByProjection(metadataProjection);
-      },
-      _getMetadataModels() {
-        return Ember.RSVP.resolve(['1']);
-      }
+    },
+    _getMetadataModels() {
+      return Ember.RSVP.resolve(['1']);
     }
-  );
+  });
   let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
   let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
@@ -259,8 +256,8 @@ test('test method findCosmos for with feature and atributes', function(assert) {
     geometry: {
       type: 'Polygon',
       coordinates: [
-        [[-2568154.38200208,1238447.0003685],[-954618.679368619,4568735.95227168],[-2683586.25264709,5143088.31265003],
-        [-4878104.10393015,3114937.3173714],[-2568154.38200208,1238447.0003685]]
+        [[-2568154.38200208, 1238447.0003685], [-954618.679368619, 4568735.95227168], [-2683586.25264709, 5143088.31265003],
+        [-4878104.10393015, 3114937.3173714], [-2568154.38200208, 1238447.0003685]]
       ]
     },
     crs: {
@@ -296,12 +293,11 @@ test('test method findCosmos for with feature and atributes', function(assert) {
       return new Query.Builder(store, metadataModelName)
       .from(metadataModelName)
       .selectByProjection(metadataProjection);
-      },
-      _getMetadataModels() {
-        return Ember.RSVP.resolve(['1']);
-      }
+    },
+    _getMetadataModels() {
+      return Ember.RSVP.resolve(['1']);
     }
-  );
+  });
   let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
   let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
