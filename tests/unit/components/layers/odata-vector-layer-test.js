@@ -235,6 +235,8 @@ test('loadLayerFeatures() with featureIds=null', function(assert) {
       });
     }).finally(() => {
       done();
+      getmapApiStub.restore();
+      getPkFieldStub.restore();
     });
 
     assert.ok(component, 'Create odata-layer');
@@ -266,6 +268,7 @@ test('getLayerFeatures() with featureIds=null', function(assert) {
       });
     }).finally(() => {
       done();
+      getCountFeaturesStub.restore();
     });
 
     assert.ok(component, 'Create odata-layer');
@@ -326,6 +329,9 @@ test('test methos identify()', function(assert) {
       crs: crsFactory4326.create(),
       _getFeature() {
         return Ember.RSVP.resolve(['1']);
+      },
+      _addLayersOnMap() {
+        null;
       }
     });
     let component = this.subject(param);
@@ -338,5 +344,6 @@ test('test methos identify()', function(assert) {
     assert.equal(spyGetFeature.getCall(0).args[0]._intersectsValue,
       'SRID=4326;POLYGON((10 30, 40 40, 40 20, 20 10, 10 30))');
     done();
+    spyGetFeature.restore();
   });
 });
