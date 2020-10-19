@@ -331,7 +331,7 @@ test('test methos identify()', function(assert) {
         return Ember.RSVP.resolve(['1']);
       },
       _addLayersOnMap() {
-        null;
+         return null;
       }
     });
     let component = this.subject(param);
