@@ -1144,18 +1144,20 @@ export default BaseLayer.extend({
     @return {String} string with replaced property
   */
   _applyProperty(str, layer) {
-    let parser = new DOMParser();
-    let xmlDoc = parser.parseFromString(str, &#x27;text/html&#x27;);
-    let propName = xmlDoc.getElementsByTagName(&#x27;propertyname&#x27;);
+    let propName = Ember.$(str).find(&#x27;propertyname&#x27;);
+    if (propName.length === 0) { // if main node
+      propName = Ember.$(str + &#x27; propertyname&#x27;);
+    }
+
     if (propName.length &gt; 0) {
       for (var prop of propName) {
         let property = prop.innerHTML;
-        if (!Ember.isNone(property)) {
-          for (let key in layer.feature.properties) {
-            if (key === property &amp;&amp; !Ember.isNone(layer.feature.properties[key]) &amp;&amp; !Ember.isBlank(layer.feature.properties[key])) {
-              str = str.replace(prop.outerHTML, layer.feature.properties[key]);
-            }
-          }
+        if (prop.localName !== &#x27;propertyname&#x27;) {
+          property = prop.innerText;
+        }
+
+        if (property &amp;&amp; layer.feature.properties.hasOwnProperty(property) &amp;&amp; !Ember.isNone(layer.feature.properties[property])) {
+          str = str.replace(prop.outerHTML, layer.feature.properties[property]);
         }
       }
     }
@@ -1171,16 +1173,18 @@ export default BaseLayer.extend({
     @return {String} string with applied and replaced function
   */
   _applyFunction(str) {
-    let parser = new DOMParser();
-    let xmlDoc = parser.parseFromString(str, &#x27;text/html&#x27;);
-    let func = xmlDoc.getElementsByTagName(&#x27;function&#x27;);
+    let func = Ember.$(str).find(&#x27;function&#x27;);
+    if (func.length === 0) { // if main node
+      func = Ember.$(str + &#x27; function&#x27;);
+    }
+
     if (func.length &gt; 0) {
       for (var item of func) {
-        let nameFunc = item.getAttribute(&#x27;name&#x27;);
+        let nameFunc = Ember.$(item).attr(&#x27;name&#x27;);
         if (!Ember.isNone(nameFunc)) {
           switch (nameFunc) {
             case &#x27;toFixed&#x27;:
-              let attr = item.getAttribute(&#x27;attr&#x27;);
+              let attr = Ember.$(item).attr(&#x27;attr&#x27;);
               let property = item.innerHTML;
               let numProp = Number.parseFloat(property);
               let numAttr = Number.parseFloat(attr);

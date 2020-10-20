@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/models/new-platform-flexberry-g-i-s-map.js - Flexberry Documentation</title>
+    <title>addon/utils/get-crs-by-name.js - Flexberry Documentation</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -403,59 +403,35 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>addon/models/new-platform-flexberry-g-i-s-map.js <small>File</small></h1>
+    <h1>addon/utils/get-crs-by-name.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
-/**
-  @module ember-flexberry-gis
-*/
-
 import Ember from &#x27;ember&#x27;;
-import { Model as MapMixin, defineProjections } from &#x27;../mixins/regenerated/models/new-platform-flexberry-g-i-s-map&#x27;;
-import MapModelApiMixin from &#x27;../mixins/flexberry-map-model-api&#x27;;
-import MapModelApiVisualEditMixin from &#x27;../mixins/flexberry-map-model-api-visualedit&#x27;;
-import MapModelApiSaveLayerMixin from &#x27;../mixins/flexberry-map-model-api-savelayer&#x27;;
-import MapModelApiReloadLayerMixin from &#x27;../mixins/flexberry-map-model-api-reloadlayer&#x27;;
-import MapModelApiExpansionMixin from &#x27;../mixins/flexberry-map-model-api-expansion&#x27;;
-import MapModelApiCosmosMixin from &#x27;../mixins/flexberry-map-model-api-cosmos&#x27;;
-import { Projection } from &#x27;ember-flexberry-data&#x27;;
-import { Offline } from &#x27;ember-flexberry-data&#x27;;
-import LeafletCrsMixin from &#x27;../mixins/leaflet-crs&#x27;;
 
 /**
-  Map model.
+  Finds crs by name in factory and create it.
 
-  @class NewPlatformFlexberryGISMapModel
-  @extends Model
-  @uses OfflineModelMixin
-  @uses NewPlatformFlexberryGISMapModelMixin
-  @uses LeafletCrsMixin
+  @method getCrsByName
+  @param {String} crsName Name of coordinate reference system.
+  @param {Object} that.
+  @returns {Object} Сoordinate reference system.
 */
-let Model = Projection.Model.extend(
-  Offline.ModelMixin,
-  MapMixin,
-  LeafletCrsMixin,
-  MapModelApiMixin,
-  MapModelApiVisualEditMixin,
-  MapModelApiSaveLayerMixin,
-  MapModelApiReloadLayerMixin,
-  MapModelApiExpansionMixin,
-  MapModelApiCosmosMixin,
-  {
-  _anyTextChanged: Ember.on(&#x27;init&#x27;, Ember.observer(&#x27;name&#x27;, &#x27;description&#x27;, &#x27;keyWords&#x27;, function() {
-    Ember.run.once(this, &#x27;_anyTextCompute&#x27;);
-  })),
-
-  anyTextCompute() {
-    return &#x60;${this.get(&#x27;name&#x27;) || &#x27;&#x27;} ${this.get(&#x27;description&#x27;) || &#x27;&#x27;} ${(this.get(&#x27;keyWords&#x27;) || &#x27;&#x27;).replace(/,/g, &#x27; &#x27;)}&#x60;;
+let getCrsByName = function(crsName, that) {
+  if (!crsName || !that) {
+    return null;
   }
-});
 
-defineProjections(Model);
+  let knownCrs = Ember.getOwner(that).knownForType(&#x27;coordinate-reference-system&#x27;);
+  let knownCrsArray = Ember.A(Object.values(knownCrs));
+  let crsLayer = knownCrsArray.findBy(&#x27;code&#x27;, crsName).create();
+  return crsLayer;
+};
 
-export default Model;
+export {
+  getCrsByName
+};
 
     </pre>
 </div>
