@@ -27,6 +27,7 @@ module.exports = function (environment) {
       backendUrl: backendUrl,
 
       intersectionArea: 'intersectionArea',
+      keywordForCosmos: 'cosmos',
 
       // It's a custom property, used to prevent duplicate backend urls in sources.
       backendUrls: {

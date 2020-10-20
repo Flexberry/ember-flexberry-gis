@@ -9,7 +9,6 @@ import { checkMapZoom } from '../../utils/check-zoom';
 import state from '../../utils/state';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 import jsts from 'npm:jsts';
-import wkt from 'npm:@terraformer/wkt';
 const { Builder } = Query;
 
 /**
@@ -372,46 +371,6 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-    Transform geometry to EWKT format
-
-    @method geomToEWKT
-    @param {Object} layer layer
-    @param {Boolean} CRS4326
-    @returns {String} geometry as EWKT format.
-  */
-  geomToEWKT(layer, CRS4326 = false) {
-    let coordInCrs;
-    let geojson;
-    let crs;
-    if (!CRS4326) {
-      coordInCrs = this._getGeometry(layer);
-      let type = layer.toGeoJSON().geometry.type;
-      if (this.get('forceMulti')) {
-        switch (type) {
-          case 'Polygon':
-            type = 'MultiPolygon';
-            break;
-          case 'LineString':
-            type = 'MultiLineString';
-            break;
-        }
-      }
-
-      geojson = {
-        'type': type,
-        'coordinates': coordInCrs
-      };
-      crs = this.get('crs').code.split(':')[1];
-    } else {
-      geojson = layer.toGeoJSON().geometry;
-      crs = '4326';
-    }
-
-    let coordToWkt = wkt.geojsonToWKT(geojson);
-    return `SRID=${crs};${coordToWkt}`;
-  },
-
-  /**
     Handles 'flexberry-map:identify' event of leaflet map.
     @method identify
     @param {Object} e Event object.
@@ -422,7 +381,7 @@ export default BaseVectorLayer.extend({
   identify(e) {
     let geometryField = this.get('geometryField') || 'geometry';
     let pred = new Query.GeometryPredicate(geometryField);
-    let predicate = pred.intersects(this.geomToEWKT(e.polygonLayer));
+    let predicate = pred.intersects(e.polygonLayer.toEWKT(this.get('crs')));
     let featuresPromise = this._getFeature(predicate, null, true);
     return featuresPromise;
   },
@@ -1074,9 +1033,8 @@ export default BaseVectorLayer.extend({
             loadedBounds = L.rectangle(loadedBounds);
           }
 
-          let geojsonReader = new jsts.io.GeoJSONReader();
-          let loadedBoundsJsts = geojsonReader.read(loadedBounds.toGeoJSON().geometry);
-          let boundsJsts = geojsonReader.read(bounds.toGeoJSON().geometry);
+          let loadedBoundsJsts = loadedBounds.toJsts(L.CRS.EPSG4326);
+          let boundsJsts = bounds.toJsts(L.CRS.EPSG4326);
 
           if (loadedBoundsJsts.contains(boundsJsts)) {
             if (leafletObject.statusLoadLayer) {
@@ -1087,7 +1045,7 @@ export default BaseVectorLayer.extend({
           }
 
           let queryOldBounds = new Query.GeometryPredicate(obj.geometryField);
-          oldPart = new Query.NotPredicate(queryOldBounds.intersects(this.geomToEWKT(loadedBounds)));
+          oldPart = new Query.NotPredicate(queryOldBounds.intersects(loadedBounds.toEWKT(this.get('crs'))));
 
           let unionJsts = loadedBoundsJsts.union(boundsJsts);
           let geojsonWriter = new jsts.io.GeoJSONWriter();
@@ -1099,7 +1057,7 @@ export default BaseVectorLayer.extend({
         this.set('loadedBounds', loadedBounds);
 
         let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
-        let newPart = queryNewBounds.intersects(this.geomToEWKT(loadedBounds));
+        let newPart = queryNewBounds.intersects(loadedBounds.toEWKT(this.get('crs')));
 
         queryBuilder.where(oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart);
 
