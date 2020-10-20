@@ -3670,7 +3670,7 @@ define('dummy/tests/unit/components/layers/group-layer-test.jshint', ['exports']
     assert.ok(true, 'unit/components/layers/group-layer-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports', 'ember', 'ember-data', 'ember-qunit', 'dummy/tests/helpers/start-app', 'ember-flexberry-data', 'sinon'], function (exports, _ember, _emberData, _emberQunit, _dummyTestsHelpersStartApp, _emberFlexberryData, _sinon) {
+define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports', 'ember', 'ember-data', 'ember-qunit', 'dummy/tests/helpers/start-app', 'ember-flexberry-data', 'sinon', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326'], function (exports, _ember, _emberData, _emberQunit, _dummyTestsHelpersStartApp, _emberFlexberryData, _sinon, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326) {
 
   var app = undefined;
   var options = undefined;
@@ -3823,6 +3823,8 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
         });
       })['finally'](function () {
         done();
+        getmapApiStub.restore();
+        getPkFieldStub.restore();
       });
 
       assert.ok(component, 'Create odata-layer');
@@ -3858,6 +3860,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
         });
       })['finally'](function () {
         done();
+        getCountFeaturesStub.restore();
       });
 
       assert.ok(component, 'Create odata-layer');
@@ -3889,7 +3892,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
               loadedBounds = component.get('loadedBounds');
               assert.ok(loadedBounds, 'loadedBounds');
               assert.ok(loadedBounds.getBounds() instanceof L.LatLngBounds, 'loadedBounds.getBounds() is L.LatLngBounds');
-              var strBounds = '{"_southWest":{"lat":58.443645,"lng":56.369991},"_northEast":{"lat":58.468073,"lng":56.610146}}';
+              var strBounds = '{"_southWest":{"lat":58.4436454695997,"lng":56.369991302490234},"_northEast":{"lat":58.46807257997011,"lng":56.61014556884766}}';
               assert.ok(JSON.stringify(loadedBounds.getBounds()) === strBounds, 'loadedBounds get from map');
 
               done();
@@ -3902,6 +3905,39 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
 
       assert.ok(component, 'Create odata-layer');
       done();
+    });
+  });
+
+  (0, _emberQunit.test)('test methos identify()', function (assert) {
+    var _this5 = this;
+
+    assert.expect(3);
+    var done = assert.async(1);
+    _ember['default'].run(function () {
+      var latlngs = [[L.latLng(30, 10), L.latLng(40, 40), L.latLng(20, 40), L.latLng(10, 20)]];
+      var layer = L.polygon(latlngs);
+      var e = {
+        polygonLayer: layer
+      };
+      _ember['default'].$.extend(param, {
+        crs: _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'].create(),
+        _getFeature: function _getFeature() {
+          return _ember['default'].RSVP.resolve(['1']);
+        },
+        _addLayersOnMap: function _addLayersOnMap() {
+          return null;
+        }
+      });
+      var component = _this5.subject(param);
+      var spyGetFeature = _sinon['default'].spy(component, '_getFeature');
+
+      component.identify(e);
+
+      assert.ok(spyGetFeature.getCall(0).args[0] instanceof _emberFlexberryData.Query.GeometryPredicate);
+      assert.equal(spyGetFeature.getCall(0).args[0]._attributePath, 'shape');
+      assert.equal(spyGetFeature.getCall(0).args[0]._intersectsValue, 'SRID=4326;POLYGON((10 30, 40 40, 40 20, 20 10, 10 30))');
+      done();
+      spyGetFeature.restore();
     });
   });
 });
@@ -5040,6 +5076,296 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-copy-object-test.jshint'
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/mixins/flexberry-map-model-api-copy-object-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-cosmos-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/flexberry-map-model-api-cosmos', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'dummy/tests/helpers/start-app', 'ember-flexberry-data', 'qunit', 'sinon'], function (exports, _ember, _emberFlexberryGisMixinsFlexberryMapModelApiCosmos, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _dummyTestsHelpersStartApp, _emberFlexberryData, _qunit, _sinon) {
+
+  var app = undefined;
+  var store = undefined;
+
+  (0, _qunit.module)('Unit | Mixin | flexberry map model api cosmos', {
+    unit: true,
+    needs: ['config:environment', 'model:new-platform-flexberry-g-i-s-layer-metadata'],
+    beforeEach: function beforeEach() {
+      _ember['default'].run(function () {
+        app = (0, _dummyTestsHelpersStartApp['default'])();
+        app.deferReadiness();
+        store = app.__container__.lookup('service:store');
+      });
+    },
+    afterEach: function afterEach() {
+      _ember['default'].run(app, 'destroy');
+    }
+  });
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApiCosmos['default']);
+  var metadataProjection = 'LayerMetadataE';
+  var metadataModelName = 'new-platform-flexberry-g-i-s-layer-metadata';
+  var crsFactory32640 = {
+    code: 'EPSG:32640',
+    definition: '+proj=utm +zone=40 +datum=WGS84 +units=m +no_defs',
+    create: function create() {
+      var crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
+        scale: function scale(zoom) {
+          return 256 * Math.pow(2, zoom);
+        },
+        zoom: function zoom(scale) {
+          return Math.log(scale / 256) / Math.LN2;
+        }
+      });
+      return crs;
+    }
+  };
+  var bbox = {
+    type: 'Polygon',
+    coordinates: [[[30, 20], [30, 30], [20, 30], [20, 20], [30, 20]]],
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:4326'
+      }
+    }
+  };
+  var testModel = _ember['default'].Object.create({
+    anyText: 'test',
+    boundingBox: bbox
+  });
+
+  (0, _qunit.test)('test method findCosmos for only with parameter feature', function (assert) {
+    //Arrange
+    assert.expect(7);
+    var done = assert.async(1);
+    var feature = {
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: [[[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]]
+      },
+      crs: {
+        type: 'name',
+        properties: {
+          name: 'EPSG:4326'
+        }
+      }
+    };
+
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default']
+        };
+      },
+      lookup: function lookup() {
+        return null;
+      }
+    });
+
+    var subject = mapApiMixinObject.create({
+      _getQueryBuilderLayerMetadata: function _getQueryBuilderLayerMetadata() {
+        return new _emberFlexberryData.Query.Builder(store, metadataModelName).from(metadataModelName).selectByProjection(metadataProjection);
+      },
+      _getMetadataModels: function _getMetadataModels() {
+        return _ember['default'].RSVP.resolve([testModel]);
+      }
+    });
+    var spyGetMetadataModels = _sinon['default'].spy(subject, '_getMetadataModels');
+    var spyGetQueryBuilderLayerMetadata = _sinon['default'].spy(subject, '_getQueryBuilderLayerMetadata');
+
+    //Act
+    subject.findLayerMetadata(feature, null).then(function (layers) {
+      //Assert
+      assert.ok(spyGetQueryBuilderLayerMetadata.called);
+      assert.ok(spyGetMetadataModels.called);
+      assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof _emberFlexberryData.Query.GeographyPredicate);
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._attributePath, 'boundingBox');
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._intersectsValue, 'SRID=4326;POLYGON((30 10, 40 40, 20 40, 10 20, 30 10))');
+      assert.equal(layers.length, 1);
+      assert.equal(layers[0].areaIntersections, 100);
+      done();
+      ownerStub.restore();
+      spyGetMetadataModels.restore();
+      spyGetQueryBuilderLayerMetadata.restore();
+    });
+  });
+
+  (0, _qunit.test)('test method findCosmos for only with parameter attributes one', function (assert) {
+    //Arrange
+    assert.expect(7);
+    var done = assert.async(1);
+    var attributes = ['test'];
+
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default']
+        };
+      },
+      lookup: function lookup() {
+        return null;
+      }
+    });
+
+    var subject = mapApiMixinObject.create({
+      _getQueryBuilderLayerMetadata: function _getQueryBuilderLayerMetadata() {
+        return new _emberFlexberryData.Query.Builder(store, metadataModelName).from(metadataModelName).selectByProjection(metadataProjection);
+      },
+      _getMetadataModels: function _getMetadataModels() {
+        return _ember['default'].RSVP.resolve([testModel]);
+      }
+    });
+    var spyGetMetadataModels = _sinon['default'].spy(subject, '_getMetadataModels');
+    var spyGetQueryBuilderLayerMetadata = _sinon['default'].spy(subject, '_getQueryBuilderLayerMetadata');
+
+    //Act
+    subject.findLayerMetadata(null, attributes).then(function (layers) {
+      //Assert
+      assert.ok(spyGetQueryBuilderLayerMetadata.called);
+      assert.ok(spyGetMetadataModels.called);
+      assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof _emberFlexberryData.Query.StringPredicate);
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._attributePath, 'anyText');
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._containsValue, 'test');
+      assert.equal(layers.length, 1);
+      assert.ok(!layers[0].hasOwnProperty('areaIntersections'));
+      done();
+      ownerStub.restore();
+      spyGetMetadataModels.restore();
+      spyGetQueryBuilderLayerMetadata.restore();
+    });
+  });
+
+  (0, _qunit.test)('test method findCosmos for only with parameter attributes two', function (assert) {
+    //Arrange
+    assert.expect(12);
+    var done = assert.async(1);
+    var attributes = ['test1', 'test2'];
+
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default']
+        };
+      },
+      lookup: function lookup() {
+        return null;
+      }
+    });
+
+    var subject = mapApiMixinObject.create({
+      _getQueryBuilderLayerMetadata: function _getQueryBuilderLayerMetadata() {
+        return new _emberFlexberryData.Query.Builder(store, metadataModelName).from(metadataModelName).selectByProjection(metadataProjection);
+      },
+      _getMetadataModels: function _getMetadataModels() {
+        return _ember['default'].RSVP.resolve([testModel]);
+      }
+    });
+    var spyGetMetadataModels = _sinon['default'].spy(subject, '_getMetadataModels');
+    var spyGetQueryBuilderLayerMetadata = _sinon['default'].spy(subject, '_getQueryBuilderLayerMetadata');
+
+    //Act
+    subject.findLayerMetadata(null, attributes).then(function (layers) {
+      //Assert
+      assert.ok(spyGetQueryBuilderLayerMetadata.called);
+      assert.ok(spyGetMetadataModels.called);
+      assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof _emberFlexberryData.Query.ComplexPredicate);
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._condition, 'or');
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates.length, 2);
+      assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof _emberFlexberryData.Query.StringPredicate);
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._attributePath, 'anyText');
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._containsValue, 'test1');
+      assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof _emberFlexberryData.Query.StringPredicate);
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'anyText');
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'test2');
+      assert.equal(layers.length, 1);
+      done();
+      ownerStub.restore();
+      spyGetMetadataModels.restore();
+      spyGetQueryBuilderLayerMetadata.restore();
+    });
+  });
+
+  (0, _qunit.test)('test method findCosmos for with feature and attributes', function (assert) {
+    //Arrange
+    assert.expect(13);
+    var done = assert.async(1);
+    var feature = {
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: [[[-2568154.38200208, 1238447.0003685], [-954618.679368619, 4568735.95227168], [-2683586.25264709, 5143088.31265003], [-4878104.10393015, 3114937.3173714], [-2568154.38200208, 1238447.0003685]]]
+      },
+      crs: {
+        type: 'name',
+        properties: {
+          name: 'EPSG:32640'
+        }
+      }
+    };
+    var attributes = ['test'];
+
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg32640': crsFactory32640
+        };
+      },
+      lookup: function lookup() {
+        return null;
+      }
+    });
+
+    var subject = mapApiMixinObject.create({
+      _getQueryBuilderLayerMetadata: function _getQueryBuilderLayerMetadata() {
+        return new _emberFlexberryData.Query.Builder(store, metadataModelName).from(metadataModelName).selectByProjection(metadataProjection);
+      },
+      _getMetadataModels: function _getMetadataModels() {
+        return _ember['default'].RSVP.resolve([testModel]);
+      }
+    });
+    var spyGetMetadataModels = _sinon['default'].spy(subject, '_getMetadataModels');
+    var spyGetQueryBuilderLayerMetadata = _sinon['default'].spy(subject, '_getQueryBuilderLayerMetadata');
+
+    //Act
+    subject.findLayerMetadata(feature, attributes).then(function (layers) {
+      //Assert
+      assert.ok(spyGetQueryBuilderLayerMetadata.called);
+      assert.ok(spyGetMetadataModels.called);
+      assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof _emberFlexberryData.Query.ComplexPredicate);
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._condition, 'and');
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates.length, 2);
+      assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof _emberFlexberryData.Query.GeographyPredicate);
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._attributePath, 'boundingBox');
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._intersectsValue, 'SRID=4326;POLYGON((29.999999999999964 9.999999999999961, 40 39.999999999999964, 19.999999999999964 39.99999999999997, ' + '10.000000000000059 19.999999999999943, 29.999999999999964 9.999999999999961))');
+      assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof _emberFlexberryData.Query.StringPredicate);
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'anyText');
+      assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'test');
+      assert.equal(layers.length, 1);
+      assert.equal(layers[0].areaIntersections, 1452646131646.9414);
+      done();
+      ownerStub.restore();
+      spyGetMetadataModels.restore();
+      spyGetQueryBuilderLayerMetadata.restore();
+    });
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-cosmos-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-cosmos-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-cosmos-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-cosmos-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-cosmos-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-cosmos-test.js should pass jshint.');
   });
 });
 define('dummy/tests/unit/mixins/flexberry-map-model-api-create-polygon-object-rhumb-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api-expansion', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApiExpansion, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326) {
@@ -8135,6 +8461,81 @@ define('dummy/tests/unit/services/map-store-test.jshint', ['exports'], function 
     assert.ok(true, 'unit/services/map-store-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/utils/get-crs-by-name-test', ['exports', 'ember', 'ember-flexberry-gis/utils/get-crs-by-name', 'qunit', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'sinon'], function (exports, _ember, _emberFlexberryGisUtilsGetCrsByName, _qunit, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _sinon) {
+
+  (0, _qunit.module)('Unit | Utility | get crs by name');
+
+  var crsFactory32640 = {
+    code: 'EPSG:32640',
+    definition: '+proj=utm +zone=40 +datum=WGS84 +units=m +no_defs',
+    create: function create() {
+      var crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
+        scale: function scale(zoom) {
+          return 256 * Math.pow(2, zoom);
+        },
+        zoom: function zoom(scale) {
+          return Math.log(scale / 256) / Math.LN2;
+        }
+      });
+      return crs;
+    }
+  };
+
+  (0, _qunit.test)('test method getCrsByName for EPSG:32640', function (assert) {
+    var crsName = 'EPSG:32640';
+    var that = {};
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'],
+          'epsg32640': crsFactory32640
+        };
+      }
+    });
+
+    var crsResult = (0, _emberFlexberryGisUtilsGetCrsByName.getCrsByName)(crsName, that);
+
+    assert.equal(crsResult.code, 'EPSG:32640');
+    ownerStub.restore();
+  });
+
+  (0, _qunit.test)('test method getCrsByName for EPSG:4326', function (assert) {
+    var crsName = 'EPSG:4326';
+    var that = {};
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'],
+          'epsg32640': crsFactory32640
+        };
+      }
+    });
+
+    var crsResult = (0, _emberFlexberryGisUtilsGetCrsByName.getCrsByName)(crsName, that);
+
+    assert.equal(crsResult.code, 'EPSG:4326');
+    ownerStub.restore();
+  });
+});
+define('dummy/tests/unit/utils/get-crs-by-name-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/utils');
+  test('unit/utils/get-crs-by-name-test.js should pass jscs', function () {
+    ok(true, 'unit/utils/get-crs-by-name-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/utils/get-crs-by-name-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/utils/get-crs-by-name-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/utils/get-crs-by-name-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/utils/lat-lng-to-coord-test', ['exports', 'ember-flexberry-gis/utils/lat-lng-to-coord', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'qunit', 'npm:jsts'], function (exports, _emberFlexberryGisUtilsLatLngToCoord, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _qunit, _npmJsts) {
 
   (0, _qunit.module)('Unit | Utility | lat lng to coord');
@@ -8334,6 +8735,127 @@ define('dummy/tests/unit/utils/lat-lng-to-coord-test.jshint', ['exports'], funct
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/utils/lat-lng-to-coord-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/utils/layer-to-ewkt-test', ['exports', 'ember-flexberry-gis/utils/layer-to-ewkt', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'qunit'], function (exports, _emberFlexberryGisUtilsLayerToEwkt, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _qunit) {
+
+  (0, _qunit.module)('Unit | Utility | layer to ewkt');
+
+  var crs = _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'].create();
+
+  (0, _qunit.test)('test method latLngsToCoords for Point', function (assert) {
+    //Arrange
+    var latlng = L.latLng(30, 10);
+    var latlngWithAlt = L.latLng(30, 10, 20);
+
+    //Act
+    var result = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPointEWKT)(latlng, crs);
+    var resultWithAlt = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPointEWKT)(latlngWithAlt, crs);
+
+    //Assert
+    assert.equal(result, 'SRID=4326;POINT(10 30)');
+    assert.equal(resultWithAlt, 'SRID=4326;POINT(10 30 20)');
+  });
+
+  (0, _qunit.test)('test method latlngToPolylineEWKT for LineString', function (assert) {
+    //Arrange
+    var latlng = [L.latLng(30, 10), L.latLng(10, 30), L.latLng(40, 40)];
+    var latlngWithAlt = [L.latLng(30, 10, 20), L.latLng(10, 30, 21), L.latLng(40, 40, 22)];
+
+    //Act
+    var result = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPolylineEWKT)(latlng, crs);
+    var resultWithAlt = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPolylineEWKT)(latlngWithAlt, crs);
+
+    //Assert
+    assert.equal(result, 'SRID=4326;LINESTRING(10 30, 30 10, 40 40)');
+    assert.equal(resultWithAlt, 'SRID=4326;LINESTRING(10 30 20, 30 10 21, 40 40 22)');
+  });
+
+  (0, _qunit.test)('test method latlngToPolylineEWKT for MultiLineString', function (assert) {
+    //Arrange
+    var latlng = [[L.latLng(10, 10), L.latLng(20, 20), L.latLng(10, 40)], [L.latLng(40, 40), L.latLng(30, 30), L.latLng(40, 20)]];
+    var latlngsWithAlt = [[L.latLng(10, 10, 20), L.latLng(20, 20, 21), L.latLng(10, 40, 22)], [L.latLng(40, 40, 23), L.latLng(30, 30, 24), L.latLng(40, 20, 25)]];
+
+    //Act
+    var result = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPolylineEWKT)(latlng, crs);
+    var resultWithAlt = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPolylineEWKT)(latlngsWithAlt, crs);
+
+    //Assert
+    assert.equal(result, 'SRID=4326;MULTILINESTRING((10 10, 20 20, 40 10), (40 40, 30 30, 20 40))');
+    assert.equal(resultWithAlt, 'SRID=4326;MULTILINESTRING((10 10 20, 20 20 21, 40 10 22), (40 40 23, 30 30 24, 20 40 25))');
+  });
+
+  (0, _qunit.test)('test method latlngToPolygonEWKT for Polygon without hole', function (assert) {
+    //Arrange
+    var latlng = [[L.latLng(30, 10), L.latLng(40, 40), L.latLng(20, 40), L.latLng(10, 20)]];
+    var latlngsWithAlt = [[L.latLng(30, 10, 20), L.latLng(40, 40, 21), L.latLng(20, 40, 22), L.latLng(10, 20, 23)]];
+
+    //Act
+    var result = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPolygonEWKT)(latlng, crs);
+    var resultWithAlt = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPolygonEWKT)(latlngsWithAlt, crs);
+
+    //Assert
+    assert.equal(result, 'SRID=4326;POLYGON((10 30, 40 40, 40 20, 20 10, 10 30))');
+    assert.equal(resultWithAlt, 'SRID=4326;POLYGON((10 30 20, 40 40 21, 40 20 22, 20 10 23, 10 30 20))');
+  });
+
+  (0, _qunit.test)('test method latlngToPolygonEWKT for Polygon with hole', function (assert) {
+    //Arrange
+    var latlng = [[L.latLng(35, 10), L.latLng(45, 45), L.latLng(15, 40), L.latLng(10, 20)], [L.latLng(20, 30), L.latLng(35, 35), L.latLng(30, 20)]];
+    var latlngsWithAlt = [[L.latLng(35, 10, 20), L.latLng(45, 45, 21), L.latLng(15, 40, 22), L.latLng(10, 20, 23)], [L.latLng(20, 30, 24), L.latLng(35, 35, 25), L.latLng(30, 20, 26)]];
+
+    //Act
+    var result = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPolygonEWKT)(latlng, crs);
+    var resultWithAlt = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPolygonEWKT)(latlngsWithAlt, crs);
+
+    //Assert
+    assert.equal(result, 'SRID=4326;POLYGON((10 35, 45 45, 40 15, 20 10, 10 35), (30 20, 35 35, 20 30, 30 20))');
+    assert.equal(resultWithAlt, 'SRID=4326;POLYGON((10 35 20, 45 45 21, 40 15 22, 20 10 23, 10 35 20), (30 20 24, 35 35 25, 20 30 26, 30 20 24))');
+  });
+
+  (0, _qunit.test)('test method latlngToPolygonEWKT for MultiPolygon without hole', function (assert) {
+    //Arrange
+    var latlng = [[[L.latLng(30, 20), L.latLng(45, 40), L.latLng(10, 40)]], [[L.latLng(15, 5), L.latLng(40, 10), L.latLng(10, 20), L.latLng(5, 10)]]];
+    var latlngsWithAlt = [[[L.latLng(30, 20, 20), L.latLng(45, 40, 21), L.latLng(10, 40, 22)]], [[L.latLng(15, 5, 23), L.latLng(40, 10, 24), L.latLng(10, 20, 25), L.latLng(5, 10, 26)]]];
+
+    //Act
+    var result = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPolygonEWKT)(latlng, crs);
+    var resultWithAlt = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPolygonEWKT)(latlngsWithAlt, crs);
+
+    //Assert
+    assert.equal(result, 'SRID=4326;MULTIPOLYGON(((20 30, 40 45, 40 10, 20 30)), ((5 15, 10 40, 20 10, 10 5, 5 15)))');
+    assert.equal(resultWithAlt, 'SRID=4326;MULTIPOLYGON(((20 30 20, 40 45 21, 40 10 22, 20 30 20)), ((5 15 23, 10 40 24, 20 10 25, 10 5 26, 5 15 23)))');
+  });
+
+  (0, _qunit.test)('test method latlngToPolygonEWKT for MultiPolygon with hole', function (assert) {
+    //Arrange
+    var latlng = [[[L.latLng(40, 40), L.latLng(20, 45), L.latLng(45, 30)]], [[L.latLng(20, 35), L.latLng(10, 30), L.latLng(10, 10), L.latLng(30, 5), L.latLng(45, 20)], [L.latLng(30, 20), L.latLng(20, 15), L.latLng(20, 25)]]];
+    var latlngsWithAlt = [[[L.latLng(40, 40, 20), L.latLng(20, 45, 21), L.latLng(45, 30, 22)]], [[L.latLng(20, 35, 24), L.latLng(10, 30, 25), L.latLng(10, 10, 26), L.latLng(30, 5, 27), L.latLng(45, 20, 28)], [L.latLng(30, 20, 29), L.latLng(20, 15, 30), L.latLng(20, 25, 31)]]];
+
+    //Act
+    var result = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPolygonEWKT)(latlng, crs);
+    var resultWithAlt = (0, _emberFlexberryGisUtilsLayerToEwkt.latlngToPolygonEWKT)(latlngsWithAlt, crs);
+
+    //Assert
+    assert.equal(result, 'SRID=4326;MULTIPOLYGON(((40 40, 45 20, 30 45, 40 40)), ((35 20, 30 10, 10 10, 5 30, 20 45, 35 20), (20 30, 15 20, 25 20, 20 30)))');
+    assert.equal(resultWithAlt, 'SRID=4326;MULTIPOLYGON(((40 40 20, 45 20 21, 30 45 22, 40 40 20)), ' + '((35 20 24, 30 10 25, 10 10 26, 5 30 27, 20 45 28, 35 20 24), (20 30 29, 15 20 30, 25 20 31, 20 30 29)))');
+  });
+});
+define('dummy/tests/unit/utils/layer-to-ewkt-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/utils');
+  test('unit/utils/layer-to-ewkt-test.js should pass jscs', function () {
+    ok(true, 'unit/utils/layer-to-ewkt-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/utils/layer-to-ewkt-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/utils/layer-to-ewkt-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/utils/layer-to-ewkt-test.js should pass jshint.');
   });
 });
 define('dummy/tests/unit/utils/layer-to-jsts-test', ['exports', 'ember-flexberry-gis/utils/layer-to-jsts', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'qunit'], function (exports, _emberFlexberryGisUtilsLayerToJsts, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _qunit) {

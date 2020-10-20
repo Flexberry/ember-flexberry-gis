@@ -4993,6 +4993,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers
     assert.ok(true, 'modules/ember-flexberry-gis/initializers/leaflet-editable-measures.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers/leaflet-ewkt.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/initializers');
+  test('modules/ember-flexberry-gis/initializers/leaflet-ewkt.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/initializers/leaflet-ewkt.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers/leaflet-ewkt.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/initializers/leaflet-ewkt.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/initializers/leaflet-ewkt.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers/leaflet-jsts.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/initializers');
   test('modules/ember-flexberry-gis/initializers/leaflet-jsts.js should pass jscs', function () {
@@ -8958,6 +8971,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/flexb
     assert.ok(true, 'modules/ember-flexberry-gis/mixins/flexberry-map-actions-handler.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/flexberry-map-model-api-cosmos.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/mixins');
+  test('modules/ember-flexberry-gis/mixins/flexberry-map-model-api-cosmos.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/mixins/flexberry-map-model-api-cosmos.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/flexberry-map-model-api-cosmos.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/mixins/flexberry-map-model-api-cosmos.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/mixins/flexberry-map-model-api-cosmos.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/flexberry-map-model-api-expansion.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/mixins');
   test('modules/ember-flexberry-gis/mixins/flexberry-map-model-api-expansion.js should pass jscs', function () {
@@ -10245,6 +10271,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/get-bo
     assert.ok(true, 'modules/ember-flexberry-gis/utils/get-bounds-from-polygon.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/get-crs-by-name.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/utils');
+  test('modules/ember-flexberry-gis/utils/get-crs-by-name.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/utils/get-crs-by-name.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/get-crs-by-name.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/utils/get-crs-by-name.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/utils/get-crs-by-name.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/html2canvas-clone.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/utils');
   test('modules/ember-flexberry-gis/utils/html2canvas-clone.js should pass jscs', function () {
@@ -10269,6 +10308,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/lat-ln
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/utils/lat-lng-to-coord.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/layer-to-ewkt.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/utils');
+  test('modules/ember-flexberry-gis/utils/layer-to-ewkt.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/utils/layer-to-ewkt.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/layer-to-ewkt.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/utils/layer-to-ewkt.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/utils/layer-to-ewkt.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/layer-to-jsts.jscs-test', ['exports'], function (exports) {
@@ -10394,7 +10446,7 @@ define('dummy/geo-providers/yandex-maps-geocoder', ['exports', 'ember-flexberry-
     }
   });
 });
-define('dummy/gis-browserify', ['exports', 'npm:@turf/buffer', 'npm:@turf/helpers', 'npm:@turf/difference', 'npm:@turf/boolean-equal', 'npm:@turf/line-split', 'npm:@turf/polygon-to-line', 'npm:@turf/line-to-polygon', 'npm:@turf/boolean-within', 'npm:@turf/kinks', 'npm:@turf/line-intersect', 'npm:@turf/intersect', 'npm:@turf/line-slice', 'npm:@turf/invariant', 'npm:@turf/distance', 'npm:@turf/midpoint', 'npm:@turf/union', 'npm:@turf/combine', 'npm:@turf/area', 'npm:@turf/boolean-point-in-polygon', 'npm:@turf/boolean-contains', 'npm:@turf/projection', 'npm:@turf/rhumb-distance', 'npm:@turf/rhumb-bearing', 'npm:leaflet-side-by-side', 'npm:jsts', 'npm:@terraformer/wkt', 'npm:clipper-lib'], function (exports, _npmTurfBuffer, _npmTurfHelpers, _npmTurfDifference, _npmTurfBooleanEqual, _npmTurfLineSplit, _npmTurfPolygonToLine, _npmTurfLineToPolygon, _npmTurfBooleanWithin, _npmTurfKinks, _npmTurfLineIntersect, _npmTurfIntersect, _npmTurfLineSlice, _npmTurfInvariant, _npmTurfDistance, _npmTurfMidpoint, _npmTurfUnion, _npmTurfCombine, _npmTurfArea, _npmTurfBooleanPointInPolygon, _npmTurfBooleanContains, _npmTurfProjection, _npmTurfRhumbDistance, _npmTurfRhumbBearing, _npmLeafletSideBySide, _npmJsts, _npmTerraformerWkt, _npmClipperLib) {});
+define('dummy/gis-browserify', ['exports', 'npm:@turf/buffer', 'npm:@turf/helpers', 'npm:@turf/difference', 'npm:@turf/boolean-equal', 'npm:@turf/line-split', 'npm:@turf/polygon-to-line', 'npm:@turf/line-to-polygon', 'npm:@turf/boolean-within', 'npm:@turf/kinks', 'npm:@turf/line-intersect', 'npm:@turf/intersect', 'npm:@turf/line-slice', 'npm:@turf/invariant', 'npm:@turf/distance', 'npm:@turf/midpoint', 'npm:@turf/union', 'npm:@turf/combine', 'npm:@turf/area', 'npm:@turf/boolean-point-in-polygon', 'npm:@turf/boolean-contains', 'npm:@turf/projection', 'npm:@turf/rhumb-distance', 'npm:@turf/rhumb-bearing', 'npm:leaflet-side-by-side', 'npm:jsts', 'npm:clipper-lib'], function (exports, _npmTurfBuffer, _npmTurfHelpers, _npmTurfDifference, _npmTurfBooleanEqual, _npmTurfLineSplit, _npmTurfPolygonToLine, _npmTurfLineToPolygon, _npmTurfBooleanWithin, _npmTurfKinks, _npmTurfLineIntersect, _npmTurfIntersect, _npmTurfLineSlice, _npmTurfInvariant, _npmTurfDistance, _npmTurfMidpoint, _npmTurfUnion, _npmTurfCombine, _npmTurfArea, _npmTurfBooleanPointInPolygon, _npmTurfBooleanContains, _npmTurfProjection, _npmTurfRhumbDistance, _npmTurfRhumbBearing, _npmLeafletSideBySide, _npmJsts, _npmClipperLib) {});
 // Requirement of ember-browserify.
 // In order to use NPM pacakges inside the addon, we have to import
 // them from somewhere in /app directory.
@@ -11107,6 +11159,20 @@ define('dummy/initializers/leaflet-editable-measures', ['exports', 'dummy/config
   };
 
   exports['default'] = _emberFlexberryGisInitializersLeafletEditableMeasures['default'];
+});
+define('dummy/initializers/leaflet-ewkt', ['exports', 'ember-flexberry-gis/initializers/leaflet-ewkt'], function (exports, _emberFlexberryGisInitializersLeafletEwkt) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisInitializersLeafletEwkt['default'];
+    }
+  });
+  Object.defineProperty(exports, 'initialize', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisInitializersLeafletEwkt.initialize;
+    }
+  });
 });
 define('dummy/initializers/leaflet-jsts', ['exports', 'ember-flexberry-gis/initializers/leaflet-jsts'], function (exports, _emberFlexberryGisInitializersLeafletJsts) {
   Object.defineProperty(exports, 'default', {
@@ -38945,6 +39011,14 @@ define('dummy/utils/feature-with-area-intersect', ['exports', 'ember-flexberry-g
     }
   });
 });
+define('dummy/utils/get-crs-by-name', ['exports', 'ember-flexberry-gis/utils/get-crs-by-name'], function (exports, _emberFlexberryGisUtilsGetCrsByName) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisUtilsGetCrsByName['default'];
+    }
+  });
+});
 define('dummy/utils/get-current-agregator', ['exports', 'ember-flexberry/utils/get-current-agregator'], function (exports, _emberFlexberryUtilsGetCurrentAgregator) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -38990,6 +39064,14 @@ define('dummy/utils/lat-lng-to-coord', ['exports', 'ember-flexberry-gis/utils/la
     enumerable: true,
     get: function get() {
       return _emberFlexberryGisUtilsLatLngToCoord['default'];
+    }
+  });
+});
+define('dummy/utils/layer-to-ewkt', ['exports', 'ember-flexberry-gis/utils/layer-to-ewkt'], function (exports, _emberFlexberryGisUtilsLayerToEwkt) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisUtilsLayerToEwkt['default'];
     }
   });
 });
@@ -39122,7 +39204,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.2+949a7cd3"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","keywordForCosmos":"cosmos","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.2+84107e9f"});
 }
 
 /* jshint ignore:end */
