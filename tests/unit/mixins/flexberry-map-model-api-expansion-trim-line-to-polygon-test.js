@@ -12,11 +12,11 @@ let aGeoJson = {
   'geometry': {
     'type': 'Polygon',
     'coordinates': [
-      [[56.184253, 58.071975],
-        [56.210689, 58.071975],
-        [56.2106895, 58.079873],
-        [56.184253, 58.079873],
-        [56.184253, 58.071975]]
+      [[56.2, 58.1],
+        [56.3, 58.1],
+        [56.3, 58.2],
+        [56.2, 58.2],
+        [56.2, 58.1]]
     ]
   },
   'crs': {
@@ -32,8 +32,8 @@ let bGeoJson = {
   'geometry': {
     'type': 'LineString',
     'coordinates': [
-      [56.17, 58.071975],
-      [56.22, 58.071975]
+      [56.1, 58.1],
+      [56.4, 58.1]
     ]
   },
   'crs': {
@@ -53,23 +53,23 @@ test('test method trimLineToPolygon with EPSG:4326', function(assert) {
 
   assert.ok(promise instanceof Ember.RSVP.Promise);
   promise.then((result) => {
-    assert.deepEqual(result.geometry.coordinates, [[56.184253, 58.071975], [56.210689, 58.071975]]);
+    assert.deepEqual(result.geometry.coordinates, [[56.2, 58.1], [56.3, 58.1]]);
     done();
   });
 });
 
-test('test method trimLineToPolygon. Error different crs', function(assert) {
+test('test method trimLineToPolygon. Error objects does\' not intersect', function(assert) {
   assert.expect(2);
   let done = assert.async(1);
-  bGeoJson.geometry.coordinates = [[56.17, 56], [56.22, 56]];
+  bGeoJson.geometry.coordinates = [[56.1, 56], [56.4, 56]];
   let subject = mapApiMixinObject.create({});
 
   let promise = subject.trimLineToPolygon(aGeoJson, bGeoJson);
 
   assert.ok(promise instanceof Ember.RSVP.Promise);
   promise.then().catch((result) => {
-    assert.equal(result, 'objects doesn\' not intersertc');
-    bGeoJson.geometry.coordinates = [[56.17, 58.071975], [56.22, 58.071975]];
+    assert.equal(result, 'objects does\' not intersect');
+    bGeoJson.geometry.coordinates = [[56.1, 58.1], [56.4, 58.1]];
     done();
   });
 });

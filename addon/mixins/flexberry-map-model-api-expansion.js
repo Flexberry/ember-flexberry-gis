@@ -353,19 +353,19 @@ export default Ember.Mixin.create(rhumbOperations, {
       resultObject = geometries[1].intersection(geometries[0]);
 
       let geojsonWriter = new jsts.io.GeoJSONWriter();
-      let unionres = geojsonWriter.write(resultObject);
-      if (unionres.coordinates.length === 0) {
-        reject('objects doesn\' not intersertc');
+      let intersectionRes = geojsonWriter.write(resultObject);
+      if (intersectionRes.coordinates.length === 0) {
+        reject('objects does\' not intersect');
         return;
       }
 
       let crsResult = 'EPSG:' + geometries[0].getSRID();
 
-      const multiObj = {
+      const intersectObj = {
         type: 'Feature',
         geometry: {
-          type: unionres.type,
-          coordinates: unionres.coordinates
+          type: intersectionRes.type,
+          coordinates: intersectionRes.coordinates
         },
         crs: {
           type: 'name',
@@ -375,7 +375,7 @@ export default Ember.Mixin.create(rhumbOperations, {
         }
       };
 
-      resolve(multiObj);
+      resolve(intersectObj);
     });
   }
 });
