@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import BaseVectorLayer from 'ember-flexberry-gis/components/base-vector-layer';
-import { Query } from 'ember-flexberry-data';
+import { Query, Projection, Serializer } from 'ember-flexberry-data';
 import { checkMapZoom } from '../../utils/check-zoom';
 import state from '../../utils/state';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
@@ -615,6 +615,39 @@ export default BaseVectorLayer.extend({
     }
   },
 
+  registerModel() {
+    let modelName = this.get('modelName');
+    let projectionName = this.get('projectionName');
+    let modelMixin = Ember.Mixin.create({
+      nomer: DS.attr('string', { defaultValue: '' }),
+      shape: DS.attr('json'),
+      createTime: DS.attr('date'),
+      creator: DS.attr('string'),
+      editTime: DS.attr('date'),
+      editor: DS.attr('string'),
+    });
+
+    let model = Projection.Model.extend(modelMixin);
+    model.defineProjection(projectionName, modelName, {
+      nomer: Projection.attr(''),
+      shape: Projection.attr(''),
+      createTime: Projection.attr(''),
+      creator: Projection.attr(''),
+      editTime: Projection.attr(''),
+      editor: Projection.attr('')
+    });
+
+    let serializer = Serializer.Odata.extend({
+      primaryKey: '__PrimaryKey'
+    });
+
+    Ember.getOwner(this).register(`model:${modelName}`, model);
+    Ember.getOwner(this).register(`mixin:${modelName}`, modelMixin);
+    Ember.getOwner(this).register(`serializer:${modelName}`, serializer);
+
+    //Ember.getOwner(store).register('model:' + modelName, model);
+  },
+
   /**
     Creates leaflet layer related to layer type.
 
@@ -624,6 +657,10 @@ export default BaseVectorLayer.extend({
   */
   createVectorLayer(options) {
     return new Ember.RSVP.Promise((resolve, reject) => {
+      if (this.get('modelName') === 'i-i-s-r-g-i-s-p-k-delyanka-polygon32640') {
+        this.registerModel();
+      }
+
       let obj = this.get('_adapterStoreModelProjectionGeom');
       let crs = this.get('crs');
 
