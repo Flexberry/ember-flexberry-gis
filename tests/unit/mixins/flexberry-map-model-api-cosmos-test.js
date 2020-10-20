@@ -45,10 +45,26 @@ let crsFactory32640 = {
     return crs;
   }
 };
+let bbox = {
+  type: 'Polygon',
+  coordinates: [
+    [[30, 20], [30, 30], [20, 30], [20, 20], [30, 20]]
+  ],
+  crs: {
+    type: 'name',
+    properties: {
+      name: 'EPSG:4326'
+    }
+  }
+};
+let testModel = Ember.Object.create({
+  anyText: 'test',
+  boundingBox: bbox
+});
 
 test('test method findCosmos for only with parameter feature', function(assert) {
   //Arrange
-  assert.expect(12);
+  assert.expect(7);
   var done = assert.async(1);
   let feature = {
     type: 'Feature',
@@ -75,13 +91,6 @@ test('test method findCosmos for only with parameter feature', function(assert) 
     },
     lookup() {
       return null;
-    },
-    resolveRegistration() {
-      return {
-        APP: {
-          keywordForCosmos: 'cosmos'
-        }
-      };
     }
   });
 
@@ -92,28 +101,23 @@ test('test method findCosmos for only with parameter feature', function(assert) 
       .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
-      return Ember.RSVP.resolve(['1']);
+      return Ember.RSVP.resolve([testModel]);
     }
   });
   let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
   let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
   //Act
-  subject.findCosmos(feature, null).then((layers) => {
+  subject.findLayerMetadata(feature, null).then((layers) => {
     //Assert
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.ComplexPredicate);
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._condition, 'and');
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates.length, 2);
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof Query.GeographyPredicate);
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._attributePath, 'boundingBox');
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._intersectsValue,
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.GeographyPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._attributePath, 'boundingBox');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._intersectsValue,
       'SRID=4326;POLYGON((30 10, 40 40, 20 40, 10 20, 30 10))');
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof Query.StringPredicate);
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'keyWords');
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'cosmos');
     assert.equal(layers.length, 1);
+    assert.equal(layers[0].areaIntersections, 100);
     done();
     ownerStub.restore();
     spyGetMetadataModels.restore();
@@ -121,11 +125,59 @@ test('test method findCosmos for only with parameter feature', function(assert) 
   });
 });
 
-test('test method findCosmos for only with parameter atributes one', function(assert) {
+test('test method findCosmos for only with parameter attributes one', function(assert) {
+  //Arrange
+  assert.expect(7);
+  var done = assert.async(1);
+  let attributes = ['test'];
+
+  let ownerStub = sinon.stub(Ember, 'getOwner');
+  ownerStub.returns({
+    knownForType() {
+      return {
+        'epsg4326': crsFactory4326
+      };
+    },
+    lookup() {
+      return null;
+    }
+  });
+
+  let subject = mapApiMixinObject.create({
+    _getQueryBuilderLayerMetadata() {
+      return new Query.Builder(store, metadataModelName)
+      .from(metadataModelName)
+      .selectByProjection(metadataProjection);
+    },
+    _getMetadataModels() {
+      return Ember.RSVP.resolve([testModel]);
+    }
+  });
+  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
+  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
+
+  //Act
+  subject.findLayerMetadata(null, attributes).then((layers) => {
+    //Assert
+    assert.ok(spyGetQueryBuilderLayerMetadata.called);
+    assert.ok(spyGetMetadataModels.called);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.StringPredicate);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._attributePath, 'anyText');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._containsValue, 'test');
+    assert.equal(layers.length, 1);
+    assert.ok(!layers[0].hasOwnProperty('areaIntersections'));
+    done();
+    ownerStub.restore();
+    spyGetMetadataModels.restore();
+    spyGetQueryBuilderLayerMetadata.restore();
+  });
+});
+
+test('test method findCosmos for only with parameter attributes two', function(assert) {
   //Arrange
   assert.expect(12);
   var done = assert.async(1);
-  let atributes = ['test'];
+  let attributes = ['test1', 'test2'];
 
   let ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
@@ -136,13 +188,6 @@ test('test method findCosmos for only with parameter atributes one', function(as
     },
     lookup() {
       return null;
-    },
-    resolveRegistration() {
-      return {
-        APP: {
-          keywordForCosmos: 'cosmos'
-        }
-      };
     }
   });
 
@@ -153,26 +198,26 @@ test('test method findCosmos for only with parameter atributes one', function(as
       .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
-      return Ember.RSVP.resolve(['1']);
+      return Ember.RSVP.resolve([testModel]);
     }
   });
   let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
   let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
   //Act
-  subject.findCosmos(null, atributes).then((layers) => {
+  subject.findLayerMetadata(null, attributes).then((layers) => {
     //Assert
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.ComplexPredicate);
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._condition, 'and');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._condition, 'or');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates.length, 2);
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof Query.StringPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._attributePath, 'anyText');
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._containsValue, 'test');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._containsValue, 'test1');
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof Query.StringPredicate);
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'keyWords');
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'cosmos');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'anyText');
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'test2');
     assert.equal(layers.length, 1);
     done();
     ownerStub.restore();
@@ -181,75 +226,9 @@ test('test method findCosmos for only with parameter atributes one', function(as
   });
 });
 
-test('test method findCosmos for only with parameter atributes two', function(assert) {
+test('test method findCosmos for with feature and attributes', function(assert) {
   //Arrange
-  assert.expect(18);
-  var done = assert.async(1);
-  let atributes = ['test1', 'test2'];
-
-  let ownerStub = sinon.stub(Ember, 'getOwner');
-  ownerStub.returns({
-    knownForType() {
-      return {
-        'epsg4326': crsFactory4326
-      };
-    },
-    lookup() {
-      return null;
-    },
-    resolveRegistration() {
-      return {
-        APP: {
-          keywordForCosmos: 'cosmos'
-        }
-      };
-    }
-  });
-
-  let subject = mapApiMixinObject.create({
-    _getQueryBuilderLayerMetadata() {
-      return new Query.Builder(store, metadataModelName)
-      .from(metadataModelName)
-      .selectByProjection(metadataProjection);
-    },
-    _getMetadataModels() {
-      return Ember.RSVP.resolve(['1']);
-    }
-  });
-  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
-  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
-
-  //Act
-  subject.findCosmos(null, atributes).then((layers) => {
-    //Assert
-    assert.ok(spyGetQueryBuilderLayerMetadata.called);
-    assert.ok(spyGetMetadataModels.called);
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.ComplexPredicate);
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._condition, 'and');
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates.length, 2);
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof Query.ComplexPredicate);
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._condition, 'or');
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates.length, 2);
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates[0] instanceof Query.StringPredicate);
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates[0]._attributePath, 'anyText');
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates[0]._containsValue, 'test1');
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates[1] instanceof Query.StringPredicate);
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates[1]._attributePath, 'anyText');
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._predicates[1]._containsValue, 'test2');
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof Query.StringPredicate);
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'keyWords');
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'cosmos');
-    assert.equal(layers.length, 1);
-    done();
-    ownerStub.restore();
-    spyGetMetadataModels.restore();
-    spyGetQueryBuilderLayerMetadata.restore();
-  });
-});
-
-test('test method findCosmos for with feature and atributes', function(assert) {
-  //Arrange
-  assert.expect(15);
+  assert.expect(13);
   var done = assert.async(1);
   let feature = {
     type: 'Feature',
@@ -267,7 +246,7 @@ test('test method findCosmos for with feature and atributes', function(assert) {
       }
     }
   };
-  let atributes = ['test'];
+  let attributes = ['test'];
 
   let ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
@@ -278,13 +257,6 @@ test('test method findCosmos for with feature and atributes', function(assert) {
     },
     lookup() {
       return null;
-    },
-    resolveRegistration() {
-      return {
-        APP: {
-          keywordForCosmos: 'cosmos'
-        }
-      };
     }
   });
 
@@ -295,20 +267,20 @@ test('test method findCosmos for with feature and atributes', function(assert) {
       .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
-      return Ember.RSVP.resolve(['1']);
+      return Ember.RSVP.resolve([testModel]);
     }
   });
   let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
   let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
   //Act
-  subject.findCosmos(feature, atributes).then((layers) => {
+  subject.findLayerMetadata(feature, attributes).then((layers) => {
     //Assert
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.ComplexPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._condition, 'and');
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates.length, 3);
+    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates.length, 2);
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof Query.GeographyPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._attributePath, 'boundingBox');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._intersectsValue,
@@ -317,10 +289,8 @@ test('test method findCosmos for with feature and atributes', function(assert) {
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof Query.StringPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'anyText');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'test');
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[2] instanceof Query.StringPredicate);
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[2]._attributePath, 'keyWords');
-    assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[2]._containsValue, 'cosmos');
     assert.equal(layers.length, 1);
+    assert.equal(layers[0].areaIntersections, 1452646131646.9414);
     done();
     ownerStub.restore();
     spyGetMetadataModels.restore();
