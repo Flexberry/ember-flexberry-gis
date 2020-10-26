@@ -1,6 +1,8 @@
 import Ember from 'ember';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
 import { Query } from 'ember-flexberry-data';
+import { getCrsByName } from '../utils/get-crs-by-name';
+import { geometryToJsts } from '../utils/layer-to-jsts';
 
 export default Ember.Mixin.create({
   /**
@@ -61,44 +63,41 @@ export default Ember.Mixin.create({
   /**
     Finds layers by feature geometry and atributes. If 'feature' parameter is specified, then search condition is created by feature geometry
     which intersects layer's boundingBox. If 'atributes' parameter is specified, then search condition is created by combining attributes via OR,
-    field for search is anyText. Adds search condition for Keyword 'cosmos'. All conditions are combined via AND.
+    field for search is anyText. All conditions are combined via AND. For the found LayerMetadatas, the intersection area is calculated if the
+    search was performed by geometryIntersectsBbox.
 
-    @method findCosmos.
-    @param {Object} feature GeoJson Feature.
-    @param {Array} atributes Array of search strings.
-    @return {Promise} Array of layers models where feature geometry intersects layer's boundingBox and layers have desired atributes.
+    @method findLayerMetadata.
+    @param {Object} geometryIntersectsBbox GeoJson Feature to intersect with boundingBox.
+    @param {Array} attributes Array of search strings.
+    @return {Promise} Array of object. Object consisting of 'layerMatadata' is layers models where feature geometry intersects layer's boundingBox
+    and layers have desired attributes, and 'areaIntersections' is area of intersections.
   */
-  findCosmos(feature, atributes) {
+  findLayerMetadata(geometryIntersectsBbox, attributes) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let filter = Ember.A();
-      if (!Ember.isNone(feature)) {
-        if (!feature.hasOwnProperty('crs')) {
-          reject("Error: feature must have 'crs' attribute");
+      let crsName;
+      let crsLayer;
+      if (!Ember.isNone(geometryIntersectsBbox)) {
+        if (!geometryIntersectsBbox.hasOwnProperty('crs')) {
+          reject("Error: geometryIntersectsBbox must have 'crs' attribute");
         }
 
-        let crsName = feature.crs.properties.name;
-        let knownCrs = Ember.getOwner(this).knownForType('coordinate-reference-system');
-        let knownCrsArray = Ember.A(Object.values(knownCrs));
-        let crsLayer = knownCrsArray.findBy('code', crsName).create();
+        crsName = geometryIntersectsBbox.crs.properties.name;
+        crsLayer = getCrsByName(crsName, this);
 
         let coordsToLatLng = function (coords) {
           return crsLayer.unproject(L.point(coords));
         };
 
-        let geoJSON = null;
-        if (crsName !== 'EPSG:4326') {
-          geoJSON = L.geoJSON(feature, { coordsToLatLng: coordsToLatLng.bind(this) });
-        } else {
-          geoJSON = L.geoJSON(feature);
-        }
+        let geoJSON = L.geoJSON(geometryIntersectsBbox, { coordsToLatLng: coordsToLatLng.bind(this) });
 
         let predicateBBox = new Query.GeographyPredicate('boundingBox');
         filter.push(predicateBBox.intersects(geoJSON.getLayers()[0].toEWKT(crsFactory4326.create())));
       }
 
-      if (!Ember.isNone(atributes) && Ember.isArray(atributes)) {
+      if (!Ember.isNone(attributes) && Ember.isArray(attributes)) {
         let equals = Ember.A();
-        atributes.forEach((strSearch) => {
+        attributes.forEach((strSearch) => {
           equals.push(new Query.StringPredicate('anyText').contains(strSearch));
         });
 
@@ -113,9 +112,13 @@ export default Ember.Mixin.create({
         reject('Error: failed to create a request condition');
       }
 
-      let config = Ember.getOwner(this).resolveRegistration('config:environment');
-      filter.push(new Query.StringPredicate('keyWords').contains(config.APP.keywordForCosmos));
-      let condition = new Query.ComplexPredicate(Query.Condition.And, ...filter);
+      let condition;
+      if (filter.length === 1) {
+        condition = filter[0];
+      } else {
+        condition = new Query.ComplexPredicate(Query.Condition.And, ...filter);
+      }
+
       let queryBuilder = this._getQueryBuilderLayerMetadata().where(condition);
 
       this._getMetadataModels(queryBuilder).then((meta) => {
@@ -126,7 +129,19 @@ export default Ember.Mixin.create({
         }
 
         models.forEach(model => {
-          result.push(model);
+          let resObject = {
+            layerMatadata: model
+          };
+          if (!Ember.isNone(geometryIntersectsBbox)) {
+            let bbox = model.get('boundingBox');
+            let bboxLayer = L.geoJSON(bbox).getLayers()[0];
+            let bboxJsts = bboxLayer.toJsts(crsLayer);
+            let featureJsts = geometryToJsts(geometryIntersectsBbox.geometry);
+            featureJsts.setSRID(crsName.split(':')[1]);
+            resObject.areaIntersections = bboxJsts.intersection(featureJsts).getArea();
+          }
+
+          result.push(resObject);
         });
 
         resolve(result);
