@@ -640,31 +640,38 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-    Creates model mixin, model, projections, serializer and adapter from jsonModel. Registers them in the application.
+    Creates model from mixin.
 
-    @method registerModel
-    @param jsonModel data model in json format
-    @return {Object} json object with model
+    @method createModel
+    @param {Object} modelMixin Model of mixin.
+    @param {Object} jsonModel Data model in json format.
+    @return {Object} Model
   */
-  registerModel(jsonModel) {
-    if (Ember.isNone(jsonModel)) {
+  createModel(modelMixin, jsonModel) {
+    if (Ember.isNone(jsonModel) || Ember.isNone(modelMixin)) {
       return;
     }
 
     let modelName = this.get('modelName');
     let projectionName = this.get('projectionName');
     let namespace = this.get('namespace');
-    let mixin = {};
-    jsonModel.attrs.forEach((attr) => {
-      mixin[attr.name] = DS.attr(attr.type);
-    });
-
-    let modelMixin = Ember.Mixin.create(mixin);
     let model = Projection.Model.extend(modelMixin);
     model.reopenClass({
       namespace: namespace
     });
 
+    return model;
+  },
+
+  /**
+    Creates projection from data model.
+
+    @method createProjection
+    @param {Object} jsonModel Data model in json format.
+    @return {Object} Projection
+  */
+  createProjection(jsonModel) {
+    let projectionName = this.get('projectionName');
     let projJson = jsonModel.projections.filter(proj=>proj.name === projectionName);
     let modelProjection = {};
     if (projJson.length > 0) {
@@ -673,10 +680,37 @@ export default BaseVectorLayer.extend({
       });
     }
 
-    if (!Ember.isNone(modelProjection)) {
-      model.defineProjection(projectionName, modelName, modelProjection);
+    return modelProjection;
+  },
+
+  /**
+    Creates mixin from data model.
+
+    @method createMixin
+    @param {Object} jsonModel Data model in json format.
+    @return {Object} Mixin
+  */
+  createMixin(jsonModel) {
+    if (Ember.isNone(jsonModel)) {
+      return;
     }
 
+    let mixin = {};
+    jsonModel.attrs.forEach((attr) => {
+      mixin[attr.name] = DS.attr(attr.type);
+    });
+
+    let modelMixin = Ember.Mixin.create(mixin);
+    return modelMixin;
+  },
+
+  /**
+    Creates serializer from Serializer.Odata.
+
+    @method createSerializer
+    @return {Object} Serializer
+  */
+  createSerializer() {
     let serializer = Ember.Mixin.create({
       primaryKey: '__PrimaryKey',
       getAttrs: function () {
@@ -694,9 +728,22 @@ export default BaseVectorLayer.extend({
     });
 
     let modelSerializer = Serializer.Odata.extend(serializer);
-    let modelAdapter = this.createAdapterForModel();
+    return modelSerializer;
+  },
 
+  /**
+    Registers mixin, model, projections, serializer and adapter in the application.
+
+    @method registerModelMixinSerializerAdapter
+    @param {Object} model
+    @param {Object} modelMixin
+    @param {Object} modelSerializer
+    @param {Object} modelAdapter
+    @return {Boolean}
+  */
+  registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter) {
     if (!Ember.isNone(model) && !Ember.isNone(modelMixin) && !Ember.isNone(modelSerializer) && !Ember.isNone(modelAdapter)) {
+      let modelName = this.get('modelName');
       Ember.getOwner(this).unregister(`model:${modelName}`, model);
       Ember.getOwner(this).unregister(`mixin:${modelName}`, modelMixin);
       Ember.getOwner(this).unregister(`serializer:${modelName}`, modelSerializer);
@@ -707,11 +754,80 @@ export default BaseVectorLayer.extend({
       Ember.getOwner(this).register(`serializer:${modelName}`, modelSerializer);
       Ember.getOwner(this).register(`adapter:${modelName}`, modelAdapter);
 
+      return true;
     } else {
-      throw 'Error: can\'t register model: ' + modelName;
+      return false;
     }
   },
 
+  /**
+    Creates model mixin, model, projections, serializer and adapter from jsonModel.
+
+    @method createDynamicModel
+    @param jsonModel data model in json format
+    @return {Promise}
+  */
+  createDynamicModel(jsonModel) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      if (Ember.isNone(jsonModel)) {
+        reject('Not json model');
+      }
+
+      // with parent model
+      let modelName = this.get('modelName');
+      let projectionName = this.get('projectionName');
+      let parentModelName = jsonModel.parentModelName;
+      let objs;
+      if (!Ember.isNone(parentModelName)) {
+        let metadataUrl = this.get('metadataUrl');
+        let _this = this;
+        Ember.$.ajax({
+          url: metadataUrl + parentModelName + '.json',
+          async: true,
+          success: function (dataModel) {
+            if (!Ember.isNone(dataModel)) {
+              let parentMixin = _this.createMixin(dataModel);
+              let parentModel = _this.createModel(parentMixin, dataModel);
+
+              let modelMixin = _this.createMixin(jsonModel);
+              let model = parentModel.extend(modelMixin, {});
+              model.reopenClass({
+                _parentModelName: parentModelName,
+                namespace: _this.get('namespace')
+              });
+
+              model.defineProjection(projectionName, modelName, _this.createProjection(jsonModel));
+              let modelSerializer = _this.createSerializer();
+              let modelAdapter = _this.createAdapterForModel();
+              _this.registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter);
+              resolve();
+            } else {
+              reject('Can\'t get data for parent model: ' + parentModelName);
+            }
+          },
+          error: function (e) {
+            reject('Can\'t register for parent model: ' + parentModelName + ' .Error: ' + e);
+          }
+        });
+
+      } else {
+        let modelMixin = this.createMixin(jsonModel);
+        let model = this.createModel(modelMixin, jsonModel);
+        model.defineProjection(projectionName, modelName, this.createProjection(jsonModel));
+        let modelSerializer = this.createSerializer();
+        let modelAdapter = this.createAdapterForModel();
+        this.registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter);
+        resolve();
+      }
+    });
+  },
+
+  /**
+    Creates leaflet layer.
+
+    @method _createVectorLayer
+    @return {Object} Layer
+  */
   _createVectorLayer() {
     let obj = this.get('_adapterStoreModelProjectionGeom');
     let crs = this.get('crs');
@@ -782,9 +898,12 @@ export default BaseVectorLayer.extend({
           async: true,
           success: function (dataModel) {
             if (!Ember.isNone(dataModel)) {
-              _this.registerModel(dataModel);
-              let layer = _this._createVectorLayer();
-              resolve(layer);
+              _this.createDynamicModel(dataModel).then(() => {
+                let layer = _this._createVectorLayer();
+                resolve(layer);
+              }).catch((e) => {
+                console.log(e);
+              });
             } else {
               reject('can\'t get data for model: ' + modelName);
             }
