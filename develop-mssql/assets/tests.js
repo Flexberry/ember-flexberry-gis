@@ -5805,6 +5805,104 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-expansion-add-object-to-
     assert.ok(true, 'unit/mixins/flexberry-map-model-api-expansion-add-object-to-layer-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/mixins/flexberry-map-model-api-expansion-trim-line-to-polygon-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api-expansion'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApiExpansion) {
+
+  (0, _qunit.module)('Unit | Mixin | test method trimLineToPolygon');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApiExpansion['default']);
+
+  var aGeoJson = {
+    'type': 'Feature',
+    'properties': {},
+    'geometry': {
+      'type': 'Polygon',
+      'coordinates': [[[56.2, 58.1], [56.3, 58.1], [56.3, 58.2], [56.2, 58.2], [56.2, 58.1]]]
+    },
+    'crs': {
+      'type': 'name',
+      'properties': {
+        'name': 'EPSG:4326'
+      }
+    }
+  };
+  var bGeoJson = {
+    'type': 'Feature',
+    'properties': {},
+    'geometry': {
+      'type': 'LineString',
+      'coordinates': [[56.1, 58.1], [56.4, 58.1]]
+    },
+    'crs': {
+      'type': 'name',
+      'properties': {
+        'name': 'EPSG:4326'
+      }
+    }
+  };
+
+  (0, _qunit.test)('test method trimLineToPolygon with EPSG:4326', function (assert) {
+    assert.expect(2);
+    var done = assert.async(1);
+    var subject = mapApiMixinObject.create({});
+
+    var promise = subject.trimLineToPolygon(aGeoJson, bGeoJson);
+
+    assert.ok(promise instanceof _ember['default'].RSVP.Promise);
+    promise.then(function (result) {
+      assert.deepEqual(result.geometry.coordinates, [[56.2, 58.1], [56.3, 58.1]]);
+      done();
+    });
+  });
+
+  (0, _qunit.test)('test method trimLineToPolygon. Error objects does\' not intersect', function (assert) {
+    assert.expect(2);
+    var done = assert.async(1);
+    bGeoJson.geometry.coordinates = [[56.1, 56], [56.4, 56]];
+    var subject = mapApiMixinObject.create({});
+
+    var promise = subject.trimLineToPolygon(aGeoJson, bGeoJson);
+
+    assert.ok(promise instanceof _ember['default'].RSVP.Promise);
+    promise.then()['catch'](function (result) {
+      assert.equal(result, 'objects does\' not intersect');
+      bGeoJson.geometry.coordinates = [[56.1, 58.1], [56.4, 58.1]];
+      done();
+    });
+  });
+
+  (0, _qunit.test)('test method trimLineToPolygon. Error different crs', function (assert) {
+    assert.expect(2);
+    var done = assert.async(1);
+    aGeoJson.crs.properties.name = 'EPSG:3395';
+    var subject = mapApiMixinObject.create({});
+
+    var promise = subject.trimLineToPolygon(aGeoJson, bGeoJson);
+
+    assert.ok(promise instanceof _ember['default'].RSVP.Promise);
+    promise.then()['catch'](function (result) {
+      assert.equal(result, 'CRS mismatch. Objects must have the same crs');
+      aGeoJson.crs.properties.name = 'EPSG:4326';
+      done();
+    });
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-expansion-trim-line-to-polygon-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-expansion-trim-line-to-polygon-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-expansion-trim-line-to-polygon-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-expansion-trim-line-to-polygon-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-expansion-trim-line-to-polygon-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-expansion-trim-line-to-polygon-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/mixins/flexberry-map-model-api-get-distance-between-objects-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi) {
 
   (0, _qunit.module)('Unit | Mixin | test method _getDistanceBetweenObjects');
