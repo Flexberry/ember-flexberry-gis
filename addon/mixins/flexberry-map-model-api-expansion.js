@@ -323,34 +323,29 @@ export default Ember.Mixin.create(rhumbOperations, {
     ```
 
     @method trimLineToPolygon
-    @param {object} polygonGeom Polygon object in GeoJSON format.
+    @param {object} polygonGeoJson Polygon object in GeoJSON format.
     @param {object} lineGeom Polyline object in GeoJSON format.
     @returns {Promise} New polyline from intersecr two objects in GeoJSON format.
   */
-  trimLineToPolygon(polygonGeom, lineGeom) {
+  trimLineToPolygon(polygonGeoJson, lineGeoJson) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let geometries = [];
       let resultObject = null;
-      let objects = [polygonGeom, lineGeom];
 
-      objects.forEach((element, i) => {
-        let g = geometryToJsts(element.geometry);
-        g.setSRID(element.crs.properties.name.split(':')[1]);
-
-        if (g.isValid()) {
-          geometries.push(g);
-          let j = geometries.length - 1;
-          if (j !== 0 && geometries[j].getSRID() !== geometries[j - 1].getSRID()) {
-            reject('CRS mismatch. Objects must have the same crs');
-            return;
-          }
-        } else {
-          reject('invalid geometry');
+      let polygonGeom = geometryToJsts(polygonGeoJson.geometry); 
+      polygonGeom.setSRID(polygonGeoJson.crs.properties.name.split(':')[1]);
+      let lineGeom = geometryToJsts(lineGeoJson.geometry); 
+      lineGeom.setSRID(lineGeoJson.crs.properties.name.split(':')[1]);
+      if (polygonGeom.isValid() && lineGeom.isValid()) {
+        if (polygonGeom.getSRID() !== lineGeom.getSRID()) {
+          reject('CRS mismatch. Objects must have the same crs');
           return;
         }
-      });
+      } else {
+        reject('invalid geometry');
+        return;
+      }
 
-      resultObject = geometries[1].intersection(geometries[0]);
+      resultObject = lineGeom.intersection(polygonGeom);
 
       let geojsonWriter = new jsts.io.GeoJSONWriter();
       let intersectionRes = geojsonWriter.write(resultObject);
@@ -359,7 +354,7 @@ export default Ember.Mixin.create(rhumbOperations, {
         return;
       }
 
-      let crsResult = 'EPSG:' + geometries[0].getSRID();
+      let crsResult = 'EPSG:' + lineGeom.getSRID();
 
       const intersectObj = {
         type: 'Feature',
