@@ -777,7 +777,6 @@ export default BaseVectorLayer.extend({
       let modelName = this.get('modelName');
       let projectionName = this.get('projectionName');
       let parentModelName = jsonModel.parentModelName;
-      let objs;
       if (!Ember.isNone(parentModelName)) {
         let metadataUrl = this.get('metadataUrl');
         let _this = this;
