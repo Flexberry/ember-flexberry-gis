@@ -331,9 +331,9 @@ export default Ember.Mixin.create(rhumbOperations, {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let resultObject = null;
 
-      let polygonGeom = geometryToJsts(polygonGeoJson.geometry); 
+      let polygonGeom = geometryToJsts(polygonGeoJson.geometry);
       polygonGeom.setSRID(polygonGeoJson.crs.properties.name.split(':')[1]);
-      let lineGeom = geometryToJsts(lineGeoJson.geometry); 
+      let lineGeom = geometryToJsts(lineGeoJson.geometry);
       lineGeom.setSRID(lineGeoJson.crs.properties.name.split(':')[1]);
       if (polygonGeom.isValid() && lineGeom.isValid()) {
         if (polygonGeom.getSRID() !== lineGeom.getSRID()) {
