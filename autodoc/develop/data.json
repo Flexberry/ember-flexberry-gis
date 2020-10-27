@@ -43221,6 +43221,31 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/mixins/flexberry-map-model-api-expansion.js",
+            "line": 279,
+            "description": "Create polyline object to interserct polyline to polygon. Transforms geometries into JSTS objects. Checks whether types and crs are same.\nIntersects of two objects is the desired line. Using GeoJSONWriter converts jsts object to geoJSON.\n\nExample of method call:\n```javascript\nlet aGeoJson = {\n  \"type\": \"Feature\",\n  \"properties\": {},\n  \"geometry\": {\n    \"type\": \"Polygon\",\n    \"coordinates\": [\n      [[56.184253, 58.071975],\n        [56.210689,58.071975],\n        [56.2106895, 58.079873],\n        [56.184253, 58.079873],\n        [56.184253,58.071975]]\n    ]\n  },\n  \"crs\": {\n    \"type\": \"name\",\n    \"properties\": {\n      \"name\": \"EPSG:4326\"\n    }\n  }\n};\nlet bGeoJson = {\n  \"type\": \"Feature\",\n  \"properties\": {},\n  \"geometry\": {\n    \"type\": \"Polygon\",\n    \"coordinates\": [\n      [56.17, 58.071975],\n      [56.22, 58.071975]\n    ]\n  },\n  \"crs\": {\n    \"type\": \"name\",\n    \"properties\": {\n      \"name\": \"EPSG:4326\"\n    }\n  }\n};\nlet result = mapApi.mapModel.trimLineToPolygon(aGeoJson, bGeoJson);\n```",
+            "itemtype": "method",
+            "name": "trimLineToPolygon",
+            "params": [
+                {
+                    "name": "polygonGeoJson",
+                    "description": "Polygon object in GeoJSON format.",
+                    "type": "Object"
+                },
+                {
+                    "name": "lineGeom",
+                    "description": "Polyline object in GeoJSON format.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "New polyline from intersecr two objects in GeoJSON format.",
+                "type": "Promise"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/mixins/flexberry-map-model-api-reloadlayer.js",
             "line": 8,
             "description": "Reload layer.",
@@ -48296,6 +48321,10 @@
         {
             "message": "replacing incorrect tag: returns with return",
             "line": " addon/mixins/flexberry-map-model-api-expansion.js:248"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:279"
         },
         {
             "message": "replacing incorrect tag: returns with return",

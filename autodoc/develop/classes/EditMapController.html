@@ -781,6 +781,10 @@
 
                             </li>
                             <li class="index-item method inherited">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_trimLineToPolygon" data-tablink="trimLineToPolygon">trimLineToPolygon</a>
+
+                            </li>
+                            <li class="index-item method inherited">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_uploadFile" data-tablink="uploadFile">uploadFile</a>
 
                             </li>
@@ -7262,6 +7266,124 @@
                                 <div class="returns-description">
                                             <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
                                         Layer object
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <div id="method_trimLineToPolygon" class="method item inherited">
+                        <h3 class="name"><code>trimLineToPolygon</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>polygonGeoJson</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>lineGeom</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/FlexberryMaplayerActionsHandlerMixin.html#method_trimLineToPolygon">FlexberryMaplayerActionsHandlerMixin</a>:
+                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l279"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:279</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            Create polyline object to interserct polyline to polygon. Transforms geometries into JSTS objects. Checks whether types and crs are same.
+                    Intersects of two objects is the desired line. Using GeoJSONWriter converts jsts object to geoJSON.
+                    
+                    Example of method call:
+                    <code>&#x60;</code>javascript
+                    let aGeoJson = {
+                      "type": "Feature",
+                      "properties": {},
+                      "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [
+                          [[56.184253, 58.071975],
+                            [56.210689,58.071975],
+                            [56.2106895, 58.079873],
+                            [56.184253, 58.079873],
+                            [56.184253,58.071975]]
+                        ]
+                      },
+                      "crs": {
+                        "type": "name",
+                        "properties": {
+                          "name": "EPSG:4326"
+                        }
+                      }
+                    };
+                    let bGeoJson = {
+                      "type": "Feature",
+                      "properties": {},
+                      "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [
+                          [56.17, 58.071975],
+                          [56.22, 58.071975]
+                        ]
+                      },
+                      "crs": {
+                        "type": "name",
+                        "properties": {
+                          "name": "EPSG:4326"
+                        }
+                      }
+                    };
+                    let result = mapApi.mapModel.trimLineToPolygon(aGeoJson, bGeoJson);
+                    <code>&#x60;</code>
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">polygonGeoJson</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Polygon object in GeoJSON format.
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">lineGeom</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Polyline object in GeoJSON format.
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        New polyline from intersecr two objects in GeoJSON format.
                                 </div>
                             </div>
                     
