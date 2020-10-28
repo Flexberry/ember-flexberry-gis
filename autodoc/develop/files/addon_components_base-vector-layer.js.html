@@ -1144,7 +1144,16 @@ export default BaseLayer.extend({
     @return {String} string with replaced property
   */
   _applyProperty(str, layer) {
-    let propName = Ember.$(str).find(&#x27;propertyname&#x27;);
+    let hasQuot = false;
+    let propName;
+    try {
+      propName = Ember.$(str).find(&#x27;propertyname&#x27;);
+    } catch (e) {
+      hasQuot = true;
+      str = str.replaceAll(&#x27;&quot;&#x27;, &#x27;\\&quot;&#x27;);
+      propName = Ember.$(str).find(&#x27;propertyname&#x27;);
+    }
+
     if (propName.length === 0) { // if main node
       propName = Ember.$(str + &#x27; propertyname&#x27;);
     }
@@ -1162,7 +1171,11 @@ export default BaseLayer.extend({
       }
     }
 
-    return str;
+    if (hasQuot) {
+      return str.replaceAll(&#x27;\\&quot;&#x27;, &#x27;&quot;&#x27;);
+    } else {
+      return str;
+    }
   },
 
   /**
@@ -1173,18 +1186,27 @@ export default BaseLayer.extend({
     @return {String} string with applied and replaced function
   */
   _applyFunction(str) {
-    let func = Ember.$(str).find(&#x27;function&#x27;);
+    let func;
+    let hasQuot = false;
+    try {
+      func = Ember.$(str).find(&#x27;function&#x27;);
+    } catch (e) {
+      hasQuot = true;
+      str = str.replaceAll(&#x27;&quot;&#x27;, &#x27;\\&quot;&#x27;);
+      func = Ember.$(str).find(&#x27;function&#x27;);
+    }
+
     if (func.length === 0) { // if main node
       func = Ember.$(str + &#x27; function&#x27;);
     }
 
     if (func.length &gt; 0) {
       for (var item of func) {
-        let nameFunc = Ember.$(item).attr(&#x27;name&#x27;);
+        let nameFunc = Ember.$(item).attr(&#x27;name&#x27;).replaceAll(&#x27;\\&quot;&#x27;, &#x27;&#x27;);
         if (!Ember.isNone(nameFunc)) {
           switch (nameFunc) {
             case &#x27;toFixed&#x27;:
-              let attr = Ember.$(item).attr(&#x27;attr&#x27;);
+              let attr = Ember.$(item).attr(&#x27;attr&#x27;).replaceAll(&#x27;\\&quot;&#x27;, &#x27;&#x27;);
               let property = item.innerHTML;
               let numProp = Number.parseFloat(property);
               let numAttr = Number.parseFloat(attr);
@@ -1199,7 +1221,11 @@ export default BaseLayer.extend({
       }
     }
 
-    return str;
+    if (hasQuot) {
+      return str.replaceAll(&#x27;\\&quot;&#x27;, &#x27;&quot;&#x27;);
+    } else {
+      return str;
+    }
   },
 
   /**
