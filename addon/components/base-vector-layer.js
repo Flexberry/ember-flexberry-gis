@@ -740,7 +740,7 @@ export default BaseLayer.extend({
       propName = Ember.$(str).find('propertyname');
     } catch (e) {
       hasQuot = true;
-      str = str.replaceAll('"','\\"');
+      str = str.replaceAll('"', '\\"');
       propName = Ember.$(str).find('propertyname');
     }
 
@@ -762,9 +762,9 @@ export default BaseLayer.extend({
     }
 
     if (hasQuot) {
-      return str.replaceAll('\\"','"');
+      return str.replaceAll('\\"', '"');
     } else {
-      return str
+      return str;
     }
   },
 
@@ -782,7 +782,7 @@ export default BaseLayer.extend({
       func = Ember.$(str).find('function');
     } catch (e) {
       hasQuot = true;
-      str = str.replaceAll('"','\\"');
+      str = str.replaceAll('"', '\\"');
       func = Ember.$(str).find('function');
     }
 
@@ -792,11 +792,11 @@ export default BaseLayer.extend({
 
     if (func.length > 0) {
       for (var item of func) {
-        let nameFunc = Ember.$(item).attr('name').replaceAll('\\"','');
+        let nameFunc = Ember.$(item).attr('name').replaceAll('\\"', '');
         if (!Ember.isNone(nameFunc)) {
           switch (nameFunc) {
             case 'toFixed':
-              let attr = Ember.$(item).attr('attr').replaceAll('\\"','');
+              let attr = Ember.$(item).attr('attr').replaceAll('\\"', '');
               let property = item.innerHTML;
               let numProp = Number.parseFloat(property);
               let numAttr = Number.parseFloat(attr);
@@ -812,9 +812,9 @@ export default BaseLayer.extend({
     }
 
     if (hasQuot) {
-      return str.replaceAll('\\"','"');
+      return str.replaceAll('\\"', '"');
     } else {
-      return str
+      return str;
     }
   },
 
