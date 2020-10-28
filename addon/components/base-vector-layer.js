@@ -734,7 +734,16 @@ export default BaseLayer.extend({
     @return {String} string with replaced property
   */
   _applyProperty(str, layer) {
-    let propName = Ember.$(str).find('propertyname');
+    let hasQuot = false;
+    let propName;
+    try {
+      propName = Ember.$(str).find('propertyname');
+    } catch (e) {
+      hasQuot = true;
+      str = str.replaceAll('"','\\"');
+      propName = Ember.$(str).find('propertyname');
+    }
+
     if (propName.length === 0) { // if main node
       propName = Ember.$(str + ' propertyname');
     }
@@ -752,7 +761,11 @@ export default BaseLayer.extend({
       }
     }
 
-    return str;
+    if (hasQuot) {
+      return str.replaceAll('\\"','"');
+    } else {
+      return str
+    }
   },
 
   /**
@@ -763,18 +776,27 @@ export default BaseLayer.extend({
     @return {String} string with applied and replaced function
   */
   _applyFunction(str) {
-    let func = Ember.$(str).find('function');
+    let func;
+    let hasQuot = false;
+    try {
+      func = Ember.$(str).find('function');
+    } catch (e) {
+      hasQuot = true;
+      str = str.replaceAll('"','\\"');
+      func = Ember.$(str).find('function');
+    }
+
     if (func.length === 0) { // if main node
       func = Ember.$(str + ' function');
     }
 
     if (func.length > 0) {
       for (var item of func) {
-        let nameFunc = Ember.$(item).attr('name');
+        let nameFunc = Ember.$(item).attr('name').replaceAll('\\"','');
         if (!Ember.isNone(nameFunc)) {
           switch (nameFunc) {
             case 'toFixed':
-              let attr = Ember.$(item).attr('attr');
+              let attr = Ember.$(item).attr('attr').replaceAll('\\"','');
               let property = item.innerHTML;
               let numProp = Number.parseFloat(property);
               let numAttr = Number.parseFloat(attr);
@@ -789,7 +811,11 @@ export default BaseLayer.extend({
       }
     }
 
-    return str;
+    if (hasQuot) {
+      return str.replaceAll('\\"','"');
+    } else {
+      return str
+    }
   },
 
   /**
