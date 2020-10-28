@@ -734,13 +734,13 @@ export default BaseLayer.extend({
     @return {String} string with replaced property
   */
   _applyProperty(str, layer) {
-    let hasQuot = false;
+    let hasReplace = false;
     let propName;
     try {
       propName = Ember.$(str).find('propertyname');
     } catch (e) {
-      hasQuot = true;
-      str = str.replaceAll('"', '\\"');
+      hasReplace = true;
+      str = str.replaceAll('"', '\\"').replaceAll('(', '\\(').replaceAll(')', '\\)');
       propName = Ember.$(str).find('propertyname');
     }
 
@@ -755,14 +755,19 @@ export default BaseLayer.extend({
           property = prop.innerText;
         }
 
-        if (property && layer.feature.properties.hasOwnProperty(property) && !Ember.isNone(layer.feature.properties[property])) {
-          str = str.replace(prop.outerHTML, layer.feature.properties[property]);
+        if (property && layer.feature.properties.hasOwnProperty(property)) {
+          let label = layer.feature.properties[property];
+          if (Ember.isNone(label)) {
+            label = '';
+          }
+
+          str = str.replace(prop.outerHTML, label);
         }
       }
     }
 
-    if (hasQuot) {
-      return str.replaceAll('\\"', '"');
+    if (hasReplace) {
+      return str.replaceAll('\\"', '"').replaceAll('\\(', '(').replaceAll('\\)', ')');
     } else {
       return str;
     }
@@ -777,12 +782,12 @@ export default BaseLayer.extend({
   */
   _applyFunction(str) {
     let func;
-    let hasQuot = false;
+    let hasReplace = false;
     try {
       func = Ember.$(str).find('function');
     } catch (e) {
-      hasQuot = true;
-      str = str.replaceAll('"', '\\"');
+      hasReplace = true;
+      str = str.replaceAll('"', '\\"').replaceAll('(', '\\(').replaceAll(')', '\\)');
       func = Ember.$(str).find('function');
     }
 
@@ -811,8 +816,8 @@ export default BaseLayer.extend({
       }
     }
 
-    if (hasQuot) {
-      return str.replaceAll('\\"', '"');
+    if (hasReplace) {
+      return str.replaceAll('\\"', '"').replaceAll('\\(', '(').replaceAll('\\)', ')');
     } else {
       return str;
     }
