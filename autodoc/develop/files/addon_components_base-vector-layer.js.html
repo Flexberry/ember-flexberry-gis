@@ -1144,13 +1144,13 @@ export default BaseLayer.extend({
     @return {String} string with replaced property
   */
   _applyProperty(str, layer) {
-    let hasQuot = false;
+    let hasReplace = false;
     let propName;
     try {
       propName = Ember.$(str).find(&#x27;propertyname&#x27;);
     } catch (e) {
-      hasQuot = true;
-      str = str.replaceAll(&#x27;&quot;&#x27;, &#x27;\\&quot;&#x27;);
+      hasReplace = true;
+      str = str.replaceAll(&#x27;&quot;&#x27;, &#x27;\\&quot;&#x27;).replaceAll(&#x27;(&#x27;, &#x27;\\(&#x27;).replaceAll(&#x27;)&#x27;, &#x27;\\)&#x27;);
       propName = Ember.$(str).find(&#x27;propertyname&#x27;);
     }
 
@@ -1165,14 +1165,19 @@ export default BaseLayer.extend({
           property = prop.innerText;
         }
 
-        if (property &amp;&amp; layer.feature.properties.hasOwnProperty(property) &amp;&amp; !Ember.isNone(layer.feature.properties[property])) {
-          str = str.replace(prop.outerHTML, layer.feature.properties[property]);
+        if (property &amp;&amp; layer.feature.properties.hasOwnProperty(property)) {
+          let label = layer.feature.properties[property];
+          if (Ember.isNone(label)) {
+            label = &#x27;&#x27;;
+          }
+
+          str = str.replace(prop.outerHTML, label);
         }
       }
     }
 
-    if (hasQuot) {
-      return str.replaceAll(&#x27;\\&quot;&#x27;, &#x27;&quot;&#x27;);
+    if (hasReplace) {
+      return str.replaceAll(&#x27;\\&quot;&#x27;, &#x27;&quot;&#x27;).replaceAll(&#x27;\\(&#x27;, &#x27;(&#x27;).replaceAll(&#x27;\\)&#x27;, &#x27;)&#x27;);
     } else {
       return str;
     }
@@ -1187,12 +1192,12 @@ export default BaseLayer.extend({
   */
   _applyFunction(str) {
     let func;
-    let hasQuot = false;
+    let hasReplace = false;
     try {
       func = Ember.$(str).find(&#x27;function&#x27;);
     } catch (e) {
-      hasQuot = true;
-      str = str.replaceAll(&#x27;&quot;&#x27;, &#x27;\\&quot;&#x27;);
+      hasReplace = true;
+      str = str.replaceAll(&#x27;&quot;&#x27;, &#x27;\\&quot;&#x27;).replaceAll(&#x27;(&#x27;, &#x27;\\(&#x27;).replaceAll(&#x27;)&#x27;, &#x27;\\)&#x27;);
       func = Ember.$(str).find(&#x27;function&#x27;);
     }
 
@@ -1221,8 +1226,8 @@ export default BaseLayer.extend({
       }
     }
 
-    if (hasQuot) {
-      return str.replaceAll(&#x27;\\&quot;&#x27;, &#x27;&quot;&#x27;);
+    if (hasReplace) {
+      return str.replaceAll(&#x27;\\&quot;&#x27;, &#x27;&quot;&#x27;).replaceAll(&#x27;\\(&#x27;, &#x27;(&#x27;).replaceAll(&#x27;\\)&#x27;, &#x27;)&#x27;);
     } else {
       return str;
     }
