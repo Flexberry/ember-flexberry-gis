@@ -33,7 +33,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
 
     let testModelMixin = Ember.Mixin.create({
       name: DS.attr('string', { defaultValue: '' }),
-      shape: DS.attr('json'),
+      shape: DS.attr('json')
     });
 
     let testModel = Projection.Model.extend(testModelMixin);
@@ -125,7 +125,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     OData-Version: 4.0
 
     {
-      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#IISRGISPKVydelUtverzhdenoPolygon32640s(__PrimaryKey,ID,Name,Shape)","value":[
+      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel(__PrimaryKey,ID,Name,Shape)","value":[
         {
           "__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a79b", "Name":null,"Shape":{
             "type":"MultiPolygon","coordinates":[
@@ -199,7 +199,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     OData-Version: 4.0
 
     {
-      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#IISRGISPKDelyankaPolygon32640s/$entity","Shape":{
+      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel/$entity","Shape":{
         "type":"MultiPolygon","coordinates":[
           [
             [
@@ -234,7 +234,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     OData-Version: 4.0
 
     {
-      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#IISRGISPKDelyankaPolygon32640s/$entity","Shape":{
+      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel/$entity","Shape":{
         "type":"MultiPolygon","coordinates":[
           [
             [
@@ -266,7 +266,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     OData-Version: 4.0
 
     {
-      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#IISRGISPKDelyankaPolygon32640s/$entity","Shape":{
+      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel/$entity","Shape":{
         "type":"MultiPolygon","coordinates":[
           [
             [
@@ -299,7 +299,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     OData-Version: 4.0
 
     {
-      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#IISRGISPKDelyankaPolygon32640s/$entity","Shape":{
+      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel/$entity","Shape":{
         "type":"MultiPolygon","coordinates":[
           [
             [
@@ -342,10 +342,10 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
 });
 
 var jsonModel = {
-  name: 'IISRGISPKDelyankaPolygon32640',
-  modelName: 'i-i-s-r-g-i-s-p-k-delyanka-polygon32640',
-  className: 'DelyankaPolygon32640',
-  nameSpace: 'IIS.RGISPK',
+  name: 'TestModel',
+  modelName: 'test-model',
+  className: 'TestModel',
+  nameSpace: 'nm',
   parentModelName: null,
   parentClassName: null,
   attrs: [
@@ -373,7 +373,7 @@ var jsonModel = {
   projections: [
     {
       name: 'AuditView',
-      modelName: 'i-i-s-r-g-i-s-p-k-delyanka-polygon32640',
+      modelName: 'test-model',
       attrs: [
         {
           name: 'shape',
@@ -392,8 +392,8 @@ var jsonModel = {
       hasMany: []
     },
     {
-      name: 'DelyankaPolygonWGS84_L',
-      modelName: 'i-i-s-r-g-i-s-p-k-delyanka-polygon32640',
+      name: 'TestModel_L',
+      modelName: 'test-model',
       attrs: [
         {
           name: 'shape',
@@ -610,11 +610,11 @@ test('test method createAdapterForModel() without odataUrl', function(assert) {
 });
 
 test('test method createDynamicModel() with json', function(assert) {
-  assert.expect(23);
+  assert.expect(24);
   var done = assert.async(1);
   Ember.$.extend(param, {
     'odataUrl': 'http://localhost:6500/odata/',
-    'namespace': 'IIS'
+    'namespace': 'NS'
   });
   jsonModel.parentModelName = null;
   let component = this.subject(param);
@@ -625,6 +625,7 @@ test('test method createDynamicModel() with json', function(assert) {
   let spyCreateProjection = sinon.spy(component, 'createProjection');
   let spyCreateMixin = sinon.spy(component, 'createMixin');
   let spyCreateSerializer = sinon.spy(component, 'createSerializer');
+  let spyCreateParent = sinon.spy(component, 'createParent');
 
   component.createDynamicModel(jsonModel).then(() => {
     assert.equal(spyCreateAdapterForModel.callCount, 1);
@@ -642,7 +643,7 @@ test('test method createDynamicModel() with json', function(assert) {
     assert.equal(spyRegister.callCount, 4);
     assert.equal(spyRegister.firstCall.args[0], 'model:test-model');
     assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
-    assert.equal(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.namespace, 'IIS');
+    assert.equal(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
     assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
     assert.equal(spyRegister.secondCall.args[0], 'mixin:test-model');
     assert.equal(Object.values(spyRegister.secondCall.args[1].mixins[0].properties).length, 2);
@@ -653,6 +654,8 @@ test('test method createDynamicModel() with json', function(assert) {
     assert.ok(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
     assert.equal(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
 
+    assert.equal(spyCreateParent.callCount, 0);
+
     done();
     spyRegister.restore();
     spyUnregister.restore();
@@ -661,15 +664,16 @@ test('test method createDynamicModel() with json', function(assert) {
     spyCreateProjection.restore();
     spyCreateMixin.restore();
     spyCreateSerializer.restore();
+    spyCreateParent.restore();
   });
 });
 
 test('test method createDynamicModel() with json with parent', function(assert) {
-  assert.expect(25);
+  assert.expect(26);
   var done = assert.async(1);
   Ember.$.extend(param, {
     'odataUrl': 'http://localhost:6500/odata/',
-    'namespace': 'IIS',
+    'namespace': 'NS',
     'metadataUrl': 'assert/felxberry/models/'
   });
 
@@ -681,13 +685,14 @@ test('test method createDynamicModel() with json with parent', function(assert) 
   let spyCreateProjection = sinon.spy(component, 'createProjection');
   let spyCreateMixin = sinon.spy(component, 'createMixin');
   let spyCreateSerializer = sinon.spy(component, 'createSerializer');
+  let spyCreateParent = sinon.spy(component, 'createParent');
 
   jsonModel.parentModelName = 'Polygon32640';
   let parentJsonModel = {
     name: 'Polygon32640',
     modelName: 'Polygon32640',
     className: 'Polygon32640',
-    nameSpace: 'IIS.RGISPK',
+    nameSpace: 'NS1',
     parentModelName: null,
     parentClassName: null,
     attrs: [
@@ -729,7 +734,7 @@ test('test method createDynamicModel() with json with parent', function(assert) 
     assert.equal(spyRegister.callCount, 4);
     assert.equal(spyRegister.firstCall.args[0], 'model:test-model');
     assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
-    assert.equal(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.namespace, 'IIS');
+    assert.equal(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
     assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
     assert.equal(spyRegister.secondCall.args[0], 'mixin:test-model');
     assert.equal(Object.values(spyRegister.secondCall.args[1].mixins[0].properties).length, 2);
@@ -740,6 +745,8 @@ test('test method createDynamicModel() with json with parent', function(assert) 
     assert.ok(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
     assert.equal(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
 
+    assert.equal(spyCreateParent.callCount, 1);
+
     done();
     spyRegister.restore();
     spyUnregister.restore();
@@ -749,6 +756,7 @@ test('test method createDynamicModel() with json with parent', function(assert) 
     spyCreateMixin.restore();
     spyCreateSerializer.restore();
     stubAjax.restore();
+    spyCreateParent.restore();
   });
 });
 
@@ -779,7 +787,7 @@ test('test method _createVectorLayer()', function(assert) {
 });
 
 test('test method createVectorLayer() without dynamicModel', function(assert) {
-  assert.expect(6);
+  assert.expect(7);
   var done = assert.async(1);
   param.layerModel.visibility = false;
   let component = this.subject(param);
@@ -787,6 +795,7 @@ test('test method createVectorLayer() without dynamicModel', function(assert) {
   let _createVectorLayerSpy = sinon.spy(component, '_createVectorLayer');
   let spyCreateDynamicModel = sinon.spy(component, 'createDynamicModel');
   let spyAjax = sinon.spy(Ember.$, 'ajax');
+  let spyCreateParent = sinon.spy(component, 'createParent');
 
   component.createVectorLayer().then((layer) => {
     assert.ok(layer);
@@ -795,16 +804,18 @@ test('test method createVectorLayer() without dynamicModel', function(assert) {
     assert.equal(_createVectorLayerSpy.callCount, 1);
     assert.equal(spyAjax.callCount, 0);
     assert.equal(spyCreateDynamicModel.callCount, 0);
+    assert.equal(spyCreateParent.callCount, 0);
     done();
     spyContinueLoad.restore();
     _createVectorLayerSpy.restore();
     spyAjax.restore();
     spyCreateDynamicModel.restore();
+    spyCreateParent.restore();
   });
 });
 
 test('test method createVectorLayer() with dynamicModel=true', function(assert) {
-  assert.expect(7);
+  assert.expect(8);
   var done = assert.async(1);
   param.layerModel.visibility = false;
   param.dynamicModel = true;
@@ -817,6 +828,7 @@ test('test method createVectorLayer() with dynamicModel=true', function(assert) 
   let spyCreateDynamicModel = sinon.spy(component, 'createDynamicModel');
   let stubAjax = sinon.stub(Ember.$, 'ajax');
   stubAjax.yieldsTo('success', jsonModel);
+  let spyCreateParent = sinon.spy(component, 'createParent');
 
   component.createVectorLayer().then((layer) => {
     assert.ok(layer);
@@ -826,11 +838,13 @@ test('test method createVectorLayer() with dynamicModel=true', function(assert) 
     assert.equal(stubAjax.callCount, 1);
     assert.equal(stubAjax.getCall(0).args[0].url, 'assert/felxberry/models/test-model.json');
     assert.equal(spyCreateDynamicModel.callCount, 1);
+    assert.equal(spyCreateParent.callCount, 0);
     done();
     spyContinueLoad.restore();
     _createVectorLayerSpy.restore();
     spyCreateDynamicModel.restore();
     stubAjax.restore();
+    spyCreateParent.restore();
   });
 });
 
@@ -928,5 +942,118 @@ test('test method save() with objects', function(assert) {
 
       assert.equal(spyBatchUpdate.callCount, 1);
     });
+  });
+});
+
+test('test method createParent() with 3 parent', function(assert) {
+  assert.expect(9);
+  var done = assert.async(1);
+  Ember.$.extend(param, {
+    'odataUrl': 'http://localhost:6500/odata/',
+    'namespace': 'ns',
+    'metadataUrl': 'assert/felxberry/models/'
+  });
+
+  let component = this.subject(param);
+
+  let parentModelName = 'parent1';
+  let parent1JsonModel = {
+    name: 'parent1',
+    parentModelName: 'parent2',
+    modelName: 'parent1',
+    className: 'parent1',
+    nameSpace: 'NS1',
+    attrs: [
+      {
+        name: 'name',
+        type: 'string',
+        flexberryType: 'Строка250',
+        notNull: false,
+        defaultValue: '',
+        stored: true,
+        ordered: false
+      }
+    ],
+    belongsTo: [],
+    hasMany: [],
+    projections: [],
+    stored: false,
+    offline: true,
+    external: false
+  };
+
+  let parent2JsonModel = {
+    name: 'parent2',
+    parentModelName: 'parent3',
+    modelName: 'parent2',
+    className: 'parent2',
+    nameSpace: 'NS2',
+    attrs: [
+      {
+        name: 'name2',
+        type: 'string',
+        flexberryType: 'Строка250',
+        notNull: false,
+        defaultValue: '',
+        stored: true,
+        ordered: false
+      }
+    ],
+    belongsTo: [],
+    hasMany: [],
+    projections: [],
+    stored: false,
+    offline: true,
+    external: false
+  };
+
+  let parent3JsonModel = {
+    name: 'parent3',
+    parentModelName: null,
+    modelName: 'parent3',
+    className: 'parent3',
+    nameSpace: 'NS3',
+    attrs: [
+      {
+        name: 'name3',
+        type: 'string',
+        flexberryType: 'Строка250',
+        notNull: false,
+        defaultValue: '',
+        stored: true,
+        ordered: false
+      }
+    ],
+    belongsTo: [],
+    hasMany: [],
+    projections: [],
+    stored: false,
+    offline: true,
+    external: false
+  };
+  let stubAjax = sinon.stub(Ember.$, 'ajax');
+  stubAjax.onCall(0).yieldsTo('success', parent1JsonModel)
+    .onCall(1).yieldsTo('success', parent2JsonModel)
+    .onCall(2).yieldsTo('success', parent3JsonModel);
+
+  let spyCreateModel = sinon.spy(component, 'createModel');
+  let spyCreateMixin = sinon.spy(component, 'createMixin');
+  let spyCreateParent = sinon.spy(component, 'createParent');
+
+  component.createParent(parentModelName).then(([model, dataModel]) => {
+    assert.equal(stubAjax.callCount, 3);
+    assert.equal(spyCreateModel.callCount, 1);
+    assert.equal(spyCreateMixin.callCount, 3);
+    assert.equal(spyCreateParent.callCount, 3);
+    assert.equal(spyCreateParent.getCall(0).args[0], 'parent1');
+    assert.equal(spyCreateParent.getCall(1).args[0], 'parent2');
+    assert.equal(spyCreateParent.getCall(2).args[0], 'parent3');
+    assert.ok(model);
+    assert.ok(dataModel);
+    done();
+    stubAjax.restore();
+    spyCreateModel.restore();
+    spyCreateMixin.restore();
+    spyCreateParent.restore();
   });
 });

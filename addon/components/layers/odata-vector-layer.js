@@ -761,6 +761,53 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Creates parent models in recursive.
+
+    @method createParent
+    @param {String} parentModelName
+    @return {Promise} Array consists of model and json data to create model mixin.
+  */
+  createParent(parentModelName) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      if (!Ember.isNone(parentModelName)) {
+        let metadataUrl = this.get('metadataUrl');
+        let _this = this;
+        Ember.$.ajax({
+          url: metadataUrl + parentModelName + '.json',
+          async: true,
+          success: function (dataModel) {
+            if (!Ember.isNone(dataModel)) {
+              let grandParentModelName = dataModel.parentModelName;
+              if (Ember.isNone(grandParentModelName)) {
+                let parentMixin = _this.createMixin(dataModel);
+                let parentModel = _this.createModel(parentMixin, dataModel);
+                resolve([parentModel, dataModel]);
+              } else {
+                _this.createParent(grandParentModelName).then(([pModel, dModel]) => {
+                  let modelMixin = _this.createMixin(dataModel);
+                  let model = pModel.extend(modelMixin, {});
+                  model.reopenClass({
+                    _parentModelName: grandParentModelName
+                  });
+
+                  resolve([model, dataModel]);
+                }).catch((e) => {
+                  reject('Can\'t create grandParent model: ' + grandParentModelName + ' .Error: ' + e);
+                });
+              }
+            }
+          },
+          error: function (e) {
+            reject('Can\'t create parent model: ' + parentModelName + ' .Error: ' + e);
+          }
+        });
+      } else {
+        reject('parentModelName is none');
+      }
+    });
+  },
+
+  /**
     Creates model mixin, model, projections, serializer and adapter from jsonModel.
 
     @method createDynamicModel
@@ -778,37 +825,22 @@ export default BaseVectorLayer.extend({
       let projectionName = this.get('projectionName');
       let parentModelName = jsonModel.parentModelName;
       if (!Ember.isNone(parentModelName)) {
-        let metadataUrl = this.get('metadataUrl');
-        let _this = this;
-        Ember.$.ajax({
-          url: metadataUrl + parentModelName + '.json',
-          async: true,
-          success: function (dataModel) {
-            if (!Ember.isNone(dataModel)) {
-              let parentMixin = _this.createMixin(dataModel);
-              let parentModel = _this.createModel(parentMixin, dataModel);
+        this.createParent(parentModelName).then(([parentModel]) => {
+          let modelMixin = this.createMixin(jsonModel);
+          let model = parentModel.extend(modelMixin, {});
+          model.reopenClass({
+            _parentModelName: parentModelName,
+            namespace: this.get('namespace')
+          });
 
-              let modelMixin = _this.createMixin(jsonModel);
-              let model = parentModel.extend(modelMixin, {});
-              model.reopenClass({
-                _parentModelName: parentModelName,
-                namespace: _this.get('namespace')
-              });
-
-              model.defineProjection(projectionName, modelName, _this.createProjection(jsonModel));
-              let modelSerializer = _this.createSerializer();
-              let modelAdapter = _this.createAdapterForModel();
-              _this.registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter);
-              resolve();
-            } else {
-              reject('Can\'t get data for parent model: ' + parentModelName);
-            }
-          },
-          error: function (e) {
-            reject('Can\'t register for parent model: ' + parentModelName + ' .Error: ' + e);
-          }
+          model.defineProjection(projectionName, modelName, this.createProjection(jsonModel));
+          let modelSerializer = this.createSerializer();
+          let modelAdapter = this.createAdapterForModel();
+          this.registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter);
+          resolve('Create dynamic model: ' + modelName);
+        }).catch((e) => {
+          reject('Can\'t create parent model: ' + parentModelName + '. Error: ' + e);
         });
-
       } else {
         let modelMixin = this.createMixin(jsonModel);
         let model = this.createModel(modelMixin, jsonModel);
@@ -816,7 +848,7 @@ export default BaseVectorLayer.extend({
         let modelSerializer = this.createSerializer();
         let modelAdapter = this.createAdapterForModel();
         this.registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter);
-        resolve();
+        resolve('Create dynamic model: ' + modelName);
       }
     });
   },
