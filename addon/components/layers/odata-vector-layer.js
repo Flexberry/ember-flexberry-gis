@@ -875,6 +875,8 @@ export default BaseVectorLayer.extend({
     layer.options.continueLoading = continueLoading;
     layer.options.showExisting = showExisting;
     layer.options.dynamicModel = dynamicModel;
+    layer.options.metadataUrl = this.get('metadataUrl');
+    layer.options.odataUrl = this.get('odataUrl');
 
     L.setOptions(layer, options);
     layer.minZoom = this.get('minZoom');
