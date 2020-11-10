@@ -14,6 +14,7 @@ let param;
 let odataServerFake;
 let bounds;
 let store;
+let responseBatchUpdate;
 
 moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata vector layer', {
   unit: true,
@@ -92,7 +93,11 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     };
 
     store = app.__container__.lookup('service:store');
+    let layerModel = store.createRecord('test-model');
+    layerModel.type = 'odata-vector';
+    layerModel.visibility = true;
     Ember.$.extend(param, {
+      'geometryType': 'MultiPolygonPropertyType',
       'modelName': 'test-model',
       'projectionName':'TestModelL',
       'geometryField': 'shape',
@@ -100,7 +105,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
       'odataClass': 'TestModel',
       'continueLoading': true,
       'store': store,
-      'layerModel': { 'type': 'odata-vector', 'visibility': true },
+      'layerModel': layerModel,
       'leafletMap': {
         getBounds,
         getPane,
@@ -120,7 +125,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     OData-Version: 4.0
 
     {
-      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#IISRGISPKVydelUtverzhdenoPolygon32640s(__PrimaryKey,ID,Name,Shape)","value":[
+      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel(__PrimaryKey,ID,Name,Shape)","value":[
         {
           "__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a79b", "Name":null,"Shape":{
             "type":"MultiPolygon","coordinates":[
@@ -146,7 +151,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
       },
 
       {
-          "__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a89b", "Name":null,"Shape":{
+          "__PrimaryKey":"5b969764-acc2-4b48-8d6a-33b395c811ce", "Name":null,"Shape":{
             "type":"MultiPolygon","coordinates":[
               [
                 [
@@ -172,10 +177,161 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     }
     --batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f--`;
 
+    responseBatchUpdate = `--batchresponse_36948c8f-1a0a-46f7-b66d-6692dc185197
+    Content-Type: multipart/mixed; boundary=changesetresponse_80ff11bf-cdeb-4dd0-9654-e316dc4bd7a0
+
+    --changesetresponse_80ff11bf-cdeb-4dd0-9654-e316dc4bd7a0
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+    Content-ID: 1
+
+    HTTP/1.1 204 No Content
+
+
+    --changesetresponse_80ff11bf-cdeb-4dd0-9654-e316dc4bd7a0
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+    Content-ID: 2
+
+    HTTP/1.1 200 OK
+    Preference-Applied: return=representation
+    Content-Type: application/json; charset=utf-8; odata.metadata=minimal
+    OData-Version: 4.0
+
+    {
+      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel/$entity","Shape":{
+        "type":"MultiPolygon","coordinates":[
+          [
+            [
+              [
+                436033.67676677159,6495840.3180785989
+              ],[
+                436363.34399267368,6496168.5915842094
+              ],[
+                436698.1414727,6495894.2219982184
+              ],[
+                436423.43417282181,6495569.9820099371
+              ],[
+                436033.67676677159,6495840.3180785989
+              ]
+            ]
+          ]
+        ],"crs":{
+          "type":"name","properties":{
+            "name":"EPSG:32640"
+          }
+        }
+      },"Name":"test","__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a79b"
+    }
+    --changesetresponse_80ff11bf-cdeb-4dd0-9654-e316dc4bd7a0
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+    Content-ID: 3
+
+    HTTP/1.1 201 Created
+    Preference-Applied: return=representation
+    Content-Type: application/json; charset=utf-8; odata.metadata=minimal
+    OData-Version: 4.0
+
+    {
+      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel/$entity","Shape":{
+        "type":"MultiPolygon","coordinates":[
+          [
+            [
+              [
+                437417.96742371243,6495668.4535367191
+              ],[
+                437838.01481024339,6495726.4829143463
+              ],[
+                437685.16544237174,6495215.9105252894
+              ],[
+                437417.96742371243,6495668.4535367191
+              ]
+            ]
+          ]
+        ],"crs":{
+          "type":"name","properties":{
+            "name":"EPSG:32640"
+          }
+        }
+      },"Name":null,"__PrimaryKey":"a5532858-dbdc-4d3c-9eaf-3d71d097ceb0"
+    }
+    --changesetresponse_80ff11bf-cdeb-4dd0-9654-e316dc4bd7a0--
+    --batchresponse_36948c8f-1a0a-46f7-b66d-6692dc185197
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json; charset=utf-8; odata.metadata=minimal
+    OData-Version: 4.0
+
+    {
+      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel/$entity","Shape":{
+        "type":"MultiPolygon","coordinates":[
+          [
+            [
+              [
+                436033.676766772,6495840.3180786
+              ],[
+                436363.343992674,6496168.59158421
+              ],[
+                436698.1414727,6495894.22199822
+              ],[
+                436423.434172822,6495569.98200994
+              ],[
+                436033.676766772,6495840.3180786
+              ]
+            ]
+          ]
+        ],"crs":{
+          "type":"name","properties":{
+            "name":"EPSG:32640"
+          }
+        }
+      },"Name":"test","__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a79b"
+    }
+    --batchresponse_36948c8f-1a0a-46f7-b66d-6692dc185197
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json; charset=utf-8; odata.metadata=minimal
+    OData-Version: 4.0
+
+    {
+      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel/$entity","Shape":{
+        "type":"MultiPolygon","coordinates":[
+          [
+            [
+              [
+                437417.967423712,6495668.45353672
+              ],[
+                437838.014810243,6495726.48291435
+              ],[
+                437685.165442372,6495215.91052529
+              ],[
+                437417.967423712,6495668.45353672
+              ]
+            ]
+          ]
+        ],"crs":{
+          "type":"name","properties":{
+            "name":"EPSG:32640"
+          }
+        }
+      },"Name":null,"__PrimaryKey":"a5532858-dbdc-4d3c-9eaf-3d71d097ceb0"
+    }
+    --batchresponse_36948c8f-1a0a-46f7-b66d-6692dc185197--`;
+
     odataServerFake.respondWith('POST', 'http://134.209.30.115:1818/odata/$batch',
       function (request) {
-        request.respond(200, { 'content-type': 'multipart/mixed; boundary=batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f' },
-        responseText);
+        if (request.requestBody.indexOf('POST') !== -1) {
+          request.respond(200, { 'content-type': 'multipart/mixed; boundary=batchresponse_36948c8f-1a0a-46f7-b66d-6692dc185197' },
+          responseBatchUpdate);
+        } else {
+          request.respond(200, { 'content-type': 'multipart/mixed; boundary=batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f' },
+          responseText);
+        }
       }
     );
   },
@@ -184,6 +340,90 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     odataServerFake.restore();
   }
 });
+
+var jsonModel = {
+  name: 'TestModel',
+  modelName: 'test-model',
+  className: 'TestModel',
+  nameSpace: 'nm',
+  parentModelName: null,
+  parentClassName: null,
+  attrs: [
+    {
+      name: 'shape',
+      type: 'json',
+      flexberryType: 'polygon32640',
+      notNull: false,
+      defaultValue: '',
+      stored: true,
+      ordered: false
+    },
+    {
+      name: 'nomer',
+      type: 'string',
+      flexberryType: 'Строка250',
+      notNull: false,
+      defaultValue: '',
+      stored: true,
+      ordered: false
+    }
+  ],
+  belongsTo: [],
+  hasMany: [],
+  projections: [
+    {
+      name: 'AuditView',
+      modelName: 'test-model',
+      attrs: [
+        {
+          name: 'shape',
+          caption: '',
+          hidden: false,
+          index: 0
+        },
+        {
+          name: 'nomer',
+          caption: '',
+          hidden: false,
+          index: 1
+        }
+      ],
+      belongsTo: [],
+      hasMany: []
+    },
+    {
+      name: 'TestModel_L',
+      modelName: 'test-model',
+      attrs: [
+        {
+          name: 'shape',
+          caption: '',
+          hidden: false,
+          index: 0
+        },
+        {
+          name: 'nomer',
+          caption: '',
+          hidden: false,
+          index: 1
+        }
+      ],
+      belongsTo: [],
+      hasMany: []
+    }
+  ],
+  stored: true,
+  offline: true,
+  external: false
+};
+
+let realCountArr = function (arr) {
+  return arr.filter((item) => {
+    if (item) {
+      return item;
+    }
+  }).length;
+};
 
 test('getFilterParameters return SimplePredicate on single value in array', function (assert) {
   assert.expect(2);
@@ -347,3 +587,599 @@ test('test methos identify()', function(assert) {
     spyGetFeature.restore();
   });
 });
+
+test('test method createAdapterForModel() with odataUrl', function(assert) {
+  assert.expect(1);
+  Ember.$.extend(param, {
+    'odataUrl': 'http://localhost:6500/odata/'
+  });
+  let component = this.subject(param);
+
+  let adapterModel = component.createAdapterForModel();
+
+  assert.ok(adapterModel);
+});
+
+test('test method createAdapterForModel() without odataUrl', function(assert) {
+  assert.expect(1);
+  let component = this.subject(param);
+
+  let adapterModel = component.createAdapterForModel();
+
+  assert.notOk(adapterModel);
+});
+
+test('test method createDynamicModel() with json', function(assert) {
+  assert.expect(24);
+  var done = assert.async(1);
+  Ember.$.extend(param, {
+    'odataUrl': 'http://localhost:6500/odata/',
+    'namespace': 'NS',
+    'metadataUrl': 'assert/felxberry/models/'
+  });
+  jsonModel.parentModelName = null;
+  let component = this.subject(param);
+  let spyUnregister = sinon.spy(Ember.getOwner(this), 'unregister');
+  let spyRegister = sinon.spy(Ember.getOwner(this), 'register');
+  let spyCreateAdapterForModel = sinon.spy(component, 'createAdapterForModel');
+  let spyCreateModel = sinon.spy(component, 'createModel');
+  let spyCreateProjection = sinon.spy(component, 'createProjection');
+  let spyCreateMixin = sinon.spy(component, 'createMixin');
+  let spyCreateSerializer = sinon.spy(component, 'createSerializer');
+  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+  let stubAjax = sinon.stub(Ember.$, 'ajax');
+  stubAjax.yieldsTo('success', jsonModel);
+
+  component.createDynamicModel().then(() => {
+    assert.equal(spyCreateAdapterForModel.callCount, 1);
+    assert.equal(spyCreateModel.callCount, 1);
+    assert.equal(spyCreateProjection.callCount, 1);
+    assert.equal(spyCreateMixin.callCount, 1);
+    assert.equal(spyCreateSerializer.callCount, 1);
+
+    assert.equal(spyUnregister.callCount, 4);
+    assert.equal(spyUnregister.firstCall.args[0], 'model:test-model');
+    assert.equal(spyUnregister.secondCall.args[0], 'mixin:test-model');
+    assert.equal(spyUnregister.thirdCall.args[0], 'serializer:test-model');
+    assert.equal(spyUnregister.lastCall.args[0], 'adapter:test-model');
+
+    assert.equal(spyRegister.callCount, 4);
+    assert.equal(spyRegister.firstCall.args[0], 'model:test-model');
+    assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
+    assert.equal(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
+    assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
+    assert.equal(spyRegister.secondCall.args[0], 'mixin:test-model');
+    assert.equal(Object.values(spyRegister.secondCall.args[1].mixins[0].properties).length, 2);
+    assert.ok(spyRegister.secondCall.args[1].mixins[0].properties.hasOwnProperty('nomer'));
+    assert.ok(spyRegister.secondCall.args[1].mixins[0].properties.hasOwnProperty('shape'));
+    assert.equal(spyRegister.thirdCall.args[0], 'serializer:test-model');
+    assert.equal(spyRegister.lastCall.args[0], 'adapter:test-model');
+    assert.ok(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
+    assert.equal(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
+
+    assert.equal(spyCreateModelHierarchy.callCount, 1);
+
+    done();
+    spyRegister.restore();
+    spyUnregister.restore();
+    spyCreateAdapterForModel.restore();
+    spyCreateModel.restore();
+    spyCreateProjection.restore();
+    spyCreateMixin.restore();
+    spyCreateSerializer.restore();
+    spyCreateModelHierarchy.restore();
+    stubAjax.restore();
+  });
+});
+
+test('test method createDynamicModel() with json with parent', function(assert) {
+  assert.expect(27);
+  var done = assert.async(1);
+  Ember.$.extend(param, {
+    'odataUrl': 'http://localhost:6500/odata/',
+    'namespace': 'NS',
+    'metadataUrl': 'assert/felxberry/models/'
+  });
+
+  let component = this.subject(param);
+  let spyUnregister = sinon.spy(Ember.getOwner(this), 'unregister');
+  let spyRegister = sinon.spy(Ember.getOwner(this), 'register');
+  let spyCreateAdapterForModel = sinon.spy(component, 'createAdapterForModel');
+  let spyCreateModel = sinon.spy(component, 'createModel');
+  let spyCreateProjection = sinon.spy(component, 'createProjection');
+  let spyCreateMixin = sinon.spy(component, 'createMixin');
+  let spyCreateSerializer = sinon.spy(component, 'createSerializer');
+  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+
+  jsonModel.parentModelName = 'Polygon32640';
+  let parentJsonModel = {
+    name: 'Polygon32640',
+    modelName: 'Polygon32640',
+    className: 'Polygon32640',
+    nameSpace: 'NS1',
+    parentModelName: null,
+    parentClassName: null,
+    attrs: [
+      {
+        name: 'name',
+        type: 'string',
+        flexberryType: 'Строка250',
+        notNull: false,
+        defaultValue: '',
+        stored: true,
+        ordered: false
+      }
+    ],
+    belongsTo: [],
+    hasMany: [],
+    projections: [],
+    stored: false,
+    offline: true,
+    external: false
+  };
+
+  let stubAjax = sinon.stub(Ember.$, 'ajax');
+  stubAjax.onCall(0).yieldsTo('success', jsonModel)
+    .onCall(1).yieldsTo('success', parentJsonModel);
+
+  component.createDynamicModel().then(() => {
+    assert.equal(spyCreateAdapterForModel.callCount, 1);
+    assert.equal(spyCreateModel.callCount, 1);
+    assert.equal(spyCreateProjection.callCount, 1);
+    assert.equal(spyCreateMixin.callCount, 2);
+    assert.equal(spyCreateSerializer.callCount, 1);
+    assert.equal(stubAjax.callCount, 2);
+    assert.equal(stubAjax.getCall(0).args[0].url, 'assert/felxberry/models/test-model.json');
+    assert.equal(stubAjax.getCall(1).args[0].url, 'assert/felxberry/models/Polygon32640.json');
+
+    assert.equal(spyUnregister.callCount, 4);
+    assert.equal(spyUnregister.firstCall.args[0], 'model:test-model');
+    assert.equal(spyUnregister.secondCall.args[0], 'mixin:test-model');
+    assert.equal(spyUnregister.thirdCall.args[0], 'serializer:test-model');
+    assert.equal(spyUnregister.lastCall.args[0], 'adapter:test-model');
+
+    assert.equal(spyRegister.callCount, 4);
+    assert.equal(spyRegister.firstCall.args[0], 'model:test-model');
+    assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
+    assert.equal(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
+    assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
+    assert.equal(spyRegister.secondCall.args[0], 'mixin:test-model');
+    assert.equal(Object.values(spyRegister.secondCall.args[1].mixins[0].properties).length, 2);
+    assert.ok(spyRegister.secondCall.args[1].mixins[0].properties.hasOwnProperty('nomer'));
+    assert.ok(spyRegister.secondCall.args[1].mixins[0].properties.hasOwnProperty('shape'));
+    assert.equal(spyRegister.thirdCall.args[0], 'serializer:test-model');
+    assert.equal(spyRegister.lastCall.args[0], 'adapter:test-model');
+    assert.ok(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
+    assert.equal(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
+
+    assert.equal(spyCreateModelHierarchy.callCount, 2);
+
+    done();
+    spyRegister.restore();
+    spyUnregister.restore();
+    spyCreateAdapterForModel.restore();
+    spyCreateModel.restore();
+    spyCreateProjection.restore();
+    spyCreateMixin.restore();
+    spyCreateSerializer.restore();
+    stubAjax.restore();
+    spyCreateModelHierarchy.restore();
+  });
+});
+
+test('test method createDynamicModel() without json', function(assert) {
+  assert.expect(1);
+  var done = assert.async(1);
+  let component = this.subject(param);
+
+  component.createDynamicModel().catch((error) => {
+    assert.equal(error, 'Can\'t create dynamic model: test-model. Error: ModelName and metadataUrl is empty');
+    done();
+  });
+});
+
+test('test method _createVectorLayer()', function(assert) {
+  assert.expect(3);
+  param.layerModel.visibility = false;
+  let component = this.subject(param);
+  let spyContinueLoad = sinon.spy(component, 'continueLoad');
+
+  let layerResult = component._createVectorLayer();
+
+  assert.ok(layerResult);
+  assert.equal(spyContinueLoad.callCount, 1);
+  assert.equal(spyContinueLoad.getCall(0).args[0], layerResult);
+
+  spyContinueLoad.restore();
+});
+
+test('test method createVectorLayer() without dynamicModel', function(assert) {
+  assert.expect(7);
+  var done = assert.async(1);
+  param.layerModel.visibility = false;
+  let component = this.subject(param);
+  let spyContinueLoad = sinon.spy(component, 'continueLoad');
+  let _createVectorLayerSpy = sinon.spy(component, '_createVectorLayer');
+  let spyCreateDynamicModel = sinon.spy(component, 'createDynamicModel');
+  let spyAjax = sinon.spy(Ember.$, 'ajax');
+  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+
+  component.createVectorLayer().then((layer) => {
+    assert.ok(layer);
+    assert.equal(spyContinueLoad.callCount, 1);
+    assert.equal(spyContinueLoad.getCall(0).args[0], layer);
+    assert.equal(_createVectorLayerSpy.callCount, 1);
+    assert.equal(spyAjax.callCount, 0);
+    assert.equal(spyCreateDynamicModel.callCount, 0);
+    assert.equal(spyCreateModelHierarchy.callCount, 0);
+    done();
+    spyContinueLoad.restore();
+    _createVectorLayerSpy.restore();
+    spyAjax.restore();
+    spyCreateDynamicModel.restore();
+    spyCreateModelHierarchy.restore();
+  });
+});
+
+test('test method createVectorLayer() with dynamicModel=true', function(assert) {
+  assert.expect(8);
+  var done = assert.async(1);
+  param.layerModel.visibility = false;
+  param.dynamicModel = true;
+  param.metadataUrl = 'assert/felxberry/models/';
+  param.odataUrl = 'http://localhost:6500/odata/';
+  jsonModel.parentModelName = null;
+  let component = this.subject(param);
+  let spyContinueLoad = sinon.spy(component, 'continueLoad');
+  let _createVectorLayerSpy = sinon.spy(component, '_createVectorLayer');
+  let spyCreateDynamicModel = sinon.spy(component, 'createDynamicModel');
+  let stubAjax = sinon.stub(Ember.$, 'ajax');
+  stubAjax.yieldsTo('success', jsonModel);
+  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+
+  component.createVectorLayer().then((layer) => {
+    assert.ok(layer);
+    assert.equal(spyContinueLoad.callCount, 1);
+    assert.equal(spyContinueLoad.getCall(0).args[0], layer);
+    assert.equal(_createVectorLayerSpy.callCount, 1);
+    assert.equal(stubAjax.callCount, 1);
+    assert.equal(stubAjax.getCall(0).args[0].url, 'assert/felxberry/models/test-model.json');
+    assert.equal(spyCreateDynamicModel.callCount, 1);
+    assert.equal(spyCreateModelHierarchy.callCount, 1);
+    done();
+    spyContinueLoad.restore();
+    _createVectorLayerSpy.restore();
+    spyCreateDynamicModel.restore();
+    stubAjax.restore();
+    spyCreateModelHierarchy.restore();
+  });
+});
+
+test('test method save() no modified objects', function(assert) {
+  assert.expect(5);
+  var done = assert.async(1);
+  let component = this.subject(param);
+
+  component.get('_leafletLayerPromise').then((leafletLayer) => {
+    component.set('_leafletObject', leafletLayer);
+    leafletLayer.promiseLoadLayer.then(() => {
+      let leafletObject = component.get('_leafletObject');
+      let obj = component.get('_adapterStoreModelProjectionGeom');
+      let spyBatchUpdate = sinon.spy(obj.adapter, 'batchUpdate');
+
+      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(leafletObject.getLayers().length, 2);
+
+      component.save();
+
+      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(leafletObject.getLayers().length, 2);
+      assert.equal(spyBatchUpdate.callCount, 0);
+      done();
+
+      spyBatchUpdate.restore();
+    });
+  });
+});
+
+test('test method save() with objects', function(assert) {
+  assert.expect(14);
+  var done = assert.async(1);
+  let component = this.subject(param);
+
+  component.get('_leafletLayerPromise').then((leafletLayer) => {
+    component.set('_leafletObject', leafletLayer);
+    leafletLayer.promiseLoadLayer.then(() => {
+      let leafletObject = component.get('_leafletObject');
+      let obj = component.get('_adapterStoreModelProjectionGeom');
+      let spyBatchUpdate = sinon.spy(obj.adapter, 'batchUpdate');
+
+      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(leafletObject.getLayers().length, 2);
+
+      let layerUpdate = leafletObject.getLayers()[0];
+      layerUpdate.feature.properties.name = 'test';
+      leafletObject.editLayer(layerUpdate);
+
+      assert.equal(realCountArr(leafletObject.models), 1);
+      assert.equal(leafletObject.getLayers().length, 2);
+
+      let layerRemove = leafletObject.getLayers()[1];
+      leafletObject.removeLayer(layerRemove);
+
+      assert.equal(realCountArr(leafletObject.models), 2);
+      assert.equal(leafletObject.getLayers().length, 1);
+
+      let feature = {
+        type: 'Polygon',
+        coordinates: [
+          [[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]
+        ]
+      };
+      let layerAdd = L.geoJSON(feature).getLayers()[0];
+      leafletObject.addLayer(layerAdd);
+      let pk = layerAdd.feature.properties.primarykey;
+      responseBatchUpdate.replace('a5532858-dbdc-4d3c-9eaf-3d71d097ceb0', pk);
+
+      assert.equal(realCountArr(leafletObject.models), 3);
+      assert.equal(leafletObject.getLayers().length, 2);
+
+      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      let stubGetmapApi = sinon.stub(component.get('mapApi'), 'getFromApi');
+      stubGetmapApi.returns(mapModel);
+
+      let _getModelLayerFeatureStub = sinon.stub(mapModel, '_getModelLayerFeature');
+      _getModelLayerFeatureStub.returns(Ember.RSVP.resolve([null, null, [layerAdd]]));
+
+      const saveSuccess = (data) => {
+        assert.equal(_getModelLayerFeatureStub.callCount, 1);
+        assert.deepEqual(_getModelLayerFeatureStub.getCall(0).args[1], [pk]);
+        assert.equal(data.layers.length, 1);
+        assert.equal(realCountArr(leafletObject.models), 0);
+        assert.equal(leafletObject.getLayers().length, 1);
+        done();
+
+        spyBatchUpdate.restore();
+        stubGetmapApi.restore();
+        _getModelLayerFeatureStub.restore();
+      };
+
+      leafletObject.once('save:success', saveSuccess);
+      component.save();
+
+      assert.equal(spyBatchUpdate.callCount, 1);
+    });
+  });
+});
+
+test('test method createModelHierarchy() with 3 parent', function(assert) {
+  assert.expect(11);
+  var done = assert.async(1);
+  Ember.$.extend(param, {
+    'odataUrl': 'http://localhost:6500/odata/',
+    'namespace': 'ns',
+    'metadataUrl': 'assert/felxberry/models/'
+  });
+
+  let component = this.subject(param);
+
+  jsonModel.parentModelName = 'parent1';
+  let parent1JsonModel = {
+    name: 'parent1',
+    parentModelName: 'parent2',
+    modelName: 'parent1',
+    className: 'parent1',
+    nameSpace: 'NS1',
+    attrs: [
+      {
+        name: 'name',
+        type: 'string',
+        flexberryType: 'Строка250',
+        notNull: false,
+        defaultValue: '',
+        stored: true,
+        ordered: false
+      }
+    ],
+    belongsTo: [],
+    hasMany: [],
+    projections: [],
+    stored: false,
+    offline: true,
+    external: false
+  };
+
+  let parent2JsonModel = {
+    name: 'parent2',
+    parentModelName: 'parent3',
+    modelName: 'parent2',
+    className: 'parent2',
+    nameSpace: 'NS2',
+    attrs: [
+      {
+        name: 'name2',
+        type: 'string',
+        flexberryType: 'Строка250',
+        notNull: false,
+        defaultValue: '',
+        stored: true,
+        ordered: false
+      }
+    ],
+    belongsTo: [],
+    hasMany: [],
+    projections: [],
+    stored: false,
+    offline: true,
+    external: false
+  };
+
+  let parent3JsonModel = {
+    name: 'parent3',
+    parentModelName: null,
+    modelName: 'parent3',
+    className: 'parent3',
+    nameSpace: 'NS3',
+    attrs: [
+      {
+        name: 'name3',
+        type: 'string',
+        flexberryType: 'Строка250',
+        notNull: false,
+        defaultValue: '',
+        stored: true,
+        ordered: false
+      }
+    ],
+    belongsTo: [],
+    hasMany: [],
+    projections: [],
+    stored: false,
+    offline: true,
+    external: false
+  };
+  let stubAjax = sinon.stub(Ember.$, 'ajax');
+  stubAjax.onCall(0).yieldsTo('success', jsonModel)
+    .onCall(1).yieldsTo('success', parent1JsonModel)
+    .onCall(2).yieldsTo('success', parent2JsonModel)
+    .onCall(3).yieldsTo('success', parent3JsonModel);
+
+  let spyCreateModel = sinon.spy(component, 'createModel');
+  let spyCreateMixin = sinon.spy(component, 'createMixin');
+  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+
+  component.сreateModelHierarchy(param.metadataUrl, param.modelName).then(({ model, dataModel, modelMixin }) => {
+    assert.equal(stubAjax.callCount, 4);
+    assert.equal(spyCreateModel.callCount, 1);
+    assert.equal(spyCreateMixin.callCount, 4);
+    assert.equal(spyCreateModelHierarchy.callCount, 4);
+    assert.equal(spyCreateModelHierarchy.getCall(0).args[1], 'test-model');
+    assert.equal(spyCreateModelHierarchy.getCall(1).args[1], 'parent1');
+    assert.equal(spyCreateModelHierarchy.getCall(2).args[1], 'parent2');
+    assert.equal(spyCreateModelHierarchy.getCall(3).args[1], 'parent3');
+    assert.ok(model);
+    assert.ok(dataModel);
+    assert.ok(modelMixin);
+    done();
+    stubAjax.restore();
+    spyCreateModel.restore();
+    spyCreateMixin.restore();
+    spyCreateModelHierarchy.restore();
+  });
+});
+
+/*test('test method createDynamicModel() with 3 parent', function(assert) {
+  assert.expect(10);
+  var done = assert.async(1);
+  Ember.$.extend(param, {
+    'odataUrl': 'http://localhost:6500/odata/',
+    'namespace': 'ns',
+    'metadataUrl': 'assert/felxberry/models/'
+  });
+
+  let component = this.subject(param);
+
+  let parentModelName = 'parent1';
+  let parent1JsonModel = {
+    name: 'parent1',
+    parentModelName: 'parent2',
+    modelName: 'parent1',
+    className: 'parent1',
+    nameSpace: 'NS1',
+    attrs: [
+      {
+        name: 'name',
+        type: 'string',
+        flexberryType: 'Строка250',
+        notNull: false,
+        defaultValue: '',
+        stored: true,
+        ordered: false
+      }
+    ],
+    belongsTo: [],
+    hasMany: [],
+    projections: [],
+    stored: false,
+    offline: true,
+    external: false
+  };
+
+  let parent2JsonModel = {
+    name: 'parent2',
+    parentModelName: 'parent3',
+    modelName: 'parent2',
+    className: 'parent2',
+    nameSpace: 'NS2',
+    attrs: [
+      {
+        name: 'name2',
+        type: 'string',
+        flexberryType: 'Строка250',
+        notNull: false,
+        defaultValue: '',
+        stored: true,
+        ordered: false
+      }
+    ],
+    belongsTo: [],
+    hasMany: [],
+    projections: [],
+    stored: false,
+    offline: true,
+    external: false
+  };
+
+  let parent3JsonModel = {
+    name: 'parent3',
+    parentModelName: null,
+    modelName: 'parent3',
+    className: 'parent3',
+    nameSpace: 'NS3',
+    attrs: [
+      {
+        name: 'name3',
+        type: 'string',
+        flexberryType: 'Строка250',
+        notNull: false,
+        defaultValue: '',
+        stored: true,
+        ordered: false
+      }
+    ],
+    belongsTo: [],
+    hasMany: [],
+    projections: [],
+    stored: false,
+    offline: true,
+    external: false
+  };
+  let stubAjax = sinon.stub(Ember.$, 'ajax');
+  stubAjax.onCall(0).yieldsTo('success', jsonModel)
+    .onCall(1).yieldsTo('success', parent1JsonModel)
+    .onCall(2).yieldsTo('success', parent2JsonModel)
+    .onCall(3).yieldsTo('success', parent3JsonModel);;
+
+  let spyCreateModel = sinon.spy(component, 'createModel');
+  let spyCreateMixin = sinon.spy(component, 'createMixin');
+  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+
+  component.createDynamicModel().then(({model, dataModel, modelMixin}) => {
+    assert.equal(stubAjax.callCount, 3);
+    assert.equal(spyCreateModel.callCount, 1);
+    assert.equal(spyCreateMixin.callCount, 3);
+    assert.equal(spyCreateModelHierarchy.callCount, 3);
+    assert.equal(spyCreateModelHierarchy.getCall(0).args[1], 'test-model');
+    assert.equal(spyCreateModelHierarchy.getCall(1).args[1], 'parent1');
+    assert.equal(spyCreateModelHierarchy.getCall(2).args[1], 'parent2');
+    assert.equal(spyCreateModelHierarchy.getCall(3).args[1], 'parent3');
+    assert.ok(model);
+    assert.ok(dataModel);
+    assert.ok(modelMixin);
+    done();
+    stubAjax.restore();
+    spyCreateModel.restore();
+    spyCreateMixin.restore();
+    spyCreateModelHierarchy.restore();
+  });
+});*/

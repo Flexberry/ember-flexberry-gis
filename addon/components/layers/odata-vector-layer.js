@@ -4,10 +4,12 @@
 
 import Ember from 'ember';
 import BaseVectorLayer from 'ember-flexberry-gis/components/base-vector-layer';
-import { Query } from 'ember-flexberry-data';
+import { Query, Projection, Serializer } from 'ember-flexberry-data';
 import { checkMapZoom } from '../../utils/check-zoom';
 import state from '../../utils/state';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
+import GisAdapter from 'ember-flexberry-gis/adapters/odata';
+import DS from 'ember-data';
 import jsts from 'npm:jsts';
 const { Builder } = Query;
 
@@ -76,7 +78,9 @@ export default BaseVectorLayer.extend({
         return layer.state === state.insert;
       });
 
-      store.batchUpdate(modelsLayer).then((models) => {
+      // to send request via the needed adapter
+      let obj = this.get('_adapterStoreModelProjectionGeom');
+      obj.adapter.batchUpdate(obj.store, modelsLayer).then((models) => {
         modelsLayer.clear();
         let insertedModelId = [];
 
@@ -616,62 +620,293 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Creates adapter for model. Need to redefine it in the application project
+    if there is a specific application adapter.
+
+    @method createAdapterForModel
+    @return {Object} Adapter for model
+  */
+  createAdapterForModel() {
+    let odataUrl = this.get('odataUrl');
+    if (Ember.isNone(odataUrl)) {
+      return;
+    }
+
+    let modelAdapter = GisAdapter.extend(Projection.AdapterMixin, {
+      host: odataUrl
+    });
+
+    return modelAdapter;
+  },
+
+  /**
+    Creates model from mixin.
+
+    @method createModel
+    @param {Object} modelMixin Model of mixin.
+    @return {Object} Model
+  */
+  createModel(modelMixin) {
+    let modelName = this.get('modelName');
+    let projectionName = this.get('projectionName');
+    let namespace = this.get('namespace');
+    let model = Projection.Model.extend(modelMixin);
+    model.reopenClass({
+      namespace: namespace
+    });
+
+    return model;
+  },
+
+  /**
+    Creates projection from data model.
+
+    @method createProjection
+    @param {Object} jsonModel Data model in json format.
+    @return {Object} Projection
+  */
+  createProjection(jsonModel) {
+    let projectionName = this.get('projectionName');
+    let projJson = jsonModel.projections.filter(proj=>proj.name === projectionName);
+    let modelProjection = {};
+    if (projJson.length > 0) {
+      projJson[0].attrs.forEach((attr) => {
+        modelProjection[attr.name] = Projection.attr('');
+      });
+    }
+
+    return modelProjection;
+  },
+
+  /**
+    Creates mixin from data model.
+
+    @method createMixin
+    @param {Object} jsonModel Data model in json format.
+    @return {Object} Mixin
+  */
+  createMixin(jsonModel) {
+    if (Ember.isNone(jsonModel)) {
+      return;
+    }
+
+    let mixin = {};
+    jsonModel.attrs.forEach((attr) => {
+      mixin[attr.name] = DS.attr(attr.type);
+    });
+
+    let modelMixin = Ember.Mixin.create(mixin);
+    return modelMixin;
+  },
+
+  /**
+    Creates serializer from Serializer.Odata.
+
+    @method createSerializer
+    @return {Object} Serializer
+  */
+  createSerializer() {
+    let serializer = Ember.Mixin.create({
+      primaryKey: '__PrimaryKey',
+      getAttrs: function () {
+        let parentAttrs = this._super();
+        let attrs = {
+
+        };
+
+        return Ember.$.extend(true, {}, parentAttrs, attrs);
+      },
+      init: function () {
+        this.set('attrs', this.getAttrs());
+        this._super(...arguments);
+      }
+    });
+
+    let modelSerializer = Serializer.Odata.extend(serializer);
+    return modelSerializer;
+  },
+
+  /**
+    Registers mixin, model, projections, serializer and adapter in the application.
+
+    @method registerModelMixinSerializerAdapter
+    @param {Object} model
+    @param {Object} modelMixin
+    @param {Object} modelSerializer
+    @param {Object} modelAdapter
+    @return {Boolean}
+  */
+  registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter) {
+    if (!Ember.isNone(model) && !Ember.isNone(modelMixin) && !Ember.isNone(modelSerializer) && !Ember.isNone(modelAdapter)) {
+      let modelName = this.get('modelName');
+      Ember.getOwner(this).unregister(`model:${modelName}`, model);
+      Ember.getOwner(this).unregister(`mixin:${modelName}`, modelMixin);
+      Ember.getOwner(this).unregister(`serializer:${modelName}`, modelSerializer);
+      Ember.getOwner(this).unregister(`adapter:${modelName}`, modelAdapter);
+
+      Ember.getOwner(this).register(`model:${modelName}`, model);
+      Ember.getOwner(this).register(`mixin:${modelName}`, modelMixin);
+      Ember.getOwner(this).register(`serializer:${modelName}`, modelSerializer);
+      Ember.getOwner(this).register(`adapter:${modelName}`, modelAdapter);
+
+      return true;
+    } else {
+      return false;
+    }
+  },
+
+  /**
+    Creates models in recursive.
+
+    @method сreateModelHierarchy
+    @param {String} metadataUrl
+    @param {String} modelName
+    @return {Promise} Object consists of model, json data and mixin.
+  */
+  сreateModelHierarchy(metadataUrl, modelName) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      if (!Ember.isNone(modelName) && !Ember.isNone(metadataUrl)) {
+        let _this = this;
+        Ember.$.ajax({
+          url: metadataUrl + modelName + '.json',
+          async: true,
+          success: function (dataModel) {
+            if (!Ember.isNone(dataModel)) {
+              let parentModelName = dataModel.parentModelName;
+              if (Ember.isNone(parentModelName)) {
+                let modelMixin = _this.createMixin(dataModel);
+                let model = _this.createModel(modelMixin);
+                resolve({ model: model, dataModel: dataModel, modelMixin: modelMixin });
+              } else {
+                _this.сreateModelHierarchy(metadataUrl, parentModelName).then(({ model }) => {
+                  let mMixin = _this.createMixin(dataModel);
+                  let mModel = model.extend(mMixin, {});
+                  mModel.reopenClass({
+                    _parentModelName: parentModelName,
+                    namespace: _this.get('namespace')
+                  });
+
+                  resolve({ model: mModel, dataModel: dataModel, modelMixin: mMixin });
+                }).catch((e) => {
+                  reject('Can\'t create parent model: ' + parentModelName + ' .Error: ' + e);
+                });
+              }
+            }
+          },
+          error: function (e) {
+            reject('Can\'t create model: ' + modelName + ' .Error: ' + e);
+          }
+        });
+      } else {
+        reject('ModelName and metadataUrl is empty');
+      }
+    });
+  },
+
+  /**
+    Creates model mixin, model, projections, serializer and adapter from jsonModel and registers them.
+
+    @method createDynamicModel
+    @return {Promise}
+  */
+  createDynamicModel() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let modelName = this.get('modelName');
+      let projectionName = this.get('projectionName');
+      let metadataUrl = this.get('metadataUrl');
+
+      this.сreateModelHierarchy(metadataUrl, modelName).then(({ model, dataModel, modelMixin }) => {
+        model.defineProjection(projectionName, modelName, this.createProjection(dataModel));
+        let modelSerializer = this.createSerializer();
+        let modelAdapter = this.createAdapterForModel();
+        this.registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter);
+        resolve('Create dynamic model: ' + modelName);
+      }).catch((e) => {
+        reject('Can\'t create dynamic model: ' + modelName + '. Error: ' + e);
+      });
+    });
+  },
+
+  /**
+    Creates leaflet layer.
+
+    @method _createVectorLayer
+    @return {Object} Layer
+  */
+  _createVectorLayer() {
+    let obj = this.get('_adapterStoreModelProjectionGeom');
+    let crs = this.get('crs');
+
+    let continueLoading = this.get('continueLoading');
+    let showExisting = this.get('showExisting');
+    let dynamicModel = this.get('dynamicModel');
+
+    const options = this.get('options');
+    let layer = L.featureGroup();
+
+    layer.options.crs = crs;
+    layer.options.style = this.get('styleSettings');
+    layer.options.continueLoading = continueLoading;
+    layer.options.showExisting = showExisting;
+    layer.options.dynamicModel = dynamicModel;
+    layer.options.metadataUrl = this.get('metadataUrl');
+    layer.options.odataUrl = this.get('odataUrl');
+
+    L.setOptions(layer, options);
+    layer.minZoom = this.get('minZoom');
+    layer.maxZoom = this.get('maxZoom');
+    layer.save = this.get('save').bind(this);
+    layer.reload = this.get('reload').bind(this);
+    layer.geometryField = obj.geometryField;
+    layer.addLayer = this.get('addLayer').bind(this);
+    layer.editLayerObjectProperties = this.get('editLayerObjectProperties').bind(this);
+    layer.editLayer = this.get('editLayer').bind(this);
+    layer.removeLayer = this.get('removeLayer').bind(this);
+    layer.modelName = obj.modelName;
+    layer.projectionName = obj.projectionName;
+    layer.editformname = obj.modelName + this.get('postfixForEditForm');
+    layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
+    layer.models = Ember.A();
+
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      let thisPane = this.get('_pane');
+      let pane = leafletMap.getPane(thisPane);
+      if (!pane || Ember.isNone(pane)) {
+        this._createPane(thisPane);
+        layer.options.pane = thisPane;
+        layer.options.renderer = this.get('_renderer');
+        this._setLayerZIndex();
+      }
+    }
+
+    // for check zoom
+    layer.leafletMap = leafletMap;
+    let load = this.continueLoad(layer);
+    layer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
+    return layer;
+  },
+
+  /**
     Creates leaflet layer related to layer type.
 
     @method createLayer
     @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
-  createVectorLayer(options) {
+  createVectorLayer() {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let obj = this.get('_adapterStoreModelProjectionGeom');
-      let crs = this.get('crs');
-
-      let continueLoading = this.get('continueLoading');
-      let showExisting = this.get('showExisting');
-
-      const options = this.get('options');
-      let layer = L.featureGroup();
-
-      layer.options.crs = crs;
-      layer.options.style = this.get('styleSettings');
-      layer.options.continueLoading = continueLoading;
-      layer.options.showExisting = showExisting;
-
-      L.setOptions(layer, options);
-      layer.minZoom = this.get('minZoom');
-      layer.maxZoom = this.get('maxZoom');
-      layer.save = this.get('save').bind(this);
-      layer.reload = this.get('reload').bind(this);
-      layer.geometryField = obj.geometryField;
-      layer.addLayer = this.get('addLayer').bind(this);
-      layer.editLayerObjectProperties = this.get('editLayerObjectProperties').bind(this);
-      layer.editLayer = this.get('editLayer').bind(this);
-      layer.removeLayer = this.get('removeLayer').bind(this);
-      layer.modelName = obj.modelName;
-      layer.projectionName = obj.projectionName;
-      layer.editformname = obj.modelName + this.get('postfixForEditForm');
-      layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
-      layer.models = Ember.A();
-
-      let leafletMap = this.get('leafletMap');
-      if (!Ember.isNone(leafletMap)) {
-        let thisPane = this.get('_pane');
-        let pane = leafletMap.getPane(thisPane);
-        if (!pane || Ember.isNone(pane)) {
-          this._createPane(thisPane);
-          layer.options.pane = thisPane;
-          layer.options.renderer = this.get('_renderer');
-          this._setLayerZIndex();
-        }
+      if (this.get('dynamicModel')) {
+        this.createDynamicModel().then(() => {
+          let layer = this._createVectorLayer();
+          resolve(layer);
+        }).catch((e) => {
+          reject(e);
+        });
+      } else {
+        let layer = this._createVectorLayer();
+        resolve(layer);
       }
-
-      // for check zoom
-      layer.leafletMap = leafletMap;
-      let load = this.continueLoad(layer);
-      layer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
-
-      resolve(layer);
     });
   },
 
@@ -746,7 +981,10 @@ export default BaseVectorLayer.extend({
     const projectionName = this.get('projectionName');
     const geometryField = this.get('geometryField') || 'geometry';
     const store = this.get('store');
-    const adapter = this.get('store').adapterFor('application');
+    let adapter = store.adapterFor(modelName);
+    if (!adapter) {
+      adapter = store.adapterFor('application');
+    }
 
     if (!modelName) {
       return;
