@@ -644,14 +644,9 @@ export default BaseVectorLayer.extend({
 
     @method createModel
     @param {Object} modelMixin Model of mixin.
-    @param {Object} jsonModel Data model in json format.
     @return {Object} Model
   */
-  createModel(modelMixin, jsonModel) {
-    if (Ember.isNone(jsonModel) || Ember.isNone(modelMixin)) {
-      return;
-    }
-
+  createModel(modelMixin) {
     let modelName = this.get('modelName');
     let projectionName = this.get('projectionName');
     let namespace = this.get('namespace');
@@ -761,95 +756,74 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-    Creates parent models in recursive.
+    Creates models in recursive.
 
-    @method createParent
-    @param {String} parentModelName
-    @return {Promise} Array consists of model and json data to create model mixin.
+    @method сreateModelHierarchy
+    @param {String} metadataUrl
+    @param {String} modelName
+    @return {Promise} Object consists of model, json data and mixin.
   */
-  createParent(parentModelName) {
+  сreateModelHierarchy(metadataUrl, modelName) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      if (!Ember.isNone(parentModelName)) {
-        let metadataUrl = this.get('metadataUrl');
+      if (!Ember.isNone(modelName) && !Ember.isNone(metadataUrl)) {
         let _this = this;
         Ember.$.ajax({
-          url: metadataUrl + parentModelName + '.json',
+          url: metadataUrl + modelName + '.json',
           async: true,
           success: function (dataModel) {
             if (!Ember.isNone(dataModel)) {
-              let grandParentModelName = dataModel.parentModelName;
-              if (Ember.isNone(grandParentModelName)) {
-                let parentMixin = _this.createMixin(dataModel);
-                let parentModel = _this.createModel(parentMixin, dataModel);
-                resolve([parentModel, dataModel]);
+              let parentModelName = dataModel.parentModelName;
+              if (Ember.isNone(parentModelName)) {
+                let modelMixin = _this.createMixin(dataModel);
+                let model = _this.createModel(modelMixin);
+                resolve({ model: model, dataModel: dataModel, modelMixin: modelMixin });
               } else {
-                _this.createParent(grandParentModelName).then(([pModel, dModel]) => {
-                  let modelMixin = _this.createMixin(dataModel);
-                  let model = pModel.extend(modelMixin, {});
-                  model.reopenClass({
-                    _parentModelName: grandParentModelName
+                _this.сreateModelHierarchy(metadataUrl, parentModelName).then(({ model }) => {
+                  let mMixin = _this.createMixin(dataModel);
+                  let mModel = model.extend(mMixin, {});
+                  mModel.reopenClass({
+                    _parentModelName: parentModelName,
+                    namespace: _this.get('namespace')
                   });
 
-                  resolve([model, dataModel]);
+                  resolve({ model: mModel, dataModel: dataModel, modelMixin: mMixin });
                 }).catch((e) => {
-                  reject('Can\'t create grandParent model: ' + grandParentModelName + ' .Error: ' + e);
+                  reject('Can\'t create parent model: ' + parentModelName + ' .Error: ' + e);
                 });
               }
             }
           },
           error: function (e) {
-            reject('Can\'t create parent model: ' + parentModelName + ' .Error: ' + e);
+            reject('Can\'t create model: ' + modelName + ' .Error: ' + e);
           }
         });
       } else {
-        reject('parentModelName is none');
+        reject('ModelName and metadataUrl is empty');
       }
     });
   },
 
   /**
-    Creates model mixin, model, projections, serializer and adapter from jsonModel.
+    Creates model mixin, model, projections, serializer and adapter from jsonModel and registers them.
 
     @method createDynamicModel
-    @param jsonModel data model in json format
     @return {Promise}
   */
-  createDynamicModel(jsonModel) {
+  createDynamicModel() {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      if (Ember.isNone(jsonModel)) {
-        reject('Not json model');
-      }
-
-      // with parent model
       let modelName = this.get('modelName');
       let projectionName = this.get('projectionName');
-      let parentModelName = jsonModel.parentModelName;
-      if (!Ember.isNone(parentModelName)) {
-        this.createParent(parentModelName).then(([parentModel]) => {
-          let modelMixin = this.createMixin(jsonModel);
-          let model = parentModel.extend(modelMixin, {});
-          model.reopenClass({
-            _parentModelName: parentModelName,
-            namespace: this.get('namespace')
-          });
+      let metadataUrl = this.get('metadataUrl');
 
-          model.defineProjection(projectionName, modelName, this.createProjection(jsonModel));
-          let modelSerializer = this.createSerializer();
-          let modelAdapter = this.createAdapterForModel();
-          this.registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter);
-          resolve('Create dynamic model: ' + modelName);
-        }).catch((e) => {
-          reject('Can\'t create parent model: ' + parentModelName + '. Error: ' + e);
-        });
-      } else {
-        let modelMixin = this.createMixin(jsonModel);
-        let model = this.createModel(modelMixin, jsonModel);
-        model.defineProjection(projectionName, modelName, this.createProjection(jsonModel));
+      this.сreateModelHierarchy(metadataUrl, modelName).then(({ model, dataModel, modelMixin }) => {
+        model.defineProjection(projectionName, modelName, this.createProjection(dataModel));
         let modelSerializer = this.createSerializer();
         let modelAdapter = this.createAdapterForModel();
         this.registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter);
         resolve('Create dynamic model: ' + modelName);
-      }
+      }).catch((e) => {
+        reject('Can\'t create dynamic model: ' + modelName + '. Error: ' + e);
+      });
     });
   },
 
@@ -923,28 +897,11 @@ export default BaseVectorLayer.extend({
   createVectorLayer() {
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (this.get('dynamicModel')) {
-        let modelName = this.get('modelName');
-        let metadataUrl = this.get('metadataUrl');
-        let _this = this;
-        Ember.$.ajax({
-          url: metadataUrl + modelName + '.json',
-          async: true,
-          success: function (dataModel) {
-            if (!Ember.isNone(dataModel)) {
-              _this.createDynamicModel(dataModel).then(() => {
-                let layer = _this._createVectorLayer();
-                resolve(layer);
-              }).catch((e) => {
-                console.log(e);
-              });
-            } else {
-              reject('can\'t get data for model: ' + modelName);
-            }
-          },
-          error: function (e) {
-            console.log('Can\'t register model: ' + modelName + ' .Error: ' + e);
-            reject('Can\'t register model: ' + modelName);
-          }
+        this.createDynamicModel().then(() => {
+          let layer = this._createVectorLayer();
+          resolve(layer);
+        }).catch((e) => {
+          reject(e);
         });
       } else {
         let layer = this._createVectorLayer();

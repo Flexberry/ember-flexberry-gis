@@ -614,7 +614,8 @@ test('test method createDynamicModel() with json', function(assert) {
   var done = assert.async(1);
   Ember.$.extend(param, {
     'odataUrl': 'http://localhost:6500/odata/',
-    'namespace': 'NS'
+    'namespace': 'NS',
+    'metadataUrl': 'assert/felxberry/models/'
   });
   jsonModel.parentModelName = null;
   let component = this.subject(param);
@@ -625,9 +626,11 @@ test('test method createDynamicModel() with json', function(assert) {
   let spyCreateProjection = sinon.spy(component, 'createProjection');
   let spyCreateMixin = sinon.spy(component, 'createMixin');
   let spyCreateSerializer = sinon.spy(component, 'createSerializer');
-  let spyCreateParent = sinon.spy(component, 'createParent');
+  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+  let stubAjax = sinon.stub(Ember.$, 'ajax');
+  stubAjax.yieldsTo('success', jsonModel);
 
-  component.createDynamicModel(jsonModel).then(() => {
+  component.createDynamicModel().then(() => {
     assert.equal(spyCreateAdapterForModel.callCount, 1);
     assert.equal(spyCreateModel.callCount, 1);
     assert.equal(spyCreateProjection.callCount, 1);
@@ -654,7 +657,7 @@ test('test method createDynamicModel() with json', function(assert) {
     assert.ok(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
     assert.equal(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
 
-    assert.equal(spyCreateParent.callCount, 0);
+    assert.equal(spyCreateModelHierarchy.callCount, 1);
 
     done();
     spyRegister.restore();
@@ -664,12 +667,13 @@ test('test method createDynamicModel() with json', function(assert) {
     spyCreateProjection.restore();
     spyCreateMixin.restore();
     spyCreateSerializer.restore();
-    spyCreateParent.restore();
+    spyCreateModelHierarchy.restore();
+    stubAjax.restore();
   });
 });
 
 test('test method createDynamicModel() with json with parent', function(assert) {
-  assert.expect(26);
+  assert.expect(27);
   var done = assert.async(1);
   Ember.$.extend(param, {
     'odataUrl': 'http://localhost:6500/odata/',
@@ -685,7 +689,7 @@ test('test method createDynamicModel() with json with parent', function(assert) 
   let spyCreateProjection = sinon.spy(component, 'createProjection');
   let spyCreateMixin = sinon.spy(component, 'createMixin');
   let spyCreateSerializer = sinon.spy(component, 'createSerializer');
-  let spyCreateParent = sinon.spy(component, 'createParent');
+  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
 
   jsonModel.parentModelName = 'Polygon32640';
   let parentJsonModel = {
@@ -713,17 +717,20 @@ test('test method createDynamicModel() with json with parent', function(assert) 
     offline: true,
     external: false
   };
-  let stubAjax = sinon.stub(Ember.$, 'ajax');
-  stubAjax.yieldsTo('success', parentJsonModel);
 
-  component.createDynamicModel(jsonModel).then(() => {
+  let stubAjax = sinon.stub(Ember.$, 'ajax');
+  stubAjax.onCall(0).yieldsTo('success', jsonModel)
+    .onCall(1).yieldsTo('success', parentJsonModel);
+
+  component.createDynamicModel().then(() => {
     assert.equal(spyCreateAdapterForModel.callCount, 1);
     assert.equal(spyCreateModel.callCount, 1);
     assert.equal(spyCreateProjection.callCount, 1);
     assert.equal(spyCreateMixin.callCount, 2);
     assert.equal(spyCreateSerializer.callCount, 1);
-    assert.equal(stubAjax.callCount, 1);
-    assert.equal(stubAjax.getCall(0).args[0].url, 'assert/felxberry/models/Polygon32640.json');
+    assert.equal(stubAjax.callCount, 2);
+    assert.equal(stubAjax.getCall(0).args[0].url, 'assert/felxberry/models/test-model.json');
+    assert.equal(stubAjax.getCall(1).args[0].url, 'assert/felxberry/models/Polygon32640.json');
 
     assert.equal(spyUnregister.callCount, 4);
     assert.equal(spyUnregister.firstCall.args[0], 'model:test-model');
@@ -745,7 +752,7 @@ test('test method createDynamicModel() with json with parent', function(assert) 
     assert.ok(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
     assert.equal(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
 
-    assert.equal(spyCreateParent.callCount, 1);
+    assert.equal(spyCreateModelHierarchy.callCount, 2);
 
     done();
     spyRegister.restore();
@@ -756,7 +763,7 @@ test('test method createDynamicModel() with json with parent', function(assert) 
     spyCreateMixin.restore();
     spyCreateSerializer.restore();
     stubAjax.restore();
-    spyCreateParent.restore();
+    spyCreateModelHierarchy.restore();
   });
 });
 
@@ -766,7 +773,7 @@ test('test method createDynamicModel() without json', function(assert) {
   let component = this.subject(param);
 
   component.createDynamicModel().catch((error) => {
-    assert.equal(error, 'Not json model');
+    assert.equal(error, 'Can\'t create dynamic model: test-model. Error: ModelName and metadataUrl is empty');
     done();
   });
 });
@@ -795,7 +802,7 @@ test('test method createVectorLayer() without dynamicModel', function(assert) {
   let _createVectorLayerSpy = sinon.spy(component, '_createVectorLayer');
   let spyCreateDynamicModel = sinon.spy(component, 'createDynamicModel');
   let spyAjax = sinon.spy(Ember.$, 'ajax');
-  let spyCreateParent = sinon.spy(component, 'createParent');
+  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
 
   component.createVectorLayer().then((layer) => {
     assert.ok(layer);
@@ -804,13 +811,13 @@ test('test method createVectorLayer() without dynamicModel', function(assert) {
     assert.equal(_createVectorLayerSpy.callCount, 1);
     assert.equal(spyAjax.callCount, 0);
     assert.equal(spyCreateDynamicModel.callCount, 0);
-    assert.equal(spyCreateParent.callCount, 0);
+    assert.equal(spyCreateModelHierarchy.callCount, 0);
     done();
     spyContinueLoad.restore();
     _createVectorLayerSpy.restore();
     spyAjax.restore();
     spyCreateDynamicModel.restore();
-    spyCreateParent.restore();
+    spyCreateModelHierarchy.restore();
   });
 });
 
@@ -828,7 +835,7 @@ test('test method createVectorLayer() with dynamicModel=true', function(assert) 
   let spyCreateDynamicModel = sinon.spy(component, 'createDynamicModel');
   let stubAjax = sinon.stub(Ember.$, 'ajax');
   stubAjax.yieldsTo('success', jsonModel);
-  let spyCreateParent = sinon.spy(component, 'createParent');
+  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
 
   component.createVectorLayer().then((layer) => {
     assert.ok(layer);
@@ -838,13 +845,13 @@ test('test method createVectorLayer() with dynamicModel=true', function(assert) 
     assert.equal(stubAjax.callCount, 1);
     assert.equal(stubAjax.getCall(0).args[0].url, 'assert/felxberry/models/test-model.json');
     assert.equal(spyCreateDynamicModel.callCount, 1);
-    assert.equal(spyCreateParent.callCount, 0);
+    assert.equal(spyCreateModelHierarchy.callCount, 1);
     done();
     spyContinueLoad.restore();
     _createVectorLayerSpy.restore();
     spyCreateDynamicModel.restore();
     stubAjax.restore();
-    spyCreateParent.restore();
+    spyCreateModelHierarchy.restore();
   });
 });
 
@@ -945,8 +952,124 @@ test('test method save() with objects', function(assert) {
   });
 });
 
-test('test method createParent() with 3 parent', function(assert) {
-  assert.expect(9);
+test('test method createModelHierarchy() with 3 parent', function(assert) {
+  assert.expect(11);
+  var done = assert.async(1);
+  Ember.$.extend(param, {
+    'odataUrl': 'http://localhost:6500/odata/',
+    'namespace': 'ns',
+    'metadataUrl': 'assert/felxberry/models/'
+  });
+
+  let component = this.subject(param);
+
+  jsonModel.parentModelName = 'parent1';
+  let parent1JsonModel = {
+    name: 'parent1',
+    parentModelName: 'parent2',
+    modelName: 'parent1',
+    className: 'parent1',
+    nameSpace: 'NS1',
+    attrs: [
+      {
+        name: 'name',
+        type: 'string',
+        flexberryType: 'Строка250',
+        notNull: false,
+        defaultValue: '',
+        stored: true,
+        ordered: false
+      }
+    ],
+    belongsTo: [],
+    hasMany: [],
+    projections: [],
+    stored: false,
+    offline: true,
+    external: false
+  };
+
+  let parent2JsonModel = {
+    name: 'parent2',
+    parentModelName: 'parent3',
+    modelName: 'parent2',
+    className: 'parent2',
+    nameSpace: 'NS2',
+    attrs: [
+      {
+        name: 'name2',
+        type: 'string',
+        flexberryType: 'Строка250',
+        notNull: false,
+        defaultValue: '',
+        stored: true,
+        ordered: false
+      }
+    ],
+    belongsTo: [],
+    hasMany: [],
+    projections: [],
+    stored: false,
+    offline: true,
+    external: false
+  };
+
+  let parent3JsonModel = {
+    name: 'parent3',
+    parentModelName: null,
+    modelName: 'parent3',
+    className: 'parent3',
+    nameSpace: 'NS3',
+    attrs: [
+      {
+        name: 'name3',
+        type: 'string',
+        flexberryType: 'Строка250',
+        notNull: false,
+        defaultValue: '',
+        stored: true,
+        ordered: false
+      }
+    ],
+    belongsTo: [],
+    hasMany: [],
+    projections: [],
+    stored: false,
+    offline: true,
+    external: false
+  };
+  let stubAjax = sinon.stub(Ember.$, 'ajax');
+  stubAjax.onCall(0).yieldsTo('success', jsonModel)
+    .onCall(1).yieldsTo('success', parent1JsonModel)
+    .onCall(2).yieldsTo('success', parent2JsonModel)
+    .onCall(3).yieldsTo('success', parent3JsonModel);
+
+  let spyCreateModel = sinon.spy(component, 'createModel');
+  let spyCreateMixin = sinon.spy(component, 'createMixin');
+  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+
+  component.сreateModelHierarchy(param.metadataUrl, param.modelName).then(({ model, dataModel, modelMixin }) => {
+    assert.equal(stubAjax.callCount, 4);
+    assert.equal(spyCreateModel.callCount, 1);
+    assert.equal(spyCreateMixin.callCount, 4);
+    assert.equal(spyCreateModelHierarchy.callCount, 4);
+    assert.equal(spyCreateModelHierarchy.getCall(0).args[1], 'test-model');
+    assert.equal(spyCreateModelHierarchy.getCall(1).args[1], 'parent1');
+    assert.equal(spyCreateModelHierarchy.getCall(2).args[1], 'parent2');
+    assert.equal(spyCreateModelHierarchy.getCall(3).args[1], 'parent3');
+    assert.ok(model);
+    assert.ok(dataModel);
+    assert.ok(modelMixin);
+    done();
+    stubAjax.restore();
+    spyCreateModel.restore();
+    spyCreateMixin.restore();
+    spyCreateModelHierarchy.restore();
+  });
+});
+
+/*test('test method createDynamicModel() with 3 parent', function(assert) {
+  assert.expect(10);
   var done = assert.async(1);
   Ember.$.extend(param, {
     'odataUrl': 'http://localhost:6500/odata/',
@@ -1032,28 +1155,31 @@ test('test method createParent() with 3 parent', function(assert) {
     external: false
   };
   let stubAjax = sinon.stub(Ember.$, 'ajax');
-  stubAjax.onCall(0).yieldsTo('success', parent1JsonModel)
-    .onCall(1).yieldsTo('success', parent2JsonModel)
-    .onCall(2).yieldsTo('success', parent3JsonModel);
+  stubAjax.onCall(0).yieldsTo('success', jsonModel)
+    .onCall(1).yieldsTo('success', parent1JsonModel)
+    .onCall(2).yieldsTo('success', parent2JsonModel)
+    .onCall(3).yieldsTo('success', parent3JsonModel);;
 
   let spyCreateModel = sinon.spy(component, 'createModel');
   let spyCreateMixin = sinon.spy(component, 'createMixin');
-  let spyCreateParent = sinon.spy(component, 'createParent');
+  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
 
-  component.createParent(parentModelName).then(([model, dataModel]) => {
+  component.createDynamicModel().then(({model, dataModel, modelMixin}) => {
     assert.equal(stubAjax.callCount, 3);
     assert.equal(spyCreateModel.callCount, 1);
     assert.equal(spyCreateMixin.callCount, 3);
-    assert.equal(spyCreateParent.callCount, 3);
-    assert.equal(spyCreateParent.getCall(0).args[0], 'parent1');
-    assert.equal(spyCreateParent.getCall(1).args[0], 'parent2');
-    assert.equal(spyCreateParent.getCall(2).args[0], 'parent3');
+    assert.equal(spyCreateModelHierarchy.callCount, 3);
+    assert.equal(spyCreateModelHierarchy.getCall(0).args[1], 'test-model');
+    assert.equal(spyCreateModelHierarchy.getCall(1).args[1], 'parent1');
+    assert.equal(spyCreateModelHierarchy.getCall(2).args[1], 'parent2');
+    assert.equal(spyCreateModelHierarchy.getCall(3).args[1], 'parent3');
     assert.ok(model);
     assert.ok(dataModel);
+    assert.ok(modelMixin);
     done();
     stubAjax.restore();
     spyCreateModel.restore();
     spyCreateMixin.restore();
-    spyCreateParent.restore();
+    spyCreateModelHierarchy.restore();
   });
-});
+});*/
