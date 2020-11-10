@@ -24,11 +24,11 @@ export default Ember.Mixin.create(SnapDraw, {
     @type MapApiService
   */
   mapApi: Ember.inject.service(),
-  
+
   /**
-    Service for managing map API.
-    @property mapApi
-    @type MapApiService
+    Service for managing local storage.
+    @property localStorageService
+    @type LocalStorageService
   */
   localStorageService: Ember.inject.service('local-storage'),
 
@@ -1764,6 +1764,7 @@ export default Ember.Mixin.create(SnapDraw, {
         if (Ember.isNone(bookmarkIds)) {
           return resolve(bookmarksStore);
         }
+
         if (!Ember.isBlank(bookmarkIds)) {
           let bookmarks = Ember.A();
           bookmarksStore.forEach((bookmark) => {
@@ -1806,7 +1807,7 @@ export default Ember.Mixin.create(SnapDraw, {
         } else {
           reject('objectIds does');
         }
-      } catch(e) {
+      } catch (e) {
         reject(e);
       }
     });
@@ -1827,6 +1828,7 @@ export default Ember.Mixin.create(SnapDraw, {
           if (Ember.isBlank(bookmarksStore)) {
             return reject('bookmarks none');
           }
+
           let bookmarks = bookmarksStore.filter((bookmark) => {
             return !bookmarkIds.includes(bookmark.primarykey);
           });
@@ -1835,7 +1837,7 @@ export default Ember.Mixin.create(SnapDraw, {
         } else {
           reject('objectIds does');
         }
-      } catch(e) {
+      } catch (e) {
         reject(e);
       }
     });
