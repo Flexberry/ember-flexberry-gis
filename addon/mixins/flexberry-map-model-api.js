@@ -15,6 +15,7 @@ import state from '../utils/state';
 import SnapDraw from './snap-draw';
 import ClipperLib from 'npm:clipper-lib';
 import jsts from 'npm:jsts';
+import uuid from 'npm:node-uuid';
 
 export default Ember.Mixin.create(SnapDraw, {
   /**
@@ -23,6 +24,13 @@ export default Ember.Mixin.create(SnapDraw, {
     @type MapApiService
   */
   mapApi: Ember.inject.service(),
+  
+  /**
+    Service for managing map API.
+    @property mapApi
+    @type MapApiService
+  */
+  localStorageService: Ember.inject.service('local-storage'),
 
   /*
     Shows layers specified by IDs.
@@ -1740,5 +1748,96 @@ export default Ember.Mixin.create(SnapDraw, {
     }
 
     return [points.X / amp, points.Y / amp];
+  },
+
+  /**
+    Get spartial bookmarks from localStorage.
+    @method getSpatialBookmarks
+    @param {Array} bookmarkIds Array of spartial bookmarks id.
+    @return {Promise} If objectIds equal ubdefined return all spartial bookmarks else return spartial bookmarks where objectIds inculde bookmark id.
+  */
+  getSpatialBookmarks(bookmarkIds) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      try {
+        let mapKey = this.get('mapApi').getFromApi('mapModel').get('id');
+        let bookmarksStore = this.get('localStorageService').getFromStorage('bookmarks', mapKey);
+        if (Ember.isNone(bookmarkIds)) {
+          return resolve(bookmarksStore);
+        }
+        if (!Ember.isBlank(bookmarkIds)) {
+          let bookmarks = Ember.A();
+          bookmarksStore.forEach((bookmark) => {
+            if (bookmarkIds.includes(bookmark.primarykey)) {
+              bookmarks.pushObject(bookmark);
+            }
+          });
+          resolve(bookmarks);
+        } else {
+          resolve(bookmarksStore);
+        }
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+
+  /**
+    Added spartial bookmarks from local storage.
+    @method addSpatialBookmark
+    @param {Float} lat Latitude of center map.
+    @param {Float} lng Longitude of center map.
+    @param {Integer} zoom Zoom of center map.
+    @return {Promise} Primary key of new spartial bookmark.
+  */
+  addSpatialBookmark(lat, lng, zoom) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      try {
+        if (!Ember.isNone(lat) && !Ember.isNone(lng) && !Ember.isNone(zoom)) {
+          let mapKey = this.get('mapApi').getFromApi('mapModel').get('id');
+          let bookmarks = this.get('localStorageService').getFromStorage('bookmarks', mapKey);
+          let bookmark = {
+            primarykey: uuid.v4(),
+            center: L.latLng(lat, lng),
+            zoom: zoom
+          };
+          bookmarks.push(bookmark);
+          this.get('localStorageService').setToStorage('bookmarks', mapKey, bookmarks);
+          resolve(bookmark.primarykey);
+        } else {
+          reject('objectIds does');
+        }
+      } catch(e) {
+        reject(e);
+      }
+    });
+  },
+
+  /**
+    Remove spartial bookmarks from localStorage.
+    @method removeSpatialBookmarks
+    @param {Array} bookmarkIds Array of spartial bookmarks id.
+    @return {Promise} Return message on success remove or error message.
+  */
+  removeSpatialBookmarks(bookmarkIds) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      try {
+        if (!Ember.isNone(bookmarkIds)) {
+          let mapKey = this.get('mapApi').getFromApi('mapModel').get('id');
+          let bookmarksStore = this.get('localStorageService').getFromStorage('bookmarks', mapKey);
+          if (Ember.isBlank(bookmarksStore)) {
+            return reject('bookmarks none');
+          }
+          let bookmarks = bookmarksStore.filter((bookmark) => {
+            return !bookmarkIds.includes(bookmark.primarykey);
+          });
+          this.get('localStorageService').setToStorage('bookmarks', mapKey, bookmarks);
+          resolve('succes');
+        } else {
+          reject('objectIds does');
+        }
+      } catch(e) {
+        reject(e);
+      }
+    });
   }
 });
