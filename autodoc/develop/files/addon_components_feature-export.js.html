@@ -644,7 +644,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
         layerElem.setAttribute(&#x27;layerName&#x27;, result.name);
         let modelName = null;
         Ember.$.ajax({
-          url: &#x27;assets/flexberry/models/&#x27; + layer.get(&#x27;_leafletObject.modelName&#x27;) + &#x27;.json&#x27;,
+          url: layer.get(&#x27;_leafletObject.options.metadataUrl&#x27;) + layer.get(&#x27;_leafletObject.modelName&#x27;) + &#x27;.json&#x27;,
           async: false,
           success: function(data) {
             modelName = data.className;

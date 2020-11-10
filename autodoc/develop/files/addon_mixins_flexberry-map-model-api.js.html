@@ -713,7 +713,7 @@ export default Ember.Mixin.create(SnapDraw, {
             if (layerType instanceof OdataLayer) {
               let table = null;
               Ember.$.ajax({
-                url: &#x27;assets/flexberry/models/&#x27; + layerModel.get(&#x27;_leafletObject.modelName&#x27;) + &#x27;.json&#x27;,
+                url: layerModel.get(&#x27;_leafletObject.options.metadataUrl&#x27;) + layerModel.get(&#x27;_leafletObject.modelName&#x27;) + &#x27;.json&#x27;,
                 async: false,
                 success: function (data) {
                   table = data.className;
