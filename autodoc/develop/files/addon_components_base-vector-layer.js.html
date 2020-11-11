@@ -1165,7 +1165,7 @@ export default BaseLayer.extend({
           property = prop.innerText;
         }
 
-        if (property &amp;&amp; layer.feature.properties.hasOwnProperty(property)) {
+        if (property &amp;&amp; layer.feature.properties &amp;&amp; layer.feature.properties.hasOwnProperty(property)) {
           let label = layer.feature.properties[property];
           if (Ember.isNone(label)) {
             label = &#x27;&#x27;;
@@ -1207,8 +1207,9 @@ export default BaseLayer.extend({
 
     if (func.length &gt; 0) {
       for (var item of func) {
-        let nameFunc = Ember.$(item).attr(&#x27;name&#x27;).replaceAll(&#x27;\\&quot;&#x27;, &#x27;&#x27;);
+        let nameFunc = Ember.$(item).attr(&#x27;name&#x27;);
         if (!Ember.isNone(nameFunc)) {
+          nameFunc = Ember.$(item).attr(&#x27;name&#x27;).replaceAll(&#x27;\\&quot;&#x27;, &#x27;&#x27;);
           switch (nameFunc) {
             case &#x27;toFixed&#x27;:
               let attr = Ember.$(item).attr(&#x27;attr&#x27;).replaceAll(&#x27;\\&quot;&#x27;, &#x27;&#x27;);
