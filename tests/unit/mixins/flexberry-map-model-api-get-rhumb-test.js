@@ -28,12 +28,12 @@ test('test method getRhumb for LineString', function (assert) {
         {
           rhumb: 'SE',
           angle: 0,
-          distance: 444780.3209341317
+          distance: 4
         },
         {
-          rhumb: 'NE',
+          rhumb: 'SE',
           angle: 90,
-          distance: 555213.4562030523
+          distance: 5
         }
     ]
   }];
@@ -69,12 +69,12 @@ test('test method getRhumb for MultiLineString', function (assert) {
         {
           rhumb: 'SE',
           angle: 0,
-          distance: 444780.3209341317
+          distance: 4
         },
         {
-          rhumb: 'NE',
+          rhumb: 'SE',
           angle: 90,
-          distance: 555213.4562030523
+          distance: 5
         }
     ]
   },
@@ -88,12 +88,12 @@ test('test method getRhumb for MultiLineString', function (assert) {
         {
           rhumb: 'SE',
           angle: 0,
-          distance: 444780.3209341316
+          distance: 4
         },
         {
-          rhumb: 'NE',
+          rhumb: 'SE',
           angle: 90,
-          distance: 443087.797530127
+          distance: 4
         }
     ]
   }];
@@ -129,22 +129,22 @@ test('test method getRhumb for Polygon without hole', function (assert) {
         {
           rhumb: 'SE',
           angle: 0,
-          distance: 444780.3209341317
+          distance: 4
+        },
+        {
+          rhumb: 'SE',
+          angle: 90,
+          distance: 5
         },
         {
           rhumb: 'NE',
-          angle: 90,
-          distance: 555213.4562030523
-        },
-        {
-          rhumb: 'NW',
           angle: 0,
-          distance: 444780.3209341317
+          distance: 4
         },
         {
           rhumb: 'NW',
           angle: 90,
-          distance: 551831.2448362056
+          distance: 5
         }
     ]
   }];
@@ -181,22 +181,22 @@ test('test method getRhumb for Polygon with hole', function (assert) {
         {
           rhumb: 'SE',
           angle: 0,
-          distance: 444780.3209341317
+          distance: 4
+        },
+        {
+          rhumb: 'SE',
+          angle: 90,
+          distance: 5
         },
         {
           rhumb: 'NE',
-          angle: 90,
-          distance: 555213.4562030523
-        },
-        {
-          rhumb: 'NW',
           angle: 0,
-          distance: 444780.3209341317
+          distance: 4
         },
         {
           rhumb: 'NW',
           angle: 90,
-          distance: 551831.2448362056
+          distance: 5
         }
     ]
   }, {
@@ -208,24 +208,24 @@ test('test method getRhumb for Polygon with hole', function (assert) {
     points:
     [
         {
+          rhumb: 'SE',
+          angle: 90,
+          distance: 1
+        },
+        {
           rhumb: 'NE',
-          angle: 90,
-          distance: 110924.21460672919
-        },
-        {
-          rhumb: 'NW',
           angle: 0,
-          distance: 111195.08023353288
+          distance: 1
         },
         {
           rhumb: 'NW',
           angle: 90,
-          distance: 110771.94938253175
+          distance: 1
         },
         {
           rhumb: 'SE',
           angle: 0,
-          distance: 111195.08023353288
+          distance: 1
         }
     ]
   }];
@@ -266,22 +266,22 @@ test('test method getRhumb for MultiPolygon with part', function (assert) {
         {
           rhumb: 'SE',
           angle: 0,
-          distance: 444780.3209341317
+          distance: 4
+        },
+        {
+          rhumb: 'SE',
+          angle: 90,
+          distance: 5
         },
         {
           rhumb: 'NE',
-          angle: 90,
-          distance: 555213.4562030523
-        },
-        {
-          rhumb: 'NW',
           angle: 0,
-          distance: 444780.3209341317
+          distance: 4
         },
         {
           rhumb: 'NW',
           angle: 90,
-          distance: 551831.2448362056
+          distance: 5
         }
     ]
   }, {
@@ -295,22 +295,22 @@ test('test method getRhumb for MultiPolygon with part', function (assert) {
         {
           rhumb: 'SE',
           angle: 0,
-          distance: 111195.08023353288
+          distance: 1
+        },
+        {
+          rhumb: 'SE',
+          angle: 90,
+          distance: 1
         },
         {
           rhumb: 'NE',
-          angle: 90,
-          distance: 111127.34319504516
-        },
-        {
-          rhumb: 'NW',
           angle: 0,
-          distance: 111195.08023353288
+          distance: 1
         },
         {
           rhumb: 'NW',
           angle: 90,
-          distance: 111042.69124061048
+          distance: 1
         }
     ]
   }];
@@ -352,22 +352,22 @@ test('test method getRhumb for MultiPolygon with part and hole', function (asser
         {
           rhumb: 'SE',
           angle: 0,
-          distance: 444780.3209341317
+          distance: 4
+        },
+        {
+          rhumb: 'SE',
+          angle: 90,
+          distance: 5
         },
         {
           rhumb: 'NE',
-          angle: 90,
-          distance: 555213.4562030523
-        },
-        {
-          rhumb: 'NW',
           angle: 0,
-          distance: 444780.3209341317
+          distance: 4
         },
         {
           rhumb: 'NW',
           angle: 90,
-          distance: 551831.2448362056
+          distance: 5
         }
     ]
   }, {
@@ -379,24 +379,24 @@ test('test method getRhumb for MultiPolygon with part and hole', function (asser
     points:
     [
         {
+          rhumb: 'SE',
+          angle: 90,
+          distance: 1
+        },
+        {
           rhumb: 'NE',
-          angle: 90,
-          distance: 110924.21460672919
-        },
-        {
-          rhumb: 'NW',
           angle: 0,
-          distance: 111195.08023353288
+          distance: 1
         },
         {
           rhumb: 'NW',
           angle: 90,
-          distance: 110771.94938253175
+          distance: 1
         },
         {
           rhumb: 'SE',
           angle: 0,
-          distance: 111195.08023353288
+          distance: 1
         }
     ]
   }, {
@@ -410,22 +410,22 @@ test('test method getRhumb for MultiPolygon with part and hole', function (asser
         {
           rhumb: 'SE',
           angle: 0,
-          distance: 111195.08023353288
+          distance: 1
+        },
+        {
+          rhumb: 'SE',
+          angle: 90,
+          distance: 1
         },
         {
           rhumb: 'NE',
-          angle: 90,
-          distance: 111127.34319504516
-        },
-        {
-          rhumb: 'NW',
           angle: 0,
-          distance: 111195.08023353288
+          distance: 1
         },
         {
           rhumb: 'NW',
           angle: 90,
-          distance: 111042.69124061048
+          distance: 1
         }
     ]
   }];

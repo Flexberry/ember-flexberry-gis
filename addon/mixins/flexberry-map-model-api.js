@@ -4,8 +4,6 @@ import helpers from 'npm:@turf/helpers';
 import booleanContains from 'npm:@turf/boolean-contains';
 import area from 'npm:@turf/area';
 import intersect from 'npm:@turf/intersect';
-import rhumbBearing from 'npm:@turf/rhumb-bearing';
-import rhumbDistance from 'npm:@turf/rhumb-distance';
 import { getLeafletCrs } from '../utils/leaflet-crs';
 import VectorLayer from '../layers/-private/vector';
 import WfsLayer from '../layers/wfs';
@@ -15,6 +13,7 @@ import state from '../utils/state';
 import SnapDraw from './snap-draw';
 import ClipperLib from 'npm:clipper-lib';
 import jsts from 'npm:jsts';
+import { geometryToJsts } from '../utils/layer-to-jsts';
 
 export default Ember.Mixin.create(SnapDraw, {
   /**
@@ -959,9 +958,8 @@ export default Ember.Mixin.create(SnapDraw, {
 
   /**
     Get a rhumb object for [LineString, MultiLineString, Polygon, MultiPolygon]. Parameters is object in GeoJSON
-    format and name of coordinate reference system. Calculates rhumb between points. Use @turf/rhumb-bearing and
-    @turf/rhumb-distance libraries to calculate angle and distance between points. Distance calculation is
-    approximate and in meters. Names of direction is [NE, SE, NW, SW]. Angle calculation in degree.
+    format and name of coordinate reference system. Calculates rhumb between points. Use jsts libraries to calculate distance between points.
+    Distance calculation in units of coordinate reference system. Names of direction is [NE, SE, NW, SW]. Angle calculation in degree.
     Returns array of object:
 
     ```javascript
@@ -1011,14 +1009,26 @@ export default Ember.Mixin.create(SnapDraw, {
     let result = [];
 
     var calcRhumb = function (point1, point2) {
-      const pointFrom = helpers.point([point2[0], point2[1]]);
-      const pointTo = helpers.point([point1[0], point1[1]]);
+      // Get distance
+      let geojson1 = {
+        type: 'Point',
+        coordinates: point1
+      };
+      let geojson2 = {
+        type: 'Point',
+        coordinates: point2
+      };
 
-      // We get the distance and translate into meters. Distance calculattion is approximate.
-      const distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
+      let jsts1 = geometryToJsts(geojson1);
+      let jsts2 = geometryToJsts(geojson2);
+      const distance = jsts1.distance(jsts2);
 
       // Get the angle.
-      const bearing = rhumbBearing.default(pointTo, pointFrom);
+      var getAngle = function (p1, p2) {
+        return Math.atan2(p1[1] - p2[1], p1[0] - p2[0]) / Math.PI * 180;
+      };
+
+      const bearing = getAngle(point2, point1);
 
       let rhumb;
       let angle;
@@ -1027,19 +1037,19 @@ export default Ember.Mixin.create(SnapDraw, {
       if (bearing <= 90 && bearing >= 0) {
         // NE
         rhumb = 'NE';
-        angle = bearing;
+        angle = 90 - bearing;
       } else if (bearing <= 180 && bearing >= 90) {
-        // SE
-        rhumb = 'SE';
-        angle = (180 - bearing);
+        // NW
+        rhumb = 'NW';
+        angle = (bearing - 90);
       } else if (bearing >= -180 && bearing <= -90) {
         // SW
         rhumb = 'SW';
-        angle = (180 + bearing);
+        angle = (-1 * bearing - 90);
       } if (bearing <= 0 && bearing >= -90) {
-        // NW
-        rhumb = 'NW';
-        angle = (-1 * bearing);
+        // SE
+        rhumb = 'SE';
+        angle = (90 + bearing);
       }
 
       return {
