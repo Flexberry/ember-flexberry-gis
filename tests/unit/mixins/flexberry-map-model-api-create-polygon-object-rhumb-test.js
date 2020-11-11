@@ -54,7 +54,7 @@ test('test method createPolygonObjectRhumb for LineString', function (assert) {
     geometry: {
       type: 'LineString',
       coordinates: [
-          [3, 7], [-7, 7.000000000000001], [-6.999999999999999, 17]
+          [3, 7], [3.0000000000000013, -3], [13.000000000000002, -2.9999999999999996]
       ]
     },
     crs: {
@@ -117,7 +117,7 @@ test('test method createPolygonObjectRhumb for Polygon', function (assert) {
     geometry: {
       type: 'Polygon',
       coordinates: [
-          [[30, 70], [20, 70], [20, 80], [30, 80], [30, 70]]
+          [[30, 70], [30, 60], [40, 60], [40, 70], [30, 70]]
       ]
     },
     crs: {
