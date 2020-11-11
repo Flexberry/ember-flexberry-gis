@@ -6085,7 +6085,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-create-polygon-object-rh
       properties: undefined,
       geometry: {
         type: 'LineString',
-        coordinates: [[3, 7], [-7, 7.000000000000001], [-6.999999999999999, 17]]
+        coordinates: [[3, 7], [3.0000000000000013, -3], [13.000000000000002, -2.9999999999999996]]
       },
       crs: {
         properties: {
@@ -6139,7 +6139,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-create-polygon-object-rh
       properties: undefined,
       geometry: {
         type: 'Polygon',
-        coordinates: [[[30, 70], [20, 70], [20, 80], [30, 80], [30, 70]]]
+        coordinates: [[[30, 70], [30, 60], [40, 60], [40, 70], [30, 70]]]
       },
       crs: {
         properties: {
@@ -6860,11 +6860,11 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test', ['expor
       points: [{
         rhumb: 'SE',
         angle: 0,
-        distance: 444780.3209341317
+        distance: 4
       }, {
-        rhumb: 'NE',
+        rhumb: 'SE',
         angle: 90,
-        distance: 555213.4562030523
+        distance: 5
       }]
     }];
     var subject = mapApiMixinObject.create();
@@ -6894,11 +6894,11 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test', ['expor
       points: [{
         rhumb: 'SE',
         angle: 0,
-        distance: 444780.3209341317
+        distance: 4
       }, {
-        rhumb: 'NE',
+        rhumb: 'SE',
         angle: 90,
-        distance: 555213.4562030523
+        distance: 5
       }]
     }, {
       type: 'LineString',
@@ -6908,11 +6908,11 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test', ['expor
       points: [{
         rhumb: 'SE',
         angle: 0,
-        distance: 444780.3209341316
+        distance: 4
       }, {
-        rhumb: 'NE',
+        rhumb: 'SE',
         angle: 90,
-        distance: 443087.797530127
+        distance: 4
       }]
     }];
     var subject = mapApiMixinObject.create();
@@ -6943,19 +6943,19 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test', ['expor
       points: [{
         rhumb: 'SE',
         angle: 0,
-        distance: 444780.3209341317
+        distance: 4
+      }, {
+        rhumb: 'SE',
+        angle: 90,
+        distance: 5
       }, {
         rhumb: 'NE',
-        angle: 90,
-        distance: 555213.4562030523
-      }, {
-        rhumb: 'NW',
         angle: 0,
-        distance: 444780.3209341317
+        distance: 4
       }, {
         rhumb: 'NW',
         angle: 90,
-        distance: 551831.2448362056
+        distance: 5
       }]
     }];
     var subject = mapApiMixinObject.create();
@@ -6986,19 +6986,19 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test', ['expor
       points: [{
         rhumb: 'SE',
         angle: 0,
-        distance: 444780.3209341317
+        distance: 4
+      }, {
+        rhumb: 'SE',
+        angle: 90,
+        distance: 5
       }, {
         rhumb: 'NE',
-        angle: 90,
-        distance: 555213.4562030523
-      }, {
-        rhumb: 'NW',
         angle: 0,
-        distance: 444780.3209341317
+        distance: 4
       }, {
         rhumb: 'NW',
         angle: 90,
-        distance: 551831.2448362056
+        distance: 5
       }]
     }, {
       type: 'Polygon',
@@ -7007,21 +7007,21 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test', ['expor
       skip: 0,
       hole: true,
       points: [{
+        rhumb: 'SE',
+        angle: 90,
+        distance: 1
+      }, {
         rhumb: 'NE',
-        angle: 90,
-        distance: 110924.21460672919
-      }, {
-        rhumb: 'NW',
         angle: 0,
-        distance: 111195.08023353288
+        distance: 1
       }, {
         rhumb: 'NW',
         angle: 90,
-        distance: 110771.94938253175
+        distance: 1
       }, {
         rhumb: 'SE',
         angle: 0,
-        distance: 111195.08023353288
+        distance: 1
       }]
     }];
     var subject = mapApiMixinObject.create();
@@ -7052,19 +7052,19 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test', ['expor
       points: [{
         rhumb: 'SE',
         angle: 0,
-        distance: 444780.3209341317
+        distance: 4
+      }, {
+        rhumb: 'SE',
+        angle: 90,
+        distance: 5
       }, {
         rhumb: 'NE',
-        angle: 90,
-        distance: 555213.4562030523
-      }, {
-        rhumb: 'NW',
         angle: 0,
-        distance: 444780.3209341317
+        distance: 4
       }, {
         rhumb: 'NW',
         angle: 90,
-        distance: 551831.2448362056
+        distance: 5
       }]
     }, {
       type: 'Polygon',
@@ -7075,19 +7075,19 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test', ['expor
       points: [{
         rhumb: 'SE',
         angle: 0,
-        distance: 111195.08023353288
+        distance: 1
+      }, {
+        rhumb: 'SE',
+        angle: 90,
+        distance: 1
       }, {
         rhumb: 'NE',
-        angle: 90,
-        distance: 111127.34319504516
-      }, {
-        rhumb: 'NW',
         angle: 0,
-        distance: 111195.08023353288
+        distance: 1
       }, {
         rhumb: 'NW',
         angle: 90,
-        distance: 111042.69124061048
+        distance: 1
       }]
     }];
     var subject = mapApiMixinObject.create();
@@ -7118,19 +7118,19 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test', ['expor
       points: [{
         rhumb: 'SE',
         angle: 0,
-        distance: 444780.3209341317
+        distance: 4
+      }, {
+        rhumb: 'SE',
+        angle: 90,
+        distance: 5
       }, {
         rhumb: 'NE',
-        angle: 90,
-        distance: 555213.4562030523
-      }, {
-        rhumb: 'NW',
         angle: 0,
-        distance: 444780.3209341317
+        distance: 4
       }, {
         rhumb: 'NW',
         angle: 90,
-        distance: 551831.2448362056
+        distance: 5
       }]
     }, {
       type: 'Polygon',
@@ -7139,21 +7139,21 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test', ['expor
       skip: 0,
       hole: true,
       points: [{
+        rhumb: 'SE',
+        angle: 90,
+        distance: 1
+      }, {
         rhumb: 'NE',
-        angle: 90,
-        distance: 110924.21460672919
-      }, {
-        rhumb: 'NW',
         angle: 0,
-        distance: 111195.08023353288
+        distance: 1
       }, {
         rhumb: 'NW',
         angle: 90,
-        distance: 110771.94938253175
+        distance: 1
       }, {
         rhumb: 'SE',
         angle: 0,
-        distance: 111195.08023353288
+        distance: 1
       }]
     }, {
       type: 'Polygon',
@@ -7164,19 +7164,19 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-get-rhumb-test', ['expor
       points: [{
         rhumb: 'SE',
         angle: 0,
-        distance: 111195.08023353288
+        distance: 1
+      }, {
+        rhumb: 'SE',
+        angle: 90,
+        distance: 1
       }, {
         rhumb: 'NE',
-        angle: 90,
-        distance: 111127.34319504516
-      }, {
-        rhumb: 'NW',
         angle: 0,
-        distance: 111195.08023353288
+        distance: 1
       }, {
         rhumb: 'NW',
         angle: 90,
-        distance: 111042.69124061048
+        distance: 1
       }]
     }];
     var subject = mapApiMixinObject.create();
@@ -10028,7 +10028,7 @@ define('dummy/tests/unit/utils/rhumb-operations-test', ['exports', 'ember-flexbe
       type: 'Feature',
       geometry: {
         type: 'Polygon',
-        coordinates: [[[20, 20], [10, 20], [10, 30], [20, 30], [20, 20]]]
+        coordinates: [[[20, 20], [20, 10], [30, 10], [30, 20], [20, 20]]]
       },
       properties: undefined,
       crs: {
@@ -10072,7 +10072,7 @@ define('dummy/tests/unit/utils/rhumb-operations-test', ['exports', 'ember-flexbe
       properties: undefined,
       geometry: {
         type: 'Polygon',
-        coordinates: [[[-5936517.120908923, 517670.4443068467], [-5937517.120908923, 517670.4443068467], [-5937517.120908923, 518670.4443068467], [-5936517.120908923, 518670.4443068467], [-5936517.120908923, 517670.4443068467]]]
+        coordinates: [[[-5936517.120908923, 517670.4443068467], [-5936517.120908923, 516670.4443068467], [-5935517.120908923, 516670.4443068467], [-5935517.120908923, 517670.4443068467], [-5936517.120908923, 517670.4443068467]]]
       },
       crs: {
         type: 'name',
@@ -10114,7 +10114,7 @@ define('dummy/tests/unit/utils/rhumb-operations-test', ['exports', 'ember-flexbe
       type: 'Feature',
       geometry: {
         type: 'LineString',
-        coordinates: [[20, 20], [10, 20], [10, 30], [20, 30]]
+        coordinates: [[20, 20], [20, 10], [30, 10], [30, 20]]
       },
       properties: undefined,
       crs: {
@@ -10158,7 +10158,7 @@ define('dummy/tests/unit/utils/rhumb-operations-test', ['exports', 'ember-flexbe
       properties: undefined,
       geometry: {
         type: 'LineString',
-        coordinates: [[-5936517.120908923, 517670.4443068467], [-5937517.120908923, 517670.4443068467], [-5937517.120908923, 518670.4443068467], [-5936517.120908923, 518670.4443068467]]
+        coordinates: [[-5936517.120908923, 517670.4443068467], [-5936517.120908923, 516670.4443068467], [-5935517.120908923, 516670.4443068467], [-5935517.120908923, 517670.4443068467]]
       },
       crs: {
         type: 'name',
