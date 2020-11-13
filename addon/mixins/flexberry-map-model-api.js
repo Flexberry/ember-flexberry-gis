@@ -54,7 +54,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @return nothing
   */
   showLayerObjects(layerId, objectIds) {
-    this._setVisibilityObjects(layerId, objectIds, true);
+    return this._setVisibilityObjects(layerId, objectIds, true);
   },
 
   /**
@@ -66,7 +66,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @return nothing
   */
   hideLayerObjects(layerId, objectIds) {
-    this._setVisibilityObjects(layerId, objectIds, false);
+    return this._setVisibilityObjects(layerId, objectIds, false);
   },
 
   /**
@@ -597,12 +597,12 @@ export default Ember.Mixin.create(SnapDraw, {
       if (Ember.isArray(objectIds)) {
         let [layer, leafletObject] = this._getModelLeafletObject(layerId);
         if (Ember.isNone(layer)) {
-          throw `Layer '${layerId}' not found.`;
+          return reject(`Layer '${layerId}' not found.`);
         }
 
         if (this._getTypeLayer(layer) instanceof VectorLayer) {
           if (Ember.isNone(leafletObject)) {
-            throw 'Layer type not supported';
+            return reject('Layer type not supported');
           }
 
           const map = this.get('mapApi').getFromApi('leafletMap');
