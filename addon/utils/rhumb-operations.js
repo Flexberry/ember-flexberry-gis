@@ -65,8 +65,8 @@ const createObjectRhumb = (data, layerCrs, that) => {
 
   // Calculation rhumb by point, distance (unit metre) and angle (unit radian).
   const rhumbToPoint = function (point, distance, angle) {
-    let x = point[0] + distance * Math.cos(angle);
-    let y = point[1] + distance * Math.sin(angle);
+    let x = point[0] + distance * Math.sin(angle);
+    let y = point[1] + distance * Math.cos(angle);
 
     return [x, y];
   };

@@ -86,6 +86,7 @@ let latlngToPolygonJsts = function(latlngs, crs, precision) {
 
 // all type
 let coordToJsts = function(coord) {
+  coord = (coord instanceof Array) ? coord : Array.from(coord);
   return coord.length === 3 ?
     new jsts.geom.Coordinate(coord[0], coord[1], coord[2]) :
       coord.length === 2 ?
@@ -100,18 +101,21 @@ let geometryToJsts = function(geometry) {
       coords = coordToJsts(geometry.coordinates);
       return geometryFactory.createPoint(coords);
     case 'LineString':
-      coords = geometry.coordinates.map(coordToJsts);
+      let coordsAsArray = geometry.coordinates instanceof Array ? geometry.coordinates : Array.from(geometry.coordinates);
+      coords = coordsAsArray.map(coordToJsts);
       return coordinatesToLineString(coords);
     case 'MultiLineString':
       for (let i = 0; i < geometry.coordinates.length; i++) {
-        coords.push(geometry.coordinates[i].map(coordToJsts));
+        let coordsAsArray = geometry.coordinates[i] instanceof Array ? geometry.coordinates[i] : Array.from(geometry.coordinates[i]);
+        coords.push(coordsAsArray.map(coordToJsts));
       }
 
       let geometries = coords.map(coordinatesToLineString);
       return geometryFactory.createMultiLineString(geometries);
     case 'Polygon':
       for (let i = 0; i < geometry.coordinates.length; i++) {
-        coords.push(geometry.coordinates[i].map(coordToJsts));
+        let coordsAsArray = geometry.coordinates[i] instanceof Array ? geometry.coordinates[i] : Array.from(geometry.coordinates[i]);
+        coords.push(coordsAsArray.map(coordToJsts));
       }
 
       return coordinatesToPolygon(coords);
@@ -119,7 +123,8 @@ let geometryToJsts = function(geometry) {
       for (let i = 0; i < geometry.coordinates.length; i++) {
         let coordinates = [];
         for (let j = 0; j < geometry.coordinates[i].length; j++) {
-          coordinates.push(geometry.coordinates[i][j].map(coordToJsts));
+          let coordsAsArray = geometry.coordinates[i][j] instanceof Array ? geometry.coordinates[i][j] : Array.from(geometry.coordinates[i][j]);
+          coordinates.push(coordsAsArray.map(coordToJsts));
         }
 
         coords.push(coordinates);
