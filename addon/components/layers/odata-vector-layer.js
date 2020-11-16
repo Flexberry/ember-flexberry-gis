@@ -78,11 +78,20 @@ export default BaseVectorLayer.extend({
         return layer.state === state.insert;
       });
 
+      let updatedLayer = leafletObject.getLayers().filter(layer => {
+        return layer.state === state.update;
+      });
+
       // to send request via the needed adapter
       let obj = this.get('_adapterStoreModelProjectionGeom');
       obj.adapter.batchUpdate(obj.store, modelsLayer).then((models) => {
         modelsLayer.clear();
         let insertedModelId = [];
+        if (!Ember.isNone(updatedLayer) && updatedLayer.length > 0) {
+          updatedLayer.map((layer) => {
+            layer.state = state.exist;
+          });
+        }
 
         models.forEach(model => {
           let ids = insertedIds.filter(id => {
@@ -1279,7 +1288,7 @@ export default BaseVectorLayer.extend({
               leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
             }
 
-            return;
+            return Ember.RSVP.resolve();
           }
 
           let queryOldBounds = new Query.GeometryPredicate(obj.geometryField);
@@ -1331,7 +1340,10 @@ export default BaseVectorLayer.extend({
         return promise;
       } else if (leafletObject.statusLoadLayer) {
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+        return Ember.RSVP.resolve();
       }
+    } else {
+      return Ember.RSVP.reject('leafletObject is none');
     }
   },
 
@@ -1344,6 +1356,7 @@ export default BaseVectorLayer.extend({
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       leafletMap.on('moveend', () => { this.continueLoad(); });
+      leafletMap.on('flexberry-map:moveend',  this._continueLoad, this);
     }
   },
 
