@@ -600,7 +600,7 @@ export default BaseVectorLayer.extend({
               leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
             }
 
-            return Ember.RSVP.resolve();
+            return Ember.RSVP.resolve('Features in bounds is already loaded');
           }
 
           oldPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs));
@@ -638,7 +638,7 @@ export default BaseVectorLayer.extend({
           });
         });
       } else {
-        promise = Ember.RSVP.resolve();
+        promise = Ember.RSVP.resolve('The layer does not require loading');
       }
 
       if (leafletObject.statusLoadLayer) {

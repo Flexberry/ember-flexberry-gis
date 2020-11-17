@@ -1288,7 +1288,7 @@ export default BaseVectorLayer.extend({
               leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
             }
 
-            return Ember.RSVP.resolve();
+            return Ember.RSVP.resolve('Features in bounds is already loaded');
           }
 
           let queryOldBounds = new Query.GeometryPredicate(obj.geometryField);
@@ -1340,7 +1340,7 @@ export default BaseVectorLayer.extend({
         return promise;
       } else if (leafletObject.statusLoadLayer) {
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
-        return Ember.RSVP.resolve();
+        return Ember.RSVP.resolve('The layer does not require loading');
       }
     } else {
       return Ember.RSVP.reject('leafletObject is none');
