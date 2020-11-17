@@ -148,6 +148,20 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Removes all the layers from the group.
+
+    @method clearLayers
+  */
+  clearLayers() {
+    let leafletObject = this.get('_leafletObject');
+    leafletObject.eachLayer((layer) => {
+      L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
+    });
+
+    return leafletObject;
+  },
+
+  /**
     Deletes model in odata layer.
 
     @method removeLayer
@@ -867,6 +881,7 @@ export default BaseVectorLayer.extend({
     layer.editformname = obj.modelName + this.get('postfixForEditForm');
     layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
     layer.models = Ember.A();
+    layer.clearLayers = this.get('clearLayers').bind(this);
 
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {

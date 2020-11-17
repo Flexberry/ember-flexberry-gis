@@ -14,6 +14,8 @@ import SnapDraw from './snap-draw';
 import ClipperLib from 'npm:clipper-lib';
 import jsts from 'npm:jsts';
 import { geometryToJsts } from '../utils/layer-to-jsts';
+import { downloadFile } from '../utils/download-file';
+import { getCrsByName } from '../utils/get-crs-by-name';
 
 export default Ember.Mixin.create(SnapDraw, {
   /**
