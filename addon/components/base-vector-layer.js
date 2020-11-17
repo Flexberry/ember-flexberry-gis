@@ -585,6 +585,27 @@ export default BaseLayer.extend({
   continueLoad() {
   },
 
+  /**
+    Handles 'flexberry-map:continueLoad' event of leaflet map.
+
+    @method search
+    @param {Object} e Event object.
+    @param {Object} layerModel Object describing layer that must be continueLoad.
+    @param {Object} results Hash containing promise.
+  */
+  _continueLoad(e) {
+    let shouldContinueLoad = Ember.A(e.layers || []).contains(this.get('layerModel'));
+    if (!shouldContinueLoad) {
+      return;
+    }
+
+    // Call public identify method, if layer should be continueLoad.
+    e.results.push({
+      layerModel: this.get('layerModel'),
+      promise: this.continueLoad(this.get('_leafletObject'))
+    });
+  },
+
   /*
     Clear changes. Needs for CancelEdit and Reload
   */

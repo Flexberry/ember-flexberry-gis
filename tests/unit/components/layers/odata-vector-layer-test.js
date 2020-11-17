@@ -883,7 +883,7 @@ test('test method save() no modified objects', function(assert) {
 });
 
 test('test method save() with objects', function(assert) {
-  assert.expect(14);
+  assert.expect(15);
   var done = assert.async(1);
   let component = this.subject(param);
 
@@ -937,6 +937,7 @@ test('test method save() with objects', function(assert) {
         assert.equal(data.layers.length, 1);
         assert.equal(realCountArr(leafletObject.models), 0);
         assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletObject.getLayers()[0].state, 'exist');
         done();
 
         spyBatchUpdate.restore();

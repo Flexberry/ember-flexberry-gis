@@ -600,7 +600,7 @@ export default BaseVectorLayer.extend({
               leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
             }
 
-            return;
+            return Ember.RSVP.resolve('Features in bounds is already loaded');
           }
 
           oldPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs));
@@ -638,7 +638,7 @@ export default BaseVectorLayer.extend({
           });
         });
       } else {
-        promise = Ember.RSVP.resolve();
+        promise = Ember.RSVP.resolve('The layer does not require loading');
       }
 
       if (leafletObject.statusLoadLayer) {
@@ -646,6 +646,8 @@ export default BaseVectorLayer.extend({
       }
 
       return promise;
+    } else {
+      return Ember.RSVP.reject('leafletObject is none');
     }
   },
 
@@ -658,6 +660,7 @@ export default BaseVectorLayer.extend({
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       leafletMap.on('moveend',  () => { this.continueLoad(); });
+      leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
     }
   },
 
