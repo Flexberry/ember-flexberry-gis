@@ -285,7 +285,7 @@ test('test method hideAllLayerObjects', function (assert) {
   Array.prototype.findBy = arrayFindBy;
 
   //Act
-  let result = subject.hideAllLayerObjects('1');
+  subject.hideAllLayerObjects('1');
 
   //Assert
   assert.equal(mapRemoveSpy.callCount, 7);
@@ -296,7 +296,6 @@ test('test method hideAllLayerObjects', function (assert) {
 test('test method hideLayers with continueLoading = false', function (assert) {
   //Arrange
   assert.expect(3);
-  let done = assert.async(1);
 
   let map = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
@@ -319,7 +318,7 @@ test('test method hideLayers with continueLoading = false', function (assert) {
   Array.prototype.findBy = arrayFindBy;
 
   //Act
-  let result = subject.hideLayers(['1']);
+  subject.hideLayers(['1']);
 
   //Assert
   assert.equal(subject.mapLayer.findBy('id', '1').visibility, false);
@@ -333,7 +332,6 @@ test('test method hideLayers with continueLoading = false', function (assert) {
 test('test method hideLayers with continueLoading = true', function (assert) {
   //Arrange
   assert.expect(3);
-  let done = assert.async(1);
 
   let map = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
@@ -356,7 +354,7 @@ test('test method hideLayers with continueLoading = true', function (assert) {
   Array.prototype.findBy = arrayFindBy;
 
   //Act
-  let result = subject.hideLayers(['1']);
+  subject.hideLayers(['1']);
 
   //Assert
   assert.equal(subject.mapLayer.findBy('id', '1').visibility, false);
