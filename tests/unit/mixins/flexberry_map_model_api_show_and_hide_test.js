@@ -261,8 +261,7 @@ test('test method showAllLayerObjects with continueLoading = true', function (as
 
 test('test method hideAllLayerObjects', function (assert) {
   //Arrange
-  assert.expect(3);
-  let done = assert.async(1);
+  assert.expect(1);
 
   let map = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
@@ -289,19 +288,14 @@ test('test method hideAllLayerObjects', function (assert) {
   let result = subject.hideAllLayerObjects('1');
 
   //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise);
-  result.then((res)=> {
-    assert.equal(res, 'success');
-    assert.equal(mapRemoveSpy.callCount, 7);
-    done();
-    mapRemoveSpy.restore();
-    Array.prototype.findBy = null;
-  });
+  assert.equal(mapRemoveSpy.callCount, 7);
+  mapRemoveSpy.restore();
+  Array.prototype.findBy = null;
 });
 
 test('test method hideLayers with continueLoading = false', function (assert) {
   //Arrange
-  assert.expect(5);
+  assert.expect(3);
   let done = assert.async(1);
 
   let map = L.map(document.createElement('div'), {
@@ -328,22 +322,17 @@ test('test method hideLayers with continueLoading = false', function (assert) {
   let result = subject.hideLayers(['1']);
 
   //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise);
-  result.then((res)=> {
-    assert.equal(res, 'success');
-    assert.equal(subject.mapLayer.findBy('id', '1').visibility, false);
-    assert.equal(getModelLayerFeatureSpy.callCount, 0);
-    assert.equal(leafletMapFireStub.callCount, 0);
-    done();
-    getModelLayerFeatureSpy.restore();
-    leafletMapFireStub.restore();
-    Array.prototype.findBy = null;
-  });
+  assert.equal(subject.mapLayer.findBy('id', '1').visibility, false);
+  assert.equal(getModelLayerFeatureSpy.callCount, 0);
+  assert.equal(leafletMapFireStub.callCount, 0);
+  getModelLayerFeatureSpy.restore();
+  leafletMapFireStub.restore();
+  Array.prototype.findBy = null;
 });
 
 test('test method hideLayers with continueLoading = true', function (assert) {
   //Arrange
-  assert.expect(5);
+  assert.expect(3);
   let done = assert.async(1);
 
   let map = L.map(document.createElement('div'), {
@@ -370,15 +359,10 @@ test('test method hideLayers with continueLoading = true', function (assert) {
   let result = subject.hideLayers(['1']);
 
   //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise);
-  result.then((res)=> {
-    assert.equal(res, 'success');
-    assert.equal(subject.mapLayer.findBy('id', '1').visibility, false);
-    assert.equal(getModelLayerFeatureSpy.callCount, 0);
-    assert.equal(leafletMapFireStub.callCount, 0);
-    done();
-    getModelLayerFeatureSpy.restore();
-    leafletMapFireStub.restore();
-    Array.prototype.findBy = null;
-  });
+  assert.equal(subject.mapLayer.findBy('id', '1').visibility, false);
+  assert.equal(getModelLayerFeatureSpy.callCount, 0);
+  assert.equal(leafletMapFireStub.callCount, 0);
+  getModelLayerFeatureSpy.restore();
+  leafletMapFireStub.restore();
+  Array.prototype.findBy = null;
 });
