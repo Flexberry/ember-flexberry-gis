@@ -403,7 +403,8 @@ export default BaseVectorLayer.extend({
         url: layerModel.get('_leafletObject.options.metadataUrl') + layerModel.get('_leafletObject.modelName') + '.json',
         success: function (dataClass) {
           let odataQueryName =  Ember.String.pluralize(capitalize(camelize(dataClass.modelName)));
-          obj.adapter.callAction(config.APP.backendActions.getIntersections, { geom: geomEWKT, odataQueryName: odataQueryName }, _this.get('odataUrl'), null, (data) => {
+          let odataUrl = _this.get('odataUrl');
+          obj.adapter.callAction(config.APP.backendActions.getIntersections, { geom: geomEWKT, odataQueryName: odataQueryName }, odataUrl, null, (data) => {
             new Ember.RSVP.Promise((resolve) => {
               const normalizedRecords = { data: Ember.A(), included: Ember.A() };
               let odataValue = data.value;
