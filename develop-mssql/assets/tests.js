@@ -7138,6 +7138,365 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-savelayer-test.jshint', 
     assert.ok(true, 'unit/mixins/flexberry-map-model-api-savelayer-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/mixins/flexberry-map-model-api-set-visibility-objects-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon', 'ember-flexberry-gis/layers/-private/vector'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon, _emberFlexberryGisLayersPrivateVector) {
+
+  (0, _qunit.module)('Unit | Mixin | test method setVisibilityObjects');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  var layerModel = _ember['default'].A({
+    settingsAsObject: {
+      labelSettings: {
+        signMapObjects: true
+      }
+    }
+  });
+  var _labelsLayer = L.featureGroup();
+  var leafletObject = L.featureGroup();
+  leafletObject.options = {
+    showExisting: false,
+    continueLoading: false
+  };
+  leafletObject._labelsLayer = _labelsLayer;
+  var firstTestLayer = L.polygon([[1, 2], [4, 2], [4, 4], [1, 2]]).addTo(leafletObject);
+  firstTestLayer.id = '1';
+  var secondTestLayer = L.polygon([[10, 20], [40, 20], [40, 40], [10, 20]]).addTo(leafletObject);
+  secondTestLayer.id = '2';
+  var thirdTestLayer = L.polygon([[0.1, 0.2], [0.4, 0.2], [0.4, 0.4], [0.1, 0.2]]).addTo(leafletObject);
+  thirdTestLayer.id = '3';
+  var firstTestLabelLayer = L.marker([1, 2]).addTo(_labelsLayer);
+  firstTestLabelLayer.id = '1';
+  var secondTestLabelLayer = L.marker([40, 20]).addTo(_labelsLayer);
+  secondTestLabelLayer.id = '2';
+  var thirdTestLabelLayer = L.marker([20, 40]).addTo(_labelsLayer);
+  thirdTestLabelLayer.id = '3';
+
+  (0, _qunit.test)('Test to addLayers to map (visibility = true)', function (assert) {
+    //Arrange
+    assert.expect(9);
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    var done = assert.async(1);
+    var subject = mapApiMixinObject.create({
+      _getModelLeafletObject: function _getModelLeafletObject() {
+        return [layerModel, leafletObject];
+      },
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      _getLayerFeatureId: function _getLayerFeatureId(layer, shape) {
+        return shape.id;
+      },
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        return _ember['default'].RSVP.resolve();
+      }
+    });
+    var getModelLeafletObjSpy = _sinon['default'].spy(subject, '_getModelLeafletObject');
+    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
+    var mapAddSpy = _sinon['default'].spy(map, 'addLayer');
+
+    //Act
+    var result = subject._setVisibilityObjects('1', ['1', '2'], true);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Equals result = Promise');
+    result.then(function (res) {
+      assert.equal(res, 'sucsess', 'Check result message');
+      assert.equal(Object.values(map._layers).length, 5, 'Check count layers on Map');
+      assert.equal(mapAddSpy.callCount, 5, 'Check call count to method addLayer');
+      assert.equal(getModelLeafletObjSpy.callCount, 1, 'Check call count to method _getModelLeafletObject');
+      assert.equal(getModelLeafletObjSpy.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
+      assert.equal(getModelLayerFeatureSpy.callCount, 1, 'Check call count to method _getModelLayerFeature');
+      assert.equal(getModelLayerFeatureSpy.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+      assert.deepEqual(getModelLayerFeatureSpy.args[0][1], ['1', '2'], 'Check call second arg to method _getModelLayerFeature');
+      done();
+      getModelLeafletObjSpy.restore();
+      getModelLayerFeatureSpy.restore();
+      mapAddSpy.restore();
+    });
+  });
+
+  (0, _qunit.test)('Test to removeLayers to map (visibility = false)', function (assert) {
+    //Arrange
+    assert.expect(7);
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    var done = assert.async(1);
+    map.addLayer(leafletObject);
+    map.addLayer(leafletObject._labelsLayer);
+    var subject = mapApiMixinObject.create({
+      _getModelLeafletObject: function _getModelLeafletObject() {
+        return [layerModel, leafletObject];
+      },
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      _getLayerFeatureId: function _getLayerFeatureId(layer, shape) {
+        return shape.id;
+      },
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        return _ember['default'].RSVP.resolve();
+      }
+    });
+    var getModelLeafletObjSpy = _sinon['default'].spy(subject, '_getModelLeafletObject');
+    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
+    var mapRemoveSpy = _sinon['default'].spy(map, 'removeLayer');
+
+    //Act
+    var result = subject._setVisibilityObjects('1', ['1', '2'], false);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Equals result = Promise');
+    result.then(function (res) {
+      assert.equal(res, 'sucsess', 'Check result message');
+      assert.equal(Object.values(map._layers).length, 5, 'Check count layers on Map');
+      assert.equal(mapRemoveSpy.callCount, 4, 'Check call count to method removeLayer');
+      assert.equal(getModelLeafletObjSpy.callCount, 1, 'Check call count to method _getModelLeafletObject');
+      assert.equal(getModelLeafletObjSpy.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
+      assert.equal(getModelLayerFeatureSpy.callCount, 0, 'Check call count to method _getModelLayerFeature');
+      done();
+      getModelLeafletObjSpy.restore();
+      getModelLayerFeatureSpy.restore();
+      mapRemoveSpy.restore();
+    });
+  });
+
+  (0, _qunit.test)('Test to check fail message', function (assert) {
+    //Arrange
+    assert.expect(6);
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    var done = assert.async(1);
+    leafletObject.options.continueLoading = true;
+    var subject = mapApiMixinObject.create({
+      _getModelLeafletObject: function _getModelLeafletObject() {
+        return [layerModel, leafletObject];
+      },
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      _getLayerFeatureId: function _getLayerFeatureId(layer, shape) {
+        return shape.id;
+      },
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        return _ember['default'].RSVP.resolve();
+      }
+    });
+    var getModelLeafletObjSpy = _sinon['default'].spy(subject, '_getModelLeafletObject');
+    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
+    var mapRemoveSpy = _sinon['default'].spy(map, 'removeLayer');
+
+    //Act
+    var result = subject._setVisibilityObjects('1', ['1', '2'], true);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Equals result = Promise');
+    result.then(function () {})['catch'](function (res) {
+      assert.equal(res, 'Not working to layer with continueLoading', 'Check result message');
+      assert.equal(Object.values(map._layers).length, 0, 'Check count layers on Map');
+      assert.equal(mapRemoveSpy.callCount, 0, 'Check call count to method removeLayer');
+      assert.equal(getModelLeafletObjSpy.callCount, 1, 'Check call count to method _getModelLeafletObject');
+      assert.equal(getModelLayerFeatureSpy.callCount, 0, 'Check call count to method _getModelLayerFeature');
+      done();
+      leafletObject.options.continueLoading = false;
+      getModelLeafletObjSpy.restore();
+      getModelLayerFeatureSpy.restore();
+      mapRemoveSpy.restore();
+    });
+  });
+
+  (0, _qunit.test)('Map doesn\'t layers and visibility = false', function (assert) {
+    //Arrange
+    assert.expect(6);
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    var done = assert.async(1);
+    var subject = mapApiMixinObject.create({
+      _getModelLeafletObject: function _getModelLeafletObject() {
+        return [layerModel, leafletObject];
+      },
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      _getLayerFeatureId: function _getLayerFeatureId(layer, shape) {
+        return shape.id;
+      },
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        return _ember['default'].RSVP.resolve();
+      }
+    });
+    var getModelLeafletObjSpy = _sinon['default'].spy(subject, '_getModelLeafletObject');
+    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
+    var mapRemoveSpy = _sinon['default'].spy(map, 'removeLayer');
+
+    //Act
+    var result = subject._setVisibilityObjects('1', ['1', '2'], false);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Equals result = Promise');
+    result.then(function (res) {
+      assert.equal(res, 'sucsess', 'Check result message');
+      assert.equal(Object.values(map._layers).length, 0, 'Check count layers on Map');
+      assert.equal(mapRemoveSpy.callCount, 4, 'Check call count to method removeLayer');
+      assert.equal(getModelLeafletObjSpy.callCount, 1, 'Check call count to method _getModelLeafletObject');
+      assert.equal(getModelLayerFeatureSpy.callCount, 0, 'Check call count to method _getModelLayerFeature');
+      done();
+      getModelLeafletObjSpy.restore();
+      getModelLayerFeatureSpy.restore();
+      mapRemoveSpy.restore();
+    });
+  });
+
+  (0, _qunit.test)('Map doesn\'t layers and visibility = false', function (assert) {
+    //Arrange
+    assert.expect(9);
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    map.addLayer(leafletObject);
+    map.addLayer(leafletObject._labelsLayer);
+    var done = assert.async(1);
+    var subject = mapApiMixinObject.create({
+      _getModelLeafletObject: function _getModelLeafletObject() {
+        return [layerModel, leafletObject];
+      },
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      _getLayerFeatureId: function _getLayerFeatureId(layer, shape) {
+        return shape.id;
+      },
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        return _ember['default'].RSVP.resolve();
+      }
+    });
+    var getModelLeafletObjSpy = _sinon['default'].spy(subject, '_getModelLeafletObject');
+    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
+    var mapAddSpy = _sinon['default'].spy(map, 'addLayer');
+
+    //Act
+    var result = subject._setVisibilityObjects('1', ['1', '2'], true);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Equals result = Promise');
+    result.then(function (res) {
+      assert.equal(res, 'sucsess', 'Check result message');
+      assert.equal(Object.values(map._layers).length, 9, 'Check count layers on Map');
+      assert.equal(mapAddSpy.callCount, 4, 'Check call count to method addLayer');
+      assert.equal(getModelLeafletObjSpy.callCount, 1, 'Check call count to method _getModelLeafletObject');
+      assert.equal(getModelLeafletObjSpy.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
+      assert.equal(getModelLayerFeatureSpy.callCount, 1, 'Check call count to method _getModelLayerFeature');
+      assert.equal(getModelLayerFeatureSpy.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+      assert.deepEqual(getModelLayerFeatureSpy.args[0][1], ['1', '2'], 'Check call second arg to method _getModelLayerFeature');
+      done();
+      getModelLeafletObjSpy.restore();
+      getModelLayerFeatureSpy.restore();
+      mapAddSpy.restore();
+    });
+  });
+
+  (0, _qunit.test)('Test to check fail message \'showExisting\'', function (assert) {
+    //Arrange
+    assert.expect(6);
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    var done = assert.async(1);
+    leafletObject.options.showExisting = true;
+    var subject = mapApiMixinObject.create({
+      _getModelLeafletObject: function _getModelLeafletObject() {
+        return [layerModel, leafletObject];
+      },
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      _getLayerFeatureId: function _getLayerFeatureId(layer, shape) {
+        return shape.id;
+      },
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        return _ember['default'].RSVP.resolve();
+      }
+    });
+    var getModelLeafletObjSpy = _sinon['default'].spy(subject, '_getModelLeafletObject');
+    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
+    var mapAddSpy = _sinon['default'].spy(map, 'addLayer');
+
+    //Act
+    var result = subject._setVisibilityObjects('1', ['1', '2'], true);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Equals result = Promise');
+    result.then(function () {})['catch'](function (res) {
+      assert.equal(res, 'Not working to layer with continueLoading', 'Check result message');
+      assert.equal(Object.values(map._layers).length, 0, 'Check count layers on Map');
+      assert.equal(mapAddSpy.callCount, 0, 'Check call count to method addLayer');
+      assert.equal(getModelLeafletObjSpy.callCount, 1, 'Check call count to method _getModelLeafletObject');
+      assert.equal(getModelLayerFeatureSpy.callCount, 0, 'Check call count to method _getModelLayerFeature');
+      done();
+      leafletObject.options.showExisting = false;
+      getModelLeafletObjSpy.restore();
+      getModelLayerFeatureSpy.restore();
+      mapAddSpy.restore();
+    });
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-set-visibility-objects-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-set-visibility-objects-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-set-visibility-objects-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-set-visibility-objects-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-set-visibility-objects-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-set-visibility-objects-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/mixins/flexberry-map-model-api-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon) {
 
   (0, _qunit.module)('Unit | Mixin | flexberry map model api test');
