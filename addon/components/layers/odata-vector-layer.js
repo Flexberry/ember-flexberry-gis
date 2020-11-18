@@ -383,11 +383,68 @@ export default BaseVectorLayer.extend({
     @param {Object[]} results Objects describing identification results.
   **/
   identify(e) {
-    let geometryField = this.get('geometryField') || 'geometry';
-    let pred = new Query.GeometryPredicate(geometryField);
-    let predicate = pred.intersects(e.polygonLayer.toEWKT(this.get('crs')));
-    let featuresPromise = this._getFeature(predicate, null, true);
+    let featuresPromise = this._getIntersections(e.polygonLayer.toEWKT(this.get('crs')));
     return featuresPromise;
+  },
+
+ /**
+   * This method get intersectoins with ajax - post
+   * @method getIntersections
+   * @param {String} geomEWKT Geometry to EWKT
+   */
+  _getIntersections(geomEWKT) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let obj = this.get('_adapterStoreModelProjectionGeom');
+      let layerModel = this.get('layerModel');
+      let table = null;
+      Ember.$.ajax({
+        url: layerModel.get('_leafletObject.options.metadataUrl') + layerModel.get('_leafletObject.modelName') + '.json',
+        async: false,
+        success: function (data) {
+          table = data.className;
+        }
+      });
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      obj.adapter.callAction('GetIntersections', {geom: geomEWKT, table: table}, '/SmartForest/odata', null, (data) => {
+          new Ember.RSVP.Promise((resolve) => {
+            const normalizedRecords = { data: Ember.A(), included: Ember.A() };
+            let odataValue = data.value;
+            if (!Ember.isNone(odataValue)) {
+              odataValue.forEach(record => {
+                if(record.hasOwnProperty("@odata.type")){
+                  delete record["@odata.type"];
+                }
+
+                const normalized = obj.store.normalize(obj.modelName, record);
+                normalizedRecords.data.addObject(normalized.data);
+                if (normalized.included) {
+                  normalizedRecords.included.addObjects(normalized.included);
+                }
+              });
+            }
+
+            resolve(Ember.run(obj.store, obj.store.push, normalizedRecords));
+          }).then((res) => {
+            let features = Ember.A();
+            let models = res;
+            if (typeof res.toArray === 'function') {
+              models = res.toArray();
+            }
+    
+            let layer = L.featureGroup();
+    
+            models.forEach(model => {
+              let feat = this.addLayerObject(layer, model, false);
+              features.push(feat.feature);
+            });
+    
+            return resolve(features);
+          });
+        },
+        (mes) => {
+          reject(mes);
+        });
+    });
   },
 
   /**
