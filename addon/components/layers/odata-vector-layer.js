@@ -410,8 +410,8 @@ export default BaseVectorLayer.extend({
           let odataValue = data.value;
           if (!Ember.isNone(odataValue)) {
             odataValue.forEach(record => {
-              if (record.hasOwnProperty("@odata.type")) {
-                delete record["@odata.type"];
+              if (record.hasOwnProperty('@odata.type')) {
+                delete record['@odata.type'];
               }
 
               const normalized = obj.store.normalize(obj.modelName, record);
