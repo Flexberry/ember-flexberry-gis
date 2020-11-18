@@ -612,7 +612,7 @@ export default Ember.Mixin.create(SnapDraw, {
             if (!showExisting && !continueLoading) {
               leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve) => {
                 this._getModelLayerFeature(layerId, objectIds, true).then(() => {
-                  resolve();
+                  resolve('Features loaded');
                 });
               });
             } else {
