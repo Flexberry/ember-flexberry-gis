@@ -396,15 +396,52 @@ export default BaseVectorLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let obj = this.get('_adapterStoreModelProjectionGeom');
       let layerModel = this.get('layerModel');
-      let table = null;
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
       Ember.$.ajax({
         url: layerModel.get('_leafletObject.options.metadataUrl') + layerModel.get('_leafletObject.modelName') + '.json',
         async: false,
-        success: function (data) {
-          table = data.className;
+        success: function (dataClass) {
+          obj.adapter.callAction(config.APP.backendActions.getIntersections, { geom: geomEWKT, table: dataClass.className }, this.get('odataUrl'), null, (data) => {
+            new Ember.RSVP.Promise((resolve) => {
+              const normalizedRecords = { data: Ember.A(), included: Ember.A() };
+              let odataValue = data.value;
+              if (!Ember.isNone(odataValue)) {
+                odataValue.forEach(record => {
+                  if (record.hasOwnProperty('@odata.type')) {
+                    delete record['@odata.type'];
+                  }
+    
+                  const normalized = obj.store.normalize(obj.modelName, record);
+                  normalizedRecords.data.addObject(normalized.data);
+                  if (normalized.included) {
+                    normalizedRecords.included.addObjects(normalized.included);
+                  }
+                });
+              }
+    
+              resolve(Ember.run(obj.store, obj.store.push, normalizedRecords));
+            }).then((res) => {
+              let features = Ember.A();
+              let models = res;
+              if (typeof res.toArray === 'function') {
+                models = res.toArray();
+              }
+    
+              let layer = L.featureGroup();
+    
+              models.forEach(model => {
+                let feat = this.addLayerObject(layer, model, false);
+                features.push(feat.feature);
+              });
+    
+              return resolve(features);
+            });
+          },
+          (mes) => {
+            reject(mes);
+          });    
         }
       });
-      let config = Ember.getOwner(this).resolveRegistration('config:environment');
       obj.adapter.callAction(config.APP.backendActions.getIntersections, { geom: geomEWKT, table: table }, this.get('odataUrl'), null, (data) => {
         new Ember.RSVP.Promise((resolve) => {
           const normalizedRecords = { data: Ember.A(), included: Ember.A() };
