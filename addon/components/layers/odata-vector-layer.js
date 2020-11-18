@@ -11,6 +11,7 @@ import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 import GisAdapter from 'ember-flexberry-gis/adapters/odata';
 import DS from 'ember-data';
 import jsts from 'npm:jsts';
+import { capitalize, camelize } from 'ember-flexberry-data/utils/string-functions';
 const { Builder } = Query;
 
 /**
@@ -401,7 +402,8 @@ export default BaseVectorLayer.extend({
       Ember.$.ajax({
         url: layerModel.get('_leafletObject.options.metadataUrl') + layerModel.get('_leafletObject.modelName') + '.json',
         success: function (dataClass) {
-          obj.adapter.callAction(config.APP.backendActions.getIntersections, { geom: geomEWKT, table: dataClass.name }, _this.get('odataUrl'), null, (data) => {
+          let odataQueryName =  Ember.String.pluralize(capitalize(camelize(dataClass.modelName)));
+          obj.adapter.callAction(config.APP.backendActions.getIntersections, { geom: geomEWKT, odataQueryName: odataQueryName }, _this.get('odataUrl'), null, (data) => {
             new Ember.RSVP.Promise((resolve) => {
               const normalizedRecords = { data: Ember.A(), included: Ember.A() };
               let odataValue = data.value;
