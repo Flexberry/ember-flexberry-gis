@@ -174,6 +174,20 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Removes all the layers from the group.
+
+    @method _clearLayers
+  */
+  _clearLayers() {
+    let leafletObject = this.get('_leafletObject');
+    leafletObject.eachLayer((layer) => {
+      L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
+    });
+
+    return leafletObject;
+  },
+
+  /**
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer
     @param {Object} options Layer options.
@@ -221,6 +235,8 @@ export default BaseVectorLayer.extend({
 
           Ember.set(wfsLayer, 'baseRemoveLayer', wfsLayer.removeLayer);
           wfsLayer.removeLayer = this.get('_removeLayer').bind(this);
+          Ember.set(wfsLayer, 'baseClearLayers', wfsLayer.clearLayers);
+          wfsLayer.clearLayers = this.get('_clearLayers').bind(this);
 
           wfsLayer.reload = this.get('reload').bind(this);
 

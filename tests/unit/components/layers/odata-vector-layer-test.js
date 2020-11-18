@@ -1069,118 +1069,22 @@ test('test method createModelHierarchy() with 3 parent', function(assert) {
   });
 });
 
-/*test('test method createDynamicModel() with 3 parent', function(assert) {
-  assert.expect(10);
+test('test method clearLayers()', function(assert) {
+  assert.expect(4);
   var done = assert.async(1);
-  Ember.$.extend(param, {
-    'odataUrl': 'http://localhost:6500/odata/',
-    'namespace': 'ns',
-    'metadataUrl': 'assert/felxberry/models/'
-  });
-
   let component = this.subject(param);
 
-  let parentModelName = 'parent1';
-  let parent1JsonModel = {
-    name: 'parent1',
-    parentModelName: 'parent2',
-    modelName: 'parent1',
-    className: 'parent1',
-    nameSpace: 'NS1',
-    attrs: [
-      {
-        name: 'name',
-        type: 'string',
-        flexberryType: 'Строка250',
-        notNull: false,
-        defaultValue: '',
-        stored: true,
-        ordered: false
-      }
-    ],
-    belongsTo: [],
-    hasMany: [],
-    projections: [],
-    stored: false,
-    offline: true,
-    external: false
-  };
+  component.get('_leafletLayerPromise').then((leafletLayer) => {
+    component.set('_leafletObject', leafletLayer);
+    leafletLayer.promiseLoadLayer.then(() => {
+      let leafletObject = component.get('_leafletObject');
 
-  let parent2JsonModel = {
-    name: 'parent2',
-    parentModelName: 'parent3',
-    modelName: 'parent2',
-    className: 'parent2',
-    nameSpace: 'NS2',
-    attrs: [
-      {
-        name: 'name2',
-        type: 'string',
-        flexberryType: 'Строка250',
-        notNull: false,
-        defaultValue: '',
-        stored: true,
-        ordered: false
-      }
-    ],
-    belongsTo: [],
-    hasMany: [],
-    projections: [],
-    stored: false,
-    offline: true,
-    external: false
-  };
-
-  let parent3JsonModel = {
-    name: 'parent3',
-    parentModelName: null,
-    modelName: 'parent3',
-    className: 'parent3',
-    nameSpace: 'NS3',
-    attrs: [
-      {
-        name: 'name3',
-        type: 'string',
-        flexberryType: 'Строка250',
-        notNull: false,
-        defaultValue: '',
-        stored: true,
-        ordered: false
-      }
-    ],
-    belongsTo: [],
-    hasMany: [],
-    projections: [],
-    stored: false,
-    offline: true,
-    external: false
-  };
-  let stubAjax = sinon.stub(Ember.$, 'ajax');
-  stubAjax.onCall(0).yieldsTo('success', jsonModel)
-    .onCall(1).yieldsTo('success', parent1JsonModel)
-    .onCall(2).yieldsTo('success', parent2JsonModel)
-    .onCall(3).yieldsTo('success', parent3JsonModel);;
-
-  let spyCreateModel = sinon.spy(component, 'createModel');
-  let spyCreateMixin = sinon.spy(component, 'createMixin');
-  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
-
-  component.createDynamicModel().then(({model, dataModel, modelMixin}) => {
-    assert.equal(stubAjax.callCount, 3);
-    assert.equal(spyCreateModel.callCount, 1);
-    assert.equal(spyCreateMixin.callCount, 3);
-    assert.equal(spyCreateModelHierarchy.callCount, 3);
-    assert.equal(spyCreateModelHierarchy.getCall(0).args[1], 'test-model');
-    assert.equal(spyCreateModelHierarchy.getCall(1).args[1], 'parent1');
-    assert.equal(spyCreateModelHierarchy.getCall(2).args[1], 'parent2');
-    assert.equal(spyCreateModelHierarchy.getCall(3).args[1], 'parent3');
-    assert.ok(model);
-    assert.ok(dataModel);
-    assert.ok(modelMixin);
-    done();
-    stubAjax.restore();
-    spyCreateModel.restore();
-    spyCreateMixin.restore();
-    spyCreateModelHierarchy.restore();
+      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(leafletObject.getLayers().length, 2);
+      leafletObject.clearLayers();
+      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(leafletObject.getLayers().length, 0);
+      done();
+    });
   });
-});*/
+});
