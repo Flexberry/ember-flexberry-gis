@@ -428,7 +428,7 @@ export default BaseVectorLayer.extend({
               }
 
               let layer = L.featureGroup();
-    
+
               models.forEach(model => {
                 let feat = _this.addLayerObject(layer, model, false);
                 features.push(feat.feature);
@@ -439,7 +439,7 @@ export default BaseVectorLayer.extend({
           },
           (mes) => {
             reject(mes);
-          });    
+          });
         }
       });
     });
