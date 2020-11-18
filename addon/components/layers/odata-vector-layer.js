@@ -387,7 +387,7 @@ export default BaseVectorLayer.extend({
     return featuresPromise;
   },
 
- /**
+  /**
    * This method get intersectoins with ajax - post
    * @method getIntersections
    * @param {String} geomEWKT Geometry to EWKT
@@ -404,46 +404,45 @@ export default BaseVectorLayer.extend({
           table = data.className;
         }
       });
-      let config = Ember.getOwner(this).resolveRegistration('config:environment');
-      obj.adapter.callAction('GetIntersections', {geom: geomEWKT, table: table}, '/SmartForest/odata', null, (data) => {
-          new Ember.RSVP.Promise((resolve) => {
-            const normalizedRecords = { data: Ember.A(), included: Ember.A() };
-            let odataValue = data.value;
-            if (!Ember.isNone(odataValue)) {
-              odataValue.forEach(record => {
-                if(record.hasOwnProperty("@odata.type")){
-                  delete record["@odata.type"];
-                }
+      obj.adapter.callAction('GetIntersections', { geom: geomEWKT, table: table }, '/SmartForest/odata', null, (data) => {
+        new Ember.RSVP.Promise((resolve) => {
+          const normalizedRecords = { data: Ember.A(), included: Ember.A() };
+          let odataValue = data.value;
+          if (!Ember.isNone(odataValue)) {
+            odataValue.forEach(record => {
+              if (record.hasOwnProperty("@odata.type")) {
+                delete record["@odata.type"];
+              }
 
-                const normalized = obj.store.normalize(obj.modelName, record);
-                normalizedRecords.data.addObject(normalized.data);
-                if (normalized.included) {
-                  normalizedRecords.included.addObjects(normalized.included);
-                }
-              });
-            }
-
-            resolve(Ember.run(obj.store, obj.store.push, normalizedRecords));
-          }).then((res) => {
-            let features = Ember.A();
-            let models = res;
-            if (typeof res.toArray === 'function') {
-              models = res.toArray();
-            }
-    
-            let layer = L.featureGroup();
-    
-            models.forEach(model => {
-              let feat = this.addLayerObject(layer, model, false);
-              features.push(feat.feature);
+              const normalized = obj.store.normalize(obj.modelName, record);
+              normalizedRecords.data.addObject(normalized.data);
+              if (normalized.included) {
+                normalizedRecords.included.addObjects(normalized.included);
+              }
             });
-    
-            return resolve(features);
+          }
+
+          resolve(Ember.run(obj.store, obj.store.push, normalizedRecords));
+        }).then((res) => {
+          let features = Ember.A();
+          let models = res;
+          if (typeof res.toArray === 'function') {
+            models = res.toArray();
+          }
+
+          let layer = L.featureGroup();
+
+          models.forEach(model => {
+            let feat = this.addLayerObject(layer, model, false);
+            features.push(feat.feature);
           });
-        },
-        (mes) => {
-          reject(mes);
+
+          return resolve(features);
         });
+      },
+      (mes) => {
+        reject(mes);
+      });
     });
   },
 
