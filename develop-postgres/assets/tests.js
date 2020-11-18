@@ -4316,7 +4316,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
   });
 
   (0, _emberQunit.test)('test method save() with objects', function (assert) {
-    assert.expect(14);
+    assert.expect(15);
     var done = assert.async(1);
     var component = this.subject(param);
 
@@ -4368,6 +4368,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
           assert.equal(data.layers.length, 1);
           assert.equal(realCountArr(leafletObject.models), 0);
           assert.equal(leafletObject.getLayers().length, 1);
+          assert.equal(leafletObject.getLayers()[0].state, 'exist');
           done();
 
           spyBatchUpdate.restore();
@@ -4494,121 +4495,25 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
     });
   });
 
-  /*test('test method createDynamicModel() with 3 parent', function(assert) {
-    assert.expect(10);
+  (0, _emberQunit.test)('test method clearLayers()', function (assert) {
+    assert.expect(4);
     var done = assert.async(1);
-    Ember.$.extend(param, {
-      'odataUrl': 'http://localhost:6500/odata/',
-      'namespace': 'ns',
-      'metadataUrl': 'assert/felxberry/models/'
+    var component = this.subject(param);
+
+    component.get('_leafletLayerPromise').then(function (leafletLayer) {
+      component.set('_leafletObject', leafletLayer);
+      leafletLayer.promiseLoadLayer.then(function () {
+        var leafletObject = component.get('_leafletObject');
+
+        assert.equal(realCountArr(leafletObject.models), 0);
+        assert.equal(leafletObject.getLayers().length, 2);
+        leafletObject.clearLayers();
+        assert.equal(realCountArr(leafletObject.models), 0);
+        assert.equal(leafletObject.getLayers().length, 0);
+        done();
+      });
     });
-  
-    let component = this.subject(param);
-  
-    let parentModelName = 'parent1';
-    let parent1JsonModel = {
-      name: 'parent1',
-      parentModelName: 'parent2',
-      modelName: 'parent1',
-      className: 'parent1',
-      nameSpace: 'NS1',
-      attrs: [
-        {
-          name: 'name',
-          type: 'string',
-          flexberryType: 'Строка250',
-          notNull: false,
-          defaultValue: '',
-          stored: true,
-          ordered: false
-        }
-      ],
-      belongsTo: [],
-      hasMany: [],
-      projections: [],
-      stored: false,
-      offline: true,
-      external: false
-    };
-  
-    let parent2JsonModel = {
-      name: 'parent2',
-      parentModelName: 'parent3',
-      modelName: 'parent2',
-      className: 'parent2',
-      nameSpace: 'NS2',
-      attrs: [
-        {
-          name: 'name2',
-          type: 'string',
-          flexberryType: 'Строка250',
-          notNull: false,
-          defaultValue: '',
-          stored: true,
-          ordered: false
-        }
-      ],
-      belongsTo: [],
-      hasMany: [],
-      projections: [],
-      stored: false,
-      offline: true,
-      external: false
-    };
-  
-    let parent3JsonModel = {
-      name: 'parent3',
-      parentModelName: null,
-      modelName: 'parent3',
-      className: 'parent3',
-      nameSpace: 'NS3',
-      attrs: [
-        {
-          name: 'name3',
-          type: 'string',
-          flexberryType: 'Строка250',
-          notNull: false,
-          defaultValue: '',
-          stored: true,
-          ordered: false
-        }
-      ],
-      belongsTo: [],
-      hasMany: [],
-      projections: [],
-      stored: false,
-      offline: true,
-      external: false
-    };
-    let stubAjax = sinon.stub(Ember.$, 'ajax');
-    stubAjax.onCall(0).yieldsTo('success', jsonModel)
-      .onCall(1).yieldsTo('success', parent1JsonModel)
-      .onCall(2).yieldsTo('success', parent2JsonModel)
-      .onCall(3).yieldsTo('success', parent3JsonModel);;
-  
-    let spyCreateModel = sinon.spy(component, 'createModel');
-    let spyCreateMixin = sinon.spy(component, 'createMixin');
-    let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
-  
-    component.createDynamicModel().then(({model, dataModel, modelMixin}) => {
-      assert.equal(stubAjax.callCount, 3);
-      assert.equal(spyCreateModel.callCount, 1);
-      assert.equal(spyCreateMixin.callCount, 3);
-      assert.equal(spyCreateModelHierarchy.callCount, 3);
-      assert.equal(spyCreateModelHierarchy.getCall(0).args[1], 'test-model');
-      assert.equal(spyCreateModelHierarchy.getCall(1).args[1], 'parent1');
-      assert.equal(spyCreateModelHierarchy.getCall(2).args[1], 'parent2');
-      assert.equal(spyCreateModelHierarchy.getCall(3).args[1], 'parent3');
-      assert.ok(model);
-      assert.ok(dataModel);
-      assert.ok(modelMixin);
-      done();
-      stubAjax.restore();
-      spyCreateModel.restore();
-      spyCreateMixin.restore();
-      spyCreateModelHierarchy.restore();
-    });
-  });*/
+  });
 });
 define('dummy/tests/unit/components/layers/odata-vector-layer-test.jscs-test', ['exports'], function (exports) {
   'use strict';
@@ -7326,6 +7231,422 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-visualedit-test.jshint',
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/mixins/flexberry-map-model-api-visualedit-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon', 'ember-flexberry-gis/layers/-private/vector'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon, _emberFlexberryGisLayersPrivateVector) {
+
+  (0, _qunit.module)('Unit | Mixin | test api show and hide layers');
+
+  var arrayFindBy = function arrayFindBy(prop, value) {
+    return this.filter(function (elem) {
+      if (elem.hasOwnProperty(prop)) {
+        return elem[prop] === value;
+      }
+    })[0];
+  };
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  var _labelsLayer = L.featureGroup();
+  var leafletObject = L.featureGroup();
+  leafletObject.options = {
+    showExisting: false,
+    continueLoading: false
+  };
+  leafletObject._labelsLayer = _labelsLayer;
+  var firstTestLayer = L.polygon([[1, 2], [4, 2], [4, 4], [1, 2]]).addTo(leafletObject);
+  firstTestLayer.id = '1';
+  var secondTestLayer = L.polygon([[10, 20], [40, 20], [40, 40], [10, 20]]).addTo(leafletObject);
+  secondTestLayer.id = '2';
+  var thirdTestLayer = L.polygon([[0.1, 0.2], [0.4, 0.2], [0.4, 0.4], [0.1, 0.2]]).addTo(leafletObject);
+  thirdTestLayer.id = '3';
+  var firstTestLabelLayer = L.marker([1, 2]).addTo(_labelsLayer);
+  firstTestLabelLayer.id = '1';
+  var secondTestLabelLayer = L.marker([40, 20]).addTo(_labelsLayer);
+  secondTestLabelLayer.id = '2';
+  var thirdTestLabelLayer = L.marker([20, 40]).addTo(_labelsLayer);
+  thirdTestLabelLayer.id = '3';
+
+  var layer1 = _ember['default'].Object.create({
+    id: '1',
+    visibility: false,
+    _leafletObject: leafletObject,
+    settingsAsObject: {
+      labelSettings: {
+        signMapObjects: true
+      }
+    }
+  });
+  var layer2 = _ember['default'].Object.create({
+    id: '2',
+    visibility: false,
+    _leafletObject: leafletObject,
+    settingsAsObject: {
+      labelSettings: {
+        signMapObjects: true
+      }
+    }
+  });
+  var maplayers = Array(layer1, layer2);
+
+  (0, _qunit.test)('test method showLayers with continueLoading = false', function (assert) {
+    //Arrange
+    assert.expect(7);
+    var done = assert.async(1);
+
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+
+    var subject = mapApiMixinObject.create({
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        return _ember['default'].RSVP.resolve();
+      },
+      mapLayer: maplayers
+    });
+
+    leafletObject.options.continueLoading = false;
+    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
+    var leafletMapFireStub = _sinon['default'].stub(map, 'fire');
+    leafletMapFireStub.returns(_ember['default'].RSVP.resolve());
+    Array.prototype.findBy = arrayFindBy;
+
+    //Act
+    var result = subject.showLayers(['1']);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (res) {
+      assert.equal(res, 'success');
+      assert.equal(subject.mapLayer.findBy('id', '1').visibility, true);
+      assert.equal(getModelLayerFeatureSpy.callCount, 1);
+      assert.equal(getModelLayerFeatureSpy.args[0][0], '1');
+      assert.deepEqual(getModelLayerFeatureSpy.args[0][1], null);
+      assert.equal(leafletMapFireStub.callCount, 0);
+      done();
+      getModelLayerFeatureSpy.restore();
+      leafletMapFireStub.restore();
+      Array.prototype.findBy = null;
+    });
+  });
+
+  (0, _qunit.test)('test method showLayers with continueLoading = true', function (assert) {
+    //Arrange
+    assert.expect(6);
+    var done = assert.async(1);
+
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+
+    var subject = mapApiMixinObject.create({
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        return _ember['default'].RSVP.resolve();
+      },
+      mapLayer: maplayers
+    });
+
+    leafletObject.options.continueLoading = true;
+    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
+    var leafletMapFireStub = _sinon['default'].stub(map, 'fire');
+    leafletMapFireStub.returns(_ember['default'].RSVP.resolve());
+    Array.prototype.findBy = arrayFindBy;
+
+    //Act
+    var result = subject.showLayers(['1']);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (res) {
+      assert.equal(res, 'success');
+      assert.equal(subject.mapLayer.findBy('id', '1').visibility, true);
+      assert.equal(getModelLayerFeatureSpy.callCount, 0);
+      assert.equal(leafletMapFireStub.callCount, 1);
+      assert.equal(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
+      done();
+      getModelLayerFeatureSpy.restore();
+      leafletMapFireStub.restore();
+      Array.prototype.findBy = null;
+    });
+  });
+
+  (0, _qunit.test)('test method showAllLayerObjects with continueLoading = false', function (assert) {
+    //Arrange
+    assert.expect(10);
+    var done = assert.async(1);
+
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+
+    var subject = mapApiMixinObject.create({
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        leafletObject.addLayer(firstTestLayer);
+        leafletObject.addLayer(secondTestLayer);
+        leafletObject.addLayer(thirdTestLayer);
+        return _ember['default'].RSVP.resolve([null, null, [firstTestLayer, secondTestLayer, thirdTestLayer]]);
+      },
+      mapLayer: maplayers
+    });
+    leafletObject.options.showExisting = false;
+    leafletObject.options.continueLoading = false;
+    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
+    var leafletMapFireStub = _sinon['default'].stub(map, 'fire');
+    leafletMapFireStub.withArgs('flexberry-map:moveend').returns(_ember['default'].RSVP.resolve());
+    var mapAddSpy = _sinon['default'].spy(map, 'addLayer');
+    var mapRemoveSpy = _sinon['default'].spy(map, 'removeLayer');
+    var leafletObjectClearLayersSpy = _sinon['default'].spy(leafletObject, 'clearLayers');
+    Array.prototype.findBy = arrayFindBy;
+
+    //Act
+    var result = subject.showAllLayerObjects('1');
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (res) {
+      assert.equal(res, 'success');
+      assert.equal(getModelLayerFeatureSpy.callCount, 1);
+      assert.equal(getModelLayerFeatureSpy.args[0][0], '1');
+      assert.deepEqual(getModelLayerFeatureSpy.args[0][1], null);
+      assert.equal(leafletMapFireStub.callCount, 8);
+      assert.notEqual(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
+      assert.equal(mapAddSpy.callCount, 8);
+      assert.equal(mapRemoveSpy.callCount, 0);
+      assert.equal(leafletObjectClearLayersSpy.callCount, 1);
+      done();
+      getModelLayerFeatureSpy.restore();
+      leafletMapFireStub.restore();
+      mapAddSpy.restore();
+      mapRemoveSpy.restore();
+      leafletObjectClearLayersSpy.restore();
+      Array.prototype.findBy = null;
+    });
+  });
+
+  (0, _qunit.test)('test method showAllLayerObjects with continueLoading = true', function (assert) {
+    //Arrange
+    assert.expect(8);
+    var done = assert.async(1);
+
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+
+    var subject = mapApiMixinObject.create({
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        leafletObject.addLayer(firstTestLayer);
+        leafletObject.addLayer(secondTestLayer);
+        leafletObject.addLayer(thirdTestLayer);
+        return _ember['default'].RSVP.resolve([null, null, [firstTestLayer, secondTestLayer, thirdTestLayer]]);
+      },
+      mapLayer: maplayers
+    });
+
+    leafletObject.options.continueLoading = true;
+    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
+    var leafletMapFireStub = _sinon['default'].stub(map, 'fire');
+    leafletMapFireStub.withArgs('flexberry-map:moveend').returns(_ember['default'].RSVP.resolve());
+    var mapAddSpy = _sinon['default'].spy(map, 'addLayer');
+    var mapRemoveSpy = _sinon['default'].spy(map, 'removeLayer');
+    var leafletObjectClearLayersSpy = _sinon['default'].spy(leafletObject, 'clearLayers');
+    Array.prototype.findBy = arrayFindBy;
+
+    //Act
+    var result = subject.showAllLayerObjects('1');
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (res) {
+      assert.equal(res, 'success');
+      assert.equal(getModelLayerFeatureSpy.callCount, 0);
+      assert.equal(leafletMapFireStub.callCount, 9);
+      assert.equal(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
+      assert.equal(mapAddSpy.callCount, 8);
+      assert.equal(mapRemoveSpy.callCount, 0);
+      assert.equal(leafletObjectClearLayersSpy.callCount, 0);
+      done();
+      getModelLayerFeatureSpy.restore();
+      leafletMapFireStub.restore();
+      mapAddSpy.restore();
+      mapRemoveSpy.restore();
+      leafletObjectClearLayersSpy.restore();
+      Array.prototype.findBy = null;
+    });
+  });
+
+  (0, _qunit.test)('test method hideAllLayerObjects', function (assert) {
+    //Arrange
+    assert.expect(1);
+
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+
+    map.addLayer(firstTestLayer);
+    map.addLayer(secondTestLayer);
+    map.addLayer(thirdTestLayer);
+    map.addLayer(_labelsLayer);
+
+    var subject = mapApiMixinObject.create({
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      mapLayer: maplayers
+    });
+
+    var mapRemoveSpy = _sinon['default'].spy(map, 'removeLayer');
+    Array.prototype.findBy = arrayFindBy;
+
+    //Act
+    subject.hideAllLayerObjects('1');
+
+    //Assert
+    assert.equal(mapRemoveSpy.callCount, 7);
+    mapRemoveSpy.restore();
+    Array.prototype.findBy = null;
+  });
+
+  (0, _qunit.test)('test method hideLayers with continueLoading = false', function (assert) {
+    //Arrange
+    assert.expect(3);
+
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+
+    var subject = mapApiMixinObject.create({
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        return _ember['default'].RSVP.resolve();
+      },
+      mapLayer: maplayers
+    });
+
+    leafletObject.options.continueLoading = false;
+    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
+    var leafletMapFireStub = _sinon['default'].stub(map, 'fire');
+    leafletMapFireStub.returns(_ember['default'].RSVP.resolve());
+    Array.prototype.findBy = arrayFindBy;
+
+    //Act
+    subject.hideLayers(['1']);
+
+    //Assert
+    assert.equal(subject.mapLayer.findBy('id', '1').visibility, false);
+    assert.equal(getModelLayerFeatureSpy.callCount, 0);
+    assert.equal(leafletMapFireStub.callCount, 0);
+    getModelLayerFeatureSpy.restore();
+    leafletMapFireStub.restore();
+    Array.prototype.findBy = null;
+  });
+
+  (0, _qunit.test)('test method hideLayers with continueLoading = true', function (assert) {
+    //Arrange
+    assert.expect(3);
+
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+
+    var subject = mapApiMixinObject.create({
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      _getModelLayerFeature: function _getModelLayerFeature() {
+        return _ember['default'].RSVP.resolve();
+      },
+      mapLayer: maplayers
+    });
+
+    leafletObject.options.continueLoading = true;
+    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
+    var leafletMapFireStub = _sinon['default'].stub(map, 'fire');
+    leafletMapFireStub.returns(_ember['default'].RSVP.resolve());
+    Array.prototype.findBy = arrayFindBy;
+
+    //Act
+    subject.hideLayers(['1']);
+
+    //Assert
+    assert.equal(subject.mapLayer.findBy('id', '1').visibility, false);
+    assert.equal(getModelLayerFeatureSpy.callCount, 0);
+    assert.equal(leafletMapFireStub.callCount, 0);
+    getModelLayerFeatureSpy.restore();
+    leafletMapFireStub.restore();
+    Array.prototype.findBy = null;
+  });
+});
+define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry_map_model_api_show_and_hide_test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry_map_model_api_show_and_hide_test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry_map_model_api_show_and_hide_test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry_map_model_api_show_and_hide_test.js should pass jshint.');
   });
 });
 define('dummy/tests/unit/mixins/leaflet-events-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/leaflet-events', 'qunit', 'sinon'], function (exports, _ember, _emberFlexberryGisMixinsLeafletEvents, _qunit, _sinon) {

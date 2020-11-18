@@ -896,7 +896,12 @@ export default Ember.Component.extend(
       leafletContainer.addLayer(leafletLayer);
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
       if (!Ember.isNone(leafletMap) &amp;&amp; leafletLayer.options.continueLoading) {
-        leafletMap.fire(&#x27;moveend&#x27;);
+        let e = {
+          layers: [this.get(&#x27;layerModel&#x27;)],
+          results: Ember.A()
+        };
+
+        leafletMap.fire(&#x27;flexberry-map:moveend&#x27;, e);
       }
     },
 

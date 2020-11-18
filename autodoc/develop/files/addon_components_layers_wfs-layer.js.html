@@ -584,6 +584,20 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Removes all the layers from the group.
+
+    @method _clearLayers
+  */
+  _clearLayers() {
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    leafletObject.eachLayer((layer) =&gt; {
+      L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
+    });
+
+    return leafletObject;
+  },
+
+  /**
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer
     @param {Object} options Layer options.
@@ -631,6 +645,8 @@ export default BaseVectorLayer.extend({
 
           Ember.set(wfsLayer, &#x27;baseRemoveLayer&#x27;, wfsLayer.removeLayer);
           wfsLayer.removeLayer = this.get(&#x27;_removeLayer&#x27;).bind(this);
+          Ember.set(wfsLayer, &#x27;baseClearLayers&#x27;, wfsLayer.clearLayers);
+          wfsLayer.clearLayers = this.get(&#x27;_clearLayers&#x27;).bind(this);
 
           wfsLayer.reload = this.get(&#x27;reload&#x27;).bind(this);
 
@@ -1010,7 +1026,7 @@ export default BaseVectorLayer.extend({
               leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
             }
 
-            return;
+            return Ember.RSVP.resolve(&#x27;Features in bounds is already loaded&#x27;);
           }
 
           oldPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs));
@@ -1048,7 +1064,7 @@ export default BaseVectorLayer.extend({
           });
         });
       } else {
-        promise = Ember.RSVP.resolve();
+        promise = Ember.RSVP.resolve(&#x27;The layer does not require loading&#x27;);
       }
 
       if (leafletObject.statusLoadLayer) {
@@ -1056,6 +1072,8 @@ export default BaseVectorLayer.extend({
       }
 
       return promise;
+    } else {
+      return Ember.RSVP.reject(&#x27;leafletObject is none&#x27;);
     }
   },
 
@@ -1068,6 +1086,7 @@ export default BaseVectorLayer.extend({
     let leafletMap = this.get(&#x27;leafletMap&#x27;);
     if (!Ember.isNone(leafletMap)) {
       leafletMap.on(&#x27;moveend&#x27;,  () =&gt; { this.continueLoad(); });
+      leafletMap.on(&#x27;flexberry-map:moveend&#x27;, this._continueLoad, this);
     }
   },
 

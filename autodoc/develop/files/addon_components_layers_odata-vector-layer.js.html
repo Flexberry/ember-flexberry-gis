@@ -488,11 +488,20 @@ export default BaseVectorLayer.extend({
         return layer.state === state.insert;
       });
 
+      let updatedLayer = leafletObject.getLayers().filter(layer =&gt; {
+        return layer.state === state.update;
+      });
+
       // to send request via the needed adapter
       let obj = this.get(&#x27;_adapterStoreModelProjectionGeom&#x27;);
       obj.adapter.batchUpdate(obj.store, modelsLayer).then((models) =&gt; {
         modelsLayer.clear();
         let insertedModelId = [];
+        if (!Ember.isNone(updatedLayer) &amp;&amp; updatedLayer.length &gt; 0) {
+          updatedLayer.map((layer) =&gt; {
+            layer.state = state.exist;
+          });
+        }
 
         models.forEach(model =&gt; {
           let ids = insertedIds.filter(id =&gt; {
@@ -553,6 +562,20 @@ export default BaseVectorLayer.extend({
       var id = leafletObject.getLayerId(layer);
       leafletObject.models[id] = layer.model;
     }
+
+    return leafletObject;
+  },
+
+  /**
+    Removes all the layers from the group.
+
+    @method clearLayers
+  */
+  clearLayers() {
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    leafletObject.eachLayer((layer) =&gt; {
+      L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
+    });
 
     return leafletObject;
   },
@@ -1277,6 +1300,7 @@ export default BaseVectorLayer.extend({
     layer.editformname = obj.modelName + this.get(&#x27;postfixForEditForm&#x27;);
     layer.loadLayerFeatures = this.get(&#x27;loadLayerFeatures&#x27;).bind(this);
     layer.models = Ember.A();
+    layer.clearLayers = this.get(&#x27;clearLayers&#x27;).bind(this);
 
     let leafletMap = this.get(&#x27;leafletMap&#x27;);
     if (!Ember.isNone(leafletMap)) {
@@ -1689,7 +1713,7 @@ export default BaseVectorLayer.extend({
               leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
             }
 
-            return;
+            return Ember.RSVP.resolve(&#x27;Features in bounds is already loaded&#x27;);
           }
 
           let queryOldBounds = new Query.GeometryPredicate(obj.geometryField);
@@ -1741,7 +1765,10 @@ export default BaseVectorLayer.extend({
         return promise;
       } else if (leafletObject.statusLoadLayer) {
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+        return Ember.RSVP.resolve(&#x27;The layer does not require loading&#x27;);
       }
+    } else {
+      return Ember.RSVP.reject(&#x27;leafletObject is none&#x27;);
     }
   },
 
@@ -1754,6 +1781,7 @@ export default BaseVectorLayer.extend({
     let leafletMap = this.get(&#x27;leafletMap&#x27;);
     if (!Ember.isNone(leafletMap)) {
       leafletMap.on(&#x27;moveend&#x27;, () =&gt; { this.continueLoad(); });
+      leafletMap.on(&#x27;flexberry-map:moveend&#x27;,  this._continueLoad, this);
     }
   },
 
