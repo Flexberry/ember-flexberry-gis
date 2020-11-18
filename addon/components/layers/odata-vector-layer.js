@@ -404,7 +404,8 @@ export default BaseVectorLayer.extend({
           table = data.className;
         }
       });
-      obj.adapter.callAction('GetIntersections', { geom: geomEWKT, table: table }, this.get('odataUrl'), null, (data) => {
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      obj.adapter.callAction(config.APP.backendActions.getIntersections, { geom: geomEWKT, table: table }, this.get('odataUrl'), null, (data) => {
         new Ember.RSVP.Promise((resolve) => {
           const normalizedRecords = { data: Ember.A(), included: Ember.A() };
           let odataValue = data.value;
