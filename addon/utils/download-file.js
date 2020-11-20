@@ -1,12 +1,18 @@
 import Ember from 'ember';
 
 /**
-  Finds crs by name in factory and create it.
+  Download file. Create request in xml format. Specific request for odata layer.
+  Makes a request for other layers by creating a wfs layer. Makes a ajax-request for the url
+  and gets blob.
 
-  @method getCrsByName
-  @param {String} crsName Name of coordinate reference system.
-  @param {Object} that.
-  @returns {Object} Сoordinate reference system.
+  @method downloadFile
+  @param {Object} layerModel Layer model.
+  @param {Array} objectIds Array of objects IDs.
+  @param {String} outputFormat Output format file.
+  @param {Object} crsOuput crs in which to download data.
+  @param {crsLayer} crsLayer crs in which data of layer.
+  @param {String} url url of controller for download file.
+  @return {Promise} Object consist of fileName and blob.
 */
 let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url) {
   return new Ember.RSVP.Promise((resolve, reject) => {
@@ -98,6 +104,12 @@ let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLa
   });
 };
 
+/**
+  Get wfs format.
+  @param {string} outputFormat Output format.
+  @param {Object} crs crs in which to download data.
+  @return {Object} L.Format.
+*/
 let getWfsFormat = function(outputFormat, crs) {
   if (outputFormat === 'JSON') {
     return new L.Format.GeoJSON({ crs: crs });
