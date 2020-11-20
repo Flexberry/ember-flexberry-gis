@@ -14,6 +14,8 @@ import SnapDraw from './snap-draw';
 import ClipperLib from 'npm:clipper-lib';
 import jsts from 'npm:jsts';
 import { geometryToJsts } from '../utils/layer-to-jsts';
+import { downloadFile, downloadBlob } from '../utils/download-file';
+import { getCrsByName } from '../utils/get-crs-by-name';
 
 export default Ember.Mixin.create(SnapDraw, {
   /**
@@ -1750,5 +1752,39 @@ export default Ember.Mixin.create(SnapDraw, {
     }
 
     return [points.X / amp, points.Y / amp];
-  }
+  },
+
+  /**
+    Download file.
+    @method downloadFile
+    @param {String} layerId.
+    @param {Array} objectIds.
+    @param {String} outputFormat.
+    @param {String} crsName.
+    @param {boolean} isFile flag indicates if return file or blob. By default 'true'.
+    @return {Promise} Object consist of fileName and blob. If isFile = true then returns file too.
+  */
+  downloadFile(layerId, objectIds, outputFormat, crsName, isFile = true) {
+    let config = Ember.getOwner(this).resolveRegistration('config:environment');
+    let url = config.APP.backendUrls.featureExportApi;
+
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      const layerModel = this.get('mapLayer').findBy('id', layerId);
+      if (Ember.isNone(layerModel)) {
+        reject(`Layer '${layerId}' not found.`);
+      }
+
+      let crsOuput = getCrsByName(crsName, this);
+      let crsLayer = getCrsByName(layerModel.get('crs').code, this);
+      downloadFile(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url).then((res) => {
+        if (isFile) {
+          downloadBlob(res.fileName, res.blob);
+        }
+
+        resolve(res);
+      }).catch((e) => {
+        reject(e);
+      });
+    });
+  },
 });

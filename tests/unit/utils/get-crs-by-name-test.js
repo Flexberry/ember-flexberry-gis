@@ -37,7 +37,10 @@ test('test method getCrsByName for EPSG:32640', function(assert) {
 
   let crsResult = getCrsByName(crsName, that);
 
-  assert.equal(crsResult.code, 'EPSG:32640');
+  assert.ok(crsResult.crs);
+  assert.ok(crsResult.definition);
+  assert.equal(crsResult.crs.code, 'EPSG:32640');
+  assert.equal(crsResult.definition, '+proj=utm +zone=40 +datum=WGS84 +units=m +no_defs');
   ownerStub.restore();
 });
 
@@ -56,6 +59,9 @@ test('test method getCrsByName for EPSG:4326', function(assert) {
 
   let crsResult = getCrsByName(crsName, that);
 
-  assert.equal(crsResult.code, 'EPSG:4326');
+  assert.ok(crsResult.crs);
+  assert.ok(crsResult.definition);
+  assert.equal(crsResult.crs.code, 'EPSG:4326');
+  assert.equal(crsResult.definition, '+title=WGS 84 (long/lat) +proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees');
   ownerStub.restore();
 });
