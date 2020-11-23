@@ -430,7 +430,10 @@ export default BaseVectorLayer.extend({
         success: function (dataClass) {
           let odataQueryName =  Ember.String.pluralize(capitalize(camelize(dataClass.modelName)));
           let odataUrl = _this.get('odataUrl');
-          obj.adapter.callAction(config.APP.backendActions.getIntersections, { geom: geomEWKT, odataQueryName: odataQueryName, odataProjectionName: obj.projectionName}, odataUrl, null, (data) => {
+          obj.adapter.callAction
+          (config.APP.backendActions.getIntersections,
+          { geom: geomEWKT, odataQueryName: odataQueryName, odataProjectionName: obj.projectionName },
+          odataUrl, null, (data) => {
             new Ember.RSVP.Promise((resolve) => {
               const normalizedRecords = { data: Ember.A(), included: Ember.A() };
               let odataValue = data.value;
