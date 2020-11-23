@@ -27,3 +27,4 @@ import * as projection from 'npm:@turf/projection';
 import * as sideBySide from 'npm:leaflet-side-by-side';
 import * as jsts from 'npm:jsts';
 import * as clipper from 'npm:clipper-lib';
+import * as vectorTile from 'npm:leaflet-vector-tile-layer';
