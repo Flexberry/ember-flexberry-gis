@@ -11,6 +11,7 @@ import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 import GisAdapter from 'ember-flexberry-gis/adapters/odata';
 import DS from 'ember-data';
 import jsts from 'npm:jsts';
+import { capitalize, camelize } from 'ember-flexberry-data/utils/string-functions';
 const { Builder } = Query;
 
 /**
