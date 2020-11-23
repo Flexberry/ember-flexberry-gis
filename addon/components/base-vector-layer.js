@@ -868,10 +868,10 @@ export default BaseLayer.extend({
     let bbox = leafletMap.getBounds();
     if (layers) {
       layers.forEach((layer) => {
-        let dynamicLoad = this.get('showExisting') === false && this.get('continueLoading');
+        let showExisting = this.get('showExisting');
         let intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
-        let staticLoad = this.get('showExisting') !== false && intersectBBox;
-        if (!layer._label && (dynamicLoad || staticLoad)) {
+        let staticLoad = showExisting !== false && intersectBBox;
+        if (!layer._label && (showExisting === false || staticLoad)) {
           let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
           this._createLabel(label, layer, style, labelsLayer);
         }
