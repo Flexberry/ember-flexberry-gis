@@ -414,6 +414,66 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+   * This method get intersectoins with ajax - post
+   * @method getIntersections
+   * @param {String} geomEWKT Geometry to EWKT
+  **/
+  _getIntersections(geomEWKT) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let obj = this.get('_adapterStoreModelProjectionGeom');
+      let layerModel = this.get('layerModel');
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      let _this = this;
+      Ember.$.ajax({
+        url: layerModel.get('_leafletObject.options.metadataUrl') + layerModel.get('_leafletObject.modelName') + '.json',
+        success: function (dataClass) {
+          let odataQueryName =  Ember.String.pluralize(capitalize(camelize(dataClass.modelName)));
+          let odataUrl = _this.get('odataUrl');
+          obj.adapter.callAction(config.APP.backendActions.getIntersections, { geom: geomEWKT, odataQueryName: odataQueryName, odataProjectionName: obj.projectionName}, odataUrl, null, (data) => {
+            new Ember.RSVP.Promise((resolve) => {
+              const normalizedRecords = { data: Ember.A(), included: Ember.A() };
+              let odataValue = data.value;
+              if (!Ember.isNone(odataValue)) {
+                odataValue.forEach(record => {
+                  if (record.hasOwnProperty('@odata.type')) {
+                    delete record['@odata.type'];
+                  }
+
+                  const normalized = obj.store.normalize(obj.modelName, record);
+                  normalizedRecords.data.addObject(normalized.data);
+                  if (normalized.included) {
+                    normalizedRecords.included.addObjects(normalized.included);
+                  }
+                });
+              }
+
+              resolve(Ember.run(obj.store, obj.store.push, normalizedRecords));
+            }).then((res) => {
+              let features = Ember.A();
+              let models = res;
+              if (typeof res.toArray === 'function') {
+                models = res.toArray();
+              }
+
+              let layer = L.featureGroup();
+
+              models.forEach(model => {
+                let feat = _this.addLayerObject(layer, model, false);
+                features.push(feat.feature);
+              });
+
+              return resolve(features);
+            });
+          },
+          (mes) => {
+            reject(mes);
+          });
+        }
+      });
+    });
+  },
+
+  /**
     Handles 'flexberry-map:search' event of leaflet map.
     @method search
     @param {Object} e Event object.
