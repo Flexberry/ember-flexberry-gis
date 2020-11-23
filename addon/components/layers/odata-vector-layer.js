@@ -433,7 +433,7 @@ export default BaseVectorLayer.extend({
             new Ember.RSVP.Promise((resolve) => {
               const normalizedRecords = { data: Ember.A(), included: Ember.A() };
               let odataValue = data.value;
-              if (!Ember.isNone(odataValue)) {
+              if (!Ember.isNone(odataValue) && typeof odataValue === Array) {
                 odataValue.forEach(record => {
                   if (record.hasOwnProperty('@odata.type')) {
                     delete record['@odata.type'];
