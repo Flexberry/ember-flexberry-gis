@@ -30,5 +30,51 @@ export default VectorLayer.extend({
   createSettings() {
     let settings = this._super(...arguments);
     return settings;
+  },
+
+  /**
+    Get properties names from leaflet layer object.
+
+    @method getLayerProperties
+    @param {Object} leafletObject Leaflet layer object
+    @returns {Array} Array with properties names
+  */
+ getLayerProperties(leafletObject) {
+  if (Ember.isNone(leafletObject)) {
+    return Ember.A();
   }
+
+  return Ember.A();
+},
+
+/**
+  Get property values from leaflet layer object.
+
+  @method getLayerPropertyValues
+  @param {Object} leafletObject Leaflet layer object
+  @param {String} selectedField Selected field name
+  @param {Integer} count Amount of values to return (for all values must be 0)
+  @returns {Array} Array with selected property values
+*/
+getLayerPropertyValues(leafletObject, selectedField, count) {
+  if (Ember.isNone(leafletObject)) {
+    return Ember.A();
+  }
+
+  let geojson = leafletObject.toGeoJSON() || {};
+  let features = geojson.features || [];
+
+  let values = Ember.A();
+
+  // for (let i = 0; i < features.length; i++) {
+  //   let value = Ember.get(features, `${i}.properties.${selectedField}`);
+  //   values.addObject(value);
+
+  //   if (values.length === count) {
+  //     break;
+  //   }
+  // }
+
+  return Ember.A();
+}
 });

@@ -1,5 +1,4 @@
 import BaseVectorLayer from '../base-vector-layer';
-import vectorTileLayer from 'npm:leaflet-vector-tile-layer';
 
 export default BaseVectorLayer.extend({
   leafletOptions: [
@@ -24,10 +23,15 @@ export default BaseVectorLayer.extend({
   */
   createVectorLayer() {
     let options = this.get('options');
+    let nameLayer = options.typeName;
     let url = options.url + '/service/tms/' + options.version + '/' +
     options.typeNS + ':' + options.typeName + '@' + options.crs.code + '@' +
-    this.get('format') + '/{z}/{x}/{y}';
-    return vectorTileLayer(url, {});
+    this.get('format') + '/{z}/{x}/{-y}.' + this.get('format');
+    let vectorGridOptions = {
+      vectorTileLayerStyles: {}
+    };
+    vectorGridOptions.vectorTileLayerStyles[nameLayer] = options.style;
+    return L.vectorGrid.protobuf(url, vectorGridOptions);
   },
 
   /**
@@ -62,5 +66,27 @@ export default BaseVectorLayer.extend({
   */
   search(e) {
     // Tile-layers hasn't any search logic.
-  }
+  },
+
+  /**
+      Sets leaflet layer's zindex.
+
+      @method _setLayerZIndex
+      @private
+    */
+   _setLayerZIndex() {
+    const leafletLayer = this.get('_leafletObject');
+    if (Ember.isNone(leafletLayer)) {
+      return;
+    }
+
+    const setZIndexFunc = Ember.get(leafletLayer, 'setZIndex');
+    if (Ember.typeOf(setZIndexFunc) !== 'function') {
+      return;
+    }
+
+    const index = this.get('index');
+    leafletLayer.setZIndex(index + 300);
+  },
+
 });
