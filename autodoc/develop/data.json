@@ -43244,7 +43244,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-cosmos.js",
-            "line": 8,
+            "line": 9,
             "description": "Keyword for cosmos images.",
             "itemtype": "property",
             "name": "cosmosKeywords",
@@ -43255,7 +43255,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-cosmos.js",
-            "line": 17,
+            "line": 18,
             "description": "Name of metadata model projection to be used as layer metadata properties limitation.",
             "itemtype": "property",
             "name": "metadataProjection",
@@ -43266,7 +43266,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-cosmos.js",
-            "line": 26,
+            "line": 27,
             "description": "Name of metadata model to be used as layer metadata record type.",
             "itemtype": "property",
             "name": "metadataModelName",
@@ -43277,7 +43277,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-cosmos.js",
-            "line": 35,
+            "line": 36,
             "description": "Produces query builder by metadata model name and metadata projection.",
             "itemtype": "method",
             "name": "_getQueryBuilderLayerMetadata",
@@ -43290,7 +43290,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-cosmos.js",
-            "line": 48,
+            "line": 49,
             "description": "Produces metadata loading request by queryBuilder.",
             "itemtype": "method",
             "name": "_getMetadataModels",
@@ -43310,7 +43310,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-cosmos.js",
-            "line": 63,
+            "line": 64,
             "description": "Finds layers by feature geometry and atributes. If 'feature' parameter is specified, then search condition is created by feature geometry\nwhich intersects layer's boundingBox. If 'atributes' parameter is specified, then search condition is created by combining attributes via OR,\nfield for search is anyText. All conditions are combined via AND. For the found LayerMetadatas, the intersection area is calculated if the\nsearch was performed by geometryIntersectsBbox.",
             "itemtype": "method",
             "name": "findLayerMetadata.",
@@ -43328,6 +43328,31 @@
             ],
             "return": {
                 "description": "Array of object. Object consisting of 'layerMatadata' is layers models where feature geometry intersects layer's boundingBox\nand layers have desired attributes, and 'areaIntersections' is area of intersections.",
+                "type": "Promise"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api-cosmos.js",
+            "line": 155,
+            "description": "Finds a layer by layer id. Creates a layer from layerMetadata, sets index and map.\nAdds layer in hierarchy.",
+            "itemtype": "method",
+            "name": "addLayerFromLayerMetadata.",
+            "params": [
+                {
+                    "name": "layerId",
+                    "description": "Layer ID.",
+                    "type": "String"
+                },
+                {
+                    "name": "index.",
+                    "description": "",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "layer model.",
                 "type": "Promise"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",

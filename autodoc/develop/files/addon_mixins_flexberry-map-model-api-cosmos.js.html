@@ -413,6 +413,7 @@ import crsFactory4326 from &#x27;ember-flexberry-gis/coordinate-reference-system
 import { Query } from &#x27;ember-flexberry-data&#x27;;
 import { getCrsByName } from &#x27;../utils/get-crs-by-name&#x27;;
 import { geometryToJsts } from &#x27;../utils/layer-to-jsts&#x27;;
+import { createLayerFromMetadata } from &#x27;../utils/create-layer-from-metadata&#x27;;
 
 export default Ember.Mixin.create({
   /**
@@ -557,6 +558,38 @@ export default Ember.Mixin.create({
         resolve(result);
       }).catch((e) =&gt; {
         reject(e);
+      });
+    });
+  },
+
+  /**
+    Finds a layer by layer id. Creates a layer from layerMetadata, sets index and map.
+    Adds layer in hierarchy.
+
+    @method addLayerFromLayerMetadata.
+    @param {String} layerId Layer ID.
+    @param {integer} index.
+    @return {Promise} layer model.
+  */
+  addLayerFromLayerMetadata(layerId, index) {
+    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+      let queryBuilder = this._getQueryBuilderLayerMetadata().byId(layerId);
+      this._getMetadataModels(queryBuilder).then((meta) =&gt; {
+        if (meta.content.length === 0) {
+          return reject(&#x60;LayerMetadata ${layerId} not found.&#x60;);
+        } else {
+          let model = meta.content[0];
+          if (meta &amp;&amp; typeof meta.toArray === &#x27;function&#x27;) {
+            model = meta.toArray()[0];
+          }
+
+          let mapLayer = createLayerFromMetadata(model, this.get(&#x27;store&#x27;));
+          mapLayer.set(&#x27;index&#x27;, index);
+          mapLayer.set(&#x27;map&#x27;, this);
+          const layers = this.get(&#x27;hierarchy&#x27;);
+          layers.addObject(mapLayer);
+          resolve(mapLayer);
+        }
       });
     });
   }

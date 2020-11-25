@@ -5702,7 +5702,10 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-cosmos-test', ['exports'
   };
   var testModel = _ember['default'].Object.create({
     anyText: 'test',
-    boundingBox: bbox
+    boundingBox: bbox,
+    id: '123',
+    type: 'wms',
+    settings: '{}'
   });
 
   (0, _qunit.test)('test method findCosmos for only with parameter feature', function (assert) {
@@ -5920,6 +5923,71 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-cosmos-test', ['exports'
       assert.equal(layers[0].areaIntersections, 1452646131646.9414);
       done();
       ownerStub.restore();
+      spyGetMetadataModels.restore();
+      spyGetQueryBuilderLayerMetadata.restore();
+    });
+  });
+
+  (0, _qunit.test)('test method addLayerFromLayerMetadata', function (assert) {
+    //Arrange
+    assert.expect(7);
+    var done = assert.async(1);
+    var hierarchy = _ember['default'].A();
+    var subject = mapApiMixinObject.create({
+      _getQueryBuilderLayerMetadata: function _getQueryBuilderLayerMetadata() {
+        return new _emberFlexberryData.Query.Builder(store, metadataModelName).from(metadataModelName).selectByProjection(metadataProjection);
+      },
+      _getMetadataModels: function _getMetadataModels() {
+        return _ember['default'].RSVP.resolve({ content: [testModel] });
+      },
+      store: store,
+      hierarchy: hierarchy
+    });
+    var spyGetMetadataModels = _sinon['default'].spy(subject, '_getMetadataModels');
+    var spyGetQueryBuilderLayerMetadata = _sinon['default'].spy(subject, '_getQueryBuilderLayerMetadata');
+
+    //Act
+    subject.addLayerFromLayerMetadata('123', 10).then(function (layer) {
+      //Assert
+      assert.ok(spyGetQueryBuilderLayerMetadata.called);
+      assert.ok(spyGetMetadataModels.called);
+      assert.ok(spyGetMetadataModels.getCall(0).args[0]._id, '123');
+      assert.ok(layer);
+      assert.equal(layer.get('index'), '10');
+      assert.equal(hierarchy.length, 1);
+      assert.equal(layer.get('type'), 'wms');
+      done();
+      spyGetMetadataModels.restore();
+      spyGetQueryBuilderLayerMetadata.restore();
+    });
+  });
+
+  (0, _qunit.test)('test method addLayerFromLayerMetadata not found layer', function (assert) {
+    //Arrange
+    assert.expect(4);
+    var done = assert.async(1);
+    var hierarchy = _ember['default'].A();
+    var subject = mapApiMixinObject.create({
+      _getQueryBuilderLayerMetadata: function _getQueryBuilderLayerMetadata() {
+        return new _emberFlexberryData.Query.Builder(store, metadataModelName).from(metadataModelName).selectByProjection(metadataProjection);
+      },
+      _getMetadataModels: function _getMetadataModels() {
+        return _ember['default'].RSVP.resolve({ content: [] });
+      },
+      store: store,
+      hierarchy: hierarchy
+    });
+    var spyGetMetadataModels = _sinon['default'].spy(subject, '_getMetadataModels');
+    var spyGetQueryBuilderLayerMetadata = _sinon['default'].spy(subject, '_getQueryBuilderLayerMetadata');
+
+    //Act
+    subject.addLayerFromLayerMetadata('123', 10)['catch'](function (error) {
+      //Assert
+      assert.ok(spyGetQueryBuilderLayerMetadata.called);
+      assert.ok(spyGetMetadataModels.called);
+      assert.ok(spyGetMetadataModels.getCall(0).args[0]._id, '123');
+      assert.equal(error, 'LayerMetadata 123 not found.');
+      done();
       spyGetMetadataModels.restore();
       spyGetQueryBuilderLayerMetadata.restore();
     });
