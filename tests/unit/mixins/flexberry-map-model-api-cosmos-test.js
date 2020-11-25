@@ -59,7 +59,10 @@ let bbox = {
 };
 let testModel = Ember.Object.create({
   anyText: 'test',
-  boundingBox: bbox
+  boundingBox: bbox,
+  id: '123',
+  type: 'wms',
+  settings: '{}'
 });
 
 test('test method findCosmos for only with parameter feature', function(assert) {
@@ -293,6 +296,75 @@ test('test method findCosmos for with feature and attributes', function(assert) 
     assert.equal(layers[0].areaIntersections, 1452646131646.9414);
     done();
     ownerStub.restore();
+    spyGetMetadataModels.restore();
+    spyGetQueryBuilderLayerMetadata.restore();
+  });
+});
+
+test('test method addLayerFromLayerMetadata', function(assert) {
+  //Arrange
+  assert.expect(7);
+  let done = assert.async(1);
+  let hierarchy = Ember.A();
+  let subject = mapApiMixinObject.create({
+    _getQueryBuilderLayerMetadata() {
+      return new Query.Builder(store, metadataModelName)
+      .from(metadataModelName)
+      .selectByProjection(metadataProjection);
+    },
+    _getMetadataModels() {
+      return Ember.RSVP.resolve({ content: [testModel] });
+    },
+    store: store,
+    hierarchy: hierarchy
+  });
+  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
+  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
+
+  //Act
+  subject.addLayerFromLayerMetadata('123', 10).then((layer) => {
+    //Assert
+    assert.ok(spyGetQueryBuilderLayerMetadata.called);
+    assert.ok(spyGetMetadataModels.called);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._id, '123');
+    assert.ok(layer);
+    assert.equal(layer.get('index'), '10');
+    assert.equal(hierarchy.length, 1);
+    assert.equal(layer.get('type'), 'wms');
+    done();
+    spyGetMetadataModels.restore();
+    spyGetQueryBuilderLayerMetadata.restore();
+  });
+});
+
+test('test method addLayerFromLayerMetadata not found layer', function(assert) {
+  //Arrange
+  assert.expect(4);
+  let done = assert.async(1);
+  let hierarchy = Ember.A();
+  let subject = mapApiMixinObject.create({
+    _getQueryBuilderLayerMetadata() {
+      return new Query.Builder(store, metadataModelName)
+      .from(metadataModelName)
+      .selectByProjection(metadataProjection);
+    },
+    _getMetadataModels() {
+      return Ember.RSVP.resolve({ content: [] });
+    },
+    store: store,
+    hierarchy: hierarchy
+  });
+  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
+  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
+
+  //Act
+  subject.addLayerFromLayerMetadata('123', 10).catch((error) => {
+    //Assert
+    assert.ok(spyGetQueryBuilderLayerMetadata.called);
+    assert.ok(spyGetMetadataModels.called);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._id, '123');
+    assert.equal(error, 'LayerMetadata 123 not found.');
+    done();
     spyGetMetadataModels.restore();
     spyGetQueryBuilderLayerMetadata.restore();
   });
