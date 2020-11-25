@@ -156,7 +156,7 @@ export default Ember.Mixin.create({
     Finds a layer by layer id. Creates a layer from layerMetadata, sets index and map.
     Adds layer in hierarchy.
 
-    @method findLayerMetadata.
+    @method addLayerFromLayerMetadata.
     @param {String} layerId Layer ID.
     @param {integer} index.
     @return {Promise} layer model.
@@ -167,22 +167,19 @@ export default Ember.Mixin.create({
       this._getMetadataModels(queryBuilder).then((meta) => {
         if (meta.content.length === 0) {
           return reject(`LayerMetadata ${layerId} not found.`);
-        }
+        } else {
+          let model = meta.content[0];
+          if (meta && typeof meta.toArray === 'function') {
+            model = meta.toArray()[0];
+          }
 
-        let models = meta.content;
-        let result = [];
-        if (meta && typeof meta.toArray === 'function') {
-          models = meta.toArray();
-        }
-
-        models.forEach(model => {
           let mapLayer = createLayerFromMetadata(model, this.get('store'));
           mapLayer.set('index', index);
           mapLayer.set('map', this);
           const layers = this.get('hierarchy');
           layers.addObject(mapLayer);
           resolve(mapLayer);
-        });
+        }
       });
     });
   }
