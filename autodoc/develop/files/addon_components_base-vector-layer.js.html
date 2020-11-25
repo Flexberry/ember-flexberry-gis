@@ -1112,7 +1112,7 @@ export default BaseLayer.extend({
     if (!Ember.isNone(leafletMap)) {
       leafletMap.off(&#x27;flexberry-map:getOrLoadLayerFeatures&#x27;, this._getOrLoadLayerFeatures, this);
 
-      if (this.get(&#x27;settings.typeGeometry&#x27;) === &#x27;polyline&#x27;) {
+      if (this.get(&#x27;typeGeometry&#x27;) === &#x27;polyline&#x27;) {
         leafletMap.off(&#x27;zoomend&#x27;, this._updatePositionLabelForLine, this);
       }
     }
@@ -1688,7 +1688,7 @@ export default BaseLayer.extend({
         labelsLayer.leafletMap = leafletMap;
         leafletObject._labelsLayer = labelsLayer;
 
-        if (this.get(&#x27;settings.typeGeometry&#x27;) === &#x27;polyline&#x27;) {
+        if (this.get(&#x27;typeGeometry&#x27;) === &#x27;polyline&#x27;) {
           leafletMap.on(&#x27;zoomend&#x27;, this._updatePositionLabelForLine, this);
         }
       } else {
@@ -1701,7 +1701,7 @@ export default BaseLayer.extend({
         this._checkZoomPane();
       }
 
-      if (this.get(&#x27;settings.typeGeometry&#x27;) === &#x27;polyline&#x27;) {
+      if (this.get(&#x27;typeGeometry&#x27;) === &#x27;polyline&#x27;) {
         this._updatePositionLabelForLine();
       }
     }
