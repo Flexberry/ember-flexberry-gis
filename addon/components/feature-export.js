@@ -153,7 +153,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
         downloadBlob(res.fileName, res.blob);
       })
       .catch((errorMessage) => {
-        console.log('Layer upload error ' + result.name + ': ' + errorMessage);
+        console.error('Layer upload error ' + result.name + ': ' + errorMessage);
         alert('When unloading a layer ' + result.name + ' an error occurred.');
       });
     }

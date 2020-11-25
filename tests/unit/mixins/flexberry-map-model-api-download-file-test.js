@@ -8,14 +8,6 @@ module('Unit | Mixin | flexberry map model api download file');
 
 let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiMixin);
 
-let arrayFindBy = function(prop, value) {
-  return this.filter((elem) => {
-    if (elem.hasOwnProperty(prop)) {
-      return elem[prop] === value;
-    }
-  })[0];
-};
-
 test('test api method downloadFile', function (assert) {
   assert.expect(4);
   var done = assert.async(1);
@@ -52,13 +44,13 @@ test('test api method downloadFile', function (assert) {
       code: 'EPSG:4326'
     }
   });
-  let maplayers = Array(layer);
-  Array.prototype.findBy = arrayFindBy;
-
+  let maplayers = Ember.A(layer);
   let subject = mapApiMixinObject.create({
     mapLayer: maplayers
   });
 
+  let findByStub = sinon.stub(subject.mapLayer, 'findBy');
+  findByStub.returns(layer);
   let stubAjax = sinon.stub(Ember.$, 'ajax');
   stubAjax.yieldsTo('success', 'blob');
 
@@ -71,6 +63,6 @@ test('test api method downloadFile', function (assert) {
     done();
     ownerStub.restore();
     stubAjax.restore();
-    Array.prototype.findBy = null;
+    findByStub.restore();
   });
 });
