@@ -566,15 +566,40 @@ export default Ember.Mixin.create(SnapDraw, {
   _setVisibility(layerIds, visibility = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (Ember.isArray(layerIds)) {
+        let currentLayerIds = [];
         layerIds.forEach(id => {
           const layer = this.get('mapLayer').findBy('id', id);
           if (layer) {
             layer.set('visibility', visibility);
+            currentLayerIds.push(id);
           } else {
             reject(`Layer '${id}' not found.`);
           }
         });
-        resolve('success');
+
+        if (currentLayerIds.length > 0) {
+          let e = {
+            layers: currentLayerIds,
+            results: Ember.A()
+          };
+
+          leafletMap.fire('flexberry-map:moveend', e);
+          e.results = Ember.isArray(e.results) ? e.results : Ember.A();
+          let promises = Ember.A();
+          e.results.forEach((result) => {
+            if (Ember.isNone(result)) {
+              return;
+            }
+
+            promises.pushObject(Ember.get(result, 'promise'));
+          });
+
+          Ember.RSVP.allSettled(promises).then(() => {
+            resolve('success');
+          });
+        } else {
+          reject('all layerIds is not found');
+        }
       }
     });
   },
