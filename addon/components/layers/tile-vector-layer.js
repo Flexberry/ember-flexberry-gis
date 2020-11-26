@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import BaseVectorLayer from '../base-vector-layer';
 
 export default BaseVectorLayer.extend({
@@ -69,12 +70,12 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-      Sets leaflet layer's zindex.
+    Sets leaflet layer's zindex.
 
-      @method _setLayerZIndex
-      @private
-    */
-   _setLayerZIndex() {
+    @method _setLayerZIndex
+    @private
+  */
+  _setLayerZIndex() {
     const leafletLayer = this.get('_leafletObject');
     if (Ember.isNone(leafletLayer)) {
       return;
