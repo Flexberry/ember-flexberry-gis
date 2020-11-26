@@ -567,60 +567,18 @@ export default Ember.Mixin.create(SnapDraw, {
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (Ember.isArray(layerIds)) {
         const layers = this.get('mapLayer');
-        let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+        // let leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
-        let layersNotShowAndLoad = [];
-        let layersShowAndLoad = [];
+        // let layersShowAndLoad = [];
         layerIds.forEach(id => {
           const layer = this.get('mapLayer').findBy('id', id);
           if (layer) {
             layer.set('visibility', visibility);
-            if (visibility && this._getTypeLayer(layer) instanceof VectorLayer) {
-              let leafletObject = Ember.get(layer, '_leafletObject');
-              let showExisting = leafletObject.options.showExisting;
-              let continueLoading = leafletObject.options.continueLoading;
-              if (!showExisting && !continueLoading) {
-                layersNotShowAndLoad.push(id);
-              } else {
-                layersShowAndLoad.push(layer);
-              }
-            }
           } else {
             reject(`Layer '${id}' not found.`);
           }
         });
-
-        if (layersNotShowAndLoad.length > 0) {
-          layersNotShowAndLoad.forEach(id => {
-            this._getModelLayerFeature(id, null, true).then(() => {
-              resolve('success');
-            });
-          });
-        }
-
-        if (layersShowAndLoad.length > 0) {
-          let e = {
-            layers: layersShowAndLoad,
-            results: Ember.A()
-          };
-
-          leafletMap.fire('flexberry-map:moveend', e);
-          e.results = Ember.isArray(e.results) ? e.results : Ember.A();
-          let promises = Ember.A();
-          e.results.forEach((result) => {
-            if (Ember.isNone(result)) {
-              return;
-            }
-
-            promises.pushObject(Ember.get(result, 'promise'));
-          });
-
-          Ember.RSVP.allSettled(promises).then(() => {
-            resolve('success');
-          });
-        }
-      } else {
-        reject('layerIds is not array');
+        resolve('success');
       }
     });
   },
