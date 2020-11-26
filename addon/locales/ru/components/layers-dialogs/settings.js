@@ -70,6 +70,15 @@ export default {
     }
   },
 
+  'tile-vector': {
+    'url-textbox': {
+      'caption': 'Url'
+    },
+    'layerName-textbox': {
+      'caption': 'Название слоя'
+    }
+  },
+
   'wms': Wms,
 
   'wfs': Wfs,
