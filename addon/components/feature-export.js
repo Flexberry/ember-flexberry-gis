@@ -144,7 +144,15 @@ let FeatureExportDialogComponent = Ember.Component.extend({
       let outputFormat = this.get('_options.format');
       let crsOuput = this.get('_crs');
       let crsLayer = getCrsByName(JSON.parse(layer.get('coordinateReferenceSystem')).code, this);
-      let objectIds = result.features.map((feature) => { return feature.id; });
+      let type = layer.get('type');
+      let objectIds = result.features.map((feature) => {
+        if (type !== 'odata-vector') {
+          return feature.id;
+        } else {
+          return feature.properties.primarykey;
+        }
+      });
+
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
       let url = config.APP.backendUrls.featureExportApi;
       let headers = {};
