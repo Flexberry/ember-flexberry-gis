@@ -1754,6 +1754,16 @@ export default Ember.Mixin.create(SnapDraw, {
     return [points.X / amp, points.Y / amp];
   },
 
+  _requestDownloadFile(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      downloadFile(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url).then((res) => {
+        resolve(res);
+      }).catch((e) => {
+        reject(e);
+      });
+    });
+  },
+
   /**
     Download file.
     @method downloadFile
@@ -1776,7 +1786,7 @@ export default Ember.Mixin.create(SnapDraw, {
 
       let crsOuput = getCrsByName(crsName, this);
       let crsLayer = getCrsByName(layerModel.get('crs').code, this);
-      downloadFile(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url).then((res) => {
+      this._requestDownloadFile(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url).then((res) => {
         if (isFile) {
           downloadBlob(res.fileName, res.blob);
         }

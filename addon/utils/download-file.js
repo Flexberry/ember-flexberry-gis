@@ -12,9 +12,10 @@ import Ember from 'ember';
   @param {Object} crsOuput crs in which to download data.
   @param {crsLayer} crsLayer crs in which data of layer.
   @param {String} url url of controller for download file.
+  @param {Object} header headers for request odata.
   @return {Promise} Object consist of fileName and blob.
 */
-let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url) {
+let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url, header = {}) {
   return new Ember.RSVP.Promise((resolve, reject) => {
     let req = null;
     let headers = {};
@@ -78,7 +79,7 @@ let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLa
         layerElem.appendChild(pkListElem);
         odataElem.appendChild(layerElem);
         req = odataElem;
-        headers = layerModel.get('headers');
+        headers = header;
       }
     } catch (error) {
       reject('Error getting data for the request: ' + error);

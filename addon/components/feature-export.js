@@ -147,16 +147,21 @@ let FeatureExportDialogComponent = Ember.Component.extend({
       let objectIds = result.features.map((feature) => { return feature.id; });
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
       let url = config.APP.backendUrls.featureExportApi;
+      let headers = {};
 
-      downloadFile(layer, objectIds, outputFormat, crsOuput, crsLayer, url)
-      .then((res) => {
-        downloadBlob(res.fileName, res.blob);
-      })
-      .catch((errorMessage) => {
-        console.error('Layer upload error ' + result.name + ': ' + errorMessage);
-        alert('When unloading a layer ' + result.name + ' an error occurred.');
-      });
+      this._requestDownloadFile(layer, objectIds, outputFormat, crsOuput, crsLayer, url, headers);
     }
+  },
+
+  _requestDownloadFile(layer, objectIds, outputFormat, crsOuput, crsLayer, url, headers) {
+    downloadFile(layer, objectIds, outputFormat, crsOuput, crsLayer, url, headers)
+    .then((res) => {
+      downloadBlob(res.fileName, res.blob);
+    })
+    .catch((errorMessage) => {
+      console.error('Layer upload error ' + layer.get('name') + ': ' + errorMessage);
+      alert('When unloading a layer ' + layer.get('name') + ' an error occurred.');
+    });
   },
 
   /**
