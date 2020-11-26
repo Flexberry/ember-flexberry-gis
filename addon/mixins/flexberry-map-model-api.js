@@ -568,41 +568,21 @@ export default Ember.Mixin.create(SnapDraw, {
   _setVisibility(layerIds, visibility = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (Ember.isArray(layerIds)) {
-        const layers = this.get('mapLayer');
-        let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-
-        let layersNotShowAndLoad = [];
-        let layersShowAndLoad = [];
+        const leafletMap = this.get('mapApi').getFromApi('leafletMap');
+        let currentLayerIds = [];
         layerIds.forEach(id => {
           const layer = this.get('mapLayer').findBy('id', id);
           if (layer) {
             layer.set('visibility', visibility);
-            if (visibility && this._getTypeLayer(layer) instanceof VectorLayer) {
-              let leafletObject = Ember.get(layer, '_leafletObject');
-              let showExisting = leafletObject.options.showExisting;
-              let continueLoading = leafletObject.options.continueLoading;
-              if (!showExisting && !continueLoading) {
-                layersNotShowAndLoad.push(id);
-              } else {
-                layersShowAndLoad.push(layer);
-              }
-            }
+            currentLayerIds.push(id);
           } else {
             reject(`Layer '${id}' not found.`);
           }
         });
 
-        if (layersNotShowAndLoad.length > 0) {
-          layersNotShowAndLoad.forEach(id => {
-            this._getModelLayerFeature(id, null, true).then(() => {
-              resolve('success');
-            });
-          });
-        }
-
-        if (layersShowAndLoad.length > 0) {
+        if (currentLayerIds.length > 0) {
           let e = {
-            layers: layersShowAndLoad,
+            layers: currentLayerIds,
             results: Ember.A()
           };
 
@@ -620,9 +600,9 @@ export default Ember.Mixin.create(SnapDraw, {
           Ember.RSVP.allSettled(promises).then(() => {
             resolve('success');
           });
+        } else {
+          reject('all layerIds is not found');
         }
-      } else {
-        reject('layerIds is not array');
       }
     });
   },

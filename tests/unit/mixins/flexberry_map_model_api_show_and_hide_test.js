@@ -56,53 +56,9 @@ let layer2 = Ember.Object.create({
     }
   }
 });
-let maplayers = Array(layer1, layer2);
+let maplayers = Ember.A([layer1, layer2]);
 
 test('test method showLayers with continueLoading = false', function (assert) {
-  //Arrange
-  assert.expect(7);
-  let done = assert.async(1);
-
-  let map = L.map(document.createElement('div'), {
-    center: [51.505, -0.09],
-    zoom: 13
-  });
-
-  let subject = mapApiMixinObject.create({
-    _getTypeLayer() { return new VectorLayer(); },
-    mapApi: {
-      getFromApi() { return map; }
-    },
-    _getModelLayerFeature() { return Ember.RSVP.resolve(); },
-    mapLayer: maplayers
-  });
-
-  leafletObject.options.continueLoading = false;
-  let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
-  let leafletMapFireStub = sinon.stub(map, 'fire');
-  leafletMapFireStub.returns(Ember.RSVP.resolve());
-  Array.prototype.findBy = arrayFindBy;
-
-  //Act
-  let result = subject.showLayers(['1']);
-
-  //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise);
-  result.then((res)=> {
-    assert.equal(res, 'success');
-    assert.equal(subject.mapLayer.findBy('id', '1').visibility, true);
-    assert.equal(getModelLayerFeatureSpy.callCount, 1);
-    assert.equal(getModelLayerFeatureSpy.args[0][0], '1');
-    assert.deepEqual(getModelLayerFeatureSpy.args[0][1], null);
-    assert.equal(leafletMapFireStub.callCount, 0);
-    done();
-    getModelLayerFeatureSpy.restore();
-    leafletMapFireStub.restore();
-    Array.prototype.findBy = null;
-  });
-});
-
-test('test method showLayers with continueLoading = true', function (assert) {
   //Arrange
   assert.expect(6);
   let done = assert.async(1);
@@ -117,15 +73,53 @@ test('test method showLayers with continueLoading = true', function (assert) {
     mapApi: {
       getFromApi() { return map; }
     },
-    _getModelLayerFeature() { return Ember.RSVP.resolve(); },
+    mapLayer: maplayers
+  });
+
+  leafletObject.options.continueLoading = false;
+  let leafletMapFireStub = sinon.stub(map, 'fire');
+  leafletMapFireStub.returns(Ember.RSVP.resolve());
+  let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+
+  //Act
+  let result = subject.showLayers(['1']); 
+
+  //Assert
+  assert.ok(result instanceof Ember.RSVP.Promise);
+  result.then((res)=> {
+    assert.equal(res, 'success');
+    assert.equal(findByStub.callCount, 1);
+    assert.equal(findByStub.args[0][0], 'id');
+    assert.equal(findByStub.args[0][1], '1');
+    assert.equal(leafletMapFireStub.callCount, 1);
+    done();
+    leafletMapFireStub.restore();
+    findByStub.restore();
+  });
+});
+
+test('test method showLayers with continueLoading = true', function (assert) {
+  //Arrange
+  assert.expect(7);
+  let done = assert.async(1);
+
+  let map = L.map(document.createElement('div'), {
+    center: [51.505, -0.09],
+    zoom: 13
+  });
+
+  let subject = mapApiMixinObject.create({
+    _getTypeLayer() { return new VectorLayer(); },
+    mapApi: {
+      getFromApi() { return map; }
+    },
     mapLayer: maplayers
   });
 
   leafletObject.options.continueLoading = true;
-  let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
   let leafletMapFireStub = sinon.stub(map, 'fire');
   leafletMapFireStub.returns(Ember.RSVP.resolve());
-  Array.prototype.findBy = arrayFindBy;
+  let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
   //Act
   let result = subject.showLayers(['1']);
@@ -134,20 +128,20 @@ test('test method showLayers with continueLoading = true', function (assert) {
   assert.ok(result instanceof Ember.RSVP.Promise);
   result.then((res)=> {
     assert.equal(res, 'success');
-    assert.equal(subject.mapLayer.findBy('id', '1').visibility, true);
-    assert.equal(getModelLayerFeatureSpy.callCount, 0);
+    assert.equal(findByStub.callCount, 1);
+    assert.equal(findByStub.args[0][0], 'id');
+    assert.equal(findByStub.args[0][1], '1');
     assert.equal(leafletMapFireStub.callCount, 1);
     assert.equal(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
     done();
-    getModelLayerFeatureSpy.restore();
     leafletMapFireStub.restore();
-    Array.prototype.findBy = null;
+    findByStub.restore();
   });
 });
 
 test('test method showAllLayerObjects with continueLoading = false', function (assert) {
   //Arrange
-  assert.expect(10);
+  assert.expect(13);
   let done = assert.async(1);
 
   let map = L.map(document.createElement('div'), {
@@ -176,7 +170,7 @@ test('test method showAllLayerObjects with continueLoading = false', function (a
   let mapAddSpy = sinon.spy(map, 'addLayer');
   let mapRemoveSpy = sinon.spy(map, 'removeLayer');
   let leafletObjectClearLayersSpy = sinon.spy(leafletObject, 'clearLayers');
-  Array.prototype.findBy = arrayFindBy;
+  let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
   //Act
   let result = subject.showAllLayerObjects('1');
@@ -192,6 +186,9 @@ test('test method showAllLayerObjects with continueLoading = false', function (a
     assert.notEqual(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
     assert.equal(mapAddSpy.callCount, 8);
     assert.equal(mapRemoveSpy.callCount, 0);
+    assert.equal(findByStub.callCount, 1);
+    assert.equal(findByStub.args[0][0], 'id');
+    assert.equal(findByStub.args[0][1], '1');
     assert.equal(leafletObjectClearLayersSpy.callCount, 1);
     done();
     getModelLayerFeatureSpy.restore();
@@ -199,13 +196,13 @@ test('test method showAllLayerObjects with continueLoading = false', function (a
     mapAddSpy.restore();
     mapRemoveSpy.restore();
     leafletObjectClearLayersSpy.restore();
-    Array.prototype.findBy = null;
+    findByStub.restore();
   });
 });
 
 test('test method showAllLayerObjects with continueLoading = true', function (assert) {
   //Arrange
-  assert.expect(8);
+  assert.expect(11);
   let done = assert.async(1);
 
   let map = L.map(document.createElement('div'), {
@@ -234,7 +231,7 @@ test('test method showAllLayerObjects with continueLoading = true', function (as
   let mapAddSpy = sinon.spy(map, 'addLayer');
   let mapRemoveSpy = sinon.spy(map, 'removeLayer');
   let leafletObjectClearLayersSpy = sinon.spy(leafletObject, 'clearLayers');
-  Array.prototype.findBy = arrayFindBy;
+  let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
   //Act
   let result = subject.showAllLayerObjects('1');
@@ -248,6 +245,9 @@ test('test method showAllLayerObjects with continueLoading = true', function (as
     assert.equal(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
     assert.equal(mapAddSpy.callCount, 8);
     assert.equal(mapRemoveSpy.callCount, 0);
+    assert.equal(findByStub.callCount, 1);
+    assert.equal(findByStub.args[0][0], 'id');
+    assert.equal(findByStub.args[0][1], '1');
     assert.equal(leafletObjectClearLayersSpy.callCount, 0);
     done();
     getModelLayerFeatureSpy.restore();
@@ -255,13 +255,13 @@ test('test method showAllLayerObjects with continueLoading = true', function (as
     mapAddSpy.restore();
     mapRemoveSpy.restore();
     leafletObjectClearLayersSpy.restore();
-    Array.prototype.findBy = null;
+    findByStub.restore();
   });
 });
 
 test('test method hideAllLayerObjects', function (assert) {
   //Arrange
-  assert.expect(1);
+  assert.expect(4);
 
   let map = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
@@ -282,20 +282,23 @@ test('test method hideAllLayerObjects', function (assert) {
   });
 
   let mapRemoveSpy = sinon.spy(map, 'removeLayer');
-  Array.prototype.findBy = arrayFindBy;
+  let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
   //Act
   subject.hideAllLayerObjects('1');
 
   //Assert
   assert.equal(mapRemoveSpy.callCount, 7);
+  assert.equal(findByStub.callCount, 1);
+  assert.equal(findByStub.args[0][0], 'id');
+  assert.equal(findByStub.args[0][1], '1');
   mapRemoveSpy.restore();
-  Array.prototype.findBy = null;
+  findByStub.restore();
 });
 
 test('test method hideLayers with continueLoading = false', function (assert) {
   //Arrange
-  assert.expect(3);
+  assert.expect(5);
 
   let map = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
@@ -315,23 +318,25 @@ test('test method hideLayers with continueLoading = false', function (assert) {
   let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
   let leafletMapFireStub = sinon.stub(map, 'fire');
   leafletMapFireStub.returns(Ember.RSVP.resolve());
-  Array.prototype.findBy = arrayFindBy;
+  let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
   //Act
   subject.hideLayers(['1']);
 
   //Assert
-  assert.equal(subject.mapLayer.findBy('id', '1').visibility, false);
   assert.equal(getModelLayerFeatureSpy.callCount, 0);
   assert.equal(leafletMapFireStub.callCount, 0);
+  assert.equal(findByStub.callCount, 1);
+  assert.equal(findByStub.args[0][0], 'id');
+  assert.equal(findByStub.args[0][1], '1');
   getModelLayerFeatureSpy.restore();
   leafletMapFireStub.restore();
-  Array.prototype.findBy = null;
+  findByStub.restore();
 });
 
 test('test method hideLayers with continueLoading = true', function (assert) {
   //Arrange
-  assert.expect(3);
+  assert.expect(5);
 
   let map = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
@@ -351,16 +356,18 @@ test('test method hideLayers with continueLoading = true', function (assert) {
   let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
   let leafletMapFireStub = sinon.stub(map, 'fire');
   leafletMapFireStub.returns(Ember.RSVP.resolve());
-  Array.prototype.findBy = arrayFindBy;
+  let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
   //Act
   subject.hideLayers(['1']);
 
   //Assert
-  assert.equal(subject.mapLayer.findBy('id', '1').visibility, false);
   assert.equal(getModelLayerFeatureSpy.callCount, 0);
   assert.equal(leafletMapFireStub.callCount, 0);
+  assert.equal(findByStub.callCount, 1);
+  assert.equal(findByStub.args[0][0], 'id');
+  assert.equal(findByStub.args[0][1], '1');
   getModelLayerFeatureSpy.restore();
   leafletMapFireStub.restore();
-  Array.prototype.findBy = null;
+  findByStub.restore();
 });
