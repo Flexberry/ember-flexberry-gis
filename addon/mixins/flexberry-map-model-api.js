@@ -566,6 +566,7 @@ export default Ember.Mixin.create(SnapDraw, {
   _setVisibility(layerIds, visibility = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (Ember.isArray(layerIds)) {
+        const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         let currentLayerIds = [];
         layerIds.forEach(id => {
           const layer = this.get('mapLayer').findBy('id', id);

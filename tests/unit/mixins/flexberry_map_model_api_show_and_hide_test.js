@@ -60,7 +60,7 @@ let maplayers = Array(layer1, layer2);
 
 test('test method showLayers with continueLoading = false', function (assert) {
   //Arrange
-  assert.expect(7);
+  assert.expect(4);
   let done = assert.async(1);
 
   let map = L.map(document.createElement('div'), {
@@ -73,12 +73,10 @@ test('test method showLayers with continueLoading = false', function (assert) {
     mapApi: {
       getFromApi() { return map; }
     },
-    _getModelLayerFeature() { return Ember.RSVP.resolve(); },
     mapLayer: maplayers
   });
 
   leafletObject.options.continueLoading = false;
-  let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
   let leafletMapFireStub = sinon.stub(map, 'fire');
   leafletMapFireStub.returns(Ember.RSVP.resolve());
   Array.prototype.findBy = arrayFindBy;
@@ -90,13 +88,9 @@ test('test method showLayers with continueLoading = false', function (assert) {
   assert.ok(result instanceof Ember.RSVP.Promise);
   result.then((res)=> {
     assert.equal(res, 'success');
-    assert.equal(subject.mapLayer.findBy('id', '1').visibility, true);
-    assert.equal(getModelLayerFeatureSpy.callCount, 1);
-    assert.equal(getModelLayerFeatureSpy.args[0][0], '1');
-    assert.deepEqual(getModelLayerFeatureSpy.args[0][1], null);
-    assert.equal(leafletMapFireStub.callCount, 0);
+    assert.equal(subject.mapLayer.findBy('id', '1').visibility, true); 
+    assert.equal(leafletMapFireStub.callCount, 1);
     done();
-    getModelLayerFeatureSpy.restore();
     leafletMapFireStub.restore();
     Array.prototype.findBy = null;
   });
@@ -104,7 +98,7 @@ test('test method showLayers with continueLoading = false', function (assert) {
 
 test('test method showLayers with continueLoading = true', function (assert) {
   //Arrange
-  assert.expect(6);
+  assert.expect(5);
   let done = assert.async(1);
 
   let map = L.map(document.createElement('div'), {
@@ -117,12 +111,10 @@ test('test method showLayers with continueLoading = true', function (assert) {
     mapApi: {
       getFromApi() { return map; }
     },
-    _getModelLayerFeature() { return Ember.RSVP.resolve(); },
     mapLayer: maplayers
   });
 
   leafletObject.options.continueLoading = true;
-  let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
   let leafletMapFireStub = sinon.stub(map, 'fire');
   leafletMapFireStub.returns(Ember.RSVP.resolve());
   Array.prototype.findBy = arrayFindBy;
@@ -135,11 +127,9 @@ test('test method showLayers with continueLoading = true', function (assert) {
   result.then((res)=> {
     assert.equal(res, 'success');
     assert.equal(subject.mapLayer.findBy('id', '1').visibility, true);
-    assert.equal(getModelLayerFeatureSpy.callCount, 0);
     assert.equal(leafletMapFireStub.callCount, 1);
     assert.equal(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
     done();
-    getModelLayerFeatureSpy.restore();
     leafletMapFireStub.restore();
     Array.prototype.findBy = null;
   });

@@ -635,10 +635,6 @@ export default BaseVectorLayer.extend({
 
         leafletObject.loadFeatures(filter);
         needPromise = true;
-      } else if (!leafletObject.options.showExisting && !leafletObject.options.continueLoading && show && !leafletObject.existingFeaturesLoaded) {
-        leafletObject.existingFeaturesLoaded = true;
-        leafletObject.loadFeatures(leafletObject.options.filter);
-        needPromise = true;
       } else if (leafletObject.statusLoadLayer) {
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
       }
