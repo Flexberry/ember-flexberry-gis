@@ -1,5 +1,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/feature-export';
+import { downloadFile, downloadBlob } from '../utils/download-file';
+import { getCrsByName } from '../utils/get-crs-by-name';
 
 import {
   translationMacro as t
@@ -75,71 +77,6 @@ let FeatureExportDialogComponent = Ember.Component.extend({
   }),
 
   /**
-   * Current data format.
-   */
-  _format: Ember.computed('_options.format', function() {
-    let _options = this.get('_options');
-    let crs = this.get('_crs').crs;
-
-    if (_options.format === 'JSON') {
-      return new L.Format.GeoJSON({ crs: crs });
-    }
-
-    let format = new L.Format.Base({ crs: crs });
-
-    format.outputFormat = _options.format;
-
-    if (_options.format === 'Shape Zip') {
-      format.outputFormat = 'Shape';
-    }
-
-    return format;
-  }),
-
-  /**
-   * Upload file extension.
-   */
-  _fileExt: Ember.computed('_options.format', function() {
-    let _options = this.get('_options');
-
-    switch (_options.format) {
-      case 'JSON':
-        return 'json';
-      case 'GML2':
-      case 'GML3':
-        return 'xml';
-      case 'KML':
-        return 'kml';
-      case 'CSV':
-        return 'csv';
-      case 'GPX':
-      case 'Shape Zip':
-      case 'MIF':
-        return 'zip';
-      default:
-        return 'txt';
-    }
-  }),
-
-  /**
-   * Layer settings
-  */
-  _layerSettings: Ember.computed('result', function() {
-    let result = this.get('result');
-    let layer = result.layerModel;
-    let type = layer.get('type');
-
-    switch (type) {
-      case 'wms-wfs':
-        return layer.get('settingsAsObject').wfs;
-      case 'wfs':
-        return layer.get('settingsAsObject');
-      default:
-        return null;
-    }
-  }),
-
-  /**
    * Layout.
    */
   layout,
@@ -203,80 +140,28 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     onApprove(e) {
       // Objects for unloading.
       let result = this.get('result');
-      let layerSettings = this.get('_layerSettings');
-      let readFormat = this.get('_format');
-      let crs = this.get('_crs');
       let layer = result.layerModel;
-      let type = layer.get('type');
-      let req = null;
+      let outputFormat = this.get('_options.format');
+      let crsOuput = this.get('_crs');
+      let crsLayer = getCrsByName(JSON.parse(layer.get('coordinateReferenceSystem')).code, this);
+      let objectIds = result.features.map((feature) => { return feature.id; });
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      let url = config.APP.backendUrls.featureExportApi;
       let headers = {};
 
-      if (type !== 'odata-vector') {
-        let wfsLayer = new L.WFS({
-          crs: crs.crs,
-          url: layerSettings.url,
-          typeNS: layerSettings.typeNS,
-          typeName: layerSettings.typeName,
-          geometryField: layerSettings.geometryField,
-          showExisting: false
-        }, readFormat);
-
-        let filters = result.features.map((feature) => new L.Filter.GmlObjectID(feature.id));
-        let allfilters = new L.Filter.Or(...filters);
-        req = wfsLayer.getFeature(allfilters);
-        headers = wfsLayer.options.headers;
-
-      } else {
-        let doc = document.implementation.createDocument('', '', null);
-        let odataElem = doc.createElement('odata');
-        odataElem.setAttribute('outputFormat', this.get('_options.format'));
-        let layerElem = doc.createElement('layer');
-        layerElem.setAttribute('layerName', result.name);
-        let modelName = null;
-        Ember.$.ajax({
-          url: layer.get('_leafletObject.options.metadataUrl') + layer.get('_leafletObject.modelName') + '.json',
-          async: false,
-          success: function(data) {
-            modelName = data.className;
-          }
-        });
-
-        layerElem.setAttribute('modelName', modelName);
-        if (!Ember.isNone(crs.definition)) {
-          layerElem.setAttribute('srsName', crs.definition);
-        } else {
-          layerElem.setAttribute('srsName', crs.crs.code);
-        }
-
-        let pkListElem = doc.createElement('pkList');
-
-        result.features.forEach((feature) => {
-          let pkElem = doc.createElement('pk');
-          pkElem.setAttribute('primarykey', feature.properties.primarykey);
-          pkListElem.appendChild(pkElem);
-        });
-
-        layerElem.appendChild(pkListElem);
-        odataElem.appendChild(layerElem);
-        req = odataElem;
-      }
-
-      let config = Ember.getOwner(this).resolveRegistration('config:environment');
-
-      this.request({
-        url: config.APP.backendUrls.featureExportApi,
-        data: L.XmlUtil.serializeXmlDocumentString(req),
-        headers: headers || {},
-        success: (blob) => {
-          let ext = this.get('_fileExt');
-          this.downloadBlob(result.name + '.' + ext, blob);
-        },
-        error: (errorMessage) => {
-          console.log('Layer upload error ' + result.name + ': ' + errorMessage);
-          alert('When unloading a layer ' + result.name + ' an error occurred.');
-        }
-      });
+      this._requestDownloadFile(layer, objectIds, outputFormat, crsOuput, crsLayer, url, headers);
     }
+  },
+
+  _requestDownloadFile(layer, objectIds, outputFormat, crsOuput, crsLayer, url, headers) {
+    downloadFile(layer, objectIds, outputFormat, crsOuput, crsLayer, url, headers)
+    .then((res) => {
+      downloadBlob(res.fileName, res.blob);
+    })
+    .catch((errorMessage) => {
+      console.error('Layer upload error ' + layer.get('name') + ': ' + errorMessage);
+      alert('When unloading a layer ' + layer.get('name') + ' an error occurred.');
+    });
   },
 
   /**
@@ -323,67 +208,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
       this.set('_options', Ember.$.extend(true, {}, defaultOptions));
       this.set('_dialogRequested', true);
     }
-  }),
-
-  /**
-   * Data loading.
-   * @param {string} filename File name.
-   * @param {Blob} blob Data array.
-   */
-  downloadBlob(filename, blob) {
-    let element = document.createElement('a');
-
-    element.setAttribute('href', window.URL.createObjectURL(blob));
-    element.setAttribute('download', filename);
-
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
-  },
-
-  /**
-   * Data request.
-   * @param {object} options Download settings.
-   */
-  request(options) {
-    // Default settings.
-    options = Object.assign({
-      async: true,
-      method: 'POST',
-      data: '',
-      params: {},
-      headers: {},
-      url: '',
-      success: function (data) {
-        console.log(data);
-      },
-      error: function (data) {
-        console.log('Ajax request fail');
-        console.log(data);
-      },
-      complete: function () {
-      }
-    }, options);
-
-    Ember.$.ajax({
-      async: options.async,
-      method: options.method,
-      url: options.url + L.Util.getParamString(options.params, options.url),
-      data: options.data,
-      contentType: 'text/xml',
-      headers: options.headers,
-      dataType: 'blob',
-      success: function(blob) {
-        options.success(blob);
-      },
-      error: function(data) {
-        options.error(data);
-      },
-    });
-  },
+  })
 });
 
 export default FeatureExportDialogComponent;
