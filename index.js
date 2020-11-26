@@ -81,6 +81,9 @@ module.exports = {
     // Leaflet-WMS.
     app.import(app.bowerDirectory + '/leaflet-wms/dist/Leaflet-WMS.js');
 
+    // Leaflet.VectorGrid.
+    app.import(app.bowerDirectory + '/leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js');
+
     // Leaflet.WMS.
     app.import(app.bowerDirectory + '/leaflet.wms/dist/leaflet.wms.js');
 

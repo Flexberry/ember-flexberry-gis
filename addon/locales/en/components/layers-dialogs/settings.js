@@ -68,6 +68,15 @@ export default {
     }
   },
 
+  'tile-vector': {
+    'url-textbox': {
+      'caption': 'Url'
+    },
+    'layerName-textbox': {
+      'caption': 'Name layer'
+    }
+  },
+
   'wms': Wms,
 
   'wms-single-tile': Wms,
