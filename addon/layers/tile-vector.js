@@ -19,7 +19,7 @@ export default VectorLayer.extend({
     @type String[]
     @default ['edit', 'remove', 'identify', 'search']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'attributes', 'legend'],
+  operations: ['identify', 'search'],
 
   /**
     Creates new settings object (with settings related to layer-type).

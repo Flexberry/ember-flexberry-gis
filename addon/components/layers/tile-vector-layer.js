@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import BaseVectorLayer from '../base-vector-layer';
+import { default as BaseVectorLayer, begIndex } from '../base-vector-layer';
 
 export default BaseVectorLayer.extend({
   leafletOptions: [
@@ -8,12 +8,7 @@ export default BaseVectorLayer.extend({
     'typeNS',
     'typeName',
     'typeNSName',
-    'crs',
-    'maxFeatures',
-    'showExisting',
     'style',
-    'forceMulti',
-    'withCredentials',
   ],
 
   /**
@@ -25,9 +20,7 @@ export default BaseVectorLayer.extend({
   createVectorLayer() {
     let options = this.get('options');
     let nameLayer = options.typeName;
-    let url = options.url + '/service/tms/' + options.version + '/' +
-    options.typeNS + ':' + options.typeName + '@' + options.crs.code + '@' +
-    this.get('format') + '/{z}/{x}/{-y}.' + this.get('format');
+    let url = options.url;
     let vectorGridOptions = {
       vectorTileLayerStyles: {}
     };
@@ -87,7 +80,7 @@ export default BaseVectorLayer.extend({
     }
 
     const index = this.get('index');
-    leafletLayer.setZIndex(index + 300);
+    leafletLayer.setZIndex(index + begIndex);
   },
 
 });
