@@ -4,10 +4,7 @@ import { default as BaseVectorLayer, begIndex } from '../base-vector-layer';
 export default BaseVectorLayer.extend({
   leafletOptions: [
     'url',
-    'version',
-    'typeNS',
-    'typeName',
-    'typeNSName',
+    'layerName',
     'style',
   ],
 
@@ -19,7 +16,7 @@ export default BaseVectorLayer.extend({
   */
   createVectorLayer() {
     let options = this.get('options');
-    let nameLayer = options.typeName;
+    let nameLayer = options.layerName;
     let url = options.url;
     let vectorGridOptions = {
       vectorTileLayerStyles: {}
