@@ -103,9 +103,8 @@ export default Ember.Mixin.create(SnapDraw, {
         const leafletObject = Ember.get(layer, '_leafletObject');
         let map = this.get('mapApi').getFromApi('leafletMap');
 
-        let showExisting = leafletObject.options.showExisting;
         let continueLoading = leafletObject.options.continueLoading;
-        if (!showExisting && !continueLoading) {
+        if (!continueLoading) {
           if (!Ember.isNone(leafletObject)) {
             leafletObject.eachLayer((layerShape) => {
               if (map.hasLayer(layerShape)) {
@@ -652,9 +651,8 @@ export default Ember.Mixin.create(SnapDraw, {
 
           const map = this.get('mapApi').getFromApi('leafletMap');
           if (visibility) {
-            let showExisting = leafletObject.options.showExisting;
             let continueLoading = leafletObject.options.continueLoading;
-            if (!showExisting && !continueLoading) {
+            if (!continueLoading) {
               leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve) => {
                 this._getModelLayerFeature(layerId, objectIds, true).then(() => {
                   resolve('Features loaded');
