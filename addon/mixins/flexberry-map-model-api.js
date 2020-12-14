@@ -575,7 +575,7 @@ export default Ember.Mixin.create(SnapDraw, {
             layer.set('visibility', visibility);
             currentLayerIds.push(id);
           } else {
-            reject(`Layer '${id}' not found.`);
+            Ember.run.later(this, () => { reject(`Layer '${id}' not found.`); }, 1);
           }
         });
 
@@ -597,10 +597,10 @@ export default Ember.Mixin.create(SnapDraw, {
           });
 
           Ember.RSVP.allSettled(promises).then(() => {
-            resolve('success');
+            Ember.run.later(this, () => { resolve('success'); }, 1);
           });
         } else {
-          reject('all layerIds is not found');
+          Ember.run.later(this, () => { reject('all layerIds is not found'); }, 1);
         }
       }
     });
