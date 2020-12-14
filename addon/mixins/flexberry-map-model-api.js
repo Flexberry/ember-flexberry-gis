@@ -588,8 +588,9 @@ export default Ember.Mixin.create(SnapDraw, {
           } else {
             Ember.run.later(this, () => { reject('all layerIds is not found'); }, 1);
           }
+        } else {
+          Ember.run.later(this, () => { resolve('success'); }, 1);
         }
-        Ember.run.later(this, () => { resolve('success'); }, 1);
       } else {
         reject('Parametr is not a Array');
       }
