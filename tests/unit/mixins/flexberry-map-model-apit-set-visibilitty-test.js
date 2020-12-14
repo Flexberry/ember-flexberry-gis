@@ -126,7 +126,7 @@ test('Test not founded layers', function(assert) {
   let mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
 
   //Act
-  let result = subject._setVisibility(['3', '4']);
+  let result = subject._setVisibility(['3', '4'], true);
 
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise, 'Equals result = Promise');
@@ -165,7 +165,7 @@ test('Test array is empty', function(assert) {
   let mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
 
   //Act
-  let result = subject._setVisibility([]);
+  let result = subject._setVisibility([], true);
 
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise, 'Equals result = Promise');
