@@ -3,7 +3,7 @@ import { module, test } from 'qunit';
 import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api';
 import sinon from 'sinon';
 
-module('Unit | Mixin | test method setVisibility');
+module('Unit | Mixin | test method setVisibility ');
 
 let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiMixin);
 
@@ -59,7 +59,7 @@ test('Test visibility = true', function(assert) {
 
 test('Test visibility = false', function(assert) {
   //Arrange
-  assert.expect(11);
+  assert.expect(10);
   let firstLayer = layerModel.create({
     id: '1'
   });
@@ -92,8 +92,7 @@ test('Test visibility = false', function(assert) {
     assert.equal(res, 'success', 'Check result message');
     assert.equal(firstLayer.get('visibility'), false, 'Check firstLayer visibility');
     assert.equal(secondLayer.get('visibility'), false, 'Check secondLayer visibility');
-    assert.equal(mapFireSpy.callCount, 1, 'Check call count method fire on map');
-    assert.equal(mapFireSpy.args[0][0], 'flexberry-map:moveend', 'Check first argument method fire on map');
+    assert.equal(mapFireSpy.callCount, 0, 'Check call count method fire on map');
     assert.equal(mapLayerFindSpy.callCount, 2, 'Check call count method findBy on Array');
     assert.equal(mapLayerFindSpy.args[0][0], 'id', 'Check first argument method findBy on Array');
     assert.equal(mapLayerFindSpy.args[0][1], '1', 'Check second argument method findBy on Array');
@@ -181,23 +180,9 @@ test('Test array is empty', function(assert) {
 
 test('Test parametr is not a array', function(assert) {
   //Arrange
-  assert.expect(4);
-  let map = L.map(document.createElement('div'), {
-    center: [51.505, -0.09],
-    zoom: 13
-  });
-  map.on('flexberry-map:moveend', ()=> {});
+  assert.expect(2);
   let done = assert.async(1);
-  let subject = mapApiMixinObject.create({
-    mapApi: {
-      getFromApi() { return map; }
-    },
-    mapLayer: Ember.A([]),
-  });
-  let mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
-    e.results = Ember.A([ { promise: Ember.RSVP.resolve() } ]);
-  });
-  let mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
+  let subject = mapApiMixinObject.create();
 
   //Act
   let result = subject._setVisibility();
@@ -206,11 +191,7 @@ test('Test parametr is not a array', function(assert) {
   assert.ok(result instanceof Ember.RSVP.Promise, 'Equals result = Promise');
   result.catch((res)=> {
     assert.equal(res, 'Parametr is not a Array', 'Check result message');
-    assert.equal(mapFireSpy.callCount, 0, 'Check call count method fire on map');
-    assert.equal(mapLayerFindSpy.callCount, 0, 'Check call count method findBy on Array');
     done();
-    mapFireSpy.restore();
-    mapLayerFindSpy.restore();
   });
 });
 
