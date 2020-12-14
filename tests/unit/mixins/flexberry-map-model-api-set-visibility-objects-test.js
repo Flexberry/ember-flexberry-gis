@@ -243,9 +243,9 @@ test('Map doesn\'t layers and visibility = false', function(assert) {
   });
 });
 
-test('Test to check fail message \'showExisting\'', function(assert) {
+test('Test to check success message \'showExisting\'', function(assert) {
   //Arrange
-  assert.expect(6);
+  assert.expect(9);
   let map = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
     zoom: 13
@@ -270,12 +270,15 @@ test('Test to check fail message \'showExisting\'', function(assert) {
 
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise, 'Equals result = Promise');
-  result.then(()=> { }).catch((res)=> {
-    assert.equal(res, 'Not working to layer with continueLoading', 'Check result message');
-    assert.equal(Object.values(map._layers).length, 0, 'Check count layers on Map');
-    assert.equal(mapAddSpy.callCount, 0, 'Check call count to method addLayer');
+  result.then((res)=> {
+    assert.equal(res, 'sucsess', 'Check result message');
+    assert.equal(Object.values(map._layers).length, 5, 'Check count layers on Map');
+    assert.equal(mapAddSpy.callCount, 5, 'Check call count to method addLayer');
     assert.equal(getModelLeafletObjSpy.callCount, 1, 'Check call count to method _getModelLeafletObject');
-    assert.equal(getModelLayerFeatureSpy.callCount, 0, 'Check call count to method _getModelLayerFeature');
+    assert.equal(getModelLeafletObjSpy.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
+    assert.equal(getModelLayerFeatureSpy.callCount, 1, 'Check call count to method _getModelLayerFeature');
+    assert.equal(getModelLayerFeatureSpy.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+    assert.deepEqual(getModelLayerFeatureSpy.args[0][1], ['1', '2'], 'Check call second arg to method _getModelLayerFeature');
     done();
     leafletObject.options.showExisting = false;
     getModelLeafletObjSpy.restore();
