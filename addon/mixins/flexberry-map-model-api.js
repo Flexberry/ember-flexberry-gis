@@ -44,7 +44,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @return nothing
   */
   hideLayers(layerIds) {
-    return this._setVisibility(layerIds);
+    return this._setVisibility(layerIds, false);
   },
 
   /**
