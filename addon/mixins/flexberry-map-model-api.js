@@ -44,21 +44,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @return nothing
   */
   hideLayers(layerIds) {
-    if (Ember.isArray(layerIds)) {
-      const layers = this.get('mapLayer');
-      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-
-      layerIds.forEach(id => {
-        const layer = this.get('mapLayer').findBy('id', id);
-        if (layer) {
-          layer.set('visibility', false);
-        } else {
-          throw `Layer '${id}' not found.`;
-        }
-      });
-    } else {
-      throw 'layerIds is not array';
-    }
+    return this._setVisibility(layerIds, false);
   },
 
   /**
@@ -103,9 +89,8 @@ export default Ember.Mixin.create(SnapDraw, {
         const leafletObject = Ember.get(layer, '_leafletObject');
         let map = this.get('mapApi').getFromApi('leafletMap');
 
-        let showExisting = leafletObject.options.showExisting;
         let continueLoading = leafletObject.options.continueLoading;
-        if (!showExisting && !continueLoading) {
+        if (!continueLoading) {
           if (!Ember.isNone(leafletObject)) {
             leafletObject.eachLayer((layerShape) => {
               if (map.hasLayer(layerShape)) {
@@ -576,33 +561,38 @@ export default Ember.Mixin.create(SnapDraw, {
             layer.set('visibility', visibility);
             currentLayerIds.push(id);
           } else {
-            reject(`Layer '${id}' not found.`);
+            Ember.run.later(this, () => { reject(`Layer '${id}' not found.`); }, 1);
           }
         });
-
-        if (currentLayerIds.length > 0) {
-          let e = {
-            layers: currentLayerIds,
-            results: Ember.A()
-          };
-
-          leafletMap.fire('flexberry-map:moveend', e);
-          e.results = Ember.isArray(e.results) ? e.results : Ember.A();
-          let promises = Ember.A();
-          e.results.forEach((result) => {
-            if (Ember.isNone(result)) {
-              return;
-            }
-
-            promises.pushObject(Ember.get(result, 'promise'));
-          });
-
-          Ember.RSVP.allSettled(promises).then(() => {
-            resolve('success');
-          });
+        if (visibility) {
+          if (currentLayerIds.length > 0) {
+            let e = {
+              layers: currentLayerIds,
+              results: Ember.A()
+            };
+  
+            leafletMap.fire('flexberry-map:moveend', e);
+            e.results = Ember.isArray(e.results) ? e.results : Ember.A();
+            let promises = Ember.A();
+            e.results.forEach((result) => {
+              if (Ember.isNone(result)) {
+                return;
+              }
+  
+              promises.pushObject(Ember.get(result, 'promise'));
+            });
+  
+            Ember.RSVP.allSettled(promises).then(() => {
+              Ember.run.later(this, () => { resolve('success'); }, 1);
+            });
+          } else {
+            Ember.run.later(this, () => { reject('all layerIds is not found'); }, 1);
+          }
         } else {
-          reject('all layerIds is not found');
+          Ember.run.later(this, () => { resolve('success'); }, 1);
         }
+      } else {
+        reject('Parametr is not a Array');
       }
     });
   },
@@ -652,9 +642,8 @@ export default Ember.Mixin.create(SnapDraw, {
 
           const map = this.get('mapApi').getFromApi('leafletMap');
           if (visibility) {
-            let showExisting = leafletObject.options.showExisting;
             let continueLoading = leafletObject.options.continueLoading;
-            if (!showExisting && !continueLoading) {
+            if (!continueLoading) {
               leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve) => {
                 this._getModelLayerFeature(layerId, objectIds, true).then(() => {
                   resolve('Features loaded');
