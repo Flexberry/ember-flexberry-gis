@@ -270,60 +270,6 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  // save: function () {
-  //   let leafletObject = this.get('_leafletObject');
-  //   var transaction = L.XmlUtil.createElementNS('wfs:Transaction', { service: 'WFS', version: leafletObject.options.version });
-
-  //   var inserted = [];
-
-  //   for (var id in leafletObject.changes) {
-  //     var layer = leafletObject.changes[id];
-  //     var action = leafletObject[layer.state](layer);
-  //     transaction.appendChild(action);
-
-  //     if (layer.state === leafletObject.state.insert) {
-  //       inserted.push(layer);
-  //     }
-  //   }
-
-  //   L.Util.request({
-  //     url: leafletObject.options.url,
-  //     data: L.XmlUtil.serializeXmlDocumentString(transaction),
-  //     headers: leafletObject.options.headers || {},
-  //     withCredentials: leafletObject.options.withCredentials,
-  //     success: function (data) {
-  //       var xmlDoc = L.XmlUtil.parseXml(data);
-  //       var exception = L.XmlUtil.parseOwsExceptionReport(xmlDoc);
-  //       if(exception !== null) {
-  //         leafletObject.fire('save:failed', exception);
-  //         return;
-  //       }
-
-  //       var insertResult = L.XmlUtil.evaluate('//wfs:InsertResults/wfs:Feature/ogc:FeatureId/@fid', xmlDoc);
-  //       var insertedIds = [];
-  //       var id = insertResult.iterateNext();
-  //       while (id) {
-  //         insertedIds.push(new L.Filter.GmlObjectID(id.value));
-  //         id = insertResult.iterateNext();
-  //       }
-
-  //       inserted.forEach(function (layer) {
-  //         L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
-  //       });
-
-  //       leafletObject.once('load', function (e) {
-  //         leafletObject.fire('save:success', { layers: e.layers });
-  //         leafletObject.changes = {};
-  //       });
-
-  //       leafletObject.loadFeatures(insertedIds);
-  //     },
-  //     error: function (data) {
-  //       leafletObject.fire('save:failed', data);
-  //     }
-  //   });
-  // },
-
   saveSuccess() {
     let leafletObject = this.get('_leafletObject');
 
