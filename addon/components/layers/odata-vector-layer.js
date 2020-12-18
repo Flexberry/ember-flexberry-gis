@@ -42,6 +42,7 @@ export default BaseVectorLayer.extend({
   save() {
     let _this = this;
     let leafletObject = _this.get('_leafletObject');
+    let leafletMap = this.get('leafletMap');
     leafletObject.eachLayer(function (layer) {
       if (Ember.get(layer, 'model.hasDirtyAttributes')) {
         if (layer.state === state.insert) {
@@ -104,8 +105,8 @@ export default BaseVectorLayer.extend({
 
         insertedLayer.forEach(function (layer) {
           L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
-          if (leafletObject.leafletMap.hasLayer(layer._label)) {
-            leafletObject.leafletMap.removeLayer(layer._label);
+          if (leafletMap.hasLayer(layer._label)) {
+            leafletMap.removeLayer(layer._label);
             let id = leafletObject.getLayerId(layer._label);
             delete leafletObject._labelsLayer[id];
           }
