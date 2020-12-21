@@ -58,9 +58,9 @@ export default VectorLayer.extend({
   */
   getLayerPropertyValues(leafletObject, selectedField, count) {
     if (Ember.isNone(leafletObject)) {
-        return Ember.A();
+      return Ember.A();
     }
-    
+
     return Ember.A();
   }
 });

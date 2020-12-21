@@ -33,7 +33,7 @@ test('Test visibility = true', function(assert) {
     mapLayer: Ember.A([firstLayer, secondLayer]),
   });
   let mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
-    e.results = Ember.A([ { promise: Ember.RSVP.resolve() } ]);
+    e.results = Ember.A([{ promise: Ember.RSVP.resolve() }]);
   });
   let mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
 
@@ -79,7 +79,7 @@ test('Test visibility = false', function(assert) {
     mapLayer: Ember.A([firstLayer, secondLayer]),
   });
   let mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
-    e.results = Ember.A([ { promise: Ember.RSVP.resolve() } ]);
+    e.results = Ember.A([{ promise: Ember.RSVP.resolve() }]);
   });
   let mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
 
@@ -120,7 +120,7 @@ test('Test not founded layers', function(assert) {
     mapLayer: Ember.A([]),
   });
   let mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
-    e.results = Ember.A([ { promise: Ember.RSVP.resolve() } ]);
+    e.results = Ember.A([{ promise: Ember.RSVP.resolve() }]);
   });
   let mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
 
@@ -159,7 +159,7 @@ test('Test array is empty', function(assert) {
     mapLayer: Ember.A([]),
   });
   let mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
-    e.results = Ember.A([ { promise: Ember.RSVP.resolve() } ]);
+    e.results = Ember.A([{ promise: Ember.RSVP.resolve() }]);
   });
   let mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
 
