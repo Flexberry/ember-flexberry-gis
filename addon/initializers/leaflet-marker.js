@@ -31,7 +31,7 @@ export function initialize() {
           this.styleIsSet = true;
         } else if (!Ember.isNone(style) && !Ember.isNone(style.options)) {
           this.setIcon(new L.Icon(style.options));
-        } else if (Ember.isNone(this.options.icon.options.iconUrl)){
+        } else if (Ember.isNone(this.options.icon.options.iconUrl)) {
           this.setIcon(new L.Icon.Default());
         }
       } else if (Ember.isNone(this.styleIsSet)) {

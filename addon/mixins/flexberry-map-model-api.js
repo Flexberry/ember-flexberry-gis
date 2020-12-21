@@ -570,7 +570,6 @@ export default Ember.Mixin.create(SnapDraw, {
               layers: currentLayerIds,
               results: Ember.A()
             };
-  
             leafletMap.fire('flexberry-map:moveend', e);
             e.results = Ember.isArray(e.results) ? e.results : Ember.A();
             let promises = Ember.A();
@@ -578,10 +577,10 @@ export default Ember.Mixin.create(SnapDraw, {
               if (Ember.isNone(result)) {
                 return;
               }
-  
+
               promises.pushObject(Ember.get(result, 'promise'));
             });
-  
+
             Ember.RSVP.allSettled(promises).then(() => {
               Ember.run.later(this, () => { resolve('success'); }, 1);
             });

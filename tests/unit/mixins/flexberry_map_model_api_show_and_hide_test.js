@@ -82,7 +82,7 @@ test('test method showLayers with continueLoading = false', function (assert) {
   let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
   //Act
-  let result = subject.showLayers(['1']); 
+  let result = subject.showLayers(['1']);
 
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise);

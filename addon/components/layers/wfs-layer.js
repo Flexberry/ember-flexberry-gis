@@ -230,6 +230,7 @@ export default BaseVectorLayer.extend({
           let leafletMap = this.get('leafletMap');
 
           wfsLayer.on('save:success', this._setLayerState, this);
+          wfsLayer.on('save:success', this.saveSuccess, this);
           Ember.set(wfsLayer, 'baseAddLayer', wfsLayer.addLayer);
           wfsLayer.addLayer = this.get('_addLayer').bind(this);
 
@@ -266,6 +267,21 @@ export default BaseVectorLayer.extend({
         .on('load', (e) => {
           this._setLayerState();
         });
+    });
+  },
+
+  saveSuccess() {
+    let leafletObject = this.get('_leafletObject');
+
+    let changes =  Object.values(leafletObject.changes);
+    changes.forEach((layer) => {
+      if (layer.state === state.insert) {
+        if (leafletObject.leafletMap.hasLayer(layer._label)) {
+          leafletObject.leafletMap.removeLayer(layer._label);
+          let id = leafletObject.getLayerId(layer._label);
+          delete leafletObject._labelsLayer[id];
+        }
+      }
     });
   },
 

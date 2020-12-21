@@ -92,6 +92,14 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
       return {};
     };
 
+    let hasLayer = function() {
+      return true;
+    };
+
+    let removeLayer = function() {
+      return {};
+    };
+
     store = app.__container__.lookup('service:store');
     let layerModel = store.createRecord('test-model');
     layerModel.type = 'odata-vector';
@@ -109,7 +117,9 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
       'leafletMap': {
         getBounds,
         getPane,
-        createPane
+        createPane,
+        hasLayer,
+        removeLayer
       }
     });
 
@@ -917,7 +927,13 @@ test('test method save() with objects', function(assert) {
         ]
       };
       let layerAdd = L.geoJSON(feature).getLayers()[0];
+      layerAdd._label = {
+        _leaflet_id: 1000
+      };
       leafletObject.addLayer(layerAdd);
+      leafletObject._labelsLayer = {
+        1000: {}
+      };
       let pk = layerAdd.feature.properties.primarykey;
       responseBatchUpdate.replace('a5532858-dbdc-4d3c-9eaf-3d71d097ceb0', pk);
 
