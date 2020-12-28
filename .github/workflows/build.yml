@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [6.x]
+        node-version: [8.x]
         #node-version: [10.x, 12.x, 14.x]
 
     steps:
@@ -55,3 +55,8 @@ jobs:
         && bash scripts/deploy-to-gh-pages.sh -postgres
         && ember build --gh-pages --brunch=$TRAVIS_BRANCH --environment=mssql-backend
         && bash scripts/deploy-to-gh-pages.sh -mssql no-doc
+
+    - id: publish
+      uses: JS-DevTools/npm-publish@v1
+      with:
+        token: ${{ secrets.NPM_TOKEN }}
