@@ -2,6 +2,7 @@
 
 # Exit with nonzero exit code if anything fails.
 set -e
+set -x
 
 # Define repository relative GitHub address.
 repositoryRelativeGitHubAddress="Flexberry/ember-flexberry-gis"
@@ -69,6 +70,6 @@ git add --all
 git commit -m "Update gh-pages for ${fullBranchName} branch"
 
 # Redirect any output to /dev/null to hide any sensitive credential data that might otherwise be exposed.
-git push --force --quiet "https://${GH_TOKEN}@github.com/${repositoryRelativeGitHubAddress}.git" > /dev/null 2>&1
+git push --force --quiet "git@github.com:${repositoryRelativeGitHubAddress}.git" #> /dev/null 2>&1
 
 echo "Deploy to gh-pages finished."
