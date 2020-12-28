@@ -5,7 +5,7 @@ set -e
 set -x
 
 # Define repository relative GitHub address.
-repositoryRelativeGitHubAddress="Flexberry/ember-flexberry-gis"
+repositoryRelativeGitHubAddress=$GITHUB_REPOSITORY
 
 # Define branch name with postfix.
 fullBranchName="${TRAVIS_BRANCH}"
