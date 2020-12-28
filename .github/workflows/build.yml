@@ -51,10 +51,10 @@ jobs:
         ifs=$IFS; IFS=/; set -- $GITHUB_REF; IFS=$ifs; while [ $# -gt 1 ]; do shift; done;
         export TRAVIS_BRANCH=$1
         export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
-        ember build --gh-pages --brunch=$TRAVIS_BRANCH --postfix=-postgres
-        && bash scripts/deploy-to-gh-pages.sh -postgres
-        && ember build --gh-pages --brunch=$TRAVIS_BRANCH --environment=mssql-backend
-        && bash scripts/deploy-to-gh-pages.sh -mssql no-doc
+        ember build --gh-pages --brunch=$TRAVIS_BRANCH --postfix=-postgres &&
+        bash scripts/deploy-to-gh-pages.sh -postgres &&
+        ember build --gh-pages --brunch=$TRAVIS_BRANCH --environment=mssql-backend &&
+        bash scripts/deploy-to-gh-pages.sh -mssql no-doc
 
     - id: publish
       uses: JS-DevTools/npm-publish@v1
