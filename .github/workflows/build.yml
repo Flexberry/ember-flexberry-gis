@@ -44,7 +44,7 @@ jobs:
         set -x
         ember try:one  default test
 
-     - name: Tune ssh-keys
+    - name: Tune ssh-keys
       env:
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
       run: |
