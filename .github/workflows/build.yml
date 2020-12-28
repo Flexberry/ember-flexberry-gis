@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         node-version: [8.x]
-        #node-version: [10.x, 12.x, 14.x]
 
     steps:
 
@@ -24,13 +23,13 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Run google
+    - name: Start google chrome
       run: |
         sudo chown root /opt/google/chrome/chrome-sandbox
         sudo sudo chmod 4755 /opt/google/chrome/chrome-sandbox
         google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost &
 
-    - name: yarn init
+    - name: Install ember and bower
       run: |
        set -x
        node -v
@@ -66,6 +65,7 @@ jobs:
         if [  "$GITHUB_EVENT_NAME" != 'push' ]; then  exit 0; fi
         if [ "$GITHUB_REF" != 'refs/heads/master' -a "$GITHUB_REF" != 'refs/heads/develop' ]; then  exit 0; fi
         ifs=$IFS; IFS=/; set -- $GITHUB_REF; IFS=$ifs; while [ $# -gt 1 ]; do shift; done;
+        # Build GH-PAGES
         export TRAVIS_BRANCH=$1
         export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
         export SSH_AUTH_SOCK=/tmp/ssh_agent.sock
