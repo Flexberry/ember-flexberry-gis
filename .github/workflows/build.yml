@@ -1,0 +1,57 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [6.x]
+        #node-version: [10.x, 12.x, 14.x]
+
+    steps:
+
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Run google
+      run: |
+        sudo chown root /opt/google/chrome/chrome-sandbox
+        sudo sudo chmod 4755 /opt/google/chrome/chrome-sandbox
+        google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost &
+
+    - name: yarn init
+      run: |
+       set -x
+       node -v
+       npm install -g bower
+       npm install -g ember-cli@2.4.3
+       yarn install
+       bower install
+
+    - name: Run ember
+      run: |
+        set -x
+        ember try:one  default test
+
+    - name: Update documentation
+      run: |
+        if [  "$GITHUB_EVENT_NAME" != 'push' ]; then  exit 0; fi
+        if [ "$GITHUB_REF" != 'refs/heads/master' -a "$GITHUB_REF" != 'refs/heads/develop' ]; then  exit 0; fi
+        ifs=$IFS; IFS=/; set -- $GITHUB_REF; IFS=$ifs; while [ $# -gt 1 ]; do shift; done;
+        export TRAVIS_BRANCH=$1
+        export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
+        ember build --gh-pages --brunch=$TRAVIS_BRANCH --postfix=-postgres
+        && bash scripts/deploy-to-gh-pages.sh -postgres
+        && ember build --gh-pages --brunch=$TRAVIS_BRANCH --environment=mssql-backend
+        && bash scripts/deploy-to-gh-pages.sh -mssql no-doc
