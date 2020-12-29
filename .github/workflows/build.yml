@@ -74,7 +74,7 @@ jobs:
         ember build --gh-pages --brunch=$TRAVIS_BRANCH --environment=mssql-backend &&
         bash scripts/deploy-to-gh-pages.sh -mssql no-doc
 
-    - id: publish npm 
+    - name: publish npm 
       uses: JS-DevTools/npm-publish@v1
       with:
         token: ${{ secrets.NPM_TOKEN }}
