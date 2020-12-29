@@ -2,9 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ develop, master ]
   pull_request:
-    branches: [ develop ]
+    branches: [ develop, master ]
 
 jobs:
   build:
@@ -38,7 +38,7 @@ jobs:
        yarn install
        bower install
 
-    - name: Run ember
+    - name: Run ember try:one  default test
       run: |
         set -x
         ember try:one  default test
@@ -60,7 +60,7 @@ jobs:
         chmod 0600 .github/workflows/secrets/id_rsa
         ssh-add .github/workflows/secrets/id_rsa
 
-    - name: Update documentation
+    - name: Update and deploy documentation
       run: |
         if [  "$GITHUB_EVENT_NAME" != 'push' ]; then  exit 0; fi
         if [ "$GITHUB_REF" != 'refs/heads/master' -a "$GITHUB_REF" != 'refs/heads/develop' ]; then  exit 0; fi
@@ -74,7 +74,7 @@ jobs:
         ember build --gh-pages --brunch=$TRAVIS_BRANCH --environment=mssql-backend &&
         bash scripts/deploy-to-gh-pages.sh -mssql no-doc
 
-    - id: publish
+    - id: publish npm 
       uses: JS-DevTools/npm-publish@v1
       with:
         token: ${{ secrets.NPM_TOKEN }}
