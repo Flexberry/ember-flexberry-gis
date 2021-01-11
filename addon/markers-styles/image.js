@@ -49,7 +49,9 @@ export default BaseMarkerStyle.extend({
     @param {Object} options.style Hash containing style settings.
   */
   renderOnLeafletMarker({ marker, style }) {
-    marker.setIcon(new L.Icon(style));
+    if (Ember.isNone(marker.styleIsSet) || !marker.styleIsSet) {
+      marker.setIcon(new L.Icon(style));
+    }
   },
 
   /**

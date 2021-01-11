@@ -63,7 +63,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     @type Observer
     @private
   */
-  _onTwoObjectToCompareChange: Ember.observer('twoObjectToCompare.[]', function() {
+  _onTwoObjectToCompareChange: Ember.observer('twoObjectToCompare.[]', function () {
     if (this.get('twoObjectToCompare').length === 2) {
       this.set('compareBtnDisabled', false);
     } else {
@@ -78,17 +78,19 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     @private
     @readonly
   */
-  _onLeafletMapDidChange: Ember.observer('leafletMap', function() {
+  _onLeafletMapDidChange: Ember.observer('leafletMap', function () {
     let leafletMap = this.get('leafletMap');
-    leafletMap.on('flexberry-map:load', (e) => {
-      Ember.RSVP.allSettled(e.results).then(() => {
-        let store = this.get('store');
-        let idFeaturesArray = store.findAll('i-i-s-r-g-i-s-p-k-favorite-features');
-        idFeaturesArray.then((result) => {
-          this.fromIdArrayToFeatureArray(result);
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.on('flexberry-map:load', (e) => {
+        Ember.RSVP.allSettled(e.results).then(() => {
+          let store = this.get('store');
+          let idFeaturesArray = store.findAll('i-i-s-r-g-i-s-p-k-favorite-features');
+          idFeaturesArray.then((result) => {
+            this.fromIdArrayToFeatureArray(result);
+          });
         });
       });
-    });
+    }
   }),
 
   /**
@@ -114,8 +116,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         if (layerModelIndex !== false) {
           favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
           let record = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
-          .filterBy('objectKey', feature.properties.primarykey)
-          .filterBy('objectLayerKey', feature.layerModel.id);
+            .filterBy('objectKey', feature.properties.primarykey)
+            .filterBy('objectLayerKey', feature.layerModel.id);
           record[0].destroyRecord();
         }
 

@@ -126,15 +126,37 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   },
 
   /**
-    List of cardinal points.
+    Availble direction.
+  */
+  _availableDirection: null,
 
-    @property _cardinalPoints
+  /**
+    Object direction.
+
+    @property _objectDirections
     @type string[]
-    @default ['СВ', 'ЮВ', 'ЮЗ', 'СЗ']
+    @default ['Polygon', 'Line']
     @readonly
     @private
   */
-  _cardinalPoints: ['СВ', 'ЮВ', 'ЮЗ', 'СЗ'],
+  _objectDirections: Ember.A([
+    {
+      captionPath: 'components.geometry-add-modes.rhumb.NE',
+      type: 'NE'
+    },
+    {
+      captionPath: 'components.geometry-add-modes.rhumb.SE',
+      type: 'SE'
+    },
+    {
+      captionPath: 'components.geometry-add-modes.rhumb.SW',
+      type: 'SW'
+    },
+    {
+      captionPath: 'components.geometry-add-modes.rhumb.NW',
+      type: 'NW'
+    }
+  ]),
 
   /**
     Data table.
@@ -294,6 +316,17 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     }
 
     this.set('_availableType', availableType);
+
+    let directionItems = this.get('directionItems');
+    let availableDirection = [];
+
+    if (!Ember.isNone(directionItems)) {
+      directionItems.forEach((item) => {
+        availableDirection.push(item.caption);
+      });
+    }
+
+    this.set('_availableDirection', availableDirection);
   },
 
   /**
@@ -307,6 +340,29 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     let _objectTypes = this.get('_objectTypes');
 
     let result = Ember.A(_objectTypes);
+    result.forEach((item) => {
+      let caption = Ember.get(item, 'caption');
+      let captionPath = Ember.get(item, 'captionPath');
+
+      if (!caption && captionPath) {
+        Ember.set(item, 'caption', i18n.t(captionPath));
+      }
+    });
+
+    return result;
+  }),
+
+  /**
+    Direction items metadata.
+
+    @property directionItems
+    @type Object[]
+  */
+  directionItems: Ember.computed('_objectDirections.[]', '_objectDirections.@each.active', 'i18n', function () {
+    let i18n = this.get('i18n');
+    let _objectDirections = this.get('_objectDirections');
+
+    let result = Ember.A(_objectDirections);
     result.forEach((item) => {
       let caption = Ember.get(item, 'caption');
       let captionPath = Ember.get(item, 'captionPath');
@@ -388,11 +444,22 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
       const startPoints = this._dataForm.startPoint.split(' ');
 
+      let translateDirection = (direction) => {
+        let factories = this.get('_objectDirections');
+        let res = null;
+
+        if (!Ember.isNone(direction)) {
+          res = factories.filter((factory) => factory.caption.toString() === direction)[0].type;
+        }
+
+        return res;
+      };
+
       let points = [];
       for (let i = 0; i < this._tableData.length; i++) {
         let item = this._tableData[i];
         let data = {
-          rhumb: `${item.direction}`,
+          rhumb: `${translateDirection(item.direction)}`,
           angle: item.rhumb,
           distance: item.distance
         };
@@ -416,7 +483,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       };
 
       let geoJSON = null;
-      if (crsCode !== 'EPSG:4326') {
+      if (crsRhumb.code !== 'EPSG:4326') {
         geoJSON = L.geoJSON(rhumbObj, { coordsToLatLng: coordsToLatLng.bind(this) });
       } else {
         geoJSON = L.geoJSON(rhumbObj);

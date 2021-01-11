@@ -52,5 +52,8 @@ export default {
   },
   'max-zoom': {
     'caption': 'Max zoom'
+  },
+  'typeGeometry': {
+    'caption': 'Geometry type'
   }
 };

@@ -3,47 +3,9 @@
 */
 
 import Ember from 'ember';
-import { checkMapZoom } from '../utils/check-zoom';
 
 export function initialize() {
   L.Marker.include({
-    /**
-      Set position when zoom changed.
-      @method _setPos
-      @param {Object} pos position
-      @private
-    */
-    _setPos: function (pos) {
-      if (!this._eventParents || (this._eventParents && checkMapZoom(this))) {
-        if (this._icon) {
-          if (L.DomUtil.hasClass(this._icon, 'hidden')) {
-            L.DomUtil.removeClass(this._icon, 'hidden');
-          }
-
-          L.DomUtil.setPosition(this._icon, pos);
-          this._icon.style.zIndex = this._zIndex;
-        }
-
-        if (this._shadow) {
-          if (L.DomUtil.hasClass(this._icon, 'hidden')) {
-            L.DomUtil.removeClass(this._icon, 'hidden');
-          }
-
-          L.DomUtil.setPosition(this._shadow, pos);
-        }
-
-        this._zIndex = pos.y + this.options.zIndexOffset;
-      } else {
-        if (this._icon) {
-          L.DomUtil.addClass(this._icon, 'hidden');
-        }
-
-        if (this._shadow) {
-          L.DomUtil.addClass(this._shadow, 'hidden');
-        }
-      }
-    },
-
     /**
       Style for marker.
       @method setStyle
@@ -69,10 +31,10 @@ export function initialize() {
           this.styleIsSet = true;
         } else if (!Ember.isNone(style) && !Ember.isNone(style.options)) {
           this.setIcon(new L.Icon(style.options));
-        } else {
+        } else if (Ember.isNone(this.options.icon.options.iconUrl)) {
           this.setIcon(new L.Icon.Default());
         }
-      } else {
+      } else if (Ember.isNone(this.styleIsSet)) {
         if (!Ember.isNone(this.style) && !Ember.isNone(this.style.html)) {
           this.setIcon(new L.divIcon(this.style));
         }
@@ -96,7 +58,7 @@ export function initialize() {
       let exp = expression.trim();
       let reg = /'(.+?)'/g;
       let expResult = exp.split(reg).filter(x => x !== '');
-      return expResult ?  expResult : null;
+      return expResult ? expResult : null;
     },
 
     /**
@@ -115,7 +77,7 @@ export function initialize() {
           }
         }
 
-        label += !isProp ?  element : '';
+        label += !isProp ? element : '';
         isProp = false;
       });
 

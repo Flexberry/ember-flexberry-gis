@@ -72,6 +72,12 @@ export default BaseVectorLayer.extend({
   createVectorLayer(options) {
     options = Ember.$.extend(true, {}, this.get('options'), options);
 
+    let pane = this.get('_pane');
+    if (pane) {
+      options.pane = pane;
+      options.renderer = this.get('_renderer');
+    }
+
     let url = this.get('url');
     if (!Ember.isNone(url)) {
       return new Ember.RSVP.Promise((resolve, reject) => {

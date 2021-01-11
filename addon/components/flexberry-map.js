@@ -10,7 +10,6 @@ import LeafletMapLoaderMixin from '../mixins/leaflet-map/map-loader';
 import LeafletMapToolsMixin from '../mixins/leaflet-map/map-tools';
 import LeafletMapCommandsMixin from '../mixins/leaflet-map/map-commands';
 import LeafletMapSidebarMixin from '../mixins/leaflet-map/map-sidebar';
-import Renderer from '../objects/custom-renderer';
 
 import layout from '../templates/components/flexberry-map';
 
@@ -105,7 +104,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     leafletOptions: [
 
       // Map state options.
-      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs', 'preferCanvas',
+      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs', 'preferCanvas', 'editable',
 
       // Interaction options.
       'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
@@ -168,6 +167,15 @@ let FlexberryMapComponent = Ember.Component.extend(
       @default null
     */
     zoom: null,
+
+    /**
+      Editable.
+
+      @property editable
+      @type Boolean
+      @default true
+    */
+    editable: true,
 
     /**
       Forces the map's zoom level to always be a multiple of this.
@@ -284,43 +292,59 @@ let FlexberryMapComponent = Ember.Component.extend(
       @private
     */
     _runQuery(queryFilter, mapObjectSetting) {
-      let serviceLayer = this.get('serviceLayer');
       let leafletMap = this.get('_leafletObject');
-
-      let e = {
-        queryFilter: queryFilter,
-        mapObjectSetting: mapObjectSetting,
-        results: Ember.A(),
-        serviceLayer: serviceLayer
-      };
 
       // Show map loader.
       leafletMap.flexberryMap.loader.show({ content: this.get('i18n').t('map-tools.identify.loader-message') });
 
-      leafletMap.fire('flexberry-map:query', e);
-
-      // Promises array could be totally changed in 'flexberry-map:query' event handlers, we should prevent possible errors.
-      e.results = Ember.isArray(e.results) ? e.results : Ember.A();
-      let promises = Ember.A();
-
-      // Handle each result.
-      // Detach promises from already received features.
-      e.results.forEach((result) => {
-        if (Ember.isNone(result)) {
-          return;
-        }
-
-        let features = Ember.get(result, 'features');
-        if (!(features instanceof Ember.RSVP.Promise)) {
-          return;
-        }
-
-        promises.pushObject(features);
-      });
-
-      // Wait for all promises to be settled & call '_finishQuery' hook.
-      Ember.RSVP.allSettled(promises).then(() => {
+      this._queryToMap(queryFilter, mapObjectSetting).then((e) => {
         this._finishQuery(e);
+      });
+    },
+
+    /**
+      Runs search query related to the specified URL params: 'queryFilter' and 'mapObjectSetting'.
+
+      @method _queryToMap
+      @returns {Ember.RSVP.Promise}
+      @private
+    */
+    _queryToMap(queryFilter, mapObjectSetting) {
+      return new Ember.RSVP.Promise((resolve) => {
+        let serviceLayer = this.get('serviceLayer');
+        let leafletMap = this.get('_leafletObject');
+
+        let e = {
+          results: Ember.A(),
+          queryFilter: queryFilter,
+          mapObjectSetting: mapObjectSetting,
+          serviceLayer: serviceLayer
+        };
+
+        leafletMap.fire('flexberry-map:query', e);
+
+        // Promises array could be totally changed in 'flexberry-map:query' event handlers, we should prevent possible errors.
+        e.results = Ember.isArray(e.results) ? e.results : Ember.A();
+        let promises = Ember.A();
+
+        // Handle each result.
+        // Detach promises from already received features.
+        e.results.forEach((result) => {
+          if (Ember.isNone(result)) {
+            return;
+          }
+
+          let features = Ember.get(result, 'features');
+          if (!(features instanceof Ember.RSVP.Promise)) {
+            return;
+          }
+
+          promises.pushObject(features);
+        });
+
+        Ember.RSVP.allSettled(promises).then(()=> {
+          resolve(e);
+        });
       });
     },
 
@@ -412,7 +436,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       @method localeDidChange
       @private
     */
-    _localeDidChange: Ember.observer('i18n.locale', function() {
+    _localeDidChange: Ember.observer('i18n.locale', function () {
       let i18n = this.get('i18n');
       let $leafletContainer = this.get('_$leafletContainer');
 
@@ -448,7 +472,6 @@ let FlexberryMapComponent = Ember.Component.extend(
       this.set('_$leafletContainer', $leafletContainer);
 
       let options = this.get('options');
-      options.renderer = new Renderer();
 
       // Create leaflet map.
       let leafletMap = L.map($leafletContainer[0], options);
@@ -470,22 +493,27 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       const mapApi = this.get('mapApi');
       if (Ember.isNone(mapApi.getFromApi('runQuery'))) {
-        mapApi.addToApi('runQuery',  this._runQuery.bind(this));
+        mapApi.addToApi('runQuery', this._runQuery.bind(this));
         this.set('_hasQueryApi', true);
       }
 
+      if (Ember.isNone(mapApi.getFromApi('queryToMap'))) {
+        mapApi.addToApi('queryToMap', this._queryToMap.bind(this));
+        this.set('_hasQueryToMap', true);
+      }
+
       if (Ember.isNone(mapApi.getFromApi('createObject'))) {
-        mapApi.addToApi('createObject',  this._createObject.bind(this));
+        mapApi.addToApi('createObject', this._createObject.bind(this));
         this.set('_hasCreateObjectApi', true);
       }
 
       if (Ember.isNone(mapApi.getFromApi('leafletMap'))) {
-        mapApi.addToApi('leafletMap',  leafletMap);
+        mapApi.addToApi('leafletMap', leafletMap);
         this.set('_hasLeafletMap', true);
       }
 
       if (Ember.isNone(mapApi.getFromApi('serviceLayer'))) {
-        mapApi.addToApi('serviceLayer',  this.get('serviceLayer'));
+        mapApi.addToApi('serviceLayer', this.get('serviceLayer'));
         this.set('_hasServiceLayer', true);
       }
 
@@ -641,6 +669,10 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       if (this.get('_hasQueryApi')) {
         this.get('mapApi').addToApi('runQuery', undefined);
+      }
+
+      if (this.get('_hasQueryToMap')) {
+        this.get('mapApi').addToApi('queryToMap', undefined);
       }
 
       if (this.get('_hasCreateObjectApi')) {
