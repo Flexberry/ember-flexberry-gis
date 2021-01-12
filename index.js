@@ -49,7 +49,7 @@ module.exports = {
 
     // Import leaflet plugins.
 
-	  // leaflet-areaselect.
+    // leaflet-areaselect.
     app.import(app.bowerDirectory + '/leaflet-areaselect/src/leaflet-areaselect.js');
     app.import(app.bowerDirectory + '/leaflet-areaselect/src/leaflet-areaselect.css');
 
@@ -80,6 +80,9 @@ module.exports = {
 
     // Leaflet-WMS.
     app.import(app.bowerDirectory + '/leaflet-wms/dist/Leaflet-WMS.js');
+
+    // Leaflet.VectorGrid.
+    app.import(app.bowerDirectory + '/leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js');
 
     // Leaflet.WMS.
     app.import(app.bowerDirectory + '/leaflet.wms/dist/leaflet.wms.js');
@@ -124,6 +127,5 @@ module.exports = {
     app.import(app.bowerDirectory + '/leaflet.markercluster/dist/leaflet.markercluster.js');
     app.import(app.bowerDirectory + '/leaflet.markercluster/dist/MarkerCluster.css');
     app.import(app.bowerDirectory + '/leaflet.markercluster/dist/MarkerCluster.Default.css');
-
   }
 };

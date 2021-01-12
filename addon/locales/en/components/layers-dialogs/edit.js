@@ -97,6 +97,9 @@ export default {
     'pmodes-tab': {
       'caption': 'Creation by prototype'
     },
+    'label-settings-tab': {
+      'caption': 'Labels settings'
+    },
     'loadfile-tab': {
       'caption': 'Load from file'
     }

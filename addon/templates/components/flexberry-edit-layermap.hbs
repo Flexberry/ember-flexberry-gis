@@ -40,12 +40,14 @@
     <div class="ui group tab segment {{if (eq _tabularMenuState.activeGroup "display-group") "active"}}" data-tab="display-group">
       {{layers-dialogs/tabs/display
         _layer=_layer
+        leafletMap = leafletMap
         _displaySettingsAreAvailableForType=_displaySettingsAreAvailableForType
         _identifySettingsAreAvailableForType=_identifySettingsAreAvailableForType
         _searchSettingsAreAvailableForType=_searchSettingsAreAvailableForType
         _legendSettingsAreAvailableForType=_legendSettingsAreAvailableForType
         _filterSettingsAreAvailableForType=_filterSettingsAreAvailableForType
         _styleSettingsAreAvailableForType=_styleSettingsAreAvailableForType
+        _labelsSettingsAreAvailableForType=_labelsSettingsAreAvailableForType
       }}
     </div>
   {{/if}}

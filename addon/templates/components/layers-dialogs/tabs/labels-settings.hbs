@@ -1,0 +1,241 @@
+<div class="field">
+  {{#if _error}}
+    {{ui-message
+      type="error"
+      message=(t "components.layers-dialogs.settings.group.tab.labels-settings.error")
+    }}
+  {{/if}}
+</div>
+<div class="field">
+  {{flexberry-checkbox
+    value=value.signMapObjects
+    label=(t _signMapObjectsLabel)
+    class=_signMapObjectsClass
+    change=(action "signMapObjectsCheckboxDidChange")
+  }}
+</div>
+<div class="{{if _leafletObjectIsLoading "loading"}}">
+      <div class="field">
+        <label>
+          {{t _fieldsCaption}}
+        </label>
+        <div class = "ui container scrollable content layers-fields-container">
+          <div class="ui middle aligned selection list">
+            {{#each-in _availableLayerProperties as |key value|}}
+              <div class="item {{if (eq _selectedField key) "active"}}" {{action "fieldClick" key}} {{action "pasteFieldValue" key on="doubleClick"}}>
+                <div class="content unselectable">
+                  {{value}}
+                </div>
+              </div>
+            {{else}}
+              <div class="item">
+                {{t _noFields}}
+              </div>
+            {{/each-in}}
+          </div>
+        </div>
+      </div>
+</div>
+<div class="field">
+  <label>{{t _label}}</label>
+  {{textarea
+    value=value.labelSettingsString
+    class="fluid edit-label-textarea"
+  }}
+</div>
+<div class='row'>
+  {{flexberry-button
+    class=_operatorButtonClass
+    caption=(t "components.flexberry-wfs-filter.buttons.clear")
+    click=(action "clearLabel")
+  }}
+</div>
+<div class="field">
+  <label>{{t _fontCaption}}</label>
+  <div class="ui grid">
+    <div class="row">
+      <div class="four wide column">
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableFontFamilies
+          value=value.options.captionFontFamily
+          readonly=(not value.signMapObjects)
+        }}
+      </div>
+      <div class="two wide column">
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableFontSizes
+          value=value.options.captionFontSize
+          readonly=(not value.signMapObjects)
+        }}
+      </div>
+      <div class="three wide column">
+        <div class="ui small fluid buttons">
+          {{flexberry-button
+            iconClass="bold icon"
+            class=(if (eq value.options.captionFontWeight "bold") "active" "")
+            click=(action "onBoldFontButtonClick")
+            readonly=(not value.signMapObjects)
+          }}
+          {{flexberry-button
+            iconClass="italic icon"
+            class=(if (eq value.options.captionFontStyle "italic") "active" "")
+            click=(action "onItalicFontButtonClick")
+            readonly=(not value.signMapObjects)
+          }}
+          {{flexberry-button
+            iconClass="underline icon"
+            class=(if (eq value.options.captionFontDecoration "underline") "active" "")
+            click=(action "onUnderlineFontButtonClick")
+            readonly=(not value.signMapObjects)
+          }}
+        </div>
+      </div>
+      <div class="two wide column">
+        {{flexberry-colorpicker
+          value=value.options.captionFontColor
+          change=(action "onCaptionFontColorChange")
+          readonly=(not value.signMapObjects)
+        }}
+      </div>
+      <div class="three wide column">
+        <div class="ui small fluid buttons">
+          {{flexberry-button
+            iconClass="align left icon"
+            class=(if (eq value.options.captionFontAlign "left") "active" "")
+            click=(action "onLeftFontButtonClick")
+            readonly=(not value.signMapObjects)
+          }}
+          {{flexberry-button
+            iconClass="align center icon"
+            class=(if (eq value.options.captionFontAlign "center") "active" "")
+            click=(action "onCenterFontButtonClick")
+            readonly=(not value.signMapObjects)
+          }}
+          {{flexberry-button
+            iconClass="align right icon"
+            class=(if (eq value.options.captionFontAlign "right") "active" "")
+            click=(action "onRightFontButtonClick")
+            readonly=(not value.signMapObjects)
+          }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{#if (eq settingsAsObject.typeGeometry "marker")}}
+  <div class="field">
+    <label>{{t _locationCaption}}</label>
+    <div class="ui grid">
+      <div class="location">
+        <div class="two wide column">
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "overLeft") "active" "")
+              click=(action "onLocationPointButtonClick" "overLeft")
+              readonly=(not value.signMapObjects)
+            }}
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "overMiddle") "active" "")
+              click=(action "onLocationPointButtonClick" "overMiddle")
+              readonly=(not value.signMapObjects)
+            }}
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "overRight") "active" "")
+              click=(action "onLocationPointButtonClick" "overRight")
+              readonly=(not value.signMapObjects)
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="location">
+        <div class="two wide column">
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "alongLeft") "active" "")
+              click=(action "onLocationPointButtonClick" "alongLeft")
+              readonly=(not value.signMapObjects)
+            }}
+            {{flexberry-button
+              iconClass="circle icon"
+              class=(if (eq value.location.locationPoint "alongMidle") "active" "")
+              click=(action "onLocationPointButtonClick" "alongMidle")
+              readonly=(not value.signMapObjects)
+            }}
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "alongRight") "active" "")
+              click=(action "onLocationPointButtonClick" "alongRight")
+              readonly=(not value.signMapObjects)
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="location">
+        <div class="two wide column">
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "underLeft") "active" "")
+              click=(action "onLocationPointButtonClick" "underLeft")
+              readonly=(not value.signMapObjects)
+            }}
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "underMiddle") "active" "")
+              click=(action "onLocationPointButtonClick" "underMiddle")
+              readonly=(not value.signMapObjects)
+            }}
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "underRight") "active" "")
+              click=(action "onLocationPointButtonClick" "underRight")
+              readonly=(not value.signMapObjects)
+            }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{{/if}}
+{{#if  (eq settingsAsObject.typeGeometry "polyline")}}
+  <div class="field">
+    <label>{{t _locationCaption}}</label>
+    {{flexberry-dropdown
+      items=_availableLineLocation
+      value=_lineLocationSelect
+      readonly=(not value.signMapObjects)
+      onChange=(action "onLineLocationSelect")
+    }}
+  </div>
+{{/if}}
+<div class="field">
+  <label>{{t _scaleRangeCaption}}</label>
+  <div class="ui grid">
+    <div class="row">
+      <div class="eight wide column">
+        <label>Min</label>
+        {{flexberry-textbox
+          class="fluid"
+          value=value.scaleRange.minScaleRange
+          readonly=(not value.signMapObjects)
+        }}
+      </div>
+      <div class="eight wide column">
+        <label>Max</label>
+        {{flexberry-textbox
+          class="fluid"
+          value=value.scaleRange.maxScaleRange
+          readonly=(not value.signMapObjects)
+        }}
+      </div>
+    </div>
+  </div>
+</div>
+
+

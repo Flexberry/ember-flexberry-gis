@@ -216,6 +216,34 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   }),
 
   /**
+    СRS metadata.
+
+    @property sidebar
+    @type Object[]
+   */
+  availableCRS: Ember.computed(function () {
+    return [{
+      crs: L.CRS.EPSG3395,
+      name: 'EPSG:3395',
+      xCaption: 'forms.map.xCaption',
+      yCaption: 'forms.map.yCaption'
+    },
+    {
+      crs: L.CRS.EPSG4326,
+      name: 'EPSG:4326',
+      xCaption: 'forms.map.xCaption',
+      yCaption: 'forms.map.yCaption'
+    },
+    {
+      crs: L.CRS.EPSG3857,
+      name: 'EPSG:3857',
+      xCaption: 'forms.map.xCaption',
+      yCaption: 'forms.map.yCaption'
+    }
+    ];
+  }),
+
+  /**
     Set of laeflet layers opened at 'flexberry-layers-attributes-panel'.
 
     @property editedLayers
