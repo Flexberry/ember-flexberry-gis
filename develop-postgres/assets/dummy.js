@@ -768,6 +768,14 @@ define('dummy/components/layers-dialogs/settings/odata-vector', ['exports', 'emb
     }
   });
 });
+define('dummy/components/layers-dialogs/settings/tile-vector', ['exports', 'ember-flexberry-gis/components/layers-dialogs/settings/tile-vector'], function (exports, _emberFlexberryGisComponentsLayersDialogsSettingsTileVector) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisComponentsLayersDialogsSettingsTileVector['default'];
+    }
+  });
+});
 define('dummy/components/layers-dialogs/settings/tile', ['exports', 'ember-flexberry-gis/components/layers-dialogs/settings/tile'], function (exports, _emberFlexberryGisComponentsLayersDialogsSettingsTile) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -1077,6 +1085,14 @@ define('dummy/components/layers/tile-layer', ['exports', 'ember-flexberry-gis/co
     enumerable: true,
     get: function get() {
       return _emberFlexberryGisComponentsLayersTileLayer['default'];
+    }
+  });
+});
+define('dummy/components/layers/tile-vector-layer', ['exports', 'ember-flexberry-gis/components/layers/tile-vector-layer'], function (exports, _emberFlexberryGisComponentsLayersTileVectorLayer) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisComponentsLayersTileVectorLayer['default'];
     }
   });
 });
@@ -3459,6 +3475,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/l
     assert.ok(true, 'modules/ember-flexberry-gis/components/layers-dialogs/settings/odata-vector.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers-dialogs/settings/tile-vector.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/components/layers-dialogs/settings');
+  test('modules/ember-flexberry-gis/components/layers-dialogs/settings/tile-vector.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/components/layers-dialogs/settings/tile-vector.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers-dialogs/settings/tile-vector.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/components/layers-dialogs/settings/tile-vector.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/components/layers-dialogs/settings/tile-vector.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers-dialogs/settings/tile.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/components/layers-dialogs/settings');
   test('modules/ember-flexberry-gis/components/layers-dialogs/settings/tile.js should pass jscs', function () {
@@ -3964,6 +3993,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/l
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/components/layers/tile-layer.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers/tile-vector-layer.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/components/layers');
+  test('modules/ember-flexberry-gis/components/layers/tile-vector-layer.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/components/layers/tile-vector-layer.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers/tile-vector-layer.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/components/layers/tile-vector-layer.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/components/layers/tile-vector-layer.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers/wfs-layer.jscs-test', ['exports'], function (exports) {
@@ -5394,6 +5436,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/layers/osm.j
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/layers/osm.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/layers/tile-vector.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/layers');
+  test('modules/ember-flexberry-gis/layers/tile-vector.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/layers/tile-vector.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/layers/tile-vector.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/layers/tile-vector.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/layers/tile-vector.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/layers/tile.jscs-test', ['exports'], function (exports) {
@@ -10219,6 +10274,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/create
     assert.ok(true, 'modules/ember-flexberry-gis/utils/create-layer-from-metadata.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/download-file.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/utils');
+  test('modules/ember-flexberry-gis/utils/download-file.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/utils/download-file.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/download-file.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/utils/download-file.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/utils/download-file.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/extended-get.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/utils');
   test('modules/ember-flexberry-gis/utils/extended-get.js should pass jscs', function () {
@@ -11730,6 +11798,14 @@ define('dummy/layers/osm', ['exports', 'ember-flexberry-gis/layers/osm'], functi
     enumerable: true,
     get: function get() {
       return _emberFlexberryGisLayersOsm['default'];
+    }
+  });
+});
+define('dummy/layers/tile-vector', ['exports', 'ember-flexberry-gis/layers/tile-vector'], function (exports, _emberFlexberryGisLayersTileVector) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisLayersTileVector['default'];
     }
   });
 });
@@ -39003,6 +39079,14 @@ define('dummy/utils/deserialize-sorting-param', ['exports', 'ember-flexberry/uti
     }
   });
 });
+define('dummy/utils/download-file', ['exports', 'ember-flexberry-gis/utils/download-file'], function (exports, _emberFlexberryGisUtilsDownloadFile) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisUtilsDownloadFile['default'];
+    }
+  });
+});
 define('dummy/utils/feature-with-area-intersect', ['exports', 'ember-flexberry-gis/utils/feature-with-area-intersect'], function (exports, _emberFlexberryGisUtilsFeatureWithAreaIntersect) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -39204,7 +39288,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","keywordForCosmos":"cosmos","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.2+8b4eae30"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","keywordForCosmos":"cosmos","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.2+6a654a1f"});
 }
 
 /* jshint ignore:end */

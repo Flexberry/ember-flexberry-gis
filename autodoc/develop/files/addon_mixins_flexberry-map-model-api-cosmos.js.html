@@ -494,7 +494,7 @@ export default Ember.Mixin.create({
         }
 
         crsName = geometryIntersectsBbox.crs.properties.name;
-        crsLayer = getCrsByName(crsName, this);
+        crsLayer = getCrsByName(crsName, this).crs;
 
         let coordsToLatLng = function (coords) {
           return crsLayer.unproject(L.point(coords));

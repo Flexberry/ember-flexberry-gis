@@ -3738,6 +3738,14 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
         return {};
       };
 
+      var hasLayer = function hasLayer() {
+        return true;
+      };
+
+      var removeLayer = function removeLayer() {
+        return {};
+      };
+
       store = app.__container__.lookup('service:store');
       var layerModel = store.createRecord('test-model');
       layerModel.type = 'odata-vector';
@@ -3755,7 +3763,9 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
         'leafletMap': {
           getBounds: getBounds,
           getPane: getPane,
-          createPane: createPane
+          createPane: createPane,
+          hasLayer: hasLayer,
+          removeLayer: removeLayer
         }
       });
 
@@ -4348,7 +4358,13 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
           coordinates: [[[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]]
         };
         var layerAdd = L.geoJSON(feature).getLayers()[0];
+        layerAdd._label = {
+          _leaflet_id: 1000
+        };
         leafletObject.addLayer(layerAdd);
+        leafletObject._labelsLayer = {
+          1000: {}
+        };
         var pk = layerAdd.feature.properties.primarykey;
         responseBatchUpdate.replace('a5532858-dbdc-4d3c-9eaf-3d71d097ceb0', pk);
 
@@ -6219,6 +6235,88 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-delete-layer-objects-tes
     assert.ok(true, 'unit/mixins/flexberry-map-model-api-delete-layer-objects-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/mixins/flexberry-map-model-api-download-file-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326) {
+
+  (0, _qunit.module)('Unit | Mixin | flexberry map model api download file');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  (0, _qunit.test)('test api method downloadFile', function (assert) {
+    assert.expect(4);
+    var done = assert.async(1);
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default']
+        };
+      },
+      resolveRegistration: function resolveRegistration() {
+        return {
+          APP: {
+            backendUrls: {
+              featureExportApi: 'featureExportApi'
+            }
+          }
+        };
+      }
+    });
+
+    var layer = _ember['default'].Object.create({
+      id: '1',
+      type: 'wfs',
+      settingsAsObject: {
+        url: 'geoserverUrl',
+        typeNS: 'testTypeNS',
+        typeName: 'layerWfs',
+        geometryField: 'geometryField'
+      },
+      name: 'layerWfsName',
+      headers: {},
+      crs: {
+        code: 'EPSG:4326'
+      }
+    });
+    var maplayers = _ember['default'].A(layer);
+    var subject = mapApiMixinObject.create({
+      mapLayer: maplayers
+    });
+
+    var findByStub = _sinon['default'].stub(subject.mapLayer, 'findBy');
+    findByStub.returns(layer);
+    var stubAjax = _sinon['default'].stub(_ember['default'].$, 'ajax');
+    stubAjax.yieldsTo('success', 'blob');
+
+    var result = subject.downloadFile('1', ['111'], 'JSON', 'EPSG:4326', false);
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (res) {
+      assert.equal(res.fileName, 'layerWfsName.json');
+      assert.equal(res.blob, 'blob');
+      assert.equal(stubAjax.callCount, 1);
+      done();
+      ownerStub.restore();
+      stubAjax.restore();
+      findByStub.restore();
+    });
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-download-file-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-download-file-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-download-file-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-download-file-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-download-file-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-download-file-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/mixins/flexberry-map-model-api-edit-layer-object-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'ember-flexberry-gis/coordinate-reference-systems/epsg-3395'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _emberFlexberryGisCoordinateReferenceSystemsEpsg3395) {
 
   (0, _qunit.module)('Unit | Mixin | test method editLayerObject');
@@ -7206,6 +7304,225 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-savelayer-test.jshint', 
     assert.ok(true, 'unit/mixins/flexberry-map-model-api-savelayer-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/mixins/flexberry-map-model-api-set-visibilitty-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon) {
+
+  (0, _qunit.module)('Unit | Mixin | test method setVisibility ');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  var layerModel = _ember['default'].Component.extend({
+    visibility: false
+  });
+
+  (0, _qunit.test)('Test visibility = true', function (assert) {
+    //Arrange
+    assert.expect(9);
+    var firstLayer = layerModel.create({
+      id: '1'
+    });
+    var secondLayer = layerModel.create({
+      id: '2'
+    });
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    map.on('flexberry-map:moveend', function () {});
+    var done = assert.async(1);
+    var subject = mapApiMixinObject.create({
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      mapLayer: _ember['default'].A([firstLayer, secondLayer])
+    });
+    var mapFireSpy = _sinon['default'].stub(map, 'fire', function (name, e) {
+      e.results = _ember['default'].A([{ promise: _ember['default'].RSVP.resolve() }]);
+    });
+    var mapLayerFindSpy = _sinon['default'].spy(subject.mapLayer, 'findBy');
+
+    //Act
+    var result = subject._setVisibility(['1'], true);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Equals result = Promise');
+    result.then(function (res) {
+      assert.equal(res, 'success', 'Check result message');
+      assert.equal(firstLayer.get('visibility'), true, 'Check firstLayer visibility');
+      assert.equal(secondLayer.get('visibility'), false, 'Check secondLayer visibility');
+      assert.equal(mapFireSpy.callCount, 1, 'Check call count method fire on map');
+      assert.equal(mapFireSpy.args[0][0], 'flexberry-map:moveend', 'Check first argument method fire on map');
+      assert.equal(mapLayerFindSpy.callCount, 1, 'Check call count method findBy on Array');
+      assert.equal(mapLayerFindSpy.args[0][0], 'id', 'Check first argument method findBy on Array');
+      assert.equal(mapLayerFindSpy.args[0][1], '1', 'Check second argument method findBy on Array');
+      done();
+      mapFireSpy.restore();
+      mapLayerFindSpy.restore();
+    });
+  });
+
+  (0, _qunit.test)('Test visibility = false', function (assert) {
+    //Arrange
+    assert.expect(10);
+    var firstLayer = layerModel.create({
+      id: '1'
+    });
+    var secondLayer = layerModel.create({
+      id: '2'
+    });
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    map.on('flexberry-map:moveend', function () {});
+    var done = assert.async(1);
+    var subject = mapApiMixinObject.create({
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      mapLayer: _ember['default'].A([firstLayer, secondLayer])
+    });
+    var mapFireSpy = _sinon['default'].stub(map, 'fire', function (name, e) {
+      e.results = _ember['default'].A([{ promise: _ember['default'].RSVP.resolve() }]);
+    });
+    var mapLayerFindSpy = _sinon['default'].spy(subject.mapLayer, 'findBy');
+
+    //Act
+    var result = subject._setVisibility(['1', '2']);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Equals result = Promise');
+    result.then(function (res) {
+      assert.equal(res, 'success', 'Check result message');
+      assert.equal(firstLayer.get('visibility'), false, 'Check firstLayer visibility');
+      assert.equal(secondLayer.get('visibility'), false, 'Check secondLayer visibility');
+      assert.equal(mapFireSpy.callCount, 0, 'Check call count method fire on map');
+      assert.equal(mapLayerFindSpy.callCount, 2, 'Check call count method findBy on Array');
+      assert.equal(mapLayerFindSpy.args[0][0], 'id', 'Check first argument method findBy on Array');
+      assert.equal(mapLayerFindSpy.args[0][1], '1', 'Check second argument method findBy on Array');
+      assert.equal(mapLayerFindSpy.args[1][0], 'id', 'Check first argument method findBy on Array');
+      assert.equal(mapLayerFindSpy.args[1][1], '2', 'Check second argument method findBy on Array');
+      done();
+      mapFireSpy.restore();
+      mapLayerFindSpy.restore();
+    });
+  });
+
+  (0, _qunit.test)('Test not founded layers', function (assert) {
+    //Arrange
+    assert.expect(8);
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    map.on('flexberry-map:moveend', function () {});
+    var done = assert.async(1);
+    var subject = mapApiMixinObject.create({
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      mapLayer: _ember['default'].A([])
+    });
+    var mapFireSpy = _sinon['default'].stub(map, 'fire', function (name, e) {
+      e.results = _ember['default'].A([{ promise: _ember['default'].RSVP.resolve() }]);
+    });
+    var mapLayerFindSpy = _sinon['default'].spy(subject.mapLayer, 'findBy');
+
+    //Act
+    var result = subject._setVisibility(['3', '4'], true);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Equals result = Promise');
+    result['catch'](function (res) {
+      assert.equal(res, 'Layer \'3\' not found.', 'Check result message');
+      assert.equal(mapFireSpy.callCount, 0, 'Check call count method fire on map');
+      assert.equal(mapLayerFindSpy.callCount, 2, 'Check call count method findBy on Array');
+      assert.equal(mapLayerFindSpy.args[0][0], 'id', 'Check first argument method findBy on Array');
+      assert.equal(mapLayerFindSpy.args[0][1], '3', 'Check second argument method findBy on Array');
+      assert.equal(mapLayerFindSpy.args[1][0], 'id', 'Check first argument method findBy on Array');
+      assert.equal(mapLayerFindSpy.args[1][1], '4', 'Check second argument method findBy on Array');
+      done();
+      mapFireSpy.restore();
+      mapLayerFindSpy.restore();
+    });
+  });
+
+  (0, _qunit.test)('Test array is empty', function (assert) {
+    //Arrange
+    assert.expect(4);
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    map.on('flexberry-map:moveend', function () {});
+    var done = assert.async(1);
+    var subject = mapApiMixinObject.create({
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      mapLayer: _ember['default'].A([])
+    });
+    var mapFireSpy = _sinon['default'].stub(map, 'fire', function (name, e) {
+      e.results = _ember['default'].A([{ promise: _ember['default'].RSVP.resolve() }]);
+    });
+    var mapLayerFindSpy = _sinon['default'].spy(subject.mapLayer, 'findBy');
+
+    //Act
+    var result = subject._setVisibility([], true);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Equals result = Promise');
+    result['catch'](function (res) {
+      assert.equal(res, 'all layerIds is not found', 'Check result message');
+      assert.equal(mapFireSpy.callCount, 0, 'Check call count method fire on map');
+      assert.equal(mapLayerFindSpy.callCount, 0, 'Check call count method findBy on Array');
+      done();
+      mapFireSpy.restore();
+      mapLayerFindSpy.restore();
+    });
+  });
+
+  (0, _qunit.test)('Test parametr is not a array', function (assert) {
+    //Arrange
+    assert.expect(2);
+    var done = assert.async(1);
+    var subject = mapApiMixinObject.create();
+
+    //Act
+    var result = subject._setVisibility();
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Equals result = Promise');
+    result['catch'](function (res) {
+      assert.equal(res, 'Parametr is not a Array', 'Check result message');
+      done();
+    });
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-set-visibilitty-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-set-visibilitty-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-set-visibilitty-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-set-visibilitty-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-set-visibilitty-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-set-visibilitty-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/mixins/flexberry-map-model-api-set-visibility-objects-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon', 'ember-flexberry-gis/layers/-private/vector'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon, _emberFlexberryGisLayersPrivateVector) {
 
   (0, _qunit.module)('Unit | Mixin | test method setVisibilityObjects');
@@ -7497,9 +7814,9 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-set-visibility-objects-t
     });
   });
 
-  (0, _qunit.test)('Test to check fail message \'showExisting\'', function (assert) {
+  (0, _qunit.test)('Test to check success message \'showExisting\'', function (assert) {
     //Arrange
-    assert.expect(6);
+    assert.expect(9);
     var map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
       zoom: 13
@@ -7534,12 +7851,15 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-set-visibility-objects-t
 
     //Assert
     assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Equals result = Promise');
-    result.then(function () {})['catch'](function (res) {
-      assert.equal(res, 'Not working to layer with continueLoading', 'Check result message');
-      assert.equal(Object.values(map._layers).length, 0, 'Check count layers on Map');
-      assert.equal(mapAddSpy.callCount, 0, 'Check call count to method addLayer');
+    result.then(function (res) {
+      assert.equal(res, 'sucsess', 'Check result message');
+      assert.equal(Object.values(map._layers).length, 5, 'Check count layers on Map');
+      assert.equal(mapAddSpy.callCount, 5, 'Check call count to method addLayer');
       assert.equal(getModelLeafletObjSpy.callCount, 1, 'Check call count to method _getModelLeafletObject');
-      assert.equal(getModelLayerFeatureSpy.callCount, 0, 'Check call count to method _getModelLayerFeature');
+      assert.equal(getModelLeafletObjSpy.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
+      assert.equal(getModelLayerFeatureSpy.callCount, 1, 'Check call count to method _getModelLayerFeature');
+      assert.equal(getModelLayerFeatureSpy.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+      assert.deepEqual(getModelLayerFeatureSpy.args[0][1], ['1', '2'], 'Check call second arg to method _getModelLayerFeature');
       done();
       leafletObject.options.showExisting = false;
       getModelLeafletObjSpy.restore();
@@ -7714,59 +8034,9 @@ define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test', ['e
       }
     }
   });
-  var maplayers = Array(layer1, layer2);
+  var maplayers = _ember['default'].A([layer1, layer2]);
 
   (0, _qunit.test)('test method showLayers with continueLoading = false', function (assert) {
-    //Arrange
-    assert.expect(7);
-    var done = assert.async(1);
-
-    var map = L.map(document.createElement('div'), {
-      center: [51.505, -0.09],
-      zoom: 13
-    });
-
-    var subject = mapApiMixinObject.create({
-      _getTypeLayer: function _getTypeLayer() {
-        return new _emberFlexberryGisLayersPrivateVector['default']();
-      },
-      mapApi: {
-        getFromApi: function getFromApi() {
-          return map;
-        }
-      },
-      _getModelLayerFeature: function _getModelLayerFeature() {
-        return _ember['default'].RSVP.resolve();
-      },
-      mapLayer: maplayers
-    });
-
-    leafletObject.options.continueLoading = false;
-    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
-    var leafletMapFireStub = _sinon['default'].stub(map, 'fire');
-    leafletMapFireStub.returns(_ember['default'].RSVP.resolve());
-    Array.prototype.findBy = arrayFindBy;
-
-    //Act
-    var result = subject.showLayers(['1']);
-
-    //Assert
-    assert.ok(result instanceof _ember['default'].RSVP.Promise);
-    result.then(function (res) {
-      assert.equal(res, 'success');
-      assert.equal(subject.mapLayer.findBy('id', '1').visibility, true);
-      assert.equal(getModelLayerFeatureSpy.callCount, 1);
-      assert.equal(getModelLayerFeatureSpy.args[0][0], '1');
-      assert.deepEqual(getModelLayerFeatureSpy.args[0][1], null);
-      assert.equal(leafletMapFireStub.callCount, 0);
-      done();
-      getModelLayerFeatureSpy.restore();
-      leafletMapFireStub.restore();
-      Array.prototype.findBy = null;
-    });
-  });
-
-  (0, _qunit.test)('test method showLayers with continueLoading = true', function (assert) {
     //Arrange
     assert.expect(6);
     var done = assert.async(1);
@@ -7785,17 +8055,13 @@ define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test', ['e
           return map;
         }
       },
-      _getModelLayerFeature: function _getModelLayerFeature() {
-        return _ember['default'].RSVP.resolve();
-      },
       mapLayer: maplayers
     });
 
-    leafletObject.options.continueLoading = true;
-    var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
+    leafletObject.options.continueLoading = false;
     var leafletMapFireStub = _sinon['default'].stub(map, 'fire');
     leafletMapFireStub.returns(_ember['default'].RSVP.resolve());
-    Array.prototype.findBy = arrayFindBy;
+    var findByStub = _sinon['default'].stub(subject.mapLayer, 'findBy', arrayFindBy);
 
     //Act
     var result = subject.showLayers(['1']);
@@ -7804,20 +8070,64 @@ define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test', ['e
     assert.ok(result instanceof _ember['default'].RSVP.Promise);
     result.then(function (res) {
       assert.equal(res, 'success');
-      assert.equal(subject.mapLayer.findBy('id', '1').visibility, true);
-      assert.equal(getModelLayerFeatureSpy.callCount, 0);
+      assert.equal(findByStub.callCount, 1);
+      assert.equal(findByStub.args[0][0], 'id');
+      assert.equal(findByStub.args[0][1], '1');
+      assert.equal(leafletMapFireStub.callCount, 1);
+      done();
+      leafletMapFireStub.restore();
+      findByStub.restore();
+    });
+  });
+
+  (0, _qunit.test)('test method showLayers with continueLoading = true', function (assert) {
+    //Arrange
+    assert.expect(7);
+    var done = assert.async(1);
+
+    var map = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+
+    var subject = mapApiMixinObject.create({
+      _getTypeLayer: function _getTypeLayer() {
+        return new _emberFlexberryGisLayersPrivateVector['default']();
+      },
+      mapApi: {
+        getFromApi: function getFromApi() {
+          return map;
+        }
+      },
+      mapLayer: maplayers
+    });
+
+    leafletObject.options.continueLoading = true;
+    var leafletMapFireStub = _sinon['default'].stub(map, 'fire');
+    leafletMapFireStub.returns(_ember['default'].RSVP.resolve());
+    var findByStub = _sinon['default'].stub(subject.mapLayer, 'findBy', arrayFindBy);
+
+    //Act
+    var result = subject.showLayers(['1']);
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (res) {
+      assert.equal(res, 'success');
+      assert.equal(findByStub.callCount, 1);
+      assert.equal(findByStub.args[0][0], 'id');
+      assert.equal(findByStub.args[0][1], '1');
       assert.equal(leafletMapFireStub.callCount, 1);
       assert.equal(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
       done();
-      getModelLayerFeatureSpy.restore();
       leafletMapFireStub.restore();
-      Array.prototype.findBy = null;
+      findByStub.restore();
     });
   });
 
   (0, _qunit.test)('test method showAllLayerObjects with continueLoading = false', function (assert) {
     //Arrange
-    assert.expect(10);
+    assert.expect(13);
     var done = assert.async(1);
 
     var map = L.map(document.createElement('div'), {
@@ -7850,7 +8160,7 @@ define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test', ['e
     var mapAddSpy = _sinon['default'].spy(map, 'addLayer');
     var mapRemoveSpy = _sinon['default'].spy(map, 'removeLayer');
     var leafletObjectClearLayersSpy = _sinon['default'].spy(leafletObject, 'clearLayers');
-    Array.prototype.findBy = arrayFindBy;
+    var findByStub = _sinon['default'].stub(subject.mapLayer, 'findBy', arrayFindBy);
 
     //Act
     var result = subject.showAllLayerObjects('1');
@@ -7866,6 +8176,9 @@ define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test', ['e
       assert.notEqual(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
       assert.equal(mapAddSpy.callCount, 8);
       assert.equal(mapRemoveSpy.callCount, 0);
+      assert.equal(findByStub.callCount, 1);
+      assert.equal(findByStub.args[0][0], 'id');
+      assert.equal(findByStub.args[0][1], '1');
       assert.equal(leafletObjectClearLayersSpy.callCount, 1);
       done();
       getModelLayerFeatureSpy.restore();
@@ -7873,13 +8186,13 @@ define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test', ['e
       mapAddSpy.restore();
       mapRemoveSpy.restore();
       leafletObjectClearLayersSpy.restore();
-      Array.prototype.findBy = null;
+      findByStub.restore();
     });
   });
 
   (0, _qunit.test)('test method showAllLayerObjects with continueLoading = true', function (assert) {
     //Arrange
-    assert.expect(8);
+    assert.expect(11);
     var done = assert.async(1);
 
     var map = L.map(document.createElement('div'), {
@@ -7912,7 +8225,7 @@ define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test', ['e
     var mapAddSpy = _sinon['default'].spy(map, 'addLayer');
     var mapRemoveSpy = _sinon['default'].spy(map, 'removeLayer');
     var leafletObjectClearLayersSpy = _sinon['default'].spy(leafletObject, 'clearLayers');
-    Array.prototype.findBy = arrayFindBy;
+    var findByStub = _sinon['default'].stub(subject.mapLayer, 'findBy', arrayFindBy);
 
     //Act
     var result = subject.showAllLayerObjects('1');
@@ -7926,6 +8239,9 @@ define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test', ['e
       assert.equal(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
       assert.equal(mapAddSpy.callCount, 8);
       assert.equal(mapRemoveSpy.callCount, 0);
+      assert.equal(findByStub.callCount, 1);
+      assert.equal(findByStub.args[0][0], 'id');
+      assert.equal(findByStub.args[0][1], '1');
       assert.equal(leafletObjectClearLayersSpy.callCount, 0);
       done();
       getModelLayerFeatureSpy.restore();
@@ -7933,13 +8249,13 @@ define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test', ['e
       mapAddSpy.restore();
       mapRemoveSpy.restore();
       leafletObjectClearLayersSpy.restore();
-      Array.prototype.findBy = null;
+      findByStub.restore();
     });
   });
 
   (0, _qunit.test)('test method hideAllLayerObjects', function (assert) {
     //Arrange
-    assert.expect(1);
+    assert.expect(4);
 
     var map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
@@ -7964,20 +8280,23 @@ define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test', ['e
     });
 
     var mapRemoveSpy = _sinon['default'].spy(map, 'removeLayer');
-    Array.prototype.findBy = arrayFindBy;
+    var findByStub = _sinon['default'].stub(subject.mapLayer, 'findBy', arrayFindBy);
 
     //Act
     subject.hideAllLayerObjects('1');
 
     //Assert
     assert.equal(mapRemoveSpy.callCount, 7);
+    assert.equal(findByStub.callCount, 1);
+    assert.equal(findByStub.args[0][0], 'id');
+    assert.equal(findByStub.args[0][1], '1');
     mapRemoveSpy.restore();
-    Array.prototype.findBy = null;
+    findByStub.restore();
   });
 
   (0, _qunit.test)('test method hideLayers with continueLoading = false', function (assert) {
     //Arrange
-    assert.expect(3);
+    assert.expect(5);
 
     var map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
@@ -8003,23 +8322,25 @@ define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test', ['e
     var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
     var leafletMapFireStub = _sinon['default'].stub(map, 'fire');
     leafletMapFireStub.returns(_ember['default'].RSVP.resolve());
-    Array.prototype.findBy = arrayFindBy;
+    var findByStub = _sinon['default'].stub(subject.mapLayer, 'findBy', arrayFindBy);
 
     //Act
     subject.hideLayers(['1']);
 
     //Assert
-    assert.equal(subject.mapLayer.findBy('id', '1').visibility, false);
     assert.equal(getModelLayerFeatureSpy.callCount, 0);
     assert.equal(leafletMapFireStub.callCount, 0);
+    assert.equal(findByStub.callCount, 1);
+    assert.equal(findByStub.args[0][0], 'id');
+    assert.equal(findByStub.args[0][1], '1');
     getModelLayerFeatureSpy.restore();
     leafletMapFireStub.restore();
-    Array.prototype.findBy = null;
+    findByStub.restore();
   });
 
   (0, _qunit.test)('test method hideLayers with continueLoading = true', function (assert) {
     //Arrange
-    assert.expect(3);
+    assert.expect(5);
 
     var map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
@@ -8045,18 +8366,20 @@ define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test', ['e
     var getModelLayerFeatureSpy = _sinon['default'].spy(subject, '_getModelLayerFeature');
     var leafletMapFireStub = _sinon['default'].stub(map, 'fire');
     leafletMapFireStub.returns(_ember['default'].RSVP.resolve());
-    Array.prototype.findBy = arrayFindBy;
+    var findByStub = _sinon['default'].stub(subject.mapLayer, 'findBy', arrayFindBy);
 
     //Act
     subject.hideLayers(['1']);
 
     //Assert
-    assert.equal(subject.mapLayer.findBy('id', '1').visibility, false);
     assert.equal(getModelLayerFeatureSpy.callCount, 0);
     assert.equal(leafletMapFireStub.callCount, 0);
+    assert.equal(findByStub.callCount, 1);
+    assert.equal(findByStub.args[0][0], 'id');
+    assert.equal(findByStub.args[0][1], '1');
     getModelLayerFeatureSpy.restore();
     leafletMapFireStub.restore();
-    Array.prototype.findBy = null;
+    findByStub.restore();
   });
 });
 define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test.jscs-test', ['exports'], function (exports) {
@@ -9976,6 +10299,109 @@ define('dummy/tests/unit/services/map-store-test.jshint', ['exports'], function 
     assert.ok(true, 'unit/services/map-store-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/utils/download-file-test', ['exports', 'ember', 'qunit', 'sinon', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'ember-flexberry-gis/utils/download-file'], function (exports, _ember, _qunit, _sinon, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _emberFlexberryGisUtilsDownloadFile) {
+
+  (0, _qunit.module)('Unit | Utility | download file');
+
+  var crsFactory32640 = {
+    code: 'EPSG:32640',
+    definition: '+proj=utm +zone=40 +datum=WGS84 +units=m +no_defs',
+    create: function create() {
+      var crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
+        scale: function scale(zoom) {
+          return 256 * Math.pow(2, zoom);
+        },
+        zoom: function zoom(scale) {
+          return Math.log(scale / 256) / Math.LN2;
+        }
+      });
+      return crs;
+    }
+  };
+
+  (0, _qunit.test)('test method downloadFile for wfs', function (assert) {
+    assert.expect(6);
+    var done = assert.async(1);
+
+    var layerModelWfs = _ember['default'].Object.create({
+      type: 'wfs',
+      settingsAsObject: {
+        url: 'geoserverUrl',
+        typeNS: 'testTypeNS',
+        typeName: 'layerWfs',
+        geometryField: 'geometryField'
+      },
+      name: 'layerWfsName',
+      headers: {}
+    });
+
+    var stubAjax = _sinon['default'].stub(_ember['default'].$, 'ajax');
+    stubAjax.yieldsTo('success', 'blob');
+
+    var result = (0, _emberFlexberryGisUtilsDownloadFile.downloadFile)(layerModelWfs, ['1'], 'JSON', { crs: crsFactory32640.create() }, { crs: _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'].create() }, '/api/featureexport');
+
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (res) {
+      assert.equal(res.fileName, 'layerWfsName.json');
+      assert.equal(res.blob, 'blob');
+      assert.equal(stubAjax.callCount, 1);
+      assert.equal(stubAjax.getCall(0).args[0].url, '/api/featureexport');
+      var data = '<wfs:GetFeature xmlns:wfs="http://www.opengis.net/wfs" service="WFS" version="1.1.0" outputFormat="application/json">' + '<wfs:Query typeName="testTypeNS:layerWfs" srsName="EPSG:32640"><ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><Or>' + '<ogc:GmlObjectId xmlns:gml="http://www.opengis.net/gml" gml:id="1"/>' + '</Or></ogc:Filter></wfs:Query><geoserver url="geoserverUrl"/></wfs:GetFeature>';
+      assert.equal(stubAjax.getCall(0).args[0].data, data);
+      done();
+      stubAjax.restore();
+    });
+  });
+
+  (0, _qunit.test)('test method downloadFile for odata', function (assert) {
+    assert.expect(6);
+    var done = assert.async(1);
+
+    var layerModelOdata = _ember['default'].Object.create({
+      type: 'odata-vector',
+      settingsAsObject: {
+        odataClass: 'modelClassName',
+        odataUrl: 'odataUrl'
+      },
+      name: 'layerOdataName',
+      headers: {}
+    });
+
+    var stubAjax = _sinon['default'].stub(_ember['default'].$, 'ajax');
+    stubAjax.yieldsTo('success', 'blob');
+
+    var result = (0, _emberFlexberryGisUtilsDownloadFile.downloadFile)(layerModelOdata, ['1', '2'], 'CSV', { crs: _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'].create() }, { crs: crsFactory32640.create() }, '/api/featureexport');
+
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    result.then(function (res) {
+      assert.equal(res.fileName, 'layerOdataName.csv');
+      assert.equal(res.blob, 'blob');
+      assert.equal(stubAjax.callCount, 1);
+      assert.equal(stubAjax.getCall(0).args[0].url, '/api/featureexport');
+      var data = '<odata outputFormat="CSV"><layer odataClass="modelClassName" odataUrl="odataUrl" srsName="EPSG:4326" ' + 'layerName="layerOdataName" srslayer="EPSG:32640"><pkList><pk primarykey="1"/><pk primarykey="2"/></pkList></layer></odata>';
+      assert.equal(stubAjax.getCall(0).args[0].data, data);
+      done();
+      stubAjax.restore();
+    });
+  });
+});
+define('dummy/tests/unit/utils/download-file-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/utils');
+  test('unit/utils/download-file-test.js should pass jscs', function () {
+    ok(true, 'unit/utils/download-file-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/utils/download-file-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/utils/download-file-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/utils/download-file-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/utils/get-crs-by-name-test', ['exports', 'ember', 'ember-flexberry-gis/utils/get-crs-by-name', 'qunit', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'sinon'], function (exports, _ember, _emberFlexberryGisUtilsGetCrsByName, _qunit, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _sinon) {
 
   (0, _qunit.module)('Unit | Utility | get crs by name');
@@ -10011,7 +10437,10 @@ define('dummy/tests/unit/utils/get-crs-by-name-test', ['exports', 'ember', 'embe
 
     var crsResult = (0, _emberFlexberryGisUtilsGetCrsByName.getCrsByName)(crsName, that);
 
-    assert.equal(crsResult.code, 'EPSG:32640');
+    assert.ok(crsResult.crs);
+    assert.ok(crsResult.definition);
+    assert.equal(crsResult.crs.code, 'EPSG:32640');
+    assert.equal(crsResult.definition, '+proj=utm +zone=40 +datum=WGS84 +units=m +no_defs');
     ownerStub.restore();
   });
 
@@ -10030,7 +10459,10 @@ define('dummy/tests/unit/utils/get-crs-by-name-test', ['exports', 'ember', 'embe
 
     var crsResult = (0, _emberFlexberryGisUtilsGetCrsByName.getCrsByName)(crsName, that);
 
-    assert.equal(crsResult.code, 'EPSG:4326');
+    assert.ok(crsResult.crs);
+    assert.ok(crsResult.definition);
+    assert.equal(crsResult.crs.code, 'EPSG:4326');
+    assert.equal(crsResult.definition, '+title=WGS 84 (long/lat) +proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees');
     ownerStub.restore();
   });
 });

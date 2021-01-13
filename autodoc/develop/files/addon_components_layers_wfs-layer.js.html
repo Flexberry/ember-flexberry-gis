@@ -640,6 +640,7 @@ export default BaseVectorLayer.extend({
           let leafletMap = this.get(&#x27;leafletMap&#x27;);
 
           wfsLayer.on(&#x27;save:success&#x27;, this._setLayerState, this);
+          wfsLayer.on(&#x27;save:success&#x27;, this.saveSuccess, this);
           Ember.set(wfsLayer, &#x27;baseAddLayer&#x27;, wfsLayer.addLayer);
           wfsLayer.addLayer = this.get(&#x27;_addLayer&#x27;).bind(this);
 
@@ -676,6 +677,21 @@ export default BaseVectorLayer.extend({
         .on(&#x27;load&#x27;, (e) =&gt; {
           this._setLayerState();
         });
+    });
+  },
+
+  saveSuccess() {
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+
+    let changes =  Object.values(leafletObject.changes);
+    changes.forEach((layer) =&gt; {
+      if (layer.state === state.insert) {
+        if (leafletObject.leafletMap.hasLayer(layer._label)) {
+          leafletObject.leafletMap.removeLayer(layer._label);
+          let id = leafletObject.getLayerId(layer._label);
+          delete leafletObject._labelsLayer[id];
+        }
+      }
     });
   },
 
@@ -1044,10 +1060,6 @@ export default BaseVectorLayer.extend({
         let filter = oldPart ? new L.Filter.And(newPart, oldPart) : newPart;
 
         leafletObject.loadFeatures(filter);
-        needPromise = true;
-      } else if (!leafletObject.options.showExisting &amp;&amp; !leafletObject.options.continueLoading &amp;&amp; show &amp;&amp; !leafletObject.existingFeaturesLoaded) {
-        leafletObject.existingFeaturesLoaded = true;
-        leafletObject.loadFeatures(leafletObject.options.filter);
         needPromise = true;
       } else if (leafletObject.statusLoadLayer) {
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();

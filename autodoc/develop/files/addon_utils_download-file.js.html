@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/components/layers-dialogs/tabs/main.js - Flexberry Documentation</title>
+    <title>addon/utils/download-file.js - Flexberry Documentation</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -403,164 +403,188 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>addon/components/layers-dialogs/tabs/main.js <small>File</small></h1>
+    <h1>addon/utils/download-file.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
 import Ember from &#x27;ember&#x27;;
-import RequiredActionsMixin from &#x27;ember-flexberry/mixins/required-actions&#x27;;
-import DynamicActionsMixin from &#x27;ember-flexberry/mixins/dynamic-actions&#x27;;
-import DynamicPropertiesMixin from &#x27;../../../mixins/dynamic-properties&#x27;;
-import FlexberryBoundingboxMapLoaderMixin from &#x27;../../../mixins/flexberry-boundingbox-map-loader&#x27;;
-import layout from &#x27;../../../templates/components/layers-dialogs/tabs/main&#x27;;
-import {
-  translationMacro as t
-} from &#x27;ember-i18n&#x27;;
 
-export default Ember.Component.extend(
-  RequiredActionsMixin,
-  DynamicActionsMixin,
-  DynamicPropertiesMixin,
-  FlexberryBoundingboxMapLoaderMixin, {
-  /**
-    Reference to component&#x27;s template.
-  */
-  layout,
+/**
+  Download file. Create request in xml format. Specific request for odata layer.
+  Makes a request for other layers by creating a wfs layer. Makes a ajax-request for the url
+  and gets blob.
 
-  /**
-    See [EmberJS API](https://emberjs.com/api/).
+  @method downloadFile
+  @param {Object} layerModel Layer model.
+  @param {Array} objectIds Array of objects IDs.
+  @param {String} outputFormat Output format file.
+  @param {Object} crsOuput crs in which to download data.
+  @param {crsLayer} crsLayer crs in which data of layer.
+  @param {String} url url of controller for download file.
+  @param {Object} header headers for request odata.
+  @return {Promise} Object consist of fileName and blob.
+*/
+let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url, header = {}) {
+  return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+    let req = null;
+    let headers = {};
+    let layerName;
+    try {
+      let type = layerModel.get(&#x27;type&#x27;);
+      let layerSettings = layerModel.get(&#x27;settingsAsObject&#x27;);
+      let readFormat = getWfsFormat(outputFormat, crsOuput.crs);
+      layerName = layerModel.get(&#x27;name&#x27;);
+      if (type === &#x27;wms-wfs&#x27;) {
+        layerSettings = layerModel.get(&#x27;settingsAsObject&#x27;).wfs;
+      }
 
-    @property classNames
-    @type Array
-    @default [&#x27;layers-dialogs-data-tabs&#x27;]
-  */
-  classNames: [&#x27;layers-dialogs-data-tabs&#x27;],
+      if (type !== &#x27;odata-vector&#x27;) {
+        let wfsLayer = new L.WFS({
+          crs: crsOuput.crs,
+          url: layerSettings.url,
+          typeNS: layerSettings.typeNS,
+          typeName: layerSettings.typeName,
+          geometryField: layerSettings.geometryField,
+          showExisting: false
+        }, readFormat);
 
-  /***
-    Indicates that boundingBox component&#x27;s map is loading.
+        let filters = objectIds.map((id) =&gt; new L.Filter.GmlObjectID(id));
+        let allfilters = new L.Filter.Or(...filters);
+        let wfsElem = wfsLayer.getFeature(allfilters);
+        headers = wfsLayer.options.headers;
+        let doc = document.implementation.createDocument(&#x27;&#x27;, &#x27;&#x27;, null);
+        let geoserverElem = doc.createElement(&#x27;geoserver&#x27;);
+        geoserverElem.setAttribute(&#x27;url&#x27;, layerSettings.url);
+        wfsElem.appendChild(geoserverElem);
+        req = wfsElem;
 
-    @property _bboxMapIsLoading
-    @type Boolean
-    @default false
-  */
-  _bboxMapIsLoading: false,
+      } else {
+        let doc = document.implementation.createDocument(&#x27;&#x27;, &#x27;&#x27;, null);
+        let odataElem = doc.createElement(&#x27;odata&#x27;);
+        odataElem.setAttribute(&#x27;outputFormat&#x27;, outputFormat);
+        let layerElem = doc.createElement(&#x27;layer&#x27;);
+        layerElem.setAttribute(&#x27;odataClass&#x27;, layerSettings.odataClass);
+        layerElem.setAttribute(&#x27;odataUrl&#x27;, layerSettings.odataUrl);
+        if (!Ember.isNone(crsOuput.definition)) {
+          layerElem.setAttribute(&#x27;srsName&#x27;, crsOuput.definition);
+        } else {
+          layerElem.setAttribute(&#x27;srsName&#x27;, crsOuput.crs.code);
+        }
 
-  /**
-    Map model fot bounding box component.
+        layerElem.setAttribute(&#x27;layerName&#x27;, layerName);
+        if (!Ember.isNone(crsLayer.definition)) {
+          layerElem.setAttribute(&#x27;srslayer&#x27;, crsLayer.definition);
+        } else {
+          layerElem.setAttribute(&#x27;srslayer&#x27;, crsLayer.crs.code);
+        }
 
-    @property boundingBoxComponentMap
-    @type Object
-    @default null
-  */
-  boundingBoxComponentMap: null,
+        let pkListElem = doc.createElement(&#x27;pkList&#x27;);
+        objectIds.forEach((id) =&gt; {
+          let pkElem = doc.createElement(&#x27;pk&#x27;);
+          pkElem.setAttribute(&#x27;primarykey&#x27;, id);
+          pkListElem.appendChild(pkElem);
+        });
 
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s caption.
-
-    @property boundsSegmentCaption
-    @type String
-    @default t(&#x27;components.layers-dialogs.edit.bounds-segment.caption&#x27;)
-  */
-  boundsSegmentCaption: t(&#x27;components.layers-dialogs.edit.bounds-segment.caption&#x27;),
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s WGS84 option caption.
-
-    @property wgs84bboxCaption
-    @type String
-    @default t(&#x27;components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption&#x27;)
-  */
-  wgs84bboxCaption: t(&#x27;components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption&#x27;),
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s BBOX option caption.
-
-    @property bboxCaption
-    @type String
-    @default t(&#x27;components.layers-dialogs.edit.bounds-segment.options.bbox.caption&#x27;)
-  */
-  bboxCaption: t(&#x27;components.layers-dialogs.edit.bounds-segment.options.bbox.caption&#x27;),
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s mode.
-
-    @property boundsMode
-    @type String
-    @default &quot;wgs84bbox&quot;
-  */
-  boundsMode: &#x27;wgs84bbox&#x27;,
-
-  /**
-    Flag: indicates whether to show bounds error message or not.
-
-    @property _showBoundsErrorMessage
-    @type Boolean
-    @readOnly
-  */
-  _showBoundsErrorMessage: false,
-
-  /**
-    Currently active tab name.
-
-    @property _activeTab
-    @type String
-    @default &#x27;links-tab&#x27;
-    @private
-  */
-  _activeTab: &#x27;main-tab&#x27;,
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-    this.set(&#x27;_mainGroupIsAvailableForType&#x27;, this.get(&#x27;mainGroupIsAvailableForType&#x27;));
-    let _this = this;
-    this.set(&#x27;_bboxMapIsLoading&#x27;, true);
-
-    this.getBoundingBoxComponentMapModel().then(result =&gt; {
-      _this.set(&#x27;boundingBoxComponentMap&#x27;, result);
-      _this.set(&#x27;_bboxMapIsLoading&#x27;, false);
-    });
-    this.set(&#x27;_activeTab&#x27;, &#x27;main-tab&#x27;);
-  },
-
-  actions: {
-    /**
-      Handles clicks on tabs.
-
-      @method actions.onTabClick
-      @param {Object} e Click event object.
-    */
-    onTabClick(e) {
-      e = Ember.$.event.fix(e);
-
-      let $clickedTab = Ember.$(e.currentTarget);
-      let clickedTabName = $clickedTab.attr(&#x27;data-tab&#x27;);
-
-      this.set(&#x27;_activeTab&#x27;, clickedTabName);
-    },
-
-    /**
-      Handles bounding box changes.
-
-      @method actions.onBoundingBoxChange
-    */
-    onBoundingBoxChange(e) {
-      this.set(&#x27;_layer.boundingBox&#x27;, e.bboxGeoJSON);
-    },
-
-    /**
-      Handles onUploadFile.
-
-      @method actions.onUploadFile
-    */
-    onUploadFile(file) {
-      this.sendAction(&#x27;onUploadFile&#x27;, file);
+        layerElem.appendChild(pkListElem);
+        odataElem.appendChild(layerElem);
+        req = odataElem;
+        headers = header;
+      }
+    } catch (error) {
+      reject(&#x27;Error getting data for the request: &#x27; + error);
     }
+
+    Ember.$.ajax({
+      async: true,
+      method: &#x27;POST&#x27;,
+      url: url,
+      data: L.XmlUtil.serializeXmlDocumentString(req),
+      contentType: &#x27;text/xml&#x27;,
+      headers: headers || {},
+      dataType: &#x27;blob&#x27;,
+      success: (blob) =&gt; {
+        let ext = getFileExt(outputFormat);
+        let fileName = layerName + &#x27;.&#x27; + ext;
+        resolve({ fileName, blob });
+      },
+      error: (errorMessage) =&gt; {
+        reject(&#x27;Layer upload error &#x27; + layerName + &#x27;: &#x27; + errorMessage);
+      }
+    });
+  });
+};
+
+/**
+  Get wfs format.
+  @param {string} outputFormat Output format.
+  @param {Object} crs crs in which to download data.
+  @return {Object} L.Format.
+*/
+let getWfsFormat = function(outputFormat, crs) {
+  if (outputFormat === &#x27;JSON&#x27;) {
+    return new L.Format.GeoJSON({ crs: crs });
   }
-});
+
+  let format = new L.Format.Base({ crs: crs });
+
+  format.outputFormat = outputFormat;
+
+  if (outputFormat === &#x27;Shape Zip&#x27;) {
+    format.outputFormat = &#x27;Shape&#x27;;
+  }
+
+  return format;
+};
+
+/**
+  Get file extension.
+  @param {string} format Output format.
+  @return {string} file extension.
+*/
+let getFileExt = function(format) {
+  switch (format) {
+    case &#x27;JSON&#x27;:
+      return &#x27;json&#x27;;
+    case &#x27;GML2&#x27;:
+    case &#x27;GML3&#x27;:
+      return &#x27;xml&#x27;;
+    case &#x27;KML&#x27;:
+      return &#x27;kml&#x27;;
+    case &#x27;CSV&#x27;:
+      return &#x27;csv&#x27;;
+    case &#x27;GPX&#x27;:
+    case &#x27;Shape Zip&#x27;:
+    case &#x27;MIF&#x27;:
+      return &#x27;zip&#x27;;
+    default:
+      return &#x27;txt&#x27;;
+  }
+};
+
+/**
+  Data loading.
+  @param {string} filename File name.
+  @param {Blob} blob Data array.
+*/
+let downloadBlob = function(filename, blob) {
+  let element = document.createElement(&#x27;a&#x27;);
+
+  element.setAttribute(&#x27;href&#x27;, window.URL.createObjectURL(blob));
+  element.setAttribute(&#x27;download&#x27;, filename);
+
+  element.style.display = &#x27;none&#x27;;
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+};
+
+export {
+  downloadFile,
+  downloadBlob
+};
 
     </pre>
 </div>

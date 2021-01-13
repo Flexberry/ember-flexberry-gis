@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/components/layers-dialogs/tabs/main.js - Flexberry Documentation</title>
+    <title>addon/components/layers/tile-vector-layer.js - Flexberry Documentation</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -403,163 +403,93 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>addon/components/layers-dialogs/tabs/main.js <small>File</small></h1>
+    <h1>addon/components/layers/tile-vector-layer.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
 import Ember from &#x27;ember&#x27;;
-import RequiredActionsMixin from &#x27;ember-flexberry/mixins/required-actions&#x27;;
-import DynamicActionsMixin from &#x27;ember-flexberry/mixins/dynamic-actions&#x27;;
-import DynamicPropertiesMixin from &#x27;../../../mixins/dynamic-properties&#x27;;
-import FlexberryBoundingboxMapLoaderMixin from &#x27;../../../mixins/flexberry-boundingbox-map-loader&#x27;;
-import layout from &#x27;../../../templates/components/layers-dialogs/tabs/main&#x27;;
-import {
-  translationMacro as t
-} from &#x27;ember-i18n&#x27;;
+import { default as BaseVectorLayer, begIndex } from &#x27;../base-vector-layer&#x27;;
 
-export default Ember.Component.extend(
-  RequiredActionsMixin,
-  DynamicActionsMixin,
-  DynamicPropertiesMixin,
-  FlexberryBoundingboxMapLoaderMixin, {
-  /**
-    Reference to component&#x27;s template.
-  */
-  layout,
+export default BaseVectorLayer.extend({
+  leafletOptions: [
+    &#x27;url&#x27;,
+    &#x27;layerName&#x27;,
+    &#x27;style&#x27;,
+  ],
 
   /**
-    See [EmberJS API](https://emberjs.com/api/).
-
-    @property classNames
-    @type Array
-    @default [&#x27;layers-dialogs-data-tabs&#x27;]
+    Creates leaflet vector layer related to layer type.
+    @method createVectorLayer
+    @returns &lt;a href=&quot;http://leafletjs.com/reference-1.0.1.html#layer&quot;&gt;L.Layer&lt;/a&gt;|&lt;a href=&quot;https://emberjs.com/api/classes/RSVP.Promise.html&quot;&gt;Ember.RSVP.Promise&lt;/a&gt;
+    Leaflet layer or promise returning such layer.
   */
-  classNames: [&#x27;layers-dialogs-data-tabs&#x27;],
-
-  /***
-    Indicates that boundingBox component&#x27;s map is loading.
-
-    @property _bboxMapIsLoading
-    @type Boolean
-    @default false
-  */
-  _bboxMapIsLoading: false,
-
-  /**
-    Map model fot bounding box component.
-
-    @property boundingBoxComponentMap
-    @type Object
-    @default null
-  */
-  boundingBoxComponentMap: null,
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s caption.
-
-    @property boundsSegmentCaption
-    @type String
-    @default t(&#x27;components.layers-dialogs.edit.bounds-segment.caption&#x27;)
-  */
-  boundsSegmentCaption: t(&#x27;components.layers-dialogs.edit.bounds-segment.caption&#x27;),
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s WGS84 option caption.
-
-    @property wgs84bboxCaption
-    @type String
-    @default t(&#x27;components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption&#x27;)
-  */
-  wgs84bboxCaption: t(&#x27;components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption&#x27;),
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s BBOX option caption.
-
-    @property bboxCaption
-    @type String
-    @default t(&#x27;components.layers-dialogs.edit.bounds-segment.options.bbox.caption&#x27;)
-  */
-  bboxCaption: t(&#x27;components.layers-dialogs.edit.bounds-segment.options.bbox.caption&#x27;),
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s mode.
-
-    @property boundsMode
-    @type String
-    @default &quot;wgs84bbox&quot;
-  */
-  boundsMode: &#x27;wgs84bbox&#x27;,
-
-  /**
-    Flag: indicates whether to show bounds error message or not.
-
-    @property _showBoundsErrorMessage
-    @type Boolean
-    @readOnly
-  */
-  _showBoundsErrorMessage: false,
-
-  /**
-    Currently active tab name.
-
-    @property _activeTab
-    @type String
-    @default &#x27;links-tab&#x27;
-    @private
-  */
-  _activeTab: &#x27;main-tab&#x27;,
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-    this.set(&#x27;_mainGroupIsAvailableForType&#x27;, this.get(&#x27;mainGroupIsAvailableForType&#x27;));
-    let _this = this;
-    this.set(&#x27;_bboxMapIsLoading&#x27;, true);
-
-    this.getBoundingBoxComponentMapModel().then(result =&gt; {
-      _this.set(&#x27;boundingBoxComponentMap&#x27;, result);
-      _this.set(&#x27;_bboxMapIsLoading&#x27;, false);
-    });
-    this.set(&#x27;_activeTab&#x27;, &#x27;main-tab&#x27;);
+  createVectorLayer() {
+    let options = this.get(&#x27;options&#x27;);
+    let nameLayer = options.layerName;
+    let url = options.url;
+    let vectorGridOptions = {
+      vectorTileLayerStyles: {}
+    };
+    vectorGridOptions.vectorTileLayerStyles[nameLayer] = options.style;
+    return L.vectorGrid.protobuf(url, vectorGridOptions);
   },
 
-  actions: {
-    /**
-      Handles clicks on tabs.
+  /**
+  Handles &#x27;flexberry-map:identify&#x27; event of leaflet map.
 
-      @method actions.onTabClick
-      @param {Object} e Click event object.
-    */
-    onTabClick(e) {
-      e = Ember.$.event.fix(e);
+  @method identify
+  @param {Object} e Event object.
+  @param {&lt;a href=&quot;http://leafletjs.com/reference-1.0.0.html#latlngbounds&quot;&gt;L.LatLngBounds&lt;/a&gt;} options.boundingBox Bounds of identification area.
+  @param {&lt;a href=&quot;http://leafletjs.com/reference-1.0.0.html#latlng&quot;&gt;L.LatLng&lt;/a&gt;} e.latlng Center of the bounding box.
+  @param {Object[]} layers Objects describing those layers which must be identified.
+  @param {Object[]} results Objects describing identification results.
+  Every result-object has the following structure: { layer: ..., features: [...] },
+  where &#x27;layer&#x27; is metadata of layer related to identification result, features is array
+  containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+  or a promise returning such array.
+  */
+  identify(e) {
+    // Tile-layers hasn&#x27;t any identify logic.
+  },
 
-      let $clickedTab = Ember.$(e.currentTarget);
-      let clickedTabName = $clickedTab.attr(&#x27;data-tab&#x27;);
+  /**
+    Handles &#x27;flexberry-map:search&#x27; event of leaflet map.
 
-      this.set(&#x27;_activeTab&#x27;, clickedTabName);
-    },
+    @method search
+    @param {Object} e Event object.
+    @param {&lt;a href=&quot;http://leafletjs.com/reference-1.0.0.html#latlng&quot;&gt;L.LatLng&lt;/a&gt;} e.latlng Center of the search area.
+    @param {Object[]} layer Object describing layer that must be searched.
+    @param {Object} searchOptions Search options related to layer type.
+    @param {Object} results Hash containing search results.
+    @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+    or a promise returning such array.
+  */
+  search(e) {
+    // Tile-layers hasn&#x27;t any search logic.
+  },
 
-    /**
-      Handles bounding box changes.
+  /**
+    Sets leaflet layer&#x27;s zindex.
 
-      @method actions.onBoundingBoxChange
-    */
-    onBoundingBoxChange(e) {
-      this.set(&#x27;_layer.boundingBox&#x27;, e.bboxGeoJSON);
-    },
-
-    /**
-      Handles onUploadFile.
-
-      @method actions.onUploadFile
-    */
-    onUploadFile(file) {
-      this.sendAction(&#x27;onUploadFile&#x27;, file);
+    @method _setLayerZIndex
+    @private
+  */
+  _setLayerZIndex() {
+    const leafletLayer = this.get(&#x27;_leafletObject&#x27;);
+    if (Ember.isNone(leafletLayer)) {
+      return;
     }
-  }
+
+    const setZIndexFunc = Ember.get(leafletLayer, &#x27;setZIndex&#x27;);
+    if (Ember.typeOf(setZIndexFunc) !== &#x27;function&#x27;) {
+      return;
+    }
+
+    const index = this.get(&#x27;index&#x27;);
+    leafletLayer.setZIndex(index + begIndex);
+  },
+
 });
 
     </pre>

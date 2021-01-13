@@ -413,7 +413,7 @@
         </div>
 
         <div class="foundat">
-            Defined in: <a href="../files/addon_layers_odata-vector.js.html#l8"><code>addon&#x2F;layers&#x2F;odata-vector.js:8</code></a>
+            Defined in: <a href="../files/addon_layers_tile-vector.js.html#l8"><code>addon&#x2F;layers&#x2F;tile-vector.js:8</code></a>
         </div>
 
             Module: <a href="../modules/ember-flexberry-gis.html">ember-flexberry-gis</a>
@@ -455,8 +455,20 @@
                                 <a href="#" data-tabid="#methods" data-anchor="#method_createSettings" data-tablink="createSettings">createSettings</a>
 
                             </li>
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_createSettings" data-tablink="createSettings">createSettings</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_getLayerProperties" data-tablink="getLayerProperties">getLayerProperties</a>
+
+                            </li>
                             <li class="index-item method inherited">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_getLayerProperties" data-tablink="getLayerProperties">getLayerProperties</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_getLayerPropertyValues" data-tablink="getLayerPropertyValues">getLayerPropertyValues</a>
 
                             </li>
                             <li class="index-item method inherited">
@@ -491,6 +503,10 @@
 
                             </li>
                             <li class="index-item property inherited">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_operations" data-tablink="operations">operations</a>
+
+                            </li>
+                            <li class="index-item property">
                                 <a href="#" data-tabid="#properties" data-anchor="#property_operations" data-tablink="operations">operations</a>
 
                             </li>
@@ -655,6 +671,113 @@
                             </div>
                     
                     </div>
+                    <div id="method_createSettings" class="method item">
+                        <h3 class="name"><code>createSettings</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_layers_tile-vector.js.html#l24"><code>addon&#x2F;layers&#x2F;tile-vector.js:24</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Creates new settings object (with settings related to layer-type).</p>
+                    
+                        </div>
+                    
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
+                                        <p>New settings object (with settings related to layer-type).</p>
+                    
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <div id="method_getLayerProperties" class="method item">
+                        <h3 class="name"><code>getLayerProperties</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>leafletObject</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_layers_tile-vector.js.html#l35"><code>addon&#x2F;layers&#x2F;tile-vector.js:35</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Get properties names from leaflet layer object.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">leafletObject</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Leaflet layer object</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
+                                        <p>Array with properties names</p>
+                    
+                                </div>
+                            </div>
+                    
+                    </div>
                     <div id="method_getLayerProperties" class="method item">
                         <h3 class="name"><code>getLayerProperties</code></h3>
                     
@@ -718,6 +841,99 @@
                                 <div class="returns-description">
                                             <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
                                         <p>Array with properties names</p>
+                    
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <div id="method_getLayerPropertyValues" class="method item">
+                        <h3 class="name"><code>getLayerPropertyValues</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>leafletObject</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>selectedField</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>count</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_layers_tile-vector.js.html#l50"><code>addon&#x2F;layers&#x2F;tile-vector.js:50</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Get property values from leaflet layer object.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">leafletObject</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Leaflet layer object</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">selectedField</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Selected field name</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">count</code>
+                                            <span class="type">Integer</span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Amount of values to return (for all values must be 0)</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
+                                        <p>Array with selected property values</p>
                     
                                 </div>
                             </div>
@@ -1229,6 +1445,32 @@
                                 </a>
                                 but overwritten in
                             <a href="../files/addon_layers_odata-vector.js.html#l24"><code>addon&#x2F;layers&#x2F;odata-vector.js:24</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Permitted operations related to layer type.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> [&#x27;edit&#x27;, &#x27;remove&#x27;, &#x27;identify&#x27;, &#x27;search&#x27;]</p>
+                    
+                    
+                    </div>
+                    <div id="property_operations" class="property item">
+                        <h3 class="name"><code>operations</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String[]</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_layers_tile-vector.js.html#l15"><code>addon&#x2F;layers&#x2F;tile-vector.js:15</code></a>
                             </p>
                     
                     

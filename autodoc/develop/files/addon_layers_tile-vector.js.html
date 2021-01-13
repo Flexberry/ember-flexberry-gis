@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/components/layers-dialogs/tabs/main.js - Flexberry Documentation</title>
+    <title>addon/layers/tile-vector.js - Flexberry Documentation</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -403,162 +403,75 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>addon/components/layers-dialogs/tabs/main.js <small>File</small></h1>
+    <h1>addon/layers/tile-vector.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from &#x27;ember&#x27;;
-import RequiredActionsMixin from &#x27;ember-flexberry/mixins/required-actions&#x27;;
-import DynamicActionsMixin from &#x27;ember-flexberry/mixins/dynamic-actions&#x27;;
-import DynamicPropertiesMixin from &#x27;../../../mixins/dynamic-properties&#x27;;
-import FlexberryBoundingboxMapLoaderMixin from &#x27;../../../mixins/flexberry-boundingbox-map-loader&#x27;;
-import layout from &#x27;../../../templates/components/layers-dialogs/tabs/main&#x27;;
-import {
-  translationMacro as t
-} from &#x27;ember-i18n&#x27;;
+import VectorLayer from &#x27;ember-flexberry-gis/layers/-private/vector&#x27;;
 
-export default Ember.Component.extend(
-  RequiredActionsMixin,
-  DynamicActionsMixin,
-  DynamicPropertiesMixin,
-  FlexberryBoundingboxMapLoaderMixin, {
+/**
+  Class describing odata vector layer metadata.
+
+  @class ODataVectorlayer
+  @extends BaseLayer
+*/
+export default VectorLayer.extend({
   /**
-    Reference to component&#x27;s template.
+    Permitted operations related to layer type.
+
+    @property operations
+    @type String[]
+    @default [&#x27;edit&#x27;, &#x27;remove&#x27;, &#x27;identify&#x27;, &#x27;search&#x27;]
   */
-  layout,
-
-  /**
-    See [EmberJS API](https://emberjs.com/api/).
-
-    @property classNames
-    @type Array
-    @default [&#x27;layers-dialogs-data-tabs&#x27;]
-  */
-  classNames: [&#x27;layers-dialogs-data-tabs&#x27;],
-
-  /***
-    Indicates that boundingBox component&#x27;s map is loading.
-
-    @property _bboxMapIsLoading
-    @type Boolean
-    @default false
-  */
-  _bboxMapIsLoading: false,
+  operations: [&#x27;edit&#x27;, &#x27;remove&#x27;],
 
   /**
-    Map model fot bounding box component.
+    Creates new settings object (with settings related to layer-type).
 
-    @property boundingBoxComponentMap
-    @type Object
-    @default null
+    @method createSettings
+    @returns {Object} New settings object (with settings related to layer-type).
   */
-  boundingBoxComponentMap: null,
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s caption.
-
-    @property boundsSegmentCaption
-    @type String
-    @default t(&#x27;components.layers-dialogs.edit.bounds-segment.caption&#x27;)
-  */
-  boundsSegmentCaption: t(&#x27;components.layers-dialogs.edit.bounds-segment.caption&#x27;),
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s WGS84 option caption.
-
-    @property wgs84bboxCaption
-    @type String
-    @default t(&#x27;components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption&#x27;)
-  */
-  wgs84bboxCaption: t(&#x27;components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption&#x27;),
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s BBOX option caption.
-
-    @property bboxCaption
-    @type String
-    @default t(&#x27;components.layers-dialogs.edit.bounds-segment.options.bbox.caption&#x27;)
-  */
-  bboxCaption: t(&#x27;components.layers-dialogs.edit.bounds-segment.options.bbox.caption&#x27;),
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s mode.
-
-    @property boundsMode
-    @type String
-    @default &quot;wgs84bbox&quot;
-  */
-  boundsMode: &#x27;wgs84bbox&#x27;,
-
-  /**
-    Flag: indicates whether to show bounds error message or not.
-
-    @property _showBoundsErrorMessage
-    @type Boolean
-    @readOnly
-  */
-  _showBoundsErrorMessage: false,
-
-  /**
-    Currently active tab name.
-
-    @property _activeTab
-    @type String
-    @default &#x27;links-tab&#x27;
-    @private
-  */
-  _activeTab: &#x27;main-tab&#x27;,
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-    this.set(&#x27;_mainGroupIsAvailableForType&#x27;, this.get(&#x27;mainGroupIsAvailableForType&#x27;));
-    let _this = this;
-    this.set(&#x27;_bboxMapIsLoading&#x27;, true);
-
-    this.getBoundingBoxComponentMapModel().then(result =&gt; {
-      _this.set(&#x27;boundingBoxComponentMap&#x27;, result);
-      _this.set(&#x27;_bboxMapIsLoading&#x27;, false);
-    });
-    this.set(&#x27;_activeTab&#x27;, &#x27;main-tab&#x27;);
+  createSettings() {
+    let settings = this._super(...arguments);
+    return settings;
   },
 
-  actions: {
-    /**
-      Handles clicks on tabs.
+  /**
+    Get properties names from leaflet layer object.
 
-      @method actions.onTabClick
-      @param {Object} e Click event object.
-    */
-    onTabClick(e) {
-      e = Ember.$.event.fix(e);
-
-      let $clickedTab = Ember.$(e.currentTarget);
-      let clickedTabName = $clickedTab.attr(&#x27;data-tab&#x27;);
-
-      this.set(&#x27;_activeTab&#x27;, clickedTabName);
-    },
-
-    /**
-      Handles bounding box changes.
-
-      @method actions.onBoundingBoxChange
-    */
-    onBoundingBoxChange(e) {
-      this.set(&#x27;_layer.boundingBox&#x27;, e.bboxGeoJSON);
-    },
-
-    /**
-      Handles onUploadFile.
-
-      @method actions.onUploadFile
-    */
-    onUploadFile(file) {
-      this.sendAction(&#x27;onUploadFile&#x27;, file);
+    @method getLayerProperties
+    @param {Object} leafletObject Leaflet layer object
+    @returns {Array} Array with properties names
+  */
+  getLayerProperties(leafletObject) {
+    if (Ember.isNone(leafletObject)) {
+      return Ember.A();
     }
+
+    return Ember.A();
+  },
+
+  /**
+    Get property values from leaflet layer object.
+
+    @method getLayerPropertyValues
+    @param {Object} leafletObject Leaflet layer object
+    @param {String} selectedField Selected field name
+    @param {Integer} count Amount of values to return (for all values must be 0)
+    @returns {Array} Array with selected property values
+  */
+  getLayerPropertyValues(leafletObject, selectedField, count) {
+    if (Ember.isNone(leafletObject)) {
+      return Ember.A();
+    }
+
+    return Ember.A();
   }
 });
 
