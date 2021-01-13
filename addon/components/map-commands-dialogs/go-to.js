@@ -267,6 +267,11 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
       */
       onHide(e) {
         this.sendAction('hide', e);
+        this.set('_options', {
+          x: '',
+          y: ''
+        });
+        this.set('_showErrorMessage', false);
       },
 
       /**
