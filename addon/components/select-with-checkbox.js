@@ -140,10 +140,13 @@ export default FlexberryDropdown.extend({
     },
 
     onHide() {
-      const dropdown = this.get('dropdownDomElement').context;
-
-      if (!dropdown) {
-        return;
+      let $list = Ember.$('.fb-selector .menu');
+      if ($list.hasClass('visible')) {
+        $list.removeClass('visible');
+        $list.addClass('hidden');
+      } else {
+        $list.removeClass('hidden');
+        $list.addClass('visible');
       }
     }
   }

@@ -14,41 +14,47 @@
         margin-right: 14px;
     }
     .intersections-panel-results-row {
-        overflow-y: scroll;
-        height: 250px;
-    }
-    .multiple.search.selection.dropdown {
-        .dropdown.icon {
-            margin-left:10px;
+      overflow-y: scroll;
+      height: 250px;
+      .flexberry-dropdown.multi-dropdown.selection {
+        margin-top: -4px;
+      }
+      .feature-result-item-select {
+        display: none;
+      }
+      .feature-result-item-list {
+        display: none;
+      }
+      .title span{
+        margin-left: 0px !important;
+      }
+      table tr td {
+        vertical-align:top;
+      }
+      .intersections-panel-input-params-row.row {
+        .ui.right.labeled.input {
+            width: 100%;
         }
-        .ui.label.adition {
-            margin-left: -20px;
-        }
-        cursor: pointer;
-    }
-    .row {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-    .button.intersect {
-        margin-left: 20px;
-        margin-top: 20px;
-    }
-    .feature-result-item-content.content {
-        .layer-result-list-toggler {
-            width:50%;
-            .title {             
-                margin-top: -10px;
-            }
-        }
-        .cords {
-            padding-top: 0px;
-            width:50%;
-        }
-    }
-    .intersection-cell {
-        vertical-align: top;
-    }
+      }
+   }
+  .multiple.search.selection.dropdown {
+      cursor: pointer;
+  }
+  .row {
+      padding-left: 15px;
+      padding-right: 15px;
+  }
+  .button.intersect {
+      margin-top: 20px;
+  }
+  .feature-result-item-content.content {
+      .layer-result-list-toggler {
+          width:50%;
+      }
+      .cords {
+          width:50%;
+      }
+  }
 }
 
 .compare-geometries-panel {
@@ -77,8 +83,8 @@
 }
 .compare-layer-tree {
     height: 52px;
-    padding: 8px 6px; 
-    border-bottom: 1px solid gray; 
+    padding: 8px 6px;
+    border-bottom: 1px solid gray;
     cursor:pointer;
     padding-top: 20px;
 }

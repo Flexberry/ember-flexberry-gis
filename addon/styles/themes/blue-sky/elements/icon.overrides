@@ -44,7 +44,7 @@ i.icon.angle.right:before {
         &:before {
         font-family: Icons;
         content: "\f005";
-      } 
+      }
     }
     /* Поиск пересеченйи*/
     i.icon.intersections:before {
