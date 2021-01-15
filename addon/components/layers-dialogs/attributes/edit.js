@@ -196,8 +196,10 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
   choiceValueObserver: Ember.observer('choiceValue', function() {
     let choiceValueData = this.get('choiceValueData');
     let choiceValue = this.get('choiceValue');
-    if (!Ember.isNone(choiceValue)) {
+    if (!Ember.isNone(choiceValue) && choiceValue !== '') {
       this.set('data', choiceValueData[`${choiceValue}` - 1]);
+    } else {
+      this.set('data', choiceValueData[`${choiceValueData.length}` - 1]);
     }
   }),
 
@@ -211,9 +213,14 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
   choiceValueDataObserver: Ember.observer('choiceValueData', function() {
     let choiceValueData = this.get('choiceValueData');
     if (!Ember.isNone(choiceValueData)) {
-      this.set('choiceItems', Object.keys(choiceValueData).map((index) => {
+      let choice = Object.keys(choiceValueData).map((index) => {
         return Number(index) + 1;
-      }));
+      });
+
+      // adds empty template
+      choice.push('');
+      choiceValueData.push(this.get('data'));
+      this.set('choiceItems', choice);
     }
   }),
 
