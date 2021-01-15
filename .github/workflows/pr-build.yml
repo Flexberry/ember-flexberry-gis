@@ -1,0 +1,42 @@
+name: Check PR
+
+on:
+  pull_request:
+    branches: [ develop, master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [8.x]
+
+    steps:
+
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Start google chrome
+      run: |
+        sudo chown root /opt/google/chrome/chrome-sandbox
+        sudo sudo chmod 4755 /opt/google/chrome/chrome-sandbox
+        google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost &
+
+    - name: Install ember and bower
+      run: |
+       set -x
+       node -v
+       npm install -g bower
+       npm install -g ember-cli@2.4.3
+       yarn install
+       bower install
+
+    - name: Run ember try:one default test
+      run: |
+        set -x
+        ember try:one default test
