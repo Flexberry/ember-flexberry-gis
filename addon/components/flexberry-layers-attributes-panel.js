@@ -937,7 +937,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
         .map((key) => {
           let geojson = tabModel.featureLink[key].feature.leafletLayer.toGeoJSON();
-          let prop = Object.assign({},geojson.properties);
+          let prop = Object.assign({}, geojson.properties);
           geojson.properties = prop;
           return geojson;
         });
