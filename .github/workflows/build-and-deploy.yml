@@ -1,9 +1,7 @@
-name: Node.js CI
+name: Build and deploy
 
 on:
   push:
-    branches: [ develop, master ]
-  pull_request:
     branches: [ develop, master ]
 
 jobs:
@@ -38,10 +36,10 @@ jobs:
        yarn install
        bower install
 
-    - name: Run ember try:one  default test
+    - name: Run ember try:one default test
       run: |
         set -x
-        ember try:one  default test
+        ember try:one default test
 
     - name: Tune ssh-keys
       env:
@@ -74,7 +72,7 @@ jobs:
         ember build --gh-pages --brunch=$TRAVIS_BRANCH --environment=mssql-backend &&
         bash scripts/deploy-to-gh-pages.sh -mssql no-doc
 
-    - name: publish npm 
+    - name: publish npm
       uses: JS-DevTools/npm-publish@v1
       with:
         token: ${{ secrets.NPM_TOKEN }}
