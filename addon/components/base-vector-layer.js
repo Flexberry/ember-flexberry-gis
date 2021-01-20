@@ -123,6 +123,7 @@ export default BaseLayer.extend({
   },
 
   _featuresProcessCallback(layers) {
+    let _this = this;
     return new Ember.RSVP.Promise((resolve) => {
       let leafletObject = this.get('_leafletObject');
 
@@ -132,6 +133,12 @@ export default BaseLayer.extend({
       }
 
       let featuresProcessCallback = Ember.get(leafletObject, 'featuresProcessCallback');
+      if (typeof featuresProcessCallback === 'function') {
+        layers.forEach((feature) => {
+          feature.layerModel = _this.get('layerModel');
+        });
+      }
+
       let p = typeof featuresProcessCallback === 'function' ? featuresProcessCallback(layers) : Ember.RSVP.resolve();
       p.then(() => {
         this._addLayersOnMap(layers);

@@ -69,6 +69,14 @@ export default BaseLayerStyleLegendComponent.extend({
       let canvas = this.$('canvas.geometries')[0];
 
       let layersStylesRenderer = this.get('_layersStylesRenderer');
+      let legendStyle = this.parentView.layer.legendStyle;
+      if (!Ember.isNone(legendStyle)) {
+        styleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
+        for (let opt in legendStyle.style.path) {
+          styleSettings.style.path[opt] = legendStyle.style.path[opt];
+        }
+      }
+
       layersStylesRenderer.renderOnCanvas({
         styleSettings: styleSettings,
         canvas: canvas,
@@ -77,7 +85,7 @@ export default BaseLayerStyleLegendComponent.extend({
     }
 
     if (this.get('_markersCanBeDisplayed')) {
-      let styleSettings = this.get('styleSettings.style.marker');
+      let styleSettings = Ember.isNone(this.parentView.layer.legendStyle) ? this.get('styleSettings.style.marker') : this.parentView.layer.legendStyle;
       let canvas = this.$('canvas.markers')[0];
 
       let markersStylesRenderer = this.get('_markersStylesRenderer');

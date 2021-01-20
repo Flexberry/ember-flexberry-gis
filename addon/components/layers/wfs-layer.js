@@ -256,6 +256,7 @@ export default BaseVectorLayer.extend({
           wfsLayer.minZoom = this.get('minZoom');
           wfsLayer.maxZoom = this.get('maxZoom');
           wfsLayer.leafletMap = leafletMap;
+          this.set('loadedBounds', null);
           let load = this.continueLoad(wfsLayer);
           wfsLayer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
 
