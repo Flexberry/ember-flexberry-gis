@@ -556,7 +556,7 @@ export default Ember.Component.extend(
 
       // When we set new style it can change layer's opacity to style's default value,
       // so we must restore opacity to user defined value.
-      //this._setLayerOpacity();
+      this._setLayerOpacity();
     }),
 
     /**
