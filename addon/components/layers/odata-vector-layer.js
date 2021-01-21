@@ -785,20 +785,6 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-    Checks that mixin, model, serializer and adapter registered in the application.
-    @method checkRegisteredModelMixinSerializerAdapter
-    @return {Boolean}
-  */
-  checkRegisteredModelMixinSerializerAdapter() {
-    let modelName = this.get('modelName');
-    let modelRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`model:${modelName}`));
-    let mixinRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`mixin:${modelName}`));
-    let serializerRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`serializer:${modelName}`));
-    let adapterRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`adapter:${modelName}`));
-    return modelRegistered && mixinRegistered && serializerRegistered && adapterRegistered;
-  },
-
-  /**
     Creates models in recursive.
 
     @method сreateModelHierarchy
@@ -927,7 +913,6 @@ export default BaseVectorLayer.extend({
 
     // for check zoom
     layer.leafletMap = leafletMap;
-    this.set('loadedBounds', null);
     let load = this.continueLoad(layer);
     layer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
     return layer;
@@ -950,7 +935,7 @@ export default BaseVectorLayer.extend({
 
       this.set('filter', filter);
 
-      if (this.get('dynamicModel') && !this.checkRegisteredModelMixinSerializerAdapter()) {
+      if (this.get('dynamicModel')) {
         this.createDynamicModel().then(() => {
           let layer = this._createVectorLayer();
           resolve(layer);
