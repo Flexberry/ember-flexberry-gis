@@ -649,6 +649,8 @@ export default BaseVectorLayer.extend({
 
         let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs);
         let filter = oldPart ? new L.Filter.And(newPart, oldPart) : newPart;
+        let optFilter = leafletObject.options.filter;
+        filter = Ember.isNone(optFilter) ? filter : new L.Filter.And(filter, optFilter);
 
         leafletObject.loadFeatures(filter);
         needPromise = true;
