@@ -785,6 +785,20 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Checks that mixin, model, serializer and adapter registered in the application.
+    @method checkRegisteredModelMixinSerializerAdapter
+    @return {Boolean}
+  */
+  checkRegisteredModelMixinSerializerAdapter() {
+    let modelName = this.get('modelName');
+    let modelRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`model:${modelName}`));
+    let mixinRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`mixin:${modelName}`));
+    let serializerRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`serializer:${modelName}`));
+    let adapterRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`adapter:${modelName}`));
+    return modelRegistered && mixinRegistered && serializerRegistered && adapterRegistered;
+  },
+
+  /**
     Creates models in recursive.
 
     @method сreateModelHierarchy
@@ -880,6 +894,7 @@ export default BaseVectorLayer.extend({
     layer.options.dynamicModel = dynamicModel;
     layer.options.metadataUrl = this.get('metadataUrl');
     layer.options.odataUrl = this.get('odataUrl');
+    layer.options.filter = this.get('filter');
 
     L.setOptions(layer, options);
     layer.minZoom = this.get('minZoom');
@@ -912,6 +927,7 @@ export default BaseVectorLayer.extend({
 
     // for check zoom
     layer.leafletMap = leafletMap;
+    this.set('loadedBounds', null);
     let load = this.continueLoad(layer);
     layer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
     return layer;
@@ -926,7 +942,15 @@ export default BaseVectorLayer.extend({
   */
   createVectorLayer() {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      if (this.get('dynamicModel')) {
+      // Retrieve possibly defined in layer's settings filter.
+      let filter = this.get('filter');
+      if (typeof filter === 'string') {
+        filter = Ember.getOwner(this).lookup('layer:odata-vector').parseFilter(filter, (this.get('geometryField') || 'geometry'));
+      }
+
+      this.set('filter', filter);
+
+      if (this.get('dynamicModel') && !this.checkRegisteredModelMixinSerializerAdapter()) {
         this.createDynamicModel().then(() => {
           let layer = this._createVectorLayer();
           resolve(layer);
@@ -1326,8 +1350,11 @@ export default BaseVectorLayer.extend({
 
         let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
         let newPart = queryNewBounds.intersects(loadedBounds.toEWKT(this.get('crs')));
+        let filter = oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart;
+        let layerFilter = this.get('filter');
+        filter = Ember.isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
 
-        queryBuilder.where(oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart);
+        queryBuilder.where(filter);
 
         let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 
