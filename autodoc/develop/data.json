@@ -15881,6 +15881,15 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/components/layers-dialogs/tabs/load-file.js",
+            "line": 32,
+            "description": "Handles clickFile.",
+            "itemtype": "method",
+            "name": "actions.clickFile",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/components/layers-dialogs/tabs/main-settings.js",
             "line": 8,
             "description": "Reference to component's template.",
@@ -16403,6 +16412,62 @@
         {
             "file": "addon/components/layers-dialogs/add.js",
             "line": 100,
+            "description": "Message success: create layer.",
+            "itemtype": "property",
+            "name": "createLayerMessage",
+            "type": "String",
+            "default": "t('components.layers-dialogs.add.createLayer.message')",
+            "class": "FlexberryAddLayerDialogComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/add.js",
+            "line": 109,
+            "description": "Flag: indicates whether add dialog is visible or not.",
+            "itemtype": "property",
+            "name": "rastrMessageVisible",
+            "type": "boolean",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryAddLayerDialogComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/add.js",
+            "line": 118,
+            "description": "Message.",
+            "itemtype": "property",
+            "name": "message",
+            "type": "String",
+            "default": "''",
+            "class": "FlexberryAddLayerDialogComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/add.js",
+            "line": 127,
+            "description": "Caption for rastr dialog.",
+            "itemtype": "property",
+            "name": "captionRastr",
+            "type": "String",
+            "default": "t('components.layers-dialogs.add.captionRastr'),",
+            "class": "FlexberryAddLayerDialogComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/add.js",
+            "line": 136,
+            "description": "Type message.",
+            "itemtype": "property",
+            "name": "typeMessage",
+            "type": "String",
+            "default": "error,",
+            "class": "FlexberryAddLayerDialogComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/add.js",
+            "line": 145,
             "description": "File control.",
             "itemtype": "property",
             "name": "_fileControl",
@@ -16413,7 +16478,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/add.js",
-            "line": 109,
+            "line": 154,
             "description": "Data request.",
             "params": [
                 {
@@ -16452,7 +16517,16 @@
         },
         {
             "file": "addon/components/layers-dialogs/add.js",
-            "line": 136,
+            "line": 181,
+            "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.approve:method\"}}'approve' action{{/crossLink}}.",
+            "itemtype": "method",
+            "name": "actions.onApproveError",
+            "class": "FlexberryAddLayerDialogComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/add.js",
+            "line": 193,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.approve:method\"}}'approve' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onApprove",
@@ -16461,7 +16535,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/add.js",
-            "line": 182,
+            "line": 248,
             "description": "Handles onUploadFile.",
             "itemtype": "method",
             "name": "actions.onUploadFile",
@@ -49598,7 +49672,7 @@
         },
         {
             "message": "Missing item type\nData request.",
-            "line": " addon/components/layers-dialogs/add.js:109"
+            "line": " addon/components/layers-dialogs/add.js:154"
         },
         {
             "message": "Missing item type\nReference to component's template.",

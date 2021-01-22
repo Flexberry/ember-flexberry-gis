@@ -508,6 +508,51 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
   existWorkspaceErrorMessage: t(&#x27;components.layers-dialogs.add.existWorkspace-error.message&#x27;),
 
   /**
+    Message success: create layer.
+
+    @property createLayerMessage
+    @type String
+    @default t(&#x27;components.layers-dialogs.add.createLayer.message&#x27;)
+  */
+  createLayerMessage: t(&#x27;components.layers-dialogs.add.createLayer.message&#x27;),
+
+  /**
+    Flag: indicates whether add dialog is visible or not.
+
+    @property rastrMessageVisible
+    @type boolean
+    @private
+  */
+  rastrMessageVisible: false,
+
+  /**
+    Message.
+
+    @property message
+    @type String
+    @default &#x27;&#x27;
+  */
+  message: &#x27;&#x27;,
+
+  /**
+    Caption for rastr dialog.
+
+    @property captionRastr
+    @type String
+    @default t(&#x27;components.layers-dialogs.add.captionRastr&#x27;),
+  */
+  captionRastr: t(&#x27;components.layers-dialogs.add.captionRastr&#x27;),
+
+  /**
+    Type message.
+
+    @property typeMessage
+    @type String
+    @default error,
+  */
+  typeMessage: &#x27;error&#x27;,
+
+  /**
     File control.
 
     @property _fileControl
@@ -547,6 +592,18 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
       Handles {{#crossLink &quot;FlexberryDialogComponent/sendingActions.approve:method&quot;}}&#x27;flexberry-dialog&#x27; component&#x27;s &#x27;approve&#x27; action{{/crossLink}}.
       Invokes {{#crossLink &quot;FlexberryEditLayerDialogComponent/sendingActions.approve:method&quot;}}&#x27;approve&#x27; action{{/crossLink}}.
 
+      @method actions.onApproveError
+    */
+    onApproveError() {
+      this.set(&#x27;rastrMessageVisible&#x27;, false);
+      this.set(&#x27;message&#x27;, &#x27;&#x27;);
+      this.set(&#x27;typeMessage&#x27;, &#x27;error&#x27;);
+    },
+
+    /**
+      Handles {{#crossLink &quot;FlexberryDialogComponent/sendingActions.approve:method&quot;}}&#x27;flexberry-dialog&#x27; component&#x27;s &#x27;approve&#x27; action{{/crossLink}}.
+      Invokes {{#crossLink &quot;FlexberryEditLayerDialogComponent/sendingActions.approve:method&quot;}}&#x27;approve&#x27; action{{/crossLink}}.
+
       @method actions.onApprove
     */
     onApprove() {
@@ -563,7 +620,9 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
             (data) =&gt; {
               this.request(&#x60;${url[0]}/geoserver/rest/workspaces/${layerName[0]}/coveragestores/${layerName[1]}&#x60;, &#x27;GET&#x27;, &#x27;application/json&#x27;, &#x27;&#x27;,
                 (data) =&gt; {
-                  alert(this.get(&#x27;storeExistErrorMessage&#x27;));
+                  this.set(&#x27;rastrMessageVisible&#x27;, true);
+                  this.set(&#x27;message&#x27;, this.get(&#x27;storeExistErrorMessage&#x27;));
+                  this.set(&#x27;typeMessage&#x27;, &#x27;error&#x27;);
                 },
                 (data) =&gt; {
                   _this.request(&#x60;${url[0]}/geoserver/rest/workspaces/${layerName[0]}/coveragestores/${layerName[1]}/file.geotiff?coverageName=${layerName[1]}&#x60;,
@@ -573,17 +632,24 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
                         layerProperties: layerProperties,
                         layer: this.get(&#x27;layer&#x27;)
                       });
+                      this.set(&#x27;rastrMessageVisible&#x27;, true);
+                      this.set(&#x27;message&#x27;, this.get(&#x27;createLayerMessage&#x27;));
+                      this.set(&#x27;typeMessage&#x27;, &#x27;success&#x27;);
                     },
                     (data) =&gt; {
                       console.log(data);
-                      alert(this.get(&#x27;createLayerErrorMessage&#x27;));
+                      this.set(&#x27;rastrMessageVisible&#x27;, true);
+                      this.set(&#x27;message&#x27;, this.get(&#x27;createLayerErrorMessage&#x27;));
+                      this.set(&#x27;typeMessage&#x27;, &#x27;error&#x27;);
                     }
                   );
                 }
               );
             },
             (data) =&gt; {
-              alert(this.get(&#x27;existWorkspaceErrorMessage&#x27;) + &#x27; &#x27; + config.APP.geoserver.workspaceRastr);
+              this.set(&#x27;rastrMessageVisible&#x27;, true);
+              this.set(&#x27;message&#x27;, this.get(&#x27;existWorkspaceErrorMessage&#x27;) + &#x27; &#x27; + config.APP.geoserver.workspaceRastr);
+              this.set(&#x27;typeMessage&#x27;, &#x27;error&#x27;);
             });
         }
       }
