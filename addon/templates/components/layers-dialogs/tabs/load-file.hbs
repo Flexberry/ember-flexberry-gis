@@ -1,8 +1,8 @@
-<div class="ui form {{if _importInProcess "loading"}}">
+<div class="ui form {{if _importInProcess "loading" ""}}">
   <div class="ui action input">
     <label class="import-from-file">
       <span class="button flexberry-import-from-file-button ui icon">{{loadButtonCaption}}</span>
-      <input onchange={{action "uploadFile"}} type="file"/>
+      <input onchange={{action "uploadFile"}} onclick={{action "clickFile"}} type="file"/>
     </label>
   </div>
 </div>
