@@ -372,6 +372,12 @@
     overflow: auto;
     height: 170px;
   }
+  .error input[type="text"]::-webkit-input-placeholder {/* WebKit, Blink, Edge */
+    color: #9F3A38;
+  }
+  .error input[type="text"]::placeholder {/* Most modern browsers support this now. */
+    color: #9F3A38;
+  }
 }
 
 .ui.modal.flexberry-add-layer-dialog,
