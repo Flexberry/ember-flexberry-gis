@@ -36684,6 +36684,14 @@ select.ui.dropdown {
   overflow: auto;
   height: 170px;
 }
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog .error input[type="text"]::-webkit-input-placeholder {
+  /* WebKit, Blink, Edge */
+  color: #9F3A38;
+}
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog .error input[type="text"]::placeholder {
+  /* Most modern browsers support this now. */
+  color: #9F3A38;
+}
 .ui.modal.flexberry-add-layer-dialog > .flexberry-dialog-content.content,
 .ui.modal.flexberry-copy-layer-dialog > .flexberry-dialog-content.content,
 .ui.modal.flexberry-edit-layer-dialog > .flexberry-dialog-content.content,
@@ -37481,7 +37489,7 @@ form.flexberry-geometry-add-mode-import-form,
   margin: 3% 0;
 }
 .ui.modal.flexberry-geometry-add-mode-rhumb-dialog .rhumb .first {
-  margin-top: 0.455em;
+  margin-top: 0.2em;
 }
 .ui.modal.flexberry-geometry-add-mode-rhumb-dialog .rhumb.last {
   padding-right: 5px;

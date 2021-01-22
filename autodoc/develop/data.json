@@ -10587,6 +10587,26 @@
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
             "line": 233,
+            "description": "Error message.",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 238,
+            "description": "Flag indicates whether to show error message.",
+            "itemtype": "property",
+            "name": "_dialogVisible",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 248,
             "description": "Fields for adding a new record.",
             "itemtype": "property",
             "name": "_dataFormTable",
@@ -10599,7 +10619,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 315,
+            "line": 332,
             "description": "Type items metadata.",
             "itemtype": "property",
             "name": "typeItems",
@@ -10609,7 +10629,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 338,
+            "line": 355,
             "description": "Direction items metadata.",
             "itemtype": "property",
             "name": "directionItems",
@@ -10619,14 +10639,14 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 362,
+            "line": 379,
             "description": "Handles button click.",
             "class": "FlexberryGeometryAddModeRhumbComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 372,
+            "line": 390,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGeometryAddModeRhumbComponent/sendingActions.complete:method\"}}'complete' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onApprove",
@@ -10635,7 +10655,21 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 473,
+            "line": 497,
+            "description": "Handles change type.",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 504,
+            "description": "Handles change start point.",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 511,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.deny:method\"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onDeny",
@@ -10644,7 +10678,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 482,
+            "line": 520,
             "description": "The button for adding a new record to the table.",
             "itemtype": "method",
             "name": "actions.onAddRow",
@@ -10653,7 +10687,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 546,
+            "line": 588,
             "description": "Button to delete a record in a table.",
             "itemtype": "method",
             "name": "actions.OnRemoveRow",
@@ -10662,7 +10696,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 572,
+            "line": 614,
             "description": "Button to edit a record in a table.",
             "itemtype": "method",
             "name": "actions.OnEditRow",
@@ -10671,7 +10705,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 618,
+            "line": 660,
             "description": "Handles click on checkbox.",
             "itemtype": "method",
             "name": "actions.onRhumbSkipChange",
@@ -10680,7 +10714,16 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 665,
+            "line": 708,
+            "description": "Handles input limit.",
+            "itemtype": "method",
+            "name": "actions.inputLimit",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 720,
             "description": "Count order number of rhumbs.",
             "itemtype": "method",
             "name": "_countSkip",
@@ -10689,7 +10732,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 677,
+            "line": 732,
             "description": "Count number of binding rhumbs.",
             "itemtype": "method",
             "name": "_countSkip",
@@ -10698,7 +10741,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 690,
+            "line": 745,
             "description": "Сlear form.",
             "itemtype": "method",
             "name": "_dropForm",
@@ -10707,7 +10750,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 706,
+            "line": 761,
             "description": "Сlear form.",
             "itemtype": "method",
             "name": "_dropTableValidForm",
@@ -10716,7 +10759,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 715,
+            "line": 770,
             "description": "Clear form validation.",
             "itemtype": "method",
             "name": "_dropTableForm",
@@ -10725,7 +10768,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 724,
+            "line": 779,
             "description": "Number check.",
             "itemtype": "method",
             "name": "_validFloatNumber",
@@ -10734,7 +10777,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 734,
+            "line": 789,
             "description": "Starp point check.",
             "itemtype": "method",
             "name": "_validStartPoint",
@@ -10743,7 +10786,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 744,
+            "line": 799,
             "description": "Component's action invoking when new geometry was added.",
             "itemtype": "method",
             "name": "sendingActions.complete",
@@ -49294,8 +49337,20 @@
             "line": " addon/components/geometry-add-modes/rhumb.js:201"
         },
         {
+            "message": "Missing item type\nError message.",
+            "line": " addon/components/geometry-add-modes/rhumb.js:233"
+        },
+        {
             "message": "Missing item type\nHandles button click.",
-            "line": " addon/components/geometry-add-modes/rhumb.js:362"
+            "line": " addon/components/geometry-add-modes/rhumb.js:379"
+        },
+        {
+            "message": "Missing item type\nHandles change type.",
+            "line": " addon/components/geometry-add-modes/rhumb.js:497"
+        },
+        {
+            "message": "Missing item type\nHandles change start point.",
+            "line": " addon/components/geometry-add-modes/rhumb.js:504"
         },
         {
             "message": "Missing item type\nReference to component's template.",
