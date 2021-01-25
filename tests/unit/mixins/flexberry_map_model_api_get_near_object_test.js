@@ -72,7 +72,7 @@ test('test method getNearObjects with odataLayer', function (assert) {
               findedObjects = findedObjects.filter((object) => {
                 return objectIds.indexOf(object.id) !== -1;
               });
-            };
+            }
 
             return resolve([item, item._leafletObject, findedObjects]);
           }
@@ -146,7 +146,7 @@ test('test method getNearObjects with not odataLayer', function (assert) {
               findedObjects = findedObjects.filter((object) => {
                 return objectIds.indexOf(object.id) !== -1;
               });
-            };
+            }
 
             return resolve([item, item._leafletObject, findedObjects]);
           }
