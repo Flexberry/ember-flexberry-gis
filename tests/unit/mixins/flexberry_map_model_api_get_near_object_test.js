@@ -12,9 +12,9 @@ let layerOne = L.featureGroup();
 let firstObject = L.polygon([[1, 2], [4, 2], [4, 4], [1, 2]]).addTo(layerOne);
 firstObject.id = '111';
 firstObject.options = {
-  metadataUrl: ""
+  metadataUrl: ''
 };
-firstObject.modelName = "";
+firstObject.modelName = '';
 
 let layerSecond = L.featureGroup();
 layerSecond.id = '2';
@@ -23,7 +23,6 @@ firstObjectInSecond.id = '11';
 
 let secondObjectInSecond = L.polygon([[6, 3], [4, 2], [4, 4], [6, 3]]).addTo(layerSecond);
 secondObjectInSecond.id = '21';
-
 
 let layerOneModel = Ember.A({
   _leafletObject: layerOne,
@@ -46,7 +45,7 @@ test('test method getNearObjects with odataLayer', function (assert) {
   let server = sinon.fakeServer.create();
   server.respondWith([
     200,
-    { "Content-Type": "application/json" },
+    { 'Content-Type': 'application/json' },
     '{"className": null, "distance": 0, "pk": "111"}'
   ]);
   server.respondImmediately = true;
@@ -56,7 +55,7 @@ test('test method getNearObjects with odataLayer', function (assert) {
       return {
         'APP': {
           'backendUrls': {
-            'getNearDistance': "fff"
+            'getNearDistance': 'fff'
           }
         }
       };
@@ -73,7 +72,7 @@ test('test method getNearObjects with odataLayer', function (assert) {
               findedObjects = findedObjects.filter((object) => {
                 return objectIds.indexOf(object.id) !== -1;
               });
-            }
+            };
             return resolve([item, item._leafletObject, findedObjects]);
           }
         });
@@ -101,11 +100,11 @@ test('test method getNearObjects with odataLayer', function (assert) {
   server.respond();
 
   //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise, "Result should be promise");
+  assert.ok(result instanceof Ember.RSVP.Promise, 'Result should be promise');
   result.then((res)=> {
-    assert.equal(res.distance, 0, "Distance beetween objects equal 0");
-    assert.equal(res.layer.id, '1', "Layer id where found nearestObject equal 1");
-    assert.equal(res.object.id, '111', "Object with nearest distance to desired object");
+    assert.equal(res.distance, 0, 'Distance beetween objects equal 0');
+    assert.equal(res.layer.id, '1', 'Layer id where found nearestObject equal 1');
+    assert.equal(res.object.id, '111', 'Object with nearest distance to desired object');
     done();
     server.restore();
     configStub.restore();
@@ -119,7 +118,7 @@ test('test method getNearObjects with not odataLayer', function (assert) {
   let server = sinon.fakeServer.create();
   server.respondWith([
     200,
-    { "Content-Type": "application/json" },
+    { 'Content-Type': 'application/json' },
     '{"className": null, "distance": 0, "pk": "111"}'
   ]);
   server.respondImmediately = true;
@@ -129,7 +128,7 @@ test('test method getNearObjects with not odataLayer', function (assert) {
       return {
         'APP': {
           'backendUrls': {
-            'getNearDistance': "fff"
+            'getNearDistance': 'fff'
           }
         }
       };
@@ -174,11 +173,11 @@ test('test method getNearObjects with not odataLayer', function (assert) {
   server.respond();
 
   //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise, "Result should be promise");
+  assert.ok(result instanceof Ember.RSVP.Promise, 'Result should be promise');
   result.then((res)=> {
-    assert.equal(res.distance.toFixed(1), 0.6, "Distance beetween objects equal 0");
-    assert.equal(res.layer.id, '2', "Layer id where found nearestObject equal 1");
-    assert.equal(res.object.id, '11', "Object with nearest distance to desired object");
+    assert.equal(res.distance.toFixed(1), 0.6, 'Distance beetween objects equal 0');
+    assert.equal(res.layer.id, '2', 'Layer id where found nearestObject equal 1');
+    assert.equal(res.object.id, '11', 'Object with nearest distance to desired object');
     done();
     server.restore();
     configStub.restore();
