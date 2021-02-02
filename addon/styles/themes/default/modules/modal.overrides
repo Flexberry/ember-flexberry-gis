@@ -372,6 +372,12 @@
     overflow: auto;
     height: 170px;
   }
+  .error input[type="text"]::-webkit-input-placeholder {/* WebKit, Blink, Edge */
+    color: #9F3A38;
+  }
+  .error input[type="text"]::placeholder {/* Most modern browsers support this now. */
+    color: #9F3A38;
+  }
 }
 
 .ui.modal.flexberry-add-layer-dialog,
@@ -536,4 +542,8 @@ form.flexberry-geometry-add-mode-geoprovider-form,
 form.flexberry-geometry-add-mode-import-form,
 .ui.modal.flexberry-geometry-add-mode-import-result .flexberry-dialog-content {
   overflow: auto;
+}
+
+.rastrMessage .flexberry-dialog-toolbar.actions .flexberry-dialog-cancel-button {
+  display: none;
 }
