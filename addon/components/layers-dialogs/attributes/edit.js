@@ -196,7 +196,7 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
   choiceValueObserver: Ember.observer('choiceValue', function() {
     let choiceValueData = this.get('choiceValueData');
     let choiceValue = this.get('choiceValue');
-    if (!Ember.isNone(choiceValue) && choiceValue !== '') {
+    if (!Ember.isNone(choiceValue) && !Ember.isBlank(choiceValue)) {
       this.set('data', choiceValueData[`${choiceValue}` - 1]);
     } else {
       this.set('data', choiceValueData[`${choiceValueData.length}` - 1]);
