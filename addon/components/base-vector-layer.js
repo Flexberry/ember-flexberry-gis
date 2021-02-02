@@ -56,6 +56,14 @@ export default BaseLayer.extend({
   }),
 
   /**
+    @method getContainer: HTMLElement
+    Returns the HTML element that contains the tiles for this layer.
+  */
+	getContainer: function () {
+		return 'canvas' + this._pane;
+	},
+
+  /**
     @property _pane
     @type String
     @readOnly
