@@ -231,6 +231,21 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   },
 
   /**
+    Error message.
+  */
+  message: '',
+
+  /**
+    Flag indicates whether to show error message.
+
+    @property _dialogVisible
+    @type Boolean
+    @default false
+    @private
+  */
+  isError: false,
+
+  /**
     Fields for adding a new record.
 
     @property _dataFormTable
@@ -285,6 +300,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   coordinatesFieldPlaceholder: t('components.geometry-add-modes.rhumb.coordinates-field-placeholder'),
 
   cannotChangePermission: t('components.geometry-add-modes.rhumb.cannot-change-permission'),
+
+  placeholderNoValue: t('components.geometry-add-modes.rhumb.placeholderNoValue'),
 
   init() {
     this._super(...arguments);
@@ -365,6 +382,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     onOpenDialog() {
       this.set('_dialogHasBeenRequested', true);
       this.set('_dialogVisible', true);
+      this.set('isError', false);
 
       this._dropForm();
     },
@@ -378,6 +396,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     onApprove(e) {
       this._dropTableValidForm();
       let error = false;
+      this.set('isError', false);
 
       if (Ember.isNone(this._dataForm.objectType)) {
         this.set('_formValid.typeObjectValid', true);
@@ -394,7 +413,12 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       }
 
       let skipNum = this._countSkip();
-      if (this._tableData.length === 0 || (this._dataForm.objectType === 'Polygon' && this._tableData.length < skipNum + 2) ||
+      if (Ember.isNone(skipNum)) {
+        this.set('isError', true);
+        this.set('message', this.get('cannotChangePermission'));
+      }
+
+      if (Ember.isNone(skipNum) || this._tableData.length === 0 || (this._dataForm.objectType === 'Polygon' && this._tableData.length < skipNum + 2) ||
         (this._dataForm.objectType === 'Line' && this._tableData.length < skipNum + 1)) {
         this.set('_formValid.tableValid', true);
         error = true;
@@ -471,6 +495,20 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     },
 
     /**
+      Handles change type.
+    */
+    validType() {
+      this.set('_formValid.typeObjectValid', Ember.isNone(this._dataForm.objectType));
+    },
+
+    /**
+      Handles change start point.
+    */
+    validCoord() {
+      this.set('_formValid.startPointValid', !this._validStartPoint(this._dataForm.startPoint));
+    },
+
+    /**
       Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
 
       @method actions.onDeny
@@ -523,6 +561,10 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       };
 
       let skip = (this._tableData.length === 1 && !this._tableData[0].skip) ? true : false;
+      if (this.get('isError') && skip) {
+        this.set('isError', false);
+      }
+
       const row = {
         id: getGuid(),
         number: '0-1',
@@ -559,7 +601,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
               Ember.set(this._tableData[0]._skip, Ember.guidFor(this._tableData[0]), true);
             } else {
               Ember.set(this._tableData[1], 'skip', true);
-              Ember.set(this._tableData[1]._skip, Ember.guidFor(this._tableData[0]), true);
+              Ember.set(this._tableData[1]._skip, Ember.guidFor(this._tableData[1]), true);
             }
           }
 
@@ -622,6 +664,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     */
     onRhumbSkipChange(rowId, row, options) {
       let checked = options.checked;
+      this.set('isError', false);
       let curSkip = this._tableData.filter((item) => {
         return Ember.get(item, 'skip');
       });
@@ -653,11 +696,23 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         }
       } else if (!Ember.isEmpty(curSkip) && row.id === Ember.get(curSkip[0], 'id')) {
         if (Ember.get(curSkip[0], 'skip')) {
-          alert(this.get('cannotChangePermission'));
+          this.set('isError', true);
+          this.set('message', this.get('cannotChangePermission'));
           options.checked = !checked;
           Ember.set(row._skip, rowId, checked);  //strange magic
           Ember.set(row._skip, rowId, !checked);
         }
+      }
+    },
+
+    /**
+      Handles input limit.
+      @method actions.inputLimit
+    */
+    onInputLimit(str, e) {
+      const regex = /^\.|[^\d\.]|\.(?=.*\.)|^0+(?=\d)/g;
+      if (!Ember.isEmpty(str) && regex.test(str)) {
+        Ember.$(e.target).val(str.replace(regex, ''));
       }
     }
   },

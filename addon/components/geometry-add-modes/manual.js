@@ -133,13 +133,80 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   /**
     Object types.
 
-    @property _geometryField
+    @property _objectTypes
     @type string[]
-    @default ['Point', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon']
+    @default ['Polygon', 'Line']
     @readonly
     @private
   */
-  _types: ['Point', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon'],
+  _objectTypes: Ember.A([]),
+
+  /**
+    Line object types.
+
+    @property _objectTypesLine
+    @type string[]
+    @default ['LineString', 'MultiLineString']
+    @readonly
+    @private
+  */
+  _objectTypesLine: Ember.A([
+    {
+      captionPath: 'components.geometry-add-modes.rhumb.manual.linestring-object-type',
+      type: 'LineString'
+    },
+    {
+      captionPath: 'components.geometry-add-modes.manual.multilinestring-object-type',
+      type: 'MultiLineString'
+    }
+  ]),
+
+  /**
+    Polygon object types.
+
+    @property _objectTypesPolygon
+    @type string[]
+    @default ['Polygon', 'MultiPolygon']
+    @readonly
+    @private
+  */
+  _objectTypesPolygon: Ember.A([
+    {
+      captionPath: 'components.geometry-add-modes.manual.polygon-object-type',
+      type: 'Polygon'
+    },
+    {
+      captionPath: 'components.geometry-add-modes.manual.multipolygon-object-type',
+      type: 'MultiPolygon'
+    }
+  ]),
+
+  /**
+    Point object types.
+
+    @property _objectTypesPoint
+    @type string[]
+    @default ['Point']
+    @readonly
+    @private
+  */
+  _objectTypesPoint: Ember.A([
+    {
+      captionPath: 'components.geometry-add-modes.manual.point-object-type',
+      type: 'Point'
+    }
+  ]),
+
+  /**
+    Object types are avaliable to choose.
+
+    @property _availableType
+    @type string[]
+    @default  []
+    @readonly
+    @private
+  */
+  _availableType: null,
 
   menuButtonTooltip: t('components.geometry-add-modes.manual.menu-button-tooltip-add'),
 
@@ -159,6 +226,58 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
 
   coordinatesInLineErrorLabel: t('components.geometry-add-modes.manual.coordinates-line-error-label'),
 
+  onSelectedTpeChanged: Ember.observer('_curType', function () {
+    if (!Ember.isNone(this.get('_curType'))) {
+      this.set('_geometryField', false);
+    }
+  }),
+
+  /**
+    Type items metadata.
+
+    @property typeItems
+    @type Object[]
+  */
+  typeItems: Ember.computed('_objectTypes.[]', '_objectTypes.@each.active', 'i18n', function () {
+    let i18n = this.get('i18n');
+    let _objectTypes = this.get('_objectTypes');
+
+    let result = Ember.A(_objectTypes);
+    result.forEach((item) => {
+      let caption = Ember.get(item, 'caption');
+      let captionPath = Ember.get(item, 'captionPath');
+
+      if (!caption && captionPath) {
+        Ember.set(item, 'caption', i18n.t(captionPath));
+      }
+    });
+
+    return result;
+  }),
+
+  /**
+    Current type.
+  */
+  _curType: null,
+
+  /**
+     Set _objectSelectType.
+  */
+  _type: Ember.observer('_curType', function() {
+    let factories = this.get('_objectTypes');
+    let _curType = this.get('_curType');
+    let res = null;
+
+    if (!Ember.isNone(_curType)) {
+      factories.forEach(factory => {
+        if (factory.caption.toString() === _curType) {
+          res = factory;
+          this._objectSelectType = factory.type;
+        }
+      });
+    }
+  }),
+
   actions: {
     /**
       Handles button click.
@@ -169,6 +288,20 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     onButtonClick(tabModel) {
       this.set('_dialogHasBeenRequested', true);
       this.set('_dialogVisible', true);
+      switch (tabModel.typeGeometry) {
+        case 'polygon' :
+          this.set('_objectTypes', this.get('_objectTypesPolygon'));
+          this._updateAvaliableTypes();
+          break;
+        case 'polyline' :
+          this.set('_objectTypes', this.get('_objectTypesLine'));
+          this._updateAvaliableTypes();
+          break;
+        case 'marker' :
+          this.set('_objectTypes', this.get('_objectTypesPoint'));
+          this._updateAvaliableTypes();
+          break;
+      }
 
       const rowId = this._getRowId(tabModel);
       const edit = Ember.get(tabModel, `_editedRows.${rowId}`);
@@ -176,14 +309,16 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       this.set('_objectTypeDisabled', edit);
 
       if (edit) {
+        let i18n = this.get('i18n');
         const layer = Ember.get(tabModel, `featureLink.${rowId}`);
-        const geoJSON = layer.toGeoJSON();
-        const type = Ember.get(geoJSON, 'geometry.type');
-
-        let coordinates = geoJSON.geometry.coordinates;
+        const type = Ember.get(layer, 'feature.geometry.type');
+        let layerObject = Ember.$.extend(true, {}, Ember.get(layer, 'feature'));
+        let coordinates = layerObject.geometry.coordinates;
         switch (type) {
           case 'Polygon':
             coordinates.forEach(item => item.pop());
+            let polygonObject = this.get('_objectTypesPolygon')[0];
+            this.set('_curType', i18n.t(polygonObject.captionPath));
             break;
           case 'MultiPolygon':
             for (let i = 0; i < coordinates.length; i++) {
@@ -192,12 +327,25 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
               }
             }
 
+            let multipolygonObject = this.get('_objectTypesPolygon')[1];
+            this.set('_curType', i18n.t(multipolygonObject.captionPath));
+            break;
+          case 'LineString':
+            let lineObject = this.get('_objectTypesLine')[0];
+            this.set('_curType', i18n.t(lineObject.captionPath));
+            break;
+          case 'MultiLineString':
+            let multilineObject = this.get('_objectTypesLine')[1];
+            this.set('_curType', i18n.t(multilineObject.captionPath));
+            break;
+          case 'Point':
+            let pointObject = this.get('_objectTypesPoint')[0];
+            this.set('_curType', i18n.t(pointObject.captionPath));
             break;
         }
 
         const str = this._coordinatesToString(coordinates);
         this.set('_coordinates', str);
-
         this.set('_objectSelectType', type);
         Ember.set(this, 'menuButtonTooltip', t('components.geometry-add-modes.manual.menu-button-tooltip-edit'));
       } else {
@@ -216,7 +364,6 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     */
     onApprove(tabModel, e) {
       const objectSelectType = this.get('_objectSelectType');
-
       let error = false;
       if (Ember.isNone(objectSelectType)) {
         error = true;
@@ -233,19 +380,21 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
         this.set('_coordinatesWithError', false);
       }
 
-      let baseCrs = Ember.get(tabModel, 'leafletObject.options.crs.code');
-      const parsedCoordinates = this._parseStringToCoordinates(coordinates, baseCrs);
       if (this._isSinglePairInLine(coordinates)) {
         this.set('coordinatesInLineError', false);
       } else {
         this.set('coordinatesInLineError', true);
         this.set('_coordinatesWithError', true);
+        error = true;
       }
 
       if (error) {
         e.closeDialog = false;
         return;
       }
+
+      let baseCrs = Ember.get(tabModel, 'leafletObject.options.crs.code');
+      const parsedCoordinates = this._parseStringToCoordinates(coordinates, baseCrs);
 
       const rowId = this._getRowId(tabModel);
       let edit = false;
@@ -442,6 +591,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
 
       this.set('_coordinates', null);
       this.set('_coordinatesWithError', null);
+      this.set('_curType', null);
+      this.set('_geometryField', false);
     },
 
     /**
@@ -452,11 +603,13 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     */
     onDeny(e) {
       this.set('_coordinates', null);
-      this.set('_coordinatesWithError', null);
+      this.set('_coordinatesWithError', false);
       this.set('_geometryField', false);
       this.set('_objectTypeDisabled', true);
       this.set('coordinatesParseError', false);
       this.set('coordinatesInLineError', false);
+      this.set('_objectSelectType', null);
+      this.set('_curType', null);
     }
   },
 
@@ -488,6 +641,10 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   */
   _parseStringToCoordinates(coordinates, baseCrs) {
     if (Ember.isNone(coordinates)) {
+      return null;
+    }
+
+    if (coordinates.includes(',')) {
       return null;
     }
 
@@ -638,8 +795,11 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     let lines = coordinates.split('\n');
     let badLines = false;
     lines.forEach(line => {
-      if (line.split(' ').length !== 2) {
-        badLines = true;
+      line = line.trim();
+      if (line !== '') {
+        if (line.split(' ').length !== 2) {
+          badLines = true;
+        }
       }
     });
     if (badLines) {
@@ -647,8 +807,25 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     } else {
       return true;
     }
-  }
+  },
 
+  /**
+    Update avaliable types for current tab
+
+    @method _updateAvaliableTypes
+  */
+  _updateAvaliableTypes() {
+    let factories = this.get('typeItems');
+    let availableType = [];
+
+    if (!Ember.isNone(factories)) {
+      factories.forEach((factory) => {
+        availableType.push(factory.caption);
+      });
+    }
+
+    this.set('_availableType', availableType);
+  }
   /**
     Component's action invoking when new geometry was added.
 

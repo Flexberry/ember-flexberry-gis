@@ -17,5 +17,9 @@ export default {
   },
   'existWorkspace-error': {
     'message': 'Can create rasters only in the workspace'
-  }
+  },
+  'createLayer': {
+    'message': 'The layer successfully added'
+  },
+  'captionRastr': 'information'
 };
