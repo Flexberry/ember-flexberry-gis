@@ -936,7 +936,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let selectedRows = Ember.get(tabModel, '_selectedRows');
       let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
         .map((key) => {
-          return tabModel.featureLink[key].feature.leafletLayer.toGeoJSON();
+          let geojson = tabModel.featureLink[key].feature.leafletLayer.toGeoJSON();
+          let prop = Object.assign({}, geojson.properties);
+          geojson.properties = prop;
+          return geojson;
         });
 
       let leafletMap = this.get('leafletMap');
@@ -1091,7 +1094,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let editedProperty = tabModel.propertyLink[rowId];
 
       this.set('_editRowData', editedProperty);
-      this.set('_editRowDataCopy', Ember.copy(editedProperty, false));
+      this.set('_editRowDataCopy', Object.assign({}, editedProperty));
       this.set('_editRowTabModel', tabModel);
       this.set('_editRowLayer', tabModel.featureLink[rowId]);
 
@@ -1116,9 +1119,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     onEditRowDialogApprove(data) {
       let tabModel = this.get('_editRowTabModel');
       let layer = this.get('_editRowLayer');
-      if (tabModel.leafletObject.editLayerObjectProperties) {
-        tabModel.leafletObject.editLayerObjectProperties(layer.model, data);
-      }
 
       for (var key in data) {
         if (data.hasOwnProperty(key)) {
@@ -1291,7 +1291,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         Ember.set(layer, 'feature', { type: 'Feature' });
         Ember.set(layer.feature, 'properties', data);
         Ember.set(layer.feature, 'leafletLayer', layer);
-        tabModel.leafletObject.addLayer(layer);
+        let e = { layers: [layer], results: Ember.A() };
+        tabLeafletObject.fire('load', e);
       }
 
       layer.disableEdit();

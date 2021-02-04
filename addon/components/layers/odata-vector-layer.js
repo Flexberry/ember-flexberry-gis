@@ -159,6 +159,13 @@ export default BaseVectorLayer.extend({
       leafletObject.models[id] = layer.model;
     }
 
+    // Changes label when edit layer feature
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+      L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
+      layer._label = null;
+      this._createStringLabel(leafletObject._labelsLayer, [layer]);
+    }
+
     return leafletObject;
   },
 
