@@ -1346,7 +1346,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let selectedRows = Ember.get(tabModel, &#x27;_selectedRows&#x27;);
       let selectedFeatures = Object.keys(selectedRows).filter((item) =&gt; Ember.get(selectedRows, item))
         .map((key) =&gt; {
-          return tabModel.featureLink[key].feature.leafletLayer.toGeoJSON();
+          let geojson = tabModel.featureLink[key].feature.leafletLayer.toGeoJSON();
+          let prop = Object.assign({}, geojson.properties);
+          geojson.properties = prop;
+          return geojson;
         });
 
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
@@ -1501,7 +1504,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let editedProperty = tabModel.propertyLink[rowId];
 
       this.set(&#x27;_editRowData&#x27;, editedProperty);
-      this.set(&#x27;_editRowDataCopy&#x27;, Ember.copy(editedProperty, false));
+      this.set(&#x27;_editRowDataCopy&#x27;, Object.assign({}, editedProperty));
       this.set(&#x27;_editRowTabModel&#x27;, tabModel);
       this.set(&#x27;_editRowLayer&#x27;, tabModel.featureLink[rowId]);
 
@@ -1526,9 +1529,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     onEditRowDialogApprove(data) {
       let tabModel = this.get(&#x27;_editRowTabModel&#x27;);
       let layer = this.get(&#x27;_editRowLayer&#x27;);
-      if (tabModel.leafletObject.editLayerObjectProperties) {
-        tabModel.leafletObject.editLayerObjectProperties(layer.model, data);
-      }
 
       for (var key in data) {
         if (data.hasOwnProperty(key)) {
@@ -1701,7 +1701,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         Ember.set(layer, &#x27;feature&#x27;, { type: &#x27;Feature&#x27; });
         Ember.set(layer.feature, &#x27;properties&#x27;, data);
         Ember.set(layer.feature, &#x27;leafletLayer&#x27;, layer);
-        tabModel.leafletObject.addLayer(layer);
+        let e = { layers: [layer], results: Ember.A() };
+        tabLeafletObject.fire(&#x27;load&#x27;, e);
       }
 
       layer.disableEdit();

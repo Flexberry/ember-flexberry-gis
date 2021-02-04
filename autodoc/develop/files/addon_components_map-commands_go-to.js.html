@@ -558,11 +558,11 @@ let GoToMapCommandComponent = Ember.Component.extend({
     let availableModes = Ember.A();
     let i18n = this.get(&#x27;i18n&#x27;);
     availableModes.push({
-      crs: this.get(&#x27;model.crs&#x27;),
+      crs: this.get(&#x27;leafletMap.options.crs&#x27;),
       name: i18n.t(&#x27;map-commands.go-to.available-crs.current.name&#x27;).toString(),
       xCaption: i18n.t(&#x27;map-commands.go-to.available-crs.current.xCaption&#x27;).toString(),
       yCaption: i18n.t(&#x27;map-commands.go-to.available-crs.current.yCaption&#x27;).toString(),
-      latlng: false
+      isLatlng: false
     });
     availableModes.push({
       crs: L.CRS.EPSG4326,

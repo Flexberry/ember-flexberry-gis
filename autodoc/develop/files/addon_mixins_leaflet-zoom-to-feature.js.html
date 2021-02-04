@@ -494,9 +494,9 @@ export default Ember.Mixin.create({
         let bboxZoom = leafletMap.getBoundsZoom(bounds.pad(1));
         let minZoom = Ember.isArray(feature) ? Ember.get(feature[0], &#x27;leafletLayer.minZoom&#x27;) : Ember.get(feature, &#x27;leafletLayer.minZoom&#x27;);
         if (!Ember.isNone(minZoom) &amp;&amp; minZoom &gt; bboxZoom) {
-          leafletMap.flyTo(bounds.getCenter(), minZoom);
+          leafletMap.flyToBounds(bounds, { paddingTopLeft: [0 - widthPadding, 0], maxZoom: minZoom });
         } else {
-          leafletMap.fitBounds(bounds.pad(1), { paddingBottomRight: [widthPadding, heightPadding] });
+          leafletMap.fitBounds(bounds.pad(1), { paddingTopLeft: [0 - widthPadding, 0] });
         }
       }
     },

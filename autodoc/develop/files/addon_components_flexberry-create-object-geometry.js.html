@@ -577,7 +577,8 @@ export default Ember.Component.extend({
 
       let wfs = this.get(&#x27;layerModel&#x27;);
       let leafletObject = this.get(&#x27;layerModel._leafletObject&#x27;);
-      leafletObject.addLayer(layer);
+      let e = { layers: [layer], results: Ember.A() };
+      leafletObject.fire(&#x27;load&#x27;, e);
 
       const saveObjectFunc = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;saveObject&#x27;);
       if (typeof saveObjectFunc === &#x27;function&#x27;) {

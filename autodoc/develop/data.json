@@ -11925,7 +11925,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 165,
+            "line": 172,
             "description": "Removes all the layers from the group.",
             "itemtype": "method",
             "name": "clearLayers",
@@ -11934,7 +11934,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 179,
+            "line": 186,
             "description": "Deletes model in odata layer.",
             "itemtype": "method",
             "name": "removeLayer",
@@ -11949,7 +11949,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 210,
+            "line": 217,
             "description": "Add layer in model.",
             "itemtype": "method",
             "name": "addLayer",
@@ -11964,7 +11964,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 264,
+            "line": 271,
             "description": "Get geometry from layer in ewkt array",
             "itemtype": "method",
             "name": "_getGeometry",
@@ -11980,7 +11980,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 286,
+            "line": 293,
             "description": "Set layer properties",
             "itemtype": "method",
             "name": "_setLayerProperties",
@@ -12006,7 +12006,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 356,
+            "line": 363,
             "description": "Get feature, not add to map",
             "itemtype": "method",
             "name": "_getFeature",
@@ -12029,7 +12029,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 406,
+            "line": 413,
             "description": "Handles 'flexberry-map:identify' event of leaflet map.",
             "itemtype": "method",
             "name": "identify",
@@ -12060,7 +12060,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 422,
+            "line": 429,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -12105,7 +12105,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 485,
+            "line": 492,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "_query",
@@ -12136,7 +12136,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 518,
+            "line": 525,
             "description": "Get an array of link parameter restrictions.",
             "itemtype": "method",
             "name": "getFilterParameters",
@@ -12160,7 +12160,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 550,
+            "line": 557,
             "description": "Get properties from model to be showed in attribute panel",
             "itemtype": "method",
             "name": "_getPropsfromModel",
@@ -12176,7 +12176,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 570,
+            "line": 577,
             "description": "Set properties from model to be showed in attribute panel",
             "itemtype": "method",
             "name": "_setPropsFromModel",
@@ -12192,7 +12192,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 598,
+            "line": 605,
             "description": "Adds layer object.",
             "itemtype": "method",
             "name": "addLayerObject",
@@ -12215,7 +12215,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 638,
+            "line": 645,
             "description": "Edit layer object properties",
             "itemtype": "method",
             "name": "editLayerObjectProperties",
@@ -12236,7 +12236,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 651,
+            "line": 658,
             "description": "Creates adapter for model. Need to redefine it in the application project\nif there is a specific application adapter.",
             "itemtype": "method",
             "name": "createAdapterForModel",
@@ -12249,7 +12249,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 671,
+            "line": 678,
             "description": "Creates model from mixin.",
             "itemtype": "method",
             "name": "createModel",
@@ -12269,7 +12269,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 690,
+            "line": 697,
             "description": "Creates projection from data model.",
             "itemtype": "method",
             "name": "createProjection",
@@ -12289,7 +12289,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 710,
+            "line": 717,
             "description": "Creates mixin from data model.",
             "itemtype": "method",
             "name": "createMixin",
@@ -12309,7 +12309,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 731,
+            "line": 738,
             "description": "Creates serializer from Serializer.Odata.",
             "itemtype": "method",
             "name": "createSerializer",
@@ -12322,7 +12322,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 758,
+            "line": 765,
             "description": "Registers mixin, model, projections, serializer and adapter in the application.",
             "itemtype": "method",
             "name": "registerModelMixinSerializerAdapter",
@@ -12357,7 +12357,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 787,
+            "line": 794,
             "description": "Creates models in recursive.",
             "itemtype": "method",
             "name": "сreateModelHierarchy",
@@ -12382,7 +12382,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 835,
+            "line": 842,
             "description": "Creates model mixin, model, projections, serializer and adapter from jsonModel and registers them.",
             "itemtype": "method",
             "name": "createDynamicModel",
@@ -12395,7 +12395,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 859,
+            "line": 866,
             "description": "Creates leaflet layer.",
             "itemtype": "method",
             "name": "_createVectorLayer",
@@ -12408,7 +12408,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 920,
+            "line": 927,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -12420,7 +12420,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 959,
+            "line": 966,
             "description": "Projects geometry from latlng to coords.",
             "itemtype": "method",
             "name": "transformToCoords",
@@ -12444,7 +12444,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 995,
+            "line": 1002,
             "description": "Returns promise with the layer properties object.",
             "itemtype": "method",
             "name": "_getAttributesOptions",
@@ -12455,7 +12455,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1035,
+            "line": 1042,
             "description": "Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "loadLayerFeatures",
@@ -12475,7 +12475,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1134,
+            "line": 1141,
             "description": "Get count of features.",
             "itemtype": "method",
             "name": "getCountFeatures",
@@ -12488,7 +12488,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1157,
+            "line": 1164,
             "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "getLayerFeatures",
@@ -12508,21 +12508,21 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1272,
+            "line": 1279,
             "description": "Handles zoomend",
             "class": "ODataVectorLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1371,
+            "line": 1378,
             "description": "Initializes DOM-related component's properties.",
             "class": "ODataVectorLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1428,
+            "line": 1435,
             "description": "Handles 'flexberry-map:cancelEdit' event of leaflet map.",
             "itemtype": "method",
             "name": "cancelEdit",
@@ -12827,7 +12827,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 176,
+            "line": 188,
             "description": "Removes all the layers from the group.",
             "itemtype": "method",
             "name": "_clearLayers",
@@ -12836,7 +12836,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 190,
+            "line": 202,
             "description": "Creates leaflet vector layer related to layer type.",
             "itemtype": "method",
             "name": "createVectorLayer",
@@ -12855,7 +12855,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 288,
+            "line": 302,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -12867,7 +12867,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 299,
+            "line": 313,
             "description": "Handles 'flexberry-map:identify' event of leaflet map.",
             "itemtype": "method",
             "name": "identify",
@@ -12898,7 +12898,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 333,
+            "line": 347,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -12943,7 +12943,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 402,
+            "line": 416,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "_query",
@@ -12974,7 +12974,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 437,
+            "line": 451,
             "description": "Get an array of link parameter restrictions.",
             "itemtype": "method",
             "name": "getFilterParameters",
@@ -12998,7 +12998,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 465,
+            "line": 479,
             "description": "Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "loadLayerFeatures",
@@ -13018,7 +13018,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 534,
+            "line": 548,
             "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "getLayerFeatures",
@@ -13038,21 +13038,21 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 599,
+            "line": 613,
             "description": "Handles zoomend",
             "class": "WfsLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 682,
+            "line": 696,
             "description": "Initializes DOM-related component's properties.",
             "class": "WfsLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 734,
+            "line": 748,
             "description": "Handles 'flexberry-map:cancelEdit' event of leaflet map.",
             "itemtype": "method",
             "name": "cancelEdit",
@@ -13660,7 +13660,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 204,
+            "line": 206,
             "description": "Observes and handles changes in choiceValueData.\nСomputes list 'choiceItems' name editing objects.",
             "itemtype": "method",
             "name": "choiceValueDataObserver",
@@ -13671,7 +13671,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 220,
+            "line": 227,
             "description": "Parses data.",
             "itemtype": "method",
             "name": "parseData",
@@ -13684,14 +13684,14 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 257,
+            "line": 264,
             "description": "Initializes component.",
             "class": "FlexberryEditLayerAttributesDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 270,
+            "line": 277,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.beforeShow:method\"}}'flexberry-dialog' component's 'beforeShow' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.beforeShow:method\"}}'beforeShow' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onBeforeShow",
@@ -13700,7 +13700,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 283,
+            "line": 290,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.show:method\"}}'flexberry-dialog' component's 'show' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.show:method\"}}'show' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onShow",
@@ -13709,7 +13709,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 294,
+            "line": 301,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.beforeHide:method\"}}'flexberry-dialog' component's 'beforeHide' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.beforeHide:method\"}}'beforeHide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onBeforeHide",
@@ -13718,7 +13718,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 304,
+            "line": 311,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.hide:method\"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.hide:method\"}}'hide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHide",
@@ -13727,7 +13727,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 320,
+            "line": 327,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.approve:method\"}}'approve' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onApprove",
@@ -13736,7 +13736,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 339,
+            "line": 346,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.deny:method\"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.deny:method\"}}'deny' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onDeny",
@@ -13745,7 +13745,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 351,
+            "line": 358,
             "description": "Component's action invoking when dialog starts to show.",
             "itemtype": "method",
             "name": "sendingActions.beforeShow",
@@ -13754,7 +13754,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 357,
+            "line": 364,
             "description": "Component's action invoking when dialog starts to hide.",
             "itemtype": "method",
             "name": "sendingActions.beforeHide",
@@ -13763,7 +13763,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 363,
+            "line": 370,
             "description": "Component's action invoking when dialog is shown.",
             "itemtype": "method",
             "name": "sendingActions.show",
@@ -13772,7 +13772,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 369,
+            "line": 376,
             "description": "Component's action invoking when dialog is hidden.",
             "itemtype": "method",
             "name": "sendingActions.hide",
@@ -13781,7 +13781,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 375,
+            "line": 382,
             "description": "Component's action invoking when dialog is approved.",
             "itemtype": "method",
             "name": "sendingActions.approve",
@@ -13790,7 +13790,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/attributes/edit.js",
-            "line": 381,
+            "line": 388,
             "description": "Component's action invoking when dialog is denied.",
             "itemtype": "method",
             "name": "sendingActions.deny",
@@ -21981,6 +21981,17 @@
         {
             "file": "addon/components/map-commands-dialogs/export.js",
             "line": 1292,
+            "description": "Observers changes in properties that affect the ability to show scale map.",
+            "itemtype": "method",
+            "name": "_scaleControlDidChange",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryExportMapCommandDialogComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/map-commands-dialogs/export.js",
+            "line": 1311,
             "description": "Observers changes in properties that affect the ability to show pages.",
             "itemtype": "method",
             "name": "_pageNumberDidChange",
@@ -21991,7 +22002,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1304,
+            "line": 1323,
             "description": "Invalidates leaflet map's size.",
             "itemtype": "method",
             "name": "_invalidateSizeOfLeafletMap",
@@ -22003,7 +22014,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1323,
+            "line": 1342,
             "description": "Fits specified leaflet map's bounds.",
             "itemtype": "method",
             "name": "_fitBoundsOfLeafletMap",
@@ -22022,7 +22033,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1345,
+            "line": 1364,
             "description": "Waits for leaflet map tile layers to be ready.",
             "itemtype": "method",
             "name": "_waitForLeafletMapTileLayersToBeReady",
@@ -22034,7 +22045,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1397,
+            "line": 1416,
             "description": "Waits for leaflet map overlay layers to be ready.",
             "itemtype": "method",
             "name": "_waitForLeafletMapOverlayLayersToBeReady",
@@ -22046,7 +22057,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1436,
+            "line": 1455,
             "description": "Waits for leaflet map layers to be ready.",
             "itemtype": "method",
             "name": "_waitForLeafletMapLayersToBeReady",
@@ -22058,7 +22069,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1450,
+            "line": 1469,
             "description": "Shows leaflet map.",
             "itemtype": "method",
             "name": "_showLeafletMap",
@@ -22069,7 +22080,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1487,
+            "line": 1509,
             "description": "Hides leaflet map.",
             "itemtype": "method",
             "name": "_hideLeafletMap",
@@ -22080,7 +22091,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1524,
+            "line": 1546,
             "description": "Computes current scren approximate DPI.",
             "return": {
                 "description": "Current scren approximate DPI.",
@@ -22091,7 +22102,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1548,
+            "line": 1570,
             "description": "Returns inner options transformed into Leaflet.Export options.",
             "itemtype": "method",
             "name": "_getLeafletExportOptions",
@@ -22104,7 +22115,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1586,
+            "line": 1608,
             "description": "Export's map with respect to selected export options.",
             "itemtype": "method",
             "name": "_export",
@@ -22115,7 +22126,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1602,
+            "line": 1624,
             "description": "Prepares map for export with respect to selected export options.",
             "itemtype": "method",
             "name": "beforeExport",
@@ -22124,7 +22135,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1663,
+            "line": 1685,
             "description": "Export's map with respect to selected export options.",
             "itemtype": "method",
             "name": "export",
@@ -22133,7 +22144,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1783,
+            "line": 1805,
             "description": "Performs after export clean up.",
             "itemtype": "method",
             "name": "afterExport",
@@ -22142,35 +22153,35 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1835,
+            "line": 1857,
             "description": "Initializes component.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1879,
+            "line": 1901,
             "description": "Initializes component's DOM-related properties.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1916,
+            "line": 1938,
             "description": "Called after a component has been rendered, both on initial render and in subsequent rerenders.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1925,
+            "line": 1947,
             "description": "Destroys component.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1948,
+            "line": 1970,
             "description": "Component's action invoking when dialog starts to show.",
             "itemtype": "method",
             "name": "sendingActions.beforeShow",
@@ -22179,7 +22190,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1954,
+            "line": 1976,
             "description": "Component's action invoking when dialog starts to hide.",
             "itemtype": "method",
             "name": "sendingActions.beforeHide",
@@ -22188,7 +22199,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1960,
+            "line": 1982,
             "description": "Component's action invoking when dialog is shown.",
             "itemtype": "method",
             "name": "sendingActions.show",
@@ -22197,7 +22208,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1966,
+            "line": 1988,
             "description": "Component's action invoking when dialog is hidden.",
             "itemtype": "method",
             "name": "sendingActions.hide",
@@ -22206,7 +22217,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1972,
+            "line": 1994,
             "description": "Component's action invoking when dialog is approved.",
             "itemtype": "method",
             "name": "sendingActions.approve",
@@ -22215,7 +22226,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1978,
+            "line": 2000,
             "description": "Component's action invoking when dialog is denied.",
             "itemtype": "method",
             "name": "sendingActions.deny",
@@ -22500,7 +22511,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/go-to.js",
-            "line": 272,
+            "line": 277,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGoToMapCommandDialogComponent/sendingActions.approve:method\"}}'approve' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onApprove",
@@ -22509,7 +22520,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/go-to.js",
-            "line": 297,
+            "line": 302,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.deny:method\"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGoToMapCommandDialogComponent/sendingActions.deny:method\"}}'deny' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onDeny",
@@ -22518,7 +22529,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/go-to.js",
-            "line": 307,
+            "line": 312,
             "description": "Switch X and Y options",
             "itemtype": "method",
             "name": "actions.switchXY",
@@ -22527,7 +22538,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/go-to.js",
-            "line": 320,
+            "line": 325,
             "description": "Handles coordinate input textboxes keyPress events.",
             "itemtype": "method",
             "name": "actions.coordsInputKeyPress",
@@ -22536,7 +22547,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/go-to.js",
-            "line": 332,
+            "line": 337,
             "description": "Returns inner options transformed into 'go-to' map-command options.",
             "itemtype": "method",
             "name": "_getGoToOptions",
@@ -22549,14 +22560,14 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/go-to.js",
-            "line": 377,
+            "line": 382,
             "description": "Initializes component.",
             "class": "FlexberryGoToMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/go-to.js",
-            "line": 394,
+            "line": 399,
             "description": "Component's action invoking when dialog starts to show.",
             "itemtype": "method",
             "name": "sendingActions.beforeShow",
@@ -22565,7 +22576,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/go-to.js",
-            "line": 400,
+            "line": 405,
             "description": "Component's action invoking when dialog starts to hide.",
             "itemtype": "method",
             "name": "sendingActions.beforeHide",
@@ -22574,7 +22585,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/go-to.js",
-            "line": 406,
+            "line": 411,
             "description": "Component's action invoking when dialog is shown.",
             "itemtype": "method",
             "name": "sendingActions.show",
@@ -22583,7 +22594,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/go-to.js",
-            "line": 412,
+            "line": 417,
             "description": "Component's action invoking when dialog is hidden.",
             "itemtype": "method",
             "name": "sendingActions.hide",
@@ -22592,7 +22603,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/go-to.js",
-            "line": 418,
+            "line": 423,
             "description": "Component's action invoking when dialog is approved.",
             "itemtype": "method",
             "name": "sendingActions.approve",
@@ -22601,7 +22612,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/go-to.js",
-            "line": 424,
+            "line": 429,
             "description": "Component's action invoking when dialog is denied.",
             "itemtype": "method",
             "name": "sendingActions.deny",
@@ -23023,7 +23034,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 484,
+            "line": 491,
             "description": "Handles 'select-all-features' checkboxes 'change' action.\nSelects/deselects all founded features & checkboxes related to them.",
             "itemtype": "method",
             "name": "actions.onSelectAllFeaturesCheckboxChange",
@@ -23046,7 +23057,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 504,
+            "line": 511,
             "description": "Handles 'select-feature' checkbox 'change' action.\nSelects/deselects founded feature related to checkbox.",
             "itemtype": "method",
             "name": "actions.onSelectFeatureCheckboxChange",
@@ -23074,7 +23085,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 522,
+            "line": 529,
             "description": "Handles 'show-all-selected-features' button's 'click' action.\nShows selected features on map.",
             "itemtype": "method",
             "name": "actions.onShowAllFeaturesButtonClick",
@@ -23083,7 +23094,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 542,
+            "line": 549,
             "description": "Handles 'show-selected-feature' button's 'click' action.\nShows feature with the specified index.",
             "itemtype": "method",
             "name": "actions.onShowFeatureButtonClick",
@@ -23099,7 +23110,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 560,
+            "line": 567,
             "description": "Observer changes in available layers & in selected layer.\nRetrieves search options related to selected layer fro cache & remember them as current.",
             "itemtype": "method",
             "name": "_availableOrSelectedLayerDidChange",
@@ -23110,7 +23121,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 588,
+            "line": 595,
             "description": "Observes changes in founded features.\nCaches them in cache related to selected layer.",
             "itemtype": "method",
             "name": "_foundedFeaturesDidChange",
@@ -23121,7 +23132,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 623,
+            "line": 630,
             "description": "Shows specified features on map.",
             "itemtype": "method",
             "name": "_showFoundedFeatures",
@@ -23139,7 +23150,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 644,
+            "line": 651,
             "description": "Filter method for available layers.",
             "itemtype": "method",
             "name": "_layerCanBeSearched",
@@ -23161,14 +23172,14 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 656,
+            "line": 663,
             "description": "Initializes component.",
             "class": "FlexberrySearchMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 665,
+            "line": 672,
             "description": "Component's action invoking when dialog starts to show.",
             "itemtype": "method",
             "name": "sendingActions.beforeShow",
@@ -23177,7 +23188,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 671,
+            "line": 678,
             "description": "Component's action invoking when dialog starts to hide.",
             "itemtype": "method",
             "name": "sendingActions.beforeHide",
@@ -23186,7 +23197,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 677,
+            "line": 684,
             "description": "Component's action invoking when dialog is shown.",
             "itemtype": "method",
             "name": "sendingActions.show",
@@ -23195,7 +23206,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 683,
+            "line": 690,
             "description": "Component's action invoking when dialog is hidden.",
             "itemtype": "method",
             "name": "sendingActions.hide",
@@ -23204,7 +23215,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 689,
+            "line": 696,
             "description": "Component's action invoking when dialog is approved.",
             "itemtype": "method",
             "name": "sendingActions.approve",
@@ -23213,7 +23224,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 695,
+            "line": 702,
             "description": "Component's action invoking when dialog is denied.",
             "itemtype": "method",
             "name": "sendingActions.deny",
@@ -23222,7 +23233,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/search.js",
-            "line": 701,
+            "line": 708,
             "description": "Component's action invoking when dialog wants to show founded features on map.",
             "itemtype": "method",
             "name": "sendingActions.showFoundedFeatures",
@@ -31411,7 +31422,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 956,
+            "line": 959,
             "description": "Handles 'Delete buffer' button click.",
             "itemtype": "method",
             "name": "actions.deleteBuffer",
@@ -31420,7 +31431,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 966,
+            "line": 969,
             "description": "Handles 'Clear found items' button click.",
             "itemtype": "method",
             "name": "actions.onClearFoundItemClick",
@@ -31429,7 +31440,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 978,
+            "line": 981,
             "description": "Handles find intersecting polygons.",
             "itemtype": "method",
             "name": "actions.onFindIntersectPolygons",
@@ -31438,7 +31449,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1010,
+            "line": 1013,
             "description": "Handles 'Select all' checkbox click.",
             "itemtype": "method",
             "name": "actions.onSelectAllClick",
@@ -31454,7 +31465,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1020,
+            "line": 1023,
             "description": "Handles 'getData' action from flexberry-table.",
             "itemtype": "method",
             "name": "actions.onTabGetData",
@@ -31475,7 +31486,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1032,
+            "line": 1035,
             "description": "Handles tab panel moving.",
             "itemtype": "method",
             "name": "actions.onTabMove",
@@ -31491,7 +31502,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1062,
+            "line": 1065,
             "description": "Handles 'Delete selected items' button click.",
             "itemtype": "method",
             "name": "actions.onDeleteItemClick",
@@ -31507,7 +31518,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1083,
+            "line": 1086,
             "description": "Performs row editing.",
             "itemtype": "method",
             "name": "actions.onRowEdit",
@@ -31528,7 +31539,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1110,
+            "line": 1113,
             "description": "Handles row edit dialog's 'approve' action.",
             "itemtype": "method",
             "name": "actions.onEditRowDialogApprove",
@@ -31610,35 +31621,35 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1329,
+            "line": 1330,
             "description": "Handles new row attributes dialog's 'deny' action.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1349,
+            "line": 1350,
             "description": "Handles new row attributes dialog's 'hide' action.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1362,
+            "line": 1363,
             "description": "Handles edit row attributes dialog's 'deny' action.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1369,
+            "line": 1370,
             "description": "Handles edit row attributes dialog's 'hide' action.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1376,
+            "line": 1377,
             "description": "Handles a new geometry adding completion.",
             "params": [
                 {
@@ -31657,7 +31668,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1398,
+            "line": 1399,
             "description": "Handles a new geometry draw start.",
             "params": [
                 {
@@ -31676,7 +31687,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1431,
+            "line": 1432,
             "description": "Handles a new geometry adding by import completion.",
             "params": [
                 {
@@ -31695,7 +31706,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1443,
+            "line": 1444,
             "description": "Handles click on 'Difference polygon' button.",
             "params": [
                 {
@@ -31709,7 +31720,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1513,
+            "line": 1514,
             "description": "Handles click on 'Split geometry' button.",
             "params": [
                 {
@@ -31723,7 +31734,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1527,
+            "line": 1528,
             "description": "Handles click on 'Union polygon' button.",
             "itemtype": "method",
             "name": "actions.doCombinedPolygon",
@@ -31739,7 +31750,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1563,
+            "line": 1564,
             "description": "Handles move layer's object.",
             "params": [
                 {
@@ -31753,7 +31764,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1579,
+            "line": 1580,
             "description": "Handles move dialog's 'approve' action.",
             "params": [
                 {
@@ -31772,7 +31783,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1618,
+            "line": 1619,
             "description": "Selected or deselected all objects.",
             "params": [
                 {
@@ -31791,7 +31802,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1656,
+            "line": 1657,
             "description": "Update '_editComponentName'.",
             "params": [
                 {
@@ -31805,7 +31816,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1673,
+            "line": 1674,
             "description": "Delete layer by key.",
             "params": [
                 {
@@ -31839,7 +31850,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1700,
+            "line": 1701,
             "description": "Treatment selected and edited rows.",
             "params": [
                 {
@@ -31858,7 +31869,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1721,
+            "line": 1722,
             "description": "Delete layer feature by id.",
             "params": [
                 {
@@ -31877,7 +31888,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1757,
+            "line": 1758,
             "description": "Disables tool and split geometry.",
             "params": [
                 {
@@ -31891,7 +31902,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1859,
+            "line": 1860,
             "description": "Split splitter and split polygon each part splitter.",
             "params": [
                 {
@@ -31910,7 +31921,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1930,
+            "line": 1931,
             "description": "Split polygon.",
             "params": [
                 {
@@ -31929,7 +31940,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1995,
+            "line": 1996,
             "description": "Calculates new coordinates layer's feature after the move",
             "params": [
                 {
@@ -31958,7 +31969,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2019,
+            "line": 2020,
             "description": "Shows a dialog for entering the attributes  move of layer's feature.",
             "params": [
                 {
@@ -31972,7 +31983,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2032,
+            "line": 2033,
             "description": "Drag and drop.",
             "params": [
                 {
@@ -31986,14 +31997,14 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2052,
+            "line": 2053,
             "description": "Returns Leaflet.Editable instance.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2067,
+            "line": 2068,
             "description": "Overrides {{#crosslink \"LeafletZoomToFeatureMixin/_prepareLayer:method\"}} to make a copy of passed layer\nand apply a style to the layer to make it more visible.",
             "itemtype": "method",
             "name": "_prepareLayer",
@@ -32015,7 +32026,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2085,
+            "line": 2086,
             "description": "Shows a dialog for entering the attributes of the newly added layer.",
             "params": [
                 {
@@ -32034,7 +32045,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2113,
+            "line": 2114,
             "description": "Returns the available drawing tools according to the type of layer geometry.",
             "params": [
                 {
@@ -32048,7 +32059,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2140,
+            "line": 2141,
             "description": "Return geometry type.",
             "params": [
                 {
@@ -32062,7 +32073,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2167,
+            "line": 2168,
             "description": "Zooms map to the specified layer.",
             "params": [
                 {
@@ -32076,7 +32087,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2177,
+            "line": 2178,
             "description": "Initializes snapping for edited vertex.",
             "itemtype": "method",
             "name": "_startSnapping",
@@ -48792,27 +48803,27 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:518"
+            "line": " addon/components/layers/odata-vector-layer.js:525"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:920"
+            "line": " addon/components/layers/odata-vector-layer.js:927"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:959"
+            "line": " addon/components/layers/odata-vector-layer.js:966"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:1035"
+            "line": " addon/components/layers/odata-vector-layer.js:1042"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:1157"
+            "line": " addon/components/layers/odata-vector-layer.js:1164"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:1428"
+            "line": " addon/components/layers/odata-vector-layer.js:1435"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -48824,27 +48835,27 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:190"
+            "line": " addon/components/layers/wfs-layer.js:202"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:288"
+            "line": " addon/components/layers/wfs-layer.js:302"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:437"
+            "line": " addon/components/layers/wfs-layer.js:451"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:465"
+            "line": " addon/components/layers/wfs-layer.js:479"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:534"
+            "line": " addon/components/layers/wfs-layer.js:548"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:734"
+            "line": " addon/components/layers/wfs-layer.js:748"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -48860,27 +48871,27 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1304"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
             "line": " addon/components/map-commands-dialogs/export.js:1323"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1345"
+            "line": " addon/components/map-commands-dialogs/export.js:1342"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1397"
+            "line": " addon/components/map-commands-dialogs/export.js:1364"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1436"
+            "line": " addon/components/map-commands-dialogs/export.js:1416"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1524"
+            "line": " addon/components/map-commands-dialogs/export.js:1455"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/components/map-commands-dialogs/export.js:1546"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -49456,11 +49467,11 @@
         },
         {
             "message": "Missing item type\nHandles zoomend",
-            "line": " addon/components/layers/odata-vector-layer.js:1272"
+            "line": " addon/components/layers/odata-vector-layer.js:1279"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/layers/odata-vector-layer.js:1371"
+            "line": " addon/components/layers/odata-vector-layer.js:1378"
         },
         {
             "message": "Missing item type\nPerforms 'getFeature' request to WFS-service related to layer.",
@@ -49468,11 +49479,11 @@
         },
         {
             "message": "Missing item type\nHandles zoomend",
-            "line": " addon/components/layers/wfs-layer.js:599"
+            "line": " addon/components/layers/wfs-layer.js:613"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/layers/wfs-layer.js:682"
+            "line": " addon/components/layers/wfs-layer.js:696"
         },
         {
             "message": "Missing item type\nPerforms 'getFeatureInfo' request to WMS-service related to layer.",
@@ -49508,7 +49519,7 @@
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/layers-dialogs/attributes/edit.js:257"
+            "line": " addon/components/layers-dialogs/attributes/edit.js:264"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -50004,23 +50015,23 @@
         },
         {
             "message": "Missing item type\nComputes current scren approximate DPI.",
-            "line": " addon/components/map-commands-dialogs/export.js:1524"
+            "line": " addon/components/map-commands-dialogs/export.js:1546"
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/map-commands-dialogs/export.js:1835"
+            "line": " addon/components/map-commands-dialogs/export.js:1857"
         },
         {
             "message": "Missing item type\nInitializes component's DOM-related properties.",
-            "line": " addon/components/map-commands-dialogs/export.js:1879"
+            "line": " addon/components/map-commands-dialogs/export.js:1901"
         },
         {
             "message": "Missing item type\nCalled after a component has been rendered, both on initial render and in subsequent rerenders.",
-            "line": " addon/components/map-commands-dialogs/export.js:1916"
+            "line": " addon/components/map-commands-dialogs/export.js:1938"
         },
         {
             "message": "Missing item type\nDestroys component.",
-            "line": " addon/components/map-commands-dialogs/export.js:1925"
+            "line": " addon/components/map-commands-dialogs/export.js:1947"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -50032,7 +50043,7 @@
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/map-commands-dialogs/go-to.js:377"
+            "line": " addon/components/map-commands-dialogs/go-to.js:382"
         },
         {
             "message": "Missing item type\nAvailable layers.",
@@ -50052,7 +50063,7 @@
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/map-commands-dialogs/search.js:656"
+            "line": " addon/components/map-commands-dialogs/search.js:663"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -50440,111 +50451,111 @@
         },
         {
             "message": "Missing item type\nHandles new row attributes dialog's 'deny' action.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1329"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1330"
         },
         {
             "message": "Missing item type\nHandles new row attributes dialog's 'hide' action.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1349"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1350"
         },
         {
             "message": "Missing item type\nHandles edit row attributes dialog's 'deny' action.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1362"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1363"
         },
         {
             "message": "Missing item type\nHandles edit row attributes dialog's 'hide' action.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1369"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1370"
         },
         {
             "message": "Missing item type\nHandles a new geometry adding completion.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1376"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1377"
         },
         {
             "message": "Missing item type\nHandles a new geometry draw start.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1398"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1399"
         },
         {
             "message": "Missing item type\nHandles a new geometry adding by import completion.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1431"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1432"
         },
         {
             "message": "Missing item type\nHandles click on 'Difference polygon' button.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1443"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1444"
         },
         {
             "message": "Missing item type\nHandles click on 'Split geometry' button.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1513"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1514"
         },
         {
             "message": "Missing item type\nHandles move layer's object.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1563"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1564"
         },
         {
             "message": "Missing item type\nHandles move dialog's 'approve' action.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1579"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1580"
         },
         {
             "message": "Missing item type\nSelected or deselected all objects.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1618"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1619"
         },
         {
             "message": "Missing item type\nUpdate '_editComponentName'.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1656"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1657"
         },
         {
             "message": "Missing item type\nDelete layer by key.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1673"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1674"
         },
         {
             "message": "Missing item type\nTreatment selected and edited rows.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1700"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1701"
         },
         {
             "message": "Missing item type\nDelete layer feature by id.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1721"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1722"
         },
         {
             "message": "Missing item type\nDisables tool and split geometry.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1757"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1758"
         },
         {
             "message": "Missing item type\nSplit splitter and split polygon each part splitter.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1859"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1860"
         },
         {
             "message": "Missing item type\nSplit polygon.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1930"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1931"
         },
         {
             "message": "Missing item type\nCalculates new coordinates layer's feature after the move",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1995"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1996"
         },
         {
             "message": "Missing item type\nShows a dialog for entering the attributes  move of layer's feature.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2019"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2020"
         },
         {
             "message": "Missing item type\nDrag and drop.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2032"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2033"
         },
         {
             "message": "Missing item type\nReturns Leaflet.Editable instance.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2052"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2053"
         },
         {
             "message": "Missing item type\nShows a dialog for entering the attributes of the newly added layer.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2085"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2086"
         },
         {
             "message": "Missing item type\nReturns the available drawing tools according to the type of layer geometry.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2113"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2114"
         },
         {
             "message": "Missing item type\nReturn geometry type.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2140"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2141"
         },
         {
             "message": "Missing item type\nZooms map to the specified layer.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2167"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2168"
         },
         {
             "message": "Missing item type\nReference to component's template.",

@@ -583,6 +583,18 @@ export default BaseVectorLayer.extend({
     }
   },
 
+  _editLayer(layer) {
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    leafletObject.baseEditLayer(layer);
+
+    // Changes label when edit layer feature
+    if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;)) &amp;&amp; !Ember.isNone(this.get(&#x27;_leafletObject._labelsLayer&#x27;))) {
+      L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
+      layer._label = null;
+      this._createStringLabel(leafletObject._labelsLayer, [layer]);
+    }
+  },
+
   /**
     Removes all the layers from the group.
 
@@ -648,6 +660,8 @@ export default BaseVectorLayer.extend({
           wfsLayer.removeLayer = this.get(&#x27;_removeLayer&#x27;).bind(this);
           Ember.set(wfsLayer, &#x27;baseClearLayers&#x27;, wfsLayer.clearLayers);
           wfsLayer.clearLayers = this.get(&#x27;_clearLayers&#x27;).bind(this);
+          Ember.set(wfsLayer, &#x27;baseEditLayer&#x27;, wfsLayer.editLayer);
+          wfsLayer.editLayer = this.get(&#x27;_editLayer&#x27;).bind(this);
 
           wfsLayer.reload = this.get(&#x27;reload&#x27;).bind(this);
 
