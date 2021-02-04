@@ -5668,6 +5668,167 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-copy-object-test.jshint'
     assert.ok(true, 'unit/mixins/flexberry-map-model-api-copy-object-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/mixins/flexberry-map-model-api-copy-objects-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon) {
+
+  (0, _qunit.module)('Unit | Mixin | method copyObjects');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  var sourceLeafletLayer = L.featureGroup();
+  var destinationLeafletLayer = L.featureGroup();
+  var testPolygon = L.polygon([[1, 1], [5, 1], [2, 2], [3, 5]]);
+  testPolygon.feature = { properties: {} };
+  var smallPolygons = [testPolygon, testPolygon, testPolygon, testPolygon, testPolygon];
+
+  var bigPolygons = [];
+  for (var i = 0; i < 10000; i++) {
+    var polygon = L.polygon([[1, 1], [5, 1], [2, 2], [3, 5]]);
+    polygon.feature = { properties: {} };
+    bigPolygons.push(polygon);
+  }
+
+  var destinationLayerModel = _ember['default'].A({
+    settingsAsObject: {
+      typeGeometry: 'polygon'
+    }
+  });
+
+  (0, _qunit.test)('test method copyObjects on small array', function (assert) {
+    //Arrange
+    assert.expect(8);
+    var done = assert.async(1);
+
+    var getModelLayerFeature = function getModelLayerFeature() {
+      return _ember['default'].RSVP.resolve([{}, sourceLeafletLayer, smallPolygons]);
+    };
+
+    var getModelLeafletObject = function getModelLeafletObject() {
+      return [destinationLayerModel, destinationLeafletLayer];
+    };
+
+    var subject = mapApiMixinObject.create({
+      _getModelLayerFeature: function _getModelLayerFeature() {},
+      _getModelLeafletObject: function _getModelLeafletObject() {}
+    });
+    var getMLFeature = _sinon['default'].stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+    var getMLObject = _sinon['default'].stub(subject, '_getModelLeafletObject', getModelLeafletObject);
+
+    //Act
+    var result = subject.copyObjects({
+      layerId: '1',
+      objectIds: ['1'],
+      shouldRemove: true
+    }, {
+      layerId: '2',
+      properties: {}
+    });
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Check result instance of Promise');
+    result.then(function (data) {
+      assert.deepEqual(data[0].getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]], 'Check latLngs');
+      assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
+      assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Check call second arg to method _getModelLayerFeature');
+      assert.equal(getMLFeature.args[0][2], true, 'Check call third arg to method _getModelLayerFeature');
+      assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
+      assert.equal(getMLObject.args[0][0], '2', 'Check call first arg to method _getModelLeafletObject');
+      done();
+      getMLFeature.restore();
+      getMLObject.restore();
+    });
+  });
+
+  (0, _qunit.test)('test method copyObjects on big array', function (assert) {
+    //Arrange
+    assert.expect(6);
+    var done = assert.async(1);
+
+    var getModelLeafletObject = function getModelLeafletObject() {
+      return [destinationLayerModel, destinationLeafletLayer];
+    };
+
+    var _loadingFeaturesByPackages = function _loadingFeaturesByPackages() {
+      return [_ember['default'].RSVP.resolve([null, sourceLeafletLayer, bigPolygons.slice(0, 2000)]), _ember['default'].RSVP.resolve([null, sourceLeafletLayer, bigPolygons.slice(2001, 4000)]), _ember['default'].RSVP.resolve([null, sourceLeafletLayer, bigPolygons.slice(4001, 6000)]), _ember['default'].RSVP.resolve([null, sourceLeafletLayer, bigPolygons.slice(6001, 8000)]), _ember['default'].RSVP.resolve([null, sourceLeafletLayer, bigPolygons.slice(8001, 9999)])];
+    };
+
+    var subject = mapApiMixinObject.create({
+      _getModelLeafletObject: function _getModelLeafletObject() {},
+      loadingFeaturesByPackages: function loadingFeaturesByPackages() {}
+    });
+    var getMLObject = _sinon['default'].stub(subject, '_getModelLeafletObject', getModelLeafletObject);
+    var getLFByPackage = _sinon['default'].stub(subject, 'loadingFeaturesByPackages', _loadingFeaturesByPackages);
+    var objectIds = [];
+    for (var i = 0; i < 101; i++) {
+      objectIds.push(String(i));
+    }
+
+    //Act
+    var result = subject.copyObjects({
+      layerId: '1',
+      objectIds: objectIds,
+      shouldRemove: true
+    }, {
+      layerId: '2',
+      properties: {}
+    });
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Check result instance of Promise');
+    result.then(function (data) {
+      assert.deepEqual(data[0].getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]], 'Check latLngs');
+      assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
+      assert.equal(getMLObject.args[0][0], '2', 'Check call first arg to method _getModelLeafletObject');
+      assert.equal(getLFByPackage.callCount, 1, 'Check call count to method loadingFeaturesByPackages');
+      assert.equal(getLFByPackage.args[0][0], '1', 'Check call first arg to method loadingFeaturesByPackages');
+      done();
+      getMLObject.restore();
+      getLFByPackage.restore();
+    });
+  });
+
+  (0, _qunit.test)('test method copyObjects on not correct parmeters', function (assert) {
+    //Arrange
+    assert.expect(2);
+    var done = assert.async(1);
+
+    var subject = mapApiMixinObject.create({});
+
+    //Act
+    var result = subject.copyObjects({
+      layerIdx: '1',
+      objectId: ['2'],
+      shouldRemove: true
+    }, {
+      layerIds: '2',
+      properties: {}
+    });
+
+    //Assert
+    assert.ok(result instanceof _ember['default'].RSVP.Promise, 'Check result instance of Promise');
+    result.then(function () {})['catch'](function (message) {
+      assert.equal(message, 'Check the parameters you are passing', 'Check the error message');
+      done();
+    });
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-copy-objects-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-copy-objects-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-copy-objects-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-copy-objects-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-copy-objects-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-copy-objects-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/mixins/flexberry-map-model-api-cosmos-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/flexberry-map-model-api-cosmos', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'dummy/tests/helpers/start-app', 'ember-flexberry-data', 'qunit', 'sinon'], function (exports, _ember, _emberFlexberryGisMixinsFlexberryMapModelApiCosmos, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _dummyTestsHelpersStartApp, _emberFlexberryData, _qunit, _sinon) {
 
   var app = undefined;
