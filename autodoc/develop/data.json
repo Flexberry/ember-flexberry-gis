@@ -44768,6 +44768,31 @@
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
             "line": 766,
+            "description": "To copy Objects from Source layer to Destination.",
+            "itemtype": "method",
+            "name": "copyObject",
+            "params": [
+                {
+                    "name": "source",
+                    "description": "Object with source settings\n{\n  layerId, //{string} Layer ID\n  objectIds, //{array} Objects ID\n  shouldRemove //{Bool} Should remove object from source layer\n}",
+                    "type": "Object"
+                },
+                {
+                    "name": "destination",
+                    "description": "Object with destination settings\n{\n  layerId, //{string} Layer ID\n  properties //{Object} Properties of new object.\n}",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Object in Destination layer",
+                "type": "Promise"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 867,
             "description": "Calculate the area of intersection between object A and objects in array B.",
             "itemtype": "method",
             "name": "getIntersectionArea",
@@ -44807,7 +44832,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 823,
+            "line": 924,
             "description": "Cleans the service layer.",
             "itemtype": "method",
             "name": "clearServiceLayer",
@@ -44819,7 +44844,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 833,
+            "line": 934,
             "description": "Create image for layer object.",
             "itemtype": "method",
             "name": "getSnapShot",
@@ -44839,7 +44864,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 952,
+            "line": 1053,
             "description": "Download image for layer object.",
             "itemtype": "method",
             "name": "downloadSnapShot",
@@ -44859,7 +44884,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 989,
+            "line": 1090,
             "description": "Get a rhumb object for [LineString, MultiLineString, Polygon, MultiPolygon]. Parameters is object in GeoJSON\nformat and name of coordinate reference system. Calculates rhumb between points. Use jsts libraries to calculate distance between points.\nDistance calculation in units of coordinate reference system. Names of direction is [NE, SE, NW, SW]. Angle calculation in degree.\nReturns array of object:\n\n```javascript\n[{\n  type - type of object is [LineString, Polygon],\n  crs - name of coordinate reference system of start point,\n  startPoint - coordinates of start point,\n  skip - how many rhumb skip from beginning (always 0),\n  points - array objects of rhumbs,\n  hole - if this part is hole then true else false. Only Polygon and MultiPolygon have it.\n}]\n```\n\nObjects of rhumbs consist from angle, distance and direction of rhumb. Example:\n\n```javascript\n{\n  rhumb: 'NE',\n  angle: 45,\n  distance: 1000\n}\n```\n\nExample of method call:\n\n```javascript\nvar feature = {\n  type: \"Feature\",\n  geometry:\n  {\n    \"type\": \"Polygon\",\n    \"coordinates\": [\n      [[56.09419, 58.08895], [56.093588, 58.088632], [56.094269, 58.088632], [56.094269, 58.088902], [56.09419, 58.08895]]\n    ]\n  }\n};\n\nvar result = mapApi.mapModel.getRhumb(feature, 'EPSG:4326');\n```",
             "itemtype": "method",
             "name": "getRhumb",
@@ -44884,7 +44909,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1147,
+            "line": 1248,
             "description": "Add a layer to the group.",
             "itemtype": "method",
             "name": "layerToGroup",
@@ -44908,7 +44933,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1169,
+            "line": 1270,
             "description": "Edit object layer.",
             "itemtype": "method",
             "name": "editLayerObject",
@@ -44943,7 +44968,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1227,
+            "line": 1328,
             "description": "Upload file.",
             "itemtype": "method",
             "name": "uploadFile",
@@ -44963,7 +44988,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1257,
+            "line": 1358,
             "description": "Convert coordinates of object to wgs84, or other crsName.",
             "itemtype": "method",
             "name": "convertObjectCoordinates",
@@ -44985,7 +45010,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1356,
+            "line": 1457,
             "description": "Get coordinates point.",
             "itemtype": "method",
             "name": "getCoordPoint",
@@ -45025,7 +45050,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1429,
+            "line": 1530,
             "description": "Loading features by packages",
             "itemtype": "method",
             "name": "loadingFeaturesByPackages",
@@ -45050,7 +45075,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1456,
+            "line": 1557,
             "description": "Get merged geometry. Loads objects from a layers by packages of 100 units each.\nWaits when all objects successfully load. Transform objects into JSTS objects.\nFirst it merges geometry of objects on first layer using _getMulti method, then on second layer.\nResult of combining objects in each layer is merged into a common geometry using createMulti method.",
             "itemtype": "method",
             "name": "getMergedGeometry",
@@ -45090,7 +45115,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1514,
+            "line": 1615,
             "description": "Add to array points and feature.",
             "itemtype": "method",
             "name": "_addToArrayPointsAndFeature",
@@ -45115,7 +45140,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1548,
+            "line": 1649,
             "description": "Difference layers.",
             "itemtype": "method",
             "name": "differenceLayers",
@@ -45140,7 +45165,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1630,
+            "line": 1731,
             "description": "Compare layers.",
             "itemtype": "method",
             "name": "compareLayers",
@@ -45175,7 +45200,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1730,
+            "line": 1831,
             "description": "Exponentiation.",
             "itemtype": "method",
             "name": "_pointAmplifier",
@@ -45188,7 +45213,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1739,
+            "line": 1840,
             "description": "Transform coordinates in points.",
             "itemtype": "method",
             "name": "_coordsToPoints",
@@ -45208,7 +45233,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1759,
+            "line": 1860,
             "description": "Transform points in coordinates.",
             "itemtype": "method",
             "name": "_pointsToCoords",
@@ -45228,7 +45253,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1795,
+            "line": 1896,
             "description": "Download file.",
             "itemtype": "method",
             "name": "downloadFile",
@@ -49175,11 +49200,11 @@
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:1147"
+            "line": " addon/mixins/flexberry-map-model-api.js:1248"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:1147"
+            "line": " addon/mixins/flexberry-map-model-api.js:1248"
         },
         {
             "message": "replacing incorrect tag: returns with return",
