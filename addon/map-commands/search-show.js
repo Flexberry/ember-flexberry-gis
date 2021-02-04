@@ -80,6 +80,7 @@ export default SearchMapCommand.extend({
     // so we will use timeout until better solution will be found.
     Ember.run(() => {
       featuresLayer.clearLayers();
+      let minimalVisibleZoom = features[0].leafletLayer.minZoom;
       setTimeout(() => {
         // Show new features.
         features.forEach((feature) => {
@@ -92,11 +93,21 @@ export default SearchMapCommand.extend({
             leafletLayer.bindPopup(getFeatureDisplayProperty(feature, featuresPropertiesSettings));
           }
 
+          if (leafletLayer.minZoom > minimalVisibleZoom) {
+            minimalVisibleZoom = leafletLayer.minZoom;
+          }
+
           leafletLayer.addTo(featuresLayer);
         });
 
         let leafletMap = this.get('leafletMap');
-        leafletMap.fitBounds(featuresLayer.getBounds());
+        let layearBounds = featuresLayer.getBounds();
+
+        if (leafletMap.getBoundsZoom(layearBounds) < minimalVisibleZoom) {
+          leafletMap.setView(layearBounds.getCenter(), minimalVisibleZoom);
+        } else {
+          leafletMap.fitBounds(layearBounds);
+        }
       }, 10);
     });
   }

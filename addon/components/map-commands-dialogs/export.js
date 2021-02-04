@@ -1290,6 +1290,25 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   }),
 
   /**
+    Observers changes in properties that affect the ability to show scale map.
+
+    @method _scaleControlDidChange
+    @private
+  */
+  _scaleControlDidChange: Ember.observer('_options.scaleControl', function () {
+    let scaleVisible = this.get('_options.scaleControl');
+    let leafletMap = this.get('leafletMap');
+    let $leafletMap = Ember.$(leafletMap._container);
+    let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
+
+    if (scaleVisible) {
+      Ember.$('.leaflet-bottom.leaflet-left', $leafletMapControls).children().show();
+    } else {
+      Ember.$('.leaflet-bottom.leaflet-left', $leafletMapControls).children().hide();
+    }
+  }),
+
+  /**
     Observers changes in properties that affect the ability to show pages.
 
     @method _pageNumberDidChange
@@ -1475,7 +1494,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
     Ember.$('.leaflet-top.leaflet-left', $leafletMapControls).children().hide();
     Ember.$('.leaflet-top.leaflet-right', $leafletMapControls).children().hide();
-    Ember.$('.leaflet-bottom.leaflet-left', $leafletMapControls).children().hide();
+    if (!this.get('_options.scaleControl')) {
+      Ember.$('.leaflet-bottom.leaflet-left', $leafletMapControls).children().hide();
+    }
+
     Ember.$('.leaflet-bottom.leaflet-right', $leafletMapControls).children().hide();
 
     // Invalidate map size and then fit it's bounds.
