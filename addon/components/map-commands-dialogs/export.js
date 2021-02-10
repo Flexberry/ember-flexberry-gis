@@ -1660,6 +1660,79 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   },
 
   /**
+    Load image for tile layer.
+
+    @method loadTile
+  */
+  loadTile(url, pos, size) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      const im = new Image();
+      im.crossOrigin = '';
+      im.onload = function() {
+        resolve({
+          img: im,
+          pos: pos,
+          size: size
+        });
+      };
+
+      im.onerror = function(e) {
+        resolve();
+      };
+
+      im.src = url;
+    });
+  },
+
+  /**
+    Export map's tile layer.
+
+    @method exportTileLayer
+  */
+  exportTileLayer(layer) {
+    const leafletMap = this.get('leafletMap');
+    const bounds = leafletMap.getPixelBounds();
+    const zoom = leafletMap.getZoom();
+    const tileSize = layer.options.tileSize;
+
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      if (zoom > layer.options.maxZoom || zoom < layer.options.minZoom) {
+        resolve();
+      }
+
+      const tileBounds = L.bounds(
+        bounds.min.divideBy(tileSize)._floor(),
+        bounds.max.divideBy(tileSize)._floor());
+      const tilePoints = [];
+      const tilePromises = [];
+
+      for (let j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
+        for (let i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
+          tilePoints.push(new L.Point(i, j));
+        }
+      }
+
+      tilePoints.forEach((tilePoint) => {
+        const originalTilePoint = tilePoint.clone();
+
+        const tilePos = originalTilePoint
+          .scaleBy(new L.Point(tileSize, tileSize))
+          .subtract(bounds.min);
+
+        const url = layer.getTileUrl(tilePoint);
+        tilePromises.push(this.loadTile(url, tilePos, tileSize));
+      });
+
+      Ember.RSVP.all(tilePromises).then((result) => {
+        resolve({
+          tiles: result,
+          zIndex: layer.options.zIndex
+        });
+      });
+    });
+  },
+
+  /**
     Export's map with respect to selected export options.
 
     @method export
@@ -1711,46 +1784,36 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let $leafletMapWrapper = $leafletMap.parent();
     let leafletMapWrapperBackground = $leafletMapWrapper.css(`background`);
 
-    let $leafletMarkers = Ember.$('.leaflet-pane.leaflet-marker-pane', $leafletMap);
-    let $leafletShadows = Ember.$('.leaflet-pane.leaflet-shadow-pane', $leafletMap);
-    $leafletMarkers.attr('data-html2canvas-ignore', 'true');
-    $leafletMarkers.css({ 'width': $leafletMap.css('width'), 'height': $leafletMap.css('height') });
-    $leafletShadows.attr('data-html2canvas-ignore', 'true');
-    $leafletShadows.css({ 'width': $leafletMap.css('width'), 'height': $leafletMap.css('height') });
+    const tilePromises = [];
+    leafletMap.eachLayer((l) => {
+      if (l instanceof L.TileLayer) {
+        tilePromises.push(this.exportTileLayer(l));
+      }
+    });
 
-    // Export only map without markers.
-    return window.html2canvas($leafletMap[0], {
-      useCORS: true
-    }).then((canvas) => {
-      $leafletShadows.removeAttr('data-html2canvas-ignore');
-      let drawContext = canvas.getContext('2d');
+    return Ember.RSVP.all(tilePromises).then((result) => {
+      const tileLayers = result.filter(r => r && r.tiles.length > 0).sort(function(a, b) {
+        return a.zIndex - b.zIndex;
+      });
 
-      // Export marker's shadows.
-      return window.html2canvas($leafletShadows[0], {
-        useCORS: true
-      }).then((shadowsCanvas) => {
-        drawContext.drawImage(shadowsCanvas, 0, 0);
-        $leafletMarkers.removeAttr('data-html2canvas-ignore');
-        $leafletShadows.css({ 'width': 0, 'height': 0 });
-
-        // Export markers.
-        return window.html2canvas($leafletMarkers[0], {
-          useCORS: true
-        }).then((markersCanvas) => {
-          drawContext.drawImage(markersCanvas, 0, 0);
-          $leafletMarkers.css({ 'width': 0, 'height': 0 });
-
-          // Then we hide map container.
-          $leafletMap.hide();
-          $leafletMap.attr('data-html2canvas-ignore', 'true');
-
-          // And set exported map's DataURL as map wrapper's background image.
-          $leafletMapWrapper.css(`background`, `url(${canvas.toDataURL('image/png')})`);
-
-          // Now we export whole sheet of paper (with caption and already exported map).
-          return exportSheetOfPaper();
+      const canvasSize = leafletMap.getSize();
+      const canvas = document.createElement('canvas');
+      canvas.width = canvasSize.x;
+      canvas.height = canvasSize.y;
+      const ctx = canvas.getContext('2d');
+      tileLayers.forEach(layer => {
+        layer.tiles.forEach(tile => {
+          if (!Ember.isNone(tile)) {
+            ctx.drawImage(tile.img, tile.pos.x, tile.pos.y, tile.size, tile.size);
+          }
         });
       });
+
+      $leafletMap.hide();
+      $leafletMap.attr('data-html2canvas-ignore', 'true');
+      $leafletMapWrapper.css(`background`, `url(${canvas.toDataURL('image/png')})`);
+
+      return exportSheetOfPaper();
     }).then((exportedSheetOfPaper) => {
       // Restore map wrapper's original background.
       $leafletMapWrapper.css(`background`, leafletMapWrapperBackground);
