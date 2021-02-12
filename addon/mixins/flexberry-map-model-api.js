@@ -764,6 +764,107 @@ export default Ember.Mixin.create(SnapDraw, {
   },
 
   /**
+    To copy Objects from Source layer to Destination.
+    @method copyObject
+    @param {Object} source Object with source settings
+    {
+      layerId, //{string} Layer ID
+      objectIds, //{array} Objects ID
+      shouldRemove //{Bool} Should remove object from source layer
+    }
+    @param {Object} destination Object with destination settings
+    {
+      layerId, //{string} Layer ID
+      properties //{Object} Properties of new object.
+    }
+    @return {Promise} Object in Destination layer
+  */
+  copyObjects(source, destination) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      if (Ember.isNone(source.layerId) || Ember.isNone(source.objectIds) || Ember.isNone(destination.layerId)) {
+        reject('Check the parameters you are passing');
+      } else {
+        let loadPromise;
+        if (source.objectIds.length > 100) {
+          loadPromise = new Ember.RSVP.all(this.loadingFeaturesByPackages(source.layerId, source.objectIds));
+        } else {
+          loadPromise =  this._getModelLayerFeature(source.layerId, source.objectIds, source.shouldRemove);
+        }
+
+        loadPromise.then((res) => {
+          let destFeatures = [];
+          let sourceFeatures = [];
+          let [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
+          let sourceLeafletLayer;
+          let objects = [];
+          if (!Ember.isArray(res[0])) {
+            sourceLeafletLayer = res[1];
+            objects = objects.concat(res[2]);
+          } else {
+            res.forEach(result => {
+              if (Ember.isNone(sourceLeafletLayer)) {
+                sourceLeafletLayer = result[1];
+              }
+
+              objects = objects.concat(result[2]);
+            });
+          }
+
+          objects.forEach(sourceFeature => {
+            let destFeature;
+            switch (destLayerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
+              case 'polygon':
+                destFeature = L.polygon(sourceFeature.getLatLngs());
+                break;
+              case 'polyline':
+                destFeature = L.polyline(sourceFeature.getLatLngs());
+                break;
+              case 'marker':
+                destFeature = L.marker(sourceFeature.getLatLng());
+                break;
+              default:
+                reject(`Unknown layer type: '${destLayerModel.get('settingsAsObject.typeGeometry')}`);
+            }
+
+            if (!Ember.isNone(destFeature)) {
+              destFeature.feature = {
+                properties: Object.assign({}, sourceFeature.feature.properties, destination.properties || {})
+              };
+
+              if (sourceLeafletLayer.geometryField) {
+                delete destFeature.feature.properties[sourceLeafletLayer.geometryField];
+              }
+
+              if (destLeafletLayer.geometryField) {
+                delete destFeature.feature.properties[destLeafletLayer.geometryField];
+              }
+
+              destFeatures.push(destFeature);
+              if (source.shouldRemove) {
+                sourceFeatures.push(sourceFeature);
+              }
+            }
+
+          });
+
+          let e = { layers: destFeatures, results: Ember.A() };
+          destLeafletLayer.fire('load', e);
+
+          Ember.RSVP.allSettled(e.results).then(() => {
+            if (source.shouldRemove) {
+              sourceFeatures.forEach(sourceFeature => {
+                sourceLeafletLayer.removeLayer(sourceFeature);
+              });
+            }
+
+            resolve(destFeatures);
+          });
+        }).catch(e => reject(e));
+      }
+    });
+  },
+
+  /**
     Calculate the area of intersection between object A and objects in array B.
     @method getIntersectionArea
     @param {String} layerAId First layer ID.

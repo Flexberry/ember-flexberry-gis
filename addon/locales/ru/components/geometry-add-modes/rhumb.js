@@ -19,6 +19,7 @@ export default {
   'object-types-polygon': 'Полигон',
   'object-types-line': 'Линия',
   'cannot-change-permission': 'Один румб должен быть обязательно выбран в качестве начала объекта.',
+  'placeholderNoValue': '(нет значения)',
   'NE': 'СВ',
   'SE': 'ЮВ',
   'SW': 'ЮЗ',
