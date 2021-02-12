@@ -765,7 +765,7 @@ export default BaseVectorLayer.extend({
     @param {Object} modelAdapter
     @return {Boolean}
   */
-  registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter) {
+  /*registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter) {
     if (!Ember.isNone(model) && !Ember.isNone(modelMixin) && !Ember.isNone(modelSerializer) && !Ember.isNone(modelAdapter)) {
       let modelName = this.get('modelName');
       Ember.getOwner(this).unregister(`model:${modelName}`, model);
@@ -782,7 +782,7 @@ export default BaseVectorLayer.extend({
     } else {
       return false;
     }
-  },
+  },*/
 
   /**
     Checks that mixin, model, serializer and adapter registered in the application.
@@ -790,14 +790,14 @@ export default BaseVectorLayer.extend({
     @method checkRegisteredModelMixinSerializerAdapter
     @return {Boolean}
   */
-  checkRegisteredModelMixinSerializerAdapter() {
+  /*checkRegisteredModelMixinSerializerAdapter() {
     let modelName = this.get('modelName');
     let modelRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`model:${modelName}`));
     let mixinRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`mixin:${modelName}`));
     let serializerRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`serializer:${modelName}`));
     let adapterRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`adapter:${modelName}`));
     return modelRegistered && mixinRegistered && serializerRegistered && adapterRegistered;
-  },
+  },*/
 
   /**
     Creates models in recursive.
@@ -859,15 +859,38 @@ export default BaseVectorLayer.extend({
       let projectionName = this.get('projectionName');
       let metadataUrl = this.get('metadataUrl');
 
-      this.сreateModelHierarchy(metadataUrl, modelName).then(({ model, dataModel, modelMixin }) => {
-        model.defineProjection(projectionName, modelName, this.createProjection(dataModel));
+      let modelRegistered = Ember.getOwner(this)._lookupFactory(`model:${modelName}`);
+      let mixinRegistered = Ember.getOwner(this)._lookupFactory(`mixin:${modelName}`);
+      let serializerRegistered = Ember.getOwner(this)._lookupFactory(`serializer:${modelName}`);
+      let adapterRegistered = Ember.getOwner(this)._lookupFactory(`adapter:${modelName}`);
+
+      if (Ember.isNone(serializerRegistered)) {
         let modelSerializer = this.createSerializer();
+        Ember.getOwner(this).register(`serializer:${modelName}`, modelSerializer);
+      }
+
+      if (Ember.isNone(adapterRegistered)) {
         let modelAdapter = this.createAdapterForModel();
-        this.registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter);
-        resolve('Create dynamic model: ' + modelName);
-      }).catch((e) => {
-        reject('Can\'t create dynamic model: ' + modelName + '. Error: ' + e);
-      });
+        Ember.getOwner(this).register(`adapter:${modelName}`, modelAdapter);
+      }
+
+      if (Ember.isNone(modelRegistered) || Ember.isNone(mixinRegistered)) {
+        this.сreateModelHierarchy(metadataUrl, modelName).then(({ model, dataModel, modelMixin }) => {
+          model.defineProjection(projectionName, modelName, this.createProjection(dataModel));
+          if (Ember.isNone(modelRegistered)) {
+            Ember.getOwner(this).register(`model:${modelName}`, model);
+          }
+
+          if (Ember.isNone(mixinRegistered)) {
+            Ember.getOwner(this).register(`mixin:${modelName}`, modelMixin);
+          }
+          resolve('Create dynamic model: ' + modelName);
+        }).catch((e) => {
+          reject('Can\'t create dynamic model: ' + modelName + '. Error: ' + e);
+        });
+      } else {
+        resolve('Model already registered: ' + modelName);
+      }
     });
   },
 
@@ -942,7 +965,7 @@ export default BaseVectorLayer.extend({
   */
   createVectorLayer() {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      if (this.get('dynamicModel') && !this.checkRegisteredModelMixinSerializerAdapter()) {
+      if (this.get('dynamicModel')) {
         this.createDynamicModel().then(() => {
           let layer = this._createVectorLayer();
           resolve(layer);
