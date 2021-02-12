@@ -49,7 +49,7 @@ test('test method copyObjects on small array', function(assert) {
   let getMLObject = sinon.stub(subject, '_getModelLeafletObject', getModelLeafletObject);
 
   //Act
-  let result = subject.copyObjects({
+  let result = subject.copyObjectsBatch({
     layerId: '1',
     objectIds: ['1'],
     shouldRemove: true
@@ -102,7 +102,7 @@ test('test method copyObjects on big array', function(assert) {
   }
 
   //Act
-  let result = subject.copyObjects({
+  let result = subject.copyObjectsBatch({
     layerId: '1',
     objectIds: objectIds,
     shouldRemove: true
@@ -133,7 +133,7 @@ test('test method copyObjects on not correct parmeters', function(assert) {
   let subject = mapApiMixinObject.create({});
 
   //Act
-  let result = subject.copyObjects({
+  let result = subject.copyObjectsBatch({
     layerIdx: '1',
     objectId: ['2'],
     shouldRemove: true

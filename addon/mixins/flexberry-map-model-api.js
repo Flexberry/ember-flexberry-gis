@@ -765,7 +765,7 @@ export default Ember.Mixin.create(SnapDraw, {
 
   /**
     To copy Objects from Source layer to Destination.
-    @method copyObject
+    @method copyObjectsBatch
     @param {Object} source Object with source settings
     {
       layerId, //{string} Layer ID
@@ -775,11 +775,11 @@ export default Ember.Mixin.create(SnapDraw, {
     @param {Object} destination Object with destination settings
     {
       layerId, //{string} Layer ID
-      properties //{Object} Properties of new object.
+      withProperties //{Bool} To copy objects with it properties.
     }
     @return {Promise} Object in Destination layer
   */
-  copyObjects(source, destination) {
+  copyObjectsBatch(source, destination) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (Ember.isNone(source.layerId) || Ember.isNone(source.objectIds) || Ember.isNone(destination.layerId)) {
         reject('Check the parameters you are passing');
@@ -827,16 +827,17 @@ export default Ember.Mixin.create(SnapDraw, {
             }
 
             if (!Ember.isNone(destFeature)) {
-              destFeature.feature = {
-                properties: Object.assign({}, sourceFeature.feature.properties, destination.properties || {})
-              };
+              destFeature.feature = { properties: {} };
+              if (destination.withProperties) {
+                destFeature.feature.properties = Object.assign({}, sourceFeature.feature.properties);
 
-              if (sourceLeafletLayer.geometryField) {
-                delete destFeature.feature.properties[sourceLeafletLayer.geometryField];
-              }
+                if (sourceLeafletLayer.geometryField) {
+                  delete destFeature.feature.properties[sourceLeafletLayer.geometryField];
+                }
 
-              if (destLeafletLayer.geometryField) {
-                delete destFeature.feature.properties[destLeafletLayer.geometryField];
+                if (destLeafletLayer.geometryField) {
+                  delete destFeature.feature.properties[destLeafletLayer.geometryField];
+                }
               }
 
               destFeatures.push(destFeature);
