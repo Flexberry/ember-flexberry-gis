@@ -16787,13 +16787,22 @@
             "line": 174,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.approve:method\"}}'approve' action{{/crossLink}}.",
             "itemtype": "method",
+            "name": "actions.onApproveError",
+            "class": "FlexberryEditLayerDialogComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/edit.js",
+            "line": 183,
+            "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.approve:method\"}}'approve' action{{/crossLink}}.",
+            "itemtype": "method",
             "name": "actions.onApprove",
             "class": "FlexberryEditLayerDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers-dialogs/edit.js",
-            "line": 186,
+            "line": 195,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.deny:method\"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.deny:method\"}}'deny' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onDeny",
@@ -16802,7 +16811,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/edit.js",
-            "line": 196,
+            "line": 205,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.beforeShow:method\"}}'flexberry-dialog' component's 'beforeShow' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.beforeShow:method\"}}'beforeShow' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onBeforeShow",
@@ -16811,7 +16820,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/edit.js",
-            "line": 206,
+            "line": 215,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.beforeHide:method\"}}'flexberry-dialog' component's 'beforeHide' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.beforeHide:method\"}}'beforeHide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onBeforeHide",
@@ -16820,7 +16829,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/edit.js",
-            "line": 216,
+            "line": 225,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.show:method\"}}'flexberry-dialog' component's 'show' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.show:method\"}}'show' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onShow",
@@ -16829,7 +16838,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/edit.js",
-            "line": 226,
+            "line": 235,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.hide:method\"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryEditLayerDialogComponent/sendingActions.hide:method\"}}'hide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHide",
@@ -16838,7 +16847,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/edit.js",
-            "line": 236,
+            "line": 245,
             "description": "Handles onUploadFile.",
             "itemtype": "method",
             "name": "actions.onUploadFile",
@@ -16847,7 +16856,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/edit.js",
-            "line": 246,
+            "line": 255,
             "description": "Component's action invoking when dialog starts to show.",
             "itemtype": "method",
             "name": "sendingActions.beforeShow",
@@ -16856,7 +16865,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/edit.js",
-            "line": 252,
+            "line": 261,
             "description": "Component's action invoking when dialog starts to hide.",
             "itemtype": "method",
             "name": "sendingActions.beforeHide",
@@ -16865,7 +16874,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/edit.js",
-            "line": 258,
+            "line": 267,
             "description": "Component's action invoking when dialog is shown.",
             "itemtype": "method",
             "name": "sendingActions.show",
@@ -16874,7 +16883,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/edit.js",
-            "line": 264,
+            "line": 273,
             "description": "Component's action invoking when dialog is hidden.",
             "itemtype": "method",
             "name": "sendingActions.hide",
@@ -16883,7 +16892,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/edit.js",
-            "line": 270,
+            "line": 279,
             "description": "Component's action invoking when dialog is approved.",
             "itemtype": "method",
             "name": "sendingActions.approve",
@@ -16906,7 +16915,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/edit.js",
-            "line": 278,
+            "line": 287,
             "description": "Component's action invoking when dialog is denied.",
             "itemtype": "method",
             "name": "sendingActions.deny",
