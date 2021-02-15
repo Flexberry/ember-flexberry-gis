@@ -10,7 +10,7 @@ let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiMixin);
 let sourceLeafletLayer = L.featureGroup();
 let destinationLeafletLayer = L.featureGroup();
 let testPolygon = L.polygon([[1, 1], [5, 1], [2, 2], [3, 5]]);
-testPolygon.feature = { properties: {} };
+testPolygon.feature = { properties: { hello: 'word' } };
 let smallPolygons = [
   testPolygon,
   testPolygon,
@@ -32,9 +32,9 @@ let destinationLayerModel = Ember.A({
   }
 });
 
-test('test method copyObjects on small array', function(assert) {
+test('test method copyObjects on small array (with properties)', function(assert) {
   //Arrange
-  assert.expect(8);
+  assert.expect(9);
   let done = assert.async(1);
 
   let getModelLayerFeature = () => { return Ember.RSVP.resolve([{}, sourceLeafletLayer, smallPolygons]); };
@@ -55,13 +55,14 @@ test('test method copyObjects on small array', function(assert) {
     shouldRemove: true
   }, {
     layerId: '2',
-    properties: {}
+    withProperties: true
   });
 
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise, 'Check result instance of Promise');
   result.then((data)=> {
     assert.deepEqual(data[0].getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]], 'Check latLngs');
+    assert.deepEqual(data[0].feature.properties.hello, 'word', 'Check properties');
     assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
     assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');
     assert.deepEqual(getMLFeature.args[0][1], ['1'], 'Check call second arg to method _getModelLayerFeature');
@@ -74,9 +75,9 @@ test('test method copyObjects on small array', function(assert) {
   });
 });
 
-test('test method copyObjects on big array', function(assert) {
+test('test method copyObjects on big array (without properties)', function(assert) {
   //Arrange
-  assert.expect(6);
+  assert.expect(7);
   let done = assert.async(1);
 
   let getModelLeafletObject = () => { return [destinationLayerModel, destinationLeafletLayer]; };
@@ -108,13 +109,14 @@ test('test method copyObjects on big array', function(assert) {
     shouldRemove: true
   }, {
     layerId: '2',
-    properties: {}
+    withProperties: false
   });
 
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise, 'Check result instance of Promise');
   result.then((data)=> {
     assert.deepEqual(data[0].getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]], 'Check latLngs');
+    assert.deepEqual(data[0].feature.properties, {}, 'Check properties');
     assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
     assert.equal(getMLObject.args[0][0], '2', 'Check call first arg to method _getModelLeafletObject');
     assert.equal(getLFByPackage.callCount, 1, 'Check call count to method loadingFeaturesByPackages');
@@ -139,7 +141,7 @@ test('test method copyObjects on not correct parmeters', function(assert) {
     shouldRemove: true
   }, {
     layerIds: '2',
-    properties: {}
+    withProperties: true
   });
 
   //Assert
