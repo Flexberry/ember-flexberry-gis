@@ -15,20 +15,6 @@ let odataServerFake;
 let bounds;
 let store;
 let responseBatchUpdate;
-let testModelMixin = Ember.Mixin.create({
-  name: DS.attr('string', { defaultValue: '' }),
-  shape: DS.attr('json')
-});
-
-let testModel = Projection.Model.extend(testModelMixin);
-testModel.defineProjection('TestModelL', 'test-model', {
-  name: Projection.attr(''),
-  shape: Projection.attr('')
-});
-
-let testSerializer = Serializer.Odata.extend({
-  primaryKey: '__PrimaryKey'
-});
 
 moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata vector layer', {
   unit: true,
@@ -44,16 +30,28 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
   ],
   beforeEach: function () {
     app = startApp();
+    let testModelMixin = Ember.Mixin.create({
+      name: DS.attr('string', { defaultValue: '' }),
+      shape: DS.attr('json')
+    });
+
+    let testModel = Projection.Model.extend(testModelMixin);
+    testModel.defineProjection('TestModelL', 'test-model', {
+      name: Projection.attr(''),
+      shape: Projection.attr('')
+    });
+
+    let testSerializer = Serializer.Odata.extend({
+      primaryKey: '__PrimaryKey'
+    });
 
     this.register('model:test-model', testModel);
     this.register('mixin:test-model', testModelMixin);
     this.register('serializer:test-model', testSerializer);
-    //this.register('adapter:test-model', testSerializer);
 
     app.register('model:test-model', testModel);
     app.register('mixin:test-model', testModelMixin);
     app.register('serializer:test-model', testSerializer);
-    //app.register('adapter:test-model', testSerializer);
 
     options = {
       geometryField: 'shape',
