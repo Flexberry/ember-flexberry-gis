@@ -15,6 +15,20 @@ let odataServerFake;
 let bounds;
 let store;
 let responseBatchUpdate;
+let testModelMixin = Ember.Mixin.create({
+  name: DS.attr('string', { defaultValue: '' }),
+  shape: DS.attr('json')
+});
+
+let testModel = Projection.Model.extend(testModelMixin);
+testModel.defineProjection('TestModelL', 'test-model', {
+  name: Projection.attr(''),
+  shape: Projection.attr('')
+});
+
+let testSerializer = Serializer.Odata.extend({
+  primaryKey: '__PrimaryKey'
+});
 
 moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata vector layer', {
   unit: true,
@@ -31,28 +45,15 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
   beforeEach: function () {
     app = startApp();
 
-    let testModelMixin = Ember.Mixin.create({
-      name: DS.attr('string', { defaultValue: '' }),
-      shape: DS.attr('json')
-    });
-
-    let testModel = Projection.Model.extend(testModelMixin);
-    testModel.defineProjection('TestModelL', 'test-model', {
-      name: Projection.attr(''),
-      shape: Projection.attr('')
-    });
-
-    let testSerializer = Serializer.Odata.extend({
-      primaryKey: '__PrimaryKey'
-    });
-
     this.register('model:test-model', testModel);
     this.register('mixin:test-model', testModelMixin);
     this.register('serializer:test-model', testSerializer);
+    //this.register('adapter:test-model', testSerializer);
 
     app.register('model:test-model', testModel);
     app.register('mixin:test-model', testModelMixin);
     app.register('serializer:test-model', testSerializer);
+    //app.register('adapter:test-model', testSerializer);
 
     options = {
       geometryField: 'shape',
@@ -620,7 +621,7 @@ test('test method createAdapterForModel() without odataUrl', function(assert) {
 });
 
 test('test method createDynamicModel() with json', function(assert) {
-  assert.expect(24);
+  assert.expect(19);
   var done = assert.async(1);
   Ember.$.extend(param, {
     'odataUrl': 'http://localhost:6500/odata/',
@@ -629,7 +630,6 @@ test('test method createDynamicModel() with json', function(assert) {
   });
   jsonModel.parentModelName = null;
   let component = this.subject(param);
-  let spyUnregister = sinon.spy(Ember.getOwner(this), 'unregister');
   let spyRegister = sinon.spy(Ember.getOwner(this), 'register');
   let spyCreateAdapterForModel = sinon.spy(component, 'createAdapterForModel');
   let spyCreateModel = sinon.spy(component, 'createModel');
@@ -639,6 +639,8 @@ test('test method createDynamicModel() with json', function(assert) {
   let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
   let stubAjax = sinon.stub(Ember.$, 'ajax');
   stubAjax.yieldsTo('success', jsonModel);
+  let _lookupFactoryStub = sinon.stub(Ember.getOwner(this), '_lookupFactory');
+  _lookupFactoryStub.returns(null);
 
   component.createDynamicModel().then(() => {
     assert.equal(spyCreateAdapterForModel.callCount, 1);
@@ -647,31 +649,24 @@ test('test method createDynamicModel() with json', function(assert) {
     assert.equal(spyCreateMixin.callCount, 1);
     assert.equal(spyCreateSerializer.callCount, 1);
 
-    assert.equal(spyUnregister.callCount, 4);
-    assert.equal(spyUnregister.firstCall.args[0], 'model:test-model');
-    assert.equal(spyUnregister.secondCall.args[0], 'mixin:test-model');
-    assert.equal(spyUnregister.thirdCall.args[0], 'serializer:test-model');
-    assert.equal(spyUnregister.lastCall.args[0], 'adapter:test-model');
-
     assert.equal(spyRegister.callCount, 4);
-    assert.equal(spyRegister.firstCall.args[0], 'model:test-model');
-    assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
-    assert.equal(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
-    assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
-    assert.equal(spyRegister.secondCall.args[0], 'mixin:test-model');
-    assert.equal(Object.values(spyRegister.secondCall.args[1].mixins[0].properties).length, 2);
-    assert.ok(spyRegister.secondCall.args[1].mixins[0].properties.hasOwnProperty('nomer'));
-    assert.ok(spyRegister.secondCall.args[1].mixins[0].properties.hasOwnProperty('shape'));
-    assert.equal(spyRegister.thirdCall.args[0], 'serializer:test-model');
-    assert.equal(spyRegister.lastCall.args[0], 'adapter:test-model');
-    assert.ok(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
-    assert.equal(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
+    assert.equal(spyRegister.thirdCall.args[0], 'model:test-model');
+    assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
+    assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
+    assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
+    assert.equal(spyRegister.lastCall.args[0], 'mixin:test-model');
+    assert.equal(Object.values(spyRegister.lastCall.args[1].mixins[0].properties).length, 2);
+    assert.ok(spyRegister.lastCall.args[1].mixins[0].properties.hasOwnProperty('nomer'));
+    assert.ok(spyRegister.lastCall.args[1].mixins[0].properties.hasOwnProperty('shape'));
+    assert.equal(spyRegister.firstCall.args[0], 'serializer:test-model');
+    assert.equal(spyRegister.secondCall.args[0], 'adapter:test-model');
+    assert.ok(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
+    assert.equal(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
 
     assert.equal(spyCreateModelHierarchy.callCount, 1);
 
     done();
     spyRegister.restore();
-    spyUnregister.restore();
     spyCreateAdapterForModel.restore();
     spyCreateModel.restore();
     spyCreateProjection.restore();
@@ -679,11 +674,12 @@ test('test method createDynamicModel() with json', function(assert) {
     spyCreateSerializer.restore();
     spyCreateModelHierarchy.restore();
     stubAjax.restore();
+    _lookupFactoryStub.restore();
   });
 });
 
 test('test method createDynamicModel() with json with parent', function(assert) {
-  assert.expect(27);
+  assert.expect(22);
   var done = assert.async(1);
   Ember.$.extend(param, {
     'odataUrl': 'http://localhost:6500/odata/',
@@ -692,7 +688,6 @@ test('test method createDynamicModel() with json with parent', function(assert) 
   });
 
   let component = this.subject(param);
-  let spyUnregister = sinon.spy(Ember.getOwner(this), 'unregister');
   let spyRegister = sinon.spy(Ember.getOwner(this), 'register');
   let spyCreateAdapterForModel = sinon.spy(component, 'createAdapterForModel');
   let spyCreateModel = sinon.spy(component, 'createModel');
@@ -700,6 +695,8 @@ test('test method createDynamicModel() with json with parent', function(assert) 
   let spyCreateMixin = sinon.spy(component, 'createMixin');
   let spyCreateSerializer = sinon.spy(component, 'createSerializer');
   let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+  let _lookupFactoryStub = sinon.stub(Ember.getOwner(this), '_lookupFactory');
+  _lookupFactoryStub.returns(null);
 
   jsonModel.parentModelName = 'Polygon32640';
   let parentJsonModel = {
@@ -742,31 +739,24 @@ test('test method createDynamicModel() with json with parent', function(assert) 
     assert.equal(stubAjax.getCall(0).args[0].url, 'assert/felxberry/models/test-model.json');
     assert.equal(stubAjax.getCall(1).args[0].url, 'assert/felxberry/models/Polygon32640.json');
 
-    assert.equal(spyUnregister.callCount, 4);
-    assert.equal(spyUnregister.firstCall.args[0], 'model:test-model');
-    assert.equal(spyUnregister.secondCall.args[0], 'mixin:test-model');
-    assert.equal(spyUnregister.thirdCall.args[0], 'serializer:test-model');
-    assert.equal(spyUnregister.lastCall.args[0], 'adapter:test-model');
-
     assert.equal(spyRegister.callCount, 4);
-    assert.equal(spyRegister.firstCall.args[0], 'model:test-model');
-    assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
-    assert.equal(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
-    assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
-    assert.equal(spyRegister.secondCall.args[0], 'mixin:test-model');
-    assert.equal(Object.values(spyRegister.secondCall.args[1].mixins[0].properties).length, 2);
-    assert.ok(spyRegister.secondCall.args[1].mixins[0].properties.hasOwnProperty('nomer'));
-    assert.ok(spyRegister.secondCall.args[1].mixins[0].properties.hasOwnProperty('shape'));
-    assert.equal(spyRegister.thirdCall.args[0], 'serializer:test-model');
-    assert.equal(spyRegister.lastCall.args[0], 'adapter:test-model');
-    assert.ok(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
-    assert.equal(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
+    assert.equal(spyRegister.thirdCall.args[0], 'model:test-model');
+    assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
+    assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
+    assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
+    assert.equal(spyRegister.lastCall.args[0], 'mixin:test-model');
+    assert.equal(Object.values(spyRegister.lastCall.args[1].mixins[0].properties).length, 2);
+    assert.ok(spyRegister.lastCall.args[1].mixins[0].properties.hasOwnProperty('nomer'));
+    assert.ok(spyRegister.lastCall.args[1].mixins[0].properties.hasOwnProperty('shape'));
+    assert.equal(spyRegister.firstCall.args[0], 'serializer:test-model');
+    assert.equal(spyRegister.secondCall.args[0], 'adapter:test-model');
+    assert.ok(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
+    assert.equal(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
 
     assert.equal(spyCreateModelHierarchy.callCount, 2);
 
     done();
     spyRegister.restore();
-    spyUnregister.restore();
     spyCreateAdapterForModel.restore();
     spyCreateModel.restore();
     spyCreateProjection.restore();
@@ -774,6 +764,7 @@ test('test method createDynamicModel() with json with parent', function(assert) 
     spyCreateSerializer.restore();
     stubAjax.restore();
     spyCreateModelHierarchy.restore();
+    _lookupFactoryStub.restore();
   });
 });
 
@@ -781,10 +772,32 @@ test('test method createDynamicModel() without json', function(assert) {
   assert.expect(1);
   var done = assert.async(1);
   let component = this.subject(param);
+  let _lookupFactoryStub = sinon.stub(Ember.getOwner(this), '_lookupFactory');
+  _lookupFactoryStub.withArgs('model:test-model').returns(null);
+  _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
+  _lookupFactoryStub.withArgs('serializer:test-model').returns({});
+
+  let registerStub = sinon.stub(Ember.getOwner(this), 'register');
+  registerStub.returns({});
 
   component.createDynamicModel().catch((error) => {
     assert.equal(error, 'Can\'t create dynamic model: test-model. Error: ModelName and metadataUrl is empty');
     done();
+    _lookupFactoryStub.restore();
+  });
+});
+
+test('test method createDynamicModel() already registered', function(assert) {
+  assert.expect(1);
+  var done = assert.async(1);
+  let component = this.subject(param);
+  let _lookupFactoryStub = sinon.stub(Ember.getOwner(this), '_lookupFactory');
+  _lookupFactoryStub.returns(1);
+
+  component.createDynamicModel().then((msg) => {
+    assert.equal(msg, 'Model already registered: test-model');
+    done();
+    _lookupFactoryStub.restore();
   });
 });
 
@@ -814,6 +827,14 @@ test('test method createVectorLayer() without dynamicModel', function(assert) {
   let spyAjax = sinon.spy(Ember.$, 'ajax');
   let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
 
+  let _lookupFactoryStub = sinon.stub(Ember.getOwner(this), '_lookupFactory');
+  _lookupFactoryStub.withArgs('model:test-model').returns(null);
+  _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
+  _lookupFactoryStub.withArgs('serializer:test-model').returns({});
+
+  let registerStub = sinon.stub(Ember.getOwner(this), 'register');
+  registerStub.returns({});
+
   component.createVectorLayer().then((layer) => {
     assert.ok(layer);
     assert.equal(spyContinueLoad.callCount, 1);
@@ -828,6 +849,8 @@ test('test method createVectorLayer() without dynamicModel', function(assert) {
     spyAjax.restore();
     spyCreateDynamicModel.restore();
     spyCreateModelHierarchy.restore();
+    _lookupFactoryStub.restore();
+    registerStub.restore();
   });
 });
 
@@ -847,11 +870,19 @@ test('test method createVectorLayer() with dynamicModel=true', function(assert) 
   stubAjax.yieldsTo('success', jsonModel);
   let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
 
+  let _lookupFactoryStub = sinon.stub(Ember.getOwner(this), '_lookupFactory');
+  _lookupFactoryStub.withArgs('model:test-model').returns(null);
+  _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
+  _lookupFactoryStub.withArgs('serializer:test-model').returns({});
+
+  let registerStub = sinon.stub(Ember.getOwner(this), 'register');
+  registerStub.returns({});
+
   component.createVectorLayer().then((layer) => {
     assert.ok(layer);
-    assert.equal(spyContinueLoad.callCount, 1);
-    assert.equal(spyContinueLoad.getCall(0).args[0], layer);
-    assert.equal(_createVectorLayerSpy.callCount, 1);
+    assert.equal(spyContinueLoad.callCount, 2);
+    assert.equal(spyContinueLoad.getCall(1).args[0], layer);
+    assert.equal(_createVectorLayerSpy.callCount, 2);
     assert.equal(stubAjax.callCount, 1);
     assert.equal(stubAjax.getCall(0).args[0].url, 'assert/felxberry/models/test-model.json');
     assert.equal(spyCreateDynamicModel.callCount, 1);
@@ -862,6 +893,8 @@ test('test method createVectorLayer() with dynamicModel=true', function(assert) 
     spyCreateDynamicModel.restore();
     stubAjax.restore();
     spyCreateModelHierarchy.restore();
+    _lookupFactoryStub.restore();
+    registerStub.restore();
   });
 });
 

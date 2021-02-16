@@ -763,50 +763,6 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-    Registers mixin, model, projections, serializer and adapter in the application.
-
-    @method registerModelMixinSerializerAdapter
-    @param {Object} model
-    @param {Object} modelMixin
-    @param {Object} modelSerializer
-    @param {Object} modelAdapter
-    @return {Boolean}
-  */
-  /*registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter) {
-    if (!Ember.isNone(model) && !Ember.isNone(modelMixin) && !Ember.isNone(modelSerializer) && !Ember.isNone(modelAdapter)) {
-      let modelName = this.get('modelName');
-      Ember.getOwner(this).unregister(`model:${modelName}`, model);
-      Ember.getOwner(this).unregister(`mixin:${modelName}`, modelMixin);
-      Ember.getOwner(this).unregister(`serializer:${modelName}`, modelSerializer);
-      Ember.getOwner(this).unregister(`adapter:${modelName}`, modelAdapter);
-
-      Ember.getOwner(this).register(`model:${modelName}`, model);
-      Ember.getOwner(this).register(`mixin:${modelName}`, modelMixin);
-      Ember.getOwner(this).register(`serializer:${modelName}`, modelSerializer);
-      Ember.getOwner(this).register(`adapter:${modelName}`, modelAdapter);
-
-      return true;
-    } else {
-      return false;
-    }
-  },*/
-
-  /**
-    Checks that mixin, model, serializer and adapter registered in the application.
-
-    @method checkRegisteredModelMixinSerializerAdapter
-    @return {Boolean}
-  */
-  /*checkRegisteredModelMixinSerializerAdapter() {
-    let modelName = this.get('modelName');
-    let modelRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`model:${modelName}`));
-    let mixinRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`mixin:${modelName}`));
-    let serializerRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`serializer:${modelName}`));
-    let adapterRegistered = !Ember.isNone(Ember.getOwner(this)._lookupFactory(`adapter:${modelName}`));
-    return modelRegistered && mixinRegistered && serializerRegistered && adapterRegistered;
-  },*/
-
-  /**
     Creates models in recursive.
 
     @method сreateModelHierarchy
@@ -891,6 +847,7 @@ export default BaseVectorLayer.extend({
           if (Ember.isNone(mixinRegistered)) {
             Ember.getOwner(this).register(`mixin:${modelName}`, modelMixin);
           }
+
           resolve('Create dynamic model: ' + modelName);
         }).catch((e) => {
           reject('Can\'t create dynamic model: ' + modelName + '. Error: ' + e);
