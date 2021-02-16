@@ -788,7 +788,7 @@ export default Ember.Mixin.create(SnapDraw, {
         if (source.objectIds.length > 100) {
           loadPromise = new Ember.RSVP.all(this.loadingFeaturesByPackages(source.layerId, source.objectIds));
         } else {
-          loadPromise =  this._getModelLayerFeature(source.layerId, source.objectIds, source.shouldRemove);
+          loadPromise =  this._getModelLayerFeature(source.layerId, source.objectIds);
         }
 
         loadPromise.then((res) => {
