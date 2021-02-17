@@ -790,12 +790,12 @@ export default Ember.Mixin.create(SnapDraw, {
           let destFeatures = [];
           let sourceFeatures = [];
           let [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
-          let sourceLeafletLayer = res[0][1];
+          let [sourceModel, sourceLeafletLayer] = this._getModelLeafletObject(source.layerId);
           let objects = [];
           if (source.shouldRemove) {
-            Object.values(sourceLeafletLayer._layers).forEach(object => {
-              if (source.objectIds.indexOf(object.model.id) !== -1) {
-                objects.push(object);
+            sourceLeafletLayer.eachLayer(shape => {
+              if (source.objectIds.indexOf(this._getLayerFeatureId(sourceModel, shape)) !== -1) {
+                objects.push(shape);
               }
             });
           } else {
