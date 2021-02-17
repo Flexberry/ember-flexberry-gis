@@ -607,7 +607,7 @@ export default BaseVectorLayer.extend({
 
         leafletObject.loadFeatures(filter).then(() => {
           resolve(leafletObject);
-        });
+        }).catch(mes => reject(mes));
       } else {
         resolve(leafletObject);
       }
