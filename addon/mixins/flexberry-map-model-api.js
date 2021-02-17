@@ -784,28 +784,22 @@ export default Ember.Mixin.create(SnapDraw, {
       if (Ember.isNone(source.layerId) || Ember.isNone(source.objectIds) || Ember.isNone(destination.layerId)) {
         reject('Check the parameters you are passing');
       } else {
-        let loadPromise;
-        if (source.objectIds.length > 100) {
-          loadPromise = new Ember.RSVP.all(this.loadingFeaturesByPackages(source.layerId, source.objectIds));
-        } else {
-          loadPromise =  this._getModelLayerFeature(source.layerId, source.objectIds);
-        }
+        let loadPromise = new Ember.RSVP.all(this.loadingFeaturesByPackages(source.layerId, source.objectIds, source.shouldRemove));
 
         loadPromise.then((res) => {
           let destFeatures = [];
           let sourceFeatures = [];
           let [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
-          let sourceLeafletLayer;
+          let sourceLeafletLayer = res[0][1];
           let objects = [];
-          if (!Ember.isArray(res[0])) {
-            sourceLeafletLayer = res[1];
-            objects = objects.concat(res[2]);
+          if (source.shouldRemove) {
+            Object.values(sourceLeafletLayer._layers).forEach(object => {
+              if (source.objectIds.indexOf(object.model.id) !== -1) {
+                objects.push(object);
+              }
+            });
           } else {
             res.forEach(result => {
-              if (Ember.isNone(sourceLeafletLayer)) {
-                sourceLeafletLayer = result[1];
-              }
-
               objects = objects.concat(result[2]);
             });
           }
@@ -1535,7 +1529,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @param {Array} objectIds Object IDs.
     @return {Promise}
   */
-  loadingFeaturesByPackages(layerId, objectIds) {
+  loadingFeaturesByPackages(layerId, objectIds, shouldRemove = false) {
     let packageSize = 100;
 
     let layerPromises = [];
@@ -1548,7 +1542,7 @@ export default Ember.Mixin.create(SnapDraw, {
         objectsPackage.push(objectIds[i]);
       }
 
-      layerPromises.push(this._getModelLayerFeature(layerId, objectsPackage));
+      layerPromises.push(this._getModelLayerFeature(layerId, objectsPackage, shouldRemove));
       startPackage = endPackage;
     }
 
