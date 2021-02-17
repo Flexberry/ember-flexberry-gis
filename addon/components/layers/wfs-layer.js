@@ -220,12 +220,13 @@ export default BaseVectorLayer.extend({
             pointToLayer: that.options.pointToLayer
           });
 
-          if (typeof that.options.style === "function") {
+          if (typeof that.options.style === 'function') {
             layers.forEach(function (element) {
               element.state = that.state.exist;
               if (element.setStyle) {
                 element.setStyle(that.options.style(element));
               }
+
               that.addLayer(element);
             });
           } else {
@@ -341,7 +342,7 @@ export default BaseVectorLayer.extend({
           wfsLayer.leafletMap = leafletMap;
           let load = this.continueLoad(wfsLayer);
           wfsLayer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
-          wfsLayer.loadFeatures = this.get("_loadFeatures").bind(wfsLayer);
+          wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);
           resolve(wfsLayer);
         })
         .once('error', (e) => {
