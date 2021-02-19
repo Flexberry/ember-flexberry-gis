@@ -1058,7 +1058,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       return null;
     }
 
-    const regex = /^([0-9]+[.][0-9]+) ([0-9]+[.][0-9]+)/gm;
+    const regex = /^([-]*[0-9]+[.][0-9]+) ([-]*[0-9]+[.][0-9]+)/gm;
     let lines = coordinates.split(&#x27;\n&#x27;);
     let result = [];
 
@@ -1089,8 +1089,12 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
             }
 
             let crs = this.get(&#x27;settings.layerCRS.code&#x27;);
-            let cordsToConvert = [parseFloat(m[2]), parseFloat(m[1])];
-            let cords = this._projectCoordinates(crs, baseCrs, cordsToConvert);
+            let cordsToConvert = [parseFloat(m[1]), parseFloat(m[2])];
+            let cords = cordsToConvert;
+            if (crs !== &#x27;EPSG:4326&#x27;) {
+              cords = this._projectCoordinates(crs, &#x27;EPSG:4326&#x27;, cordsToConvert);
+            }
+
             mas.push(cords);
           }
         }

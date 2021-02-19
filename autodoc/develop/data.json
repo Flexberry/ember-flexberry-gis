@@ -10262,7 +10262,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 699,
+            "line": 703,
             "description": "Projects coordinate pair from one crs to another.",
             "itemtype": "method",
             "name": "_projectCoordinates",
@@ -10292,7 +10292,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 719,
+            "line": 723,
             "description": "Get the depth of the array.",
             "itemtype": "method",
             "name": "_countDimensions",
@@ -10312,7 +10312,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 730,
+            "line": 734,
             "description": "Get coordinate line.",
             "itemtype": "method",
             "name": "_coordinatesToString",
@@ -10328,7 +10328,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 787,
+            "line": 791,
             "description": "Define if line contains more than one coordinate pair.",
             "itemtype": "method",
             "name": "_isSinglePairInLine",
@@ -10348,7 +10348,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 812,
+            "line": 816,
             "description": "Update avaliable types for current tab",
             "itemtype": "method",
             "name": "_updateAvaliableTypes",
@@ -10357,7 +10357,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 829,
+            "line": 833,
             "description": "Component's action invoking when new geometry was added.",
             "itemtype": "method",
             "name": "sendingActions.complete",
@@ -48757,15 +48757,15 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/geometry-add-modes/manual.js:699"
+            "line": " addon/components/geometry-add-modes/manual.js:703"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/geometry-add-modes/manual.js:719"
+            "line": " addon/components/geometry-add-modes/manual.js:723"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/geometry-add-modes/manual.js:787"
+            "line": " addon/components/geometry-add-modes/manual.js:791"
         },
         {
             "message": "replacing incorrect tag: returns with return",
