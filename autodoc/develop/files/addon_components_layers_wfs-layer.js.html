@@ -596,6 +596,76 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Load features by filter and return promise.
+
+    @method _loadFeatures
+    @param filter {L.Filter} filter on loaded features
+    @returns {RSVP.Promise}.
+  */
+  _loadFeatures(filter) {
+    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+      var that = this;
+
+      L.Util.request({
+        url: this.options.url,
+        data: L.XmlUtil.serializeXmlDocumentString(that.getFeature(filter)),
+        headers: this.options.headers || {},
+        withCredentials: this.options.withCredentials,
+        success: function (responseText) {
+          // If some exception occur, WFS-service can response successfully, but with ExceptionReport,
+          // and such situation must be handled.
+          var exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
+          if (exceptionReport) {
+            that.fire(&#x27;error&#x27;, {
+              error: new Error(exceptionReport.message)
+            });
+
+            return that;
+          }
+
+          // Request was truly successful (without exception report),
+          // so convert response to layers.
+          var layers = that.readFormat.responseToLayers(responseText, {
+            coordsToLatLng: that.options.coordsToLatLng,
+            pointToLayer: that.options.pointToLayer
+          });
+
+          if (typeof that.options.style === &#x27;function&#x27;) {
+            layers.forEach(function (element) {
+              element.state = that.state.exist;
+              if (element.setStyle) {
+                element.setStyle(that.options.style(element));
+              }
+
+              that.addLayer(element);
+            });
+          } else {
+            layers.forEach(function (element) {
+              element.state = that.state.exist;
+              that.addLayer(element);
+            });
+            that.setStyle(that.options.style);
+          }
+
+          that.fire(&#x27;load&#x27;, {
+            responseText: responseText,
+            layers: layers
+          });
+          resolve(that);
+          return that;
+        },
+        error: function (errorMessage) {
+          that.fire(&#x27;error&#x27;, {
+            error: new Error(errorMessage)
+          });
+          reject(errorMessage);
+          return that;
+        }
+      });
+    });
+  },
+
+  /**
     Removes all the layers from the group.
 
     @method _clearLayers
@@ -682,7 +752,7 @@ export default BaseVectorLayer.extend({
           wfsLayer.leafletMap = leafletMap;
           let load = this.continueLoad(wfsLayer);
           wfsLayer.promiseLoadLayer = load &amp;&amp; load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
-
+          wfsLayer.loadFeatures = this.get(&#x27;_loadFeatures&#x27;).bind(wfsLayer);
           resolve(wfsLayer);
         })
         .once(&#x27;error&#x27;, (e) =&gt; {
@@ -945,10 +1015,9 @@ export default BaseVectorLayer.extend({
           }
         }
 
-        leafletObject.loadFeatures(filter);
-        leafletObject.once(&#x27;load&#x27;, () =&gt; {
+        leafletObject.loadFeatures(filter).then(() =&gt; {
           resolve(leafletObject);
-        });
+        }).catch(mes =&gt; reject(mes));
       } else {
         resolve(leafletObject);
       }
