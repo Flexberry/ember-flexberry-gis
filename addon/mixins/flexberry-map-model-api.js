@@ -765,7 +765,7 @@ export default Ember.Mixin.create(SnapDraw, {
 
   /**
     To copy Objects from Source layer to Destination.
-    @method copyObject
+    @method copyObjectsBatch
     @param {Object} source Object with source settings
     {
       layerId, //{string} Layer ID
@@ -775,37 +775,31 @@ export default Ember.Mixin.create(SnapDraw, {
     @param {Object} destination Object with destination settings
     {
       layerId, //{string} Layer ID
-      properties //{Object} Properties of new object.
+      withProperties //{Bool} To copy objects with it properties.
     }
     @return {Promise} Object in Destination layer
   */
-  copyObjects(source, destination) {
+  copyObjectsBatch(source, destination) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (Ember.isNone(source.layerId) || Ember.isNone(source.objectIds) || Ember.isNone(destination.layerId)) {
         reject('Check the parameters you are passing');
       } else {
-        let loadPromise;
-        if (source.objectIds.length > 100) {
-          loadPromise = new Ember.RSVP.all(this.loadingFeaturesByPackages(source.layerId, source.objectIds));
-        } else {
-          loadPromise =  this._getModelLayerFeature(source.layerId, source.objectIds, source.shouldRemove);
-        }
+        let loadPromise = new Ember.RSVP.all(this.loadingFeaturesByPackages(source.layerId, source.objectIds, source.shouldRemove));
 
         loadPromise.then((res) => {
           let destFeatures = [];
           let sourceFeatures = [];
           let [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
-          let sourceLeafletLayer;
+          let [sourceModel, sourceLeafletLayer] = this._getModelLeafletObject(source.layerId);
           let objects = [];
-          if (!Ember.isArray(res[0])) {
-            sourceLeafletLayer = res[1];
-            objects = objects.concat(res[2]);
+          if (source.shouldRemove) {
+            sourceLeafletLayer.eachLayer(shape => {
+              if (source.objectIds.indexOf(this._getLayerFeatureId(sourceModel, shape)) !== -1) {
+                objects.push(shape);
+              }
+            });
           } else {
             res.forEach(result => {
-              if (Ember.isNone(sourceLeafletLayer)) {
-                sourceLeafletLayer = result[1];
-              }
-
               objects = objects.concat(result[2]);
             });
           }
@@ -827,16 +821,17 @@ export default Ember.Mixin.create(SnapDraw, {
             }
 
             if (!Ember.isNone(destFeature)) {
-              destFeature.feature = {
-                properties: Object.assign({}, sourceFeature.feature.properties, destination.properties || {})
-              };
+              destFeature.feature = { properties: {} };
+              if (destination.withProperties) {
+                destFeature.feature.properties = Object.assign({}, sourceFeature.feature.properties);
 
-              if (sourceLeafletLayer.geometryField) {
-                delete destFeature.feature.properties[sourceLeafletLayer.geometryField];
-              }
+                if (sourceLeafletLayer.geometryField) {
+                  delete destFeature.feature.properties[sourceLeafletLayer.geometryField];
+                }
 
-              if (destLeafletLayer.geometryField) {
-                delete destFeature.feature.properties[destLeafletLayer.geometryField];
+                if (destLeafletLayer.geometryField) {
+                  delete destFeature.feature.properties[destLeafletLayer.geometryField];
+                }
               }
 
               destFeatures.push(destFeature);
@@ -1534,7 +1529,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @param {Array} objectIds Object IDs.
     @return {Promise}
   */
-  loadingFeaturesByPackages(layerId, objectIds) {
+  loadingFeaturesByPackages(layerId, objectIds, shouldRemove = false) {
     let packageSize = 100;
 
     let layerPromises = [];
@@ -1547,7 +1542,7 @@ export default Ember.Mixin.create(SnapDraw, {
         objectsPackage.push(objectIds[i]);
       }
 
-      layerPromises.push(this._getModelLayerFeature(layerId, objectsPackage));
+      layerPromises.push(this._getModelLayerFeature(layerId, objectsPackage, shouldRemove));
       startPackage = endPackage;
     }
 

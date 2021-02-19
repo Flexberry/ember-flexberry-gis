@@ -153,7 +153,6 @@ test('getLayerFeatures() with options showExisting = false and continueLoading =
         results: Ember.A()
       };
       component._leafletObject = res.target;
-
       component.getLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Get feature of layers with showExisting = false and continueLoading = true');
         done();
@@ -224,6 +223,7 @@ test('loadLayerFeatures() with options showExisting = false', function(assert) {
       };
       component._leafletObject = res.target;
 
+      component._leafletObject.loadFeatures = () => new Ember.RSVP.resolve();
       component.loadLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Load feature of layers with showExisting = false');
         done();
@@ -261,6 +261,7 @@ test('loadLayerFeatures() with options showExisting = true', function(assert) {
 
       component._leafletObject = res.target;
 
+      component._leafletObject.loadFeatures = () => new Ember.RSVP.resolve();
       component.loadLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Load feature of layers with showExisting = true');
         done();
@@ -295,6 +296,27 @@ test('loadLayerFeatures() with options showExisting = false, call 2 times', func
         results: Ember.A()
       };
       component._leafletObject = res.target;
+      component._leafletObject.loadFeatures = function (filter) {
+        return new Ember.RSVP.Promise(resolve => {
+          var that = this;
+
+          L.Util.request({
+            url: this.options.url,
+            data: L.XmlUtil.serializeXmlDocumentString(that.getFeature(filter)),
+            success: function (responseText) {
+              var layers = that.readFormat.responseToLayers(responseText, {
+                coordsToLatLng: that.options.coordsToLatLng,
+                pointToLayer: that.options.pointToLayer
+              });
+              layers.forEach(function (element) {
+                element.state = that.state.exist;
+                that.addLayer(element);
+              });
+              resolve(that);
+            }
+          });
+        });
+      }.bind(component._leafletObject);
 
       component.loadLayerFeatures(e).then((layers) => {
         assert.equal(layers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 1 times');
