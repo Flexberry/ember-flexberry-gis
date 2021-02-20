@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/map-commands-dialogs/export';
+import html2canvasClone from '../../utils/html2canvas-clone';
 
 /**
   Constants representing default print/eport options.
@@ -1289,6 +1290,25 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   }),
 
   /**
+    Observers changes in properties that affect the ability to show scale map.
+
+    @method _scaleControlDidChange
+    @private
+  */
+  _scaleControlDidChange: Ember.observer('_options.scaleControl', function () {
+    let scaleVisible = this.get('_options.scaleControl');
+    let leafletMap = this.get('leafletMap');
+    let $leafletMap = Ember.$(leafletMap._container);
+    let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
+
+    if (scaleVisible) {
+      Ember.$('.leaflet-bottom.leaflet-left', $leafletMapControls).children().show();
+    } else {
+      Ember.$('.leaflet-bottom.leaflet-left', $leafletMapControls).children().hide();
+    }
+  }),
+
+  /**
     Observers changes in properties that affect the ability to show pages.
 
     @method _pageNumberDidChange
@@ -1474,7 +1494,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
     Ember.$('.leaflet-top.leaflet-left', $leafletMapControls).children().hide();
     Ember.$('.leaflet-top.leaflet-right', $leafletMapControls).children().hide();
-    Ember.$('.leaflet-bottom.leaflet-left', $leafletMapControls).children().hide();
+    if (!this.get('_options.scaleControl')) {
+      Ember.$('.leaflet-bottom.leaflet-left', $leafletMapControls).children().hide();
+    }
+
     Ember.$('.leaflet-bottom.leaflet-right', $leafletMapControls).children().hide();
 
     // Invalidate map size and then fit it's bounds.
@@ -1669,7 +1692,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let $sheetOfLegend = this.get('_$sheetOfLegend');
     let exportSheetOfPaper = () => {
       return window.html2canvas($sheetOfPaper[0], {
-        useCORS: true
+        useCORS: true,
+        onclone: function(clonedDoc) {
+          html2canvasClone(clonedDoc);
+        }
       }).then((canvas) => {
         let type = 'image/png';
         return {
@@ -1686,7 +1712,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       $sheetOfLegend.removeClass('hidden');
 
       return window.html2canvas($sheetOfLegend[0], {
-        useCORS: true
+        useCORS: true,
+        onclone: function(clonedDoc) {
+          html2canvasClone(clonedDoc);
+        }
       }).then((canvas) => {
         $sheetOfLegend.addClass('hidden');
         $sheetOfPaper.removeClass('hidden');
@@ -1720,14 +1749,20 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
     // Export only map without markers.
     return window.html2canvas($leafletMap[0], {
-      useCORS: true
+      useCORS: true,
+      onclone: function(clonedDoc) {
+        html2canvasClone(clonedDoc);
+      }
     }).then((canvas) => {
       $leafletShadows.removeAttr('data-html2canvas-ignore');
       let drawContext = canvas.getContext('2d');
 
       // Export marker's shadows.
       return window.html2canvas($leafletShadows[0], {
-        useCORS: true
+        useCORS: true,
+        onclone: function(clonedDoc) {
+          html2canvasClone(clonedDoc);
+        }
       }).then((shadowsCanvas) => {
         drawContext.drawImage(shadowsCanvas, 0, 0);
         $leafletMarkers.removeAttr('data-html2canvas-ignore');
@@ -1735,7 +1770,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
         // Export markers.
         return window.html2canvas($leafletMarkers[0], {
-          useCORS: true
+          useCORS: true,
+          onclone: function(clonedDoc) {
+            html2canvasClone(clonedDoc);
+          }
         }).then((markersCanvas) => {
           drawContext.drawImage(markersCanvas, 0, 0);
           $leafletMarkers.css({ 'width': 0, 'height': 0 });

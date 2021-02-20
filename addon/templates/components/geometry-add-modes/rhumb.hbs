@@ -18,33 +18,41 @@
     deny=(action "onDeny")
   }}
     <form class="ui form" role="form">
+      {{#if isError}}
+        {{ui-message
+          type="error"
+          message=message
+        }}
+      {{/if}}
       <div class="ui grid">
         <div class="rhumb">
           <div class="field {{if _formValid.startPointValid "error" ""}}">
             <label>
               {{startPointFieldLabel}}
             </label>
-            {{flexberry-field
+            {{input
+              type="text"
               value=_dataForm.startPoint
               placeholder=coordinatesFieldPlaceholder
               class = "first"
+              key-up=(action 'validCoord')
             }}
           </div>
         </div>
         <div class="rhumb">
-          <div class="field">         
+          <div class="field">
             {{flexberry-edit-crs
               crsCaption=coordinatesSystemFieldLabel
               coordinateReferenceSystem=settings.layerCRS
             }}
-          </div>       
+          </div>
         </div>
         <div class="rhumb last">
           <div class="field {{if _formValid.typeObjectValid "error" ""}}">
             <label>
               {{typeObjectFieldLabel}}
             </label>
-            {{flexberry-dropdown items=_availableType value=_curType}}
+            {{flexberry-dropdown items=_availableType value=_curType onChange=(action 'validType')}}
           </div>
         </div>
       </div>
@@ -75,19 +83,19 @@
             <td>
               <div class="field {{if _addValid.directionValid "error"}}">
                 {{flexberry-dropdown
-                  items=_cardinalPoints
+                  items=_availableDirection
                   value=_dataFormTable.direction
                 }}
               </div>
             </td>
             <td>
               <div class="field {{if _addValid.rhumbValid "error"}}">
-                {{flexberry-field value=_dataFormTable.rhumb}}
+                {{input type="text" value=_dataFormTable.rhumb placeholder=placeholderNoValue key-up=(action "onInputLimit")}}
               </div>
             </td>
             <td>
               <div class="field {{if _addValid.distanceValid "error"}}">
-                {{flexberry-field value=_dataFormTable.distance}}
+                {{input type="text" value=_dataFormTable.distance placeholder=placeholderNoValue key-up=(action "onInputLimit")}}
               </div>
             </td>
             <td class="narrow rhumb">
@@ -145,7 +153,7 @@
                 <td>
                   <div class="field {{if row.directionValid "error"}}">
                     {{flexberry-dropdown
-                      items=_cardinalPoints
+                      items=_availableDirection
                       value=row.direction
                       readonly=row.readonly
                     }}
@@ -155,14 +163,14 @@
               {{#block-slot "column-cell-head-0" as |row|}}
                 <td>
                   <div class="field {{if row.rhumbValid "error"}}">
-                    {{flexberry-field value=row.rhumb readonly=row.readonly}}
+                    {{input type="text" value=row.rhumb readonly=(if row.readonly "" readonly) placeholder=placeholderNoValue key-up=(action "onInputLimit")}}
                   </div>
                 </td>
               {{/block-slot}}
               {{#block-slot "column-cell-head-0" as |row|}}
                 <td>
                   <div class="field {{if row.distanceValid "error"}}">
-                    {{flexberry-field value=row.distance readonly=row.readonly}}
+                    {{input type="text" value=row.distance readonly=(if row.readonly "" readonly) placeholder=placeholderNoValue key-up=(action "onInputLimit")}}
                   </div>
                 </td>
               {{/block-slot}}
@@ -184,7 +192,7 @@
                   {{flexberry-button
                     iconClass="trash icon"
                     click=(action "OnRemoveRow" row.id)
-                  }}                
+                  }}
                 </td>
               {{/block-slot}}
             {{/flexberry-table}}

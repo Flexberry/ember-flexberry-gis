@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
+import sinon from 'sinon';
 
 moduleForComponent('flexberry-map', 'Unit | Component | flexberry map', {
   unit: true,
@@ -16,6 +17,38 @@ test('it should create leaflet map on didInsertElement', function (assert) {
   let component = this.subject();
   this.render();
   assert.ok(component.get('_leafletObject') instanceof L.Map);
+});
+
+test('test function queryToMap', function (assert) {
+  assert.expect(8);
+  let leafletMap = L.map(document.createElement('div'), {
+    center: [51.505, -0.09],
+    zoom: 13
+  });
+  let querySpy = sinon.stub(leafletMap, 'fire', (st, e) => {
+    e.results.push({ features: Ember.RSVP.resolve([{ id: '1' }]) });
+  });
+  let component = this.subject({
+    _leafletObject: leafletMap
+  });
+  let done = assert.async(2);
+
+  let res = component._queryToMap('1', '2');
+
+  assert.ok(res instanceof Ember.RSVP.Promise, 'Является ли результат работы функции Promise');
+  res.then((e)=> {
+    assert.equal(e.results.length, 1, 'Length results equals 1');
+    assert.equal(e.queryFilter, '1', 'Check parameter queryFilter');
+    assert.equal(e.mapObjectSetting, '2', 'Check parameter mapObjectSetting');
+    assert.equal(querySpy.callCount, 1, 'Count call method fire');
+    assert.equal(querySpy.args[0][0], 'flexberry-map:query', 'Check call first arg to method fire');
+    assert.deepEqual(querySpy.args[0][1], e, 'Check call second arg to method fire');
+    e.results[0].features.then((result)=> {
+      assert.equal(result[0].id, 1, 'Cherck result id');
+      done(1);
+    });
+    done(1);
+  });
 });
 
 test('should compute center from lat/lng', function (assert) {

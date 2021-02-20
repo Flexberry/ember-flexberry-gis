@@ -39,6 +39,22 @@ export default {
         'version': 'Version',
         'format': 'Format',
         'layers': 'Layers'
+      },
+
+      'labels-settings':{
+        'sign-map-objects-label': 'Sign map objects',
+        'field-caption': 'Layer\'s attributes',
+        'no-fields': 'Fields isn\'t loaded',
+        'label': 'Label',
+        'font-caption': 'Font',
+        'location-caption': 'Location',
+        'scale-range-caption': 'Visibility within scale',
+        'availableLineLocation': {
+          'over': 'Over the line',
+          'along': 'Along the line',
+          'under': 'Under the line'
+        },
+        'error': 'The layer must be added to the map'
       }
     }
   },
@@ -49,6 +65,15 @@ export default {
     },
     'no-wrap-checkbox': {
       'caption': 'Layer\'s noWrap property'
+    }
+  },
+
+  'tile-vector': {
+    'url-textbox': {
+      'caption': 'Url'
+    },
+    'layerName-textbox': {
+      'caption': 'Name layer'
     }
   },
 
@@ -76,12 +101,6 @@ export default {
     },
     'geometry-type-textbox': {
       'caption': 'Geometry type'
-    },
-    'coords-function-textbox': {
-      'caption': 'Coords transformation method'
-    },
-    'latlng-function-textbox': {
-      'caption': 'LatLngs transformation method'
     },
     'min-zoom': {
       'caption': 'Min zoom'

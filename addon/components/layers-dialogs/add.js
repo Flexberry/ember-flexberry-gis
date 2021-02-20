@@ -98,6 +98,51 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
   existWorkspaceErrorMessage: t('components.layers-dialogs.add.existWorkspace-error.message'),
 
   /**
+    Message success: create layer.
+
+    @property createLayerMessage
+    @type String
+    @default t('components.layers-dialogs.add.createLayer.message')
+  */
+  createLayerMessage: t('components.layers-dialogs.add.createLayer.message'),
+
+  /**
+    Flag: indicates whether add dialog is visible or not.
+
+    @property rastrMessageVisible
+    @type boolean
+    @private
+  */
+  rastrMessageVisible: false,
+
+  /**
+    Message.
+
+    @property message
+    @type String
+    @default ''
+  */
+  message: '',
+
+  /**
+    Caption for rastr dialog.
+
+    @property captionRastr
+    @type String
+    @default t('components.layers-dialogs.add.captionRastr'),
+  */
+  captionRastr: t('components.layers-dialogs.add.captionRastr'),
+
+  /**
+    Type message.
+
+    @property typeMessage
+    @type String
+    @default error,
+  */
+  typeMessage: 'error',
+
+  /**
     File control.
 
     @property _fileControl
@@ -137,6 +182,18 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
       Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
       Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
 
+      @method actions.onApproveError
+    */
+    onApproveError() {
+      this.set('rastrMessageVisible', false);
+      this.set('message', '');
+      this.set('typeMessage', 'error');
+    },
+
+    /**
+      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
+      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
+
       @method actions.onApprove
     */
     onApprove() {
@@ -153,7 +210,9 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
             (data) => {
               this.request(`${url[0]}/geoserver/rest/workspaces/${layerName[0]}/coveragestores/${layerName[1]}`, 'GET', 'application/json', '',
                 (data) => {
-                  alert(this.get('storeExistErrorMessage'));
+                  this.set('rastrMessageVisible', true);
+                  this.set('message', this.get('storeExistErrorMessage'));
+                  this.set('typeMessage', 'error');
                 },
                 (data) => {
                   _this.request(`${url[0]}/geoserver/rest/workspaces/${layerName[0]}/coveragestores/${layerName[1]}/file.geotiff?coverageName=${layerName[1]}`,
@@ -163,17 +222,24 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
                         layerProperties: layerProperties,
                         layer: this.get('layer')
                       });
+                      this.set('rastrMessageVisible', true);
+                      this.set('message', this.get('createLayerMessage'));
+                      this.set('typeMessage', 'success');
                     },
                     (data) => {
                       console.log(data);
-                      alert(this.get('createLayerErrorMessage'));
+                      this.set('rastrMessageVisible', true);
+                      this.set('message', this.get('createLayerErrorMessage'));
+                      this.set('typeMessage', 'error');
                     }
                   );
                 }
               );
             },
             (data) => {
-              alert(this.get('existWorkspaceErrorMessage') + ' ' + config.APP.geoserver.workspaceRastr);
+              this.set('rastrMessageVisible', true);
+              this.set('message', this.get('existWorkspaceErrorMessage') + ' ' + config.APP.geoserver.workspaceRastr);
+              this.set('typeMessage', 'error');
             });
         }
       }

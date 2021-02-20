@@ -479,6 +479,13 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     */
     onHide(e) {
       this.sendAction('hide', e);
+      this.set('foundedFeatures', []);
+      this.set('_selectedLayer', []);
+      this.set('_options', {
+        localizedValue: '',
+        propertyName: '',
+        queryString: ''
+      });
     },
 
     /**

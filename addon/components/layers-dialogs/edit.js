@@ -172,6 +172,15 @@ let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
       },
 
       /**
+      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
+      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
+
+      @method actions.onApproveError
+      */
+      onApproveError() {
+      },
+
+      /**
         Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
         Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
 

@@ -18,5 +18,10 @@ export default {
   'coordinates-field-placeholder': '(no value)',
   'object-types-polygon': 'Polygon',
   'object-types-line': 'Line',
-  'cannot-change-permission': 'One rhumb must be selected as start of object.'
+  'cannot-change-permission': 'One rhumb must be selected as start of object.',
+  'placeholderNoValue': '(no value)',
+  'NE': 'NE',
+  'SE': 'SE',
+  'SW': 'SW',
+  'NW': 'NW'
 };

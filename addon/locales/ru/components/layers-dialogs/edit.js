@@ -97,6 +97,9 @@ export default {
     'pmodes-tab': {
       'caption': 'Создание на основе'
     },
+    'label-settings-tab': {
+      'caption': 'Настройки надписей'
+    },
     'loadfile-tab': {
       'caption': 'Загрузить из файла'
     }
