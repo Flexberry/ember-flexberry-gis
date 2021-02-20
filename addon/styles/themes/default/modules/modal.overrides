@@ -425,8 +425,13 @@
 }
 
 .ui.modal.flexberry-geometry-add-mode-import-dialog, .layers-dialogs-data-tabs {
-  .import-from-file input {
-    display: none;
+  .import-from-file {
+    input {
+      display: none;
+    }
+    .flexberry-import-from-file-button {
+      padding-top: 10px;
+    }
   }
 }
 
