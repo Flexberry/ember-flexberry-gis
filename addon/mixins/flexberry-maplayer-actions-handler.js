@@ -261,7 +261,7 @@ export default Ember.Mixin.create({
         if (index >= 0) {
           this.set(selectedTabIndexPath, index);
         } else {
-          items.addObject({ name: name, leafletObject: object, settings });
+          items.addObject({ name: name, leafletObject: object, settings, layerModel });
           this.set(itemsPath, items);
           this.set(selectedTabIndexPath, items.length - 1);
         }

@@ -24,6 +24,7 @@ import * as distance from 'npm:@turf/distance';
 import * as midpoint from 'npm:@turf/midpoint';
 import * as union from 'npm:@turf/union';
 import intersect from 'npm:@turf/intersect';
+import WfsLayer from '../layers/wfs';
 
 /**
   The component for editing layers attributes.
@@ -169,7 +170,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       let tabModels = editedLayers.map((item) => {
         let name = Ember.get(item, 'name');
-
+        let layerModel = Ember.get(item, 'layerModel');
         let leafletObject = Ember.get(item, 'leafletObject');
         let readonly = Ember.get(item, 'settings.readonly') || false;
         let styleSettings = Ember.get(item, 'settings.styleSettings') || {};
@@ -282,12 +283,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
           header: Ember.computed('i18n.locale', getHeader),
 
-          _reload() {
+          _reload(data) {
             this.set('featureLink', {});
             this.set('propertyLink', {});
             let properties = Ember.A();
+            let _this = this;
 
-            leafletObject.eachLayer((layer) => {
+            var addProperties = function(layer) {
               if (Ember.isNone(Ember.get(layer, 'feature'))) {
                 Ember.set(layer, 'feature', {});
               }
@@ -299,13 +301,24 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
               }
 
               // the hash containing guid of properties object and link to feature layer
-              this.set(`featureLink.${propId}`, layer);
+              _this.set(`featureLink.${propId}`, layer);
 
               // the hash containing guid of properties object and link to that object
-              this.set(`propertyLink.${propId}`, props);
+              _this.set(`propertyLink.${propId}`, props);
 
               properties.pushObject(props);
-            });
+            };
+
+            if (!Ember.isNone(data)) {
+              properties = this.get('properties');
+              data.forEach((layer) => {
+                addProperties(layer);
+              });
+            } else {
+              leafletObject.eachLayer((layer) => {
+                addProperties(layer);
+              });
+            }
 
             this.set('properties', properties);
           },
@@ -596,7 +609,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             leafletObject,
             availableDrawTools,
             styleSettings,
-            typeGeometry
+            typeGeometry,
+            layerModel
           }
         );
 
@@ -1250,6 +1264,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let saveSuccess = (data) => {
         Ember.set(tabModel, 'leafletObject._wasChanged', false);
         tabModel._reload();
+        let className = Ember.get(tabModel.layerModel, 'type');
+        let layerType = Ember.getOwner(this).knownForType('layer', className);
+        if (!Ember.isNone(data) && layerType instanceof WfsLayer) {
+          tabModel._reload(data.layers);
+        }
+
         let editedRows = Ember.get(tabModel, '_editedRows');
         if (Object.keys(editedRows).length > 0) {
           let isExist = tabModel.properties.filter((item) => Ember.guidFor(item) === Object.keys(editedRows)[0]);
