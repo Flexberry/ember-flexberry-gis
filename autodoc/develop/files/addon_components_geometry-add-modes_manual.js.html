@@ -721,6 +721,12 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       if (edit) {
         let i18n = this.get(&#x27;i18n&#x27;);
         const layer = Ember.get(tabModel, &#x60;featureLink.${rowId}&#x60;);
+        if (Ember.isNone(Ember.get(layer, &#x27;feature.geometry&#x27;))) {
+          let baseCrs = Ember.get(tabModel, &#x27;leafletObject.options.crs&#x27;);
+          let geometry = layer.toProjectedGeoJSON(baseCrs).geometry;
+          Ember.set(layer, &#x27;feature.geometry&#x27;, geometry);
+        }
+
         const type = Ember.get(layer, &#x27;feature.geometry.type&#x27;);
         let layerObject = Ember.$.extend(true, {}, Ember.get(layer, &#x27;feature&#x27;));
         let coordinates = layerObject.geometry.coordinates;
