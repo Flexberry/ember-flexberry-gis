@@ -206,11 +206,18 @@ export default Ember.Mixin.create(rhumbOperations, {
     let unionres = geojsonWriter.write(resultObject);
     let crsResult = 'EPSG:' + geometries[0].getSRID();
 
+    let type = unionres.type;
+    let coordinates = unionres.coordinates;
+    if (unionres.type.indexOf('Multi') < 0) {
+      type = 'Multi' + unionres.type;
+      coordinates = [unionres.coordinates];
+    }
+
     const multiObj = {
       type: 'Feature',
       geometry: {
-        type: unionres.type,
-        coordinates: unionres.coordinates
+        type: type,
+        coordinates: coordinates
       },
       crs: {
         type: 'name',
