@@ -141,13 +141,14 @@ export default Ember.Mixin.create(rhumbOperations, {
     @param {array} objects Array of objects in GeoJSON format.
     @param {Boolean} isUnion Flag: indicates whether to union geometries or to different.
     @param {Boolean} failIfInvalid Flag: indicates whether to throw error if invalid geometries.
+    @param {Boolean} forceMulti Flag: indicates whether to make geometries as multi.
     @returns {Object} New multi-circuit object in GeoJSO format.
   */
-  createMulti(objects, isUnion = false, failIfInvalid = true) {
-    return this._getMulti(objects, isUnion, failIfInvalid, true);
+  createMulti(objects, isUnion = false, failIfInvalid = true, forceMulti = true) {
+    return this._getMulti(objects, isUnion, failIfInvalid, true, forceMulti);
   },
 
-  _getMulti(objects, isUnion = false, failIfInvalid = true, isJsts = false) {
+  _getMulti(objects, isUnion = false, failIfInvalid = true, isJsts = false, forceMulti = true) {
     let separateObjects = [];
     let resultObject = null;
     let geometries = [];
@@ -206,11 +207,18 @@ export default Ember.Mixin.create(rhumbOperations, {
     let unionres = geojsonWriter.write(resultObject);
     let crsResult = 'EPSG:' + geometries[0].getSRID();
 
+    let type = unionres.type;
+    let coordinates = unionres.coordinates;
+    if (unionres.type.indexOf('Multi') < 0 && forceMulti) {
+      type = 'Multi' + unionres.type;
+      coordinates = [unionres.coordinates];
+    }
+
     const multiObj = {
       type: 'Feature',
       geometry: {
-        type: unionres.type,
-        coordinates: unionres.coordinates
+        type: type,
+        coordinates: coordinates
       },
       crs: {
         type: 'name',
