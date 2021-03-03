@@ -43838,6 +43838,11 @@
                     "name": "failIfInvalid",
                     "description": "Flag: indicates whether to throw error if invalid geometries.",
                     "type": "Boolean"
+                },
+                {
+                    "name": "forceMulti",
+                    "description": "Flag: indicates whether to make geometries as multi.",
+                    "type": "Boolean"
                 }
             ],
             "return": {
@@ -43849,7 +43854,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 226,
+            "line": 234,
             "description": "Get geometry kind by geometry",
             "params": [
                 {
@@ -43867,7 +43872,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 248,
+            "line": 256,
             "description": "Create object by rhumb for [LineString, Polygon]. Start point coordinates convert in crs of layer.\nAccepts angles in degrees, converting them to radians. Accepts names of direction is [NE, SE, NW, SW].\nAccepts distance in units accepted for CRS of layer. Calculation rhumb by point, distance and angle.\nReturns coordinates skipping 'skip' from the first rhumb in crs of layer.",
             "itemtype": "method",
             "name": "createPolygonObjectRhumb",
@@ -43892,7 +43897,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 279,
+            "line": 287,
             "description": "Create polyline object to interserct polyline to polygon. Transforms geometries into JSTS objects. Checks whether types and crs are same.\nIntersects of two objects is the desired line. Using GeoJSONWriter converts jsts object to geoJSON.\n\nExample of method call:\n```javascript\nlet aGeoJson = {\n  \"type\": \"Feature\",\n  \"properties\": {},\n  \"geometry\": {\n    \"type\": \"Polygon\",\n    \"coordinates\": [\n      [[56.184253, 58.071975],\n        [56.210689,58.071975],\n        [56.2106895, 58.079873],\n        [56.184253, 58.079873],\n        [56.184253,58.071975]]\n    ]\n  },\n  \"crs\": {\n    \"type\": \"name\",\n    \"properties\": {\n      \"name\": \"EPSG:4326\"\n    }\n  }\n};\nlet bGeoJson = {\n  \"type\": \"Feature\",\n  \"properties\": {},\n  \"geometry\": {\n    \"type\": \"Polygon\",\n    \"coordinates\": [\n      [56.17, 58.071975],\n      [56.22, 58.071975]\n    ]\n  },\n  \"crs\": {\n    \"type\": \"name\",\n    \"properties\": {\n      \"name\": \"EPSG:4326\"\n    }\n  }\n};\nlet result = mapApi.mapModel.trimLineToPolygon(aGeoJson, bGeoJson);\n```",
             "itemtype": "method",
             "name": "trimLineToPolygon",
@@ -45133,6 +45138,11 @@
                     "name": "failIfInvalid",
                     "description": "Fail when has invalid geometry.",
                     "type": "Boolean"
+                },
+                {
+                    "name": "forceMulti",
+                    "description": "Flag: indicates whether to make geometries as multi..",
+                    "type": "Boolean"
                 }
             ],
             "return": {
@@ -45144,7 +45154,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1610,
+            "line": 1611,
             "description": "Add to array points and feature.",
             "itemtype": "method",
             "name": "_addToArrayPointsAndFeature",
@@ -45169,7 +45179,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1644,
+            "line": 1645,
             "description": "Difference layers.",
             "itemtype": "method",
             "name": "differenceLayers",
@@ -45194,7 +45204,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1726,
+            "line": 1727,
             "description": "Compare layers.",
             "itemtype": "method",
             "name": "compareLayers",
@@ -45229,7 +45239,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1826,
+            "line": 1827,
             "description": "Exponentiation.",
             "itemtype": "method",
             "name": "_pointAmplifier",
@@ -45242,7 +45252,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1835,
+            "line": 1836,
             "description": "Transform coordinates in points.",
             "itemtype": "method",
             "name": "_coordsToPoints",
@@ -45262,7 +45272,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1855,
+            "line": 1856,
             "description": "Transform points in coordinates.",
             "itemtype": "method",
             "name": "_pointsToCoords",
@@ -45282,7 +45292,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1891,
+            "line": 1892,
             "description": "Download file.",
             "itemtype": "method",
             "name": "downloadFile",
@@ -49205,15 +49215,15 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:226"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:234"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:248"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:256"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:279"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:287"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -50961,7 +50971,7 @@
         },
         {
             "message": "Missing item type\nGet geometry kind by geometry",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:226"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:234"
         },
         {
             "message": "Missing item type\nGet [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.",

@@ -1971,9 +1971,10 @@ export default Ember.Mixin.create(SnapDraw, {
     @param {String} layerBId Second layer ID.
     @param {Array} objectBIds Second layer object IDs.
     @param {Boolean} failIfInvalid Fail when has invalid geometry.
+    @param {Boolean} forceMulti Flag: indicates whether to make geometries as multi..
     @return {Promise} GeoJson Feature.
   */
-  getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, isUnion = false, failIfInvalid = false) {
+  getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, isUnion = false, failIfInvalid = false, forceMulti = true) {
     return new Ember.RSVP.Promise((resolve, reject) =&gt; {
       let layerAPromises = this.loadingFeaturesByPackages(layerAId, objectAIds);
       let layerBPromises = this.loadingFeaturesByPackages(layerBId, objectBIds);
@@ -2009,7 +2010,7 @@ export default Ember.Mixin.create(SnapDraw, {
           }
         });
 
-        let resultObj = resultObjs.length &gt; 0 ? this.createMulti(resultObjs, isUnion, failIfInvalid, true) : null;
+        let resultObj = resultObjs.length &gt; 0 ? this.createMulti(resultObjs, isUnion, failIfInvalid, true, forceMulti) : null;
         resolve(resultObj ? resultObj : null);
       }).catch((e) =&gt; {
         reject(e);
