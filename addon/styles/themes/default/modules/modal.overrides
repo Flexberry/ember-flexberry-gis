@@ -355,6 +355,7 @@
 .ui.modal.flexberry-geometry-add-mode-rhumb-dialog,
 .ui.modal.flexberry-geometry-add-mode-geoprovider-dialog,
 .ui.modal.flexberry-geometry-add-mode-import-dialog,
+.ui.modal.flexberry-layer-dialog-move-dialog,
 .ui.modal.flexberry-geometry-add-mode-import-result {
   .flexberry-dialog-content.content {
     min-height: 400px;
@@ -424,8 +425,13 @@
 }
 
 .ui.modal.flexberry-geometry-add-mode-import-dialog, .layers-dialogs-data-tabs {
-  .import-from-file input {
-    display: none;
+  .import-from-file {
+    input {
+      display: none;
+    }
+    .flexberry-import-from-file-button {
+      padding-top: 10px;
+    }
   }
 }
 
