@@ -15,4 +15,5 @@ export default {
   'multilinestring-object-type': 'MultiLineString',
   'polygon-object-type': 'Polygon',
   'multipolygon-object-type': 'MultiPolygon',
+  'coordinates-type-geometry-error-label': 'For this type of geometry is required a minimum count of points'
 };
