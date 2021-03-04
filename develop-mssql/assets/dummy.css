@@ -1478,35 +1478,39 @@ lang {
   overflow-y: scroll;
   height: 250px;
 }
+.intersection-panel .intersections-panel-results-row .flexberry-dropdown.multi-dropdown.selection {
+  margin-top: -4px;
+}
+.intersection-panel .intersections-panel-results-row .feature-result-item-select {
+  display: none;
+}
+.intersection-panel .intersections-panel-results-row .feature-result-item-list {
+  display: none;
+}
+.intersection-panel .intersections-panel-results-row .title span {
+  margin-left: 0px !important;
+}
+.intersection-panel .intersections-panel-results-row table tr td {
+  vertical-align: top;
+}
+.intersection-panel .intersections-panel-results-row .intersections-panel-input-params-row.row .ui.right.labeled.input {
+  width: 100%;
+}
 .intersection-panel .multiple.search.selection.dropdown {
   cursor: pointer;
-}
-.intersection-panel .multiple.search.selection.dropdown .dropdown.icon {
-  margin-left: 10px;
-}
-.intersection-panel .multiple.search.selection.dropdown .ui.label.adition {
-  margin-left: -20px;
 }
 .intersection-panel .row {
   padding-left: 15px;
   padding-right: 15px;
 }
 .intersection-panel .button.intersect {
-  margin-left: 20px;
   margin-top: 20px;
 }
 .intersection-panel .feature-result-item-content.content .layer-result-list-toggler {
   width: 50%;
 }
-.intersection-panel .feature-result-item-content.content .layer-result-list-toggler .title {
-  margin-top: -10px;
-}
 .intersection-panel .feature-result-item-content.content .cords {
-  padding-top: 0px;
   width: 50%;
-}
-.intersection-panel .intersection-cell {
-  vertical-align: top;
 }
 .compare-geometries-panel .close {
   margin-left: auto;
@@ -1537,24 +1541,24 @@ lang {
   cursor: pointer;
   padding-top: 20px;
 }
-form.flexberry-geometry-add-mode-manual-form .flexberry-textarea textarea {
-  margin-left: 0px;
-  margin-right: 0px;
-}
-.multiple.selection.dropdown > input.search {
-  position: static;
-  padding: 0;
-  max-width: 100%;
-  margin: 0.45240952em 0em 0.45240952em 0.71428571em;
-  width: 2.2em;
-  line-height: 1.2142em;
-  border: none;
-}
-.multiple.selection.dropdown > i.close.icon {
+.flexberry-dropdown.multi-dropdown.selection > i.close.icon {
   margin-right: 0px;
   right: 0;
   position: absolute;
   font-size: 12px;
+}
+.flexberry-dropdown.multi-dropdown.selection > i.dropdown.icon {
+  margin-right: 5px;
+}
+.flexberry-dropdown.multi-dropdown.selection .item .flexberry-checkbox.ui.checkbox {
+  width: 100%;
+}
+.intersections-panel-form-row .flexberry-dropdown.multi-dropdown.selection {
+  margin-top: -4px;
+}
+form.flexberry-geometry-add-mode-manual-form .flexberry-textarea textarea {
+  margin-left: 0px;
+  margin-right: 0px;
 }
 /* Elements */
 /*!
