@@ -13,4 +13,8 @@ export default {
   'results': 'Результаты',
   'show-cords': 'Развернуть таблицу',
   'hide-cords': 'Cвернуть таблицу',
+  'chooseCaption': 'Выбрано',
+  'notResult': '(нет значений)',
+  'search-placeholder': 'Поиск',
+  'selectAllText': 'Выделить все'
 };
