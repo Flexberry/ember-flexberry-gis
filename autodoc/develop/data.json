@@ -1358,6 +1358,13 @@
             "fors": {},
             "namespaces": {}
         },
+        "addon/components/select-with-checkbox.js": {
+            "name": "addon/components/select-with-checkbox.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/components/spatial-bookmark.js": {
             "name": "addon/components/spatial-bookmark.js",
             "modules": {},
@@ -5325,7 +5332,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 8,
+            "line": 7,
             "description": "The component for searching for intersections with selected feature.",
             "uses": [
                 "LeafletZoomToFeatureMixin"
@@ -28769,7 +28776,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 327,
+            "line": 328,
             "description": "Zooms to intersection and add intersection object on map.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -28778,7 +28785,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 337,
+            "line": 338,
             "description": "Component's action invoking for select feature",
             "itemtype": "method",
             "name": "sendingActions.selectFeature",
@@ -28794,7 +28801,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 343,
+            "line": 344,
             "description": "Component's action invoking for feature zooming",
             "itemtype": "method",
             "name": "sendingActions.zoomTo",
@@ -28810,7 +28817,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 349,
+            "line": 350,
             "description": "Component's action invoking for feature pan",
             "itemtype": "method",
             "name": "sendingActions.panTo",
@@ -32372,14 +32379,14 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 16,
+            "line": 15,
             "description": "Reference to component's template.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 21,
+            "line": 20,
             "description": "Object name disaplayed on template.",
             "itemtype": "property",
             "name": "disaplayName",
@@ -32390,7 +32397,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 29,
+            "line": 28,
             "description": "Layer contains identification result features.",
             "itemtype": "property",
             "name": "resultsLayer",
@@ -32401,7 +32408,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 38,
+            "line": 37,
             "description": "List vector layers.",
             "itemtype": "property",
             "name": "vectorLayers",
@@ -32412,7 +32419,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 47,
+            "line": 46,
             "description": "Leaflet map object for zoom and pan.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -32423,7 +32430,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 56,
+            "line": 55,
             "description": "Observer for leafletMap property adding layer with results.",
             "itemtype": "property",
             "name": "_OnMapChanged",
@@ -32435,7 +32442,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 69,
+            "line": 68,
             "description": "Flag indicates if there are any results of intersection.",
             "itemtype": "property",
             "name": "noIntersectionResults",
@@ -32446,7 +32453,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 78,
+            "line": 77,
             "description": "intersection area over which to look.",
             "itemtype": "property",
             "name": "square",
@@ -32457,7 +32464,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 87,
+            "line": 86,
             "description": "Buffer radius in selected units.",
             "itemtype": "property",
             "name": "bufferR",
@@ -32468,7 +32475,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 96,
+            "line": 95,
             "description": "List of selected vector layers.",
             "itemtype": "property",
             "name": "selectedLayers",
@@ -32479,7 +32486,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 105,
+            "line": 104,
             "description": "List of intersection results.",
             "itemtype": "property",
             "name": "results",
@@ -32490,7 +32497,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 114,
+            "line": 113,
             "description": "Selected feature.",
             "itemtype": "property",
             "name": "feature",
@@ -32501,7 +32508,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 123,
+            "line": 122,
             "description": "Flag indicates if panel is folded.",
             "itemtype": "property",
             "name": "folded",
@@ -32512,7 +32519,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 132,
+            "line": 131,
             "description": "Injected ember storage.",
             "itemtype": "property",
             "name": "store",
@@ -32522,7 +32529,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 140,
+            "line": 139,
             "description": "Injected map Api.",
             "itemtype": "property",
             "name": "mapApi",
@@ -32532,7 +32539,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 148,
+            "line": 147,
             "description": "Observer for feature. If changed=> clear form.",
             "itemtype": "property",
             "name": "_OnMapChanged",
@@ -32544,14 +32551,14 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 159,
+            "line": 158,
             "description": "Initializes component.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 187,
+            "line": 186,
             "description": "Handles click on a button.",
             "itemtype": "method",
             "name": "actions.findIntersections",
@@ -32560,7 +32567,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 240,
+            "line": 244,
             "description": "Handles click on a close button.",
             "itemtype": "method",
             "name": "actions.findIntersections",
@@ -32569,7 +32576,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 252,
+            "line": 254,
             "description": "Handles click on tab.",
             "itemtype": "method",
             "name": "actions.hidePanel",
@@ -32578,7 +32585,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 261,
+            "line": 263,
             "description": "Handles click on zoom icon.",
             "itemtype": "method",
             "name": "actions.hidePanel",
@@ -32594,7 +32601,16 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 276,
+            "line": 278,
+            "description": "Handles input limit.",
+            "itemtype": "method",
+            "name": "actions.inputLimit",
+            "class": "FlexberryLayersAttributesPanelComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-layers-intersections-panel.js",
+            "line": 290,
             "description": "Starts identification by array of satisfying layers inside given polygon area.",
             "itemtype": "method",
             "name": "_startIdentification",
@@ -32634,7 +32650,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 344,
+            "line": 358,
             "description": "Finishes identification.",
             "itemtype": "method",
             "name": "_finishIdentification",
@@ -32683,7 +32699,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 407,
+            "line": 421,
             "description": "Cleaning after changing feature.",
             "itemtype": "method",
             "name": "clearPanel",
@@ -32692,7 +32708,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 426,
+            "line": 444,
             "description": "Removing layers with identification results.",
             "itemtype": "method",
             "name": "removeLayers",
@@ -32701,7 +32717,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 444,
+            "line": 462,
             "description": "Searching intersections.",
             "itemtype": "method",
             "name": "_findIntersections",
@@ -36954,7 +36970,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 538,
+            "line": 543,
             "description": "Get an array of layer shapes id.",
             "itemtype": "method",
             "name": "_getFeatureShapeIds",
@@ -37638,6 +37654,74 @@
                 "type": "L.Control"
             },
             "class": "ScaleControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/select-with-checkbox.js",
+            "line": 14,
+            "description": "Reference to component's template.",
+            "class": "SpatialBookmarkComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/select-with-checkbox.js",
+            "line": 21,
+            "description": "Search for occurrences in the entire text (SemanticUI settings).",
+            "class": "SpatialBookmarkComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/select-with-checkbox.js",
+            "line": 38,
+            "description": "Storage for the items state.",
+            "example": [
+                "\n```javascript\n[\n  {\n    key: '2e46cce0-b9fa-4b34-b417-4bd600a89c5d',\n    value: 'Подтверждена',\n    isVisible: false\n  },\n  ...\n]\n```"
+            ],
+            "class": "SpatialBookmarkComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/select-with-checkbox.js",
+            "line": 54,
+            "description": "Flag indicates whether is array consists of objects or not.",
+            "itemtype": "property",
+            "name": "isObject",
+            "type": "Bool",
+            "default": "'false'",
+            "class": "SpatialBookmarkComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/select-with-checkbox.js",
+            "line": 63,
+            "description": "Array with selected dropdown items.",
+            "itemtype": "property",
+            "name": "selectedItems",
+            "type": "Object",
+            "default": "Ember.A()",
+            "class": "SpatialBookmarkComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/select-with-checkbox.js",
+            "line": 72,
+            "description": "Count selected items.",
+            "itemtype": "property",
+            "name": "countChoose",
+            "type": "Number",
+            "default": "0",
+            "class": "SpatialBookmarkComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/select-with-checkbox.js",
+            "line": 81,
+            "description": "Classname.",
+            "itemtype": "property",
+            "name": "selectorName",
+            "type": "String",
+            "default": "'fb-selector'",
+            "class": "SpatialBookmarkComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -50643,11 +50727,11 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/flexberry-layers-intersections-panel.js:16"
+            "line": " addon/components/flexberry-layers-intersections-panel.js:15"
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/flexberry-layers-intersections-panel.js:159"
+            "line": " addon/components/flexberry-layers-intersections-panel.js:158"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -50828,6 +50912,18 @@
         {
             "message": "Missing item type\nReference to component's template.",
             "line": " addon/components/minimap-control.js:14"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/select-with-checkbox.js:14"
+        },
+        {
+            "message": "Missing item type\nSearch for occurrences in the entire text (SemanticUI settings).",
+            "line": " addon/components/select-with-checkbox.js:21"
+        },
+        {
+            "message": "Missing item type\nStorage for the items state.",
+            "line": " addon/components/select-with-checkbox.js:38"
         },
         {
             "message": "Missing item type\nValidation settings",

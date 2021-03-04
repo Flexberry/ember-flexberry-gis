@@ -728,6 +728,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         (features) =&gt; {
           if (features.length &gt; 0) {
             let intersectArray = features.filter((item) =&gt; {
+              item.isIntersect = false;
+              if (!Ember.isNone(item.intersection)) {
+                item.isIntersect = true;
+              }
+
               return !Ember.isNone(item.intersection);
             });
 

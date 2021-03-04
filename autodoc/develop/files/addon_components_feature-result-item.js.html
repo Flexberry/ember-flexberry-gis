@@ -732,6 +732,7 @@ export default Ember.Component.extend({
      */
     panToIntersection() {
       this.sendAction(&#x27;zoomTo&#x27;, this.get(&#x27;feature&#x27;));
+      this.sendAction(&#x27;panTo&#x27;, this.get(&#x27;feature&#x27;));
     },
 
     /**
