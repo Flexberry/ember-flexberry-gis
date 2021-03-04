@@ -1174,35 +1174,6 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-    Registers mixin, model, projections, serializer and adapter in the application.
-
-    @method registerModelMixinSerializerAdapter
-    @param {Object} model
-    @param {Object} modelMixin
-    @param {Object} modelSerializer
-    @param {Object} modelAdapter
-    @return {Boolean}
-  */
-  registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter) {
-    if (!Ember.isNone(model) &amp;&amp; !Ember.isNone(modelMixin) &amp;&amp; !Ember.isNone(modelSerializer) &amp;&amp; !Ember.isNone(modelAdapter)) {
-      let modelName = this.get(&#x27;modelName&#x27;);
-      Ember.getOwner(this).unregister(&#x60;model:${modelName}&#x60;, model);
-      Ember.getOwner(this).unregister(&#x60;mixin:${modelName}&#x60;, modelMixin);
-      Ember.getOwner(this).unregister(&#x60;serializer:${modelName}&#x60;, modelSerializer);
-      Ember.getOwner(this).unregister(&#x60;adapter:${modelName}&#x60;, modelAdapter);
-
-      Ember.getOwner(this).register(&#x60;model:${modelName}&#x60;, model);
-      Ember.getOwner(this).register(&#x60;mixin:${modelName}&#x60;, modelMixin);
-      Ember.getOwner(this).register(&#x60;serializer:${modelName}&#x60;, modelSerializer);
-      Ember.getOwner(this).register(&#x60;adapter:${modelName}&#x60;, modelAdapter);
-
-      return true;
-    } else {
-      return false;
-    }
-  },
-
-  /**
     Creates models in recursive.
 
     @method сreateModelHierarchy
@@ -1262,15 +1233,39 @@ export default BaseVectorLayer.extend({
       let projectionName = this.get(&#x27;projectionName&#x27;);
       let metadataUrl = this.get(&#x27;metadataUrl&#x27;);
 
-      this.сreateModelHierarchy(metadataUrl, modelName).then(({ model, dataModel, modelMixin }) =&gt; {
-        model.defineProjection(projectionName, modelName, this.createProjection(dataModel));
+      let modelRegistered = Ember.getOwner(this)._lookupFactory(&#x60;model:${modelName}&#x60;);
+      let mixinRegistered = Ember.getOwner(this)._lookupFactory(&#x60;mixin:${modelName}&#x60;);
+      let serializerRegistered = Ember.getOwner(this)._lookupFactory(&#x60;serializer:${modelName}&#x60;);
+      let adapterRegistered = Ember.getOwner(this)._lookupFactory(&#x60;adapter:${modelName}&#x60;);
+
+      if (Ember.isNone(serializerRegistered)) {
         let modelSerializer = this.createSerializer();
+        Ember.getOwner(this).register(&#x60;serializer:${modelName}&#x60;, modelSerializer);
+      }
+
+      if (Ember.isNone(adapterRegistered)) {
         let modelAdapter = this.createAdapterForModel();
-        this.registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter);
-        resolve(&#x27;Create dynamic model: &#x27; + modelName);
-      }).catch((e) =&gt; {
-        reject(&#x27;Can\&#x27;t create dynamic model: &#x27; + modelName + &#x27;. Error: &#x27; + e);
-      });
+        Ember.getOwner(this).register(&#x60;adapter:${modelName}&#x60;, modelAdapter);
+      }
+
+      if (Ember.isNone(modelRegistered) || Ember.isNone(mixinRegistered)) {
+        this.сreateModelHierarchy(metadataUrl, modelName).then(({ model, dataModel, modelMixin }) =&gt; {
+          model.defineProjection(projectionName, modelName, this.createProjection(dataModel));
+          if (Ember.isNone(modelRegistered)) {
+            Ember.getOwner(this).register(&#x60;model:${modelName}&#x60;, model);
+          }
+
+          if (Ember.isNone(mixinRegistered)) {
+            Ember.getOwner(this).register(&#x60;mixin:${modelName}&#x60;, modelMixin);
+          }
+
+          resolve(&#x27;Create dynamic model: &#x27; + modelName);
+        }).catch((e) =&gt; {
+          reject(&#x27;Can\&#x27;t create dynamic model: &#x27; + modelName + &#x27;. Error: &#x27; + e);
+        });
+      } else {
+        resolve(&#x27;Model already registered: &#x27; + modelName);
+      }
     });
   },
 
@@ -1331,6 +1326,7 @@ export default BaseVectorLayer.extend({
 
     // for check zoom
     layer.leafletMap = leafletMap;
+    this.set(&#x27;loadedBounds&#x27;, null);
     let load = this.continueLoad(layer);
     layer.promiseLoadLayer = load &amp;&amp; load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
     return layer;

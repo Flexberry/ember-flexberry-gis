@@ -3685,7 +3685,6 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
     needs: ['service:map-api', 'service:layers-styles-renderer', 'config:environment', 'model:new-platform-flexberry-g-i-s-link-parameter', 'model:new-platform-flexberry-g-i-s-map', 'model:new-platform-flexberry-g-i-s-map-layer', 'adapter:application', 'layer:odata-vector'],
     beforeEach: function beforeEach() {
       app = (0, _dummyTestsHelpersStartApp['default'])();
-
       var testModelMixin = _ember['default'].Mixin.create({
         name: _emberData['default'].attr('string', { defaultValue: '' }),
         shape: _emberData['default'].attr('json')
@@ -4056,7 +4055,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
   });
 
   (0, _emberQunit.test)('test method createDynamicModel() with json', function (assert) {
-    assert.expect(24);
+    assert.expect(19);
     var done = assert.async(1);
     _ember['default'].$.extend(param, {
       'odataUrl': 'http://localhost:6500/odata/',
@@ -4065,7 +4064,6 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
     });
     jsonModel.parentModelName = null;
     var component = this.subject(param);
-    var spyUnregister = _sinon['default'].spy(_ember['default'].getOwner(this), 'unregister');
     var spyRegister = _sinon['default'].spy(_ember['default'].getOwner(this), 'register');
     var spyCreateAdapterForModel = _sinon['default'].spy(component, 'createAdapterForModel');
     var spyCreateModel = _sinon['default'].spy(component, 'createModel');
@@ -4075,6 +4073,8 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
     var spyCreateModelHierarchy = _sinon['default'].spy(component, 'сreateModelHierarchy');
     var stubAjax = _sinon['default'].stub(_ember['default'].$, 'ajax');
     stubAjax.yieldsTo('success', jsonModel);
+    var _lookupFactoryStub = _sinon['default'].stub(_ember['default'].getOwner(this), '_lookupFactory');
+    _lookupFactoryStub.returns(null);
 
     component.createDynamicModel().then(function () {
       assert.equal(spyCreateAdapterForModel.callCount, 1);
@@ -4083,31 +4083,24 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       assert.equal(spyCreateMixin.callCount, 1);
       assert.equal(spyCreateSerializer.callCount, 1);
 
-      assert.equal(spyUnregister.callCount, 4);
-      assert.equal(spyUnregister.firstCall.args[0], 'model:test-model');
-      assert.equal(spyUnregister.secondCall.args[0], 'mixin:test-model');
-      assert.equal(spyUnregister.thirdCall.args[0], 'serializer:test-model');
-      assert.equal(spyUnregister.lastCall.args[0], 'adapter:test-model');
-
       assert.equal(spyRegister.callCount, 4);
-      assert.equal(spyRegister.firstCall.args[0], 'model:test-model');
-      assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
-      assert.equal(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
-      assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
-      assert.equal(spyRegister.secondCall.args[0], 'mixin:test-model');
-      assert.equal(Object.values(spyRegister.secondCall.args[1].mixins[0].properties).length, 2);
-      assert.ok(spyRegister.secondCall.args[1].mixins[0].properties.hasOwnProperty('nomer'));
-      assert.ok(spyRegister.secondCall.args[1].mixins[0].properties.hasOwnProperty('shape'));
-      assert.equal(spyRegister.thirdCall.args[0], 'serializer:test-model');
-      assert.equal(spyRegister.lastCall.args[0], 'adapter:test-model');
-      assert.ok(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
-      assert.equal(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
+      assert.equal(spyRegister.thirdCall.args[0], 'model:test-model');
+      assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
+      assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
+      assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
+      assert.equal(spyRegister.lastCall.args[0], 'mixin:test-model');
+      assert.equal(Object.values(spyRegister.lastCall.args[1].mixins[0].properties).length, 2);
+      assert.ok(spyRegister.lastCall.args[1].mixins[0].properties.hasOwnProperty('nomer'));
+      assert.ok(spyRegister.lastCall.args[1].mixins[0].properties.hasOwnProperty('shape'));
+      assert.equal(spyRegister.firstCall.args[0], 'serializer:test-model');
+      assert.equal(spyRegister.secondCall.args[0], 'adapter:test-model');
+      assert.ok(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
+      assert.equal(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
 
       assert.equal(spyCreateModelHierarchy.callCount, 1);
 
       done();
       spyRegister.restore();
-      spyUnregister.restore();
       spyCreateAdapterForModel.restore();
       spyCreateModel.restore();
       spyCreateProjection.restore();
@@ -4115,11 +4108,12 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       spyCreateSerializer.restore();
       spyCreateModelHierarchy.restore();
       stubAjax.restore();
+      _lookupFactoryStub.restore();
     });
   });
 
   (0, _emberQunit.test)('test method createDynamicModel() with json with parent', function (assert) {
-    assert.expect(27);
+    assert.expect(22);
     var done = assert.async(1);
     _ember['default'].$.extend(param, {
       'odataUrl': 'http://localhost:6500/odata/',
@@ -4128,7 +4122,6 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
     });
 
     var component = this.subject(param);
-    var spyUnregister = _sinon['default'].spy(_ember['default'].getOwner(this), 'unregister');
     var spyRegister = _sinon['default'].spy(_ember['default'].getOwner(this), 'register');
     var spyCreateAdapterForModel = _sinon['default'].spy(component, 'createAdapterForModel');
     var spyCreateModel = _sinon['default'].spy(component, 'createModel');
@@ -4136,6 +4129,8 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
     var spyCreateMixin = _sinon['default'].spy(component, 'createMixin');
     var spyCreateSerializer = _sinon['default'].spy(component, 'createSerializer');
     var spyCreateModelHierarchy = _sinon['default'].spy(component, 'сreateModelHierarchy');
+    var _lookupFactoryStub = _sinon['default'].stub(_ember['default'].getOwner(this), '_lookupFactory');
+    _lookupFactoryStub.returns(null);
 
     jsonModel.parentModelName = 'Polygon32640';
     var parentJsonModel = {
@@ -4175,31 +4170,24 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       assert.equal(stubAjax.getCall(0).args[0].url, 'assert/felxberry/models/test-model.json');
       assert.equal(stubAjax.getCall(1).args[0].url, 'assert/felxberry/models/Polygon32640.json');
 
-      assert.equal(spyUnregister.callCount, 4);
-      assert.equal(spyUnregister.firstCall.args[0], 'model:test-model');
-      assert.equal(spyUnregister.secondCall.args[0], 'mixin:test-model');
-      assert.equal(spyUnregister.thirdCall.args[0], 'serializer:test-model');
-      assert.equal(spyUnregister.lastCall.args[0], 'adapter:test-model');
-
       assert.equal(spyRegister.callCount, 4);
-      assert.equal(spyRegister.firstCall.args[0], 'model:test-model');
-      assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
-      assert.equal(spyRegister.firstCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
-      assert.ok(spyRegister.firstCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
-      assert.equal(spyRegister.secondCall.args[0], 'mixin:test-model');
-      assert.equal(Object.values(spyRegister.secondCall.args[1].mixins[0].properties).length, 2);
-      assert.ok(spyRegister.secondCall.args[1].mixins[0].properties.hasOwnProperty('nomer'));
-      assert.ok(spyRegister.secondCall.args[1].mixins[0].properties.hasOwnProperty('shape'));
-      assert.equal(spyRegister.thirdCall.args[0], 'serializer:test-model');
-      assert.equal(spyRegister.lastCall.args[0], 'adapter:test-model');
-      assert.ok(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
-      assert.equal(spyRegister.lastCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
+      assert.equal(spyRegister.thirdCall.args[0], 'model:test-model');
+      assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
+      assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
+      assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
+      assert.equal(spyRegister.lastCall.args[0], 'mixin:test-model');
+      assert.equal(Object.values(spyRegister.lastCall.args[1].mixins[0].properties).length, 2);
+      assert.ok(spyRegister.lastCall.args[1].mixins[0].properties.hasOwnProperty('nomer'));
+      assert.ok(spyRegister.lastCall.args[1].mixins[0].properties.hasOwnProperty('shape'));
+      assert.equal(spyRegister.firstCall.args[0], 'serializer:test-model');
+      assert.equal(spyRegister.secondCall.args[0], 'adapter:test-model');
+      assert.ok(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
+      assert.equal(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
 
       assert.equal(spyCreateModelHierarchy.callCount, 2);
 
       done();
       spyRegister.restore();
-      spyUnregister.restore();
       spyCreateAdapterForModel.restore();
       spyCreateModel.restore();
       spyCreateProjection.restore();
@@ -4207,6 +4195,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       spyCreateSerializer.restore();
       stubAjax.restore();
       spyCreateModelHierarchy.restore();
+      _lookupFactoryStub.restore();
     });
   });
 
@@ -4214,10 +4203,32 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
     assert.expect(1);
     var done = assert.async(1);
     var component = this.subject(param);
+    var _lookupFactoryStub = _sinon['default'].stub(_ember['default'].getOwner(this), '_lookupFactory');
+    _lookupFactoryStub.withArgs('model:test-model').returns(null);
+    _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
+    _lookupFactoryStub.withArgs('serializer:test-model').returns({});
+
+    var registerStub = _sinon['default'].stub(_ember['default'].getOwner(this), 'register');
+    registerStub.returns({});
 
     component.createDynamicModel()['catch'](function (error) {
       assert.equal(error, 'Can\'t create dynamic model: test-model. Error: ModelName and metadataUrl is empty');
       done();
+      _lookupFactoryStub.restore();
+    });
+  });
+
+  (0, _emberQunit.test)('test method createDynamicModel() already registered', function (assert) {
+    assert.expect(1);
+    var done = assert.async(1);
+    var component = this.subject(param);
+    var _lookupFactoryStub = _sinon['default'].stub(_ember['default'].getOwner(this), '_lookupFactory');
+    _lookupFactoryStub.returns(1);
+
+    component.createDynamicModel().then(function (msg) {
+      assert.equal(msg, 'Model already registered: test-model');
+      done();
+      _lookupFactoryStub.restore();
     });
   });
 
@@ -4247,6 +4258,14 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
     var spyAjax = _sinon['default'].spy(_ember['default'].$, 'ajax');
     var spyCreateModelHierarchy = _sinon['default'].spy(component, 'сreateModelHierarchy');
 
+    var _lookupFactoryStub = _sinon['default'].stub(_ember['default'].getOwner(this), '_lookupFactory');
+    _lookupFactoryStub.withArgs('model:test-model').returns(null);
+    _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
+    _lookupFactoryStub.withArgs('serializer:test-model').returns({});
+
+    var registerStub = _sinon['default'].stub(_ember['default'].getOwner(this), 'register');
+    registerStub.returns({});
+
     component.createVectorLayer().then(function (layer) {
       assert.ok(layer);
       assert.equal(spyContinueLoad.callCount, 1);
@@ -4261,6 +4280,8 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       spyAjax.restore();
       spyCreateDynamicModel.restore();
       spyCreateModelHierarchy.restore();
+      _lookupFactoryStub.restore();
+      registerStub.restore();
     });
   });
 
@@ -4280,11 +4301,19 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
     stubAjax.yieldsTo('success', jsonModel);
     var spyCreateModelHierarchy = _sinon['default'].spy(component, 'сreateModelHierarchy');
 
+    var _lookupFactoryStub = _sinon['default'].stub(_ember['default'].getOwner(this), '_lookupFactory');
+    _lookupFactoryStub.withArgs('model:test-model').returns(null);
+    _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
+    _lookupFactoryStub.withArgs('serializer:test-model').returns({});
+
+    var registerStub = _sinon['default'].stub(_ember['default'].getOwner(this), 'register');
+    registerStub.returns({});
+
     component.createVectorLayer().then(function (layer) {
       assert.ok(layer);
-      assert.equal(spyContinueLoad.callCount, 1);
-      assert.equal(spyContinueLoad.getCall(0).args[0], layer);
-      assert.equal(_createVectorLayerSpy.callCount, 1);
+      assert.equal(spyContinueLoad.callCount, 2);
+      assert.equal(spyContinueLoad.getCall(1).args[0], layer);
+      assert.equal(_createVectorLayerSpy.callCount, 2);
       assert.equal(stubAjax.callCount, 1);
       assert.equal(stubAjax.getCall(0).args[0].url, 'assert/felxberry/models/test-model.json');
       assert.equal(spyCreateDynamicModel.callCount, 1);
@@ -4295,6 +4324,8 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       spyCreateDynamicModel.restore();
       stubAjax.restore();
       spyCreateModelHierarchy.restore();
+      _lookupFactoryStub.restore();
+      registerStub.restore();
     });
   });
 

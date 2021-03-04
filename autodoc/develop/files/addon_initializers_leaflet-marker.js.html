@@ -431,6 +431,11 @@ export function initialize() {
       }
     */
     setStyle: function (style) {
+      let legendStyle = {
+        type: &#x27;default&#x27;,
+        style: null
+      };
+
       if (Ember.isNone(this.styleIsSet) || !this.styleIsSet) {
         if (!Ember.isNone(style) &amp;&amp; !Ember.isNone(style.isImage) &amp;&amp; (style.isImage === &#x27;false&#x27; || !style.isImage)) {
           let html = this._parseString(style.options.html);
@@ -442,6 +447,10 @@ export function initialize() {
           this.styleIsSet = true;
         } else if (!Ember.isNone(style) &amp;&amp; !Ember.isNone(style.options)) {
           this.setIcon(new L.Icon(style.options));
+          legendStyle = {
+            type: &#x27;image&#x27;,
+            style: style.options
+          };
         } else if (Ember.isNone(this.options.icon.options.iconUrl)) {
           this.setIcon(new L.Icon.Default());
         }
@@ -451,6 +460,10 @@ export function initialize() {
         }
 
         this.styleIsSet = false;
+      }
+
+      if (!Ember.isNone(this.layerModel) &amp;&amp; Ember.isNone(this.layerModel.legendStyle)) {
+        this.layerModel.legendStyle = legendStyle;
       }
 
       return this;

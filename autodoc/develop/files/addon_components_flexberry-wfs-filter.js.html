@@ -732,23 +732,6 @@ export default Ember.Component.extend({
       this._parseFilter();
       if (this.get(&#x27;_filterIsCorrect&#x27;)) {
         this.set(&#x27;filter&#x27;, this.get(&#x27;filterStringValue&#x27;));
-        if (!Ember.isNone(this.get(&#x27;filterStringValue&#x27;))) {
-          let leafletMap = this._targetObject.leafletMap;
-          let idlabelsLayer = this._targetObject._layer.settings.labelSettings.labelsLayer;
-          if (!Ember.isNone(idlabelsLayer)) {
-            leafletMap.eachLayer(function(layer) {
-              if (layer._idLeafletObject === idlabelsLayer) {
-                var self = layer._this;
-
-                if (self.get(&#x27;_layerType&#x27;) === &#x27;line&#x27;) {
-                  leafletMap.off(&#x27;zoomend&#x27;, self._updatePositionLabelForLine, self);
-                }
-
-                leafletMap.removeLayer(layer);
-              }
-            });
-          }
-        }
       }
     },
 

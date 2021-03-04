@@ -543,6 +543,12 @@ export default BaseLayer.extend({
       }
 
       let featuresProcessCallback = Ember.get(leafletObject, &#x27;featuresProcessCallback&#x27;);
+      if (typeof featuresProcessCallback === &#x27;function&#x27;) {
+        layers.forEach((feature) =&gt; {
+          feature.layerModel = this.get(&#x27;layerModel&#x27;);
+        });
+      }
+
       let p = typeof featuresProcessCallback === &#x27;function&#x27; ? featuresProcessCallback(layers) : Ember.RSVP.resolve();
       p.then(() =&gt; {
         this._addLayersOnMap(layers);
