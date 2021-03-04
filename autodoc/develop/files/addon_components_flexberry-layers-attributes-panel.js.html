@@ -419,7 +419,6 @@ import LeafletZoomToFeatureMixin from &#x27;../mixins/leaflet-zoom-to-feature&#x
 import SnapDrawMixin from &#x27;../mixins/snap-draw&#x27;;
 import checkIntersect from &#x27;../utils/polygon-intersect-check&#x27;;
 import * as buffer from &#x27;npm:@turf/buffer&#x27;;
-import * as thelpers from &#x27;npm:@turf/helpers&#x27;;
 import * as difference from &#x27;npm:@turf/difference&#x27;;
 import * as booleanEqual from &#x27;npm:@turf/boolean-equal&#x27;;
 import * as lineSplit from &#x27;npm:@turf/line-split&#x27;;
@@ -1359,25 +1358,21 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let radius = this.get(&#x27;_radius&#x27;);
       let unit = this.get(&#x27;_selectedUnit&#x27;);
       let selectedRows = Ember.get(tabModel, &#x27;_selectedRows&#x27;);
-      let selectedFeatures = Object.keys(selectedRows).filter((item) =&gt; Ember.get(selectedRows, item))
-        .map((key) =&gt; {
-          let geojson = tabModel.featureLink[key].feature.leafletLayer.toGeoJSON();
-          let prop = Object.assign({}, geojson.properties);
-          geojson.properties = prop;
-          return geojson;
-        });
-
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
-      let featureCollection = thelpers.default.featureCollection(selectedFeatures);
-
-      let buf = buffer.default(featureCollection, radius, { units: unit });
       let _bufferLayer = this.get(&#x27;_bufferLayer&#x27;);
       if (Ember.isNone(_bufferLayer)) {
         _bufferLayer = L.featureGroup();
         leafletMap.addLayer(_bufferLayer);
       }
 
-      _bufferLayer.addLayer(L.geoJSON(buf));
+      Object.keys(selectedRows).forEach(key =&gt; {
+        let item = tabModel.featureLink[key].feature.leafletLayer.toGeoJSON();
+        let prop = Object.assign({}, item.properties);
+        item.properties = prop;
+        let buf = buffer.default(item, radius, { units: unit });
+        _bufferLayer.addLayer(L.geoJSON(buf, { key: key }));
+      });
+
       this.set(&#x27;_bufferLayer&#x27;, _bufferLayer);
     },
 
@@ -1386,9 +1381,18 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       @method actions.deleteBuffer
     */
-    deleteBuffer() {
+    deleteBuffer(tabModel) {
       let _bufferLayer = this.get(&#x27;_bufferLayer&#x27;);
-      _bufferLayer.clearLayers();
+      let selectedRows = Ember.get(tabModel, &#x27;_selectedRows&#x27;);
+      Object.keys(selectedRows).forEach(key =&gt; {
+        if (selectedRows[key]) {
+          Object.values(_bufferLayer._layers).forEach(layer =&gt; {
+            if (layer.options.key === key) {
+              _bufferLayer.removeLayer(layer);
+            }
+          });
+        }
+      });
     },
 
     /**
