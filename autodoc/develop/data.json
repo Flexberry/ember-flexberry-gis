@@ -10106,6 +10106,17 @@
         {
             "file": "addon/components/geometry-add-modes/manual.js",
             "line": 124,
+            "description": "Flag to dispaly parse error.",
+            "itemtype": "property",
+            "name": "coordinatesTypeGeometryError",
+            "type": "Boolean",
+            "default": "false",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/manual.js",
+            "line": 133,
             "description": "Flag to display line error.",
             "itemtype": "property",
             "name": "coordinatesInLineError",
@@ -10116,7 +10127,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 133,
+            "line": 142,
             "description": "Object types.",
             "itemtype": "property",
             "name": "_objectTypes",
@@ -10130,7 +10141,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 144,
+            "line": 153,
             "description": "Line object types.",
             "itemtype": "property",
             "name": "_objectTypesLine",
@@ -10144,7 +10155,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 164,
+            "line": 173,
             "description": "Polygon object types.",
             "itemtype": "property",
             "name": "_objectTypesPolygon",
@@ -10158,7 +10169,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 184,
+            "line": 193,
             "description": "Point object types.",
             "itemtype": "property",
             "name": "_objectTypesPoint",
@@ -10172,7 +10183,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 200,
+            "line": 209,
             "description": "Object types are avaliable to choose.",
             "itemtype": "property",
             "name": "_availableType",
@@ -10186,7 +10197,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 235,
+            "line": 246,
             "description": "Type items metadata.",
             "itemtype": "property",
             "name": "typeItems",
@@ -10196,21 +10207,21 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 258,
+            "line": 269,
             "description": "Current type.",
             "class": "FlexberryGeometryAddModeManualComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 263,
+            "line": 274,
             "description": "Set _objectSelectType.",
             "class": "FlexberryGeometryAddModeManualComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 282,
+            "line": 293,
             "description": "Handles button click.",
             "itemtype": "method",
             "name": "actions.onButtonClick",
@@ -10226,7 +10237,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 363,
+            "line": 375,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGeometryAddModeManualComponent/sendingActions.complete:method\"}}'complete' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onApprove",
@@ -10247,7 +10258,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 604,
+            "line": 626,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.deny:method\"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onDeny",
@@ -10263,7 +10274,16 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 622,
+            "line": 637,
+            "description": "Cleaning panel.",
+            "itemtype": "method",
+            "name": "clearDialog",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/manual.js",
+            "line": 654,
             "description": "Get row id.",
             "itemtype": "method",
             "name": "_getRowId",
@@ -10283,7 +10303,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 641,
+            "line": 673,
             "description": "Get an array of coordinates from a coordinate line.",
             "itemtype": "method",
             "name": "_parseCoordinates",
@@ -10303,7 +10323,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 709,
+            "line": 741,
             "description": "Projects coordinate pair from one crs to another.",
             "itemtype": "method",
             "name": "_projectCoordinates",
@@ -10333,7 +10353,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 729,
+            "line": 761,
             "description": "Get the depth of the array.",
             "itemtype": "method",
             "name": "_countDimensions",
@@ -10353,7 +10373,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 740,
+            "line": 772,
             "description": "Get coordinate line.",
             "itemtype": "method",
             "name": "_coordinatesToString",
@@ -10369,7 +10389,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 797,
+            "line": 829,
             "description": "Define if line contains more than one coordinate pair.",
             "itemtype": "method",
             "name": "_isSinglePairInLine",
@@ -10389,7 +10409,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 822,
+            "line": 854,
             "description": "Update avaliable types for current tab",
             "itemtype": "method",
             "name": "_updateAvaliableTypes",
@@ -10398,7 +10418,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 839,
+            "line": 871,
             "description": "Component's action invoking when new geometry was added.",
             "itemtype": "method",
             "name": "sendingActions.complete",
@@ -48963,23 +48983,23 @@
     "warnings": [
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/geometry-add-modes/manual.js:622"
+            "line": " addon/components/geometry-add-modes/manual.js:654"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/geometry-add-modes/manual.js:641"
+            "line": " addon/components/geometry-add-modes/manual.js:673"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/geometry-add-modes/manual.js:709"
+            "line": " addon/components/geometry-add-modes/manual.js:741"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/geometry-add-modes/manual.js:729"
+            "line": " addon/components/geometry-add-modes/manual.js:761"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/geometry-add-modes/manual.js:797"
+            "line": " addon/components/geometry-add-modes/manual.js:829"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -49655,11 +49675,11 @@
         },
         {
             "message": "Missing item type\nCurrent type.",
-            "line": " addon/components/geometry-add-modes/manual.js:258"
+            "line": " addon/components/geometry-add-modes/manual.js:269"
         },
         {
             "message": "Missing item type\nSet _objectSelectType.",
-            "line": " addon/components/geometry-add-modes/manual.js:263"
+            "line": " addon/components/geometry-add-modes/manual.js:274"
         },
         {
             "message": "Missing item type\nReference to component's template.",
