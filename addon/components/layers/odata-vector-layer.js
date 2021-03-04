@@ -887,6 +887,7 @@ export default BaseVectorLayer.extend({
     layer.options.dynamicModel = dynamicModel;
     layer.options.metadataUrl = this.get('metadataUrl');
     layer.options.odataUrl = this.get('odataUrl');
+    layer.options.filter = this.get('filter');
 
     L.setOptions(layer, options);
     layer.minZoom = this.get('minZoom');
@@ -933,6 +934,14 @@ export default BaseVectorLayer.extend({
   */
   createVectorLayer() {
     return new Ember.RSVP.Promise((resolve, reject) => {
+      // Retrieve possibly defined in layer's settings filter.
+      let filter = this.get('filter');
+      if (typeof filter === 'string') {
+        filter = Ember.getOwner(this).lookup('layer:odata-vector').parseFilter(filter, (this.get('geometryField') || 'geometry'));
+      }
+
+      this.set('filter', filter);
+
       if (this.get('dynamicModel')) {
         this.createDynamicModel().then(() => {
           let layer = this._createVectorLayer();
@@ -1333,8 +1342,11 @@ export default BaseVectorLayer.extend({
 
         let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
         let newPart = queryNewBounds.intersects(loadedBounds.toEWKT(this.get('crs')));
+        let filter = oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart;
+        let layerFilter = this.get('filter');
+        filter = Ember.isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
 
-        queryBuilder.where(oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart);
+        queryBuilder.where(filter);
 
         let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 

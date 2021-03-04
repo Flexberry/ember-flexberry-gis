@@ -4,6 +4,8 @@
 
 import Ember from 'ember';
 import VectorLayer from 'ember-flexberry-gis/layers/-private/vector';
+import OdataFilterParserMixin from '../mixins/odata-filter-parser';
+import { Query } from 'ember-flexberry-data';
 
 /**
   Class describing odata vector layer metadata.
@@ -11,7 +13,7 @@ import VectorLayer from 'ember-flexberry-gis/layers/-private/vector';
   @class ODataVectorlayer
   @extends BaseLayer
 */
-export default VectorLayer.extend({
+export default VectorLayer.extend(OdataFilterParserMixin, {
   /**
     Icon class related to layer type.
 
@@ -28,7 +30,16 @@ export default VectorLayer.extend({
     @type String[]
     @default ['edit', 'remove', 'identify', 'search']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'attributes', 'legend'],
+  operations: ['edit', 'remove', 'identify', 'search', 'attributes', 'legend', 'filter'],
+
+  /**
+    Crs.
+
+    @property crs
+    @type Object
+    @default null
+  */
+  crs: null,
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -66,6 +77,7 @@ export default VectorLayer.extend({
     let projection = Ember.get(modelConstructor, `projections.${leafletObject.projectionName}`);
     let props = Object.keys(projection.attributes);
     let fields = Ember.A();
+    this.set('crs', leafletObject.options.crs);
 
     props.forEach((key) => {
       let prop = projection.attributes[key];
@@ -107,5 +119,28 @@ export default VectorLayer.extend({
     }
 
     return values;
+  },
+
+  /**
+    Parse filter geometry expression.
+    ('IN', 'NOT IN').
+
+    @method parseFilterGeometryExpression
+    @param {String} condition Filter condition
+    @param {Object} geoJSON Geometry
+    @param {String} geometryField Layer's geometry field
+    @param {Object} crs Crs
+    @returns {Object} Filter object
+  */
+  parseFilterGeometryExpression(condition, geoJSON, geometryField) {
+    switch (condition) {
+      case 'in':
+      case 'not in':
+        let geomPredicate = new Query.GeometryPredicate(geometryField);
+        let geom = L.geoJSON(geoJSON).getLayers()[0].toEWKT(this.get('crs'));
+        let filter = geomPredicate.intersects(geom);
+
+        return condition === 'in' ? filter : new Query.NotPredicate(filter);
+    }
   }
 });
