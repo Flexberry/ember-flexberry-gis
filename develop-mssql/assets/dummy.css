@@ -36669,6 +36669,7 @@ select.ui.dropdown {
 .ui.modal.flexberry-geometry-add-mode-rhumb-dialog .flexberry-dialog-content.content,
 .ui.modal.flexberry-geometry-add-mode-geoprovider-dialog .flexberry-dialog-content.content,
 .ui.modal.flexberry-geometry-add-mode-import-dialog .flexberry-dialog-content.content,
+.ui.modal.flexberry-layer-dialog-move-dialog .flexberry-dialog-content.content,
 .ui.modal.flexberry-geometry-add-mode-import-result .flexberry-dialog-content.content {
   min-height: 400px;
 }
@@ -36681,6 +36682,7 @@ select.ui.dropdown {
 .ui.modal.flexberry-geometry-add-mode-rhumb-dialog .flexberry-boundingbox .flexberry-map,
 .ui.modal.flexberry-geometry-add-mode-geoprovider-dialog .flexberry-boundingbox .flexberry-map,
 .ui.modal.flexberry-geometry-add-mode-import-dialog .flexberry-boundingbox .flexberry-map,
+.ui.modal.flexberry-layer-dialog-move-dialog .flexberry-boundingbox .flexberry-map,
 .ui.modal.flexberry-geometry-add-mode-import-result .flexberry-boundingbox .flexberry-map {
   max-height: 300px;
 }
@@ -36760,6 +36762,10 @@ select.ui.dropdown {
 .ui.modal.flexberry-geometry-add-mode-import-dialog .import-from-file input,
 .layers-dialogs-data-tabs .import-from-file input {
   display: none;
+}
+.ui.modal.flexberry-geometry-add-mode-import-dialog .import-from-file .flexberry-import-from-file-button,
+.layers-dialogs-data-tabs .import-from-file .flexberry-import-from-file-button {
+  padding-top: 10px;
 }
 .ui.modal.flexberry-geometry-add-mode-import-result .ui.table.import-table .import-column {
   min-width: 170px;
@@ -37417,6 +37423,19 @@ form.flexberry-geometry-add-mode-import-form,
 .ui.modal.flexberry-search-map-command-dialog .flexberry-edit-layermap .ui.small.fluid.buttons:not(.basic):not(.inverted) > .button.flexberry-button,
 .ui.modal.flexberry-go-to-map-command-dialog .flexberry-edit-layermap .ui.small.fluid.buttons:not(.basic):not(.inverted) > .button.flexberry-button {
   color: #3C4F76;
+}
+.ui.modal.flexberry-dialog-move {
+  /* кнопка Отмена */
+}
+.ui.modal.flexberry-dialog-move .ui.negative.button {
+  font-weight: normal;
+  background-color: #768CBB !important;
+  border: solid 1px #768CBB !important;
+  color: #fff;
+  margin-left: 0px;
+}
+.ui.modal.flexberry-dialog-move .ui.negative.button:hover {
+  opacity: 0.8;
 }
 .ui.modal.flexberry-add-layer-dialog .ui.form,
 .ui.modal.flexberry-copy-layer-dialog .ui.form,
