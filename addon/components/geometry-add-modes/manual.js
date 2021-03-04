@@ -434,7 +434,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       const typeGeometryError = (n) => {
         e.closeDialog = false;
         this.set('_coordinatesWithError', true);
-        let coordinatesTypeGeometryErrorLabel = this.get('coordinatesTypeGeometryErrorLabel').string.replace('count', n);
+        let coordinatesTypeGeometryErrorLabel = this.get('coordinatesTypeGeometryErrorLabel').string.replace('%count%', n);
         this.set('coordinatesTypeGeometryErrorLabel', coordinatesTypeGeometryErrorLabel);
         this.set('coordinatesTypeGeometryError', true);
       };

@@ -15,5 +15,5 @@ export default {
   'multilinestring-object-type': 'Мультилиния',
   'polygon-object-type': 'Полигон',
   'multipolygon-object-type': 'Мультиполигон',
-  'coordinates-type-geometry-error-label': 'Для данного типа геометрии требуется минимум count точки'
+  'coordinates-type-geometry-error-label': 'Для данного типа геометрии требуется минимум %count% точки'
 };
