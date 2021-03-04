@@ -361,9 +361,9 @@ export default Ember.Component.extend({
       @method actions.showCheckboxDidChange
       @param {Object} e Click event object.
     */
-    showCheckboxDidChange(e) {
+    showCheckboxDidChange(property, e) {
       let _showableItems = this.get('_showableItems');
-      Ember.set(this, `_showableItems.${e}`, !_showableItems[e]);
+      Ember.set(this, `_showableItems.${property}`, e.checked);
 
       let excluded = [];
       for (var prop in _showableItems) {

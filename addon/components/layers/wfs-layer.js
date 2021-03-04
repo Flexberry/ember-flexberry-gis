@@ -340,6 +340,7 @@ export default BaseVectorLayer.extend({
           wfsLayer.minZoom = this.get('minZoom');
           wfsLayer.maxZoom = this.get('maxZoom');
           wfsLayer.leafletMap = leafletMap;
+          this.set('loadedBounds', null);
           let load = this.continueLoad(wfsLayer);
           wfsLayer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
           wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);
@@ -731,6 +732,8 @@ export default BaseVectorLayer.extend({
 
         let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs);
         let filter = oldPart ? new L.Filter.And(newPart, oldPart) : newPart;
+        let optFilter = leafletObject.options.filter;
+        filter = Ember.isNone(optFilter) ? filter : new L.Filter.And(filter, optFilter);
 
         leafletObject.loadFeatures(filter);
         needPromise = true;
