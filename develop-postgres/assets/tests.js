@@ -9394,6 +9394,181 @@ define('dummy/tests/unit/mixins/map-model-api-getmergegeometry-test-test.jshint'
     assert.ok(true, 'unit/mixins/map-model-api-getmergegeometry-test-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/mixins/odata-filter-parser-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/odata-filter-parser', 'qunit', 'ember-flexberry-data'], function (exports, _ember, _emberFlexberryGisMixinsOdataFilterParser, _qunit, _emberFlexberryData) {
+
+  (0, _qunit.module)('Unit | Mixin | odata filter parser');
+
+  var OdataFilterParserObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsOdataFilterParser['default']);
+
+  (0, _qunit.test)('it works', function (assert) {
+    var subject = OdataFilterParserObject.create();
+    assert.ok(subject);
+  });
+
+  (0, _qunit.test)('parseFilterConditionExpression should return filter SimplePredicate eq with value null', function (assert) {
+    assert.expect(4);
+    var subject = OdataFilterParserObject.create({});
+
+    var filter = subject.parseFilterConditionExpression('field', '=', '');
+
+    assert.ok(filter instanceof _emberFlexberryData.Query.SimplePredicate);
+    assert.equal(filter._attributePath, 'field');
+    assert.equal(filter._operator, 'eq');
+    assert.equal(filter._value, null);
+  });
+
+  (0, _qunit.test)('parseFilterConditionExpression should return filter SimplePredicate eq with value', function (assert) {
+    assert.expect(4);
+    var subject = OdataFilterParserObject.create({});
+
+    var filter = subject.parseFilterConditionExpression('field', '=', 'test');
+
+    assert.ok(filter instanceof _emberFlexberryData.Query.SimplePredicate);
+    assert.equal(filter._attributePath, 'field');
+    assert.equal(filter._operator, 'eq');
+    assert.equal(filter._value, 'test');
+  });
+
+  (0, _qunit.test)('parseFilterConditionExpression should return filter SimplePredicate neq with value null', function (assert) {
+    assert.expect(4);
+    var subject = OdataFilterParserObject.create({});
+
+    var filter = subject.parseFilterConditionExpression('field', '!=', null);
+
+    assert.ok(filter instanceof _emberFlexberryData.Query.SimplePredicate);
+    assert.equal(filter._attributePath, 'field');
+    assert.equal(filter._operator, 'neq');
+    assert.equal(filter._value, null);
+  });
+
+  (0, _qunit.test)('parseFilterConditionExpression should return filter SimplePredicate neq with value', function (assert) {
+    assert.expect(9);
+    var subject = OdataFilterParserObject.create({});
+
+    var filter = subject.parseFilterConditionExpression('field', '!=', 'test');
+
+    assert.ok(filter instanceof _emberFlexberryData.Query.ComplexPredicate);
+    assert.equal(filter._condition, 'or');
+    assert.equal(filter._predicates.length, 2);
+    assert.equal(filter._predicates[0]._attributePath, 'field');
+    assert.equal(filter._predicates[0]._operator, 'neq');
+    assert.equal(filter._predicates[0]._value, 'test');
+    assert.equal(filter._predicates[1]._attributePath, 'field');
+    assert.equal(filter._predicates[1]._operator, 'eq');
+    assert.equal(filter._predicates[1]._value, null);
+  });
+
+  (0, _qunit.test)('parseFilterConditionExpression should return filter SimplePredicate ge', function (assert) {
+    assert.expect(4);
+    var subject = OdataFilterParserObject.create({});
+
+    var filter = subject.parseFilterConditionExpression('field', '>', 10);
+
+    assert.ok(filter instanceof _emberFlexberryData.Query.SimplePredicate);
+    assert.equal(filter._attributePath, 'field');
+    assert.equal(filter._operator, 'ge');
+    assert.equal(filter._value, 10);
+  });
+
+  (0, _qunit.test)('parseFilterConditionExpression should return filter SimplePredicate le', function (assert) {
+    assert.expect(4);
+    var subject = OdataFilterParserObject.create({});
+
+    var filter = subject.parseFilterConditionExpression('field', '<', 10);
+
+    assert.ok(filter instanceof _emberFlexberryData.Query.SimplePredicate);
+    assert.equal(filter._attributePath, 'field');
+    assert.equal(filter._operator, 'le');
+    assert.equal(filter._value, 10);
+  });
+
+  (0, _qunit.test)('parseFilterConditionExpression should return filter SimplePredicate geq', function (assert) {
+    assert.expect(4);
+    var subject = OdataFilterParserObject.create({});
+
+    var filter = subject.parseFilterConditionExpression('field', '>=', 10);
+
+    assert.ok(filter instanceof _emberFlexberryData.Query.SimplePredicate);
+    assert.equal(filter._attributePath, 'field');
+    assert.equal(filter._operator, 'geq');
+    assert.equal(filter._value, 10);
+  });
+
+  (0, _qunit.test)('parseFilterConditionExpression should return filter SimplePredicate leq', function (assert) {
+    assert.expect(4);
+    var subject = OdataFilterParserObject.create({});
+
+    var filter = subject.parseFilterConditionExpression('field', '<=', 10);
+
+    assert.ok(filter instanceof _emberFlexberryData.Query.SimplePredicate);
+    assert.equal(filter._attributePath, 'field');
+    assert.equal(filter._operator, 'leq');
+    assert.equal(filter._value, 10);
+  });
+
+  (0, _qunit.test)('parseFilterConditionExpression should return filter SimplePredicate like', function (assert) {
+    assert.expect(3);
+    var subject = OdataFilterParserObject.create({});
+
+    var filter = subject.parseFilterConditionExpression('field', 'like', 10);
+
+    assert.ok(filter instanceof _emberFlexberryData.Query.StringPredicate);
+    assert.equal(filter._attributePath, 'field');
+    assert.equal(filter._containsValue, 10);
+  });
+
+  (0, _qunit.test)('parseFilterLogicalExpression should return filter ComplexPredicate AND', function (assert) {
+    assert.expect(3);
+    var subject = OdataFilterParserObject.create({});
+
+    var predicates = [new _emberFlexberryData.Query.SimplePredicate('field', _emberFlexberryData.Query.FilterOperator.Eq, 'test1'), new _emberFlexberryData.Query.SimplePredicate('field', _emberFlexberryData.Query.FilterOperator.Eq, 'test2')];
+    var filter = subject.parseFilterLogicalExpression('and', predicates);
+
+    assert.ok(filter instanceof _emberFlexberryData.Query.ComplexPredicate);
+    assert.equal(filter._condition, 'and');
+    assert.equal(filter._predicates.length, 2);
+  });
+
+  (0, _qunit.test)('parseFilterLogicalExpression should return filter ComplexPredicate OR', function (assert) {
+    assert.expect(3);
+    var subject = OdataFilterParserObject.create({});
+
+    var predicates = [new _emberFlexberryData.Query.SimplePredicate('field', _emberFlexberryData.Query.FilterOperator.Eq, 'test1'), new _emberFlexberryData.Query.SimplePredicate('field', _emberFlexberryData.Query.FilterOperator.Eq, 'test2')];
+    var filter = subject.parseFilterLogicalExpression('or', predicates);
+
+    assert.ok(filter instanceof _emberFlexberryData.Query.ComplexPredicate);
+    assert.equal(filter._condition, 'or');
+    assert.equal(filter._predicates.length, 2);
+  });
+
+  (0, _qunit.test)('parseFilterLogicalExpression should return filter ComplexPredicate NOT', function (assert) {
+    assert.expect(2);
+    var subject = OdataFilterParserObject.create({});
+
+    var predicates = [new _emberFlexberryData.Query.SimplePredicate('field', _emberFlexberryData.Query.FilterOperator.Eq, 'test1'), new _emberFlexberryData.Query.SimplePredicate('field', _emberFlexberryData.Query.FilterOperator.Eq, 'test2')];
+    var filter = subject.parseFilterLogicalExpression('not', predicates);
+
+    assert.ok(filter instanceof _emberFlexberryData.Query.NotPredicate);
+    assert.ok(filter._predicate instanceof _emberFlexberryData.Query.SimplePredicate);
+  });
+});
+define('dummy/tests/unit/mixins/odata-filter-parser-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/odata-filter-parser-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/odata-filter-parser-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/odata-filter-parser-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/odata-filter-parser-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/odata-filter-parser-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-layer-link-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
 
   (0, _emberQunit.moduleForModel)('new-platform-flexberry-g-i-s-layer-link', 'Unit | Model | new-platform-flexberry-g-i-s-layer-link', {

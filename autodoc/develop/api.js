@@ -251,6 +251,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "ODataVectorlayer",
         "OSMLayerComponent",
         "ObjectContainsHelper",
+        "OdataFilterParserMixin",
         "PieComponent",
         "PolygonIdentifyMapTool",
         "PolylineIdentifyMapTool",

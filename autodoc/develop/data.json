@@ -2820,6 +2820,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "addon/mixins/odata-filter-parser.js": {
+            "name": "addon/mixins/odata-filter-parser.js",
+            "modules": {},
+            "classes": {
+                "OdataFilterParserMixin": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/mixins/snap-draw.js": {
             "name": "addon/mixins/snap-draw.js",
             "modules": {},
@@ -3603,6 +3612,7 @@
                 "LeafletPropertiesMixin": 1,
                 "LeafletZoomToFeatureMixin": 1,
                 "LocalStorageBindingMixin": 1,
+                "OdataFilterParserMixin": 1,
                 "WfsFilterParserMixin": 1,
                 "NewPlatformFlexberryGISLayerLinkModel": 1,
                 "NewPlatformFlexberryGISLayerMetadataModel": 1,
@@ -7863,6 +7873,23 @@
             "line": 10,
             "description": "Mixin containing logic which binds data from model into local storage.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Mixin.html\">Ember.Mixin</a>"
+        },
+        "OdataFilterParserMixin": {
+            "name": "OdataFilterParserMixin",
+            "shortname": "OdataFilterParserMixin",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": "",
+            "file": "addon/mixins/odata-filter-parser.js",
+            "line": 8,
+            "description": "Odata filter parser mixin.\nContains methods for parsing odata filter.",
+            "uses": [
+                "<a href=\"http://emberjs.com/api/classes/Ember.Mixin.html\">Ember.Mixin</a>"
+            ]
         },
         "WfsFilterParserMixin": {
             "name": "WfsFilterParserMixin",
@@ -12415,7 +12442,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 927,
+            "line": 928,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -12427,7 +12454,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 966,
+            "line": 975,
             "description": "Projects geometry from latlng to coords.",
             "itemtype": "method",
             "name": "transformToCoords",
@@ -12451,7 +12478,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1002,
+            "line": 1011,
             "description": "Returns promise with the layer properties object.",
             "itemtype": "method",
             "name": "_getAttributesOptions",
@@ -12462,7 +12489,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1042,
+            "line": 1051,
             "description": "Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "loadLayerFeatures",
@@ -12482,7 +12509,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1141,
+            "line": 1150,
             "description": "Get count of features.",
             "itemtype": "method",
             "name": "getCountFeatures",
@@ -12495,7 +12522,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1164,
+            "line": 1173,
             "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "getLayerFeatures",
@@ -12515,21 +12542,21 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1279,
+            "line": 1288,
             "description": "Handles zoomend",
             "class": "ODataVectorLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1378,
+            "line": 1390,
             "description": "Initializes DOM-related component's properties.",
             "class": "ODataVectorLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1435,
+            "line": 1447,
             "description": "Handles 'flexberry-map:cancelEdit' event of leaflet map.",
             "itemtype": "method",
             "name": "cancelEdit",
@@ -40023,7 +40050,7 @@
         },
         {
             "file": "addon/layers/odata-vector.js",
-            "line": 15,
+            "line": 17,
             "description": "Icon class related to layer type.",
             "itemtype": "property",
             "name": "iconClass",
@@ -40034,7 +40061,7 @@
         },
         {
             "file": "addon/layers/odata-vector.js",
-            "line": 24,
+            "line": 26,
             "description": "Permitted operations related to layer type.",
             "itemtype": "property",
             "name": "operations",
@@ -40045,7 +40072,18 @@
         },
         {
             "file": "addon/layers/odata-vector.js",
-            "line": 33,
+            "line": 35,
+            "description": "Crs.",
+            "itemtype": "property",
+            "name": "crs",
+            "type": "Object",
+            "default": "null",
+            "class": "ODataVectorlayer",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/layers/odata-vector.js",
+            "line": 44,
             "description": "Creates new settings object (with settings related to layer-type).",
             "itemtype": "method",
             "name": "createSettings",
@@ -40058,7 +40096,7 @@
         },
         {
             "file": "addon/layers/odata-vector.js",
-            "line": 52,
+            "line": 63,
             "description": "Get properties names from leaflet layer object.",
             "itemtype": "method",
             "name": "getLayerProperties",
@@ -40078,7 +40116,7 @@
         },
         {
             "file": "addon/layers/odata-vector.js",
-            "line": 81,
+            "line": 93,
             "description": "Get property values from leaflet layer object.",
             "itemtype": "method",
             "name": "getLayerPropertyValues",
@@ -40102,6 +40140,41 @@
             "return": {
                 "description": "Array with selected property values",
                 "type": "Array"
+            },
+            "class": "ODataVectorlayer",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/layers/odata-vector.js",
+            "line": 124,
+            "description": "Parse filter geometry expression.\n('IN', 'NOT IN').",
+            "itemtype": "method",
+            "name": "parseFilterGeometryExpression",
+            "params": [
+                {
+                    "name": "condition",
+                    "description": "Filter condition",
+                    "type": "String"
+                },
+                {
+                    "name": "geoJSON",
+                    "description": "Geometry",
+                    "type": "Object"
+                },
+                {
+                    "name": "geometryField",
+                    "description": "Layer's geometry field",
+                    "type": "String"
+                },
+                {
+                    "name": "crs",
+                    "description": "Crs",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Filter object",
+                "type": "Object"
             },
             "class": "ODataVectorlayer",
             "module": "ember-flexberry-gis"
@@ -46615,6 +46688,61 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/mixins/odata-filter-parser.js",
+            "line": 16,
+            "description": "Parse filter condition expression ('=', '!=', '<', '<=', '>', '>=', 'LIKE', 'ILIKE').",
+            "itemtype": "method",
+            "name": "parseFilterConditionExpression",
+            "params": [
+                {
+                    "name": "field",
+                    "description": "Field name",
+                    "type": "String"
+                },
+                {
+                    "name": "condition",
+                    "description": "Condition name",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "description": "Field value",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Filter object",
+                "type": "Object"
+            },
+            "class": "OdataFilterParserMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/odata-filter-parser.js",
+            "line": 53,
+            "description": "Parse filter logical expression ('AND', 'OR', 'NOT').",
+            "itemtype": "method",
+            "name": "parseFilterLogicalExpression",
+            "params": [
+                {
+                    "name": "condition",
+                    "description": "Filter condition",
+                    "type": "String"
+                },
+                {
+                    "name": "properties",
+                    "description": "Filter properties",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Filter object",
+                "type": "Object"
+            },
+            "class": "OdataFilterParserMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/mixins/snap-draw.js",
             "line": 4,
             "description": "GroupLayers for snap (wfs, odata)",
@@ -48955,23 +49083,23 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:927"
+            "line": " addon/components/layers/odata-vector-layer.js:928"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:966"
+            "line": " addon/components/layers/odata-vector-layer.js:975"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:1042"
+            "line": " addon/components/layers/odata-vector-layer.js:1051"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:1164"
+            "line": " addon/components/layers/odata-vector-layer.js:1173"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:1435"
+            "line": " addon/components/layers/odata-vector-layer.js:1447"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -49223,15 +49351,19 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/layers/odata-vector.js:33"
+            "line": " addon/layers/odata-vector.js:44"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/layers/odata-vector.js:52"
+            "line": " addon/layers/odata-vector.js:63"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/layers/odata-vector.js:81"
+            "line": " addon/layers/odata-vector.js:93"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/layers/odata-vector.js:124"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -49368,6 +49500,14 @@
         {
             "message": "unknown tag: defaul",
             "line": " addon/mixins/leaflet-properties.js:31"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/mixins/odata-filter-parser.js:16"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/mixins/odata-filter-parser.js:53"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -49619,11 +49759,11 @@
         },
         {
             "message": "Missing item type\nHandles zoomend",
-            "line": " addon/components/layers/odata-vector-layer.js:1279"
+            "line": " addon/components/layers/odata-vector-layer.js:1288"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/layers/odata-vector-layer.js:1378"
+            "line": " addon/components/layers/odata-vector-layer.js:1390"
         },
         {
             "message": "Missing item type\nPerforms 'getFeature' request to WFS-service related to layer.",
