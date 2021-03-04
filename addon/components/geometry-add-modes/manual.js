@@ -122,6 +122,15 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   coordinatesParseError: false,
 
   /**
+    Flag to dispaly parse error.
+
+    @property coordinatesTypeGeometryError
+    @type Boolean
+    @default false
+  */
+  coordinatesTypeGeometryError: false,
+
+  /**
     Flag to display line error.
 
     @property coordinatesInLineError
@@ -152,7 +161,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   */
   _objectTypesLine: Ember.A([
     {
-      captionPath: 'components.geometry-add-modes.rhumb.manual.linestring-object-type',
+      captionPath: 'components.geometry-add-modes.manual.linestring-object-type',
       type: 'LineString'
     },
     {
@@ -226,6 +235,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
 
   coordinatesInLineErrorLabel: t('components.geometry-add-modes.manual.coordinates-line-error-label'),
 
+  coordinatesTypeGeometryErrorLabel: t('components.geometry-add-modes.manual.coordinates-type-geometry-error-label'),
+
   onSelectedTpeChanged: Ember.observer('_curType', function () {
     if (!Ember.isNone(this.get('_curType'))) {
       this.set('_geometryField', false);
@@ -286,6 +297,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       @param {Object} tabModel Tab model.
     */
     onButtonClick(tabModel) {
+      this.clearDialog();
       this.set('_dialogHasBeenRequested', true);
       this.set('_dialogVisible', true);
       switch (tabModel.typeGeometry) {
@@ -419,6 +431,16 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
 
       this.set('coordinatesParseError', false);
 
+      const typeGeometryError = (n) => {
+        e.closeDialog = false;
+        this.set('_coordinatesWithError', true);
+        let coordinatesTypeGeometryErrorLabel = this.get('coordinatesTypeGeometryErrorLabel').string.replace('%count%', n);
+        this.set('coordinatesTypeGeometryErrorLabel', coordinatesTypeGeometryErrorLabel);
+        this.set('coordinatesTypeGeometryError', true);
+      };
+
+      this.set('coordinatesTypeGeometryError', false);
+
       if (Ember.isNone(parsedCoordinates) || parsedCoordinates.length === 0) {
         return coordinatesWithError();
       }
@@ -461,7 +483,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
         case 'LineString':
           if (!hasMinCountPoint(parsedCoordinates, 2)) {
 
-            return coordinatesWithError();
+            return typeGeometryError(2);
           }
 
           if (edit) {
@@ -490,7 +512,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
         case 'MultiLineString':
           if (!hasMinCountPoint(parsedCoordinates, 2)) {
 
-            return coordinatesWithError();
+            return typeGeometryError(2);
           }
 
           if (edit) {
@@ -516,7 +538,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
         case 'Polygon':
           if (!hasMinCountPoint(parsedCoordinates, 3)) {
 
-            return coordinatesWithError();
+            return typeGeometryError(3);
           }
 
           if (edit) {
@@ -545,7 +567,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
         case 'MultiPolygon':
           if (!hasMinCountPoint(parsedCoordinates, 3)) {
 
-            return coordinatesWithError();
+            return typeGeometryError(3);
           }
 
           if (edit) {
@@ -608,15 +630,25 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       @param {Object} e Object event.
     */
     onDeny(e) {
-      this.set('_coordinates', null);
-      this.set('_coordinatesWithError', false);
-      this.set('_geometryField', false);
-      this.set('_objectTypeDisabled', true);
-      this.set('coordinatesParseError', false);
-      this.set('coordinatesInLineError', false);
-      this.set('_objectSelectType', null);
-      this.set('_curType', null);
+      this.clearDialog();
     }
+  },
+
+  /**
+    Cleaning panel.
+
+    @method clearDialog
+  */
+  clearDialog() {
+    this.set('_coordinates', null);
+    this.set('_coordinatesWithError', false);
+    this.set('_geometryField', false);
+    this.set('_objectTypeDisabled', true);
+    this.set('coordinatesParseError', false);
+    this.set('coordinatesInLineError', false);
+    this.set('_objectSelectType', null);
+    this.set('_curType', null);
+    this.set('coordinatesTypeGeometryError', false);
   },
 
   /**

@@ -7,7 +7,7 @@ export default {
   'geometry-field-label': 'Тип геометрии',
   'coordinates-field-label': 'Координаты',
   'coordinates-field-placeholder': 'Добавьте координаты',
-  'coordinates-parse-error-label': 'Некорректно введены координаты. Между парой координат X и Y должен быть пробел.' +
+  'coordinates-parse-error-label': 'Некорректно введены координаты. Между парой координат X и Y должен быть пробел. ' +
    'Разделителем в десятичной координате должна быть точка.',
   'coordinates-line-error-label': 'Некорректно введены координаты. В строке должна содержаться одна пара координат X и Y через пробел',
   'point-object-type': 'Точка',
@@ -15,4 +15,5 @@ export default {
   'multilinestring-object-type': 'Мультилиния',
   'polygon-object-type': 'Полигон',
   'multipolygon-object-type': 'Мультиполигон',
+  'coordinates-type-geometry-error-label': 'Для данного типа геометрии требуется минимум %count% точки'
 };
