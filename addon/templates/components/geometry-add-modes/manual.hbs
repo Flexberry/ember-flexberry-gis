@@ -30,32 +30,44 @@
             </div>
           </div>
           <div class="eight wide column">
-            <div class="field {{if _objectTypeDisabled "disabled" ""}} {{if _geometryField "error" ""}}">   
+            <div class="field {{if _objectTypeDisabled "disabled" ""}} {{if _geometryField "error" ""}}">
               <label>{{geometryFieldLabel}}</label>
               {{flexberry-dropdown
-                items=_types
-                value=_objectSelectType
+                items=_availableType
+                value=_curType
               }}
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="field {{if _coordinatesWithError "error" ""}}">
-      <label>{{coordinatesFieldLabel}}</label>
-      {{flexberry-textarea
-        value=_coordinates
-        placeholder=coordinatesFieldPlaceholder
-      }}
+    <div class="row">
+      <div class="sixteen wide column">
+        <div class="ui grid">
+          <div class="sixteen wide column">
+          <div class="manual-textarea field {{if _coordinatesWithError "error" ""}}">
+            <label>{{coordinatesFieldLabel}}</label>
+            {{flexberry-textarea
+              value=_coordinates
+              placeholder=coordinatesFieldPlaceholder
+            }}
+          </div>
+          </div>
+        </div>
+      </div>
     </div>
-     {{#if (or coordinatesInLineError coordinatesParseError)}}
+
+     {{#if (or coordinatesInLineError coordinatesParseError coordinatesTypeGeometryError)}}
       <div class="ember-view ui message red">
-        <ul class="list">   
-            {{#if coordinatesInLineError}}     
+        <ul class="list">
+            {{#if coordinatesInLineError}}
               <li>{{coordinatesInLineErrorLabel}}</li>
             {{/if}}
-            {{#if coordinatesParseError}}     
+            {{#if coordinatesParseError}}
               <li>{{coordinatesParseErrorLabel}}</li>
+            {{/if}}
+            {{#if coordinatesTypeGeometryError}}
+              <li>{{coordinatesTypeGeometryErrorLabel}}</li>
             {{/if}}
         </ul>
       </div>

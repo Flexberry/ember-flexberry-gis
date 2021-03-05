@@ -355,6 +355,7 @@
 .ui.modal.flexberry-geometry-add-mode-rhumb-dialog,
 .ui.modal.flexberry-geometry-add-mode-geoprovider-dialog,
 .ui.modal.flexberry-geometry-add-mode-import-dialog,
+.ui.modal.flexberry-layer-dialog-move-dialog,
 .ui.modal.flexberry-geometry-add-mode-import-result {
   .flexberry-dialog-content.content {
     min-height: 400px;
@@ -371,6 +372,12 @@
   .flexberry-geometry-add-mode-rhumb-table-block {
     overflow: auto;
     height: 170px;
+  }
+  .error input[type="text"]::-webkit-input-placeholder {/* WebKit, Blink, Edge */
+    color: #9F3A38;
+  }
+  .error input[type="text"]::placeholder {/* Most modern browsers support this now. */
+    color: #9F3A38;
   }
 }
 
@@ -418,8 +425,13 @@
 }
 
 .ui.modal.flexberry-geometry-add-mode-import-dialog, .layers-dialogs-data-tabs {
-  .import-from-file input {
-    display: none;
+  .import-from-file {
+    input {
+      display: none;
+    }
+    .flexberry-import-from-file-button {
+      padding-top: 10px;
+    }
   }
 }
 
@@ -536,4 +548,8 @@ form.flexberry-geometry-add-mode-geoprovider-form,
 form.flexberry-geometry-add-mode-import-form,
 .ui.modal.flexberry-geometry-add-mode-import-result .flexberry-dialog-content {
   overflow: auto;
+}
+
+.rastrMessage .flexberry-dialog-toolbar.actions .flexberry-dialog-cancel-button {
+  display: none;
 }

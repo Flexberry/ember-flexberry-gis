@@ -764,6 +764,102 @@ export default Ember.Mixin.create(SnapDraw, {
   },
 
   /**
+    To copy Objects from Source layer to Destination.
+    @method copyObjectsBatch
+    @param {Object} source Object with source settings
+    {
+      layerId, //{string} Layer ID
+      objectIds, //{array} Objects ID
+      shouldRemove //{Bool} Should remove object from source layer
+    }
+    @param {Object} destination Object with destination settings
+    {
+      layerId, //{string} Layer ID
+      withProperties //{Bool} To copy objects with it properties.
+    }
+    @return {Promise} Object in Destination layer
+  */
+  copyObjectsBatch(source, destination) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      if (Ember.isNone(source.layerId) || Ember.isNone(source.objectIds) || Ember.isNone(destination.layerId)) {
+        reject('Check the parameters you are passing');
+      } else {
+        let loadPromise = new Ember.RSVP.all(this.loadingFeaturesByPackages(source.layerId, source.objectIds, source.shouldRemove));
+
+        loadPromise.then((res) => {
+          let destFeatures = [];
+          let sourceFeatures = [];
+          let [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
+          let [sourceModel, sourceLeafletLayer] = this._getModelLeafletObject(source.layerId);
+          let objects = [];
+          if (source.shouldRemove) {
+            sourceLeafletLayer.eachLayer(shape => {
+              if (source.objectIds.indexOf(this._getLayerFeatureId(sourceModel, shape)) !== -1) {
+                objects.push(shape);
+              }
+            });
+          } else {
+            res.forEach(result => {
+              objects = objects.concat(result[2]);
+            });
+          }
+
+          objects.forEach(sourceFeature => {
+            let destFeature;
+            switch (destLayerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
+              case 'polygon':
+                destFeature = L.polygon(sourceFeature.getLatLngs());
+                break;
+              case 'polyline':
+                destFeature = L.polyline(sourceFeature.getLatLngs());
+                break;
+              case 'marker':
+                destFeature = L.marker(sourceFeature.getLatLng());
+                break;
+              default:
+                reject(`Unknown layer type: '${destLayerModel.get('settingsAsObject.typeGeometry')}`);
+            }
+
+            if (!Ember.isNone(destFeature)) {
+              destFeature.feature = { properties: {} };
+              if (destination.withProperties) {
+                destFeature.feature.properties = Object.assign({}, sourceFeature.feature.properties);
+
+                if (sourceLeafletLayer.geometryField) {
+                  delete destFeature.feature.properties[sourceLeafletLayer.geometryField];
+                }
+
+                if (destLeafletLayer.geometryField) {
+                  delete destFeature.feature.properties[destLeafletLayer.geometryField];
+                }
+              }
+
+              destFeatures.push(destFeature);
+              if (source.shouldRemove) {
+                sourceFeatures.push(sourceFeature);
+              }
+            }
+
+          });
+
+          let e = { layers: destFeatures, results: Ember.A() };
+          destLeafletLayer.fire('load', e);
+
+          Ember.RSVP.allSettled(e.results).then(() => {
+            if (source.shouldRemove) {
+              sourceFeatures.forEach(sourceFeature => {
+                sourceLeafletLayer.removeLayer(sourceFeature);
+              });
+            }
+
+            resolve(destFeatures);
+          });
+        }).catch(e => reject(e));
+      }
+    });
+  },
+
+  /**
     Calculate the area of intersection between object A and objects in array B.
     @method getIntersectionArea
     @param {String} layerAId First layer ID.
@@ -1433,7 +1529,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @param {Array} objectIds Object IDs.
     @return {Promise}
   */
-  loadingFeaturesByPackages(layerId, objectIds) {
+  loadingFeaturesByPackages(layerId, objectIds, shouldRemove = false) {
     let packageSize = 100;
 
     let layerPromises = [];
@@ -1446,7 +1542,7 @@ export default Ember.Mixin.create(SnapDraw, {
         objectsPackage.push(objectIds[i]);
       }
 
-      layerPromises.push(this._getModelLayerFeature(layerId, objectsPackage));
+      layerPromises.push(this._getModelLayerFeature(layerId, objectsPackage, shouldRemove));
       startPackage = endPackage;
     }
 
@@ -1465,9 +1561,10 @@ export default Ember.Mixin.create(SnapDraw, {
     @param {String} layerBId Second layer ID.
     @param {Array} objectBIds Second layer object IDs.
     @param {Boolean} failIfInvalid Fail when has invalid geometry.
+    @param {Boolean} forceMulti Flag: indicates whether to make geometries as multi..
     @return {Promise} GeoJson Feature.
   */
-  getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, isUnion = false, failIfInvalid = false) {
+  getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, isUnion = false, failIfInvalid = false, forceMulti = true) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let layerAPromises = this.loadingFeaturesByPackages(layerAId, objectAIds);
       let layerBPromises = this.loadingFeaturesByPackages(layerBId, objectBIds);
@@ -1503,7 +1600,7 @@ export default Ember.Mixin.create(SnapDraw, {
           }
         });
 
-        let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, isUnion, failIfInvalid, true) : null;
+        let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, isUnion, failIfInvalid, true, forceMulti) : null;
         resolve(resultObj ? resultObj : null);
       }).catch((e) => {
         reject(e);

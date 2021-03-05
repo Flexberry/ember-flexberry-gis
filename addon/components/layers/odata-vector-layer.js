@@ -159,6 +159,13 @@ export default BaseVectorLayer.extend({
       leafletObject.models[id] = layer.model;
     }
 
+    // Changes label when edit layer feature
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+      L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
+      layer._label = null;
+      this._createStringLabel(leafletObject._labelsLayer, [layer]);
+    }
+
     return leafletObject;
   },
 
@@ -756,35 +763,6 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-    Registers mixin, model, projections, serializer and adapter in the application.
-
-    @method registerModelMixinSerializerAdapter
-    @param {Object} model
-    @param {Object} modelMixin
-    @param {Object} modelSerializer
-    @param {Object} modelAdapter
-    @return {Boolean}
-  */
-  registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter) {
-    if (!Ember.isNone(model) && !Ember.isNone(modelMixin) && !Ember.isNone(modelSerializer) && !Ember.isNone(modelAdapter)) {
-      let modelName = this.get('modelName');
-      Ember.getOwner(this).unregister(`model:${modelName}`, model);
-      Ember.getOwner(this).unregister(`mixin:${modelName}`, modelMixin);
-      Ember.getOwner(this).unregister(`serializer:${modelName}`, modelSerializer);
-      Ember.getOwner(this).unregister(`adapter:${modelName}`, modelAdapter);
-
-      Ember.getOwner(this).register(`model:${modelName}`, model);
-      Ember.getOwner(this).register(`mixin:${modelName}`, modelMixin);
-      Ember.getOwner(this).register(`serializer:${modelName}`, modelSerializer);
-      Ember.getOwner(this).register(`adapter:${modelName}`, modelAdapter);
-
-      return true;
-    } else {
-      return false;
-    }
-  },
-
-  /**
     Creates models in recursive.
 
     @method сreateModelHierarchy
@@ -844,15 +822,39 @@ export default BaseVectorLayer.extend({
       let projectionName = this.get('projectionName');
       let metadataUrl = this.get('metadataUrl');
 
-      this.сreateModelHierarchy(metadataUrl, modelName).then(({ model, dataModel, modelMixin }) => {
-        model.defineProjection(projectionName, modelName, this.createProjection(dataModel));
+      let modelRegistered = Ember.getOwner(this)._lookupFactory(`model:${modelName}`);
+      let mixinRegistered = Ember.getOwner(this)._lookupFactory(`mixin:${modelName}`);
+      let serializerRegistered = Ember.getOwner(this)._lookupFactory(`serializer:${modelName}`);
+      let adapterRegistered = Ember.getOwner(this)._lookupFactory(`adapter:${modelName}`);
+
+      if (Ember.isNone(serializerRegistered)) {
         let modelSerializer = this.createSerializer();
+        Ember.getOwner(this).register(`serializer:${modelName}`, modelSerializer);
+      }
+
+      if (Ember.isNone(adapterRegistered)) {
         let modelAdapter = this.createAdapterForModel();
-        this.registerModelMixinSerializerAdapter(model, modelMixin, modelSerializer, modelAdapter);
-        resolve('Create dynamic model: ' + modelName);
-      }).catch((e) => {
-        reject('Can\'t create dynamic model: ' + modelName + '. Error: ' + e);
-      });
+        Ember.getOwner(this).register(`adapter:${modelName}`, modelAdapter);
+      }
+
+      if (Ember.isNone(modelRegistered) || Ember.isNone(mixinRegistered)) {
+        this.сreateModelHierarchy(metadataUrl, modelName).then(({ model, dataModel, modelMixin }) => {
+          model.defineProjection(projectionName, modelName, this.createProjection(dataModel));
+          if (Ember.isNone(modelRegistered)) {
+            Ember.getOwner(this).register(`model:${modelName}`, model);
+          }
+
+          if (Ember.isNone(mixinRegistered)) {
+            Ember.getOwner(this).register(`mixin:${modelName}`, modelMixin);
+          }
+
+          resolve('Create dynamic model: ' + modelName);
+        }).catch((e) => {
+          reject('Can\'t create dynamic model: ' + modelName + '. Error: ' + e);
+        });
+      } else {
+        resolve('Model already registered: ' + modelName);
+      }
     });
   },
 
@@ -880,6 +882,7 @@ export default BaseVectorLayer.extend({
     layer.options.dynamicModel = dynamicModel;
     layer.options.metadataUrl = this.get('metadataUrl');
     layer.options.odataUrl = this.get('odataUrl');
+    layer.options.filter = this.get('filter');
 
     L.setOptions(layer, options);
     layer.minZoom = this.get('minZoom');
@@ -912,6 +915,7 @@ export default BaseVectorLayer.extend({
 
     // for check zoom
     layer.leafletMap = leafletMap;
+    this.set('loadedBounds', null);
     let load = this.continueLoad(layer);
     layer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
     return layer;
@@ -926,6 +930,14 @@ export default BaseVectorLayer.extend({
   */
   createVectorLayer() {
     return new Ember.RSVP.Promise((resolve, reject) => {
+      // Retrieve possibly defined in layer's settings filter.
+      let filter = this.get('filter');
+      if (typeof filter === 'string') {
+        filter = Ember.getOwner(this).lookup('layer:odata-vector').parseFilter(filter, (this.get('geometryField') || 'geometry'));
+      }
+
+      this.set('filter', filter);
+
       if (this.get('dynamicModel')) {
         this.createDynamicModel().then(() => {
           let layer = this._createVectorLayer();
@@ -1326,8 +1338,11 @@ export default BaseVectorLayer.extend({
 
         let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
         let newPart = queryNewBounds.intersects(loadedBounds.toEWKT(this.get('crs')));
+        let filter = oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart;
+        let layerFilter = this.get('filter');
+        filter = Ember.isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
 
-        queryBuilder.where(oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart);
+        queryBuilder.where(filter);
 
         let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 

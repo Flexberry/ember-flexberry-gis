@@ -11,6 +11,24 @@
   show=(action "onShow")
   hide=(action "onHide")
 }}
+  {{#flexberry-dialog class='rastrMessage'
+    caption=captionRastr
+    approveButtonCaption=approveButtonCaption
+    denyButtonCaption=denyButtonCaption
+    visible=rastrMessageVisible
+    typeIsReadonly=typeIsReadonly
+    approve=(action "onApproveError")
+    deny=(action "onDeny")
+    beforeShow=(action "onBeforeShow")
+    beforeHide=(action "onBeforeHide")
+    show=(action "onShow")
+    hide=(action "onHide")
+  }}
+    {{ui-message
+      type=typeMessage
+      message=message
+    }}
+  {{/flexberry-dialog}}
   {{flexberry-edit-layermap
     visible=visible
     layer=layer

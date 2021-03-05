@@ -173,6 +173,88 @@ export default BaseVectorLayer.extend({
     }
   },
 
+  _editLayer(layer) {
+    let leafletObject = this.get('_leafletObject');
+    leafletObject.baseEditLayer(layer);
+
+    // Changes label when edit layer feature
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+      L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
+      layer._label = null;
+      this._createStringLabel(leafletObject._labelsLayer, [layer]);
+    }
+  },
+
+  /**
+    Load features by filter and return promise.
+
+    @method _loadFeatures
+    @param filter {L.Filter} filter on loaded features
+    @returns {RSVP.Promise}.
+  */
+  _loadFeatures(filter) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      var that = this;
+
+      L.Util.request({
+        url: this.options.url,
+        data: L.XmlUtil.serializeXmlDocumentString(that.getFeature(filter)),
+        headers: this.options.headers || {},
+        withCredentials: this.options.withCredentials,
+        success: function (responseText) {
+          // If some exception occur, WFS-service can response successfully, but with ExceptionReport,
+          // and such situation must be handled.
+          var exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
+          if (exceptionReport) {
+            that.fire('error', {
+              error: new Error(exceptionReport.message)
+            });
+
+            return that;
+          }
+
+          // Request was truly successful (without exception report),
+          // so convert response to layers.
+          var layers = that.readFormat.responseToLayers(responseText, {
+            coordsToLatLng: that.options.coordsToLatLng,
+            pointToLayer: that.options.pointToLayer
+          });
+
+          if (typeof that.options.style === 'function') {
+            layers.forEach(function (element) {
+              element.state = that.state.exist;
+              if (element.setStyle) {
+                element.setStyle(that.options.style(element));
+              }
+
+              that.addLayer(element);
+            });
+          } else {
+            layers.forEach(function (element) {
+              element.state = that.state.exist;
+              that.addLayer(element);
+            });
+            that.setStyle(that.options.style);
+          }
+
+          that.fire('load', {
+            responseText: responseText,
+            layers: layers
+          });
+          resolve(that);
+          return that;
+        },
+        error: function (errorMessage) {
+          that.fire('error', {
+            error: new Error(errorMessage)
+          });
+          reject(errorMessage);
+          return that;
+        }
+      });
+    });
+  },
+
   /**
     Removes all the layers from the group.
 
@@ -238,6 +320,8 @@ export default BaseVectorLayer.extend({
           wfsLayer.removeLayer = this.get('_removeLayer').bind(this);
           Ember.set(wfsLayer, 'baseClearLayers', wfsLayer.clearLayers);
           wfsLayer.clearLayers = this.get('_clearLayers').bind(this);
+          Ember.set(wfsLayer, 'baseEditLayer', wfsLayer.editLayer);
+          wfsLayer.editLayer = this.get('_editLayer').bind(this);
 
           wfsLayer.reload = this.get('reload').bind(this);
 
@@ -256,9 +340,10 @@ export default BaseVectorLayer.extend({
           wfsLayer.minZoom = this.get('minZoom');
           wfsLayer.maxZoom = this.get('maxZoom');
           wfsLayer.leafletMap = leafletMap;
+          this.set('loadedBounds', null);
           let load = this.continueLoad(wfsLayer);
           wfsLayer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
-
+          wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);
           resolve(wfsLayer);
         })
         .once('error', (e) => {
@@ -521,10 +606,9 @@ export default BaseVectorLayer.extend({
           }
         }
 
-        leafletObject.loadFeatures(filter);
-        leafletObject.once('load', () => {
+        leafletObject.loadFeatures(filter).then(() => {
           resolve(leafletObject);
-        });
+        }).catch(mes => reject(mes));
       } else {
         resolve(leafletObject);
       }
@@ -648,6 +732,8 @@ export default BaseVectorLayer.extend({
 
         let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs);
         let filter = oldPart ? new L.Filter.And(newPart, oldPart) : newPart;
+        let optFilter = leafletObject.options.filter;
+        filter = Ember.isNone(optFilter) ? filter : new L.Filter.And(filter, optFilter);
 
         leafletObject.loadFeatures(filter);
         needPromise = true;

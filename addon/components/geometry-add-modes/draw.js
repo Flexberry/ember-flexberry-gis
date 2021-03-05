@@ -234,7 +234,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     @private
   */
   _createCopyMultiShape(tabModel, layerId, geometryType, featureCollection) {
-    let styleSettings = tabModel.get('styleSettings');
     let feature = featureCollection.features.pop();
     let shape = {};
 
@@ -248,16 +247,9 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     let coordinates = feature.features[0].geometry.coordinates;
 
     if (geometryType === 'multyPolygon') {
-      shape = L.polygon(coordinates, {
-        color: styleSettings.style.path.color,
-        weight: styleSettings.style.path.weight,
-        fillColor: styleSettings.style.path.fillColor
-      });
+      shape = L.polygon(coordinates);
     } else if (geometryType === 'multyLine') {
-      shape = L.polyline(coordinates, {
-        color: styleSettings.style.path.color,
-        weight: styleSettings.style.path.weight
-      });
+      shape = L.polyline(coordinates);
     }
 
     let layer = Ember.get(tabModel, `featureLink.${layerId}`);

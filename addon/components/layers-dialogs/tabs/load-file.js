@@ -24,10 +24,18 @@ export default Ember.Component.extend({
       @method actions.uploadFile
     */
     uploadFile(e) {
-      this.set('_importInProcess', true);
       let file = e.target.files[0];
       this.set('_importInProcess', false);
       this.sendAction('onUploadFile', file);
+    },
+
+    /**
+      Handles clickFile.
+
+      @method actions.clickFile
+    */
+    clickFile() {
+      this.set('_importInProcess', true);
     }
   }
 });
