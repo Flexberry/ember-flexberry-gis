@@ -56,12 +56,26 @@ export default BaseLayer.extend({
   }),
 
   /**
-    @method getContainer: HTMLElement
-    Returns the HTML element that contains the tiles for this layer.
+    @method _getContainer
+    @return HTMLElement
+    Returns the HTML element for this layer.
   */
-	getContainer: function () {
-		return 'canvas' + this._pane;
-	},
+  _getContainer: function () {
+    let className = 'leaflet-' + this.get('_pane') + '-pane';
+    let container = Ember.$(`.${className}`);
+    return container[0];
+  },
+
+  /**
+    @method _getContainerPane
+    @return HTMLElement
+    Returns the HTML element for this label layer.
+  */
+  _getContainerPane: function () {
+    let className = 'leaflet-' + this.get('_paneLabel') + '-pane';
+    let container = Ember.$(`.${className}`);
+    return container[0];
+  },
 
   /**
     @property _pane
@@ -345,6 +359,8 @@ export default BaseLayer.extend({
 
         vectorLayer.minZoom = this.get('minZoom');
         vectorLayer.maxZoom = this.get('maxZoom');
+
+        vectorLayer.getContainer = this.get('_getContainer').bind(this);
 
         if (this.get('clusterize')) {
           let clusterLayer = this.createClusterLayer(vectorLayer);
@@ -1284,6 +1300,7 @@ export default BaseLayer.extend({
         labelsLayer.minZoom = minScaleRange;
         labelsLayer.maxZoom = maxScaleRange;
         labelsLayer.leafletMap = leafletMap;
+        labelsLayer.getContainer = this.get('_getContainerPane').bind(this);
         leafletObject._labelsLayer = labelsLayer;
 
         if (this.get('typeGeometry') === 'polyline') {
