@@ -14,7 +14,7 @@ test('it works FlexberryMapModelApiMixin', function (assert) {
 });
 
 test('uploadFile should send post request with fileName and data to backend and return Ember.RSVP.Promise', function (assert) {
-  assert.expect(4);
+  assert.expect(5);
   let done = assert.async(1);
   let server = sinon.fakeServer.create();
   server.respondWith('uploadfileresponse');
@@ -36,7 +36,8 @@ test('uploadFile should send post request with fileName and data to backend and 
   server.respond();
 
   assert.ok(result instanceof Ember.RSVP.Promise);
-  assert.deepEqual(server.requests[0].requestBody, payload);
+  assert.ok(server.requests[0].requestBody instanceof FormData);
+  assert.ok(server.requests[0].requestBody.has('testFile'));
   assert.equal(server.requests[0].url, 'stubbackend/controls/FileUploaderHandler.ashx?FileName=testFile');
   result.then((e) => {
     assert.equal(e, 'uploadfileresponse');
