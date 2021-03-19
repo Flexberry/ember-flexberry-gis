@@ -347,12 +347,15 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
       this.set('fileControl', Ember.$(e.target));
       let _this = this;
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      let data = new FormData();
+      data.append(file.name, file);
 
       Ember.$.ajax({
         url: `${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}`,
         type: 'POST',
-        data: file,
+        data: data,
         cache: false,
+        contentType: false,
         processData: false
       }).done((response) => {
         if (response && response.features) {

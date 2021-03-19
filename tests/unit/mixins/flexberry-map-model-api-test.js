@@ -36,7 +36,7 @@ test('uploadFile should send post request with fileName and data to backend and 
   server.respond();
 
   assert.ok(result instanceof Ember.RSVP.Promise);
-  assert.deepEqual(server.requests[0].requestBody, payload);
+  assert.ok(server.requests[0].requestBody.has('testFile'));
   assert.equal(server.requests[0].url, 'stubbackend/controls/FileUploaderHandler.ashx?FileName=testFile');
   result.then((e) => {
     assert.equal(e, 'uploadfileresponse');
