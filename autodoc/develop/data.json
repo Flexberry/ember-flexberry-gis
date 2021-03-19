@@ -9866,7 +9866,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 374,
+            "line": 377,
             "description": "Handles button click.",
             "itemtype": "method",
             "name": "actions.onButtonClick",
@@ -9875,7 +9875,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 384,
+            "line": 387,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGeometryAddModeManualComponent/sendingActions.complete:method\"}}'complete' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onApprove",
@@ -9884,7 +9884,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 438,
+            "line": 441,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.hide:method\"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHide",
@@ -9893,7 +9893,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 449,
+            "line": 452,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGeometryAddModeManualComponent/sendingActions.complete:method\"}}'complete' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onApproveImportDialog",
@@ -9902,7 +9902,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 484,
+            "line": 487,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.hide:method\"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHideImportDialog",
@@ -9911,7 +9911,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 503,
+            "line": 506,
             "description": "Handles selectAll button click on import result dialog.",
             "itemtype": "method",
             "name": "actions.onImportAllSelect",
@@ -9920,7 +9920,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 519,
+            "line": 522,
             "description": "Handles changing in properties connections.",
             "itemtype": "method",
             "name": "actions.onPropertyConnectionChange",
@@ -9941,7 +9941,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 535,
+            "line": 538,
             "description": "Component's action invoking when new geometry was added.",
             "itemtype": "method",
             "name": "sendingActions.importComplete",
@@ -45171,7 +45171,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1353,
+            "line": 1356,
             "description": "Convert coordinates of object to wgs84, or other crsName.",
             "itemtype": "method",
             "name": "convertObjectCoordinates",
@@ -45193,7 +45193,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1452,
+            "line": 1455,
             "description": "Get coordinates point.",
             "itemtype": "method",
             "name": "getCoordPoint",
@@ -45233,7 +45233,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1525,
+            "line": 1528,
             "description": "Loading features by packages",
             "itemtype": "method",
             "name": "loadingFeaturesByPackages",
@@ -45258,7 +45258,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1552,
+            "line": 1555,
             "description": "Get merged geometry. Loads objects from a layers by packages of 100 units each.\nWaits when all objects successfully load. Transform objects into JSTS objects.\nFirst it merges geometry of objects on first layer using _getMulti method, then on second layer.\nResult of combining objects in each layer is merged into a common geometry using createMulti method.",
             "itemtype": "method",
             "name": "getMergedGeometry",
@@ -45303,7 +45303,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1611,
+            "line": 1614,
             "description": "Add to array points and feature.",
             "itemtype": "method",
             "name": "_addToArrayPointsAndFeature",
@@ -45328,7 +45328,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1645,
+            "line": 1648,
             "description": "Difference layers.",
             "itemtype": "method",
             "name": "differenceLayers",
@@ -45353,7 +45353,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1727,
+            "line": 1730,
             "description": "Compare layers.",
             "itemtype": "method",
             "name": "compareLayers",
@@ -45388,7 +45388,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1827,
+            "line": 1830,
             "description": "Exponentiation.",
             "itemtype": "method",
             "name": "_pointAmplifier",
@@ -45401,7 +45401,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1836,
+            "line": 1839,
             "description": "Transform coordinates in points.",
             "itemtype": "method",
             "name": "_coordsToPoints",
@@ -45421,7 +45421,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1856,
+            "line": 1859,
             "description": "Transform points in coordinates.",
             "itemtype": "method",
             "name": "_pointsToCoords",
@@ -45441,7 +45441,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1892,
+            "line": 1895,
             "description": "Download file.",
             "itemtype": "method",
             "name": "downloadFile",
