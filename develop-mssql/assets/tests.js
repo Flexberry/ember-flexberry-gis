@@ -8276,7 +8276,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-test', ['exports', 'embe
     server.respond();
 
     assert.ok(result instanceof _ember['default'].RSVP.Promise);
-    assert.deepEqual(server.requests[0].requestBody, payload);
+    assert.ok(server.requests[0].requestBody.has('testFile'));
     assert.equal(server.requests[0].url, 'stubbackend/controls/FileUploaderHandler.ashx?FileName=testFile');
     result.then(function (e) {
       assert.equal(e, 'uploadfileresponse');
