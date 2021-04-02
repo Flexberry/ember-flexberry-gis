@@ -16,6 +16,8 @@ module.exports = {
     // Import extensions for jQuery 'resize' method ($('...').resize(...)).
     app.import('vendor/jquery/jquery.resize.extensions.js');
 
+    app.import('vendor/jquery/jquery-ui.draggable.js');
+
     // Import Leaflet library & it's resources.
     // Leaflet must be prepended (imported with prepend: true option),
     // because ember-addons depending on ember-flexberry-gis

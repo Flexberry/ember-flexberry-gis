@@ -1,61 +1,66 @@
-{{#map-tools/base
+{{#drag-box
+  additionalClassName='measure-drag-panel'
+  container='.mappanel'
+  zIndex=3000
+  top=panelTop
+  left=panelLeft
+  bottom=panelBottom
+  right=panelRight
+  visible=showPanel
+}}
+  <div class="{{titleClass}}">{{t "components.map-tools.measure.title"}}</div>
+  {{#if measureCoordinates}}
+    {{map-tools/base
+            class=(concat flexberryClassNames.prefix " " flexberryClassNames.measureCoordinates " " measureCoordinatesClass)
+            name="measure-coordinates"
+            tooltip=measureCoordinatesCaption
+            iconClass=measureCoordinatesIconClass
+            leafletMap=leafletMap
+            mapToolProperties=_measureToolProperties
+          }}
+  {{/if}}
+  {{#if measureRadius}}
+    {{map-tools/base
+            class=(concat flexberryClassNames.prefix " " flexberryClassNames.measureRadius " " measureRadiusClass)
+            name="measure-radius"
+            tooltip=measureRadiusCaption
+            iconClass=measureRadiusIconClass
+            leafletMap=leafletMap
+            mapToolProperties=_measureToolProperties
+          }}
+  {{/if}}
+  {{#if measureAreaDistance}}
+    {{map-tools/base
+            class=(concat flexberryClassNames.prefix " " flexberryClassNames.measureAreaDistance " " measureAreaDistanceClass)
+            name="measure-distance"
+            tooltip=measureAreaDistanceCaption
+            iconClass=measureAreaDistanceIconClass
+            leafletMap=leafletMap
+            mapToolProperties=_measureToolProperties
+          }}
+  {{/if}}
+  {{#if measureShowHide}}
+    <a title={{if showMeasure measureHideCaption measureShowCaption}} class="{{flexberryClassNames.prefix}} {{flexberryClassNames.measureShowHide}} item" {{action "showHide"}}>
+      <i class="{{if showMeasure measureHideIconClass measureShowIconClass}} {{flexberryClassNames.icon}} icon"></i>
+    </a>
+  {{/if}}
+  {{#if measureClear}}
+    <a title={{measureClearCaption}} class="{{flexberryClassNames.prefix}} {{flexberryClassNames.measureClear}} item" {{action "clear"}}>
+      <i class="{{measureClearIconClass}} {{flexberryClassNames.icon}} icon"></i>
+    </a>
+  {{/if}}
+  <a title={{measureCloseCaption}} class="{{flexberryClassNames.prefix}} {{flexberryClassNames.measureClose}} item" {{action "closePanel"}}>
+    <i class="{{measureCloseIconClass}} {{flexberryClassNames.icon}} icon"></i>
+  </a>
+{{/drag-box}}
+
+
+{{map-commands/base
   class=(concat flexberryClassNames.wrapper " " class)
-  name="measure"
+  name="base"
   caption=caption
   tooltip=tooltip
   iconClass=iconClass
   leafletMap=leafletMap
+  click=(action "showPanel")
 }}
-  {{#block-slot "submenu"}}
-    {{#if measureCoordinates}}
-      {{map-tools/base
-        class=(concat flexberryClassNames.measureCoordinates " " measureCoordinatesClass)
-        name="measure-coordinates"
-        caption=measureCoordinatesCaption
-        iconClass=measureCoordinatesIconClass
-        leafletMap=leafletMap
-        mapToolProperties=_measureToolProperties
-      }}
-    {{/if}}
-    {{#if measureRadius}}
-      {{map-tools/base
-        class=(concat flexberryClassNames.measureRadius " " measureRadiusClass)
-        name="measure-radius"
-        caption=measureRadiusCaption
-        iconClass=measureRadiusIconClass
-        leafletMap=leafletMap
-        mapToolProperties=_measureToolProperties
-      }}
-    {{/if}}
-    {{#if measureDistance}}
-      {{map-tools/base
-        class=(concat flexberryClassNames.measureDistance " " measureDistanceClass)
-        name="measure-distance"
-        caption=measureDistanceCaption
-        iconClass=measureDistanceIconClass
-        leafletMap=leafletMap
-        mapToolProperties=_measureToolProperties
-      }}
-    {{/if}}
-    {{#if measureArea}}
-      {{map-tools/base
-        class=(concat flexberryClassNames.measureArea " " measureAreaClass)
-        name="measure-area"
-        caption=measureAreaCaption
-        iconClass=measureAreaIconClass
-        leafletMap=leafletMap
-        mapToolProperties=_measureToolProperties
-      }}
-    {{/if}}
-    {{#if measureClear}}
-      {{map-tools/base
-        class=(concat flexberryClassNames.measureClear " " measureClearClass)
-        name="measure-clear"
-        caption=measureClearCaption
-        iconClass=measureClearIconClass
-        leafletMap=leafletMap
-        mapToolProperties=_measureToolProperties
-      }}
-    {{/if}}
-  {{/block-slot}}
-{{/map-tools/base}}

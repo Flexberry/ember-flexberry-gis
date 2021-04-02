@@ -40,20 +40,30 @@ export default {
   'measure': {
     'caption': 'Измерить',
     'tooltip': 'Измерить',
+    'title': 'Измерение',
     'measure-coordinates': {
       'caption': 'Координаты'
     },
     'measure-radius': {
       'caption': 'Радиус'
     },
-    'measure-distance': {
-      'caption': 'Расстояние'
+    'measure-area-distance': {
+      'caption': 'Площадь/Расстояние'
     },
     'measure-area': {
       'caption': 'Площадь'
     },
+    'measure-show': {
+      'caption': 'Показать'
+    },
+    'measure-hide': {
+      'caption': 'Скрыть'
+    },
     'measure-clear': {
       'caption': 'Очистить'
+    },
+    'measure-close': {
+      'caption': 'Закрыть'
     }
   },
   'draw': {

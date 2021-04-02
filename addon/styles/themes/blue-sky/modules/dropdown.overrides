@@ -8,7 +8,6 @@
         font-size: 0px;
         background: @whitecolor;
     }
-
     /* элементы внутри выпадающих списков */
     .ui.dropdown .menu {
         margin-left: 52px;
@@ -23,6 +22,11 @@
             width: auto;
         }
     }
+    .no-arrow.ui.dropdown .menu {
+      margin-left: 0px;
+      margin-top: 4px;
+    }
+
     /* элементы меню при наведении */
     .dropdown.item:hover,
     .ui.dropdown .menu>.item:hover {

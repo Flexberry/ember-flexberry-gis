@@ -40,7 +40,7 @@
             leafletMap=leafletMap
             compareLayersEnabled=compareLayersEnabled
             sideBySide=sideBySide
-            layers=(get-with-dynamic-actions this "model.hierarchy"       
+            layers=(get-with-dynamic-actions this "model.hierarchy"
               hierarchyPropertyName="layers"
               pathKeyword="layerPath"
               dynamicActions=(array
@@ -242,8 +242,6 @@
           leafletMap=leafletMap
           layers=model.hierarchy
         }}
-        {{map-tools/measure leafletMap=leafletMap}}
-        {{map-tools/draw leafletMap=leafletMap}}
         {{map-commands/export
           iconClass="external share icon"
           timeout=30000
@@ -251,6 +249,26 @@
           leafletMap=leafletMap
           layers=model.hierarchy
         }}
+        {{#map-commands/base
+          class="flexberry-more-map-command no-arrow"
+          name="base"
+          iconClass="more icon"
+          leafletMap=leafletMap
+        }}
+          {{#block-slot "submenu"}}
+            {{map-tools/measure leafletMap=leafletMap addHaArea=true}}
+          {{#minimap-control
+            minimized=true
+            leafletMap=leafletMap as |groupLayers|
+          }}
+            {{flexberry-layers
+              leafletContainer=groupLayers
+              layers=model.hierarchy
+              forMinimap=true
+            }}
+          {{/minimap-control}}
+          {{/block-slot}}
+        {{/map-commands/base}}
       {{/flexberry-maptoolbar}}
     </div>
   </div>
@@ -283,16 +301,7 @@
           updateWhenIdle=true
           scales=switchScaleControlScales
         }}
-        {{#minimap-control
-          minimized=true
-          leafletMap=leafletMap as |groupLayers|
-        }}
-          {{flexberry-layers
-            leafletContainer=groupLayers
-            layers=model.hierarchy
-            forMinimap=true
-          }}
-        {{/minimap-control}}
+
       {{/flexberry-map}}
     </div>
   </div>
