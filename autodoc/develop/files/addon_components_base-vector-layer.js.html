@@ -467,6 +467,28 @@ export default BaseLayer.extend({
   }),
 
   /**
+    @method _getContainer
+    @return HTMLElement
+    Returns the HTML element for this layer.
+  */
+  _getContainer: function () {
+    let className = &#x27;leaflet-&#x27; + this.get(&#x27;_pane&#x27;) + &#x27;-pane&#x27;;
+    let container = Ember.$(&#x60;.${className}&#x60;);
+    return container[0];
+  },
+
+  /**
+    @method _getContainerPane
+    @return HTMLElement
+    Returns the HTML element for this label layer.
+  */
+  _getContainerPane: function () {
+    let className = &#x27;leaflet-&#x27; + this.get(&#x27;_paneLabel&#x27;) + &#x27;-pane&#x27;;
+    let container = Ember.$(&#x60;.${className}&#x60;);
+    return container[0];
+  },
+
+  /**
     @property _pane
     @type String
     @readOnly
@@ -754,6 +776,8 @@ export default BaseLayer.extend({
 
         vectorLayer.minZoom = this.get(&#x27;minZoom&#x27;);
         vectorLayer.maxZoom = this.get(&#x27;maxZoom&#x27;);
+
+        vectorLayer.getContainer = this.get(&#x27;_getContainer&#x27;).bind(this);
 
         if (this.get(&#x27;clusterize&#x27;)) {
           let clusterLayer = this.createClusterLayer(vectorLayer);
@@ -1693,6 +1717,7 @@ export default BaseLayer.extend({
         labelsLayer.minZoom = minScaleRange;
         labelsLayer.maxZoom = maxScaleRange;
         labelsLayer.leafletMap = leafletMap;
+        labelsLayer.getContainer = this.get(&#x27;_getContainerPane&#x27;).bind(this);
         leafletObject._labelsLayer = labelsLayer;
 
         if (this.get(&#x27;typeGeometry&#x27;) === &#x27;polyline&#x27;) {
