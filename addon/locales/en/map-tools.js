@@ -25,7 +25,7 @@ export default {
       'commit': 'Click on the current vertex to fix area',
       'drag': 'Release the mouse to fix the area',
       'labelPrefix': '<b> Area:&nbsp;',
-      'labelPostfix': '</ b><br/>'
+      'labelPostfix': '</b><br/>'
     },
     'measure-perimeter': {
       'labelPrefix': '<b>Perimeter:&nbsp;',
