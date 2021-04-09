@@ -40,7 +40,7 @@
             leafletMap=leafletMap
             compareLayersEnabled=compareLayersEnabled
             sideBySide=sideBySide
-            layers=(get-with-dynamic-actions this "model.hierarchy"       
+            layers=(get-with-dynamic-actions this "model.otherLayers"
               hierarchyPropertyName="layers"
               pathKeyword="layerPath"
               dynamicActions=(array
@@ -52,7 +52,7 @@
                 (hash
                   on="copy"
                   actionName="onMapLayerCopy"
-                  actionArguments=(array "model.hierarchy")
+                  actionArguments=(array "model.otherLayers")
                 )
                 (hash
                   on="edit"
@@ -251,6 +251,7 @@
           leafletMap=leafletMap
           layers=model.hierarchy
         }}
+        {{map-tools/background-layers layers=model.backgroundLayers}}
       {{/flexberry-maptoolbar}}
     </div>
   </div>

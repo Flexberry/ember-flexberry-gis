@@ -1,0 +1,21 @@
+<div class={{flexberryClassNames.div}}>
+{{map-tools/base
+  class=(concat flexberryClassNames.wrapper)
+  name="background-layers-control"
+  caption=caption
+  tooltip=tooltip
+  iconClass=iconClass
+  leafletMap=leafletMap
+  click=(action "showBackgroundLayers")
+}}
+  {{#if isVisible}}
+      <div class="main-background-layers">
+        {{#each items as |item|}}
+          <div class="child-background-layers {{item.class}}" onclick={{action "onLayerClick" item.layer}}>
+            <img src="{{item.pic}}" class="picture {{item.classActive}}">
+            <p>{{item.name}}</p>
+          </div>
+        {{/each}}
+      </div>
+  {{/if}}
+</div>
