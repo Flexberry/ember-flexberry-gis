@@ -27,6 +27,17 @@
     </div>
   </div>
   <div class="sidebar-wrapper">
+    {{flexberry-search-panel
+      querySearch=(action "querySearch")
+      clearSearch=(action "clearSearch")
+      leafletMap=leafletMap
+      layers=model.hierarchy
+      searchInProcess=searchInProcess
+      maxResultsCount=10
+      class="outer-search"
+      searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
+      attrSearch=(action "attrSearch")
+    }}
     {{flexberry-tab-bar
       change=(action "toggleSidebar")
       items=_sidebarFiltered
@@ -40,7 +51,7 @@
             leafletMap=leafletMap
             compareLayersEnabled=compareLayersEnabled
             sideBySide=sideBySide
-            layers=(get-with-dynamic-actions this "model.hierarchy"       
+            layers=(get-with-dynamic-actions this "model.hierarchy"
               hierarchyPropertyName="layers"
               pathKeyword="layerPath"
               dynamicActions=(array
@@ -105,9 +116,17 @@
         {{flexberry-search-panel
           querySearch=(action "querySearch")
           clearSearch=(action "clearSearch")
+          leafletMap=leafletMap
+          layers=model.hierarchy
           searchInProcess=searchInProcess
+          maxResultsCount=10
+          attrVisible=attrVisible
+          queryString=queryString
           searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
         }}
+        {{#if (gt searchResults.length 0)}}
+          <h5>{{t "components.flexberry-search.result-caption"}}</h5>
+        {{/if}}
         {{layer-result-list
           results=searchResults
           serviceLayer=serviceLayer
