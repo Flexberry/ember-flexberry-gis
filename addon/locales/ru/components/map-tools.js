@@ -11,6 +11,10 @@ export default {
     'caption': '',
     'tooltip': 'Уменьшить'
   },
+  'background-layers': {
+    'caption': '',
+    'tooltip': 'Подложки'
+  },
   'comapre-layers': {
     'caption': '',
     'tooltip': 'Сравнить слои'

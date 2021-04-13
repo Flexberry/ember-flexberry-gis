@@ -3,12 +3,54 @@
     dynamicProperties=searchSettings
     value=queryString
     enter=(action "querySearch" false)
-    select=(action "querySearch" true)
+    select=(action "querySearch" false)
 }}
   <button class="ui icon search-button" {{action "querySearch" false}}>
     <i class="search icon"></i>
+  </button>
+  <button class="ui icon attr-search-button" {{action "attrSearch"}}>
+    <i class="attr icon"></i>
   </button>
   <button class="ui icon clear-search-button" {{action "clearSearch"}}>
     <i class="remove icon"></i>
   </button>
 {{/flexberry-search}}
+{{ui-message
+  type="error"
+  closeable=true
+  visible=showErrorMessage
+  caption=errorMessageCaption
+  message=errorMessage
+  onShow=(action "onErrorMessageShow")
+  onHide=(action "onErrorMessageHide")
+}}
+{{#if attrVisible }}
+  <div class="flexberry-search-attr">
+    <div class="field layers">
+      <label>
+        {{t "components.flexberry-search.search-layers.caption"}}
+      </label>
+      {{flexberry-layers-dropdown
+        class="fluid"
+        filter=(action _layerCanBeSearched)
+        layers=layers
+        value=_selectedLayer
+        layerChange=(action "onLayersDropdownLayerChange")
+      }}
+    </div>
+    <div class="field properties">
+      <label>
+        {{t "components.flexberry-search.search-properties.caption"}}
+      </label>
+      {{flexberry-dropdown
+        class="fluid"
+        items=_selectedLayerFeaturesLocalizedProperties
+        onChange=(action "onChange")
+        value=_localizedValue
+      }}
+    </div>
+    <button class="ui icon close-attr-search" {{action "attrSearch"}}>
+      <i class="remove icon"></i>
+    </button>
+  </div>
+{{/if}}
