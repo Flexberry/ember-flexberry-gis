@@ -425,7 +425,7 @@
     }
     i.icon.favorites:before {
       font-family: Icons;
-      content: "\f006"; 
+      content: "\f006";
     }
     i.icon.compare:before {
       font-family: Icons;
@@ -737,6 +737,12 @@
     transform-origin: 50% 60%;
     &:before {
       font-size: 20px;
+      content: '\f104';
+    }
+  }
+  .ui.accordion .title.active .dropdown.icon {
+    &:before {
+      content: '\f102';
     }
   }
   .layer-result-list-toggler {
@@ -752,8 +758,8 @@
     }
   }
   .flexberry-toggler {
-    border-radius: 5px;
-    box-shadow: @darkBoxShadow;
+    //border-radius: 5px;
+    //box-shadow: @darkBoxShadow;
     padding: 5px;
     margin-bottom: 5px;
     margin-top: 5px;
@@ -762,11 +768,11 @@
     padding: 5px;
   }
   .flexberry-toggler-content {
-    border-radius: 5px;
+    //border-radius: 5px;
     .item:not(.icon) {
       padding: 5px;
-      border-radius: 5px;
-      box-shadow: @darkBoxShadow;
+      //border-radius: 5px;
+      //box-shadow: @darkBoxShadow;
       margin-bottom: 5px;
       .ui.table {
         margin-top: 15px;

@@ -94,48 +94,38 @@
 </div>
 <div class="feature-result-item-content content {{if expanded "visible" "hidden"}}">
   {{#if expanded}}
-    <table class="ui compact celled table">
-      <tr>
-        <th>{{t "components.feature-result-item.feature-table-property-name"}}</th>
-        <th>{{t "components.feature-result-item.feature-table-property-value"}}</th>
-      </tr>
       {{#each-in feature.properties as |propertyName propertyValue|}}
         {{#if (not (array-contains _excludedProperties propertyName))}}
-          <tr>
-            <td>
-              {{#if (get _localizedProperties propertyName)}}
-                {{get _localizedProperties propertyName}}
-              {{else}}
-                {{propertyName}}
-              {{/if}}
-            </td>
-            <td>
-              {{#if (regex-test propertyValue '^(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?')}}
-                <a target="_blank" href="{{propertyValue}}">{{propertyValue}}</a>
-              {{else}}
-                {{{propertyValue}}}
-              {{/if}}
-            </td>
-          </tr>
+          <div class="feature-div-property-name">
+            {{#if (get _localizedProperties propertyName)}}
+              {{get _localizedProperties propertyName}}
+            {{else}}
+              {{propertyName}}
+            {{/if}}
+          </div>
+          <div class="feature-div-property-value">
+            {{#if (regex-test propertyValue '^(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?')}}
+              <a target="_blank" href="{{propertyValue}}">{{propertyValue}}</a>
+            {{else}}
+              {{{propertyValue}}}
+            {{/if}}
+          </div>
         {{/if}}
       {{/each-in}}
       {{#if intersection}}
         {{#if feature.intersection.isPolygon}}
-          <tr>
-            <td>
-              {{t 'components.flexberry-layers-intersections-panel.square'}}
-            </td>
-            <td>
-              {{feature.intersection.intersectedArea}} {{t 'components.flexberry-layers-intersections-panel.m2'}}
-            </td>
-          </tr>
+          <div class="feature-div-property-name">
+            {{t 'components.flexberry-layers-intersections-panel.square'}}
+          </div>
+          <div class="feature-div-property-value">
+            {{feature.intersection.intersectedArea}} {{t 'components.flexberry-layers-intersections-panel.m2'}}
+          </div>
         {{/if}}
         {{#if feature.intersection.intersectionCords}}
-          <tr>
-            <td class="intersection-cell">
-              {{t 'components.flexberry-layers-intersections-panel.intersection-cords'}}
-            </td>
-            <td class="cords">   
+          <div class="feature-div-property-name">
+            {{t 'components.flexberry-layers-intersections-panel.intersection-cords'}}
+          </div>
+          <div class="feature-div-property-value">
               <div>
                 <table class="ui compact celled table">
                   <tr>
@@ -148,42 +138,40 @@
                   </tr>
                   {{#if showAllCords}}
                     {{#each feature.intersection.intersectionCords as |cords|}}
-                      <tr>                  
+                      <tr>
                         <td>
                           {{cords.[0]}}
                         </td>
                         <td>
                           {{cords.[1]}}
-                        </td>                 
-                      </tr>                 
-                    {{/each}}                 
+                        </td>
+                      </tr>
+                    {{/each}}
                   {{else}}
-                    <tr>                  
+                    <tr>
                       <td>
                         {{feature.intersection.intersectionCords.[0].[0]}}
                       </td>
                       <td>
                         {{feature.intersection.intersectionCords.[0].[1]}}
-                      </td>                 
+                      </td>
                     </tr>
-                    <tr>                  
+                    <tr>
                       <td>
                         {{feature.intersection.intersectionCords.[1].[0]}}
                       </td>
                       <td>
                         {{feature.intersection.intersectionCords.[1].[1]}}
-                      </td>                   
-                    </tr>               
+                      </td>
+                    </tr>
                   {{/if}}
                 </table>
                 <div class="show-cords" {{action "toggleShowAllCords"}}>
                   {{cordsActionCaption}}
                 </div>
-              </div> 
-            </td>
-          </tr>
+              </div>
+            </div>
         {{/if}}
       {{/if}}
-    </table>
   {{/if}}
 </div>
