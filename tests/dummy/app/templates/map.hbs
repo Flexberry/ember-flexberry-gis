@@ -261,8 +261,6 @@
           leafletMap=leafletMap
           layers=model.hierarchy
         }}
-        {{map-tools/measure leafletMap=leafletMap}}
-        {{map-tools/draw leafletMap=leafletMap}}
         {{map-commands/export
           iconClass="external share icon"
           timeout=30000
@@ -270,6 +268,26 @@
           leafletMap=leafletMap
           layers=model.hierarchy
         }}
+        {{#map-commands/base
+          class="flexberry-more-map-command no-arrow"
+          name="base"
+          iconClass="more icon"
+          leafletMap=leafletMap
+        }}
+          {{#block-slot "submenu"}}
+            {{map-tools/measure leafletMap=leafletMap addHaArea=true}}
+          {{#minimap-control
+            minimized=true
+            leafletMap=leafletMap as |groupLayers|
+          }}
+            {{flexberry-layers
+              leafletContainer=groupLayers
+              layers=model.hierarchy
+              forMinimap=true
+            }}
+          {{/minimap-control}}
+          {{/block-slot}}
+        {{/map-commands/base}}
         {{map-tools/background-layers layers=model.backgroundLayers}}
       {{/flexberry-maptoolbar}}
     </div>
@@ -312,16 +330,7 @@
           updateWhenIdle=true
           scales=switchScaleControlScales
         }}
-        {{#minimap-control
-          minimized=true
-          leafletMap=leafletMap as |groupLayers|
-        }}
-          {{flexberry-layers
-            leafletContainer=groupLayers
-            layers=model.hierarchy
-            forMinimap=true
-          }}
-        {{/minimap-control}}
+
       {{/flexberry-map}}
     </div>
   </div>

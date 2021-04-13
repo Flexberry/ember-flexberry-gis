@@ -429,6 +429,12 @@
             }
         }
     }
+    .flexberry-more-map-command {
+        i.flexberry-map-tool-submenu-icon.dropdown.icon,
+        i.flexberry-map-command-submenu-icon.dropdown.icon {
+            display: none;
+        }
+    }
     /* показать слои */
     .flexberry-maplayers-show {
         display: inline-flex;
@@ -585,6 +591,20 @@
             content: "\e822";
         }
     }
+    /* еще */
+    i.icon.more {
+      margin: 0px 0px 0px 2px;
+      &:before {
+        content: "\f141";
+        font-family: Icons;
+      }
+    }
+    i.icon.minimap {
+      &:before {
+        content: '\f278';
+        font-family: Icons;
+      }
+    }
     /* изображение */
     i.icon.download:before {
         content: "\e824";
@@ -625,6 +645,69 @@
             content: "\f114";
         }
     }
+}
+
+.flexberry-drag-box {
+  position: absolute;
+  cursor: all-scroll;
+}
+
+div.minimap-drag-panel {
+  width: 175px;
+  height: 175px;
+  background: #fff;
+  border: 2px solid #7ba7d9;
+  border-radius: 5px;
+  padding: 15px 10px 5px 10px;
+
+  i.icon {
+    font-size: 12px;
+  }
+
+  .leaflet-control-minimap {
+   box-shadow: none;
+  }
+
+  .flexberry-minimap-close {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    z-index: 1000;
+    cursor: pointer;
+  }
+}
+
+div.measure-drag-panel {
+  width: 215px;
+  height: 60px;
+  margin: 5px 10px;
+  background: #fff;
+  border: 2px solid @bluesky;
+  border-radius: 5px;
+  box-shadow: 0 0 4px #3c4f76;
+  padding-top: 30px;
+  i.icon {
+    font-size: 20px;
+  }
+
+  .measure-map-tool-panel-title {
+    position: absolute;
+      top: 0px;
+      left: 4px;
+  }
+
+  a.flexberry-map-tool {
+    padding: 4px 4px;
+    cursor: pointer;
+    &.flexberry-measure-close-map-tool {
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      i.icon {
+        font-size: 12px;
+      }
+    }
+  }
 }
 
 /*********************************************
