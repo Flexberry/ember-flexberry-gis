@@ -296,7 +296,16 @@
         {{flexberry-layers
           leafletMap=leafletMap
           leafletContainer=leafletMap
-          layers=model.hierarchy
+          layers=(get-with-dynamic-actions this "model.hierarchy"
+            hierarchyPropertyName="layers"
+            pathKeyword="layerPath"
+            dynamicActions=(array
+              (hash
+                on="layerInit"
+                actionName="onLayerInit"
+              )
+            )
+          )
         }}
         {{switch-scale-control
           leafletMap=leafletMap

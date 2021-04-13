@@ -279,10 +279,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _attributesOperationIsAvailable: Ember.computed('_layerClassFactory', function () {
+    _attributesOperationIsAvailable: Ember.computed('_layerClassFactory', 'layer.layerInitialized', function () {
       let layerClassFactory = this.get('_layerClassFactory');
 
-      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('attributes');
+      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).includes('attributes') && this.get('layer.layerInitialized');
     }),
 
     /**
