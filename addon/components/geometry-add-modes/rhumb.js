@@ -52,24 +52,19 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   tagName: '',
 
   /**
-    Flag indicates whether rhumb geometry rhumb dialog has been already requested by user or not.
-
-    @property _dialogHasBeenRequested
-    @type Boolean
-    @default false
+    @property CRS
+    @default null
     @private
   */
-  _dialogHasBeenRequested: false,
+  _crs: null,
 
   /**
-    Flag indicates whether to show rhumb geometry adding dialog.
-
-    @property _dialogVisible
-    @type Boolean
-    @default false
+    @property layer
+    @type Leaflet layer
+    @default null
     @private
   */
-  _dialogVisible: false,
+  layer: null,
 
   /**
     Form validation flags.
@@ -78,51 +73,13 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     @type Object
     @default {
     startPointValid: false,
-    typeObjectValid: false,
     tableValid: false
   }
     @private
   */
   _formValid: {
     startPointValid: false,
-    typeObjectValid: false,
     tableValid: false
-  },
-
-  /**
-    Validation flags for adding a new record.
-
-    @property _addValid
-    @type Object
-    @default {
-    directionValid: false,
-    rhumbValid: false,
-    distanceValid: false
-  }
-    @private
-  */
-  _addValid: {
-    directionValid: false,
-    rhumbValid: false,
-    distanceValid: false
-  },
-
-  /**
-    Validation flags for adding a edited record.
-
-    @property _editValid
-    @type Object
-    @default {
-    directionValid: false,
-    rhumbValid: false,
-    distanceValid: false
-  }
-    @private
-  */
-  _editValid: {
-    directionValid: false,
-    rhumbValid: false,
-    distanceValid: false
   },
 
   /**
@@ -169,64 +126,16 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   _tableData: Ember.A([]),
 
   /**
-    Object types.
-
-    @property _objectTypes
-    @type string[]
-    @default ['Polygon', 'Line']
-    @readonly
-    @private
-  */
-  _objectTypes: Ember.A([
-    {
-      captionPath: 'components.geometry-add-modes.rhumb.object-types-polygon',
-      type: 'Polygon'
-    },
-    {
-      captionPath: 'components.geometry-add-modes.rhumb.object-types-line',
-      type: 'Line'
-    }
-  ]),
-
-  /**
-    Availble type.
-  */
-  _availableType: null,
-
-  /**
-    Current type.
-  */
-  _curType: null,
-
-  /**
-    Set _dataForm.objectType.
-  */
-  _type: Ember.observer('_curType', function() {
-    let factories = this.get('_objectTypes');
-    let _curType = this.get('_curType');
-    let res = null;
-
-    if (!Ember.isNone(_curType)) {
-      res = factories.filter((factory) => factory.caption.toString() === _curType)[0].type;
-      this._dataForm.objectType = res;
-    }
-
-    return res;
-  }),
-
-  /**
     Form fields.
 
     @property _dataForm
     @type Object
     @default {
-    objectType: null,
     startPoint: ''
   }
     @private
   */
   _dataForm: {
-    objectType: null,
     startPoint: ''
   },
 
@@ -245,31 +154,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   */
   isError: false,
 
-  /**
-    Fields for adding a new record.
-
-    @property _dataFormTable
-    @type Object
-    @default {
-    direction: null,
-    rhumb: null,
-    distance: null,
-  }
-    @private
- */
-  _dataFormTable: {
-    direction: null,
-    rhumb: null,
-    distance: null,
-  },
-
   _availableCoordinateReferenceSystemsCodes: null,
-
-  menuButtonTooltip: t('components.geometry-add-modes.rhumb.menu-button-tooltip'),
-
-  dialogApproveButtonCaption: t('components.geometry-add-modes.rhumb.dialog-approve-button-caption'),
-
-  dialogDenyButtonCaption: t('components.geometry-add-modes.rhumb.dialog-deny-button-caption'),
 
   startPointFieldLabel: t('components.geometry-add-modes.rhumb.start-point-field-label'),
 
@@ -301,21 +186,12 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
   cannotChangePermission: t('components.geometry-add-modes.rhumb.cannot-change-permission'),
 
+  incorrectPermission: t('components.geometry-add-modes.rhumb.incorrect-permission'),
+
   placeholderNoValue: t('components.geometry-add-modes.rhumb.placeholderNoValue'),
 
   init() {
     this._super(...arguments);
-
-    let factories = this.get('typeItems');
-    let availableType = [];
-
-    if (!Ember.isNone(factories)) {
-      factories.forEach((factory) => {
-        availableType.push(factory.caption);
-      });
-    }
-
-    this.set('_availableType', availableType);
 
     let directionItems = this.get('directionItems');
     let availableDirection = [];
@@ -328,29 +204,6 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
     this.set('_availableDirection', availableDirection);
   },
-
-  /**
-    Type items metadata.
-
-    @property typeItems
-    @type Object[]
-  */
-  typeItems: Ember.computed('_objectTypes.[]', '_objectTypes.@each.active', 'i18n', function () {
-    let i18n = this.get('i18n');
-    let _objectTypes = this.get('_objectTypes');
-
-    let result = Ember.A(_objectTypes);
-    result.forEach((item) => {
-      let caption = Ember.get(item, 'caption');
-      let captionPath = Ember.get(item, 'captionPath');
-
-      if (!caption && captionPath) {
-        Ember.set(item, 'caption', i18n.t(captionPath));
-      }
-    });
-
-    return result;
-  }),
 
   /**
     Direction items metadata.
@@ -375,110 +228,97 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     return result;
   }),
 
-  actions: {
-    /**
-      Handles button click.
-    */
-    onOpenDialog() {
-      this.set('_dialogHasBeenRequested', true);
-      this.set('_dialogVisible', true);
-      this.set('isError', false);
+  initialSettings: Ember.on('init', Ember.observer('settings', function () {
+    this.set('isError', false);
+    this.set('_crs', this.get('settings.layerCRS'));
+    this._dropForm();
+  })),
 
-      this._dropForm();
-    },
+  getLayer() {
+    let error = false;
+    this.set('isError', false);
+    this.set('message', null);
 
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryGeometryAddModeRhumbComponent/sendingActions.complete:method"}}'complete' action{{/crossLink}}.
+    this.set('_formValid.startPointValid', !this._validStartPoint(this._dataForm.startPoint));
+    error |= !this._validStartPoint(this._dataForm.startPoint);
 
-      @method actions.onApprove
-    */
-    onApprove(e) {
-      this._dropTableValidForm();
-      let error = false;
-      this.set('isError', false);
+    let skipNum = this._countSkip();
+    if (Ember.isNone(skipNum)) {
+      this.set('isError', true);
+      this.set('message', this.get('cannotChangePermission'));
+    }
 
-      if (Ember.isNone(this._dataForm.objectType)) {
-        this.set('_formValid.typeObjectValid', true);
-        error = true;
-      } else {
-        this.set('_formValid.typeObjectValid', false);
+    let type = this.get('settings.typeGeometry');
+
+    if (Ember.isNone(skipNum) || this._tableData.length === 0 || (type === 'polygon' && this._tableData.length < skipNum + 2) ||
+      (type === 'polyline' && this._tableData.length < skipNum + 1)) {
+      this.set('_formValid.tableValid', true);
+      error = true;
+      this.set('message', this.get('incorrectPermission'));
+    } else {
+      this.set('_formValid.tableValid', false);
+    }
+
+    for (let i = 0; i < this._tableData.length; i++) {
+      let item = this._tableData[i];
+      Ember.set(item, 'directionValid', Ember.isNone(item.direction));
+      Ember.set(item, 'rhumbValid', !this._validFloatNumber(item.rhumb));
+      Ember.set(item, 'distanceValid', !this._validFloatNumber(item.distance));
+      error |= Ember.isNone(item.direction) || !this._validFloatNumber(item.rhumb) || !this._validFloatNumber(item.distance);
+    }
+
+    if (error) {
+      return [true, null];
+    }
+
+    let objectType;
+    switch (type) {
+      case 'polygon':
+        objectType = 'Polygon';
+        break;
+      case 'polyine':
+        objectType = 'LineString';
+        break;
+    }
+
+    const startPoints = this._dataForm.startPoint.split(' ');
+
+    let translateDirection = (direction) => {
+      let factories = this.get('_objectDirections');
+      let res = null;
+
+      if (!Ember.isNone(direction)) {
+        res = factories.filter((factory) => factory.caption.toString() === direction)[0].type;
       }
 
-      if (!this._validStartPoint(this._dataForm.startPoint)) {
-        this.set('_formValid.startPointValid', true);
-        error = true;
-      } else {
-        this.set('_formValid.startPointValid', false);
-      }
+      return res;
+    };
 
-      let skipNum = this._countSkip();
-      if (Ember.isNone(skipNum)) {
-        this.set('isError', true);
-        this.set('message', this.get('cannotChangePermission'));
-      }
-
-      if (Ember.isNone(skipNum) || this._tableData.length === 0 || (this._dataForm.objectType === 'Polygon' && this._tableData.length < skipNum + 2) ||
-        (this._dataForm.objectType === 'Line' && this._tableData.length < skipNum + 1)) {
-        this.set('_formValid.tableValid', true);
-        error = true;
-      } else {
-        this.set('_formValid.tableValid', false);
-      }
-
-      if (error) {
-        e.closeDialog = false;
-
-        return;
-      }
-
-      let objectType;
-      switch (this._dataForm.objectType) {
-        case 'Polygon':
-          objectType = 'Polygon';
-          break;
-        case 'Line':
-          objectType = 'LineString';
-          break;
-      }
-
-      const startPoints = this._dataForm.startPoint.split(' ');
-
-      let translateDirection = (direction) => {
-        let factories = this.get('_objectDirections');
-        let res = null;
-
-        if (!Ember.isNone(direction)) {
-          res = factories.filter((factory) => factory.caption.toString() === direction)[0].type;
-        }
-
-        return res;
+    let points = [];
+    for (let i = 0; i < this._tableData.length; i++) {
+      let item = this._tableData[i];
+      let data = {
+        rhumb: `${translateDirection(item.direction)}`,
+        angle: item.rhumb,
+        distance: item.distance
       };
 
-      let points = [];
-      for (let i = 0; i < this._tableData.length; i++) {
-        let item = this._tableData[i];
-        let data = {
-          rhumb: `${translateDirection(item.direction)}`,
-          angle: item.rhumb,
-          distance: item.distance
-        };
+      points.push(data);
+    }
 
-        points.push(data);
-      }
+    const crsCode = this.get('_crs.code');
+    let data = {
+      type: objectType,
+      startPoint: startPoints,
+      skip: skipNum,
+      crs: crsCode,
+      points: points
+    };
 
-      const crsCode  = this.get('settings.layerCRS.code');
-      const data = {
-        type: objectType,
-        startPoint: startPoints,
-        skip: skipNum,
-        crs: crsCode,
-        points: points
-      };
-
-      let crsRhumb = Ember.get(this.tabModel, 'leafletObject.options.crs');
+    try {
+      let crsRhumb = this.get('settings.layerCRS');
       const rhumbObj = rhumbOperations.createObjectRhumb(data, crsRhumb, this);
-      let coordsToLatLng = function(coords) {
+      let coordsToLatLng = function (coords) {
         return crsRhumb.unproject(L.point(coords));
       };
 
@@ -491,14 +331,39 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
       let newObj = geoJSON.getLayers()[0];
 
-      this.sendAction('complete', newObj, { panToAddedObject: true });
-    },
+      return [false, newObj];
+    } catch (e) {
+      return [true, null];
+    }
+  },
 
-    /**
-      Handles change type.
-    */
-    validType() {
-      this.set('_formValid.typeObjectValid', Ember.isNone(this._dataForm.objectType));
+  actions: {
+
+    apply() {
+      let [error, addedLayer] = this.getLayer();
+
+      if (error) {
+        return;
+      }
+
+      let layer = this.get('layer');
+      if (!Ember.isNone(layer)) {
+        const type = this.get('settings.typeGeometry');
+        if (type === 'marker') {
+          layer.setLatLng(addedLayer.getLatLng());
+        } else {
+          layer.setLatLngs(addedLayer.getLatLngs());
+        }
+
+        layer.disableEdit();
+        layer.enableEdit();
+
+        addedLayer.remove();
+
+        addedLayer = layer;
+      }
+
+      this.sendAction('updateLayer', addedLayer, true);
     },
 
     /**
@@ -509,47 +374,11 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     },
 
     /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
-
-      @method actions.onDeny
-    */
-    onDeny(e) {
-      this._dropForm();
-    },
-
-    /**
       The button for adding a new record to the table.
 
       @method actions.onAddRow
     */
-    onAddRow(option) {
-      let error = false;
-
-      if (Ember.isNone(this._dataFormTable.direction)) {
-        this.set('_addValid.directionValid', true);
-        error = true;
-      } else {
-        this.set('_addValid.directionValid', false);
-      }
-
-      if (!this._validFloatNumber(this._dataFormTable.rhumb)) {
-        this.set('_addValid.rhumbValid', true);
-        error = true;
-      } else {
-        this.set('_addValid.rhumbValid', false);
-      }
-
-      if (!this._validFloatNumber(this._dataFormTable.distance)) {
-        this.set('_addValid.distanceValid', true);
-        error = true;
-      } else {
-        this.set('_addValid.distanceValid', false);
-      }
-
-      if (error) {
-        return;
-      }
-
+    OnAddRow(rowId) {
       const getGuid = () => {
         const templ = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
         let result = templ.replace(/[xy]/g, (c, r) => {
@@ -565,23 +394,28 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         this.set('isError', false);
       }
 
+      let index = -1;
+      for (let i = 0; i < this._tableData.length; i++) {
+        if (this._tableData[i].id === rowId) {
+          index = i;
+        }
+      }
+
       const row = {
         id: getGuid(),
         number: '0-1',
         readonly: true,
-        _skip: {},
         skip: skip,
-        direction: this._dataFormTable.direction,
-        rhumb: this._dataFormTable.rhumb,
-        distance: this._dataFormTable.distance,
+        direction: null,
+        rhumb: null,
+        distance: null,
         directionValid: false,
         rhumbValid: false,
         distanceValid: false
       };
 
-      Ember.set(row._skip, Ember.guidFor(row), skip);
-      this._tableData.pushObject(row);
-      this._dropTableForm();
+      this._tableData.insertAt(index + 1, row);
+
       this._countOrder();
     },
 
@@ -598,10 +432,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
           if (Ember.get(item, 'skip')) {
             if (this._tableData.length === 1) {
               Ember.set(this._tableData[0], 'skip', true);
-              Ember.set(this._tableData[0]._skip, Ember.guidFor(this._tableData[0]), true);
             } else {
               Ember.set(this._tableData[1], 'skip', true);
-              Ember.set(this._tableData[1]._skip, Ember.guidFor(this._tableData[1]), true);
             }
           }
 
@@ -612,95 +444,31 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     },
 
     /**
-      Button to edit a record in a table.
-
-      @method actions.OnEditRow
-    */
-    OnEditRow(id) {
-      for (let i = 0; i < this._tableData.length; i++) {
-        let item = this._tableData[i];
-        if (item.id === id) {
-          if (Ember.get(item, 'readonly')) {
-            Ember.set(item, 'readonly', false);
-          } else {
-            let error = false;
-            if (Ember.isNone(item.direction)) {
-              Ember.set(item, 'directionValid', true);
-              error = true;
-            } else {
-              Ember.set(item, 'directionValid', false);
-            }
-
-            if (!this._validFloatNumber(item.rhumb)) {
-              Ember.set(item, 'rhumbValid', true);
-              error = true;
-            } else {
-              Ember.set(item, 'rhumbValid', false);
-            }
-
-            if (!this._validFloatNumber(item.distance)) {
-              Ember.set(item, 'distanceValid', true);
-              error = true;
-            } else {
-              Ember.set(item, 'distanceValid', false);
-            }
-
-            if (error) {
-              return;
-            }
-
-            Ember.set(item, 'readonly', true);
-          }
-
-          return;
-        }
-      }
-    },
-
-    /**
       Handles click on checkbox.
 
       @method actions.onRhumbSkipChange
     */
-    onRhumbSkipChange(rowId, row, options) {
+    onRhumbSkipChange(row, options) {
       let checked = options.checked;
-      this.set('isError', false);
-      let curSkip = this._tableData.filter((item) => {
-        return Ember.get(item, 'skip');
-      });
 
-      if (this._tableData.length > 1 && (!Ember.isEmpty(curSkip) && Ember.get(curSkip[0], 'id') !== row.id)) {
+      this.set('isError', false);
+
+      // не будем давать снимать галку, только перевесить
+      if (!checked) {
+        Ember.set(row.skip, true);
+        return;
+      }
+
+      if (this._tableData.length > 1 && this._tableData.filter((item) => item.skip).length > 1) {
         if (confirm(this.get('changePermission'))) {
           for (let i = 0; i < this._tableData.length; i++) {
             let item = this._tableData[i];
-            Ember.set(item, 'skip', false);
-            Ember.set(item._skip, Ember.guidFor(item), false);
-            if (item.id === row.id) {
-              Ember.set(item, 'skip', true);
-              Ember.set(item._skip, Ember.guidFor(item), true);
+            if (item.id !== row.id) {
+              Ember.set(item, 'skip', false);
             }
           }
         } else {
-          options.checked = !checked;
-          Ember.set(row._skip, rowId, checked);  //strange magic
-          Ember.set(row._skip, rowId, !checked);
-        }
-      } else if (this._tableData.length === 1) {
-        let item = this._tableData[0];
-        if (this._tableData[0].skip) {
-          Ember.set(item, 'skip', false);
-          Ember.set(item._skip, Ember.guidFor(item), false);
-        }else {
-          Ember.set(item, 'skip', true);
-          Ember.set(item._skip, Ember.guidFor(item), true);
-        }
-      } else if (!Ember.isEmpty(curSkip) && row.id === Ember.get(curSkip[0], 'id')) {
-        if (Ember.get(curSkip[0], 'skip')) {
-          this.set('isError', true);
-          this.set('message', this.get('cannotChangePermission'));
-          options.checked = !checked;
-          Ember.set(row._skip, rowId, checked);  //strange magic
-          Ember.set(row._skip, rowId, !checked);
+          Ember.set(row, 'skip', false);
         }
       }
     },
@@ -720,7 +488,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   /**
     Count order number of rhumbs.
 
-    @method _countSkip
+    @method _countOrder
   */
   _countOrder() {
     for (let i = 0; i < this._tableData.length; i++) {
@@ -749,31 +517,12 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   */
   _dropForm() {
     this.set('_dataForm.startPoint', '');
-    this.set('_dataForm.objectType', null);
     this.set('_curType', null);
 
-    this._dropTableForm();
+    this.set('_tableData', Ember.A());
+    this.send('OnAddRow');
+
     Object.keys(this._formValid).forEach(v => Ember.set(this, `_formValid.${v}`, false));
-    this._dropTableValidForm();
-    this.set('_tableData', Ember.A([]));
-  },
-
-  /**
-    Сlear form.
-
-    @method _dropTableValidForm
-  */
-  _dropTableValidForm() {
-    Object.keys(this._addValid).forEach(v => Ember.set(this, `_addValid.${v}`, false));
-  },
-
-  /**
-    Clear form validation.
-
-    @method _dropTableForm
-  */
-  _dropTableForm() {
-    Object.keys(this._dataFormTable).forEach(v => Ember.set(this, `_dataFormTable.${v}`, null));
   },
 
   /**

@@ -549,6 +549,18 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       },
 
       /**
+        Handles create feature button's 'click' event.
+        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.attributes:method"}}'attributes'{{/crossLink}} action.
+
+        @method actions.onFeatureCreateButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+       onFeatureCreateButtonClick(...args) {
+        this.sendAction('featureEdit', ...args);
+      },
+
+      /**
         Handles add button's 'click' event.
         Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
 

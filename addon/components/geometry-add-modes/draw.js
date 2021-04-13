@@ -45,11 +45,296 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   classNames: ['draw', flexberryClassNames.wrapper],
 
   /**
+    Offset validation flags.
+
+    @property _offsetInvalid
+    @type Object
+    @default {
+      x: false,
+      y: false
+    }
+    @private
+  */
+  _offsetInvalid: {
+    x: false,
+    y: false
+  },
+
+  /**
+    Offset
+
+    @property s
+    @type Object
+    @default {
+      x: null,
+      y: null
+    }
+    @private
+  */
+  _offset: {
+    x: null,
+    y: null
+  },
+
+  /**
     Component settings.
   */
   settings: null,
 
+  layer: null,
+
+  edit: Ember.computed('layer', function () {
+    if (this.get('layer')) {
+      return true;
+    }
+
+    return false;
+  }),
+
+  initialSettings: Ember.on('init', Ember.observer('settings', function () {
+    this._dragAndDrop(false);
+  })),
+
+  getLayer() {
+    let layer = this.get('layer');
+
+    return [Ember.isNone(layer), layer];
+  },
+
+  /**
+    Number check.
+
+    @method _validFloatNumber
+  */
+  _validOffset(str) {
+    const regex = /^(([0-9]*[.])?[0-9]+)$/;
+    return regex.exec(str);
+  },
+
+  /**
+    Calculates new coordinates layer's feature after the move
+
+    @param {Arrey} latlngs A hash containing  coordinates.
+    @param {Number} x A hash containing move by X.
+    @param {Number} y A hash containing move by Y.
+    @param {Object} crs A hash containing layer's crs.
+  */
+  move(latlngs, x, y, crs) {
+    if (Ember.isArray(latlngs)) {
+      latlngs.forEach(ll => this.move(ll, x, y, crs));
+    } else {
+      let pointO = crs.unproject(L.point(0, 0));
+      let pointOX = crs.unproject(L.point(x, 0));
+      let pointOY = crs.unproject(L.point(0, y));
+      latlngs.lat += (pointOY.lat - pointO.lat);
+      latlngs.lng += (pointOX.lng - pointO.lng);
+
+      if (latlngs.lat > 90 || latlngs.lat < -90 || latlngs.lng > 180 || latlngs.lng < -180) {
+        this.set('_moveWithError', true);
+      }
+    }
+  },
+
+  _dragLayer: null,
+  _nowDragging: false,
+  _tempCoords: null,
+
+  _dragAndDrop(enable) {
+    this.set('_moveEnabled', enable);
+
+    let dragLayer = this.get('_dragLayer');
+    if (dragLayer) {
+      this._stopDragging(dragLayer);
+    }
+
+    let layer = this.get('layer');
+    if (Ember.isNone(layer)) {
+      return;
+    }
+
+    if (enable) {
+      this.set('_dragLayer', layer);
+
+      layer.on('click', this._dragOnClick, this);
+
+      if (layer.bringToFront) {
+        layer.bringToFront();
+      }
+    } else {
+      layer.off('click', this._dragOnClick, this);
+    }
+  },
+
+  _stopDragging(dragLayer) {
+    dragLayer._map.dragging.enable();
+
+    dragLayer.off('click', this._dragOnClick, this);
+    dragLayer._map.off('mousemove', this._dragOnMouseMove, this);
+
+    dragLayer.enableEdit();
+
+    this.set('_nowDragging', false);
+  },
+
+  /**
+    Handles mouse down event when dragging.
+
+    @param {Object} e Event object.
+  */
+  _dragOnClick(e) {
+    if (this.isDestroyed) {
+      return;
+    }
+
+    // cancel if mouse button is NOT the left button
+    if (e.originalEvent.button > 0) {
+      return;
+    }
+
+    let nowDragging = this.get('_nowDragging');
+    if (nowDragging) {
+      this._stopDragging(this.get('_dragLayer'));
+      this.sendAction('updateLayer', this.get('_dragLayer'), true);
+    } else {
+      this.set('_nowDragging', true);
+
+      this.set('_tempCoords', e.latlng);
+
+      let dragLayer = this.get('_dragLayer');
+      dragLayer.disableEdit();
+
+      if (dragLayer.bringToFront) {
+        dragLayer.bringToFront();
+      }
+
+      dragLayer._map.on('mousemove', this._dragOnMouseMove, this);
+      e.target._map.dragging.disable();
+    }
+  },
+
+  /**
+    Handles mouse move event when dragging.
+
+    @param {Object} e Event object.
+  */
+  _dragOnMouseMove(e) {
+    // latLng of mouse event
+    let { latlng } = e;
+
+    // delta coords (how far was dragged)
+    let deltaLatLng = {
+      lat: latlng.lat - this.get('_tempCoords.lat'),
+      lng: latlng.lng - this.get('_tempCoords.lng'),
+    };
+
+    // move the coordinates by the delta
+    let moveCoords = coords => {
+      if (Ember.isArray(coords)) {
+        return coords.map((currentLatLng) => {
+          return moveCoords(currentLatLng);
+        });
+      }
+
+      let res = {
+        lat: coords.lat + deltaLatLng.lat,
+        lng: coords.lng + deltaLatLng.lng,
+      };
+
+      return res;
+    };
+
+    // create the new coordinates array
+    let newCoords;
+    let dragLayer = this.get('_dragLayer');
+
+    let moveLayer = (layer) => {
+      if (layer instanceof L.Marker) {
+        newCoords = moveCoords(layer._latlng);
+      } else {
+        newCoords = moveCoords(layer._latlngs);
+      }
+
+      // set new coordinates and redraw
+      if (layer.setLatLngs) {
+        layer.setLatLngs(newCoords).redraw();
+      } else {
+        layer.setLatLng(newCoords);
+      }
+    };
+
+    moveLayer(dragLayer);
+
+    // save current latlng for next delta calculation
+    this.set('_tempCoords', latlng);
+  },
+
   actions: {
+    /**
+      Handles change start point.
+    */
+    validOffset(field) {
+      this.set('_offsetInvalid.' + field, !this._validOffset(this.get('_offset.' + field)));
+    },
+
+    applyXY() {
+      let _moveX = parseFloat(this.get('_offset.x')) || 0;
+      let _moveY = parseFloat(this.get('_offset.y')) || 0;
+
+      let layer = this.get('layer');
+      let feature = this.get('layer.feature');
+
+      if (Ember.isNone(feature)) {
+        return;
+      }
+
+      layer.disableEdit();
+
+      let crs = this.get('settings.layerCRS');
+
+      this.set('_moveWithError', false);
+      let coords = feature.leafletLayer._latlngs;
+      if (Ember.isNone(coords)) {
+        coords = feature.leafletLayer._latlng;
+      }
+
+      this.move(coords, _moveX, _moveY, crs);
+      if (this.get('_moveWithError')) {
+        this.move(coords, -_moveX, -_moveY, crs);
+      }
+
+      if (feature.leafletLayer.redraw) {
+        feature.leafletLayer.redraw();
+      }
+
+      layer.enableEdit();
+
+      this.sendAction('updateLayer', layer, true);
+    },
+
+    /**
+      Handles click on available geometry type.
+
+      @method onGeometryTypeSelect
+      @param {String} geometryType Selected geometry type.
+    */
+    onMoveSelect(geometryType) {
+      this.set('_moveWithError', false);
+      this.set('geometryType', geometryType);
+
+      let editTools = this._getEditTools();
+      if (!Ember.isNone(editTools)) {
+        editTools.stopDrawing();
+      }
+
+      let leafletMap = this.get('leafletMap');
+      leafletMap.flexberryMap.tools.enableDefault();
+
+      if (geometryType === 'move') {
+        let enable = this.get('_moveEnabled');
+        this._dragAndDrop(!enable);
+      }
+    },
+
     /**
       Handles click on available geometry type.
 
@@ -57,17 +342,19 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       @param {String} geometryType Selected geometry type.
     */
     onGeometryTypeSelect(geometryType) {
+      this._dragAndDrop(false);
+
       this.sendAction('drawStart', geometryType);
 
       this.set('geometryType', geometryType);
 
-      // let that = { component: this, tabModel: tabModel };
       let editTools = this._getEditTools();
 
       if (!Ember.isNone(editTools)) {
         editTools.stopDrawing();
       }
 
+      editTools.off('editable:drawing:end', this._disableDraw, this);
       editTools.on('editable:drawing:end', this._disableDraw, this);
 
       let leafletMap = this.get('leafletMap');
@@ -137,10 +424,10 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   */
   _disableDraw(e) {
     let editTools = this.get('_editTools');
+    editTools.off('editable:drawing:end', this._disableDraw, this);
 
     this.$().closest('body').off('keydown');
     if (!Ember.isNone(editTools)) {
-      editTools.off('editable:drawing:end', this._disableDraw, this);
       editTools.stopDrawing();
     }
 
@@ -148,169 +435,32 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       let geometryType = this.get('geometryType');
 
       if (geometryType !== 'multyPolygon' && geometryType !== 'multyLine') {
-        let addedLayer = e.layer;
-        this.sendAction('complete', addedLayer);
+        this.set('layer', e.layer);
+        this.sendAction('updateLayer', e.layer, false);
       } else {
-        let leafletMap = this.get('leafletMap');
-
-        var drawnItems = new L.FeatureGroup();
-        leafletMap.addLayer(drawnItems);
+        let layer = this.get('layer');
+        if (Ember.isNone(layer)) {
+          this.set('layer', e.layer);
+          return;
+        }
 
         var featureCollection = {
           type: 'FeatureCollection',
-          features: []
+          features: [layer.toGeoJSON(), e.layer.toGeoJSON()]
         };
 
-        // Define editable objects.
-        leafletMap.eachLayer(function (layer) {
-          let enabled = Ember.get(layer, 'editor._enabled');
-          if (enabled === true) {
-            var layerGeoJson = layer.toGeoJSON();
-            featureCollection.features.push(layerGeoJson);
-
-            Ember.set(layer, 'multyShape', true);
-
-            if (leafletMap.hasLayer(layer)) {
-              leafletMap.removeLayer(layer);
-            }
-
-            if (this.tabModel.leafletObject.hasLayer(layer)) {
-              this.tabModel.leafletObject.removeLayer(layer);
-            }
-
-            if (Ember.get(layer, 'model')) {
-              this.tabModel.leafletObject.deleteModel(layer.model);
-            }
-          }
-        }.bind(this));
-
-        // Coordinate union.
         let fcCombined = turfCombine.default(featureCollection);
+        const featureCombined = L.geoJSON(fcCombined);
+        const combinedLeaflet = featureCombined.getLayers()[0];
+        layer.setLatLngs(combinedLeaflet.getLatLngs());
+        layer.disableEdit();
+        layer.enableEdit();
 
-        let layerId = Ember.get(this.tabModel, 'layerId');
-
-        // Create a new multi shape with old shape data.
-        let shape = this._createCopyMultiShape(this.tabModel, layerId, geometryType, fcCombined);
-
-        const tabLeafletObject = this.tabModel.get('leafletObject');
-        if (tabLeafletObject.createLayerObject) {
-          shape = tabLeafletObject.createLayerObject(tabLeafletObject, Ember.get(shape, 'feature.properties'), shape.toGeoJSON().geometry);
-        }
-
-        // Create a multiple shape.
-        shape.addTo(this.tabModel.leafletObject);
-
-        // Linking shapes.
-        Ember.set(shape, 'multyShape', true);
-        Ember.set(shape, 'mainMultyShape', true);
-
-        // Make shape in edit mode.
-        shape.enableEdit();
-
-        // We note that the shape was edited.
-        this.tabModel.leafletObject.editLayer(shape);
-
-        // Replace with a new shape.
-        Ember.set(this.tabModel, `featureLink.${layerId}`, shape);
-
-        // From the list of changed shapes, delete individual ones, leaving only the multiple shape.
-        this._removeFromModified(this.tabModel.leafletObject.changes);
-
-        // Enable save button.
-        Ember.set(this.tabModel, 'leafletObject._wasChanged', true);
+        e.layer.remove();
+        this.sendAction('updateLayer', layer, false);
       }
     }
-  },
-
-  /**
-    Will create a new multi shape with the data of the old shape.
-
-    @method _createCopyMultiShape
-    @param {Object} tabModel Tab model.
-    @param {Number} layerId Layer id.
-    @param {String} geometryType Shape type.
-    @param {Object[]} featureCollection United coordinates.
-    @return {Object} Return a new multi shape.
-    @private
-  */
-  _createCopyMultiShape(tabModel, layerId, geometryType, featureCollection) {
-    let feature = featureCollection.features.pop();
-    let shape = {};
-
-    // We will transform feature coordinates from WGS84 (it is EPSG: 4326) to LatLng.
-    feature = L.geoJson(feature, {
-      coordsToLatLng: function (coords) {
-        return coords;
-      }
-    }).toGeoJSON();
-
-    let coordinates = feature.features[0].geometry.coordinates;
-
-    if (geometryType === 'multyPolygon') {
-      shape = L.polygon(coordinates);
-    } else if (geometryType === 'multyLine') {
-      shape = L.polyline(coordinates);
-    }
-
-    let layer = Ember.get(tabModel, `featureLink.${layerId}`);
-    var geoJson = layer.toGeoJSON();
-
-    Ember.set(shape, 'feature', {
-      type: 'Feature',
-      properties: geoJson.properties,
-      leafletLayer: shape
-    });
-
-    let id = Ember.get(layer.feature, 'id');
-    if (!Ember.isNone(id)) {
-      Ember.set(shape.feature, 'id', id);
-      Ember.set(shape.feature, 'geometry_name', layer.feature.geometry_name);
-      Ember.set(shape, 'state', 'updateElement');
-
-      Ember.set(shape.feature, 'geometry', {
-        coordinates: coordinates
-      });
-
-      let geoType = Ember.get(layer.feature, 'geometry.type');
-      if (!Ember.isNone(geoType)) {
-        Ember.set(shape.feature.geometry, 'type', geoType);
-      }
-    } else {
-      Ember.set(shape, 'state', 'insertElement');
-    }
-
-    return shape;
-  },
-
-  /**
-    From the list of changed objects, delete individual ones, leaving only the multiple shape.
-
-    @method _removeFromModified
-    @param {Object[]} changes Array of modified objects.
-    @private
-   */
-  _removeFromModified(changes) {
-    for (let changeLayerNumber in changes) {
-      let multyShape = Ember.get(changes[changeLayerNumber], 'multyShape') === true;
-      let mainMultyShape = Ember.get(changes[changeLayerNumber], 'mainMultyShape') === true;
-
-      if (multyShape === true) {
-        if (mainMultyShape === false) {
-          delete changes[changeLayerNumber];
-        } else {
-          delete changes[changeLayerNumber].multyShape;
-          delete changes[changeLayerNumber].mainMultyShape;
-        }
-      }
-    }
-  },
-
-  /**
-    Component's action invoking when new geometry was added.
-
-    @method sendingActions.complete
-    @param {Object} addedLayer Added layer.
-  */
+  }
 });
 
 // Add component's CSS-class names as component's class static constants

@@ -1,45 +1,98 @@
-{{#if (eq tabModel.typeGeometry "polygon") }}
+{{#if (eq settings.typeGeometry "polygon") }}
   {{flexberry-button
-    tooltip=(t "components.map-tools.draw.draw-polygon.caption")
-    click=(action "onGeometryTypeSelect" "polygon")
-    iconClass="flexberry-map-tool-icon star icon"
-  }}
+      tooltip=(t "components.geometry-add-modes.draw.draw-polygon.caption")
+      click=(action "onGeometryTypeSelect" "polygon")
+      iconClass="flexberry-map-tool-icon poly icon"
+      readonly=edit
+    }}
   {{flexberry-button
-    tooltip=(t "components.map-tools.draw.draw-rectangle.caption")
-    click=(action "onGeometryTypeSelect" "rectangle")
-    iconClass="flexberry-map-tool-icon square icon"
-  }}
-  {{!-- todo: To work, you need to translate a circle into a polygon. --}}
-  {{!-- {{flexberry-button
-    tooltip=(t "components.map-tools.draw.draw-circle.caption")
-    click=(action "onGeometryTypeSelect" "circle")
-    iconClass="flexberry-map-tool-icon circle icon"
-  }} --}}
+      tooltip=(t "components.geometry-add-modes.draw.draw-rectangle.caption")
+      click=(action "onGeometryTypeSelect" "rectangle")
+      iconClass="flexberry-map-tool-icon square icon"
+      readonly=edit
+    }}
   {{flexberry-button
-    tooltip=(t "components.map-tools.draw.draw-multy-polygon.caption")
-    click=(action "onGeometryTypeSelect" "multyPolygon")
-    iconClass="flexberry-map-tool-icon multy-polygon icon"
-    readonly=(eq tabModel._selectedShape false)
-  }}
+      tooltip=(t "components.geometry-add-modes.draw.draw-multi-polygon.caption")
+      click=(action "onGeometryTypeSelect" "multyPolygon")
+      iconClass="flexberry-map-tool-icon multi-poly icon"
+      readonly=(not edit)
+    }}
 {{/if}}
-{{#if (eq tabModel.typeGeometry "polyline") }}
+{{#if (eq settings.typeGeometry "polyline") }}
   {{flexberry-button
-    tooltip=(t "components.map-tools.draw.draw-polyline.caption")
+    tooltip=(t "components.geometry-add-modes.draw.draw-polyline.caption")
     click=(action "onGeometryTypeSelect" "polyline")
-    iconClass="flexberry-map-tool-icon empty star icon"
+    iconClass="flexberry-map-tool-icon line icon"
+    readonly=edit
   }}
   {{flexberry-button
-    tooltip=(t "components.map-tools.draw.draw-multy-line.caption")
+    tooltip=(t "components.geometry-add-modes.draw.draw-multi-line.caption")
     click=(action "onGeometryTypeSelect" "multyLine")
     iconClass="flexberry-map-tool-icon multy-line icon"
-    readonly=(eq tabModel._selectedShape false)
+    readonly=(not edit)
   }}
 {{/if}}
-{{#if (eq tabModel.typeGeometry "marker") }}
+
+{{#if (or (eq settings.typeGeometry "polygon") (eq settings.typeGeometry "polyline")) }}
   {{flexberry-button
-    tooltip=(t "components.map-tools.draw.draw-marker.caption")
+    tooltip=(t "components.geometry-add-modes.draw.move.caption")
+    click=(action "onMoveSelect" "move")
+    iconClass=(concat "flexberry-map-tool-icon move icon " (if _moveEnabled "active" ""))
+    readonly=(not edit)
+  }}
+  {{flexberry-button
+    tooltip=(t "components.geometry-add-modes.draw.movexy.caption")
+    click=(action "onMoveSelect" "movexy")
+    iconClass="flexberry-map-tool-icon movexy icon"
+    readonly=(not edit)
+  }}
+
+  {{#if (eq geometryType "movexy")}}
+    {{#if _moveWithError}}
+      {{ui-message
+        type="error"
+        message=(t "components.geometry-add-modes.draw.movexy.error")
+      }}
+    {{/if}}
+
+    <div class="ui grid">
+      <div class="seven wide column">
+        <div class="field {{if _offsetInvalid.x "error" ""}}">
+          <label>
+            {{t "components.geometry-add-modes.draw.movexy.x"}}
+          </label>
+          {{input
+            type="text"
+            value=_offset.x
+            key-up=(action 'validOffset' 'x')
+          }}
+        </div>
+      </div>
+      <div class="seven wide column">
+        <div class="field {{if _offsetInvalid.y "error" ""}}">
+          <label>
+            {{t "components.geometry-add-modes.draw.movexy.y"}}
+          </label>
+          {{input
+            type="text"
+            value=_offset.y
+            key-up=(action 'validOffset' 'y')
+          }}
+        </div>
+      </div>
+    </div>
+    <div>
+      <button type="submit" class="ui button" {{action "applyXY"}}>
+        {{t "components.geometry-add-modes.draw.movexy.apply"}}
+      </button>
+    </div>
+  {{/if}}
+{{/if}}
+
+{{#if (eq settings.typeGeometry "marker") }}
+{{flexberry-button
+    tooltip=(t "components.geometry-add-modes.draw.draw-marker.caption")
     click=(action "onGeometryTypeSelect" "marker")
     iconClass="flexberry-map-tool-icon marker icon"
   }}
 {{/if}}
-

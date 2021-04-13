@@ -900,6 +900,7 @@ export default BaseVectorLayer.extend({
     layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
     layer.models = Ember.A();
     layer.clearLayers = this.get('clearLayers').bind(this);
+    layer.cancelEdit = this.get('cancelEdit').bind(this);
 
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
