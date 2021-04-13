@@ -425,7 +425,7 @@
     }
     i.icon.favorites:before {
       font-family: Icons;
-      content: "\f006"; 
+      content: "\f006";
     }
     i.icon.compare:before {
       font-family: Icons;
