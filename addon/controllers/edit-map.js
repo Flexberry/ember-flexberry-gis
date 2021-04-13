@@ -6,6 +6,7 @@ import Ember from 'ember';
 import EditFormController from 'ember-flexberry/controllers/edit-form';
 import FlexberryMapActionsHandlerMixin from '../mixins/flexberry-map-actions-handler';
 import FlexberryMaplayerActionsHandlerMixin from '../mixins/flexberry-maplayer-actions-handler';
+import FlexberryLayersActionsHandlerMixin from '../mixins/flexberry-layers-action-handler';
 import LayerResultListActionsHandlerMixin from '../mixins/layer-result-list-actions-handler';
 import LocalStorageBindingMixin from '../mixins/local-storage-binding';
 import FavoritesListMixin from '../mixins/favorites-features';
@@ -23,6 +24,7 @@ import sideBySide from 'npm:leaflet-side-by-side';
 export default EditFormController.extend(
   FlexberryMapActionsHandlerMixin,
   FlexberryMaplayerActionsHandlerMixin,
+  FlexberryLayersActionsHandlerMixin,
   LayerResultListActionsHandlerMixin,
   LocalStorageBindingMixin,
   FavoritesListMixin, {

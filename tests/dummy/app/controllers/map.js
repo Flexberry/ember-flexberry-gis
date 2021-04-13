@@ -415,6 +415,21 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
       this.set('sidebar.0.active', true);
     },
+      
+    attrSearch(queryString) {
+      Ember.$('.outer-search.flexberry-search-panel').addClass('hidden');
+      if (this.get('sidebar.1.active') !== true) {
+        this.set('sidebar.1.active', true);
+      }
+
+      this.set('attrVisible', true);
+      this.set('queryString', queryString);
+
+      this.send('toggleSidebar', {
+        changed: false,
+        tabName: 'search'
+      });
+    },
 
     onQueryFinished(e) {
       if (this.get('createObject')) {
@@ -470,8 +485,12 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         // push left map controls to right for sidebar width
         if (sidebarOpened) {
           Ember.$('.sidebar-wrapper').addClass('visible');
+          if (!Ember.$('.outer-search.flexberry-search-panel').hasClass('hidden')) {
+            Ember.$('.outer-search.flexberry-search-panel').addClass('hidden');
+          }
         } else {
           Ember.$('.sidebar-wrapper').removeClass('visible');
+          Ember.$('.outer-search.flexberry-search-panel').removeClass('hidden');
         }
       }
 
@@ -519,24 +538,22 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
       @method actions.querySearch
     */
-    querySearch(queryString) {
+    querySearch(e) {
       let leafletMap = this.get('leafletMap');
-      let e = {
-        context: true,
-        latlng: leafletMap.getCenter(),
-        searchOptions: {
-          queryString,
-          maxResultsCount: 10
-        },
-        filter(layerModel) {
-          return layerModel.get('canBeContextSearched') && layerModel.get('visibility');
-        },
-        results: Ember.A()
-      };
 
       leafletMap.fire('flexberry-map:search', e);
 
       this.set('searchResults', e.results);
+
+      if (this.get('sidebar.1.active') !== true) {
+        this.set('sidebar.1.active', true);
+        if (!this.get('sidebarOpened')) {
+          this.send('toggleSidebar', {
+            changed: false,
+            tabName: 'search'
+          });
+        }
+      }
     },
 
     /**
