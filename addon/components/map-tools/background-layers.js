@@ -93,7 +93,7 @@ export default Ember.Component.extend({
     let count = layers.length;
     layers.forEach(layer => {
       let classChild = 'first-item';
-      if (count === 1 || (count === 2 && i === 2) || (count >=3 && i % 3 === 0)) {
+      if (count === 1 || (count === 2 && i === 2) || (count >= 3 && i % 3 === 0)) {
         classChild = 'last-item';
       }
 

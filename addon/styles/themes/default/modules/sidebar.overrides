@@ -377,7 +377,7 @@
 .outer-search.flexberry-search-panel {
   z-index: 899;
   position: absolute;
-  left: -25px;
+  left: 20px;
   width: 300px;
   background: @whitecolor;
   top: 10px;
