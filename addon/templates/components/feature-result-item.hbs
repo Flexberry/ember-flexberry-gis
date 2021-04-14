@@ -1,95 +1,120 @@
 <div class="feature-result-item-title">
-  <div class="feature-result-item-toolbar {{if (gt feature.editForms.length 1) "links" ""}}">
-    <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo" on="click"}}>
-      <i class="caret {{if expanded 'down' 'right'}} icon"></i>
-    </a>
-      {{#if intersection}}
-        <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" on="click"}}>
-          <i class="marker icon"></i>
-        </a>
-        <a class="icon item" title="{{t 'components.flexberry-layers-intersections-panel.show-on-map'}}" {{action "zoomToIntersection" on="click"}}>
-          <i class="intersections icon"></i>
-        </a>
-      {{else}}
-        {{#if favoriteMode}}
-          {{flexberry-ddau-checkbox
-            value=feature.compareEnabled
-            change=(action 'addToCompareGeometries')
-          }}
-        {{/if}}
-        <a class="icon item" title="{{t "components.compare-object-geometries.add-to-fav-caption"}}" {{action "addToFavorite" on="click"}}>
-          <i class="fvicon favorites {{if feature.properties.isFavorite "filled" "unfilled"}} icon"></i>
-        </a>
-        <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
-          <i class="marker icon"></i>
-        </a>
-        <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
-          <i class="hand paper icon"></i>
-        </a>
-        <a class="icon item" title="{{t "components.feature-result-item.find-intersection-caption"}}" {{action "findIntersection" on="click"}}>
-          <i class="intersections icon"></i>
-        </a>
+  <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo" on="click"}}>
+    <i class="caret {{if expanded 'down' 'right'}} icon"></i>
+  </a>
+  <div class="feature-result-item-toolbar {{if (gt feature.editForms.length 1) "links" ""}} hidden">
+    {{#if intersection}}
+      <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" on="click"}}>
+        <i class="marker icon"></i>
+      </a>
+      <a class="icon item" title="{{t 'components.flexberry-layers-intersections-panel.show-on-map'}}" {{action "zoomToIntersection" on="click"}}>
+        <i class="intersections icon"></i>
+      </a>
+    {{else}}
+      {{#if favoriteMode}}
+        {{flexberry-ddau-checkbox
+          value=feature.compareEnabled
+          change=(action 'addToCompareGeometries')
+        }}
       {{/if}}
-      {{#if (gt feature.editForms.length 0)}}
-        {{#if (eq feature.editForms.length 1)}}
-          {{#if hasEditForm}}
-            <div class="ui dropdown item" {{action "toggleLinks" on="click"}}>
-              {{t "components.feature-result-item.select-object-caption"}}
-              <i class="dropdown icon"></i>
-              <div class="ui menu transition {{if _linksExpanded "visible" "hidden"}}">
+      <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
+        <i class="marker icon"></i>
+      </a>
+      <a class="icon item" title="{{t "components.compare-object-geometries.add-to-fav-caption"}}" {{action "addToFavorite" on="click"}}>
+        <i class="fvicon favorites {{if feature.properties.isFavorite "filled" "unfilled"}} icon"></i>
+      </a>
+      <a class="icon item more">
+        <i class="icon">...</i>
+      </a>
+      <div class="more submenu hidden">
+        <div>
+          <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
+            <i class="hand paper icon"></i>
+            {{t "components.feature-result-item.pan-to-caption"}}
+          </a>
+        </div>
+        <div>
+          <a class="icon item" title="{{t "components.feature-result-item.find-intersection-caption"}}" {{action "findIntersection" on="click"}}>
+            <i class="intersections icon"></i>
+            {{t "components.feature-result-item.find-intersection-caption"}}
+          </a>
+        </div>
+        {{#if (gt feature.editForms.length 0)}}
+          {{#if (eq feature.editForms.length 1)}}
+            {{#if hasEditForm}}
+              <div>
+                <div class="ui dropdown item" {{action "toggleLinks" on="click"}}>
+                  {{t "components.feature-result-item.select-object-caption"}}
+                  <i class="dropdown icon"></i>
+                  <div class="ui menu transition {{if _linksExpanded "visible" "hidden"}}">
+                    <a class="feature-result-item-object icon item"
+                      title="{{t "components.feature-result-item.select-object-caption"}}"
+                      href="{{feature.editForms.[0].url}}" target="_blank">
+                      <i class="external icon"></i>
+                      {{t "components.feature-result-item.select-object-caption"}}
+                    </a>
+                    <a class="feature-result-item-object icon item"
+                      title="{{t "components.feature-result-item.action-object-caption"}}"
+                      {{action "goToEditForm" feature.layerModel.id featureId}}>
+                      <i class="external icon"></i>
+                      {{t "components.feature-result-item.action-object-caption"}}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            {{else}}
+              <div>
                 <a class="feature-result-item-object icon item"
                   title="{{t "components.feature-result-item.select-object-caption"}}"
                   href="{{feature.editForms.[0].url}}" target="_blank">
                   <i class="external icon"></i>
-                </a>
-                <a class="feature-result-item-object icon item"
-                  title="{{t "components.feature-result-item.action-object-caption"}}"
-                  {{action "goToEditForm" feature.layerModel.id featureId}}>
-                  <i class="external icon"></i>
+                  {{t "components.feature-result-item.select-object-caption"}}
                 </a>
               </div>
-            </div>
+            {{/if}}
           {{else}}
-            <a class="feature-result-item-object icon item"
-              title="{{t "components.feature-result-item.select-object-caption"}}"
-              href="{{feature.editForms.[0].url}}" target="_blank">
-              <i class="external icon"></i>
-            </a>
+            <div>
+              <div class="ui dropdown item" {{action "toggleLinks" on="click"}}>
+                {{t "components.feature-result-item.select-object-caption"}}
+                <i class="dropdown icon"></i>
+                <div class="ui menu transition {{if _linksExpanded "visible" "hidden"}}">
+                    {{#each feature.editForms as |editForm|}}
+                      <a class="feature-result-item-object icon item"
+                        title="{{editForm.typeName}}"
+                        href="{{editForm.url}}" target="_blank">
+                        <i class="external icon"></i>
+                        {{editForm.typeName}}
+                      </a>
+                    {{/each}}
+                    {{#if hasEditForm}}
+                      <a class="feature-result-item-object icon item"
+                        title="{{t "components.feature-result-item.action-object-caption"}}"
+                        {{action "goToEditForm" feature.layerModel.id featureId}}>
+                        <i class="external icon"></i>
+                        {{t "components.feature-result-item.action-object-caption"}}
+                      </a>
+                    {{/if}}
+                </div>
+              </div>
+            </div>
           {{/if}}
         {{else}}
-          <div class="ui dropdown item" {{action "toggleLinks" on="click"}}>
-            {{t "components.feature-result-item.select-object-caption"}}
-            <i class="dropdown icon"></i>
-            <div class="ui menu transition {{if _linksExpanded "visible" "hidden"}}">
-                {{#each feature.editForms as |editForm|}}
-                  <a class="feature-result-item-object icon item"
-                    title="{{editForm.typeName}}"
-                    href="{{editForm.url}}" target="_blank">
-                    <i class="external icon"></i>
-                  </a>
-                {{/each}}
-                {{#if hasEditForm}}
-                  <a class="feature-result-item-object icon item"
-                    title="{{t "components.feature-result-item.action-object-caption"}}"
-                    {{action "goToEditForm" feature.layerModel.id featureId}}>
-                    <i class="external icon"></i>
-                  </a>
-                {{/if}}
+          {{#if hasEditForm}}
+            <div>
+              <a class="feature-result-item-object icon item"
+                title="{{t "components.feature-result-item.action-object-caption"}}"
+                {{action "goToEditForm" feature.layerModel.id featureId}}>
+                <i class="external icon"></i>
+                {{t "components.feature-result-item.action-object-caption"}}
+              </a>
             </div>
-          </div>
+          {{/if}}
         {{/if}}
-      {{else}}
-        {{#if hasEditForm}}
-          <a class="feature-result-item-object icon item"
-            title="{{t "components.feature-result-item.action-object-caption"}}"
-            {{action "goToEditForm" feature.layerModel.id featureId}}>
-            <i class="external icon"></i>
-          </a>
-        {{/if}}
-      {{/if}}
+      </div>
+    {{/if}}
   </div>
   <div class="feature-result-item-caption" {{action "showInfo" on="click"}}>
-    {{get feature displayProperty}}
+    <label>qweqweqweqweqwe{{get feature displayProperty}}</label>
   </div>
 </div>
 <div class="feature-result-item-content content {{if expanded "visible" "hidden"}}">

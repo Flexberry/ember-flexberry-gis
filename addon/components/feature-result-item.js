@@ -217,6 +217,45 @@ export default Ember.Component.extend({
       this.set('featureId', shapeId);
       this.set('hasEditForm', hasEditForm);
     }
+
+    let _this = this;
+    let $caption = this.$('.feature-result-item-caption');
+    if ($caption.length > 0) {
+      $caption.hover(
+        function() {
+          let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
+          $toolbar.removeClass('hidden');
+          _this.$(this).addClass('hidden');
+        },
+        function() {
+          let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
+          $toolbar.hover(
+            () => {},
+            () => {
+              $toolbar.addClass('hidden');
+              _this.$(this).removeClass('hidden');
+            });
+        }
+      );
+    }
+
+    let $more = this.$('.icon.item.more');
+    if ($more.length > 0) {
+      $more.hover(
+        function() {
+          let $submenu = _this.$(this).parent().children('.more.submenu');
+          $submenu.removeClass('hidden');
+        },
+        function() {
+          let $submenu = _this.$(this).parent().children('.more.submenu');
+          $submenu.hover(
+            () => {},
+            () => {
+              $submenu.addClass('hidden');
+            });
+        }
+      );
+    }
   },
 
   actions: {
