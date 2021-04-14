@@ -53,24 +53,19 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   tagName: '',
 
   /**
-    Flag indicates whether manual geometry adding dialog has been already requested by user or not.
-
-    @property _dialogHasBeenRequested
-    @type Boolean
-    @default false
+    @property layer
+    @type Leaflet layer
+    @default null
     @private
   */
-  _dialogHasBeenRequested: false,
+  layer: null,
 
   /**
-    Flag indicates whether to show manual geometry adding dialog.
-
-    @property _dialogVisible
-    @type Boolean
-    @default false
+    @property CRS
+    @default null
     @private
   */
-  _dialogVisible: false,
+  _crs: null,
 
   /**
     Added coordinates.
@@ -91,26 +86,6 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     @private
   */
   _coordinatesWithError: false,
-
-  /**
-    Flag to disable object type selection.
-
-    @property _objectTypeDisabled
-    @type Boolean
-    @default true
-    @private
-  */
-  _objectTypeDisabled: true,
-
-  /**
-    Object type selection error flag.
-
-    @property _geometryField
-    @type Boolean
-    @default false
-    @private
-  */
-  _geometryField: false,
 
   /**
     Flag to dispaly parse error.
@@ -139,93 +114,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   */
   coordinatesInLineError: false,
 
-  /**
-    Object types.
-
-    @property _objectTypes
-    @type string[]
-    @default ['Polygon', 'Line']
-    @readonly
-    @private
-  */
-  _objectTypes: Ember.A([]),
-
-  /**
-    Line object types.
-
-    @property _objectTypesLine
-    @type string[]
-    @default ['LineString', 'MultiLineString']
-    @readonly
-    @private
-  */
-  _objectTypesLine: Ember.A([
-    {
-      captionPath: 'components.geometry-add-modes.manual.linestring-object-type',
-      type: 'LineString'
-    },
-    {
-      captionPath: 'components.geometry-add-modes.manual.multilinestring-object-type',
-      type: 'MultiLineString'
-    }
-  ]),
-
-  /**
-    Polygon object types.
-
-    @property _objectTypesPolygon
-    @type string[]
-    @default ['Polygon', 'MultiPolygon']
-    @readonly
-    @private
-  */
-  _objectTypesPolygon: Ember.A([
-    {
-      captionPath: 'components.geometry-add-modes.manual.polygon-object-type',
-      type: 'Polygon'
-    },
-    {
-      captionPath: 'components.geometry-add-modes.manual.multipolygon-object-type',
-      type: 'MultiPolygon'
-    }
-  ]),
-
-  /**
-    Point object types.
-
-    @property _objectTypesPoint
-    @type string[]
-    @default ['Point']
-    @readonly
-    @private
-  */
-  _objectTypesPoint: Ember.A([
-    {
-      captionPath: 'components.geometry-add-modes.manual.point-object-type',
-      type: 'Point'
-    }
-  ]),
-
-  /**
-    Object types are avaliable to choose.
-
-    @property _availableType
-    @type string[]
-    @default  []
-    @readonly
-    @private
-  */
-  _availableType: null,
-
-  menuButtonTooltip: t('components.geometry-add-modes.manual.menu-button-tooltip-add'),
-
-  dialogApproveButtonCaption: t('components.geometry-add-modes.manual.dialog-approve-button-caption'),
-
-  dialogDenyButtonCaption: t('components.geometry-add-modes.manual.dialog-deny-button-caption'),
-
   crsFieldLabel: t('components.geometry-add-modes.manual.crs-field-label'),
-
-  geometryFieldLabel: t('components.geometry-add-modes.manual.geometry-field-label'),
 
   coordinatesFieldLabel: t('components.geometry-add-modes.manual.coordinates-field-label'),
 
@@ -237,447 +126,199 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
 
   coordinatesTypeGeometryErrorLabel: t('components.geometry-add-modes.manual.coordinates-type-geometry-error-label'),
 
-  onSelectedTpeChanged: Ember.observer('_curType', function () {
-    if (!Ember.isNone(this.get('_curType'))) {
-      this.set('_geometryField', false);
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this.clear();
+  },
+
+  initialSettings: Ember.on('init', Ember.observer('settings', 'layer', function () {
+    this.clear();
+
+    let settings = this.get('settings');
+
+    if (Ember.isNone(settings)) {
+      return;
     }
-  }),
 
-  /**
-    Type items metadata.
+    this.set('_crs', settings.layerCRS);
 
-    @property typeItems
-    @type Object[]
-  */
-  typeItems: Ember.computed('_objectTypes.[]', '_objectTypes.@each.active', 'i18n', function () {
-    let i18n = this.get('i18n');
-    let _objectTypes = this.get('_objectTypes');
+    let layer = this.get('layer');
+    const edit = !Ember.isNone(layer);
 
-    let result = Ember.A(_objectTypes);
-    result.forEach((item) => {
-      let caption = Ember.get(item, 'caption');
-      let captionPath = Ember.get(item, 'captionPath');
+    if (edit) {
+      this._updateCoordinates();
 
-      if (!caption && captionPath) {
-        Ember.set(item, 'caption', i18n.t(captionPath));
-      }
-    });
+      layer.off('editable:vertex:dragend', this._updateCoordinates, this);
+      layer.off('editable:vertex:deleted', this._updateCoordinates, this);
+      layer.off('editable:drawing:end', this._updateCoordinates, this);
+      layer.off('create-layer:change', this._updateCoordinates, this);
 
-    return result;
-  }),
+      layer.on('editable:vertex:dragend', this._updateCoordinates, this);
+      layer.on('editable:vertex:deleted', this._updateCoordinates, this);
+      layer.on('editable:drawing:end', this._updateCoordinates, this);
+      layer.on('create-layer:change', this._updateCoordinates, this);
+    } else {
+      this.set('_coordinates', '');
+    }
+  })),
 
-  /**
-    Current type.
-  */
-  _curType: null,
+  _updateCoordinates() {
+    let layer = this.get('layer');
 
-  /**
-     Set _objectSelectType.
-  */
-  _type: Ember.observer('_curType', function() {
-    let factories = this.get('_objectTypes');
-    let _curType = this.get('_curType');
-    let res = null;
+    if (Ember.isNone(layer)) {
+      return;
+    }
 
-    if (!Ember.isNone(_curType)) {
-      factories.forEach(factory => {
-        if (factory.caption.toString() === _curType) {
-          res = factory;
-          this._objectSelectType = factory.type;
+    let baseCrs = this.get('settings.layerCRS');
+    let coordinates = layer.toProjectedGeoJSON(baseCrs).geometry.coordinates;
+
+    const str = this._coordinatesToString(coordinates);
+    this.set('_coordinates', str);
+  },
+
+  getLayer() {
+    let error = false;
+
+    const coordinates = this.get('_coordinates');
+    if (Ember.isEmpty(coordinates)) {
+      error = true;
+      this.set('_coordinatesWithError', true);
+    } else {
+      this.set('_coordinatesWithError', false);
+    }
+
+    if (this._isSinglePairInLine(coordinates)) {
+      this.set('coordinatesInLineError', false);
+    } else {
+      this.set('coordinatesInLineError', true);
+      this.set('_coordinatesWithError', true);
+      error = true;
+    }
+
+    if (error) {
+      return [true, null];
+    }
+
+    const parsedCoordinates = this._parseStringToCoordinates(coordinates);
+
+    this.set('coordinatesParseError', false);
+
+    const coordinatesWithError = () => {
+      this.set('_coordinatesWithError', true);
+      this.set('coordinatesParseError', true);
+      return [true, null];
+    };
+
+    if (Ember.isNone(parsedCoordinates) || parsedCoordinates.length === 0) {
+      return coordinatesWithError();
+    }
+
+    this.set('coordinatesTypeGeometryError', false);
+    const typeGeometryError = (n) => {
+      this.set('_coordinatesWithError', true);
+      let coordinatesTypeGeometryErrorLabel = this.get('coordinatesTypeGeometryErrorLabel').string.replace('%count%', n);
+      this.set('coordinatesTypeGeometryErrorLabel', coordinatesTypeGeometryErrorLabel);
+      this.set('coordinatesTypeGeometryError', true);
+
+      return [true, null];
+    };
+
+    // Checks the minimum number of points.
+    const hasMinCountPoint = (items, n) => {
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].length < n) {
+          return false;
         }
-      });
+      }
+
+      return true;
+    };
+
+    const type = this.get('settings.typeGeometry'); // marker polyline polygon
+
+    let addedLayer;
+    switch (type) {
+      case 'marker':
+        if (parsedCoordinates.length > 1 || (parsedCoordinates.length === 1 && parsedCoordinates[0].length > 1)) {
+          return coordinatesWithError();
+        }
+
+        addedLayer = new L.marker(parsedCoordinates[0][0]);
+        break;
+
+      case 'polyline':
+        if (!hasMinCountPoint(parsedCoordinates, 2)) {
+          return typeGeometryError(2);
+        }
+
+        addedLayer = L.polyline(parsedCoordinates);
+        break;
+
+      case 'polygon':
+        if (!hasMinCountPoint(parsedCoordinates, 3)) {
+          return typeGeometryError(3);
+        }
+
+        addedLayer = L.polygon(parsedCoordinates);
+        break;
     }
-  }),
+
+    this.set('_coordinatesWithError', null);
+
+    return [false, addedLayer];
+  },
 
   actions: {
-    /**
-      Handles button click.
-
-      @method actions.onButtonClick
-      @param {Object} tabModel Tab model.
-    */
-    onButtonClick(tabModel) {
-      this.clearDialog();
-      this.set('_dialogHasBeenRequested', true);
-      this.set('_dialogVisible', true);
-      switch (tabModel.typeGeometry) {
-        case 'polygon' :
-          this.set('_objectTypes', this.get('_objectTypesPolygon'));
-          this._updateAvaliableTypes();
-          break;
-        case 'polyline' :
-          this.set('_objectTypes', this.get('_objectTypesLine'));
-          this._updateAvaliableTypes();
-          break;
-        case 'marker' :
-          this.set('_objectTypes', this.get('_objectTypesPoint'));
-          this._updateAvaliableTypes();
-          break;
-      }
-
-      const rowId = this._getRowId(tabModel);
-      const edit = Ember.get(tabModel, `_editedRows.${rowId}`);
-
-      this.set('_objectTypeDisabled', edit);
-
-      if (edit) {
-        let i18n = this.get('i18n');
-        const layer = Ember.get(tabModel, `featureLink.${rowId}`);
-        if (Ember.isNone(Ember.get(layer, 'feature.geometry'))) {
-          let baseCrs = Ember.get(tabModel, 'leafletObject.options.crs');
-          let geometry = layer.toProjectedGeoJSON(baseCrs).geometry;
-          Ember.set(layer, 'feature.geometry', geometry);
-        }
-
-        const type = Ember.get(layer, 'feature.geometry.type');
-        let layerObject = Ember.$.extend(true, {}, Ember.get(layer, 'feature'));
-        let coordinates = layerObject.geometry.coordinates;
-        switch (type) {
-          case 'Polygon':
-            coordinates.forEach(item => item.pop());
-            let polygonObject = this.get('_objectTypesPolygon')[0];
-            this.set('_curType', i18n.t(polygonObject.captionPath));
-            break;
-          case 'MultiPolygon':
-            for (let i = 0; i < coordinates.length; i++) {
-              for (let j = 0; j < coordinates[i].length; j++) {
-                coordinates[i][j].pop();
-              }
-            }
-
-            let multipolygonObject = this.get('_objectTypesPolygon')[1];
-            this.set('_curType', i18n.t(multipolygonObject.captionPath));
-            break;
-          case 'LineString':
-            let lineObject = this.get('_objectTypesLine')[0];
-            this.set('_curType', i18n.t(lineObject.captionPath));
-            break;
-          case 'MultiLineString':
-            let multilineObject = this.get('_objectTypesLine')[1];
-            this.set('_curType', i18n.t(multilineObject.captionPath));
-            break;
-          case 'Point':
-            let pointObject = this.get('_objectTypesPoint')[0];
-            this.set('_curType', i18n.t(pointObject.captionPath));
-            break;
-        }
-
-        const str = this._coordinatesToString(coordinates);
-        this.set('_coordinates', str);
-        this.set('_objectSelectType', type);
-        Ember.set(this, 'menuButtonTooltip', t('components.geometry-add-modes.manual.menu-button-tooltip-edit'));
-      } else {
-        this.set('_coordinates', '');
-        Ember.set(this, 'menuButtonTooltip', t('components.geometry-add-modes.manual.menu-button-tooltip-add'));
-      }
-    },
-
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryGeometryAddModeManualComponent/sendingActions.complete:method"}}'complete' action{{/crossLink}}.
-
-      @method actions.onApprove
-      @param {Object} tabModel Tab model.
-      @param {Object} e Object event.
-    */
-    onApprove(tabModel, e) {
-      const objectSelectType = this.get('_objectSelectType');
-      let error = false;
-      if (Ember.isNone(objectSelectType)) {
-        error = true;
-        this.set('_geometryField', true);
-      } else {
-        this.set('_geometryField', false);
-      }
-
-      const coordinates = this.get('_coordinates');
-      if (Ember.isEmpty(coordinates)) {
-        error = true;
-        this.set('_coordinatesWithError', true);
-      } else {
-        this.set('_coordinatesWithError', false);
-      }
-
-      if (this._isSinglePairInLine(coordinates)) {
-        this.set('coordinatesInLineError', false);
-      } else {
-        this.set('coordinatesInLineError', true);
-        this.set('_coordinatesWithError', true);
-        error = true;
-      }
+    apply() {
+      let [error, addedLayer] = this.getLayer();
 
       if (error) {
-        e.closeDialog = false;
         return;
       }
 
-      let baseCrs = Ember.get(tabModel, 'leafletObject.options.crs.code');
-      const parsedCoordinates = this._parseStringToCoordinates(coordinates, baseCrs);
-
-      const rowId = this._getRowId(tabModel);
-      let edit = false;
-      let layer;
-      if (!Ember.isNone(rowId)) {
-        edit = Ember.get(tabModel, `_editedRows.${rowId}`);
-        layer = Ember.get(tabModel, `featureLink.${rowId}`);
-      }
-
-      // Prevent dialog from being closed.
-      const coordinatesWithError = () => {
-        e.closeDialog = false;
-        this.set('_coordinatesWithError', true);
-        this.set('coordinatesParseError', true);
-      };
-
-      this.set('coordinatesParseError', false);
-
-      const typeGeometryError = (n) => {
-        e.closeDialog = false;
-        this.set('_coordinatesWithError', true);
-        let coordinatesTypeGeometryErrorLabel = this.get('coordinatesTypeGeometryErrorLabel').string.replace('%count%', n);
-        this.set('coordinatesTypeGeometryErrorLabel', coordinatesTypeGeometryErrorLabel);
-        this.set('coordinatesTypeGeometryError', true);
-      };
-
-      this.set('coordinatesTypeGeometryError', false);
-
-      if (Ember.isNone(parsedCoordinates) || parsedCoordinates.length === 0) {
-        return coordinatesWithError();
-      }
-
-      // Checks the minimum number of points.
-      const hasMinCountPoint = (items, n) => {
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].length < n) {
-            return false;
-          }
-        }
-
-        return true;
-      };
-
-      let addedLayer;
-      let latlngs;
-
-      switch (objectSelectType) {
-        case 'Point':
-
-          // Only one point.
-          if (parsedCoordinates.length > 1 || (parsedCoordinates.length === 1 && parsedCoordinates[0].length > 1)) {
-
-            return coordinatesWithError();
-          }
-
-          if (edit) {
-            if (!Ember.isNone(layer.feature.geometry)) {
-              Ember.set(layer, 'feature.geometry.coordinates', parsedCoordinates[0][0]);
-            }
-
-            latlngs = { lat: parsedCoordinates[0][0][0], lng: parsedCoordinates[0][0][1] };
-
-          } else {
-            addedLayer = new L.marker(parsedCoordinates[0][0]);
-          }
-
-          break;
-        case 'LineString':
-          if (!hasMinCountPoint(parsedCoordinates, 2)) {
-
-            return typeGeometryError(2);
-          }
-
-          if (edit) {
-            if (!Ember.isNone(layer.feature.geometry)) {
-              Ember.set(layer, 'feature.geometry.coordinates', parsedCoordinates);
-            }
-
-            latlngs = [];
-            for (let i = 0; i < parsedCoordinates.length; i++) {
-              for (let j = 0; j < parsedCoordinates[i].length; j++) {
-                latlngs.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
-              }
-            }
-          } else {
-            let coors = [];
-            for (let i = 0; i < parsedCoordinates.length; i++) {
-              for (let j = 0; j < parsedCoordinates[i].length; j++) {
-                coors.push(parsedCoordinates[i][j]);
-              }
-            }
-
-            addedLayer = L.polyline(coors);
-          }
-
-          break;
-        case 'MultiLineString':
-          if (!hasMinCountPoint(parsedCoordinates, 2)) {
-
-            return typeGeometryError(2);
-          }
-
-          if (edit) {
-            if (!Ember.isNone(layer.feature.geometry)) {
-              Ember.set(layer, 'feature.geometry.coordinates', parsedCoordinates);
-            }
-
-            latlngs = [];
-            for (let i = 0; i < parsedCoordinates.length; i++) {
-              let mas = [];
-              for (let j = 0; j < parsedCoordinates[i].length; j++) {
-                mas.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
-              }
-
-              latlngs.push(mas);
-            }
-
-          } else {
-            addedLayer = L.polyline(parsedCoordinates);
-          }
-
-          break;
-        case 'Polygon':
-          if (!hasMinCountPoint(parsedCoordinates, 3)) {
-
-            return typeGeometryError(3);
-          }
-
-          if (edit) {
-            latlngs = [];
-            let coors = [];
-            for (let i = 0; i < parsedCoordinates.length; i++) {
-              let masLatLng = [];
-              let mas = [];
-              for (let j = 0; j < parsedCoordinates[i].length; j++) {
-                masLatLng.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
-                mas.push(parsedCoordinates[i][j]);
-              }
-
-              latlngs.push(masLatLng);
-              coors.push(mas);
-            }
-
-            if (!Ember.isNone(layer.feature.geometry)) {
-              Ember.set(layer, 'feature.geometry.coordinates', coors);
-            }
-          } else {
-            addedLayer = L.polygon(parsedCoordinates);
-          }
-
-          break;
-        case 'MultiPolygon':
-          if (!hasMinCountPoint(parsedCoordinates, 3)) {
-
-            return typeGeometryError(3);
-          }
-
-          if (edit) {
-            latlngs = [];
-            let coors = [];
-            for (let i = 0; i < parsedCoordinates.length; i++) {
-              let masLatLng = [];
-              let mas = [];
-              for (let j = 0; j < parsedCoordinates[i].length; j++) {
-                masLatLng.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
-                mas.push(parsedCoordinates[i][j]);
-              }
-
-              latlngs.push([masLatLng]);
-              coors.push([mas]);
-            }
-
-            if (!Ember.isNone(layer.feature.geometry)) {
-              Ember.set(layer, 'feature.geometry.coordinates', coors);
-            }
-
-          } else {
-            addedLayer = L.polygon(parsedCoordinates);
-          }
-
-          break;
-      }
-
-      if (edit) {
-        if (objectSelectType === 'Point') {
-          layer._latlng = latlngs;
+      let layer = this.get('layer');
+      if (!Ember.isNone(layer)) {
+        const type = this.get('settings.typeGeometry');
+        if (type === 'marker') {
+          layer.setLatLng(addedLayer.getLatLng());
         } else {
-          layer._latlngs = latlngs;
+          layer.setLatLngs(addedLayer.getLatLngs());
         }
 
-        let leafletMap = this.get('leafletMap');
+        layer.disableEdit();
+        layer.enableEdit();
 
-        // Deletes and draws in a new location.
-        leafletMap.removeLayer(layer);
-        leafletMap.addLayer(layer);
+        addedLayer.remove();
 
-        tabModel.leafletObject.editLayer(layer);
-        Ember.set(tabModel, 'leafletObject._wasChanged', true);
-
-        this.send('zoomTo', [layer.feature]);
-      } else {
-        this.sendAction('complete', addedLayer, { panToAddedObject: true });
+        addedLayer = layer;
       }
 
-      this.set('_coordinates', null);
-      this.set('_coordinatesWithError', null);
-      this.set('_curType', null);
-      this.set('_geometryField', false);
-    },
-
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
-
-      @method actions.onDeny
-      @param {Object} e Object event.
-    */
-    onDeny(e) {
-      this.clearDialog();
+      this.sendAction('updateLayer', addedLayer, true);
     }
   },
 
   /**
     Cleaning panel.
 
-    @method clearDialog
+    @method clear
   */
-  clearDialog() {
+  clear() {
     this.set('_coordinates', null);
     this.set('_coordinatesWithError', false);
-    this.set('_geometryField', false);
-    this.set('_objectTypeDisabled', true);
     this.set('coordinatesParseError', false);
     this.set('coordinatesInLineError', false);
-    this.set('_objectSelectType', null);
-    this.set('_curType', null);
     this.set('coordinatesTypeGeometryError', false);
-  },
-
-  /**
-    Get row id.
-
-    @method _getRowId
-    @param {Object} tabModel Tab model.
-    @returns {string} Row id.
-  */
-  _getRowId(tabModel) {
-    const editedRows = Ember.get(tabModel, '_editedRows');
-    const keys = Object.keys(editedRows);
-
-    let rowId;
-    if (!Ember.isNone(keys[0])) {
-      rowId = keys[0];
-    }
-
-    return rowId;
   },
 
   /**
     Get an array of coordinates from a coordinate line.
 
     @method _parseCoordinates
-    @param {string} coordinates A string with the coordinates.
-    @returns {string[]} Array of coordinates of type [[["55.472379","58.733686"]],[["55.472336","58.733789"]]].
+    @param {string} coordinates A string with the coordinates. (geojson)
+    @returns {string[]} Array of coordinates of type [[["55.472379","58.733686"]],[["55.472336","58.733789"]]]. (latlng)
   */
-  _parseStringToCoordinates(coordinates, baseCrs) {
+  _parseStringToCoordinates(coordinates) {
     if (Ember.isNone(coordinates)) {
       return null;
     }
@@ -690,6 +331,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     let lines = coordinates.split('\n');
     let result = [];
 
+    let crs = this.get('_crs.code');
     let k = 0;
     for (let i = 0; i < lines.length; i++) {
       lines[i] = lines[i].trim();
@@ -716,14 +358,16 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
               regex.lastIndex++;
             }
 
-            let crs = this.get('settings.layerCRS.code');
-            let cordsToConvert = [parseFloat(m[1]), parseFloat(m[2])];
-            let cords = cordsToConvert;
+            let x = parseFloat(m[1]);
+            let y = parseFloat(m[2]);
+
             if (crs !== 'EPSG:4326') {
-              cords = this._projectCoordinates(crs, 'EPSG:4326', cordsToConvert);
+              let projected = this._projectCoordinates(crs, 'EPSG:4326', [x, y]);
+              x = projected[0];
+              y = projected[1];
             }
 
-            mas.push(cords);
+            mas.push([y, x]);
           }
         }
 
@@ -821,7 +465,9 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     }
 
     let result = '';
-    coors.forEach(item => result += item !== null ? `${item[0]} ${item[1]} \n` : '\n');
+    coors.forEach(item => {
+      result += item !== null ? `${item[0]} ${item[1]} \n` : '\n';
+    });
 
     return result;
   },
@@ -849,33 +495,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     } else {
       return true;
     }
-  },
-
-  /**
-    Update avaliable types for current tab
-
-    @method _updateAvaliableTypes
-  */
-  _updateAvaliableTypes() {
-    let factories = this.get('typeItems');
-    let availableType = [];
-
-    if (!Ember.isNone(factories)) {
-      factories.forEach((factory) => {
-        availableType.push(factory.caption);
-      });
-    }
-
-    this.set('_availableType', availableType);
   }
-  /**
-    Component's action invoking when new geometry was added.
-
-    @method sendingActions.complete
-    @param {Object} addedLayer Added layer.
-    @param {Object} options Actions options.
-    @param {Boolean} options.panToAddedObject Flag indicating wheter to pan to added object.
-  */
 });
 
 // Add component's CSS-class names as component's class static constants

@@ -102,6 +102,16 @@
                     )
                   )
                 )
+                (hash
+                  on="featureEdit"
+                  actionName="onFeatureEdit"
+                  actionArguments=(array "{% layerPath %}"
+                    (hash
+                      mapAction="onCreateOrEditFeature"
+                      loadingPath="editedLayersPanelLoading"
+                    )
+                  )
+                )
               )
             )
             add=(action "onMapLayerAdd" "model.hierarchy")
@@ -188,6 +198,20 @@
           addToCompareGeometries=(action 'addToCompareGeometries')
         }}
       </div>
+      <div data-tab="createOrEditObject" class="ui tab createOrEditObject">
+      <h3>{{t "forms.map.tabbar.createOrEditObject.caption"}}</h3>
+        {{flexberry-edit-layer-feature
+          dataItems=createOrEditedFeature.dataItems
+          layerModel=createOrEditedFeature.layerModel
+          leafletMap=leafletMap
+          serviceLayer=serviceLayer
+          editFeatureEnd=(action 'onCreateOrEditFeatureEnd')
+          rhumbMode=true
+          drawMode=true
+          geoproviderMode=false
+        }}
+      </div>
+
     </div>
   </div>
   <div class={{concat "bottompanel-wrapper" (if (or (gt editedLayers.length 0) editedLayersPanelLoading) "" " hidden")}}>
@@ -199,6 +223,7 @@
       settings=editedLayersPanelSettings
       loading=editedLayersPanelLoading
       leafletMap=leafletMap
+      editFeature=(action 'onCreateOrEditFeature')
     }}
   </div>
   <div class={{concat "bottompanel-wrapper intersection-panel" (if showIntersectionPanel "" " hidden")}}>

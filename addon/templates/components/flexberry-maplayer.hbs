@@ -68,6 +68,12 @@
               tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
               click=(action "onAttributesButtonClick")
             }}
+            {{flexberry-button
+              class=(concat flexberryClassNames.attributesButton " right floated " flexberryClassNames.preventExpandCollapse)
+              iconClass="plus icon"
+              tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
+              click=(action "onFeatureCreateButtonClick")
+            }}
           {{/if}}
         {{/if}}
         {{#if _canChangeOpacity}}

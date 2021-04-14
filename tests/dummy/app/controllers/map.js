@@ -75,7 +75,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @type String
     @readOnly
   */
-  identifyToolName: Ember.computed('identifyToolLayerMode', 'identifyToolToolMode', function() {
+  identifyToolName: Ember.computed('identifyToolLayerMode', 'identifyToolToolMode', function () {
     let identifyToolName = 'identify';
     let layerMode = this.get('identifyToolLayerMode');
     let toolMode = this.get('identifyToolToolMode');
@@ -172,22 +172,26 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     captionPath: 'forms.map.favoritesbuttontooltip',
     iconClass: 'favorites icon',
     class: 'favorite'
+  }, {
+    selector: 'createObject',
+    captionPath: 'forms.map.createobjectbuttontooltip',
+    iconClass: 'createObject icon'
+  }, {
+    selector: 'createOrEditObject',
+    captionPath: 'forms.map.createoreditobjectbuttontooltip',
+    iconClass: 'createOrEditObject icon',
+    class: 'createOrEditObject'
   }]),
 
-  _sidebarFiltered: Ember.computed('sidebar', 'createObject', function () {
+  _sidebarFiltered: Ember.computed('sidebar', 'createObject', 'createOrEditObject', function () {
     let result = Ember.A();
     let sidebar = this.get('sidebar');
     sidebar.forEach((item) => {
-      result.push(item);
+      if ((item.selector !== 'createObject' || this.get('createObject')) &&
+          (item.selector !== 'createOrEditObject' || this.get('createOrEditObject'))) {
+        result.push(item);
+      }
     });
-
-    if (this.get('createObject')) {
-      result.push({
-        selector: 'createObject',
-        captionPath: 'forms.map.createobjectbuttontooltip',
-        iconClass: 'createObject icon'
-      });
-    }
 
     return result;
   }),
@@ -299,7 +303,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       editedLayersSelectedTabIndex: 0,
       editedLayersPanelFolded: true,
       editedLayersPanelSettings: {
-        withToolbar: false,
+        withToolbar: true,
         sidebarOpened: false
       }
     });
@@ -327,7 +331,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
     @method sideBarStateDidChange
   */
-  sideBarStateDidChange: Ember.observer('sidebarOpened', function() {
+  sideBarStateDidChange: Ember.observer('sidebarOpened', function () {
     if (this.get('sidebarOpened')) {
       this.set('editedLayersPanelSettings.sidebarOpened', true);
     } else {
@@ -361,18 +365,57 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
       if (this.get('createObject')) {
         Ember.run.later(() => {
-          if (this.get('_sidebarFiltered.4.active') !== true) {
-            this.set('_sidebarFiltered.4.active', true);
+          if (this.get('sidebar.5.active') !== true) {
+            this.set('sidebar.5.active', true);
           }
 
-          this.send('toggleSidebar', {
-            changed: false,
-            tabName: 'createObject'
-          });
+          if (!this.get('sidebarOpened')) {
+            this.send('toggleSidebar', {
+              changed: false,
+              tabName: 'createObject'
+            });
+          }
         });
       }
     },
 
+    /**
+      Handles create/edit feature.
+
+      @method  actions.onCreateOrEditFeature
+    */
+    onCreateOrEditFeature(e) {
+      this.set('createOrEditedFeature', e);
+      this.set('createOrEditObject', true);
+
+      if (this.get('createOrEditObject')) {
+        Ember.run.later(() => {
+          if (this.get('sidebar.6.class').indexOf('active') === -1 && this.get('sidebarOpened')) {
+            Ember.$('.sidebar-wrapper .item.active').removeClass('active');
+          }
+
+          this.set('sidebar.6.active', true);
+
+          if (!this.get('sidebarOpened')) {
+            this.send('toggleSidebar', {
+              changed: false,
+              tabName: 'createOrEditObject'
+            });
+          }
+        });
+      }
+    },
+
+    onCreateOrEditFeatureEnd() {
+      this.set('createOrEditedFeature', null);
+      this.set('createOrEditObject', false);
+
+      this.set('sidebar.6.class', 'createOrEditObject');
+      this.set('sidebar.6.active', false);
+
+      this.set('sidebar.0.active', true);
+    },
+      
     attrSearch(queryString) {
       Ember.$('.outer-search.flexberry-search-panel').addClass('hidden');
       if (this.get('sidebar.1.active') !== true) {
@@ -391,14 +434,16 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     onQueryFinished(e) {
       if (this.get('createObject')) {
         Ember.run.later(() => {
-          if (this.get('sidebarItems.4.active') !== true) {
-            this.set('sidebarItems.4.active', true);
+          if (this.get('sidebar.5.active') !== true) {
+            this.set('sidebar.5.active', true);
           }
 
-          this.send('toggleSidebar', {
-            changed: false,
-            tabName: 'createObject'
-          });
+          if (!this.get('sidebarOpened')) {
+            this.send('toggleSidebar', {
+              changed: false,
+              tabName: 'createObject'
+            });
+          }
         });
       } else {
         this._identificationFinished(e);
@@ -414,11 +459,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this._super(...arguments);
 
       this.initializeEditPanel();
-
-      let leafletMap = this.get('leafletMap');
-      if (!Ember.isNone(leafletMap)) {
-        leafletMap.on('containerResizeStart', this.onLeafletMapContainerResizeStart, this);
-      }
     },
 
     /**
@@ -427,11 +467,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       @method  actions.onMapLeafletDestroy
     */
     onMapLeafletDestroy() {
-      let leafletMap = this.get('leafletMap');
-      if (!Ember.isNone(leafletMap)) {
-        leafletMap.off('containerResizeStart', this.onLeafletMapContainerResizeStart, this);
-      }
-
       this.destroyEditPanel();
 
       this._super(...arguments);
@@ -485,6 +520,16 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
             this.set('showTree', true);
           }, 500);
         }
+      }
+
+      if (e.prevTab === 'createOrEditObject') {
+        if (e.changed) {
+          this.set('createOrEditObject', false);
+          this.set('createOrEditedFeature', null);
+        }
+
+        this.set('sidebar.6.class', 'createOrEditObject');
+        this.set('sidebar.6.active', false);
       }
     },
 

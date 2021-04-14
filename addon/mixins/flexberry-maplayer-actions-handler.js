@@ -44,7 +44,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerHeaderClick(...args) {},
+    onMapLayerHeaderClick(...args) { },
 
     /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}flexberry-maplayers component's 'beforeExpand' action{{/crossLink}}.
@@ -72,7 +72,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerBeforeExpand(...args) {},
+    onMapLayerBeforeExpand(...args) { },
 
     /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}flexberry-maplayers component's 'beforeCollapse' action{{/crossLink}}.
@@ -100,7 +100,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerBeforeCollapse(...args) {},
+    onMapLayerBeforeCollapse(...args) { },
 
     /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.visiblilityChange:method"}}flexberry-maplayers component's 'visiblilityChange' action{{/crossLink}}.
@@ -250,6 +250,10 @@ export default Ember.Mixin.create({
       let name = Ember.get(layerModel, 'name');
       let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
 
+      if (Ember.isNone(getAttributesOptions)) {
+        return;
+      }
+
       this.set(loadingPath, true);
       if (this.get(foldedPath)) {
         this.set(foldedPath, false);
@@ -265,6 +269,55 @@ export default Ember.Mixin.create({
           this.set(itemsPath, items);
           this.set(selectedTabIndexPath, items.length - 1);
         }
+      }).catch((errorMessage) => {
+        Ember.Logger.error(errorMessage);
+      }).finally(() => {
+        this.set(loadingPath, false);
+      });
+    },
+
+    /**
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.onFeatureEdit:method"}}flexberry-maplayers component's 'onFeatureEdit' action{{/crossLink}}.
+      Opens {{#FlexberryEditLayerFeatureComponent}}flexberry-edit-layer-feature component to edit attributes of the selected layer.
+
+      @method actions.onFeatureEdit
+      @param {String} layerModelPath Path to a layer model, which value must be used within action.
+      @param {Object} attributesPanelSettingsPathes Object containing pathes to properties containing 'flexberry-layers-attributes-panel' settings.
+      @param {String} attributesPanelSettingsPathes.itemsPath path to property containing 'flexberry-layers-attributes-panel' items.
+      @param {String} attributesPanelSettingsPathes.selectedTabIndexPath path to property containing 'flexberry-layers-attributes-panel' selected tab index.
+      @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
+    */
+    onFeatureEdit(layerPath, { loadingPath, mapAction }) {
+      let layerModel = getRecord(this, layerPath);
+      let name = Ember.get(layerModel, 'name');
+      let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
+
+      if (Ember.isNone(getAttributesOptions)) {
+        return;
+      }
+
+      getAttributesOptions().then(({ object, settings }) => {
+        let fields = Ember.get(object, 'readFormat.featureType.fields');
+        let data = Object.keys(fields).reduce((result, item) => {
+          result[item] = null;
+          return result;
+        }, {});
+
+        let dataItems = {
+          mode: 'Create',
+          items: [{
+            data: data,
+            layer: null
+          }]
+        };
+
+        this.set(loadingPath, true);
+
+        this.send(mapAction, {
+          dataItems: dataItems,
+          layerModel: { name: name, leafletObject: object, settings, layerModel }
+        });
+
       }).catch((errorMessage) => {
         Ember.Logger.error(errorMessage);
       }).finally(() => {
