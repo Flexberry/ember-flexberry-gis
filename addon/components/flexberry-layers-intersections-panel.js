@@ -434,7 +434,10 @@ export default Ember.Component.extend({
     this.set('noIntersectionResults', true);
     this.set('folded', false);
 
-    this.childViews[0].get('state').setEach('isVisible', false);
+    if (!Ember.isNone(this.childViews[0].get('state'))) {
+      this.childViews[0].get('state').setEach('isVisible', false);
+    }
+
     Ember.$('.search-field').val('');
     Ember.$('.fb-selector .item.filtered').each((i, item) => {
       Ember.$(item).removeClass('filtered');
