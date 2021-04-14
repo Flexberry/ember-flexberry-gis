@@ -12,6 +12,10 @@ export default {
   'table-tab': 'Table',
   'diagram-tab': 'Chart',
   'move-dialog': 'Move feature',
+  'delete-items-confirm': 'Confirm?',
+  'confirm-approve-caption': 'Yes',
+  'confirm-deny-caption': 'No',
+  'delete-dialog-confirm-caption': 'Deletion',
   'move': {
     'dragNdrop': {
       'caption': 'Group drag and drop'

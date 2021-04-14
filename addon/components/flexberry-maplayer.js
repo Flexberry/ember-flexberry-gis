@@ -279,10 +279,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _attributesOperationIsAvailable: Ember.computed('_layerClassFactory', function () {
+    _attributesOperationIsAvailable: Ember.computed('_layerClassFactory', 'layer.layerInitialized', function () {
       let layerClassFactory = this.get('_layerClassFactory');
 
-      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('attributes');
+      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).includes('attributes') && this.get('layer.layerInitialized');
     }),
 
     /**
@@ -546,6 +546,18 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onAttributesButtonClick(...args) {
         this.sendAction('attributesEdit', ...args);
+      },
+
+      /**
+        Handles create feature button's 'click' event.
+        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.attributes:method"}}'attributes'{{/crossLink}} action.
+
+        @method actions.onFeatureCreateButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onFeatureCreateButtonClick(...args) {
+        this.sendAction('featureEdit', ...args);
       },
 
       /**

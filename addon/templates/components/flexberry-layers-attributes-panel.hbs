@@ -41,7 +41,7 @@
           <div class="ui bottom attached tab segment layers-attributes-segment {{if (or (eq (get _activeTabs tabModel.name) "table-tab") (is-none (get _activeTabs tabModel.name))) "active"}}" data-tab="table-tab">
             {{#flexberry-table
               allowEdit=tabModel.allowEdit
-              allowEditOnList=tabModel.allowEditOnList
+              allowEditOnList=false
               perPageAvailable=false
               model=tabModel.propertiesToShow
               header=tabModel.header
@@ -52,75 +52,19 @@
               fieldValidators=(get tabModel "leafletObject.readFormat.featureType.fieldValidators")
               page=lastPage
               getData=(action "onTabGetData" tabModel)
-              rowEdited=(action "onTableRowEdited" tabModel)
             }}
 
             {{#block-slot "head-block"}}
               <div class="bottompanel-tab-head-panel">
                 <div class="buttons">
-                  {{#if tabModel.allowEdit}}
-                    {{component "geometry-add-modes/manual"
+                   {{#if tabModel.allowEdit}}
+                   {{component "geometry-add-modes/import"
                         leafletMap=leafletMap
                         settings=(hash
-                          drawTools=(get tabModel "availableDrawTools")
                           layerCRS=(get tabModel "leafletObject.options.crs")
                           layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
-                          layersFieldsCaptions=(get tabModel "header")
                         )
                         tabModel=tabModel
-                        complete=(action "onGeometryAddComplete" tabModel)
-                        drawStart=(action "onAddDrawStart" tabModel)
-                        importComplete=(action "onImportComplete" tabModel)
-                    }}
-                    {{#if (not (eq tabModel.typeGeometry "marker")) }}
-                      {{component "geometry-add-modes/rhumb"
-                          leafletMap=leafletMap
-                          settings=(hash                          
-                            layerCRS=(get tabModel "leafletObject.options.crs")                 
-                          )
-                          tabModel=tabModel
-                          complete=(action "onGeometryAddComplete" tabModel)
-                      }}
-                    {{/if}}
-                    {{component "geometry-add-modes/draw"
-                        leafletMap=leafletMap
-                        settings=(hash
-                          drawTools=(get tabModel "availableDrawTools")
-                          layerCRS=(get tabModel "leafletObject.options.crs")
-                          layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
-                          layersFieldsCaptions=(get tabModel "header")
-                        )
-                        tabModel=tabModel
-                        complete=(action "onGeometryAddComplete" tabModel)
-                        drawStart=(action "onAddDrawStart" tabModel)
-                        importComplete=(action "onImportComplete" tabModel)
-                    }}
-                    {{#if (eq tabModel.typeGeometry "marker") }}
-                      {{component "geometry-add-modes/geoprovider"
-                          leafletMap=leafletMap
-                          settings=(hash
-                            drawTools=(get tabModel "availableDrawTools")
-                            layerCRS=(get tabModel "leafletObject.options.crs")
-                            layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
-                            layersFieldsCaptions=(get tabModel "header")
-                          )
-                          tabModel=tabModel
-                          complete=(action "onGeometryAddComplete" tabModel)
-                          drawStart=(action "onAddDrawStart" tabModel)
-                          importComplete=(action "onImportComplete" tabModel)
-                      }}
-                    {{/if}}
-                    {{component "geometry-add-modes/import"
-                        leafletMap=leafletMap
-                        settings=(hash
-                          drawTools=(get tabModel "availableDrawTools")
-                          layerCRS=(get tabModel "leafletObject.options.crs")
-                          layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
-                          layersFieldsCaptions=(get tabModel "header")
-                        )
-                        tabModel=tabModel
-                        complete=(action "onGeometryAddComplete" tabModel)
-                        drawStart=(action "onAddDrawStart" tabModel)
                         importComplete=(action "onImportComplete" tabModel)
                     }}
                   {{/if}}
@@ -143,26 +87,6 @@
                     }}
                   {{/if}}
                   {{#if tabModel.allowEdit}}
-                    {{flexberry-button
-                      tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
-                      click=(action "onSaveChangesClick" tabModel)
-                      iconClass="save icon"
-                      readonly=(not (get tabModel "leafletObject._wasChanged"))
-                    }}
-                    <div class="flexberry-geometry-move {{if tabModel.groupDraggable "active"}}">
-                      <div class="ui simple dropdown item">
-                        <i class="move icon"></i>
-                        <i class="dropdown icon"></i>
-                        <div class="menu">
-                            <a class="item" onclick={{action "onMoveSelect" "dragNdrop" tabModel}}>
-                              {{t "components.flexberry-layers-attributes-panel.move.dragNdrop.caption"}}
-                            </a>
-                            <a class="item" onclick={{action "onMoveSelect" "offset" tabModel}}>
-                              {{t "components.flexberry-layers-attributes-panel.move.offset.caption"}}
-                            </a>
-                        </div>
-                      </div>
-                    </div>
                     <div class="flexberry-geometry-tools">
                       <div class="ui simple dropdown item">
                         <i class="cut icon"></i>
@@ -273,16 +197,16 @@
                 {{#block-slot "column-cell-head-1" as |row|}}
                   <td class="narrow">
                     {{flexberry-button
+                      tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
+                      click=(action "onFindItem" tabModel (ember-guid row))
+                      iconClass="marker icon"
+                    }}
+
+                    {{flexberry-button
                       class="small-button"
                       tooltip=(t "components.flexberry-layers-attributes-panel.edit-item")
                       click=(action "onRowEdit" tabModel (ember-guid row))
                       iconClass="edit icon"
-                    }}
-                    {{flexberry-button
-                      class=(concat "small-button" (if (get tabModel._editedRows (ember-guid row)) " active" ""))
-                      tooltip=(t "components.flexberry-layers-attributes-panel.edit-item-geometry")
-                      click=(action "onRowGeometryEdit" tabModel (ember-guid row))
-                      iconClass="move icon"
                     }}
                   </td>
                 {{/block-slot}}
@@ -302,51 +226,20 @@
   {{/each}}
 </div>
 
-{{!--
-  Semantic UI modal dialogs takes long time to be initialized
-  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
---}}
-{{#if _editRowDialogHasBeenRequested}}
-  {{component (if (known-for-type "component" _editComponentName) _editComponentName "layers-dialogs/attributes/edit")
-    class=flexberryClassNames.addDialog
-    visible=_onEditRowDialogIsVisible
-    fieldNames=(get _editRowTabModel "header")
-    fieldTypes=(get _editRowTabModel "leafletObject.readFormat.featureType.fieldTypes")
-    fieldParsers=(get _editRowTabModel "leafletObject.readFormat.featureType.fields")
-    fieldValidators=(get _editRowTabModel "leafletObject.readFormat.featureType.fieldValidators")
-    data=_editRowDataCopy
-    layerData=extraLayerData
-    approve=(action "onEditRowDialogApprove")
-    deny=(action "onEditRowDialogDeny")
-    hide=(action "onEditRowDialogHide")
-  }}
-{{/if}}
-{{#if _newRowDialogHasBeenRequested}}
-  {{component (if (known-for-type "component" _editComponentName) _editComponentName "layers-dialogs/attributes/edit")
-    caption=(t "components.layers-dialogs.edit-attributes.add")
-    class=flexberryClassNames.addDialog
-    visible=_newRowDialogIsVisible
-    data=_newRowData
-    layerData=extraLayerData
-    choiceValueData=_newRowСhoiceValueData
-    choiceValueMode=_newRowСhoiceValueMode
-    fieldNames=(get _newRowTabModel "header")
-    fieldTypes=(get _newRowTabModel "leafletObject.readFormat.featureType.fieldTypes")
-    fieldParsers=(get _newRowTabModel "leafletObject.readFormat.featureType.fields")
-    fieldValidators=(get _newRowTabModel "leafletObject.readFormat.featureType.fieldValidators")
-    approve=(action "onNewRowDialogApprove")
-    deny=(action "onNewRowDialogDeny")
-    hide=(action "onNewRowDialogHide")
-  }}
-{{/if}}
-{{#if _moveDialogHasBeenRequested}}
-  {{component "layers-dialogs/attributes/move"
-    caption=(t "components.flexberry-layers-attributes-panel.move-dialog")
-    visible=_moveDialogIsVisible
-    moveX=_moveX
-    moveY=_moveY
-    layerCRS=(get _tabModels (concat selectedTabIndex ".leafletObject.options.crs.code"))
-    approve=(action "onMoveDialogApprove")
-  }}
-{{/if}}
 {{flexberry-error error=error}}
+
+{{#if _deleteRowDialogHasBeenRequested}}
+  {{#flexberry-dialog
+    caption=(t "components.flexberry-layers-attributes-panel.delete-items-confirm")
+    approveButtonCaption=(t "components.flexberry-layers-attributes-panel.confirm-approve-caption")
+    denyButtonCaption=(t "components.flexberry-layers-attributes-panel.confirm-deny-caption")
+    visible=_deleteRowDialogIsVisible
+    approve=(action "onDeleteRowDialogApprove")
+    deny=(action "onDeleteRowDialogDeny")
+    hide=(action "onDeleteRowDialogDeny")
+  }}
+    <div class="ui celled grid">
+      {{t "components.flexberry-layers-attributes-panel.delete-items-confirm"}}
+    </div>
+  {{/flexberry-dialog}}
+{{/if}}

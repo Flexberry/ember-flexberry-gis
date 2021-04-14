@@ -27,6 +27,17 @@
     </div>
   </div>
   <div class="sidebar-wrapper">
+    {{flexberry-search-panel
+      querySearch=(action "querySearch")
+      clearSearch=(action "clearSearch")
+      leafletMap=leafletMap
+      layers=model.hierarchy
+      searchInProcess=searchInProcess
+      maxResultsCount=10
+      class="outer-search"
+      searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
+      attrSearch=(action "attrSearch")
+    }}
     {{flexberry-tab-bar
       change=(action "toggleSidebar")
       items=_sidebarFiltered
@@ -40,7 +51,7 @@
             leafletMap=leafletMap
             compareLayersEnabled=compareLayersEnabled
             sideBySide=sideBySide
-            layers=(get-with-dynamic-actions this "model.hierarchy"       
+            layers=(get-with-dynamic-actions this "model.otherLayers"
               hierarchyPropertyName="layers"
               pathKeyword="layerPath"
               dynamicActions=(array
@@ -52,7 +63,7 @@
                 (hash
                   on="copy"
                   actionName="onMapLayerCopy"
-                  actionArguments=(array "model.hierarchy")
+                  actionArguments=(array "model.otherLayers")
                 )
                 (hash
                   on="edit"
@@ -91,6 +102,16 @@
                     )
                   )
                 )
+                (hash
+                  on="featureEdit"
+                  actionName="onFeatureEdit"
+                  actionArguments=(array "{% layerPath %}"
+                    (hash
+                      mapAction="onCreateOrEditFeature"
+                      loadingPath="editedLayersPanelLoading"
+                    )
+                  )
+                )
               )
             )
             add=(action "onMapLayerAdd" "model.hierarchy")
@@ -105,9 +126,17 @@
         {{flexberry-search-panel
           querySearch=(action "querySearch")
           clearSearch=(action "clearSearch")
+          leafletMap=leafletMap
+          layers=model.hierarchy
           searchInProcess=searchInProcess
+          maxResultsCount=10
+          attrVisible=attrVisible
+          queryString=queryString
           searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
         }}
+        {{#if (gt searchResults.length 0)}}
+          <h5>{{t "components.flexberry-search.result-caption"}}</h5>
+        {{/if}}
         {{layer-result-list
           results=searchResults
           serviceLayer=serviceLayer
@@ -169,6 +198,20 @@
           addToCompareGeometries=(action 'addToCompareGeometries')
         }}
       </div>
+      <div data-tab="createOrEditObject" class="ui tab createOrEditObject">
+      <h3>{{t "forms.map.tabbar.createOrEditObject.caption"}}</h3>
+        {{flexberry-edit-layer-feature
+          dataItems=createOrEditedFeature.dataItems
+          layerModel=createOrEditedFeature.layerModel
+          leafletMap=leafletMap
+          serviceLayer=serviceLayer
+          editFeatureEnd=(action 'onCreateOrEditFeatureEnd')
+          rhumbMode=true
+          drawMode=true
+          geoproviderMode=false
+        }}
+      </div>
+
     </div>
   </div>
   <div class={{concat "bottompanel-wrapper" (if (or (gt editedLayers.length 0) editedLayersPanelLoading) "" " hidden")}}>
@@ -180,6 +223,7 @@
       settings=editedLayersPanelSettings
       loading=editedLayersPanelLoading
       leafletMap=leafletMap
+      editFeature=(action 'onCreateOrEditFeature')
     }}
   </div>
   <div class={{concat "bottompanel-wrapper intersection-panel" (if showIntersectionPanel "" " hidden")}}>
@@ -242,8 +286,6 @@
           leafletMap=leafletMap
           layers=model.hierarchy
         }}
-        {{map-tools/measure leafletMap=leafletMap}}
-        {{map-tools/draw leafletMap=leafletMap}}
         {{map-commands/export
           iconClass="external share icon"
           timeout=30000
@@ -251,6 +293,27 @@
           leafletMap=leafletMap
           layers=model.hierarchy
         }}
+        {{#map-commands/base
+          class="flexberry-more-map-command no-arrow"
+          name="base"
+          iconClass="more icon"
+          leafletMap=leafletMap
+        }}
+          {{#block-slot "submenu"}}
+            {{map-tools/measure leafletMap=leafletMap addHaArea=true}}
+          {{#minimap-control
+            minimized=true
+            leafletMap=leafletMap as |groupLayers|
+          }}
+            {{flexberry-layers
+              leafletContainer=groupLayers
+              layers=model.hierarchy
+              forMinimap=true
+            }}
+          {{/minimap-control}}
+          {{/block-slot}}
+        {{/map-commands/base}}
+        {{map-tools/background-layers layers=model.backgroundLayers}}
       {{/flexberry-maptoolbar}}
     </div>
   </div>
@@ -276,23 +339,23 @@
         {{flexberry-layers
           leafletMap=leafletMap
           leafletContainer=leafletMap
-          layers=model.hierarchy
+          layers=(get-with-dynamic-actions this "model.hierarchy"
+            hierarchyPropertyName="layers"
+            pathKeyword="layerPath"
+            dynamicActions=(array
+              (hash
+                on="layerInit"
+                actionName="onLayerInit"
+              )
+            )
+          )
         }}
         {{switch-scale-control
           leafletMap=leafletMap
           updateWhenIdle=true
           scales=switchScaleControlScales
         }}
-        {{#minimap-control
-          minimized=true
-          leafletMap=leafletMap as |groupLayers|
-        }}
-          {{flexberry-layers
-            leafletContainer=groupLayers
-            layers=model.hierarchy
-            forMinimap=true
-          }}
-        {{/minimap-control}}
+
       {{/flexberry-map}}
     </div>
   </div>

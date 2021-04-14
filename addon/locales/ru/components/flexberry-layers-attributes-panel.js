@@ -12,6 +12,10 @@ export default {
   'table-tab': 'Таблица',
   'diagram-tab': 'График',
   'move-dialog': 'Переместить объект',
+  'delete-items-confirm': 'Подтверждаете удаление?',
+  'confirm-approve-caption': 'Да',
+  'confirm-deny-caption': 'Нет',
+  'delete-dialog-confirm-caption': 'Удаление',
   'move': {
     'dragNdrop': {
       'caption': 'Перетаскивание выделенных'

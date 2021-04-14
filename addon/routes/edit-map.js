@@ -137,7 +137,15 @@ export default EditFormRoute.extend({
     if (layers) {
       let rootLayers = layers.filter(layer => Ember.isEmpty(layer.get('parent')));
 
-      model.set('hierarchy', this.sortLayersByIndex(rootLayers));
+      let hierarchy = this.sortLayersByIndex(rootLayers);
+      model.set('hierarchy', hierarchy);
+
+      let backgroundLayers = Ember.A();
+      backgroundLayers.addObjects(hierarchy.filterBy('settingsAsObject.backgroundSettings.canBeBackground', true));
+      model.set('backgroundLayers', backgroundLayers);
+      let otherLayers = Ember.A();
+      otherLayers.addObjects(hierarchy.filterBy('settingsAsObject.backgroundSettings.canBeBackground', false));
+      model.set('otherLayers', otherLayers);
     }
 
     let urlParams = ['zoom', 'lat', 'lng'];
