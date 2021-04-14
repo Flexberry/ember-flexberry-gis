@@ -37,8 +37,7 @@
     "leaflet.markercluster": "1.1.0",
     "leaflet-omnivore": "0.3.3",
     "chart.js": "v2.7.1",
-    "javascript-detect-element-resize": "0.5.3",
-    "jquery-ui": "^1.12.1"
+    "javascript-detect-element-resize": "0.5.3"
   },
   "resolutions": {
     "ember": "2.4.3",
