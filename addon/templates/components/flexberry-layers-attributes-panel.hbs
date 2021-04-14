@@ -226,16 +226,6 @@
   {{/each}}
 </div>
 
-{{#if _moveDialogHasBeenRequested}}
-  {{component "layers-dialogs/attributes/move"
-    caption=(t "components.flexberry-layers-attributes-panel.move-dialog")
-    visible=_moveDialogIsVisible
-    moveX=_moveX
-    moveY=_moveY
-    layerCRS=(get _tabModels (concat selectedTabIndex ".leafletObject.options.crs.code"))
-    approve=(action "onMoveDialogApprove")
-  }}
-{{/if}}
 {{flexberry-error error=error}}
 
 {{#if _deleteRowDialogHasBeenRequested}}

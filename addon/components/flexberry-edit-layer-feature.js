@@ -797,6 +797,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             Ember.set(layer, 'feature', { type: 'Feature' });
             Ember.set(layer.feature, 'properties', data);
             Ember.set(layer.feature, 'leafletLayer', layer);
+
+            if (Ember.isNone(Ember.get(layer, 'feature.geometry'))) {
+              let baseCrs = this.get('leafletObject.options.crs');
+              let geometry = layer.toProjectedGeoJSON(baseCrs).geometry;
+              Ember.set(layer, 'feature.geometry', geometry);
+            }
+
             e.layers.push(layer);
           }
         });
