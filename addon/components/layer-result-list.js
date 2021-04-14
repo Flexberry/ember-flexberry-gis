@@ -206,6 +206,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.sendAction('addToFavorite', feature);
     },
 
+    /**
+      Performs row editing.
+
+      @method actions.editFeature
+    */
     editFeature(e) {
       this.sendAction('editFeature', e);
     },

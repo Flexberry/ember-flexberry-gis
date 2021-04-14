@@ -263,25 +263,33 @@ export default Ember.Component.extend({
       Performs row editing.
 
       @method actions.onRowEdit
-      @param {Object} tabModel Related tab.
-      @param {Object} rowId Editing row identifier.
     */
     onRowEdit() {
       let feature = this.get('feature');
-      let editedProperty = feature.properties;
+      let layerModel = feature.layerModel;
+      let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
 
-      let dataItems = {
-        mode: 'Edit',
-        items: [{
-          data: Object.assign({}, editedProperty),
-          initialData: editedProperty,
-          layer: feature.leafletLayer,
-        }]
-      };
+      if (Ember.isNone(getAttributesOptions)) {
+        return;
+      }
 
-      this.sendAction('editFeature', {
-        dataItems: dataItems,
-        layerModel: null
+      getAttributesOptions().then(({ object, settings }) => {
+        let name = Ember.get(feature.layerModel, 'name');
+        let editedProperty = feature.properties;
+
+        let dataItems = {
+          mode: 'Edit',
+          items: [{
+            data: Object.assign({}, editedProperty),
+            initialData: editedProperty,
+            layer: feature.leafletLayer,
+          }]
+        };
+
+        this.sendAction('editFeature', {
+          dataItems: dataItems,
+          layerModel: { name: name, leafletObject: object, settings, layerModel }
+        });
       });
     },
 
