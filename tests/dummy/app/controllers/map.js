@@ -197,7 +197,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     let sidebar = this.get('sidebar');
     sidebar.forEach((item) => {
       if ((item.selector !== 'createObject' || this.get('createObject')) &&
-          (item.selector !== 'createOrEditObject' || this.get('createOrEditObject'))) {
+        (item.selector !== 'createOrEditObject' || this.get('createOrEditObject'))) {
         result.push(item);
       }
     });
