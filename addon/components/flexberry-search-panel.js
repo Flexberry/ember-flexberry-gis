@@ -115,6 +115,19 @@ export default Ember.Component.extend({
   */
   errorMessage: null,
 
+  /**
+    Flag: indicates whether to show clear button or not.
+
+    @property queryStringEmpty
+    @type String
+    @default '''
+  */
+  queryStringEmpty: '',
+
+  queryStringObserver: Ember.observer('queryString', function() {
+    this.set('queryStringEmpty', !Ember.isBlank(this.get('queryString')));
+  }),
+
   actions: {
     querySearch() {
       if (this.get('attrVisible')) {
