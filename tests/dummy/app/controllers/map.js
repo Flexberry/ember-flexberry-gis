@@ -181,6 +181,15 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     captionPath: 'forms.map.createoreditobjectbuttontooltip',
     iconClass: 'createOrEditObject icon',
     class: 'createOrEditObject'
+  }, {
+    selector: 'createObject',
+    captionPath: 'forms.map.createobjectbuttontooltip',
+    iconClass: 'createObject icon'
+  }, {
+    selector: 'createOrEditObject',
+    captionPath: 'forms.map.createoreditobjectbuttontooltip',
+    iconClass: 'createOrEditObject icon',
+    class: 'createOrEditObject'
   }]),
 
   _sidebarFiltered: Ember.computed('sidebar', 'createObject', 'createOrEditObject', function () {
@@ -415,7 +424,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
       this.set('sidebar.0.active', true);
     },
-      
+
     attrSearch(queryString) {
       Ember.$('.outer-search.flexberry-search-panel').addClass('hidden');
       if (this.get('sidebar.1.active') !== true) {

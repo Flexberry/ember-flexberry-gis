@@ -556,7 +556,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
         which describes button's 'click' event.
       */
-       onFeatureCreateButtonClick(...args) {
+      onFeatureCreateButtonClick(...args) {
         this.sendAction('featureEdit', ...args);
       },
 
