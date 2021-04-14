@@ -34,6 +34,12 @@
           </a>
         </div>
         <div>
+          <a class="icon item" title="{{t "components.feature-result-item.edit-caption"}}" {{action "onRowEdit" on="click"}}>
+            <i class="edit icon"></i>
+            {{t "components.feature-result-item.edit-caption"}}
+          </a>
+        </div>
+        <div>
           <a class="icon item" title="{{t "components.feature-result-item.find-intersection-caption"}}" {{action "findIntersection" on="click"}}>
             <i class="intersections icon"></i>
             {{t "components.feature-result-item.find-intersection-caption"}}
@@ -114,7 +120,7 @@
     {{/if}}
   </div>
   <div class="feature-result-item-caption" {{action "showInfo" on="click"}}>
-    <label>qweqweqweqweqwe{{get feature displayProperty}}</label>
+    <label>{{get feature displayProperty}}</label>
   </div>
 </div>
 <div class="feature-result-item-content content {{if expanded "visible" "hidden"}}">

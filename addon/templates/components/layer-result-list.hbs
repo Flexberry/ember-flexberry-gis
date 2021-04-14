@@ -98,6 +98,7 @@
                     intersection=intersection
                     zoomToIntersection=(action 'zoomToIntersection')
                     panToIntersection=panToIntersection
+                    editFeature=(action 'editFeature')
                 }}
                 {{else}}
                   {{feature-result-item
@@ -113,6 +114,7 @@
                     intersection=intersection
                     zoomToIntersection=(action 'zoomToIntersection')
                     panToIntersection=panToIntersection
+                    editFeature=(action 'editFeature')
                   }}
                 {{/if}}
               {{/if}}
@@ -215,6 +217,7 @@
                 favoriteMode=favoriteMode
                 addToFavorite=(action 'addToFavorite')
                 addToCompareGeometries=(action 'addToCompareGeometries')
+                editFeature=(action 'editFeature')
             }}
             {{else}}
               {{feature-result-item
@@ -233,6 +236,7 @@
                 favoriteMode=favoriteMode
                 addToFavorite=(action 'addToFavorite')
                 addToCompareGeometries=(action 'addToCompareGeometries')
+                editFeature=(action 'editFeature')
               }}
             {{/if}}
           {{/each}}

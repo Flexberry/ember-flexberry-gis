@@ -206,6 +206,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.sendAction('addToFavorite', feature);
     },
 
+    editFeature(e) {
+      this.sendAction('editFeature', e);
+    },
+
     /**
       Action adds feature to array for comparing geometries.
 

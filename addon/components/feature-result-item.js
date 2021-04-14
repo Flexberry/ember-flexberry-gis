@@ -259,6 +259,31 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    /**
+      Performs row editing.
+
+      @method actions.onRowEdit
+      @param {Object} tabModel Related tab.
+      @param {Object} rowId Editing row identifier.
+    */
+    onRowEdit() {
+      let feature = this.get('feature');
+      let editedProperty = feature.properties;
+
+      let dataItems = {
+        mode: 'Edit',
+        items: [{
+          data: Object.assign({}, editedProperty),
+          initialData: editedProperty,
+          layer: feature.leafletLayer,
+        }]
+      };
+
+      this.sendAction('editFeature', {
+        dataItems: dataItems,
+        layerModel: null
+      });
+    },
 
     /**
       Handles click on show/hide all intersection coordinates.

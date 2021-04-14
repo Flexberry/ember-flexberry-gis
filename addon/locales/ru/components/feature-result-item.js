@@ -5,7 +5,8 @@ export default {
   'select-all-caption': 'Выбрать все',
   'feature-table-property-name': 'Поле',
   'feature-table-property-value': 'Значение',
-  'select-object-caption': 'Редактировать объект',
-  'action-object-caption': 'Редактировать объект',
-  'find-intersection-caption': 'Поиск пересечений'
+  'select-object-caption': 'К объекту',
+  'action-object-caption': 'К объекту',
+  'find-intersection-caption': 'Поиск пересечений',
+  'edit-caption': 'Редактировать объект'
 };
