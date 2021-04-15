@@ -434,6 +434,19 @@
         i.flexberry-map-command-submenu-icon.dropdown.icon {
             display: none;
         }
+
+        .flexberry-map-command-submenu {
+          a.flexberry-map-tool {
+            padding: 5px !important;
+            i.icon {
+              margin: 0px;
+            }
+
+            i.icon:before {
+              font-size: 15px;
+            }
+          }
+        }
     }
     /* показать слои */
     .flexberry-maplayers-show {

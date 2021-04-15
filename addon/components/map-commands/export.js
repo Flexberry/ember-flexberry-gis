@@ -45,316 +45,214 @@ const flexberryClassNames = {
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
 let ExportMapCommandComponent = Ember.Component.extend({
-    /**
-      Map command to execute.
 
-      @property _command
-      @type String
-      @default null
-      @private
-    */
-    _command: null,
+  /**
+    Flag: indicates whether export dialog has been already requested by user or not.
 
-    /**
-      Flag: indicates whether export dialog has been already requested by user or not.
+    @property _exportDialogHasBeenRequested
+    @type boolean
+    @default false
+    @private
+  */
+  _exportDialogHasBeenRequested: false,
 
-      @property _exportDialogHasBeenRequested
-      @type boolean
-      @default false
-      @private
-    */
-    _exportDialogHasBeenRequested: false,
+  /**
+    Flag: indicates whether export dialog is visible or not.
 
-    /**
-      Flag: indicates whether export dialog is visible or not.
+    @property _exportDialogIsVisible
+    @type boolean
+    @default false
+    @private
+  */
+  _exportDialogIsVisible: false,
 
-      @property _exportDialogIsVisible
-      @type boolean
-      @default false
-      @private
-    */
-    _exportDialogIsVisible: false,
+  /**
+    Flag: indicates whether to show downloading file settings or not.
 
-    /**
-      Flag: indicates whether to show downloading file settings or not.
+    @property showDownloadingFileSettings
+    @type Boolean
+    @default true
+  */
+  showDownloadingFileSettings: true,
 
-      @property _showDownloadingFileSettings
-      @type Boolean
-      @default false
-    */
-    _showDownloadingFileSettings: false,
+  /**
+    Flag: indicates whether export is in progress.
 
-    /**
-      Flag: indicates whether export is in progress.
+    @property _exportIsInProgress
+    @type Boolean
+    @default false
+    @private
+  */
+  _exportIsInProgress: false,
 
-      @property _exportIsInProgress
-      @type Boolean
-      @default false
-      @private
-    */
-    _exportIsInProgress: false,
+  /**
+    Flag: indicates whether to show export error message or not.
 
-    /**
-      Flag: indicates whether to show export error message or not.
+    @property _showExportErrorMessage
+    @type Boolean
+    @readOnly
+  */
+  _showExportErrorMessage: false,
 
-      @property _showExportErrorMessage
-      @type Boolean
-      @readOnly
-    */
-    _showExportErrorMessage: false,
+  /**
+    Export error message.
 
-    /**
-      Export error message.
+    @property _exportErrorMessage
+    @type String
+    @default null
+    @private
+  */
+  _exportErrorMessage: null,
 
-      @property _exportErrorMessage
-      @type String
-      @default null
-      @private
-    */
-    _exportErrorMessage: null,
+  /**
+    Reference to component's template.
+  */
+  layout,
 
-    /**
-      Reference to component's template.
-    */
-    layout,
+  /**
+    Reference to component's CSS-classes names.
+    Must be also a component's instance property to be available from component's .hbs template.
+  */
+  flexberryClassNames,
 
-    /**
-      Reference to component's CSS-classes names.
-      Must be also a component's instance property to be available from component's .hbs template.
-    */
-    flexberryClassNames,
+  /**
+    Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
+    to disable a component's wrapping element.
 
-    /**
-      Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
-      to disable a component's wrapping element.
+    @property tagName
+    @type String
+    @default ''
+  */
+  tagName: '',
 
-      @property tagName
-      @type String
-      @default ''
-    */
-    tagName: '',
+  /**
+    Map command's additional CSS-class.
 
-    /**
-      Map command's additional CSS-class.
+    @property class
+    @type String
+    @default null
+  */
+  class: null,
 
-      @property class
-      @type String
-      @default null
-    */
-    class: null,
+  /**
+    Map command's caption.
 
-    /**
-      Map command's caption.
+    @property caption
+    @type String
+    @default t('components.map-commands.export.caption')
+  */
+  caption: t('components.map-commands.export.caption'),
 
-      @property caption
-      @type String
-      @default t('components.map-commands.export.caption')
-    */
-    caption: t('components.map-commands.export.caption'),
+  /**
+    Map command's tooltip text.
+    Will be added as wrapper's element 'title' attribute.
 
-    /**
-      Map command's tooltip text.
-      Will be added as wrapper's element 'title' attribute.
+    @property tooltip
+    @default t('components.map-commands.export.tooltip')
+  */
+  tooltip: t('components.map-commands.export.tooltip'),
 
-      @property tooltip
-      @default t('components.map-commands.export.tooltip')
-    */
-    tooltip: t('components.map-commands.export.tooltip'),
+  /**
+    Map command's icon CSS-class names.
 
-    /**
-      Map command's icon CSS-class names.
+    @property iconClass
+    @type String
+    @default 'file image outline icon'
+  */
+  iconClass: 'file image outline icon',
 
-      @property iconClass
-      @type String
-      @default 'file image outline icon'
-    */
-    iconClass: 'file image outline icon',
+  /**
+    Map caption that will be displayed on print/export preview by default.
 
-    /**
-      Map command's 'export-download' mode's additional CSS-class.
+    @property defaultMapCaption
+    @type String
+    @default ''
+  */
+  defaultMapCaption: '',
 
-      @property class
-      @type String
-      @default null
-    */
-    exportDownloadClass: null,
+  /**
+    Max timeout (in milliseconds) to wait for map's layers readiness before export.
 
-    /**
-      Map command's 'export-download' mode's caption.
+    @property timeout
+    @type Number
+    @default 30000
+  */
+  timeout: 30000,
 
-      @property exportDownloadCaption
-      @type String
-      @default t('components.map-commands.export.export-download.caption')
-    */
-    exportDownloadCaption: t('components.map-commands.export.export-download.caption'),
-
-    /**
-      Map command's 'export-download' mode's tooltip.
-
-      @property exportDownloadTooltip
-      @type String
-      @default t('components.map-commands.export.export-download.tooltip')
-    */
-    exportDownloadTooltip: t('components.map-commands.export.export-download.tooltip'),
-
-    /**
-      Map command's 'export-download' mode's icon CSS-class names.
-
-      @property iconClass
-      @type String
-      @default 'download icon'
-    */
-    exportDownloadIconClass: 'download icon',
-
-    /**
-      Map command's 'export-download' mode's additional CSS-class.
-
-      @property class
-      @type String
-      @default null
-    */
-    exportPrintClass: null,
-
-    /**
-      Map command's 'export-download' mode's caption.
-
-      @property caption
-      @type String
-      @default t('components.map-commands.export.export-print.caption')
-    */
-    exportPrintCaption: t('components.map-commands.export.export-print.caption'),
-
-    /**
-      Map command's 'export-print' mode's tooltip.
-
-      @property exportPrintTooltip
-      @type String
-      @default t('components.map-commands.export.export-print.tooltip')
-    */
-    exportPrintTooltip: t('components.map-commands.export.export-print.tooltip'),
-
-    /**
-      Map command's 'export-download' mode's icon CSS-class names.
-
-      @property iconClass
-      @type String
-      @default 'print icon'
-    */
-    exportPrintIconClass: 'print icon',
-
-    /**
-      Map caption that will be displayed on print/export preview by default.
-
-      @property defaultMapCaption
-      @type String
-      @default ''
-    */
-    defaultMapCaption: '',
-
-    /**
-      Max timeout (in milliseconds) to wait for map's layers readiness before export.
-
-      @property timeout
-      @type Number
-      @default 30000
-    */
-    timeout: 30000,
-
-    actions: {
-      onMapCommandButtonClick(e) {
-        this.set('_command', 'export-download');
-        this._showExportDialog({ isDownloadDialog: true, executeActionEventObject: e });
-      },
-
-      /**
-        Handles {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
-
-        @method actions.onExportDownloadMapCommandExecute
-        @param {Object} e Base map-command's 'execute' action event-object.
-      */
-      onExportPrintMapCommandExecute(e) {
-        this.set('_command', 'export-print');
-        this._showExportDialog({ isDownloadDialog: false, executeActionEventObject: e });
-      },
-
-      /**
-        Handles export dialog's 'approve' action.
-        Invokes own {{#crossLink "ExportMapCommandComponent/sendingActions.execute:method"}}'execute' action{{/crossLink}}.
-
-        @method actions.onExportDialogApprove
-        @param {Object} e Action's event object.
-      */
-      onExportDialogApprove(e) {
-        this.set('_exportIsInProgress', true);
-        e.closeDialog = false;
-        let leafletMap = this.get('leafletMap');
-        let mapCommandName = this.get('_command');
-        let mapCommandProperties = null;
-        let mapCommandExecutionOptions = Ember.get(e, 'exportOptions');
-        leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions).then(()=> {
-          this.set('_exportIsInProgress', false);
-          e.closeDialog = true;
-          this. _hideExportDialog();
-        });
-      }
-    },
-
-    /**
+  /**
       Shows export dialog.
 
       @method _showExportDialog
-      @param {Object} [options] Method options.
-      @param {Boolean} [options.isDownloadDialog] Flag: indicates whether dialog is in 'export-download' mode.
       @private
     */
-    _showExportDialog(options) {
-      options = options || {};
+  _showExportDialog() {
+    // Include dialog to markup.
+    this.set('_exportDialogHasBeenRequested', true);
 
-      let isDownloadDialog = Ember.get(options, 'isDownloadDialog');
-      this.set('_showDownloadingFileSettings', isDownloadDialog);
+    // Show dialog.
+    this.set('_exportDialogIsVisible', true);
+  },
 
-      // Include dialog to markup.
-      this.set('_exportDialogHasBeenRequested', true);
-
-      // Show dialog.
-      this.set('_exportDialogIsVisible', true);
+  actions: {
+    onButtonClick(e) {
+      this._showExportDialog();
     },
 
     /**
-      Hides export dialog.
+      Handles export dialog's 'approve' action.
+      Invokes own {{#crossLink "ExportMapCommandComponent/sendingActions.execute:method"}}'execute' action{{/crossLink}}.
 
-      @method _hideExportDialog
-      @private
+      @method actions.onExportDialogApprove
+      @param {Object} e Action's event object.
     */
-    _hideExportDialog() {
-      // Hide dialog.
-      this.set('_exportDialogIsVisible', false);
-    },
-
-    /**
-      Destroys DOM-related component's properties & logic.
-    */
-    willDestroyElement() {
-      this._super(...arguments);
-
-      this._hideExportDialog();
-    },
-
-    /**
-      Destroys component.
-    */
-    willDestroy() {
-      this._super(...arguments);
+    onExportDialogApprove(e) {
+      this.set('_exportIsInProgress', true);
+      e.closeDialog = false;
+      let leafletMap = this.get('leafletMap');
+      let mapCommandExecutionOptions = Ember.get(e, 'exportOptions');
+      leafletMap.flexberryMap.commands.execute('export', null, mapCommandExecutionOptions).then(() => {
+        this.set('_exportIsInProgress', false);
+        e.closeDialog = true;
+        this._hideExportDialog();
+      });
     }
+  },
 
-    /**
-      Component's action invoking when map-command must be executed.
+  /**
+    Hides export dialog.
 
-      @method sendingActions.execute
-      @param {Object} e Action's event object from
-      {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
-    */
+    @method _hideExportDialog
+    @private
+  */
+  _hideExportDialog() {
+    // Hide dialog.
+    this.set('_exportDialogIsVisible', false);
+  },
+
+  /**
+    Destroys DOM-related component's properties & logic.
+  */
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this._hideExportDialog();
+  },
+
+  /**
+    Destroys component.
+  */
+  willDestroy() {
+    this._super(...arguments);
   }
+
+  /**
+    Component's action invoking when map-command must be executed.
+
+    @method sendingActions.execute
+    @param {Object} e Action's event object from
+    {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
+  */
+}
 );
 
 // Add component's CSS-class names as component's class static constants

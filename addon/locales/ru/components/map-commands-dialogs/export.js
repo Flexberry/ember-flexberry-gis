@@ -7,11 +7,17 @@ export default {
   'approve-button': {
     'caption': 'Ок'
   },
+  'print-button': {
+    'caption': 'Печать карты'
+  },
+  'export-button': {
+    'caption': 'Сохранить изображение'
+  },
   'deny-button': {
     'caption': 'Отмена'
   },
   'caption-settings-tab': {
-    'caption': 'Настройки заголовка карты',
+    'caption': 'НАСТРОЙКИ ПЕЧАТИ',
     'caption-textbox': {
       'caption': 'Заголовок карты'
     },

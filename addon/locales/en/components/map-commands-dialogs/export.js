@@ -7,6 +7,12 @@ export default {
   'approve-button': {
     'caption': 'Ok'
   },
+  'print-button': {
+    'caption': 'Print'
+  },
+  'export-button': {
+    'caption': 'Export'
+  },
   'deny-button': {
     'caption': 'Cancel'
   },
