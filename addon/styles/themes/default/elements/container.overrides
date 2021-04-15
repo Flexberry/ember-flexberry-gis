@@ -339,56 +339,6 @@
         border-radius: 0px 5px 5px 0px;
         left: 320px;
     }
-    .flexberry-background-map-tool-div {
-      position: absolute;
-      left: 366px;
-      top: 0px;
-      .flexberry-background-map-tool {
-        margin-bottom: 0px;
-      }
-      .visible {
-        border-radius: 5px 5px 0px 0px;
-        border-bottom-width: 0px;
-        clip-path: inset(-2px -2px 0px -2px);
-      }
-      .main-background-layers {
-        max-width:360px;
-        background: @whitecolor;
-        box-shadow: @uiIconButtonBoxShadow;
-        clip-path: inset(0px -2px 0px -2px);
-        padding: 15px;
-        border: 1px solid  @bluecolor;
-        box-sizing: border-box;
-        border-top-width: 0px;
-      }
-      .last-item {
-        padding-right: 0px;
-      }
-      .first-item {
-        padding-right: 20px;
-      }
-      .child-background-layers{
-        position: relative;
-        padding-bottom: 6px;
-        display: inline-block;
-        .picture {
-          margin-bottom: 5px;
-          border: 1px solid  @graybluecolor;
-          width: 94px;
-          height: 49px;
-          box-sizing: border-box;
-        }
-        .active {
-          border: 1px solid @darkbluecolor;
-        }
-        p {
-          text-align: center;
-          font-size: 11px;
-          width: 94px;
-          line-height: 13px;
-        }
-      }
-    }
     .flexberry-full-extent-map-command {
         border-radius: 5px;
     }
@@ -647,6 +597,73 @@
     }
 }
 
+.background-layers.flexberry-maptoolbar.ui.menu {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  float: right;
+  width: 100%;
+  .flexberry-background-map-tool-div {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0px 30px 30px 0px;
+    width: 360px;
+    .flexberry-background-map-tool {
+      margin-bottom: 0px;
+    }
+    .visible {
+      border-radius: 5px 5px 0px 0px;
+      border-bottom-width: 0px;
+      clip-path: inset(-2px -2px 0px -2px);
+    }
+    .main-background-layers {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      max-width:360px;
+      background: @whitecolor;
+      box-shadow: @uiIconButtonBoxShadow;
+      clip-path: inset(0px -2px 0px -2px);
+      padding: 15px;
+      border: 1px solid  @bluecolor;
+      box-sizing: border-box;
+      border-top-width: 0px;
+    }
+    a {
+      position: absolute;
+      right: 0;
+    }
+    .last-item {
+      padding-right: 0px;
+    }
+    .first-item {
+      padding-right: 20px;
+    }
+    .child-background-layers{
+      position: relative;
+      padding-bottom: 6px;
+      display: inline-block;
+      .picture {
+        margin-bottom: 5px;
+        border: 1px solid  @graybluecolor;
+        width: 94px;
+        height: 49px;
+        box-sizing: border-box;
+      }
+      .active {
+        border: 1px solid @darkbluecolor;
+      }
+      p {
+        text-align: center;
+        font-size: 11px;
+        width: 94px;
+        line-height: 13px;
+      }
+    }
+  }
+}
+
 .flexberry-drag-box {
   position: absolute;
   cursor: all-scroll;
@@ -797,6 +814,12 @@ div.measure-drag-panel {
     font-size: 20px;
     margin: 0;
   }
+  i.icon.caret.down:before {
+    content: '\f107';
+  }
+  i.icon.caret.right:before {
+    content: '\f105';
+  }
   .ui.active.inline.loader {
     margin-top: 10px;
     left: 45%;
@@ -827,11 +850,34 @@ div.measure-drag-panel {
             margin: 0;
         }
     }
+    .more.submenu{
+      position: absolute;
+      top: 20px;
+      left: 47px;
+      width: 250px;
+      z-index: 100;
+      background: @whitecolor;
+      border: 1px solid #E5E5E5;
+      box-sizing: border-box;
+      border-radius: 3.5px;
+      div {
+        margin-bottom: 10px;
+      }
+    }
+    .icon.item.more {
+      width: 300px;
+    }
+  }
+  .feature-result-item-title {
+    position: relative;
   }
   .feature-result-item-caption {
     max-width: 68%;
     word-break: break-word;
     word-wrap: break-word;
+    font-family: Tahoma;
+    font-size: 14px;
+    color: @darkbluecolor;
   }
   .feature-result-item-select.icon.item, .feature-result-item-upload.icon.item {
     font-size: 1.4em;
@@ -841,6 +887,7 @@ div.measure-drag-panel {
   }
   .feature-result-item-group {
     text-align: left;
+    position: relative;
 
     .ui.dropdown>.dropdown.icon {
         margin: 0;
@@ -853,8 +900,12 @@ div.measure-drag-panel {
     }
   }
   .feature-result-item-toolbar {
+    position: absolute;
     display: flex;
     flex-direction: row;
+    width: 300px;
+    height: 100px;
+    left: 28px;
     &>.icon.item {
       font-size: 1.15em;
     }
@@ -874,6 +925,12 @@ div.measure-drag-panel {
     transform-origin: 50% 60%;
     &:before {
       font-size: 20px;
+      content: '\f105';
+    }
+  }
+  .ui.accordion .title.active .dropdown.icon {
+    &:before {
+      content: '\f105';
     }
   }
   .layer-result-list-toggler {
@@ -881,16 +938,16 @@ div.measure-drag-panel {
       display: flex;
       .flexberry-toggler-caption {
         color: @darkbluecolor;
-        margin-left: 1.7em;
+        margin-left: 6px;
         display: block;
         float: left;
         max-width: 80%;
+        font-size: 14px;
       }
     }
   }
+
   .flexberry-toggler {
-    border-radius: 5px;
-    box-shadow: @darkBoxShadow;
     padding: 5px;
     margin-bottom: 5px;
     margin-top: 5px;
@@ -899,15 +956,13 @@ div.measure-drag-panel {
     padding: 5px;
   }
   .flexberry-toggler-content {
-    border-radius: 5px;
     .item:not(.icon) {
-      padding: 5px;
-      border-radius: 5px;
-      box-shadow: @darkBoxShadow;
+      padding: 5px 5px 5px 8px;
       margin-bottom: 5px;
       .ui.table {
-        margin-top: 15px;
+        margin-top: 0px;
         color: @darkbluecolor;
+        border: none;
         tr th {
           background: @lightbluecolor;
         }
@@ -915,6 +970,9 @@ div.measure-drag-panel {
           word-break: break-word;
           word-wrap: break-word;
           min-width: 80px;
+          border: none;
+          padding: 0px;
+          color:  #343A32;
         }
       }
     }
@@ -947,6 +1005,27 @@ div.measure-drag-panel {
     .flexberry-toggler-caption {
       margin-left: 1em;
     }
+  }
+  .feature-div-property-name {
+    font-family: Tahoma;
+    font-size: 12px;
+    color: #8F928F;
+    padding: 15px 0px 10px 0px;
+  }
+  .feature-div-property-value {
+    font-family: Tahoma;
+    font-size: 12px;
+    color: #343A32;
+    .table {
+      width: 400px;
+      border: none;
+      tr td {
+        border: none;
+      }
+    }
+  }
+  .feature-result-item-content {
+    padding-left: 25px;
   }
 }
 

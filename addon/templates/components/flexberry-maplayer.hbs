@@ -24,63 +24,65 @@
         <label class={{flexberryClassNames.caption}}>
           {{layer.name}}
         </label>
-      </div>
-      <div class="flexberry-treenode-buttons-block">
-        {{#if (not readonly)}}
-          {{flexberry-button
-            class=(concat flexberryClassNames.removeButton " right floated " flexberryClassNames.preventExpandCollapse)
-            iconClass="trash icon"
-            tooltip=(t "components.flexberry-maplayer.remove-button.tooltip")
-            click=(action "onRemoveButtonClick")
-          }}
-          {{flexberry-button
-            class=(concat flexberryClassNames.editButton " right floated " flexberryClassNames.preventExpandCollapse)
-            iconClass="edit icon"
-            tooltip=(t "components.flexberry-maplayer.edit-button.tooltip")
-            click=(action "onEditButtonClick")
-          }}
-          {{flexberry-button
-            class=(concat flexberryClassNames.copyButton " right floated " flexberryClassNames.preventExpandCollapse)
-            iconClass="copy icon"
-            tooltip=(t "components.flexberry-maplayer.copy-button.tooltip")
-            click=(action "onCopyButtonClick")
-          }}
-          {{#if _addOperationIsAvailable}}
+        <div class="flexberry-treenode-buttons-block hidden">
+          {{#if (not readonly)}}
             {{flexberry-button
-              class=(concat flexberryClassNames.addButton " right floated " flexberryClassNames.preventExpandCollapse)
-              iconClass="plus icon"
-              tooltip=(t "components.flexberry-maplayer.add-button.tooltip")
-              click=(action "onAddButtonClick")
-            }}
-          {{/if}}
-          {{#if _fitBoundsOperationIsAvailable}}
-            {{flexberry-button
-              class=(concat flexberryClassNames.boundsButton " right floated " flexberryClassNames.preventExpandCollapse)
-              iconClass="maximize icon"
-              tooltip=(t "components.flexberry-maplayer.bounds-button.tooltip")
-              click=(action "onBoundsButtonClick")
-            }}
-          {{/if}}
-          {{#if _attributesOperationIsAvailable}}
-            {{flexberry-button
-              class=(concat flexberryClassNames.attributesButton " right floated " flexberryClassNames.preventExpandCollapse)
-              iconClass="browser icon"
-              tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
-              click=(action "onAttributesButtonClick")
-            }}
-            {{flexberry-button
-              class=(concat flexberryClassNames.attributesButton " right floated " flexberryClassNames.preventExpandCollapse)
+              class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
               iconClass="plus icon"
               tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
               click=(action "onFeatureCreateButtonClick")
             }}
+            {{#if _attributesOperationIsAvailable}}
+              {{flexberry-button
+                class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
+                iconClass="browser icon"
+                tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
+                click=(action "onAttributesButtonClick")
+              }}
+            {{/if}}
+            <div class="allmore floated flexberry-button ui button icon">
+              <a class="icon item more">
+                <i class="icon">...</i>
+              </a>
+              <div class="more submenu hidden">
+                {{#if _fitBoundsOperationIsAvailable}}
+                  <div class="{{flexberryClassNames.boundsButton}}">
+                    <a class="icon item" title="{{t "components.flexberry-maplayer.bounds-button.tooltip"}}" {{action "onBoundsButtonClick" on="click"}}>
+                      <i class="maximize icon"></i>
+                      {{t "components.flexberry-maplayer.bounds-button.tooltip"}}
+                    </a>
+                  </div>
+                {{/if}}
+                <div class="{{flexberryClassNames.editButton}}">
+                  <a class="icon item" title="{{t "components.flexberry-maplayer.edit-button.tooltip"}}" {{action "onEditButtonClick" on="click"}}>
+                    <i class="edit icon"></i>
+                    {{t "components.flexberry-maplayer.edit-button.tooltip"}}
+                  </a>
+                </div>
+                <div class="{{flexberryClassNames.copyButton}}">
+                  <a class="icon item" title="{{t "components.flexberry-maplayer.copy-button.tooltip"}}" {{action "onCopyButtonClick" on="click"}}>
+                    <i class="copy icon"></i>
+                    {{t "components.flexberry-maplayer.copy-button.tooltip"}}
+                  </a>
+                </div>
+                {{#if _addOperationIsAvailable}}
+                  <div class="{{flexberryClassNames.addButton}}">
+                    <a class="icon item" title="{{t "components.flexberry-maplayer.add-button.tooltip"}}" {{action "onAddButtonClick" on="click"}}>
+                      <i class="plus icon"></i>
+                      {{t "components.flexberry-maplayer.add-button.tooltip"}}
+                    </a>
+                  </div>
+                {{/if}}
+                <div class="{{flexberryClassNames.removeButton}}">
+                  <a class="icon item" title="{{t "components.flexberry-maplayer.remove-button.tooltip"}}" {{action "onRemoveButtonClick" on="click"}}>
+                    <i class="trash icon"></i>
+                    {{t "components.flexberry-maplayer.remove-button.tooltip"}}
+                  </a>
+                </div>
+              </div>
+            </div>
           {{/if}}
-        {{/if}}
-        {{#if _canChangeOpacity}}
-          <label class="{{flexberryClassNames.opacityLabel}}" title="{{t "components.flexberry-maplayer.opacity-label.tooltip"}}">
-            {{_opacityDisplayValue}}
-          </label>
-        {{/if}}
+        </div>
       </div>
     </div>
     {{!--

@@ -457,6 +457,49 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     //compare enabled
     compareLayersEnabled: false,
 
+    /**
+      Initializes DOM-related component's properties.
+    */
+    didInsertElement() {
+      let $caption = Ember.$('label.flexberry-maplayer-caption-label');
+      if ($caption.length > 0) {
+        $caption.hover(
+          function() {
+            let $toolbar = Ember.$(this).parent().children('.flexberry-treenode-buttons-block');
+            $toolbar.removeClass('hidden');
+            Ember.$(this).addClass('hidden');
+          },
+          function() {
+            let $toolbar = Ember.$(this).parent().children('.flexberry-treenode-buttons-block');
+            $toolbar.hover(
+              () => {},
+              () => {
+                $toolbar.addClass('hidden');
+                Ember.$(this).removeClass('hidden');
+              });
+          }
+        );
+      }
+
+      let $more = Ember.$('.icon.item.more');
+      if ($more.length > 0) {
+        $more.hover(
+          function() {
+            let $submenu = Ember.$(this).parent().children('.more.submenu');
+            $submenu.removeClass('hidden');
+          },
+          function() {
+            let $submenu = Ember.$(this).parent().children('.more.submenu');
+            $submenu.hover(
+              () => {},
+              () => {
+                $submenu.addClass('hidden');
+              });
+          }
+        );
+      }
+    },
+
     actions: {
       onAddCompare() {
         //добавление в зависимости от стороны
