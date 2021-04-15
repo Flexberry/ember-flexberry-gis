@@ -208,7 +208,6 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   */
   _tabularMenuClickedTab: null,
 
-
   /**
     Available font families.
 
