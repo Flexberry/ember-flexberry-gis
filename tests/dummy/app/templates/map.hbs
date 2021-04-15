@@ -144,6 +144,7 @@
           showIntersectionPanel=(action 'onIntersectionPanel')
           featureSelected=(action "onLayerFeatureSelected")
           addToFavorite=(action "addToFavorite")
+          editFeature=(action 'onCreateOrEditFeature')
         }}
       </div>
       <div data-tab="identify" class="ui tab identify">
@@ -167,6 +168,7 @@
           featureSelected=(action "onLayerFeatureSelected")
           addToFavorite=(action "addToFavorite")
           availableCRS=availableCRS
+          editFeature=(action 'onCreateOrEditFeature')
         }}
       </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
@@ -313,10 +315,13 @@
           {{/minimap-control}}
           {{/block-slot}}
         {{/map-commands/base}}
-        {{map-tools/background-layers layers=model.backgroundLayers}}
+
       {{/flexberry-maptoolbar}}
     </div>
   </div>
+  {{#flexberry-maptoolbar class="background-layers"}}
+    {{map-tools/background-layers layers=model.hierarchy}}
+  {{/flexberry-maptoolbar}}
   <div class="mappanel">
     <div class="pusher">
       {{#flexberry-map

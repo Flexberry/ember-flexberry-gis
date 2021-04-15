@@ -207,6 +207,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     /**
+      Performs row editing.
+
+      @method actions.editFeature
+    */
+    editFeature(e) {
+      this.sendAction('editFeature', e);
+    },
+
+    /**
       Action adds feature to array for comparing geometries.
 
       @method actions.addToCompareGeometries
@@ -233,6 +242,29 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     upload(result) {
       this.set('exportResult', result);
       this.set('exportDialogVisible', true);
+    }
+  },
+
+  didUpdate() {
+    let _this = this;
+    let $caption = this.$('.title .flexberry-toggler-caption');
+    if ($caption.length > 0) {
+      $caption.hover(
+        function() {
+          let $buttons = _this.$(this).parent().parent().parent().children('.feature-result-item-buttons');
+          $buttons.removeClass('hidden');
+          _this.$(this).addClass('hidden');
+        },
+        function () {
+          let $buttons = _this.$(this).parent().parent().parent().children('.feature-result-item-buttons');
+          $buttons.hover(
+            () => {},
+            () => {
+              $buttons.addClass('hidden');
+              _this.$(this).removeClass('hidden');
+            });
+        }
+      );
     }
   },
 

@@ -949,15 +949,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       Handles a new geometry adding by import completion.
 
       @param {Object} tabModel Related tab model.
-      @param {Object} addedLayers Added layers.
+      @param {Object} addedLayers Added layer.
     */
     onImportComplete(tabModel, addedLayers) {
-      let items = addedLayers.map((layer) => {
-        return {
-          data: Object.assign({}, layer.feature.properties),
-          layer: layer
-        };
-      });
+      let items = [{
+        data: Object.assign({}, addedLayers.feature.properties),
+        layer: addedLayers
+      }];
 
       let dataItems = {
         mode: 'Import',

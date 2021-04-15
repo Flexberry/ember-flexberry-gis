@@ -11,25 +11,23 @@
   }
   .feature-result-item-upload, .feature-result-item-select, .feature-result-item-list {
     margin-top: 0.6em;
+
+  }
+  .ui.list.transaction {
+    margin-left: 10px;
+  }
+  .feature-result-item-buttons {
     position: absolute;
-  }
-  .feature-result-item-select {
-    left: 1.7em
-  }
-  .feature-result-item-upload {
-    left: 3em
+    top: 11px;
+    left: 20px;
+    width: 300px;
+    margin-left: 7px;
   }
   .feature-result-item-list+.layer-result-list-toggler,.feature-result-item-upload+.layer-result-list-toggler {
     .title .flexberry-toggler-caption {
       margin-left: 3.7em;
       max-width: ~"calc(100% - 4em)";
     }
-  }
-  .feature-result-item-list+.feature-result-item-upload {
-    left: 4.7em;
-  }
-  .feature-result-item-list {
-    left: 3.3em;
   }
   .feature-result-item-list+.feature-result-item-upload+.layer-result-list-toggler .title .flexberry-toggler-caption {
     margin-left: 5.7em;

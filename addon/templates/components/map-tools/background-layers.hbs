@@ -1,13 +1,4 @@
 <div class={{flexberryClassNames.div}}>
-{{map-tools/base
-  class=(concat flexberryClassNames.wrapper)
-  name="background-layers-control"
-  caption=caption
-  tooltip=tooltip
-  iconClass=iconClass
-  leafletMap=leafletMap
-  click=(action "showBackgroundLayers")
-}}
   {{#if isVisible}}
       <div class="main-background-layers">
         {{#each items as |item|}}
@@ -18,4 +9,13 @@
         {{/each}}
       </div>
   {{/if}}
+  {{map-tools/base
+    class=(concat flexberryClassNames.wrapper)
+    name="background-layers-control"
+    caption=caption
+    tooltip=tooltip
+    iconClass=iconClass
+    leafletMap=leafletMap
+    click=(action "showBackgroundLayers")
+  }}
 </div>
