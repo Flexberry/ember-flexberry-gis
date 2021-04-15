@@ -339,56 +339,6 @@
         border-radius: 0px 5px 5px 0px;
         left: 320px;
     }
-    .flexberry-background-map-tool-div {
-      position: absolute;
-      left: 366px;
-      top: 0px;
-      .flexberry-background-map-tool {
-        margin-bottom: 0px;
-      }
-      .visible {
-        border-radius: 5px 5px 0px 0px;
-        border-bottom-width: 0px;
-        clip-path: inset(-2px -2px 0px -2px);
-      }
-      .main-background-layers {
-        max-width:360px;
-        background: @whitecolor;
-        box-shadow: @uiIconButtonBoxShadow;
-        clip-path: inset(0px -2px 0px -2px);
-        padding: 15px;
-        border: 1px solid  @bluecolor;
-        box-sizing: border-box;
-        border-top-width: 0px;
-      }
-      .last-item {
-        padding-right: 0px;
-      }
-      .first-item {
-        padding-right: 20px;
-      }
-      .child-background-layers{
-        position: relative;
-        padding-bottom: 6px;
-        display: inline-block;
-        .picture {
-          margin-bottom: 5px;
-          border: 1px solid  @graybluecolor;
-          width: 94px;
-          height: 49px;
-          box-sizing: border-box;
-        }
-        .active {
-          border: 1px solid @darkbluecolor;
-        }
-        p {
-          text-align: center;
-          font-size: 11px;
-          width: 94px;
-          line-height: 13px;
-        }
-      }
-    }
     .flexberry-full-extent-map-command {
         border-radius: 5px;
     }
@@ -647,6 +597,73 @@
     }
 }
 
+.background-layers.flexberry-maptoolbar.ui.menu {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  float: right;
+  width: 100%;
+  .flexberry-background-map-tool-div {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0px 30px 30px 0px;
+    width: 360px;
+    .flexberry-background-map-tool {
+      margin-bottom: 0px;
+    }
+    .visible {
+      border-radius: 5px 5px 0px 0px;
+      border-bottom-width: 0px;
+      clip-path: inset(-2px -2px 0px -2px);
+    }
+    .main-background-layers {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      max-width:360px;
+      background: @whitecolor;
+      box-shadow: @uiIconButtonBoxShadow;
+      clip-path: inset(0px -2px 0px -2px);
+      padding: 15px;
+      border: 1px solid  @bluecolor;
+      box-sizing: border-box;
+      border-top-width: 0px;
+    }
+    a {
+      position: absolute;
+      right: 0;
+    }
+    .last-item {
+      padding-right: 0px;
+    }
+    .first-item {
+      padding-right: 20px;
+    }
+    .child-background-layers{
+      position: relative;
+      padding-bottom: 6px;
+      display: inline-block;
+      .picture {
+        margin-bottom: 5px;
+        border: 1px solid  @graybluecolor;
+        width: 94px;
+        height: 49px;
+        box-sizing: border-box;
+      }
+      .active {
+        border: 1px solid @darkbluecolor;
+      }
+      p {
+        text-align: center;
+        font-size: 11px;
+        width: 94px;
+        line-height: 13px;
+      }
+    }
+  }
+}
+
 .flexberry-drag-box {
   position: absolute;
   cursor: all-scroll;
@@ -837,9 +854,12 @@ div.measure-drag-panel {
       position: absolute;
       top: 20px;
       left: 47px;
-      width: 300px;
+      width: 250px;
       z-index: 100;
       background: @whitecolor;
+      border: 1px solid #E5E5E5;
+      box-sizing: border-box;
+      border-radius: 3.5px;
       div {
         margin-bottom: 10px;
       }

@@ -222,6 +222,70 @@
 /***************************************************
                     Layers
 ****************************************************/
+.flexberry-maplayers {
+  .flexberry-treenode-expand-collapse-icon.dropdown.icon:before {
+    content: '\f105';
+    font-family: Icons;
+  }
+  .flexberry-treenode {
+    .flexberry-treenode-header.title {
+      border: none;
+    }
+
+    .layer-legend {
+      margin-left: 25px;
+      label {
+        color: #8F928F;
+      }
+    }
+    .flexberry-treenode-caption-block {
+      position: relative;
+    }
+    .flexberry-treenode-buttons-block {
+      position: absolute;
+      width: 200px;
+      top: -9px;
+      left: 30px;
+      label.ui.button.icon {
+        border: none;
+        box-shadow: none;
+      }
+      .allmore.floated.flexberry-button.ui.button.icon {
+        border: none;
+        box-shadow: none;
+        position: relative;
+      }
+      .more.submenu {
+        width: 200px;
+        height: 110px;
+        position: absolute;
+        z-index: 100;
+        background: @whitecolor;
+        border: 1px solid #E5E5E5;
+        border-radius: 3.5px;
+        box-sizing: border-box;
+        div {
+          padding-top: 10px;
+          padding-left: 8px;
+          text-align: left;
+        }
+        a {
+          color: #343A32;
+          font-size: 11px;
+        }
+        .flexberry-maplayer-add-button {
+          padding-left: 1px;
+          i.plus.icon {
+            margin-right: 13px;
+          }
+        }
+      }
+    }
+    .flexberry-maplayer-type-icon.folder~.flexberry-treenode-buttons-block {
+      left: 48px;
+    }
+  }
+}
 
 .ui.right.sidebar {
     .ui.tab {
@@ -252,6 +316,9 @@
     }
     .ui.styled.accordion {
         box-shadow: none;
+        .title {
+          border: none;
+        }
         .accordion {
             margin: .5em 0;
             border-radius: 5px 0px 0px 5px;
@@ -289,15 +356,11 @@
                     height: 30px;
                     color: @flexberryMaplayerOpacitiLabelColor;
                     background-color: @flexberryMaplayerOpacitiLabelBackgroundColor;
-                    box-shadow: @flexberryMaplayerOpacitiLabelBoxShadow;
                     padding: @flexberryMaplayerOpacitiLabelPadding;
                     margin: @flexberryMaplayerOpacitiLabelMargin;
                     &:hover {
                         background-color: @flexberryMaplayerOpacitiLabelHoveredBackground;
                     }
-                }
-                .flexberry-maplayer-add-button {
-                    padding: 7px 0;
                 }
                 .flexberry-maplayer-opacity-label {
                     padding: 10px 0;
@@ -309,7 +372,7 @@
         .accordion .content {
             padding: 0px 0px 8px 30px;
             .flexberry-slider {
-                margin: @flexberrySliderMargin;
+                margin: 5px 0px 0px 25px;
                 .ui-slider .slider {
                     &.slider.slider-horizontal {
                         height: 7px;
