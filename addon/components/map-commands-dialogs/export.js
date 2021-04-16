@@ -209,23 +209,6 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   _tabularMenuClickedTab: null,
 
   /**
-    Tabular menu active tab.
-
-    @property _activeSettingsTab
-    @type {String}
-    @default 'caption'
-    @private
-  */
-  _tabularMenuActiveTab: Ember.computed('_tabularMenuClickedTab', 'showDownloadingFileSettings', function () {
-    let tabularMenuDefaultTab = 'caption';
-    let tabularMenuClickedTab = this.get('_tabularMenuClickedTab') || tabularMenuDefaultTab;
-    let showDownloadingFileSettings = this.get('showDownloadingFileSettings');
-
-    // Activate default tab if 'downloading-file' tab is active, but showDownloadingFileSettings is false.
-    return tabularMenuClickedTab === 'downloading-file' && !showDownloadingFileSettings ? tabularMenuDefaultTab : tabularMenuClickedTab;
-  }),
-
-  /**
     Available font families.
 
     @property _availableFontFamilies
@@ -367,15 +350,26 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   ),
 
   /**
-    Sheet of paper preview height.
+    Sheet of paper container height.
     Initializes in 'didInsertElement' hook.
 
-    @property _sheetOfPaperPreviewHeight
+    @property _sheetOfPaperInitialHeight
     @type Number
     @private
     @readOnly
   */
-  _sheetOfPaperPreviewHeight: null,
+  _sheetOfPaperInitialHeight: null,
+
+  /**
+     Sheet of paper container width.
+     Initializes in 'didInsertElement' hook.
+
+     @property _sheetOfPaperInitialWidth
+     @type Number
+     @private
+     @readOnly
+   */
+  _sheetOfPaperInitialWidth: null,
 
   /**
     Fixed difference between map height and sheet of paper height.
@@ -397,15 +391,51 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     @readOnly
   */
   _sheetOfPaperPreviewScaleFactor: Ember.computed(
+    '_sheetOfPaperInitialHeight',
+    '_sheetOfPaperInitialWidth',
     '_sheetOfPaperRealHeight',
-    '_sheetOfPaperPreviewHeight',
+    '_sheetOfPaperRealWidth',
+    '_options.paperOrientation',
     function () {
-      let sheetOfPaperPreviewHeight = this.get('_sheetOfPaperPreviewHeight');
-      if (Ember.isNone(sheetOfPaperPreviewHeight)) {
+      let paperOrientation = this.get('_options.paperOrientation');
+
+      let sheetOfPaperPreviewScaleFactor;
+      if (paperOrientation === 'landscape') {
+        let sheetOfPaperInitialWidth = this.get('_sheetOfPaperInitialWidth');
+        let sheetOfPaperRealWidth = this.get('_sheetOfPaperRealWidth');
+        if (!Ember.isNone(sheetOfPaperInitialWidth) && !Ember.isNone(sheetOfPaperRealWidth)) {
+          sheetOfPaperPreviewScaleFactor = sheetOfPaperInitialWidth / sheetOfPaperRealWidth;
+        }
+      } else {
+        let sheetOfPaperInitialHeight = this.get('_sheetOfPaperInitialHeight');
+        let sheetOfPaperRealHeight = this.get('_sheetOfPaperRealHeight');
+        if (!Ember.isNone(sheetOfPaperInitialHeight) && !Ember.isNone(sheetOfPaperRealHeight)) {
+          sheetOfPaperPreviewScaleFactor = (sheetOfPaperInitialHeight - 60) / sheetOfPaperRealHeight;
+        }
+      }
+
+      return sheetOfPaperPreviewScaleFactor;
+    }
+  ),
+
+  /**
+  Sheet of paper preview height.
+
+    @property _sheetOfPaperPreviewHeight
+    @type Number
+    @private
+    @readOnly
+  */
+  _sheetOfPaperPreviewHeight: Ember.computed(
+    '_sheetOfPaperRealHeight',
+    '_sheetOfPaperPreviewScaleFactor',
+    function () {
+      let sheetOfPaperPreviewScaleFactor = this.get('_sheetOfPaperPreviewScaleFactor');
+      if (Ember.isNone(sheetOfPaperPreviewScaleFactor)) {
         return null;
       }
 
-      return sheetOfPaperPreviewHeight / this.get('_sheetOfPaperRealHeight');
+      return Math.round(this.get('_sheetOfPaperRealHeight') * sheetOfPaperPreviewScaleFactor);
     }
   ),
 
@@ -442,8 +472,9 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     '_sheetOfPaperPreviewHeight',
     '_sheetOfPaperPreviewWidth',
     function () {
-      let sheetOfPaperPreviewHeight = this.get('_sheetOfPaperPreviewHeight');
       let sheetOfPaperPreviewWidth = this.get('_sheetOfPaperPreviewWidth');
+      let sheetOfPaperPreviewHeight = this.get('_sheetOfPaperPreviewHeight');
+
       if (Ember.isNone(sheetOfPaperPreviewHeight) || Ember.isNone(sheetOfPaperPreviewWidth)) {
         return Ember.String.htmlSafe(``);
       }
@@ -1031,6 +1062,20 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   */
   legends: {},
 
+  _getOptions(e, type) {
+    if (this.get('_options.legendSecondPage')) {
+      Ember.set(e, 'exportOptions', {
+        type: type,
+        data: [this._getLeafletExportOptions('1'), this._getLeafletExportOptions('2')]
+      });
+    } else {
+      Ember.set(e, 'exportOptions', {
+        type: type,
+        data: [this._getLeafletExportOptions('1')]
+      });
+    }
+  },
+
   actions: {
     /**
       Handler for settings tabs 'click' action.
@@ -1156,7 +1201,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
       @method actions.onErrorMessageShow
     */
-    onErrorMessageShow() {},
+    onErrorMessageShow() { },
 
     /**
       Handler for error 'ui-message' component 'onHide' action.
@@ -1167,30 +1212,16 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       this.set('showErrorMessage', false);
     },
 
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryExportMapCommandDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
-
-      @method actions.onApprove
-    */
-    onApprove(e) {
-      if (this.get('_options.legendSecondPage')) {
-        Ember.set(e, 'exportOptions', [this._getLeafletExportOptions('1'), this._getLeafletExportOptions('2')]);
-      } else {
-        Ember.set(e, 'exportOptions', [this._getLeafletExportOptions('1')]);
-      }
+    onExport(e) {
+      this._getOptions(e, 'export');
 
       this.sendAction('approve', e);
     },
 
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryExportMapCommandDialogComponent/sendingActions.deny:method"}}'deny' action{{/crossLink}}.
+    onPrint(e) {
+      this._getOptions(e, 'print');
 
-      @method actions.onDeny
-    */
-    onDeny(e) {
-      this.sendAction('deny', e);
+      this.sendAction('approve', e);
     },
 
     /**
@@ -1693,7 +1724,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let exportSheetOfPaper = () => {
       return window.html2canvas($sheetOfPaper[0], {
         useCORS: true,
-        onclone: function(clonedDoc) {
+        onclone: function (clonedDoc) {
           html2canvasClone(clonedDoc);
         }
       }).then((canvas) => {
@@ -1713,7 +1744,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
       return window.html2canvas($sheetOfLegend[0], {
         useCORS: true,
-        onclone: function(clonedDoc) {
+        onclone: function (clonedDoc) {
           html2canvasClone(clonedDoc);
         }
       }).then((canvas) => {
@@ -1750,7 +1781,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     // Export only map without markers.
     return window.html2canvas($leafletMap[0], {
       useCORS: true,
-      onclone: function(clonedDoc) {
+      onclone: function (clonedDoc) {
         html2canvasClone(clonedDoc);
       }
     }).then((canvas) => {
@@ -1760,7 +1791,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       // Export marker's shadows.
       return window.html2canvas($leafletShadows[0], {
         useCORS: true,
-        onclone: function(clonedDoc) {
+        onclone: function (clonedDoc) {
           html2canvasClone(clonedDoc);
         }
       }).then((shadowsCanvas) => {
@@ -1771,7 +1802,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         // Export markers.
         return window.html2canvas($leafletMarkers[0], {
           useCORS: true,
-          onclone: function(clonedDoc) {
+          onclone: function (clonedDoc) {
             html2canvasClone(clonedDoc);
           }
         }).then((markersCanvas) => {
@@ -1912,7 +1943,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let $sheetOfPaper = dialogComponent.$(`.${flexberryClassNames.sheetOfPaper}`);
     let $sheetOfLegend = dialogComponent.$(`.${flexberryClassNames.sheetOfLegend}`);
     this.set(`_$sheetOfPaper`, $sheetOfPaper);
-    this.set('_sheetOfPaperPreviewHeight', $sheetOfPaper.outerHeight());
+    this.set('_sheetOfPaperInitialHeight', $sheetOfPaper.outerHeight());
+    this.set('_sheetOfPaperInitialWidth', $sheetOfPaper.outerWidth());
     this.set(`_$sheetOfLegend`, $sheetOfLegend);
 
     let $mapCaption = Ember.$(`.${flexberryClassNames.sheetOfPaperMapCaption}`, $sheetOfPaper);

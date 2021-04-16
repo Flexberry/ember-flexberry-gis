@@ -157,8 +157,8 @@ i.icon.intersections:before {
 *********************************************/
 
 i.icon.keyboard:before {
-  font-family: Icons;
-  content: "\f11c";
+  font-family: Arial;
+  content: "XY";
 }
 
 i.icon.compass:before {

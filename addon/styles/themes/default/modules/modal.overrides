@@ -103,7 +103,14 @@
     Styles for print/export tool's dialog (see templates/components/map-commands-dialogs/export.hbs).
 **************************************************************************************/
 
+.ui.modal.flexberry-export-map-command-dialog {
+  width: 90% !important;
+  max-height: 90% !important;
+  margin-left: -45%!important;
+}
+
 .ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content {
+  max-height: none;
   // Stretch dialog's content to whole available dialog's size.
   padding: 0;
 
@@ -125,50 +132,30 @@
     box-shadow: none;
 
     // Same as dialog content's max-height in Semantic UI.
-    height: 400px;
-    max-height: 400px;
+    height: 850px;
+    max-height: 850px;
 
     .flexberry-export-map-command-dialog-settings-column {
       padding-right: 0;
       padding-left: 0;
 
-      .ui.tabular.menu {
-        &.fluid {
-          width: 100% !important;
+      border: none;
+      box-shadow: none;
 
-          .item {
-            // Now there is only four items inside tabular menu (so 100% / 4 = 25%).
-            width: 25%;
+      .export-buttons {
+        padding-top: 50px;
+        display: flex;
+        justify-content: center;
 
-            &:last-child {
-              width: 25.1%;
-            }
-          }
-        }
-
-       .item {
-          padding-top: 10px;
-          padding-bottom: 10px;
-
-          i.icon {
-            margin: 0 auto;
-            font-size: 1.2em;
-          }
-
-          &.disabled {
-            i.icon.download:before {
-              color: #999;
-            }
-          }
+        .button.flexberry-button {
         }
       }
 
-      .ui.tab.segment {
-        // Height is 100% minus height of tabular menu items related to their paddings, borders and font size.
-        height: calc( 100% - 10px - 1.2em );
+      .ui.segment {
         border-radius: 0;
         width:100%;
         margin: 0;
+        border: none;
 
         .ui.button.active,
           .ui.button:hover {
@@ -178,7 +165,7 @@
         .flexberry-dropdown.ui.selection.dropdown .menu {
           // About 4 items is enough.
           // Without max height two scrolls will appear (one in settings column, another in dropdown menu).
-          max-height: 150px;
+          max-height: 110px;
         }
 
         .ui.grid {
@@ -224,11 +211,19 @@
       }
     }
 
-    .flexberry-export-map-command-dialog-paging-column{
-            .ui.button.active{
-                background: @mediumbluecolor;
-          }
+    .flexberry-export-map-command-dialog-paging-column {
+      .ui.button.active{
+        border: 1px solid @mediumbluecolor;
       }
+
+      display: flex;
+      justify-content: flex-end;
+      height: 60px;
+
+      .field label {
+        margin: 0 0 0 10px;
+      }
+    }
 
     .flexberry-export-map-command-dialog-preview-column,
     .flexberry-export-map-command-dialog-paging-column  {

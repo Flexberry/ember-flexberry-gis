@@ -181,15 +181,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     captionPath: 'forms.map.createoreditobjectbuttontooltip',
     iconClass: 'createOrEditObject icon',
     class: 'createOrEditObject'
-  }, {
-    selector: 'createObject',
-    captionPath: 'forms.map.createobjectbuttontooltip',
-    iconClass: 'createObject icon'
-  }, {
-    selector: 'createOrEditObject',
-    captionPath: 'forms.map.createoreditobjectbuttontooltip',
-    iconClass: 'createOrEditObject icon',
-    class: 'createOrEditObject'
   }]),
 
   _sidebarFiltered: Ember.computed('sidebar', 'createObject', 'createOrEditObject', function () {

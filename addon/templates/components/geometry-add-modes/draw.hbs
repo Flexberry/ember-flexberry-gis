@@ -1,52 +1,57 @@
-{{#if (eq settings.typeGeometry "polygon") }}
-  {{flexberry-button
-      tooltip=(t "components.geometry-add-modes.draw.draw-polygon.caption")
-      click=(action "onGeometryTypeSelect" "polygon")
-      iconClass="flexberry-map-tool-icon poly icon"
+<div class="draw-tools">
+  {{#if (eq settings.typeGeometry "polygon") }}
+    {{flexberry-button
+        tooltip=(t "components.geometry-add-modes.draw.draw-polygon.caption")
+        click=(action "onGeometryTypeSelect" "polygon")
+        iconClass="flexberry-map-tool-icon poly icon"
+        readonly=edit
+      }}
+    {{flexberry-button
+        tooltip=(t "components.geometry-add-modes.draw.draw-rectangle.caption")
+        click=(action "onGeometryTypeSelect" "rectangle")
+        iconClass="flexberry-map-tool-icon square icon"
+        readonly=edit
+      }}
+    {{flexberry-button
+        tooltip=(t "components.geometry-add-modes.draw.draw-multi-polygon.caption")
+        click=(action "onGeometryTypeSelect" "multyPolygon")
+        iconClass="flexberry-map-tool-icon multi-poly icon"
+        readonly=(not edit)
+      }}
+  {{/if}}
+  {{#if (eq settings.typeGeometry "polyline") }}
+    {{flexberry-button
+      tooltip=(t "components.geometry-add-modes.draw.draw-polyline.caption")
+      click=(action "onGeometryTypeSelect" "polyline")
+      iconClass="flexberry-map-tool-icon line icon"
       readonly=edit
     }}
-  {{flexberry-button
-      tooltip=(t "components.geometry-add-modes.draw.draw-rectangle.caption")
-      click=(action "onGeometryTypeSelect" "rectangle")
-      iconClass="flexberry-map-tool-icon square icon"
-      readonly=edit
-    }}
-  {{flexberry-button
-      tooltip=(t "components.geometry-add-modes.draw.draw-multi-polygon.caption")
-      click=(action "onGeometryTypeSelect" "multyPolygon")
-      iconClass="flexberry-map-tool-icon multi-poly icon"
+    {{flexberry-button
+      tooltip=(t "components.geometry-add-modes.draw.draw-multi-line.caption")
+      click=(action "onGeometryTypeSelect" "multyLine")
+      iconClass="flexberry-map-tool-icon multy-line icon"
       readonly=(not edit)
     }}
-{{/if}}
-{{#if (eq settings.typeGeometry "polyline") }}
-  {{flexberry-button
-    tooltip=(t "components.geometry-add-modes.draw.draw-polyline.caption")
-    click=(action "onGeometryTypeSelect" "polyline")
-    iconClass="flexberry-map-tool-icon line icon"
-    readonly=edit
-  }}
-  {{flexberry-button
-    tooltip=(t "components.geometry-add-modes.draw.draw-multi-line.caption")
-    click=(action "onGeometryTypeSelect" "multyLine")
-    iconClass="flexberry-map-tool-icon multy-line icon"
-    readonly=(not edit)
-  }}
-{{/if}}
+  {{/if}}
+
+  {{#if (or (eq settings.typeGeometry "polygon") (eq settings.typeGeometry "polyline")) }}
+    {{flexberry-button
+      tooltip=(t "components.geometry-add-modes.draw.move.caption")
+      click=(action "onMoveSelect" "move")
+      iconClass="flexberry-map-tool-icon move icon"
+      class=(if _moveEnabled "active" "")
+      readonly=(not edit)
+    }}
+    {{flexberry-button
+      tooltip=(t "components.geometry-add-modes.draw.movexy.caption")
+      click=(action "onMoveSelect" "movexy")
+      iconClass="flexberry-map-tool-icon movexy icon"
+      readonly=(not edit)
+    }}
+  {{/if}}
+</div>
 
 {{#if (or (eq settings.typeGeometry "polygon") (eq settings.typeGeometry "polyline")) }}
-  {{flexberry-button
-    tooltip=(t "components.geometry-add-modes.draw.move.caption")
-    click=(action "onMoveSelect" "move")
-    iconClass=(concat "flexberry-map-tool-icon move icon " (if _moveEnabled "active" ""))
-    readonly=(not edit)
-  }}
-  {{flexberry-button
-    tooltip=(t "components.geometry-add-modes.draw.movexy.caption")
-    click=(action "onMoveSelect" "movexy")
-    iconClass="flexberry-map-tool-icon movexy icon"
-    readonly=(not edit)
-  }}
-
   {{#if (eq geometryType "movexy")}}
     {{#if _moveWithError}}
       {{ui-message
@@ -55,8 +60,8 @@
       }}
     {{/if}}
 
-    <div class="ui grid">
-      <div class="seven wide column">
+    <div class="offset">
+      <div class="offset-inner">
         <div class="field {{if _offsetInvalid.x "error" ""}}">
           <label>
             {{t "components.geometry-add-modes.draw.movexy.x"}}
@@ -68,7 +73,7 @@
           }}
         </div>
       </div>
-      <div class="seven wide column">
+      <div class="offset-inner">
         <div class="field {{if _offsetInvalid.y "error" ""}}">
           <label>
             {{t "components.geometry-add-modes.draw.movexy.y"}}
@@ -81,8 +86,8 @@
         </div>
       </div>
     </div>
-    <div>
-      <button type="submit" class="ui button" {{action "applyXY"}}>
+    <div class="offset-button flex-buttons">
+      <button type="submit" class="ui button positive" {{action "applyXY"}}>
         {{t "components.geometry-add-modes.draw.movexy.apply"}}
       </button>
     </div>
