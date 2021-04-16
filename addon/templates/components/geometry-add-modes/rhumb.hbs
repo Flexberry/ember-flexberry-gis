@@ -32,13 +32,12 @@
   <div class="{{flexberryClassNames.tableBlock}}">
     {{#flexberry-table perPageAvailable=true model=_tableData}}
     {{#block-slot "column-header-head-0"}}
-    <th class="small">
+    <th colspan="2">
+        {{directionTh}}
     </th>
     {{/block-slot}}
     {{#block-slot "column-header-head-0"}}
-    <th>
-      {{directionTh}}
-    </th>
+
     {{/block-slot}}
     {{#block-slot "column-header-head-0"}}
     <th>
@@ -51,16 +50,15 @@
     </th>
     {{/block-slot}}
     {{#block-slot "column-header-head-0"}}
-    <th class="small">
+    <th  colspan="2" class="small narrow-rhumb">
       {{rhumbObjectStart}}
     </th>
     {{/block-slot}}
     {{#block-slot "column-header-head-0"}}
-    <th class="narrow-rhumb">
-    </th>
+
     {{/block-slot}}
     {{#block-slot "column-cell-head-0" as |row|}}
-    <td class="small">
+    <td class="small rhumb-number">
       {{row.number}}
     </td>
     {{/block-slot}}

@@ -8,22 +8,13 @@
   visible=showPanel
 }}
   <div class="{{titleClass}}">{{t "components.map-tools.measure.title"}}</div>
+  <div class="div-tools">
   {{#if measureCoordinates}}
     {{map-tools/base
             class=(concat flexberryClassNames.prefix " " flexberryClassNames.measureCoordinates " " measureCoordinatesClass)
             name="measure-coordinates"
             tooltip=measureCoordinatesCaption
             iconClass=measureCoordinatesIconClass
-            leafletMap=leafletMap
-            mapToolProperties=_measureToolProperties
-          }}
-  {{/if}}
-  {{#if measureRadius}}
-    {{map-tools/base
-            class=(concat flexberryClassNames.prefix " " flexberryClassNames.measureRadius " " measureRadiusClass)
-            name="measure-radius"
-            tooltip=measureRadiusCaption
-            iconClass=measureRadiusIconClass
             leafletMap=leafletMap
             mapToolProperties=_measureToolProperties
           }}
@@ -38,6 +29,16 @@
             mapToolProperties=_measureToolProperties
           }}
   {{/if}}
+  {{#if measureRadius}}
+    {{map-tools/base
+            class=(concat flexberryClassNames.prefix " " flexberryClassNames.measureRadius " " measureRadiusClass)
+            name="measure-radius"
+            tooltip=measureRadiusCaption
+            iconClass=measureRadiusIconClass
+            leafletMap=leafletMap
+            mapToolProperties=_measureToolProperties
+          }}
+  {{/if}}
   {{#if measureShowHide}}
     <a title={{if showMeasure measureHideCaption measureShowCaption}} class="{{flexberryClassNames.prefix}} {{flexberryClassNames.measureShowHide}} item" {{action "showHide"}}>
       <i class="{{if showMeasure measureHideIconClass measureShowIconClass}} {{flexberryClassNames.icon}} icon"></i>
@@ -48,6 +49,7 @@
       <i class="{{measureClearIconClass}} {{flexberryClassNames.icon}} icon"></i>
     </a>
   {{/if}}
+  </div>
   <a title={{measureCloseCaption}} class="{{flexberryClassNames.prefix}} {{flexberryClassNames.measureClose}} item" {{action "closePanel"}}>
     <i class="{{measureCloseIconClass}} {{flexberryClassNames.icon}} icon"></i>
   </a>

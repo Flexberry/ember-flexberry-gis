@@ -228,3 +228,8 @@ i.icon.movexy:after {
   margin-left: -2px;
   vertical-align: sub;
 }
+
+i.icon.checkall:before {
+  content: "\e815";
+  font-family: 'Crimean';
+}
