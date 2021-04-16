@@ -258,6 +258,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     return {
       availableDrawTools: availableDrawTools,
       typeGeometry: typeGeometry,
+      name: Ember.get(layer, 'layerModel.name'),
       layerCRS: Ember.get(leafletObject, 'options.crs'),
       layerFields: Ember.get(leafletObject, 'readFormat.featureType.fields'),
       fieldTypes: Ember.get(leafletObject, 'readFormat.featureType.fieldTypes'),

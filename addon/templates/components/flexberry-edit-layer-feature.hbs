@@ -1,6 +1,12 @@
+<div class="create-edit-block-title">
+  <h3>
+    {{_model.name}}
+  </h3>
+</div>
+
 <div class="create-edit-block">
 
-  {{#if error}}
+   {{#if error}}
     {{ui-message
       type="error"
       message=error
@@ -9,16 +15,16 @@
 
   {{#if (or (eq mode "Create") (eq mode "Edit"))}}
 
-    <div class="bottompanel-tab-nav-panel">
-      <div class="ui top attached tabular menu bottompanel-tab-nav-panel-tabs">
+    <div class="editfeature-tab-nav-panel">
+      <div class="ui top attached tabular menu editfeature-tab-nav-panel-tabs">
 
-        <a class="bottompanel tab item {{if (eq activeGeoTool "manual") "active"}}" data-tab="manual"
+        <a class="editfeature tab item manual {{if (eq activeGeoTool "manual") "curtab active"}}" data-tab="manual"
           {{action "setGeometryTool" "manual"}}>
           <i class="keyboard icon"></i>
         </a>
 
         {{#if drawMode }}
-        <a class="bottompanel tab item {{if (eq activeGeoTool "draw") "active"}}" data-tab="draw"
+        <a class="editfeature tab item {{if (eq activeGeoTool "draw") "curtab active"}}" data-tab="draw"
           {{action "setGeometryTool" "draw"}}>
           <i class="draw-area icon"></i>
         </a>
@@ -26,13 +32,13 @@
 
         {{#if (eq mode "Create")}}
           {{#if (and rhumbMode (not (eq _model.typeGeometry "marker"))) }}
-          <a class="bottompanel tab item {{if (eq activeGeoTool "rhumb") "active"}}" data-tab="rhumb"
+          <a class="editfeature tab item {{if (eq activeGeoTool "rhumb") "curtab active"}}" data-tab="rhumb"
             {{action "setGeometryTool" "rhumb"}}>
             <i class="compass icon"></i>
           </a>
           {{/if}}
           {{#if (and geoproviderMode (eq _model.typeGeometry "marker")) }}
-          <a class="bottompanel tab item {{if (eq activeGeoTool "geoprovider") "active"}}" data-tab="geoprovider"
+          <a class="editfeature tab item {{if (eq activeGeoTool "geoprovider") "curtab active"}}" data-tab="geoprovider"
             {{action "setGeometryTool" "geoprovider"}}>
             <i class="world icon"></i>
           </a>
@@ -43,7 +49,7 @@
     </div>
 
     <div data-tab="manual"
-      class="ui bottom attached tab segment bottompanel-tab-data-panel {{if (eq activeGeoTool "manual") " active" ""}}">
+      class="ui bottom attached tab segment editfeature-tab-data-panel manual {{if (eq activeGeoTool "manual") "active" ""}}">
       {{component "geometry-add-modes/manual"
           leafletMap=leafletMap
           layer=(get layers (concat '' curIndex))
@@ -57,7 +63,7 @@
 
     {{#if drawMode }}
     <div data-tab="draw"
-      class="ui bottom attached tab segment bottompanel-tab-data-panel {{if (eq activeGeoTool "draw") " active" ""}}">
+      class="ui bottom attached tab segment editfeature-tab-data-panel {{if (eq activeGeoTool "draw") "active" ""}}">
       {{component "geometry-add-modes/draw"
             leafletMap=leafletMap
             layer=(get layers (concat '' curIndex))
@@ -76,7 +82,7 @@
     {{#if (eq mode "Create")}}
       {{#if rhumbMode }}
       <div data-tab="rhumb"
-        class="ui bottom attached tab segment bottompanel-tab-data-panel {{if (eq activeGeoTool "rhumb") " active" ""}}">
+        class="ui bottom attached tab segment editfeature-tab-data-panel {{if (eq activeGeoTool "rhumb") "active" ""}}">
         {{component "geometry-add-modes/rhumb"
             leafletMap=leafletMap
             layer=(get layers (concat '' curIndex))
@@ -91,7 +97,7 @@
 
       {{#if geoproviderMode }}
       <div data-tab="geoprovider"
-        class="ui bottom attached tab segment bottompanel-tab-data-panel {{if (eq activeGeoTool "geoprovider") " active" ""}}">
+        class="ui bottom attached tab segment editfeature-tab-data-panel {{if (eq activeGeoTool "geoprovider") "active" ""}}">
         {{component "geometry-add-modes/geoprovider"
             leafletMap=leafletMap
             registerAs=geoproviderComponent
@@ -157,12 +163,12 @@
   {{/each-in}}
 </div>
 
-<div class="create-edit-block-buttons">
-  <button type="submit" class="ui button {{if loading "disabled"}}" {{action "save"}}>
+<div class="create-edit-block-buttons flex-buttons">
+  <button type="submit" class="ui button positive {{if loading "disabled"}}" {{action "save"}}>
     {{t "components.flexberry-edit-layer-feature.buttons.save.caption"}}
   </button>
 
-  <button type="submit" class="ui button {{if loading "disabled"}}" {{action "undo"}}>
+  <button type="submit" class="ui button negative {{if loading "disabled"}}" {{action "undo"}}>
     {{t "components.flexberry-edit-layer-feature.buttons.cancel.caption"}}
   </button>
 </div>

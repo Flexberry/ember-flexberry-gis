@@ -9,7 +9,7 @@ export default {
       'tooltip': 'Отмена'
     }
   },
-  'attributes': 'АТТРИБУТЫ',
+  'attributes': 'АТРИБУТЫ',
   'validation': {
     'no-layer': 'Не задан слой для сохранения',
     'data-errors': 'Ошибки валидации данных',

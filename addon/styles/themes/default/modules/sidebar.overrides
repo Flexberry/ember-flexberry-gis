@@ -441,22 +441,15 @@
           Create/Edit Block
 *************************************/
 
-.sidebar-wrapper {
+.right-sidebar-wrapper {
   .ui.right.sidebar {
     .ui.tab.createOrEditObject {
-      .ui.selection.dropdown, .ember-text-field {
-        padding: 0 4px;
-        line-height: 24px;
-        height: 24px;
-        min-height: 24px;
-        border-radius: 0;
-        min-width: 0px;
-      }
 
       h3 {
         position: absolute;
         top: 5px;
       }
+
       padding: 50px 25px;
 
       .create-edit-block {
@@ -467,8 +460,32 @@
 
         padding-right: 10px;
 
-        .bottompanel-tab-data-panel {
-          padding: 0px;
+        .ui.button {
+          border-radius: 3px;
+          box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.1);
+
+          &.positive {
+            color: @white;
+            background: #7ba7d9 !important;
+          }
+
+          &.negative {
+            color: #7ba7d9;
+            background: @white !important;
+            background-color: @white !important;
+          }
+        }
+
+        .editfeature-tab-data-panel {
+          padding: 15px;
+          margin: 0px;
+          border: 1px solid #b1cae8;
+          border-radius: 3px;
+          margin-bottom: 15px;
+
+          &.manual.active {
+            border-top-left-radius: 0px !important;
+          }
 
           .ui.message {
             padding: 3px 0px;
@@ -478,25 +495,157 @@
 
           .ui.celled.table.flexberry-table {
             border: none;
+            th {
+              color: #8F928F;
+              font-weight: normal;
+              font-size: 0.9em;
+            }
+
             td, th {
               border: none;
-              min-width: 40px;
+              min-width: 65px;
               padding: 1px;
               background: none;
+              &.small {
+                min-width: 30px;
+                width: 30px;
+              }
+
+              &.checkbox-rhumb {
+                .flexberry-checkbox.checkbox {
+                  width: 17px;
+                }
+              }
+
+              &.narrow-rhumb {
+                min-width: 40px;
+                width: 40px;
+              }
+            }
+          }
+
+          label.flexberry-button {
+            border-radius: 3px;
+            box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.1);
+            border: 1px solid #b1cae8;
+          }
+
+          .manual-textarea {
+            .flexberry-textarea.ui.input {
+              width: ~"calc(100% - 20px)";
+              textarea {
+                border-top-right-radius: 0px;
+              }
+            }
+
+            label.flexberry-button {
+                width: 20px;
+                min-width: 20px;
+                padding: 0;
+                margin: 0 0 0 -4px;
+                vertical-align: top;
+                box-shadow: none;
+                border: 1px solid #b1cae8;
+
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+                border-top-right-radius: 1px;
+                border-bottom-right-radius: 1px;
+
+                i.icon {
+                  margin: 0;
+                }
+            }
+          }
+
+          .draw-tools {
+            display: flex;
+            justify-content: space-between;
+          }
+
+          div.offset {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+
+            .offset-inner {
+              width: 45%;
             }
           }
         }
+
+        .editfeature-tab-nav-panel {
+          .editfeature-tab-nav-panel-tabs {
+            border: none;
+            margin-bottom: 10px;
+
+            .editfeature.tab {
+              border: 1px solid #b1cae8;
+              border-radius: 3px;
+              padding: 10px;
+              margin-right: 10px;
+              height: 40px;
+
+              i.icon {
+                display: flex;
+                justify-content: center;
+                margin: 0;
+              }
+
+              &.curtab {
+                border-bottom-right-radius: 0px !important;
+                border-bottom-left-radius: 0px !important;
+                border-bottom: 1px solid @white;
+                height: 51px;
+                padding-bottom: 21px;
+                z-index: 1;
+              }
+            }
+          }
+        }
+
+        .field {
+          margin-bottom: 10px;
+
+          textarea.ember-text-area,
+          .flexberry-dropdown.selection.dropdown,
+          .ember-text-field {
+            margin: 0;
+            box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+            border: 1px solid #b1cae8;
+          }
+
+          .flexberry-dropdown.selection.dropdown,
+          .ember-text-field {
+            padding: 8px 6px 6px 6px;
+            height: 32px;
+            min-height: 32px;
+            min-width: 0px;
+          }
+
+          label {
+            color: #8F928F;
+          }
+        }
       }
+
+      .flex-buttons {
+        display: flex;
+        justify-content: center;
+
+        .button {
+          width: 40%;
+        }
+      }
+
       .create-edit-block-buttons {
         position: absolute;
         bottom: 0px;
-        display: flex;
-        justify-content: center;
         width: @visibleCreateEditBlockWidth;
-        .button {
-          display: inline-flex;
-        }
+        padding: 10px 0;
       }
+
       .create-edit-block-attributes {
         padding-top: 10px;
       }

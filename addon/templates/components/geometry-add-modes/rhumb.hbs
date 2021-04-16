@@ -32,7 +32,7 @@
   <div class="{{flexberryClassNames.tableBlock}}">
     {{#flexberry-table perPageAvailable=true model=_tableData}}
     {{#block-slot "column-header-head-0"}}
-    <th>
+    <th class="small">
     </th>
     {{/block-slot}}
     {{#block-slot "column-header-head-0"}}
@@ -51,16 +51,16 @@
     </th>
     {{/block-slot}}
     {{#block-slot "column-header-head-0"}}
-    <th>
+    <th class="small">
       {{rhumbObjectStart}}
     </th>
     {{/block-slot}}
     {{#block-slot "column-header-head-0"}}
-    <th class="narrow rhumb">
+    <th class="narrow-rhumb">
     </th>
     {{/block-slot}}
     {{#block-slot "column-cell-head-0" as |row|}}
-    <td>
+    <td class="small">
       {{row.number}}
     </td>
     {{/block-slot}}
@@ -90,7 +90,7 @@
     </td>
     {{/block-slot}}
     {{#block-slot "column-cell-head-0" as |row|}}
-    <td class="checkbox-rhumb">
+    <td class="checkbox-rhumb small">
       {{flexberry-checkbox
                     value=row.skip
                     readonly=row.skip
@@ -99,7 +99,7 @@
     </td>
     {{/block-slot}}
     {{#block-slot "column-cell-head-0" as |row|}}
-    <td class="narrow rhumb">
+    <td class="narrow-rhumb">
       <i class="plus icon" {{action "OnAddRow" row.id}}></i>
       {{#if (gt _tableData.length 1)}}
         <i class="trash icon" {{action "OnRemoveRow" row.id}}></i>
@@ -110,7 +110,8 @@
   </div>
 </div>
 
-{{flexberry-button
-  caption=(t "components.geometry-add-modes.draw.movexy.apply")
-  click=(action "apply")
-}}
+<div class="flex-buttons">
+  <button type="submit" class="ui button positive" {{action "apply"}}>
+    {{t "components.geometry-add-modes.draw.movexy.apply"}}
+  </button>
+</div>
