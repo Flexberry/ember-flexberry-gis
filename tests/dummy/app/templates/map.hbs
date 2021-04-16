@@ -26,18 +26,21 @@
       <button type="submit" class="ui button close-button" {{action "close"}}>{{t "forms.edit-form.close-button-text"}}--></button>
     </div>
   </div>
+  {{flexberry-search-panel
+    querySearch=(action "querySearch")
+    clearSearch=(action "clearSearch")
+    leafletMap=leafletMap
+    layers=model.hierarchy
+    searchInProcess=searchInProcess
+    maxResultsCount=10
+    attrVisible=attrVisible
+    isSearch=isSearch
+    class="outer-search"
+    searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
+    attrSearch=(action "attrSearch")
+  }}
   <div class="sidebar-wrapper">
-    {{flexberry-search-panel
-      querySearch=(action "querySearch")
-      clearSearch=(action "clearSearch")
-      leafletMap=leafletMap
-      layers=model.hierarchy
-      searchInProcess=searchInProcess
-      maxResultsCount=10
-      class="outer-search"
-      searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
-      attrSearch=(action "attrSearch")
-    }}
+
     {{flexberry-tab-bar
       change=(action "toggleSidebar")
       items=_sidebarFiltered
@@ -123,17 +126,6 @@
       </div>
       <div data-tab="search" class="ui tab search">
         <h3>{{t "forms.map.tabbar.search.caption"}}</h3>
-        {{flexberry-search-panel
-          querySearch=(action "querySearch")
-          clearSearch=(action "clearSearch")
-          leafletMap=leafletMap
-          layers=model.hierarchy
-          searchInProcess=searchInProcess
-          maxResultsCount=10
-          attrVisible=attrVisible
-          queryString=queryString
-          searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
-        }}
         {{#if (gt searchResults.length 0)}}
           <h5>{{t "components.flexberry-search.result-caption"}}</h5>
         {{/if}}

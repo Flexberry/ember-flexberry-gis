@@ -478,7 +478,9 @@ export default BaseVectorLayer.extend({
     }
 
     let filter;
-    if (equals.length === 1) {
+    if (equals.length === 0) {
+      return;
+    } else if (equals.length === 1) {
       filter = equals[0];
     } else {
       filter = new Query.ComplexPredicate(Query.Condition.Or, ...equals);

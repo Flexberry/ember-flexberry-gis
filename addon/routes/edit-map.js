@@ -143,8 +143,12 @@ export default EditFormRoute.extend({
       let backgroundLayers = Ember.A();
       backgroundLayers.addObjects(hierarchy.filterBy('settingsAsObject.backgroundSettings.canBeBackground', true));
       model.set('backgroundLayers', backgroundLayers);
+
+      let other = hierarchy.filter((layer) => {
+        return Ember.isNone(layer.get('settingsAsObject')) || !layer.get('settingsAsObject.backgroundSettings.canBeBackground');
+      });
       let otherLayers = Ember.A();
-      otherLayers.addObjects(hierarchy.filterBy('settingsAsObject.backgroundSettings.canBeBackground', false));
+      otherLayers.addObjects(other);
       model.set('otherLayers', otherLayers);
     }
 

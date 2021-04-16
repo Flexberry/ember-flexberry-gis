@@ -253,7 +253,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         function() {
           let $buttons = _this.$(this).parent().parent().parent().children('.feature-result-item-buttons');
           $buttons.removeClass('hidden');
-          _this.$(this).addClass('hidden');
+          _this.$(this).addClass('blur');
         },
         function () {
           let $buttons = _this.$(this).parent().parent().parent().children('.feature-result-item-buttons');
@@ -261,7 +261,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             () => {},
             () => {
               $buttons.addClass('hidden');
-              _this.$(this).removeClass('hidden');
+              _this.$(this).removeClass('blur');
             });
         }
       );

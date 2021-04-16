@@ -198,15 +198,11 @@ export default Ember.Component.extend({
     attrSearch() {
       let attrVisible = !this.get('attrVisible');
       if (attrVisible) {
-        let outerSearch = this.$().hasClass('outer-search');
-        if (outerSearch) {
-          this.sendAction('attrSearch', this.get('queryString'));
-        } else {
-          this.set('attrVisible', attrVisible);
-          let searchSettings = this.get('searchSettings');
-          this.set('_searchSettings', searchSettings);
-          this.set('searchSettings', null);
-        }
+        this.set('attrVisible', attrVisible);
+        let searchSettings = this.get('searchSettings');
+        this.set('_searchSettings', searchSettings);
+        this.set('searchSettings', null);
+        this.sendAction('attrSearch', this.get('queryString'));
       } else {
         let _searchSettings = this.get('_searchSettings');
         this.set('searchSettings', _searchSettings);

@@ -23,10 +23,11 @@
       <a class="icon item" title="{{t "components.compare-object-geometries.add-to-fav-caption"}}" {{action "addToFavorite" on="click"}}>
         <i class="fvicon favorites {{if feature.properties.isFavorite "filled" "unfilled"}} icon"></i>
       </a>
-      <a class="icon item more">
+      <a class="icon item more" {{action "onSubmenu" on="click"}}>
         <i class="icon">...</i>
       </a>
-      <div class="more submenu hidden">
+      <div class="more submenu {{if isSubmenu '' 'hidden'}}">
+        <p>...</p>
         <div>
           <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
             <i class="hand paper icon"></i>
