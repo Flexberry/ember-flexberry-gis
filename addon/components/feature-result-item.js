@@ -192,6 +192,15 @@ export default Ember.Component.extend({
   hasEditForm: false,
 
   /**
+    Flag: indicates whether submenu is visible.
+
+    @property isSubmenu
+    @type boolean
+    @default false
+  */
+  isSubmenu: false,
+
+  /**
     Initializes DOM-related component's properties.
   */
   didInsertElement() {
@@ -225,7 +234,7 @@ export default Ember.Component.extend({
         function() {
           let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
           $toolbar.removeClass('hidden');
-          _this.$(this).addClass('hidden');
+          _this.$(this).addClass('blur');
         },
         function() {
           let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
@@ -233,25 +242,8 @@ export default Ember.Component.extend({
             () => {},
             () => {
               $toolbar.addClass('hidden');
-              _this.$(this).removeClass('hidden');
-            });
-        }
-      );
-    }
-
-    let $more = this.$('.icon.item.more');
-    if ($more.length > 0) {
-      $more.hover(
-        function() {
-          let $submenu = _this.$(this).parent().children('.more.submenu');
-          $submenu.removeClass('hidden');
-        },
-        function() {
-          let $submenu = _this.$(this).parent().children('.more.submenu');
-          $submenu.hover(
-            () => {},
-            () => {
-              $submenu.addClass('hidden');
+              _this.$(this).removeClass('blur');
+              _this.set('isSubmenu', false);
             });
         }
       );
@@ -259,6 +251,14 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    /**
+      Show\hide submenu
+
+      @method actions.onSubmenu
+    */
+    onSubmenu() {
+      this.set('isSubmenu', !this.get('isSubmenu'));
+    },
     /**
       Performs row editing.
 

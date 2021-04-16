@@ -41,10 +41,11 @@
               }}
             {{/if}}
             <div class="allmore floated flexberry-button ui button icon">
-              <a class="icon item more">
+              <a class="icon item more" {{action "onSubmenu" on="click"}}>
                 <i class="icon">...</i>
               </a>
-              <div class="more submenu hidden">
+              <div class="more submenu {{if isSubmenu '' 'hidden'}}">
+                <p>...</p>
                 {{#if _fitBoundsOperationIsAvailable}}
                   <div class="{{flexberryClassNames.boundsButton}}">
                     <a class="icon item" title="{{t "components.flexberry-maplayer.bounds-button.tooltip"}}" {{action "onBoundsButtonClick" on="click"}}>

@@ -864,7 +864,10 @@ div.measure-drag-panel {
             margin: 0;
         }
     }
-    .more.submenu{
+    a.icon.item.more {
+      line-height: 5px;
+    }
+    .more.submenu {
       position: absolute;
       top: 20px;
       left: 47px;
@@ -874,6 +877,12 @@ div.measure-drag-panel {
       border: 1px solid #E5E5E5;
       box-sizing: border-box;
       border-radius: 3.5px;
+      p {
+        text-align: left;
+        margin-bottom: 0px;
+        padding-left: 7px;
+        line-height: 1px;
+      }
       div {
         margin-bottom: 10px;
       }

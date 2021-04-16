@@ -417,7 +417,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     },
 
     attrSearch(queryString) {
-      Ember.$('.outer-search.flexberry-search-panel').addClass('hidden');
       if (this.get('sidebar.1.active') !== true) {
         this.set('sidebar.1.active', true);
       }
@@ -425,10 +424,12 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this.set('attrVisible', true);
       this.set('queryString', queryString);
 
-      this.send('toggleSidebar', {
-        changed: false,
-        tabName: 'search'
-      });
+      if (!this.get('sidebarOpened')) {
+        this.send('toggleSidebar', {
+          changed: false,
+          tabName: 'search'
+        });
+      }
     },
 
     onQueryFinished(e) {
@@ -485,13 +486,14 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         // push left map controls to right for sidebar width
         if (sidebarOpened) {
           Ember.$('.sidebar-wrapper').addClass('visible');
-          if (!Ember.$('.outer-search.flexberry-search-panel').hasClass('hidden')) {
-            Ember.$('.outer-search.flexberry-search-panel').addClass('hidden');
-          }
         } else {
           Ember.$('.sidebar-wrapper').removeClass('visible');
-          Ember.$('.outer-search.flexberry-search-panel').removeClass('hidden');
+          this.set('attrVisible', false);
         }
+      }
+
+      if (e.tabName !== 'search') {
+        this.set('attrVisible', false);
       }
 
       if (e.tabName === 'identify') {

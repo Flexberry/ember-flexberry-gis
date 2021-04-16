@@ -458,49 +458,53 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     compareLayersEnabled: false,
 
     /**
+      Flag: indicates whether submenu is visible.
+
+      @property isSubmenu
+      @type boolean
+      @default false
+    */
+    isSubmenu: false,
+
+    /**
       Initializes DOM-related component's properties.
     */
     didInsertElement() {
-      let $caption = Ember.$('label.flexberry-maplayer-caption-label');
-      if ($caption.length > 0) {
-        $caption.hover(
-          function() {
-            let $toolbar = Ember.$(this).parent().children('.flexberry-treenode-buttons-block');
-            $toolbar.removeClass('hidden');
-            Ember.$(this).addClass('hidden');
-          },
-          function() {
-            let $toolbar = Ember.$(this).parent().children('.flexberry-treenode-buttons-block');
-            $toolbar.hover(
-              () => {},
-              () => {
-                $toolbar.addClass('hidden');
-                Ember.$(this).removeClass('hidden');
-              });
-          }
-        );
-      }
-
-      let $more = Ember.$('.icon.item.more');
-      if ($more.length > 0) {
-        $more.hover(
-          function() {
-            let $submenu = Ember.$(this).parent().children('.more.submenu');
-            $submenu.removeClass('hidden');
-          },
-          function() {
-            let $submenu = Ember.$(this).parent().children('.more.submenu');
-            $submenu.hover(
-              () => {},
-              () => {
-                $submenu.addClass('hidden');
-              });
-          }
-        );
+      if (!this.get('readonly')) {
+        let _this = this;
+        let $caption = Ember.$('label.flexberry-maplayer-caption-label');
+        if ($caption.length > 0) {
+          $caption.hover(
+            function() {
+              let $toolbar = Ember.$(this).parent().children('.flexberry-treenode-buttons-block');
+              $toolbar.removeClass('hidden');
+              Ember.$(this).addClass('blur');
+            },
+            function() {
+              let $toolbar = Ember.$(this).parent().children('.flexberry-treenode-buttons-block');
+              $toolbar.hover(
+                () => {},
+                () => {
+                  $toolbar.addClass('hidden');
+                  Ember.$(this).removeClass('blur');
+                  _this.set('isSubmenu', false);
+                });
+            }
+          );
+        }
       }
     },
 
     actions: {
+      /**
+        Show\hide submenu
+
+        @method actions.onSubmenu
+      */
+      onSubmenu() {
+        this.set('isSubmenu', !this.get('isSubmenu'));
+      },
+
       onAddCompare() {
         //добавление в зависимости от стороны
       },
