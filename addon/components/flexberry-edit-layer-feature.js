@@ -749,16 +749,21 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       }
 
       this.set('error', null);
-
+      let error = false;
       let datas = this.get('data');
 
       Object.keys(datas).forEach((index) => {
         let parsedData = this.parseData(index, datas[index]);
         if (Ember.isNone(parsedData)) {
           this.set('error', t('components.flexberry-edit-layer-feature.validation.data-errors'));
+          error = true;
           return;
         }
       });
+
+      if (error) {
+        return;
+      }
 
       let layerModel = this.get('layerModel');
       let leafletObject = this.get('layerModel.leafletObject');
@@ -778,8 +783,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       let event = '';
       let createPromise;
-
-      let error = false;
 
       if (state === 'New') {
         let e = {

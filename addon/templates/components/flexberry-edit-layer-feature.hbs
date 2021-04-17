@@ -139,7 +139,7 @@
             }}
         {{/if}}
         {{#each-in _model.fieldNames as |fieldName fieldValue|}}
-        <div class="field {{if (get parsingErrors fieldName) "error" ""}}">
+        <div class="field {{if (get (get parsingErrors (concat '' curIndex)) fieldName) "error" ""}}">
           <label>{{fieldValue}}</label>
           {{#if (eq (get fieldTypes fieldName) "date")}}
           {{flexberry-datepicker
