@@ -446,6 +446,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
           if (layer.get('visibility')) {
             layersArray.push(layer);
           }
+
           layer.side = null;
           layer.set('visibility', false);
         });
@@ -458,6 +459,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
           sbs._updateClip = Ember.get(sbs, 'baseUpdateClip').bind(this);
           map.off('move', this._updateClip, this);
         }
+
         sbs._leftLayers.forEach(function (layer) {
           if (!Ember.isNone(layer)) {
             layer.getContainer().style.clip = '';
@@ -545,9 +547,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       */
       onRightClick() {
         this.set('side', 'Right');
-      },
-
-
+      }
     },
 
     /**

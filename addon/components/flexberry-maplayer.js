@@ -614,6 +614,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
             sbs.setRightLayers(right);
           }
         }
+
         this.sendAction('onChangeLayer', this.get('leftLayer'), this.get('rightLayer'));
       },
 
