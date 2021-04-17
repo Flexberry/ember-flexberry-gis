@@ -2,7 +2,13 @@
   <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo" on="click"}}>
     <i class="caret {{if expanded 'down' 'right'}} icon"></i>
   </a>
-  <div class="feature-result-item-toolbar {{if (gt feature.editForms.length 1) "links" ""}} hidden">
+  {{#if favoriteMode}}
+    {{flexberry-ddau-checkbox
+      value=feature.compareEnabled
+      change=(action 'addToCompareGeometries')
+    }}
+  {{/if}}
+  <div class="feature-result-item-toolbar {{if favoriteMode "favorite"}} {{if (gt feature.editForms.length 1) "links" ""}} hidden">
     {{#if intersection}}
       <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" on="click"}}>
         <i class="marker icon"></i>
@@ -11,12 +17,6 @@
         <i class="intersections icon"></i>
       </a>
     {{else}}
-      {{#if favoriteMode}}
-        {{flexberry-ddau-checkbox
-          value=feature.compareEnabled
-          change=(action 'addToCompareGeometries')
-        }}
-      {{/if}}
       <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
         <i class="marker icon"></i>
       </a>
