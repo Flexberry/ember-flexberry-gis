@@ -866,6 +866,7 @@ div.measure-drag-panel {
     }
     a.icon.item.more {
       line-height: 5px;
+      z-index: 100;
     }
     .more.submenu {
       position: absolute;
