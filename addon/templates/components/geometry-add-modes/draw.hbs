@@ -1,23 +1,23 @@
 <div class="draw-tools">
   {{#if (eq settings.typeGeometry "polygon") }}
     {{flexberry-button
-        tooltip=(t "components.geometry-add-modes.draw.draw-polygon.caption")
-        click=(action "onGeometryTypeSelect" "polygon")
-        iconClass="flexberry-map-tool-icon poly icon"
-        readonly=edit
-      }}
+      tooltip=(t "components.geometry-add-modes.draw.draw-rectangle.caption")
+      click=(action "onGeometryTypeSelect" "rectangle")
+      iconClass="flexberry-map-tool-icon square outline icon"
+      readonly=edit
+    }}
     {{flexberry-button
-        tooltip=(t "components.geometry-add-modes.draw.draw-rectangle.caption")
-        click=(action "onGeometryTypeSelect" "rectangle")
-        iconClass="flexberry-map-tool-icon square icon"
-        readonly=edit
-      }}
+      tooltip=(t "components.geometry-add-modes.draw.draw-polygon.caption")
+      click=(action "onGeometryTypeSelect" "polygon")
+      iconClass="flexberry-map-tool-icon poly icon"
+      readonly=edit
+    }}
     {{flexberry-button
-        tooltip=(t "components.geometry-add-modes.draw.draw-multi-polygon.caption")
-        click=(action "onGeometryTypeSelect" "multyPolygon")
-        iconClass="flexberry-map-tool-icon multi-poly icon"
-        readonly=(not edit)
-      }}
+      tooltip=(t "components.geometry-add-modes.draw.draw-multi-polygon.caption")
+      click=(action "onGeometryTypeSelect" "multyPolygon")
+      iconClass="flexberry-map-tool-icon multi-poly icon"
+      readonly=(not edit)
+    }}
   {{/if}}
   {{#if (eq settings.typeGeometry "polyline") }}
     {{flexberry-button

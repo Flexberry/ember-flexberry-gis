@@ -15,12 +15,13 @@
         value=_coordinates
         placeholder=coordinatesFieldPlaceholder
       }}
-      {{flexberry-button
-        iconClass="caret down icon"
-        click=(action "apply")
-        tooltip=(t "components.geometry-add-modes.manual.apply")
-      }}
     </div>
+  </div>
+
+  <div class="row flex-buttons">
+    <button type="submit" class="ui button positive" {{action "apply"}}>
+      {{t "components.geometry-add-modes.manual.apply"}}
+    </button>
   </div>
 
   {{#if (or coordinatesInLineError coordinatesParseError coordinatesTypeGeometryError)}}

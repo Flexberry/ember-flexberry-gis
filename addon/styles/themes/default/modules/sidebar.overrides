@@ -545,34 +545,6 @@
             border: 1px solid #b1cae8;
           }
 
-          .manual-textarea {
-            .flexberry-textarea.ui.input {
-              width: ~"calc(100% - 20px)";
-              textarea {
-                border-top-right-radius: 0px;
-              }
-            }
-
-            label.flexberry-button {
-                width: 20px;
-                min-width: 20px;
-                padding: 0;
-                margin: 0 0 0 -4px;
-                vertical-align: top;
-                box-shadow: none;
-                border: 1px solid #b1cae8;
-
-                border-top-left-radius: 0px;
-                border-bottom-left-radius: 0px;
-                border-top-right-radius: 1px;
-                border-bottom-right-radius: 1px;
-
-                i.icon {
-                  margin: 0;
-                }
-            }
-          }
-
           .draw-tools {
             display: flex;
             justify-content: space-between;
