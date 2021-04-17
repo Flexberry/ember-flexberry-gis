@@ -19,5 +19,8 @@ export default {
   },
   'remove-button': {
     'tooltip': 'Remove layer'
+  },
+  'plus-button': {
+    'tooltip': 'Create object'
   }
 };

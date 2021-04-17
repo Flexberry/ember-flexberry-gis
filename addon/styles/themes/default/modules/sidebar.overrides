@@ -275,8 +275,8 @@
         box-sizing: border-box;
         p {
           text-align: left;
-          margin-bottom: 0px;
-          padding-left: 7px;
+          margin-bottom: 5px;
+          padding-left: 8px;
           line-height: 1px;
         }
         div {
