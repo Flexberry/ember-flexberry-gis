@@ -143,6 +143,15 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   lastPage: 1,
 
   /**
+    The last page in the table.
+
+    @property pageSize
+    @type Number
+    @default 1
+  */
+  pageSize: 5,
+
+  /**
     Computed property that builds tab models collection from items.
 
     @property _tabModels
@@ -186,7 +195,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         };
 
         let tabModel = Ember.Object.extend({
-          _top: 5,
+          _top: this.get('pageSize'),
           _skip: 0,
           _selectedRows: {},
           _editedRows: {},
