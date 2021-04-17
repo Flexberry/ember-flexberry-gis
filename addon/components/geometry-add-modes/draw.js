@@ -370,6 +370,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       }));
 
       // TODO add event listener on mapTool.enable event - to disable drawing tool when user click on any map tool.
+      this.sendAction('block', true);
 
       switch (geometryType) {
         case 'marker':
@@ -430,6 +431,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     if (!Ember.isNone(editTools)) {
       editTools.stopDrawing();
     }
+
+    this.sendAction('block', false);
 
     if (!Ember.isNone(e)) {
       let geometryType = this.get('geometryType');

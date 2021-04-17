@@ -521,11 +521,19 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       return;
     }
 
+    if (e.layers.filter((l) => {
+      return Ember.isNone(l.leafletLayer);
+    }).length > 0) {
+      console.log(e.layers);
+      console.log(e.layers[0].feature.properties);
+      return;
+    }
+
     Ember.set(tabModel, '_selectedRows', {});
     Ember.set(tabModel, '_editedRows', {});
 
     let features = [];
-    Object.values(e.layers).forEach((layer) => {
+    e.layers.forEach((layer) => {
       let props = Ember.get(layer, 'feature.properties');
       let propId = Ember.guidFor(props);
 
@@ -615,6 +623,18 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     this.set('_selectedUnit', 'meters');
   },
 
+  _foldTabs() {
+    this.set('folded', !this.get('folded'));
+
+    // While executing transition vertical scroll will always appear, it is unnecessary and looks very strange,
+    // so we can hide scroll untill transition end.
+    let $tabs = this.$('.bottompanel-tab-data-panel');
+    $tabs.css('overflow', 'hidden');
+    this.$('.ui.bottom.bottompanel').one('webkitTransitionEnd mozTransitionEnd oTransitionEnd otransitionend transitionend', () => {
+      $tabs.css('overflow', 'auto');
+    });
+  },
+
   actions: {
     /**
       Handles click on a tab.
@@ -624,15 +644,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     */
     onTabSelect(index) {
       if (index === this.get('selectedTabIndex')) {
-        this.set('folded', !this.get('folded'));
-
-        // While executing transition vertical scroll will always appear, it is unnecessary and looks very strange,
-        // so we can hide scroll untill transition end.
-        let $tabs = this.$('.bottompanel-tab-data-panel');
-        $tabs.css('overflow', 'hidden');
-        this.$('.ui.bottom.bottompanel').one('webkitTransitionEnd mozTransitionEnd oTransitionEnd otransitionend transitionend', () => {
-          $tabs.css('overflow', 'auto');
-        });
+        this._foldTabs();
       } else {
         this.set('selectedTabIndex', index);
         if (this.get('folded')) {
@@ -952,6 +964,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         dataItems: dataItems,
         layerModel: tabModel
       });
+
+      this._foldTabs();
     },
 
     /**
@@ -961,10 +975,24 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       @param {Object} addedLayers Added layer.
     */
     onImportComplete(tabModel, addedLayers) {
-      let items = [{
-        data: Object.assign({}, addedLayers.feature.properties),
-        layer: addedLayers
-      }];
+      let fields = Ember.get(tabModel, 'leafletObject.readFormat.featureType.fields');
+
+      let items = [];
+      addedLayers.forEach((layer) => {
+        let properties = Object.keys(fields).reduce((result, item) => {
+          result[item] = null;
+          return result;
+        }, {});
+
+        Object.keys(layer.feature.properties).forEach((key) => {
+          Ember.set(properties, key, layer.feature.properties[key]);
+        });
+
+        items.push({
+          data: properties,
+          layer: layer
+        });
+      });
 
       let dataItems = {
         mode: 'Import',
@@ -975,6 +1003,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         dataItems: dataItems,
         layerModel: tabModel
       });
+
+      this._foldTabs();
     },
 
     /**
@@ -1064,6 +1094,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         });
 
         this.changeSelectedAll(tabModel, false);
+        this._foldTabs();
       }
     },
 
@@ -1144,6 +1175,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           dataItems: dataItems,
           layerModel: tabModel
         });
+
+        this._foldTabs();
       }
     },
   },
@@ -1338,6 +1371,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       dataItems: dataItems,
       layerModel: tabModel
     });
+
+    this._foldTabs();
   },
 
   /**
