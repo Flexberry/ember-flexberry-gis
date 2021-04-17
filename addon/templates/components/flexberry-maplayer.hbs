@@ -13,77 +13,90 @@
   {{#block-slot "header"}}
     <div class="flexberry-treenode-header-block">
       <div class="flexberry-treenode-caption-block">
-        {{flexberry-ddau-checkbox
-          class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
-          value=layer.visibility
-          change=(action "onVisibilityCheckboxChange")
-        }}
+        {{#if (and (not-eq layer.type 'group') compareLayersEnabled)}}
+          {{flexberry-ddau-checkbox
+            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
+            value=layer.visibility
+            change=(action "onChange")
+            readonly=(and (not-eq side layer.side) (not-eq layer.side null) true)
+          }}
+        {{else}}
+          {{#if (not compareLayersEnabled)}}
+            {{flexberry-ddau-checkbox
+              class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
+              value=layer.visibility
+              change=(action "onVisibilityCheckboxChange")
+            }}
+          {{/if}}
+        {{/if}}
         {{flexberry-icon
           class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
         }}
         <label class={{flexberryClassNames.caption}}>
           {{layer.name}}
         </label>
-        <div class="flexberry-treenode-buttons-block hidden">
-          {{#if (not readonly)}}
-            {{flexberry-button
-              class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
-              iconClass="plus icon"
-              tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
-              click=(action "onFeatureCreateButtonClick")
-            }}
-            {{#if _attributesOperationIsAvailable}}
+        {{#if (not compareLayersEnabled)}}
+          <div class="flexberry-treenode-buttons-block hidden">
+            {{#if (not readonly)}}
               {{flexberry-button
                 class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
-                iconClass="browser icon"
+                iconClass="plus icon"
                 tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
-                click=(action "onAttributesButtonClick")
+                click=(action "onFeatureCreateButtonClick")
               }}
-            {{/if}}
-            <div class="allmore floated flexberry-button ui button icon">
-              <a class="icon item more" {{action "onSubmenu" on="click"}}>
-                <i class="icon">...</i>
-              </a>
-              <div class="more submenu {{if isSubmenu '' 'hidden'}}">
-                <p>...</p>
-                {{#if _fitBoundsOperationIsAvailable}}
-                  <div class="{{flexberryClassNames.boundsButton}}">
-                    <a class="icon item" title="{{t "components.flexberry-maplayer.bounds-button.tooltip"}}" {{action "onBoundsButtonClick" on="click"}}>
-                      <i class="maximize icon"></i>
-                      {{t "components.flexberry-maplayer.bounds-button.tooltip"}}
+              {{#if _attributesOperationIsAvailable}}
+                {{flexberry-button
+                  class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
+                  iconClass="browser icon"
+                  tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
+                  click=(action "onAttributesButtonClick")
+                }}
+              {{/if}}
+              <div class="allmore floated flexberry-button ui button icon">
+                <a class="icon item more" {{action "onSubmenu" on="click"}}>
+                  <i class="icon">...</i>
+                </a>
+                <div class="more submenu {{if isSubmenu '' 'hidden'}}">
+                  <p>...</p>
+                  {{#if _fitBoundsOperationIsAvailable}}
+                    <div class="{{flexberryClassNames.boundsButton}}">
+                      <a class="icon item" title="{{t "components.flexberry-maplayer.bounds-button.tooltip"}}" {{action "onBoundsButtonClick" on="click"}}>
+                        <i class="maximize icon"></i>
+                        {{t "components.flexberry-maplayer.bounds-button.tooltip"}}
+                      </a>
+                    </div>
+                  {{/if}}
+                  <div class="{{flexberryClassNames.editButton}}">
+                    <a class="icon item" title="{{t "components.flexberry-maplayer.edit-button.tooltip"}}" {{action "onEditButtonClick" on="click"}}>
+                      <i class="edit icon"></i>
+                      {{t "components.flexberry-maplayer.edit-button.tooltip"}}
                     </a>
                   </div>
-                {{/if}}
-                <div class="{{flexberryClassNames.editButton}}">
-                  <a class="icon item" title="{{t "components.flexberry-maplayer.edit-button.tooltip"}}" {{action "onEditButtonClick" on="click"}}>
-                    <i class="edit icon"></i>
-                    {{t "components.flexberry-maplayer.edit-button.tooltip"}}
-                  </a>
-                </div>
-                <div class="{{flexberryClassNames.copyButton}}">
-                  <a class="icon item" title="{{t "components.flexberry-maplayer.copy-button.tooltip"}}" {{action "onCopyButtonClick" on="click"}}>
-                    <i class="copy icon"></i>
-                    {{t "components.flexberry-maplayer.copy-button.tooltip"}}
-                  </a>
-                </div>
-                {{#if _addOperationIsAvailable}}
-                  <div class="{{flexberryClassNames.addButton}}">
-                    <a class="icon item" title="{{t "components.flexberry-maplayer.add-button.tooltip"}}" {{action "onAddButtonClick" on="click"}}>
-                      <i class="plus icon"></i>
-                      {{t "components.flexberry-maplayer.add-button.tooltip"}}
+                  <div class="{{flexberryClassNames.copyButton}}">
+                    <a class="icon item" title="{{t "components.flexberry-maplayer.copy-button.tooltip"}}" {{action "onCopyButtonClick" on="click"}}>
+                      <i class="copy icon"></i>
+                      {{t "components.flexberry-maplayer.copy-button.tooltip"}}
                     </a>
                   </div>
-                {{/if}}
-                <div class="{{flexberryClassNames.removeButton}}">
-                  <a class="icon item" title="{{t "components.flexberry-maplayer.remove-button.tooltip"}}" {{action "onRemoveButtonClick" on="click"}}>
-                    <i class="trash icon"></i>
-                    {{t "components.flexberry-maplayer.remove-button.tooltip"}}
-                  </a>
+                  {{#if _addOperationIsAvailable}}
+                    <div class="{{flexberryClassNames.addButton}}">
+                      <a class="icon item" title="{{t "components.flexberry-maplayer.add-button.tooltip"}}" {{action "onAddButtonClick" on="click"}}>
+                        <i class="plus icon"></i>
+                        {{t "components.flexberry-maplayer.add-button.tooltip"}}
+                      </a>
+                    </div>
+                  {{/if}}
+                  <div class="{{flexberryClassNames.removeButton}}">
+                    <a class="icon item" title="{{t "components.flexberry-maplayer.remove-button.tooltip"}}" {{action "onRemoveButtonClick" on="click"}}>
+                      <i class="trash icon"></i>
+                      {{t "components.flexberry-maplayer.remove-button.tooltip"}}
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          {{/if}}
-        </div>
+            {{/if}}
+          </div>
+        {{/if}}
       </div>
     </div>
     {{!--
@@ -142,6 +155,12 @@
         readonly=readonly
         leafletMap=leafletMap
         layers=layer.layers
+        compareLayersEnabled=compareLayersEnabled
+        side=side
+        sideBySide=sideBySide
+        leftLayer=leftLayer
+        rightLayer=rightLayer
+        isGroup=isGroup
       }}
     {{/if}}
     {{#yield-slot "content"}}

@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import EditMapController from 'ember-flexberry-gis/controllers/edit-map';
 import EditFormControllerOperationsIndicationMixin from 'ember-flexberry/mixins/edit-form-controller-operations-indication';
+import sideBySide from 'npm:leaflet-side-by-side';
 
 /**
   Map controller.
@@ -14,6 +15,14 @@ import EditFormControllerOperationsIndicationMixin from 'ember-flexberry/mixins/
   @uses EditFormControllerOperationsIndicationMixin
 */
 export default EditMapController.extend(EditFormControllerOperationsIndicationMixin, {
+  /**
+    Property contatining sideBySide component.
+    @property sideBySide
+    @type L.control.sideBySide
+    @default null
+  */
+  sideBySide: L.control.sideBySide(),
+
   /**
     Parent route.
 
@@ -181,6 +190,11 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     captionPath: 'forms.map.createoreditobjectbuttontooltip',
     iconClass: 'createOrEditObject icon',
     class: 'createOrEditObject'
+  }, {
+    selector: 'compare',
+    captionPath: 'forms.map.comparebuttontooltip',
+    iconClass: 'compare icon',
+    class: 'compare'
   }]),
 
   _sidebarFiltered: Ember.computed('sidebar', 'createObject', 'createOrEditObject', function () {
@@ -188,7 +202,8 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     let sidebar = this.get('sidebar');
     sidebar.forEach((item) => {
       if ((item.selector !== 'createObject' || this.get('createObject')) &&
-        (item.selector !== 'createOrEditObject' || this.get('createOrEditObject'))) {
+        (item.selector !== 'createOrEditObject' || this.get('createOrEditObject')))/* &&
+        (item.selector !== 'compare' || this.get('compare'))) */{
         result.push(item);
       }
     });
@@ -432,6 +447,27 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       }
     },
 
+    showCompareSideBar() {
+      if (sideBySide) {
+        if (!this.get('compareLayersEnabled')) {
+          this.set('sidebar.7.active', true);
+        } else {
+          this.set('sidebar.0.active', true);
+        }
+
+        if (!this.get('sidebarOpened')) {
+          this.send('toggleSidebar', {
+            changed: false,
+            tabName: 'compare'
+          });
+        }
+
+        setTimeout(() => {
+          this.toggleProperty('compareLayersEnabled');
+        }, 500);
+      }
+    },
+
     onQueryFinished(e) {
       if (this.get('createObject')) {
         Ember.run.later(() => {
@@ -494,6 +530,10 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
       if (e.tabName !== 'search') {
         this.set('attrVisible', false);
+      }
+
+      if (e.tabName !== 'compare' && this.get('compareLayersEnabled')) {
+        this.set('compareLayersEnabled', false);
       }
 
       if (e.tabName === 'identify') {

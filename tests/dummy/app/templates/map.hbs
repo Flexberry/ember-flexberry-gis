@@ -51,7 +51,6 @@
           {{flexberry-maplayers
             class="styled"
             leafletMap=leafletMap
-            compareLayersEnabled=compareLayersEnabled
             sideBySide=sideBySide
             layers=(get-with-dynamic-actions this "model.otherLayers"
               hierarchyPropertyName="layers"
@@ -204,7 +203,18 @@
           geoproviderMode=false
         }}
       </div>
-
+      <div data-tab="compare" class="ui tab compare">
+      <h3>{{t "forms.map.tabbar.compare.caption"}}</h3>
+        {{flexberry-maplayers
+          class="styled"
+          leafletMap=leafletMap
+          compareLayersEnabled=compareLayersEnabled
+          sideBySide=sideBySide
+          layers=(get-with-dynamic-actions this "model.hierarchy"
+              hierarchyPropertyName="layers"
+              pathKeyword="layerPath")
+        }}
+      </div>
     </div>
   </div>
   <div class={{concat "bottompanel-wrapper" (if (or (gt editedLayers.length 0) editedLayersPanelLoading) "" " hidden")}}>
@@ -271,6 +281,7 @@
         }}
         {{map-tools/compare
           leafletMap=leafletMap
+          compareLayersEnabled=compareLayersEnabled
           showCompareSideBar=(action "showCompareSideBar")
         }}
         {{map-commands/go-to leafletMap=leafletMap}}

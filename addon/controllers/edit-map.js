@@ -10,7 +10,7 @@ import FlexberryLayersActionsHandlerMixin from '../mixins/flexberry-layers-actio
 import LayerResultListActionsHandlerMixin from '../mixins/layer-result-list-actions-handler';
 import LocalStorageBindingMixin from '../mixins/local-storage-binding';
 import FavoritesListMixin from '../mixins/favorites-features';
-import sideBySide from 'npm:leaflet-side-by-side';
+
 /**
   Edit map controller.
 
@@ -28,15 +28,6 @@ export default EditFormController.extend(
   LayerResultListActionsHandlerMixin,
   LocalStorageBindingMixin,
   FavoritesListMixin, {
-    /**
-      Property contatining sideBySide component.
-
-      @property sideBySide
-      @type L.control.sideBySide
-      @default null
-    */
-    sideBySide: L.control.sideBySide(),
-
     /**
       Observes handles changes in showComapreGeometriesPanel property.
       If Comapre Geometries Panel is active bring in to front.
@@ -313,31 +304,5 @@ export default EditFormController.extend(
       }
 
       return layer;
-    },
-
-    actions: {
-      /**
-        Handles click on compare-layers button.
-
-        @method showCompareSideBar
-      */
-      showCompareSideBar() {
-        if (sideBySide) {
-          if (this.get('sidebar.0.active') !== true) {
-            this.set('sidebar.0.active', true);
-          }
-
-          if (!this.get('sidebarOpened')) {
-            this.send('toggleSidebar', {
-              changed: false,
-              tabName: 'treeview'
-            });
-          }
-
-          setTimeout(() => {
-            this.toggleProperty('compareLayersEnabled');
-          }, 500);
-        }
-      },
     }
   });
