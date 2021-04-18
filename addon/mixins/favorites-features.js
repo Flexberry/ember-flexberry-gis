@@ -86,7 +86,9 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
           let store = this.get('store');
           let idFeaturesArray = store.findAll('i-i-s-r-g-i-s-p-k-favorite-features');
           idFeaturesArray.then((result) => {
-            this.fromIdArrayToFeatureArray(result);
+            // TODO: change favorite features behavior for loading data only at open favorites tab
+            // Now it is broken such as try to get feature that not loaded yet
+            //this.fromIdArrayToFeatureArray(result);
           });
         });
       });

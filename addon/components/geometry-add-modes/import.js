@@ -433,9 +433,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
         return;
       }
 
-      newLayers.forEach((layer) => {
-        this.sendAction('importComplete', layer);
-      }, this);
+      this.sendAction('importComplete', newLayers);
     },
 
     /**

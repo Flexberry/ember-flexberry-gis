@@ -1,7 +1,7 @@
 export default {
   'menu-button-tooltip-add': 'Добавить по координатам',
   'menu-button-tooltip-edit': 'Редактировать координаты',
-  'apply': 'Применить координаты',
+  'apply': 'Применить',
   'dialog-approve-button-caption': 'Ok',
   'dialog-deny-button-caption': 'Отмена',
   'crs-field-label': 'Система координат',

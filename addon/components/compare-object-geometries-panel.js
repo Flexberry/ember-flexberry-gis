@@ -152,7 +152,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let group = this.get('featuresLayer');
       group.clearLayers();
       let serviceLayer = this.get('serviceLayer');
-      serviceLayer.clearLayers();
+      if (!Ember.isNone(serviceLayer)) {
+        serviceLayer.clearLayers();
+      }
+
       this.send('selectFeature', null);
       this.sendAction('closeComparePanel');
     },
@@ -287,13 +290,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         arr.forEach(pair => {
           if (feature.geometry.type === 'MultiPolygon') {
             pair.forEach(cords => {
-              feature.intersectionCords.push(cords);
+              feature.intersectionCords.push(cords[0] + ' ' + cords[1]);
             });
+            feature.intersectionCords.push('');
           } else {
-            feature.intersectionCords.push(pair);
+            feature.intersectionCords.push(pair[0] + ' ' + pair[1]);
           }
         });
       });
+      feature.intersectionCoordsText = feature.intersectionCords.join('\r\n');
       return feature;
     }
 

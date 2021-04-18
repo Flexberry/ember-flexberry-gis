@@ -13,7 +13,7 @@
     }}
   {{/if}}
 
-  {{#if (or (eq mode "Create") (eq mode "Edit"))}}
+  {{#if (or (eq mode "Create") (eq mode "Edit") (eq mode "Import"))}}
 
     <div class="editfeature-tab-nav-panel">
       <div class="ui top attached tabular menu editfeature-tab-nav-panel-tabs">
@@ -75,6 +75,7 @@
             )
             drawStart=(action "onAddDrawStart" _model.typeGeometry)
             updateLayer=(action "updateLayer")
+            block=(action "blockForm")
         }}
     </div>
     {{/if}}
@@ -138,7 +139,7 @@
             }}
         {{/if}}
         {{#each-in _model.fieldNames as |fieldName fieldValue|}}
-        <div class="field {{if (get parsingErrors fieldName) "error" ""}}">
+        <div class="field {{if (get (get parsingErrors (concat '' curIndex)) fieldName) "error" ""}}">
           <label>{{fieldValue}}</label>
           {{#if (eq (get fieldTypes fieldName) "date")}}
           {{flexberry-datepicker
@@ -164,11 +165,11 @@
 </div>
 
 <div class="create-edit-block-buttons flex-buttons">
-  <button type="submit" class="ui button positive {{if loading "disabled"}}" {{action "save"}}>
+  <button type="submit" class="ui button positive {{if (or block loading) "disabled"}}" {{action "save"}}>
     {{t "components.flexberry-edit-layer-feature.buttons.save.caption"}}
   </button>
 
-  <button type="submit" class="ui button negative {{if loading "disabled"}}" {{action "undo"}}>
+  <button type="submit" class="ui button negative {{if (or block loading) "disabled"}}" {{action "undo"}}>
     {{t "components.flexberry-edit-layer-feature.buttons.cancel.caption"}}
   </button>
 </div>

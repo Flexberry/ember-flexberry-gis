@@ -7,7 +7,7 @@ export default {
   'start-point-field-label': 'Координаты начальной точки',
   'direction-field-label': 'Направление',
   'rhumb-field-label': 'Румб, °',
-  'distance-field-label': 'Расстояние, м',
+  'distance-field-label': 'Длина, м',
   'add-button-caption': 'Добавить',
   'table-field-label': 'Таблица румбов',
   'table-column-operation': 'Операция',
