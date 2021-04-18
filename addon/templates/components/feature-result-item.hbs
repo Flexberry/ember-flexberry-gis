@@ -27,7 +27,11 @@
         <i class="icon">...</i>
       </a>
       <div class="more submenu {{if isSubmenu '' 'hidden'}}">
-        <p>...</p>
+        <div>
+          <a class="more-button" {{action "onSubmenu" on="click"}}>
+            <p>...</p>
+          </a>
+        </div>
         <div>
           <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
             <i class="hand paper icon"></i>
