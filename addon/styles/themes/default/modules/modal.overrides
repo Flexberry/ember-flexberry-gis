@@ -110,9 +110,9 @@
 }
 
 .ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content {
-  max-height: none;
+  max-height: ~"calc(90vh - 50px)";
   // Stretch dialog's content to whole available dialog's size.
-  padding: 0;
+  padding: 20px 0 0 0 !important;
 
   // Force color-picker's palette to be visible.
   overflow: visible;

@@ -15,7 +15,7 @@
       <div class="flexberry-treenode-caption-block">
         {{#if (and (not-eq layer.type 'group') compareLayersEnabled)}}
           {{flexberry-ddau-checkbox
-            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
+            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse " " layer.type)
             value=layer.visibility
             change=(action "onChange")
             readonly=(and (not-eq side layer.side) (not-eq layer.side null) true)
@@ -23,7 +23,7 @@
         {{else}}
           {{#if (not compareLayersEnabled)}}
             {{flexberry-ddau-checkbox
-              class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
+              class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse " " layer.type)
               value=layer.visibility
               change=(action "onVisibilityCheckboxChange")
             }}
