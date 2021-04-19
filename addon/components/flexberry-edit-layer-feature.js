@@ -848,7 +848,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             return;
           }
 
+          let properties = Object.keys(this.get('leafletObject.readFormat.featureType.fields'));
+
           for (var key in data) {
+            if (!properties.contains(key)) {
+              delete layer.feature.properties[key];
+            }
+
             if (data.hasOwnProperty(key)) {
               var element = data[key];
               if (!Ember.isEqual(element, Ember.get(layer.feature, `properties.${key}`))) {
