@@ -899,7 +899,6 @@ div.measure-drag-panel {
     max-width: 68%;
     word-break: break-word;
     word-wrap: break-word;
-    font-family: Tahoma;
     font-size: 14px;
     color: @darkbluecolor;
   }
@@ -1031,13 +1030,11 @@ div.measure-drag-panel {
     }
   }
   .feature-div-property-name {
-    font-family: Tahoma;
     font-size: 12px;
     color: #8F928F;
     padding: 15px 0px 10px 0px;
   }
   .feature-div-property-value {
-    font-family: Tahoma;
     font-size: 12px;
     color: #343A32;
     .table {

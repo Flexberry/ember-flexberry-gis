@@ -31,7 +31,10 @@
     }
     .ui.icon.separate {
       position: relative;
-      right: 23px;
+      right: 13px;
+      height: 23px;
+      border-left: 1px solid #E5E5E5;
+      top: 6px;
     }
   }
   .flexberry-search-attr {
