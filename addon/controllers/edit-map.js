@@ -28,49 +28,6 @@ export default EditFormController.extend(
   LayerResultListActionsHandlerMixin,
   LocalStorageBindingMixin,
   FavoritesListMixin, {
-    /**
-      Observes handles changes in showComapreGeometriesPanel property.
-      If Comapre Geometries Panel is active bring in to front.
-
-      @method comapreGeometriesPanelObserver
-      @private
-    */
-    _comapreGeometriesPanelObserver: Ember.observer('showComapreGeometriesPanel', function () {
-      if (this.get('showComapreGeometriesPanel')) {
-        Ember.$('.bottom-compare-panel').css('z-index', 2000);
-        Ember.$('.bottom-intersection-panel').css('z-index', 1999);
-        Ember.$('.bottom-attributes-panel').css('z-index', 1998);
-      }
-    }),
-
-    /**
-      Observes handles changes in showIntersectionPanel property.
-      If Intersectio nPanel is active bring in to front.
-
-      @method intersectionPanelObserver
-      @private
-    */
-    _intersectionPanelObserver: Ember.observer('showIntersectionPanel', function () {
-      if (this.get('showIntersectionPanel')) {
-        Ember.$('.bottom-intersection-panel').css('z-index', 2000);
-        Ember.$('.bottom-compare-panel').css('z-index', 1999);
-        Ember.$('.bottom-attributes-panel').css('z-index', 1998);
-      }
-    }),
-    /**
-      Observes handles changes in editedLayers.length property.
-      If Attributes Panel is active bring in to front.
-
-      @method attributesPanelObserver
-      @private
-    */
-    _attributesPanelObserver: Ember.observer('editedLayers.length', function () {
-      if (this.get('editedLayers.length') > 0) {
-        Ember.$('.bottom-attributes-panel').css('z-index', 2000);
-        Ember.$('.bottom-intersection-panel').css('z-index', 1999);
-        Ember.$('.bottom-compare-panel').css('z-index', 1998);
-      }
-    }),
 
     /**
       Flag indicates if comapre tool active.
