@@ -276,7 +276,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       case 'polygon':
         objectType = 'Polygon';
         break;
-      case 'polyine':
+      case 'polyline':
         objectType = 'LineString';
         break;
     }
