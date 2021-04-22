@@ -225,83 +225,6 @@
 .blur {
   filter: blur(2px);
 }
-.flexberry-maplayers {
-  .flexberry-treenode-expand-collapse-icon.dropdown.icon:before {
-    content: '\f105';
-    font-family: Icons;
-  }
-  .flexberry-treenode {
-    .flexberry-treenode-header.title {
-      border: none;
-    }
-
-    .layer-legend {
-      margin-left: 25px;
-      label {
-        color: #8F928F;
-      }
-    }
-    .flexberry-treenode-caption-block {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-    .flexberry-treenode-buttons-block {
-      position: absolute;
-      width: 200px;
-      top: -9px;
-      left: 30px;
-      a.icon.item.more {
-        line-height: 5px;
-      }
-      label.ui.button.icon {
-        border: none;
-        box-shadow: none;
-      }
-      .allmore.floated.flexberry-button.ui.button.icon {
-        border: none;
-        box-shadow: none;
-        position: relative;
-      }
-      .more.submenu {
-        width: 200px;
-        height: 110px;
-        position: absolute;
-        top: 10px;
-        z-index: 100;
-        background: @whitecolor;
-        border: 1px solid #E5E5E5;
-        border-radius: 3.5px;
-        box-sizing: border-box;
-        p {
-          text-align: left;
-          margin-bottom: 5px;
-          padding-left: 8px;
-          line-height: 1px;
-        }
-        div {
-          padding-top: 10px;
-          padding-left: 8px;
-          text-align: left;
-        }
-        a {
-          color: #343A32;
-          font-size: 11px;
-        }
-        .flexberry-maplayer-add-button {
-          padding-left: 1px;
-          i.plus.icon {
-            margin-right: 13px;
-          }
-        }
-      }
-    }
-    .flexberry-maplayer-type-icon.folder~.flexberry-treenode-buttons-block {
-      left: 48px;
-    }
-  }
-}
-
 .ui.right.sidebar {
     .ui.tab {
         border-radius: 5px;
@@ -366,7 +289,6 @@
                 }
                 .button,
                 .flexberry-maplayer-opacity-label {
-                    vertical-align: baseline;
                     width: 30px;
                     height: 30px;
                     color: @flexberryMaplayerOpacitiLabelColor;
@@ -379,6 +301,10 @@
                 }
                 .flexberry-maplayer-opacity-label {
                     padding: 10px 0;
+                    vertical-align: baseline;
+                }
+                .button {
+                  vertical-align: top;
                 }
             }
         }
@@ -451,6 +377,100 @@
         }
     }
 }
+.flexberry-maplayers {
+  .flexberry-treenode-expand-collapse-icon.dropdown.icon:before {
+    content: '\f105';
+    font-family: Icons;
+  }
+  .flexberry-treenode {
+    .flexberry-treenode-header.title {
+      border: none;
+    }
+
+    .layer-legend {
+      margin-left: 25px;
+      label {
+        color: #8F928F;
+      }
+    }
+    .flexberry-treenode-caption-block {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .flexberry-treenode-buttons-block {
+      position: absolute;
+      width: 200px;
+      top: -9px;
+      left: 30px;
+      a.icon.item.more {
+        line-height: 5px;
+      }
+      label.floated.flexberry-treenode-prevent-expand-collapse.flexberry-button.ui.button.icon {
+        border: none;
+        box-shadow: none;
+        vertical-align: top;
+      }
+      .allmore.floated.flexberry-button.ui.button.icon {
+        i.icon.more:before {
+          content: "...";
+        }
+        border: none;
+        box-shadow: none;
+        vertical-align: top;
+        label.more {
+          position: relative;
+          bottom: 15px;
+        }
+        .more.submenu {
+          width: 200px;
+          height: 130px;
+          position: absolute;
+          top: 10px;
+          z-index: 100;
+          background: @whitecolor;
+          border: 1px solid #E5E5E5;
+          border-radius: 3.5px;
+          box-sizing: border-box;
+          div {
+            padding-top: 10px;
+            padding-left: 8px;
+            text-align: left;
+          }
+          .button-more-submenu {
+            height: 0px;
+            label.more.submenu {
+              position: relative;
+              top: -25px;
+              right: 10px;
+              background-color: rgba(255,255,255,0);
+              height: 30px;
+              width: 30px;
+              border: none;
+            }
+          }
+          label.ui.button {
+            color: #343A32;
+            font-size: 11px;
+            width: 200px;
+            text-align: left;
+          }
+          .flexberry-maplayer-add-button {
+            padding-left: 1px;
+            i.plus.icon {
+              margin-right: 13px;
+            }
+          }
+        }
+      }
+
+    }
+    .flexberry-maplayer-type-icon.folder~.flexberry-treenode-buttons-block {
+      left: 48px;
+    }
+  }
+}
+
 
 /************************************
           Create/Edit Block
