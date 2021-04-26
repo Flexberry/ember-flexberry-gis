@@ -78,6 +78,15 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   identifyToolBufferRadius: 0,
 
   /**
+    Placeholder or default text (will be displayed if there is no selected item).
+
+    @property placeholderSearch
+    @type String
+    @default null
+  */
+  placeholderSearch: null,
+
+  /**
     Identify tool name computed by the specified tool settings.
 
     @property identifyToolName

@@ -751,16 +751,8 @@ div.measure-drag-panel {
 
 .flexberry-identify-panel {
   background: #fff none;
-
-  &.celled.grid {
-    margin: 0;
-    & .ui.four.wide.column:last-child {
-      text-align: right;
-      float: right;
-      .button {
-        border-radius: 5px;
-      }
-    }
+  .button {
+    border-radius: 5px;
   }
   i.icon {
     font-family: rgis;
@@ -771,15 +763,13 @@ div.measure-drag-panel {
   &,
   &-layers-options,
   &-tools-options,
-  &>.ui.four.wide.column {
+  &-options {
     box-shadow: none !important;
     padding: 0px !important;
   }
   .flexberry-identify-panel-layers-options {
-    text-align: left;
-    &[class*="eight wide"].column {
-      width: 35%;
-    }
+    display: inline-block;
+    margin-right: 12px;
     i.icon.square.outline:before,
     i.icon.list:before {
       font-family: Crimean;
@@ -796,7 +786,8 @@ div.measure-drag-panel {
     }
   }
   .flexberry-identify-panel-tools-options {
-    text-align: left;
+    display: inline-block;
+    margin-right: 12px;
     i.icon.square.outline:before {
       font-family: Icons;
       content: "\f248";
@@ -807,15 +798,40 @@ div.measure-drag-panel {
       content: "\e802";
     }
   }
+  .flexberry-identify-panel-options {
+    display: inline-block;
+  }
   /* удаление */
   i.icon.remove:before {
     content: "\e814";
   }
-  .buffer-tools {
+  .buffer-caption{
     margin-top: 8px;
   }
+  .buffer-tools {
+    margin-top: 8px;
+    .field {
+      width: 45%;
+      display: inline-block;
+      border: none;
+      box-shadow: 0 0 4px #3c4f76;
+      border-radius: 5px;
+      vertical-align: top;
+      .item.ui.dropdown {
+        border: none;
+        box-shadow: none;
+      }
+      .input {
+        border-bottom: none;
+        height: 38px;
+      }
+      &:first-child {
+        height: 38px;
+        margin-right: 15px;
+      }
+    }
+  }
 }
-
 
 /*********************************************
             Layers result list

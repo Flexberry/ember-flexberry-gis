@@ -33,19 +33,19 @@
           </a>
         </div>
         <div>
-          <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
+          <a class="icon item" {{action "panTo" on="click"}}>
             <i class="hand paper icon"></i>
             {{t "components.feature-result-item.pan-to-caption"}}
           </a>
         </div>
         <div>
-          <a class="icon item" title="{{t "components.feature-result-item.edit-caption"}}" {{action "onRowEdit" on="click"}}>
+          <a class="icon item" {{action "onRowEdit" on="click"}}>
             <i class="edit icon"></i>
             {{t "components.feature-result-item.edit-caption"}}
           </a>
         </div>
         <div>
-          <a class="icon item" title="{{t "components.feature-result-item.find-intersection-caption"}}" {{action "findIntersection" on="click"}}>
+          <a class="icon item"  {{action "findIntersection" on="click"}}>
             <i class="intersections icon"></i>
             {{t "components.feature-result-item.find-intersection-caption"}}
           </a>
@@ -59,13 +59,11 @@
                   <i class="dropdown icon"></i>
                   <div class="ui menu transition {{if _linksExpanded "visible" "hidden"}}">
                     <a class="feature-result-item-object icon item"
-                      title="{{t "components.feature-result-item.select-object-caption"}}"
                       href="{{feature.editForms.[0].url}}" target="_blank">
                       <i class="external icon"></i>
                       {{t "components.feature-result-item.select-object-caption"}}
                     </a>
                     <a class="feature-result-item-object icon item"
-                      title="{{t "components.feature-result-item.action-object-caption"}}"
                       {{action "goToEditForm" feature.layerModel.id featureId}}>
                       <i class="external icon"></i>
                       {{t "components.feature-result-item.action-object-caption"}}
@@ -76,7 +74,6 @@
             {{else}}
               <div>
                 <a class="feature-result-item-object icon item"
-                  title="{{t "components.feature-result-item.select-object-caption"}}"
                   href="{{feature.editForms.[0].url}}" target="_blank">
                   <i class="external icon"></i>
                   {{t "components.feature-result-item.select-object-caption"}}
@@ -91,7 +88,6 @@
                 <div class="ui menu transition {{if _linksExpanded "visible" "hidden"}}">
                     {{#each feature.editForms as |editForm|}}
                       <a class="feature-result-item-object icon item"
-                        title="{{editForm.typeName}}"
                         href="{{editForm.url}}" target="_blank">
                         <i class="external icon"></i>
                         {{editForm.typeName}}
@@ -99,7 +95,6 @@
                     {{/each}}
                     {{#if hasEditForm}}
                       <a class="feature-result-item-object icon item"
-                        title="{{t "components.feature-result-item.action-object-caption"}}"
                         {{action "goToEditForm" feature.layerModel.id featureId}}>
                         <i class="external icon"></i>
                         {{t "components.feature-result-item.action-object-caption"}}
@@ -113,7 +108,6 @@
           {{#if hasEditForm}}
             <div>
               <a class="feature-result-item-object icon item"
-                title="{{t "components.feature-result-item.action-object-caption"}}"
                 {{action "goToEditForm" feature.layerModel.id featureId}}>
                 <i class="external icon"></i>
                 {{t "components.feature-result-item.action-object-caption"}}
