@@ -41,9 +41,9 @@ export default function featureWithAreaIntersect(featureA, geoLayer, leafletLaye
  * @param {GeoJSON} geoJsonB
  * @returns {double} area of intersection of features in measure units of coordinate references systems
 */
-export function intersectionArea(geoJsonA, geoJsonB) {
+export function intersectionArea(geoJsonA, geoJsonB, scale) {
   let geojsonReader = new jsts.io.GeoJSONReader();
-  let precisionModel = new jsts.geometry.PrecisionModel(10000); // number - scale
+  let precisionModel = new jsts.geometry.PrecisionModel(scale); // number - scale
   let objAJsts = geojsonReader.read(geoJsonA.geometry);
   let objBJsts = geojsonReader.read(geoJsonB.geometry);
   let objAJstsScaled = new jsts.precision.GeometryPrecisionReducer(precisionModel).reduce(objAJsts);

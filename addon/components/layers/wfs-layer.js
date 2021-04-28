@@ -405,7 +405,7 @@ export default BaseVectorLayer.extend({
           let projectedIdentifyPolygon = e.polygonLayer.toProjectedGeoJSON(this.get('crs'));
           filteredFeatures.forEach(feature => {
             feature.properties = feature.properties || {};
-            feature.properties.intersectionArea = intersectionArea(projectedIdentifyPolygon, feature.leafletLayer.toProjectedGeoJSON(this.get('crs')));
+            feature.properties.intersectionArea = intersectionArea(projectedIdentifyPolygon, feature.leafletLayer.toProjectedGeoJSON(this.get('crs')), 10000);
           });
         }
 
