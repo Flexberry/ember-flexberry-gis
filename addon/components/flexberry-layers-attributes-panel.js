@@ -717,6 +717,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           return tabModel.featureLink[key].feature;
         });
       this.send('zoomTo', selectedFeatures);
+      this._foldTabs();
     },
 
     /**
@@ -728,6 +729,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     onFindItem(tabModel, rowId) {
       let selectedFeature = tabModel.featureLink[rowId].feature;
       this.send('zoomTo', [selectedFeature]);
+      this._foldTabs();
     },
 
     /**
@@ -900,6 +902,15 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       let selectedRows = Ember.get(tabModel, '_selectedRows');
       let editedRows = Ember.get(tabModel, '_editedRows');
+
+      let mapModelApi = this.get('mapApi').getFromApi('mapModel');
+      let selectedFeatureIds = Object.keys(selectedRows).map((key) => {
+        let id = mapModelApi._getLayerFeatureId(tabModel.layerModel, tabModel.featureLink[key]);
+        return id;
+      });
+
+      let leafletMap = this.get('leafletMap');
+      leafletMap.fire('flexberry-map:delete-feature:start', { ids: selectedFeatureIds });
 
       let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
       selectedFeatureKeys.forEach((key) => {

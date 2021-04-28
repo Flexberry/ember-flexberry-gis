@@ -1,4 +1,18 @@
-<div>
+<div class="form ui">
+  {{#if (or coordinatesInLineError coordinatesParseError coordinatesTypeGeometryError)}}
+    <div class="ember-view ui error message">
+      {{#if coordinatesInLineError}}
+        <p>{{coordinatesInLineErrorLabel}}</p>
+      {{/if}}
+      {{#if coordinatesParseError}}
+        <p>{{coordinatesParseErrorLabel}}</p>
+      {{/if}}
+      {{#if coordinatesTypeGeometryError}}
+        <p>{{coordinatesTypeGeometryErrorLabel}}</p>
+      {{/if}}
+    </div>
+  {{/if}}
+
   <div class="row">
     <div class="field">
       {{flexberry-edit-crs
@@ -23,20 +37,4 @@
       {{t "components.geometry-add-modes.manual.apply"}}
     </button>
   </div>
-
-  {{#if (or coordinatesInLineError coordinatesParseError coordinatesTypeGeometryError)}}
-  <div class="ember-view ui message red">
-    <ul class="list">
-      {{#if coordinatesInLineError}}
-      <li>{{coordinatesInLineErrorLabel}}</li>
-      {{/if}}
-      {{#if coordinatesParseError}}
-      <li>{{coordinatesParseErrorLabel}}</li>
-      {{/if}}
-      {{#if coordinatesTypeGeometryError}}
-      <li>{{coordinatesTypeGeometryErrorLabel}}</li>
-      {{/if}}
-    </ul>
-  </div>
-  {{/if}}
 </div>

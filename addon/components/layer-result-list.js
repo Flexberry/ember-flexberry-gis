@@ -164,7 +164,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   exportResult: null,
 
   actions: {
-
     /**
       Show\hide links list (if present).
       @method actions.toggleLinks
@@ -250,7 +249,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     let $caption = this.$('.title .flexberry-toggler-caption');
     if ($caption.length > 0) {
       $caption.hover(
-        function() {
+        function () {
           let $buttons = _this.$(this).parent().parent().parent().children('.feature-result-item-buttons');
           $buttons.removeClass('hidden');
           _this.$(this).addClass('blur');
@@ -258,7 +257,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         function () {
           let $buttons = _this.$(this).parent().parent().parent().children('.feature-result-item-buttons');
           $buttons.hover(
-            () => {},
+            () => { },
             () => {
               $buttons.addClass('hidden');
               _this.$(this).removeClass('blur');

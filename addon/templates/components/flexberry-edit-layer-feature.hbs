@@ -155,6 +155,11 @@
                   value=(mut (get dataValue fieldName))
                 }}
           {{/if}}
+          {{#if (get (get parsingErrors (concat '' curIndex)) fieldName)}}
+          <div class="validation">
+            {{t "components.flexberry-edit-layer-feature.validation.field-error"}}
+          </div>
+          {{/if}}
         </div>
         {{/each-in}}
       </form>

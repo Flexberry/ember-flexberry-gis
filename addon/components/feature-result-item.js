@@ -29,6 +29,13 @@ export default Ember.Component.extend({
   showAllCords: false,
 
   /**
+    Loader
+    @property _showLoader
+    @type boolean
+  */
+  _showLoader: false,
+
+  /**
     Map command's caption.
     @property caption
     @type String
@@ -231,15 +238,15 @@ export default Ember.Component.extend({
     let $caption = this.$('.feature-result-item-caption');
     if ($caption.length > 0) {
       $caption.hover(
-        function() {
+        function () {
           let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
           $toolbar.removeClass('hidden');
           _this.$(this).addClass('blur');
         },
-        function() {
+        function () {
           let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
           $toolbar.hover(
-            () => {},
+            () => { },
             () => {
               $toolbar.addClass('hidden');
               _this.$(this).removeClass('blur');
@@ -273,22 +280,62 @@ export default Ember.Component.extend({
         return;
       }
 
+      let mapModelApi = this.get('mapApi').getFromApi('mapModel');
+      let id = mapModelApi._getLayerFeatureId(layerModel, feature.leafletLayer);
+
+      this.set('_showLoader', true);
+
       getAttributesOptions().then(({ object, settings }) => {
-        let name = Ember.get(feature.layerModel, 'name');
-        let editedProperty = feature.properties;
+        let name = Ember.get(layerModel, 'name');
 
-        let dataItems = {
-          mode: 'Edit',
-          items: [{
-            data: Object.assign({}, editedProperty),
-            initialData: editedProperty,
-            layer: feature.leafletLayer,
-          }]
-        };
+        // редактируемый объект должен быть загружен
+        let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+        object.statusLoadLayer = true;
 
-        this.sendAction('editFeature', {
-          dataItems: dataItems,
-          layerModel: { name: name, leafletObject: object, settings, layerModel }
+        let bounds;
+        if (feature.leafletLayer instanceof L.Marker) {
+          let featureGroup = L.featureGroup().addLayer(feature.leafletLayer);
+          bounds = featureGroup.getBounds();
+        } else {
+          bounds = feature.leafletLayer.getBounds();
+        }
+
+        leafletMap.fitBounds(bounds);
+        if (Ember.isNone(object.promiseLoadLayer) || !(object.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+          object.promiseLoadLayer = Ember.RSVP.resolve();
+        }
+
+        object.promiseLoadLayer.then(() => {
+          object.statusLoadLayer = false;
+          object.promiseLoadLayer = null;
+
+          this.set('_showLoader', false);
+
+          let layers = object._layers;
+          let layerObject = Object.values(layers).find(layer => {
+            return mapModelApi._getLayerFeatureId(layerModel, layer) === id;
+          });
+
+          if (!layerObject) {
+            console.log('Object not found');
+            return;
+          }
+
+          let editedProperty = layerObject.feature.properties;
+
+          let dataItems = {
+            mode: 'Edit',
+            items: [{
+              data: Object.assign({}, editedProperty),
+              initialData: editedProperty,
+              layer: layerObject,
+            }]
+          };
+
+          this.sendAction('editFeature', {
+            dataItems: dataItems,
+            layerModel: { name: name, leafletObject: object, settings, layerModel }
+          });
         });
       });
     },

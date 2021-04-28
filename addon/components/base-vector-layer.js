@@ -150,6 +150,7 @@ export default BaseLayer.extend({
 
       if (!layers) {
         resolve();
+        leafletObject.fire('loadCompleted');
         return;
       }
 

@@ -111,40 +111,24 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     return regex.exec(str);
   },
 
-  /**
-    Calculates new coordinates layer's feature after the move
-
-    @param {Arrey} latlngs A hash containing  coordinates.
-    @param {Number} x A hash containing move by X.
-    @param {Number} y A hash containing move by Y.
-    @param {Object} crs A hash containing layer's crs.
-  */
-  move(latlngs, x, y, crs) {
-    if (Ember.isArray(latlngs)) {
-      latlngs.forEach(ll => this.move(ll, x, y, crs));
-    } else {
-      let pointO = crs.unproject(L.point(0, 0));
-      let pointOX = crs.unproject(L.point(x, 0));
-      let pointOY = crs.unproject(L.point(0, y));
-      latlngs.lat += (pointOY.lat - pointO.lat);
-      latlngs.lng += (pointOX.lng - pointO.lng);
-
-      if (latlngs.lat > 90 || latlngs.lat < -90 || latlngs.lng > 180 || latlngs.lng < -180) {
-        this.set('_moveWithError', true);
-      }
-    }
-  },
-
   _dragLayer: null,
   _nowDragging: false,
   _tempCoords: null,
 
   _dragAndDrop(enable) {
+    // если не было включено и не включаем
+    if (!this.get('_moveEnabled') && !enable) {
+      return;
+    }
+
     this.set('_moveEnabled', enable);
 
+    // слой, для которого включено перемещение
     let dragLayer = this.get('_dragLayer');
     if (dragLayer) {
-      this._stopDragging(dragLayer);
+      this._stopDragging(dragLayer, false);
+      dragLayer.off('mousedown', this._dragOnMouseDown, this);
+      this.set('_dragLayer', null);
     }
 
     let layer = this.get('layer');
@@ -154,34 +138,69 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
     if (enable) {
       this.set('_dragLayer', layer);
+      layer.on('mousedown', this._dragOnMouseDown, this);
 
-      layer.on('click', this._dragOnClick, this);
+      this._setClickEnable(false, layer);
 
       if (layer.bringToFront) {
         layer.bringToFront();
       }
     } else {
-      layer.off('click', this._dragOnClick, this);
+      // сюда попадаем, если до этого было включено перетаскивание
+      this._setClickEnable(true, layer);
     }
   },
 
-  _stopDragging(dragLayer) {
-    dragLayer._map.dragging.enable();
+  _setClickEnable(enable, layer) {
+    let leafletMap = this.get('leafletMap');
+    let panes = [];
 
-    dragLayer.off('click', this._dragOnClick, this);
-    dragLayer._map.off('mousemove', this._dragOnMouseMove, this);
+    try {
+      let curPane = layer.getPane();
 
-    dragLayer.enableEdit();
+      if (Ember.isNone(curPane.style.zIndex)) {
+        return;
+      }
+
+      panes = Object.values(leafletMap.getPanes()).filter((p) => {
+        return p !== curPane && !Ember.isNone(p.style.zIndex) && parseInt(p.style.zIndex) >= parseInt(curPane.style.zIndex);
+      });
+    }
+    catch (ex) {
+      console.log(ex);
+
+      if (enable) {
+        panes = Object.values(leafletMap.getPanes());
+      }
+    }
+
+    panes.forEach((p) => {
+      if (!enable) {
+        p.style.pointerEventsOld = p.style.pointerEvents;
+        p.style.pointerEvents = 'none';
+      }
+
+      if (enable && !Ember.isNone(p.style.pointerEventsOld)) {
+        p.style.pointerEvents = p.style.pointerEventsOld;
+      }
+    });
+  },
+
+  _stopDragging(dragLayer, editAfter) {
+    let leafletMap = this.get('leafletMap');
+    leafletMap.dragging.enable();
+
+    dragLayer.off('mouseup', this._dragOnMouseUp, this);
+    leafletMap.off('mousemove', this._dragOnMouseMove, this);
+
+    if (editAfter) {
+      dragLayer.enableEdit();
+    }
 
     this.set('_nowDragging', false);
   },
 
-  /**
-    Handles mouse down event when dragging.
-
-    @param {Object} e Event object.
-  */
-  _dragOnClick(e) {
+  _dragOnMouseDown(e) {
     if (this.isDestroyed) {
       return;
     }
@@ -193,7 +212,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
     let nowDragging = this.get('_nowDragging');
     if (nowDragging) {
-      this._stopDragging(this.get('_dragLayer'));
+      this._stopDragging(this.get('_dragLayer'), true);
       this.sendAction('updateLayer', this.get('_dragLayer'), true);
     } else {
       this.set('_nowDragging', true);
@@ -207,16 +226,22 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         dragLayer.bringToFront();
       }
 
-      dragLayer._map.on('mousemove', this._dragOnMouseMove, this);
-      e.target._map.dragging.disable();
+      dragLayer.on('mouseup', this._dragOnMouseUp, this);
+
+      let leafletMap = this.get('leafletMap');
+      leafletMap.on('mousemove', this._dragOnMouseMove, this);
+      leafletMap.dragging.disable();
     }
   },
 
-  /**
-    Handles mouse move event when dragging.
+  _dragOnMouseUp(e) {
+    let nowDragging = this.get('_nowDragging');
+    if (nowDragging) {
+      this._stopDragging(this.get('_dragLayer'), true);
+      this.sendAction('updateLayer', this.get('_dragLayer'), true);
+    }
+  },
 
-    @param {Object} e Event object.
-  */
   _dragOnMouseMove(e) {
     // latLng of mouse event
     let { latlng } = e;
@@ -260,12 +285,54 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       } else {
         layer.setLatLng(newCoords);
       }
+
+      let label = this.get('_dragLayer._label');
+      if (label) {
+        newCoords = moveCoords(label._latlng);
+        label.setLatLng(newCoords);
+      }
     };
 
     moveLayer(dragLayer);
 
     // save current latlng for next delta calculation
     this.set('_tempCoords', latlng);
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    this._dragAndDrop(false);
+  },
+
+  /**
+    Calculates new coordinates layer's feature after the move
+
+    @param {Arrey} latlngs A hash containing  coordinates.
+    @param {Number} x A hash containing move by X.
+    @param {Number} y A hash containing move by Y.
+    @param {Object} crs A hash containing layer's crs.
+  */
+  move(latlngs, x, y, crs) {
+    if (Ember.isArray(latlngs)) {
+      return latlngs.map((currentLatLng) => {
+        return this.move(currentLatLng, x, y, crs);
+      });
+    }
+
+    let pointO = crs.unproject(L.point(0, 0));
+    let pointOX = crs.unproject(L.point(x, 0));
+    let pointOY = crs.unproject(L.point(0, y));
+
+    let res = {
+      lat: latlngs.lat + (pointOY.lat - pointO.lat),
+      lng: latlngs.lng + (pointOX.lng - pointO.lng)
+    };
+
+    if (res.lat > 90 || res.lat < -90 || res.lng > 180 || res.lng < -180) {
+      this.set('_moveWithError', true);
+    }
+
+    return res;
   },
 
   actions: {
@@ -281,9 +348,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       let _moveY = parseFloat(this.get('_offset.y')) || 0;
 
       let layer = this.get('layer');
-      let feature = this.get('layer.feature');
 
-      if (Ember.isNone(feature)) {
+      if (Ember.isNone(layer)) {
         return;
       }
 
@@ -292,18 +358,27 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       let crs = this.get('settings.layerCRS');
 
       this.set('_moveWithError', false);
-      let coords = feature.leafletLayer._latlngs;
-      if (Ember.isNone(coords)) {
-        coords = feature.leafletLayer._latlng;
+
+      let coords;
+      if (layer.getLatLngs) {
+        coords = layer.getLatLngs();
+      } else {
+        coords = layer.getLatLng();
       }
 
-      this.move(coords, _moveX, _moveY, crs);
-      if (this.get('_moveWithError')) {
-        this.move(coords, -_moveX, -_moveY, crs);
-      }
+      let newLatLngs = this.move(coords, _moveX, _moveY, crs);
+      if (!this.get('_moveWithError')) {
+        if (layer.setLatLngs) {
+          layer.setLatLngs(newLatLngs).redraw();
+        } else {
+          layer.setLatLng(newLatLngs);
+        }
 
-      if (feature.leafletLayer.redraw) {
-        feature.leafletLayer.redraw();
+        let label = this.get('layer._label');
+        if (label) {
+          newLatLngs = this.move(label.getLatLng(), _moveX, _moveY, crs);
+          label.setLatLng(newLatLngs);
+        }
       }
 
       layer.enableEdit();

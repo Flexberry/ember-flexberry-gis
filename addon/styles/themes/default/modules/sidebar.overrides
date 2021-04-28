@@ -471,9 +471,9 @@
         height: @visibleCreateEditBlockHeight;
         width: @visibleCreateEditBlockWidth;
         position: absolute;
-        overflow-y: auto;
+        overflow-y: scroll;
 
-        padding-right: 10px;
+        padding-right: 6px;
 
         .ui.button {
           border-radius: 3px;
@@ -492,7 +492,7 @@
         }
 
         .editfeature-tab-data-panel {
-          padding: 15px;
+          padding: 21px 17px 15px 17px;
           margin: 0px;
           border: 1px solid #b1cae8;
           border-radius: 3px;
@@ -500,12 +500,6 @@
 
           &.manual.active {
             border-top-left-radius: 0px !important;
-          }
-
-          .ui.message {
-            padding: 3px 0px;
-            border: none;
-            box-shadow: none;
           }
 
           .ui.celled.table.flexberry-table {
@@ -598,16 +592,6 @@
           .flexberry-dropdown.selection.dropdown,
           .ember-text-field {
             margin: 0;
-            box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.1);
-            border-radius: 3px;
-            border: 1px solid #b1cae8;
-          }
-
-          .flexberry-dropdown.selection.dropdown,
-          .ember-text-field {
-            padding: 8px 6px 6px 6px;
-            height: 32px;
-            min-height: 32px;
             min-width: 0px;
           }
 
