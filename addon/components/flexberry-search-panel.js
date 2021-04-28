@@ -33,6 +33,7 @@ export default Ember.Component.extend({
       let localizedProperties = this.get(
         `_selectedLayer.settingsAsObject.displaySettings.` +
         `featuresPropertiesSettings.localizedProperties.${currentLocale}`) || {};
+      this.set('_localizedValue', null);
       return localizedProperties;
     }
   ),
@@ -128,6 +129,44 @@ export default Ember.Component.extend({
     this.set('queryStringEmpty', !Ember.isBlank(this.get('queryString')));
   }),
 
+  /**
+    Transforms string of coordinate in degrees, minutes, seconds in coordinate in degrees.
+
+    @method degreeMinSecToDegree
+    @param {String} degMinSec String of coordinate in degrees, minutes, seconds.
+    @return {Number} Coordinate in degrees.
+    @private
+  */
+  degreeMinSecToDegree(degMinSec) {
+    let degree = degMinSec.substring(0, degMinSec.indexOf('°'));
+    let min = degMinSec.substring(degMinSec.indexOf('°') + 1, degMinSec.indexOf('\''));
+    let sec = degMinSec.substring(degMinSec.indexOf('\'') + 1, degMinSec.indexOf('"'));
+    let coord = Number(degree) + Number(min) / 60 + Number(sec) / 3600;
+    return coord.toFixed(5);
+  },
+
+  /**
+    Transforms string of coordinate in degrees, minutes, seconds in coordinate in degrees.
+
+    @method goTo
+    @param {Number} coord1 Latitude.
+    @param {Number} coord1 Longitude.
+    @return {Nothing} Go to coordinates.
+    @private
+  */
+  goTo(coord1, coord2) {
+    let latlng = new L.LatLng(coord1, coord2);
+    let xCaption = this.get('xCaption');
+    let yCaption = this.get('yCaption');
+    let popupContent =
+      `${xCaption}: ${latlng.lat}; ` +
+      `${yCaption}: ${latlng.lng}`;
+
+    let leafletMap = this.get('leafletMap');
+    leafletMap.openPopup(popupContent, latlng);
+    leafletMap.panTo(latlng);
+  },
+
   actions: {
     querySearch() {
       if (this.get('attrVisible')) {
@@ -145,19 +184,18 @@ export default Ember.Component.extend({
       this.set('showErrorMessage', false);
       let queryString =  this.get('queryString');
       let leafletMap = this.get('leafletMap');
-      const regex = /^([-]?[0-9]+[.]?[0-9]*) ([-]?[0-9]+[.]?[0-9]*)/;
-      if (regex.test(queryString)) {
+      const regexDegree = /^([-]?[0-9]+[.]?[0-9]*) ([-]?[0-9]+[.]?[0-9]*)/;
+      const regexDegreeMinSec = /^([-]?[0-9]+[°][0-9]+['][0-9]+[.]?[0-9]*["]) ([-]?[0-9]+[°][0-9]+['][0-9]+[.]?[0-9]*["])/;
+      if (regexDegree.test(queryString)) {
         // Go to coordinates
-        let coords = regex.exec(queryString);
-        let latlng = new L.LatLng(coords[1], coords[2]);
-        let xCaption = this.get('xCaption');
-        let yCaption = this.get('yCaption');
-        let popupContent =
-          `${xCaption}: ${latlng.lat}; ` +
-          `${yCaption}: ${latlng.lng}`;
-
-        leafletMap.openPopup(popupContent, latlng);
-        leafletMap.panTo(latlng);
+        let coords = regexDegree.exec(queryString);
+        this.goTo(coords[1], coords[2]);
+      } else if (regexDegreeMinSec.test(queryString)) {
+        // Go to coordinates with degree, minute, second
+        let degMinSec = regexDegreeMinSec.exec(queryString);
+        let coord1 = this.degreeMinSecToDegree(degMinSec[1]);
+        let coord2 = this.degreeMinSecToDegree(degMinSec[2]);
+        this.goTo(coord1, coord2);
       } else {
         // Сontext search and coordinate search
         let filter;

@@ -1,7 +1,9 @@
 {{#if _showLoader}}
   <div class="ui active inline loader"></div>{{t "components.layer-result-list.processing"}}
 {{else if _noData}}
+  <div class="nodata">
   {{t "components.layer-result-list.nodata"}}
+  </div>
 {{/if}}
 {{#each _displayResults as |result|}}
   <div class="feature-result-item-group">

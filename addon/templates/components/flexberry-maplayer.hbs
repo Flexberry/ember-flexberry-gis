@@ -38,12 +38,14 @@
         {{#if (not compareLayersEnabled)}}
           <div class="flexberry-treenode-buttons-block hidden">
             {{#if (not readonly)}}
-              {{flexberry-button
-                class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
-                iconClass="plus icon"
-                tooltip=(t "components.flexberry-maplayer.plus-button.tooltip")
-                click=(action "onFeatureCreateButtonClick")
-              }}
+              {{#if (not isGroup)}}
+                {{flexberry-button
+                  class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
+                  iconClass="plus icon"
+                  tooltip=(t "components.flexberry-maplayer.plus-button.tooltip")
+                  click=(action "onFeatureCreateButtonClick")
+                }}
+              {{/if}}
               {{#if _attributesOperationIsAvailable}}
                 {{flexberry-button
                   class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
@@ -52,48 +54,54 @@
                   click=(action "onAttributesButtonClick")
                 }}
               {{/if}}
-              <div class="allmore floated flexberry-button ui button icon">
-                <a class="icon item more" {{action "onSubmenu" on="click"}}>
-                  <i class="icon">...</i>
-                </a>
+              <div class="allmore floated flexberry-button ui button icon {{flexberryClassNames.preventExpandCollapse}}">
+                {{flexberry-button
+                  class=(concat "more floated " flexberryClassNames.preventExpandCollapse)
+                  iconClass="more icon"
+                  click=(action "onSubmenu")
+                }}
                 <div class="more submenu {{if isSubmenu '' 'hidden'}}">
-                  <a class="more-button" {{action "onSubmenu" on="click"}}>
-                    <p>...</p>
-                  </a>
+                  <div class="button-more-submenu">
+                  {{flexberry-button
+                    class=(concat "more submenu floated " flexberryClassNames.preventExpandCollapse)
+                    iconClass="more icon"
+                    click=(action "onSubmenu")
+                  }}
+                  </div>
                   {{#if _fitBoundsOperationIsAvailable}}
-                    <div class="{{flexberryClassNames.boundsButton}}">
-                      <a class="icon item" title="{{t "components.flexberry-maplayer.bounds-button.tooltip"}}" {{action "onBoundsButtonClick" on="click"}}>
-                        <i class="maximize icon"></i>
-                        {{t "components.flexberry-maplayer.bounds-button.tooltip"}}
-                      </a>
-                    </div>
+                    {{flexberry-button
+                      class=(concat flexberryClassNames.boundsButton " floated " flexberryClassNames.preventExpandCollapse)
+                      iconClass="maximize icon"
+                      caption=(t "components.flexberry-maplayer.bounds-button.tooltip")
+                      click=(action "onBoundsButtonClick")
+                    }}
                   {{/if}}
-                  <div class="{{flexberryClassNames.editButton}}">
-                    <a class="icon item" title="{{t "components.flexberry-maplayer.edit-button.tooltip"}}" {{action "onEditButtonClick" on="click"}}>
-                      <i class="edit icon"></i>
-                      {{t "components.flexberry-maplayer.edit-button.tooltip"}}
-                    </a>
-                  </div>
-                  <div class="{{flexberryClassNames.copyButton}}">
-                    <a class="icon item" title="{{t "components.flexberry-maplayer.copy-button.tooltip"}}" {{action "onCopyButtonClick" on="click"}}>
-                      <i class="copy icon"></i>
-                      {{t "components.flexberry-maplayer.copy-button.tooltip"}}
-                    </a>
-                  </div>
+                  {{flexberry-button
+                    class=(concat flexberryClassNames.editButton " floated " flexberryClassNames.preventExpandCollapse)
+                    iconClass="edit icon"
+                    caption=(t "components.flexberry-maplayer.edit-button.tooltip")
+                    click=(action "onEditButtonClick")
+                  }}
+                  {{flexberry-button
+                    class=(concat flexberryClassNames.copyButton " floated " flexberryClassNames.preventExpandCollapse)
+                    iconClass="copy icon"
+                    caption=(t "components.flexberry-maplayer.copy-button.tooltip")
+                    click=(action "onCopyButtonClick")
+                  }}
                   {{#if _addOperationIsAvailable}}
-                    <div class="{{flexberryClassNames.addButton}}">
-                      <a class="icon item" title="{{t "components.flexberry-maplayer.add-button.tooltip"}}" {{action "onAddButtonClick" on="click"}}>
-                        <i class="plus icon"></i>
-                        {{t "components.flexberry-maplayer.add-button.tooltip"}}
-                      </a>
-                    </div>
+                    {{flexberry-button
+                      class=(concat flexberryClassNames.addButton " floated " flexberryClassNames.preventExpandCollapse)
+                      iconClass="plus icon"
+                      caption=(t "components.flexberry-maplayer.add-button.tooltip")
+                      click=(action "onAddButtonClick")
+                    }}
                   {{/if}}
-                  <div class="{{flexberryClassNames.removeButton}}">
-                    <a class="icon item" title="{{t "components.flexberry-maplayer.remove-button.tooltip"}}" {{action "onRemoveButtonClick" on="click"}}>
-                      <i class="trash icon"></i>
-                      {{t "components.flexberry-maplayer.remove-button.tooltip"}}
-                    </a>
-                  </div>
+                  {{flexberry-button
+                    class=(concat flexberryClassNames.removeButton " floated " flexberryClassNames.preventExpandCollapse)
+                    iconClass="trash icon"
+                    caption=(t "components.flexberry-maplayer.remove-button.tooltip")
+                    click=(action "onRemoveButtonClick")
+                  }}
                 </div>
               </div>
             {{/if}}

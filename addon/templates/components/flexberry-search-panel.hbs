@@ -41,6 +41,7 @@
         layers=layers
         value=_selectedLayer
         layerChange=(action "onLayersDropdownLayerChange")
+        placeholder=placeholder
       }}
     </div>
     <div class="field properties">
@@ -52,6 +53,7 @@
         items=_selectedLayerFeaturesLocalizedProperties
         onChange=(action "onChange")
         value=_localizedValue
+        placeholder=placeholder
       }}
     </div>
     <button class="ui icon close-attr-search" {{action "attrSearch"}}>
