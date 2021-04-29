@@ -886,7 +886,7 @@ div.measure-drag-panel {
     }
     .more.submenu {
       position: absolute;
-      top: 20px;
+      top: 4px;
       left: 47px;
       width: 250px;
       z-index: 100;
@@ -907,6 +907,9 @@ div.measure-drag-panel {
     .icon.item.more {
       width: 300px;
     }
+  }
+  .feature-result-item-toolbar .feature-result-item-edit-forms~.more.submenu {
+    left: 62px;
   }
   .feature-result-item-title {
     position: relative;
