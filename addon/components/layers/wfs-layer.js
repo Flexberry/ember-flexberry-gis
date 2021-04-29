@@ -840,6 +840,7 @@ export default BaseVectorLayer.extend({
       leafletObject.changes = {};
     }
 
+    editTools.editLayer.clearLayers();
     return featuresIds;
   },
 

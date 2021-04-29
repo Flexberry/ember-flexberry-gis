@@ -55,6 +55,39 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
     };
     param = Ember.$.extend(param, options);
 
+    let bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
+
+    let getBounds = function() {
+      return bounds;
+    };
+
+    let getPane = function() {
+      return undefined;
+    };
+
+    let createPane = function() {
+      return {};
+    };
+
+    let hasLayer = function() {
+      return true;
+    };
+
+    let removeLayer = function() {
+      return {};
+    };
+
+    let leafletMap = L.map(document.createElement('div'));
+    leafletMap.getBounds = getBounds;
+    leafletMap.getPane = getPane;
+    leafletMap.createPane = createPane;
+    leafletMap.removeLayer = removeLayer;
+    leafletMap.hasLayer = hasLayer;
+    let editTools = new L.Editable(leafletMap);
+    Ember.set(leafletMap, 'editTools', editTools);
+
+    Ember.$.extend(param, { 'leafletMap': leafletMap });
+
     geoserverFake = sinon.fakeServer.create();
     geoserverFake.autoRespond = true;
 
@@ -131,6 +164,10 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
     geoserverFake.restore();
   }
 });
+
+let realCountArr = function (arr) {
+  return Object.values(arr).length;
+};
 
 test('getLayerFeatures() with options showExisting = false and continueLoading = true', function(assert) {
   assert.expect(2);
@@ -330,5 +367,213 @@ test('loadLayerFeatures() with options showExisting = false, call 2 times', func
 
     assert.ok(component, 'Create wfs-layer with showExisting = false');
     done();
+  });
+});
+
+test('test method clearChanges() with no changes', function(assert) {
+  assert.expect(7);
+  var done = assert.async(1);
+  Ember.run(() => {
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+
+    options.showExisting = true;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      let e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: Ember.A()
+      };
+
+      component._leafletObject = res.target;
+
+      component.getLayerFeatures(e).then((layers) => {
+        let leafletObject = component.get('_leafletObject');
+        let leafletMap = component.get('leafletMap');
+        leafletObject.leafletMap = leafletMap;
+
+        assert.equal(realCountArr(leafletObject.changes), 0);
+        assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+        let layerUpdate = leafletObject.getLayers()[0];
+        layerUpdate.enableEdit(leafletMap);
+
+        assert.equal(realCountArr(leafletObject.changes), 0);
+        assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+
+        component.clearChanges();
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+        done();
+      });
+    });
+  });
+});
+
+test('test method clearChanges() with create', function(assert) {
+  assert.expect(7);
+  var done = assert.async(1);
+  Ember.run(() => {
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+
+    options.showExisting = true;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      let e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: Ember.A()
+      };
+
+      component._leafletObject = res.target;
+
+      component.getLayerFeatures(e).then((layers) => {
+        let leafletObject = component.get('_leafletObject');
+        let leafletMap = component.get('leafletMap');
+        leafletObject.leafletMap = leafletMap;
+
+        assert.equal(realCountArr(leafletObject.changes), 0);
+        assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+        let feature = {
+          type: 'Polygon',
+          coordinates: [
+            [[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]
+          ]
+        };
+        let layerAdd = L.geoJSON(feature).getLayers()[0];
+        layerAdd._label = {
+          _leaflet_id: 1000
+        };
+        leafletObject.addLayer(layerAdd);
+        leafletObject._labelsLayer = {
+          1000: {}
+        };
+        layerAdd.enableEdit(leafletMap);
+
+        assert.equal(realCountArr(leafletObject.changes), 1);
+        assert.equal(leafletObject.getLayers().length, 2);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+
+        component.clearChanges();
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+        done();
+      });
+    });
+  });
+});
+
+test('test method clearChanges() with update', function(assert) {
+  assert.expect(7);
+  var done = assert.async(1);
+  Ember.run(() => {
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+
+    options.showExisting = true;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      let e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: Ember.A()
+      };
+
+      component._leafletObject = res.target;
+
+      component.getLayerFeatures(e).then((layers) => {
+        let leafletObject = component.get('_leafletObject');
+        let leafletMap = component.get('leafletMap');
+        leafletObject.leafletMap = leafletMap;
+
+        assert.equal(realCountArr(leafletObject.changes), 0);
+        assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+        let layerUpdate = leafletObject.getLayers()[0];
+        layerUpdate.feature.properties.name = 'test';
+        layerUpdate.enableEdit(leafletMap);
+        leafletObject.editLayer(layerUpdate);
+
+        assert.equal(realCountArr(leafletObject.changes), 1);
+        assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+
+        component.clearChanges();
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+        done();
+      });
+    });
+  });
+});
+
+test('test method clearChanges() with delete', function(assert) {
+  assert.expect(7);
+  var done = assert.async(1);
+  Ember.run(() => {
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+
+    options.showExisting = true;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      let e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: Ember.A()
+      };
+
+      component._leafletObject = res.target;
+
+      component.getLayerFeatures(e).then((layers) => {
+        let leafletObject = component.get('_leafletObject');
+        let leafletMap = component.get('leafletMap');
+        leafletObject.leafletMap = leafletMap;
+
+        assert.equal(realCountArr(leafletObject.changes), 0);
+        assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+        let layerRemove = leafletObject.getLayers()[0];
+        layerRemove.enableEdit(leafletMap);
+        leafletObject.removeLayer(layerRemove);
+
+        assert.equal(realCountArr(leafletObject.changes), 1);
+        assert.equal(leafletObject.getLayers().length, 0);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+
+        component.clearChanges();
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+        done();
+      });
+    });
   });
 });
