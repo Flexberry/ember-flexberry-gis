@@ -821,6 +821,7 @@ export default BaseVectorLayer.extend({
     } else {
       leafletObject.changes = {};
     }
+
     editTools.editLayer.clearLayers();
     return featuresIds;
   },
