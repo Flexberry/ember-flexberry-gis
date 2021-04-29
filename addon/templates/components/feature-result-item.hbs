@@ -107,10 +107,12 @@
           </a>
         </div>
         <div>
-          <a class="icon item" {{action "onRowEdit" on="click"}}>
-            <i class="edit icon"></i>
-            {{t "components.feature-result-item.edit-caption"}}
-          </a>
+          {{#if availableEdit}}
+            <a class="icon item" {{action "onRowEdit" on="click"}}>
+              <i class="edit icon"></i>
+              {{t "components.feature-result-item.edit-caption"}}
+            </a>
+          {{/if}}
         </div>
         <div>
           <a class="icon item"  {{action "findIntersection" on="click"}}>
