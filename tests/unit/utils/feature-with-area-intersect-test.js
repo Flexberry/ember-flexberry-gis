@@ -4,8 +4,8 @@ import sinon from 'sinon';
 
 module('Unit | Utility | intersectionArea');
 
-let testAObjIntersect = L.polygon([[1, 2], [2, 4], [5, 3], [1, 2]]).toGeoJSON();
-let testBObjIntersect = L.polygon([[1, 2], [2, 4], [2, 3], [1, 2]]).toGeoJSON();
+let testAObjIntersect = L.polygon([[125683.7646000004, 6473431.741699998], [125662.04439999978, 6473428.5752], [125644.82490000012, 6473430.114399999], [125683.7646000004, 6473431.741699998]]).toGeoJSON();
+let testBObjIntersect = L.polygon([[125683.7646000002, 6473431.741699997], [125662.04439999979, 6473428.5751], [125644.82490000013, 6473430.1144], [125683.7646000002, 6473431.741699997]]).toGeoJSON();
 
 let testBObjNotIntersect = L.polygon([[5, 5], [6, 7], [7, 6], [5, 5]]).toGeoJSON();
 testBObjIntersect.properties = {};
@@ -17,7 +17,27 @@ test('test method intersectionArea for two polygon', function(assert) {
   let res = intersectionArea(testAObjIntersect, testBObjIntersect, 10000);
 
   //Assert
-  assert.equal(res, 0.5, 'Assert intersectArea');
+  assert.equal(res, 43.97863930247094, 'Assert intersectArea');
+});
+
+test('test method intersectionArea for two polygon with scale 0.1', function(assert) {
+  assert.expect(1);
+
+  //Act
+  let res = intersectionArea(testAObjIntersect, testBObjIntersect, 0.1);
+
+  //Assert
+  assert.equal(res, 0, 'Assert intersectArea');
+});
+
+test('test method intersectionArea for two polygon with scale 10', function(assert) {
+  assert.expect(1);
+
+  //Act
+  let res = intersectionArea(testAObjIntersect, testBObjIntersect, 10);
+
+  //Assert
+  assert.equal(res, 43.010000004803295, 'Assert intersectArea');
 });
 
 test('test method intersectionArea for two polygon not intesect', function(assert) {
@@ -51,7 +71,7 @@ test('test method featureWithAreaIntersect for two polygon', function(assert) {
   let res = featureWithAreaIntersect(testAObjIntersect, testBObjIntersect, leafletLayer, mapModel, 10000);
 
   //Assert
-  assert.equal(res.properties.intersectionArea, 0.5, 'Assert intersectArea');
+  assert.equal(res.properties.intersectionArea, 43.97863930247094, 'Assert intersectArea');
   assert.equal(stubConvertCoordinates.callCount, 0, 'Assert call count for method _convertObjectCoordinates');
 });
 

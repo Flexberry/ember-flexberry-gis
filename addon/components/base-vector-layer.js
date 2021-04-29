@@ -18,6 +18,11 @@ const { assert } = Ember;
 export const begIndex = 300;
 
 /**
+  This constant need to jsts in PrecionModel
+*/
+export const scale = 10000;
+
+/**
   BaseVectorLayer component for other flexberry-gis vector(geojson, kml, etc.) layers.
 
   @class BaseVectorLayerComponent
@@ -441,10 +446,10 @@ export default BaseLayer.extend({
             if (geoLayer.geometry.type === 'GeometryCollection') {
               geoLayer.geometry.geometries.forEach(feat => {
                 let geoObj = { type: 'Feature', geometry: feat };
-                features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoObj, leafletLayer, mapModel, 10000));
+                features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoObj, leafletLayer, mapModel, scale));
               });
             } else {
-              features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoLayer, leafletLayer, mapModel, 10000));
+              features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoLayer, leafletLayer, mapModel, scale));
             }
           }
         });
