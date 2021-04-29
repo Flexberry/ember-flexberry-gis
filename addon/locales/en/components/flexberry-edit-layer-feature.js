@@ -13,6 +13,7 @@ export default {
   'validation': {
     'no-layer': 'No layer',
     'data-errors': 'Validation errors',
+    'field-error': 'Validation error',
     'save-fail': 'Save failed'
   }
 };

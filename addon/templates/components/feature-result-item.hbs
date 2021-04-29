@@ -1,4 +1,7 @@
 <div class="feature-result-item-title">
+  {{#if _showLoader}}
+    <div class="ui small active loader"></div>
+  {{/if}}
   <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo" on="click"}}>
     <i class="caret {{if expanded 'down' 'right'}} icon"></i>
   </a>

@@ -532,6 +532,9 @@ let MeasureMapToolComponent = Ember.Component.extend({
 
   actions: {
     closePanel() {
+      let _measureTools = this.get('_measureToolProperties._measureTools');
+      _measureTools.clearLayers();
+
       this.set('showPanel', false);
     },
 

@@ -9,6 +9,13 @@ import { translationMacro as t } from 'ember-i18n';
 
 export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFeatureMixin, {
   /**
+    Service for managing map API.
+    @property mapApi
+    @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -112,6 +119,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
   _dataItemObserver: Ember.observer('dataItems', function () {
     let leafletMap = this.get('leafletMap');
+    leafletMap.flexberryMap.tools.enable('drag');
 
     this.set('error', null);
 
@@ -168,7 +176,17 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
                 break;
             }
 
-            this.set(`latlngs.${index}`, this.copy(latlngs));
+            let latlngcopy = {
+              layer: this.copy(latlngs),
+              label: null
+            };
+
+            let label = Ember.get(layer, '_label');
+            if (label) {
+              latlngcopy.label = this.copy(label.getLatLng());
+            }
+
+            this.set(`latlngs.${index}`, latlngcopy);
           }
 
           let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
@@ -492,6 +510,66 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     return this.get('_snapLayers');
   }),
 
+  mapObserver: Ember.observer('leafletMap', function () {
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.on('flexberry-map:delete-feature:start', this._onDelete, this);
+    }
+  }),
+
+  /**
+    Deinitializes DOM-related component's properties.
+  */
+  willDestroyElement() {
+    this._super(...arguments);
+
+    let leafletMap = this.get('leafletMap');
+    if (leafletMap) {
+      leafletMap.off('flexberry-map:delete-feature:start', this._onDelete, this);
+    }
+  },
+
+  _onDelete(e) {
+    let datas = this.get('initialData');
+    let layers = this.get('layers');
+    if (Ember.isNone(datas) || Ember.isNone(layers)) {
+      return;
+    }
+
+    if (Ember.isNone(e.ids)) {
+      return;
+    }
+
+    let mapModelApi = this.get('mapApi').getFromApi('mapModel');
+    let pkField = mapModelApi._getPkField(this.get('layerModel.layerModel'));
+    let needCancel = false;
+
+    Object.keys(datas).forEach((key) => {
+      let data = datas[key];
+      let layer = layers[key];
+
+      let id;
+      if (data.hasOwnProperty(pkField)) {
+        id = Ember.get(data, pkField);
+      } else {
+        id = Ember.get(layer, 'feature.id');
+      }
+
+      if (e.ids.filter((idForDelete) => { return id === idForDelete; }).length > 0) {
+        needCancel = true;
+      }
+    });
+
+    if (needCancel) {
+      if (this.get('loading')) {
+        return;
+      }
+
+      this.set('dataItems', null);
+      this.sendAction('editFeatureEnd');
+    }
+  },
+
   /**
     Initializes component.
   */
@@ -526,14 +604,19 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           if (!Ember.isNone(layer) && !Ember.isNone(latlng)) {
             switch (layer.feature.geometry.type) {
               case 'Point':
-                layer.setLatLng(latlng);
+                layer.setLatLng(latlng.layer);
                 break;
               case 'LineString':
               case 'MultiLineString':
               case 'Polygon':
               case 'MultiPolygon':
-                layer.setLatLngs(latlng);
+                layer.setLatLngs(latlng.layer);
                 break;
+            }
+
+            let label = Ember.get(layer, '_label');
+            if (label) {
+              label.setLatLng(latlng.label);
             }
           }
 
@@ -549,6 +632,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
                 }
               }
             }
+
+            // для надписей
+            leafletObject.editLayer(layer);
           }
 
           delete latlngs[index];
@@ -828,7 +914,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
         leafletObject.fire('load', e);
 
-        createPromise = new Ember.RSVP.Promise((resolve, reject) => {
+        createPromise = new Ember.RSVP.Promise((resolve) => {
           Ember.RSVP.allSettled(e.results).then(() => {
             resolve();
           });
@@ -881,7 +967,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         initialFeatureKeys: this.get('dataItems.initialFeatureKeys')
       };
 
-      let saveFailed = (data) => {
+      let saveFailed = () => {
         this.set('loading', false);
         this.set('error', t('components.flexberry-edit-layer-feature.validation.save-fail'));
         leafletObject.off('save:success', saveSuccess);
@@ -891,7 +977,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         }).catch(() => {
           // не удалось ни сохранить, ни восстановить слои. непонятно что делать
         });
-
       };
 
       let saveSuccess = (data) => {

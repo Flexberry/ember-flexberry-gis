@@ -113,6 +113,19 @@ export default Ember.Mixin.create({
       this.get('leafletMap').panTo(latLng);
       this.send('selectFeature', feature);
     },
+
+    /**
+      Clear selected features
+      @method actions.clearSelected
+    */
+    clearSelected() {
+      let serviceLayer = this.get('serviceLayer');
+      if (!Ember.isNone(serviceLayer)) {
+        serviceLayer.clearLayers();
+      }
+
+      this.set('_selectedFeature', null);
+    }
   },
 
   /**

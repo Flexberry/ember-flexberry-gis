@@ -79,25 +79,35 @@ export default BaseVectorLayer.extend({
     @param {<a href="https://github.com/Flexberry/Leaflet-WFST#initialization-options">L.WFS initialization options</a>} options WFS layer options.
     @param {Boolean} [single = false] Flag: indicates whether result should be a single layer.
   */
-  _getFeature(options, single = false) {
+  _getFeature(options) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       options = Ember.$.extend(options || {}, { showExisting: true });
-      this.createVectorLayer(options).then((wfsLayer) => {
-        if (single) {
-          resolve(wfsLayer);
-        } else {
-          let features = Ember.A();
 
-          // Instead of injectLeafletLayersIntoGeoJSON to avoid duplicate reprojection,
-          // retrieve features from already projected layers & inject layers into retrieved features.
-          wfsLayer.eachLayer((layer) => {
-            let feature = layer.feature;
-            feature.leafletLayer = layer;
-            features.pushObject(feature);
-          });
+      let filter = Ember.get(options, 'filter');
+      if (typeof filter === 'string') {
+        filter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(filter);
+      }
 
-          resolve(features);
-        }
+      let resultingFilter = filter ? filter.toGml() : null;
+
+      let wfsLayer = this.get('_leafletObject');
+
+      if (Ember.isNone(wfsLayer)) {
+        resolve(Ember.A());
+        return;
+      }
+
+      let load = this.get('_loadFeatures').bind(wfsLayer);
+      load(resultingFilter, false, wfsLayer).then((layers) => {
+        let features = Ember.A();
+
+        layers.forEach((layer) => {
+          let feature = layer.feature;
+          feature.leafletLayer = layer;
+          features.pushObject(feature);
+        });
+
+        resolve(features);
       }).catch((e) => {
         reject(e);
       });
@@ -190,9 +200,10 @@ export default BaseVectorLayer.extend({
 
     @method _loadFeatures
     @param filter {L.Filter} filter on loaded features
+    @param fireLoad flag indicates needs of fire 'load' event
     @returns {RSVP.Promise}.
   */
-  _loadFeatures(filter) {
+  _loadFeatures(filter, fireLoad = true) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       var that = this;
 
@@ -234,21 +245,28 @@ export default BaseVectorLayer.extend({
               element.state = that.state.exist;
               that.addLayer(element);
             });
+
             that.setStyle(that.options.style);
           }
 
-          that.fire('load', {
-            responseText: responseText,
-            layers: layers
-          });
-          resolve(that);
+          if (fireLoad) {
+            that.fire('load', {
+              responseText: responseText,
+              layers: layers
+            });
+          }
+
+          resolve(layers);
+
           return that;
         },
         error: function (errorMessage) {
           that.fire('error', {
             error: new Error(errorMessage)
           });
+
           reject(errorMessage);
+
           return that;
         }
       });
