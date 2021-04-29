@@ -11,7 +11,7 @@ export default {
   'add-button-caption': 'Добавить',
   'table-field-label': 'Таблица румбов',
   'table-column-operation': 'Операция',
-  'crs-code': 'Система координат(CRS)',
+  'crs-code': 'Система координат',
   'number': 'Номер',
   'object-start': 'Начало объекта',
   'change-permission': 'Изменить начальный румб объекта?',

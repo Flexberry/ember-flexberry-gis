@@ -115,6 +115,7 @@ const flexberryClassNamesPrefix = 'flexberry-export-map-command-dialog';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
+  content: 'flexberry-dialog-content',
   settingsColumn: flexberryClassNamesPrefix + '-settings-column',
   previewColumn: flexberryClassNamesPrefix + '-preview-column',
   sheetOfPaper: flexberryClassNamesPrefix + '-sheet-of-paper',
@@ -1943,8 +1944,6 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let $sheetOfPaper = dialogComponent.$(`.${flexberryClassNames.sheetOfPaper}`);
     let $sheetOfLegend = dialogComponent.$(`.${flexberryClassNames.sheetOfLegend}`);
     this.set(`_$sheetOfPaper`, $sheetOfPaper);
-    this.set('_sheetOfPaperInitialHeight', $sheetOfPaper.outerHeight());
-    this.set('_sheetOfPaperInitialWidth', $sheetOfPaper.outerWidth());
     this.set(`_$sheetOfLegend`, $sheetOfLegend);
 
     let $mapCaption = Ember.$(`.${flexberryClassNames.sheetOfPaperMapCaption}`, $sheetOfPaper);
@@ -1972,6 +1971,14 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   */
   didRender() {
     this._super(...arguments);
+
+    let dialogComponent = this.get(`childViews`)[0];
+    let $sheetOfPaper = dialogComponent.$(`.${flexberryClassNames.sheetOfPaper}`);
+    let $previewColumn = dialogComponent.$(`.${flexberryClassNames.previewColumn}`);
+    let $content = dialogComponent.$(`.${flexberryClassNames.content}`);
+
+    this.set('_sheetOfPaperInitialHeight', $sheetOfPaper.outerHeight() > $content.outerHeight() ? $content.outerHeight() : $sheetOfPaper.outerHeight());
+    this.set('_sheetOfPaperInitialWidth', $previewColumn.outerWidth());
 
     this.set('_isDialogAlreadyRendered', true);
   },
