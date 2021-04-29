@@ -440,10 +440,10 @@ export default BaseLayer.extend({
             if (geoLayer.geometry.type === 'GeometryCollection') {
               geoLayer.geometry.geometries.forEach(feat => {
                 let geoObj = { type: 'Feature', geometry: feat };
-                features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoObj, leafletLayer, mapModel));
+                features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoObj, leafletLayer, mapModel, 10000));
               });
             } else {
-              features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoLayer, leafletLayer, mapModel));
+              features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoLayer, leafletLayer, mapModel, 10000));
             }
           }
         });
