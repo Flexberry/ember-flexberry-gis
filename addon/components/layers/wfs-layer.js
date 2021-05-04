@@ -3,7 +3,7 @@
 */
 
 import Ember from 'ember';
-import BaseVectorLayer from '../base-vector-layer';
+import BaseVectorLayer, { scale } from '../base-vector-layer';
 import { checkMapZoom } from '../../utils/check-zoom';
 import { intersectionArea } from '../../utils/feature-with-area-intersect';
 import jsts from 'npm:jsts';
@@ -423,7 +423,7 @@ export default BaseVectorLayer.extend({
           let projectedIdentifyPolygon = e.polygonLayer.toProjectedGeoJSON(this.get('crs'));
           filteredFeatures.forEach(feature => {
             feature.properties = feature.properties || {};
-            feature.properties.intersectionArea = intersectionArea(projectedIdentifyPolygon, feature.leafletLayer.toProjectedGeoJSON(this.get('crs')));
+            feature.properties.intersectionArea = intersectionArea(projectedIdentifyPolygon, feature.leafletLayer.toProjectedGeoJSON(this.get('crs')), scale);
           });
         }
 
@@ -840,6 +840,7 @@ export default BaseVectorLayer.extend({
       leafletObject.changes = {};
     }
 
+    editTools.editLayer.clearLayers();
     return featuresIds;
   },
 

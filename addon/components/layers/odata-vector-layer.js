@@ -1439,7 +1439,7 @@ export default BaseVectorLayer.extend({
         featuresIds.push(model.get('id'));
       }
     });
-
+    editTools.editLayer.clearLayers();
     return featuresIds;
   },
 
