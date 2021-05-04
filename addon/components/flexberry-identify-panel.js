@@ -104,7 +104,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       return {
         bufferActive: !Ember.isNone(this.get('bufferRadius')) || !Ember.isBlank(this.get('bufferRadius')),
         bufferUnits: this.get('bufferUnits'),
-        bufferRadius: this.get('bufferRadius'),
+        bufferRadius: this.get('bufferRadius').replace(',', '.'),
         layerMode: this.get('layerMode'),
         toolMode: this.get('toolMode'),
         layers: this.get('layers')
@@ -416,7 +416,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       @method actions.inputLimit
     */
     onInputLimit(str, e) {
-      const regex = /^\.|[^\d\.]|\.(?=.*\.)|^0+(?=\d)|\+/g;
+      const regex = /^\.|^,|[^\d\.,]|\.(?=.*\.)|,(?=,*,)|^0+(?=\d)/g;
       if (!Ember.isEmpty(str) && regex.test(str)) {
         Ember.$(e.target).val(str.replace(regex, ''));
       }

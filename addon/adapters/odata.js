@@ -46,24 +46,28 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
         return reject(new Ember.DS.AdapterError('Invalid response type.'));
       }
 
-      const batchResponses = getBatchResponses(response, meta.boundary).map(parseBatchResponse);
-      const result = batchResponses.filter(r => r.contentType === 'application/http')[0];
+      try {
+        const batchResponses = getBatchResponses(response, meta.boundary).map(parseBatchResponse);
+        const result = batchResponses.filter(r => r.contentType === 'application/http')[0];
 
-      const normalizedRecords = { data: Ember.A(), included: Ember.A() };
-      let odataValue = result.response.body.value;
-      if (!Ember.isNone(odataValue)) {
-        odataValue.forEach(record => {
-          const normalized = store.normalize(modelName, record);
-          normalizedRecords.data.addObject(normalized.data);
-          if (normalized.included) {
-            normalizedRecords.included.addObjects(normalized.included);
-          }
-        });
-      } else {
-        console.log('Error batch: ' + result.response.body);
+        const normalizedRecords = { data: Ember.A(), included: Ember.A() };
+        let odataValue = result.response.body.value;
+        if (!Ember.isNone(odataValue)) {
+          odataValue.forEach(record => {
+            const normalized = store.normalize(modelName, record);
+            normalizedRecords.data.addObject(normalized.data);
+            if (normalized.included) {
+              normalizedRecords.included.addObjects(normalized.included);
+            }
+          });
+        } else {
+          console.log('Error batch: ' + result.response.body);
+        }
+
+        return resolve(Ember.run(store, store.push, normalizedRecords));
+      } catch(e) {
+        return reject(e);
       }
-
-      return resolve(Ember.run(store, store.push, normalizedRecords));
     }).fail(reject));
   }
 });
