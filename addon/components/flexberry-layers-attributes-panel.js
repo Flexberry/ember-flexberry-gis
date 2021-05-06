@@ -24,6 +24,9 @@ import * as distance from 'npm:@turf/distance';
 import * as midpoint from 'npm:@turf/midpoint';
 import * as union from 'npm:@turf/union';
 import intersect from 'npm:@turf/intersect';
+import {
+  translationMacro as t
+} from 'ember-i18n';
 
 /**
   The component for editing layers attributes.
@@ -522,10 +525,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     }
 
     if (e.layers.filter((l) => {
-      return Ember.isNone(l.leafletLayer);
+      return Ember.isNone(Ember.get(l, 'feature.leafletLayer'));
     }).length > 0) {
-      console.log(e.layers);
-      console.log(e.layers[0].feature.properties);
+      console.warn(e.layers);
+      console.warn(e.layers[0].feature.properties);
       return;
     }
 
@@ -716,8 +719,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         .map((key) => {
           return tabModel.featureLink[key].feature;
         });
-      this.send('zoomTo', selectedFeatures);
+
       this._foldTabs();
+      this.send('zoomTo', selectedFeatures);
     },
 
     /**
@@ -1084,7 +1088,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           });
         });
 
+        this.set('_dataForDifference', null);
+
         if (items.length < 1) {
+          let i18n = this.get('i18n');
+          alert(i18n.t(('components.flexberry-layers-attributes-panel.spliter-error')));
           return;
         }
 
@@ -1117,6 +1125,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     onSplitGeometry(tabModel) {
       let leafletMap = this.get('leafletMap');
       leafletMap.flexberryMap.tools.enableDefault();
+
+      this.send('onFindItemClick', tabModel);
 
       let editTools = this._getEditTools();
       editTools.off('editable:drawing:end', this._disableDrawSplitGeometry, [tabModel, this]);
@@ -1382,8 +1392,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       dataItems: dataItems,
       layerModel: tabModel
     });
-
-    this._foldTabs();
   },
 
   /**

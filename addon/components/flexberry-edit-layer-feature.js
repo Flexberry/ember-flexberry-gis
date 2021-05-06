@@ -133,6 +133,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         }
 
         leafletMap.off('editable:vertex:dragstart', this._startSnapping, this);
+
+        layer.off('editable:vertex:dragend', this._updateLabels, [this, layer]);
+        layer.off('editable:vertex:deleted', this._updateLabels, [this, layer]);
       });
     }
 
@@ -196,7 +199,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
 
           this.send('zoomTo', [layer.feature]);
-          this.get('serviceLayer').clearLayers();
+          this.send('clearSelected');
           if (!isMarker) {
             if (layer.bringToFront) {
               layer.bringToFront();
@@ -205,6 +208,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
           layer.enableEdit(leafletMap);
           leafletMap.on('editable:vertex:dragstart', this._startSnapping, this);
+          layer.on('editable:vertex:dragend', this._updateLabels, [this, layer]);
+          layer.on('editable:vertex:deleted', this._updateLabels, [this, layer]);
         }
 
         this.set(`layers.${index}`, layer);
@@ -652,9 +657,25 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             if (leafletMap.hasLayer(layer)) {
               leafletMap.removeLayer(layer);
             }
+
+            let label = Ember.get(layer, '_label');
+            if (!Ember.isNone(label)) {
+              if (!Ember.isNone(leafletObject) && leafletObject.hasLayer(label)) {
+                leafletObject.removeLayer(label);
+              }
+
+              if (leafletMap.hasLayer(label)) {
+                leafletMap.removeLayer(label);
+              }
+            }
           }
         }
       });
+    }
+
+    if (!Ember.isNone(layers)) {
+      // Сервисный слой общий с панелью атрибутов. Не надо очищать, если ничего не редактировали
+      this.send('clearSelected');
     }
 
     this.set('latlngs', null);
@@ -681,7 +702,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         let className = Ember.get(layerModel, 'type');
         let layerType = Ember.getOwner(this).knownForType('layer', className);
 
-        let pks = Ember.A();
+        let featureIds = Ember.A();
 
         initialLayers.forEach((layer) => {
           let editTools = this._getEditTools();
@@ -710,13 +731,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             delete leafletObject.changes[id];
           }
 
-          pks.push(Ember.get(layer, 'feature.properties.primarykey'));
+          featureIds.push(Ember.get(layer, 'feature.properties.primarykey'));
         });
 
         let promise;
 
         if (layerType instanceof WfsLayer) {
-          let filters = pks.map((pk) => {
+          let filters = featureIds.map((pk) => {
             return new L.Filter.EQ('primarykey', pk);
           });
 
@@ -730,7 +751,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           promise = leafletObject.loadFeatures(filter);
         } else if (layerType instanceof OdataLayer) {
           let e = {
-            featureIds: pks
+            featureIds: featureIds
           };
 
           promise = leafletObject.loadLayerFeatures(e);
@@ -761,6 +782,20 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     }
   },
 
+  _updateLabels() {
+    let [_this, layer] = this;
+
+    if (_this.get('mode') === 'Create') {
+      return;
+    }
+
+    let leafletObject = _this.get('leafletObject');
+
+    if (Ember.get(leafletObject, 'updateLabel') && typeof (leafletObject.updateLabel) === 'function') {
+      leafletObject.updateLabel(layer);
+    }
+  },
+
   actions: {
 
     blockForm(block) {
@@ -785,13 +820,14 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       if (zoom) {
         this.send('zoomTo', [layer.feature]);
-        this.get('serviceLayer').clearLayers();
+        this.send('clearSelected');
       }
 
       let index = this.get('curIndex');
       this.set(`layers.${index}`, layer);
 
       layer.fire('create-layer:change', { layer: layer });
+      this._updateLabels.apply([this, layer]);
     },
 
     setGeometryTool(tool) {
@@ -976,6 +1012,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           this.get('leafletMap').fire(event + ':fail', e);
         }).catch(() => {
           // не удалось ни сохранить, ни восстановить слои. непонятно что делать
+          console.log('Save and restore layer error');
         });
       };
 
@@ -984,6 +1021,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         leafletObject.off('save:failed', saveFailed);
 
         if (!Ember.isNone(data.layers) && Ember.isArray(data.layers)) {
+          data.layers.forEach((layer) => {
+            if (Ember.isNone(Ember.get(layer, 'feature.leafletLayer'))) {
+              Ember.set(layer.feature, 'leafletLayer', layer);
+            }
+          });
+
           Ember.set(e, 'layers', data.layers);
         }
 

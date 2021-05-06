@@ -28,6 +28,7 @@ export default {
   'goto': 'Go to',
   'difference': 'Difference polygon',
   'choice-spliter': 'Select a polygon that will be subtracted',
+  'spliter-error': 'Selected polygons is not intersected',
   'split-geometry': 'Split geometry',
   'combined-polygon': 'Union polygon',
   'buffer': {

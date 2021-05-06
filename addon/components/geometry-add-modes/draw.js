@@ -76,6 +76,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     y: null
   },
 
+  _moveEnabled: false,
+
   /**
     Component settings.
   */
@@ -273,10 +275,10 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     let dragLayer = this.get('_dragLayer');
 
     let moveLayer = (layer) => {
-      if (layer instanceof L.Marker) {
-        newCoords = moveCoords(layer._latlng);
+      if (layer.getLatLngs) {
+        newCoords = moveCoords(layer.getLatLngs());
       } else {
-        newCoords = moveCoords(layer._latlngs);
+        newCoords = moveCoords(layer.getLatLng());
       }
 
       // set new coordinates and redraw
@@ -288,7 +290,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
       let label = this.get('_dragLayer._label');
       if (label) {
-        newCoords = moveCoords(label._latlng);
+        newCoords = moveCoords(label.getLatLng());
         label.setLatLng(newCoords);
       }
     };
@@ -373,12 +375,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         } else {
           layer.setLatLng(newLatLngs);
         }
-
-        let label = this.get('layer._label');
-        if (label) {
-          newLatLngs = this.move(label.getLatLng(), _moveX, _moveY, crs);
-          label.setLatLng(newLatLngs);
-        }
       }
 
       layer.enableEdit();
@@ -393,6 +389,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       @param {String} geometryType Selected geometry type.
     */
     onMoveSelect(geometryType) {
+      let curGeometryType = this.get('geometryType');
+
       this.set('_moveWithError', false);
       this.set('geometryType', geometryType);
 
@@ -404,9 +402,15 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       let leafletMap = this.get('leafletMap');
       leafletMap.flexberryMap.tools.enableDefault();
 
-      if (geometryType === 'move') {
-        let enable = this.get('_moveEnabled');
-        this._dragAndDrop(!enable);
+      if (geometryType === 'move' && curGeometryType !== 'move') {
+        this._dragAndDrop(true);
+      } else {
+        if (geometryType === 'move') {
+          // единственный выключаемый инструмент
+          this.set('geometryType', null);
+        }
+
+        this._dragAndDrop(false);
       }
     },
 
@@ -538,6 +542,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         this.sendAction('updateLayer', layer, false);
       }
     }
+
+    this.set('geometryType', null);
   }
 });
 

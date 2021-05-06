@@ -660,21 +660,21 @@ let FlexberryMapComponent = Ember.Component.extend(
       let intersect = false;
 
       const checkIntersect = (layer) => {
-        let i = false;
+        let innerLayerIntersect = false;
         if (typeof (layer.eachLayer) === 'function') {
           layer.eachLayer(function (l) {
-            i = i || checkIntersect(l);
-            if (i) {
-              return i;
+            innerLayerIntersect = innerLayerIntersect || checkIntersect(l);
+            if (innerLayerIntersect) {
+              return innerLayerIntersect;
             }
           });
         } else {
           if (typeof (layer._containsPoint) === 'function') {
-            i = i || layer._containsPoint(point);
+            innerLayerIntersect = innerLayerIntersect || layer._containsPoint(point);
           }
         }
 
-        return i;
+        return innerLayerIntersect;
       };
 
       leafletMap.eachLayer((l) => {

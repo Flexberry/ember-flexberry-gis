@@ -107,7 +107,7 @@ export default BaseVectorLayer.extend({
           L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
           if (leafletMap.hasLayer(layer._label)) {
             leafletMap.removeLayer(layer._label);
-            let id = leafletObject.getLayerId(layer._label);
+            let id = leafletObject.getLayerId(layer._label);
             delete leafletObject._labelsLayer[id];
           }
         });
@@ -160,13 +160,22 @@ export default BaseVectorLayer.extend({
     }
 
     // Changes label when edit layer feature
+    this.updateLabel(layer);
+
+    return leafletObject;
+  },
+
+  /**
+    Update label's layer
+  */
+  updateLabel(layer) {
+    let leafletObject = this.get('_leafletObject');
+
     if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
       layer._label = null;
       this._createStringLabel(leafletObject._labelsLayer, [layer]);
     }
-
-    return leafletObject;
   },
 
   /**
@@ -335,7 +344,7 @@ export default BaseVectorLayer.extend({
         const proxy = this;
         return { get value() { return proxy.get(target, name); }, configurable: true, enumerable: true, writable: true };
       },
-      has: function(target, prop) {
+      has: function (target, prop) {
         return target.has(prop);
       },
     });
@@ -705,7 +714,7 @@ export default BaseVectorLayer.extend({
   */
   createProjection(jsonModel) {
     let projectionName = this.get('projectionName');
-    let projJson = jsonModel.projections.filter(proj=>proj.name === projectionName);
+    let projJson = jsonModel.projections.filter(proj => proj.name === projectionName);
     let modelProjection = {};
     if (projJson.length > 0) {
       projJson[0].attrs.forEach((attr) => {
@@ -903,6 +912,7 @@ export default BaseVectorLayer.extend({
     layer.models = Ember.A();
     layer.clearLayers = this.get('clearLayers').bind(this);
     layer.cancelEdit = this.get('cancelEdit').bind(this);
+    layer.updateLabel = this.get('updateLabel').bind(this);
 
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
@@ -1395,7 +1405,7 @@ export default BaseVectorLayer.extend({
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       leafletMap.on('moveend', () => { this.continueLoad(); });
-      leafletMap.on('flexberry-map:moveend',  this._continueLoad, this);
+      leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
     }
   },
 

@@ -188,6 +188,15 @@ export default BaseVectorLayer.extend({
     leafletObject.baseEditLayer(layer);
 
     // Changes label when edit layer feature
+    this.updateLabel(layer);
+  },
+
+  /**
+    Update label's layer
+  */
+  updateLabel(layer) {
+    let leafletObject = this.get('_leafletObject');
+
     if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
       layer._label = null;
@@ -229,6 +238,12 @@ export default BaseVectorLayer.extend({
           var layers = that.readFormat.responseToLayers(responseText, {
             coordsToLatLng: that.options.coordsToLatLng,
             pointToLayer: that.options.pointToLayer
+          });
+
+          layers.forEach(function (element) {
+            if (!Ember.isNone(Ember.get(element, 'feature')) && Ember.isNone(Ember.get(element, 'feature.leafletLayer'))) {
+              Ember.set(element.feature, 'leafletLayer', element);
+            }
           });
 
           if (typeof that.options.style === 'function') {
@@ -343,6 +358,7 @@ export default BaseVectorLayer.extend({
 
           wfsLayer.reload = this.get('reload').bind(this);
           wfsLayer.cancelEdit = this.get('cancelEdit').bind(this);
+          wfsLayer.updateLabel = this.get('updateLabel').bind(this);
 
           if (!Ember.isNone(leafletMap)) {
             let thisPane = this.get('_pane');

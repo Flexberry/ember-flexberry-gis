@@ -211,17 +211,26 @@
       }
     }
 
+    .flexberry-export-map-command-dialog-preview-column {
+      display: flex;
+      justify-content: center;
+
+      .flexberry-export-map-command-dialog-sheet-of-paper,
+      .flexberry-export-map-command-dialog-sheet-of-legend,
+      .flexberry-export-map-command-dialog-paging-column {
+        float: left;
+      }
+    }
+
     .flexberry-export-map-command-dialog-paging-column {
       .ui.button.active{
         border: 1px solid @mediumbluecolor;
       }
 
-      display: flex;
-      justify-content: flex-end;
-      height: 60px;
+      display: block;
 
       .field label {
-        margin: 0 0 0 10px;
+        margin: 0;
       }
     }
 
@@ -269,7 +278,7 @@
   width: 100%;
   height: 100%;
   padding: 14px;
-  margin: 0 auto;
+  margin: 0;
   display: block;
   overflow: hidden;
 

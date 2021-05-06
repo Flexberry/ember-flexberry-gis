@@ -117,6 +117,7 @@ const flexberryClassNames = {
   wrapper: null,
   content: 'flexberry-dialog-content',
   settingsColumn: flexberryClassNamesPrefix + '-settings-column',
+  settingsColumnInner: flexberryClassNamesPrefix + '-settings-column-inner',
   previewColumn: flexberryClassNamesPrefix + '-preview-column',
   sheetOfPaper: flexberryClassNamesPrefix + '-sheet-of-paper',
   sheetOfLegend: flexberryClassNamesPrefix + '-sheet-of-legend',
@@ -398,21 +399,20 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     '_sheetOfPaperRealWidth',
     '_options.paperOrientation',
     function () {
-      let paperOrientation = this.get('_options.paperOrientation');
+      let sheetOfPaperInitialWidth = this.get('_sheetOfPaperInitialWidth');
+      let sheetOfPaperRealWidth = this.get('_sheetOfPaperRealWidth');
+
+      let sheetOfPaperInitialHeight = this.get('_sheetOfPaperInitialHeight');
+      let sheetOfPaperRealHeight = this.get('_sheetOfPaperRealHeight');
 
       let sheetOfPaperPreviewScaleFactor;
-      if (paperOrientation === 'landscape') {
-        let sheetOfPaperInitialWidth = this.get('_sheetOfPaperInitialWidth');
-        let sheetOfPaperRealWidth = this.get('_sheetOfPaperRealWidth');
-        if (!Ember.isNone(sheetOfPaperInitialWidth) && !Ember.isNone(sheetOfPaperRealWidth)) {
-          sheetOfPaperPreviewScaleFactor = sheetOfPaperInitialWidth / sheetOfPaperRealWidth;
-        }
-      } else {
-        let sheetOfPaperInitialHeight = this.get('_sheetOfPaperInitialHeight');
-        let sheetOfPaperRealHeight = this.get('_sheetOfPaperRealHeight');
-        if (!Ember.isNone(sheetOfPaperInitialHeight) && !Ember.isNone(sheetOfPaperRealHeight)) {
-          sheetOfPaperPreviewScaleFactor = (sheetOfPaperInitialHeight - 60) / sheetOfPaperRealHeight;
-        }
+
+      if (!Ember.isNone(sheetOfPaperInitialWidth) && !Ember.isNone(sheetOfPaperRealWidth) &&
+        !Ember.isNone(sheetOfPaperInitialHeight) && !Ember.isNone(sheetOfPaperRealHeight)) {
+        let widthScale = sheetOfPaperInitialWidth / sheetOfPaperRealWidth;
+        let heightScale = sheetOfPaperInitialHeight / sheetOfPaperRealHeight;
+
+        sheetOfPaperPreviewScaleFactor = widthScale < heightScale ? widthScale : heightScale;
       }
 
       return sheetOfPaperPreviewScaleFactor;
@@ -1570,9 +1570,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
       // Invalidate map size and then fit it's bounds again.
       return this._invalidateSizeOfLeafletMap();
-    }).then(() => {
-      return this._fitBoundsOfLeafletMap(leafletMapInitialBounds);
-    });
+    }).then(() => { return this._fitBoundsOfLeafletMap(leafletMapInitialBounds); });
   },
 
   /**
@@ -1973,12 +1971,11 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     this._super(...arguments);
 
     let dialogComponent = this.get(`childViews`)[0];
-    let $sheetOfPaper = dialogComponent.$(`.${flexberryClassNames.sheetOfPaper}`);
     let $previewColumn = dialogComponent.$(`.${flexberryClassNames.previewColumn}`);
-    let $content = dialogComponent.$(`.${flexberryClassNames.content}`);
+    let $settingsColumnInner = dialogComponent.$(`.${flexberryClassNames.settingsColumnInner}`);
 
-    this.set('_sheetOfPaperInitialHeight', $sheetOfPaper.outerHeight() > $content.outerHeight() ? $content.outerHeight() : $sheetOfPaper.outerHeight());
-    this.set('_sheetOfPaperInitialWidth', $previewColumn.outerWidth());
+    this.set('_sheetOfPaperInitialHeight', $settingsColumnInner.outerHeight());
+    this.set('_sheetOfPaperInitialWidth', $previewColumn.width() - 60);
 
     this.set('_isDialogAlreadyRendered', true);
   },

@@ -4,18 +4,21 @@
       tooltip=(t "components.geometry-add-modes.draw.draw-rectangle.caption")
       click=(action "onGeometryTypeSelect" "rectangle")
       iconClass="flexberry-map-tool-icon square outline icon"
+      class=(if (eq geometryType "rectangle") "active")
       readonly=edit
     }}
     {{flexberry-button
       tooltip=(t "components.geometry-add-modes.draw.draw-polygon.caption")
       click=(action "onGeometryTypeSelect" "polygon")
       iconClass="flexberry-map-tool-icon poly icon"
+      class=(if (eq geometryType "polygon") "active")
       readonly=edit
     }}
     {{flexberry-button
       tooltip=(t "components.geometry-add-modes.draw.draw-multi-polygon.caption")
       click=(action "onGeometryTypeSelect" "multyPolygon")
       iconClass="flexberry-map-tool-icon multi-poly icon"
+      class=(if (eq geometryType "multyPolygon") "active")
       readonly=(not edit)
     }}
   {{/if}}
@@ -24,12 +27,14 @@
       tooltip=(t "components.geometry-add-modes.draw.draw-polyline.caption")
       click=(action "onGeometryTypeSelect" "polyline")
       iconClass="flexberry-map-tool-icon line icon"
+      class=(if (eq geometryType "polyline") "active")
       readonly=edit
     }}
     {{flexberry-button
       tooltip=(t "components.geometry-add-modes.draw.draw-multi-line.caption")
       click=(action "onGeometryTypeSelect" "multyLine")
       iconClass="flexberry-map-tool-icon multi-line icon"
+      class=(if (eq geometryType "multyLine") "active")
       readonly=(not edit)
     }}
   {{/if}}
@@ -39,13 +44,14 @@
       tooltip=(t "components.geometry-add-modes.draw.move.caption")
       click=(action "onMoveSelect" "move")
       iconClass="flexberry-map-tool-icon move icon"
-      class=(if _moveEnabled "active" "")
+      class=(if (eq geometryType "move") "active")
       readonly=(not edit)
     }}
     {{flexberry-button
       tooltip=(t "components.geometry-add-modes.draw.movexy.caption")
       click=(action "onMoveSelect" "movexy")
       iconClass="flexberry-map-tool-icon movexy icon"
+      class=(if (eq geometryType "movexy") "active")
       readonly=(not edit)
     }}
   {{/if}}
@@ -68,7 +74,7 @@
       }}
     {{/if}}
 
-    <div class="offset">
+    <div class="offset ui form">
       <div class="offset-inner">
         <div class="field {{if _offsetInvalid.x "error" ""}}">
           <label>

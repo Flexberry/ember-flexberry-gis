@@ -28,6 +28,7 @@ export default {
   'goto': 'Перейти',
   'difference': 'Вычитание полигонов',
   'choice-spliter': 'Выберите полигон, который будет вычитаться',
+  'spliter-error': 'Выбранные полигоны не пересекаются',
   'split-geometry': 'Разбить геометрию',
   'combined-polygon': 'Объединить полигоны',
   'buffer': {

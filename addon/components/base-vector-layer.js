@@ -939,7 +939,7 @@ export default BaseLayer.extend({
       try {
         let centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
         if (!objJsts.isValid()) {
-          console.log(layer.toGeoJSON().id);
+          console.warn(layer.toGeoJSON().id + ' is not valid');
         }
 
         let geojsonWriter = new jsts.io.GeoJSONWriter();
