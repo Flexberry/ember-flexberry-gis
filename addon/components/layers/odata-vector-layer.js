@@ -122,7 +122,7 @@ export default BaseVectorLayer.extend({
           leafletObject.fire('save:success', { layers: [] });
         }
       }).catch(function (e) {
-        console.log('Error save: ' + e);
+        console.error('Error save: ' + e);
         leafletObject.fire('save:failed', e);
       });
     } else {
@@ -616,7 +616,6 @@ export default BaseVectorLayer.extend({
     const geometryField = this.get('geometryField') || 'geometry';
     const geometry = model.get(geometryField);
     if (!geometry) {
-      console.log('No geometry specified for layer');
       return;
     }
 
@@ -1141,7 +1140,7 @@ export default BaseVectorLayer.extend({
           resolve(leafletObject);
         }
       } catch (e) {
-        console.log(e);
+        reject(e);
       }
     });
   },
@@ -1279,7 +1278,7 @@ export default BaseVectorLayer.extend({
           }
         }
       } catch (e) {
-        console.log(e);
+        reject(e);
       }
     });
   },

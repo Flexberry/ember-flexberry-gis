@@ -317,7 +317,7 @@ export default Ember.Component.extend({
           });
 
           if (!layerObject) {
-            console.log('Object not found');
+            console.error('Object not found');
             return;
           }
 

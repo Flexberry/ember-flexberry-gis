@@ -524,8 +524,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     if (e.layers.filter((l) => {
       return Ember.isNone(l.leafletLayer);
     }).length > 0) {
-      console.log(e.layers);
-      console.log(e.layers[0].feature.properties);
       return;
     }
 

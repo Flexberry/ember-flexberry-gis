@@ -61,7 +61,7 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
             }
           });
         } else {
-          console.log('Error batch: ' + result.response.body);
+          console.error('Error batch: ' + result.response.body);
         }
 
         return resolve(Ember.run(store, store.push, normalizedRecords));

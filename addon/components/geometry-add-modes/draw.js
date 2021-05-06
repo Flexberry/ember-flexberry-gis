@@ -167,7 +167,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       });
     }
     catch (ex) {
-      console.log(ex);
+      console.error(ex);
 
       if (enable) {
         panes = Object.values(leafletMap.getPanes());

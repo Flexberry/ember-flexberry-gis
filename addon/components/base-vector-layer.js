@@ -938,10 +938,6 @@ export default BaseLayer.extend({
 
       try {
         let centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
-        if (!objJsts.isValid()) {
-          console.log(layer.toGeoJSON().id);
-        }
-
         let geojsonWriter = new jsts.io.GeoJSONWriter();
         let centroid = geojsonWriter.write(centroidJsts);
         latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0]);

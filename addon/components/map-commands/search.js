@@ -285,7 +285,6 @@ let SearchMapCommandComponent = Ember.Component.extend({
       let leafletMap = this.get('leafletMap');
       let mapCommandName = 'search-attributes';
       let mapCommandProperties = this.get('_searchCommandProperties');
-      console.log(mapCommandProperties);
       this.set('_searchIsInProgress', true);
       leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, e).then(res=> {
         res[0].features.then(result=> {
