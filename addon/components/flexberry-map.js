@@ -232,11 +232,11 @@ let FlexberryMapComponent = Ember.Component.extend(
   /**
     Flag: indicates this is main map.
 
-    @property isMainMap
+    @property mainMap
     @type Boolean
     @default false
   */
-  isMainMap: false,
+   mainMap: false,
 
   /**
     Injects additional methods into initialized leaflet map.
@@ -487,13 +487,13 @@ let FlexberryMapComponent = Ember.Component.extend(
     this.set('_leafletObject', leafletMap);
 
     // Perform initializations.
-    if (this.get('isMainMap')) {
+    if (this.get('mainMap')) {
       this.willInitLeafletMap(leafletMap);
     }
 
     this.initLeafletMap(leafletMap);
 
-    if (this.get('isMainMap')) {
+    if (this.get('mainMap')) {
       this.initServiceLayer(leafletMap);
       this.initClickOnPanes(leafletMap);
 
@@ -579,7 +579,7 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     let leafletMap = this.get('_leafletObject');
     if (!Ember.isNone(leafletMap)) {
-      if (this.get('isMainMap')) {
+      if (this.get('mainMap')) {
         this.destroyServiceLayer(leafletMap);
         this.willDestroyLeafletMap(leafletMap);
       }
@@ -650,7 +650,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     this.sendAction('leafletInit', {
       map: leafletMap
     });
-    if (this.get('isMainMap')) {
+    if (this.get('mainMap')) {
       this.get('mapApi').addToApi('leafletMap', leafletMap);
     }
   },
@@ -740,24 +740,26 @@ let FlexberryMapComponent = Ember.Component.extend(
     this.set('_leafletObject', null);
     this.set('_$leafletContainer', null);
 
-    if (this.get('_hasQueryApi')) {
-      this.get('mapApi').addToApi('runQuery', undefined);
-    }
+    if  (this.get('mainMap')) {
+      if (this.get('_hasQueryApi')) {
+        this.get('mapApi').addToApi('runQuery', undefined);
+      }
 
-    if (this.get('_hasQueryToMap')) {
-      this.get('mapApi').addToApi('queryToMap', undefined);
-    }
+      if (this.get('_hasQueryToMap')) {
+        this.get('mapApi').addToApi('queryToMap', undefined);
+      }
 
-    if (this.get('_hasCreateObjectApi')) {
-      this.get('mapApi').addToApi('createObject', undefined);
-    }
+      if (this.get('_hasCreateObjectApi')) {
+        this.get('mapApi').addToApi('createObject', undefined);
+      }
 
-    if (this.get('_hasLeafletMap') && this.get('isMainMap')) {
-      this.get('mapApi').addToApi('leafletMap', undefined);
-    }
+      if (this.get('_hasLeafletMap')) {
+        this.get('mapApi').addToApi('leafletMap', undefined);
+      }
 
-    if (this.get('_hasServiceLayer')) {
-      this.get('mapApi').addToApi('serviceLayer', undefined);
+      if (this.get('_hasServiceLayer')) {
+        this.get('mapApi').addToApi('serviceLayer', undefined);
+      }
     }
 
     this.sendAction('leafletDestroy');
