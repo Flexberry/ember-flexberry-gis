@@ -482,7 +482,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @type String
       @default ''
     */
-   disabled: '',
+    disabled: '',
 
     /**
       Initializes DOM-related component's properties.

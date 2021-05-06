@@ -230,6 +230,15 @@ let FlexberryMapComponent = Ember.Component.extend(
   mapApi: Ember.inject.service(),
 
   /**
+    Flag: indicates this is main map.
+
+    @property isMainMap
+    @type Boolean
+    @default false
+  */
+  isMainMap: false,
+
+  /**
     Injects additional methods into initialized leaflet map.
 
     @method _injectMapLoaderMethods
@@ -478,49 +487,55 @@ let FlexberryMapComponent = Ember.Component.extend(
     this.set('_leafletObject', leafletMap);
 
     // Perform initializations.
-    this.willInitLeafletMap(leafletMap);
-    this.initLeafletMap(leafletMap);
-    this.initServiceLayer(leafletMap);
-    this.initClickOnPanes(leafletMap);
+    if (this.get('isMainMap')) {
+      this.willInitLeafletMap(leafletMap);
+    }
 
-    // Run search query if 'queryFilter' is defined.
-    let queryFilter = this.get('queryFilter');
-    let mapObjectSetting = this.get('mapObjectSetting');
-    if (!Ember.isBlank(queryFilter)) {
+    this.initLeafletMap(leafletMap);
+
+    if (this.get('isMainMap')) {
+      this.initServiceLayer(leafletMap);
+      this.initClickOnPanes(leafletMap);
+
+      // Run search query if 'queryFilter' is defined.
+      let queryFilter = this.get('queryFilter');
+      let mapObjectSetting = this.get('mapObjectSetting');
+      if (!Ember.isBlank(queryFilter)) {
+        Ember.run.scheduleOnce('afterRender', this, function () {
+          this._runQuery(queryFilter, mapObjectSetting);
+        });
+      }
+
+      const mapApi = this.get('mapApi');
+      if (Ember.isNone(mapApi.getFromApi('runQuery'))) {
+        mapApi.addToApi('runQuery', this._runQuery.bind(this));
+        this.set('_hasQueryApi', true);
+      }
+
+      if (Ember.isNone(mapApi.getFromApi('queryToMap'))) {
+        mapApi.addToApi('queryToMap', this._queryToMap.bind(this));
+        this.set('_hasQueryToMap', true);
+      }
+
+      if (Ember.isNone(mapApi.getFromApi('createObject'))) {
+        mapApi.addToApi('createObject', this._createObject.bind(this));
+        this.set('_hasCreateObjectApi', true);
+      }
+
+      if (Ember.isNone(mapApi.getFromApi('leafletMap'))) {
+        mapApi.addToApi('leafletMap', leafletMap);
+        this.set('_hasLeafletMap', true);
+      }
+
+      if (Ember.isNone(mapApi.getFromApi('serviceLayer'))) {
+        mapApi.addToApi('serviceLayer', this.get('serviceLayer'));
+        this.set('_hasServiceLayer', true);
+      }
+
       Ember.run.scheduleOnce('afterRender', this, function () {
-        this._runQuery(queryFilter, mapObjectSetting);
+        this.load(leafletMap, mapApi);
       });
     }
-
-    const mapApi = this.get('mapApi');
-    if (Ember.isNone(mapApi.getFromApi('runQuery'))) {
-      mapApi.addToApi('runQuery', this._runQuery.bind(this));
-      this.set('_hasQueryApi', true);
-    }
-
-    if (Ember.isNone(mapApi.getFromApi('queryToMap'))) {
-      mapApi.addToApi('queryToMap', this._queryToMap.bind(this));
-      this.set('_hasQueryToMap', true);
-    }
-
-    if (Ember.isNone(mapApi.getFromApi('createObject'))) {
-      mapApi.addToApi('createObject', this._createObject.bind(this));
-      this.set('_hasCreateObjectApi', true);
-    }
-
-    if (Ember.isNone(mapApi.getFromApi('leafletMap'))) {
-      mapApi.addToApi('leafletMap', leafletMap);
-      this.set('_hasLeafletMap', true);
-    }
-
-    if (Ember.isNone(mapApi.getFromApi('serviceLayer'))) {
-      mapApi.addToApi('serviceLayer', this.get('serviceLayer'));
-      this.set('_hasServiceLayer', true);
-    }
-
-    Ember.run.scheduleOnce('afterRender', this, function () {
-      this.load(leafletMap, mapApi);
-    });
   },
 
   /**
@@ -564,8 +579,11 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     let leafletMap = this.get('_leafletObject');
     if (!Ember.isNone(leafletMap)) {
-      this.destroyServiceLayer(leafletMap);
-      this.willDestroyLeafletMap(leafletMap);
+      if (this.get('isMainMap')) {
+        this.destroyServiceLayer(leafletMap);
+        this.willDestroyLeafletMap(leafletMap);
+      }
+
       this.destroyLeafletMap(leafletMap);
     }
   },
@@ -578,10 +596,6 @@ let FlexberryMapComponent = Ember.Component.extend(
   willInitLeafletMap(leafletMap) {
     // Add 'flexberryMap' namespace to leafletMap.
     leafletMap.flexberryMap = {};
-
-    // Temporary store leafletMap as global object to simplify debugging.
-    // TODO: Remove it before changes will be pushed to origin.
-    window.leafletMap = leafletMap;
 
     // See 'willInitLeafletMap' implementations in mixins which are mixed to 'leaflet-map'.
     this._super(...arguments);
@@ -598,10 +612,6 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     // Remove 'flexberryMap' namespace forom leafletMap.
     delete leafletMap.flexberryMap;
-
-    // Temporary store leafletMap as global object to simplify debugging.
-    // TODO: Remove it before changes will be pushed to origin.
-    delete window.leafletMap;
   },
 
   /**
@@ -640,7 +650,9 @@ let FlexberryMapComponent = Ember.Component.extend(
     this.sendAction('leafletInit', {
       map: leafletMap
     });
-    this.get('mapApi').addToApi('leafletMap', leafletMap);
+    if (this.get('isMainMap')) {
+      this.get('mapApi').addToApi('leafletMap', leafletMap);
+    }
   },
 
   initClickOnPanes(leafletMap) {
@@ -740,7 +752,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       this.get('mapApi').addToApi('createObject', undefined);
     }
 
-    if (this.get('_hasLeafletMap')) {
+    if (this.get('_hasLeafletMap') && this.get('isMainMap')) {
       this.get('mapApi').addToApi('leafletMap', undefined);
     }
 
