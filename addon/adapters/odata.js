@@ -65,7 +65,7 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
         }
 
         return resolve(Ember.run(store, store.push, normalizedRecords));
-      } catch(e) {
+      } catch (e) {
         return reject(e);
       }
     }).fail(reject));
