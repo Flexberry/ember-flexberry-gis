@@ -118,7 +118,7 @@ export default EditFormController.extend(
         try {
           return JSON.parse(filter);
         } catch (e) {
-          console.log('Wrong JSON query filter string: ' + filter);
+          console.error('Wrong JSON query filter string: ' + filter);
         }
       }
 

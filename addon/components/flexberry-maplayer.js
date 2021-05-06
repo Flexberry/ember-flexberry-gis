@@ -476,11 +476,21 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     isGroup: false,
 
     /**
+      CSS class 'disabled' if layer is group.
+
+      @property disabled
+      @type String
+      @default ''
+    */
+    disabled: '',
+
+    /**
       Initializes DOM-related component's properties.
     */
     didInsertElement() {
       if (this.get('layer.type') === 'group') {
         this.set('isGroup', true);
+        this.set('disabled', 'disabled');
       }
 
       if (!this.get('readonly')) {

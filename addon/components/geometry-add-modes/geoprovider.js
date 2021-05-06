@@ -292,7 +292,7 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
       this.set('_queryResultsTotalCount', result.total);
 
     }).catch(() => {
-      console.log(arguments);
+      console.error(arguments);
     }).finally(() => {
       this.set('_loading', false);
     });

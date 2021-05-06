@@ -13,9 +13,9 @@
   {{#block-slot "header"}}
     <div class="flexberry-treenode-header-block">
       <div class="flexberry-treenode-caption-block">
-        {{#if (and (not-eq layer.type 'group') compareLayersEnabled)}}
+        {{#if compareLayersEnabled}}
           {{flexberry-ddau-checkbox
-            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse " " layer.type)
+            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse " " layer.type " " disabled)
             value=layer.visibility
             change=(action "onChange")
             readonly=(and (not-eq side layer.side) (not-eq layer.side null) true)
