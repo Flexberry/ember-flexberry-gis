@@ -236,7 +236,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     @type Boolean
     @default false
   */
-   mainMap: false,
+  mainMap: false,
 
   /**
     Injects additional methods into initialized leaflet map.
@@ -740,7 +740,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     this.set('_leafletObject', null);
     this.set('_$leafletContainer', null);
 
-    if  (this.get('mainMap')) {
+    if (this.get('mainMap')) {
       if (this.get('_hasQueryApi')) {
         this.get('mapApi').addToApi('runQuery', undefined);
       }
