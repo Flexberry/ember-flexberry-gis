@@ -24,9 +24,6 @@ import * as distance from 'npm:@turf/distance';
 import * as midpoint from 'npm:@turf/midpoint';
 import * as union from 'npm:@turf/union';
 import intersect from 'npm:@turf/intersect';
-import {
-  translationMacro as t
-} from 'ember-i18n';
 
 /**
   The component for editing layers attributes.

@@ -557,6 +557,10 @@
             border-radius: 3px;
             box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.1);
             border: 1px solid #b1cae8;
+
+            &.geoprovider-search {
+              width: 35px;
+            }
           }
 
           .draw-tools {
