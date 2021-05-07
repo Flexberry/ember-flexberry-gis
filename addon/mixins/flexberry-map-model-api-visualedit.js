@@ -353,11 +353,7 @@ export default Ember.Mixin.create(SnapDraw, {
   */
   _getModelLayerFeature(layerId, featureIds, load = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let [, leafletObject] = this._getModelLeafletObject(layerId);
-      let leafletMap = leafletObject._map;
-      if (Ember.isNone(leafletMap)) {
-        leafletMap = this.get('mapApi').getFromApi('leafletMap');
-      }
+      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
       let e = {
         featureIds: featureIds,
