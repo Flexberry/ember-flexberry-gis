@@ -248,7 +248,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       return this.getObjectWithProperties(nonIntersectionRes, displayCrs);
     }
 
-    return {area: '0.000', intersectionCoordsText: ''};
+    return { area: '0.000', intersectionCoordsText: '' };
   },
 
   getObjectWithProperties(feature, displаyCrs) {
