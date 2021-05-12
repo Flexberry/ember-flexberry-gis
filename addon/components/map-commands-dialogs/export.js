@@ -1686,7 +1686,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       $legendControlMap.attr('style', this.get('_mapCaptionRealStyle'));
 
       // Replace interactivva map inside dialog with it's static clone for a while.
-      $sheetOfPaperClone.appendTo($sheetOfPaperParent[0]);
+      $sheetOfPaperClone.prependTo($sheetOfPaperParent[0]);
 
       if (pageNumber === '2') {
         resolve();
@@ -1854,7 +1854,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       this.set('_$sheetOfPaperClone', null);
 
       // Place sheet of papaer in the preview dialog again.
-      $sheetOfPaper.appendTo($sheetOfPaperParent[0]);
+      $sheetOfPaper.prependTo($sheetOfPaperParent[0]);
 
       let $body = $sheetOfPaper.closest('body');
       $body.css('height', '');
