@@ -12,3 +12,19 @@
 @tabularMenuItemDisabledIconColor: #999 !important;
 
 @fieldButtonColor: @darkbluecolor;
+
+// ====== RGIS ========
+@border: none;
+@boxShadow: rgb(136, 136, 136) 0px 0px 6px;
+
+@headerBackground: @backgroundGradient;
+
+@positiveButtonHoverColor: @lightgrassGreenColor !important;
+@positiveButtonActiveColor: @primaryColor !important;
+@negativeButtonHoverColor: @veryLightBlueColor !important;
+@negativeButtonActiveColor: @middlegraycolor !important;
+
+@tabularMenuItemColor: @textColor;
+@layersFieldsContainerBorderColor: @controlBorderColor;
+
+@modalSegmentButtonsHoveredColor: @white !important;
