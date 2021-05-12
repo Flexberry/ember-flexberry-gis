@@ -16,8 +16,7 @@ module.exports = {
     // Import extensions for jQuery 'resize' method ($('...').resize(...)).
     app.import('vendor/jquery/jquery.resize.extensions.js');
 
-    app.import('vendor/jquery/jquery-ui-draggable-resizable.min.css');
-    app.import('vendor/jquery/jquery-ui-draggable-resizable.min.js');
+    app.import('vendor/jquery/jquery.drag-resize.js');
 
     // Import Leaflet library & it's resources.
     // Leaflet must be prepended (imported with prepend: true option),

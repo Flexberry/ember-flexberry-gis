@@ -68,9 +68,14 @@ export default Ember.Component.extend({
       }
 
       this.$().css('position', 'absolute');
-      this.$().draggable({ containment: container, scroll: false });
+      this.$().dragOrResize({ mode: 'drag', containment: container });
 
       this.setVisibility();
     }
-  }
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    this.$().dragOrResize('destroy');
+  },
 });
