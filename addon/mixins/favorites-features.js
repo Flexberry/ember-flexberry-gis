@@ -16,6 +16,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
   */
   result: Ember.A(),
 
+  favorites: Ember.A(),
+
   /**
     Array of 2 features that will be compared.
     @property twoObjectToCompare
@@ -81,19 +83,15 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
   _onLeafletMapDidChange: Ember.observer('leafletMap', function () {
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
-      leafletMap.on('flexberry-map:load', (e) => {
-        Ember.RSVP.allSettled(e.results).then(() => {
-          let store = this.get('store');
-          let idFeaturesArray = store.findAll('i-i-s-r-g-i-s-p-k-favorite-features');
-          idFeaturesArray.then((result) => {
-            // TODO: change favorite features behavior for loading data only at open favorites tab
-            // Now it is broken such as try to get feature that not loaded yet
-            //this.fromIdArrayToFeatureArray(result);
-          });
-        });
-      });
+      leafletMap.on('flexberry-map:loadFavorites', this.fromIdArrayToFeatureArray, this);
     }
   }),
+
+  willDestroyElement() {
+    this._super(...arguments);
+    let leafletMap = this.get('leafletMap');
+    leafletMap.off('flexberry-map:loadFavorites', this.fromIdArrayToFeatureArray, this);
+  },
 
   /**
     Injected ember storage.
@@ -120,7 +118,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
           let record = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
             .filterBy('objectKey', feature.properties.primarykey)
             .filterBy('objectLayerKey', feature.layerModel.id);
-          record[0].destroyRecord();
+          record[0].deleteRecord();
+          record[0].save();
         }
 
         Ember.set(feature.properties, 'isFavorite', false);
@@ -261,52 +260,82 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
 
     @method fromIdArrayToFeatureArray
   */
-  fromIdArrayToFeatureArray(favFeaturesIds) {
-    let favFeatures = Ember.A();
-    favFeaturesIds.forEach(layer => {
-      let [layerModel, featureLayer] = this.getModelLayerFeature(layer.get('objectLayerKey'), layer.get('objectKey'));
-      featureLayer.feature.leafletLayer = L.geoJSON(featureLayer.feature, { color: featureLayer.options.color });
-      featureLayer.feature.layerModel = layerModel;
-      Ember.set(featureLayer.feature.properties, 'isFavorite', true);
-      let layerModelIndex = this.isLayerModelInArray(favFeatures, layerModel);
-      if (layerModelIndex !== false) {
-        favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, featureLayer.feature);
-      } else {
-        favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, layerModel, featureLayer.feature);
-      }
-    });
+  fromIdArrayToFeatureArray() {
+    let store = this.get('store');
+    let idFeaturesArray = store.findAll('i-i-s-r-g-i-s-p-k-favorite-features');
+    idFeaturesArray.then((favorites) => {
+      let favFeaturesArray = Ember.A();
+      favorites.forEach(layer => {
+        let id = this.isLayerModelInArray(favFeaturesArray, {id: layer.get('objectLayerKey')})
+        if(id !== false) {
+          favFeaturesArray[id].features.push(layer.get('objectKey'));
+        } else {
 
-    let layerModelPromise = Ember.A();
-    favFeatures.forEach(object => {
-      let promise = new Ember.RSVP.Promise((resolve) => {
-        resolve(object.features);
+          favFeaturesArray.addObject({layerModel: {id: layer.get('objectLayerKey')}, features: [layer.get('objectKey')]});
+        }
       });
-      layerModelPromise.addObject({ layerModel: object.layerModel, features: promise });
+
+      let promises = [];
+      favFeaturesArray.forEach((item) => {
+        let featurePromises = this.get('mapApi').getFromApi('mapModel').loadingFeaturesByPackages(item.layerModel.id, item.features);
+        promises = promises.concat(featurePromises);
+      });
+      Ember.RSVP.allSettled(promises).then((res) => {
+        let favFeatures = Ember.A();
+        let result = Ember.A();
+        res.forEach((promiseResult) => {
+          if (promiseResult.state !== 'rejected') {
+            let favorites = Ember.A();
+            promiseResult.value[2].forEach((layerObject) => {
+              Ember.set(layerObject.feature.properties, 'isFavorite', true);
+              favorites.push(layerObject.feature);
+            });
+            let promiseFeature = null;
+            let layerModelIndex = this.isLayerModelInArray(result, promiseResult.value[0]);
+            if (layerModelIndex !== false) {
+              favorites = favorites.concat(favorites, favFeatures[layerModelIndex].features);
+              promiseFeature = new Ember.RSVP.Promise((resolve) => {
+                resolve(favorites);
+              });
+              result[layerModelIndex].features = promiseFeature;
+              favFeatures[layerModelIndex].features = favorites;
+            } else {
+              promiseFeature = new Ember.RSVP.Promise((resolve) => {
+                resolve(favorites);
+              });
+              result.addObject({layerModel: promiseResult.value[0], features: promiseFeature});
+              favFeatures.addObject({layerModel: promiseResult.value[0], features: favorites});
+            }
+          }
+        });
+        this.set('result', result);
+        this.set('favFeatures', favFeatures);
+      });
     });
-    this.set('favFeatures', favFeatures);
-    this.set('result', layerModelPromise);
   },
 
-  /**
-    Get [layerModel, featureLayer] by layer id or layer id and object id.
 
-    @param {string} layerId Layer id.
-    @param {string} [featureId] Object id.
-    @returns {[layerModel, leafletObject, featureLayer]} Get [layerModel, featureLayer] or [layerModel, undefined].
-    @private
-  */
-  getModelLayerFeature(layerId, featureId) {
-    let layerModel = this.get('model.hierarchy').findBy('id', layerId);
-    let leafletObject = layerModel.get('_leafletObject');
-    let layers = leafletObject._layers;
-    let featureLayer;
-    if (!Ember.isNone(featureId)) {
-      featureLayer = Object.values(layers).find(feature => {
-        const layerFeatureId = feature.feature.properties.primarykey;
-        return layerFeatureId === featureId;
-      });
-    }
 
-    return [layerModel, featureLayer];
-  },
+  // /**
+  //   Get [layerModel, featureLayer] by layer id or layer id and object id.
+
+  //   @param {string} layerId Layer id.
+  //   @param {string} [featureId] Object id.
+  //   @returns {[layerModel, leafletObject, featureLayer]} Get [layerModel, featureLayer] or [layerModel, undefined].
+  //   @private
+  // */
+  // getModelLayerFeature(layerId, featureId) {
+  //   let layerModel = this.get('model.hierarchy').findBy('id', layerId);
+  //   let leafletObject = layerModel.get('_leafletObject');
+  //   let layers = leafletObject._layers;
+  //   let featureLayer;
+  //   if (!Ember.isNone(featureId)) {
+  //     featureLayer = Object.values(layers).find(feature => {
+  //       const layerFeatureId = feature.feature.properties.primarykey;
+  //       return layerFeatureId === featureId;
+  //     });
+  //   }
+
+  //   return [layerModel, featureLayer];
+  // },
 });

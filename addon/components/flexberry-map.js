@@ -552,6 +552,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     leafletMap.fire('flexberry-map:load', e);
 
     Ember.RSVP.allSettled(e.results).then(function (array) {
+      leafletMap.fire('flexberry-map:loadFavorites');
       const readyMapLayers = mapApi.getFromApi('readyMapLayers');
       const errorMapLayers = mapApi.getFromApi('errorMapLayers');
 
