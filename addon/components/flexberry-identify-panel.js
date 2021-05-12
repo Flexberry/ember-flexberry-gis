@@ -101,10 +101,11 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     'toolMode',
     'layers',
     function() {
+      let radius = typeof this.get('bufferRadius') === 'string' ? this.get('bufferRadius').replace(',', '.') : this.get('bufferRadius');
       return {
         bufferActive: !Ember.isNone(this.get('bufferRadius')) || !Ember.isBlank(this.get('bufferRadius')),
         bufferUnits: this.get('bufferUnits'),
-        bufferRadius: this.get('bufferRadius').replace(',', '.'),
+        bufferRadius: radius,
         layerMode: this.get('layerMode'),
         toolMode: this.get('toolMode'),
         layers: this.get('layers')
