@@ -311,15 +311,23 @@
       height: auto;
       overflow: auto !important;
 
+      .flexberry-export-map-command-dialog-sheet-of-paper {
+        box-shadow: @defaultFieldBoxShadow;
+      }
+
       & > .ui.form > .ui.grid .flexberry-export-map-command-dialog-paging-column {
-          label {
-            border-radius: 2px;
-          }
-          .ui.button:hover,
-          .ui.button.active {
-            border: 1px solid @primaryColor;
-            background: @white;
-          }
+        padding-left: 10px;
+        label {
+          border-radius: @defaultBorderRadius;
+          width: 35px;
+          margin: 0;
+          box-shadow: @defaultFieldBoxShadow;
+        }
+        .ui.button:hover,
+        .ui.button.active {
+          border: 1px solid @primaryColor;
+          background: @white;
+        }
       }
     }
   }
@@ -352,6 +360,11 @@
     .flexberry-button:not(.icon) {
       width: 50%;
     }
+  }
+}
+.ui.modal.flexberry-edit-layer-dialog {
+  i.icon.close:before {
+    color: @primaryColor;
   }
 }
 .ui.modal.flexberry-dialog-move {
@@ -449,12 +462,6 @@
         }
       }
     }
-  }
-}
-
-.flexberry-export-map-command-dialog {
-  .one.wide.column.flexberry-export-map-command-dialog-paging-column {
-      padding: 1.5em;
   }
 }
 

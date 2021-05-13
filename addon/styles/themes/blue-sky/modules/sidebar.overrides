@@ -700,6 +700,15 @@
 
   .ui-resizable-handle.ui-resizable-e {
     width: 10px;
+    position: absolute;
+    display: block;
+    -ms-touch-action: none;
+    touch-action: none;
+    cursor: e-resize;
+    right: -5px;
+    top: 0;
+    height: 100%;
+    z-index: 90;
   }
 }
 
@@ -1015,12 +1024,29 @@
 }
 
 .ui.tab.compare {
+  overflow-y: hidden !important;
+  .compare-header {
+    height: 35px;
+    h3 {
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+  }
   .ui.icon.close {
-    position: relative;
-    bottom: 35px;
-    left: 200px;
+    margin-left: 9px;
     background: @whitecolor;
     border: none;
+    height: 32px;
+    i.remove.icon {
+      padding-left: 2px;
+      padding-top: 2px;
+    }
+    &:hover {
+      border: 1px solid @primaryColor;
+      i.remove.icon:before {
+        color: @primaryColor;
+      }
+    }
   }
   .ui.styled.accordion .accordion:first-child .title {
     border-top: none;
@@ -1028,9 +1054,29 @@
   .flexberry-maplayers-add-button {
     display: none;
   }
+  .ui.pointing.group.secondary.menu {
+    margin-top: 0px;
+    margin-left: -15px;
+    border-bottom: none;
+    min-height: 35px;
+    margin-bottom: 10px;
+    a.item {
+      color: #8F928F;
+      font-size: 14px;
+      font-weight: normal;
+      border-bottom: none;
+      padding-top: 7px;
+      &.active {
+        color: #000000;
+        font-weight: normal;
+      }
+    }
+  }
+  .flexberry-maplayers {
+    margin-top: 0px !important;
+  }
 }
 
 .ui.tab.treeview .treeview.root.header.hidden+.flexberry-maplayers {
   margin-top: 12px;
 }
-
