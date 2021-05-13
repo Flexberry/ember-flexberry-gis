@@ -420,11 +420,12 @@
         left: 90px;
         width: 210px;
         padding: 0 0 11px 7px;
+        text-align: left;
         label.ui.button {
-          width: 200px !important;
+          width: auto !important;
           color: @textColor;
           border: none;
-          padding: 10px 5px 0px 0px;
+          padding: 10px 0px 0px 0px;
           height: 25px;
         }
         .flexberry-maplayer-bounds-button {
@@ -554,6 +555,7 @@
 
   .ui.right.sidebar.tabbar {
     left: ~"calc(-100%) !important";
+    overflow: visible!important;
   }
 
   &.visible .ui.right.sidebar.tabbar {
