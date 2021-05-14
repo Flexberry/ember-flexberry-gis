@@ -489,10 +489,9 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     // Create leaflet map.
     let leafletMap = L.map($leafletContainer[0], options);
-    L.DomEvent.on(leafletMap, 'mousedown mouseup', (e) => {
+    L.DomEvent.on(leafletMap, 'mousedown mouseup mousein mouseout', (e) => {
       if (e.originalEvent.button === 1) {
-        console.log('middle button click')
-        if(e.type === 'mousedown') {
+        if (e.type === 'mousedown') {
           e.originalEvent.preventDefault();
           let enabledTools = {
             name: leafletMap.flexberryMap.tools.getEnabled().name,
@@ -504,6 +503,9 @@ let FlexberryMapComponent = Ember.Component.extend(
           leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
           this.set('prevEnabledTools', null);
         }
+      } else if (!Ember.isNone(this.get('prevEnabledTools'))) {
+        leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
+        this.set('prevEnabledTools', null);
       }
     });
     this.set('_leafletObject', leafletMap);
