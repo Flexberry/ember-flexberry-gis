@@ -51,6 +51,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
       }
 
       if (!Ember.isNone(mapToolProperties)) {
+        Ember.set(mapTool, 'mapToolProperties', mapToolProperties);
         Ember.A(Object.keys(mapToolProperties)).forEach((propertyName) => {
           Ember.set(mapTool, propertyName, Ember.get(mapToolProperties, propertyName));
         });

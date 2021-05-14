@@ -77,6 +77,11 @@ let FlexberryMapComponent = Ember.Component.extend(
   layout,
 
   /**
+    This is a object with name and properties prev enabled tools
+  */
+  prevEnabledTools: null,
+
+  /**
     Reference to component's CSS-classes names.
     Must be also a component's instance property to be available from component's .hbs template.
   */
@@ -484,6 +489,23 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     // Create leaflet map.
     let leafletMap = L.map($leafletContainer[0], options);
+    L.DomEvent.on(leafletMap, 'mousedown mouseup', (e) => {
+      if (e.originalEvent.button === 1) {
+        console.log('middle button click')
+        if(e.type === 'mousedown') {
+          e.originalEvent.preventDefault();
+          let enabledTools = {
+            name: leafletMap.flexberryMap.tools.getEnabled().name,
+            mapToolProperties: leafletMap.flexberryMap.tools.getEnabled().mapToolProperties
+          };
+          this.set('prevEnabledTools', enabledTools);
+          leafletMap.flexberryMap.tools.enable('drag');
+        } else {
+          leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
+          this.set('prevEnabledTools', null);
+        }
+      }
+    });
     this.set('_leafletObject', leafletMap);
 
     // Perform initializations.
