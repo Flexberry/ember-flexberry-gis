@@ -489,25 +489,27 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     // Create leaflet map.
     let leafletMap = L.map($leafletContainer[0], options);
-    L.DomEvent.on(leafletMap, 'mousedown mouseup mousein mouseout', (e) => {
-      if (e.originalEvent.button === 1) {
-        if (e.type === 'mousedown') {
-          e.originalEvent.preventDefault();
-          let enabledTools = {
-            name: leafletMap.flexberryMap.tools.getEnabled().name,
-            mapToolProperties: leafletMap.flexberryMap.tools.getEnabled().mapToolProperties
-          };
-          this.set('prevEnabledTools', enabledTools);
-          leafletMap.flexberryMap.tools.enable('drag');
-        } else {
+    if (this.get('mainMap')) {
+      L.DomEvent.on(leafletMap, 'mousedown mouseup mousein mouseout', (e) => {
+        if (e.originalEvent.button === 1) {
+          if (e.type === 'mousedown') {
+            e.originalEvent.preventDefault();
+            let enabledTools = {
+              name: leafletMap.flexberryMap.tools.getEnabled().name,
+              mapToolProperties: leafletMap.flexberryMap.tools.getEnabled().mapToolProperties
+            };
+            this.set('prevEnabledTools', enabledTools);
+            leafletMap.flexberryMap.tools.enable('drag');
+          } else {
+            leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
+            this.set('prevEnabledTools', null);
+          }
+        } else if (!Ember.isNone(this.get('prevEnabledTools'))) {
           leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
           this.set('prevEnabledTools', null);
         }
-      } else if (!Ember.isNone(this.get('prevEnabledTools'))) {
-        leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
-        this.set('prevEnabledTools', null);
-      }
-    });
+      });
+    }
     this.set('_leafletObject', leafletMap);
 
     // Perform initializations.
