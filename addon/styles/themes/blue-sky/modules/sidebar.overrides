@@ -401,12 +401,16 @@
     }
     .flexberry-treenode-buttons-block {
       padding-top: 5px;
-      left: 20px;
+      left: 40px;
       top: -6px;
       width: 100%;
+      font-size: 0;
       i.icon:before {
         color: @textColor;
         font-size: 18px;
+      }
+      i.icon.plus:before {
+        font-size: 14px;
       }
       a.icon.item.more {
         color: @textColor;
@@ -433,15 +437,16 @@
         }
         .button-more-submenu label.more.submenu {
           left: -10px;
-          top: -20px !important;
+          top: -12px !important;
           margin-left: 2px;
           padding-top: 5px;
           i.more.icon:before {
-            font-size: 18px;
+            font-size: 26px;
           }
         }
-        i.icon {
+        i.icon:not(.more) {
           margin-right: 10px;
+          margin-left: 0;
         }
         i.icon:before {
           font-size: 12px;
@@ -465,7 +470,7 @@
         align-items: flex-start;
       }
       .flexberry-treenode-prevent-expand-collapse {
-        margin-right: 15px;
+        margin: 0 15px;
         width: 17px !important;
       }
       &:not(.flexberry-checkbox) {
@@ -484,7 +489,7 @@
 
           .button {
             box-shadow:none;
-            margin: 0 0 0 .25em;
+            margin: 0;
 
             &:hover {
               border: @flexberryMaplayerOpacitiLabelHoveredBorder;
@@ -712,6 +717,15 @@
     height: 100%;
     z-index: 90;
   }
+
+  .compare-geometries-panel > div,
+  .bottom-compare-panel {
+    height: 100%;
+  }
+  .compare-main-panel {
+    height: ~"calc(100% - 30px)";
+    overflow: auto;
+  }
 }
 
 .ui.menu.flexberry-maptoolbar .no-arrow.ui.dropdown .menu {
@@ -727,7 +741,7 @@
       padding-left: 9px;
       padding-top: 2px;
       border-radius: 3.5px;
-      right: 9px;
+      right: 0;
       i.icon:before {
         font-size: 22px;
         line-height: 25px;
@@ -747,7 +761,7 @@
       box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
       border-radius: 3.5px 3.5px 0px 3.5px;
       bottom: -1px;
-      right: 9px;
+      right: 0;
       padding-bottom: 4px;
       .picture.active {
         border-width: 2px;
@@ -794,35 +808,42 @@
         }
       }
 
+      .bmrk-add-block {
+        padding: 15px 0;
+        .ui.input input {
+          border-radius: @defaultBorderRadius;
+          border: 1px solid @controlBorderColor;
+          box-shadow: @defaultFieldBoxShadow;
+          max-width: 256px;
+        }
+      }
+      .bookmark-item {
+        padding-bottom: 10px;
+      }
+      .bookmark-item-buttons,
+      .bmrk-add-block-buttons {
+        .ui.icon.button{
+          height: 33px;
+          min-width: 30px;
+        }
+        i.icon.checkmark:before {
+          font-size: 24px;
+        }
+
+        i.icon.remove:before {
+          font-family: Crimean;
+          font-size: 20px;
+          content: '\e814'
+        }
+
+        i.icon.zoom:before {
+          font-family: Crimean;
+          font-size: 20px;
+          content:'\e812';
+        }
+      }
       .bookmark-item,
       .bmrk-add-block {
-        border-radius: @defaultBorderRadius;
-        box-shadow: none;
-        padding: 10px 0;
-
-        .ui.input input {
-          border-radius: 0.28571429rem;
-          border: 1px solid @controlBorderColor;
-        }
-
-        .bookmark-item-buttons,
-        .bmrk-add-block-buttons {
-          .ui.icon.button{
-            height: 33px;
-            min-width: 30px;
-          }
-
-          i.icon.remove:before {
-            font-family: Crimean;
-            content: '\e814'
-          }
-
-          i.icon.zoom:before {
-            font-family: Crimean;
-            content:'\e812';
-          }
-        }
-
         .ember-text-field {
           height: 33px;
         }
@@ -832,7 +853,7 @@
           padding: 0;
           line-height: 33px;
           float: left;
-          width: ~'calc(100% - 65px)'
+          width: ~'calc(100% - 75px)'
         }
 
         .bookmark-item-title {

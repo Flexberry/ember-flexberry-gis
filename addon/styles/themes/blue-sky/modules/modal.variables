@@ -19,10 +19,10 @@
 
 @headerBackground: @backgroundGradient;
 
-@positiveButtonHoverColor: @lightgrassGreenColor !important;
+@positiveButtonHoverColor: @buttonHoverColor !important;
 @positiveButtonActiveColor: @primaryColor !important;
-@negativeButtonHoverColor: @veryLightBlueColor !important;
-@negativeButtonActiveColor: @middlegraycolor !important;
+@negativeButtonHoverColor: @white !important;
+@negativeButtonActiveColor: @white !important;
 
 @tabularMenuItemColor: @textColor;
 @layersFieldsContainerBorderColor: @controlBorderColor;

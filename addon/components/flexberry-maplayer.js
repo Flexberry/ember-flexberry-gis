@@ -647,7 +647,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         const isHidden = this.get('isSubmenu');
         this.set('isSubmenu', !isHidden);
 
-        if (isHidden) {
+        if (!isHidden) {
           const component = Ember.$('.' + this.get('componentName'));
           const moreButton = Ember.$('.more.floated.button', component);
           const elements = Ember.$('.more.submenu.hidden', component);
@@ -657,7 +657,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
             const { top, left } = moreButton[0].getBoundingClientRect();
             element.style.zIndex = 100;
             element.style.left = `${left}px`;
-            element.style.top = `${top + 10}px`;
+            element.style.top = `${top + 2}px`;
             element.style.position = 'fixed';
           });
         }

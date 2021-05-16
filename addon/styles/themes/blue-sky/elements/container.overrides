@@ -402,15 +402,24 @@ div.bottompanel-wrapper {
       &.folded {
         bottom: 0;
         height: 69px;
-        left: 470px;
-        max-width: ~"calc(100% - 470px)";
+        left: 520px;
+        width: auto;
+        max-width: ~"calc(100% - 620px)";
 
+        .ui.tab.active,
+        .ui.tab.open {
+          display: none;
+        }
         .bottompanel-tab-nav-panel {
-          padding-top: 7px !important;
+          padding: 7px 37px 0 37px;
         }
 
         .bottompanel-tab-nav-button {
           margin-top: 16px;
+          width: 23px;
+          i.icon {
+            margin: 0;
+          }
         }
       }
 
@@ -466,13 +475,14 @@ div.bottompanel-wrapper {
         padding-top: 10px;
 
         .buttons {
+          font-size: 0;
           .ui.button.flexberry-button,
           .flexberry-geometry-buffer {
             box-shadow: @defaultBoxShadow;
             border-radius: @defaultBorderRadius !important;
             width: 40px;
             height: 40px;
-            margin: 0 10px 0 0;
+            margin: 0 20px 0 0;
             vertical-align: bottom;
             &:hover {
               background: @white;

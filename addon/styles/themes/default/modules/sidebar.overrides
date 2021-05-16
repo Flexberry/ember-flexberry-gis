@@ -230,7 +230,7 @@
     .ui.tab {
         border-radius: 5px;
         h3 {
-            margin: 7px 0px 13px 0px;
+            margin: 10px 0px 13px 0px;
         }
     }
     .flexberry-tree-header {
@@ -413,19 +413,23 @@
         vertical-align: top;
       }
       .allmore.floated.flexberry-button.ui.button.icon {
-        i.icon.more:before {
-          content: "...";
-        }
         border: none;
         box-shadow: none;
         vertical-align: top;
+        i.icon.more:before {
+          content: "...";
+          font-size: 26px;
+          line-height: 0;
+        }
         label.more {
-          position: relative;
-          bottom: 15px;
+          padding: 0;
+          height: auto;
+          margin-top: -3px;
+          margin-left: -3px;
         }
         .more.submenu {
           width: 200px;
-          height: 130px;
+          height: auto;
           position: absolute;
           top: 10px;
           z-index: 100;

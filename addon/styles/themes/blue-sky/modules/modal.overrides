@@ -28,73 +28,76 @@
     }
   }
 
-    .ui.attached.menu {
-        background: @whitecolor;
-    }
-    /* вкладки в модальных окнах */
-    .ui.tabular.menu .item {
-        color: @tabularMenuItemColor;
-        &.active {
-            color: @tabularMenuItemActiveColor;
-        }
-        &:hover {
-            color: @tabularMenuItemHoveredCcolor;
-        }
-        &.disabled i.icon:before {
-            color: @tabularMenuItemDisabledIconColor;
-        }
-    }
-    .actions:not(.ui) {
-        border-top: none;
-        background-color: @lightbluecolor;
-        padding: 1rem;
-        color: @whitecolor;
-        .ui.button {
-            padding: .6em 2em;
-        }
-    }
-    .ui.error.message {
-        margin: 10px 0 0 0;
-    }
-    /* иконка закрытия */
-    i.icon.close:before {
-        font-family: Crimean;
-        content: "\e806";
-    }
-    /* контент окна */
-    .flexberry-dialog-content {
-        padding: 0px 1.5rem !important;
-    }
-    .ui.form .field {
-        .button.flexberry-button {
-          color: @darkbluecolor;
-            &>i.icon:before {
-              color: @darkbluecolor;
-            }
-            &:hover {
-                &>i.icon:before {
-                  color: @darkbluecolor;
-                }
-            }
-        }
-    }
-    .ui.icon.button.switch {
-        display: inline-block;
-        height: auto;
-    }
+  .ui.attached.menu {
+      background: @whitecolor;
+  }
+  /* вкладки в модальных окнах */
+  .ui.tabular.menu .item {
+      color: @tabularMenuItemColor;
+      &.active {
+          color: @tabularMenuItemActiveColor;
+      }
+      &:hover {
+          color: @tabularMenuItemHoveredCcolor;
+      }
+      &.disabled i.icon:before {
+          color: @tabularMenuItemDisabledIconColor;
+      }
+  }
+  .actions:not(.ui) {
+      border-top: none;
+      background-color: @lightbluecolor;
+      padding: 1rem;
+      color: @whitecolor;
+      .ui.button {
+          padding: .6em 2em;
+      }
+  }
+  .ui.error.message {
+      margin: 10px 0 0 0;
+  }
+  /* иконка закрытия */
+  i.icon.close:before {
+      font-family: Crimean;
+      content: "\e806";
+  }
+  /* контент окна */
+  .flexberry-dialog-content {
+      padding: 0px 1.5rem !important;
+  }
+  .ui.form .field {
+      .button.flexberry-button {
+        color: @darkbluecolor;
+          &>i.icon:before {
+            color: @darkbluecolor;
+          }
+          &:hover {
+              &>i.icon:before {
+                color: @darkbluecolor;
+              }
+          }
+      }
+  }
+  .ui.icon.button.switch {
+      display: inline-block;
+      height: auto;
+  }
   /* кнопка ОК */
   .ui.positive.button {
-      font-weight: normal;
-      background-color: @primaryColor !important;
-      border: solid 1px @primaryColor !important;
-      color: @whitecolor;
-      &:hover {
-        opacity: 1;
-        background-color: @positiveButtonHoverColor;
-      }
-      &:active{
-        background-color: @positiveButtonActiveColor;
-      }
+    font-weight: normal;
+    background-color: @primaryColor !important;
+    border: solid 1px @primaryColor !important;
+    box-shadow: @defaultBoxShadow;
+    color: @whitecolor;
+    &:hover {
+      opacity: 1;
+      background-color: @positiveButtonHoverColor;
+      box-shadow: none;
+    }
+    &:active{
+      background-color: @positiveButtonActiveColor;
+      box-shadow: none;
+    }
   }
 
   /* кнопка Отмена */
@@ -103,7 +106,58 @@
     background-color: @white !important;
     background-image: none;
     border: solid 1px @borderColor !important;
-    color: @textColor !important;
+    box-shadow: @defaultBoxShadow;
+    color: @primaryColor !important;
+    margin-left: 0px;
+    &:hover {
+      opacity: 1;
+      color: @buttonHoverColor;
+      background-color: @negativeButtonHoverColor;
+      box-shadow: none;
+    }
+    &:active{
+      background-color: @negativeButtonActiveColor;
+      box-shadow: none;
+    }
+  }
+
+  .ui.attached.tab.segment .flexberry-button:not(.success) {
+      background: @white !important;
+      box-shadow: @darkBoxShadow;
+      &:hover {
+          background: #f1f7ff !important;
+          color: @darkbluecolor;
+      }
+      &:not(.disabled) {
+          border: none;
+      }
+      &.filter-operator-button {
+          margin: 5px;
+          width: 6em;
+      }
+  }
+
+  .ui.tab.segment,
+  .ui.tabular.menu {
+    margin-bottom: 0px !important;
+    &.fluid {
+      &.item:last-child {
+        width: calc( 16.75% + 1px );
+      }
+    }
+  }
+  .flexberry-edit-layermap .ui.small.fluid.buttons:not(.basic):not(.inverted) > .button.flexberry-button {
+    color: @darkbluecolor;
+  }
+}
+.ui.modal.flexberry-dialog-move {
+    /* кнопка Отмена */
+  .ui.negative.button {
+    background-color: @white !important;
+    background-image: none;
+    border: @defaultGrayBorder !important;
+    color: @primaryColor !important;
+    font-weight: normal;
     margin-left: 0px;
     &:hover {
       opacity: 1;
@@ -113,48 +167,6 @@
       background-color: @negativeButtonActiveColor;
     }
   }
-
-    .ui.attached.tab.segment .flexberry-button:not(.success) {
-        background: @white !important;
-        box-shadow: @darkBoxShadow;
-        &:hover {
-            background: #f1f7ff !important;
-            color: @darkbluecolor;
-        }
-        &:not(.disabled) {
-            border: none;
-        }
-        &.filter-operator-button {
-            margin: 5px;
-            width: 6em;
-        }
-    }
-
-    .ui.tab.segment,
-    .ui.tabular.menu {
-        margin-bottom: 0px !important;
-        &.fluid {
-          &.item:last-child {
-            width: calc( 16.75% + 1px );
-          }
-        }
-    }
-    .flexberry-edit-layermap .ui.small.fluid.buttons:not(.basic):not(.inverted) > .button.flexberry-button {
-        color: @darkbluecolor;
-    }
-}
-.ui.modal.flexberry-dialog-move {
-     /* кнопка Отмена */
-    .ui.negative.button {
-        font-weight: normal;
-        background-color: @graybluecolor !important;
-        border: solid 1px @graybluecolor !important;
-        color: @whitecolor;
-        margin-left: 0px;
-        &:hover {
-            opacity: 0.8;
-        }
-    }
 }
 
 .ui.modal.flexberry-add-layer-dialog,
@@ -316,12 +328,15 @@
       }
 
       & > .ui.form > .ui.grid .flexberry-export-map-command-dialog-paging-column {
-        padding-left: 10px;
+        padding-left: 15px;
         label {
           border-radius: @defaultBorderRadius;
-          width: 35px;
+          box-shadow: @defaultBoxShadow;
+          height: 40px;
           margin: 0;
-          box-shadow: @defaultFieldBoxShadow;
+          width: 40px;
+          font-size: 20px;
+          line-height: 0.5;
         }
         .ui.button:hover,
         .ui.button.active {
@@ -367,22 +382,7 @@
     color: @primaryColor;
   }
 }
-.ui.modal.flexberry-dialog-move {
-   /* кнопка Отмена */
-  .ui.negative.button {
-    background-color: @white !important;
-    border-color: @borderColor !important;
-    color: @textColor !important;
-    background-image: none;
-    &:hover {
-      opacity: 1;
-      background-color: @negativeButtonHoverColor;
-    }
-    &:active{
-      background-color: @negativeButtonActiveColor;
-    }
-  }
-}
+
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
   border-radius: 3px;
 }
@@ -401,6 +401,7 @@
     padding-left: 0;
     border: none;
     box-shadow: none;
+
     h3 {
       font-weight: normal;
       text-align: center;
@@ -412,6 +413,7 @@
         background: @primaryColor;
         height: initial;
         min-height: 35px;
+        min-width: 179px;
       }
     }
 
@@ -435,8 +437,12 @@
 
       .ui.grid .row .ui.buttons {
         .ui.icon.button {
-          border: @buttonMenuBorder;
-          box-shadow: @buttonMenuBoxShadow;
+          border: @defaultGrayBorder;
+          border-radius: @defaultBorderRadius;
+          box-shadow: @defaultBoxShadow;
+          margin-right: 20px;
+          min-width: 40px;
+          max-width: 40px;
           &:hover {
             background: @white !important;
             border: @buttonMenuHoveredBorder;
@@ -450,7 +456,7 @@
           }
           &:first-child,
           &:last-child {
-            border-radius: 0;
+            border-radius: @defaultBorderRadius;
           }
         }
       }
@@ -458,7 +464,7 @@
         width: 40px;
         height: 40px;
         .minicolors-swatch-color {
-        border-radius: 4px;
+          border-radius: @defaultBorderRadius;
         }
       }
     }
@@ -475,6 +481,7 @@
 
 .ui.flexberry-geometry-add-mode-import-form {
   padding: 0em 1em;
+  padding-bottom: 0.5em;
   .ui.flexberry-jsonarea {
     box-shadow: none;
     .row {
@@ -787,13 +794,7 @@
 .ui.form.flexberry-geometry-add-mode-manual-form {
   overflow: hidden;
 }
-.ui.modal.flexberry-remove-layer-dialog {
-  .ui.negative.button.flexberry-dialog-cancel-button {
-    background-color: @whitecolor !important;
-    color: @darkColor;
-    border: 1px solid rgba(34, 36, 38, 0.15) !important;
-    &:hover {
-      background-color: #E2E2E2 !important;
-    }
-  }
+
+.flexberry-export-map-command-dialog-settings-column-inner {
+  max-width: 454px;
 }

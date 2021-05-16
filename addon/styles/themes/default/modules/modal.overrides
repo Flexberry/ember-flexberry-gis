@@ -104,8 +104,8 @@
 **************************************************************************************/
 .modals.dimmer .ui.scrolling.modal.flexberry-export-map-command-dialog,
 .ui.modal.flexberry-export-map-command-dialog {
-  width: 90% !important;
-  margin-left: -45%!important;
+  width: ~"calc(100vw - 60px)" !important;
+  margin-left: ~"calc(-50% + 30px)" !important;
   top: 0;
   margin-top: 14px!important;
   position: fixed!important;
@@ -149,8 +149,8 @@
         display: flex;
         justify-content: center;
 
-        .button.flexberry-button {
-        }
+        // .button.flexberry-button {
+        // }
       }
 
       .ui.segment {

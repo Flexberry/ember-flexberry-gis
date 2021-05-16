@@ -186,7 +186,8 @@
 .rgis-sidebar-wrapper {
   .ui.icon.button.flexberry-map-layers-add-button,
   .ui.icon.button.flexberry-button.save,
-  .bmrk-add-block-buttons .ui.icon.button {
+  .bmrk-add-block-buttons .ui.icon.button,
+  .bookmark-item-buttons .ui.icon.button {
     border: none;
     box-shadow: none;
     width: 30px;
@@ -365,6 +366,7 @@
 .ui.modal.flexberry-geometry-add-mode-import-dialog {
   .button.flexberry-import-from-file-button {
     padding-top: 10px;
+    margin: 0;
     &:hover {
       background-color: @white;
     }
