@@ -8,9 +8,8 @@ import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import SnapDrawMixin from '../mixins/snap-draw';
 import EditFeatureMixin from '../mixins/edit-feature';
 import checkIntersect from '../utils/polygon-intersect-check';
+
 import * as buffer from 'npm:@turf/buffer';
-import * as difference from 'npm:@turf/difference';
-import * as booleanEqual from 'npm:@turf/boolean-equal';
 import * as lineSplit from 'npm:@turf/line-split';
 import * as polygonToLine from 'npm:@turf/polygon-to-line';
 import * as lineToPolygon from 'npm:@turf/line-to-polygon';
@@ -22,8 +21,8 @@ import * as lineSlice from 'npm:@turf/line-slice';
 import * as invariant from 'npm:@turf/invariant';
 import * as distance from 'npm:@turf/distance';
 import * as midpoint from 'npm:@turf/midpoint';
-import * as union from 'npm:@turf/union';
-import intersect from 'npm:@turf/intersect';
+
+import jsts from 'npm:jsts';
 
 /**
   The component for editing layers attributes.
@@ -1058,14 +1057,27 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         Ember.removeObserver(tabModel, '_typeSelectedRows', null, tabModel._typeSelectedRowsObserverForDifference);
         tabModel._typeSelectedRowsObserverForDifference = undefined;
 
+        let geojsonReader = new jsts.io.GeoJSONReader();
+
         // Find intersecting polygons with splitter.
         let dataForDifference = this.get('_dataForDifference');
-        let intersectingPolygon = Object.keys(dataForDifference).filter((item) => Ember.get(dataForDifference, item))
+        let intersectingFeatures = Object.keys(dataForDifference).filter((item) => Ember.get(dataForDifference, item))
           .map((key) => {
             let feature = tabModel.featureLink[key].feature;
             let layer = feature.leafletLayer.toGeoJSON();
-            if (!booleanEqual.default(layer, selectedFeatures[0]) && !Ember.isNone(intersect.default(layer, selectedFeatures[0]))) {
-              return layer;
+
+
+            let firstObjectJstsGeom = geojsonReader.read(layer.geometry);
+            let secondObjectJstsGeom = geojsonReader.read(selectedFeatures[0].geometry);
+
+            if (!firstObjectJstsGeom.equalsNorm(secondObjectJstsGeom)) {
+              let intersection = firstObjectJstsGeom.intersection(secondObjectJstsGeom);
+              let geojsonWriter = new jsts.io.GeoJSONWriter();
+              let intersectionRes = geojsonWriter.write(intersection);
+
+              if (!Ember.isNone(intersectionRes)) {
+                return layer;
+              }
             }
 
             delete dataForDifference[key];
@@ -1073,12 +1085,18 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
         let items = [];
 
-        intersectingPolygon.forEach((polygon) => {
-          let differenceResult = difference.default(polygon, selectedFeatures[0]);
+        intersectingFeatures.forEach((feature) => {
+          let firstObjectJstsGeom = geojsonReader.read(feature.geometry);
+          let secondObjectJstsGeom = geojsonReader.read(selectedFeatures[0].geometry);
+
+          let nonIntersection = firstObjectJstsGeom.difference(secondObjectJstsGeom);
+          let geojsonWriter = new jsts.io.GeoJSONWriter();
+          let differenceResult = geojsonWriter.write(nonIntersection);
+
           let leafletLayer = L.geoJSON(differenceResult).getLayers();
 
           items.push({
-            data: Object.assign({}, polygon.properties),
+            data: Object.assign({}, feature.properties),
             layer: leafletLayer[0]
           });
         });
@@ -1159,8 +1177,15 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       // если подходящих действительно несколько, то собираем в один новый мультиполигон
       if (selectedFeatures.length > 1) {
-        let combinedPolygon = union.default(...selectedFeatures);
-        let leafletLayers = L.geoJSON(combinedPolygon);
+        let geojsonReader = new jsts.io.GeoJSONReader();
+        let combinedPolygon = geojsonReader.read(selectedFeatures[0].geometry);
+        for (var i = 1; i < selectedFeatures.length; i++) {
+          combinedPolygon = combinedPolygon.union(geojsonReader.read(selectedFeatures[i].geometry));
+        }
+
+        let geojsonWriter = new jsts.io.GeoJSONWriter();
+
+        let leafletLayers = L.geoJSON(geojsonWriter.write(combinedPolygon));
         let polygonLayers = leafletLayers.getLayers();
 
         // готовим данные для выбора
