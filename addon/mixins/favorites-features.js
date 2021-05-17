@@ -83,14 +83,14 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
   _onLeafletMapDidChange: Ember.observer('leafletMap', function () {
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
-      leafletMap.on('flexberry-map:loadFavorites', this.fromIdArrayToFeatureArray, this);
+      leafletMap.on('flexberry-map:allLayersLoaded', this.fromIdArrayToFeatureArray, this);
     }
   }),
 
   willDestroyElement() {
     this._super(...arguments);
     let leafletMap = this.get('leafletMap');
-    leafletMap.off('flexberry-map:loadFavorites', this.fromIdArrayToFeatureArray, this);
+    leafletMap.off('flexberry-map:allLayersLoaded', this.fromIdArrayToFeatureArray, this);
   },
 
   /**
