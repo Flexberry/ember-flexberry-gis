@@ -1066,7 +1066,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             let feature = tabModel.featureLink[key].feature;
             let layer = feature.leafletLayer.toGeoJSON();
 
-
             let firstObjectJstsGeom = geojsonReader.read(layer.geometry);
             let secondObjectJstsGeom = geojsonReader.read(selectedFeatures[0].geometry);
 
