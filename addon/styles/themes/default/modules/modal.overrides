@@ -133,10 +133,6 @@
  	  margin-bottom: 0;
     box-shadow: none;
 
-    // Same as dialog content's max-height in Semantic UI.
-    // height: 850px;
-    // max-height: 850px;
-
     .flexberry-export-map-command-dialog-settings-column {
       padding-right: 0;
       padding-left: 0;
@@ -148,9 +144,6 @@
         padding-top: 50px;
         display: flex;
         justify-content: center;
-
-        // .button.flexberry-button {
-        // }
       }
 
       .ui.segment {

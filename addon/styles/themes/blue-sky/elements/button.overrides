@@ -121,16 +121,6 @@
   }
 }
 
-// .mappanel,
-// .flexberry-export-map-command-dialog,
-// .flexberry-search-map-command-dialog,
-// .flexberry-go-to-map-command-dialog {
-  // .ui.icon.button:not(.fluid) {
-  //   box-shadow: none;
-  //   border-radius: 0;
-  // }
-// }
-
 /* flexberry-identify-panel*/
 .flexberry-identify-panel {
   .ui.icon.button {
