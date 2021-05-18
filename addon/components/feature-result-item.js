@@ -264,7 +264,22 @@ export default Ember.Component.extend({
       @method actions.onSubmenu
     */
     onSubmenu() {
-      this.set('isSubmenu', !this.get('isSubmenu'));
+      const isHidden = this.get('isSubmenu');
+      this.set('isSubmenu', !isHidden);
+
+      if (!isHidden) {
+        const component = this.get('element');
+        const moreButton = component.getElementsByClassName('icon item more');
+        const elements = component.getElementsByClassName('more submenu hidden');
+        const element = elements[0];
+        Ember.run.next(() => {
+          // Устанавливаем фиксированное позиционирование для подменю, чтобы не зависеть от внешнего контенера.
+          const { top, left } = moreButton[0].getBoundingClientRect();
+          element.style.position = 'fixed';
+          element.style.left = `${left - 8}px`;
+          element.style.top = `${top + 1}px`;
+        });
+      }
     },
     /**
       Performs row editing.
