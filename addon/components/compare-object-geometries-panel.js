@@ -58,6 +58,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     let two = this.get('twoObjects');
     if (two.length === 2) {
       let crs = two[0].leafletLayer.options.crs;
+      this.set('crs', crs);
       let firstObject =  two[0];
       let secondObject =  two[1].leafletLayer.toProjectedGeoJSON(crs);
       let geojsonReader = new jsts.io.GeoJSONReader();
@@ -129,6 +130,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   serviceLayer: null,
 
+  crs: null,
+
   /**
     Observer for leafletMap property adding layer with results.
 
@@ -157,7 +160,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       this.send('selectFeature', null);
-      this.sendAction('closeComparePanel', 'close');
+      this.sendAction('closeComparePanel');
     },
 
     /**
@@ -174,8 +177,19 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       @method actions.hidePanel
     */
-    panToIntersection(feature) {
-      let center = L.geoJSON(feature).getLayers()[0].getBounds().getCenter();
+    panToIntersection(geometry) {
+      let group = this.get('featuresLayer');
+      group.clearLayers();
+      let featureLayer = L.geoJSON(geometry, {
+        style: { color: 'green' }
+      });
+      let mapModel = this.get('mapApi').getFromApi('mapModel');
+      let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, featureLayer.getLayers()[0].feature);
+      featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
+        style: { color: 'green' }
+      });
+      featureLayer.addTo(group);
+      let center = featureLayer.getBounds().getCenter();
       let leafletMap = this.get('leafletMap');
       leafletMap.panTo(center);
     },
@@ -185,13 +199,19 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       @method actions.hidePanel
     */
-    zoomToIntersection(feature) {
+    zoomToIntersection(geometry) {
       let group = this.get('featuresLayer');
       group.clearLayers();
-      let obj = L.geoJSON(feature, {
+      let featureLayer = L.geoJSON(geometry, {
         style: { color: 'green' }
       });
-      obj.addTo(group);
+
+      let mapModel = this.get('mapApi').getFromApi('mapModel');
+      let convertedFeatureLayer =  mapModel._convertObjectCoordinates(this.get('crs').code, featureLayer.getLayers()[0].feature);
+      featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
+        style: { color: 'green' }
+      });
+      featureLayer.addTo(group);
     }
   },
 

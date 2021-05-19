@@ -279,37 +279,44 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         let featurePromises = this.get('mapApi').getFromApi('mapModel').loadingFeaturesByPackages(item.layerModel.id, item.features);
         promises = promises.concat(featurePromises);
       });
-      Ember.RSVP.allSettled(promises).then((res) => {
-        let favFeatures = Ember.A();
-        let result = Ember.A();
-        res.forEach((promiseResult) => {
-          if (promiseResult.state !== 'rejected') {
-            let favorites = Ember.A();
-            promiseResult.value[2].forEach((layerObject) => {
-              Ember.set(layerObject.feature.properties, 'isFavorite', true);
-              favorites.push(layerObject.feature);
-            });
-            let promiseFeature = null;
-            let layerModelIndex = this.isLayerModelInArray(result, promiseResult.value[0]);
-            if (layerModelIndex !== false) {
-              favorites = favorites.concat(favorites, favFeatures[layerModelIndex].features);
-              promiseFeature = new Ember.RSVP.Promise((resolve) => {
-                resolve(favorites);
+      if(!Ember.isBlank(promises)) {
+        Ember.RSVP.allSettled(promises).then((res) => {
+          let favFeatures = Ember.A();
+          let result = Ember.A();
+          res.forEach((promiseResult) => {
+            if (promiseResult.state !== 'rejected') {
+              let favorites = Ember.A();
+              promiseResult.value[2].forEach((layerObject) => {
+                Ember.set(layerObject.feature.properties, 'isFavorite', true);
+                favorites.push(layerObject.feature);
               });
-              result[layerModelIndex].features = promiseFeature;
-              favFeatures[layerModelIndex].features = favorites;
-            } else {
-              promiseFeature = new Ember.RSVP.Promise((resolve) => {
-                resolve(favorites);
-              });
-              result.addObject({ layerModel: promiseResult.value[0], features: promiseFeature });
-              favFeatures.addObject({ layerModel: promiseResult.value[0], features: favorites });
+              let promiseFeature = null;
+              let layerModelIndex = this.isLayerModelInArray(result, promiseResult.value[0]);
+              if (layerModelIndex !== false) {
+                favorites = favorites.concat(favorites, favFeatures[layerModelIndex].features);
+                promiseFeature = new Ember.RSVP.Promise((resolve) => {
+                  resolve(favorites);
+                });
+                result[layerModelIndex].features = promiseFeature;
+                favFeatures[layerModelIndex].features = favorites;
+              } else {
+                promiseFeature = new Ember.RSVP.Promise((resolve) => {
+                  resolve(favorites);
+                });
+                result.addObject({ layerModel: promiseResult.value[0], features: promiseFeature });
+                favFeatures.addObject({ layerModel: promiseResult.value[0], features: favorites });
+              }
             }
-          }
+          });
+          this.set('result', result);
+          this.set('favFeatures', favFeatures);
+          this.set('_showFavorites', true);
         });
-        this.set('result', result);
-        this.set('favFeatures', favFeatures);
-      });
+      } else {
+        this.set('result', Ember.A());
+        this.set('favFeatures', Ember.A());
+        this.set('_showFavorites', true);
+      }
     });
   }
 });

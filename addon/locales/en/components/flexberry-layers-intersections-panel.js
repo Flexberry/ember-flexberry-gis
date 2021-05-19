@@ -11,7 +11,7 @@ export default {
   'm': 'm',
   'show-on-map': 'Show on map',
   'results': 'Results',
-  'show-cords': 'Expand table',
+  'show-cords': '...',
   'hide-cords': 'Collapse table',
   'chooseCaption': 'Selected',
   'notResult': 'No result found',

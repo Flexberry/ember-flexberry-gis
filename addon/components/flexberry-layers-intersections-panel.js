@@ -81,7 +81,7 @@ export default Ember.Component.extend({
     @type Number
     @default 0
   */
-  square: 0,
+  square: null,
 
   /**
     Buffer radius in selected units.
@@ -90,7 +90,7 @@ export default Ember.Component.extend({
     @type Number
     @default 0
   */
-  bufferR: 0,
+  bufferR: null,
 
   /**
     List of selected vector layers.
@@ -199,7 +199,7 @@ export default Ember.Component.extend({
       let polygonLayer = null;
 
       let bufferedMainPolygonLayer;
-      let bufferR = this.get('bufferR');
+      let bufferR = Ember.isNone(this.get('bufferR')) ? 0 : this.get('bufferR');
 
       let latlng;
       let workingPolygon;
@@ -428,8 +428,8 @@ export default Ember.Component.extend({
     group.clearLayers();
     this.removeLayers();
     this.set('selectedLayers', []);
-    this.set('square', 0);
-    this.set('bufferR', 0);
+    this.set('square', null);
+    this.set('bufferR', null);
     this.set('results', []);
     this.set('noIntersectionResults', true);
     this.set('folded', false);
@@ -476,7 +476,7 @@ export default Ember.Component.extend({
       $listLayer.addClass('hidden');
     }
 
-    let square = this.get('square');
+    let square = Ember.isNone(this.get('square')) ? 0 : this.get('square');
     let mapModel = this.get('mapApi').getFromApi('mapModel');
     e.results.forEach((layer) => {
       layer.features.then((features) => {

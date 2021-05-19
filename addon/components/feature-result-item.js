@@ -414,6 +414,7 @@ export default Ember.Component.extend({
       @method actions.findIntersection
     */
     findIntersection() {
+      this.set('isSubmenu', false);
       this.sendAction('findIntersection', this.get('feature'));
     },
 

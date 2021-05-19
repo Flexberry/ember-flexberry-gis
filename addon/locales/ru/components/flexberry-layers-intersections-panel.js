@@ -11,7 +11,7 @@ export default {
   'm': 'm',
   'show-on-map': 'Приблизить к пересечению',
   'results': 'Результаты',
-  'show-cords': 'Развернуть таблицу',
+  'show-cords': '...',
   'hide-cords': 'Cвернуть таблицу',
   'chooseCaption': 'Выбрано',
   'notResult': '(нет значений)',
