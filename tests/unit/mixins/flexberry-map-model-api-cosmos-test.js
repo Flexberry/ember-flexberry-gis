@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import FlexberryMapModelApiCosmosMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api-cosmos';
+import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
 import startApp from 'dummy/tests/helpers/start-app';
 import { Query } from 'ember-flexberry-data';
@@ -62,7 +63,18 @@ let testModel = Ember.Object.create({
   boundingBox: bbox,
   id: '123',
   type: 'wms',
-  settings: '{}'
+  settings: '{}',
+  linkMetadata: [
+    Ember.A({
+      allowShow: true,
+      mapObjectSetting: null,
+      parameters: [
+        Ember.A({
+          objectField: 'testObjectField'
+        })
+      ]
+    })
+  ]
 });
 
 test('test method findCosmos for only with parameter feature', function(assert) {
@@ -303,7 +315,7 @@ test('test method findCosmos for with feature and attributes', function(assert) 
 
 test('test method addLayerFromLayerMetadata', function(assert) {
   //Arrange
-  assert.expect(7);
+  assert.expect(8);
   let done = assert.async(1);
   let hierarchy = Ember.A();
   let subject = mapApiMixinObject.create({
@@ -329,6 +341,7 @@ test('test method addLayerFromLayerMetadata', function(assert) {
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._id, '123');
     assert.ok(layer);
     assert.equal(layer.get('index'), '10');
+    assert.ok(!Ember.isNone(layer.get('id')));
     assert.equal(hierarchy.length, 1);
     assert.equal(layer.get('type'), 'wms');
     done();
@@ -367,5 +380,27 @@ test('test method addLayerFromLayerMetadata not found layer', function(assert) {
     done();
     spyGetMetadataModels.restore();
     spyGetQueryBuilderLayerMetadata.restore();
+  });
+});
+
+test('test method createLayerFromMetadata', function(assert) {
+  //Arrange
+  assert.expect(5);
+  let done = assert.async(1);
+  let subject = mapApiMixinObject.create({
+    store: store
+  });
+
+  //Act
+  Ember.run(() => {
+    let layerModel = createLayerFromMetadata(testModel, subject.get('store'));
+
+    //Assert
+    assert.ok(layerModel);
+    assert.ok(!Ember.isNone(layerModel.get('id')));
+    assert.equal(layerModel.get('type'), 'wms');
+    assert.equal(layerModel.get('layerLink').length, 1);
+    assert.equal(layerModel.get('layerLink.firstObject.parameters.firstObject.objectField'), 'testObjectField');
+    done();
   });
 });
