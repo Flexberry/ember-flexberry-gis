@@ -180,10 +180,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     panToIntersection(geometry) {
       if (!Ember.isBlank(geometry.coordinates[0])) {
         let copyGeometry = Object.assign({}, geometry);
-        let featureLayer = { geometry: copyGeometry };
         let mapModel = this.get('mapApi').getFromApi('mapModel');
-        let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, featureLayer);
-        featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
+        let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
+        let featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
           style: { color: 'green' }
         });
         let center = featureLayer.getBounds().getCenter();
@@ -202,9 +201,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         let group = this.get('featuresLayer');
         group.clearLayers();
         let copyGeometry = Object.assign({}, geometry);
-        let feature = { geometry: copyGeometry };
         let mapModel = this.get('mapApi').getFromApi('mapModel');
-        let convertedFeatureLayer =  mapModel._convertObjectCoordinates(this.get('crs').code, feature);
+        let convertedFeatureLayer =  mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
         let featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
           style: { color: 'green' }
         });
