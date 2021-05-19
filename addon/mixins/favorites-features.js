@@ -279,7 +279,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         let featurePromises = this.get('mapApi').getFromApi('mapModel').loadingFeaturesByPackages(item.layerModel.id, item.features);
         promises = promises.concat(featurePromises);
       });
-      if(!Ember.isBlank(promises)) {
+      if (!Ember.isBlank(promises)) {
         Ember.RSVP.allSettled(promises).then((res) => {
           let favFeatures = Ember.A();
           let result = Ember.A();
