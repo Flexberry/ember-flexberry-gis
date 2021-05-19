@@ -162,6 +162,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     _requiredActionNames: ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds'],
 
     /**
+      Used to identify this component on the page by component name.
+      @property componentName
+      @type String
+      @readonly
+    */
+    componentName: Ember.computed('elementId', function () {
+      return 'treenode' + this.get('elementId');
+    }),
+
+    /**
       Flag: indicates whether some {{#crossLink "FlexberryMaplayerComponent/layers:property"}}'layers'{{/childNodes}} are defined.
 
       @property _hasLayers
@@ -634,7 +644,23 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         @method actions.onSubmenu
       */
       onSubmenu() {
-        this.set('isSubmenu', !this.get('isSubmenu'));
+        const isHidden = this.get('isSubmenu');
+        this.set('isSubmenu', !isHidden);
+
+        if (!isHidden) {
+          const component = Ember.$('.' + this.get('componentName'));
+          const moreButton = Ember.$('.more.floated.button', component);
+          const elements = Ember.$('.more.submenu.hidden', component);
+          const element = elements[0];
+          Ember.run.next(() => {
+            // Устанавливаем фиксированное позиционирование для подменю, чтобы не зависеть от внешнего контенера.
+            const { top, left } = moreButton[0].getBoundingClientRect();
+            element.style.zIndex = 100;
+            element.style.left = `${left}px`;
+            element.style.top = `${top + 2}px`;
+            element.style.position = 'fixed';
+          });
+        }
       },
 
       onAddCompare() {

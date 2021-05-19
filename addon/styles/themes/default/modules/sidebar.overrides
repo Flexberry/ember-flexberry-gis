@@ -6,102 +6,9 @@
   width: 100%;
 }
 
-.sidebar-wrapper {
-  position: absolute;
-  width: @sidebarWrapperWidth;
-  height: @sidebarWrapperHeight;
-  right: @sidebarWrapperRight;
-  transition: @sidebarWrapperTransition;
-  &.visible {
-    right: @visibleRight;
-    .ui.right.sidebar {
-      right: 10px !important;
-    }
-    .ui.tabular.menu.flexberry-tab-bar {
-      right: 410px;
-    }
-  }
-  .ui.right.sidebar {
-    right: -10px !important;
-  }
-  .ui.right.sidebar,
-  .ui.right.sidebar.visible {
-    position: absolute;
-    top: 0px;
-    z-index: 1010;
-    visibility: visible;
-    transform: none;
-    transition: none;
-    background-color: @visibleRightSidebarBackgroundColor;
-    margin: @visibleRightSidebarMargin;
-    min-height: @visibleRightSidebarMinHeight;
-    height: @visibleRightSidebarHeight;
-    border-radius: @visibleRightSidebarBorderRadius;
-    box-shadow: @visibleRightSidebarBoxShadow;
-    width: @visibleRightSidebarWidth;
-    .ui.tab {
-      padding: 10px;
-      color: @sidebarWrapperTabColor;
-    }
-  }
-  .ui.button.flexberry-button {
-    min-width: 30px;
-  }
-  .ui.tabular.menu.flexberry-tab-bar {
-    position: absolute;
-    top: 10px;
-    z-index: 899;
-    overflow: visible;
-    display: block;
-    border: @flexberryTabBarBorder;
-    box-shadow: @flexberryTabBarBoxShadow;
-    background-color: @flexberryTabBarBackgroundColor;
-    border-radius: @flexberryTabBarBorderRadius;
-    right: @flexberryTabBarRight;
-    margin-right: @flexberryTabBarMarginRight;
-    &>* {
-      width: 50px;
-      height: 50px;
-      display: block;
-    }
-    .tab.item {
-      color: @flexberryTabBarItemColor;
-      border: @flexberryTabBarItemBorder;
-      border-radius: @flexberryTabBarItemBorderRadius;
-      box-shadow: @flexberryTabBarItemBoxShadow;
-      margin: @flexberryTabBarItemMargin;
-      padding: @flexberryTabBarItemPadding;
-      &.active.item {
-        border-radius: @flexberryTabBarActiveItemBorderRaius;
-        background: @flexberryTabBarActiveItemBackground;
-        margin: @flexberryTabBarActiveItemMargin;
-      }
-      .flexberry-tab-bar-tab-icon {
-        padding: 5px 5px 0px 0px;
-        &.bookmark {
-          padding: 5px 2px 0 2px;
-        }
-      }
-    }
-    .tab.item:first-child {
-      border-top-left-radius: 5px;
-      &.active.item {
-        border-top-left-radius: 5px !important;
-      }
-    }
-    .tab.item:last-child {
-      border-bottom-left-radius: 5px;
-      &.active.item {
-        border-bottom-left-radius: 5px !important;
-      }
-    }
-  }
-}
-
 /************************************
           Bookmark Block
 *************************************/
-
 .sidebar-wrapper {
   .bookmark-block {
     padding: 0;
@@ -224,12 +131,13 @@
 ****************************************************/
 .blur {
   filter: blur(2px);
+  color: rgba(52, 58, 50, 0.2);
 }
 .ui.right.sidebar {
     .ui.tab {
         border-radius: 5px;
         h3 {
-            margin: 7px 0px 13px 0px;
+            margin: 10px 0px 13px 0px;
         }
     }
     .flexberry-tree-header {
@@ -412,19 +320,23 @@
         vertical-align: top;
       }
       .allmore.floated.flexberry-button.ui.button.icon {
-        i.icon.more:before {
-          content: "...";
-        }
         border: none;
         box-shadow: none;
         vertical-align: top;
+        i.icon.more:before {
+          content: "...";
+          font-size: 26px;
+          line-height: 0;
+        }
         label.more {
-          position: relative;
-          bottom: 15px;
+          padding: 0;
+          height: auto;
+          margin-top: -3px;
+          margin-left: -3px;
         }
         .more.submenu {
           width: 200px;
-          height: 130px;
+          height: auto;
           position: absolute;
           top: 10px;
           z-index: 100;
@@ -496,16 +408,16 @@
         padding-right: 6px;
 
         .ui.button {
-          border-radius: 3px;
-          box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.1);
+          border-radius: @defaultBorderRadius;
+          box-shadow: @defaultBoxShadow;
 
           &.positive {
             color: @white;
-            background: #7ba7d9 !important;
+            background: @primaryColor !important;
           }
 
           &.negative {
-            color: #7ba7d9;
+            color: @primaryColor;
             background: @white !important;
             background-color: @white !important;
           }
@@ -515,7 +427,7 @@
           padding: 21px 17px 15px 17px;
           margin: 0px;
           border: 1px solid #b1cae8;
-          border-radius: 3px;
+          border-radius: @defaultBorderRadius;
           margin-bottom: 15px;
 
           &.manual.active {
@@ -554,7 +466,7 @@
           }
 
           label.flexberry-button {
-            border-radius: 3px;
+            border-radius: @defaultBorderRadius;
             box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.1);
             border: 1px solid #b1cae8;
 
@@ -586,7 +498,7 @@
 
             .editfeature.tab {
               border: 1px solid #b1cae8;
-              border-radius: 3px;
+              border-radius: @defaultBorderRadius;
               padding: 10px;
               margin-right: 10px;
               height: 40px;
