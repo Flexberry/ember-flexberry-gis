@@ -22,6 +22,7 @@ let createLayerFromMetadata = function(metadata, store) {
       scale:metadata.get('scale'),
       coordinateReferenceSystem:metadata.get('coordinateReferenceSystem'),
       boundingBox:metadata.get('boundingBox'),
+      id: metadata.get('id'),
 
       // If user has chosen to open metadata on map, then layer created on metadata basics must be visible by default.
       visibility: true
