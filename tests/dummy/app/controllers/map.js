@@ -204,14 +204,28 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     captionPath: 'forms.map.comparebuttontooltip',
     iconClass: 'compare icon',
     class: 'compare'
+  }, {
+    selector: 'compareObjects',
+    caption: 'Сравнение объектов',
+    iconClass: 'compareObjects icon',
+    class: 'compareObjects'
+  }, {
+    selector: 'intersectionObjects',
+    caption: 'Сравнение объектов',
+    iconClass: 'intersectionObjects icon',
+    class: 'intersectionObjects'
   }]),
 
-  _sidebarFiltered: Ember.computed('sidebar', 'createObject', 'createOrEditObject', function () {
+  _showFavorites: false,
+
+  _sidebarFiltered: Ember.computed('sidebar', 'createObject', 'createOrEditObject', 'compareObjects', 'showIntersectionPanel', function () {
     let result = Ember.A();
     let sidebar = this.get('sidebar');
     sidebar.forEach((item) => {
       if ((item.selector !== 'createObject' || this.get('createObject')) &&
-        (item.selector !== 'createOrEditObject' || this.get('createOrEditObject')))/* &&
+        (item.selector !== 'createOrEditObject' || this.get('createOrEditObject')) &&
+        (item.selector !== 'intersectionObjects' || this.get('showIntersectionPanel')) &&
+        (item.selector !== 'compareObjects' || this.get('compareObjects')))/* &&
         (item.selector !== 'compare' || this.get('compare'))) */{
         result.push(item);
       }
@@ -378,6 +392,40 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   },
 
   actions: {
+    OnCompareTwoGeometries() {
+      this.set('compareObjects', true);
+      Ember.run.later(() => {
+        let tab;
+        let activeTab = Ember.$('.rgis-sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
+        if (activeTab.length > 0) {
+          tab = activeTab.attr('data-tab');
+        }
+
+        Ember.$('.rgis-sidebar-wrapper .main-map-tab-bar > .item.tab.active').removeClass('active');
+
+        this.set('sidebar.8.active', true);
+
+        this.send('toggleSidebar', {
+          changed: this.get('sidebarOpened'),
+          tabName: 'compareObjects',
+          prevTab: tab
+        });
+      });
+    },
+
+    onCompareTwoGeometriesEnd() {
+      this.set('compareObjects', false);
+
+      this.set('sidebar.8.class', 'compareObjects');
+      this.set('sidebar.8.active', false);
+
+      this.set('sidebar.3.active', true);
+      this.send('toggleSidebar', {
+        changed: true,
+        tabName: 'bookmarksAndFavorites'
+      });
+    },
+
     /**
       Handles create object.
 
@@ -582,6 +630,25 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         this.set('sidebar.6.class', 'createOrEditObject');
         this.set('sidebar.6.active', false);
       }
+
+      if (e.prevTab === 'intersectionObjects') {
+        if (e.changed) {
+          this.set('showIntersectionPanel', false);
+          this.set('feature', null);
+        }
+
+        this.set('sidebar.9.class', 'intersectionObjects');
+        this.set('sidebar.9.active', false);
+      }
+
+      if (e.prevTab === 'compareObjects') {
+        if (e.changed) {
+          this.set('compareObjects', null);
+        }
+
+        this.set('sidebar.8.class', 'compareObjects');
+        this.set('sidebar.8.active', false);
+      }
     },
 
     /**
@@ -614,6 +681,54 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     */
     clearSearch() {
       this.set('searchResults', null);
+    },
+
+    /**
+      Action shows intersection panel.
+
+      @method actions.onIntersectionPanel
+    */
+    onIntersectionPanel(feature) {
+      this.set('feature', feature);
+      this.set('showIntersectionPanel', true);
+      Ember.run.later(() => {
+        let tab;
+        let activeTab = Ember.$('.rgis-sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
+        if (activeTab.length > 0) {
+          tab = activeTab.attr('data-tab');
+        }
+
+        Ember.$('.rgis-sidebar-wrapper .main-map-tab-bar > .item.tab.active').removeClass('active');
+
+        this.set('sidebar.9.active', true);
+
+        this.send('toggleSidebar', {
+          changed: this.get('sidebarOpened'),
+          tabName: 'intersectionObjects',
+          prevTab: tab
+        });
+      });
+    },
+
+    /**
+      Close intersection panel.
+
+      @method actions.findIntersection
+    */
+    closeIntersectionPanel() {
+      this.set('intersection', false);
+      this.set('showIntersectionPanel', false);
+
+      this.set('feature', null);
+
+      this.set('sidebar.9.class', 'createOrEditObject');
+      this.set('sidebar.9.active', false);
+
+      this.set('sidebar.0.active', true);
+      this.send('toggleSidebar', {
+        changed: true,
+        tabName: 'treeview'
+      });
     },
 
     /**

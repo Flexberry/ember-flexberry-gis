@@ -178,16 +178,18 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @method actions.hidePanel
     */
     panToIntersection(geometry) {
-      let copyGeometry = Object.assign({}, geometry);
-      let featureLayer = {geometry: copyGeometry};
-      let mapModel = this.get('mapApi').getFromApi('mapModel');
-      let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, featureLayer);
-      featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
-        style: { color: 'green' }
-      });
-      let center = featureLayer.getBounds().getCenter();
-      let leafletMap = this.get('leafletMap');
-      leafletMap.panTo(center);
+      if (!Ember.isBlank(geometry.coordinates[0])) {
+        let copyGeometry = Object.assign({}, geometry);
+        let featureLayer = {geometry: copyGeometry};
+        let mapModel = this.get('mapApi').getFromApi('mapModel');
+        let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, featureLayer);
+        featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
+          style: { color: 'green' }
+        });
+        let center = featureLayer.getBounds().getCenter();
+        let leafletMap = this.get('leafletMap');
+        leafletMap.panTo(center);
+      }
     },
 
     /**
@@ -196,18 +198,20 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @method actions.hidePanel
     */
     zoomToIntersection(geometry) {
-      let group = this.get('featuresLayer');
-      group.clearLayers();
-      let copyGeometry = Object.assign({}, geometry);
-      let feature = {geometry: copyGeometry};
-      let mapModel = this.get('mapApi').getFromApi('mapModel');
-      let convertedFeatureLayer =  mapModel._convertObjectCoordinates(this.get('crs').code, feature);
-      let featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
-        style: { color: 'green' }
-      });
-      featureLayer.addTo(group);
-      let map = this.get('leafletMap');
-      map.fitBounds(featureLayer.getBounds());
+      if (!Ember.isBlank(geometry.coordinates[0])) {
+        let group = this.get('featuresLayer');
+        group.clearLayers();
+        let copyGeometry = Object.assign({}, geometry);
+        let feature = {geometry: copyGeometry};
+        let mapModel = this.get('mapApi').getFromApi('mapModel');
+        let convertedFeatureLayer =  mapModel._convertObjectCoordinates(this.get('crs').code, feature);
+        let featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
+          style: { color: 'green' }
+        });
+        featureLayer.addTo(group);
+        let map = this.get('leafletMap');
+        map.fitBounds(featureLayer.getBounds());
+      }
     }
   },
 
