@@ -510,6 +510,7 @@ let FlexberryMapComponent = Ember.Component.extend(
         }
       });
     }
+
     this.set('_leafletObject', leafletMap);
 
     // Perform initializations.
