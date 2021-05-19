@@ -341,7 +341,7 @@ test('test method addLayerFromLayerMetadata', function(assert) {
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._id, '123');
     assert.ok(layer);
     assert.equal(layer.get('index'), '10');
-    assert.equal(layer.get('id'), '123');
+    assert.ok(!Ember.isNone(layer.get('id')));
     assert.equal(hierarchy.length, 1);
     assert.equal(layer.get('type'), 'wms');
     done();
@@ -397,7 +397,7 @@ test('test method createLayerFromMetadata', function(assert) {
 
     //Assert
     assert.ok(layerModel);
-    assert.equal(layerModel.get('id'), '123');
+    assert.ok(!Ember.isNone(layerModel.get('id')));
     assert.equal(layerModel.get('type'), 'wms');
     assert.equal(layerModel.get('layerLink').length, 1);
     assert.equal(layerModel.get('layerLink.firstObject.parameters.firstObject.objectField'), 'testObjectField');
