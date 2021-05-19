@@ -2,7 +2,7 @@
       Gis Theme Overrides
 *******************************/
 
-@flexberryButtonIconHoveredColor: @bluesky;
+@flexberryButtonIconHoveredColor: @primaryColor;
 
 
 /*********************************************
@@ -10,16 +10,16 @@
 *********************************************/
 
 @uiIconButtonBorderRadius: 5px;
-@uiIconButtonBorderColor: @bluesky;
+@uiIconButtonBorderColor: @primaryColor;
 @uiIconButtonPadding: 12px 4px;
 @uiIconButtonHeight: 40px;
 @uiIconButtonWidth: 40px;
-@uiIconButtonColor: @bluesky;
+@uiIconButtonColor: @primaryColor;
 @uiIconButtonBackground: @whitecolor;
 @uiIconButtonBoxShadow: 0 0 4px @darkbluecolor;
 
 /* Hovered */
-@uiIconButtonHoveredColor: @bluesky;
+@uiIconButtonHoveredColor: @primaryColor;
 @uiIconButtonHoveredBackground: @lightbluecolor;
 @uiIconButtonHoveredBoxShadow: 0 0 4px @darkbluecolor;
 
@@ -35,7 +35,24 @@
 /*********************************************
             Field Button styles
 *********************************************/
-@fieldButtonColor: @bluesky;
+@fieldButtonColor: @primaryColor;
 
 /* Hovered */
-@fieldButtonHoveredColor: @bluesky;
+@fieldButtonHoveredColor: @primaryColor;
+
+
+
+// ==== RGIS =====
+@positiveColor: @primaryColor;
+@negativeColor: @white;
+@uiIconButtonColor: @primaryColor;
+@uiIconButtonHoveredColor: @primaryColor;
+@flexberryButtonIconHoveredColor: @primaryColor;
+@uiIconButtonBorderRadius: @defaultBorderRadius;
+@uiBorderColor: @lightGreyColor;
+@uiHoveredPositiveBorderColor: @primaryColor;
+@textColor: @primaryColor;
+@uiIconButtonHoveredBackground: @buttonMenuHoveredBackground;
+@olvToolvarButtonActiveBackgroundColor: @yellowGreenColor;
+@olvToolvarButtonActiveBorderRadius: 3px;
+@buttonMenuHoveredBackground: @white;

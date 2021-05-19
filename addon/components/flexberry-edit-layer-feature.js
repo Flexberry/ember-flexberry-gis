@@ -332,10 +332,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     let choiceValue = this.get('choiceValue');
     let index = this.get('curIndex');
     this.set('data', {});
-    if (!Ember.isNone(choiceValueData) && !Ember.isNone(choiceValue) && !Ember.isBlank(choiceValue)) {
-      this.set(`data.${index}`, choiceValueData[`${choiceValue}` - 1]);
-    } else {
-      this.set(`data.${index}`, choiceValueData[`${choiceValueData.length}` - 1]);
+    if (!Ember.isNone(choiceValueData)) {
+      if (!Ember.isNone(choiceValue) && !Ember.isBlank(choiceValue)) {
+        this.set(`data.${index}`, choiceValueData[`${choiceValue}` - 1]);
+      } else {
+        this.set(`data.${index}`, choiceValueData[`${choiceValueData.length}` - 1]);
+      }
     }
   }),
 

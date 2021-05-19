@@ -1,0 +1,1105 @@
+.sidebar-wrapper,
+.rgis-sidebar-wrapper.right-sidebar-wrapper {
+  top: 0;
+  .main-map-tab-bar .item.tab.createOrEditObject,
+  .main-map-tab-bar .item.tab.createOrEditObject.active {
+    position: absolute;
+    display: none !important;
+  }
+
+  .ui.right.sidebar.tabbar {
+
+    .ui.tab.createOrEditObject {
+      padding: 10px 10px;
+
+      .create-edit-block-attributes {
+        padding-top: 20px;
+      }
+
+      .create-edit-block-title {
+        h3 {
+          position: initial;
+          text-transform: uppercase;
+          font-size: 18px;
+          margin: 10px 0 20px 0;
+        }
+      }
+
+      .create-edit-block {
+        width: 100% !important;
+        height: ~"calc(100% - 80px) !important;";
+        position: relative;
+        overflow-y: scroll;
+        margin-top: 0px;
+
+        .ui.button {
+
+          &.positive :hover {
+            background: #59902f !important
+          }
+
+          &.negative {
+            color: @primaryColor;
+            background: @white !important;
+            background-color: @white !important;
+          }
+        }
+
+        .editfeature-tab-data-panel {
+          border-color: @defaultBorderColor;
+          font-size: 13px;
+          margin-bottom: 24px;
+
+          &.active {
+            box-shadow: @defaultBoxShadow;
+          }
+
+          &.manual .row.flex-buttons {
+            margin: 12px 0 2px 0;
+          }
+
+          .draw-tools {
+
+            margin-top: 1px;
+            margin-bottom: 3px;
+            .flexberry-button.ui.button {
+              width: 40px;
+              height: 40px;
+              i.icon {
+                padding-top: 5px;
+                &:before {
+                  font-size: 18px;
+                }
+
+                &.multi-poly {
+                  margin-left: -5px;
+                }
+
+                &.move {
+                  margin-left: -2px;
+                }
+
+                &.movexy {
+                  margin-left: -2px;
+                  &:after {
+                    margin-left: -6px;
+                  }
+                }
+              }
+            }
+          }
+
+          .ui.celled.table.flexberry-table {
+            width: ~"calc(100% + 26px)";
+            margin-left: -13px;
+            th {
+              color: @labelColor;
+              padding: 0px 5px;
+              line-height: 13px;
+
+              &:first-child {
+                text-align: end;
+              }
+            }
+
+            td {
+              padding: 5px 3px;
+              input[type="text"] {
+                padding: 3px 6px;
+              }
+            }
+
+            td, th {
+              .field {
+                margin: 0;
+                color: @textColor;
+              }
+
+              &.small {
+                min-width: 25px;
+                width: 25px;
+              }
+
+              &.checkbox-rhumb {
+                width: 77px;
+                min-width: 77px;
+
+                .ui.checkbox.flexberry-checkbox.read-only {
+                    opacity: 1;
+                }
+
+                i.plus.icon {
+                  position: relative;
+                  left: 3px;
+                }
+              }
+
+              &.rhumb-number {
+                padding-top: 7px;
+                font-size: 11px;
+                color: @textColor;
+              }
+
+              &.narrow-rhumb {
+                min-width: 42px;
+                width: 42px;
+                padding: 5px 6px;
+              }
+
+              font-size: 11px;
+
+              .flexberry-checkbox-label:before,
+              .flexberry-checkbox-label:after {
+                margin: 0;
+              }
+            }
+
+            .flexberry-dropdown.selection {
+              padding: 10px 6px 6px 6px;
+            }
+          }
+
+          label.flexberry-button {
+            box-shadow: @defaultBoxShadow;
+            border-color: @defaultBorderColor;
+            &.active, &:hover {
+              border-color: @primaryColor;
+            }
+          }
+
+          .manual-textarea {
+            padding-top: 6px;
+            .flexberry-textarea.ui.input {
+              width: 100%;
+            }
+            textarea {
+              width: 100%;
+              min-height: 120px;
+              padding: 6px;
+              &::placeholder {
+                color: #E5E5E5;
+              }
+            }
+          }
+
+          .rhumb-first {
+            .row > .field {
+              margin-bottom: 16px;
+            }
+
+            .row:last-child > .field {
+              margin-bottom: 6px;
+            }
+          }
+        }
+
+        .editfeature-tab-nav-panel {
+          .editfeature-tab-nav-panel-tabs {
+            margin-bottom: 0px;
+            .editfeature.tab {
+              border-color: @defaultBorderColor;
+              width: 40px;
+              margin-right: 30px;
+              box-shadow: @defaultBoxShadow;
+
+              i.icon {
+                &:before {
+                  font-size: 18px;
+                  margin-top: -2px;
+                  margin-left: 2px;
+                }
+              }
+
+              &.curtab {
+                border-bottom-color: @white !important;
+                background-color: @white !important;
+                box-shadow: 0px 2px 2px 0 rgba(255, 255, 255, 1), 2px -2px 4px 0 rgba(0, 0, 0, 0.1);
+              }
+            }
+          }
+        }
+
+        .field {
+          margin-bottom: 12px;
+          textarea.ember-text-area,
+          .flexberry-dropdown.selection.dropdown,
+          .ember-text-field {
+            width: 100%;
+          }
+
+          .flexberry-dropdown.selection.dropdown > .dropdown.icon {
+            right: 10px;
+            top: 6px;
+
+            &:before {
+              content: '\f107';
+              color: #8F928F;
+              font-family: 'Icons';
+              font-size: 20px;
+            }
+          }
+
+          label {
+            color: @labelColor;
+          }
+        }
+
+        .create-edit-block-data > a {
+          color: @textColor;
+          font-size: 18px;
+
+          i.icon.caret:before {
+            color: @textColor;
+            font-family: Icons;
+            font-size: 21px;
+            content: "\f105";
+          }
+
+          i.icon.caret.down:before {
+            content: "\F107";
+          }
+        }
+      }
+
+      .create-edit-block-buttons {
+        bottom: 92px;
+        width: ~"calc(100% - 60px)";
+        justify-content: start;
+
+        .ui.button {
+          box-shadow: @defaultBoxShadow;
+          border-color: @defaultBorderColor;
+
+          margin-right: 15px;
+          &:last-child {
+            margin-right: 0px;
+          }
+
+          &.positive:hover {
+            background: @buttonHoverColor !important
+          }
+
+          &.negative {
+            color: @primaryColor;
+            background: @white !important;
+            background-color: @white !important;
+          }
+        }
+      }
+
+      .flex-buttons {
+        .button {
+          height: 32px;
+          width: 145px;
+        }
+      }
+    }
+
+    border: @buttonMenuBorder;
+
+    .ui.tab {
+      .feature-result-item-title:hover {
+        .feature-result-item-caption {
+          color: @sidebarWrapperTabHoveredColor;
+        }
+      }
+    }
+  }
+}
+
+.ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).title:hover,
+.ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title:hover {
+  color: @textColor;
+}
+
+.ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).title .flexberry-maplayer-caption-label,
+.ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .flexberry-maplayer-caption-label {
+  font-size: 14px;
+}
+
+.ui.right.sidebar {
+  .treeview {
+    overflow-x: hidden;
+    overflow-y: hidden !important;
+    .ui.styled.accordion {
+      width: 1000px;
+      .accordion:first-child .title {
+        border-top: none;
+      }
+    }
+    &.root.header {
+      bottom: 37px;
+      left: 247px;
+      position: relative;
+      .button {
+        &:hover {
+          background: @whitecolor;
+        }
+        .icon {
+          &.save {
+            margin-top: 1px;
+            margin-left: 1px;
+          }
+          &.plus {
+            margin-left: 3px;
+          }
+        }
+      }
+    }
+    .content .flexberry-maplayers.accordion {
+      margin-top: 0px;
+    }
+  }
+  .flexberry-map-layers-add-button {
+    padding: 6px 0;
+  }
+
+  &.treeview .flexberry-maplayers {
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: -30px;
+    margin-left: -13px;
+    height: ~"calc(100% - 30px)" !important;
+    .flexberry-treenode-expand-collapse-icon.dropdown.icon:before {
+      content: '\f105';
+      font-family: Icons;
+      color: @textColor;
+    }
+    .ui.icon.button:not(.fluid) {
+      padding: 6px 0;
+    }
+
+    .button .icon {
+      margin-top: -1px;
+    }
+
+    .flexberry-tree-root {
+      background-color: @white;
+      &> :last-child {
+          border-radius: 0;
+      }
+    }
+
+    .flexberry-maplayer-caption-label {
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .flexberry-maplayer-type-icon.without-folder~.flexberry-treenode-buttons-block .allmore .more.submenu {
+      width: 210px;
+      left: 5px;
+    }
+
+    .flexberry-maplayer-type-icon:not(.without-folder)~.flexberry-treenode-buttons-block .allmore .more.submenu {
+      height: auto;
+    }
+
+    .flexberry-treenode-buttons-block {
+      label.button:hover {
+        border: none;
+      }
+    }
+    .flexberry-treenode-buttons-block {
+      padding-top: 5px;
+      left: 40px;
+      top: -6px;
+      width: 100%;
+      font-size: 0;
+      i.icon:before {
+        color: @textColor;
+        font-size: 18px;
+      }
+      i.icon.plus:before {
+        font-size: 14px;
+      }
+      a.icon.item.more {
+        color: @textColor;
+      }
+      label.more.flexberry-treenode-prevent-expand-collapse {
+        left: -10px;
+      }
+      .more.submenu {
+        height: auto;
+        top: 10px;
+        left: 90px;
+        width: 210px;
+        padding: 0 0 11px 7px;
+        text-align: left;
+        label.ui.button {
+          width: auto !important;
+          color: @textColor;
+          border: none;
+          padding: 10px 0px 0px 0px;
+          height: 25px;
+        }
+        .flexberry-maplayer-bounds-button {
+          padding-top: 12px !important;
+        }
+        .button-more-submenu label.more.submenu {
+          left: -10px;
+          top: -12px !important;
+          margin-left: 2px;
+          padding-top: 5px;
+          i.more.icon:before {
+            font-size: 26px;
+          }
+        }
+        i.icon:not(.more) {
+          margin-right: 10px;
+          margin-left: 0;
+        }
+        i.icon:before {
+          font-size: 12px;
+        }
+        .flexberry-maplayer-add-button {
+          margin-right: 17px;
+          margin-left: -5px !important;
+        }
+      }
+    }
+  }
+
+  .ui.styled.accordion {
+    .accordion .content {
+      padding: 0px 0px 8px 20px;
+    }
+
+    .flexberry-treenode-header {
+      align-items: flex-start;
+      .flexberry-treenode-caption-block {
+        align-items: flex-start;
+      }
+      .flexberry-treenode-prevent-expand-collapse {
+        margin: 0 15px;
+        width: 17px !important;
+      }
+      &:not(.flexberry-checkbox) {
+        &.title,
+        &.active.title {
+
+          color: @flexberryTreenodeHeaderColor;
+          .flexberry-treenode-expand-collapse-icon {
+            width: 25px;
+            height: 25px;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            bottom: 4px;
+          }
+
+          .button {
+            box-shadow:none;
+            margin: 0;
+
+            &:hover {
+              border: @flexberryMaplayerOpacitiLabelHoveredBorder;
+            }
+          }
+
+          .flexberry-maplayer-opacity-label {
+            box-shadow:none;
+            margin: 0 0 0 .25em;
+            background-color: @white;
+            padding: 8px 0px;
+
+            &:hover {
+              background-color: @white !important;
+            }
+          }
+
+          /*.flexberry-maplayer-attributes-button {
+            display: none;
+          }*/
+
+          .flexberry-maplayer-copy-button {
+            display: none;
+          }
+
+          &:hover {
+            color: @primaryColor;
+          }
+          .flexberry-treenode-buttons-block {
+            height: 37px;
+            .button {
+              opacity: 0.75;
+              background-color: rgba(255, 255, 255, 0);
+            }
+            .button:hover {
+              border: none;
+              opacity: 1;
+            }
+          }
+        }
+      }
+
+      .content {
+        .flexberry-maplayer-opacity-slider {
+          margin-right: 15px;
+        }
+
+        .flexberry-slider .ui-slider .slider.slider.slider-horizontal {
+          height: 7px;
+          margin: 0;
+
+          .slider-selection {
+            background-color: @white;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ====== RGIS map-themes ========
+.sidebar-wrapper,
+.rgis-sidebar-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: -webkit-transform 0.5s ease, right 0.5s ease;
+
+  .ui.right.sidebar.tabbar {
+    left: ~"calc(-100%) !important";
+    overflow: visible!important;
+  }
+
+  &.visible .ui.right.sidebar.tabbar {
+    left: 0 !important;
+  }
+
+  .ui.tabular.menu.flexberry-tab-bar {
+    .tab.item {
+      background-color: @white;
+      border: @buttonMenuBorder;
+      &:hover {
+        border: @buttonMenuHoveredBorder;
+        background: @buttonMenuHoveredBackground;
+      }
+      &.active {
+        border: 1px solid @white;
+        box-shadow: none;
+      }
+      &.isogd-treeview-tab {
+        padding: 10px 12px;
+      }
+      &.create-edit-object-tab {
+        display: none;
+        position: absolute;
+      }
+    }
+    &.main-map-tab-bar {
+      position: absolute;
+      bottom: 17px;
+      margin: 0;
+      padding: 0 0 10px 0;
+      z-index: 899;
+      display: block;
+      border: 0px;
+      box-shadow: none !important;
+      background-color: transparent;
+      border-radius: 0;
+      left: 0;
+      margin-right: 0;
+
+      display: flex;
+      width: 380px;
+      flex-direction: row;
+      justify-content: space-around;
+      padding: 0 15px 0;
+      box-shadow: @buttonMenuBoxShadow;
+
+      a.tab {
+        border-radius: @defaultBorderRadius;
+        box-shadow: @defaultBoxShadow;
+        width: 40px;
+        height: 40px;
+
+        display: flex;
+        justify-content: center;
+        padding: 10px;
+        margin: 0 15px;
+
+        &.item > i.icon {
+          margin: 0px;
+          margin-top: -4px;
+        }
+
+        &.active {
+          border-radius: @defaultBorderRadius !important;
+        }
+
+        &.isogd-treeview-tab > i.icon {
+          margin-left: -4px;
+        }
+
+        &.isogd-identify-tab > i.icon {
+          margin-left: -6px;
+        }
+
+        &.analytics > i.icon {
+          margin-left: -3px;
+        }
+
+        i.icon:before {
+          font-family: 'Crimean';
+          font-size: 18px;
+        }
+
+        i.icon.list:before {
+          content: "\e825";
+        }
+
+        i.icon.info.circle:before {
+          content: "\e827";
+        }
+
+        i.icon.analytics:before {
+          font-family: 'Icons';
+          content: "\f080";
+        }
+
+        i.icon.bookmark:before {
+          font-family: 'Icons';
+          content: "\f02e";
+        }
+      }
+    }
+  }
+
+  .ui.right.sidebar.tabbar {
+    position: absolute;
+    padding-top: 70px !important;
+    padding-left: 20px !important;
+    top: 0px;
+    z-index: 890;
+    visibility: visible;
+    transform: none;
+    transition: none;
+    background-color: white;
+    margin: 0px 0px !important;
+    min-height: 250px;
+    height: 100% !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    -webkit-transition: left 0.5s;
+    -moz-transition: left 0.5s;
+    -o-transition: left 0.5s;
+    transition: left 0.5s;
+
+    .ui.tab {
+      padding: 10px;
+      color: @textColor;
+
+      h3 {
+        font-weight: normal;
+      }
+    }
+
+    .ui.tab.createOrEditObject {
+      padding: 50px 25px;
+    }
+  }
+
+  .sidebar > div.ui.tab {
+    height: ~"calc(100% - 85px) !important";
+    overflow-y: auto;
+  }
+
+  .ui-resizable-handle.ui-resizable-e {
+    width: 10px;
+    position: absolute;
+    display: block;
+    -ms-touch-action: none;
+    touch-action: none;
+    cursor: e-resize;
+    right: -5px;
+    top: 0;
+    height: 100%;
+    z-index: 90;
+  }
+
+  .compare-geometries-panel > div,
+  .bottom-compare-panel {
+    height: 100%;
+  }
+  .compare-main-panel {
+    height: ~"calc(100% - 30px)";
+    overflow: auto;
+  }
+}
+
+.ui.menu.flexberry-maptoolbar .no-arrow.ui.dropdown .menu {
+  margin-left: -161px;
+  margin-top: 0px;
+  width: 200px;
+}
+
+.background-layers.flexberry-maptoolbar.ui.menu {
+  bottom: 67px;
+  .flexberry-background-map-tool-div {
+    .flexberry-background-map-tool {
+      padding-left: 9px;
+      padding-top: 2px;
+      border-radius: 3.5px;
+      right: 0;
+      i.icon:before {
+        font-size: 22px;
+        line-height: 25px;
+      }
+      &.visible {
+        border-top: none;
+        border-radius: 0px 0px 3.5px 3.5px;
+        border-bottom: @defaultGrayBorder;
+      }
+      &:hover {
+        background: @whitecolor;
+        border: 1px solid @primaryColor;
+      }
+    }
+    .main-background-layers {
+      border: @defaultGrayBorder;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+      border-radius: 3.5px 3.5px 0px 3.5px;
+      bottom: -1px;
+      right: 0;
+      padding-bottom: 4px;
+      .picture.active {
+        border-width: 2px;
+      }
+      .picture:not(.active) {
+        border-color: #E5E5E5;
+      }
+    }
+  }
+}
+
+/************************************
+        Bookmark Block
+*************************************/
+
+.sidebar-wrapper,
+.rgis-sidebar-wrapper {
+  .ui.right.sidebar.tabbar {
+    .ui.tab.bookmarks,
+    .ui.tab.favorites {
+      padding: 0;
+    }
+
+    /**
+    Закладки
+    */
+    .bookmark-block {
+      .bookmark-header {
+        margin-bottom: 20px;
+
+        .ui.button.create-bookmark {
+          margin: 0px;
+          text-align: center;
+          width: auto;
+          color: @white;
+          background: @primaryColor;
+          width: 175px;
+          height: 32px;
+          padding: 7px 0;
+
+          i.icon.add {
+            display:none
+          }
+        }
+      }
+
+      .bmrk-add-block {
+        padding: 15px 0;
+        .ui.input input {
+          border-radius: @defaultBorderRadius;
+          border: 1px solid @controlBorderColor;
+          box-shadow: @defaultFieldBoxShadow;
+          max-width: 256px;
+        }
+      }
+      .bookmark-item {
+        padding-bottom: 10px;
+      }
+      .bookmark-item-buttons,
+      .bmrk-add-block-buttons {
+        .ui.icon.button{
+          height: 33px;
+          min-width: 30px;
+        }
+        i.icon.checkmark:before {
+          font-size: 24px;
+        }
+
+        i.icon.remove:before {
+          font-family: Crimean;
+          font-size: 20px;
+          content: '\e814'
+        }
+
+        i.icon.zoom:before {
+          font-family: Crimean;
+          font-size: 20px;
+          content:'\e812';
+        }
+      }
+      .bookmark-item,
+      .bmrk-add-block {
+        .ember-text-field {
+          height: 33px;
+        }
+
+        .flexberry-textbox,
+        .bookmark-item-title {
+          padding: 0;
+          line-height: 33px;
+          float: left;
+          width: ~'calc(100% - 75px)'
+        }
+
+        .bookmark-item-title {
+          padding-left: 5px;
+        }
+
+        .bmrk-add-block-buttons,
+        &-buttons {
+
+          right: 0;
+          font-size: 0;
+
+          .ui.icon.button {
+            margin:0;
+
+            &:nth-child(1),
+            &:nth-child(2) {
+              border-radius: 0px;
+            }
+          }
+        }
+      }
+    }
+
+    /** Избранное Кнопка Сравнить объекты*/
+    .ui.tab.favorites .ui.button.compare {
+      color: @white;
+      background: @primaryColor;
+      margin: 0 0 20px 0;
+      padding: 7px 18px;
+      height: 30px;
+      width: 175px;
+    }
+  }
+}
+
+.outer-search.flexberry-search-panel.attr~.ui.sidebar.treeview.pushable.tabbar .ui.tab.search.active h3 {
+  margin-top: 207px;
+}
+.flexberry-search-panel .flexberry-search-attr .ui.icon.close-attr-search {
+  position: absolute;
+  top: 63px;
+  left: 290px;
+}
+.outer-search.flexberry-search-panel {
+  left: 30px;
+  top: 30px;
+  width: 320px;
+  height: 40px;
+  box-shadow: @defaultBoxShadow;
+  .flexberry-search.ui.search {
+    display: block;
+    border-radius: @defaultBorderRadius;
+    .prompt {
+      width: 320px !important;
+      border: @defaultGrayBorder !important;
+      color: @textColor;
+      height: 40px;
+      border-radius: 3.5px !important;
+      padding-left: 11px;
+      input.ember-text-field {
+        background-color: @whitecolor;
+      }
+    }
+    .flexberry-search-results.results.visible {
+      border: none;
+      margin-top: 0px;
+    }
+    button.ui.icon {
+      border: none;
+      color: @darkbluecolor;
+      margin-right: 0px;
+      padding: 0;
+      outline: none;
+      &.attr-search-button {
+        top: 1px;
+      }
+      &.separate {
+        position: absolute;
+        top: 8px;
+        right: 14px;
+        border-left: @defaultGrayBorder;
+      }
+      .icon {
+        &.remove:before {
+          content: '\e806';
+          font-size: 12px;
+          color: @greyIconColor;
+        }
+        &.search:before {
+          content: "\e803";
+          font-size: 15px;
+        }
+        &.attr {
+          margin-bottom: 10px;
+        }
+        &.attr:before {
+          font-size: 8px;
+        }
+      }
+      &.search-button:hover {
+        .search:before {
+          color: @yellowGreenColor;
+        }
+      }
+      &.clear-search-button:hover {
+        .remove:before {
+          color: #2B7A38 !important;
+        }
+      }
+    }
+    .flexberry-search-results {
+      position: initial;
+    }
+    .dropdown {
+      background-color: @whitecolor;
+      &.active {
+        background-color: @lightbluecolor;
+      }
+    }
+  }
+  .flexberry-search-attr {
+    min-height: 146px;
+    height: auto;
+    border: @defaultGrayBorder;
+    .field.layers {
+      margin: 12px 15px 0px 22px;
+    }
+    .field.properties {
+      margin-bottom: 18px;
+    }
+    label {
+      font-size: @labelFontSize;
+      color: @labelColor;
+    }
+    .flexberry-dropdown {
+      min-height: 32px;
+      height: auto;
+      margin-top: 3px;
+      margin-bottom: 8px;
+      border: @defaultGrayBorder;
+      box-shadow: @defaultFieldBoxShadow;
+      border-radius: 3.5px;
+      div.text {
+        padding-left: 9px;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      i.dropdown.icon {
+        right: 9px;
+      }
+      i.dropdown.icon:before {
+        content: '\f107';
+        font-family: 'FontAwesome';
+        font-size: 15px;
+        color: #8F928F;
+      }
+    }
+  }
+}
+
+.ui.tab.search {
+  overflow-y: hidden !important;
+  overflow-x: hidden;
+  .layer-result-list {
+    overflow-y: auto;
+    height: ~"calc(100% - 35px)" !important;
+  }
+}
+.outer-search.flexberry-search-panel.attr~.ui.sidebar.treeview.pushable.tabbar .ui.tab.search.active .layer-result-list {
+  height: ~"calc(100% - 200px)" !important;
+}
+
+.ui.tab.identify {
+  overflow-y: hidden !important;
+  overflow-x: hidden;
+  .layer-result-list {
+    overflow-y: auto;
+    height: ~"calc(100% - 90px)" !important;
+  }
+  .layer-result-list .nodata {
+    margin-top: 15px;
+  }
+}
+.flexberry-gis-edit-panel {
+  display: flex;
+  font-size: 0;
+  .flexberry-buttons {
+    margin-right: 20px;
+  }
+}
+
+.ui.tab.compare {
+  overflow-y: hidden !important;
+  .compare-header {
+    height: 35px;
+    h3 {
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+  }
+  .ui.icon.close {
+    margin-left: 9px;
+    background: @whitecolor;
+    border: none;
+    height: 32px;
+    i.remove.icon {
+      padding-left: 2px;
+      padding-top: 2px;
+    }
+    &:hover {
+      border: 1px solid @primaryColor;
+      i.remove.icon:before {
+        color: @primaryColor;
+      }
+    }
+  }
+  .ui.styled.accordion .accordion:first-child .title {
+    border-top: none;
+  }
+  .flexberry-maplayers-add-button {
+    display: none;
+  }
+  .ui.pointing.group.secondary.menu {
+    margin-top: 0px;
+    margin-left: -15px;
+    border-bottom: none;
+    min-height: 35px;
+    margin-bottom: 10px;
+    a.item {
+      color: #8F928F;
+      font-size: 14px;
+      font-weight: normal;
+      border-bottom: none;
+      padding-top: 7px;
+      &.active {
+        color: #000000;
+        font-weight: normal;
+      }
+    }
+  }
+  .flexberry-maplayers {
+    margin-top: 0px !important;
+  }
+}
+
+.ui.tab.treeview .treeview.root.header.hidden+.flexberry-maplayers {
+  margin-top: 12px;
+}
