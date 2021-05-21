@@ -652,6 +652,11 @@
           margin-left: -3px;
         }
 
+        // i.icon:before {
+        //   font-family: 'Crimean';
+        //   font-size: 18px;
+        // }
+
         i.icon.list:before {
           content: "\e825";
         }
@@ -1006,43 +1011,6 @@
       background-color: @whitecolor;
       &.active {
         background-color: @lightbluecolor;
-      }
-    }
-  }
-  .flexberry-search-attr {
-    min-height: 146px;
-    height: auto;
-    border: @defaultGrayBorder;
-    padding: 12px 17px;
-    .field.layers,
-    .field.properties {
-      margin: 0px;
-    }
-    label {
-      font-size: @labelFontSize;
-      color: @labelColor;
-    }
-    .flexberry-dropdown {
-      min-height: 32px;
-      height: auto;
-      margin-top: 3px;
-      margin-bottom: 6px;
-      border: @defaultGrayBorder;
-      box-shadow: @defaultFieldBoxShadow;
-      border-radius: 3.5px;
-      div.text {
-        padding-left: 9px;
-        white-space: nowrap;
-        overflow: hidden;
-      }
-      i.dropdown.icon {
-        right: 9px;
-      }
-      i.dropdown.icon:before {
-        content: '\f107';
-        font-family: 'FontAwesome';
-        font-size: 15px;
-        color: #8F928F;
       }
     }
   }

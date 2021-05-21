@@ -179,3 +179,42 @@
     }
   }
 }
+
+.outer-search.flexberry-search-panel .flexberry-search-attr,
+.create-edit-block-choices {
+  min-height: 146px;
+  height: auto;
+  border: @defaultGrayBorder;
+  padding: 12px 17px;
+  .field.layers,
+  .field.properties {
+    margin: 0px;
+  }
+  label {
+    font-size: @labelFontSize;
+    color: @labelColor;
+  }
+  .flexberry-dropdown {
+    min-height: 32px;
+    height: auto;
+    margin-top: 3px;
+    margin-bottom: 6px;
+    border: @defaultGrayBorder;
+    box-shadow: @defaultFieldBoxShadow;
+    border-radius: 3.5px;
+    div.text {
+      padding-left: 9px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    i.dropdown.icon {
+      right: 9px;
+    }
+    i.dropdown.icon:before {
+      content: '\f107';
+      font-family: 'FontAwesome';
+      font-size: 15px;
+      color: @greyIconColor;
+    }
+  }
+}
