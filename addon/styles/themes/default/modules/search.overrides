@@ -12,7 +12,7 @@
     }
     .ui.search-button {
       position: absolute;
-      right: 39px;
+      right: 33px;
       border: none;
       height: 40px;
     }
@@ -27,7 +27,7 @@
       right: 4px;
       border: none;
       height: 40px;
-      width: 30px;
+      width: 25px;
     }
     .ui.icon.separate {
       position: relative;

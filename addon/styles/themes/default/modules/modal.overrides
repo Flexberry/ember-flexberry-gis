@@ -170,13 +170,6 @@
               padding-bottom: 0;
             }
 
-            .column {
-              // Shrink distance between components located in same rows.
-              &:not(:last-child) {
-                padding-right: 0;
-              }
-            }
-
             .ui.buttons {
               .ui.icon.button {
                 border-right: none;

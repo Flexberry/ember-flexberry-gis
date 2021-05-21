@@ -105,7 +105,7 @@
     font-weight: normal;
     background-color: @white !important;
     background-image: none;
-    border: solid 1px @borderColor !important;
+    border: @defaultGrayBorder !important;
     box-shadow: @defaultBoxShadow;
     color: @primaryColor !important;
     margin-left: 0px;
@@ -517,6 +517,7 @@
     }
     textarea.ember-text-area {
       margin: 0em;
+      min-height: 120px;
     }
   }
 }
@@ -797,4 +798,8 @@
 
 .flexberry-export-map-command-dialog-settings-column-inner {
   max-width: 454px;
+}
+
+.ui.modal.flexberry-geometry-add-mode-import-dialog textarea {
+
 }

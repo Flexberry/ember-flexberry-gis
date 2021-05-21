@@ -99,17 +99,15 @@
 
 
 // ====== RGIS ========
-.ui.button {
+.ui.button:not(.icon) {
   border-radius: @defaultBorderRadius;
-  box-shadow: @defaultBoxShadow;
-  color: @textColor;
   .ui.active.button {
     box-shadow: @defaultBoxShadow;
   }
   &:hover {
-    border: @buttonMenuHoveredBorder;
     background: @buttonMenuHoveredBackground;
-    color: @black;
+    color: @buttonHoverColor;
+    box-shadow: none;
   }
 }
 

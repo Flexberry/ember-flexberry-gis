@@ -8,7 +8,6 @@
   }
 
   .ui.right.sidebar.tabbar {
-
     .ui.tab.createOrEditObject {
       padding: 10px 10px;
 
@@ -33,9 +32,9 @@
         margin-top: 0px;
 
         .ui.button {
-
-          &.positive :hover {
-            background: #59902f !important
+          &.positive:hover {
+            background: @buttonHoverColor !important;
+            color: @white;
           }
 
           &.negative {
@@ -110,6 +109,7 @@
             }
 
             td, th {
+              font-size: 11px;
               .field {
                 margin: 0;
                 color: @textColor;
@@ -146,10 +146,16 @@
                 padding: 5px 6px;
               }
 
-              font-size: 11px;
-
               .flexberry-checkbox-label:before,
               .flexberry-checkbox-label:after {
+                margin: 0;
+              }
+              i.icon.plus {
+                font-size: 14px;
+              }
+
+              i.icon.trash {
+                font-size: 15px;
                 margin: 0;
               }
             }
@@ -213,7 +219,14 @@
               &.curtab {
                 border-bottom-color: @white !important;
                 background-color: @white !important;
-                box-shadow: 0px 2px 2px 0 rgba(255, 255, 255, 1), 2px -2px 4px 0 rgba(0, 0, 0, 0.1);
+                &::before {
+                  background-color: @white;
+                  display: block;
+                  height: 7px;
+                  width: 100%;
+                  bottom: -7px;
+                  top: auto;
+                }
               }
             }
           }
@@ -268,21 +281,27 @@
 
         .ui.button {
           box-shadow: @defaultBoxShadow;
-          border-color: @defaultBorderColor;
-
-          margin-right: 15px;
-          &:last-child {
-            margin-right: 0px;
+          margin: 0;
+          &:first-child {
+            margin-right: 30px;
           }
 
           &.positive:hover {
-            background: @buttonHoverColor !important
+            box-shadow: none;
+            background: @buttonHoverColor !important;
+            color: @white;
           }
 
           &.negative {
             color: @primaryColor;
             background: @white !important;
             background-color: @white !important;
+            border-color: @defaultBorderColor;
+            opacity: 1;
+            &:hover {
+              box-shadow: none;
+              color: @buttonHoverColor;
+            }
           }
         }
       }
@@ -291,16 +310,7 @@
         .button {
           height: 32px;
           width: 145px;
-        }
-      }
-    }
-
-    border: @buttonMenuBorder;
-
-    .ui.tab {
-      .feature-result-item-title:hover {
-        .feature-result-item-caption {
-          color: @sidebarWrapperTabHoveredColor;
+          box-shadow: @defaultBoxShadow;
         }
       }
     }
@@ -476,7 +486,6 @@
       &:not(.flexberry-checkbox) {
         &.title,
         &.active.title {
-
           color: @flexberryTreenodeHeaderColor;
           .flexberry-treenode-expand-collapse-icon {
             width: 25px;
@@ -484,7 +493,7 @@
             margin: 0;
             padding: 0;
             position: relative;
-            bottom: 4px;
+            bottom: 2px;
           }
 
           .button {
@@ -516,7 +525,7 @@
           }
 
           &:hover {
-            color: @primaryColor;
+            color: @textColor;
           }
           .flexberry-treenode-buttons-block {
             height: 37px;
@@ -558,6 +567,9 @@
   height: 100%;
   transition: -webkit-transform 0.5s ease, right 0.5s ease;
 
+  .remove.icon:hover:before {
+    color: @buttonHoverColor;
+  }
   .ui.right.sidebar.tabbar {
     left: ~"calc(-100%) !important";
     overflow: visible!important;
@@ -640,11 +652,6 @@
           margin-left: -3px;
         }
 
-        i.icon:before {
-          font-family: 'Crimean';
-          font-size: 18px;
-        }
-
         i.icon.list:before {
           content: "\e825";
         }
@@ -680,7 +687,8 @@
     min-height: 250px;
     height: 100% !important;
     border-radius: 0 !important;
-    box-shadow: none !important;
+    border: @defaultGrayBorder;
+    box-shadow: 4px 0px 4px rgba(0, 0, 0, 10%)!important;
     -webkit-transition: left 0.5s;
     -moz-transition: left 0.5s;
     -o-transition: left 0.5s;
@@ -789,10 +797,18 @@
     Закладки
     */
     .bookmark-block {
+      i.icon:before {
+        opacity: 1;
+      }
+      i.icon:hover:before {
+        color: @buttonHoverColor;
+      }
       .bookmark-header {
         margin-bottom: 20px;
 
         .ui.button.create-bookmark {
+          border-color: @primaryColor;
+          box-shadow: @defaultBoxShadow;
           margin: 0px;
           text-align: center;
           width: auto;
@@ -801,6 +817,11 @@
           width: 175px;
           height: 32px;
           padding: 7px 0;
+          &:hover {
+            background-color: @buttonHoverColor;
+            border-color: @buttonHoverColor;
+            box-shadow: none;
+          }
 
           i.icon.add {
             display:none
@@ -882,10 +903,15 @@
     .ui.tab.favorites .ui.button.compare {
       color: @white;
       background: @primaryColor;
+      border-color: @primaryColor;
       margin: 0 0 20px 0;
       padding: 7px 18px;
       height: 30px;
       width: 175px;
+      &:hover {
+        box-shadow: none;
+        background-color: @buttonHoverColor;
+      }
     }
   }
 }
@@ -904,6 +930,9 @@
   width: 320px;
   height: 40px;
   box-shadow: @defaultBoxShadow;
+  .remove.icon:hover:before {
+    color: @buttonHoverColor;
+  }
   .flexberry-search.ui.search {
     display: block;
     border-radius: @defaultBorderRadius;
@@ -914,6 +943,8 @@
       height: 40px;
       border-radius: 3.5px !important;
       padding-left: 11px;
+      padding-right: 80px;
+      text-overflow: ellipsis;
       input.ember-text-field {
         background-color: @whitecolor;
       }
@@ -928,14 +959,14 @@
       margin-right: 0px;
       padding: 0;
       outline: none;
-      &.attr-search-button {
-        top: 1px;
-      }
       &.separate {
         position: absolute;
         top: 8px;
-        right: 14px;
+        right: 25px;
         border-left: @defaultGrayBorder;
+        i.icon {
+          width: auto;
+        }
       }
       .icon {
         &.remove:before {
@@ -945,23 +976,25 @@
         }
         &.search:before {
           content: "\e803";
-          font-size: 15px;
+          font-size: 20px;
+          opacity: 1;
         }
         &.attr {
-          margin-bottom: 10px;
+          margin: 0 0 10px;
         }
         &.attr:before {
           font-size: 8px;
+          opacity: 1;
         }
       }
       &.search-button:hover {
         .search:before {
-          color: @yellowGreenColor;
+          color: @buttonHoverColor;
         }
       }
       &.clear-search-button:hover {
         .remove:before {
-          color: #2B7A38 !important;
+          color: @buttonHoverColor !important;
         }
       }
     }
@@ -979,11 +1012,10 @@
     min-height: 146px;
     height: auto;
     border: @defaultGrayBorder;
-    .field.layers {
-      margin: 12px 15px 0px 22px;
-    }
+    padding: 12px 17px;
+    .field.layers,
     .field.properties {
-      margin-bottom: 18px;
+      margin: 0px;
     }
     label {
       font-size: @labelFontSize;
@@ -993,7 +1025,7 @@
       min-height: 32px;
       height: auto;
       margin-top: 3px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       border: @defaultGrayBorder;
       box-shadow: @defaultFieldBoxShadow;
       border-radius: 3.5px;
@@ -1020,6 +1052,7 @@
   overflow-x: hidden;
   .layer-result-list {
     overflow-y: auto;
+    overflow-x: hidden;
     height: ~"calc(100% - 35px)" !important;
   }
 }
@@ -1063,11 +1096,8 @@
     i.remove.icon {
       padding-left: 2px;
       padding-top: 2px;
-    }
-    &:hover {
-      border: 1px solid @primaryColor;
-      i.remove.icon:before {
-        color: @primaryColor;
+      &:hover:before {
+        color: @buttonHoverColor;
       }
     }
   }
@@ -1084,7 +1114,7 @@
     min-height: 35px;
     margin-bottom: 10px;
     a.item {
-      color: #8F928F;
+      color: @labelColor;
       font-size: 14px;
       font-weight: normal;
       border-bottom: none;
@@ -1102,4 +1132,29 @@
 
 .ui.tab.treeview .treeview.root.header.hidden+.flexberry-maplayers {
   margin-top: 12px;
+}
+
+.create-edit-block-indexes {
+  position: absolute;
+  right: 8px;
+  i.icon {
+    font-size: 18px;
+    width: auto;
+  }
+  i.icon.caret.left:before {
+    content: "\f104";
+    color: @greyIconColor;
+  }
+  i.icon.caret.right:before{
+    content: "\f105";
+    color: @greyIconColor;
+  }
+}
+.create-edit-block-index {
+  color: @labelColor;
+  display: inline-block;
+  font-size: 18px;
+  &::first-letter {
+    color: @textColor;
+  }
 }

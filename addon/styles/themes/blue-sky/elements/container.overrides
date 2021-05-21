@@ -224,13 +224,14 @@ div.measure-drag-panel {
       box-shadow: @defaultFieldBoxShadow;
       border-radius: @defaultBorderRadius;
       box-sizing: border-box;
-      width: 160px;
+      width: 155px;
       &:first-child {
-        margin-left: 1px;
         margin-bottom: 0px;
         margin-right: 12px;
-        input {
-          border-bottom: none !important;
+        width: 168px;
+        input[type="text"] {
+          border: none;
+          box-shadow: none;
           padding-left: 10px;
           color: @textColor;
         }
@@ -270,10 +271,6 @@ div.measure-drag-panel {
     }
   }
 
-  i.icon.bullseye:before {
-    font-family: FontAwesome;
-    content: "\f124";
-  }
   .flexberry-compare-map-tool {
     border-radius: 0px 5px 5px 0px;
   }
@@ -342,9 +339,6 @@ a.item:active,
   
   .flexberry-toggler-content {
     padding-top: 0px !important;
-  }
-  .ui.accordion .title .dropdown.icon:before {
-    font-family: 'FontAwesome';
   }
 }
 
@@ -480,6 +474,7 @@ div.bottompanel-wrapper {
           .flexberry-geometry-buffer {
             box-shadow: @defaultBoxShadow;
             border-radius: @defaultBorderRadius !important;
+            font-size: 1rem;
             width: 40px;
             height: 40px;
             margin: 0 20px 0 0;
@@ -551,6 +546,7 @@ div.bottompanel-wrapper {
             i.icon.folder.open:before {
               content: "\F15B";
               font-family: Icons;
+              font-size: 16px;
             }
 
             i.icon.erase {
@@ -566,6 +562,7 @@ div.bottompanel-wrapper {
           i.icon.dot.circle:before {
             font-family: Crimean;
             content: "\E82B";
+            font-size: 20px;
           }
 
           i.icon.erase {
@@ -590,12 +587,23 @@ div.bottompanel-wrapper {
             }
 
             .ui.dropdown.item {
+              &:hover::after {
+                content: '';
+                width: 100%;
+                height: 1px;
+                position: absolute;
+                bottom: 1px;
+                background-color: @white;
+                z-index: 100;
+                left: 0;
+              }
               & > .menu {
                 margin-top: -2px;
                 margin-left: -1px;
                 border-radius: @defaultBorderRadius;
                 border-top-left-radius: 0px;
-                border-top: none;
+                border: @defaultGrayBorder;
+                box-shadow: none;
                 .item, label {
                   font-size: 11px;
                 }
@@ -637,9 +645,14 @@ div.bottompanel-wrapper {
               }
             }
 
-            &> div {
-              padding: 4px 9px 4px 11px;
+            & > div {
+              line-height: 38px;
               margin: 0;
+              width: 100%;
+              > i.icon {
+                margin: 0;
+                width: 100%;
+              }
             }
           }
 

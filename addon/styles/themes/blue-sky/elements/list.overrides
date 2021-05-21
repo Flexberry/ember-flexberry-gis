@@ -42,9 +42,6 @@
   .ui.accordion.flexberry-toggler .title:not(.ui) {
     background-color: @whitecolor;
   }
-  .layer-result-list-toggler .title .flexberry-toggler-caption {
-    color: @textColor;
-  }
   .layer-result-list-toggler.flexberry-toggler.accordion.fluid {
     border: none;
   }
@@ -89,7 +86,7 @@
       margin: 0;
 
       .feature-result-item-title {
-        padding-top: 14px;
+        padding-top: 13px;
 
         .ui.small.loader {
           right: 0;
@@ -100,7 +97,7 @@
         .feature-result-item-toolbar {
           z-index: 100;
           height: 26px;
-          bottom: -3px;
+          top: 7px;
           left: 22px;
           i.icon:before {
             font-size: 16px;
