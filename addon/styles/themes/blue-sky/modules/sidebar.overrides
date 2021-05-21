@@ -959,6 +959,7 @@
       margin-right: 0px;
       padding: 0;
       outline: none;
+      top: 0;
       &.separate {
         position: absolute;
         top: 8px;
