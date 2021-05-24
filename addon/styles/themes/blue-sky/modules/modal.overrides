@@ -812,7 +812,7 @@
     }
   }
 
-  .flexberry-card-buttons {
+  .field.flexberry-card-buttons {
     margin-left: -1rem;
     margin-right: -1rem;
     > .field {
