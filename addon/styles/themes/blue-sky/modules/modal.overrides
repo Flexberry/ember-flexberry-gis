@@ -440,7 +440,7 @@
           border: @defaultGrayBorder;
           border-radius: @defaultBorderRadius;
           box-shadow: @defaultBoxShadow;
-          margin-right: 20px;
+          margin-right: 2px;
           min-width: 40px;
           max-width: 40px;
           &:hover {
@@ -802,4 +802,21 @@
 
 .ui.modal.flexberry-geometry-add-mode-import-dialog textarea {
 
+}
+
+.flexberry-export-map-command-dialog-settings-column {
+  .ui.buttons.flexberry-font-buttons {
+    justify-content: space-between;
+    &::after {
+      display: none;
+    }
+  }
+
+  .flexberry-card-buttons {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    > .field {
+      padding: 0 1rem;
+    }
+  }
 }

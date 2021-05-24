@@ -124,7 +124,7 @@
 
               <div class="row">
                 <div class="eleven wide column">
-                  <div class="ui small fluid buttons">
+                  <div class="ui small fluid buttons flexberry-font-buttons">
                     {{flexberry-button
                       iconClass="bold icon"
                       class=(if (eq _options.captionFontWeight "bold") "active" "")
@@ -145,81 +145,81 @@
                       class=(if (eq _options.captionFontDecoration "line-through") "active" "")
                       click=(action "onLinethroughFontButtonClick")
                     }}
+                    {{flexberry-colorpicker
+                      value=_options.captionFontColor
+                      change=(action "onCaptionFontColorChange")
+                    }}
                   </div>
-                </div>
-                <div class="five wide column">
-                  {{flexberry-colorpicker
-                    value=_options.captionFontColor
-                    change=(action "onCaptionFontColorChange")
-                  }}
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="field">
-            <label>{{t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.caption"}}</label>
-            <div class="ui small fluid buttons">
-              {{flexberry-button
-                class=(if (eq _options.displayMode "standard-mode") "active" "")
-                caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.standard-mode.caption")
-                click=(action "onDisplayModeChange" "standard-mode")
-              }}
+          <div class="flexberry-card-buttons field">
+            <div class="eleven wide field">
+              <label>{{t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.caption"}}</label>
+              <div class="ui fluid buttons">
+                {{flexberry-button
+                  class=(if (eq _options.displayMode "standard-mode") "active" "")
+                  caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.standard-mode.caption")
+                  click=(action "onDisplayModeChange" "standard-mode")
+                }}
 
-              {{flexberry-button
-                class=(if (eq _options.displayMode "map-only-mode") "active" "")
-                caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.map-only-mode.caption")
-                click=(action "onDisplayModeChange" "map-only-mode")
-              }}
+                {{flexberry-button
+                  class=(if (eq _options.displayMode "map-only-mode") "active" "")
+                  caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.map-only-mode.caption")
+                  click=(action "onDisplayModeChange" "map-only-mode")
+                }}
+              </div>
             </div>
-          </div>
 
-          <div class="field">
-            <label>{{t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.caption"}}</label>
-            <div class="ui small fluid buttons">
-              {{flexberry-button
-                class=(if _options.legendControl "active" "")
-                caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.legend-control.caption")
-                click=(action "onMapControlChange" "legendControl")
-              }}
-              {{flexberry-button
-                class=(if _options.scaleControl "active" "")
-                caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.scale-control.caption")
-                click=(action "onMapControlChange" "scaleControl")
-              }}
+            <div class="eleven wide field">
+              <label>{{t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.caption"}}</label>
+              <div class="ui fluid buttons">
+                {{flexberry-button
+                  class=(if _options.legendControl "active" "")
+                  caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.legend-control.caption")
+                  click=(action "onMapControlChange" "legendControl")
+                }}
+                {{flexberry-button
+                  class=(if _options.scaleControl "active" "")
+                  caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.scale-control.caption")
+                  click=(action "onMapControlChange" "scaleControl")
+                }}
+              </div>
             </div>
-          </div>
 
-          <div class="field">
-            <label>{{t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.caption"}}</label>
-            <div class="ui small fluid buttons">
-              {{flexberry-button
-                class=(if (eq _options.legendPosition "under-map") "active" "")
-                caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.under-map.caption")
-                click=(action "onLegendPositionChange" "under-map")
-              }}
-              {{flexberry-button
-                class=(if (eq _options.legendPosition "second-page") "active" "")
-                caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.second-page.caption")
-                click=(action "onLegendPositionChange" "second-page")
-              }}
+            <div class="eleven wide field">
+              <label>{{t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.caption"}}</label>
+              <div class="ui fluid buttons">
+                {{flexberry-button
+                  class=(if (eq _options.legendPosition "under-map") "active" "")
+                  caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.under-map.caption")
+                  click=(action "onLegendPositionChange" "under-map")
+                }}
+                {{flexberry-button
+                  class=(if (eq _options.legendPosition "second-page") "active" "")
+                  caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.second-page.caption")
+                  click=(action "onLegendPositionChange" "second-page")
+                }}
+              </div>
             </div>
-          </div>
 
-          <div class="field">
-            <label>{{t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.caption"}}</label>
-            <div class="ui small fluid buttons">
-              {{flexberry-button
-                class=(if (eq _options.paperOrientation "landscape") "active" "")
-                caption=(t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.landscape-orientation.caption")
-                click=(action "onPaperOrientationChange" "landscape")
-              }}
+            <div class="eleven wide field">
+              <label>{{t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.caption"}}</label>
+              <div class="ui fluid buttons">
+                {{flexberry-button
+                  class=(if (eq _options.paperOrientation "landscape") "active" "")
+                  caption=(t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.landscape-orientation.caption")
+                  click=(action "onPaperOrientationChange" "landscape")
+                }}
 
-              {{flexberry-button
-                class=(if (eq _options.paperOrientation "portrait") "active" "")
-                caption=(t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.portrait-orientation.caption")
-                click=(action "onPaperOrientationChange" "portrait")
-              }}
+                {{flexberry-button
+                  class=(if (eq _options.paperOrientation "portrait") "active" "")
+                  caption=(t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.portrait-orientation.caption")
+                  click=(action "onPaperOrientationChange" "portrait")
+                }}
+              </div>
             </div>
           </div>
 

@@ -206,6 +206,7 @@
       padding-left: 9px;
       white-space: nowrap;
       overflow: hidden;
+      color: @textColor;
     }
     i.dropdown.icon {
       right: 9px;
