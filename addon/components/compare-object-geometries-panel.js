@@ -304,7 +304,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           }
         });
       } else {
-        jstsGeometry.intersectionCords.push(jstsGeometry.coordinates[0] + ' ' + jstsGeometry.coordinates[1])
+        jstsGeometry.intersectionCords.push(jstsGeometry.coordinates[0] + ' ' + jstsGeometry.coordinates[1]);
       }
 
       jstsGeometry.intersectionCoordsText = jstsGeometry.intersectionCords.join('\r\n');
