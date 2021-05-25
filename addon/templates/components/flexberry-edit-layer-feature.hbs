@@ -132,11 +132,13 @@
     <div class="create-edit-block-attributes {{if _attributesExpanded "visible" "hidden"}}">
       <form class="ui form" role="form">
         {{#if choiceItems}}
-        {{flexberry-dropdown
+          <div class="field">
+            {{flexberry-dropdown
               class="create-edit-block-choices"
               items=choiceItems
               value=choiceValue
             }}
+          </div>
         {{/if}}
         {{#each-in _model.fieldNames as |fieldName fieldValue|}}
         <div class="field {{if (get (get parsingErrors (concat '' curIndex)) fieldName) "error" ""}}">

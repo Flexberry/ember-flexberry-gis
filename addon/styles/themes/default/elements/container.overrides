@@ -635,7 +635,7 @@
       position: absolute;
       bottom: 0px;
       right: 0px;
-      max-width:357px;
+      max-width:352px;
       background: @whitecolor;
       box-shadow: @uiIconButtonBoxShadow;
       clip-path: inset(0px -2px 0px -2px);
@@ -979,7 +979,6 @@ div.measure-drag-panel {
     .title {
       display: flex;
       .flexberry-toggler-caption {
-        color: @darkbluecolor;
         margin-left: 6px;
         display: block;
         float: left;
@@ -1065,7 +1064,7 @@ div.measure-drag-panel {
     }
   }
   .feature-result-item-content {
-    padding-left: 25px;
+    padding-left: 32px;
   }
 }
 

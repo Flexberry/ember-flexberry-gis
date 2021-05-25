@@ -6,7 +6,7 @@
 @flexberryTabBarItemBoxShadow: none !important;
 @flexberryTabBarBackgroundColor: transparent;
 @flexberryTabBarActiveItemBackground: @buttonMenuActiveBackground;
-@flexberryTreeHeaderTitleHoveredColor: @primaryColor;
+@flexberryTreeHeaderTitleHoveredColor: @textColor;
 @flexberryMaplayerOpacitiLabelColor: @primaryColor;
 @sliderHandlerBackground: @primaryColor;
 @flexberryTreenodeHeaderColor: @textColor;
