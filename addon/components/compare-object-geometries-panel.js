@@ -57,10 +57,18 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _onTwoObjectsChange: Ember.observer('twoObjects.[]', function() {
     let two = this.get('twoObjects');
     if (two.length === 2) {
-      let crs = two[0].leafletLayer.options.crs;
+      let mapModel = this.get('mapApi').getFromApi('mapModel');
+      let crs = two[0].layerModel.get('_leafletObject.options.crs');
       this.set('crs', crs);
       let firstObject =  two[0];
-      let secondObject =  two[1].leafletLayer.toProjectedGeoJSON(crs);
+      let secondObject = null;
+      if (two[1].layerModel.get('_leafletObject.options.crs').code !== crs.code) {
+        secondObject = Object.assign({}, two[1]);
+        mapModel._convertObjectCoordinates(crs.code, secondObject);
+      } else {
+        secondObject = two[1];
+      }
+
       let geojsonReader = new jsts.io.GeoJSONReader();
       let firstObjectJstsGeom = geojsonReader.read(firstObject.geometry);
       let secondObjectJstsGeom = geojsonReader.read(secondObject.geometry);
@@ -271,18 +279,34 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     displаyCrs = displаyCrs ? displаyCrs : 'EPSG:4326';
     if (jstsGeometry) {
       jstsGeometry.intersectionCords = [];
-      jstsGeometry.coordinates.forEach(arr => {
-        arr.forEach(pair => {
-          if (jstsGeometry.type === 'MultiPolygon') {
-            pair.forEach(cords => {
-              jstsGeometry.intersectionCords.push(cords[0] + ' ' + cords[1]);
+      if (jstsGeometry.type !== 'Point') {
+        jstsGeometry.coordinates.forEach(arr => {
+          if (jstsGeometry.type.indexOf('Multi') !== -1) {
+            arr.forEach(pair => {
+              if (jstsGeometry.type === 'MultiPolygon') {
+                pair.forEach(cords => {
+                  jstsGeometry.intersectionCords.push(cords[0] + ' ' + cords[1]);
+                });
+                jstsGeometry.intersectionCords.push('');
+              } else {
+                jstsGeometry.intersectionCords.push(pair[0] + ' ' + pair[1]);
+              }
             });
-            jstsGeometry.intersectionCords.push('');
           } else {
-            jstsGeometry.intersectionCords.push(pair[0] + ' ' + pair[1]);
+            if (jstsGeometry.type === 'Polygon') {
+              arr.forEach(cords => {
+                jstsGeometry.intersectionCords.push(cords[0] + ' ' + cords[1]);
+              });
+              jstsGeometry.intersectionCords.push('');
+            } else {
+              jstsGeometry.intersectionCords.push(arr[0] + ' ' + arr[1]);
+            }
           }
         });
-      });
+      } else {
+        jstsGeometry.intersectionCords.push(jstsGeometry.coordinates[0] + ' ' + jstsGeometry.coordinates[1])
+      }
+
       jstsGeometry.intersectionCoordsText = jstsGeometry.intersectionCords.join('\r\n');
       return jstsGeometry;
     }

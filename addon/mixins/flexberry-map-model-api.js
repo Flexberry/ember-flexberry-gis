@@ -1401,20 +1401,34 @@ export default Ember.Mixin.create(SnapDraw, {
           if (result.geometry.type !== 'Point') {
             result.geometry.coordinates.forEach(arr => {
               var arr1 = [];
-              arr.forEach(pair => {
-                if (result.geometry.type === 'MultiPolygon') {
-                  let arr2 = [];
-                  pair.forEach(cords => {
+              if (result.geometry.type.indexOf('Multi') !== -1) {
+                arr.forEach(pair => {
+                  if (result.geometry.type === 'MultiPolygon') {
+                    let arr2 = [];
+                    pair.forEach(cords => {
+                      let transdormedCords = proj4(firstDefinition, secondDefinition, cords);
+                      arr2.push(transdormedCords);
+                    });
+                    arr1.push(arr2);
+                  } else {
+                    let cords = proj4(firstDefinition, secondDefinition, pair);
+                    arr1.push(cords);
+                  }
+
+                });
+                coordinatesArray.push(arr1);
+              } else {
+                if (result.geometry.type === 'Polygon') {
+                  arr.forEach(cords => {
                     let transdormedCords = proj4(firstDefinition, secondDefinition, cords);
-                    arr2.push(transdormedCords);
+                    arr1.push(transdormedCords);
                   });
-                  arr1.push(arr2);
+                  coordinatesArray.push(arr1);
                 } else {
-                  let cords = proj4(firstDefinition, secondDefinition, pair);
-                  arr1.push(cords);
+                  let cords = proj4(firstDefinition, secondDefinition, arr);
+                  coordinatesArray.push(cords);
                 }
-              });
-              coordinatesArray.push(arr1);
+              }
             });
           } else {
             coordinatesArray = proj4(firstDefinition, secondDefinition, result.geometry.coordinates);
