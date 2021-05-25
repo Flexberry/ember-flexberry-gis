@@ -182,9 +182,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         let copyGeometry = Object.assign({}, geometry);
         let mapModel = this.get('mapApi').getFromApi('mapModel');
         let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
-        let featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
-          style: { color: 'green' }
-        });
+        let featureLayer = L.geoJSON(convertedFeatureLayer.geometry);
         let center = featureLayer.getBounds().getCenter();
         let leafletMap = this.get('leafletMap');
         leafletMap.panTo(center);
