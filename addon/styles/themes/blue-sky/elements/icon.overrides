@@ -68,6 +68,7 @@ i.icon.angle.right:before {
             .ui.icon.button .icon {
                 &:before {
                   font-family: Crimean;
+                  opacity: 1;
                 }
                 &.minus:before,
                 &.remove:before {
@@ -232,4 +233,8 @@ i.icon.movexy:after {
 i.icon.checkall:before {
   content: "\e815";
   font-family: 'Crimean';
+}
+
+i.icon.intersection-panel-exit-icon:hover::before {
+  color: @buttonHoverColor;
 }

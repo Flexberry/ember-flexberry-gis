@@ -105,7 +105,7 @@
     font-weight: normal;
     background-color: @white !important;
     background-image: none;
-    border: solid 1px @borderColor !important;
+    border: @defaultGrayBorder !important;
     box-shadow: @defaultBoxShadow;
     color: @primaryColor !important;
     margin-left: 0px;
@@ -440,7 +440,7 @@
           border: @defaultGrayBorder;
           border-radius: @defaultBorderRadius;
           box-shadow: @defaultBoxShadow;
-          margin-right: 20px;
+          margin-right: 2px;
           min-width: 40px;
           max-width: 40px;
           &:hover {
@@ -517,6 +517,7 @@
     }
     textarea.ember-text-area {
       margin: 0em;
+      min-height: 120px;
     }
   }
 }
@@ -797,4 +798,25 @@
 
 .flexberry-export-map-command-dialog-settings-column-inner {
   max-width: 454px;
+}
+
+.ui.modal.flexberry-geometry-add-mode-import-dialog textarea {
+
+}
+
+.flexberry-export-map-command-dialog-settings-column {
+  .ui.buttons.flexberry-font-buttons {
+    justify-content: space-between;
+    &::after {
+      display: none;
+    }
+  }
+
+  .field.flexberry-card-buttons {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    > .field {
+      padding: 0 1rem;
+    }
+  }
 }

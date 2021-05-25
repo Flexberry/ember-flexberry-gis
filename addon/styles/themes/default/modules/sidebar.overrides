@@ -133,6 +133,9 @@
   filter: blur(2px);
   color: rgba(52, 58, 50, 0.2);
 }
+.layer-result-list .feature-result-item-caption.blur {
+  color: lighten(@primaryColor, 40);
+}
 .ui.right.sidebar {
     .ui.tab {
         border-radius: 5px;
@@ -404,24 +407,7 @@
         width: @visibleCreateEditBlockWidth;
         position: absolute;
         overflow-y: scroll;
-
-        padding-right: 6px;
-
-        .ui.button {
-          border-radius: @defaultBorderRadius;
-          box-shadow: @defaultBoxShadow;
-
-          &.positive {
-            color: @white;
-            background: @primaryColor !important;
-          }
-
-          &.negative {
-            color: @primaryColor;
-            background: @white !important;
-            background-color: @white !important;
-          }
-        }
+        padding-right: 8px;
 
         .editfeature-tab-data-panel {
           padding: 21px 17px 15px 17px;

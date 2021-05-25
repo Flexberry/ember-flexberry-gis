@@ -129,20 +129,11 @@
 .mappanel,
 .sidebar-wrapper,
 .rgis-sidebar-wrapper {
-  .dropdown .menu .item {
-    color: @textColor;
-    &:hover {
-      color: @hoveredItemColor;
-    }
-  }
-
   /* выпадающий список в dropdown */
   .ui.selection.active,
   .ui.selection.active:hover {
     border: 1px solid @controlBorderColor;
-    border-top: 0;
-    background-color: @white;
-    color: @selectedItemTextColor;
+
     /* меню */
     .menu {
         border-radius: 0;
@@ -152,17 +143,7 @@
 
   .ui.selection.dropdown,
   .ui.active.selection.dropdown {
-    border: none;
-    border-radius: 0;
-    border-bottom: 1px solid @controlBorderColor;
-    box-shadow: none;
-    color: @selectionTextColor !important;
     padding: @selectionPadding;
-  }
-
-  .ui.active.selection.dropdown:hover {
-    border: none;
-    border-bottom: 1px solid @controlBorderColor;
   }
 }
 
@@ -183,14 +164,6 @@
     > a.item {
       color: @darkbluecolor !important;
 
-      &:hover {
-        color: @white !important;
-        background-color: @lightgrassGreenColor !important;
-        >i.icon:before {
-          color: @white;
-        }
-      }
-
       &.active {
         background-color: @selectedBackground !important;
         color: @selectedColor !important;
@@ -203,6 +176,46 @@
   .ui.dropdown .menu {
     > a.item {
       color: @textColor !important;
+    }
+  }
+}
+
+.outer-search.flexberry-search-panel .flexberry-search-attr,
+.create-edit-block-choices {
+  min-height: 146px;
+  height: auto;
+  border: @defaultGrayBorder;
+  padding: 12px 17px;
+  .field.layers,
+  .field.properties {
+    margin: 0px;
+  }
+  label {
+    font-size: @labelFontSize;
+    color: @labelColor;
+  }
+  .flexberry-dropdown {
+    min-height: 32px;
+    height: auto;
+    margin-top: 3px;
+    margin-bottom: 6px;
+    border: @defaultGrayBorder;
+    box-shadow: @defaultFieldBoxShadow;
+    border-radius: 3.5px;
+    div.text {
+      padding-left: 9px;
+      white-space: nowrap;
+      overflow: hidden;
+      color: @textColor;
+    }
+    i.dropdown.icon {
+      right: 9px;
+    }
+    i.dropdown.icon:before {
+      content: '\f107';
+      font-family: 'FontAwesome';
+      font-size: 15px;
+      color: @greyIconColor;
     }
   }
 }
