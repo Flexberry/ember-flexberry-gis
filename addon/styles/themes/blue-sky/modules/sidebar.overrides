@@ -594,7 +594,8 @@
       &.isogd-treeview-tab {
         padding: 10px 12px;
       }
-      &.create-edit-object-tab {
+      &.create-edit-object-tab, &.compareObjects, &.intersectionObjects,
+      &.compare, &.timelapse {
         display: none;
         position: absolute;
       }

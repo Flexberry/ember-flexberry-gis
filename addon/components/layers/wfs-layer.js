@@ -689,6 +689,12 @@ export default BaseVectorLayer.extend({
               pointToLayer: leafletObject.options.pointToLayer
             });
 
+            layers.forEach(function (element) {
+              if (!Ember.isNone(Ember.get(element, 'feature')) && Ember.isNone(Ember.get(element, 'feature.leafletLayer'))) {
+                Ember.set(element.feature, 'leafletLayer', element);
+              }
+            });
+
             resolve(layers);
           },
           error: function (errorMessage) {

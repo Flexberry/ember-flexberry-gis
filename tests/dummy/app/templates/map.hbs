@@ -188,6 +188,7 @@
           compareBtnDisabled=compareBtnDisabled
           serviceLayer=serviceLayer
           leafletMap=leafletMap
+          _showFavorites=_showFavorites
           showIntersectionPanel=(action 'onIntersectionPanel')
           compareTwoGeometries=(action 'OnCompareTwoGeometries')
           addToFavorite=(action "addToFavorite")
@@ -233,7 +234,7 @@
       editFeature=(action 'onCreateOrEditFeature')
     }}
   </div>
-  <div class={{concat "bottompanel-wrapper intersection-panel" (if showIntersectionPanel "" " hidden")}}>
+  <div class="ui tab bottompanel-wrapper intersection-panel">
     {{flexberry-layers-intersections-panel
       layers=model.hierarchy
       leafletMap=leafletMap
@@ -244,12 +245,12 @@
       disaplayName=feature.properties.name
     }}
   </div>
-  <div class={{concat "bottompanel-wrapper compare-geometries-panel" (if showComapreGeometriesPanel "" " hidden")}}>
+  <div class="ui tab bottompanel-wrapper compare-geometries-panel">
     {{compare-object-geometries-panel
       layers=model.hierarchy
       leafletMap=leafletMap
       settings=editedLayersPanelSettings
-      closeComparePanel=(action "closeComparePanel")
+      closeComparePanel=(action "onCompareTwoGeometriesEnd")
       twoObjects=twoObjectToCompare
     }}
   </div>

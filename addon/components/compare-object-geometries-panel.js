@@ -1,12 +1,10 @@
 import Ember from 'ember';
 import layout from '../templates/components/compare-object-geometries-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
-import area from 'npm:@turf/area';
 import distance from 'npm:@turf/distance';
 import helpers from 'npm:@turf/helpers';
-import intersect from 'npm:@turf/intersect';
-import difference from 'npm:@turf/difference';
-import  union from 'npm:@turf/union';
+import jsts from 'npm:jsts';
+
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   layout,
 
@@ -59,19 +57,30 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _onTwoObjectsChange: Ember.observer('twoObjects.[]', function() {
     let two = this.get('twoObjects');
     if (two.length === 2) {
+      let mapModel = this.get('mapApi').getFromApi('mapModel');
+      let crs = two[0].layerModel.get('_leafletObject.options.crs');
+      this.set('crs', crs);
       let firstObject =  two[0];
-      let secondObject =  two[1];
-      firstObject = this.convertCoordinates(firstObject);
-      secondObject = this.convertCoordinates(secondObject);
-      Ember.set(firstObject, 'area', area(firstObject).toFixed(3));
-      Ember.set(secondObject, 'area', area(secondObject).toFixed(3));
+      let secondObject = null;
+      if (two[1].layerModel.get('_leafletObject.options.crs').code !== crs.code) {
+        secondObject = Object.assign({}, two[1]);
+        mapModel._convertObjectCoordinates(crs.code, secondObject);
+      } else {
+        secondObject = two[1];
+      }
+
+      let geojsonReader = new jsts.io.GeoJSONReader();
+      let firstObjectJstsGeom = geojsonReader.read(firstObject.geometry);
+      let secondObjectJstsGeom = geojsonReader.read(secondObject.geometry);
+      Ember.set(firstObject, 'area', firstObjectJstsGeom.getArea().toFixed(3));
+      Ember.set(secondObject, 'area', secondObjectJstsGeom.getArea().toFixed(3));
 
       this.set('firstObject', firstObject);
       this.set('secondObject', secondObject);
       let dist = this.getDistance(firstObject, secondObject);
       this.set('distanceBetween', dist);
-      this.set('intersection', this.getIntersection(firstObject, secondObject));
-      this.set('nonIntersection', this.getNonIntersection(firstObject, secondObject));
+      this.set('intersection', this.getIntersection(firstObjectJstsGeom, secondObjectJstsGeom));
+      this.set('nonIntersection', this.getNonIntersection(firstObjectJstsGeom, secondObjectJstsGeom));
     }
   }),
 
@@ -129,6 +138,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   serviceLayer: null,
 
+  crs: null,
+
   /**
     Observer for leafletMap property adding layer with results.
 
@@ -174,10 +185,16 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       @method actions.hidePanel
     */
-    panToIntersection(feature) {
-      let center = L.geoJSON(feature).getLayers()[0].getBounds().getCenter();
-      let leafletMap = this.get('leafletMap');
-      leafletMap.panTo(center);
+    panToIntersection(geometry) {
+      if (!Ember.isBlank(geometry.coordinates[0])) {
+        let copyGeometry = Object.assign({}, geometry);
+        let mapModel = this.get('mapApi').getFromApi('mapModel');
+        let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
+        let featureLayer = L.geoJSON(convertedFeatureLayer.geometry);
+        let center = featureLayer.getBounds().getCenter();
+        let leafletMap = this.get('leafletMap');
+        leafletMap.panTo(center);
+      }
     },
 
     /**
@@ -185,13 +202,20 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       @method actions.hidePanel
     */
-    zoomToIntersection(feature) {
-      let group = this.get('featuresLayer');
-      group.clearLayers();
-      let obj = L.geoJSON(feature, {
-        style: { color: 'green' }
-      });
-      obj.addTo(group);
+    zoomToIntersection(geometry) {
+      if (!Ember.isBlank(geometry.coordinates[0])) {
+        let group = this.get('featuresLayer');
+        group.clearLayers();
+        let copyGeometry = Object.assign({}, geometry);
+        let mapModel = this.get('mapApi').getFromApi('mapModel');
+        let convertedFeatureLayer =  mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
+        let featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
+          style: { color: 'green' }
+        });
+        featureLayer.addTo(group);
+        let map = this.get('leafletMap');
+        map.fitBounds(featureLayer.getBounds());
+      }
     }
   },
 
@@ -226,80 +250,65 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   },
 
   getIntersection(firstObject, secondObject) {
-    let intersection = intersect.default(firstObject, secondObject);
-    if (intersection) {
-      let displayCrs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
-      return this.getObjectWithProperties(intersection, displayCrs);
-    }
+    let intersection = firstObject.intersection(secondObject);
+    let geojsonWriter = new jsts.io.GeoJSONWriter();
+    let intersectionRes = geojsonWriter.write(intersection);
 
-    return null;
+    if (intersectionRes) {
+      intersectionRes.area = intersection.getArea().toFixed(3);
+      let displayCrs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
+      return this.getObjectWithProperties(intersectionRes, displayCrs);
+    }
   },
 
   getNonIntersection(firstObject, secondObject) {
-    let intersection = intersect.default(firstObject, secondObject);
-    let nonIntersection;
-    if (intersection) {
-      let nonIntersection1 = difference.default(secondObject, intersection);
-      let nonIntersection2 = difference.default(firstObject, intersection);
+    let nonIntersection = firstObject.symDifference(secondObject);
+    let geojsonWriter = new jsts.io.GeoJSONWriter();
+    let nonIntersectionRes = geojsonWriter.write(nonIntersection);
 
-      if (nonIntersection1 && nonIntersection2) {
-        if (nonIntersection1.geometry.type === 'Polygon') {
-          nonIntersection1 = helpers.polygon(nonIntersection1.geometry.coordinates);
-        }
-
-        if (nonIntersection1.geometry.type === 'MultiPolygon') {
-          nonIntersection1 = helpers.multiPolygon(nonIntersection1.geometry.coordinates);
-        }
-
-        if (nonIntersection2.geometry.type === 'Polygon') {
-          nonIntersection2 = helpers.polygon(nonIntersection2.geometry.coordinates);
-        }
-
-        if (nonIntersection2.geometry.type === 'MultiPolygon') {
-          nonIntersection2 = helpers.multiPolygon(nonIntersection2.geometry.coordinates);
-        }
-
-        nonIntersection = union(nonIntersection1,  nonIntersection2);
-      } else {
-        if (nonIntersection1) {
-          nonIntersection = nonIntersection1;
-        }
-
-        if (nonIntersection2) {
-          nonIntersection = nonIntersection2;
-        }
-      }
-    }
-
-    if (nonIntersection) {
+    if (nonIntersectionRes) {
+      nonIntersectionRes.area = nonIntersection.getArea().toFixed(3);
       let displayCrs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
-      return this.getObjectWithProperties(nonIntersection, displayCrs);
+      return this.getObjectWithProperties(nonIntersectionRes, displayCrs);
     }
 
-    return null;
+    return { area: '0.000', intersectionCoordsText: '' };
   },
 
-  getObjectWithProperties(feature, displаyCrs) {
+  getObjectWithProperties(jstsGeometry, displаyCrs) {
     displаyCrs = displаyCrs ? displаyCrs : 'EPSG:4326';
-    if (feature) {
-      feature.area = area(feature).toFixed(3);
-      feature.intersectionCords = [];
-      let mapModel = this.get('mapApi').getFromApi('mapModel');
-      let featureInCrs = mapModel._convertObjectCoordinates(null, feature, displаyCrs);
-      featureInCrs.geometry.coordinates.forEach(arr => {
-        arr.forEach(pair => {
-          if (feature.geometry.type === 'MultiPolygon') {
-            pair.forEach(cords => {
-              feature.intersectionCords.push(cords[0] + ' ' + cords[1]);
+    if (jstsGeometry) {
+      jstsGeometry.intersectionCords = [];
+      if (jstsGeometry.type !== 'Point') {
+        jstsGeometry.coordinates.forEach(arr => {
+          if (jstsGeometry.type.indexOf('Multi') !== -1) {
+            arr.forEach(pair => {
+              if (jstsGeometry.type === 'MultiPolygon') {
+                pair.forEach(cords => {
+                  jstsGeometry.intersectionCords.push(cords[0] + ' ' + cords[1]);
+                });
+                jstsGeometry.intersectionCords.push('');
+              } else {
+                jstsGeometry.intersectionCords.push(pair[0] + ' ' + pair[1]);
+              }
             });
-            feature.intersectionCords.push('');
           } else {
-            feature.intersectionCords.push(pair[0] + ' ' + pair[1]);
+            if (jstsGeometry.type === 'Polygon') {
+              arr.forEach(cords => {
+                jstsGeometry.intersectionCords.push(cords[0] + ' ' + cords[1]);
+              });
+              jstsGeometry.intersectionCords.push('');
+            } else {
+              jstsGeometry.intersectionCords.push(arr[0] + ' ' + arr[1]);
+            }
           }
         });
-      });
-      feature.intersectionCoordsText = feature.intersectionCords.join('\r\n');
-      return feature;
+      } else {
+        jstsGeometry.intersectionCords.push(jstsGeometry.coordinates[0] + ' ' + jstsGeometry.coordinates[1]);
+      }
+
+      jstsGeometry.intersectionCoordsText = jstsGeometry.intersectionCords.join('\r\n');
+      return jstsGeometry;
     }
 
     return null;
