@@ -315,10 +315,12 @@ test('test method findCosmos for with feature and attributes', function(assert) 
 
 test('test method addLayerFromLayerMetadata', function(assert) {
   //Arrange
-  assert.expect(8);
+  assert.expect(9);
   let done = assert.async(1);
   let hierarchy = Ember.A();
+  let mapLayer = Ember.A();
   let subject = mapApiMixinObject.create({
+    mapLayer: mapLayer,
     _getQueryBuilderLayerMetadata() {
       return new Query.Builder(store, metadataModelName)
       .from(metadataModelName)
@@ -343,6 +345,7 @@ test('test method addLayerFromLayerMetadata', function(assert) {
     assert.equal(layer.get('index'), '10');
     assert.ok(!Ember.isNone(layer.get('id')));
     assert.equal(hierarchy.length, 1);
+    assert.equal(mapLayer.length, 1);
     assert.equal(layer.get('type'), 'wms');
     done();
     spyGetMetadataModels.restore();
