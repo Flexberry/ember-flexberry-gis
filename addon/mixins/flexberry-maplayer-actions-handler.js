@@ -366,6 +366,7 @@ export default Ember.Mixin.create({
         Ember.typeOf(primaryParentLayerPath) === 'string');
 
       let secondaryParentLayerPath = primaryParentLayerPath.indexOf('hierarchy') !== -1 ? 'model.otherLayers' : 'model.hierarchy';
+      let backgroundLayerPath = 'model.backgroundLayers';
 
       let {
         layerProperties,
@@ -383,6 +384,7 @@ export default Ember.Mixin.create({
         Ember.isArray(primaryParentLayer) || Ember.typeOf(primaryParentLayer) === 'object' || Ember.typeOf(primaryParentLayer) === 'instance');
 
       let secondaryParentLayer = getRecord(this, secondaryParentLayerPath);
+      let backgroundLayer = getRecord(this, backgroundLayerPath);
 
       let primaryChildLayers = Ember.isArray(primaryParentLayer) ? primaryParentLayer : Ember.get(primaryParentLayer, 'layers');
       if (Ember.isNone(primaryChildLayers)) {
@@ -407,10 +409,23 @@ export default Ember.Mixin.create({
         Ember.set(childLayer, 'layers', Ember.A());
       }
 
-      primaryChildLayers.pushObject(childLayer);
+      let canBeBackground = childLayer.get('settingsAsObject.backgroundSettings.canBeBackground');
 
-      if (!Ember.isNone(secondaryParentLayer)) {
-        secondaryParentLayer.pushObject(childLayer);
+      if (canBeBackground) {
+        if (primaryParentLayerPath.indexOf('hierarchy') !== -1) {
+          primaryChildLayers.pushObject(childLayer);
+        } else {
+          secondaryParentLayer.pushObject(childLayer);
+        }
+
+        if (!Ember.isNone(backgroundLayer)) {
+          backgroundLayer.pushObject(childLayer);
+        }
+      } else {
+        primaryChildLayers.pushObject(childLayer);
+        if (!Ember.isNone(secondaryParentLayer)) {
+          secondaryParentLayer.pushObject(childLayer);
+        }
       }
 
       let rootArray = this.get(rootPath);
