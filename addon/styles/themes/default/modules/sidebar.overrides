@@ -197,6 +197,7 @@
                 }
                 .flexberry-maplayer-caption-label {
                     font-size: 12px;
+                    word-break: break-word;
                 }
                 .button,
                 .flexberry-maplayer-opacity-label {
