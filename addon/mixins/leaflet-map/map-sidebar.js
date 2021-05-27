@@ -24,17 +24,17 @@ export default Ember.Mixin.create({
 
       // Hide sidebar.
       hide() {
-        let $control = Ember.$('.sidebar-wrapper');
-        if ($control.length === 1 && !$control.hasClass('hidden')) {
-          $control.addClass('hidden');
+        let $control = Ember.$('.rgis-sidebar-wrapper');
+        if ($control.length === 1 && $control.hasClass('visible')) {
+          leafletMap.fire('flexberry-map:toggleSidebar');
         }
       },
 
       // Show sidebar.
       show() {
-        let $control = Ember.$('.sidebar-wrapper');
-        if ($control.length === 1 && $control.hasClass('hidden')) {
-          $control.removeClass('hidden');
+        let $control = Ember.$('.rgis-sidebar-wrapper');
+        if ($control.length === 1 && $control.hasClass('invisible')) {
+          leafletMap.fire('flexberry-map:toggleSidebar');
         }
       }
     };
