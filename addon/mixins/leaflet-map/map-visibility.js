@@ -52,7 +52,11 @@ export default Ember.Mixin.create({
 
     if (Ember.isNone(mapCommandName)) {
       funcClass(Ember.$('.flexberry-maptoolbar'));
+      funcClass(Ember.$('.toggle-button'));
+      funcClass(Ember.$('.outer-search'));
+      funcClass(Ember.$('.main-map-tab-bar'));
       funcClass($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
+      funcClass($leafletContainer.find('.leaflet-control-container .leaflet-control-scale'));
       funcClass($leafletContainer.find('.leaflet-control-container .history-control'));
       return true;
     }
@@ -62,6 +66,33 @@ export default Ember.Mixin.create({
       return true;
     } else if (mapCommandName.includes('zoom-') && !isTool) {
       funcClass($leafletContainer.find(`.leaflet-control-container .leaflet-control-zoom .leaflet-control-${mapCommandName}`));
+      return true;
+    } else if (mapCommandName.includes('scale-')) {
+      funcClass($leafletContainer.find(`.leaflet-control-container .leaflet-control-scale .leaflet-control-${mapCommandName}`));
+      return true;
+    } else if (mapCommandName.includes('treeview')) {
+      funcClass(Ember.$('*[class$="isogd-' + mapCommandName + '-tab"]'));
+      return true;
+    } else if (mapCommandName.includes('search')) {
+      funcClass(Ember.$('*[class$="isogd-' + mapCommandName + '-tab"]'));
+      return true;
+    } else if (mapCommandName.includes('identify')) {
+      funcClass(Ember.$('*[class$="isogd-' + mapCommandName + '-tab"]'));
+      return true;
+    } else if (mapCommandName.includes('bookmarks')) {
+      funcClass(Ember.$('*[class$="isogd-' + mapCommandName + '-tab"]'));
+      return true;
+    } else if (mapCommandName.includes('analytics')) {
+      funcClass(Ember.$('*[class$="' + mapCommandName + "]"));
+      return true;
+    } else if (mapCommandName.includes('toggle')) {
+      funcClass(Ember.$(`.${mapCommandName}-button`));
+      return true;
+    } else if (mapCommandName.includes('outer-search') && !isTool) {
+      funcClass(Ember.$(`.${mapCommandName}`));
+      return true;
+    } else if (mapCommandName.includes('more') && !isTool) {
+      funcClass(Ember.$('*[class$="' + mapCommandName + '-map-command"], *[class*="' + mapCommandName + '-map-command "]'));
       return true;
     }
 
