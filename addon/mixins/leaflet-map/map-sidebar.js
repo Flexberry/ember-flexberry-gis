@@ -24,7 +24,7 @@ export default Ember.Mixin.create({
 
       // Hide sidebar.
       hide() {
-        let $control = Ember.$('.rgis-sidebar-wrapper');
+        let $control = Ember.$('.rgis-sidebar-wrapper').length !== 0 ? Ember.$('.rgis-sidebar-wrapper') : Ember.$('.sidebar-wrapper');
         if ($control.length === 1 && $control.hasClass('visible')) {
           leafletMap.fire('flexberry-map:toggleSidebar');
         }
@@ -32,8 +32,8 @@ export default Ember.Mixin.create({
 
       // Show sidebar.
       show() {
-        let $control = Ember.$('.rgis-sidebar-wrapper');
-        if ($control.length === 1 && $control.hasClass('invisible')) {
+        let $control = Ember.$('.rgis-sidebar-wrapper').length !== 0 ? Ember.$('.rgis-sidebar-wrapper') : Ember.$('.sidebar-wrapper');
+        if ($control.length === 1 && !$control.hasClass('visible')) {
           leafletMap.fire('flexberry-map:toggleSidebar');
         }
       }
