@@ -88,11 +88,14 @@ export default Ember.Mixin.create({
     } else if (mapCommandName.includes('toggle')) {
       funcClass(Ember.$(`.${mapCommandName}-button`));
       return true;
-    } else if (mapCommandName.includes('outer-search') && !isTool) {
+    } else if (mapCommandName.includes('outer-search')) {
       funcClass(Ember.$(`.${mapCommandName}`));
       return true;
-    } else if (mapCommandName.includes('more') && !isTool) {
+    } else if (mapCommandName.includes('more')) {
       funcClass(Ember.$('*[class$="' + mapCommandName + '-map-command"], *[class*="' + mapCommandName + '-map-command "]'));
+      return true;
+    } else if (mapCommandName.includes('background-layers')) {
+      funcClass(Ember.$(`.${mapCommandName}`));
       return true;
     }
 
