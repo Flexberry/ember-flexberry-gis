@@ -6,6 +6,7 @@ import Ember from 'ember';
 import layout from '../../templates/components/geometry-add-modes/manual';
 import LeafletZoomToFeatureMixin from '../../mixins/leaflet-zoom-to-feature';
 import { translationMacro as t } from 'ember-i18n';
+import { coordinatesToString } from '../../utils/coordinates-to-string';
 
 /**
   Component's CSS-classes names.
@@ -173,7 +174,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     let baseCrs = this.get('settings.layerCRS');
     let coordinates = layer.toProjectedGeoJSON(baseCrs).geometry.coordinates;
 
-    const str = this._coordinatesToString(coordinates);
+    const str = coordinatesToString(coordinates);
     this.set('_coordinates', str);
   },
 
@@ -400,76 +401,6 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     let toCrsDefinition = Ember.get(toCrs, 'definition');
     let cords = proj4(fromCrsDefinition, toCrsDefinition, coordinates);
     return cords;
-  },
-
-  /**
-    Get the depth of the array.
-
-    @method _countDimensions
-    @param {Object[]} value Array.
-    @returns {number} value Array depth.
-  */
-  _countDimensions(value) {
-    return Array.isArray(value) ? 1 + Math.max(...value.map(this._countDimensions.bind(this))) : 0;
-  },
-
-  /**
-    Get coordinate line.
-
-    @method _coordinatesToString
-    @param {Object[]} coordinates Coordinates.
-  */
-  _coordinatesToString(coordinates) {
-
-    // Get array depth.
-    const arrDepth = this._countDimensions(coordinates);
-
-    let coors = [];
-    switch (arrDepth) {
-      case 1: // Point.
-        coors.push(coordinates);
-        break;
-      case 2: // LineString.
-        coors = coordinates;
-        break;
-      case 3: // Polygon and MultiLineString.
-        for (let i = 0; i < coordinates.length; i++) {
-          for (let j = 0; j < coordinates[i].length; j++) {
-            let item = coordinates[i][j];
-            coors.push(item);
-          }
-
-          if (i !== coordinates.length - 1) {
-            coors.push(null);
-          }
-        }
-
-        break;
-      case 4: // MultiPolygon.
-        for (let i = 0; i < coordinates.length; i++) {
-          for (let j = 0; j < coordinates[i].length; j++) {
-            for (let k = 0; k < coordinates[i][j].length; k++) {
-              let item = coordinates[i][j][k];
-              coors.push(item);
-            }
-          }
-
-          if (i !== coordinates.length - 1) {
-            coors.push(null);
-          }
-        }
-
-        break;
-      default:
-        throw new Error('Coordinate array error.');
-    }
-
-    let result = '';
-    coors.forEach(item => {
-      result += item !== null ? `${item[0]} ${item[1]} \n` : '\n';
-    });
-
-    return result;
   },
 
   /**
