@@ -125,7 +125,6 @@ export default Ember.Mixin.create(SnapDraw, {
     @return nothing
   */
   cancelEdit(layer) {
-    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     let editTools = this._getEditTools();
     editTools.off('editable:drawing:end');
     editTools.off('editable:editing');
