@@ -635,7 +635,7 @@
       position: absolute;
       bottom: 0px;
       right: 0px;
-      max-width:352px;
+      max-width: 357px;
       background: @whitecolor;
       box-shadow: @uiIconButtonBoxShadow;
       clip-path: inset(0px -2px 0px -2px);
