@@ -162,7 +162,7 @@
           </div>
           <div class="feature-div-property-value">
               <div>
-                <table class="ui compact celled table">
+                <table class="ui compact celled table intersection-table">
                   <tr>
                     <td>
                       {{t 'components.flexberry-layers-intersections-panel.x-cord'}}
@@ -174,12 +174,14 @@
                   {{#if showAllCords}}
                     {{#each feature.intersection.intersectionCords as |cords|}}
                       <tr>
-                        <td>
-                          {{cords.[0]}}
-                        </td>
-                        <td>
-                          {{cords.[1]}}
-                        </td>
+                        {{#if cords}}
+                          <td>
+                            {{cords.[0]}}
+                          </td>
+                          <td>
+                            {{cords.[1]}}
+                          </td>
+                        {{/if}}
                       </tr>
                     {{/each}}
                   {{else}}

@@ -4,6 +4,8 @@ import * as buffer from 'npm:@turf/buffer';
 import VectorLayer from '../layers/-private/vector';
 import WmsWfsLayer from 'ember-flexberry-gis/layers/wms-wfs';
 import * as jsts from 'npm:jsts';
+import { coordinatesToArray } from '../utils/coordinates-to-string';
+
 /**
   The component for searching for intersections with selected feature.
 
@@ -508,25 +510,20 @@ export default Ember.Component.extend({
   },
 
   computeCoordinates(feature) {
-    let coordinatesArray = [];
-    if (feature.type === 'MultiPolygon' || feature.type === 'Polygon') {
-      feature.coordinates.forEach(arr => {
-        arr.forEach(pair => {
-          if (feature.type === 'MultiPolygon') {
-            pair.forEach(cords => {
-              coordinatesArray.push(cords);
-            });
-          } else {
-            coordinatesArray.push(pair);
-          }
+    if (feature) {
+      let coordinatesArray = [];
+      if (feature.type === 'GeometryCollection') {
+        feature.geometries.forEach((geometry) => {
+          coordinatesArray = coordinatesArray.concat(coordinatesToArray(geometry.coordinates));
+          coordinatesArray = coordinatesArray.concat(null);
         });
-      });
-    } else if (feature.type === 'Point') {
-      coordinatesArray.push(feature.coordinates);
-    } else {
-      coordinatesArray = feature.coordinates;
+      } else {
+        coordinatesArray = coordinatesToArray(feature.coordinates);
+      }
+
+      return coordinatesArray;
     }
 
-    return coordinatesArray;
+    return null;
   }
 });
