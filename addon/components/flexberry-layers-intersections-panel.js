@@ -4,7 +4,7 @@ import * as buffer from 'npm:@turf/buffer';
 import VectorLayer from '../layers/-private/vector';
 import WmsWfsLayer from 'ember-flexberry-gis/layers/wms-wfs';
 import * as jsts from 'npm:jsts';
-import { coordinatesToArray } from '../utils/coordinates-to-string';
+import { coordinatesToArray } from '../utils/coordinates-to';
 
 /**
   The component for searching for intersections with selected feature.

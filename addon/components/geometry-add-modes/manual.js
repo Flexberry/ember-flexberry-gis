@@ -6,7 +6,7 @@ import Ember from 'ember';
 import layout from '../../templates/components/geometry-add-modes/manual';
 import LeafletZoomToFeatureMixin from '../../mixins/leaflet-zoom-to-feature';
 import { translationMacro as t } from 'ember-i18n';
-import { coordinatesToString } from '../../utils/coordinates-to-string';
+import { coordinatesToString } from '../../utils/coordinates-to';
 
 /**
   Component's CSS-classes names.

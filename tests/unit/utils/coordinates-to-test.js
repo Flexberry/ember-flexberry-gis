@@ -1,7 +1,7 @@
-import { coordinatesToString, coordinatesToArray } from 'ember-flexberry-gis/utils/coordinates-to-string';
+import { coordinatesToString, coordinatesToArray } from 'ember-flexberry-gis/utils/coordinates-to';
 import { module, test } from 'qunit';
 
-module('Unit | Utility | coordinates to string');
+module('Unit | Utility | coordinates to');
 
 test('test methods coordinatesToString and coordinatesToArray for Point', function(assert) {
   let feature = {

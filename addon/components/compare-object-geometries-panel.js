@@ -4,7 +4,7 @@ import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import distance from 'npm:@turf/distance';
 import helpers from 'npm:@turf/helpers';
 import jsts from 'npm:jsts';
-import { coordinatesToString } from '../utils/coordinates-to-string';
+import { coordinatesToString } from '../utils/coordinates-to';
 
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   layout,
