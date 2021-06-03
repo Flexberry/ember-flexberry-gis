@@ -1062,6 +1062,9 @@ div.measure-drag-panel {
         border: none;
       }
     }
+    .intersection-table tr{
+      height: 1em;
+    }
   }
   .feature-result-item-content {
     padding-left: 32px;

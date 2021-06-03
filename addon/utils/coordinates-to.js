@@ -10,12 +10,12 @@ let countDimensions = function(value) {
 };
 
 /**
-  Get coordinate line.
+  Converting coordinates to a single array.
 
-  @method _coordinatesToString
+  @method coordinatesToArray
   @param {Object[]} coordinates Coordinates.
 */
-let coordinatesToString = function(coordinates) {
+let coordinatesToArray = function(coordinates) {
 
   // Get array depth.
   const arrDepth = countDimensions(coordinates);
@@ -60,8 +60,19 @@ let coordinatesToString = function(coordinates) {
       throw new Error('Coordinate array error.');
   }
 
+  return coors;
+};
+
+/**
+  Converting coordinates to string.
+
+  @method coordinatesToString
+  @param {Object[]} coordinates Coordinates.
+*/
+let coordinatesToString = function(coordinates) {
+  let coords = coordinatesToArray(coordinates);
   let result = '';
-  coors.forEach(item => {
+  coords.forEach(item => {
     result += item !== null ? `${item[0]} ${item[1]} \n` : '\n';
   });
 
@@ -69,5 +80,6 @@ let coordinatesToString = function(coordinates) {
 };
 
 export {
-  coordinatesToString
+  coordinatesToString,
+  coordinatesToArray
 };
