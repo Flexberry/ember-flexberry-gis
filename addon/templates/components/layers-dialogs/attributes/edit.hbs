@@ -26,6 +26,7 @@
         {{#if (eq (get fieldTypes fieldName) "date")}}
           {{flexberry-datepicker
             value=(mut (get data fieldName))
+            placeholder=placeholderDataPicker
           }}
         {{else if (eq (get fieldTypes fieldName) "boolean")}}
           {{flexberry-checkbox

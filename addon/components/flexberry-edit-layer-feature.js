@@ -39,6 +39,15 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   */
   class: null,
 
+  /**
+    Placeholder for dataPicker.
+
+    @property placeholderDataPicker
+    @type String
+    @default null
+  */
+  placeholderDataPicker: null,
+
   loading: false,
 
   block: false,

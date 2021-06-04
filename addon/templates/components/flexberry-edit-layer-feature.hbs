@@ -143,19 +143,20 @@
         {{#each-in _model.fieldNames as |fieldName fieldValue|}}
         <div class="field {{if (get (get parsingErrors (concat '' curIndex)) fieldName) "error" ""}}">
           <label>{{fieldValue}}</label>
-          {{#if (eq (get fieldTypes fieldName) "date")}}
-          {{flexberry-datepicker
-                  value=(mut (get dataValue fieldName))
-                }}
-          {{else if (eq (get fieldTypes fieldName) "boolean")}}
-          {{flexberry-checkbox
-                  value=(mut (get dataValue fieldName))
-                }}
+          {{#if (eq (get _model.fieldTypes fieldName) "date")}}
+            {{flexberry-datepicker
+              value=(mut (get dataValue fieldName))
+              placeholder=placeholderDataPicker
+            }}
+          {{else if (eq (get _model.fieldTypes fieldName) "boolean")}}
+            {{flexberry-checkbox
+              value=(mut (get dataValue fieldName))
+            }}
           {{else}}
-          {{input
-                  type="text"
-                  value=(mut (get dataValue fieldName))
-                }}
+            {{input
+              type="text"
+              value=(mut (get dataValue fieldName))
+            }}
           {{/if}}
           {{#if (get (get parsingErrors (concat '' curIndex)) fieldName)}}
           <div class="validation">
