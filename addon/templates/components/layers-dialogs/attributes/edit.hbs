@@ -24,7 +24,8 @@
       <div class="field {{if (get parsingErrors fieldName) "error" ""}}">
         <label>{{fieldValue}}</label>
         {{#if (eq (get fieldTypes fieldName) "date")}}
-          {{flexberry-datepicker
+          {{flexberry-simpledatetime
+            type="date"
             value=(mut (get data fieldName))
             placeholder=placeholderDataPicker
           }}

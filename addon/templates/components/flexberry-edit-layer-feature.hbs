@@ -144,7 +144,8 @@
         <div class="field {{if (get (get parsingErrors (concat '' curIndex)) fieldName) "error" ""}}">
           <label>{{fieldValue}}</label>
           {{#if (eq (get _model.fieldTypes fieldName) "date")}}
-            {{flexberry-datepicker
+            {{flexberry-simpledatetime
+              type="date"
               value=(mut (get dataValue fieldName))
               placeholder=placeholderDataPicker
             }}
