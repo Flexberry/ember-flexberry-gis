@@ -656,6 +656,7 @@
     }
     .child-background-layers{
       position: relative;
+
       padding-bottom: 6px;
       display: inline-block;
       .picture {
@@ -673,6 +674,7 @@
         font-size: 11px;
         width: 94px;
         line-height: 13px;
+        word-break: break-word;
       }
     }
   }
