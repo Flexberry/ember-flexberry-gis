@@ -65,7 +65,7 @@
               width: 40px;
               height: 40px;
               i.icon {
-                padding-top: 5px;
+                padding-top: 2px;
                 &:before {
                   font-size: 18px;
                 }
@@ -325,6 +325,7 @@
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).title .flexberry-maplayer-caption-label,
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .flexberry-maplayer-caption-label {
   font-size: 14px;
+  margin-top: 2px;
 }
 
 .ui.right.sidebar {
@@ -410,7 +411,7 @@
       }
     }
     .flexberry-treenode-buttons-block {
-      padding-top: 5px;
+      padding-top: 2px;
       left: 40px;
       top: -6px;
       width: 100%;
@@ -532,6 +533,12 @@
             .button {
               opacity: 0.75;
               background-color: rgba(255, 255, 255, 0);
+              &.more {
+                padding: 0;
+                height: auto;
+                margin-top: -2px;
+                margin-left: -3px;
+              }
             }
             .button:hover {
               border: none;
@@ -849,7 +856,7 @@
       }
       .bookmark-item-buttons,
       .bmrk-add-block-buttons {
-        .ui.icon.button{
+        .ui.icon.button {
           height: 33px;
           min-width: 30px;
         }
@@ -868,6 +875,10 @@
           font-size: 20px;
           content:'\e812';
         }
+      }
+      .bmrk-add-block-buttons .remove.icon,
+      .bmrk-add-block-buttons .checkmark.icon {
+        margin-top: 2px;
       }
       .bookmark-item,
       .bmrk-add-block {
@@ -925,11 +936,7 @@
 .outer-search.flexberry-search-panel.attr~.ui.sidebar.treeview.pushable.tabbar .ui.tab.search.active h3 {
   margin-top: 207px;
 }
-.flexberry-search-panel .flexberry-search-attr .ui.icon.close-attr-search {
-  position: absolute;
-  top: 63px;
-  left: 290px;
-}
+
 .outer-search.flexberry-search-panel {
   left: 30px;
   top: 30px;
@@ -969,10 +976,11 @@
       &.separate {
         position: absolute;
         top: 8px;
-        right: 25px;
+        right: 28px;
         border-left: @defaultGrayBorder;
         i.icon {
           width: auto;
+          margin: 0;
         }
       }
       .icon {
@@ -1078,7 +1086,7 @@
     display: none;
   }
   .ui.pointing.group.secondary.menu {
-    margin-top: 0px;
+    margin-top: 10px;
     margin-left: -15px;
     border-bottom: none;
     min-height: 35px;
@@ -1088,7 +1096,6 @@
       font-size: 14px;
       font-weight: normal;
       border-bottom: none;
-      padding-top: 7px;
       &.active {
         color: #000000;
         font-weight: normal;
@@ -1114,10 +1121,12 @@
   i.icon.caret.left:before {
     content: "\f104";
     color: @greyIconColor;
+    opacity: 1;
   }
   i.icon.caret.right:before{
     content: "\f105";
     color: @greyIconColor;
+    opacity: 1;
   }
 }
 .create-edit-block-index {

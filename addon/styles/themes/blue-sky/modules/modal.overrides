@@ -397,8 +397,7 @@
   }
 
   .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-settings-column {
-    padding-right: 0;
-    padding-left: 0;
+    padding: 1em 0 60px 0;
     border: none;
     box-shadow: none;
 
@@ -411,9 +410,11 @@
       .button.flexberry-button {
         color:@white;
         background: @primaryColor;
-        height: initial;
-        min-height: 35px;
+        height: 32px;
+        min-height: 32px;
         min-width: 179px;
+        padding: 7px 0;
+        margin: 0 15px;
       }
     }
 
@@ -815,6 +816,10 @@
   .field.flexberry-card-buttons {
     margin-left: -1rem;
     margin-right: -1rem;
+    .ui.button.flexberry-button {
+      height: 32px;
+      padding: 7px 0 !important;
+    }
     > .field {
       padding: 0 1rem;
     }
