@@ -216,6 +216,7 @@
       font-family: 'FontAwesome';
       font-size: 15px;
       color: @greyIconColor;
+      opacity: 1;
     }
   }
 }

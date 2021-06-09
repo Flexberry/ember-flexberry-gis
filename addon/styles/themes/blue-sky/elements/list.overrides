@@ -6,9 +6,10 @@
   .flexberry-toggler-content .item:not(.icon) {
     padding: 5px;
   }
-  .feature-result-item-upload, .feature-result-item-select, .feature-result-item-list {
+  .feature-result-item-upload,
+  .feature-result-item-select,
+  .feature-result-item-list {
     margin-top: 0.6em;
-
   }
   .ui.list.transaction {
     margin-left: 10px;
@@ -96,7 +97,7 @@
 
         .feature-result-item-toolbar {
           z-index: 100;
-          height: 26px;
+          height: 100%;
           top: 7px;
           left: 22px;
           i.icon:before {

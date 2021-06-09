@@ -8,8 +8,7 @@
 {{#each _displayResults as |result|}}
   <div class="feature-result-item-group">
     {{#if result.isIntersect}}
-      {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
-	    <div class="feature-result-item-buttons hidden">
+      <div class="feature-result-item-buttons hidden">
         <a class="feature-result-item-select icon item"
           title="{{t "components.feature-result-item.select-all-caption"}}"
           {{action "zoomTo" result.features}}>
@@ -81,7 +80,8 @@
           <i class="upload icon"></i>
           </a>
         {{/if}}
-        </div>
+      </div>
+      {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
         <div class="ui list transition">
           {{#if intersection}}
             {{#each result.features as |feature|}}
