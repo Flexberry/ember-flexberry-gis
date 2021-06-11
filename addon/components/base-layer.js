@@ -279,7 +279,7 @@ export default Ember.Component.extend(
       }).then(({
         leafletLayer
       }) => {
-        leafletLayer.leafletMap = this.get('leafletMap');
+        Ember.set(leafletLayer, 'leafletMap',this.get('leafletMap'));
         this.set('_leafletObject', leafletLayer);
 
         if (Ember.isPresent(this.get('layerModel'))) {
@@ -392,8 +392,11 @@ export default Ember.Component.extend(
       @method _setLayerZIndex
       @private
     */
-    _setLayerZIndex() {
-      const leafletLayer = this.get('_leafletObject');
+    _setLayerZIndex(leafletLayer) {
+      if (!leafletLayer) {
+        leafletLayer = this.get('_leafletObject');
+      }
+
       if (Ember.isNone(leafletLayer)) {
         return;
       }
