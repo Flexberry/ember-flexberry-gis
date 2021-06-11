@@ -969,7 +969,7 @@
     button.ui.icon {
       border: none;
       color: @darkbluecolor;
-      margin-right: 0px;
+      margin-right: 1px;
       padding: 0;
       outline: none;
       top: 0;

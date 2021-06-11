@@ -12,9 +12,10 @@
     }
     .ui.search-button {
       position: absolute;
-      right: 33px;
+      right: 35px;
       border: none;
       height: 40px;
+      top: 1px !important;
     }
     .ui.clear-search-button {
       position: absolute;
@@ -57,7 +58,7 @@
       width: 14px;
       height: 14px;
       border: 0px;
-      right: 7px;
+      right: 8px;
       top: 7px;
       padding: 0;
       line-height: 1;
