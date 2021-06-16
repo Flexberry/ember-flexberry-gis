@@ -61,6 +61,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   */
   layer: null,
 
+  active: false,
+
   /**
     @property CRS
     @default null
