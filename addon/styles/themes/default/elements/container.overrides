@@ -110,10 +110,6 @@
                 }
                 i.icon:before {
                     color: @lightgraycolor;
-                    &:hover {
-                        color: @leafletBarButtonDisabledHoveredColor;
-                        background: @leafletBarButtonDisabledHoveredBackground;
-                    }
                 }
             }
         }
