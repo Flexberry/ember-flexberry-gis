@@ -13,6 +13,18 @@
 
       .create-edit-block-attributes {
         padding-top: 20px;
+        .flexberry-simpledatetime .ui.fluid.action.input {
+          border: @defaultGrayBorder;
+          border-radius: @defaultBorderRadius;
+          box-shadow: @defaultFieldBoxShadow;
+          height: 32px;
+          .ui.button {
+            height: 32px;
+          }
+          input {
+            box-shadow: none;
+          }
+        }
       }
 
       .create-edit-block-title {
@@ -70,7 +82,8 @@
                   font-size: 18px;
                 }
 
-                &.multi-poly {
+                &.multi-poly,
+                &.multi-line {
                   margin-left: -5px;
                 }
 
@@ -123,6 +136,10 @@
               &.checkbox-rhumb {
                 width: 77px;
                 min-width: 77px;
+                line-height: 1;
+                * {
+                  vertical-align: middle;
+                }
 
                 .ui.checkbox.flexberry-checkbox.read-only {
                     opacity: 1;
@@ -774,6 +791,8 @@
       }
       &:hover {
         background: @whitecolor;
+      }
+      &:not(.visible):hover {
         border: 1px solid @primaryColor;
       }
     }
@@ -969,7 +988,7 @@
     button.ui.icon {
       border: none;
       color: @darkbluecolor;
-      margin-right: 1px;
+      margin-right: 2px;
       padding: 0;
       outline: none;
       top: 0;

@@ -748,6 +748,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       @param {Object} tabModel Related tab.
     */
     drawBuffer(tabModel) {
+      this.send('deleteBuffer', tabModel);
+
       let radius = this.get('_radius');
       let unit = this.get('_selectedUnit');
       let selectedRows = Ember.get(tabModel, '_selectedRows');
@@ -767,6 +769,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       });
 
       this.set('_bufferLayer', _bufferLayer);
+
+      this.send('onFindItemClick', tabModel);
     },
 
     /**
@@ -776,6 +780,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     */
     deleteBuffer(tabModel) {
       let _bufferLayer = this.get('_bufferLayer');
+      if (Ember.isNone(_bufferLayer)) {
+        return;
+      }
+
       let selectedRows = Ember.get(tabModel, '_selectedRows');
       Object.keys(selectedRows).forEach(key => {
         if (selectedRows[key]) {

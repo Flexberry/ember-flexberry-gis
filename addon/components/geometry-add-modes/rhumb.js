@@ -66,6 +66,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   */
   layer: null,
 
+  active: false,
+
   /**
     Form validation flags.
 
@@ -281,7 +283,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         break;
     }
 
-    const startPoints = this._dataForm.startPoint.split(' ');
+    const startPoints = this._dataForm.startPoint.split(' ').map((p) => { return parseFloat(p); });
 
     let translateDirection = (direction) => {
       let factories = this.get('_objectDirections');
@@ -300,7 +302,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       let data = {
         rhumb: `${translateDirection(item.direction)}`,
         angle: item.rhumb,
-        distance: item.distance
+        distance: parseFloat(item.distance)
       };
 
       points.push(data);

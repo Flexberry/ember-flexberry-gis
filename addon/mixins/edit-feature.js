@@ -41,7 +41,6 @@ export default Ember.Mixin.create({
     let pane = leafletMap.getPane('zoomto');
     if (!pane || Ember.isNone(pane)) {
       pane = leafletMap.createPane('zoomto');
-      pane.style.zIndex = 400;
       pane.style.pointerEvents = 'none';
     }
 

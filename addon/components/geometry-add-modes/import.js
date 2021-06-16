@@ -96,6 +96,8 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
   */
   importAllSelect: false,
 
+  active: false,
+
   /**
     List of available CRS for import.
 

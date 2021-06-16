@@ -337,6 +337,8 @@
           width: 40px;
           font-size: 20px;
           line-height: 0.5;
+          padding-left: 0;
+          padding-right: 0;
         }
         .ui.button:hover,
         .ui.button.active {
@@ -810,6 +812,11 @@
     justify-content: space-between;
     &::after {
       display: none;
+    }
+
+    .ui.icon.button {
+      padding-left: 0!important;
+      padding-right: 0!important;
     }
   }
 
