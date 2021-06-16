@@ -443,6 +443,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       // выключим инструмент, при повторном клике
       if (geometryType === curGeometryType) {
         this.set('geometryType', null);
+        this.sendAction('block', false);
       } else {
         if (!Ember.isNone(editTools)) {
           editTools.on('editable:drawing:end', this._disableDraw, this);
