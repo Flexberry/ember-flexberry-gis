@@ -187,6 +187,11 @@ export default BaseVectorLayer.extend({
     let leafletObject = this.get('_leafletObject');
     leafletObject.baseEditLayer(layer);
 
+    if (layer.state = state.update) {
+      let coordinates = this._getGeometry(layer);
+      Ember.set(layer, 'feature.geometry.coordinates', coordinates);
+    }
+
     // Changes label when edit layer feature
     this.updateLabel(layer);
   },

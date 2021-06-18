@@ -1397,5 +1397,52 @@ export default BaseLayer.extend({
         this._removeLabelsFromLeafletContainer();
       }
     }
+  },
+
+  /**
+    Projects geometry from latlng to coords.
+
+    @method _transformToCoords
+    @private
+  */
+  _transformToCoords(latlngs, type) {
+    if (Array.isArray(latlngs[0]) || (!(latlngs instanceof L.LatLng) && (latlngs[0] instanceof L.LatLng))) {
+      let coords = [];
+      for (let i = 0; i < latlngs.length; i++) {
+        coords.push(this._transformToCoords(latlngs[i], type));
+      }
+
+      // ewkt requires closeing polygon
+      if (!Ember.isNone(type) && type.indexOf('Polygon') !== -1 && !Array.isArray(coords[0][0])) {
+        let first = coords[0];
+        coords.push(first);
+      }
+
+      return coords;
+    }
+
+    let crs = this.get('crs');
+    const latLng = latlngs instanceof L.LatLng ? latlngs : L.latLng(latlngs[1], latlngs[0]);
+    const point = crs.project(latLng);
+    return [point.x, point.y];
+  },
+
+  _getGeometry(layer) {
+    let coordinates = Ember.A();
+    let type = layer.toGeoJSON().geometry.type;
+
+    let forceMulti = this.get('forceMulti') || false;
+
+    if (layer instanceof L.Marker) {
+      coordinates = this._transformToCoords(layer._latlng);
+    } else {
+      coordinates = this._transformToCoords(layer._latlngs, type);
+    }
+
+    if (forceMulti && (type === 'Polygon' || type === 'LineString')) {
+      return [coordinates];
+    } else {
+      return coordinates;
+    }
   }
 });
