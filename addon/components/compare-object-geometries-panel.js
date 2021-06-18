@@ -187,11 +187,20 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @method actions.hidePanel
     */
     panToIntersection(geometry) {
-      if (!Ember.isBlank(geometry.coordinates[0])) {
-        let copyGeometry = Object.assign({}, geometry);
-        let mapModel = this.get('mapApi').getFromApi('mapModel');
-        let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
-        let featureLayer = L.geoJSON(convertedFeatureLayer.geometry);
+      let featureLayer = null;
+      if (geometry.type === 'GeometryCollection') {
+        featureLayer = L.featureGroup();
+        geometry.geometries.forEach(geom => {
+          featureLayer.addLayer(this._addConvertedGeometryToFeatureLayer(geom));
+        });
+        let center = featureLayer.getBounds().getCenter();
+        let leafletMap = this.get('leafletMap');
+        leafletMap.panTo(center);
+      } else {
+        featureLayer = this._addConvertedGeometryToFeatureLayer(geometry);
+      }
+
+      if (!Ember.isNone(featureLayer)) {
         let center = featureLayer.getBounds().getCenter();
         let leafletMap = this.get('leafletMap');
         leafletMap.panTo(center);
@@ -204,19 +213,39 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @method actions.hidePanel
     */
     zoomToIntersection(geometry) {
-      if (!Ember.isBlank(geometry.coordinates[0])) {
-        let group = this.get('featuresLayer');
-        group.clearLayers();
-        let copyGeometry = Object.assign({}, geometry);
-        let mapModel = this.get('mapApi').getFromApi('mapModel');
-        let convertedFeatureLayer =  mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
-        let featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
+      let group = this.get('featuresLayer');
+      group.clearLayers();
+      let featureLayer = null;
+      if (geometry.type === 'GeometryCollection') {
+        featureLayer = L.featureGroup();
+        geometry.geometries.forEach(geom => {
+          featureLayer.addLayer(this._addConvertedGeometryToFeatureLayer(geom, {
+            style: { color: 'green' }
+          }));
+        });
+        let center = featureLayer.getBounds().getCenter();
+        let leafletMap = this.get('leafletMap');
+        leafletMap.panTo(center);
+      } else {
+        featureLayer = this._addConvertedGeometryToFeatureLayer(geometry, {
           style: { color: 'green' }
         });
+      }
+
+      if (!Ember.isNone(featureLayer)) {
         featureLayer.addTo(group);
         let map = this.get('leafletMap');
         map.fitBounds(featureLayer.getBounds());
       }
+    }
+  },
+
+  _addConvertedGeometryToFeatureLayer(geometry, style) {
+    if (!Ember.isBlank(geometry.coordinates[0])) {
+      let copyGeometry = Object.assign({}, geometry);
+      let mapModel = this.get('mapApi').getFromApi('mapModel');
+      let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
+      return L.geoJSON(convertedFeatureLayer.geometry, style);
     }
   },
 
