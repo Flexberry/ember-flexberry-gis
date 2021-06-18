@@ -370,7 +370,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
           result[layerModelIndex].features = promiseFeature;
           favFeatures[layerModelIndex].features = favorites;
         } else {
-          favorties = favoriteObject.features;
+          favorites = favoriteObject.features;
           promiseFeature = new Ember.RSVP.Promise((resolve) => {
             resolve(favorites);
           });
