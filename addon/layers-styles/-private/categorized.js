@@ -93,9 +93,6 @@ export default BaseLayerStyle.extend({
   */
   _categoryIsRelevantToLeafletLayer({ leafletLayer, propertyName, category }) {
     let featureProperties = Ember.get(leafletLayer, 'feature.properties');
-    if (Ember.isNone(featureProperties)) {
-      return false;
-    }
 
     // Get property value.
     let propertyValue = Ember.get(featureProperties, propertyName);
