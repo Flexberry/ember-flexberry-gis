@@ -191,13 +191,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       if (geometry.type === 'GeometryCollection') {
         featureLayer = L.featureGroup();
         geometry.geometries.forEach(geom => {
-          featureLayer.addLayer(this._addConvertedGeometryToFeatureLayer(geom));
+          featureLayer.addLayer(this._convertGeometryToFeatureLayer(geom));
         });
-        let center = featureLayer.getBounds().getCenter();
-        let leafletMap = this.get('leafletMap');
-        leafletMap.panTo(center);
       } else {
-        featureLayer = this._addConvertedGeometryToFeatureLayer(geometry);
+        featureLayer = this._convertGeometryToFeatureLayer(geometry);
       }
 
       if (!Ember.isNone(featureLayer)) {
@@ -219,15 +216,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       if (geometry.type === 'GeometryCollection') {
         featureLayer = L.featureGroup();
         geometry.geometries.forEach(geom => {
-          featureLayer.addLayer(this._addConvertedGeometryToFeatureLayer(geom, {
+          featureLayer.addLayer(this._convertGeometryToFeatureLayer(geom, {
             style: { color: 'green' }
           }));
         });
-        let center = featureLayer.getBounds().getCenter();
-        let leafletMap = this.get('leafletMap');
-        leafletMap.panTo(center);
       } else {
-        featureLayer = this._addConvertedGeometryToFeatureLayer(geometry, {
+        featureLayer = this._convertGeometryToFeatureLayer(geometry, {
           style: { color: 'green' }
         });
       }
@@ -240,7 +234,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     }
   },
 
-  _addConvertedGeometryToFeatureLayer(geometry, style) {
+  _convertGeometryToFeatureLayer(geometry, style) {
     if (!Ember.isBlank(geometry.coordinates[0])) {
       let copyGeometry = Object.assign({}, geometry);
       let mapModel = this.get('mapApi').getFromApi('mapModel');
