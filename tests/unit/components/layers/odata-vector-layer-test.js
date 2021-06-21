@@ -928,7 +928,7 @@ test('test method save() no modified objects', function(assert) {
 });
 
 test('test method save() with objects', function(assert) {
-  assert.expect(15);
+  assert.expect(17);
   var done = assert.async(1);
   let component = this.subject(param);
 
@@ -944,7 +944,20 @@ test('test method save() with objects', function(assert) {
 
       let layerUpdate = leafletObject.getLayers()[0];
       layerUpdate.feature.properties.name = 'test';
+
+      let newFeature = L.geoJSON({
+        type: 'Polygon',
+        coordinates: [[[56.432487, 58.14725], [56.432133, 58.146749], [56.434, 58.146737]]]
+      }).getLayers()[0];
+
+      layerUpdate.setLatLngs(newFeature.getLatLngs());
+
       leafletObject.editLayer(layerUpdate);
+
+      assert.equal(layerUpdate.feature.geometry.coordinates[0].length, 4);
+      let coordinates = '6282035.717038031,7998313.982057768,6281996.30993829,' +
+          '7998208.303352221,6282204.143427601,7998205.77214398,6282035.717038031,7998313.982057768';
+      assert.equal(layerUpdate.feature.geometry.coordinates.toString(), coordinates);
 
       assert.equal(realCountArr(leafletObject.models), 1);
       assert.equal(leafletObject.getLayers().length, 2);
