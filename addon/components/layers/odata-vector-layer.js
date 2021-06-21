@@ -40,28 +40,13 @@ export default BaseVectorLayer.extend({
     @method save
   */
   save() {
-    let _this = this;
-    let leafletObject = _this.get('_leafletObject');
+    let leafletObject = this.get('_leafletObject');
     let leafletMap = this.get('leafletMap');
-    leafletObject.eachLayer(function (layer) {
+    leafletObject.eachLayer(layer => {
       if (Ember.get(layer, 'model.hasDirtyAttributes')) {
         if (layer.state === state.insert) {
-          let geometryObject = Ember.A();
-          let coordinates = Ember.A();
-          let type = Ember.get(layer, 'feature.geometry.type');
-          if (layer instanceof L.Marker) {
-            coordinates = _this.transformToCoords(layer._latlng);
-          } else {
-            coordinates = _this.transformToCoords(layer._latlngs, type);
-          }
-
-          if (_this.get('forceMulti') && (layer.toGeoJSON().geometry.type === 'Polygon' || layer.toGeoJSON().geometry.type === 'LineString')) {
-            geometryObject = [coordinates];
-          } else {
-            geometryObject = coordinates;
-          }
-
-          Ember.set(layer, 'feature.geometry.coordinates', geometryObject);
+          let coordinates = this._getGeometry(layer);
+          Ember.set(layer, 'feature.geometry.coordinates', coordinates);
         }
       }
     }, leafletObject);
@@ -111,9 +96,9 @@ export default BaseVectorLayer.extend({
         });
 
         if (insertedModelId.length > 0) {
-          _this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(_this.layerModel.get('id'), insertedModelId, true)
+          this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(this.layerModel.get('id'), insertedModelId, true)
             .then(([, lObject, featureLayer]) => {
-              _this._setLayerState();
+              this._setLayerState();
               leafletObject.fire('save:success', { layers: featureLayer });
             });
         } else {
@@ -273,28 +258,6 @@ export default BaseVectorLayer.extend({
     var id = leafletObject.getLayerId(layer);
     leafletObject.models[id] = layer.model;
     return leafletObject;
-  },
-
-  /**
-    Get geometry from layer in ewkt array
-
-    @method _getGeometry
-    @param {Object} layer
-  */
-  _getGeometry(layer) {
-    let coordinates = Ember.A();
-    let type = layer.toGeoJSON().geometry.type;
-    if (layer instanceof L.Marker) {
-      coordinates = this.transformToCoords(layer._latlng);
-    } else {
-      coordinates = this.transformToCoords(layer._latlngs, type);
-    }
-
-    if (this.get('forceMulti') && (type === 'Polygon' || type === 'LineString')) {
-      return [coordinates];
-    } else {
-      return coordinates;
-    }
   },
 
   /**
@@ -974,36 +937,6 @@ export default BaseVectorLayer.extend({
     const point = L.point(coordinates);
 
     return crs.unproject(point);
-  },
-
-  /**
-   Projects geometry from latlng to coords.
-
-   @method transformToCoords
-   @param {Leaflet Object} latlngs
-   @param {String} type
-   @returns coordinates in GeoJSON
-   */
-  transformToCoords(latlngs, type) {
-    if (Array.isArray(latlngs[0]) || (!(latlngs instanceof L.LatLng) && (latlngs[0] instanceof L.LatLng))) {
-      let coords = [];
-      for (let i = 0; i < latlngs.length; i++) {
-        coords.push(this.transformToCoords(latlngs[i], type));
-      }
-
-      // ewkt requires closeing polygon
-      if (!Ember.isNone(type) && type.indexOf('Polygon') !== -1 && !Array.isArray(coords[0][0])) {
-        let first = coords[0];
-        coords.push(first);
-      }
-
-      return coords;
-    }
-
-    const crs = this.get('crs');
-    const latLng = latlngs instanceof L.LatLng ? latlngs : L.latLng(latlngs[1], latlngs[0]);
-    const point = crs.project(latLng);
-    return [point.x, point.y];
   },
 
   createReadFormat() {
