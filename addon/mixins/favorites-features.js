@@ -327,7 +327,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     let result = Ember.A();
     let favFeatures = Ember.A();
     let twoObjects = this.get('twoObjectToCompare');
-
+    let updatedLayer = data.layers[0];
     let idUpdatedFavorite = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(data.layerModel.layerModel, data.layers[0]);
     this.get('favFeatures').forEach((favoriteObject) => {
       let favorites = Ember.A();
@@ -335,20 +335,17 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         favoriteObject.features.forEach((feature) => {
           let id = feature.properties.primarykey;
           if (idUpdatedFavorite === id) {
-            Ember.set(data.layers[0].feature.properties, 'isFavorite', true);
-            let updatedFeature = data.layers[0].toProjectedGeoJSON(data.layerModel.layerModel.get('crs'));
-            updatedFeature.layerModel = data.layerModel.layerModel;
-            Ember.set(updatedFeature.properties, 'isFavorite', true);
+            updatedLayer.feature.layerModel = data.layerModel.layerModel;
+            Ember.set(updatedLayer.feature.properties, 'isFavorite', true);
             if (!Ember.isEmpty(twoObjects)) {
               if (Ember.get(feature, 'compareEnabled')) {
-                Ember.set(feature, 'compareEnabled', false);
                 twoObjects.removeObject(feature);
-                Ember.set(updatedFeature, 'compareEnabled', true);
-                twoObjects.pushObject(updatedFeature);
+                Ember.set(updatedLayer.feature, 'compareEnabled', true)
+                twoObjects.pushObject(updatedLayer.feature);
               }
             }
 
-            favorites.push(updatedFeature);
+            favorites.push(updatedLayer.feature);
           } else {
             favorites.push(feature);
           }
