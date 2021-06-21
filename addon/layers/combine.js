@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import BaseLayer from './-private/base';
+//import VectorLayer from './-private/vector';
 
 /**
   Class describing combine layers metadata.
@@ -38,6 +39,10 @@ export default BaseLayer.extend({
   */
   createSettings() {
     let settings = this._super(...arguments);
+    Ember.$.extend(true, settings, {
+      type: undefined,
+      innerLayers: undefined,
+    });
     return settings;
   }
 });

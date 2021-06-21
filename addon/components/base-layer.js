@@ -279,7 +279,7 @@ export default Ember.Component.extend(
       }).then(({
         leafletLayer
       }) => {
-        Ember.set(leafletLayer, 'leafletMap',this.get('leafletMap'));
+        Ember.set(leafletLayer, 'leafletMap', this.get('leafletMap'));
         this.set('_leafletObject', leafletLayer);
 
         if (Ember.isPresent(this.get('layerModel'))) {
@@ -301,8 +301,6 @@ export default Ember.Component.extend(
         if (typeof layerInitCallback === 'function') {
           layerInitCallback(this);
         }
-
-        this._setFeaturesProcessCallback();
 
         return leafletLayer;
       }).catch((errorMessage) => {
@@ -470,6 +468,7 @@ export default Ember.Component.extend(
     _addLayerToLeafletContainer() {
       let leafletContainer = this.get('leafletContainer');
       let leafletLayer = this.get('_leafletObject');
+
       if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) || leafletContainer.hasLayer(leafletLayer)) {
         return;
       }
@@ -507,6 +506,7 @@ export default Ember.Component.extend(
     _removeLayerFromLeafletContainer() {
       let leafletContainer = this.get('leafletContainer');
       let leafletLayer = this.get('_leafletObject');
+
       if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) || !leafletContainer.hasLayer(leafletLayer)) {
         return;
       }

@@ -602,8 +602,11 @@ export default BaseVectorLayer.extend({
     return props;
   },
 
-  _addLayersOnMap(layers) {
-    let leafletObject = this.get('_leafletObject');
+  _addLayersOnMap(layers, leafletObject) {
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
+
     layers.forEach((layer) => {
       leafletObject.addLayer(layer);
     });
@@ -924,6 +927,7 @@ export default BaseVectorLayer.extend({
     // for check zoom
     layer.leafletMap = leafletMap;
     this.set('loadedBounds', null);
+    this._setFeaturesProcessCallback(layer);
     let load = this.continueLoad(layer);
     layer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
     return layer;
@@ -1292,7 +1296,7 @@ export default BaseVectorLayer.extend({
   continueLoad(leafletObject) {
     let loadedBounds = this.get('loadedBounds');
 
-    if (!leafletObject) {
+    if (!leafletObject || !(leafletObject instanceof L.FeatureGroup)) {
       leafletObject = this.get('_leafletObject');
     }
 
@@ -1396,9 +1400,22 @@ export default BaseVectorLayer.extend({
 
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
-      leafletMap.on('moveend', () => { this.continueLoad(); });
+      leafletMap.on('moveend',this.continueLoad, this);
       leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
     }
+  },
+
+  /**
+    Deinitializes DOM-related component's properties.
+  */
+  willDestroyElement() {
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.off('moveend', this.continueLoad, this);
+      leafletMap.off('flexberry-map:moveend', this._continueLoad, this);
+    }
+
+    this._super(...arguments);
   },
 
   clearChanges() {

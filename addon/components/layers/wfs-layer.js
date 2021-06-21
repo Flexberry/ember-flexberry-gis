@@ -147,8 +147,11 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  _addLayersOnMap(layers) {
-    let leafletObject = this.get('_leafletObject');
+  _addLayersOnMap(layers, leafletObject) {
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
+
     let leafletMap = this.get('leafletMap');
     let pane = this.get('_pane');
 
@@ -376,9 +379,12 @@ export default BaseVectorLayer.extend({
           wfsLayer.maxZoom = this.get('maxZoom');
           wfsLayer.leafletMap = leafletMap;
           this.set('loadedBounds', null);
+          this._setFeaturesProcessCallback(wfsLayer);
           let load = this.continueLoad(wfsLayer);
           wfsLayer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
           wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);
+          wfsLayer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
+
           resolve(wfsLayer);
         })
         .once('error', (e) => {
@@ -727,7 +733,7 @@ export default BaseVectorLayer.extend({
   continueLoad(leafletObject) {
     let loadedBounds = this.get('loadedBounds');
 
-    if (!leafletObject) {
+    if (!leafletObject || !(leafletObject instanceof L.FeatureGroup)) {
       leafletObject = this.get('_leafletObject');
     }
 
@@ -814,9 +820,22 @@ export default BaseVectorLayer.extend({
 
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
-      leafletMap.on('moveend', () => { this.continueLoad(); });
+      leafletMap.on('moveend', this.continueLoad, this);
       leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
     }
+  },
+
+  /**
+    Deinitializes DOM-related component's properties.
+  */
+  willDestroyElement() {
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.off('moveend', this.continueLoad, this);
+      leafletMap.off('flexberry-map:moveend', this._continueLoad, this);
+    }
+
+    this._super(...arguments);
   },
 
   clearChanges(ids) {

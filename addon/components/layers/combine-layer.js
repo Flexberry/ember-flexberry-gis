@@ -2,8 +2,9 @@
   @module ember-flexberry-gis
 */
 import Ember from 'ember';
-import BaseLayer from '../base-layer';
 import { checkMapZoom } from '../../utils/check-zoom';
+//import BaseVectorLayer from '../base-vector-layer';
+import BaseLayer from '../base-layer';
 
 /**
   Combine layer component for leaflet map.
@@ -36,17 +37,36 @@ export default BaseLayer.extend({
   /**
     Creates leaflet layer related to layer type.
 
-    @method createLayer
+    @method createVectorLayer
     @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this.createAllLayer();
+      Ember.RSVP.hash({
+        layer: this.get('mainLayer._leafletLayerPromise')
+      }).then(({ layer }) => {
+        Ember.set(this.get('layerModel'), '_attributesOptions', this._getAttributesOptions.bind(this));
+        Ember.set(layer, 'mainLayer', this.get('mainLayer'));
+        resolve(layer);
+      }).catch((e) => {
+        reject(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${e}`);
+      });
+    });
+  },
+
+  /**
+    Initializes component.
+  */
+  createAllLayer() {
     let settings = this.get('layerModel.settingsAsObject');
-    if (!Ember.isNone(settings)) {
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(settings) && !Ember.isNone(leafletMap)) {
       let mainType = Ember.get(settings, 'type');
 
       let layerProperties = {
-        leafletMap: this.get('leafletMap'),
+        leafletMap: leafletMap,
         leafletContainer: this.get('leafletContainer'),
         layerModel: this.get('layerModel'),
         index: this.get('index'),
@@ -67,107 +87,104 @@ export default BaseLayer.extend({
         layerProperties[ownerKey] = owner;
       }
 
-      //let layerComponent = Ember.getOwner(this).factoryFor(`component:layers/${mainType}-layer`);
-      //layerComponent.setProperties(layerProperties);
-      //let mainLayer = Ember.getOwner(this).fa(`component:layers/${mainType}-layer`).createLayer.apply(this, arguments);
       let mainLayer = Ember.getOwner(this).factoryFor(`component:layers/${mainType}-layer`).create(layerProperties);
-      mainLayer.layerId = Ember.guidFor(mainLayer);
-      this.set('mainLayer', mainLayer);
+      if (!Ember.isNone(mainLayer)) {
+        mainLayer.layerId = Ember.guidFor(mainLayer);
+        this.set('mainLayer', mainLayer);
 
+        let innerLayers = Ember.A();
+        let innerLayersSettings = Ember.get(settings, 'innerLayers');
+        for (let type in innerLayersSettings) {
+          let innerLayerProperties = {
+            leafletMap: leafletMap,
+            leafletContainer: this.get('leafletContainer'),
+            layerModel: this.get('layerModel'),
+            index: this.get('index'),
+            visibility:  false,
+            dynamicProperties: innerLayersSettings[type]
+          };
 
-      /*this.getLeafletObject().then(() => {
-        this.get('_leafletLayerPromise').then((leafletLayer) => {
-          if (!Ember.isNone(leafletLayer)) {
-            this._visibilityOfLayerByZoom();
+          // Set creating component's owner to avoid possible lookup exceptions.
+          let owner = Ember.getOwner(this);
+          let ownerKey = null;
+          Ember.A(Object.keys(this) || []).forEach((key) => {
+            if (this[key] === owner) {
+              ownerKey = key;
+              return false;
+            }
+          });
+          if (!Ember.isBlank(ownerKey)) {
+            innerLayerProperties[ownerKey] = owner;
           }
-        });
-      });*/
 
-      return mainLayer;
-    }
-
-    return null;
-  },
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-
-    let settings = this.get('layerModel.settingsAsObject');
-    if (!Ember.isNone(settings)) {
-      let innerLayers = Ember.A();
-      let innerLayersSettings = Ember.get(settings, 'innerLayers');
-      for (let type in innerLayersSettings) {
-        let innerLayerProperties = {
-          leafletMap: this.get('leafletMap'),
-          leafletContainer: this.get('leafletContainer'),
-          layerModel: this.get('layerModel'),
-          index: this.get('index'),
-          visibility: false,
-          dynamicProperties: innerLayersSettings[type]
-        };
-
-        // Set creating component's owner to avoid possible lookup exceptions.
-        let owner = Ember.getOwner(this);
-        let ownerKey = null;
-        Ember.A(Object.keys(this) || []).forEach((key) => {
-          if (this[key] === owner) {
-            ownerKey = key;
-            return false;
+          let layer = Ember.getOwner(this).factoryFor(`component:layers/${type}-layer`).create(innerLayerProperties);
+          if (!Ember.isNone(layer)) {
+            layer.layerId = Ember.guidFor(layer);
+            innerLayers.addObject(layer);
+          } else {
+            throw(`Invalid layer type ${type} for layer ${this.get('layerModel.name')}`);
           }
-        });
-        if (!Ember.isBlank(ownerKey)) {
-          innerLayerProperties[ownerKey] = owner;
         }
 
-        let layer = Ember.getOwner(this).factoryFor(`component:layers/${type}-layer`).create(innerLayerProperties);
-        layer.layerId = Ember.guidFor(layer);
-        innerLayers.addObject(layer);
+        this.set('innerLayers', innerLayers);
+        Ember.set(mainLayer, 'innerLayers', innerLayers);
+        leafletMap.on('zoomend', this._visibilityOfLayerByZoom, this);
+        mainLayer.didInsertElement();
+        mainLayer.get('innerLayers').forEach((layer) => {
+          layer.didInsertElement();
+        });
+      } else {
+        throw(`Invalid layer type ${mainType} for layer ${this.get('layerModel.name')}`);
       }
-
-      this.set('innerLayers', innerLayers);
-      let mainLayer = this.get('mainLayer');
-      Ember.set(mainLayer, 'innerLayers', innerLayers);
-      /*this.get('_leafletLayerPromise').then(() => {
-        if (!Ember.isNone(this.get('layerModel._leafletObject'))) {
-          this._visibilityOfLayerByZoom();
-        }
-      });*/
     }
+
+    //this._super(...arguments);
   },
 
   /**
-    Initializes DOM-related component's properties.
+    Handles changes in settings.
+
+    @method _searchPropertiesDidChange
+    @private
   */
-  didInsertElement() {
+  _settingsDidChange: Ember.observer('layerModel.settingsAsObject', function() {
+    Ember.run.once(this, '_resetLayer');
+  }),
+
+  /**
+    Destroys leaflet layer related to layer type.
+
+    @method _destroyLayer
+    @private
+  */
+  destroyLayer() {
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
-      leafletMap.on('zoomend', this._visibilityOfLayerByZoom, this);
+      leafletMap.off('zoomend', this._visibilityOfLayerByZoom, this);
     }
 
-    this.get('_leafletLayerPromise').then((leafletLayer) => {
-      this._visibilityOfLayerByZoom();
-    });
+    let mainLayer = this.get('mainLayer');
+    if (!Ember.isNone(mainLayer)) {
+      mainLayer.willDestroyElement();
+      mainLayer.get('innerLayers').forEach((layer) => {
+        layer.willDestroyElement();
+      });
+    }
 
-    this._super(...arguments);
+    this.set('mainLayer', null);
+    this.set('layerVisibility', null);
   },
 
   /**
     Deinitializes DOM-related component's properties.
   */
   willDestroyElement() {
-    let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
-      leafletMap.off('zoomend', this._visibilityOfLayerByZoom, this);
-    }
-
+    this._destroyLayer();
     this._super(...arguments);
   },
 
   /**
-    Check zoom and set layerVisibility.
+    Checks zoom and sets layer visibility.
 
     @method _checkAndSetVisibility
     @param {Object} layer
@@ -176,12 +193,16 @@ export default BaseLayer.extend({
   */
   _checkAndSetVisibility(layer) {
     let layerVisibility = this.get('layerVisibility');
-    if (checkMapZoom(layer)) {
-      if (Ember.isNone(layerVisibility) || layerVisibility._leaflet_id !== layer._leaflet_id) {
-        this._removeLayerFromLeafletContainer();
+    let visibility = this.get('visibility');
+    if (visibility && checkMapZoom(layer._leafletObject)) {
+      if (Ember.isNone(layerVisibility) || layerVisibility.layerId !== layer.layerId) {
+        if (!Ember.isNone(layerVisibility)) {
+          layerVisibility.set('visibility', false);
+        }
+
         this.set('layerVisibility', layer);
-        this._addLayerToLeafletContainer();
-        this._setLayerZIndex(layer);
+        layer.set('visibility', true);
+        this._setLayerZIndex(layer._leafletObject);
       }
 
       return true;
@@ -193,18 +214,34 @@ export default BaseLayer.extend({
   /**
     Sets leaflet layer's visibility.
 
+    @method _setLayerVisibility
+    @private
+  */
+  _setLayerVisibility() {
+    let layerVisibility = this.get('layerVisibility');
+    if (this.get('visibility')) {
+      this._visibilityOfLayerByZoom();
+    } else if (!Ember.isNone(layerVisibility)) {
+      layerVisibility.set('visibility', false);
+      this.set('layerVisibility', null);
+    }
+  },
+
+  /**
+    Sets leaflet layer's visibility.
+
     @method _visibilityOfLayerByZoom
     @private
   */
   _visibilityOfLayerByZoom() {
-    let leafletObject = this.get('layerModel._leafletObject');
-    if (Ember.isNone(leafletObject)) {
+    let mainLayer = this.get('mainLayer');
+    if (Ember.isNone(mainLayer)) {
       return;
     }
 
-    if (!this._checkAndSetVisibility(leafletObject)) {
-      this.get('innerLayers').forEach((layer) => {
-        if (this._checkAndSetVisibility(layer._leafletObject)) {
+    if (!this._checkAndSetVisibility(mainLayer)) {
+      mainLayer.get('innerLayers').forEach((layer) => {
+        if (this._checkAndSetVisibility(layer)) {
           return;
         }
       });
@@ -212,58 +249,13 @@ export default BaseLayer.extend({
   },
 
   /**
-    Adds layer to it's leaflet container.
+    Returns promise with the layer properties object.
 
-    @method _addLayerToLeafletContainer
+    @method _getAttributesOptions
     @private
   */
-  _addLayerToLeafletContainer() {
-    let leafletContainer = this.get('leafletContainer');
-    let leafletLayer = this.get('layerModel._leafletObject');
-    let layerVisibility = this.get('layerVisibility');
-    if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) || Ember.isNone(layerVisibility) || leafletContainer.hasLayer(layerVisibility)) {
-      return;
-    }
-
-    let thisPane = this.get('_pane');
-    if (thisPane) {
-      let leafletMap = this.get('leafletMap');
-      if (thisPane && !Ember.isNone(leafletMap)) {
-        let pane = leafletMap.getPane(thisPane);
-        if (!pane || Ember.isNone(pane)) {
-          this._createPane(thisPane);
-          this._setLayerZIndex();
-        }
-      }
-    }
-
-    leafletContainer.addLayer(layerVisibility);
-    let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap) && layerVisibility.options.continueLoading) {
-      let e = {
-        layers: [this.get('layerModel')],
-        results: Ember.A()
-      };
-
-      leafletMap.fire('flexberry-map:moveend', e);
-    }
-  },
-
-  /**
-    Removes layer from it's leaflet container.
-
-    @method _removeLayerFromLeafletContainer
-    @private
-  */
-  _removeLayerFromLeafletContainer() {
-    let leafletContainer = this.get('leafletContainer');
-    let leafletLayer = this.get('layerModel._leafletObject');
-    let layerVisibility = this.get('layerVisibility');
-    if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) || Ember.isNone(layerVisibility) || !leafletContainer.hasLayer(layerVisibility)) {
-      return;
-    }
-
-    leafletContainer.removeLayer(layerVisibility);
+  _getAttributesOptions() {
+    return this.get('mainLayer')._getAttributesOptions();
   },
 
   /**

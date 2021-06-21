@@ -48,6 +48,16 @@ export default BaseLayer.extend({
   clusterOptions: null,
 
   /**
+    Promise returning Leaflet layer.
+
+    @property _leafletVectorLayerPromise
+    @type <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @default null
+    @private
+  */
+  _leafletVectorLayerPromise: null,
+
+  /**
     Observes and handles changes in {{#crossLink "BaseVectorLayerComponent/clusterize:property"}}'clusterize' property{{/crossLink}}.
     Resets layer with respect to new value of {{#crossLink "BaseVectorLayerComponent/clusterize:property"}}'clusterize' property{{/crossLink}}.
 
@@ -139,19 +149,24 @@ export default BaseLayer.extend({
     }
   },
 
-  _setFeaturesProcessCallback() {
-    let leafletObject = this.get('_leafletObject');
+  _setFeaturesProcessCallback(leafletObject) {
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
+
     leafletObject.on('load', (loaded) => {
-      let promise = this._featuresProcessCallback(loaded.layers);
+      let promise = this._featuresProcessCallback(loaded.layers, leafletObject);
       if (loaded.results && Ember.isArray(loaded.results)) {
         loaded.results.push(promise);
       }
     });
   },
 
-  _featuresProcessCallback(layers) {
+  _featuresProcessCallback(layers, leafletObject) {
     return new Ember.RSVP.Promise((resolve) => {
-      let leafletObject = this.get('_leafletObject');
+      if (!leafletObject) {
+        leafletObject = this.get('_leafletObject');
+      }
 
       if (!layers) {
         resolve();
@@ -168,7 +183,7 @@ export default BaseLayer.extend({
 
       let p = typeof featuresProcessCallback === 'function' ? featuresProcessCallback(layers) : Ember.RSVP.resolve();
       p.then(() => {
-        this._addLayersOnMap(layers);
+        this._addLayersOnMap(layers, leafletObject);
 
         if (this.get('labelSettings.signMapObjects')) {
           this._addLabelsToLeafletContainer(layers);
@@ -374,6 +389,10 @@ export default BaseLayer.extend({
 
         vectorLayer.getContainer = this.get('_getContainer').bind(this);
 
+        if (Ember.isNone(vectorLayer.loadLayerFeatures)) {
+          Ember.set(vectorLayer, 'loadLayerFeatures', this.loadLayerFeatures.bind(this));
+        }
+
         if (this.get('clusterize')) {
           let clusterLayer = this.createClusterLayer(vectorLayer);
           resolve(clusterLayer);
@@ -392,6 +411,7 @@ export default BaseLayer.extend({
     @method destroyLayer
   */
   destroyLayer() {
+    this.set('_leafletVectorLayerPromise', null);
     let leafletLayer = this.get('_leafletObject');
     if (leafletLayer instanceof L.MarkerClusterGroup) {
       this.destroyClusterLayer(leafletLayer);

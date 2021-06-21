@@ -48,7 +48,10 @@
       {{/if}}
       {{#if _layerSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "settings-tab") "active"}}" data-tab="settings-tab">
-          {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings bounds=_layer.settings.wgs84bbox}}
+          {{component (concat "layers-dialogs/settings/" _layer.type)
+            settings=_layer.settings
+            bounds=_layer.settings.wgs84bbox
+          }}
         </div>
       {{/if}}
       {{#if _bboxSettingsAreAvailableForType}}
