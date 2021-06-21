@@ -40,13 +40,12 @@ export default BaseVectorLayer.extend({
     @method save
   */
   save() {
-    let _this = this;
-    let leafletObject = _this.get('_leafletObject');
+    let leafletObject = this.get('_leafletObject');
     let leafletMap = this.get('leafletMap');
-    leafletObject.eachLayer(function (layer) {
+    leafletObject.eachLayer(layer => {
       if (Ember.get(layer, 'model.hasDirtyAttributes')) {
         if (layer.state === state.insert) {
-          let coordinates = _this._getGeometry(layer);
+          let coordinates = this._getGeometry(layer);
           Ember.set(layer, 'feature.geometry.coordinates', coordinates);
         }
       }
@@ -97,9 +96,9 @@ export default BaseVectorLayer.extend({
         });
 
         if (insertedModelId.length > 0) {
-          _this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(_this.layerModel.get('id'), insertedModelId, true)
+          this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(this.layerModel.get('id'), insertedModelId, true)
             .then(([, lObject, featureLayer]) => {
-              _this._setLayerState();
+              this._setLayerState();
               leafletObject.fire('save:success', { layers: featureLayer });
             });
         } else {
