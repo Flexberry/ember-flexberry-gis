@@ -154,13 +154,15 @@ export default Ember.Component.extend({
     @return {Nothing} Go to coordinates.
     @private
   */
-  goTo(coord1, coord2) {
+  goTo(coord1, coord2, degMinSec1, degMinSec2) {
     let latlng = new L.LatLng(coord1, coord2);
     let xCaption = this.get('xCaption');
     let yCaption = this.get('yCaption');
+    let lat = !Ember.isNone(degMinSec1) ? degMinSec1 : latlng.lat;
+    let lng = !Ember.isNone(degMinSec2) ? degMinSec2 : latlng.lng;
     let popupContent =
-      `${xCaption}: ${latlng.lat}; ` +
-      `${yCaption}: ${latlng.lng}`;
+      `${xCaption}: ${lat}; ` +
+      `${yCaption}: ${lng}`;
 
     let leafletMap = this.get('leafletMap');
     leafletMap.openPopup(popupContent, latlng);
@@ -195,7 +197,7 @@ export default Ember.Component.extend({
         let degMinSec = regexDegreeMinSec.exec(queryString);
         let coord1 = this.degreeMinSecToDegree(degMinSec[1]);
         let coord2 = this.degreeMinSecToDegree(degMinSec[2]);
-        this.goTo(coord1, coord2);
+        this.goTo(coord1, coord2, degMinSec[1], degMinSec[2]);
       } else {
         // Сontext search and coordinate search
         let filter;
