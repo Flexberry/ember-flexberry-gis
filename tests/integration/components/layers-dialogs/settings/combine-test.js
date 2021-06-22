@@ -46,7 +46,7 @@ test('it renders without settings and test action addTypeSettings', function(ass
           return {
             crs: undefined,
             showExisting: undefined,
-          }
+          };
         }
       };
     },

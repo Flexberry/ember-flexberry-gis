@@ -227,8 +227,10 @@ export default BaseVectorLayer.extend({
     @method addLayer
     @param layer
   */
-  addLayer(layer) {
-    let leafletObject = this.get('_leafletObject');
+  addLayer(layer, leafletObject) {
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
 
     if (layer.state && layer.state !== state.insert) {
       L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
@@ -608,7 +610,7 @@ export default BaseVectorLayer.extend({
     }
 
     layers.forEach((layer) => {
-      leafletObject.addLayer(layer);
+      leafletObject.addLayer(layer, leafletObject);
     });
 
     this._super(...arguments);
@@ -1400,7 +1402,7 @@ export default BaseVectorLayer.extend({
 
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
-      leafletMap.on('moveend',this.continueLoad, this);
+      leafletMap.on('moveend', this.continueLoad, this);
       leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
     }
   },

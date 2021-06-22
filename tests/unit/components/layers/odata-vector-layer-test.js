@@ -667,7 +667,6 @@ test('test method createDynamicModel() with json', function(assert) {
 
     assert.equal(spyCreateModelHierarchy.callCount, 1);
 
-    done();
     spyRegister.restore();
     spyCreateAdapterForModel.restore();
     spyCreateModel.restore();
@@ -677,6 +676,7 @@ test('test method createDynamicModel() with json', function(assert) {
     spyCreateModelHierarchy.restore();
     stubAjax.restore();
     _lookupFactoryStub.restore();
+    done(1);
   });
 });
 
