@@ -203,7 +203,7 @@ test('test method hideAllLayerObjects', function (assert) {
   //Act
   assert.throws(
     function () { subject.hideAllLayerObjects('1'); },
-    function (err) { return err.toString() === 'Is not a vector layer' },
+    function (err) { return err.toString() === 'Is not a vector layer'; },
     'Error thrown'
   );
 

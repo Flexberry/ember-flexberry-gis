@@ -214,9 +214,24 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
 
           layer.enableEdit(leafletMap);
+
+          leafletMap.off('editable:vertex:dragstart', this._startSnapping, this);
+          layer.off('editable:vertex:dragend', this._updateLabels, [this, layer]);
+          layer.off('editable:vertex:deleted', this._updateLabels, [this, layer]);
+
           leafletMap.on('editable:vertex:dragstart', this._startSnapping, this);
           layer.on('editable:vertex:dragend', this._updateLabels, [this, layer]);
           layer.on('editable:vertex:deleted', this._updateLabels, [this, layer]);
+
+          layer.off('editable:vertex:dragend', this._updateCoordinates, this);
+          layer.off('editable:vertex:deleted', this._updateCoordinates, this);
+          layer.off('editable:drawing:end', this._updateCoordinates, this);
+
+          if (this.get('dataItemCount') > 1) {
+            layer.on('editable:vertex:dragend', this.selectLayer, this);
+            layer.on('editable:vertex:deleted', this.selectLayer, this);
+            layer.on('editable:drawing:end', this.selectLayer, this);
+          }
         }
 
         this.set(`layers.${index}`, layer);
@@ -254,9 +269,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       return {};
     }
 
+    let settings = Ember.get(layer, 'settings') || {};
+
     let leafletObject = Ember.get(layer, 'leafletObject');
     this.set('leafletObject', leafletObject);
-    let readonly = Ember.get(layer, 'settings.readonly') || false;
+    let readonly = Ember.get(settings, 'readonly') || false;
 
     let availableDrawTools = null;
     let typeGeometry = null;
@@ -270,8 +287,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     let getHeader = () => {
       let result = {};
       let locale = this.get('i18n.locale');
-      let localizedProperties = Ember.get(layer, `settings.localizedProperties.${locale}`) || {};
-      let excludedProperties = Ember.get(layer, `settings.excludedProperties`);
+      let localizedProperties = Ember.get(settings, `localizedProperties.${locale}`) || {};
+      let excludedProperties = Ember.get(settings, `excludedProperties`);
       excludedProperties = Ember.isArray(excludedProperties) ? Ember.A(excludedProperties) : Ember.A();
 
       for (let propertyName in Ember.get(leafletObject, 'readFormat.featureType.fields')) {
@@ -811,6 +828,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       layer.fire('create-layer:change', { layer: layer });
       this._updateLabels.apply([this, layer]);
+
+      if (this.get('dataItemCount') > 1) {
+        this.selectLayer();
+      }
     },
 
     setGeometryTool(tool) {
@@ -1003,7 +1024,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         this.set('loading', false);
         leafletObject.off('save:failed', saveFailed);
 
-        if (!Ember.isNone(data.layers) && Ember.isArray(data.layers)) {
+        if (!Ember.isNone(data.layers) && Ember.isArray(data.layers) && data.layers.length > 0) {
+          if (state === 'New') {
+            e.layers.forEach((l) => {
+              this.get('leafletMap').removeLayer(l);
+            });
+          }
+
           data.layers.forEach((layer) => {
             if (Ember.isNone(Ember.get(layer, 'feature.leafletLayer'))) {
               Ember.set(layer.feature, 'leafletLayer', layer);

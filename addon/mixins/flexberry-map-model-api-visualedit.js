@@ -133,7 +133,7 @@ export default Ember.Mixin.create(SnapDraw, {
       if (!Ember.isNone(leafletObject)) {
         leafletObject.removeLayer(layer);
         leafletObject.cancelEditObject(layer);
-         if (layer.state === state.insert) {
+        if (layer.state === state.insert) {
           if (editTools.featuresLayer.getLayers().length !== 0) {
             let id = editTools.featuresLayer.getLayerId(layer);
             let editLayer = editTools.featuresLayer.getLayer(id).editor.editLayer;
@@ -364,13 +364,11 @@ export default Ember.Mixin.create(SnapDraw, {
           let featureLayer = [];
           if (load) {
             let layers = layerObject._layers;
-            if (!Ember.isNone(featureIds) && featureIds.length === 1) {
-              let obj = Object.values(layers).find(feature => {
+            if (!Ember.isNone(featureIds) && featureIds.length > 0) {
+              featureLayer = Object.values(layers).filter(feature => {
                 const layerFeatureId = this._getLayerFeatureId(e.results[0].layerModel, feature);
-                return layerFeatureId === featureIds[0];
+                return featureIds.any((f) => { return layerFeatureId === f; });
               });
-
-              featureLayer.push(obj);
             }
           } else {
             featureLayer = layerObject;

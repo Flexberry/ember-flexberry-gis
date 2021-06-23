@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import VectorLayer from '../../../layers/-private/vector';
 import layout from '../../../templates/components/layers-dialogs/tabs/legend-settings';
-import CombineLayer from '../layers/combine';
+import CombineLayer from '../../../layers/combine';
 
 /**
  Component for legend settings tab in layer settings.

@@ -172,6 +172,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         let leafletObject = Ember.get(item, 'leafletObject');
         let readonly = Ember.get(item, 'settings.readonly') || false;
         let styleSettings = Ember.get(item, 'settings.styleSettings') || {};
+        let settings = Ember.get(item, 'settings') || {};
 
         let getHeader = () => {
           let result = {};
@@ -350,7 +351,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             allowEditOnList: this.get('_isPanelEditable'),
             leafletObject,
             styleSettings,
-            layerModel
+            layerModel,
+            settings
           }
         );
 
@@ -748,6 +750,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       @param {Object} tabModel Related tab.
     */
     drawBuffer(tabModel) {
+      this.send('deleteBuffer', tabModel);
+
       let radius = this.get('_radius');
       let unit = this.get('_selectedUnit');
       let selectedRows = Ember.get(tabModel, '_selectedRows');
@@ -767,6 +771,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       });
 
       this.set('_bufferLayer', _bufferLayer);
+
+      this.send('onFindItemClick', tabModel);
     },
 
     /**
@@ -776,6 +782,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     */
     deleteBuffer(tabModel) {
       let _bufferLayer = this.get('_bufferLayer');
+      if (Ember.isNone(_bufferLayer)) {
+        return;
+      }
+
       let selectedRows = Ember.get(tabModel, '_selectedRows');
       Object.keys(selectedRows).forEach(key => {
         if (selectedRows[key]) {
@@ -971,7 +981,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       this.sendAction('editFeature', {
         dataItems: dataItems,
-        layerModel: tabModel
+        layerModel: tabModel,
+        settings: tabModel.settings
       });
 
       this._foldTabs();
@@ -1010,7 +1021,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       this.sendAction('editFeature', {
         dataItems: dataItems,
-        layerModel: tabModel
+        layerModel: tabModel,
+        settings: tabModel.settings
       });
 
       this._foldTabs();
@@ -1121,7 +1133,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
         this.sendAction('editFeature', {
           dataItems: dataItems,
-          layerModel: tabModel
+          layerModel: tabModel,
+          settings: tabModel.settings
         });
 
         this.changeSelectedAll(tabModel, false);
@@ -1213,7 +1226,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
         this.sendAction('editFeature', {
           dataItems: dataItems,
-          layerModel: tabModel
+          layerModel: tabModel,
+          settings: tabModel.settings
         });
 
         this._foldTabs();
@@ -1409,7 +1423,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
     _this.sendAction('editFeature', {
       dataItems: dataItems,
-      layerModel: tabModel
+      layerModel: tabModel,
+      settings: tabModel.settings
     });
   },
 

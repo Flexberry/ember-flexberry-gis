@@ -58,6 +58,8 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
   */
   layer: null,
 
+  active: false,
+
   /**
     Flag indicates that provider request is running.
 

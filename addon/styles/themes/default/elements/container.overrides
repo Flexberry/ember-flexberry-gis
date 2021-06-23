@@ -110,10 +110,6 @@
                 }
                 i.icon:before {
                     color: @lightgraycolor;
-                    &:hover {
-                        color: @leafletBarButtonDisabledHoveredColor;
-                        background: @leafletBarButtonDisabledHoveredBackground;
-                    }
                 }
             }
         }
@@ -656,12 +652,11 @@
     }
     .child-background-layers{
       position: relative;
-
-      padding-bottom: 6px;
+      padding-bottom: 10px;
       display: inline-block;
       .picture {
-        margin-bottom: 5px;
-        border: 1px solid  @graybluecolor;
+        border: @defaultGrayBorder;
+        box-shadow: @defaultBoxShadow;
         width: 94px;
         height: 49px;
         box-sizing: border-box;
@@ -1052,7 +1047,7 @@ div.measure-drag-panel {
   .feature-div-property-name {
     font-size: 12px;
     color: #8F928F;
-    padding: 15px 0px 10px 0px;
+    padding: 10px 0px 5px 0px;
   }
   .feature-div-property-value {
     font-size: 12px;

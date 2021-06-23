@@ -57,6 +57,7 @@
             layerCRS=_model.layerCRS
             typeGeometry=_model.typeGeometry
           )
+          active=(eq activeGeoTool "manual")
           updateLayer=(action "updateLayer")
       }}
     </div>
@@ -73,6 +74,7 @@
               drawTools=_model.availableDrawTools
               typeGeometry=_model.typeGeometry
             )
+            active=(eq activeGeoTool "draw")
             drawStart=(action "onAddDrawStart" _model.typeGeometry)
             updateLayer=(action "updateLayer")
             block=(action "blockForm")
@@ -91,6 +93,7 @@
               layerCRS=_model.layerCRS
               typeGeometry=_model.typeGeometry
             )
+            active=(eq activeGeoTool "rhumb")
             updateLayer=(action "updateLayer")
         }}
       </div>

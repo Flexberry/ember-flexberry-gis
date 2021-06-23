@@ -85,6 +85,19 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
   layer: null,
 
+  active: false,
+
+  activeChange: Ember.observer('active', function () {
+    if (!this.get('active')) {
+
+      let tool = this.get('geometryType');
+      if (tool) {
+        this._dragAndDrop(false);
+        this._disableDrawTool(true);
+      }
+    }
+  }),
+
   edit: Ember.computed('layer', function () {
     if (this.get('layer')) {
       return true;
@@ -164,8 +177,10 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         return;
       }
 
+      let curZIndex = parseInt(getComputedStyle(curPane).zIndex);
       panes = Object.values(leafletMap.getPanes()).filter((p) => {
-        return p !== curPane && !Ember.isNone(p.style.zIndex) && parseInt(p.style.zIndex) >= parseInt(curPane.style.zIndex);
+        let zIndex = parseInt(getComputedStyle(p).zIndex);
+        return p !== curPane && zIndex && curZIndex && zIndex >= curZIndex;
       });
     }
     catch (ex) {
@@ -392,25 +407,22 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       let curGeometryType = this.get('geometryType');
 
       this.set('_moveWithError', false);
-      this.set('geometryType', geometryType);
 
-      let editTools = this._getEditTools();
-      if (!Ember.isNone(editTools)) {
-        editTools.stopDrawing();
-      }
+      this._disableDrawTool(true);
 
-      let leafletMap = this.get('leafletMap');
-      leafletMap.flexberryMap.tools.enableDefault();
-
-      if (geometryType === 'move' && curGeometryType !== 'move') {
-        this._dragAndDrop(true);
+      if (geometryType === curGeometryType) {
+        this.set('geometryType', null);
       } else {
-        if (geometryType === 'move') {
-          // единственный выключаемый инструмент
-          this.set('geometryType', null);
-        }
+        this.set('geometryType', geometryType);
 
-        this._dragAndDrop(false);
+        if (geometryType === 'move') {
+          let leafletMap = this.get('leafletMap');
+          if (!Ember.isNone(leafletMap)) {
+            leafletMap.once('flexberry-map:tools:choose', this._disableDrawTool, this);
+          }
+
+          this._dragAndDrop(true);
+        }
       }
     },
 
@@ -421,58 +433,63 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       @param {String} geometryType Selected geometry type.
     */
     onGeometryTypeSelect(geometryType) {
-      this._dragAndDrop(false);
+      let curGeometryType = this.get('geometryType');
 
-      this.sendAction('drawStart', geometryType);
+      this._disableDrawTool(false);
 
-      this.set('geometryType', geometryType);
-
-      let editTools = this._getEditTools();
-
-      if (!Ember.isNone(editTools)) {
-        editTools.stopDrawing();
-      }
-
-      editTools.off('editable:drawing:end', this._disableDraw, this);
-      editTools.on('editable:drawing:end', this._disableDraw, this);
-
+      let editTools = this.get('_editTools');
       let leafletMap = this.get('leafletMap');
-      Ember.set(leafletMap, 'drawTools', editTools);
 
-      leafletMap.flexberryMap.tools.enableDefault();
-
-      this.$().closest('body').on('keydown', ((e) => {
-        // Esc was pressed.
-        if (e.which === 27) {
-          this._disableDraw();
+      // выключим инструмент, при повторном клике
+      if (geometryType === curGeometryType) {
+        this.set('geometryType', null);
+        this.sendAction('block', false);
+      } else {
+        if (!Ember.isNone(editTools)) {
+          editTools.on('editable:drawing:end', this._disableDraw, this);
         }
-      }));
 
-      // TODO add event listener on mapTool.enable event - to disable drawing tool when user click on any map tool.
-      this.sendAction('block', true);
+        if (!Ember.isNone(leafletMap)) {
+          Ember.set(leafletMap, 'drawTools', editTools);
+          leafletMap.once('flexberry-map:tools:choose', this._disableDrawTool, this);
+        }
 
-      switch (geometryType) {
-        case 'marker':
-          editTools.startMarker();
-          break;
-        case 'polyline':
-          editTools.startPolyline();
-          break;
-        case 'circle':
-          editTools.startCircle();
-          break;
-        case 'rectangle':
-          editTools.startRectangle();
-          break;
-        case 'polygon':
-          editTools.startPolygon();
-          break;
-        case 'multyPolygon':
-          editTools.startPolygon();
-          break;
-        case 'multyLine':
-          editTools.startPolyline();
-          break;
+        this.set('geometryType', geometryType);
+
+        this.sendAction('drawStart', geometryType);
+        this.$().closest('body').on('keydown', ((e) => {
+          // Esc was pressed.
+          if (e.which === 27) {
+            this._disableDraw();
+          }
+        }));
+
+        // TODO add event listener on mapTool.enable event - to disable drawing tool when user click on any map tool.
+        this.sendAction('block', true);
+
+        switch (geometryType) {
+          case 'marker':
+            editTools.startMarker();
+            break;
+          case 'polyline':
+            editTools.startPolyline();
+            break;
+          case 'circle':
+            editTools.startCircle();
+            break;
+          case 'rectangle':
+            editTools.startRectangle();
+            break;
+          case 'polygon':
+            editTools.startPolygon();
+            break;
+          case 'multyPolygon':
+            editTools.startPolygon();
+            break;
+          case 'multyLine':
+            editTools.startPolyline();
+            break;
+        }
       }
     },
   },
@@ -493,6 +510,37 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     }
 
     return editTools;
+  },
+
+  /**
+    @method _disableDrawTool
+    @private
+  */
+  _disableDrawTool(e) {
+    let trigger = !Ember.isNone(e) && typeof (e) === 'object';
+    let defaultTool = !trigger && e;
+
+    this._dragAndDrop(false);
+
+    let editTools = this.get('_editTools');
+    if (!Ember.isNone(editTools)) {
+      editTools.off('editable:drawing:end', this._disableDraw, this);
+      editTools.stopDrawing();
+    }
+
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.off('flexberry-map:tools:choose', this._disableDrawTool, this);
+
+      if (defaultTool) {
+        leafletMap.flexberryMap.tools.enableDefault();
+      }
+    }
+
+    if (trigger || defaultTool) {
+      this.set('geometryType', null);
+      this.sendAction('block', false);
+    }
   },
 
   /**

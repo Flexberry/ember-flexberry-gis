@@ -327,16 +327,12 @@
         border: none;
         box-shadow: none;
         vertical-align: top;
+        i.icon.more {
+          line-height: 0;
+        }
         i.icon.more:before {
           content: "...";
           font-size: 26px;
-          line-height: 0;
-        }
-        label.more {
-          padding: 0;
-          height: auto;
-          margin-top: -3px;
-          margin-left: -3px;
         }
         .more.submenu {
           width: 200px;
@@ -363,6 +359,7 @@
               height: 30px;
               width: 30px;
               border: none;
+              margin: 0;
             }
           }
           label.ui.button {

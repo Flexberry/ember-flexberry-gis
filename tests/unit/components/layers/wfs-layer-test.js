@@ -16,7 +16,7 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
     'component:base-vector-layer',
     'model:new-platform-flexberry-g-i-s-map'
   ],
-  beforeEach: function() {
+  beforeEach: function () {
     app = startApp();
 
     options = {
@@ -57,23 +57,23 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
 
     let bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
 
-    let getBounds = function() {
+    let getBounds = function () {
       return bounds;
     };
 
-    let getPane = function() {
+    let getPane = function () {
       return undefined;
     };
 
-    let createPane = function() {
+    let createPane = function () {
       return {};
     };
 
-    let hasLayer = function() {
+    let hasLayer = function () {
       return true;
     };
 
-    let removeLayer = function() {
+    let removeLayer = function () {
       return {};
     };
 
@@ -98,68 +98,68 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
           '<ogc:PropertyIsEqualTo matchCase="false"><ogc:PropertyName>primarykey</ogc:PropertyName><ogc:Literal>475adc5b-fee4-4e8c-bed0-93746a9f00f0' +
           '</ogc:Literal></ogc:PropertyIsEqualTo></Or></Not></ogc:Filter></wfs:Query></wfs:GetFeature>') {
           request.respond(200, { 'Content-Type': 'application/json' },
-          '{"type":"FeatureCollection","features":[],"totalFeatures":0,"numberMatched":0,"numberReturned":0,"timeStamp":"2020-02-27T04:44:49.909Z",' +
-          '"crs":null}');
+            '{"type":"FeatureCollection","features":[],"totalFeatures":0,"numberMatched":0,"numberReturned":0,"timeStamp":"2020-02-27T04:44:49.909Z",' +
+            '"crs":null}');
         }
 
         if (request.requestBody.indexOf('<wfs:GetFeature') !== -1) {
           request.respond(200, { 'Content-Type': 'application/json' },
-          '{"type":"FeatureCollection","features":[{"type":"Feature","id":"vydel_utverzhdeno_polygon.06350c71-ec5c-431e-a5ab-e423cf662128",' +
-          '"geometry":{"type":"MultiPolygon","coordinates":[[[[6215353.89391635,8117916.10977998],[6215317.82640125,8117408.36954415],' +
-          '[6215322.83577823,8116959.81224657],[6213934.34777038,8117228.98625252],[6213930.67422719,8117229.84351009],' +
-          '[6214007.26203691,8117650.34021493],[6214045.44462228,8117860.38311881],[6214113.79478966,8118235.47443556],' +
-          '[6214237.35942438,8118229.9015124],[6214247.82345653,8118288.63175866],[6215053.10865244,8118087.57903733],' +
-          '[6215031.95794919,8118033.35145873],[6215042.3106618,8117957.47637766],[6215353.89391635,8117916.10977998]]]]},' +
-          '"geometry_name":"shape","properties":' +
-          '{"id":"000","lesnichestvo":"-","uchastkovoelesnichestvo":"-","nomerkvartala":"141","urochishe":null,"nomer":10,"ploshad":200,"kategoriyazemel":' +
-          '"Эксплуатационные леса","preobladayushayaporoda":"Сосна","bonitet":"2","gruppavozrasta":"Молодняки I гр.","klassvozrasta":"1","klasstovarnosti":' +
-          'null,"area":373798.7024302,"length":null,"primarykey":"06350c71-ec5c-431e-a5ab-e423cf662128","createtime":null,"creator":null,' +
-          '"edittime":null,"editor":null}}],"totalFeatures":1,"numberMatched":1,"numberReturned":1,"timeStamp":"2020-02-27T04:44:49.909Z",' +
-          '"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::3857"}}}');
+            '{"type":"FeatureCollection","features":[{"type":"Feature","id":"vydel_utverzhdeno_polygon.06350c71-ec5c-431e-a5ab-e423cf662128",' +
+            '"geometry":{"type":"MultiPolygon","coordinates":[[[[6215353.89391635,8117916.10977998],[6215317.82640125,8117408.36954415],' +
+            '[6215322.83577823,8116959.81224657],[6213934.34777038,8117228.98625252],[6213930.67422719,8117229.84351009],' +
+            '[6214007.26203691,8117650.34021493],[6214045.44462228,8117860.38311881],[6214113.79478966,8118235.47443556],' +
+            '[6214237.35942438,8118229.9015124],[6214247.82345653,8118288.63175866],[6215053.10865244,8118087.57903733],' +
+            '[6215031.95794919,8118033.35145873],[6215042.3106618,8117957.47637766],[6215353.89391635,8117916.10977998]]]]},' +
+            '"geometry_name":"shape","properties":' +
+            '{"id":"000","lesnichestvo":"-","uchastkovoelesnichestvo":"-","nomerkvartala":"141","urochishe":null,"nomer":10,"ploshad":200,"kategoriyazemel":' +
+            '"Эксплуатационные леса","preobladayushayaporoda":"Сосна","bonitet":"2","gruppavozrasta":"Молодняки I гр.","klassvozrasta":"1","klasstovarnosti":' +
+            'null,"area":373798.7024302,"length":null,"primarykey":"06350c71-ec5c-431e-a5ab-e423cf662128","createtime":null,"creator":null,' +
+            '"edittime":null,"editor":null}}],"totalFeatures":1,"numberMatched":1,"numberReturned":1,"timeStamp":"2020-02-27T04:44:49.909Z",' +
+            '"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::3857"}}}');
         }
 
         if (request.requestBody.indexOf('<wfs:DescribeFeatureType') !== -1) {
           request.respond(200, { 'Content-Type': 'text/plain;charset=utf-8' },
-          '<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" ' +
-          'xmlns:rgisperm="http://rgis.permkrai.ru" elementFormDefault="qualified" targetNamespace="http://rgis.permkrai.ru">' +
-          '<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://rgispk.wdepo.ru:80/geoserver/schemas/gml/3.1.1/base/gml.xsd"/>' +
-          '<xsd:complexType name="vydel_utverzhdeno_polygonType">' +
-          '<xsd:complexContent>' +
-          '<xsd:extension base="gml:AbstractFeatureType">' +
-          '<xsd:sequence>' +
-          '<xsd:element maxOccurs="1" minOccurs="1" name="primarykey" nillable="false" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="shape" nillable="true" type="gml:MultiSurfacePropertyType"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="id" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="lesnichestvo" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="uchastkovoelesnichestvo" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="nomerkvartala" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="urochishe" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="nomer" nillable="true" type="xsd:int"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="ploshad" nillable="true" type="xsd:decimal"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="kategoriyazemel" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="preobladayushayaporoda" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="bonitet" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="gruppavozrasta" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="klassvozrasta" nillable="true" type="xsd:int"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="klasstovarnosti" nillable="true" type="xsd:int"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="area" nillable="true" type="xsd:decimal"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="length" nillable="true" type="xsd:decimal"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="createtime" nillable="true" type="xsd:dateTime"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="creator" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="edittime" nillable="true" type="xsd:dateTime"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="editor" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="kl" nillable="true" type="xsd:string"/>' +
-          '</xsd:sequence>' +
-          '</xsd:extension>' +
-          '</xsd:complexContent>' +
-          '</xsd:complexType>' +
-          '<xsd:element name="vydel_utverzhdeno_polygon" substitutionGroup="gml:_Feature" type="rgisperm:vydel_utverzhdeno_polygonType"/>' +
-          '</xsd:schema>');
+            '<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" ' +
+            'xmlns:rgisperm="http://rgis.permkrai.ru" elementFormDefault="qualified" targetNamespace="http://rgis.permkrai.ru">' +
+            '<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://rgispk.wdepo.ru:80/geoserver/schemas/gml/3.1.1/base/gml.xsd"/>' +
+            '<xsd:complexType name="vydel_utverzhdeno_polygonType">' +
+            '<xsd:complexContent>' +
+            '<xsd:extension base="gml:AbstractFeatureType">' +
+            '<xsd:sequence>' +
+            '<xsd:element maxOccurs="1" minOccurs="1" name="primarykey" nillable="false" type="xsd:string"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="shape" nillable="true" type="gml:MultiSurfacePropertyType"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="id" nillable="true" type="xsd:string"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="lesnichestvo" nillable="true" type="xsd:string"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="uchastkovoelesnichestvo" nillable="true" type="xsd:string"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="nomerkvartala" nillable="true" type="xsd:string"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="urochishe" nillable="true" type="xsd:string"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="nomer" nillable="true" type="xsd:int"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="ploshad" nillable="true" type="xsd:decimal"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="kategoriyazemel" nillable="true" type="xsd:string"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="preobladayushayaporoda" nillable="true" type="xsd:string"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="bonitet" nillable="true" type="xsd:string"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="gruppavozrasta" nillable="true" type="xsd:string"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="klassvozrasta" nillable="true" type="xsd:int"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="klasstovarnosti" nillable="true" type="xsd:int"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="area" nillable="true" type="xsd:decimal"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="length" nillable="true" type="xsd:decimal"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="createtime" nillable="true" type="xsd:dateTime"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="creator" nillable="true" type="xsd:string"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="edittime" nillable="true" type="xsd:dateTime"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="editor" nillable="true" type="xsd:string"/>' +
+            '<xsd:element maxOccurs="1" minOccurs="0" name="kl" nillable="true" type="xsd:string"/>' +
+            '</xsd:sequence>' +
+            '</xsd:extension>' +
+            '</xsd:complexContent>' +
+            '</xsd:complexType>' +
+            '<xsd:element name="vydel_utverzhdeno_polygon" substitutionGroup="gml:_Feature" type="rgisperm:vydel_utverzhdeno_polygonType"/>' +
+            '</xsd:schema>');
         }
       }
     );
   },
-  afterEach: function() {
+  afterEach: function () {
     Ember.run(app, 'destroy');
     geoserverFake.restore();
   }
@@ -169,7 +169,7 @@ let realCountArr = function (arr) {
   return Object.values(arr).length;
 };
 
-test('getLayerFeatures() with options showExisting = false and continueLoading = true', function(assert) {
+test('getLayerFeatures() with options showExisting = false and continueLoading = true', function (assert) {
   assert.expect(2);
   var done = assert.async(2);
   Ember.run(() => {
@@ -201,7 +201,7 @@ test('getLayerFeatures() with options showExisting = false and continueLoading =
   });
 });
 
-test('getLayerFeatures() with options showExisting = true', function(assert) {
+test('getLayerFeatures() with options showExisting = true', function (assert) {
   assert.expect(2);
   var done = assert.async(2);
   Ember.run(() => {
@@ -238,7 +238,7 @@ test('getLayerFeatures() with options showExisting = true', function(assert) {
   });
 });
 
-test('loadLayerFeatures() with options showExisting = false', function(assert) {
+test('loadLayerFeatures() with options showExisting = false', function (assert) {
   assert.expect(2);
   var done = assert.async(2);
   Ember.run(() => {
@@ -272,7 +272,7 @@ test('loadLayerFeatures() with options showExisting = false', function(assert) {
   });
 });
 
-test('loadLayerFeatures() with options showExisting = true', function(assert) {
+test('loadLayerFeatures() with options showExisting = true', function (assert) {
   assert.expect(2);
   var done = assert.async(2);
   Ember.run(() => {
@@ -310,7 +310,7 @@ test('loadLayerFeatures() with options showExisting = true', function(assert) {
   });
 });
 
-test('loadLayerFeatures() with options showExisting = false, call 2 times', function(assert) {
+test('loadLayerFeatures() with options showExisting = false, call 2 times', function (assert) {
   assert.expect(3);
   var done = assert.async(3);
   Ember.run(() => {
@@ -370,7 +370,7 @@ test('loadLayerFeatures() with options showExisting = false, call 2 times', func
   });
 });
 
-test('test method clearChanges() with no changes', function(assert) {
+test('test method clearChanges() with no changes', function (assert) {
   assert.expect(7);
   var done = assert.async(1);
   Ember.run(() => {
@@ -418,7 +418,7 @@ test('test method clearChanges() with no changes', function(assert) {
   });
 });
 
-test('test method clearChanges() with create', function(assert) {
+test('test method clearChanges() with create', function (assert) {
   assert.expect(7);
   var done = assert.async(1);
   Ember.run(() => {
@@ -479,7 +479,7 @@ test('test method clearChanges() with create', function(assert) {
   });
 });
 
-test('test method clearChanges() with update', function(assert) {
+test('test method clearChanges() with update', function (assert) {
   assert.expect(7);
   var done = assert.async(1);
   Ember.run(() => {
@@ -514,6 +514,7 @@ test('test method clearChanges() with update', function(assert) {
 
         let layerUpdate = leafletObject.getLayers()[0];
         layerUpdate.feature.properties.name = 'test';
+
         layerUpdate.enableEdit(leafletMap);
         leafletObject.editLayer(layerUpdate);
 
@@ -529,7 +530,7 @@ test('test method clearChanges() with update', function(assert) {
   });
 });
 
-test('test method clearChanges() with delete', function(assert) {
+test('test method clearChanges() with delete', function (assert) {
   assert.expect(7);
   var done = assert.async(1);
   Ember.run(() => {
@@ -613,6 +614,61 @@ test('test getPkField with pkField', function (assert) {
       let fieldName = leafletObject.getPkField(component.get('layerModel'));
       assert.equal(fieldName, 'pk');
       done(1);
+    });
+  });
+});
+test('test editLayer', function (assert) {
+  assert.expect(2);
+  var done = assert.async(2);
+  Ember.run(() => {
+    param = Ember.$.extend(param, { showExisting: true });
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+
+    options.showExisting = true;
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      let leafletMap = component.get('leafletMap');
+      leafletObject.leafletMap = leafletMap;
+
+      let e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: Ember.A()
+      };
+
+      done();
+
+      component.getLayerFeatures(e).then((layers) => {
+        let layerUpdate = leafletObject.getLayers()[0];
+        layerUpdate.feature.properties.name = 'test';
+
+        layerUpdate.enableEdit(leafletMap);
+
+        let newFeature = L.geoJSON({
+          type: 'Polygon',
+          coordinates: [[[56.432487, 58.14725], [56.432133, 58.146749], [56.434, 58.146737]]]
+        }).getLayers()[0];
+
+        layerUpdate.setLatLngs(newFeature.getLatLngs());
+
+        leafletObject.editLayer(layerUpdate);
+
+        assert.equal(layerUpdate.feature.geometry.coordinates[0].length, 4);
+        let coordinates = '6282035.717038031,7998313.982057768,6281996.30993829,' +
+          '7998208.303352221,6282204.143427601,7998205.77214398,6282035.717038031,7998313.982057768';
+        assert.equal(layerUpdate.feature.geometry.coordinates.toString(), coordinates);
+
+        done();
+      });
     });
   });
 });

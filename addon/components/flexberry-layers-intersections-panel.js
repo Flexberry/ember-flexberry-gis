@@ -2,7 +2,7 @@ import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-intersections-panel';
 import * as buffer from 'npm:@turf/buffer';
 import VectorLayer from '../layers/-private/vector';
-import WmsWfsLayer from 'ember-flexberry-gis/layers/wms-wfs';
+import WmsWfsLayer from '../layers/wms-wfs';
 import CombineLayer from '../layers/combine';
 import * as jsts from 'npm:jsts';
 import { coordinatesToArray } from '../utils/coordinates-to';

@@ -1581,5 +1581,17 @@ export default BaseLayer.extend({
         this._removeLabelsFromLeafletContainer();
       }
     }
+  },
+
+  _getGeometry(layer) {
+    let geoJSONLayer = layer.toProjectedGeoJSON(this.get('crs'));
+    let type = layer.toGeoJSON().geometry.type;
+    let forceMulti = this.get('forceMulti') || false;
+
+    if (forceMulti && (type === 'Polygon' || type === 'LineString')) {
+      return [geoJSONLayer.geometry.coordinates];
+    } else {
+      return geoJSONLayer.geometry.coordinates;
+    }
   }
 });
