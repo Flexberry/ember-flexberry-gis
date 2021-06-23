@@ -366,6 +366,162 @@ export default BaseLayer.extend({
     clusterLayer._featureGroup.off('layerremove', this._setLayerOpacity, this);
   },
 
+  getPkField(layer) {
+    const getPkField = this.get('mapApi').getFromApi('getPkField');
+    if (typeof getPkField === 'function') {
+      return getPkField(layer);
+    }
+
+    let field = Ember.get(layer, 'settingsAsObject.pkField');
+    return Ember.isNone(field) ? 'primarykey' : field;
+  },
+
+  showAllLayerObjects() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletObject = this.get('_leafletObject');
+      let map = this.get('leafletMap');
+      let layer = this.get('layerModel');
+
+      let continueLoading = leafletObject.options.continueLoading;
+      if (!continueLoading) {
+        if (!Ember.isNone(leafletObject)) {
+          leafletObject.eachLayer((layerShape) => {
+            if (map.hasLayer(layerShape)) {
+              map.removeLayer(layerShape);
+            }
+          });
+          if (!leafletObject.options.showExisting) {
+            leafletObject.clearLayers();
+          }
+        }
+
+        leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve) => {
+          let e = {
+            featureIds: null
+          };
+
+          leafletObject.loadLayerFeatures(e).then(() => {
+            resolve('Features loaded');
+          });
+        });
+      } else {
+        leafletObject.showLayerObjects = true;
+        leafletObject.statusLoadLayer = true;
+        let e = {
+          layers: [layer],
+          results: Ember.A()
+        };
+
+        this.continueLoad(leafletObject);
+        if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+          leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+        }
+      }
+
+      leafletObject.promiseLoadLayer.then(() => {
+        leafletObject.statusLoadLayer = false;
+        leafletObject.promiseLoadLayer = null;
+        leafletObject.eachLayer(function (layerShape) {
+          if (!map.hasLayer(layerShape)) {
+            map.addLayer(layerShape);
+          }
+        });
+        let labelLayer = leafletObject._labelsLayer;
+        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer) && !map.hasLayer(labelLayer)) {
+          map.addLayer(labelLayer);
+        }
+
+        resolve('success');
+      });
+    });
+  },
+
+  hideAllLayerObjects() {
+    let leafletObject = this.get('_leafletObject');
+    let map = this.get('leafletMap');
+    let layer = this.get('layerModel');
+
+    leafletObject.showLayerObjects = false;
+
+    leafletObject.eachLayer(function (layerShape) {
+      if (map.hasLayer(layerShape)) {
+        map.removeLayer(layerShape);
+      }
+    });
+    let labelLayer = leafletObject._labelsLayer;
+    if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer) && map.hasLayer(labelLayer)) {
+      map.removeLayer(labelLayer);
+    }
+  },
+
+  _setVisibilityObjects(objectIds, visibility = false) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletObject = this.get('_leafletObject');
+      let map = this.get('leafletMap');
+      let layer = this.get('layerModel');
+
+      if (visibility) {
+        let continueLoading = leafletObject.options.continueLoading;
+        if (!continueLoading) {
+          leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve) => {
+            let e = {
+              featureIds: objectIds
+            };
+
+            leafletObject.loadLayerFeatures(e).then(() => {
+              resolve('Features loaded');
+            });
+          });
+        } else {
+          reject('Not working to layer with continueLoading');
+        }
+      } else {
+        leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+      }
+
+      leafletObject.promiseLoadLayer.then(() => {
+        leafletObject.statusLoadLayer = false;
+        leafletObject.promiseLoadLayer = null;
+        objectIds.forEach(objectId => {
+          let objects = Object.values(leafletObject._layers).filter(shape => {
+            return this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layer, shape) === objectId;
+          });
+          if (objects.length > 0) {
+            objects.forEach(obj => {
+              if (visibility) {
+                map.addLayer(obj);
+              } else {
+                map.removeLayer(obj);
+              }
+            });
+          }
+        });
+        let labelLayer = leafletObject._labelsLayer;
+        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer)) {
+          objectIds.forEach(objectId => {
+            let objects = Object.values(labelLayer._layers).filter(shape => {
+              return this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layer, shape) === objectId;
+            });
+            if (objects.length > 0) {
+              objects.forEach(obj => {
+                if (visibility) {
+                  map.addLayer(obj);
+                } else {
+                  map.removeLayer(obj);
+                }
+              });
+            }
+          });
+        }
+
+        resolve('success');
+      });
+    });
+  },
+
+  cancelEditObject(layer) {
+  },
+
   /**
     Creates leaflet layer related to layer type.
 
@@ -388,6 +544,14 @@ export default BaseLayer.extend({
         vectorLayer.maxZoom = this.get('maxZoom');
 
         vectorLayer.getContainer = this.get('_getContainer').bind(this);
+        vectorLayer.getPkField = this.get('getPkField').bind(this);
+        vectorLayer.showAllLayerObjects = this.get('showAllLayerObjects').bind(this);
+        vectorLayer.hideAllLayerObjects = this.get('hideAllLayerObjects').bind(this);
+        vectorLayer._setVisibilityObjects = this.get('_setVisibilityObjects').bind(this);
+
+        if (Ember.isNone(vectorLayer.cancelEditObject)) {
+          Ember.set(vectorLayer, 'cancelEditObject', this.cancelEditObject.bind(this));
+        }
 
         if (Ember.isNone(vectorLayer.loadLayerFeatures)) {
           Ember.set(vectorLayer, 'loadLayerFeatures', this.loadLayerFeatures.bind(this));

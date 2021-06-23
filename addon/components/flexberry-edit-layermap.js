@@ -4,6 +4,7 @@ import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import layout from '../templates/components/flexberry-edit-layermap';
 import VectorLayer from '../layers/-private/vector';
+import CombineLayer from '../layers/combine';
 import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
 import {
   translationMacro as t
@@ -441,8 +442,14 @@ export default Ember.Component.extend(
         null :
         Ember.getOwner(this).knownForType('layer', className);
 
+      let isCombineVector = false;
+      if (layerClass instanceof CombineLayer) {
+        let combineClass = Ember.getOwner(this).knownForType('layer', this.get('_layer.settings.type'));
+        isCombineVector = combineClass instanceof VectorLayer;
+      }
+
       // Style settings are available only for vector layers.
-      return !Ember.isNone(layerClass) && layerClass instanceof VectorLayer;
+      return !Ember.isNone(layerClass) && (layerClass instanceof VectorLayer || isCombineVector);
     }),
 
     /**

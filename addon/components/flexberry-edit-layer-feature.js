@@ -3,8 +3,6 @@ import layout from '../templates/components/flexberry-edit-layer-feature';
 import SnapDrawMixin from '../mixins/snap-draw';
 import EditFeatureMixin from '../mixins/edit-feature';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
-import WfsLayer from '../layers/wfs';
-import OdataLayer from '../layers/odata-vector';
 import { translationMacro as t } from 'ember-i18n';
 
 export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFeatureMixin, {
@@ -731,42 +729,16 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
           let id = leafletObject.getLayerId(layer);
           delete leafletObject._layers[id];
-
-          if (layerType instanceof OdataLayer) {
-            let model = Ember.get(layer, 'model');
-            model.rollbackAttributes();
-          }
-
-          if (layerType instanceof WfsLayer) {
-            let id = leafletObject.getLayerId(layer);
-            delete leafletObject.changes[id];
-          }
+          leafletObject.cancelEditObject(layer);
 
           featureIds.push(Ember.get(layer, 'feature.properties.primarykey'));
         });
 
-        let promise;
+        let e = {
+          featureIds: featureIds
+        };
 
-        if (layerType instanceof WfsLayer) {
-          let filters = featureIds.map((pk) => {
-            return new L.Filter.EQ('primarykey', pk);
-          });
-
-          let filter;
-          if (filters.length === 1) {
-            filter = filters[0];
-          } else {
-            filter = new L.Filter.Or(...filters);
-          }
-
-          promise = leafletObject.loadFeatures(filter);
-        } else if (layerType instanceof OdataLayer) {
-          let e = {
-            featureIds: featureIds
-          };
-
-          promise = leafletObject.loadLayerFeatures(e);
-        }
+        let promise = leafletObject.loadLayerFeatures(e);
 
         this.set('loading', true);
         (promise ? promise : Ember.RSVP.resolve()).then(() => {

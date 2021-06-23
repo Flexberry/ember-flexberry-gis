@@ -4,7 +4,6 @@
 
 import Ember from 'ember';
 import BaseLayer from './-private/base';
-//import VectorLayer from './-private/vector';
 
 /**
   Class describing combine layers metadata.
@@ -22,7 +21,7 @@ export default BaseLayer.extend({
   */
   iconClass: 'image icon',
 
-   /**
+  /**
     Permitted operations related to layer type.
 
     @property operations

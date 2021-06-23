@@ -3,7 +3,6 @@
 */
 import Ember from 'ember';
 import { checkMapZoom } from '../../utils/check-zoom';
-//import BaseVectorLayer from '../base-vector-layer';
 import BaseLayer from '../base-layer';
 
 /**

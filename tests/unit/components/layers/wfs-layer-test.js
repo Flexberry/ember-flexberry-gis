@@ -577,3 +577,42 @@ test('test method clearChanges() with delete', function(assert) {
     });
   });
 });
+test('test getPkField without pkField', function (assert) {
+  assert.expect(1);
+  var done = assert.async(1);
+  Ember.run(() => {
+    let layerModel = Ember.Object.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject:options
+    });
+    param = Ember.$.extend(param, { layerModel: layerModel });
+    let component = this.subject(param);
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      let fieldName = leafletObject.getPkField(component.get('layerModel'));
+      assert.equal(fieldName, 'primarykey');
+      done(1);
+    });
+  });
+});
+test('test getPkField with pkField', function (assert) {
+  assert.expect(1);
+  var done = assert.async(1);
+  Ember.run(() => {
+    options = Ember.$.extend(options, { pkField: 'pk' });
+    let layerModel = Ember.Object.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject:options
+    });
+    param = Ember.$.extend(param, { layerModel: layerModel });
+    let component = this.subject(param);
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      let fieldName = leafletObject.getPkField(component.get('layerModel'));
+      assert.equal(fieldName, 'pk');
+      done(1);
+    });
+  });
+});

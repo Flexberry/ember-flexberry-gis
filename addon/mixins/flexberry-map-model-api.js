@@ -5,8 +5,6 @@ import booleanContains from 'npm:@turf/boolean-contains';
 import area from 'npm:@turf/area';
 import intersect from 'npm:@turf/intersect';
 import { getLeafletCrs } from '../utils/leaflet-crs';
-import VectorLayer from '../layers/-private/vector';
-import WfsLayer from '../layers/wfs';
 import OdataLayer from '../layers/odata-vector';
 import html2canvasClone from '../utils/html2canvas-clone';
 import state from '../utils/state';
@@ -85,54 +83,10 @@ export default Ember.Mixin.create(SnapDraw, {
         reject(`Layer '${layerId}' not found.`);
       }
 
-      if (this._getTypeLayer(layer) instanceof VectorLayer) {
-        const leafletObject = Ember.get(layer, '_leafletObject');
-        let map = this.get('mapApi').getFromApi('leafletMap');
-
-        let continueLoading = leafletObject.options.continueLoading;
-        if (!continueLoading) {
-          if (!Ember.isNone(leafletObject)) {
-            leafletObject.eachLayer((layerShape) => {
-              if (map.hasLayer(layerShape)) {
-                map.removeLayer(layerShape);
-              }
-            });
-            leafletObject.clearLayers();
-          }
-
-          leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve) => {
-            this._getModelLayerFeature(layerId, null, true).then(() => {
-              resolve('Features loaded');
-            });
-          });
-        } else {
-          leafletObject.showLayerObjects = true;
-          leafletObject.statusLoadLayer = true;
-          let e = {
-            layers: [layer],
-            results: Ember.A()
-          };
-
-          map.fire('flexberry-map:moveend', e);
-          if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
-            leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
-          }
-        }
-
-        leafletObject.promiseLoadLayer.then(() => {
-          leafletObject.statusLoadLayer = false;
-          leafletObject.promiseLoadLayer = null;
-          leafletObject.eachLayer(function (layerShape) {
-            if (!map.hasLayer(layerShape)) {
-              map.addLayer(layerShape);
-            }
-          });
-          let labelLayer = leafletObject._labelsLayer;
-          if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer) && !map.hasLayer(labelLayer)) {
-            map.addLayer(labelLayer);
-          }
-
-          resolve('success');
+      const leafletObject = Ember.get(layer, '_leafletObject');
+      if (!Ember.isNone(leafletObject) && typeof leafletObject.showAllLayerObjects === 'function') {
+        leafletObject.showAllLayerObjects().then((result) => {
+          resolve(result);
         });
       } else {
         resolve('Is not a vector layer');
@@ -153,20 +107,9 @@ export default Ember.Mixin.create(SnapDraw, {
       throw `Layer '${layerId}' not found.`;
     }
 
-    if (this._getTypeLayer(layer) instanceof VectorLayer) {
-      const leafletObject = Ember.get(layer, '_leafletObject');
-      var map = this.get('mapApi').getFromApi('leafletMap');
-      leafletObject.showLayerObjects = false;
-
-      leafletObject.eachLayer(function (layerShape) {
-        if (map.hasLayer(layerShape)) {
-          map.removeLayer(layerShape);
-        }
-      });
-      let labelLayer = leafletObject._labelsLayer;
-      if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer) && map.hasLayer(labelLayer)) {
-        map.removeLayer(labelLayer);
-      }
+    const leafletObject = Ember.get(layer, '_leafletObject');
+    if (!Ember.isNone(leafletObject) && typeof leafletObject.hideAllLayerObjects === 'function') {
+      leafletObject.hideAllLayerObjects();
     } else {
       throw 'Is not a vector layer';
     }
@@ -250,8 +193,7 @@ export default Ember.Mixin.create(SnapDraw, {
         layerIds.forEach(id => {
           const layer = this.get('mapLayer').findBy('id', id);
           if (!Ember.isNone(layer)) {
-            let layerType = this._getTypeLayer(layer);
-            if (layerType instanceof VectorLayer) {
+            if (layer.get('settingsAsObject.identifySettings.canBeIdentified')) {
               layersIntersect.push(layer);
             }
           }
@@ -634,64 +576,12 @@ export default Ember.Mixin.create(SnapDraw, {
           return reject(`Layer '${layerId}' not found.`);
         }
 
-        if (this._getTypeLayer(layer) instanceof VectorLayer) {
-          if (Ember.isNone(leafletObject)) {
-            return reject('Layer type not supported');
-          }
-
-          const map = this.get('mapApi').getFromApi('leafletMap');
-          if (visibility) {
-            let continueLoading = leafletObject.options.continueLoading;
-            if (!continueLoading) {
-              leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve) => {
-                this._getModelLayerFeature(layerId, objectIds, true).then(() => {
-                  resolve('Features loaded');
-                });
-              });
-            } else {
-              reject('Not working to layer with continueLoading');
-            }
-          } else {
-            leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
-          }
-
-          leafletObject.promiseLoadLayer.then(() => {
-            leafletObject.statusLoadLayer = false;
-            leafletObject.promiseLoadLayer = null;
-            objectIds.forEach(objectId => {
-              let objects = Object.values(leafletObject._layers).filter(shape => {
-                return this._getLayerFeatureId(layer, shape) === objectId;
-              });
-              if (objects.length > 0) {
-                objects.forEach(obj => {
-                  if (visibility) {
-                    map.addLayer(obj);
-                  } else {
-                    map.removeLayer(obj);
-                  }
-                });
-              }
-            });
-            let labelLayer = leafletObject._labelsLayer;
-            if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer)) {
-              objectIds.forEach(objectId => {
-                let objects = Object.values(labelLayer._layers).filter(shape => {
-                  return this._getLayerFeatureId(layer, shape) === objectId;
-                });
-                if (objects.length > 0) {
-                  objects.forEach(obj => {
-                    if (visibility) {
-                      map.addLayer(obj);
-                    } else {
-                      map.removeLayer(obj);
-                    }
-                  });
-                }
-              });
-            }
-
-            resolve('sucsess');
+        if (!Ember.isNone(leafletObject) && typeof leafletObject._setVisibilityObjects === 'function') {
+          leafletObject._setVisibilityObjects(objectIds, visibility).then((result) => {
+            resolve(result);
           });
+        } else {
+          return reject('Layer type not supported');
         }
       }
     });
@@ -975,21 +865,15 @@ export default Ember.Mixin.create(SnapDraw, {
         if (ids) {
           ids.forEach((lid) => {
             if (lid !== layerId) {
-              let [layer, layerObject] = this._getModelLeafletObject(lid);
-              let layerType = this._getTypeLayer(layer);
-              if ((layerType instanceof WfsLayer || layerType instanceof OdataLayer) && !Ember.isNone(layerObject)) {
-                layerObject.statusLoadLayer = true;
-                load.push(layerObject);
-              }
+              let [, layerObject] = this._getModelLeafletObject(lid);
+              layerObject.statusLoadLayer = true;
+              load.push(layerObject);
             }
           });
         }
 
-        let layerType = this._getTypeLayer(layerModel);
-        if (layerType instanceof WfsLayer || layerType instanceof OdataLayer) {
-          leafletObject.statusLoadLayer = true;
-          load.push(leafletObject);
-        }
+        leafletObject.statusLoadLayer = true;
+        load.push(leafletObject);
 
         leafletMap.once('moveend', () => {
           Ember.run.later(() => {
@@ -1000,7 +884,7 @@ export default Ember.Mixin.create(SnapDraw, {
             Ember.$(document).find('.leaflet-bottom.leaflet-right').css('display', 'none');
 
             let promises = load.map((object) => {
-              return object.promiseLoadLayer;
+              return !Ember.isNone(leafletObject.promiseLoadLayer) && (leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise);
             });
 
             Ember.RSVP.allSettled(promises).then((e) => {
@@ -1451,15 +1335,8 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {String} Field name.
   */
   _getPkField(layer) {
-    let layerType = this._getTypeLayer(layer);
-    if (layerType instanceof VectorLayer) {
-      const getPkField = this.get('mapApi').getFromApi('getPkField');
-      if (typeof getPkField === 'function') {
-        return getPkField(layer);
-      }
-
-      let field = Ember.get(layer, 'settingsAsObject.pkField');
-      return Ember.isNone(field) ? 'primarykey' : field;
+    if (!Ember.isNone(layer) && !Ember.isNone(layer._leafletObject) && typeof layer._leafletObject.getPkField === 'function') {
+      return layer._leafletObject.getPkField(layer);
     } else {
       throw 'Layer is not VectorLayer';
     }

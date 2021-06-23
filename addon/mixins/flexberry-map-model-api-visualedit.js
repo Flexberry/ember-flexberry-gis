@@ -1,9 +1,6 @@
 import Ember from 'ember';
 import turfCombine from 'npm:@turf/combine';
-import WfsLayer from '../layers/wfs';
-import OdataLayer from '../layers/odata-vector';
 import state from '../utils/state';
-
 import SnapDraw from './snap-draw';
 
 export default Ember.Mixin.create(SnapDraw, {
@@ -132,17 +129,11 @@ export default Ember.Mixin.create(SnapDraw, {
     this._stopSnap();
 
     if (!Ember.isNone(layer) && !Ember.isNone(layer.layerId)) {
-      let [layerModel, leafletObject] = this._getModelLeafletObject(layer.layerId);
+      let [, leafletObject] = this._getModelLeafletObject(layer.layerId);
       if (!Ember.isNone(leafletObject)) {
-        let className = Ember.get(layerModel, 'type');
-        let layerType = Ember.getOwner(this).knownForType('layer', className);
-        if (layerType instanceof OdataLayer) {
-          let model = Ember.get(layer, 'model');
-          model.rollbackAttributes();
-        }
-
-        if (layer.state === state.insert) {
-          leafletObject.removeLayer(layer);
+        leafletObject.removeLayer(layer);
+        leafletObject.cancelEditObject(layer);
+         if (layer.state === state.insert) {
           if (editTools.featuresLayer.getLayers().length !== 0) {
             let id = editTools.featuresLayer.getLayerId(layer);
             let editLayer = editTools.featuresLayer.getLayer(id).editor.editLayer;
@@ -152,20 +143,15 @@ export default Ember.Mixin.create(SnapDraw, {
         } else if (layer.state === state.update) {
           let editLayer = layer.editor.editLayer;
           editTools.editLayer.removeLayer(editLayer);
-          let map = Ember.get(leafletObject, '_map');
+          let map = this.get('mapApi').getFromApi('leafletMap');
           map.removeLayer(layer);
           let id = leafletObject.getLayerId(layer);
           delete leafletObject._layers[id];
-          if (layerType instanceof WfsLayer) {
-            let filter = new L.Filter.EQ('primarykey', Ember.get(layer, 'feature.properties.primarykey'));
-            leafletObject.loadFeatures(filter);
-            delete leafletObject.changes[id];
-          } else if (layerType instanceof OdataLayer) {
-            let e = {
-              featureIds: [Ember.get(layer, 'feature.properties.primarykey')]
-            };
-            leafletObject.loadLayerFeatures(e);
-          }
+
+          let e = {
+            featureIds: [Ember.get(layer, 'feature.properties.primarykey')]
+          };
+          leafletObject.loadLayerFeatures(e);
         }
       }
 

@@ -306,6 +306,19 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Cancel edit for layer object.
+
+    @method cancelEdit
+    @param {Object} layer layer object.
+    @return nothing
+  */
+  cancelEditObject(layer) {
+    let leafletObject = this.get('_leafletObject');
+    let id = leafletObject.getLayerId(layer);
+    delete leafletObject.changes[id];
+  },
+
+  /**
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer
     @param {Object} options Layer options.
@@ -362,6 +375,7 @@ export default BaseVectorLayer.extend({
           wfsLayer.reload = this.get('reload').bind(this);
           wfsLayer.cancelEdit = this.get('cancelEdit').bind(this);
           wfsLayer.updateLabel = this.get('updateLabel').bind(this);
+          wfsLayer.cancelEditObject = this.get('cancelEditObject').bind(this);
 
           if (!Ember.isNone(leafletMap)) {
             let thisPane = this.get('_pane');

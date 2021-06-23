@@ -3,6 +3,7 @@ import layout from '../templates/components/flexberry-layers-intersections-panel
 import * as buffer from 'npm:@turf/buffer';
 import VectorLayer from '../layers/-private/vector';
 import WmsWfsLayer from 'ember-flexberry-gis/layers/wms-wfs';
+import CombineLayer from '../layers/combine';
 import * as jsts from 'npm:jsts';
 import { coordinatesToArray } from '../utils/coordinates-to';
 
@@ -157,6 +158,22 @@ export default Ember.Component.extend({
     this.clearPanel();
   }),
 
+  _checkTypeLayer(layer) {
+    let className = Ember.get(layer, 'type');
+    let layerType = Ember.getOwner(this).knownForType('layer', className);
+    let isCombineVector = false;
+    if (layerType instanceof CombineLayer) {
+      let combineClass = Ember.getOwner(this).knownForType('layer', this.get('_layer.settings.type'));
+      isCombineVector = combineClass instanceof VectorLayer;
+    }
+
+    if (layerType instanceof VectorLayer || layerType instanceof WmsWfsLayer || isCombineVector) {
+      return true;
+    }
+
+    return false;
+  },
+
   /**
     Initializes component.
   */
@@ -167,16 +184,12 @@ export default Ember.Component.extend({
       let layers = Ember.get(item, 'layers');
       if (layers.length > 0) {
         layers.forEach(layer => {
-          let className = Ember.get(layer, 'type');
-          let layerType = Ember.getOwner(this).knownForType('layer', className);
-          if (layerType instanceof VectorLayer || layerType instanceof WmsWfsLayer) {
+          if (this._checkTypeLayer(layer)) {
             vlayers.push(layer);
           }
         });
       } else {
-        let className = Ember.get(item, 'type');
-        let layerType = Ember.getOwner(this).knownForType('layer', className);
-        if (layerType instanceof VectorLayer || layerType instanceof WmsWfsLayer) {
+        if (this._checkTypeLayer(item)) {
           vlayers.push(item);
         }
       }

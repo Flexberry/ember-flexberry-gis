@@ -870,6 +870,21 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Cancel edit for layer object.
+
+    @method cancelEdit
+    @param {Object} layer layer object.
+    @return nothing
+  */
+  cancelEditObject(layer) {
+    let model = Ember.get(layer, 'model');
+    model.rollbackAttributes();
+    let leafletObject = this.get('_leafletObject');
+    let layerId = leafletObject.getLayerId(layer);
+    delete leafletObject.models[layerId];
+  },
+
+  /**
     Creates leaflet layer.
 
     @method _createVectorLayer
@@ -913,6 +928,7 @@ export default BaseVectorLayer.extend({
     layer.clearLayers = this.get('clearLayers').bind(this);
     layer.cancelEdit = this.get('cancelEdit').bind(this);
     layer.updateLabel = this.get('updateLabel').bind(this);
+    layer.cancelEditObject = this.get('cancelEditObject').bind(this);
 
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
