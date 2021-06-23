@@ -323,6 +323,10 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     });
   },
 
+  /**
+   * This method update favorite feature when feature is edited
+   * @param {Object} data This parameter contain layerModel and layer (object) which the was edited.
+   */
   _updateFavorite(data) {
     let result = Ember.A();
     let favFeatures = Ember.A();
@@ -340,7 +344,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
             if (!Ember.isEmpty(twoObjects)) {
               if (Ember.get(feature, 'compareEnabled')) {
                 twoObjects.removeObject(feature);
-                Ember.set(updatedLayer.feature, 'compareEnabled', true)
+                Ember.set(updatedLayer.feature, 'compareEnabled', true);
                 twoObjects.pushObject(updatedLayer.feature);
               }
             }
