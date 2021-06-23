@@ -236,6 +236,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     }
   },
 
+  /**
+      Convert feature coordinate.
+
+      @method actions.zoomToIntersection
+      @param {Object} geometry Contain coordinates
+      @param {Object} style Contain style if need to paint feature
+      @returns {Object} geoJSON layer
+    */
   _convertGeometryToFeatureLayer(geometry, style) {
     if (!Ember.isBlank(geometry.coordinates[0])) {
       let copyGeometry = Object.assign({}, geometry);
