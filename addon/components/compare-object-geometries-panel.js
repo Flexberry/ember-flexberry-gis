@@ -184,7 +184,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles click on pan to icon.
 
-      @method actions.hidePanel
+      @method actions.panToIntersection
+      @param {Object} geometry Contain intersection | non-intersection geometry. (Maybe contain many geometries)
     */
     panToIntersection(geometry) {
       let featureLayer = null;
@@ -207,7 +208,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles click on zoom to icon.
 
-      @method actions.hidePanel
+      @method actions.zoomToIntersection
+      @param {Object} geometry Contain intersection | non-intersection geometry. (Maybe contain many geometries)
     */
     zoomToIntersection(geometry) {
       let group = this.get('featuresLayer');
