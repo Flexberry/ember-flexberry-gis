@@ -348,6 +348,7 @@ export default Ember.Component.extend({
           };
 
           this.sendAction('editFeature', {
+            isFavorite: feature.properties.isFavorite,
             dataItems: dataItems,
             layerModel: { name: name, leafletObject: object, settings, layerModel }
           });
