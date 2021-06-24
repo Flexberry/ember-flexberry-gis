@@ -43,9 +43,20 @@ export default BaseLayer.extend({
   createLayer() {
     return new Ember.RSVP.Promise((resolve, reject) => {
       this.createAllLayer();
-      Ember.RSVP.hash({
-        layer: this.get('mainLayer._leafletLayerPromise')
-      }).then(({ layer }) => {
+      let promises = Ember.A();
+      promises.push(this.get('mainLayer._leafletLayerPromise'));
+      this.get('mainLayer.innerLayers').forEach((layer) => {
+        promises.push(layer.get('_leafletLayerPromise'));
+      });
+
+      Ember.RSVP.allSettled(promises).then((layers) => {
+        const rejected = layers.filter((item) => { return item.state === 'rejected'; }).length > 0;
+
+        if (rejected) {
+          reject(`Failed to create leaflet layer for '${this.get('layerModel.name')}`);
+        }
+
+        let layer = layers[0].value;
         Ember.set(this.get('layerModel'), '_attributesOptions', this._getAttributesOptions.bind(this));
         Ember.set(layer, 'mainLayer', this.get('mainLayer'));
         resolve(layer);
@@ -94,6 +105,7 @@ export default BaseLayer.extend({
         let innerLayers = Ember.A();
         let innerLayersSettings = Ember.get(settings, 'innerLayers');
         for (let type in innerLayersSettings) {
+          Ember.set(innerLayersSettings[type], 'type', type);
           let innerLayerProperties = {
             leafletMap: leafletMap,
             leafletContainer: this.get('leafletContainer'),
@@ -136,8 +148,6 @@ export default BaseLayer.extend({
         throw(`Invalid layer type ${mainType} for layer ${this.get('layerModel.name')}`);
       }
     }
-
-    //this._super(...arguments);
   },
 
   /**
@@ -234,7 +244,7 @@ export default BaseLayer.extend({
   */
   _visibilityOfLayerByZoom() {
     let mainLayer = this.get('mainLayer');
-    if (Ember.isNone(mainLayer)) {
+    if (Ember.isNone(mainLayer) || Ember.isNone(mainLayer._leafletObject)) {
       return;
     }
 

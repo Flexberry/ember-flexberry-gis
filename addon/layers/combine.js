@@ -43,5 +43,44 @@ export default BaseLayer.extend({
       innerLayers: undefined,
     });
     return settings;
+  },
+
+  /**
+    Get properties names from leaflet layer object.
+
+    @method getLayerProperties
+    @param {Object} leafletObject Leaflet layer object
+    @returns {Array} Array with properties names
+  */
+  getLayerProperties(leafletObject) {
+    if (Ember.isNone(leafletObject) || Ember.isNone(leafletObject.type)) {
+      return Ember.A();
+    }
+
+    //let layerClass = Ember.getOwner(this).lookup(`layer:${this.get('layerModel.type')}`);
+    let layerClass = Ember.getOwner(this).lookup(`layer:${leafletObject.type}`);
+    let layerProperties = layerClass.getLayerProperties(leafletObject);
+
+    return layerProperties;
+  },
+
+  /**
+    Get property values from leaflet layer object.
+
+    @method getLayerPropertyValues
+    @param {Object} leafletObject Leaflet layer object
+    @param {String} selectedField Selected field name
+    @param {Integer} count Amount of values to return (for all values must be 0)
+    @returns {Array} Array with selected property values
+  */
+  getLayerPropertyValues(leafletObject, selectedField, count) {
+    if (Ember.isNone(leafletObject) || Ember.isNone(leafletObject.type)) {
+      return Ember.A();
+    }
+
+    let layerClass = Ember.getOwner(this).lookup(`layer:${leafletObject.type}`);
+    let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, selectedField, count);
+
+    return layerPropertyValue;
   }
 });

@@ -519,9 +519,6 @@ export default BaseLayer.extend({
     });
   },
 
-  cancelEditObject(layer) {
-  },
-
   /**
     Creates leaflet layer related to layer type.
 
@@ -537,6 +534,11 @@ export default BaseLayer.extend({
         // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
         let readFormat = vectorLayer.readFormat;
         if (Ember.isNone(readFormat)) {
+          // For combine layer
+          if (!Ember.isNone(this.dynamicProperties) && !Ember.isNone(this.dynamicProperties.type)) {
+            vectorLayer.type = this.dynamicProperties.type;
+          }
+
           vectorLayer.readFormat = this.createReadFormat(vectorLayer);
         }
 
@@ -548,10 +550,6 @@ export default BaseLayer.extend({
         vectorLayer.showAllLayerObjects = this.get('showAllLayerObjects').bind(this);
         vectorLayer.hideAllLayerObjects = this.get('hideAllLayerObjects').bind(this);
         vectorLayer._setVisibilityObjects = this.get('_setVisibilityObjects').bind(this);
-
-        if (Ember.isNone(vectorLayer.cancelEditObject)) {
-          Ember.set(vectorLayer, 'cancelEditObject', this.cancelEditObject.bind(this));
-        }
 
         if (Ember.isNone(vectorLayer.loadLayerFeatures)) {
           Ember.set(vectorLayer, 'loadLayerFeatures', this.loadLayerFeatures.bind(this));

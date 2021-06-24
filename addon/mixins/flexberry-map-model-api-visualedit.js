@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import turfCombine from 'npm:@turf/combine';
-import state from '../utils/state';
 import SnapDraw from './snap-draw';
 
 export default Ember.Mixin.create(SnapDraw, {
@@ -130,31 +129,14 @@ export default Ember.Mixin.create(SnapDraw, {
 
     if (!Ember.isNone(layer) && !Ember.isNone(layer.layerId)) {
       let [, leafletObject] = this._getModelLeafletObject(layer.layerId);
-      if (!Ember.isNone(leafletObject)) {
-        leafletObject.removeLayer(layer);
-        leafletObject.cancelEditObject(layer);
-        if (layer.state === state.insert) {
-          if (editTools.featuresLayer.getLayers().length !== 0) {
-            let id = editTools.featuresLayer.getLayerId(layer);
-            let editLayer = editTools.featuresLayer.getLayer(id).editor.editLayer;
-            editTools.editLayer.removeLayer(editLayer);
-            editTools.featuresLayer.removeLayer(layer);
-          }
-        } else if (layer.state === state.update) {
-          let editLayer = layer.editor.editLayer;
-          editTools.editLayer.removeLayer(editLayer);
-          let map = this.get('mapApi').getFromApi('leafletMap');
-          map.removeLayer(layer);
-          let id = leafletObject.getLayerId(layer);
-          delete leafletObject._layers[id];
-
-          let e = {
-            featureIds: [Ember.get(layer, 'feature.properties.primarykey')]
-          };
-          leafletObject.loadLayerFeatures(e);
-        }
-      }
-
+      let id = leafletObject.getLayerId(layer);
+      let e = {
+        layerIds: [layer.layerId],
+        ids: [id],
+        results: Ember.A()
+      };
+      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+      leafletMap.fire('flexberry-map:cancelEdit', e);
       layer.layerId = null;
     }
   },

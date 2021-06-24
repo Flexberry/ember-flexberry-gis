@@ -311,19 +311,6 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-    Cancel edit for layer object.
-
-    @method cancelEdit
-    @param {Object} layer layer object.
-    @return nothing
-  */
-  cancelEditObject(layer) {
-    let leafletObject = this.get('_leafletObject');
-    let id = leafletObject.getLayerId(layer);
-    delete leafletObject.changes[id];
-  },
-
-  /**
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer
     @param {Object} options Layer options.
@@ -380,7 +367,6 @@ export default BaseVectorLayer.extend({
           wfsLayer.reload = this.get('reload').bind(this);
           wfsLayer.cancelEdit = this.get('cancelEdit').bind(this);
           wfsLayer.updateLabel = this.get('updateLabel').bind(this);
-          wfsLayer.cancelEditObject = this.get('cancelEditObject').bind(this);
 
           if (!Ember.isNone(leafletMap)) {
             let thisPane = this.get('_pane');
@@ -857,6 +843,13 @@ export default BaseVectorLayer.extend({
     this._super(...arguments);
   },
 
+  /**
+    Clear changes.
+
+    @method clearChanges
+    @param {Array} ids Array contains internal leaflet IDs for a layer.
+    @return {Array} Array contains primarykey features which need load.
+  */
   clearChanges(ids) {
     let leafletObject = this.get('_leafletObject');
     let editTools = leafletObject.leafletMap.editTools;
@@ -900,7 +893,10 @@ export default BaseVectorLayer.extend({
       leafletObject.changes = {};
     }
 
-    editTools.editLayer.clearLayers();
+    if (Ember.isNone(ids) || ids.length === 0) {
+      editTools.editLayer.clearLayers();
+    }
+
     return featuresIds;
   },
 
@@ -908,6 +904,7 @@ export default BaseVectorLayer.extend({
     Handles 'flexberry-map:cancelEdit' event of leaflet map.
 
     @method cancelEdit
+    @param {Array} ids Array contains internal leaflet IDs for a layer.
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   cancelEdit(ids) {

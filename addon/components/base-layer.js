@@ -692,7 +692,7 @@ export default Ember.Component.extend(
     */
     _cancelEdit(e) {
       if (e.layerIds.indexOf(this.get('layerModel.id')) !== -1) {
-        e.results.pushObject(this.cancelEdit());
+        e.results.pushObject(this.cancelEdit(e.ids));
       }
     },
 
