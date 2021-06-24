@@ -724,38 +724,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let leafletObject = this.get('leafletObject');
 
       if (!Ember.isNone(initialLayers) && !Ember.isNone(leafletObject)) {
-        let layerModel = this.get('layerModel.layerModel');
-        let className = Ember.get(layerModel, 'type');
-        let layerType = Ember.getOwner(this).knownForType('layer', className);
-
-        let featureIds = Ember.A();
-
-        initialLayers.forEach((layer) => {
-          let editTools = this._getEditTools();
-          if (!Ember.isNone(layer.editor)) {
-            let editLayer = layer.editor.editLayer;
-            editTools.editLayer.removeLayer(editLayer);
-          }
-
-          if (leafletObject.hasLayer(layer)) {
-            leafletObject.removeLayer(layer);
-          }
-
-          let map = Ember.get(leafletObject, '_map');
-          map.removeLayer(layer);
-
-          let id = leafletObject.getLayerId(layer);
-          delete leafletObject._layers[id];
-          leafletObject.cancelEditObject(layer);
-
-          featureIds.push(Ember.get(layer, 'feature.properties.primarykey'));
+        let featureIds = initialLayers.map((layer) => {
+          return leafletObject.getLayerId(layer);
         });
 
-        let e = {
-          featureIds: featureIds
-        };
-
-        let promise = leafletObject.loadLayerFeatures(e);
+        let promise = leafletObject.cancelEdit(featureIds);
 
         this.set('loading', true);
         (promise ? promise : Ember.RSVP.resolve()).then(() => {

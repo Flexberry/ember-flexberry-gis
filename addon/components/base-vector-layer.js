@@ -48,16 +48,6 @@ export default BaseLayer.extend({
   clusterOptions: null,
 
   /**
-    Promise returning Leaflet layer.
-
-    @property _leafletVectorLayerPromise
-    @type <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
-    @default null
-    @private
-  */
-  _leafletVectorLayerPromise: null,
-
-  /**
     Observes and handles changes in {{#crossLink "BaseVectorLayerComponent/clusterize:property"}}'clusterize' property{{/crossLink}}.
     Resets layer with respect to new value of {{#crossLink "BaseVectorLayerComponent/clusterize:property"}}'clusterize' property{{/crossLink}}.
 
@@ -366,6 +356,12 @@ export default BaseLayer.extend({
     clusterLayer._featureGroup.off('layerremove', this._setLayerOpacity, this);
   },
 
+  /*
+    Get the field to search for objects
+    @method getPkField
+    @param {Object} layer.
+    @return {String} Field name.
+  */
   getPkField(layer) {
     const getPkField = this.get('mapApi').getFromApi('getPkField');
     if (typeof getPkField === 'function') {
@@ -376,6 +372,11 @@ export default BaseLayer.extend({
     return Ember.isNone(field) ? 'primarykey' : field;
   },
 
+  /**
+    Show all layer objects.
+    @method showAllLayerObjects
+    @return {Promise}
+  */
   showAllLayerObjects() {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletObject = this.get('_leafletObject');
@@ -436,6 +437,11 @@ export default BaseLayer.extend({
     });
   },
 
+  /**
+    Hide all layer objects.
+    @method hideAllLayerObjects
+    @return nothing
+  */
   hideAllLayerObjects() {
     let leafletObject = this.get('_leafletObject');
     let map = this.get('leafletMap');
@@ -454,6 +460,13 @@ export default BaseLayer.extend({
     }
   },
 
+  /**
+    Determine the visibility of the specified objects by id for the layer.
+    @method _setVisibilityObjects
+    @param {string[]} objectIds Array of objects IDs.
+    @param {boolean} [visibility=false] visibility Object Visibility.
+    @return {Ember.RSVP.Promise}
+  */
   _setVisibilityObjects(objectIds, visibility = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletObject = this.get('_leafletObject');
@@ -573,7 +586,6 @@ export default BaseLayer.extend({
     @method destroyLayer
   */
   destroyLayer() {
-    this.set('_leafletVectorLayerPromise', null);
     let leafletLayer = this.get('_leafletObject');
     if (leafletLayer instanceof L.MarkerClusterGroup) {
       this.destroyClusterLayer(leafletLayer);
