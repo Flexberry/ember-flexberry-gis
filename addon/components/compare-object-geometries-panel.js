@@ -184,14 +184,21 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles click on pan to icon.
 
-      @method actions.hidePanel
+      @method actions.panToIntersection
+      @param {Object} geometry Contain intersection | non-intersection geometry. (Maybe contain many geometries)
     */
     panToIntersection(geometry) {
-      if (!Ember.isBlank(geometry.coordinates[0])) {
-        let copyGeometry = Object.assign({}, geometry);
-        let mapModel = this.get('mapApi').getFromApi('mapModel');
-        let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
-        let featureLayer = L.geoJSON(convertedFeatureLayer.geometry);
+      let featureLayer = null;
+      if (geometry.type === 'GeometryCollection') {
+        featureLayer = L.featureGroup();
+        geometry.geometries.forEach(geom => {
+          featureLayer.addLayer(this._convertGeometryToFeatureLayer(geom));
+        });
+      } else {
+        featureLayer = this._convertGeometryToFeatureLayer(geometry);
+      }
+
+      if (!Ember.isNone(featureLayer)) {
         let center = featureLayer.getBounds().getCenter();
         let leafletMap = this.get('leafletMap');
         leafletMap.panTo(center);
@@ -201,22 +208,48 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles click on zoom to icon.
 
-      @method actions.hidePanel
+      @method actions.zoomToIntersection
+      @param {Object} geometry Contain intersection | non-intersection geometry. (Maybe contain many geometries)
     */
     zoomToIntersection(geometry) {
-      if (!Ember.isBlank(geometry.coordinates[0])) {
-        let group = this.get('featuresLayer');
-        group.clearLayers();
-        let copyGeometry = Object.assign({}, geometry);
-        let mapModel = this.get('mapApi').getFromApi('mapModel');
-        let convertedFeatureLayer =  mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
-        let featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
+      let group = this.get('featuresLayer');
+      group.clearLayers();
+      let featureLayer = null;
+      if (geometry.type === 'GeometryCollection') {
+        featureLayer = L.featureGroup();
+        geometry.geometries.forEach(geom => {
+          featureLayer.addLayer(this._convertGeometryToFeatureLayer(geom, {
+            style: { color: 'green' }
+          }));
+        });
+      } else {
+        featureLayer = this._convertGeometryToFeatureLayer(geometry, {
           style: { color: 'green' }
         });
+      }
+
+      if (!Ember.isNone(featureLayer)) {
         featureLayer.addTo(group);
         let map = this.get('leafletMap');
         map.fitBounds(featureLayer.getBounds());
       }
+    }
+  },
+
+  /**
+      Convert feature coordinate.
+
+      @method actions.zoomToIntersection
+      @param {Object} geometry Contain coordinates
+      @param {Object} style Contain style if need to paint feature
+      @returns {Object} geoJSON layer
+    */
+  _convertGeometryToFeatureLayer(geometry, style) {
+    if (!Ember.isBlank(geometry.coordinates[0])) {
+      let copyGeometry = Object.assign({}, geometry);
+      let mapModel = this.get('mapApi').getFromApi('mapModel');
+      let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
+      return L.geoJSON(convertedFeatureLayer.geometry, style);
     }
   },
 
