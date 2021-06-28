@@ -95,6 +95,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         this._dragAndDrop(false);
         this._disableDrawTool(true);
       }
+    } else {
+      this.set('_offset', { x: null, y: null });
     }
   }),
 
