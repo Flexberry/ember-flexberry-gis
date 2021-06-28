@@ -282,10 +282,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let mainLayer = this.get('mainLayer');
-    if (!Ember.isNone(mainLayer)) {
-      return mainLayer.identify.apply(mainLayer, arguments);
-    }
+    return Ember.RSVP.resolve();
   },
 
   /**
@@ -301,10 +298,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    let mainLayer = this.get('mainLayer');
-    if (!Ember.isNone(mainLayer)) {
-      return mainLayer.search.apply(mainLayer, arguments);
-    }
+    return Ember.RSVP.resolve();
   },
 
   /**
@@ -318,9 +312,6 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   query(layerLinks, e) {
-    let mainLayer = this.get('mainLayer');
-    if (!Ember.isNone(mainLayer)) {
-      return mainLayer.query.apply(mainLayer, arguments);
-    }
+    return Ember.RSVP.resolve();
   }
 });

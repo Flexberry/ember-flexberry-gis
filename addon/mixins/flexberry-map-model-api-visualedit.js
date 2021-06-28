@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import turfCombine from 'npm:@turf/combine';
 import SnapDraw from './snap-draw';
+import zoomToBounds from '../utils/zoom-to-bounds';
 
 export default Ember.Mixin.create(SnapDraw, {
 
@@ -42,6 +43,7 @@ export default Ember.Mixin.create(SnapDraw, {
       this._getModelLayerFeature(layerId, [featureId]).then(([layerModel, leafletObject, featureLayer]) => {
         let leafletMap = this.get('mapApi').getFromApi('leafletMap');
         leafletObject.statusLoadLayer = true;
+
         let bounds;
         if (featureLayer[0] instanceof L.Marker) {
           let featureGroup = L.featureGroup().addLayer(featureLayer[0]);
@@ -50,7 +52,9 @@ export default Ember.Mixin.create(SnapDraw, {
           bounds = featureLayer[0].getBounds();
         }
 
-        leafletMap.fitBounds(bounds);
+        let minZoom = Ember.get(leafletObject, 'minZoom');
+        let maxZoom = Ember.get(leafletObject, 'maxZoom');
+        zoomToBounds(bounds, leafletMap, leafletObject, minZoom, maxZoom);
         if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
           leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
         }

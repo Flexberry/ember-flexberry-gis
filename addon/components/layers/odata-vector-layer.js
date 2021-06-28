@@ -275,6 +275,8 @@ export default BaseVectorLayer.extend({
     layer.options.crs = this.get('crs');
     layer.model = model;
     layer.modelProj = modelProj;
+    layer.minZoom = this.get('minZoom');
+    layer.maxZoom = this.get('maxZoom');
     layer.feature = {
       type: 'Feature',
       geometry: geometry,

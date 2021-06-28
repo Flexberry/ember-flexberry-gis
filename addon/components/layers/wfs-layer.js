@@ -250,6 +250,8 @@ export default BaseVectorLayer.extend({
 
           layers.forEach(function (element) {
             if (!Ember.isNone(Ember.get(element, 'feature')) && Ember.isNone(Ember.get(element, 'feature.leafletLayer'))) {
+              element.minZoom = that.minZoom;
+              element.maxZoom = that.maxZoom;
               Ember.set(element.feature, 'leafletLayer', element);
             }
           });
@@ -385,9 +387,9 @@ export default BaseVectorLayer.extend({
           wfsLayer.leafletMap = leafletMap;
           this.set('loadedBounds', null);
           this._setFeaturesProcessCallback(wfsLayer);
+          wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);
           let load = this.continueLoad(wfsLayer);
           wfsLayer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
-          wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);
           wfsLayer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
 
           resolve(wfsLayer);

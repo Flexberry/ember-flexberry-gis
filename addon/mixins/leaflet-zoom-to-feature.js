@@ -3,6 +3,7 @@
  */
 
 import Ember from 'ember';
+import zoomToBounds from '../utils/zoom-to-bounds';
 
 /**
   Mixin with the logic of finding a feature on the map.
@@ -72,19 +73,9 @@ export default Ember.Mixin.create({
       }
 
       if (!Ember.isNone(bounds)) {
-        // 'bound.pad(1)' bounds with zoom decreased by 1 point (padding).
-        //  That allows to make map's bounds slightly larger than serviceLayer's bounds to make better UI.
-
-        let sidebarElement = Ember.$('.sidebar-wrapper:visible .sidebar');
-        const widthPadding = sidebarElement.width() || 0;
-
-        let bboxZoom = leafletMap.getBoundsZoom(bounds.pad(1));
         let minZoom = Ember.isArray(feature) ? Ember.get(feature[0], 'leafletLayer.minZoom') : Ember.get(feature, 'leafletLayer.minZoom');
-        if (!Ember.isNone(minZoom) && minZoom > bboxZoom) {
-          leafletMap.flyToBounds(bounds, { paddingTopLeft: [0 - widthPadding, 0], maxZoom: minZoom });
-        } else {
-          leafletMap.fitBounds(bounds.pad(1), { paddingTopLeft: [0 - widthPadding, 0] });
-        }
+        let maxZoom = Ember.isArray(feature) ? Ember.get(feature[0], 'leafletLayer.maxZoom') : Ember.get(feature, 'leafletLayer.maxZoom');
+        zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
       }
     },
 
