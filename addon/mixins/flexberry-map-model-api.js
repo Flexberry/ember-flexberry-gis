@@ -243,11 +243,71 @@ export default Ember.Mixin.create(SnapDraw, {
     @method getNearObject
     @param {string} layerId Layer ID of the selected object.
     @param {string} layerObjectId Object ID of the selected object.
-    @param {Array} layerIdsArray Array of layers IDs in which to search.
+    @param {Array} layerIds Array of layers IDs in which to search.
     @return {Promise} Object constains distance, layer and layer object.
   */
-  getNearObject(layerId, layerObjectId, layerIdsArray) {
+  getNearObject(layerId, layerObjectId, layerIds) {
     return new Ember.RSVP.Promise((resolve, reject) => {
+      this._getModelLayerFeature(layerId, [layerObjectId]).then(([, leafletObject, layerObject]) => {
+        const leafletMap = this.get('mapApi').getFromApi('leafletMap');
+        let layersGetNeatObject = [];
+        layerIds.forEach(id => {
+          const layer = this.get('mapLayer').findBy('id', id);
+          layersGetNeatObject.push(layer);
+          /*if (!Ember.isNone(layer)) {
+            if (layer.get('settingsAsObject.identifySettings.canBeIdentified')) {
+              layersIntersect.push(layer);
+            }
+          }*/
+        });
+
+        /*let crs = crsName || 'EPSG:4326';
+        let featureCrs = crs === 'EPSG:4326' ? feature : this._convertObjectCoordinates(crs, feature);
+        let featureLayer = L.GeoJSON.geometryToLayer(featureCrs);
+        let latlng = featureLayer instanceof L.Marker || featureLayer instanceof L.CircleMarker ?
+          featureLayer.getLatLng() : featureLayer.getBounds().getCenter();*/
+        let e = {
+          featureLayer: layerObject[0],
+          featureId: layerObjectId,
+          layerObjectId: layerId,
+          layers: layersGetNeatObject,
+          results: Ember.A()
+        };
+
+        if (e.layers.length > 0) {
+          leafletMap.fire('flexberry-map:getNearObject', e);
+        }
+
+        e.results = Ember.isArray(e.results) ? e.results : Ember.A();
+        let promises = Ember.A();
+
+        // Handle each result.
+        // Detach promises from already received features.
+        e.results.forEach((result) => {
+          if (Ember.isNone(result)) {
+            return;
+          }
+
+          promises.pushObject(Ember.get(result, 'features'));
+        });
+
+        Ember.RSVP.allSettled(promises).then((results) => {
+          const rejected = results.filter((item) => { return item.state === 'rejected'; }).length > 0;
+          if (rejected) {
+            return reject('Failed to get nearest object');
+          }
+
+          let res = null;
+          results.forEach((item) => {
+            if (Ember.isNone(res) || item.value.distance < res.distance) {
+              res = item.value;
+            }
+          });
+          resolve(res);
+        });
+      });
+    });
+    /*return new Ember.RSVP.Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, [layerObjectId]).then(([, leafletObject, layerObject]) => {
         let result = null;
         let promises = layerIdsArray.map(lid => {
@@ -318,7 +378,7 @@ export default Ember.Mixin.create(SnapDraw, {
       }).catch((e) => {
         reject(e);
       });
-    });
+    });*/
   },
 
   getObjectCenter(object) {

@@ -532,6 +532,38 @@ export default BaseLayer.extend({
     });
   },
 
+  getNearObject(e) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let result = null;
+      let mapApi = this.get('mapApi').getFromApi('mapModel');
+      let features = {
+        featureIds: null
+      };
+      let layerModel = this.get('layerModel');
+      let layerId = layerModel.get('id');
+      this.getLayerFeatures(features).then((featuresLayer) => {
+        featuresLayer.forEach(obj => {
+          const id = mapApi._getLayerFeatureId(layerModel, obj);
+          const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, obj);
+
+          if (layerId === e.layerObjectId && e.featureId === id) {
+            return;
+          }
+
+          if (Ember.isNone(result) || distance < result.distance) {
+            result = {
+              distance: distance,
+              layer: layerModel,
+              object: obj,
+            };
+          }
+        });
+
+        resolve(result);
+      });
+    });
+  },
+
   /**
     Creates leaflet layer related to layer type.
 

@@ -35,7 +35,8 @@ export default BaseVectorLayer.extend({
     'filter',
     'forceMulti',
     'withCredentials',
-    'continueLoading'
+    'continueLoading',
+    'urlWPS'
   ],
 
   /**
@@ -935,5 +936,148 @@ export default BaseVectorLayer.extend({
         this.loadLayerFeatures(e).then(() => { resolve(); }).catch((e) => reject(e));
       }
     });
-  }
+  },
+
+  getWPSgsNearest(typeName, typeGeometry, geom, crsName) {
+    return '<?xml version="1.0" encoding="UTF-8"?>'+
+      '<wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">'+
+        '<ows:Identifier>gs:Nearest</ows:Identifier>'+
+        '<wps:DataInputs>'+
+          '<wps:Input>'+
+            '<ows:Identifier>features</ows:Identifier>'+
+            '<wps:Reference mimeType="text/xml; subtype=wfs-collection/1.0" xlink:href="http://geoserver/wfs" method="POST">'+
+              '<wps:Body>'+
+                '<wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2">'+
+                  '<wfs:Query typeName="' + typeName + '"/>'+
+                '</wfs:GetFeature>'+
+              '</wps:Body>'+
+            '</wps:Reference>'+
+          '</wps:Input>'+
+          '<wps:Input>'+
+            '<ows:Identifier>' + typeGeometry + '</ows:Identifier>'+
+            '<wps:Data>'+
+              '<wps:ComplexData mimeType="text/xml; subtype=gml/3.1.1"><![CDATA[' + geom + ']]></wps:ComplexData>'+
+            '</wps:Data>'+
+          '</wps:Input>'+
+          '<wps:Input>'+
+            '<ows:Identifier>crs</ows:Identifier>'+
+            '<wps:Data>'+
+              '<wps:LiteralData>' + crsName + '</wps:LiteralData>'+
+            '</wps:Data>'+
+          '</wps:Input>'+
+        '</wps:DataInputs>'+
+        '<wps:ResponseForm>'+
+          '<wps:RawDataOutput mimeType="text/xml; subtype=wfs-collection/1.0">'+
+            '<ows:Identifier>result</ows:Identifier>'+
+          '</wps:RawDataOutput>'+
+        '</wps:ResponseForm>'+
+      '</wps:Execute>';
+  },
+
+  dwithin(geometryField, featureLayer, crs, distance) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let filter = new L.Filter.EQ(new L.Filter.DWithin(geometryField, featureLayer, crs, distance, 'meter'), true);
+
+      this._getFeature({
+        filter
+      }).then(filteredFeatures => {
+        if (filteredFeatures.length === 0) {
+          return resolve(null);
+        }
+
+        let res = null;
+        filteredFeatures.forEach(item => {
+          const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, item);
+          if (Ember.isNone(res) || distance < res.distance) {
+            res = {
+              distance: distance,
+              layer: layerModel,
+              object: item,
+            };
+          }
+        });
+        resolve(res);
+      }).catch((message) => {
+        reject(message);
+      });
+    });
+  },
+
+  getNearObject(e) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let result = null;
+      let mapApi = this.get('mapApi').getFromApi('mapModel');
+      let leafletObject = this.get('_leafletObject');
+      let layerModel = this.get('layerModel');
+      let urlWPS = leafletObject.options.urlWPS;
+      if (!Ember.isNone(urlWPS)) {
+        let typeGeometry = e.featureLayer.feature.type;
+        let geom = e.featureLayer.toProjectedEWKT(this.get('crs'));
+        let data = this.getWPSgsNearest(leafletObject.options.typeName, typeGeometry, geom, this.get('crs'));
+        Ember.$.ajax({
+          url: `${urlWPS}`,
+          type: 'POST',
+          contentType: 'text/xml',
+          data: data,
+          success: function (responseText) {
+            // If some exception occur, WFS-service can response successfully, but with ExceptionReport,
+            // and such situation must be handled.
+            let exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
+            if (exceptionReport) {
+              return reject(exceptionReport.message);
+            }
+
+            //let result = L.XmlUtil.parseXml(responseText);
+            let nearObject = leafletObject.readFormat.responseToLayers(responseText, {
+              coordsToLatLng: leafletObject.options.coordsToLatLng,
+              pointToLayer: leafletObject.options.pointToLayer
+            });
+
+            const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, nearObject);
+            let result = {
+                distance: distance,
+                layer: layerModel,
+                object: nearObject,
+            };
+            resolve(result);
+          },
+          error: function (error) {
+            reject(`Error for request getNearObject via WPS ${urlWPS} for layer ${layerModel.get('name')}: ${error}`);
+          }
+        });
+      } else {
+        let distances = [1, 10, 100, 1000, 10000, 100000, 1000000];
+        let resultDwithin;
+        distances.forEach((item) => {
+          this.dwithin(this.get('geometryField'), e.featureLayer, this.get('crs'), item).then((res) => {
+            if (!Ember.isNone(res)) {
+              resultDwithin = res;
+              return;
+            }
+          });
+        });
+        let result = null;
+        if (!Ember.isNone(resultDwithin)) {
+          resultDwithin.forEach(obj => {
+            const id = mapApi._getLayerFeatureId(layerModel, obj);
+            const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, obj);
+
+            if (layerId === e.layerObjectId && e.featureId === id) {
+              return;
+            }
+
+            if (Ember.isNone(result) || distance < result.distance) {
+              result = {
+                distance: distance,
+                layer: layerModel,
+                object: obj,
+              };
+            }
+          });
+        }
+
+        resolve(result);
+      }
+    });
+  },
 });
