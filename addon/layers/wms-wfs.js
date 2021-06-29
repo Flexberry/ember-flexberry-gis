@@ -74,7 +74,7 @@ export default WmsLayer.extend({
 
     @method isVectorType
     @param {Object} layer Layer model.
-    @param {Boolean} howVector.
+    @param {Boolean} howVector Sometimes (in intersection panel) wms-wfs layer can work how a vector (example for identify).
     @returns {Boolean}
   */
   isVectorType(layer, howVector) {

@@ -4,7 +4,6 @@
 
 import Ember from 'ember';
 import BaseLayer from './-private/base';
-import VectorLayer from './-private/vector';
 
 /**
   Class describing combine layers metadata.
@@ -95,11 +94,11 @@ export default BaseLayer.extend({
   */
   isVectorType(layer) {
     if (Ember.isNone(layer)) {
-      return;
+      return false;
     }
 
     let combineType = !Ember.isNone(Ember.get(layer, 'settingsAsObject')) ? Ember.get(layer, 'settingsAsObject.type') : Ember.get(layer, 'settings.type');
     let layerClass = Ember.getOwner(this).knownForType('layer', combineType);
-    return !Ember.isNone(layerClass) && layerClass instanceof VectorLayer;
+    return !Ember.isNone(layerClass) && layerClass.isVectorType(layer);
   }
 });
