@@ -716,6 +716,10 @@ export default Ember.Component.extend(
       this._createLayer();
     },
 
+    onLeafletMapEvent() {
+
+    },
+
     /**
       Initializes DOM-related component's properties.
     */

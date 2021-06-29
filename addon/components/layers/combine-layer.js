@@ -140,9 +140,9 @@ export default BaseLayer.extend({
         this.set('innerLayers', innerLayers);
         Ember.set(mainLayer, 'innerLayers', innerLayers);
         leafletMap.on('zoomend', this._visibilityOfLayerByZoom, this);
-        mainLayer.didInsertElement();
+        mainLayer.onLeafletMapEvent();
         mainLayer.get('innerLayers').forEach((layer) => {
-          layer.didInsertElement();
+          layer.onLeafletMapEvent();
         });
       } else {
         throw(`Invalid layer type ${mainType} for layer ${this.get('layerModel.name')}`);
@@ -282,7 +282,10 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    return Ember.RSVP.resolve();
+    let mainLayer = this.get('mainLayer');
+    if (!Ember.isNone(mainLayer)) {
+      return mainLayer.identify.apply(mainLayer, arguments);
+    }
   },
 
   /**
@@ -298,7 +301,10 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    return Ember.RSVP.resolve();
+    let mainLayer = this.get('mainLayer');
+    if (!Ember.isNone(mainLayer)) {
+      return mainLayer.search.apply(mainLayer, arguments);
+    }
   },
 
   /**
@@ -312,6 +318,9 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   query(layerLinks, e) {
-    return Ember.RSVP.resolve();
+    let mainLayer = this.get('mainLayer');
+    if (!Ember.isNone(mainLayer)) {
+      return mainLayer.query.apply(mainLayer, arguments);
+    }
   }
 });

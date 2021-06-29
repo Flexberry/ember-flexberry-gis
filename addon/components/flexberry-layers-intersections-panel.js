@@ -1,9 +1,6 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-intersections-panel';
 import * as buffer from 'npm:@turf/buffer';
-import VectorLayer from '../layers/-private/vector';
-import WmsWfsLayer from '../layers/wms-wfs';
-import CombineLayer from '../layers/combine';
 import * as jsts from 'npm:jsts';
 import { coordinatesToArray } from '../utils/coordinates-to';
 
@@ -160,18 +157,11 @@ export default Ember.Component.extend({
 
   _checkTypeLayer(layer) {
     let className = Ember.get(layer, 'type');
-    let layerType = Ember.getOwner(this).knownForType('layer', className);
-    let isCombineVector = false;
-    if (layerType instanceof CombineLayer) {
-      let combineClass = Ember.getOwner(this).knownForType('layer', this.get('_layer.settings.type'));
-      isCombineVector = combineClass instanceof VectorLayer;
-    }
+    let layerClass = Ember.isNone(className) ?
+      null :
+      Ember.getOwner(this).knownForType('layer', className);
 
-    if (layerType instanceof VectorLayer || layerType instanceof WmsWfsLayer || isCombineVector) {
-      return true;
-    }
-
-    return false;
+    return !Ember.isNone(layerClass) && layerClass.isVectorType(layer, true);
   },
 
   /**

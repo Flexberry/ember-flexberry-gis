@@ -870,16 +870,25 @@ export default BaseLayer.extend({
   },
 
   /**
-    Initializes DOM-related component's properties.
-  */
-  didInsertElement() {
-    this._super(...arguments);
+    Adds a listener function to leafletMap.
 
+    @method onLeafletMapEvent
+    @return nothing.
+  */
+  onLeafletMapEvent() {
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       leafletMap.on('flexberry-map:getOrLoadLayerFeatures', this._getOrLoadLayerFeatures, this);
       leafletMap.on('zoomend', this._checkZoomPane, this);
     }
+  },
+
+  /**
+    Initializes DOM-related component's properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+    this.onLeafletMapEvent();
   },
 
   /**

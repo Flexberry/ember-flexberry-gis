@@ -1,7 +1,5 @@
 import Ember from 'ember';
-import VectorLayer from '../../../layers/-private/vector';
 import layout from '../../../templates/components/layers-dialogs/tabs/legend-settings';
-import CombineLayer from '../../../layers/combine';
 
 /**
  Component for legend settings tab in layer settings.
@@ -53,12 +51,6 @@ export default Ember.Component.extend({
       null :
       Ember.getOwner(this).knownForType('layer', className);
 
-    let isCombineVector = false;
-    if (layerClass instanceof CombineLayer) {
-      let combineClass = Ember.getOwner(this).knownForType('layer', this.get('_layer.settings.type'));
-      isCombineVector = combineClass instanceof VectorLayer;
-    }
-
-    return !Ember.isNone(layerClass) && (layerClass instanceof VectorLayer || isCombineVector);
+    return !Ember.isNone(layerClass) && layerClass.isVectorType(this.get('_layer'));
   })
 });

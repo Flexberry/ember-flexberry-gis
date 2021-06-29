@@ -337,4 +337,16 @@ export default Ember.Object.extend({
   parseFilterGeometryExpression(condition, geoJSON, geometryField) {
     assert('BaseLayer\'s \'parseFilterBboxExpression\' should be overridden.');
   },
+
+  /**
+    Indicates whether related layer is vector layer.
+
+    @method isVectorType
+    @param {Object} layer Layer model.
+    @param {Boolean} howVector.
+    @returns {Boolean}
+  */
+  isVectorType(layer) {
+    return false;
+  }
 });

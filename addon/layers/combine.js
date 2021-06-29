@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import BaseLayer from './-private/base';
+import VectorLayer from './-private/vector';
 
 /**
   Class describing combine layers metadata.
@@ -82,5 +83,23 @@ export default BaseLayer.extend({
     let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, selectedField, count);
 
     return layerPropertyValue;
+  },
+
+  /**
+    Indicates whether related layer is vector layer.
+
+    @method isVectorType
+    @param {Object} layer Layer model.
+    @param {Boolean} howVector.
+    @returns {Boolean}
+  */
+  isVectorType(layer) {
+    if (Ember.isNone(layer)) {
+      return;
+    }
+
+    let combineType = !Ember.isNone(Ember.get(layer, 'settingsAsObject')) ? Ember.get(layer, 'settingsAsObject.type') : Ember.get(layer, 'settings.type');
+    let layerClass = Ember.getOwner(this).knownForType('layer', combineType);
+    return !Ember.isNone(layerClass) && layerClass instanceof VectorLayer;
   }
 });

@@ -820,9 +820,12 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-    Initializes DOM-related component's properties.
+    Adds a listener function to leafletMap.
+
+    @method onLeafletMapEvent
+    @return nothing.
   */
-  didInsertElement() {
+  onLeafletMapEvent() {
     this._super(...arguments);
 
     let leafletMap = this.get('leafletMap');
@@ -830,6 +833,14 @@ export default BaseVectorLayer.extend({
       leafletMap.on('moveend', this.continueLoad, this);
       leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
     }
+  },
+
+  /**
+    Initializes DOM-related component's properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+    this.onLeafletMapEvent();
   },
 
   /**
