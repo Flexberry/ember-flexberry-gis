@@ -716,8 +716,13 @@ export default Ember.Component.extend(
       this._createLayer();
     },
 
-    onLeafletMapEvent() {
+    /**
+      Adds a listener function to leafletMap.
 
+      @method onLeafletMapEvent
+      @return nothing.
+    */
+    onLeafletMapEvent() {
     },
 
     /**
