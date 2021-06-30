@@ -592,6 +592,12 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     */
     onMapLeafletDestroy() {
       this.destroyEditPanel();
+      this.set('sidebarOpened', false);
+      this.set('showTree', false);
+      let leafletMap = this.get('leafletMap');
+      if (leafletMap) {
+        leafletMap.off('flexberry-map:toggleSidebar', this.onToggleSidebar, this);
+      }
 
       this._super(...arguments);
     },
