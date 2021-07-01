@@ -31,7 +31,7 @@ moduleForComponent('layers/combine-layer', 'Unit | Component | layers/combine la
     let settingsAsObject = {
       'type': 'wfs',
       'url': 'http://geoserverFake/geoserver/ows',
-      'style': {'color': 'red', 'weight': '4'},
+      'style': { 'color': 'red', 'weight': '4' },
       'filter': null,
       'format': 'GeoJSON',
       'typeNS': 'les',
@@ -48,8 +48,8 @@ moduleForComponent('layers/combine-layer', 'Unit | Component | layers/combine la
       'continueLoading': false,
       'typeGeometry': 'polygon',
       'geometryField': 'shape',
-      'innerLayers' :{
-          'wms':{
+      'innerLayers': {
+        'wms':{
           'info_format': 'application/json',
           'url': 'http://geoserverFake/geoserver/ows',
           'version': '1.3.0',
@@ -60,9 +60,9 @@ moduleForComponent('layers/combine-layer', 'Unit | Component | layers/combine la
           'minZoom':1,
         }
       }
-	  };
+    };
 
-    leafletMap = L.map(document.createElement('div'), { center: [51.505, -0.09], zoom: 13});
+    leafletMap = L.map(document.createElement('div'), { center: [51.505, -0.09], zoom: 13 });
     let layerModel = Ember.Object.create({
       type: 'combine',
       visibility: false,

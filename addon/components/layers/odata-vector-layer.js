@@ -1446,5 +1446,59 @@ export default BaseVectorLayer.extend({
         this.loadLayerFeatures(e).then(() => { resolve(); }).catch((e) => reject(e));
       }
     });
+  },
+
+  /**
+    Get nearest object.
+    Gets all leaflet layer objects and processes them _calcNearestObject().
+
+    @method getNearObject
+    @param {Object} e Event object..
+    @param {Object} featureLayer Leaflet layer object.
+    @param {Number} featureId Leaflet layer object id.
+    @param {Number} layerObjectId Leaflet layer id.
+    @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
+  */
+  getNearObject(e) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let layerModel = this.get('layerModel');
+      let table = null;
+      Ember.$.ajax({
+        url: layerModel.get('_leafletObject.options.metadataUrl') + layerModel.get('_leafletObject.modelName') + '.json',
+        async: false,
+        success: function (data) {
+          table = data.className;
+        }
+      });
+      let mapApi = this.get('mapApi').getFromApi('mapModel');
+      let center = mapApi.getObjectCenter(e.featureLayer);
+      let geom = `SRID=4326;POINT(${center.lng} ${center.lat})`;
+      geom = geom.replace('.', ',').replace('.', ',');
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      let _this = this;
+      Ember.$.ajax({
+        url: `${config.APP.backendUrls.getNearDistance}(geom='${geom}', table='${table}')`,
+        type: 'GET',
+        success: function (data) {
+          let obj= {
+            featureIds: [data.pk]
+          };
+          _this.getLayerFeatures(obj).then((featuresLayer) => {
+            if (Ember.isArray(featuresLayer) && featuresLayer.length > 0) {
+              resolve({
+                distance: data.distance,
+                layer: layerModel,
+                object: featuresLayer[0],
+              });
+            } else {
+              resolve('Nearest object not found');
+            }
+          });
+        },
+        error: function (error) {
+          reject(`Error for request getNearObject for layer ${layerModel.get('name')}: ${error}`);
+        }
+      });
+    });
   }
 });

@@ -532,36 +532,70 @@ export default BaseLayer.extend({
     });
   },
 
+  /**
+    Get nearest object.
+    Gets all leaflet layer objects and processes them _calcNearestObject().
+
+    @method getNearObject
+    @param {Object} e Event object..
+    @param {Object} featureLayer Leaflet layer object.
+    @param {Number} featureId Leaflet layer object id.
+    @param {Number} layerObjectId Leaflet layer id.
+    @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
+  */
   getNearObject(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let result = null;
-      let mapApi = this.get('mapApi').getFromApi('mapModel');
       let features = {
         featureIds: null
       };
-      let layerModel = this.get('layerModel');
-      let layerId = layerModel.get('id');
-      this.getLayerFeatures(features).then((featuresLayer) => {
-        featuresLayer.forEach(obj => {
-          const id = mapApi._getLayerFeatureId(layerModel, obj);
-          const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, obj);
-
-          if (layerId === e.layerObjectId && e.featureId === id) {
-            return;
+      this.getLayerFeatures(features)
+        .then((featuresLayer) => {
+          if (Ember.isArray(featuresLayer) && featuresLayer.length > 0) {
+            resolve(this._calcNearestObject(featuresLayer, e));
+          } else {
+            resolve('Nearest object not found');
           }
-
-          if (Ember.isNone(result) || distance < result.distance) {
-            result = {
-              distance: distance,
-              layer: layerModel,
-              object: obj,
-            };
-          }
+        })
+        .catch((error) => {
+          reject(error);
         });
-
-        resolve(result);
-      });
     });
+  },
+
+  /**
+    Calculates nearest object.
+    Iterates all objects and calculates min distance. If it searches for nearest object in same layer, it is excluded e.featureLayer.
+
+    @method getNearObject
+    @param {Array} featuresLayer Leaflet layer objects.
+    @param {Object} e Event object..
+    @param {Object} featureLayer Leaflet layer object.
+    @param {Number} featureId Leaflet layer object id.
+    @param {Number} layerObjectId Leaflet layer id.
+    @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
+  */
+  _calcNearestObject(featuresLayer, e) {
+    let result = null;
+    let mapApi = this.get('mapApi').getFromApi('mapModel');
+    let layerModel = this.get('layerModel');
+    let layerId = layerModel.get('id');
+    featuresLayer.forEach(obj => {
+      let  leafletLayer = Ember.isNone(obj.leafletLayer) ? obj : obj.leafletLayer;
+      const id = mapApi._getLayerFeatureId(layerModel, leafletLayer);
+      if (layerId === e.layerObjectId && e.featureId === id) {
+        return;
+      }
+
+      const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, leafletLayer);
+      if (Ember.isNone(result) || distance < result.distance) {
+        result = {
+          distance: distance,
+          layer: layerModel,
+          object: leafletLayer,
+        };
+      }
+    });
+    return result;
   },
 
   /**

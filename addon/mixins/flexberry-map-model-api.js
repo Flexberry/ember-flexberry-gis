@@ -5,7 +5,6 @@ import booleanContains from 'npm:@turf/boolean-contains';
 import area from 'npm:@turf/area';
 import intersect from 'npm:@turf/intersect';
 import { getLeafletCrs } from '../utils/leaflet-crs';
-import OdataLayer from '../layers/odata-vector';
 import html2canvasClone from '../utils/html2canvas-clone';
 import state from '../utils/state';
 import SnapDraw from './snap-draw';
@@ -254,18 +253,8 @@ export default Ember.Mixin.create(SnapDraw, {
         layerIds.forEach(id => {
           const layer = this.get('mapLayer').findBy('id', id);
           layersGetNeatObject.push(layer);
-          /*if (!Ember.isNone(layer)) {
-            if (layer.get('settingsAsObject.identifySettings.canBeIdentified')) {
-              layersIntersect.push(layer);
-            }
-          }*/
         });
 
-        /*let crs = crsName || 'EPSG:4326';
-        let featureCrs = crs === 'EPSG:4326' ? feature : this._convertObjectCoordinates(crs, feature);
-        let featureLayer = L.GeoJSON.geometryToLayer(featureCrs);
-        let latlng = featureLayer instanceof L.Marker || featureLayer instanceof L.CircleMarker ?
-          featureLayer.getLatLng() : featureLayer.getBounds().getCenter();*/
         let e = {
           featureLayer: layerObject[0],
           featureId: layerObjectId,
@@ -307,78 +296,6 @@ export default Ember.Mixin.create(SnapDraw, {
         });
       });
     });
-    /*return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, [layerObjectId]).then(([, leafletObject, layerObject]) => {
-        let result = null;
-        let promises = layerIdsArray.map(lid => {
-          return new Ember.RSVP.Promise((resolve, reject) => {
-            let layerModel = this.getLayerModel(lid);
-            let layerType = this._getTypeLayer(layerModel);
-            if (layerType instanceof OdataLayer) {
-              let table = null;
-              Ember.$.ajax({
-                url: layerModel.get('_leafletObject.options.metadataUrl') + layerModel.get('_leafletObject.modelName') + '.json',
-                async: false,
-                success: function (data) {
-                  table = data.className;
-                }
-              });
-              let center = this.getObjectCenter(layerObject[0]);
-              let geom = `SRID=4326;POINT(${center.lng} ${center.lat})`;
-              geom = geom.replace('.', ',').replace('.', ',');
-              let config = Ember.getOwner(this).resolveRegistration('config:environment');
-              let _this = this;
-              Ember.$.ajax({
-                url: `${config.APP.backendUrls.getNearDistance}(geom='${geom}', table='${table}')`,
-                type: 'GET',
-                success: function (data) {
-                  _this._getModelLayerFeature(lid, [data.pk]).then(([, leafletObject, layerObject]) => {
-                    resolve({
-                      distance: data.distance,
-                      layer: layerModel,
-                      object: layerObject[0],
-                    });
-                  });
-                }
-              });
-            } else {
-              this._getModelLayerFeature(lid, null).then(([layer, lObject, featuresLayer]) => {
-                featuresLayer.forEach(obj => {
-                  const id = this._getLayerFeatureId(layer, obj);
-                  const distance = this._getDistanceBetweenObjects(layerObject[0], obj);
-
-                  if (layerId === lid && layerObjectId === id) {
-                    return;
-                  }
-
-                  if (Ember.isNone(result) || distance < result.distance) {
-                    result = {
-                      distance: distance,
-                      layer: layer,
-                      object: obj,
-                    };
-                  }
-                });
-
-                resolve(result);
-              });
-            }
-          });
-        });
-
-        Ember.RSVP.allSettled(promises).then((results) => {
-          let res = null;
-          results.forEach((item) => {
-            if (Ember.isNone(res) || item.value.distance < res.distance) {
-              res = item.value;
-            }
-          });
-          resolve(res);
-        });
-      }).catch((e) => {
-        reject(e);
-      });
-    });*/
   },
 
   getObjectCenter(object) {

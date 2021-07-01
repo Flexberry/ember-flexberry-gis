@@ -322,5 +322,22 @@ export default BaseLayer.extend({
     if (!Ember.isNone(mainLayer)) {
       return mainLayer.query.apply(mainLayer, arguments);
     }
+  },
+
+  /**
+    Handles 'flexberry-map:getNearObject' event of leaflet map.
+
+    @method getNearObject
+    @param {Object} e Event object..
+    @param {Object} featureLayer Leaflet layer object.
+    @param {Number} featureId Leaflet layer object id.
+    @param {Number} layerObjectId Leaflet layer id.
+    @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
+  */
+  getNearObject(e) {
+    let mainLayer = this.get('mainLayer');
+    if (!Ember.isNone(mainLayer)) {
+      return mainLayer.getNearObject.apply(mainLayer, arguments);
+    }
   }
 });

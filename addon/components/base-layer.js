@@ -609,7 +609,8 @@ export default Ember.Component.extend(
     */
     _getNearObject(e) {
       let layerModel = this.get('layerModel');
-      let shouldGetNearObject = Ember.A(e.layers || []).contains(layerModel);
+      let isVectorLayer = Ember.getOwner(this).lookup('layer:' + layerModel.get('type')).isVectorType(layerModel);
+      let shouldGetNearObject = Ember.A(e.layers || []).contains(layerModel) && isVectorLayer;
       if (!shouldGetNearObject) {
         return;
       }
@@ -871,7 +872,7 @@ export default Ember.Component.extend(
       @method getNearObject
       @param {Object} e Event object.
       Every result-object has the following structure: { layer: ..., features: [...] },
-      where 'layer' is metadata of layer related to identification result, features is array
+      where 'layer' is metadata of layer related to getNearObject result, features is array
       containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
       or a promise returning such array.
     */

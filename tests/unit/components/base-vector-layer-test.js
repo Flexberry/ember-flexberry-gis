@@ -573,3 +573,138 @@ test('test _setVisibilityObjects with continueLoading=true and visibility = true
     });
   });
 });
+test('test getNearObject', function (assert) {
+  assert.expect(8);
+  var done = assert.async(2);
+  Ember.run(() => {
+    let options = {
+      continueLoading: false,
+      showExisting: true
+    };
+    let layerModel = Ember.Object.create({
+      type: 'type',
+      visibility: false,
+      settingsAsObject:options
+    });
+    let component = this.subject({
+      createVectorLayer() {
+        let feature1 =  L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
+        feature1.id = '1';
+        feature1.feature = { properties: { primarykey: '1' }};
+        let feature2 = L.polygon([[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]);
+        feature2.id = '2';
+        feature2.feature = { properties: { primarykey:'2' }};
+        let layer = L.featureGroup([feature1, feature2]);
+        layer.options = options;
+        return layer;
+      },
+      createReadFormat() {
+        return null;
+      },
+      layerModel: layerModel,
+      leafletMap: leafletMap
+    });
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    let _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
+    let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+    let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+    let _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      leafletObject.options = options;
+      let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+      let e = {
+        featureLayer: featureLayer,
+        featureId: '234',
+        layerObjectId: '123'
+      };
+      let promise = component.getNearObject(e).then((result) => {
+        assert.equal(result.distance, 18060435.745686203);
+        assert.ok(result.layer);
+        assert.equal(result.object.feature.properties.primarykey, '1');
+        assert.equal(_calcNearestObjectSpy.callCount, 1);
+        assert.equal(getObjectCenterSpy.callCount, 4);
+        assert.equal(_getDistanceBetweenObjectsSpy.callCount, 2);
+        assert.equal(_getLayerFeatureIdSpy.callCount, 2);
+      }).finally(() => {
+        done(1);
+        getmapApiStub.restore();
+        _calcNearestObjectSpy.restore();
+        getObjectCenterSpy.restore();
+        _getDistanceBetweenObjectsSpy.restore();
+        _getLayerFeatureIdSpy.restore();
+      });
+      assert.ok(promise instanceof Ember.RSVP.Promise);
+      done(1);
+    });
+  });
+});
+test('test getNearObject Nearest object not found', function (assert) {
+  assert.expect(6);
+  var done = assert.async(2);
+  Ember.run(() => {
+    let options = {
+      continueLoading: false,
+      showExisting: true
+    };
+    let layerModel = Ember.Object.create({
+      type: 'type',
+      visibility: false,
+      settingsAsObject:options
+    });
+    let component = this.subject({
+      createVectorLayer() {
+        let layer = L.featureGroup([]);
+        layer.options = options;
+        return layer;
+      },
+      createReadFormat() {
+        return null;
+      },
+      layerModel: layerModel,
+      leafletMap: leafletMap
+    });
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    let _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
+    let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+    let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+    let _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      leafletObject.options = options;
+      let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+      let e = {
+        featureLayer: featureLayer,
+        featureId: '234',
+        layerObjectId: '123'
+      };
+      let promise = component.getNearObject(e).then((result) => {
+        assert.equal(result, 'Nearest object not found');
+        assert.equal(_calcNearestObjectSpy.callCount, 0);
+        assert.equal(getObjectCenterSpy.callCount, 0);
+        assert.equal(_getDistanceBetweenObjectsSpy.callCount, 0);
+        assert.equal(_getLayerFeatureIdSpy.callCount, 0);
+      }).finally(() => {
+        done(1);
+        getmapApiStub.restore();
+        _calcNearestObjectSpy.restore();
+        getObjectCenterSpy.restore();
+        _getDistanceBetweenObjectsSpy.restore();
+        _getLayerFeatureIdSpy.restore();
+      });
+      assert.ok(promise instanceof Ember.RSVP.Promise);
+      done(1);
+    });
+  });
+});
+

@@ -28,7 +28,9 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
       typeNSName: 'rgisperm',
       filter: null,
       version: '1.1.0',
-      continueLoading: true
+      continueLoading: true,
+      typeNS: 'les',
+      typeName: 'kvartalutverzhdenopolygon32640'
     };
 
     let leafletOptions = [
@@ -669,6 +671,516 @@ test('test editLayer', function (assert) {
 
         done();
       });
+    });
+  });
+});
+test('test getNearObject with urlWPS', function (assert) {
+  assert.expect(9);
+  var done = assert.async(2);
+  Ember.run(() => {
+    options = Ember.$.extend(options, { pkField: 'primarykey', urlWPS: 'http://localhost:8080/geoserver/wps' });
+    let layerModel = Ember.Object.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject:options
+    });
+    param = Ember.$.extend(param, { layerModel: layerModel });
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+    let stubAjax = sinon.stub(Ember.$, 'ajax');
+    let responseText = '{' +
+      '"type": "FeatureCollection",' +
+      '"crs": {' +
+        '"type": "name",' +
+        '"properties": {' +
+          '"name": "EPSG:32640"' +
+        '}' +
+      '},' +
+      '"features": [' +
+        '{' +
+          '"type": "Feature",' +
+          '"geometry": {' +
+            '"type": "MultiPolygon",' +
+            '"coordinates": [' +
+              '[[[465991.9001, 6445952.6774], [466300.6857, 6446025.6799],' +
+                '[466192.0721, 6445729.0941], [465991.9001, 6445952.6774]]]' +
+            ']' +
+          '},' +
+          '"properties": {' +
+            '"nearest_distance": 123,' +
+            '"nearest_bearing": 73.58555983346304' +
+          '},' +
+          '"id": "kvartalutverzhdenopolygon32640.84b823eb-00f2-48eb-9fdf-a1b47dbe185d"' +
+        '}' +
+      ']' +
+    '}';
+    stubAjax.yieldsTo('success', responseText);
+    let getLayerFeaturesStub = sinon.stub(component, 'getLayerFeatures');
+    getLayerFeaturesStub.returns(Ember.RSVP.resolve([{
+      'feature': {
+        'properties': {
+          'primarykey': '84b823eb-00f2-48eb-9fdf-a1b47dbe185d'
+        }
+      }
+    }]));
+    let getWPSgsNearestSpy = sinon.spy(component, 'getWPSgsNearest');
+    let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+    let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+    let _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      leafletObject.options = options;
+      let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+      let e = {
+        featureLayer: featureLayer,
+      };
+      let promise = component.getNearObject(e).then((result) => {
+        assert.equal(result.distance, 12168517.065042155);
+        assert.ok(result.layer);
+        assert.equal(result.object.feature.properties.primarykey, '84b823eb-00f2-48eb-9fdf-a1b47dbe185d');
+        assert.equal(getWPSgsNearestSpy.callCount, 1);
+        assert.equal(getObjectCenterSpy.callCount, 3);
+        assert.equal(_getDistanceBetweenObjectsSpy.callCount, 1);
+        assert.equal(_getLayerFeatureIdSpy.callCount, 1);
+        assert.equal(getLayerFeaturesStub.callCount, 1);
+      }).finally(() => {
+        done(1);
+        getmapApiStub.restore();
+        stubAjax.restore();
+        getLayerFeaturesStub.restore();
+        getWPSgsNearestSpy.restore();
+        getObjectCenterSpy.restore();
+        _getDistanceBetweenObjectsSpy.restore();
+        _getLayerFeatureIdSpy.restore();
+      });
+      assert.ok(promise instanceof Ember.RSVP.Promise);
+      done(1);
+    });
+  });
+});
+test('test getNearObject with urlWPS, Nearest object not found', function (assert) {
+  assert.expect(7);
+  var done = assert.async(2);
+  Ember.run(() => {
+    options = Ember.$.extend(options, { pkField: 'primarykey', urlWPS: 'http://localhost:8080/geoserver/wps' });
+    let layerModel = Ember.Object.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject:options
+    });
+    param = Ember.$.extend(param, { layerModel: layerModel });
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+    let stubAjax = sinon.stub(Ember.$, 'ajax');
+    let responseText = '{' +
+      '"type": "FeatureCollection",' +
+      '"crs": {' +
+        '"type": "name",' +
+        '"properties": {' +
+          '"name": "EPSG:32640"' +
+        '}' +
+      '},' +
+      '"features": []' +
+    '}';
+    stubAjax.yieldsTo('success', responseText);
+    let getLayerFeaturesStub = sinon.stub(component, 'getLayerFeatures');
+    getLayerFeaturesStub.returns(Ember.RSVP.resolve([]));
+    let getWPSgsNearestSpy = sinon.spy(component, 'getWPSgsNearest');
+    let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+    let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+    let _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      leafletObject.options = options;
+      let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+      let e = {
+        featureLayer: featureLayer,
+      };
+      let promise = component.getNearObject(e).then((result) => {
+        assert.equal(result, 'Nearest object not found');
+        assert.equal(getWPSgsNearestSpy.callCount, 1);
+        assert.equal(getObjectCenterSpy.callCount, 1);
+        assert.equal(_getDistanceBetweenObjectsSpy.callCount, 0);
+        assert.equal(_getLayerFeatureIdSpy.callCount, 0);
+        assert.equal(getLayerFeaturesStub.callCount, 0);
+      }).finally(() => {
+        done(1);
+        getmapApiStub.restore();
+        stubAjax.restore();
+        getLayerFeaturesStub.restore();
+        getWPSgsNearestSpy.restore();
+        getObjectCenterSpy.restore();
+        _getDistanceBetweenObjectsSpy.restore();
+        _getLayerFeatureIdSpy.restore();
+      });
+      assert.ok(promise instanceof Ember.RSVP.Promise);
+      done(1);
+    });
+  });
+});
+
+test('test getNearObject without urlWPS, same layer', function (assert) {
+  assert.expect(10);
+  var done = assert.async(2);
+  Ember.run(() => {
+    options = Ember.$.extend(options, { pkField: 'primarykey' });
+    let layerModel = Ember.Object.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject:options,
+      id: '123'
+    });
+    param = Ember.$.extend(param, { layerModel: layerModel });
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+    let dwithinStub = sinon.stub(component, 'dwithin');
+    dwithinStub.onCall(0).returns(Ember.RSVP.resolve(null));
+    dwithinStub.onCall(1).returns(Ember.RSVP.resolve(null));
+
+    // feature1
+    let feature1 =  {
+      "type": "Feature",
+      "id": "kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb6",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]
+      },
+      "geometry_name": "shape",
+      "properties": {
+        "primarykey": "df5178d8-aa47-4b92-ba08-2404ea26fdb6",
+        "nomer": null,
+        "lesnichestvo": null,
+        "uchastkovoelesnichestvo": null,
+        "urochishe": null,
+        "area": null,
+        "length": null,
+        "id": null,
+        "createtime": null,
+        "creator": null,
+        "edittime": null,
+        "editor": null
+      },
+    };
+    let polygon1 = L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
+    polygon1.feature = feature1;
+    feature1.leafletLayer = polygon1;
+
+    // feature 2
+    let feature2 =  {
+      "type": "Feature",
+      "id": "kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb7",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]
+      },
+      "geometry_name": "shape",
+      "properties": {
+        "primarykey": "df5178d8-aa47-4b92-ba08-2404ea26fdb7",
+        "nomer": null,
+        "lesnichestvo": null,
+        "uchastkovoelesnichestvo": null,
+        "urochishe": null,
+        "area": null,
+        "length": null,
+        "id": null,
+        "createtime": null,
+        "creator": null,
+        "edittime": null,
+        "editor": null
+      },
+    };
+    let polygon2 = L.polygon([[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]);
+    polygon2.feature = feature2;
+    feature2.leafletLayer = polygon2;
+
+    // feature3 - same object
+    let feature3 =  {
+      "type": "Feature",
+      "id": "kvartalutverzhdenopolygon32640.234",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]
+      },
+      "geometry_name": "shape",
+      "properties": {
+        "primarykey": "234",
+        "nomer": null,
+        "lesnichestvo": null,
+        "uchastkovoelesnichestvo": null,
+        "urochishe": null,
+        "area": null,
+        "length": null,
+        "id": null,
+        "createtime": null,
+        "creator": null,
+        "edittime": null,
+        "editor": null
+      },
+    };
+    let polygon3 = L.polygon([[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]);
+    polygon3.feature = feature3;
+    feature3.leafletLayer = polygon3;
+
+    dwithinStub.onCall(2).returns(Ember.RSVP.resolve([feature1, feature2, feature3]));
+
+    let upDistanceSpy = sinon.spy(component, 'upDistance');
+    let _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
+    let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+    let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+    let _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      leafletObject.options = options;
+      let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+      let e = {
+        featureLayer: featureLayer,
+        featureId: '234',
+        layerObjectId: '123'
+      };
+      let promise = component.getNearObject(e).then((result) => {
+        assert.equal(result.distance, 18060435.745686203);
+        assert.ok(result.layer);
+        assert.equal(result.object.feature.properties.primarykey, 'df5178d8-aa47-4b92-ba08-2404ea26fdb6');
+        assert.equal(getObjectCenterSpy.callCount, 4);
+        assert.equal(_getDistanceBetweenObjectsSpy.callCount, 2);
+        assert.equal(_getLayerFeatureIdSpy.callCount, 3);
+        assert.equal(upDistanceSpy.callCount, 3);
+        assert.equal(_calcNearestObjectSpy.callCount, 1);
+        assert.equal(dwithinStub.callCount, 3);
+      }).finally(() => {
+        done(1);
+        getmapApiStub.restore();
+        _calcNearestObjectSpy.restore();
+        upDistanceSpy.restore();
+        getObjectCenterSpy.restore();
+        _getDistanceBetweenObjectsSpy.restore();
+        _getLayerFeatureIdSpy.restore();
+        dwithinStub.restore();
+      });
+      assert.ok(promise instanceof Ember.RSVP.Promise);
+      done(1);
+    });
+  });
+});
+test('test getNearObject without urlWPS, other layer', function (assert) {
+  assert.expect(10);
+  var done = assert.async(2);
+  Ember.run(() => {
+    options = Ember.$.extend(options, { pkField: 'primarykey' });
+    let layerModel = Ember.Object.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject:options,
+      id: '123'
+    });
+    param = Ember.$.extend(param, { layerModel: layerModel });
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+    let dwithinStub = sinon.stub(component, 'dwithin');
+    dwithinStub.onCall(0).returns(Ember.RSVP.resolve(null));
+    dwithinStub.onCall(1).returns(Ember.RSVP.resolve(null));
+
+    // feature1
+    let feature1 =  {
+      "type": "Feature",
+      "id": "kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb6",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]
+      },
+      "geometry_name": "shape",
+      "properties": {
+        "primarykey": "df5178d8-aa47-4b92-ba08-2404ea26fdb6",
+        "nomer": null,
+        "lesnichestvo": null,
+        "uchastkovoelesnichestvo": null,
+        "urochishe": null,
+        "area": null,
+        "length": null,
+        "id": null,
+        "createtime": null,
+        "creator": null,
+        "edittime": null,
+        "editor": null
+      },
+    };
+    let polygon1 = L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
+    polygon1.feature = feature1;
+    feature1.leafletLayer = polygon1;
+
+    // feature 2
+    let feature2 =  {
+      "type": "Feature",
+      "id": "kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb7",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]
+      },
+      "geometry_name": "shape",
+      "properties": {
+        "primarykey": "df5178d8-aa47-4b92-ba08-2404ea26fdb7",
+        "nomer": null,
+        "lesnichestvo": null,
+        "uchastkovoelesnichestvo": null,
+        "urochishe": null,
+        "area": null,
+        "length": null,
+        "id": null,
+        "createtime": null,
+        "creator": null,
+        "edittime": null,
+        "editor": null
+      },
+    };
+    let polygon2 = L.polygon([[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]);
+    polygon2.feature = feature2;
+    feature2.leafletLayer = polygon2;
+
+    // feature3 - same object
+    let feature3 =  {
+      "type": "Feature",
+      "id": "kvartalutverzhdenopolygon32640.234",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]
+      },
+      "geometry_name": "shape",
+      "properties": {
+        "primarykey": "234",
+        "nomer": null,
+        "lesnichestvo": null,
+        "uchastkovoelesnichestvo": null,
+        "urochishe": null,
+        "area": null,
+        "length": null,
+        "id": null,
+        "createtime": null,
+        "creator": null,
+        "edittime": null,
+        "editor": null
+      },
+    };
+    let polygon3 = L.polygon([[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]);
+    polygon3.feature = feature3;
+    feature3.leafletLayer = polygon3;
+
+    dwithinStub.onCall(2).returns(Ember.RSVP.resolve([feature1, feature2, feature3]));
+
+    let upDistanceSpy = sinon.spy(component, 'upDistance');
+    let _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
+    let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+    let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+    let _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      leafletObject.options = options;
+      let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+      let e = {
+        featureLayer: featureLayer,
+        featureId: '234',
+        layerObjectId: '234'
+      };
+      let promise = component.getNearObject(e).then((result) => {
+        assert.equal(result.distance, 0);
+        assert.ok(result.layer);
+        assert.equal(result.object.feature.properties.primarykey, '234');
+        assert.equal(getObjectCenterSpy.callCount, 6);
+        assert.equal(_getDistanceBetweenObjectsSpy.callCount, 3);
+        assert.equal(_getLayerFeatureIdSpy.callCount, 3);
+        assert.equal(upDistanceSpy.callCount, 3);
+        assert.equal(_calcNearestObjectSpy.callCount, 1);
+        assert.equal(dwithinStub.callCount, 3);
+      }).finally(() => {
+        done(1);
+        getmapApiStub.restore();
+        _calcNearestObjectSpy.restore();
+        upDistanceSpy.restore();
+        getObjectCenterSpy.restore();
+        _getDistanceBetweenObjectsSpy.restore();
+        _getLayerFeatureIdSpy.restore();
+        dwithinStub.restore();
+      });
+      assert.ok(promise instanceof Ember.RSVP.Promise);
+      done(1);
+    });
+  });
+});
+test('test getNearObject without urlWPS, Nearest object not found', function (assert) {
+  assert.expect(8);
+  var done = assert.async(2);
+  Ember.run(() => {
+    options = Ember.$.extend(options, { pkField: 'primarykey' });
+    let layerModel = Ember.Object.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject:options,
+      id: '123'
+    });
+    param = Ember.$.extend(param, { layerModel: layerModel });
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+    let dwithinStub = sinon.stub(component, 'dwithin');
+    dwithinStub.returns(Ember.RSVP.resolve(null));
+
+    let upDistanceSpy = sinon.spy(component, 'upDistance');
+    let _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
+    let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+    let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+    let _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      leafletObject.options = options;
+      let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+      let e = {
+        featureLayer: featureLayer,
+        featureId: '234',
+        layerObjectId: '234'
+      };
+      let promise = component.getNearObject(e).then((result) => {
+        assert.equal(result, 'Nearest object not found');
+        assert.equal(getObjectCenterSpy.callCount, 0);
+        assert.equal(_getDistanceBetweenObjectsSpy.callCount, 0);
+        assert.equal(_getLayerFeatureIdSpy.callCount, 0);
+        assert.equal(upDistanceSpy.callCount, 8);
+        assert.equal(_calcNearestObjectSpy.callCount, 0);
+        assert.equal(dwithinStub.callCount, 8);
+      }).finally(() => {
+        done(1);
+        getmapApiStub.restore();
+        _calcNearestObjectSpy.restore();
+        upDistanceSpy.restore();
+        getObjectCenterSpy.restore();
+        _getDistanceBetweenObjectsSpy.restore();
+        _getLayerFeatureIdSpy.restore();
+        dwithinStub.restore();
+      });
+      assert.ok(promise instanceof Ember.RSVP.Promise);
+      done(1);
     });
   });
 });

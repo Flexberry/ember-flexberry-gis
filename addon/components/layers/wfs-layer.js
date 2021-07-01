@@ -938,9 +938,24 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  getWPSgsNearest(typeName, typeGeometry, geom, crsName) {
+  /**
+    Create body of request gs:Nearest for WPS.
+
+    @method getWPSgsNearest
+    @param {String} point Coordinates of point in EWKT.
+    @return {String} Xml for request gs:Nearest.
+  */
+  getWPSgsNearest(point) {
+    let leafletObject = this.get('_leafletObject');
+    let typeNS = leafletObject.options.typeNS;
+    let typeName = leafletObject.options.typeName;
+    let crsName = L.CRS.EPSG4326.code;
     return '<?xml version="1.0" encoding="UTF-8"?>'+
-      '<wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">'+
+      '<wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+        'xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" ' +
+        'xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" ' +
+        'xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" ' +
+        'xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">' +
         '<ows:Identifier>gs:Nearest</ows:Identifier>'+
         '<wps:DataInputs>'+
           '<wps:Input>'+
@@ -948,15 +963,15 @@ export default BaseVectorLayer.extend({
             '<wps:Reference mimeType="text/xml; subtype=wfs-collection/1.0" xlink:href="http://geoserver/wfs" method="POST">'+
               '<wps:Body>'+
                 '<wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2">'+
-                  '<wfs:Query typeName="' + typeName + '"/>'+
+                  '<wfs:Query typeName="' + typeNS + ':' + typeName + '"/>'+
                 '</wfs:GetFeature>'+
               '</wps:Body>'+
             '</wps:Reference>'+
           '</wps:Input>'+
           '<wps:Input>'+
-            '<ows:Identifier>' + typeGeometry + '</ows:Identifier>'+
+            '<ows:Identifier>point</ows:Identifier>'+
             '<wps:Data>'+
-              '<wps:ComplexData mimeType="text/xml; subtype=gml/3.1.1"><![CDATA[' + geom + ']]></wps:ComplexData>'+
+              '<wps:ComplexData mimeType="text/xml; subtype=gml/3.1.1"><![CDATA[' + point + ']]></wps:ComplexData>'+
             '</wps:Data>'+
           '</wps:Input>'+
           '<wps:Input>'+
@@ -967,42 +982,86 @@ export default BaseVectorLayer.extend({
           '</wps:Input>'+
         '</wps:DataInputs>'+
         '<wps:ResponseForm>'+
-          '<wps:RawDataOutput mimeType="text/xml; subtype=wfs-collection/1.0">'+
+          '<wps:RawDataOutput mimeType="application/json">'+
             '<ows:Identifier>result</ows:Identifier>'+
           '</wps:RawDataOutput>'+
         '</wps:ResponseForm>'+
       '</wps:Execute>';
   },
 
-  dwithin(geometryField, featureLayer, crs, distance) {
+  /**
+    Create body of request gs:Nearest for WPS.
+
+    @method dwithin
+    @param {Object} featureLayer Leaflet layer object.
+    @param {Number} distance Distance in meter.
+    @param {Boolean} exceptFeature Flag indicates that need to exclude feature,
+    so that when request it in the same layer, do not get the same object.
+    @return {Ember.RSVP.Promise}
+  */
+  dwithin(featureLayer, distance, exceptFeature) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let filter = new L.Filter.EQ(new L.Filter.DWithin(geometryField, featureLayer, crs, distance, 'meter'), true);
+      let geometryField = this.get('geometryField');
+      let crs = this.get('crs');
+      let filter = new L.Filter.DWithin(geometryField, featureLayer, crs, distance, 'meter');
+      if (exceptFeature) {
+        let layerModel = this.get('layerModel');
+        let fieldName = this.getPkField(layerModel);
+        const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layerModel, featureLayer);
+        filter = new L.Filter.And(filter, new L.Filter.NotEQ(fieldName, id));
+      }
 
-      this._getFeature({
+      let filterPromise = this._getFeature({
         filter
-      }).then(filteredFeatures => {
-        if (filteredFeatures.length === 0) {
-          return resolve(null);
-        }
-
-        let res = null;
-        filteredFeatures.forEach(item => {
-          const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, item);
-          if (Ember.isNone(res) || distance < res.distance) {
-            res = {
-              distance: distance,
-              layer: layerModel,
-              object: item,
-            };
-          }
-        });
-        resolve(res);
-      }).catch((message) => {
-        reject(message);
       });
+      resolve(filterPromise);
     });
   },
 
+  /**
+    Recursively calls itself increasing the distance until it gets the result.
+
+    @method upDistance
+    @param {Object} featureLayer Leaflet layer object.
+    @param {Array} distances Array of distance in meter.
+    @param {Number} iter Iteration number to get the distance
+    @param {Boolean} exceptFeature Flag indicates that need to exclude feature,
+    so that when request it in the same layer, do not get the same object (for dwithin()).
+    @return {Ember.RSVP.Promise}
+  */
+  upDistance(featureLayer, distances, iter, exceptFeature) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this.dwithin(featureLayer, distances[iter], exceptFeature)
+        .then((res) => {
+          if (Ember.isArray(res) && res.length > 0) {
+            resolve(res);
+          } else if (iter++ < distances.length) {
+            resolve(this.upDistance(featureLayer, distances, iter, exceptFeature));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  /**
+    Get nearest object.
+    If settings of layer has urlWPS, it do request to WPS service with request 'gs:Nearest'. It get data for request calling getWPSgsNearest().
+    Response of WPS servise is FeatureCollection in json format with one feature without themselves properties of feature.
+    Therefore, feature by id is loaded and distance is calculated.
+    If settings of layer has not urlWPS, it do call upDistance() for array of distances [1, 10, 100, 1000, 10000, 100000, 1000000].
+    Result being processed base-vector-layer's method _calcNearestObject.
+
+    @method getNearObject
+    @param {Object} e Event object..
+    @param {Object} featureLayer Leaflet layer object.
+    @param {Number} featureId Leaflet layer object id.
+    @param {Number} layerObjectId Leaflet layer id.
+    @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
+  */
   getNearObject(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let result = null;
@@ -1011,14 +1070,16 @@ export default BaseVectorLayer.extend({
       let layerModel = this.get('layerModel');
       let urlWPS = leafletObject.options.urlWPS;
       if (!Ember.isNone(urlWPS)) {
-        let typeGeometry = e.featureLayer.feature.type;
-        let geom = e.featureLayer.toProjectedEWKT(this.get('crs'));
-        let data = this.getWPSgsNearest(leafletObject.options.typeName, typeGeometry, geom, this.get('crs'));
+        let point = L.marker(mapApi.getObjectCenter(e.featureLayer)).toEWKT(L.CRS.EPSG4326).replace('SRID=4326;', '');
+        let data = this.getWPSgsNearest(point);
+        let _this = this;
         Ember.$.ajax({
-          url: `${urlWPS}`,
+          url: `${urlWPS}?`,
           type: 'POST',
           contentType: 'text/xml',
           data: data,
+          headers: leafletObject.options.headers || {},
+          withCredentials: leafletObject.options.withCredentials,
           success: function (responseText) {
             // If some exception occur, WFS-service can response successfully, but with ExceptionReport,
             // and such situation must be handled.
@@ -1027,19 +1088,31 @@ export default BaseVectorLayer.extend({
               return reject(exceptionReport.message);
             }
 
-            //let result = L.XmlUtil.parseXml(responseText);
             let nearObject = leafletObject.readFormat.responseToLayers(responseText, {
               coordsToLatLng: leafletObject.options.coordsToLatLng,
               pointToLayer: leafletObject.options.pointToLayer
             });
-
-            const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, nearObject);
-            let result = {
-                distance: distance,
-                layer: layerModel,
-                object: nearObject,
-            };
-            resolve(result);
+            if (Ember.isArray(nearObject) && nearObject.length === 1) {
+              const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, nearObject[0]);
+              const id = mapApi._getLayerFeatureId(layerModel, nearObject[0]).replace(leafletObject.options.typeName + '.', '');
+              let obj= {
+                featureIds: [id]
+              };
+              _this.getLayerFeatures(obj).then((object) => {
+                if (Ember.isArray(object) && object.length === 1) {
+                  result = {
+                    distance: distance,
+                    layer: layerModel,
+                    object: object[0],
+                  };
+                  resolve(result);
+                } else {
+                  reject(`Don't loaded feature with id: ${id} for layer ${layerModel.get('name')}`);
+                }
+              });
+            } else {
+              resolve('Nearest object not found');
+            }
           },
           error: function (error) {
             reject(`Error for request getNearObject via WPS ${urlWPS} for layer ${layerModel.get('name')}: ${error}`);
@@ -1047,37 +1120,20 @@ export default BaseVectorLayer.extend({
         });
       } else {
         let distances = [1, 10, 100, 1000, 10000, 100000, 1000000];
-        let resultDwithin;
-        distances.forEach((item) => {
-          this.dwithin(this.get('geometryField'), e.featureLayer, this.get('crs'), item).then((res) => {
-            if (!Ember.isNone(res)) {
-              resultDwithin = res;
-              return;
+        let layerId = layerModel.get('id');
+        let exceptFeature = layerId === e.layerObjectId;
+        this.upDistance(e.featureLayer, distances, 0, exceptFeature)
+          .then((resultDwithin) => {
+            if (!Ember.isNone(resultDwithin)) {
+              resolve(this._calcNearestObject(resultDwithin, e));
+            } else {
+              resolve('Nearest object not found');
             }
+          })
+          .catch((error) => {
+            reject(error);
           });
-        });
-        let result = null;
-        if (!Ember.isNone(resultDwithin)) {
-          resultDwithin.forEach(obj => {
-            const id = mapApi._getLayerFeatureId(layerModel, obj);
-            const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, obj);
-
-            if (layerId === e.layerObjectId && e.featureId === id) {
-              return;
-            }
-
-            if (Ember.isNone(result) || distance < result.distance) {
-              result = {
-                distance: distance,
-                layer: layerModel,
-                object: obj,
-              };
-            }
-          });
-        }
-
-        resolve(result);
       }
     });
-  },
+  }
 });
