@@ -849,7 +849,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       @param {Object} tabModel Related tab.
     */
     onSelectAllClick(tabModel) {
-      this.changeSelectedAll(tabModel);
+      this.changeSelectedAll(tabModel, true);
     },
 
     /**

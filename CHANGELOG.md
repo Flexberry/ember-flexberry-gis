@@ -12,11 +12,13 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 * Change chart's library from `highcharts` to `chart.js`.
+* Style icon minus on identification container.
 * Change leafletLayer loading, moved from layer-styles to `layers-styles-editor` component.
 * Update dependency on the `jquery-minicolors` bower package to version `2.3.4`.
 
 ### Fixed
 * Fix legends for graduated layer-style.
+* Fix check all objects in attributes panel.
 * Fix `bboxEWKT` in `flexberry-boundingbox` component.
 * Identification on `geojson` layers, when them contains multigeometries or collections.
 * Fix not reseting map tool when draw new geometry from attributes table.
