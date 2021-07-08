@@ -756,6 +756,9 @@ div.measure-drag-panel {
     &.map.marker {
       font-family: 'Icons';
     }
+    &.minus {
+      margin-right: 0.6em !important;
+    }
   }
   &,
   &-layers-options,
