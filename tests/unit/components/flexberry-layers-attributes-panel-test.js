@@ -39,3 +39,9 @@ test('test method changeSelectedAll showAll', function (assert) {
   });
 });
 
+test('test method changeSelectedAll hideAll', function (assert) {
+  assert.expect(1);
+  let component = this.subject();
+  component.changeSelectedAll(tabModel, false);
+  assert.deepEqual(tabModel.get('_selectedRows'), {});
+});
