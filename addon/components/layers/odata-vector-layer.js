@@ -1293,7 +1293,7 @@ export default BaseVectorLayer.extend({
       .from(obj.modelName)
       .selectByProjection(obj.projectionName);
 
-    if (filter) {
+    if (!Ember.isNone(filter)) {
       queryBuilder.where(filter);
     }
 
