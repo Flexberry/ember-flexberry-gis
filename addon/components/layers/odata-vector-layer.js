@@ -1233,6 +1233,7 @@ export default BaseVectorLayer.extend({
     if (!Ember.isNone(leafletObject)) {
       let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
       let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
+      let showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading;
 
       if (continueLoad && show && checkMapZoom(leafletObject)) {
         let bounds = L.rectangle(leafletMap.getBounds());
@@ -1284,6 +1285,40 @@ export default BaseVectorLayer.extend({
 
         let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 
+        let promise = new Ember.RSVP.Promise((resolve, reject) => {
+          objs.then(res => {
+            let models = res;
+            if (typeof res.toArray === 'function') {
+              models = res.toArray();
+            }
+
+            let innerLayers = [];
+            models.forEach(model => {
+              let l = this.addLayerObject(leafletObject, model, false);
+              innerLayers.push(l);
+            });
+
+            let e = { layers: innerLayers, results: Ember.A() };
+            leafletObject.fire('load', e);
+
+            Ember.RSVP.allSettled(e.results).then(() => {
+              this._setLayerState();
+              resolve();
+            });
+          });
+        });
+
+        if (leafletObject.statusLoadLayer) {
+          leafletObject.promiseLoadLayer = promise;
+        }
+
+        return promise;
+      } else if (showExisting) {
+        let obj = this.get('_adapterStoreModelProjectionGeom');
+        let queryBuilder = new Builder(obj.store)
+          .from(obj.modelName)
+          .selectByProjection(obj.projectionName);
+        let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
         let promise = new Ember.RSVP.Promise((resolve, reject) => {
           objs.then(res => {
             let models = res;

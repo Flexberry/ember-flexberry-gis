@@ -259,6 +259,65 @@ test('test method showAllLayerObjects with continueLoading = true', function (as
   });
 });
 
+test('test method showAllLayerObjects with showExisting = true', function (assert) {
+  //Arrange
+  assert.expect(11);
+  let done = assert.async(1);
+
+  let map = L.map(document.createElement('div'), {
+    center: [51.505, -0.09],
+    zoom: 13
+  });
+
+  let subject = mapApiMixinObject.create({
+    _getTypeLayer() { return new VectorLayer(); },
+    mapApi: {
+      getFromApi() { return map; }
+    },
+    _getModelLayerFeature() {
+      leafletObject.addLayer(firstTestLayer);
+      leafletObject.addLayer(secondTestLayer);
+      leafletObject.addLayer(thirdTestLayer);
+      return Ember.RSVP.resolve([null, null, [firstTestLayer, secondTestLayer, thirdTestLayer]]);
+    },
+    mapLayer: maplayers
+  });
+
+  leafletObject.options.showExisting = true;
+  let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
+  let leafletMapFireStub = sinon.stub(map, 'fire');
+  leafletMapFireStub.withArgs('flexberry-map:moveend').returns(Ember.RSVP.resolve());
+  let mapAddSpy = sinon.spy(map, 'addLayer');
+  let mapRemoveSpy = sinon.spy(map, 'removeLayer');
+  let leafletObjectClearLayersSpy = sinon.spy(leafletObject, 'clearLayers');
+  let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+
+  //Act
+  let result = subject.showAllLayerObjects('1');
+
+  //Assert
+  assert.ok(result instanceof Ember.RSVP.Promise);
+  result.then((res)=> {
+    assert.equal(res, 'success');
+    assert.equal(getModelLayerFeatureSpy.callCount, 0);
+    assert.equal(leafletMapFireStub.callCount, 9);
+    assert.equal(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
+    assert.equal(mapAddSpy.callCount, 8);
+    assert.equal(mapRemoveSpy.callCount, 0);
+    assert.equal(findByStub.callCount, 1);
+    assert.equal(findByStub.args[0][0], 'id');
+    assert.equal(findByStub.args[0][1], '1');
+    assert.equal(leafletObjectClearLayersSpy.callCount, 0);
+    done();
+    getModelLayerFeatureSpy.restore();
+    leafletMapFireStub.restore();
+    mapAddSpy.restore();
+    mapRemoveSpy.restore();
+    leafletObjectClearLayersSpy.restore();
+    findByStub.restore();
+  });
+});
+
 test('test method hideAllLayerObjects', function (assert) {
   //Arrange
   assert.expect(4);
