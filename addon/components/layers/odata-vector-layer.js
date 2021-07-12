@@ -1233,9 +1233,52 @@ export default BaseVectorLayer.extend({
       let showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading;
 
       if (continueLoad && show && checkMapZoom(leafletObject)) {
-        return this._downloadFeaturesWithOrNotFilter(leafletObject, true);
+        let loadedBounds = this.get('loadedBounds');
+        let leafletMap = this.get('leafletMap');
+        let obj = this.get('_adapterStoreModelProjectionGeom');
+        let bounds = L.rectangle(leafletMap.getBounds());
+        if (!Ember.isNone(leafletObject.showLayerObjects)) {
+          leafletObject.showLayerObjects = false;
+        }
+
+        let oldPart;
+        if (!Ember.isNone(loadedBounds)) {
+          if (loadedBounds instanceof L.LatLngBounds) {
+            loadedBounds = L.rectangle(loadedBounds);
+          }
+
+          let loadedBoundsJsts = loadedBounds.toJsts(L.CRS.EPSG4326);
+          let boundsJsts = bounds.toJsts(L.CRS.EPSG4326);
+
+          if (loadedBoundsJsts.contains(boundsJsts)) {
+            if (leafletObject.statusLoadLayer) {
+              leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+            }
+
+            return Ember.RSVP.resolve('Features in bounds is already loaded');
+          }
+
+          let queryOldBounds = new Query.GeometryPredicate(obj.geometryField);
+          oldPart = new Query.NotPredicate(queryOldBounds.intersects(loadedBounds.toEWKT(this.get('crs'))));
+
+          let unionJsts = loadedBoundsJsts.union(boundsJsts);
+          let geojsonWriter = new jsts.io.GeoJSONWriter();
+          loadedBounds = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
+        } else {
+          loadedBounds = bounds;
+        }
+
+        this.set('loadedBounds', loadedBounds);
+
+        let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
+        let newPart = queryNewBounds.intersects(loadedBounds.toEWKT(this.get('crs')));
+        let filter = oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart;
+        let layerFilter = this.get('filter');
+        filter = Ember.isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
+
+        return this._downloadFeaturesWithOrNotFilter(leafletObject, obj, filter);
       } else if (showExisting) {
-        return this._downloadFeaturesWithOrNotFilter(leafletObject, false);
+        return this._downloadFeaturesWithOrNotFilter(leafletObject, this.get('_adapterStoreModelProjectionGeom'));
       } else if (leafletObject.statusLoadLayer) {
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
         return Ember.RSVP.resolve('The layer does not require loading');
@@ -1245,55 +1288,12 @@ export default BaseVectorLayer.extend({
     }
   },
 
-  _downloadFeaturesWithOrNotFilter(leafletObject, withFilter) {
-    let loadedBounds = this.get('loadedBounds');
-    let leafletMap = this.get('leafletMap');
-    let obj = this.get('_adapterStoreModelProjectionGeom');
+  _downloadFeaturesWithOrNotFilter(leafletObject, obj, filter) {
     let queryBuilder = new Builder(obj.store)
       .from(obj.modelName)
       .selectByProjection(obj.projectionName);
 
-    if (withFilter) {
-      let bounds = L.rectangle(leafletMap.getBounds());
-      if (!Ember.isNone(leafletObject.showLayerObjects)) {
-        leafletObject.showLayerObjects = false;
-      }
-
-      let oldPart;
-      if (!Ember.isNone(loadedBounds)) {
-        if (loadedBounds instanceof L.LatLngBounds) {
-          loadedBounds = L.rectangle(loadedBounds);
-        }
-
-        let loadedBoundsJsts = loadedBounds.toJsts(L.CRS.EPSG4326);
-        let boundsJsts = bounds.toJsts(L.CRS.EPSG4326);
-
-        if (loadedBoundsJsts.contains(boundsJsts)) {
-          if (leafletObject.statusLoadLayer) {
-            leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
-          }
-
-          return Ember.RSVP.resolve('Features in bounds is already loaded');
-        }
-
-        let queryOldBounds = new Query.GeometryPredicate(obj.geometryField);
-        oldPart = new Query.NotPredicate(queryOldBounds.intersects(loadedBounds.toEWKT(this.get('crs'))));
-
-        let unionJsts = loadedBoundsJsts.union(boundsJsts);
-        let geojsonWriter = new jsts.io.GeoJSONWriter();
-        loadedBounds = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
-      } else {
-        loadedBounds = bounds;
-      }
-
-      this.set('loadedBounds', loadedBounds);
-
-      let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
-      let newPart = queryNewBounds.intersects(loadedBounds.toEWKT(this.get('crs')));
-      let filter = oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart;
-      let layerFilter = this.get('filter');
-      filter = Ember.isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
-
+    if (filter) {
       queryBuilder.where(filter);
     }
 
