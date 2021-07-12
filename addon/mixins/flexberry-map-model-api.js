@@ -97,7 +97,10 @@ export default Ember.Mixin.create(SnapDraw, {
                 map.removeLayer(layerShape);
               }
             });
-            leafletObject.clearLayers();
+            if (!leafletObject.options.showExisting) {
+              leafletObject.clearLayers();
+            }
+
           }
 
           leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve) => {
