@@ -1223,130 +1223,19 @@ export default BaseVectorLayer.extend({
     Handles zoomend
   */
   continueLoad(leafletObject) {
-    let loadedBounds = this.get('loadedBounds');
-
     if (!leafletObject) {
       leafletObject = this.get('_leafletObject');
     }
 
-    let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletObject)) {
       let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
       let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
       let showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading;
 
       if (continueLoad && show && checkMapZoom(leafletObject)) {
-        let bounds = L.rectangle(leafletMap.getBounds());
-        if (!Ember.isNone(leafletObject.showLayerObjects)) {
-          leafletObject.showLayerObjects = false;
-        }
-
-        let obj = this.get('_adapterStoreModelProjectionGeom');
-        let queryBuilder = new Builder(obj.store)
-          .from(obj.modelName)
-          .selectByProjection(obj.projectionName);
-
-        let oldPart;
-        if (!Ember.isNone(loadedBounds)) {
-          if (loadedBounds instanceof L.LatLngBounds) {
-            loadedBounds = L.rectangle(loadedBounds);
-          }
-
-          let loadedBoundsJsts = loadedBounds.toJsts(L.CRS.EPSG4326);
-          let boundsJsts = bounds.toJsts(L.CRS.EPSG4326);
-
-          if (loadedBoundsJsts.contains(boundsJsts)) {
-            if (leafletObject.statusLoadLayer) {
-              leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
-            }
-
-            return Ember.RSVP.resolve('Features in bounds is already loaded');
-          }
-
-          let queryOldBounds = new Query.GeometryPredicate(obj.geometryField);
-          oldPart = new Query.NotPredicate(queryOldBounds.intersects(loadedBounds.toEWKT(this.get('crs'))));
-
-          let unionJsts = loadedBoundsJsts.union(boundsJsts);
-          let geojsonWriter = new jsts.io.GeoJSONWriter();
-          loadedBounds = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
-        } else {
-          loadedBounds = bounds;
-        }
-
-        this.set('loadedBounds', loadedBounds);
-
-        let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
-        let newPart = queryNewBounds.intersects(loadedBounds.toEWKT(this.get('crs')));
-        let filter = oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart;
-        let layerFilter = this.get('filter');
-        filter = Ember.isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
-
-        queryBuilder.where(filter);
-
-        let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
-
-        let promise = new Ember.RSVP.Promise((resolve, reject) => {
-          objs.then(res => {
-            let models = res;
-            if (typeof res.toArray === 'function') {
-              models = res.toArray();
-            }
-
-            let innerLayers = [];
-            models.forEach(model => {
-              let l = this.addLayerObject(leafletObject, model, false);
-              innerLayers.push(l);
-            });
-
-            let e = { layers: innerLayers, results: Ember.A() };
-            leafletObject.fire('load', e);
-
-            Ember.RSVP.allSettled(e.results).then(() => {
-              this._setLayerState();
-              resolve();
-            });
-          });
-        });
-
-        if (leafletObject.statusLoadLayer) {
-          leafletObject.promiseLoadLayer = promise;
-        }
-
-        return promise;
+        return this._downloadFeaturesWithOrNotFilter(leafletObject, true);
       } else if (showExisting) {
-        let obj = this.get('_adapterStoreModelProjectionGeom');
-        let queryBuilder = new Builder(obj.store)
-          .from(obj.modelName)
-          .selectByProjection(obj.projectionName);
-        let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
-        let promise = new Ember.RSVP.Promise((resolve, reject) => {
-          objs.then(res => {
-            let models = res;
-            if (typeof res.toArray === 'function') {
-              models = res.toArray();
-            }
-
-            let innerLayers = [];
-            models.forEach(model => {
-              let l = this.addLayerObject(leafletObject, model, false);
-              innerLayers.push(l);
-            });
-
-            let e = { layers: innerLayers, results: Ember.A() };
-            leafletObject.fire('load', e);
-
-            Ember.RSVP.allSettled(e.results).then(() => {
-              this._setLayerState();
-              resolve();
-            });
-          });
-        });
-
-        if (leafletObject.statusLoadLayer) {
-          leafletObject.promiseLoadLayer = promise;
-        }
-
-        return promise;
+        return this._downloadFeaturesWithOrNotFilter(leafletObject, false);
       } else if (leafletObject.statusLoadLayer) {
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
         return Ember.RSVP.resolve('The layer does not require loading');
@@ -1354,6 +1243,90 @@ export default BaseVectorLayer.extend({
     } else {
       return Ember.RSVP.reject('leafletObject is none');
     }
+  },
+
+  _downloadFeaturesWithOrNotFilter(leafletObject, withFilter) {
+    let loadedBounds = this.get('loadedBounds');
+    let leafletMap = this.get('leafletMap');
+    let obj = this.get('_adapterStoreModelProjectionGeom');
+    let queryBuilder = new Builder(obj.store)
+      .from(obj.modelName)
+      .selectByProjection(obj.projectionName);
+
+    if (withFilter) {
+      let bounds = L.rectangle(leafletMap.getBounds());
+      if (!Ember.isNone(leafletObject.showLayerObjects)) {
+        leafletObject.showLayerObjects = false;
+      }
+
+      let oldPart;
+      if (!Ember.isNone(loadedBounds)) {
+        if (loadedBounds instanceof L.LatLngBounds) {
+          loadedBounds = L.rectangle(loadedBounds);
+        }
+
+        let loadedBoundsJsts = loadedBounds.toJsts(L.CRS.EPSG4326);
+        let boundsJsts = bounds.toJsts(L.CRS.EPSG4326);
+
+        if (loadedBoundsJsts.contains(boundsJsts)) {
+          if (leafletObject.statusLoadLayer) {
+            leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+          }
+
+          return Ember.RSVP.resolve('Features in bounds is already loaded');
+        }
+
+        let queryOldBounds = new Query.GeometryPredicate(obj.geometryField);
+        oldPart = new Query.NotPredicate(queryOldBounds.intersects(loadedBounds.toEWKT(this.get('crs'))));
+
+        let unionJsts = loadedBoundsJsts.union(boundsJsts);
+        let geojsonWriter = new jsts.io.GeoJSONWriter();
+        loadedBounds = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
+      } else {
+        loadedBounds = bounds;
+      }
+
+      this.set('loadedBounds', loadedBounds);
+
+      let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
+      let newPart = queryNewBounds.intersects(loadedBounds.toEWKT(this.get('crs')));
+      let filter = oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart;
+      let layerFilter = this.get('filter');
+      filter = Ember.isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
+
+      queryBuilder.where(filter);
+    }
+
+    let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
+
+    let promise = new Ember.RSVP.Promise((resolve, reject) => {
+      objs.then(res => {
+        let models = res;
+        if (typeof res.toArray === 'function') {
+          models = res.toArray();
+        }
+
+        let innerLayers = [];
+        models.forEach(model => {
+          let l = this.addLayerObject(leafletObject, model, false);
+          innerLayers.push(l);
+        });
+
+        let e = { layers: innerLayers, results: Ember.A() };
+        leafletObject.fire('load', e);
+
+        Ember.RSVP.allSettled(e.results).then(() => {
+          this._setLayerState();
+          resolve();
+        });
+      });
+    });
+
+    if (leafletObject.statusLoadLayer) {
+      leafletObject.promiseLoadLayer = promise;
+    }
+
+    return promise;
   },
 
   /**
