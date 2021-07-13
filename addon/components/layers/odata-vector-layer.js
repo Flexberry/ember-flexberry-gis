@@ -11,6 +11,7 @@ import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 import GisAdapter from 'ember-flexberry-gis/adapters/odata';
 import DS from 'ember-data';
 import jsts from 'npm:jsts';
+import { capitalize, camelize } from 'ember-flexberry-data/utils/string-functions';
 const { Builder } = Query;
 
 /**
@@ -1461,42 +1462,65 @@ export default BaseVectorLayer.extend({
   */
   getNearObject(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
+      let obj = this.get('_adapterStoreModelProjectionGeom');
       let layerModel = this.get('layerModel');
-      let table = null;
-      Ember.$.ajax({
-        url: layerModel.get('_leafletObject.options.metadataUrl') + layerModel.get('_leafletObject.modelName') + '.json',
-        async: false,
-        success: function (data) {
-          table = data.className;
-        }
-      });
-      let mapApi = this.get('mapApi').getFromApi('mapModel');
-      let center = mapApi.getObjectCenter(e.featureLayer);
-      let geom = `SRID=4326;POINT(${center.lng} ${center.lat})`;
-      geom = geom.replace('.', ',').replace('.', ',');
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      let mapApi = this.get('mapApi').getFromApi('mapModel');
       let _this = this;
       Ember.$.ajax({
-        url: `${config.APP.backendUrls.getNearDistance}(geom='${geom}', table='${table}')`,
-        type: 'GET',
-        success: function (data) {
-          let obj= {
-            featureIds: [data.pk]
-          };
-          _this.getLayerFeatures(obj).then((featuresLayer) => {
-            if (Ember.isArray(featuresLayer) && featuresLayer.length > 0) {
-              resolve({
-                distance: data.distance,
-                layer: layerModel,
-                object: featuresLayer[0],
+        url: layerModel.get('_leafletObject.options.metadataUrl') + layerModel.get('_leafletObject.modelName') + '.json',
+        success: function (dataClass) {
+          let odataQueryName =  Ember.String.pluralize(capitalize(camelize(dataClass.modelName)));
+          let odataUrl = _this.get('odataUrl');
+          obj.adapter.callAction(
+            config.APP.backendActions.getNearDistance,
+            { geom: L.marker(mapApi.getObjectCenter(e.featureLayer)).toEWKT(_this.get('crs')),
+            odataQueryName: odataQueryName, odataProjectionName: obj.projectionName },
+            odataUrl, null, (data) => {
+              new Ember.RSVP.Promise((resolve) => {
+                const normalizedRecords = { data: Ember.A(), included: Ember.A() };
+                let odataValue = data.value;
+                if (!Ember.isNone(odataValue) && Array.isArray(odataValue)) {
+                  odataValue.forEach(record => {
+                    if (record.hasOwnProperty('@odata.type')) {
+                      delete record['@odata.type'];
+                    }
+
+                    const normalized = obj.store.normalize(obj.modelName, record);
+                    normalizedRecords.data.addObject(normalized.data);
+                    if (normalized.included) {
+                      normalizedRecords.included.addObjects(normalized.included);
+                    }
+                  });
+                }
+
+                resolve(Ember.run(obj.store, obj.store.push, normalizedRecords));
+              }).then((res) => {
+                let features = Ember.A();
+                let models = res;
+                if (typeof res.toArray === 'function') {
+                  models = res.toArray();
+                }
+
+                let layer = L.featureGroup();
+
+                models.forEach(model => {
+                  let feat = _this.addLayerObject(layer, model, false);
+                  features.push(feat.feature);
+                });
+
+                const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, features[0].leafletLayer);
+                resolve({
+                  distance: distance,
+                  layer: layerModel,
+                  object: features[0].leafletLayer,
+                });
               });
-            } else {
-              resolve('Nearest object not found');
+            },
+            (mes) => {
+              reject(mes);
             }
-          });
-        },
-        error: function (error) {
-          reject(`Error for request getNearObject for layer ${layerModel.get('name')}: ${error}`);
+          );
         }
       });
     });

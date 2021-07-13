@@ -1262,3 +1262,70 @@ test('test method clearChanges() with update and delete', function(assert) {
     });
   });
 });
+
+test('test method getNearObject()', function(assert) {
+  assert.expect(6);
+  var done = assert.async(2);
+  param = Ember.$.extend(param, { pkField: 'primarykey' });
+  param.continueLoading = false;
+  let component = this.subject(param);
+
+  let store = app.__container__.lookup('service:store');
+  let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+  let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+  getmapApiStub.returns(mapModel);
+  let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+  let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+  let stubAjax = sinon.stub(Ember.$, 'ajax');
+  stubAjax.yieldsTo('success', { modelName: 'testModel' });
+  let obj = component.get('_adapterStoreModelProjectionGeom');
+  let _callAjaxStub = sinon.stub(obj.adapter, '_callAjax');
+  _callAjaxStub.yields({
+    '@odata.context': 'http://localhost/smartforest/odata/$metadata#ICSSoftSTORMNETDataObjects',
+    'value': [{
+      '@odata.type': '#IIS.RGISPK.VydelUtverzhdenoPolygon32640',
+      '__PrimaryKey': '57bfb1e1-6a73-4850-a065-1de96d4d93a4',
+      'Shape': {
+        'coordinates': [[[[465991.9001, 6445952.6774], [466300.6857, 6446025.6799],
+        [466192.0721, 6445729.0941], [465991.9001, 6445952.6774]]]],
+        'type': 'MultiPolygon'
+      }
+    }]
+  });
+  let registerStub = sinon.stub(Ember.getOwner(this), 'resolveRegistration');
+  registerStub.returns({
+    APP: {
+      backendActions: {
+        getNearDistance: 'getNearDistance'
+      }
+    }
+  });
+
+  component.get('_leafletLayerPromise').then((leafletLayer) => {
+    component.set('_leafletObject', leafletLayer);
+    leafletLayer.options = param;
+    let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+    let e = {
+      featureLayer: featureLayer,
+      featureId: '234',
+      layerObjectId: '123'
+    };
+
+    let promise = component.getNearObject(e).then((result) => {
+      assert.equal(result.distance, 12168517.065042155);
+      assert.ok(result.layer);
+      assert.equal(result.object.feature.properties.primarykey, '57bfb1e1-6a73-4850-a065-1de96d4d93a4');
+      assert.equal(getObjectCenterSpy.callCount, 3);
+      assert.equal(_getDistanceBetweenObjectsSpy.callCount, 1);
+    }).finally(() => {
+      done(1);
+      getmapApiStub.restore();
+      getObjectCenterSpy.restore();
+      _getDistanceBetweenObjectsSpy.restore();
+      stubAjax.restore();
+      _callAjaxStub.restore();
+    });
+    assert.ok(promise instanceof Ember.RSVP.Promise);
+    done(1);
+  });
+});

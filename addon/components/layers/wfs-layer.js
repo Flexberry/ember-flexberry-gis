@@ -950,42 +950,42 @@ export default BaseVectorLayer.extend({
     let typeNS = leafletObject.options.typeNS;
     let typeName = leafletObject.options.typeName;
     let crsName = L.CRS.EPSG4326.code;
-    return '<?xml version="1.0" encoding="UTF-8"?>'+
+    return '<?xml version="1.0" encoding="UTF-8"?>' +
       '<wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
         'xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" ' +
         'xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" ' +
         'xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" ' +
         'xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">' +
-        '<ows:Identifier>gs:Nearest</ows:Identifier>'+
-        '<wps:DataInputs>'+
-          '<wps:Input>'+
-            '<ows:Identifier>features</ows:Identifier>'+
-            '<wps:Reference mimeType="text/xml; subtype=wfs-collection/1.0" xlink:href="http://geoserver/wfs" method="POST">'+
-              '<wps:Body>'+
-                '<wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2">'+
-                  '<wfs:Query typeName="' + typeNS + ':' + typeName + '"/>'+
-                '</wfs:GetFeature>'+
-              '</wps:Body>'+
-            '</wps:Reference>'+
-          '</wps:Input>'+
-          '<wps:Input>'+
-            '<ows:Identifier>point</ows:Identifier>'+
-            '<wps:Data>'+
-              '<wps:ComplexData mimeType="text/xml; subtype=gml/3.1.1"><![CDATA[' + point + ']]></wps:ComplexData>'+
-            '</wps:Data>'+
-          '</wps:Input>'+
-          '<wps:Input>'+
-            '<ows:Identifier>crs</ows:Identifier>'+
-            '<wps:Data>'+
-              '<wps:LiteralData>' + crsName + '</wps:LiteralData>'+
-            '</wps:Data>'+
-          '</wps:Input>'+
-        '</wps:DataInputs>'+
-        '<wps:ResponseForm>'+
-          '<wps:RawDataOutput mimeType="application/json">'+
-            '<ows:Identifier>result</ows:Identifier>'+
-          '</wps:RawDataOutput>'+
-        '</wps:ResponseForm>'+
+        '<ows:Identifier>gs:Nearest</ows:Identifier>' +
+        '<wps:DataInputs>' +
+          '<wps:Input>' +
+            '<ows:Identifier>features</ows:Identifier>' +
+            '<wps:Reference mimeType="text/xml; subtype=wfs-collection/1.0" xlink:href="http://geoserver/wfs" method="POST">' +
+              '<wps:Body>' +
+                '<wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2">' +
+                  '<wfs:Query typeName="' + typeNS + ':' + typeName + '"/>' +
+                '</wfs:GetFeature>' +
+              '</wps:Body>' +
+            '</wps:Reference>' +
+          '</wps:Input>' +
+          '<wps:Input>' +
+            '<ows:Identifier>point</ows:Identifier>' +
+            '<wps:Data>' +
+              '<wps:ComplexData mimeType="text/xml; subtype=gml/3.1.1"><![CDATA[' + point + ']]></wps:ComplexData>' +
+            '</wps:Data>' +
+          '</wps:Input>' +
+          '<wps:Input>' +
+            '<ows:Identifier>crs</ows:Identifier>' +
+            '<wps:Data>' +
+              '<wps:LiteralData>' + crsName + '</wps:LiteralData>' +
+            '</wps:Data>' +
+          '</wps:Input>' +
+        '</wps:DataInputs>' +
+        '<wps:ResponseForm>' +
+          '<wps:RawDataOutput mimeType="application/json">' +
+            '<ows:Identifier>result</ows:Identifier>' +
+          '</wps:RawDataOutput>' +
+        '</wps:ResponseForm>' +
       '</wps:Execute>';
   },
 
@@ -1095,7 +1095,7 @@ export default BaseVectorLayer.extend({
             if (Ember.isArray(nearObject) && nearObject.length === 1) {
               const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, nearObject[0]);
               const id = mapApi._getLayerFeatureId(layerModel, nearObject[0]).replace(leafletObject.options.typeName + '.', '');
-              let obj= {
+              let obj = {
                 featureIds: [id]
               };
               _this.getLayerFeatures(obj).then((object) => {

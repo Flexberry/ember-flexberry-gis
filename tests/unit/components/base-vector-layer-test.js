@@ -590,10 +590,10 @@ test('test getNearObject', function (assert) {
       createVectorLayer() {
         let feature1 =  L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
         feature1.id = '1';
-        feature1.feature = { properties: { primarykey: '1' }};
+        feature1.feature = { properties: { primarykey: '1' } };
         let feature2 = L.polygon([[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]);
         feature2.id = '2';
-        feature2.feature = { properties: { primarykey:'2' }};
+        feature2.feature = { properties: { primarykey: '2' } };
         let layer = L.featureGroup([feature1, feature2]);
         layer.options = options;
         return layer;
