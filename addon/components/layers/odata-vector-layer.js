@@ -1277,7 +1277,7 @@ export default BaseVectorLayer.extend({
         filter = Ember.isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
 
         return this._downloadFeaturesWithOrNotFilter(leafletObject, obj, filter);
-      } else if (showExisting) {
+      } else if (showExisting && Ember.isEmpty(Object.values(leafletObject._layers))) {
         return this._downloadFeaturesWithOrNotFilter(leafletObject, this.get('_adapterStoreModelProjectionGeom'));
       } else if (leafletObject.statusLoadLayer) {
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
