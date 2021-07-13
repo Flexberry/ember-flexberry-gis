@@ -1,10 +1,10 @@
 <div class="bookmark-block">
-  <div>
+  <div class="bookmark-header">
     {{flexberry-button
       tooltip=(t "components.spatial-bookmarks.add-bookmark")
       caption=(t "components.spatial-bookmarks.add-bookmark")
       iconClass="add icon"
-      class="icon item"
+      class="icon item create-bookmark"
       click=(action "showAddBlock")
     }}
   </div>
@@ -13,7 +13,7 @@
     <div class="bmrk-add-block">
       {{flexberry-textbox
         value=_addBookmarkName
-        class=(if errors._addBookmarkName 'error' '')
+        placeholder=""
       }}
       <div class="bmrk-add-block-buttons">
         {{flexberry-button
@@ -31,7 +31,6 @@
       </div>
     </div>
   {{/if}}
-  <hr />
   <div class="bookmarks">
     {{#each bookmarks as |bkmrk|}}
       <div class="bookmark-item">

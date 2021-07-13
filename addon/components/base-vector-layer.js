@@ -18,6 +18,11 @@ const { assert } = Ember;
 export const begIndex = 300;
 
 /**
+  This constant need to jsts in PrecionModel
+*/
+export const scale = 10000;
+
+/**
   BaseVectorLayer component for other flexberry-gis vector(geojson, kml, etc.) layers.
 
   @class BaseVectorLayerComponent
@@ -150,6 +155,7 @@ export default BaseLayer.extend({
 
       if (!layers) {
         resolve();
+        leafletObject.fire('loadCompleted');
         return;
       }
 
@@ -436,14 +442,13 @@ export default BaseLayer.extend({
           let primitive = new Terraformer.Primitive(geoLayer.geometry);
 
           if (primitiveSatisfiesBounds(primitive, bounds)) {
-            let feature;
             if (geoLayer.geometry.type === 'GeometryCollection') {
               geoLayer.geometry.geometries.forEach(feat => {
                 let geoObj = { type: 'Feature', geometry: feat };
-                features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoObj, leafletLayer, mapModel));
+                features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoObj, leafletLayer, mapModel, scale));
               });
             } else {
-              features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoLayer, leafletLayer, mapModel));
+              features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoLayer, leafletLayer, mapModel, scale));
             }
           }
         });
@@ -932,10 +937,6 @@ export default BaseLayer.extend({
 
       try {
         let centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
-        if (!objJsts.isValid()) {
-          console.log(layer.toGeoJSON().id);
-        }
-
         let geojsonWriter = new jsts.io.GeoJSONWriter();
         let centroid = geojsonWriter.write(centroidJsts);
         latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0]);
@@ -1395,6 +1396,18 @@ export default BaseLayer.extend({
       if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
         this._removeLabelsFromLeafletContainer();
       }
+    }
+  },
+
+  _getGeometry(layer) {
+    let geoJSONLayer = layer.toProjectedGeoJSON(this.get('crs'));
+    let type = layer.toGeoJSON().geometry.type;
+    let forceMulti = this.get('forceMulti') || false;
+
+    if (forceMulti && (type === 'Polygon' || type === 'LineString')) {
+      return [geoJSONLayer.geometry.coordinates];
+    } else {
+      return geoJSONLayer.geometry.coordinates;
     }
   }
 });

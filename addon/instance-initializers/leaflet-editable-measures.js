@@ -53,6 +53,12 @@ export function initialize(applicationInstance) {
     L.Measure.PolygonBase.prototype.popupText.commit = i18n.t('map-tools.measure.measure-area.commit').toString();
     L.Measure.PolygonBase.prototype.basePopupText.labelPrefix = i18n.t('map-tools.measure.measure-area.labelPrefix').toString();
     L.Measure.PolygonBase.prototype.basePopupText.labelPostfix = i18n.t('map-tools.measure.measure-area.labelPostfix').toString();
+    L.Measure.PolygonBase.prototype.basePopupText.perimeterLabelPrefix = i18n.t('map-tools.measure.measure-perimeter.labelPrefix').toString();
+    L.Measure.PolygonBase.prototype.basePopupText.perimeterLabelPostfix = i18n.t('map-tools.measure.measure-perimeter.labelPostfix').toString();
+    L.Measure.PolygonBase.prototype.basePopupText.distanceLabelPrefix = i18n.t('map-tools.measure.measure-distance.distanceLabelPrefix').toString();
+    L.Measure.PolygonBase.prototype.basePopupText.distanceLabelPostfix = i18n.t('map-tools.measure.measure-distance.distanceLabelPostfix').toString();
+    L.Measure.PolygonBase.prototype.basePopupText.incLabelPrefix = i18n.t('map-tools.measure.measure-distance.incLabelPrefix').toString();
+    L.Measure.PolygonBase.prototype.basePopupText.incLabelPostfix = i18n.t('map-tools.measure.measure-distance.incLabelPostfix').toString();
     L.Measure.PolygonBase.prototype.distanceMeasureUnit.kilometer = i18n.t('map-tools.measure.measure-units.kilometer').toString();
     L.Measure.PolygonBase.prototype.distanceMeasureUnit.meter = i18n.t('map-tools.measure.measure-units.meter').toString();
   };

@@ -36,7 +36,7 @@
 
 .treeview {
     .ui.loading.form {
-        margin-top: 100px;
+        margin-top: 0;
     }
 }
 

@@ -6,6 +6,8 @@ export default {
   'identifybuttontooltip': 'Идентификация',
   'favoritesbuttontooltip': 'Избранное',
   'createobjectbuttontooltip': 'Создание объекта',
+  'createoreditobjectbuttontooltip': 'Создание/редактирование объекта',
+  'comparebuttontooltip': 'Сравнение слоев',
   'xCaption': 'Долгота',
   'yCaption': 'Широта',
 
@@ -27,6 +29,12 @@ export default {
     },
     'createObject': {
       'caption': 'Создание объекта'
+    },
+    'createOrEditObject': {
+      'caption': 'Создание/редактирование объекта'
+    },
+    'compare': {
+      'caption': 'Сравнить слои'
     }
   }
 };

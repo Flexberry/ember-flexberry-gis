@@ -307,9 +307,9 @@
       var showLeftPanel = function () {
         var nameTool = document.getElementById('nameTools').value;
         if (nameTool != '')
-          frame.contentWindow.leafletMap.flexberryMap.tools.show(nameTool);
+          frame.contentWindow.mapApi.leafletMap.flexberryMap.tools.show(nameTool);
         else
-          frame.contentWindow.leafletMap.flexberryMap.tools.show();
+          frame.contentWindow.mapApi.leafletMap.flexberryMap.tools.show();
       };
       showLeftPanelButton.addEventListener('click', showLeftPanel);
 
@@ -317,21 +317,21 @@
       var hideLeftPanel = function () {
         var nameTool = document.getElementById('nameTools').value;
         if (nameTool != '')
-          frame.contentWindow.leafletMap.flexberryMap.tools.hide(nameTool);
+          frame.contentWindow.mapApi.leafletMap.flexberryMap.tools.hide(nameTool);
         else
-          frame.contentWindow.leafletMap.flexberryMap.tools.hide();
+          frame.contentWindow.mapApi.leafletMap.flexberryMap.tools.hide();
       };
       hideLeftPanelButton.addEventListener('click', hideLeftPanel);
 
       var showRightPanelButton = document.getElementById('showRightPanel');
       var showRightPanel = function () {
-        frame.contentWindow.leafletMap.flexberryMap.sidebar.show();
+        frame.contentWindow.mapApi.leafletMap.flexberryMap.sidebar.show();
       };
       showRightPanelButton.addEventListener('click', showRightPanel);
 
       var hideRightPanelButton = document.getElementById('hideRightPanel');
       var hideRightPanel = function () {
-        frame.contentWindow.leafletMap.flexberryMap.sidebar.hide();
+        frame.contentWindow.mapApi.leafletMap.flexberryMap.sidebar.hide();
       };
       hideRightPanelButton.addEventListener('click', hideRightPanel);
 

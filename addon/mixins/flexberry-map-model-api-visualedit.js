@@ -125,7 +125,6 @@ export default Ember.Mixin.create(SnapDraw, {
     @return nothing
   */
   cancelEdit(layer) {
-    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     let editTools = this._getEditTools();
     editTools.off('editable:drawing:end');
     editTools.off('editable:editing');
@@ -354,6 +353,7 @@ export default Ember.Mixin.create(SnapDraw, {
   _getModelLayerFeature(layerId, featureIds, load = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+
       let e = {
         featureIds: featureIds,
         layer: layerId,
@@ -378,13 +378,11 @@ export default Ember.Mixin.create(SnapDraw, {
           let featureLayer = [];
           if (load) {
             let layers = layerObject._layers;
-            if (!Ember.isNone(featureIds) && featureIds.length === 1) {
-              let obj = Object.values(layers).find(feature => {
+            if (!Ember.isNone(featureIds) && featureIds.length > 0) {
+              featureLayer = Object.values(layers).filter(feature => {
                 const layerFeatureId = this._getLayerFeatureId(e.results[0].layerModel, feature);
-                return layerFeatureId === featureIds[0];
+                return featureIds.some((f) => { return layerFeatureId === f; });
               });
-
-              featureLayer.push(obj);
             }
           } else {
             featureLayer = layerObject;

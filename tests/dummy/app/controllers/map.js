@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import EditMapController from 'ember-flexberry-gis/controllers/edit-map';
 import EditFormControllerOperationsIndicationMixin from 'ember-flexberry/mixins/edit-form-controller-operations-indication';
+import sideBySide from 'npm:leaflet-side-by-side';
 
 /**
   Map controller.
@@ -14,6 +15,14 @@ import EditFormControllerOperationsIndicationMixin from 'ember-flexberry/mixins/
   @uses EditFormControllerOperationsIndicationMixin
 */
 export default EditMapController.extend(EditFormControllerOperationsIndicationMixin, {
+  /**
+    Property contatining sideBySide component.
+    @property sideBySide
+    @type L.control.sideBySide
+    @default null
+  */
+  sideBySide: L.control.sideBySide(),
+
   /**
     Parent route.
 
@@ -69,13 +78,22 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   identifyToolBufferRadius: 0,
 
   /**
+    Placeholder or default text (will be displayed if there is no selected item).
+
+    @property placeholderSearch
+    @type String
+    @default null
+  */
+  placeholderSearch: null,
+
+  /**
     Identify tool name computed by the specified tool settings.
 
     @property identifyToolName
     @type String
     @readOnly
   */
-  identifyToolName: Ember.computed('identifyToolLayerMode', 'identifyToolToolMode', function() {
+  identifyToolName: Ember.computed('identifyToolLayerMode', 'identifyToolToolMode', function () {
     let identifyToolName = 'identify';
     let layerMode = this.get('identifyToolLayerMode');
     let toolMode = this.get('identifyToolToolMode');
@@ -139,6 +157,13 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   */
   switchScaleControlScales: [500, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 150000, 200000],
 
+  _leafletMapDidChange: Ember.observer('leafletMap', function () {
+    let leafletMap = this.get('leafletMap');
+    if (leafletMap) {
+      leafletMap.on('flexberry-map:toggleSidebar', this.onToggleSidebar, this);
+    }
+  }),
+
   /**
    Flat indicates that map should fire create object on first load
   */
@@ -172,22 +197,46 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     captionPath: 'forms.map.favoritesbuttontooltip',
     iconClass: 'favorites icon',
     class: 'favorite'
+  }, {
+    selector: 'createObject',
+    captionPath: 'forms.map.createobjectbuttontooltip',
+    iconClass: 'createObject icon'
+  }, {
+    selector: 'createOrEditObject',
+    captionPath: 'forms.map.createoreditobjectbuttontooltip',
+    iconClass: 'createOrEditObject icon',
+    class: 'createOrEditObject'
+  }, {
+    selector: 'compare',
+    captionPath: 'forms.map.comparebuttontooltip',
+    iconClass: 'compare icon',
+    class: 'compare'
+  }, {
+    selector: 'compareObjects',
+    caption: 'Сравнение объектов',
+    iconClass: 'compareObjects icon',
+    class: 'compareObjects'
+  }, {
+    selector: 'intersectionObjects',
+    caption: 'Сравнение объектов',
+    iconClass: 'intersectionObjects icon',
+    class: 'intersectionObjects'
   }]),
 
-  _sidebarFiltered: Ember.computed('sidebar', 'createObject', function () {
+  _showFavorites: false,
+
+  _sidebarFiltered: Ember.computed('sidebar', 'createObject', 'createOrEditObject', 'compareObjects', 'showIntersectionPanel', function () {
     let result = Ember.A();
     let sidebar = this.get('sidebar');
     sidebar.forEach((item) => {
-      result.push(item);
+      if ((item.selector !== 'createObject' || this.get('createObject')) &&
+        (item.selector !== 'createOrEditObject' || this.get('createOrEditObject')) &&
+        (item.selector !== 'intersectionObjects' || this.get('showIntersectionPanel')) &&
+        (item.selector !== 'compareObjects' || this.get('compareObjects')))/* &&
+        (item.selector !== 'compare' || this.get('compare'))) */{
+        result.push(item);
+      }
     });
-
-    if (this.get('createObject')) {
-      result.push({
-        selector: 'createObject',
-        captionPath: 'forms.map.createobjectbuttontooltip',
-        iconClass: 'createObject icon'
-      });
-    }
 
     return result;
   }),
@@ -299,7 +348,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       editedLayersSelectedTabIndex: 0,
       editedLayersPanelFolded: true,
       editedLayersPanelSettings: {
-        withToolbar: false,
+        withToolbar: true,
         sidebarOpened: false
       }
     });
@@ -322,12 +371,35 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     });
   },
 
+  onToggleSidebar() {
+    let tab;
+    if (this.get('sidebarOpened')) {
+      Ember.$('.sidebar-wrapper .main-map-tab-bar > .item.tab.active').removeClass('active');
+    } else {
+      // поищем поcледнюю активную. у самих data-tab класс не сбрасывается
+      let activeTab = Ember.$('.sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
+      if (activeTab.length > 0) {
+        let dataTab = activeTab.attr('data-tab');
+        Ember.$('.sidebar-wrapper .main-map-tab-bar > .item.tab[data-tab=' + dataTab + ']').addClass('active');
+        tab = dataTab;
+      } else {
+        this.set('sidebar.0.active', true);
+        tab = 'treeview';
+      }
+    }
+
+    this.send('toggleSidebar', {
+      changed: false,
+      tabName: tab
+    });
+  },
+
   /**
     Observes changes in sidebar state and performs some changes in related 'flexberry-layers-attributes-panel'.
 
     @method sideBarStateDidChange
   */
-  sideBarStateDidChange: Ember.observer('sidebarOpened', function() {
+  sideBarStateDidChange: Ember.observer('sidebarOpened', function () {
     if (this.get('sidebarOpened')) {
       this.set('editedLayersPanelSettings.sidebarOpened', true);
     } else {
@@ -350,6 +422,40 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   },
 
   actions: {
+    OnCompareTwoGeometries() {
+      this.set('compareObjects', true);
+      Ember.run.later(() => {
+        let tab;
+        let activeTab = Ember.$('.sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
+        if (activeTab.length > 0) {
+          tab = activeTab.attr('data-tab');
+        }
+
+        Ember.$('.sidebar-wrapper .main-map-tab-bar > .item.tab.active').removeClass('active');
+
+        this.set('sidebar.8.active', true);
+
+        this.send('toggleSidebar', {
+          changed: this.get('sidebarOpened'),
+          tabName: 'compareObjects',
+          prevTab: tab
+        });
+      });
+    },
+
+    onCompareTwoGeometriesEnd() {
+      this.set('compareObjects', false);
+
+      this.set('sidebar.8.class', 'compareObjects');
+      this.set('sidebar.8.active', false);
+
+      this.set('sidebar.3.active', true);
+      this.send('toggleSidebar', {
+        changed: true,
+        tabName: 'bookmarks'
+      });
+    },
+
     /**
       Handles create object.
 
@@ -361,29 +467,107 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
       if (this.get('createObject')) {
         Ember.run.later(() => {
-          if (this.get('_sidebarFiltered.4.active') !== true) {
-            this.set('_sidebarFiltered.4.active', true);
+          if (this.get('sidebar.5.active') !== true) {
+            this.set('sidebar.5.active', true);
           }
 
+          if (!this.get('sidebarOpened')) {
+            this.send('toggleSidebar', {
+              changed: false,
+              tabName: 'createObject'
+            });
+          }
+        });
+      }
+    },
+
+    /**
+      Handles create/edit feature.
+
+      @method  actions.onCreateOrEditFeature
+    */
+    onCreateOrEditFeature(e) {
+      this.set('createOrEditedFeature', e);
+      this.set('createOrEditObject', true);
+
+      if (this.get('createOrEditObject')) {
+        Ember.run.later(() => {
+          if (this.get('sidebar.6.class').indexOf('active') === -1 && this.get('sidebarOpened')) {
+            Ember.$('.sidebar-wrapper .item.active').removeClass('active');
+          }
+
+          this.set('sidebar.6.active', true);
+
+          if (!this.get('sidebarOpened')) {
+            this.send('toggleSidebar', {
+              changed: false,
+              tabName: 'createOrEditObject'
+            });
+          }
+        });
+      }
+    },
+
+    onCreateOrEditFeatureEnd() {
+      this.set('createOrEditedFeature', null);
+      this.set('createOrEditObject', false);
+
+      this.set('sidebar.6.class', 'createOrEditObject');
+      this.set('sidebar.6.active', false);
+
+      this.set('sidebar.0.active', true);
+    },
+
+    attrSearch(queryString) {
+      if (this.get('sidebar.1.active') !== true) {
+        this.set('sidebar.1.active', true);
+      }
+
+      this.set('attrVisible', true);
+      this.set('queryString', queryString);
+
+      if (!this.get('sidebarOpened')) {
+        this.send('toggleSidebar', {
+          changed: false,
+          tabName: 'search'
+        });
+      }
+    },
+
+    showCompareSideBar() {
+      if (sideBySide) {
+        if (!this.get('compareLayersEnabled')) {
+          this.set('sidebar.7.active', true);
+        } else {
+          this.set('sidebar.0.active', true);
+        }
+
+        if (!this.get('sidebarOpened')) {
           this.send('toggleSidebar', {
             changed: false,
-            tabName: 'createObject'
+            tabName: 'compare'
           });
-        });
+        }
+
+        setTimeout(() => {
+          this.toggleProperty('compareLayersEnabled');
+        }, 500);
       }
     },
 
     onQueryFinished(e) {
       if (this.get('createObject')) {
         Ember.run.later(() => {
-          if (this.get('sidebarItems.4.active') !== true) {
-            this.set('sidebarItems.4.active', true);
+          if (this.get('sidebar.5.active') !== true) {
+            this.set('sidebar.5.active', true);
           }
 
-          this.send('toggleSidebar', {
-            changed: false,
-            tabName: 'createObject'
-          });
+          if (!this.get('sidebarOpened')) {
+            this.send('toggleSidebar', {
+              changed: false,
+              tabName: 'createObject'
+            });
+          }
         });
       } else {
         this._identificationFinished(e);
@@ -399,11 +583,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this._super(...arguments);
 
       this.initializeEditPanel();
-
-      let leafletMap = this.get('leafletMap');
-      if (!Ember.isNone(leafletMap)) {
-        leafletMap.on('containerResizeStart', this.onLeafletMapContainerResizeStart, this);
-      }
     },
 
     /**
@@ -412,12 +591,13 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       @method  actions.onMapLeafletDestroy
     */
     onMapLeafletDestroy() {
-      let leafletMap = this.get('leafletMap');
-      if (!Ember.isNone(leafletMap)) {
-        leafletMap.off('containerResizeStart', this.onLeafletMapContainerResizeStart, this);
-      }
-
       this.destroyEditPanel();
+      this.set('sidebarOpened', false);
+      this.set('showTree', false);
+      let leafletMap = this.get('leafletMap');
+      if (leafletMap) {
+        leafletMap.off('flexberry-map:toggleSidebar', this.onToggleSidebar, this);
+      }
 
       this._super(...arguments);
     },
@@ -437,7 +617,16 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
           Ember.$('.sidebar-wrapper').addClass('visible');
         } else {
           Ember.$('.sidebar-wrapper').removeClass('visible');
+          this.set('attrVisible', false);
         }
+      }
+
+      if (e.tabName !== 'search') {
+        this.set('attrVisible', false);
+      }
+
+      if (e.tabName !== 'compare' && this.get('compareLayersEnabled')) {
+        this.set('compareLayersEnabled', false);
       }
 
       if (e.tabName === 'identify') {
@@ -467,6 +656,35 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
           }, 500);
         }
       }
+
+      if (e.prevTab === 'createOrEditObject') {
+        if (e.changed) {
+          this.set('createOrEditObject', false);
+          this.set('createOrEditedFeature', null);
+        }
+
+        this.set('sidebar.6.class', 'createOrEditObject');
+        this.set('sidebar.6.active', false);
+      }
+
+      if (e.prevTab === 'intersectionObjects') {
+        if (e.changed) {
+          this.set('showIntersectionPanel', false);
+          this.set('feature', null);
+        }
+
+        this.set('sidebar.9.class', 'intersectionObjects');
+        this.set('sidebar.9.active', false);
+      }
+
+      if (e.prevTab === 'compareObjects') {
+        if (e.changed) {
+          this.set('compareObjects', null);
+        }
+
+        this.set('sidebar.8.class', 'compareObjects');
+        this.set('sidebar.8.active', false);
+      }
     },
 
     /**
@@ -474,24 +692,22 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
       @method actions.querySearch
     */
-    querySearch(queryString) {
+    querySearch(e) {
       let leafletMap = this.get('leafletMap');
-      let e = {
-        context: true,
-        latlng: leafletMap.getCenter(),
-        searchOptions: {
-          queryString,
-          maxResultsCount: 10
-        },
-        filter(layerModel) {
-          return layerModel.get('canBeContextSearched') && layerModel.get('visibility');
-        },
-        results: Ember.A()
-      };
 
       leafletMap.fire('flexberry-map:search', e);
 
       this.set('searchResults', e.results);
+
+      if (this.get('sidebar.1.active') !== true) {
+        this.set('sidebar.1.active', true);
+        if (!this.get('sidebarOpened')) {
+          this.send('toggleSidebar', {
+            changed: false,
+            tabName: 'search'
+          });
+        }
+      }
     },
 
     /**
@@ -501,6 +717,54 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     */
     clearSearch() {
       this.set('searchResults', null);
+    },
+
+    /**
+      Action shows intersection panel.
+
+      @method actions.onIntersectionPanel
+    */
+    onIntersectionPanel(feature) {
+      this.set('feature', feature);
+      this.set('showIntersectionPanel', true);
+      Ember.run.later(() => {
+        let tab;
+        let activeTab = Ember.$('.rgis-sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
+        if (activeTab.length > 0) {
+          tab = activeTab.attr('data-tab');
+        }
+
+        Ember.$('.rgis-sidebar-wrapper .main-map-tab-bar > .item.tab.active').removeClass('active');
+
+        this.set('sidebar.9.active', true);
+
+        this.send('toggleSidebar', {
+          changed: this.get('sidebarOpened'),
+          tabName: 'intersectionObjects',
+          prevTab: tab
+        });
+      });
+    },
+
+    /**
+      Close intersection panel.
+
+      @method actions.findIntersection
+    */
+    closeIntersectionPanel() {
+      this.set('intersection', false);
+      this.set('showIntersectionPanel', false);
+
+      this.set('feature', null);
+
+      this.set('sidebar.9.class', 'createOrEditObject');
+      this.set('sidebar.9.active', false);
+
+      this.set('sidebar.0.active', true);
+      this.send('toggleSidebar', {
+        changed: true,
+        tabName: 'treeview'
+      });
     },
 
     /**

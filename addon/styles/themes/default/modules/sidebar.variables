@@ -55,6 +55,10 @@
 @bmrkItemBackgroundHover: #F3F3F3;
 
 
+/* Create/Edit Block */
+@visibleCreateEditBlockHeight: ~"calc(100% - 100px)" !important;
+@visibleCreateEditBlockWidth: ~"calc(100% - 50px)" !important;
+
 /*****************
       Layers
 ******************/

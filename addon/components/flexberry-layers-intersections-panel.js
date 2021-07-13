@@ -4,6 +4,8 @@ import * as buffer from 'npm:@turf/buffer';
 import VectorLayer from '../layers/-private/vector';
 import WmsWfsLayer from 'ember-flexberry-gis/layers/wms-wfs';
 import * as jsts from 'npm:jsts';
+import { coordinatesToArray } from '../utils/coordinates-to';
+
 /**
   The component for searching for intersections with selected feature.
 
@@ -81,7 +83,7 @@ export default Ember.Component.extend({
     @type Number
     @default 0
   */
-  square: 0,
+  square: null,
 
   /**
     Buffer radius in selected units.
@@ -90,7 +92,7 @@ export default Ember.Component.extend({
     @type Number
     @default 0
   */
-  bufferR: 0,
+  bufferR: null,
 
   /**
     List of selected vector layers.
@@ -199,7 +201,7 @@ export default Ember.Component.extend({
       let polygonLayer = null;
 
       let bufferedMainPolygonLayer;
-      let bufferR = this.get('bufferR');
+      let bufferR = Ember.isNone(this.get('bufferR')) ? 0 : this.get('bufferR');
 
       let latlng;
       let workingPolygon;
@@ -428,8 +430,8 @@ export default Ember.Component.extend({
     group.clearLayers();
     this.removeLayers();
     this.set('selectedLayers', []);
-    this.set('square', 0);
-    this.set('bufferR', 0);
+    this.set('square', null);
+    this.set('bufferR', null);
     this.set('results', []);
     this.set('noIntersectionResults', true);
     this.set('folded', false);
@@ -476,8 +478,7 @@ export default Ember.Component.extend({
       $listLayer.addClass('hidden');
     }
 
-    let square = this.get('square');
-    let mapModel = this.get('mapApi').getFromApi('mapModel');
+    let square = Ember.isNone(this.get('square')) ? 0 : this.get('square');
     e.results.forEach((layer) => {
       layer.features.then((features) => {
         features.forEach((item) => {
@@ -509,25 +510,20 @@ export default Ember.Component.extend({
   },
 
   computeCoordinates(feature) {
-    let coordinatesArray = [];
-    if (feature.type === 'MultiPolygon' || feature.type === 'Polygon') {
-      feature.coordinates.forEach(arr => {
-        arr.forEach(pair => {
-          if (feature.type === 'MultiPolygon') {
-            pair.forEach(cords => {
-              coordinatesArray.push(cords);
-            });
-          } else {
-            coordinatesArray.push(pair);
-          }
+    if (feature) {
+      let coordinatesArray = [];
+      if (feature.type === 'GeometryCollection') {
+        feature.geometries.forEach((geometry) => {
+          coordinatesArray = coordinatesArray.concat(coordinatesToArray(geometry.coordinates));
+          coordinatesArray = coordinatesArray.concat(null);
         });
-      });
-    } else if (feature.type === 'Point') {
-      coordinatesArray.push(feature.coordinates);
-    } else {
-      coordinatesArray = feature.coordinates;
+      } else {
+        coordinatesArray = coordinatesToArray(feature.coordinates);
+      }
+
+      return coordinatesArray;
     }
 
-    return coordinatesArray;
+    return null;
   }
 });

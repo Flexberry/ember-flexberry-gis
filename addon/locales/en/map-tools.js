@@ -25,7 +25,11 @@ export default {
       'commit': 'Click on the current vertex to fix area',
       'drag': 'Release the mouse to fix the area',
       'labelPrefix': '<b> Area:&nbsp;',
-      'labelPostfix': '</ b>',
+      'labelPostfix': '</b><br/>'
+    },
+    'measure-perimeter': {
+      'labelPrefix': '<b>Perimeter:&nbsp;',
+      'labelPostfix': '</b>',
     },
     'measure-distance': {
       'move': 'Click on the map to add the initial vertex.',

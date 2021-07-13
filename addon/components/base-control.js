@@ -73,6 +73,14 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
   },
 
   /**
+    After creates control instance, should be overridden in child classes.
+
+    @method afterCreateControl
+  */
+  afterCreateControl() {
+  },
+
+  /**
     Adds created control to map if it's present or change.
 
     @method initControl
@@ -84,6 +92,7 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
       this.set('control', control);
 
       leafletMap.addControl(control);
+      this.afterCreateControl();
     }
   }),
 

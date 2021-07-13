@@ -1,77 +1,40 @@
-{{flexberry-button
-  tooltip=menuButtonTooltip
-  click=(action "onButtonClick" tabModel)
-  iconClass="flexberry-map-command-icon location arrow icon"
-}}
-
-{{!--
-  Semantic UI modal dialogs takes long time to be initialized
-  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
---}}
-{{#if _dialogHasBeenRequested}}
-  {{#flexberry-dialog class=flexberryClassNames.dialog
-    caption=menuButtonTooltip
-    approveButtonCaption=dialogApproveButtonCaption
-    denyButtonCaption=dialogDenyButtonCaption
-    visible=_dialogVisible
-    approve=(action "onApprove" tabModel)
-    deny=(action "onDeny")
-  }}
-  <form class="ui form {{flexberryClassNames.form}}" role="form">
-    <div class="row">
-      <div class="sixteen wide column">
-        <div class="ui grid">
-          <div class="eight wide column">
-            <div class="field">
-              {{flexberry-edit-crs
-                crsCaption=crsFieldLabel
-                coordinateReferenceSystem=settings.layerCRS
-              }}
-            </div>
-          </div>
-          <div class="eight wide column">
-            <div class="field {{if _objectTypeDisabled "disabled" ""}} {{if _geometryField "error" ""}}">
-              <label>{{geometryFieldLabel}}</label>
-              {{flexberry-dropdown
-                items=_availableType
-                value=_curType
-              }}
-            </div>
-          </div>
-        </div>
-      </div>
+<div class="form ui">
+  {{#if (or coordinatesInLineError coordinatesParseError coordinatesTypeGeometryError)}}
+    <div class="ember-view ui error message">
+      {{#if coordinatesInLineError}}
+        <p>{{coordinatesInLineErrorLabel}}</p>
+      {{/if}}
+      {{#if coordinatesParseError}}
+        <p>{{coordinatesParseErrorLabel}}</p>
+      {{/if}}
+      {{#if coordinatesTypeGeometryError}}
+        <p>{{coordinatesTypeGeometryErrorLabel}}</p>
+      {{/if}}
     </div>
-    <div class="row">
-      <div class="sixteen wide column">
-        <div class="ui grid">
-          <div class="sixteen wide column">
-          <div class="manual-textarea field {{if _coordinatesWithError "error" ""}}">
-            <label>{{coordinatesFieldLabel}}</label>
-            {{flexberry-textarea
-              value=_coordinates
-              placeholder=coordinatesFieldPlaceholder
-            }}
-          </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  {{/if}}
 
-     {{#if (or coordinatesInLineError coordinatesParseError coordinatesTypeGeometryError)}}
-      <div class="ember-view ui message red">
-        <ul class="list">
-            {{#if coordinatesInLineError}}
-              <li>{{coordinatesInLineErrorLabel}}</li>
-            {{/if}}
-            {{#if coordinatesParseError}}
-              <li>{{coordinatesParseErrorLabel}}</li>
-            {{/if}}
-            {{#if coordinatesTypeGeometryError}}
-              <li>{{coordinatesTypeGeometryErrorLabel}}</li>
-            {{/if}}
-        </ul>
-      </div>
-    {{/if}}
-  </form>
-{{/flexberry-dialog}}
-{{/if}}
+  <div class="row">
+    <div class="field">
+      {{flexberry-edit-crs
+          crsCaption=crsFieldLabel
+          coordinateReferenceSystem=_crs
+        }}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="manual-textarea field {{if _coordinatesWithError "error" ""}}">
+      <label>{{coordinatesFieldLabel}}</label>
+      {{flexberry-textarea
+        value=_coordinates
+        placeholder=coordinatesFieldPlaceholder
+      }}
+    </div>
+  </div>
+
+  <div class="row flex-buttons">
+    <button type="submit" class="ui button positive" {{action "apply"}}>
+      {{t "components.geometry-add-modes.manual.apply"}}
+    </button>
+  </div>
+</div>

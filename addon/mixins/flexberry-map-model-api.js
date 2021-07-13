@@ -97,7 +97,10 @@ export default Ember.Mixin.create(SnapDraw, {
                 map.removeLayer(layerShape);
               }
             });
-            leafletObject.clearLayers();
+            if (!leafletObject.options.showExisting) {
+              leafletObject.clearLayers();
+            }
+
           }
 
           leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve) => {
@@ -1226,7 +1229,6 @@ export default Ember.Mixin.create(SnapDraw, {
 
         break;
       case 'MultiPolygon':
-        let k = 0;
         for (let i = 0; i < coords.length; i++) {
           for (let j = 0; j < coords[i].length; j++) {
             result.push(coordToRhumbs('Polygon', coords[i][j]));
@@ -1401,20 +1403,34 @@ export default Ember.Mixin.create(SnapDraw, {
           if (result.geometry.type !== 'Point') {
             result.geometry.coordinates.forEach(arr => {
               var arr1 = [];
-              arr.forEach(pair => {
-                if (result.geometry.type === 'MultiPolygon') {
-                  let arr2 = [];
-                  pair.forEach(cords => {
+              if (result.geometry.type.indexOf('Multi') !== -1) {
+                arr.forEach(pair => {
+                  if (result.geometry.type === 'MultiPolygon') {
+                    let arr2 = [];
+                    pair.forEach(cords => {
+                      let transdormedCords = proj4(firstDefinition, secondDefinition, cords);
+                      arr2.push(transdormedCords);
+                    });
+                    arr1.push(arr2);
+                  } else {
+                    let cords = proj4(firstDefinition, secondDefinition, pair);
+                    arr1.push(cords);
+                  }
+
+                });
+                coordinatesArray.push(arr1);
+              } else {
+                if (result.geometry.type === 'Polygon') {
+                  arr.forEach(cords => {
                     let transdormedCords = proj4(firstDefinition, secondDefinition, cords);
-                    arr2.push(transdormedCords);
+                    arr1.push(transdormedCords);
                   });
-                  arr1.push(arr2);
+                  coordinatesArray.push(arr1);
                 } else {
-                  let cords = proj4(firstDefinition, secondDefinition, pair);
-                  arr1.push(cords);
+                  let cords = proj4(firstDefinition, secondDefinition, arr);
+                  coordinatesArray.push(cords);
                 }
-              });
-              coordinatesArray.push(arr1);
+              }
             });
           } else {
             coordinatesArray = proj4(firstDefinition, secondDefinition, result.geometry.coordinates);
@@ -1654,7 +1670,6 @@ export default Ember.Mixin.create(SnapDraw, {
   */
   differenceLayers(layerAId, layerBId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let result = Ember.A();
       let crsA = this._getModelLeafletObject(layerAId)[1].options.crs.code;
       let crsB = this._getModelLeafletObject(layerBId)[1].options.crs.code;
       let arrayPointsAndFeaturePromises = [this._addToArrayPointsAndFeature(layerAId), this._addToArrayPointsAndFeature(layerBId)];
@@ -1771,7 +1786,7 @@ export default Ember.Mixin.create(SnapDraw, {
               objectDifference: featureLayer
             };
 
-            let filterByCondition = layerFeatures.every((feat) => {
+            layerFeatures.every((feat) => {
               let jstsFeat = jstsGeoJSONReader.read(feat.feature);
               if (jstsFeat.geometry.isValid()) {
                 switch (condition) {

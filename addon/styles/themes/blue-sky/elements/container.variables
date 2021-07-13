@@ -1,0 +1,6 @@
+@leafletBarButtonBoxShadow: none;
+@leafletBarButtonColor: @buttonMenuColor;
+
+@leafletBarButtonHoveredBoxShadow: none;
+
+@layerResultListActiveBackground : @white;

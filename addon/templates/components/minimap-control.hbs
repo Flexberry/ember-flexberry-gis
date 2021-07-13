@@ -1,1 +1,25 @@
-{{yield layerGroup}}
+{{#drag-box
+    additionalClassName='minimap-drag-panel'
+    container='.mappanel'
+    top=panelTop
+    left=panelLeft
+    bottom=panelBottom
+    right=panelRight
+    visible=showPanel
+  }}
+  {{yield layerGroup}}
+
+  <a title="{{t "components.minimap.close.title"}}" class="flexberry-minimap-close" {{action "close"}}>
+    <i class="close icon"></i>
+  </a>
+{{/drag-box}}
+
+{{map-commands/base
+  class="flexberry-map-command flexberry-minimap"
+  name="base"
+  caption=(t "components.minimap.caption")
+  tooltip=(t "components.minimap.title")
+  iconClass="minimap icon"
+  leafletMap=leafletMap
+  click=(action "open")
+}}

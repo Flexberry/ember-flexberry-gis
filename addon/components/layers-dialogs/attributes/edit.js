@@ -115,6 +115,15 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
   fieldTypes: null,
 
   /**
+    Placeholder for dataPicker.
+
+    @property placeholderDataPicker
+    @type String
+    @default null
+  */
+  placeholderDataPicker: null,
+
+  /**
     Hash containing type parsers related to field names.
 
     @property fieldParsers

@@ -1,0 +1,191 @@
+<div class="create-edit-block">
+
+  <div class="create-edit-block-title">
+    <h3>
+      {{_model.name}}
+    </h3>
+  </div>
+
+   {{#if error}}
+    {{ui-message
+      type="error"
+      message=error
+    }}
+  {{/if}}
+
+  {{#if (or (eq mode "Create") (eq mode "Edit") (eq mode "Import"))}}
+
+    <div class="editfeature-tab-nav-panel">
+      <div class="ui top attached tabular menu editfeature-tab-nav-panel-tabs">
+
+        <a class="editfeature tab item manual {{if (eq activeGeoTool "manual") "curtab active"}}" data-tab="manual"
+          {{action "setGeometryTool" "manual"}}>
+          <i class="keyboard icon"></i>
+        </a>
+
+        {{#if drawMode }}
+        <a class="editfeature tab item {{if (eq activeGeoTool "draw") "curtab active"}}" data-tab="draw"
+          {{action "setGeometryTool" "draw"}}>
+          <i class="draw-area icon"></i>
+        </a>
+        {{/if}}
+
+        {{#if (eq mode "Create")}}
+          {{#if (and rhumbMode (not (eq _model.typeGeometry "marker"))) }}
+          <a class="editfeature tab item {{if (eq activeGeoTool "rhumb") "curtab active"}}" data-tab="rhumb"
+            {{action "setGeometryTool" "rhumb"}}>
+            <i class="compass icon"></i>
+          </a>
+          {{/if}}
+          {{#if (and geoproviderMode (eq _model.typeGeometry "marker")) }}
+          <a class="editfeature tab item {{if (eq activeGeoTool "geoprovider") "curtab active"}}" data-tab="geoprovider"
+            {{action "setGeometryTool" "geoprovider"}}>
+            <i class="world icon"></i>
+          </a>
+          {{/if}}
+        {{/if}}
+
+      </div>
+    </div>
+
+    <div data-tab="manual"
+      class="ui bottom attached tab segment editfeature-tab-data-panel manual {{if (eq activeGeoTool "manual") "active" ""}}">
+      {{component "geometry-add-modes/manual"
+          leafletMap=leafletMap
+          layer=(get layers (concat '' curIndex))
+          settings=(hash
+            layerCRS=_model.layerCRS
+            typeGeometry=_model.typeGeometry
+          )
+          active=(eq activeGeoTool "manual")
+          updateLayer=(action "updateLayer")
+      }}
+    </div>
+
+    {{#if drawMode }}
+    <div data-tab="draw"
+      class="ui bottom attached tab segment editfeature-tab-data-panel {{if (eq activeGeoTool "draw") "active" ""}}">
+      {{component "geometry-add-modes/draw"
+            leafletMap=leafletMap
+            layer=(get layers (concat '' curIndex))
+            _editTools=_editTools
+            settings=(hash
+              layerCRS=_model.layerCRS
+              drawTools=_model.availableDrawTools
+              typeGeometry=_model.typeGeometry
+            )
+            active=(eq activeGeoTool "draw")
+            drawStart=(action "onAddDrawStart" _model.typeGeometry)
+            updateLayer=(action "updateLayer")
+            block=(action "blockForm")
+        }}
+    </div>
+    {{/if}}
+
+    {{#if (eq mode "Create")}}
+      {{#if rhumbMode }}
+      <div data-tab="rhumb"
+        class="ui bottom attached tab segment editfeature-tab-data-panel {{if (eq activeGeoTool "rhumb") "active" ""}}">
+        {{component "geometry-add-modes/rhumb"
+            leafletMap=leafletMap
+            layer=(get layers (concat '' curIndex))
+            settings=(hash
+              layerCRS=_model.layerCRS
+              typeGeometry=_model.typeGeometry
+            )
+            active=(eq activeGeoTool "rhumb")
+            updateLayer=(action "updateLayer")
+        }}
+      </div>
+      {{/if}}
+
+      {{#if geoproviderMode }}
+      <div data-tab="geoprovider"
+        class="ui bottom attached tab segment editfeature-tab-data-panel {{if (eq activeGeoTool "geoprovider") "active" ""}}">
+        {{component "geometry-add-modes/geoprovider"
+            leafletMap=leafletMap
+            registerAs=geoproviderComponent
+        }}
+      </div>
+      {{/if}}
+    {{/if}}
+  {{/if}}
+
+  {{#if (gt dataItemCount 1)}}
+  <div class="create-edit-block-indexes">
+    <span class="create-edit-block-prev {{if (gt curIndex 1) "active" ""}}" {{action "prev" on="click"}}>
+      <i class="caret left icon"></i>
+    </span>
+    <span class="create-edit-block-index">
+      {{curIndex}} из {{dataItemCount}}
+    </span>
+    <span class="create-edit-block-next {{if (lt curIndex dataItemCount) "active" ""}}" {{action "next" on="click"}}>
+      <i class="caret right icon"></i>
+    </span>
+  </div>
+  {{/if}}
+
+  {{#each-in data as |index dataValue|}}
+  <div class="create-edit-block-data {{if (eq (concat "" curIndex) index) "visible" "hidden"}}">
+    <a class="icon item" {{action "toggleAttributes" on="click"}}>
+      <i class="caret {{if _attributesExpanded 'down' 'right'}} icon"></i>
+      {{t "components.flexberry-edit-layer-feature.attributes"}}
+    </a>
+
+    <div class="create-edit-block-attributes {{if _attributesExpanded "visible" "hidden"}}">
+      <form class="ui form" role="form">
+        {{#if choiceItems}}
+          <div class="field">
+            {{flexberry-dropdown
+              class="create-edit-block-choices"
+              items=choiceItems
+              value=choiceValue
+            }}
+          </div>
+        {{/if}}
+        {{#each-in _model.fieldNames as |fieldName fieldValue|}}
+        <div class="field {{if (get (get parsingErrors (concat '' curIndex)) fieldName) "error" ""}}">
+          <label>{{fieldValue}}</label>
+          {{#if (eq (get _model.fieldTypes fieldName) "date")}}
+            {{flexberry-simpledatetime
+              type="date"
+              value=(mut (get dataValue fieldName))
+              placeholder=placeholderDataPicker
+            }}
+          {{else if (eq (get _model.fieldTypes fieldName) "boolean")}}
+            {{flexberry-checkbox
+              value=(mut (get dataValue fieldName))
+            }}
+          {{else}}
+            {{input
+              type="text"
+              value=(mut (get dataValue fieldName))
+            }}
+          {{/if}}
+          {{#if (get (get parsingErrors (concat '' curIndex)) fieldName)}}
+          <div class="validation">
+            {{t "components.flexberry-edit-layer-feature.validation.field-error"}}
+          </div>
+          {{/if}}
+        </div>
+        {{/each-in}}
+      </form>
+    </div>
+  </div>
+
+  {{/each-in}}
+</div>
+
+<div class="create-edit-block-buttons flex-buttons">
+  <button type="submit" class="ui button positive {{if (or block loading) "disabled"}}" {{action "save"}}>
+    {{t "components.flexberry-edit-layer-feature.buttons.save.caption"}}
+  </button>
+
+  <button type="submit" class="ui button negative {{if (or block loading) "disabled"}}" {{action "undo"}}>
+    {{t "components.flexberry-edit-layer-feature.buttons.cancel.caption"}}
+  </button>
+</div>
+
+<div class={{concat "ui inverted dimmer" (if loading " active" " disabled") }}>
+  <div class="ui loader"></div>
+</div>

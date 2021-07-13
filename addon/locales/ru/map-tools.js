@@ -25,6 +25,10 @@ export default {
       'commit': 'Кликните на текущую вершину, чтобы зафиксировать площадь',
       'drag': 'Отпустите курсор, чтобы  зафиксировать площадь',
       'labelPrefix': '<b>Площадь:&nbsp;',
+      'labelPostfix': '</b><br />',
+    },
+    'measure-perimeter': {
+      'labelPrefix': '<b>Периметр:&nbsp;',
       'labelPostfix': '</b>',
     },
     'measure-distance': {

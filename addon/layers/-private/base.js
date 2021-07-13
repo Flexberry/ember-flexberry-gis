@@ -72,6 +72,13 @@ const createcommonLabelSettings = function () {
   };
 };
 
+const createCommonBackgroundLayerSettings = function () {
+  return {
+    canBeBackground: false,
+    picture: null
+  };
+};
+
 /**
   Class describing base layer metadata.
 
@@ -126,6 +133,8 @@ export default Ember.Object.extend({
     }
 
     Ember.set(settings, 'labelSettings', createcommonLabelSettings());
+
+    Ember.set(settings, 'backgroundSettings', createCommonBackgroundLayerSettings());
 
     return settings;
   },

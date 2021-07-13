@@ -1,7 +1,194 @@
 
 .ui.menu.flexberry-maptoolbar .active.item {
-    box-shadow: @darkBoxShadow;
+  box-shadow: @darkBoxShadow;
 }
 .ui.menu.flexberry-maptoolbar > .item:first-child {
   border-radius: 5px;
 }
+
+
+// ====== RGIS map-themes========
+.ui.menu.flexberry-maptoolbar {
+  min-height: 0;
+  height: 0;
+  margin: 0;
+  right: 30px;
+  width: 40px;
+  padding: 30px 0px 0px 0px;
+  background-color: transparent;
+  overflow: visible;
+  z-index: 999;
+  position: absolute;
+
+  .item {
+    border: @buttonMenuBorder;
+    position: relative;
+    border-radius: @defaultBorderRadius;
+    background: @whitecolor;
+    padding: 4px 10px;
+    font-weight: normal;
+    height: 40px;
+    width: 40px;
+    box-shadow: @buttonMenuBoxShadow;
+    &.active {
+      background: @buttonMenuActiveBackground;
+      border-color: @buttonMenuActiveBackground;
+      box-shadow: @buttonMenuHoveredBoxShadow;
+      > i.icon:before {
+        color:@white;
+      }
+    }
+
+    &.flexberry-more-map-command.active,
+    &.flexberry-more-map-command.active:hover {
+      background: @whitecolor !important;
+      border: @buttonMenuBorder;
+
+      border-bottom-right-radius: 0px !important;
+      border-bottom-left-radius: 0px !important;
+      border-bottom-color: @white !important;
+
+      box-shadow: @buttonMenuBoxShadow;
+      > i.icon:before {
+        color:@primaryColor;
+      }
+    }
+
+  }
+
+  > .item:first-child {
+    border-radius: @defaultBorderRadius;
+  }
+
+  .flexberry-zoom-in-map-tool,
+  .flexberry-zoom-out-map-tool {
+      position: relative;
+      left: 0;
+  }
+
+  .flexberry-identify-map-tool {
+      padding: 4px 6px;
+      position: relative;
+      left: 0;
+      .icon.info.circle {
+        margin-left: -2px;
+        margin-right: 0px;
+      }
+  }
+
+  .flexberry-go-to-map-command {
+    margin-top: 0;
+  }
+
+  .flexberry-compare-map-tool {
+    padding: 4px 6px;
+    left: 0px;
+  }
+
+  .flexberry-drag-map-tool {
+    position: absolute;
+    left: -160px;
+  }
+
+  .flexberry-zoom-in-map-tool {
+    position: absolute;
+    top: 190px;
+  }
+
+  .ui.dropdown.flexberry-more-map-command {
+    position: absolute;
+    top: 250px;
+
+    padding: 0px 10px 10px 10px;
+
+    .flexberry-map-command-submenu.menu {
+      border-top-left-radius: 3.5px;
+      border-bottom-left-radius: 3.5px;
+      border-bottom-right-radius: 3.5px;
+      z-index: -1;
+      padding: 11px 3px;
+
+      a.flexberry-map-tool {
+        padding: 8px 5px 2px 10px !important;
+        color: @textColor !important;
+        font-size: 14px !important;
+        opacity: 0.75;
+
+        &:hover {
+          background: @white !important;
+          opacity: 1;
+        }
+
+        i.icon {
+          margin-right: 4px;
+          &:before {
+            color: @textColor;
+            font-size: 16px;
+          }
+        }
+
+        i.icon.minimap:before {
+          content: "\F0AC";
+          font-family: Icons;
+        }
+      }
+    }
+  }
+
+  .flexberry-full-extent-map-command,
+  .flexberry-go-to-map-command,
+  .flexberry-locate-map-command,
+  .flexberry-identify-map-tool,
+  .flexberry-drag-map-tool,
+  .flexberry-zoom-in-map-tool,
+  .flexberry-zoom-out-map-tool,
+  .flexberry-more-map-command,
+  .flexberry-compare-map-tool {
+      width: 40px;
+      margin-right: 5px;
+
+      &:active, &:active:hover {
+        .flexberry-map-command-submenu {
+          i.icon:before {
+            color: @primaryColor;
+          }
+        }
+
+        i.icon:before {
+          color: @white;
+        }
+      }
+  }
+
+  .flexberry-drag-map-tool,
+  .flexberry-zoom-in-map-tool,
+  .flexberry-zoom-out-map-tool,
+  .flexberry-identify-map-tool {
+      margin-right: 0px;
+  }
+
+  .flexberry-search-map-command,
+  .flexberry-measure-map-tool,
+  .flexberry-draw-map-tool,
+  .flexberry-export-map-command {
+    .flexberry-map-tool.item {
+      display: flex;
+      align-items: center;
+      line-height: 20px;
+    }
+    .flexberry-map-tool-submenu.menu,
+    .flexberry-map-command-submenu.menu {
+      left: -2px;
+    }
+  }
+
+  .flexberry-identify-map-tool,
+  .flexberry-search-map-command,
+  .flexberry-measure-map-tool,
+  .flexberry-draw-map-tool,
+  .flexberry-export-map-command {
+      font-size: 13px;
+      margin-right: 5px;
+  }
+}
+

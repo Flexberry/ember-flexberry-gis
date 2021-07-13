@@ -35,7 +35,15 @@ let Model = Projection.Model.extend(Offline.ModelMixin, MapLayerMixin, LayerMode
 
   anyTextCompute() {
     return `${this.get('name') || ''} ${this.get('description') || ''} ${(this.get('keyWords') || '').replace(/,/g, ' ')}`;
-  }
+  },
+
+  /**
+   Flag indicates that layer components was created and ready for render and handle other ui logic
+
+   @property layerInitialized
+   @type boolean
+  */
+  layerInitialized: null
 });
 
 defineProjections(Model);

@@ -3,7 +3,7 @@
 */
 
 import Ember from 'ember';
-import BaseVectorLayer from '../base-vector-layer';
+import BaseVectorLayer, { scale } from '../base-vector-layer';
 import { checkMapZoom } from '../../utils/check-zoom';
 import { intersectionArea } from '../../utils/feature-with-area-intersect';
 import jsts from 'npm:jsts';
@@ -79,25 +79,35 @@ export default BaseVectorLayer.extend({
     @param {<a href="https://github.com/Flexberry/Leaflet-WFST#initialization-options">L.WFS initialization options</a>} options WFS layer options.
     @param {Boolean} [single = false] Flag: indicates whether result should be a single layer.
   */
-  _getFeature(options, single = false) {
+  _getFeature(options) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       options = Ember.$.extend(options || {}, { showExisting: true });
-      this.createVectorLayer(options).then((wfsLayer) => {
-        if (single) {
-          resolve(wfsLayer);
-        } else {
-          let features = Ember.A();
 
-          // Instead of injectLeafletLayersIntoGeoJSON to avoid duplicate reprojection,
-          // retrieve features from already projected layers & inject layers into retrieved features.
-          wfsLayer.eachLayer((layer) => {
-            let feature = layer.feature;
-            feature.leafletLayer = layer;
-            features.pushObject(feature);
-          });
+      let filter = Ember.get(options, 'filter');
+      if (typeof filter === 'string') {
+        filter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(filter);
+      }
 
-          resolve(features);
-        }
+      let resultingFilter = filter ? filter.toGml() : null;
+
+      let wfsLayer = this.get('_leafletObject');
+
+      if (Ember.isNone(wfsLayer)) {
+        resolve(Ember.A());
+        return;
+      }
+
+      let load = this.get('_loadFeatures').bind(wfsLayer);
+      load(resultingFilter, false, wfsLayer).then((layers) => {
+        let features = Ember.A();
+
+        layers.forEach((layer) => {
+          let feature = layer.feature;
+          feature.leafletLayer = layer;
+          features.pushObject(feature);
+        });
+
+        resolve(features);
       }).catch((e) => {
         reject(e);
       });
@@ -177,7 +187,21 @@ export default BaseVectorLayer.extend({
     let leafletObject = this.get('_leafletObject');
     leafletObject.baseEditLayer(layer);
 
+    if (layer.state = state.update) {
+      let coordinates = this._getGeometry(layer);
+      Ember.set(layer, 'feature.geometry.coordinates', coordinates);
+    }
+
     // Changes label when edit layer feature
+    this.updateLabel(layer);
+  },
+
+  /**
+    Update label's layer
+  */
+  updateLabel(layer) {
+    let leafletObject = this.get('_leafletObject');
+
     if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
       layer._label = null;
@@ -190,9 +214,10 @@ export default BaseVectorLayer.extend({
 
     @method _loadFeatures
     @param filter {L.Filter} filter on loaded features
+    @param fireLoad flag indicates needs of fire 'load' event
     @returns {RSVP.Promise}.
   */
-  _loadFeatures(filter) {
+  _loadFeatures(filter, fireLoad = true) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       var that = this;
 
@@ -220,6 +245,12 @@ export default BaseVectorLayer.extend({
             pointToLayer: that.options.pointToLayer
           });
 
+          layers.forEach(function (element) {
+            if (!Ember.isNone(Ember.get(element, 'feature')) && Ember.isNone(Ember.get(element, 'feature.leafletLayer'))) {
+              Ember.set(element.feature, 'leafletLayer', element);
+            }
+          });
+
           if (typeof that.options.style === 'function') {
             layers.forEach(function (element) {
               element.state = that.state.exist;
@@ -234,21 +265,28 @@ export default BaseVectorLayer.extend({
               element.state = that.state.exist;
               that.addLayer(element);
             });
+
             that.setStyle(that.options.style);
           }
 
-          that.fire('load', {
-            responseText: responseText,
-            layers: layers
-          });
-          resolve(that);
+          if (fireLoad) {
+            that.fire('load', {
+              responseText: responseText,
+              layers: layers
+            });
+          }
+
+          resolve(layers);
+
           return that;
         },
         error: function (errorMessage) {
           that.fire('error', {
             error: new Error(errorMessage)
           });
+
           reject(errorMessage);
+
           return that;
         }
       });
@@ -306,7 +344,7 @@ export default BaseVectorLayer.extend({
       options = Ember.$.extend(true, {}, initialOptions, options, { filter: resultingFilter });
 
       let featuresReadFormat = this.getFeaturesReadFormat();
-      let newLayer = L.wfst(options, featuresReadFormat)
+      L.wfst(options, featuresReadFormat)
         .once('load', (e) => {
           let wfsLayer = e.target;
           let leafletMap = this.get('leafletMap');
@@ -324,6 +362,8 @@ export default BaseVectorLayer.extend({
           wfsLayer.editLayer = this.get('_editLayer').bind(this);
 
           wfsLayer.reload = this.get('reload').bind(this);
+          wfsLayer.cancelEdit = this.get('cancelEdit').bind(this);
+          wfsLayer.updateLabel = this.get('updateLabel').bind(this);
 
           if (!Ember.isNone(leafletMap)) {
             let thisPane = this.get('_pane');
@@ -358,12 +398,12 @@ export default BaseVectorLayer.extend({
   saveSuccess() {
     let leafletObject = this.get('_leafletObject');
 
-    let changes =  Object.values(leafletObject.changes);
+    let changes = Object.values(leafletObject.changes);
     changes.forEach((layer) => {
       if (layer.state === state.insert) {
         if (leafletObject.leafletMap.hasLayer(layer._label)) {
           leafletObject.leafletMap.removeLayer(layer._label);
-          let id = leafletObject.getLayerId(layer._label);
+          let id = leafletObject.getLayerId(layer._label);
           delete leafletObject._labelsLayer[id];
         }
       }
@@ -404,7 +444,7 @@ export default BaseVectorLayer.extend({
           let projectedIdentifyPolygon = e.polygonLayer.toProjectedGeoJSON(this.get('crs'));
           filteredFeatures.forEach(feature => {
             feature.properties = feature.properties || {};
-            feature.properties.intersectionArea = intersectionArea(projectedIdentifyPolygon, feature.leafletLayer.toProjectedGeoJSON(this.get('crs')));
+            feature.properties.intersectionArea = intersectionArea(projectedIdentifyPolygon, feature.leafletLayer.toProjectedGeoJSON(this.get('crs')), scale);
           });
         }
 
@@ -654,6 +694,12 @@ export default BaseVectorLayer.extend({
               pointToLayer: leafletObject.options.pointToLayer
             });
 
+            layers.forEach(function (element) {
+              if (!Ember.isNone(Ember.get(element, 'feature')) && Ember.isNone(Ember.get(element, 'feature.leafletLayer'))) {
+                Ember.set(element.feature, 'leafletLayer', element);
+              }
+            });
+
             resolve(layers);
           },
           error: function (errorMessage) {
@@ -694,6 +740,8 @@ export default BaseVectorLayer.extend({
     if (!Ember.isNone(leafletObject)) {
       let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
       let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
+      let showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading;
+
       let needPromise = false;
       if (continueLoad && show && checkMapZoom(leafletObject)) {
         let bounds = leafletMap.getBounds();
@@ -737,6 +785,9 @@ export default BaseVectorLayer.extend({
 
         leafletObject.loadFeatures(filter);
         needPromise = true;
+      } else if (showExisting && Ember.isEmpty(Object.values(leafletObject._layers))) {
+        leafletObject.loadFeatures();
+        needPromise = true;
       } else if (leafletObject.statusLoadLayer) {
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
       }
@@ -773,47 +824,55 @@ export default BaseVectorLayer.extend({
 
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
-      leafletMap.on('moveend',  () => { this.continueLoad(); });
+      leafletMap.on('moveend', () => { this.continueLoad(); });
       leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
     }
   },
 
-  clearChanges() {
+  clearChanges(ids) {
     let leafletObject = this.get('_leafletObject');
     let editTools = leafletObject.leafletMap.editTools;
 
     let featuresIds = [];
-    Object.values(leafletObject.changes).forEach(layer => {
-      if (layer.state === state.insert) {
-        if (leafletObject.hasLayer(layer)) {
-          leafletObject.removeLayer(layer);
-        }
-
-        if (editTools.featuresLayer.getLayers().length !== 0) {
-          let editorLayerId = editTools.featuresLayer.getLayerId(layer);
-          let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
-          if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
-            let editLayer = featureLayer.editor.editLayer;
-            editTools.editLayer.removeLayer(editLayer);
-            editTools.featuresLayer.removeLayer(layer);
+    Object.values(leafletObject.changes)
+      .filter((layer) => { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(layer)); }).forEach(layer => {
+        if (layer.state === state.insert) {
+          if (leafletObject.hasLayer(layer)) {
+            leafletObject.removeLayer(layer);
           }
+
+          if (editTools.featuresLayer.getLayers().length !== 0) {
+            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+            if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
+              let editLayer = featureLayer.editor.editLayer;
+              editTools.editLayer.removeLayer(editLayer);
+              editTools.featuresLayer.removeLayer(layer);
+            }
+          }
+        } else if (layer.state === state.update || layer.state === state.remove) {
+          if (!Ember.isNone(layer.editor)) {
+            let editLayer = layer.editor.editLayer;
+            editTools.editLayer.removeLayer(editLayer);
+          }
+
+          if (leafletObject.hasLayer(layer)) {
+            leafletObject.removeLayer(layer);
+          }
+
+          featuresIds.push(layer.feature.properties.primarykey);
         }
-      } else if (layer.state === state.update || layer.state === state.remove) {
-        if (!Ember.isNone(layer.editor)) {
-          let editLayer = layer.editor.editLayer;
-          editTools.editLayer.removeLayer(editLayer);
-        }
+      });
 
-        if (leafletObject.hasLayer(layer)) {
-          leafletObject.removeLayer(layer);
-        }
+    if (!Ember.isNone(ids)) {
+      ids.forEach((id) => {
+        delete leafletObject.changes[id];
+      });
+    } else {
+      leafletObject.changes = {};
+    }
 
-        featuresIds.push(layer.feature.properties.primarykey);
-      }
-    });
-
-    leafletObject.changes = {};
-
+    editTools.editLayer.clearLayers();
     return featuresIds;
   },
 
@@ -823,10 +882,10 @@ export default BaseVectorLayer.extend({
     @method cancelEdit
     @returns {Ember.RSVP.Promise} Returns promise.
   */
-  cancelEdit() {
+  cancelEdit(ids) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletObject = this.get('_leafletObject');
-      let featuresIds = this.clearChanges();
+      let featuresIds = this.clearChanges(ids);
       if (featuresIds.length === 0) {
         resolve();
       } else {

@@ -19,5 +19,8 @@ export default {
   },
   'remove-button': {
     'tooltip': 'Удалить слой'
+  },
+  'plus-button': {
+    'tooltip': 'Создать объект'
   }
 };

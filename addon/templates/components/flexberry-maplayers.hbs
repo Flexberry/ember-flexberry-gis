@@ -3,7 +3,7 @@
   {{yield}} is required here to make yield-slots available.
 --}}
 {{yield}}
-{{#if compareLayersEnabled}}
+{{#if (and compareLayersEnabled (not isGroup))}}
    <div class="ui pointing group secondary menu">
       <a class="item {{if (eq side "Left") "active"}}" onclick={{action "onLeftClick"}}>
         {{t "components.flexberry-maplayers.left-part"}}
@@ -12,20 +12,7 @@
         {{t "components.flexberry-maplayers.right-part"}}
       </a>
   </div>
-  {{#each rasterLayers as |layer|}}
-    {{#if (not layer.isDeleted)}}
-      <div class="compare-layer-tree">
-        {{flexberry-ddau-checkbox
-          class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
-          value=layer.visibility
-          change=(action "onChange" layer)
-          readonly=(and (not-eq side layer.side) (not-eq layer.side null) true)
-        }} 
-        {{layer.name}}
-      </div>
-    {{/if}}
-  {{/each}}
-{{else}}
+{{/if}}
   {{#yield-slot "above-tree" (block-params this)}}
     {{yield}}
   {{/yield-slot}}
@@ -64,6 +51,12 @@
           layer=layer
           dynamicProperties=layer.dynamicProperties
           dynamicActions=layer.dynamicActions
+          compareLayersEnabled=compareLayersEnabled
+          side=side
+          sideBySide=sideBySide
+          leftLayer=leftLayer
+          rightLayer=rightLayer
+          onChangeLayer = (action "onChangeLayer")
         }}
       {{/if}}
     {{/each}}
@@ -96,4 +89,3 @@
       approve=(action "onAddDialogApprove")
     }}
   {{/if}}
-{{/if}}

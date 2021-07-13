@@ -2,6 +2,7 @@
   @module ember-flexberry-gis
  */
 
+import Ember from 'ember';
 import BaseControl from 'ember-flexberry-gis/components/base-control';
 import layout from '../templates/components/minimap-control';
 
@@ -120,9 +121,9 @@ export default BaseControl.extend({
     Sets whether the minimap should have a button to minimise it.
     @property toggleDisplay
     @type boolean
-    @default true
+    @default false
    */
-  toggleDisplay: true,
+  toggleDisplay: false,
 
   /**
     Sets whether the minimap should hide automatically if the parent map bounds does not fit within the minimap bounds.
@@ -140,6 +141,51 @@ export default BaseControl.extend({
     @default false
   */
   minimized: false,
+
+  /**
+  Panel position. Top
+
+  @property panelTop
+  @default null
+  @type String
+*/
+  panelTop: null,
+
+  /**
+    Panel position. Bottom
+
+    @property panelBottom
+    @default 4px
+    @type String
+  */
+  panelBottom: '4px',
+
+  /**
+    Panel position. Left
+
+    @property panelLeft
+    @default null
+    @type String
+  */
+  panelLeft: null,
+
+  /**
+    Panel position. Right
+
+    @property panelRight
+    @default 65px
+    @type String
+  */
+  panelRight: '65px',
+
+  /**
+    Panel visibility
+
+    @property showPanel
+    @default false
+    @type Boolean
+  */
+  showPanel: false,
 
   /**
     Overrides the default strings allowing for translation.
@@ -160,5 +206,20 @@ export default BaseControl.extend({
 
   createControl() {
     return new L.Control.MiniMap(this.get('layerGroup'), this.get('options'));
+  },
+
+  afterCreateControl() {
+    Ember.$(this.get('control')._container).appendTo('.minimap-drag-panel');
+    this.get('control')._restore();
+  },
+
+  actions: {
+    open() {
+      this.set('showPanel', true);
+    },
+
+    close() {
+      this.set('showPanel', false);
+    }
   }
 });

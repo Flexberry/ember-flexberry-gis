@@ -26,8 +26,23 @@
       <button type="submit" class="ui button close-button" {{action "close"}}>{{t "forms.edit-form.close-button-text"}}--></button>
     </div>
   </div>
+  {{flexberry-search-panel
+    querySearch=(action "querySearch")
+    clearSearch=(action "clearSearch")
+    leafletMap=leafletMap
+    layers=model.hierarchy
+    searchInProcess=searchInProcess
+    maxResultsCount=10
+    attrVisible=attrVisible
+    isSearch=isSearch
+    class="outer-search"
+    searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
+    attrSearch=(action "attrSearch")
+    placeholder=placeholderSearch
+  }}
   <div class="sidebar-wrapper">
     {{flexberry-tab-bar
+      class="main-map-tab-bar"
       change=(action "toggleSidebar")
       items=_sidebarFiltered
     }}
@@ -38,9 +53,8 @@
           {{flexberry-maplayers
             class="styled"
             leafletMap=leafletMap
-            compareLayersEnabled=compareLayersEnabled
             sideBySide=sideBySide
-            layers=(get-with-dynamic-actions this "model.hierarchy"       
+            layers=(get-with-dynamic-actions this "model.otherLayers"
               hierarchyPropertyName="layers"
               pathKeyword="layerPath"
               dynamicActions=(array
@@ -52,7 +66,7 @@
                 (hash
                   on="copy"
                   actionName="onMapLayerCopy"
-                  actionArguments=(array "model.hierarchy")
+                  actionArguments=(array "model.otherLayers")
                 )
                 (hash
                   on="edit"
@@ -91,6 +105,16 @@
                     )
                   )
                 )
+                (hash
+                  on="featureEdit"
+                  actionName="onFeatureEdit"
+                  actionArguments=(array "{% layerPath %}"
+                    (hash
+                      mapAction="onCreateOrEditFeature"
+                      loadingPath="editedLayersPanelLoading"
+                    )
+                  )
+                )
               )
             )
             add=(action "onMapLayerAdd" "model.hierarchy")
@@ -102,12 +126,9 @@
       </div>
       <div data-tab="search" class="ui tab search">
         <h3>{{t "forms.map.tabbar.search.caption"}}</h3>
-        {{flexberry-search-panel
-          querySearch=(action "querySearch")
-          clearSearch=(action "clearSearch")
-          searchInProcess=searchInProcess
-          searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
-        }}
+        {{#if (gt searchResults.length 0)}}
+          <h5>{{t "components.flexberry-search.result-caption"}}</h5>
+        {{/if}}
         {{layer-result-list
           results=searchResults
           serviceLayer=serviceLayer
@@ -115,6 +136,8 @@
           showIntersectionPanel=(action 'onIntersectionPanel')
           featureSelected=(action "onLayerFeatureSelected")
           addToFavorite=(action "addToFavorite")
+          editFeature=(action 'onCreateOrEditFeature')
+          availableEdit=true
         }}
       </div>
       <div data-tab="identify" class="ui tab identify">
@@ -138,6 +161,8 @@
           featureSelected=(action "onLayerFeatureSelected")
           addToFavorite=(action "addToFavorite")
           availableCRS=availableCRS
+          editFeature=(action 'onCreateOrEditFeature')
+          availableEdit=true
         }}
       </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
@@ -163,10 +188,37 @@
           compareBtnDisabled=compareBtnDisabled
           serviceLayer=serviceLayer
           leafletMap=leafletMap
+          _showFavorites=_showFavorites
           showIntersectionPanel=(action 'onIntersectionPanel')
           compareTwoGeometries=(action 'OnCompareTwoGeometries')
           addToFavorite=(action "addToFavorite")
           addToCompareGeometries=(action 'addToCompareGeometries')
+        }}
+      </div>
+      <div data-tab="createOrEditObject" class="ui tab createOrEditObject">
+      <h3>{{t "forms.map.tabbar.createOrEditObject.caption"}}</h3>
+        {{flexberry-edit-layer-feature
+          isFavorite=createOrEditedFeature.isFavorite
+          dataItems=createOrEditedFeature.dataItems
+          layerModel=createOrEditedFeature.layerModel
+          leafletMap=leafletMap
+          serviceLayer=serviceLayer
+          editFeatureEnd=(action 'onCreateOrEditFeatureEnd')
+          rhumbMode=true
+          drawMode=true
+          geoproviderMode=true
+        }}
+      </div>
+      <div data-tab="compare" class="ui tab compare">
+      <h3>{{t "forms.map.tabbar.compare.caption"}}</h3>
+        {{flexberry-maplayers
+          class="styled"
+          leafletMap=leafletMap
+          compareLayersEnabled=compareLayersEnabled
+          sideBySide=sideBySide
+          layers=(get-with-dynamic-actions this "model.hierarchy"
+              hierarchyPropertyName="layers"
+              pathKeyword="layerPath")
         }}
       </div>
     </div>
@@ -180,9 +232,10 @@
       settings=editedLayersPanelSettings
       loading=editedLayersPanelLoading
       leafletMap=leafletMap
+      editFeature=(action 'onCreateOrEditFeature')
     }}
   </div>
-  <div class={{concat "bottompanel-wrapper intersection-panel" (if showIntersectionPanel "" " hidden")}}>
+  <div class="ui tab bottompanel-wrapper intersection-panel">
     {{flexberry-layers-intersections-panel
       layers=model.hierarchy
       leafletMap=leafletMap
@@ -193,12 +246,12 @@
       disaplayName=feature.properties.name
     }}
   </div>
-  <div class={{concat "bottompanel-wrapper compare-geometries-panel" (if showComapreGeometriesPanel "" " hidden")}}>
+  <div class="ui tab bottompanel-wrapper compare-geometries-panel">
     {{compare-object-geometries-panel
       layers=model.hierarchy
       leafletMap=leafletMap
       settings=editedLayersPanelSettings
-      closeComparePanel=(action "closeComparePanel")
+      closeComparePanel=(action "onCompareTwoGeometriesEnd")
       twoObjects=twoObjectToCompare
     }}
   </div>
@@ -234,6 +287,7 @@
         }}
         {{map-tools/compare
           leafletMap=leafletMap
+          compareLayersEnabled=compareLayersEnabled
           showCompareSideBar=(action "showCompareSideBar")
         }}
         {{map-commands/go-to leafletMap=leafletMap}}
@@ -242,8 +296,6 @@
           leafletMap=leafletMap
           layers=model.hierarchy
         }}
-        {{map-tools/measure leafletMap=leafletMap}}
-        {{map-tools/draw leafletMap=leafletMap}}
         {{map-commands/export
           iconClass="external share icon"
           timeout=30000
@@ -251,9 +303,33 @@
           leafletMap=leafletMap
           layers=model.hierarchy
         }}
+        {{#map-commands/base
+          class="flexberry-more-map-command no-arrow"
+          name="base"
+          iconClass="more icon"
+          leafletMap=leafletMap
+        }}
+          {{#block-slot "submenu"}}
+            {{map-tools/measure leafletMap=leafletMap addHaArea=true}}
+          {{#minimap-control
+            minimized=true
+            leafletMap=leafletMap as |groupLayers|
+          }}
+            {{flexberry-layers
+              leafletContainer=groupLayers
+              layers=model.hierarchy
+              forMinimap=true
+            }}
+          {{/minimap-control}}
+          {{/block-slot}}
+        {{/map-commands/base}}
+
       {{/flexberry-maptoolbar}}
     </div>
   </div>
+  {{#flexberry-maptoolbar class="background-layers"}}
+    {{map-tools/background-layers layers=model.hierarchy}}
+  {{/flexberry-maptoolbar}}
   <div class="mappanel">
     <div class="pusher">
       {{#flexberry-map
@@ -265,6 +341,7 @@
         zoomControl=true
         queryFilter=queryFilter
         mapObjectSetting=setting
+        mainMap=true
         leafletInit=(action "onMapLeafletInit" "leafletMap")
         serviceLayerInit=(action "onServiceLayerInit" "serviceLayer")
         leafletDestroy=(action "onMapLeafletDestroy" "leafletMap")
@@ -276,23 +353,23 @@
         {{flexberry-layers
           leafletMap=leafletMap
           leafletContainer=leafletMap
-          layers=model.hierarchy
+          layers=(get-with-dynamic-actions this "model.hierarchy"
+            hierarchyPropertyName="layers"
+            pathKeyword="layerPath"
+            dynamicActions=(array
+              (hash
+                on="layerInit"
+                actionName="onLayerInit"
+              )
+            )
+          )
         }}
         {{switch-scale-control
           leafletMap=leafletMap
           updateWhenIdle=true
           scales=switchScaleControlScales
         }}
-        {{#minimap-control
-          minimized=true
-          leafletMap=leafletMap as |groupLayers|
-        }}
-          {{flexberry-layers
-            leafletContainer=groupLayers
-            layers=model.hierarchy
-            forMinimap=true
-          }}
-        {{/minimap-control}}
+
       {{/flexberry-map}}
     </div>
   </div>

@@ -8,5 +8,6 @@ export default {
   'results-label': 'Query results',
   'results-header-select': 'Select',
   'results-header-name': 'Name',
-  'results-header-position': 'Position'
+  'results-header-position': 'Position',
+  'apply': 'Apply'
 };

@@ -227,7 +227,6 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
                       this.set('typeMessage', 'success');
                     },
                     (data) => {
-                      console.log(data);
                       this.set('rastrMessageVisible', true);
                       this.set('message', this.get('createLayerErrorMessage'));
                       this.set('typeMessage', 'error');
@@ -242,6 +241,8 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
               this.set('typeMessage', 'error');
             });
         }
+      } else {
+        this._super(...arguments);
       }
     },
 

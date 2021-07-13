@@ -4,6 +4,9 @@ import { Query } from 'ember-flexberry-data';
 import { getCrsByName } from '../utils/get-crs-by-name';
 import { geometryToJsts } from '../utils/layer-to-jsts';
 import { createLayerFromMetadata } from '../utils/create-layer-from-metadata';
+import {
+  setIndexes
+} from '../utils/change-index-on-map-layers';
 
 export default Ember.Mixin.create({
   /**
@@ -176,8 +179,27 @@ export default Ember.Mixin.create({
           let mapLayer = createLayerFromMetadata(model, this.get('store'));
           mapLayer.set('index', index);
           mapLayer.set('map', this);
+          let canBeBackground = mapLayer.get('settingsAsObject.backgroundSettings.canBeBackground');
           const layers = this.get('hierarchy');
+          const layersInTree = this.get('otherLayers');
+          const layerBackground = this.get('backgroundLayers');
           layers.addObject(mapLayer);
+          if (canBeBackground) {
+            if (!Ember.isNone(layerBackground)) {
+              layerBackground.addObject(mapLayer);
+            }
+          } else {
+            if (!Ember.isNone(layersInTree)) {
+              layersInTree.addObject(mapLayer);
+            }
+          }
+
+          let rootArray = this.get('mapLayer');
+          rootArray.pushObject(mapLayer);
+          if (Ember.isNone(index)) {
+            setIndexes(rootArray, layers);
+          }
+
           resolve(mapLayer);
         }
       });
