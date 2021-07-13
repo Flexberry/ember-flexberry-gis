@@ -785,7 +785,7 @@ export default BaseVectorLayer.extend({
 
         leafletObject.loadFeatures(filter);
         needPromise = true;
-      } else if (showExisting) {
+      } else if (showExisting && Ember.isEmpty(Object.values(leafletObject._layers))) {
         leafletObject.loadFeatures();
         needPromise = true;
       } else if (leafletObject.statusLoadLayer) {
