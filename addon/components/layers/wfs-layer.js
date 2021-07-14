@@ -749,6 +749,8 @@ export default BaseVectorLayer.extend({
     if (!Ember.isNone(leafletObject)) {
       let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
       let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
+      let showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading;
+
       let needPromise = false;
       if (continueLoad && show && checkMapZoom(leafletObject)) {
         let bounds = leafletMap.getBounds();
@@ -791,6 +793,9 @@ export default BaseVectorLayer.extend({
         filter = Ember.isNone(optFilter) ? filter : new L.Filter.And(filter, optFilter);
 
         leafletObject.loadFeatures(filter);
+        needPromise = true;
+      } else if (showExisting && Ember.isEmpty(Object.values(leafletObject._layers))) {
+        leafletObject.loadFeatures();
         needPromise = true;
       } else if (leafletObject.statusLoadLayer) {
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();

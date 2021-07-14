@@ -198,6 +198,7 @@
       <div data-tab="createOrEditObject" class="ui tab createOrEditObject">
       <h3>{{t "forms.map.tabbar.createOrEditObject.caption"}}</h3>
         {{flexberry-edit-layer-feature
+          isFavorite=createOrEditedFeature.isFavorite
           dataItems=createOrEditedFeature.dataItems
           layerModel=createOrEditedFeature.layerModel
           leafletMap=leafletMap

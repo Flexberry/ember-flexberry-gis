@@ -1232,27 +1232,24 @@ export default BaseVectorLayer.extend({
     Handles zoomend
   */
   continueLoad(leafletObject) {
-    let loadedBounds = this.get('loadedBounds');
-
     if (!leafletObject || !(leafletObject instanceof L.FeatureGroup)) {
       leafletObject = this.get('_leafletObject');
     }
 
-    let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletObject)) {
       let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
       let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
+      let showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading;
       let promise;
+
       if (continueLoad && show && checkMapZoom(leafletObject)) {
+        let loadedBounds = this.get('loadedBounds');
+        let leafletMap = this.get('leafletMap');
+        let obj = this.get('_adapterStoreModelProjectionGeom');
         let bounds = L.rectangle(leafletMap.getBounds());
         if (!Ember.isNone(leafletObject.showLayerObjects)) {
           leafletObject.showLayerObjects = false;
         }
-
-        let obj = this.get('_adapterStoreModelProjectionGeom');
-        let queryBuilder = new Builder(obj.store)
-          .from(obj.modelName)
-          .selectByProjection(obj.projectionName);
 
         let oldPart;
         if (!Ember.isNone(loadedBounds)) {
@@ -1289,36 +1286,9 @@ export default BaseVectorLayer.extend({
         let layerFilter = this.get('filter');
         filter = Ember.isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
 
-        queryBuilder.where(filter);
-
-        let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
-
-        promise = new Ember.RSVP.Promise((resolve, reject) => {
-          objs.then(res => {
-            let models = res;
-            if (typeof res.toArray === 'function') {
-              models = res.toArray();
-            }
-
-            let innerLayers = [];
-            models.forEach(model => {
-              let l = this.addLayerObject(leafletObject, model, false);
-              innerLayers.push(l);
-            });
-
-            let e = { layers: innerLayers, results: Ember.A() };
-            leafletObject.fire('load', e);
-
-            Ember.RSVP.allSettled(e.results).then(() => {
-              this._setLayerState();
-              resolve();
-            });
-          });
-        });
-
-        if (leafletObject.statusLoadLayer) {
-          leafletObject.promiseLoadLayer = promise;
-        }
+        promise = this._downloadFeaturesWithOrNotFilter(leafletObject, obj, filter);
+      } else if (showExisting && Ember.isEmpty(Object.values(leafletObject._layers))) {
+        promise = this._downloadFeaturesWithOrNotFilter(leafletObject, this.get('_adapterStoreModelProjectionGeom'));
       } else {
         promise = Ember.RSVP.resolve('The layer does not require loading');
       }
@@ -1331,6 +1301,47 @@ export default BaseVectorLayer.extend({
     } else {
       return Ember.RSVP.reject('leafletObject is none');
     }
+  },
+
+  _downloadFeaturesWithOrNotFilter(leafletObject, obj, filter) {
+    let queryBuilder = new Builder(obj.store)
+      .from(obj.modelName)
+      .selectByProjection(obj.projectionName);
+
+    if (!Ember.isNone(filter)) {
+      queryBuilder.where(filter);
+    }
+
+    let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
+
+    let promise = new Ember.RSVP.Promise((resolve, reject) => {
+      objs.then(res => {
+        let models = res;
+        if (typeof res.toArray === 'function') {
+          models = res.toArray();
+        }
+
+        let innerLayers = [];
+        models.forEach(model => {
+          let l = this.addLayerObject(leafletObject, model, false);
+          innerLayers.push(l);
+        });
+
+        let e = { layers: innerLayers, results: Ember.A() };
+        leafletObject.fire('load', e);
+
+        Ember.RSVP.allSettled(e.results).then(() => {
+          this._setLayerState();
+          resolve();
+        });
+      });
+    });
+
+    if (leafletObject.statusLoadLayer) {
+      leafletObject.promiseLoadLayer = promise;
+    }
+
+    return promise;
   },
 
   /**

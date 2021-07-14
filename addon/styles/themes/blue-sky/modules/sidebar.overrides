@@ -1105,7 +1105,7 @@
     display: none;
   }
   .ui.pointing.group.secondary.menu {
-    margin-top: 10px;
+    margin-top: 6px;
     margin-left: -15px;
     border-bottom: none;
     min-height: 35px;

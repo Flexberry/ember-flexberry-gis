@@ -353,7 +353,7 @@ export default Ember.Mixin.create(SnapDraw, {
             if (!Ember.isNone(featureIds) && featureIds.length > 0) {
               featureLayer = Object.values(layers).filter(feature => {
                 const layerFeatureId = this._getLayerFeatureId(e.results[0].layerModel, feature);
-                return featureIds.any((f) => { return layerFeatureId === f; });
+                return featureIds.some((f) => { return layerFeatureId === f; });
               });
             }
           } else {

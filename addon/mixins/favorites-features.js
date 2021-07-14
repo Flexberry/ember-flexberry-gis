@@ -84,6 +84,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       leafletMap.on('flexberry-map:allLayersLoaded', this.fromIdArrayToFeatureArray, this);
+      leafletMap.on('flexberry-map:updateFavorite', this._updateFavorite, this);
     }
   }),
 
@@ -91,6 +92,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     this._super(...arguments);
     let leafletMap = this.get('leafletMap');
     leafletMap.off('flexberry-map:allLayersLoaded', this.fromIdArrayToFeatureArray, this);
+    leafletMap.off('flexberry-map:updateFavorite', this._updateFavorite, this);
+
   },
 
   /**
@@ -318,5 +321,66 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         this.set('_showFavorites', true);
       }
     });
+  },
+
+  /**
+   * This method update favorite feature when feature is edited
+   * @param {Object} data This parameter contain layerModel and layer (object) which the was edited.
+   */
+  _updateFavorite(data) {
+    let result = Ember.A();
+    let favFeatures = Ember.A();
+    let twoObjects = this.get('twoObjectToCompare');
+    let updatedLayer = data.layers[0];
+    let idUpdatedFavorite = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(data.layerModel.layerModel, data.layers[0]);
+    this.get('favFeatures').forEach((favoriteObject) => {
+      let favorites = Ember.A();
+      if (favoriteObject.layerModel.id === data.layerModel.layerModel.id) {
+        favoriteObject.features.forEach((feature) => {
+          let id = feature.properties.primarykey;
+          if (idUpdatedFavorite === id) {
+            updatedLayer.feature.layerModel = data.layerModel.layerModel;
+            Ember.set(updatedLayer.feature.properties, 'isFavorite', true);
+            if (!Ember.isEmpty(twoObjects)) {
+              if (Ember.get(feature, 'compareEnabled')) {
+                twoObjects.removeObject(feature);
+                Ember.set(updatedLayer.feature, 'compareEnabled', true);
+                twoObjects.pushObject(updatedLayer.feature);
+              }
+            }
+
+            favorites.push(updatedLayer.feature);
+          } else {
+            favorites.push(feature);
+          }
+        });
+
+        let promiseFeature = new Ember.RSVP.Promise((resolve) => {
+          resolve(favorites);
+        });
+        result.addObject({ layerModel: favoriteObject.layerModel, features: promiseFeature });
+        favFeatures.addObject({ layerModel: favoriteObject.layerModel, features: favorites });
+      } else {
+        let promiseFeature = null;
+        let layerModelIndex = this.isLayerModelInArray(result, favoriteObject.layerModel);
+        if (layerModelIndex !== false) {
+          favorites = favorites.concat(favorites, favoriteObject.features);
+          promiseFeature = new Ember.RSVP.Promise((resolve) => {
+            resolve(favorites);
+          });
+          result[layerModelIndex].features = promiseFeature;
+          favFeatures[layerModelIndex].features = favorites;
+        } else {
+          favorites = favoriteObject.features;
+          promiseFeature = new Ember.RSVP.Promise((resolve) => {
+            resolve(favorites);
+          });
+          result.addObject({ layerModel: favoriteObject.layerModel, features: promiseFeature });
+          favFeatures.addObject({ layerModel: favoriteObject.layerModel, features: favorites });
+        }
+      }
+    });
+    this.set('result', result);
+    this.set('favFeatures', favFeatures);
   }
 });

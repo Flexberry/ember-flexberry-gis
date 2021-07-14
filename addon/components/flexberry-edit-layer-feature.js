@@ -115,6 +115,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   */
   dataItems: null,
 
+  isFavorite: false,
+
   dataItemCount: Ember.computed('dataItems', function () {
     let items = this.get('dataItems.items');
     if (Ember.isNone(items)) {
@@ -1011,6 +1013,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           });
 
           Ember.set(e, 'layers', data.layers);
+        }
+
+        if (this.get('isFavorite')) {
+          this.get('leafletMap').fire('flexberry-map:updateFavorite', e);
         }
 
         this.get('leafletMap').fire(event + ':end', e);
