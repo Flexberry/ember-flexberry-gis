@@ -141,7 +141,7 @@ test('test method showLayers with continueLoading = true', function (assert) {
 
 test('test method showAllLayerObjects with continueLoading = false', function (assert) {
   //Arrange
-  assert.expect(13);
+  assert.expect(2);
   let done = assert.async(1);
 
   let map = L.map(document.createElement('div'), {
@@ -150,7 +150,6 @@ test('test method showAllLayerObjects with continueLoading = false', function (a
   });
 
   let subject = mapApiMixinObject.create({
-    _getTypeLayer() { return new VectorLayer(); },
     mapApi: {
       getFromApi() { return map; }
     },
@@ -164,12 +163,6 @@ test('test method showAllLayerObjects with continueLoading = false', function (a
   });
   leafletObject.options.showExisting = false;
   leafletObject.options.continueLoading = false;
-  let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
-  let leafletMapFireStub = sinon.stub(map, 'fire');
-  leafletMapFireStub.withArgs('flexberry-map:moveend').returns(Ember.RSVP.resolve());
-  let mapAddSpy = sinon.spy(map, 'addLayer');
-  let mapRemoveSpy = sinon.spy(map, 'removeLayer');
-  let leafletObjectClearLayersSpy = sinon.spy(leafletObject, 'clearLayers');
   let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
   //Act
@@ -178,142 +171,8 @@ test('test method showAllLayerObjects with continueLoading = false', function (a
   //Assert
   assert.ok(result instanceof Ember.RSVP.Promise);
   result.then((res)=> {
-    assert.equal(res, 'success');
-    assert.equal(getModelLayerFeatureSpy.callCount, 1);
-    assert.equal(getModelLayerFeatureSpy.args[0][0], '1');
-    assert.deepEqual(getModelLayerFeatureSpy.args[0][1], null);
-    assert.equal(leafletMapFireStub.callCount, 8);
-    assert.notEqual(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
-    assert.equal(mapAddSpy.callCount, 8);
-    assert.equal(mapRemoveSpy.callCount, 0);
-    assert.equal(findByStub.callCount, 1);
-    assert.equal(findByStub.args[0][0], 'id');
-    assert.equal(findByStub.args[0][1], '1');
-    assert.equal(leafletObjectClearLayersSpy.callCount, 1);
+    assert.equal(res, 'Is not a vector layer');
     done();
-    getModelLayerFeatureSpy.restore();
-    leafletMapFireStub.restore();
-    mapAddSpy.restore();
-    mapRemoveSpy.restore();
-    leafletObjectClearLayersSpy.restore();
-    findByStub.restore();
-  });
-});
-
-test('test method showAllLayerObjects with continueLoading = true', function (assert) {
-  //Arrange
-  assert.expect(11);
-  let done = assert.async(1);
-
-  let map = L.map(document.createElement('div'), {
-    center: [51.505, -0.09],
-    zoom: 13
-  });
-
-  let subject = mapApiMixinObject.create({
-    _getTypeLayer() { return new VectorLayer(); },
-    mapApi: {
-      getFromApi() { return map; }
-    },
-    _getModelLayerFeature() {
-      leafletObject.addLayer(firstTestLayer);
-      leafletObject.addLayer(secondTestLayer);
-      leafletObject.addLayer(thirdTestLayer);
-      return Ember.RSVP.resolve([null, null, [firstTestLayer, secondTestLayer, thirdTestLayer]]);
-    },
-    mapLayer: maplayers
-  });
-
-  leafletObject.options.continueLoading = true;
-  let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
-  let leafletMapFireStub = sinon.stub(map, 'fire');
-  leafletMapFireStub.withArgs('flexberry-map:moveend').returns(Ember.RSVP.resolve());
-  let mapAddSpy = sinon.spy(map, 'addLayer');
-  let mapRemoveSpy = sinon.spy(map, 'removeLayer');
-  let leafletObjectClearLayersSpy = sinon.spy(leafletObject, 'clearLayers');
-  let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
-
-  //Act
-  let result = subject.showAllLayerObjects('1');
-
-  //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise);
-  result.then((res)=> {
-    assert.equal(res, 'success');
-    assert.equal(getModelLayerFeatureSpy.callCount, 0);
-    assert.equal(leafletMapFireStub.callCount, 9);
-    assert.equal(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
-    assert.equal(mapAddSpy.callCount, 8);
-    assert.equal(mapRemoveSpy.callCount, 0);
-    assert.equal(findByStub.callCount, 1);
-    assert.equal(findByStub.args[0][0], 'id');
-    assert.equal(findByStub.args[0][1], '1');
-    assert.equal(leafletObjectClearLayersSpy.callCount, 0);
-    done();
-    getModelLayerFeatureSpy.restore();
-    leafletMapFireStub.restore();
-    mapAddSpy.restore();
-    mapRemoveSpy.restore();
-    leafletObjectClearLayersSpy.restore();
-    findByStub.restore();
-  });
-});
-
-test('test method showAllLayerObjects with showExisting = true', function (assert) {
-  //Arrange
-  assert.expect(11);
-  let done = assert.async(1);
-
-  let map = L.map(document.createElement('div'), {
-    center: [51.505, -0.09],
-    zoom: 13
-  });
-
-  let subject = mapApiMixinObject.create({
-    _getTypeLayer() { return new VectorLayer(); },
-    mapApi: {
-      getFromApi() { return map; }
-    },
-    _getModelLayerFeature() {
-      leafletObject.addLayer(firstTestLayer);
-      leafletObject.addLayer(secondTestLayer);
-      leafletObject.addLayer(thirdTestLayer);
-      return Ember.RSVP.resolve([null, null, [firstTestLayer, secondTestLayer, thirdTestLayer]]);
-    },
-    mapLayer: maplayers
-  });
-
-  leafletObject.options.showExisting = true;
-  let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
-  let leafletMapFireStub = sinon.stub(map, 'fire');
-  leafletMapFireStub.withArgs('flexberry-map:moveend').returns(Ember.RSVP.resolve());
-  let mapAddSpy = sinon.spy(map, 'addLayer');
-  let mapRemoveSpy = sinon.spy(map, 'removeLayer');
-  let leafletObjectClearLayersSpy = sinon.spy(leafletObject, 'clearLayers');
-  let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
-
-  //Act
-  let result = subject.showAllLayerObjects('1');
-
-  //Assert
-  assert.ok(result instanceof Ember.RSVP.Promise);
-  result.then((res)=> {
-    assert.equal(res, 'success');
-    assert.equal(getModelLayerFeatureSpy.callCount, 0);
-    assert.equal(leafletMapFireStub.callCount, 9);
-    assert.equal(leafletMapFireStub.args[0][0], 'flexberry-map:moveend');
-    assert.equal(mapAddSpy.callCount, 8);
-    assert.equal(mapRemoveSpy.callCount, 0);
-    assert.equal(findByStub.callCount, 1);
-    assert.equal(findByStub.args[0][0], 'id');
-    assert.equal(findByStub.args[0][1], '1');
-    assert.equal(leafletObjectClearLayersSpy.callCount, 0);
-    done();
-    getModelLayerFeatureSpy.restore();
-    leafletMapFireStub.restore();
-    mapAddSpy.restore();
-    mapRemoveSpy.restore();
-    leafletObjectClearLayersSpy.restore();
     findByStub.restore();
   });
 });
@@ -333,25 +192,25 @@ test('test method hideAllLayerObjects', function (assert) {
   map.addLayer(_labelsLayer);
 
   let subject = mapApiMixinObject.create({
-    _getTypeLayer() { return new VectorLayer(); },
     mapApi: {
       getFromApi() { return map; }
     },
     mapLayer: maplayers
   });
 
-  let mapRemoveSpy = sinon.spy(map, 'removeLayer');
   let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
   //Act
-  subject.hideAllLayerObjects('1');
+  assert.throws(
+    function () { subject.hideAllLayerObjects('1'); },
+    function (err) { return err.toString() === 'Is not a vector layer'; },
+    'Error thrown'
+  );
 
   //Assert
-  assert.equal(mapRemoveSpy.callCount, 7);
   assert.equal(findByStub.callCount, 1);
   assert.equal(findByStub.args[0][0], 'id');
   assert.equal(findByStub.args[0][1], '1');
-  mapRemoveSpy.restore();
   findByStub.restore();
 });
 

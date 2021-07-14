@@ -72,5 +72,17 @@ export default BaseLayer.extend({
     });
 
     return settings;
+  },
+
+  /**
+    Indicates whether related layer is vector layer.
+
+    @method isVectorType
+    @param {Object} layer Layer model.
+    @param {Boolean} howVector.
+    @returns {Boolean}
+  */
+  isVectorType(layer) {
+    return true;
   }
 });

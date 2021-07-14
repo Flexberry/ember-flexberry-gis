@@ -3,8 +3,6 @@ import layout from '../templates/components/flexberry-edit-layer-feature';
 import SnapDrawMixin from '../mixins/snap-draw';
 import EditFeatureMixin from '../mixins/edit-feature';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
-import WfsLayer from '../layers/wfs';
-import OdataLayer from '../layers/odata-vector';
 import { translationMacro as t } from 'ember-i18n';
 
 export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFeatureMixin, {
@@ -728,64 +726,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let leafletObject = this.get('leafletObject');
 
       if (!Ember.isNone(initialLayers) && !Ember.isNone(leafletObject)) {
-        let layerModel = this.get('layerModel.layerModel');
-        let className = Ember.get(layerModel, 'type');
-        let layerType = Ember.getOwner(this).knownForType('layer', className);
-
-        let featureIds = Ember.A();
-
-        initialLayers.forEach((layer) => {
-          let editTools = this._getEditTools();
-          if (!Ember.isNone(layer.editor)) {
-            let editLayer = layer.editor.editLayer;
-            editTools.editLayer.removeLayer(editLayer);
-          }
-
-          if (leafletObject.hasLayer(layer)) {
-            leafletObject.removeLayer(layer);
-          }
-
-          let map = Ember.get(leafletObject, '_map');
-          map.removeLayer(layer);
-
-          let id = leafletObject.getLayerId(layer);
-          delete leafletObject._layers[id];
-
-          if (layerType instanceof OdataLayer) {
-            let model = Ember.get(layer, 'model');
-            model.rollbackAttributes();
-          }
-
-          if (layerType instanceof WfsLayer) {
-            let id = leafletObject.getLayerId(layer);
-            delete leafletObject.changes[id];
-          }
-
-          featureIds.push(Ember.get(layer, 'feature.properties.primarykey'));
+        let featureIds = initialLayers.map((layer) => {
+          return leafletObject.getLayerId(layer);
         });
 
-        let promise;
-
-        if (layerType instanceof WfsLayer) {
-          let filters = featureIds.map((pk) => {
-            return new L.Filter.EQ('primarykey', pk);
-          });
-
-          let filter;
-          if (filters.length === 1) {
-            filter = filters[0];
-          } else {
-            filter = new L.Filter.Or(...filters);
-          }
-
-          promise = leafletObject.loadFeatures(filter);
-        } else if (layerType instanceof OdataLayer) {
-          let e = {
-            featureIds: featureIds
-          };
-
-          promise = leafletObject.loadLayerFeatures(e);
-        }
+        let promise = leafletObject.cancelEdit(featureIds);
 
         this.set('loading', true);
         (promise ? promise : Ember.RSVP.resolve()).then(() => {

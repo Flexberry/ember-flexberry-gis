@@ -125,5 +125,12 @@ export default {
     'autocomplete-url-textbox': {
       'caption': 'Url для автокомплита'
     }
+  },
+
+  'combine': {
+    'main-settings-caption': 'Настройки основного слоя ',
+    'inner-settings-caption': 'Настройки ',
+    'type-dropdown': 'Тип слоя',
+    'add-button-caption': 'Добавить'
   }
 };
