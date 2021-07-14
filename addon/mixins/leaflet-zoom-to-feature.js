@@ -78,9 +78,6 @@ export default Ember.Mixin.create({
         let sidebarElement = Ember.$('.sidebar-wrapper:visible .sidebar');
         const widthPadding = sidebarElement.width() || 0;
 
-        let bottompanelElement = Ember.$('.bottompanel-wrapper:visible .bottom.bottompanel');
-        const heightPadding = bottompanelElement.height() || 0;
-
         let bboxZoom = leafletMap.getBoundsZoom(bounds.pad(1));
         let minZoom = Ember.isArray(feature) ? Ember.get(feature[0], 'leafletLayer.minZoom') : Ember.get(feature, 'leafletLayer.minZoom');
         if (!Ember.isNone(minZoom) && minZoom > bboxZoom) {

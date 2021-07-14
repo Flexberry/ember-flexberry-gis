@@ -46,7 +46,6 @@ export default BaseVectorLayer.extend({
     leafletObject.eachLayer(function (layer) {
       if (Ember.get(layer, 'model.hasDirtyAttributes')) {
         if (layer.state === state.insert) {
-          const geometryField = _this.get('geometryField') || 'geometry';
           let geometryObject = Ember.A();
           let coordinates = Ember.A();
           let type = Ember.get(layer, 'feature.geometry.type');
@@ -68,7 +67,6 @@ export default BaseVectorLayer.extend({
     }, leafletObject);
 
     let modelsLayer = leafletObject.models;
-    const store = this.get('store');
     if (modelsLayer.length > 0) {
       let insertedIds = leafletObject.getLayers().map((layer) => {
         if (layer.state === state.insert) {
@@ -684,8 +682,6 @@ export default BaseVectorLayer.extend({
     @return {Object} Model
   */
   createModel(modelMixin) {
-    let modelName = this.get('modelName');
-    let projectionName = this.get('projectionName');
     let namespace = this.get('namespace');
     let model = Projection.Model.extend(modelMixin);
     model.reopenClass({
@@ -1033,9 +1029,6 @@ export default BaseVectorLayer.extend({
       return;
     }
 
-    let builder = new Builder(store)
-      .from(modelName)
-      .selectByProjection(projectionName);
     return {
       store: store,
       modelName: modelName,

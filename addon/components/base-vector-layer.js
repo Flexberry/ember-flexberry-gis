@@ -436,7 +436,6 @@ export default BaseLayer.extend({
           let primitive = new Terraformer.Primitive(geoLayer.geometry);
 
           if (primitiveSatisfiesBounds(primitive, bounds)) {
-            let feature;
             if (geoLayer.geometry.type === 'GeometryCollection') {
               geoLayer.geometry.geometries.forEach(feat => {
                 let geoObj = { type: 'Feature', geometry: feat };
