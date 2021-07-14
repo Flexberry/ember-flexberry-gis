@@ -11,6 +11,7 @@ import DomActionsMixin from 'ember-flexberry/mixins/dom-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import GroupLayer from '../layers/group';
+import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
 import layout from '../templates/components/flexberry-maplayers';
 import { translationMacro as t } from 'ember-i18n';
@@ -538,7 +539,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       onAddButtonClick(e) {
         // Create empty layer model.
         let store = this.get('store');
-        let addDialogLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer');
+        let addDialogLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId() });
         this.set('_addDialogLayer', addDialogLayer);
 
         // Include dialog to markup.

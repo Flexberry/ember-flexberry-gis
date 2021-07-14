@@ -198,8 +198,13 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
     */
     onApprove() {
       let file = this.get('_fileControl');
-      if (!Ember.isNone(file)) {
-        let layerProperties = this.get('getLayerProperties')();
+      let layerProperties = this.get('getLayerProperties')();
+      if (Ember.isNone(file)) {
+        this.sendAction('approve', {
+          layerProperties: layerProperties,
+          layer: this.get('layer')
+        });
+      } else {
         let layerName = JSON.parse(layerProperties.settings).layers.split(':');
         let url = JSON.parse(layerProperties.settings).url.split('/geoserver');
         if (!Ember.isNone(layerName)) {

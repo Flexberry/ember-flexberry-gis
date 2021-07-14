@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
 /**
   Creates map layer from metadata.
@@ -14,14 +15,15 @@ import Ember from 'ember';
 */
 let createLayerFromMetadata = function(metadata, store) {
   let mapLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', {
+      id: generateUniqueId(),
       name: metadata.get('name'),
       description: metadata.get('description'),
       keyWords: metadata.get('keyWords'),
       type: metadata.get('type'),
       settings: metadata.get('settings'),
-      scale:metadata.get('scale'),
-      coordinateReferenceSystem:metadata.get('coordinateReferenceSystem'),
-      boundingBox:metadata.get('boundingBox'),
+      scale: metadata.get('scale'),
+      coordinateReferenceSystem: metadata.get('coordinateReferenceSystem'),
+      boundingBox: metadata.get('boundingBox'),
 
       // If user has chosen to open metadata on map, then layer created on metadata basics must be visible by default.
       visibility: true
@@ -46,6 +48,7 @@ let addLinkMetadata = function(layerModel, linkMetadata, store) {
 
   linkMetadata.forEach((item) => {
     let newLayerLink = store.createRecord('new-platform-flexberry-g-i-s-layer-link', {
+      id: generateUniqueId(),
       allowShow: item.get('allowShow'),
       mapObjectSetting: item.get('mapObjectSetting')
     });
@@ -70,6 +73,7 @@ let addLinkParametersMetadata = function(layerLinkModel, parameters, store) {
 
   parameters.forEach((item) => {
     let newLinkParameter = store.createRecord('new-platform-flexberry-g-i-s-link-parameter', {
+      id: generateUniqueId(),
       objectField: item.get('objectField'),
       layerField: item.get('layerField'),
       expression: item.get('expression'),
