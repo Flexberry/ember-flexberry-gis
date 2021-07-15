@@ -760,7 +760,7 @@ div.measure-drag-panel {
       margin-right: 0.6em !important;
       margin-top: -2px !important;
     }
-    &.square.outline  {
+    &.rectangle {
       margin-top: 1px !important;
     }
   }
@@ -792,7 +792,7 @@ div.measure-drag-panel {
   .flexberry-identify-panel-tools-options {
     display: inline-block;
     margin-right: 12px;
-    i.icon.square.outline:before {
+    i.icon.rectangle:before {
       font-family: Icons;
       content: "\f248";
     }

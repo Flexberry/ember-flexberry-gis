@@ -193,7 +193,7 @@ div.measure-drag-panel {
 
   .flexberry-identify-panel-tools-options {
     margin-right: 8px;
-    i.icon.square.outline:before {
+    i.icon.rectangle:before {
       content: "\f096";
       font-family: FontAwesome;
     }
@@ -337,7 +337,7 @@ a.item:active,
     background: @layerResultListActiveBackground;
     color: @primaryColor;
   }
-  
+
   .flexberry-toggler-content {
     padding-top: 0px !important;
   }

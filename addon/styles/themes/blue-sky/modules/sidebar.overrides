@@ -1062,7 +1062,8 @@
   overflow-x: hidden;
   .layer-result-list {
     overflow-y: auto;
-    height: ~"calc(100% - 90px)" !important;
+    overflow-x: hidden;
+    height: ~"calc(100% - 140px)" !important;
   }
   .layer-result-list .nodata {
     margin-top: 15px;
