@@ -18,7 +18,7 @@ export default function openCloseSubmenu (context, moreButton, elements, incTop,
         element.className = "more submenu "
       }
       element.style.position = 'fixed';
-      element.style.left = `${left - (Ember.isNone(decLeft) ? 0 : 8)}px`;
+      element.style.left = `${left - (Ember.isNone(decLeft) ? 0 : decLeft)}px`;
       element.style.top = `${top + incTop}px`;
     });
   }
