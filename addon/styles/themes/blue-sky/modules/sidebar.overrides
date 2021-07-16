@@ -453,6 +453,11 @@
         width: 210px;
         padding: 0 0 11px 7px;
         text-align: left;
+        &.reversed {
+          display: flex;
+          flex-direction: column-reverse;
+          padding: 0 0 0 7px;
+        }
         label.ui.button {
           width: auto !important;
           color: @textColor;
@@ -483,6 +488,7 @@
           margin-right: 17px;
           margin-left: -5px !important;
         }
+
       }
     }
   }

@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 * Add geometry filters into `geojson` layers.
 * Add layer polygons intersection check.
 * Add support for point objects (markers) in vector layers legends.
-* Add logic: if sub menu on feature-result-item after showing lower than main menu buttons then sub menu moving up.
+* Add utils open\close sub menu in componetns: feature-result-item and flexberry-maplayers.
 
 ### Changed
 * Change chart's library from `highcharts` to `chart.js`.
