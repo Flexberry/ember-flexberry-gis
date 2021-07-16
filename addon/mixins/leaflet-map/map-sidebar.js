@@ -20,7 +20,7 @@ export default Ember.Mixin.create({
     this._super(...arguments);
 
     // Define flexberryMap.commands namespace & related methods & properties.
-    let sidebar = leafletMap.flexberryMap.sidebar = {
+    leafletMap.flexberryMap.sidebar = {
 
       // Hide sidebar.
       hide() {

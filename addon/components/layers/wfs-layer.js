@@ -306,7 +306,7 @@ export default BaseVectorLayer.extend({
       options = Ember.$.extend(true, {}, initialOptions, options, { filter: resultingFilter });
 
       let featuresReadFormat = this.getFeaturesReadFormat();
-      let newLayer = L.wfst(options, featuresReadFormat)
+      L.wfst(options, featuresReadFormat)
         .once('load', (e) => {
           let wfsLayer = e.target;
           let leafletMap = this.get('leafletMap');

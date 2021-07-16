@@ -163,8 +163,6 @@ export default Ember.Component.extend({
 
       layer.feature = { properties: Ember.merge(defaultProperties, properties) };
 
-      let wfsProperties = Ember.$.extend({}, this.get('layerModel.settingsAsObject'), { 'showExisting': false });
-
       let wfs = this.get('layerModel');
       let leafletObject = this.get('layerModel._leafletObject');
       let e = { layers: [layer], results: Ember.A() };
