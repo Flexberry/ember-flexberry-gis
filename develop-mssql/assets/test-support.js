@@ -12889,6 +12889,532 @@ define('sinon', [], function() {
   };
 });
 
+define('ember-flexberry/test-support/check-close-edit-form', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  _ember['default'].Test.registerAsyncHelper('checkCloseEditForm', function (app, olvSelector, context, assert, path) {
+    var helpers = app.testHelpers;
+    var olv = helpers.findWithAssert(olvSelector, context);
+
+    assert.expect(assert.expect() + 3);
+
+    var helperColumn = helpers.find('tbody .object-list-view-helper-column', olv).toArray();
+    var row = helpers.find('tbody tr', olv);
+    var cell = helpers.find('td', row)[1];
+
+    assert.notEqual(0, helperColumn.length);
+
+    var controller = app.__container__.lookup('controller:' + path);
+    var editFormRoute = _ember['default'].get(controller, 'editFormRoute');
+    var waiterFunction = function waiterFunction() {
+      return currentPath() === editFormRoute;
+    };
+
+    _ember['default'].Test.registerWaiter(waiterFunction);
+    click(cell);
+    andThen(function () {
+      var deleteButton = helpers.find('.flexberry-edit-panel .close-button');
+
+      assert.equal(currentPath(), editFormRoute);
+
+      _ember['default'].Test.unregisterWaiter(waiterFunction);
+      click(deleteButton);
+      andThen(function () {
+        assert.equal(currentPath(), path);
+      });
+    });
+  });
+});
+define('ember-flexberry/test-support/check-delete-record-from-e-form', ['exports', 'ember', 'moment', 'ember-flexberry-data/utils/generate-unique-id', 'ember-flexberry/test-support/utils/create-recort-for-test'], function (exports, _ember, _moment, _emberFlexberryDataUtilsGenerateUniqueId, _emberFlexberryTestSupportUtilsCreateRecortForTest) {
+  'use strict';
+
+  _ember['default'].Test.registerAsyncHelper('checkDeleteRecordFromEditForm', function (app, olvSelector, context, assert, store, model, prop) {
+    var helpers = app.testHelpers;
+    var olv = helpers.findWithAssert(olvSelector, context);
+
+    var currentData = (0, _moment['default'])().format('DD.MM.YYYY HH:mm');
+    var deleteRecordId = (0, _emberFlexberryDataUtilsGenerateUniqueId['default'])();
+
+    (0, _emberFlexberryTestSupportUtilsCreateRecortForTest.createRecord)(store, model, prop, deleteRecordId, currentData).then(function () {
+      assert.expect(assert.expect() + 4);
+
+      var currentPathPage = currentPath();
+      visit(currentPathPage + '?filter=' + currentData + ' ' + deleteRecordId);
+      andThen(function () {
+        var helperColumn = helpers.find('tbody .object-list-view-helper-column', olv).toArray();
+        var row = helpers.find('tbody tr', olv);
+        var cell = helpers.find('td', row)[1];
+
+        assert.equal(1, helperColumn.length);
+
+        var controller = app.__container__.lookup('controller:' + currentPath());
+        var editFormRoute = _ember['default'].get(controller, 'editFormRoute');
+        var waiterFunction = function waiterFunction() {
+          return currentPath() === editFormRoute;
+        };
+
+        _ember['default'].Test.registerWaiter(waiterFunction);
+        click(cell);
+        andThen(function () {
+          var deleteButton = helpers.find('.flexberry-edit-panel .save-del-button');
+
+          assert.equal(currentPath(), editFormRoute);
+
+          _ember['default'].Test.unregisterWaiter(waiterFunction);
+          click(deleteButton);
+          andThen(function () {
+            assert.equal(currentPath(), currentPathPage);
+
+            visit(currentPathPage + '?filter=' + currentData + ' ' + deleteRecordId);
+            andThen(function () {
+              var helperColumn = helpers.find('tbody .object-list-view-helper-column', olv).toArray();
+              assert.equal(0, helperColumn.length);
+            });
+          });
+        });
+      });
+    });
+  });
+});
+define('ember-flexberry/test-support/check-delete-record-from-olv', ['exports', 'ember', 'moment', 'ember-flexberry-data/utils/generate-unique-id'], function (exports, _ember, _moment, _emberFlexberryDataUtilsGenerateUniqueId) {
+  'use strict';
+
+  _ember['default'].Test.registerAsyncHelper('checkDeleteRecordFromOlv', function (app, olvSelector, context, assert, store, model, prop) {
+    var helpers = app.testHelpers;
+    var olv = helpers.findWithAssert(olvSelector, context);
+
+    var currentData = (0, _moment['default'])().format('DD.MM.YYYY HH:mm');
+    var deleteUseRowButton = (0, _emberFlexberryDataUtilsGenerateUniqueId['default'])();
+    var deleteUseRowMeny = (0, _emberFlexberryDataUtilsGenerateUniqueId['default'])();
+    var deleteUseToolbar1 = (0, _emberFlexberryDataUtilsGenerateUniqueId['default'])();
+    var deleteUseToolbar2 = (0, _emberFlexberryDataUtilsGenerateUniqueId['default'])();
+
+    _ember['default'].RSVP.all([createRecord(store, model, prop, deleteUseRowButton, currentData), createRecord(store, model, prop, deleteUseRowMeny, currentData), createRecord(store, model, prop, deleteUseToolbar1, currentData), createRecord(store, model, prop, deleteUseToolbar2, currentData)]).then(function () {
+
+      assert.expect(assert.expect() + 6);
+
+      // Delete use row button.
+      visit(currentPath() + '?filter=' + currentData + ' ' + deleteUseRowButton);
+      andThen(function () {
+        var helperColumn = helpers.find('tbody .object-list-view-helper-column', olv).toArray();
+        var deletaRowButton = helpers.find('.object-list-view-row-delete-button', helperColumn);
+        assert.equal(1, helperColumn.length);
+
+        click(deletaRowButton);
+        click('.menu .refresh-button');
+        andThen(function () {
+          var helperColumn = helpers.find('tbody .object-list-view-helper-column', olv).toArray();
+          assert.equal(0, helperColumn.length);
+
+          // Delete use row meny.
+          visit(currentPath() + '?filter=' + currentData + ' ' + deleteUseRowMeny);
+          andThen(function () {
+            var menuColumn = helpers.find('tbody .object-list-view-menu', olv).toArray();
+            var deletaRowButton = helpers.find('.item.delete-menu', menuColumn);
+            assert.equal(1, menuColumn.length);
+
+            click(deletaRowButton);
+            click('.menu .refresh-button');
+            andThen(function () {
+              var helperColumn = helpers.find('tbody .object-list-view-helper-column', olv).toArray();
+              assert.equal(0, helperColumn.length);
+
+              // Delete use toolBar.
+              visit(currentPath() + '?filter=' + currentData);
+              andThen(function () {
+                var helperColumn = helpers.find('tbody .object-list-view-helper-column', olv).toArray();
+                var checkboxRowButton = helpers.find('.flexberry-checkbox', helperColumn).toArray();
+                assert.equal(2, helperColumn.length);
+
+                checkboxRowButton.forEach(function (checkbox) {
+                  click(checkbox);
+                });
+                andThen(function () {
+                  var deleteToolbarButton = helpers.find('.menu .delete-button', olv);
+                  click(deleteToolbarButton);
+                  click('.menu .refresh-button');
+                  andThen(function () {
+                    var helperColumn = helpers.find('tbody .object-list-view-helper-column', olv).toArray();
+                    assert.equal(0, helperColumn.length);
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+
+  // Create record.
+  var createRecord = function createRecord(store, model, prop, id, data) {
+    var record = store.createRecord(model, {
+      id: id
+    });
+
+    record.set('' + prop, data + ' ' + id);
+
+    return record.save();
+  };
+});
+define('ember-flexberry/test-support/check-lock-edit-form', ['exports', 'ember', 'moment', 'ember-flexberry-data/utils/generate-unique-id', 'ember-flexberry/test-support/utils/create-recort-for-test'], function (exports, _ember, _moment, _emberFlexberryDataUtilsGenerateUniqueId, _emberFlexberryTestSupportUtilsCreateRecortForTest) {
+  'use strict';
+
+  _ember['default'].Test.registerAsyncHelper('checkLockEditForm', function (app, olvSelector, context, assert, store, model, prop, path) {
+    var helpers = app.testHelpers;
+    var olv = helpers.findWithAssert(olvSelector, context);
+    var helperCells = helpers.find('tbody .object-list-view-helper-column-cell', olv);
+
+    var currentData = (0, _moment['default'])().format('DD.MM.YYYY HH:mm');
+    var testRecord = (0, _emberFlexberryDataUtilsGenerateUniqueId['default'])();
+    var lockRecord = store.createRecord('new-platform-flexberry-services-lock', {
+      lockKey: testRecord,
+      userName: 'AutoTestUser',
+      lockDate: currentData
+    });
+
+    _ember['default'].RSVP.all([(0, _emberFlexberryTestSupportUtilsCreateRecortForTest.createRecord)(store, model, prop, testRecord, currentData), lockRecord.save()]).then(function () {
+
+      assert.expect(assert.expect() + 11);
+
+      visit(currentPath() + '?filter=' + currentData + ' ' + testRecord);
+      andThen(function () {
+        var helperColumn = helpers.find('tbody .object-list-view-helper-column', olv).toArray();
+        var row = helpers.find('tbody tr', olv);
+        var cell = helpers.find('td', row)[1];
+
+        assert.equal(1, helperColumn.length);
+
+        var controller = app.__container__.lookup('controller:' + path);
+        var editFormRoute = _ember['default'].get(controller, 'editFormRoute');
+        var waiterFunction = function waiterFunction() {
+          return currentPath() === editFormRoute;
+        };
+
+        _ember['default'].Test.registerWaiter(waiterFunction);
+        click(cell);
+        andThen(function () {
+          var saveButton = helpers.find('.flexberry-edit-panel .save-button').toArray();
+          var deleteButton = helpers.find('.flexberry-edit-panel .save-del-button').toArray();
+          var closeButton = helpers.find('.flexberry-edit-panel .close-button').toArray();
+
+          assert.equal(currentPath(), editFormRoute);
+          assert.equal(0, saveButton.length);
+          assert.equal(0, deleteButton.length);
+          assert.equal(1, closeButton.length);
+
+          _ember['default'].Test.unregisterWaiter(waiterFunction);
+          click(closeButton);
+          andThen(function () {
+            assert.equal(currentPath(), path);
+
+            lockRecord.destroyRecord().then(function () {
+              visit(currentPath() + '?filter=' + currentData + ' ' + testRecord);
+              andThen(function () {
+                var helperColumn = helpers.find('tbody .object-list-view-helper-column').toArray();
+                var row = helpers.find('tbody tr');
+                var cell = helpers.find('td', row)[1];
+
+                assert.equal(1, helperColumn.length);
+
+                _ember['default'].Test.registerWaiter(waiterFunction);
+                click(cell);
+                andThen(function () {
+                  var saveButton = helpers.find('.flexberry-edit-panel .save-button').toArray();
+                  var deleteButton = helpers.find('.flexberry-edit-panel .save-del-button').toArray();
+                  var closeButton = helpers.find('.flexberry-edit-panel .close-button').toArray();
+
+                  assert.equal(currentPath(), editFormRoute);
+                  assert.equal(1, saveButton.length);
+                  assert.equal(1, deleteButton.length);
+                  assert.equal(1, closeButton.length);
+
+                  _ember['default'].Test.unregisterWaiter(waiterFunction);
+                  click(deleteButton);
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+});
+define('ember-flexberry/test-support/check-lookup-dialogs', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  _ember['default'].Test.registerAsyncHelper('checkLookupDialogs', function (app) {
+    var helpers = app.testHelpers;
+    var lookups = helpers.find('[data-test-lookup]');
+    if (lookups.length > 0) {
+      checkLookups(lookups, 0, helpers);
+    }
+  });
+
+  var checkLookups = function checkLookups(lookups, index, helpers) {
+    var modalDialogWaiter = function modalDialogWaiter() {
+      var dimmer = helpers.find('.ui.dimmer');
+      return !dimmer.hasClass('animating') || dimmer.hasClass('hidden');
+    };
+    _ember['default'].Test.registerWaiter(modalDialogWaiter);
+
+    var lookup = lookups[index];
+    var dialogButton = helpers.find('[data-test-lookup-change]', lookup);
+    helpers.click(dialogButton);
+    helpers.andThen(function () {
+      var dialog = helpers.findWithAssert('[data-test-lookup-dialog]');
+      helpers.findWithAssert('[data-test-lookup-olv]', dialog);
+      var closeButton = helpers.findWithAssert('.close', dialog);
+      helpers.click(closeButton);
+      helpers.andThen(function () {
+        _ember['default'].Test.unregisterWaiter(modalDialogWaiter);
+        if (index < lookups.length - 1) {
+          checkLookups(lookups, index + 1, helpers);
+        }
+      });
+    });
+  };
+});
+define('ember-flexberry/test-support/check-olv-config', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  _ember['default'].Test.registerAsyncHelper('checkOlvConfig', function (app, olvSelector, context, assert) {
+    var config = arguments.length <= 4 || arguments[4] === undefined ? [] : arguments[4];
+
+    var helpers = app.testHelpers;
+    var olv = helpers.findWithAssert(olvSelector, context);
+    var helperCells = helpers.find('tbody .object-list-view-helper-column-cell', olv);
+    var olvMenu = helpers.find('tbody .object-list-view-menu', olv);
+    config.forEach(function (prop) {
+      switch (prop) {
+        case 'refreshButton':
+          helpers.findWithAssert('.refresh-button', olv);
+          break;
+        case 'createNewButton':
+          helpers.findWithAssert('.create-button', olv);
+          break;
+        case 'deleteButton':
+          helpers.findWithAssert('.delete-button', olv);
+          break;
+        case 'colsConfigButton':
+          helpers.findWithAssert('.cols-config', olv);
+          break;
+        case 'exportExcelButton':
+          helpers.findWithAssert('.export-config', olv);
+          break;
+        case 'advLimitButton':
+          helpers.findWithAssert('.adv-limit-config', olv);
+          break;
+        case '_availableHierarchicalMode':
+          helpers.findWithAssert('.hierarchical-button .sitemap', olv);
+          break;
+        case 'availableCollExpandMode':
+          helpers.findWithAssert('.hierarchical-button .expand', olv);
+          break;
+        case 'enableFilters':
+          helpers.findWithAssert('.buttons.filter-active', olv);
+          break;
+        case 'filterButton':
+          helpers.findWithAssert('.olv-search', olv);
+          break;
+        case 'defaultSortingButton':
+          helpers.findWithAssert('.clear-sorting-button', olv);
+          break;
+        case 'showCheckBoxInRow':
+          helpers.findWithAssert('.check-all-at-page-button', olv);
+          helpers.findWithAssert('.check-all-button', olv);
+          var checkBoxes = helpers.find('.flexberry-checkbox', helperCells);
+          assert.equal(helperCells.length, checkBoxes.length, 'Every row have checkbox');
+          break;
+        case 'showEditButtonInRow':
+          var editButtons = helpers.find('.object-list-view-row-edit-button', helperCells);
+          assert.equal(helperCells.length, editButtons.length, 'Every row have edit button');
+          break;
+        case 'showPrototypeButtonInRow':
+          var protoButtons = helpers.find('.object-list-view-row-prototype-button', helperCells);
+          assert.equal(helperCells.length, protoButtons.length, 'Every row have prototype button');
+          break;
+        case 'showDeleteButtonInRow':
+          var deleteButtons = helpers.find('.object-list-view-row-delete-button', helperCells);
+          assert.equal(helperCells.length, deleteButtons.length, 'Every row have delete button');
+          break;
+        case 'showEditMenuItemInRow':
+          var editMenuButtons = helpers.find('.edit-menu', olvMenu);
+          assert.equal(olvMenu.length, editMenuButtons.length, 'Every row have edit menu button');
+          break;
+        case 'showPrototypeMenuItemInRow':
+          var protoMenuButtons = helpers.find('.prototype-menu', olvMenu);
+          assert.equal(olvMenu.length, protoMenuButtons.length, 'Every row have prototype menu button');
+          break;
+        case 'showDeleteMenuItemInRow':
+          var deleteMenuButtons = helpers.find('.delete-menu', olvMenu);
+          assert.equal(olvMenu.length, deleteMenuButtons.length, 'Every row have delete menu button');
+          break;
+        default:
+          throw new Error('Helper checkOlvConfig can\'t check ' + prop + ' config property');
+      }
+    });
+  });
+});
+define('ember-flexberry/test-support/check-olv-sort-for-each-column', ['exports', 'ember', 'ember-flexberry/test-support/utils/check-olv-sort-function'], function (exports, _ember, _emberFlexberryTestSupportUtilsCheckOlvSortFunction) {
+  'use strict';
+
+  _ember['default'].Test.registerAsyncHelper('checkOlvSortForEachColumn', function (app, olvSelector, context, assert) {
+    var helpers = app.testHelpers;
+    var olv = helpers.findWithAssert(olvSelector, context);
+    var headCells = helpers.find('thead .dt-head-left', olv).toArray();
+
+    if (headCells.length > 0) {
+      assert.expect(assert.expect() + headCells.length * 4);
+
+      checkColumns(headCells, 0, olv, helpers, assert);
+    } else {
+      throw new Error('Helper checkOlvSortForEachColumn can\'t check empty list');
+    }
+  });
+
+  var checkColumns = function checkColumns(headCells, index, olv, helpers, assert) {
+    var headCell = headCells[index];
+
+    click('.ui.clear-sorting-button');
+    click(headCell);
+    andThen(function () {
+      var sortValue = (0, _emberFlexberryTestSupportUtilsCheckOlvSortFunction.getHeaderSort)(olv, index, helpers);
+      assert.equal('▲', sortValue.icon, 'Sorting icon is not correct');
+      assert.equal(1, sortValue.index, 'Sorting index is not correct');
+
+      click(headCell);
+      andThen(function () {
+        var sortValue = (0, _emberFlexberryTestSupportUtilsCheckOlvSortFunction.getHeaderSort)(olv, index, helpers);
+        assert.equal('▼', sortValue.icon, 'Sorting icon is not correct');
+        assert.equal(1, sortValue.index, 'Sorting index is not correct');
+
+        if (index !== headCells.length - 1) {
+          checkColumns(headCells, index + 1, olv, helpers, assert);
+        }
+      });
+    });
+  };
+});
+define('ember-flexberry/test-support/check-olv-sort-on-all-columns', ['exports', 'ember', 'ember-flexberry/test-support/utils/check-olv-sort-function'], function (exports, _ember, _emberFlexberryTestSupportUtilsCheckOlvSortFunction) {
+  'use strict';
+
+  _ember['default'].Test.registerAsyncHelper('checkOlvSortOnAllColumns', function (app, olvSelector, context, assert) {
+    var helpers = app.testHelpers;
+    var olv = helpers.findWithAssert(olvSelector, context);
+    var headCells = helpers.find('thead .dt-head-left', olv).toArray();
+
+    if (headCells.length > 0) {
+      click('.ui.clear-sorting-button');
+      andThen(function () {
+        checkColumns(headCells, 0, olv, helpers, assert);
+      });
+    } else {
+      throw new Error('Helper checkOlvSortOnAllColumns can\'t check empty list');
+    }
+  });
+
+  var checkColumns = function checkColumns(headCells, index, olv, helpers, assert) {
+    var headCell = headCells[index];
+
+    triggerEvent(headCell, 'click', { ctrlKey: true });
+    andThen(function () {
+      var sortValue = (0, _emberFlexberryTestSupportUtilsCheckOlvSortFunction.getHeaderSort)(olv, index, helpers);
+      assert.equal('▲', sortValue.icon, 'Sorting icon is not correct');
+      assert.equal(index + 1, sortValue.index, 'Sorting index is not correct');
+
+      triggerEvent(headCell, 'click', { ctrlKey: true });
+      andThen(function () {
+        var sortValue = (0, _emberFlexberryTestSupportUtilsCheckOlvSortFunction.getHeaderSort)(olv, index, helpers);
+        assert.equal('▼', sortValue.icon, 'Sorting icon is not correct');
+        assert.equal(index + 1, sortValue.index, 'Sorting index is not correct');
+
+        if (index !== headCells.length - 1) {
+          checkColumns(headCells, index + 1, olv, helpers, assert);
+        }
+      });
+    });
+  };
+});
+define('ember-flexberry/test-support/go-to-new-form', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  _ember['default'].Test.registerAsyncHelper('goToNewForm', function (app, olvSelector, context, assert, newRoute) {
+    if (_ember['default'].isBlank(newRoute)) {
+      throw new Error('newRoute can\'t be undefined');
+    }
+
+    var helpers = app.testHelpers;
+    var olv = helpers.findWithAssert(olvSelector, context);
+    var newButton = helpers.findWithAssert('.secondary.menu .create-button', olv);
+    helpers.click(newButton);
+    helpers.andThen(function () {
+      assert.equal(helpers.currentRouteName(), newRoute, 'not on new route');
+    });
+  });
+});
+define('ember-flexberry/test-support/index', ['exports', 'ember-flexberry/test-support/go-to-new-form', 'ember-flexberry/test-support/check-olv-config', 'ember-flexberry/test-support/check-olv-sort-for-each-column', 'ember-flexberry/test-support/check-olv-sort-on-all-columns', 'ember-flexberry/test-support/check-delete-record-from-olv', 'ember-flexberry/test-support/open-editform', 'ember-flexberry/test-support/check-delete-record-from-e-form', 'ember-flexberry/test-support/check-close-edit-form', 'ember-flexberry/test-support/check-lock-edit-form', 'ember-flexberry/test-support/check-lookup-dialogs'], function (exports, _emberFlexberryTestSupportGoToNewForm, _emberFlexberryTestSupportCheckOlvConfig, _emberFlexberryTestSupportCheckOlvSortForEachColumn, _emberFlexberryTestSupportCheckOlvSortOnAllColumns, _emberFlexberryTestSupportCheckDeleteRecordFromOlv, _emberFlexberryTestSupportOpenEditform, _emberFlexberryTestSupportCheckDeleteRecordFromEForm, _emberFlexberryTestSupportCheckCloseEditForm, _emberFlexberryTestSupportCheckLockEditForm, _emberFlexberryTestSupportCheckLookupDialogs) {
+  'use strict';
+});
+define('ember-flexberry/test-support/open-editform', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  _ember['default'].Test.registerAsyncHelper('openEditform', function (app, olvSelector, context, assert, editRoute) {
+    if (_ember['default'].isBlank(editRoute)) {
+      throw new Error('editRoute can\'t be undefined');
+    }
+
+    var helpers = app.testHelpers;
+    var olv = helpers.findWithAssert(olvSelector, context);
+
+    var rows = helpers.findWithAssert('.object-list-view-container table.object-list-view tbody tr', olv);
+
+    var controller = app.__container__.lookup('controller:' + currentRouteName());
+    controller.set('rowClickable', true);
+
+    var timeout = 1000;
+    _ember['default'].run.later(function () {
+      helpers.click(rows[1].children[1]);
+      _ember['default'].run.later(function () {
+        assert.equal(helpers.currentRouteName(), editRoute, 'on edit route');
+      }, timeout);
+    }, timeout);
+  });
+});
+define('ember-flexberry/test-support/utils/check-olv-sort-function', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  var getHeaderSort = function getHeaderSort(olv, index, helpers) {
+    var headCells = helpers.find('thead .dt-head-left', olv).toArray();
+    var headCell = headCells[index];
+    var sort = helpers.find('.object-list-view-order-icon', headCell);
+    var sortValue = sort.text().trim();
+    var sortIndex = parseInt(sortValue.slice(1));
+
+    return {
+      index: sortIndex,
+      icon: sortValue.slice(0, 1)
+    };
+  };
+
+  exports.getHeaderSort = getHeaderSort;
+});
+define("ember-flexberry/test-support/utils/create-recort-for-test", ["exports"], function (exports) {
+  // Create record.
+  "use strict";
+
+  var createRecord = function createRecord(store, model, prop, id, data) {
+    var record = store.createRecord(model, {
+      id: id
+    });
+
+    record.set("" + prop, data + " " + id);
+
+    return record.save();
+  };
+
+  exports.createRecord = createRecord;
+});
 define('ember-qunit', ['exports', 'ember-qunit/module-for', 'ember-qunit/module-for-component', 'ember-qunit/module-for-model', 'ember-qunit/test', 'ember-qunit/only', 'ember-qunit/skip', 'ember-test-helpers'], function (exports, _emberQunitModuleFor, _emberQunitModuleForComponent, _emberQunitModuleForModel, _emberQunitTest, _emberQunitOnly, _emberQunitSkip, _emberTestHelpers) {
   'use strict';
 
