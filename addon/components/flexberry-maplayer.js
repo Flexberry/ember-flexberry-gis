@@ -645,7 +645,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         @method actions.onSubmenu
       */
       onSubmenu() {
-        openCloseSubmenu(this, true, 2);
+        let component = Ember.$('.' + this.get('componentName'));
+        let moreButton = Ember.$('.more.floated.button', component);
+        let elements = Ember.$('.more.submenu.hidden', component);
+        openCloseSubmenu(this, moreButton, elements,  2);
       },
 
       onAddCompare() {

@@ -1,14 +1,11 @@
 import Ember from 'ember';
 
 
-export default function openCloseSubmenu (context, isTree, incTop, decLeft) {
+export default function openCloseSubmenu (context, moreButton, elements, incTop, decLeft) {
   const isHidden = context.get('isSubmenu');
   context.set('isSubmenu', !isHidden);
 
   if (!isHidden) {
-    const component = isTree ? Ember.$('.' + context.get('componentName')) : context.get('element');
-    const moreButton = isTree ? Ember.$('.more.floated.button', component) : component.getElementsByClassName('icon item more');
-    const elements = isTree ? Ember.$('.more.submenu.hidden', component) : component.getElementsByClassName('more submenu hidden');
     const element = elements[0];
     const topMainButtons = window.document.getElementsByClassName('main-map-tab-bar')[0].getBoundingClientRect().top;
     Ember.run.next(() => {

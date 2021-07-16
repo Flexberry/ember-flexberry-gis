@@ -265,7 +265,10 @@ export default Ember.Component.extend({
       @method actions.onSubmenu
     */
     onSubmenu() {
-      openCloseSubmenu(this, false, 1, 8);
+      let component = this.get('element');
+      let moreButton = component.getElementsByClassName('icon item more');
+      let elements = component.getElementsByClassName('more submenu hidden')
+      openCloseSubmenu(this, moreButton, elements, false, 1, 8);
     },
     /**
       Performs row editing.
