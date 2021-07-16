@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 * Add geometry filters into `geojson` layers.
 * Add layer polygons intersection check.
 * Add support for point objects (markers) in vector layers legends.
+* Add utils open\close sub menu in componetns: feature-result-item and flexberry-maplayers.
 
 ### Changed
 * Change chart's library from `highcharts` to `chart.js`.
@@ -17,6 +18,8 @@ All notable changes to this project will be documented in this file.
 * Style icon minus on identification container.
 * Change leafletLayer loading, moved from layer-styles to `layers-styles-editor` component.
 * Update dependency on the `jquery-minicolors` bower package to version `2.3.4`.
+* icon on indetify panel: rectangle and broken line.
+* height on list of feature in identify panel.
 
 ### Fixed
 * Fix legends for graduated layer-style.

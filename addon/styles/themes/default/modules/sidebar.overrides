@@ -344,6 +344,15 @@
           border: 1px solid #E5E5E5;
           border-radius: 3.5px;
           box-sizing: border-box;
+          &.reversed {
+            div {
+              padding-top: 16px;
+            }
+            .button-more-submenu {
+              height: 20px;
+              margin-top: 2px;
+            }
+          }
           div {
             padding-top: 10px;
             padding-left: 8px;
