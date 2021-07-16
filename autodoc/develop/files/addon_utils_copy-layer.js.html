@@ -413,6 +413,8 @@
   @module ember-flexberry-gis
 */
 
+import generateUniqueId from &#x27;ember-flexberry-data/utils/generate-unique-id&#x27;;
+
 /**
   Creates copy of the specified map layer.
 
@@ -425,7 +427,7 @@
 */
 let copyLayer = function(layerModel, store, ignoreLinks) {
   // Create empty layer model.
-  let layerModelCopy = store.createRecord(&#x27;new-platform-flexberry-g-i-s-map-layer&#x27;);
+  let layerModelCopy = store.createRecord(&#x27;new-platform-flexberry-g-i-s-map-layer&#x27;, { id: generateUniqueId() });
 
   // Copy attibutes values into created empty model.
   copyAttributes(layerModel, layerModelCopy);
@@ -453,7 +455,7 @@ let copyLayerLinks = function(layerModel, layerModelCopy, store) {
 
   linkModels.forEach((linkModel) =&gt; {
     // Create empty layer link model.
-    let linkModelCopy = store.createRecord(&#x27;new-platform-flexberry-g-i-s-layer-link&#x27;);
+    let linkModelCopy = store.createRecord(&#x27;new-platform-flexberry-g-i-s-layer-link&#x27;, { id: generateUniqueId() });
 
     // Copy attibutes values into created empty model.
     copyAttributes(linkModel, linkModelCopy);
@@ -475,7 +477,7 @@ let copyLinkParameters = function(linkModel, linkModelCopy, store) {
 
   parameterModels.forEach((parameterModel) =&gt; {
     // Create empty link parameter model.
-    let parameterModelCopy = store.createRecord(&#x27;new-platform-flexberry-g-i-s-link-parameter&#x27;);
+    let parameterModelCopy = store.createRecord(&#x27;new-platform-flexberry-g-i-s-link-parameter&#x27;, { id: generateUniqueId() });
 
     // Copy attibutes values into created empty model.
     copyAttributes(parameterModel, parameterModelCopy);

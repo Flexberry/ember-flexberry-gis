@@ -422,6 +422,7 @@ import DomActionsMixin from &#x27;ember-flexberry/mixins/dom-actions&#x27;;
 import DynamicActionsMixin from &#x27;ember-flexberry/mixins/dynamic-actions&#x27;;
 import DynamicPropertiesMixin from &#x27;../mixins/dynamic-properties&#x27;;
 import GroupLayer from &#x27;../layers/group&#x27;;
+import generateUniqueId from &#x27;ember-flexberry-data/utils/generate-unique-id&#x27;;
 
 import layout from &#x27;../templates/components/flexberry-maplayers&#x27;;
 import { translationMacro as t } from &#x27;ember-i18n&#x27;;
@@ -949,7 +950,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       onAddButtonClick(e) {
         // Create empty layer model.
         let store = this.get(&#x27;store&#x27;);
-        let addDialogLayer = store.createRecord(&#x27;new-platform-flexberry-g-i-s-map-layer&#x27;);
+        let addDialogLayer = store.createRecord(&#x27;new-platform-flexberry-g-i-s-map-layer&#x27;, { id: generateUniqueId() });
         this.set(&#x27;_addDialogLayer&#x27;, addDialogLayer);
 
         // Include dialog to markup.

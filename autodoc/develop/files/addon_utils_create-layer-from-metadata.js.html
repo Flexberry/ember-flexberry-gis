@@ -414,6 +414,7 @@
 */
 
 import Ember from &#x27;ember&#x27;;
+import generateUniqueId from &#x27;ember-flexberry-data/utils/generate-unique-id&#x27;;
 
 /**
   Creates map layer from metadata.
@@ -425,14 +426,15 @@ import Ember from &#x27;ember&#x27;;
 */
 let createLayerFromMetadata = function(metadata, store) {
   let mapLayer = store.createRecord(&#x27;new-platform-flexberry-g-i-s-map-layer&#x27;, {
+      id: generateUniqueId(),
       name: metadata.get(&#x27;name&#x27;),
       description: metadata.get(&#x27;description&#x27;),
       keyWords: metadata.get(&#x27;keyWords&#x27;),
       type: metadata.get(&#x27;type&#x27;),
       settings: metadata.get(&#x27;settings&#x27;),
-      scale:metadata.get(&#x27;scale&#x27;),
-      coordinateReferenceSystem:metadata.get(&#x27;coordinateReferenceSystem&#x27;),
-      boundingBox:metadata.get(&#x27;boundingBox&#x27;),
+      scale: metadata.get(&#x27;scale&#x27;),
+      coordinateReferenceSystem: metadata.get(&#x27;coordinateReferenceSystem&#x27;),
+      boundingBox: metadata.get(&#x27;boundingBox&#x27;),
 
       // If user has chosen to open metadata on map, then layer created on metadata basics must be visible by default.
       visibility: true
@@ -457,6 +459,7 @@ let addLinkMetadata = function(layerModel, linkMetadata, store) {
 
   linkMetadata.forEach((item) =&gt; {
     let newLayerLink = store.createRecord(&#x27;new-platform-flexberry-g-i-s-layer-link&#x27;, {
+      id: generateUniqueId(),
       allowShow: item.get(&#x27;allowShow&#x27;),
       mapObjectSetting: item.get(&#x27;mapObjectSetting&#x27;)
     });
@@ -481,6 +484,7 @@ let addLinkParametersMetadata = function(layerLinkModel, parameters, store) {
 
   parameters.forEach((item) =&gt; {
     let newLinkParameter = store.createRecord(&#x27;new-platform-flexberry-g-i-s-link-parameter&#x27;, {
+      id: generateUniqueId(),
       objectField: item.get(&#x27;objectField&#x27;),
       layerField: item.get(&#x27;layerField&#x27;),
       expression: item.get(&#x27;expression&#x27;),

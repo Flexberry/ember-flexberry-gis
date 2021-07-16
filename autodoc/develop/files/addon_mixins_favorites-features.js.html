@@ -416,6 +416,7 @@
 import Ember from &#x27;ember&#x27;;
 import LeafletZoomToFeatureMixin from &#x27;../mixins/leaflet-zoom-to-feature&#x27;;
 import { translationMacro as t } from &#x27;ember-i18n&#x27;;
+import generateUniqueId from &#x27;ember-flexberry-data/utils/generate-unique-id&#x27;;
 
 export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
 
@@ -543,12 +544,12 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         Ember.set(feature.properties, &#x27;isFavorite&#x27;, true);
         if (layerModelIndex !== false) {
           favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);
-          let newRecord = { objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
+          let newRecord = { id: generateUniqueId(), objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
           let record = store.createRecord(&#x27;i-i-s-r-g-i-s-p-k-favorite-features&#x27;, newRecord);
           record.save();
         } else {
           favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature.layerModel, feature);
-          let newRecord = { objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
+          let newRecord = { id: generateUniqueId(), objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
           let record = store.createRecord(&#x27;i-i-s-r-g-i-s-p-k-favorite-features&#x27;, newRecord);
           record.save();
         }

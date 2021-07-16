@@ -415,6 +415,7 @@
 
 import Ember from &#x27;ember&#x27;;
 import FlexberryDdauCheckboxActionsHandlerMixin from &#x27;ember-flexberry/mixins/flexberry-ddau-checkbox-actions-handler&#x27;;
+import generateUniqueId from &#x27;ember-flexberry-data/utils/generate-unique-id&#x27;;
 
 /**
   Mixin containing handlers for
@@ -468,7 +469,7 @@ export default Ember.Mixin.create({
     */
     addLayerLink() {
       let model = this.get(this.get(&#x27;linksPropertyPath&#x27;));
-      let record = this.get(&#x27;store&#x27;).createRecord(this.get(&#x27;linksModelName&#x27;));
+      let record = this.get(&#x27;store&#x27;).createRecord(this.get(&#x27;linksModelName&#x27;), { id: generateUniqueId() });
 
       model.pushObject(record);
     },

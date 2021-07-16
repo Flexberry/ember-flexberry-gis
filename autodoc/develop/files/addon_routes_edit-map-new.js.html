@@ -415,6 +415,7 @@
 
 import Ember from &#x27;ember&#x27;;
 import EditMapRoute from &#x27;./edit-map&#x27;;
+import generateUniqueId from &#x27;ember-flexberry-data/utils/generate-unique-id&#x27;;
 
 /**
   Edit new map route.
@@ -444,7 +445,7 @@ export default EditMapRoute.extend({
   */
   model(params, transition) {
     return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      let mapProject = this.store.createRecord(this.get(&#x27;modelName&#x27;));
+      let mapProject = this.store.createRecord(this.get(&#x27;modelName&#x27;), { id: generateUniqueId() });
       mapProject.set(&#x27;mapLayer&#x27;, Ember.A());
 
       if (Ember.isPresent(params.metadata)) {

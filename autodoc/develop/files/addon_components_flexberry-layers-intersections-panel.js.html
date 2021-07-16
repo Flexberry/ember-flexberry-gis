@@ -888,7 +888,6 @@ export default Ember.Component.extend({
     }
 
     let square = this.get(&#x27;square&#x27;);
-    let mapModel = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;);
     e.results.forEach((layer) =&gt; {
       layer.features.then((features) =&gt; {
         features.forEach((item) =&gt; {

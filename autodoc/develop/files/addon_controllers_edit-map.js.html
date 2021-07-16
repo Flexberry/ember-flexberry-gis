@@ -421,6 +421,7 @@ import LayerResultListActionsHandlerMixin from &#x27;../mixins/layer-result-list
 import LocalStorageBindingMixin from &#x27;../mixins/local-storage-binding&#x27;;
 import FavoritesListMixin from &#x27;../mixins/favorites-features&#x27;;
 import sideBySide from &#x27;npm:leaflet-side-by-side&#x27;;
+import generateUniqueId from &#x27;ember-flexberry-data/utils/generate-unique-id&#x27;;
 /**
   Edit map controller.
 
@@ -664,7 +665,7 @@ export default EditFormController.extend(
     createLayer(options) {
       options = options || {};
       let parentLayer = Ember.get(options, &#x27;parentLayer&#x27;);
-      let layerProperties = Ember.get(options, &#x27;layerProperties&#x27;);
+      let layerProperties = Ember.$.extend({ id: generateUniqueId() }, Ember.get(options, &#x27;layerProperties&#x27;));
 
       let store = this.get(&#x27;store&#x27;);
       let layer = store.createRecord(&#x27;new-platform-flexberry-g-i-s-map-layer&#x27;, layerProperties);

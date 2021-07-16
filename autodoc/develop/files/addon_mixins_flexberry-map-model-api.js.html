@@ -1637,7 +1637,6 @@ export default Ember.Mixin.create(SnapDraw, {
 
         break;
       case &#x27;MultiPolygon&#x27;:
-        let k = 0;
         for (let i = 0; i &lt; coords.length; i++) {
           for (let j = 0; j &lt; coords[i].length; j++) {
             result.push(coordToRhumbs(&#x27;Polygon&#x27;, coords[i][j]));
@@ -2065,7 +2064,6 @@ export default Ember.Mixin.create(SnapDraw, {
   */
   differenceLayers(layerAId, layerBId) {
     return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      let result = Ember.A();
       let crsA = this._getModelLeafletObject(layerAId)[1].options.crs.code;
       let crsB = this._getModelLeafletObject(layerBId)[1].options.crs.code;
       let arrayPointsAndFeaturePromises = [this._addToArrayPointsAndFeature(layerAId), this._addToArrayPointsAndFeature(layerBId)];
@@ -2182,7 +2180,7 @@ export default Ember.Mixin.create(SnapDraw, {
               objectDifference: featureLayer
             };
 
-            let filterByCondition = layerFeatures.every((feat) =&gt; {
+            layerFeatures.every((feat) =&gt; {
               let jstsFeat = jstsGeoJSONReader.read(feat.feature);
               if (jstsFeat.geometry.isValid()) {
                 switch (condition) {

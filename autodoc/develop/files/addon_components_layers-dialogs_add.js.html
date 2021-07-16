@@ -653,6 +653,8 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
               this.set(&#x27;typeMessage&#x27;, &#x27;error&#x27;);
             });
         }
+      } else {
+        this._super(...arguments);
       }
     },
 
