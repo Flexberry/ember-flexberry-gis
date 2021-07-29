@@ -164,7 +164,8 @@ export default BaseVectorLayer.extend({
 
       layer.leafletMap = leafletMap;
 
-      leafletObject.baseAddLayer(layer);
+      if (!Ember.isNone(leafletObject))
+        leafletObject.baseAddLayer(layer);
     });
 
     this._super(...arguments);
@@ -381,18 +382,7 @@ export default BaseVectorLayer.extend({
           wfsLayer.maxZoom = this.get('maxZoom');
           wfsLayer.leafletMap = leafletMap;
           this.set('loadedBounds', null);
-          Object.values(wfsLayer._layers).forEach((layer) => {
-            if (this.get('_pane')) {
-              if (layer instanceof L.Marker) {
-                layer.options.shadowPane = this.get('_pane');
-              }
-
-              layer.options.pane = this.get('_pane');
-              layer.options.renderer = this.get('_renderer');
-            }
-
-            layer.leafletMap = leafletMap;
-          });
+          this._addLayersOnMap(Object.values(wfsLayer._layers));
           let load = this.continueLoad(wfsLayer);
           wfsLayer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
           wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);
