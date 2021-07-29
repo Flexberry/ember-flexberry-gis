@@ -164,8 +164,10 @@ export default BaseVectorLayer.extend({
 
       layer.leafletMap = leafletMap;
 
-      if (!Ember.isNone(leafletObject))
+      if (!Ember.isNone(leafletObject)) {
         leafletObject.baseAddLayer(layer);
+      }
+
     });
 
     this._super(...arguments);

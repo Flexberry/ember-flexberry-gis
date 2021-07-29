@@ -222,9 +222,9 @@ test('_addLayersOnMap() with options showExisting = true and continueLoading = f
     options.showExisting = true;
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
       let layers = Object.values(res.target._layers);
-      component._addLayersOnMap(layers)
-      assert.equal(layers[0].options.pane, component.get('_pane'), "Pane on object eqals pane on layer");
-      assert.equal(layers[0].options.renderer, component.get('_renderer'), "Renderer on object eqals renderer on layer");
+      component._addLayersOnMap(layers);
+      assert.equal(layers[0].options.pane, component.get('_pane'), 'Pane on object eqals pane on layer');
+      assert.equal(layers[0].options.renderer, component.get('_renderer'), 'Renderer on object eqals renderer on layer');
       done();
     });
 
