@@ -674,11 +674,11 @@ test('test editLayer', function (assert) {
     });
   });
 });
-test('test getNearObject with urlWPS', function (assert) {
+test('test getNearObject with wpsUrl', function (assert) {
   assert.expect(9);
   var done = assert.async(2);
   Ember.run(() => {
-    options = Ember.$.extend(options, { pkField: 'primarykey', urlWPS: 'http://localhost:8080/geoserver/wps' });
+    options = Ember.$.extend(options, { pkField: 'primarykey', wpsUrl: 'http://localhost:8080/geoserver/wps' });
     let layerModel = Ember.Object.create({
       type: 'wfs',
       visibility: false,
@@ -763,11 +763,11 @@ test('test getNearObject with urlWPS', function (assert) {
     });
   });
 });
-test('test getNearObject with urlWPS, Nearest object not found', function (assert) {
+test('test getNearObject with wpsUrl, Nearest object not found', function (assert) {
   assert.expect(7);
   var done = assert.async(2);
   Ember.run(() => {
-    options = Ember.$.extend(options, { pkField: 'primarykey', urlWPS: 'http://localhost:8080/geoserver/wps' });
+    options = Ember.$.extend(options, { pkField: 'primarykey', wpsUrl: 'http://localhost:8080/geoserver/wps' });
     let layerModel = Ember.Object.create({
       type: 'wfs',
       visibility: false,
@@ -829,7 +829,7 @@ test('test getNearObject with urlWPS, Nearest object not found', function (asser
   });
 });
 
-test('test getNearObject without urlWPS, same layer', function (assert) {
+test('test getNearObject without wpsUrl, same layer', function (assert) {
   assert.expect(10);
   var done = assert.async(2);
   Ember.run(() => {
@@ -977,7 +977,7 @@ test('test getNearObject without urlWPS, same layer', function (assert) {
     });
   });
 });
-test('test getNearObject without urlWPS, other layer', function (assert) {
+test('test getNearObject without wpsUrl, other layer', function (assert) {
   assert.expect(10);
   var done = assert.async(2);
   Ember.run(() => {
@@ -1001,26 +1001,26 @@ test('test getNearObject without urlWPS, other layer', function (assert) {
 
     // feature1
     let feature1 =  {
-      "type": "Feature",
-      "id": "kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb6",
-      "geometry": {
-        "type": "MultiPolygon",
-        "coordinates": [[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]
+      'type': 'Feature',
+      'id': 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb6',
+      'geometry': {
+        'type': 'MultiPolygon',
+        'coordinates': [[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]
       },
-      "geometry_name": "shape",
-      "properties": {
-        "primarykey": "df5178d8-aa47-4b92-ba08-2404ea26fdb6",
-        "nomer": null,
-        "lesnichestvo": null,
-        "uchastkovoelesnichestvo": null,
-        "urochishe": null,
-        "area": null,
-        "length": null,
-        "id": null,
-        "createtime": null,
-        "creator": null,
-        "edittime": null,
-        "editor": null
+      'geometry_name': 'shape',
+      'properties': {
+        'primarykey': 'df5178d8-aa47-4b92-ba08-2404ea26fdb6',
+        'nomer': null,
+        'lesnichestvo': null,
+        'uchastkovoelesnichestvo': null,
+        'urochishe': null,
+        'area': null,
+        'length': null,
+        'id': null,
+        'createtime': null,
+        'creator': null,
+        'edittime': null,
+        'editor': null
       },
     };
     let polygon1 = L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
@@ -1029,26 +1029,26 @@ test('test getNearObject without urlWPS, other layer', function (assert) {
 
     // feature 2
     let feature2 =  {
-      "type": "Feature",
-      "id": "kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb7",
-      "geometry": {
-        "type": "MultiPolygon",
-        "coordinates": [[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]
+      'type': 'Feature',
+      'id': 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb7',
+      'geometry': {
+        'type': 'MultiPolygon',
+        'coordinates': [[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]
       },
-      "geometry_name": "shape",
-      "properties": {
-        "primarykey": "df5178d8-aa47-4b92-ba08-2404ea26fdb7",
-        "nomer": null,
-        "lesnichestvo": null,
-        "uchastkovoelesnichestvo": null,
-        "urochishe": null,
-        "area": null,
-        "length": null,
-        "id": null,
-        "createtime": null,
-        "creator": null,
-        "edittime": null,
-        "editor": null
+      'geometry_name': 'shape',
+      'properties': {
+        'primarykey': 'df5178d8-aa47-4b92-ba08-2404ea26fdb7',
+        'nomer': null,
+        'lesnichestvo': null,
+        'uchastkovoelesnichestvo': null,
+        'urochishe': null,
+        'area': null,
+        'length': null,
+        'id': null,
+        'createtime': null,
+        'creator': null,
+        'edittime': null,
+        'editor': null
       },
     };
     let polygon2 = L.polygon([[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]);
@@ -1057,26 +1057,26 @@ test('test getNearObject without urlWPS, other layer', function (assert) {
 
     // feature3 - same object
     let feature3 =  {
-      "type": "Feature",
-      "id": "kvartalutverzhdenopolygon32640.234",
-      "geometry": {
-        "type": "MultiPolygon",
-        "coordinates": [[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]
+      'type': 'Feature',
+      'id': 'kvartalutverzhdenopolygon32640.234',
+      'geometry': {
+        'type': 'MultiPolygon',
+        'coordinates': [[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]
       },
-      "geometry_name": "shape",
-      "properties": {
-        "primarykey": "234",
-        "nomer": null,
-        "lesnichestvo": null,
-        "uchastkovoelesnichestvo": null,
-        "urochishe": null,
-        "area": null,
-        "length": null,
-        "id": null,
-        "createtime": null,
-        "creator": null,
-        "edittime": null,
-        "editor": null
+      'geometry_name': 'shape',
+      'properties': {
+        'primarykey': '234',
+        'nomer': null,
+        'lesnichestvo': null,
+        'uchastkovoelesnichestvo': null,
+        'urochishe': null,
+        'area': null,
+        'length': null,
+        'id': null,
+        'createtime': null,
+        'creator': null,
+        'edittime': null,
+        'editor': null
       },
     };
     let polygon3 = L.polygon([[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]);
@@ -1125,7 +1125,7 @@ test('test getNearObject without urlWPS, other layer', function (assert) {
     });
   });
 });
-test('test getNearObject without urlWPS, Nearest object not found', function (assert) {
+test('test getNearObject without wpsUrl, Nearest object not found', function (assert) {
   assert.expect(8);
   var done = assert.async(2);
   Ember.run(() => {

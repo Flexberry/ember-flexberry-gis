@@ -97,7 +97,11 @@ export default BaseLayer.extend({
       return false;
     }
 
-    let combineType = !Ember.isNone(Ember.get(layer, 'settingsAsObject')) ? Ember.get(layer, 'settingsAsObject.type') : Ember.get(layer, 'settings.type');
+    let combineType = !Ember.isNone(Ember.get(layer, 'settingsAsObject')) ? Ember.get(layer, 'settingsAsObject.type') : null;
+    if (Ember.isNone(combineType)) {
+      return false;
+    }
+
     let layerClass = Ember.getOwner(this).knownForType('layer', combineType);
     return !Ember.isNone(layerClass) && layerClass.isVectorType(layer);
   }

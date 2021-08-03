@@ -51,6 +51,6 @@ export default Ember.Component.extend({
       null :
       Ember.getOwner(this).knownForType('layer', className);
 
-    return !Ember.isNone(layerClass) && layerClass.isVectorType(this.get('_layer'));
+    return !Ember.isNone(layerClass) && layerClass.isVectorType(this.get('layerModel'));
   })
 });

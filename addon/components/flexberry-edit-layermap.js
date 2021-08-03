@@ -441,7 +441,7 @@ export default Ember.Component.extend(
         Ember.getOwner(this).knownForType('layer', className);
 
       // Style settings are available only for vector layers.
-      return !Ember.isNone(layerClass) && layerClass.isVectorType(this.get('_layer'));
+      return !Ember.isNone(layerClass) && layerClass.isVectorType(this.get('layer'));
     }),
 
     /**

@@ -36,7 +36,7 @@ export default BaseVectorLayer.extend({
     'forceMulti',
     'withCredentials',
     'continueLoading',
-    'urlWPS'
+    'wpsUrl'
   ],
 
   /**
@@ -995,7 +995,7 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-    Create body of request gs:Nearest for WPS.
+    Request with filter DWithin.
 
     @method dwithin
     @param {Object} featureLayer Leaflet layer object.
@@ -1054,10 +1054,10 @@ export default BaseVectorLayer.extend({
 
   /**
     Get nearest object.
-    If settings of layer has urlWPS, it do request to WPS service with request 'gs:Nearest'. It get data for request calling getWPSgsNearest().
+    If settings of layer has wpsUrl, it do request to WPS service with request 'gs:Nearest'. It get data for request calling getWPSgsNearest().
     Response of WPS servise is FeatureCollection in json format with one feature without themselves properties of feature.
     Therefore, feature by id is loaded and distance is calculated.
-    If settings of layer has not urlWPS, it do call upDistance() for array of distances [1, 10, 100, 1000, 10000, 100000, 1000000].
+    If settings of layer has not wpsUrl, it do call upDistance() for array of distances [1, 10, 100, 1000, 10000, 100000, 1000000].
     Result being processed base-vector-layer's method _calcNearestObject.
 
     @method getNearObject
@@ -1073,13 +1073,13 @@ export default BaseVectorLayer.extend({
       let mapApi = this.get('mapApi').getFromApi('mapModel');
       let leafletObject = this.get('_leafletObject');
       let layerModel = this.get('layerModel');
-      let urlWPS = leafletObject.options.urlWPS;
-      if (!Ember.isNone(urlWPS)) {
+      let wpsUrl = leafletObject.options.wpsUrl;
+      if (!Ember.isNone(wpsUrl)) {
         let point = L.marker(mapApi.getObjectCenter(e.featureLayer)).toEWKT(L.CRS.EPSG4326).replace('SRID=4326;', '');
         let data = this.getWPSgsNearest(point);
         let _this = this;
         Ember.$.ajax({
-          url: `${urlWPS}?`,
+          url: `${wpsUrl}?`,
           type: 'POST',
           contentType: 'text/xml',
           data: data,
@@ -1120,7 +1120,7 @@ export default BaseVectorLayer.extend({
             }
           },
           error: function (error) {
-            reject(`Error for request getNearObject via WPS ${urlWPS} for layer ${layerModel.get('name')}: ${error}`);
+            reject(`Error for request getNearObject via WPS ${wpsUrl} for layer ${layerModel.get('name')}: ${error}`);
           }
         });
       } else {

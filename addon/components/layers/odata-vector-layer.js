@@ -1485,9 +1485,14 @@ export default BaseVectorLayer.extend({
           let odataUrl = _this.get('odataUrl');
           obj.adapter.callAction(
             config.APP.backendActions.getNearDistance,
-            { geom: L.marker(mapApi.getObjectCenter(e.featureLayer)).toEWKT(_this.get('crs')),
-            odataQueryName: odataQueryName, odataProjectionName: obj.projectionName },
-            odataUrl, null, (data) => {
+            {
+              geom: L.marker(mapApi.getObjectCenter(e.featureLayer)).toEWKT(_this.get('crs')),
+              odataQueryName: odataQueryName,
+              odataProjectionName: obj.projectionName
+            },
+            odataUrl,
+            null,
+            (data) => {
               new Ember.RSVP.Promise((resolve) => {
                 const normalizedRecords = { data: Ember.A(), included: Ember.A() };
                 let odataValue = data.value;
@@ -1506,11 +1511,11 @@ export default BaseVectorLayer.extend({
                 }
 
                 resolve(Ember.run(obj.store, obj.store.push, normalizedRecords));
-              }).then((res) => {
+              }).then((result) => {
                 let features = Ember.A();
-                let models = res;
-                if (typeof res.toArray === 'function') {
-                  models = res.toArray();
+                let models = result;
+                if (typeof result.toArray === 'function') {
+                  models = result.toArray();
                 }
 
                 let layer = L.featureGroup();
@@ -1528,8 +1533,8 @@ export default BaseVectorLayer.extend({
                 });
               });
             },
-            (mes) => {
-              reject(mes);
+            (message) => {
+              reject(message);
             }
           );
         }
