@@ -206,7 +206,7 @@ export default Ember.Mixin.create(rhumbOperations, {
 
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let unionres = geojsonWriter.write(resultObject);
-    let crsResult = 'EPSG:' + geometries[0].getSRID();
+    let crsResult = 'EPSG:' + Ember.isNone(geometries) ? "" :  geometries[0].getSRID();
 
     let type = unionres.type;
     let coordinates = unionres.coordinates;

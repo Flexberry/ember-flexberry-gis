@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 * Add layer polygons intersection check.
 * Add support for point objects (markers) in vector layers legends.
 * Add utils open\close sub menu in componetns: feature-result-item and flexberry-maplayers.
+* Add geometryPrecisionReducer in function getMulti
 
 ### Changed
 * Change chart's library from `highcharts` to `chart.js`.
