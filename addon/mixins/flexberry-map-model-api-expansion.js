@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import rhumbOperations from '../utils/rhumb-operations';
 import { getLeafletCrs } from '../utils/leaflet-crs';
-import { geometryToJsts } from '../utils/layer-to-jsts';
+import { geometryToJsts, geometryPrecisionReducer } from '../utils/layer-to-jsts';
 import jsts from 'npm:jsts';
 
 export default Ember.Mixin.create(rhumbOperations, {
@@ -152,7 +152,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     let separateObjects = [];
     let resultObject = null;
     let geometries = [];
-    let precisionReducer = GeometryPrecisionReducer(10000);
+    let precisionReducer = geometryPrecisionReducer(this.get('mapApi').getFromApi('precisionScale'));
     objects.forEach((element, i) => {
       let g = element;
       if (isJsts) {
@@ -161,7 +161,9 @@ export default Ember.Mixin.create(rhumbOperations, {
       }
 
       if (g.isValid()) {
-        geometries.push(precisionReducer.reduce(g));
+        let reducedGeometry = precisionReducer.reduce(g);
+        reducedGeometry.setSRID(g.getSRID());
+        geometries.push(reducedGeometry);
         let j = geometries.length - 1;
         if (j !== 0 && this.getGeometryKind(geometries[j]) !== this.getGeometryKind(geometries[j - 1])) {
           throw 'error: type mismatch. Objects must have the same type';
@@ -206,7 +208,7 @@ export default Ember.Mixin.create(rhumbOperations, {
 
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let unionres = geojsonWriter.write(resultObject);
-    let crsResult = 'EPSG:' + Ember.isNone(geometries) ? "" :  geometries[0].getSRID();
+    let crsResult = 'EPSG:' + (Ember.isNone(geometries) ? '' :  geometries[0].getSRID());
 
     let type = unionres.type;
     let coordinates = unionres.coordinates;

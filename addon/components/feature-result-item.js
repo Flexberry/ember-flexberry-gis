@@ -5,7 +5,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/feature-result-item';
 import { translationMacro as t } from 'ember-i18n';
-import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu'
+import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
 
 /**
   Component for display GeoJSON feature object details
@@ -267,7 +267,7 @@ export default Ember.Component.extend({
     onSubmenu() {
       let component = this.get('element');
       let moreButton = component.getElementsByClassName('icon item more');
-      let elements = component.getElementsByClassName('more submenu hidden')
+      let elements = component.getElementsByClassName('more submenu hidden');
       openCloseSubmenu(this, moreButton, elements, false, 1, 8);
     },
     /**
