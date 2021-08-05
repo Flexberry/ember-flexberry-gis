@@ -226,7 +226,7 @@ export default Ember.Component.extend({
   _error: Ember.computed('_leafletObject', 'leafletMap', function() {
     let leafletObject = this.get('_leafletObject');
     let leafletMap = this.get('leafletMap');
-    return !leafletMap.hasLayer(leafletObject);
+    return leafletMap && !leafletMap.hasLayer(leafletObject);
   }),
 
   /**

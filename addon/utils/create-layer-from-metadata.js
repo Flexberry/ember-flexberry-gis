@@ -15,6 +15,7 @@ import uuid from 'npm:node-uuid';
 */
 let createLayerFromMetadata = function(metadata, store) {
   let mapLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', {
+      id: generateUniqueId(),
       name: metadata.get('name'),
       description: metadata.get('description'),
       keyWords: metadata.get('keyWords'),
@@ -48,6 +49,7 @@ let addLinkMetadata = function(layerModel, linkMetadata, store) {
 
   linkMetadata.forEach((item) => {
     let newLayerLink = store.createRecord('new-platform-flexberry-g-i-s-layer-link', {
+      id: generateUniqueId(),
       allowShow: item.get('allowShow'),
       mapObjectSetting: item.get('mapObjectSetting')
     });
@@ -72,6 +74,7 @@ let addLinkParametersMetadata = function(layerLinkModel, parameters, store) {
 
   parameters.forEach((item) => {
     let newLinkParameter = store.createRecord('new-platform-flexberry-g-i-s-link-parameter', {
+      id: generateUniqueId(),
       objectField: item.get('objectField'),
       layerField: item.get('layerField'),
       expression: item.get('expression'),

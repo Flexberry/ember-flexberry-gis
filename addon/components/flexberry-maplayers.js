@@ -508,7 +508,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       onAddButtonClick(e) {
         // Create empty layer model.
         let store = this.get('store');
-        let addDialogLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer');
+        let addDialogLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId() });
         this.set('_addDialogLayer', addDialogLayer);
 
         // Include dialog to markup.

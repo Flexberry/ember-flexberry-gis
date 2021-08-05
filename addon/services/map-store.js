@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { Query } from 'ember-flexberry-data';
 import epsg3857 from '../coordinate-reference-systems/epsg-3857';
+import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
 const {
   Builder
@@ -57,6 +58,7 @@ export default Ember.Service.extend({
     let store = this.get('store');
     let crs = JSON.stringify(epsg3857);
     let mapModel = store.createRecord(this.get('_mapModelName'), {
+      id: generateUniqueId(),
       name: 'OSM',
       lat: 0,
       lng: 0,
@@ -66,6 +68,7 @@ export default Ember.Service.extend({
     });
 
     let openStreetMapLayer = store.createRecord(this.get('_layerModelname'), {
+      id: generateUniqueId(),
       name: 'OSM',
       type: 'osm',
       visibility: true,

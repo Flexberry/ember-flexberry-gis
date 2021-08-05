@@ -11,6 +11,7 @@ import DomActionsMixin from 'ember-flexberry/mixins/dom-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import { copyLayer } from '../utils/copy-layer';
+import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
 import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
 import layout from '../templates/components/flexberry-maplayer';
@@ -764,7 +765,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onAddButtonClick(e) {
         // Create empty layer.
         let store = this.get('store');
-        this.set('_addDialogLayer', store.createRecord('new-platform-flexberry-g-i-s-map-layer'));
+        this.set('_addDialogLayer', store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId() }));
 
         // Include dialog to markup.
         this.set('_addDialogHasBeenRequested', true);
