@@ -164,7 +164,10 @@ export default BaseVectorLayer.extend({
 
       layer.leafletMap = leafletMap;
 
-      leafletObject.baseAddLayer(layer);
+      if (!Ember.isNone(leafletObject)) {
+        leafletObject.baseAddLayer(layer);
+      }
+
     });
 
     this._super(...arguments);
@@ -381,6 +384,9 @@ export default BaseVectorLayer.extend({
           wfsLayer.maxZoom = this.get('maxZoom');
           wfsLayer.leafletMap = leafletMap;
           this.set('loadedBounds', null);
+
+          // this.get('_leafletObject') is null at this moment. _layers hasn't pane and renderer. For marker layer this is critical (ignore zoom), but for polygon layer doesn't.
+          this._addLayersOnMap(Object.values(wfsLayer._layers));
           let load = this.continueLoad(wfsLayer);
           wfsLayer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
           wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);

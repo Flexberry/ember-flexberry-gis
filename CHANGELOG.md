@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 * Add geometry filters into `geojson` layers.
 * Add layer polygons intersection check.
 * Add support for point objects (markers) in vector layers legends.
+* Add pane and renderer on objects in layer WFS when layer is created.
 * Add utils open\close sub menu in componetns: feature-result-item and flexberry-maplayers.
 
 ### Changed
