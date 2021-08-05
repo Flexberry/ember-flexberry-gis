@@ -152,6 +152,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     let separateObjects = [];
     let resultObject = null;
     let geometries = [];
+    let precisionReducer = GeometryPrecisionReducer(10000);
     objects.forEach((element, i) => {
       let g = element;
       if (isJsts) {
@@ -160,7 +161,7 @@ export default Ember.Mixin.create(rhumbOperations, {
       }
 
       if (g.isValid()) {
-        geometries.push(g);
+        geometries.push(precisionReducer.reduce(g));
         let j = geometries.length - 1;
         if (j !== 0 && this.getGeometryKind(geometries[j]) !== this.getGeometryKind(geometries[j - 1])) {
           throw 'error: type mismatch. Objects must have the same type';
