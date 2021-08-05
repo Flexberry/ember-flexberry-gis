@@ -94,10 +94,6 @@ let coordToJsts = function(coord) {
         null;
 };
 
-let geometryPrecisionReducer = function(scale) {
-  return new jsts.precision.GeometryPrecisionReducer(new jsts.geom.PrecisionModel(scale));
-};
-
 let geometryToJsts = function(geometry) {
   let coords = [];
   switch (geometry.type) {
@@ -143,6 +139,5 @@ export {
   latlngToPointJsts,
   latlngToPolylineJsts,
   latlngToPolygonJsts,
-  geometryToJsts,
-  geometryPrecisionReducer
+  geometryToJsts
 };

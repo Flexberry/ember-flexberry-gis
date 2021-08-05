@@ -97,8 +97,7 @@ test(`it identify on 'geojson' layer`, function(assert) {
     let store = app.__container__.lookup('service:store');
     let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
     let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-    getmapApiStub.withArgs('mapModel').returns(mapModel);
-    getmapApiStub.withArgs('precisionScale').returns(10000);
+    getmapApiStub.returns(mapModel);
 
     component.identify(select([[[4, 4], [2, 4], [2, 6], [4, 6], [4, 4]]])).then((results) => {
       assert.equal(results.length, 0, 'Empty area is selected.');

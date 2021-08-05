@@ -18,6 +18,11 @@ const { assert } = Ember;
 export const begIndex = 300;
 
 /**
+  This constant need to jsts in PrecionModel
+*/
+export const scale = 10000;
+
+/**
   BaseVectorLayer component for other flexberry-gis vector(geojson, kml, etc.) layers.
 
   @class BaseVectorLayerComponent
@@ -432,7 +437,6 @@ export default BaseLayer.extend({
         let bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
         let leafletLayer = this.get('_leafletObject');
         let mapModel = this.get('mapApi').getFromApi('mapModel');
-        let scale = this.get('mapApi').getFromApi('precisionScale');
         leafletLayer.eachLayer(function (layer) {
           let geoLayer = layer.toGeoJSON();
           let primitive = new Terraformer.Primitive(geoLayer.geometry);
