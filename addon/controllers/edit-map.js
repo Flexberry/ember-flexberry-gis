@@ -10,6 +10,7 @@ import FlexberryLayersActionsHandlerMixin from '../mixins/flexberry-layers-actio
 import LayerResultListActionsHandlerMixin from '../mixins/layer-result-list-actions-handler';
 import LocalStorageBindingMixin from '../mixins/local-storage-binding';
 import FavoritesListMixin from '../mixins/favorites-features';
+import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
 /**
   Edit map controller.
@@ -203,7 +204,7 @@ export default EditFormController.extend(
     createLayer(options) {
       options = options || {};
       let parentLayer = Ember.get(options, 'parentLayer');
-      let layerProperties = Ember.get(options, 'layerProperties');
+      let layerProperties = Ember.$.extend({ id: generateUniqueId() }, Ember.get(options, 'layerProperties'));
 
       let store = this.get('store');
       let layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', layerProperties);

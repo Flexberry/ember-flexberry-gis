@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import EditMapRoute from './edit-map';
+import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
 /**
   Edit new map route.
@@ -33,7 +34,7 @@ export default EditMapRoute.extend({
   */
   model(params, transition) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let mapProject = this.store.createRecord(this.get('modelName'));
+      let mapProject = this.store.createRecord(this.get('modelName'), { id: generateUniqueId() });
       mapProject.set('mapLayer', Ember.A());
 
       if (Ember.isPresent(params.metadata)) {
