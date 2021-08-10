@@ -453,6 +453,11 @@
         width: 210px;
         padding: 0 0 11px 7px;
         text-align: left;
+        &.reversed {
+          display: flex;
+          flex-direction: column-reverse;
+          padding: 0 0 0 7px;
+        }
         label.ui.button {
           width: auto !important;
           color: @textColor;
@@ -483,6 +488,7 @@
           margin-right: 17px;
           margin-left: -5px !important;
         }
+
       }
     }
   }
@@ -1062,7 +1068,8 @@
   overflow-x: hidden;
   .layer-result-list {
     overflow-y: auto;
-    height: ~"calc(100% - 90px)" !important;
+    overflow-x: hidden;
+    height: ~"calc(100% - 140px)" !important;
   }
   .layer-result-list .nodata {
     margin-top: 15px;

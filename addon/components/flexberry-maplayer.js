@@ -12,6 +12,7 @@ import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import { copyLayer } from '../utils/copy-layer';
 
+import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu'
 import layout from '../templates/components/flexberry-maplayer';
 import {
   translationMacro as t
@@ -644,23 +645,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         @method actions.onSubmenu
       */
       onSubmenu() {
-        const isHidden = this.get('isSubmenu');
-        this.set('isSubmenu', !isHidden);
-
-        if (!isHidden) {
-          const component = Ember.$('.' + this.get('componentName'));
-          const moreButton = Ember.$('.more.floated.button', component);
-          const elements = Ember.$('.more.submenu.hidden', component);
-          const element = elements[0];
-          Ember.run.next(() => {
-            // Устанавливаем фиксированное позиционирование для подменю, чтобы не зависеть от внешнего контенера.
-            const { top, left } = moreButton[0].getBoundingClientRect();
-            element.style.zIndex = 100;
-            element.style.left = `${left}px`;
-            element.style.top = `${top + 2}px`;
-            element.style.position = 'fixed';
-          });
-        }
+        let component = Ember.$('.' + this.get('componentName'));
+        let moreButton = Ember.$('.more.floated.button', component);
+        let elements = Ember.$('.more.submenu.hidden', component);
+        openCloseSubmenu(this, moreButton, elements,  2);
       },
 
       onAddCompare() {

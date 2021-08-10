@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/feature-result-item';
 import { translationMacro as t } from 'ember-i18n';
+import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu'
 
 /**
   Component for display GeoJSON feature object details
@@ -264,22 +265,10 @@ export default Ember.Component.extend({
       @method actions.onSubmenu
     */
     onSubmenu() {
-      const isHidden = this.get('isSubmenu');
-      this.set('isSubmenu', !isHidden);
-
-      if (!isHidden) {
-        const component = this.get('element');
-        const moreButton = component.getElementsByClassName('icon item more');
-        const elements = component.getElementsByClassName('more submenu hidden');
-        const element = elements[0];
-        Ember.run.next(() => {
-          // Устанавливаем фиксированное позиционирование для подменю, чтобы не зависеть от внешнего контенера.
-          const { top, left } = moreButton[0].getBoundingClientRect();
-          element.style.position = 'fixed';
-          element.style.left = `${left - 8}px`;
-          element.style.top = `${top + 1}px`;
-        });
-      }
+      let component = this.get('element');
+      let moreButton = component.getElementsByClassName('icon item more');
+      let elements = component.getElementsByClassName('more submenu hidden')
+      openCloseSubmenu(this, moreButton, elements, false, 1, 8);
     },
     /**
       Performs row editing.

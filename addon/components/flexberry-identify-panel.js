@@ -249,7 +249,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @type String
     @default 'square outline icon'
   */
-  rectangleIconClass: 'square outline icon',
+  rectangleIconClass: 'rectangle icon',
 
   /**
     Tools option's 'polygon' mode's caption.
