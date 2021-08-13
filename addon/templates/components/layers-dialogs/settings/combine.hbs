@@ -7,14 +7,14 @@
   </div>
 {{/if}}
 {{#if settings.innerLayers}}
-  {{#each-in settings.innerLayers as |type innerLayerSettings|}}
+  {{#each settings.innerLayers as |innerLayerSettings|}}
     <div class="ui segment">
       <h5 class="ui header">
-        {{concat innerSettingsCaption type}}
+        {{concat innerSettingsCaption innerLayerSettings.type}}
       </h5>
-      {{component (concat "layers-dialogs/settings/" type) settings=innerLayerSettings bounds=innerLayerSettings.wgs84bbox}}
+      {{component (concat "layers-dialogs/settings/" innerLayerSettings.type) settings=innerLayerSettings bounds=innerLayerSettings.wgs84bbox}}
     </div>
-  {{/each-in}}
+  {{/each}}
 {{/if}}
 <div class="combineAdd">
   <div class="field">

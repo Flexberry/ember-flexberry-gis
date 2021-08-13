@@ -1791,4 +1791,14 @@ export default Ember.Mixin.create(SnapDraw, {
       });
     });
   },
+
+  setLayerFilter(layerId, filter) {
+    let layerModel = this.getLayerModel(layerId);
+
+    if (Ember.isNone(layerModel)) {
+      return;
+    }
+
+    layerModel.set('filter', filter);
+  }
 });

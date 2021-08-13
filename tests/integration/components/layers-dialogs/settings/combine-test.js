@@ -92,9 +92,11 @@ test('it renders with settings', function(assert) {
   this.set('settings',
     {
       type: 'wfs',
-      innerLayers: {
-        'wms': {}
-      }
+      innerLayers: [
+        {
+          'type': 'wms'
+        }
+      ]
     }
   );
 

@@ -12,7 +12,7 @@ import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import { copyLayer } from '../utils/copy-layer';
 
-import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu'
+import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
 import layout from '../templates/components/flexberry-maplayer';
 import {
   translationMacro as t

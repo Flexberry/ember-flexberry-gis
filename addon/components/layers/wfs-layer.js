@@ -310,6 +310,12 @@ export default BaseVectorLayer.extend({
       L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
     });
 
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+      leafletObject._labelsLayer.eachLayer((layer) => {
+        L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer);
+      });
+    }
+
     return leafletObject;
   },
 
@@ -789,8 +795,8 @@ export default BaseVectorLayer.extend({
 
         let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs);
         let filter = oldPart ? new L.Filter.And(newPart, oldPart) : newPart;
-        let optFilter = leafletObject.options.filter;
-        filter = Ember.isNone(optFilter) ? filter : new L.Filter.And(filter, optFilter);
+        let layerFilter = this.get('filter');
+        filter = Ember.isEmpty(layerFilter) ? filter : new L.Filter.And(filter, layerFilter);
 
         leafletObject.loadFeatures(filter);
         needPromise = true;

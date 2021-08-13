@@ -27,7 +27,20 @@ const maxBatchFeatures = 10000;
  */
 export default BaseVectorLayer.extend({
 
-  leafletOptions: ['attribution', 'pane', 'styles'],
+  leafletOptions: [
+    'attribution',
+    'pane',
+    'styles',
+    'crs',
+    'showExisting',
+    'continueLoading',
+    'filter',
+    'forceMulti',
+    'dynamicModel',
+    'metadataUrl',
+    'odataUrl',
+    'projectionName'
+  ],
 
   clusterize: false,
 
@@ -172,6 +185,12 @@ export default BaseVectorLayer.extend({
     leafletObject.eachLayer((layer) => {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
     });
+
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+      leafletObject._labelsLayer.eachLayer((layer) => {
+        L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer);
+      });
+    }
 
     return leafletObject;
   },
@@ -1242,12 +1261,15 @@ export default BaseVectorLayer.extend({
     }
 
     if (!Ember.isNone(leafletObject)) {
-      let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
+      // it's from api showAllLayerObjects, to load objects if layer is not visibility
+      let showLayerObjects =  (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
+      let show = this.get('layerModel.visibility');
       let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
-      let showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading;
+      let showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading && Ember.isEmpty(Object.values(leafletObject._layers));
+
       let promise;
 
-      if (continueLoad && show && checkMapZoom(leafletObject)) {
+      if ((continueLoad && show && checkMapZoom(leafletObject)) || (showLayerObjects && continueLoad)) {
         let loadedBounds = this.get('loadedBounds');
         let leafletMap = this.get('leafletMap');
         let obj = this.get('_adapterStoreModelProjectionGeom');
@@ -1292,7 +1314,7 @@ export default BaseVectorLayer.extend({
         filter = Ember.isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
 
         promise = this._downloadFeaturesWithOrNotFilter(leafletObject, obj, filter);
-      } else if (showExisting && Ember.isEmpty(Object.values(leafletObject._layers))) {
+      } else if (showExisting || (showExisting && showLayerObjects)) {
         promise = this._downloadFeaturesWithOrNotFilter(leafletObject, this.get('_adapterStoreModelProjectionGeom'));
       } else {
         promise = Ember.RSVP.resolve('The layer does not require loading');

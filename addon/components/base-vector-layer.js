@@ -88,7 +88,9 @@ export default BaseLayer.extend({
     @readOnly
   */
   _pane: Ember.computed('layerModel.id', function () {
-    return 'vectorLayer' + this.get('layerModel.id');
+    // to switch combine-layer
+    let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
+    return 'vectorLayer' + this.get('layerModel.id') + layerId;
   }),
 
   /**
@@ -98,7 +100,9 @@ export default BaseLayer.extend({
   */
   _paneLabel: Ember.computed('layerModel.id', 'labelSettings.signMapObjects', function () {
     if (this.get('labelSettings.signMapObjects')) {
-      return 'labelLayer' + this.get('layerModel.id');
+      // to switch combine-layer
+      let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
+      return 'labelLayer' + this.get('layerModel.id') + layerId;
     }
 
     return null;

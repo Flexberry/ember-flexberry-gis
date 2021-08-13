@@ -83,13 +83,15 @@ export default Ember.Component.extend({
           let mainSettings = Ember.$.extend(true, defaultSettings, { 'type': type });
           this.set('settings', mainSettings);
         } else {
-          let innerLayerSettings = { [type]: defaultSettings };
+          let innerLayerSettings = defaultSettings;
+          Ember.$.extend(true, innerLayerSettings, { 'type': type });
           let innerLayers = this.get('settings.innerLayers');
-          if (!Ember.isNone(innerLayers)) {
-            innerLayers = Ember.$.extend(true, innerLayers, innerLayerSettings);
+          if (Ember.isNone(innerLayers)) {
+            innerLayers = Ember.A();
           }
 
-          this.set('settings.innerLayers', innerLayerSettings);
+          innerLayers.push(innerLayerSettings);
+          this.set('settings.innerLayers', innerLayers);
         }
 
         this.set('_type', null);

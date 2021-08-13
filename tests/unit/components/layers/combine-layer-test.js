@@ -48,8 +48,9 @@ moduleForComponent('layers/combine-layer', 'Unit | Component | layers/combine la
       'continueLoading': false,
       'typeGeometry': 'polygon',
       'geometryField': 'shape',
-      'innerLayers': {
-        'wms':{
+      'innerLayers': [
+        {
+          'type': 'wms',
           'info_format': 'application/json',
           'url': 'http://geoserverFake/geoserver/ows',
           'version': '1.3.0',
@@ -59,7 +60,7 @@ moduleForComponent('layers/combine-layer', 'Unit | Component | layers/combine la
           'maxZoom':12,
           'minZoom':1,
         }
-      }
+      ]
     };
 
     leafletMap = L.map(document.createElement('div'), { center: [51.505, -0.09], zoom: 13 });
@@ -224,6 +225,142 @@ test('test method createLayer()', function(assert) {
       getmapApiStub.restore();
       createAllLayerSpy.restore();
       createLayerSpy.restore();
+      done(1);
+    });
+  });
+});
+
+test('test method showAllLayerObjects() and hideAllLayerObjects()', function(assert) {
+  assert.expect(16);
+  var done = assert.async(2);
+  Ember.run(() => {
+    let settingsAsObject = {
+      'type': 'wfs',
+      'url': 'http://geoserverFake/geoserver/ows',
+      'style': { 'color': 'red', 'weight': '4' },
+      'filter': null,
+      'format': 'GeoJSON',
+      'typeNS': 'les',
+      'maxZoom': '13',
+      'minZoom': '11',
+      'opacity': null,
+      'pkField': 'primarykey',
+      'version': '1.1.0',
+      'typeName': 'test',
+      'clusterize': false,
+      'forceMulti': true,
+      'typeNSName': '',
+      'showExisting': false,
+      'continueLoading': false,
+      'typeGeometry': 'polygon',
+      'geometryField': 'shape',
+      'innerLayers': [
+        {
+          'type': 'wfs',
+          'url': 'http://geoserverFake/geoserver/ows',
+          'style': { 'color': 'red', 'weight': '4' },
+          'filter': null,
+          'format': 'GeoJSON',
+          'typeNS': 'les',
+          'maxZoom': '10',
+          'minZoom': '7',
+          'opacity': null,
+          'pkField': 'primarykey',
+          'version': '1.1.0',
+          'typeName': 'test',
+          'clusterize': false,
+          'forceMulti': true,
+          'typeNSName': '',
+          'showExisting': false,
+          'continueLoading': false,
+          'typeGeometry': 'polygon',
+          'geometryField': 'shape',
+        }
+      ]
+    };
+
+    let layerModel = Ember.Object.create({
+      type: 'combine',
+      visibility: false,
+      settingsAsObject:settingsAsObject
+    });
+
+    let options = {
+      'layerModel': layerModel,
+      'leafletMap': leafletMap,
+      'visibility': false
+    };
+
+    let component = this.subject(options);
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      assert.ok(leafletObject instanceof L.FeatureGroup);
+      let innerLeafletObject = leafletObject.mainLayer.innerLayers[0]._leafletObject;
+      assert.ok(innerLeafletObject instanceof L.FeatureGroup);
+
+      // spy for mainLeafletObject
+      let baseShowAllLayerObjectsSpy = sinon.spy(leafletObject, 'baseShowAllLayerObjects');
+      let showAllLayerObjectsSpy = sinon.spy(leafletObject, 'showAllLayerObjects');
+      let clearLayersSpy = sinon.spy(leafletObject, 'clearLayers');
+      let loadLayerFeaturesSpy = sinon.spy(leafletObject, 'loadLayerFeatures');
+      let baseHideAllLayerObjectsSpy = sinon.spy(leafletObject, 'baseHideAllLayerObjects');
+      let hideAllLayerObjectsSpy = sinon.spy(leafletObject, 'hideAllLayerObjects');
+
+      // spy for innerLeafletObject
+      let showAllLayerObjectsInnerSpy = sinon.spy(innerLeafletObject, 'showAllLayerObjects');
+      let clearLayersInnerSpy = sinon.spy(innerLeafletObject, 'clearLayers');
+      let loadLayerFeaturesInnerSpy = sinon.spy(innerLeafletObject, 'loadLayerFeatures');
+      let hideAllLayerObjectsInnerSpy = sinon.spy(innerLeafletObject, 'hideAllLayerObjects');
+
+      // spy for map
+      let removeLayerSpy = sinon.spy(leafletMap, 'removeLayer');
+      let addLayerSpy = sinon.spy(leafletMap, 'addLayer');
+
+      component.showAllLayerObjects().then(result => {
+        assert.equal(result, 'success');
+
+        assert.equal(baseShowAllLayerObjectsSpy.callCount, 1);
+        assert.equal(showAllLayerObjectsSpy.callCount, 0);
+        assert.equal(clearLayersSpy.callCount, 1);
+        assert.equal(loadLayerFeaturesSpy.callCount, 1);
+
+        assert.equal(showAllLayerObjectsInnerSpy.callCount, 1);
+        assert.equal(clearLayersInnerSpy.callCount, 1);
+        assert.equal(loadLayerFeaturesInnerSpy.callCount, 1);
+
+        assert.equal(removeLayerSpy.callCount, 0);
+        assert.equal(addLayerSpy.callCount, 4);
+
+        component.hideAllLayerObjects();
+
+        assert.equal(baseHideAllLayerObjectsSpy.callCount, 1);
+        assert.equal(hideAllLayerObjectsSpy.callCount, 0);
+
+        assert.equal(hideAllLayerObjectsInnerSpy.callCount, 1);
+        assert.equal(removeLayerSpy.callCount, 2);
+
+        baseShowAllLayerObjectsSpy.restore();
+        showAllLayerObjectsSpy.restore();
+        clearLayersSpy.restore();
+        loadLayerFeaturesSpy.restore();
+        baseHideAllLayerObjectsSpy.restore();
+        hideAllLayerObjectsSpy.restore();
+
+        showAllLayerObjectsInnerSpy.restore();
+        clearLayersInnerSpy.restore();
+        loadLayerFeaturesInnerSpy.restore();
+        hideAllLayerObjectsInnerSpy.restore();
+
+        removeLayerSpy.restore();
+        addLayerSpy.restore();
+        done(1);
+      });
+
+      getmapApiStub.restore();
       done(1);
     });
   });

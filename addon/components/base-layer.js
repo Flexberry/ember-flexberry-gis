@@ -308,6 +308,28 @@ export default Ember.Component.extend(
       }));
     },
 
+    _setFilter: Ember.observer('layerModel.filter', function () {
+
+      let filter = this.get('layerModel.filter');
+      if (typeof filter === 'string') {
+        try {
+          let layerLinks = this.get('layerModel.layerLink');
+          let layerModel = this.get('layerModel');
+
+          // this.get('type') to get type for layers in combine-layer
+          let type = !Ember.isNone(this.get('type')) ? this.get('type') : layerModel.get('type');
+          filter = Ember.getOwner(this).lookup(`layer:${type}`).parseFilter(filter, (this.get('geometryField') || 'geometry'), null, layerLinks);
+        }
+        catch (ex) {
+          console.error(ex);
+          return;
+        }
+      }
+
+      // Observer will work via mixin/leaflet-options. Option 'filter' need be in leafletOptions components/layers/..
+      this.set('filter', filter);
+    }),
+
     /**
       Destroys leaflet layer related to layer type.
 

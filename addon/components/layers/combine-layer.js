@@ -59,6 +59,10 @@ export default BaseLayer.extend({
         let layer = layers[0].value;
         Ember.set(this.get('layerModel'), '_attributesOptions', this._getAttributesOptions.bind(this));
         Ember.set(layer, 'mainLayer', this.get('mainLayer'));
+        Ember.set(layer, 'baseShowAllLayerObjects', layer.showAllLayerObjects);
+        layer.showAllLayerObjects = this.get('showAllLayerObjects').bind(this);
+        Ember.set(layer, 'baseHideAllLayerObjects', layer.hideAllLayerObjects);
+        layer.hideAllLayerObjects = this.get('hideAllLayerObjects').bind(this);
         resolve(layer);
       }).catch((e) => {
         reject(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${e}`);
@@ -104,15 +108,14 @@ export default BaseLayer.extend({
 
         let innerLayers = Ember.A();
         let innerLayersSettings = Ember.get(settings, 'innerLayers');
-        for (let type in innerLayersSettings) {
-          Ember.set(innerLayersSettings[type], 'type', type);
+        innerLayersSettings.forEach(innerSettings => {
           let innerLayerProperties = {
             leafletMap: leafletMap,
             leafletContainer: this.get('leafletContainer'),
             layerModel: this.get('layerModel'),
             index: this.get('index'),
             visibility:  false,
-            dynamicProperties: innerLayersSettings[type]
+            dynamicProperties: innerSettings
           };
 
           // Set creating component's owner to avoid possible lookup exceptions.
@@ -128,6 +131,7 @@ export default BaseLayer.extend({
             innerLayerProperties[ownerKey] = owner;
           }
 
+          let type = innerSettings.type;
           let layer = Ember.getOwner(this).factoryFor(`component:layers/${type}-layer`).create(innerLayerProperties);
           if (!Ember.isNone(layer)) {
             layer.layerId = Ember.guidFor(layer);
@@ -135,7 +139,7 @@ export default BaseLayer.extend({
           } else {
             throw(`Invalid layer type ${type} for layer ${this.get('layerModel.name')}`);
           }
-        }
+        });
 
         this.set('innerLayers', innerLayers);
         Ember.set(mainLayer, 'innerLayers', innerLayers);
@@ -339,5 +343,52 @@ export default BaseLayer.extend({
     if (!Ember.isNone(mainLayer)) {
       return mainLayer.getNearObject.apply(mainLayer, arguments);
     }
+  },
+
+  /**
+    Show all layer objects.
+    @method showAllLayerObjects
+    @return {Promise}
+  */
+  showAllLayerObjects() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let mainLayer = this.get('mainLayer');
+      if (Ember.isNone(mainLayer) || Ember.isNone(mainLayer._leafletObject)) {
+        return;
+      }
+
+      let promises = Ember.A();
+      promises.push(mainLayer._leafletObject.baseShowAllLayerObjects());
+      mainLayer.get('innerLayers').forEach((layer) => {
+        promises.push(layer._leafletObject.showAllLayerObjects());
+      });
+
+      Ember.RSVP.allSettled(promises).then((result) => {
+        const rejected = result.filter((item) => { return item.state === 'rejected'; }).length > 0;
+
+        if (rejected) {
+          reject(`Failed to showAllLayerObjects for '${this.get('layerModel.name')}`);
+        }
+
+        resolve(result[0].value);
+      });
+    });
+  },
+
+  /**
+    Hide all layer objects.
+    @method hideAllLayerObjects
+    @return nothing
+  */
+  hideAllLayerObjects() {
+    let mainLayer = this.get('mainLayer');
+    if (Ember.isNone(mainLayer) || Ember.isNone(mainLayer._leafletObject)) {
+      return;
+    }
+
+    mainLayer._leafletObject.baseHideAllLayerObjects();
+    mainLayer.get('innerLayers').forEach((layer) => {
+      layer._leafletObject.hideAllLayerObjects();
+    });
   }
 });
