@@ -53,7 +53,9 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
 
     param = {
       format: 'GeoJSON',
-      leafletOptions: leafletOptions
+      leafletOptions: leafletOptions,
+      _pane: 'pane000',
+      _renderer: Ember.A()
     };
     param = Ember.$.extend(param, options);
 
@@ -199,6 +201,36 @@ test('getLayerFeatures() with options showExisting = false and continueLoading =
     });
 
     assert.ok(component, 'Create wfs-layer with showExisting = false');
+    done();
+  });
+});
+
+test('_addLayersOnMap() with options showExisting = true and continueLoading = false', function (assert) {
+  assert.expect(3);
+  var done = assert.async(2);
+  Ember.run(() => {
+    param.showExisting = true;
+
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+
+    options.showExisting = true;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      let layers = Object.values(res.target._layers);
+      component._addLayersOnMap(layers);
+      assert.equal(layers[0].options.pane, component.get('_pane'), 'Pane on object eqals pane on layer');
+      assert.equal(layers[0].options.renderer, component.get('_renderer'), 'Renderer on object eqals renderer on layer');
+      done();
+    });
+
+    assert.ok(component, 'Create wfs-layer with showExisting = true');
     done();
   });
 });

@@ -3,7 +3,7 @@
 */
 
 import Ember from 'ember';
-import BaseVectorLayer, { scale } from '../base-vector-layer';
+import BaseVectorLayer from '../base-vector-layer';
 import { checkMapZoom } from '../../utils/check-zoom';
 import { intersectionArea } from '../../utils/feature-with-area-intersect';
 import jsts from 'npm:jsts';
@@ -168,7 +168,10 @@ export default BaseVectorLayer.extend({
 
       layer.leafletMap = leafletMap;
 
-      leafletObject.baseAddLayer(layer);
+      if (!Ember.isNone(leafletObject)) {
+        leafletObject.baseAddLayer(layer);
+      }
+
     });
 
     this._super(...arguments);
@@ -395,6 +398,9 @@ export default BaseVectorLayer.extend({
           this.set('loadedBounds', null);
           this._setFeaturesProcessCallback(wfsLayer);
           wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);
+
+          // this.get('_leafletObject') is null at this moment. _layers hasn't pane and renderer. For marker layer this is critical (ignore zoom), but for polygon layer doesn't.
+          this._addLayersOnMap(Object.values(wfsLayer._layers));
           let load = this.continueLoad(wfsLayer);
           wfsLayer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
           wfsLayer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
@@ -457,6 +463,7 @@ export default BaseVectorLayer.extend({
       }).then(filteredFeatures => {
         if (this.get('typeGeometry') === 'polygon') {
           let projectedIdentifyPolygon = e.polygonLayer.toProjectedGeoJSON(this.get('crs'));
+          let scale = this.get('mapApi').getFromApi('precisionScale');
           filteredFeatures.forEach(feature => {
             feature.properties = feature.properties || {};
             feature.properties.intersectionArea = intersectionArea(projectedIdentifyPolygon, feature.leafletLayer.toProjectedGeoJSON(this.get('crs')), scale);

@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import FlexberryTreenodeComponent from 'ember-flexberry/components/flexberry-treenode';
-
+import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 import SlotsMixin from 'ember-block-slots';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DomActionsMixin from 'ember-flexberry/mixins/dom-actions';
@@ -508,7 +508,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       onAddButtonClick(e) {
         // Create empty layer model.
         let store = this.get('store');
-        let addDialogLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer');
+        let addDialogLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId() });
         this.set('_addDialogLayer', addDialogLayer);
 
         // Include dialog to markup.

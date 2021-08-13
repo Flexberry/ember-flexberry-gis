@@ -242,7 +242,8 @@ export default BaseVectorLayer.extend({
       return;
     }
 
-    const model = this.get('store').createRecord(this.get('modelName'), layer.feature.properties || {});
+    const featureProperties = Ember.$.extend({ id: generateUniqueId() }, layer.feature.properties);
+    const model = this.get('store').createRecord(this.get('modelName'), featureProperties);
     const geometryField = this.get('geometryField') || 'geometry';
     const geometryObject = {};
     let typeModel = this.get('geometryType');
