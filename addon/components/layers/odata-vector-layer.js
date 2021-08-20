@@ -810,6 +810,11 @@ export default BaseVectorLayer.extend({
       if (Ember.isNone(modelRegistered) || Ember.isNone(mixinRegistered)) {
         this.сreateModelHierarchy(metadataUrl, modelName).then(({ model, dataModel, modelMixin }) => {
           model.defineProjection(projectionName, modelName, this.createProjection(dataModel));
+
+          // Необходимо еще раз проверить регистрацию, т.к. могут быть слои с одной моделью, а код - асинхронный
+          modelRegistered = Ember.getOwner(this)._lookupFactory(`model:${modelName}`);
+          mixinRegistered = Ember.getOwner(this)._lookupFactory(`mixin:${modelName}`);
+
           if (Ember.isNone(modelRegistered)) {
             Ember.getOwner(this).register(`model:${modelName}`, model);
           }
