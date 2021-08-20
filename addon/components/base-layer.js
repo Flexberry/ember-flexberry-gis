@@ -279,7 +279,7 @@ export default Ember.Component.extend(
       }).then(({
         leafletLayer
       }) => {
-        leafletLayer.leafletMap = this.get('leafletMap');
+        Ember.set(leafletLayer, 'leafletMap', this.get('leafletMap'));
         this.set('_leafletObject', leafletLayer);
 
         if (Ember.isPresent(this.get('layerModel'))) {
@@ -302,13 +302,33 @@ export default Ember.Component.extend(
           layerInitCallback(this);
         }
 
-        this._setFeaturesProcessCallback();
-
         return leafletLayer;
       }).catch((errorMessage) => {
         Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
       }));
     },
+
+    _setFilter: Ember.observer('layerModel.filter', function () {
+
+      let filter = this.get('layerModel.filter');
+      if (typeof filter === 'string') {
+        try {
+          let layerLinks = this.get('layerModel.layerLink');
+          let layerModel = this.get('layerModel');
+
+          // this.get('type') to get type for layers in combine-layer
+          let type = !Ember.isNone(this.get('type')) ? this.get('type') : layerModel.get('type');
+          filter = Ember.getOwner(this).lookup(`layer:${type}`).parseFilter(filter, (this.get('geometryField') || 'geometry'), null, layerLinks);
+        }
+        catch (ex) {
+          console.error(ex);
+          return;
+        }
+      }
+
+      // Observer will work via mixin/leaflet-options. Option 'filter' need be in leafletOptions components/layers/..
+      this.set('filter', filter);
+    }),
 
     /**
       Destroys leaflet layer related to layer type.
@@ -392,8 +412,11 @@ export default Ember.Component.extend(
       @method _setLayerZIndex
       @private
     */
-    _setLayerZIndex() {
-      const leafletLayer = this.get('_leafletObject');
+    _setLayerZIndex(leafletLayer) {
+      if (!leafletLayer) {
+        leafletLayer = this.get('_leafletObject');
+      }
+
       if (Ember.isNone(leafletLayer)) {
         return;
       }
@@ -467,6 +490,7 @@ export default Ember.Component.extend(
     _addLayerToLeafletContainer() {
       let leafletContainer = this.get('leafletContainer');
       let leafletLayer = this.get('_leafletObject');
+
       if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) || leafletContainer.hasLayer(leafletLayer)) {
         return;
       }
@@ -504,6 +528,7 @@ export default Ember.Component.extend(
     _removeLayerFromLeafletContainer() {
       let leafletContainer = this.get('leafletContainer');
       let leafletLayer = this.get('_leafletObject');
+
       if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) || !leafletContainer.hasLayer(leafletLayer)) {
         return;
       }
@@ -585,6 +610,37 @@ export default Ember.Component.extend(
       e.results.push({
         layerModel: this.get('layerModel'),
         features: this.identify(e)
+      });
+    },
+
+    /**
+      Handles 'flexberry-map:getNearObject' event of leaflet map.
+
+      @method _getNearObject
+      @param {Object} e Event object.
+      @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.boundingBox Leaflet layer
+      representing bounding box within which layer's objects must be identified.
+      @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
+      @param {Object[]} layers Objects describing those layers which must be identified.
+      @param {Object[]} results Objects describing identification results.
+      Every result-object has the following structure: { layer: ..., features: [...] },
+      where 'layer' is metadata of layer related to identification result, features is array
+      containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+      or a promise returning such array.
+      @private
+    */
+    _getNearObject(e) {
+      let layerModel = this.get('layerModel');
+      let isVectorLayer = Ember.getOwner(this).lookup('layer:' + layerModel.get('type')).isVectorType(layerModel);
+      let shouldGetNearObject = Ember.A(e.layers || []).contains(layerModel) && isVectorLayer;
+      if (!shouldGetNearObject) {
+        return;
+      }
+
+      // Call public getNearObject method, if layer should be getNearObject.
+      e.results.push({
+        layerModel: layerModel,
+        features: this.getNearObject(e)
       });
     },
 
@@ -689,7 +745,7 @@ export default Ember.Component.extend(
     */
     _cancelEdit(e) {
       if (e.layerIds.indexOf(this.get('layerModel.id')) !== -1) {
-        e.results.pushObject(this.cancelEdit());
+        e.results.pushObject(this.cancelEdit(e.ids));
       }
     },
 
@@ -714,6 +770,15 @@ export default Ember.Component.extend(
     },
 
     /**
+      Adds a listener function to leafletMap.
+
+      @method onLeafletMapEvent
+      @return nothing.
+    */
+    onLeafletMapEvent() {
+    },
+
+    /**
       Initializes DOM-related component's properties.
     */
     didInsertElement() {
@@ -733,6 +798,7 @@ export default Ember.Component.extend(
         leafletMap.on('flexberry-map:query', this._query, this);
         leafletMap.on('flexberry-map:createObject', this._createObject, this);
         leafletMap.on('flexberry-map:cancelEdit', this._cancelEdit, this);
+        leafletMap.on('flexberry-map:getNearObject', this._getNearObject, this);
 
         leafletMap.on('flexberry-map:load', (e) => {
           e.results.push(this.get('_leafletLayerPromise'));
@@ -754,6 +820,7 @@ export default Ember.Component.extend(
         leafletMap.off('flexberry-map:query', this._query, this);
         leafletMap.off('flexberry-map:createObject', this._createObject, this);
         leafletMap.off('flexberry-map:cancelEdit', this._cancelEdit, this);
+        leafletMap.off('flexberry-map:getNearObject', this._getNearObject, this);
       }
 
       // Destroy leaflet layer.
@@ -819,6 +886,20 @@ export default Ember.Component.extend(
     */
     identify(e) {
       assert('BaseLayer\'s \'identify\' method should be overridden.');
+    },
+
+    /**
+      Get nearest object.
+
+      @method getNearObject
+      @param {Object} e Event object.
+      Every result-object has the following structure: { layer: ..., features: [...] },
+      where 'layer' is metadata of layer related to getNearObject result, features is array
+      containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+      or a promise returning such array.
+    */
+    getNearObject(e) {
+      // BaseLayer's 'getNearObject' method should be overridden.
     },
 
     /**

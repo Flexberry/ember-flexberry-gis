@@ -35,7 +35,8 @@ export default BaseVectorLayer.extend({
     'filter',
     'forceMulti',
     'withCredentials',
-    'continueLoading'
+    'continueLoading',
+    'wpsUrl'
   ],
 
   /**
@@ -147,8 +148,11 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  _addLayersOnMap(layers) {
-    let leafletObject = this.get('_leafletObject');
+  _addLayersOnMap(layers, leafletObject) {
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
+
     let leafletMap = this.get('leafletMap');
     let pane = this.get('_pane');
 
@@ -250,6 +254,8 @@ export default BaseVectorLayer.extend({
 
           layers.forEach(function (element) {
             if (!Ember.isNone(Ember.get(element, 'feature')) && Ember.isNone(Ember.get(element, 'feature.leafletLayer'))) {
+              element.minZoom = that.minZoom;
+              element.maxZoom = that.maxZoom;
               Ember.set(element.feature, 'leafletLayer', element);
             }
           });
@@ -306,6 +312,12 @@ export default BaseVectorLayer.extend({
     leafletObject.eachLayer((layer) => {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
     });
+
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+      leafletObject._labelsLayer.eachLayer((layer) => {
+        L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer);
+      });
+    }
 
     return leafletObject;
   },
@@ -384,12 +396,15 @@ export default BaseVectorLayer.extend({
           wfsLayer.maxZoom = this.get('maxZoom');
           wfsLayer.leafletMap = leafletMap;
           this.set('loadedBounds', null);
+          this._setFeaturesProcessCallback(wfsLayer);
+          wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);
 
           // this.get('_leafletObject') is null at this moment. _layers hasn't pane and renderer. For marker layer this is critical (ignore zoom), but for polygon layer doesn't.
           this._addLayersOnMap(Object.values(wfsLayer._layers));
           let load = this.continueLoad(wfsLayer);
           wfsLayer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
-          wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);
+          wfsLayer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
+
           resolve(wfsLayer);
         })
         .once('error', (e) => {
@@ -739,7 +754,7 @@ export default BaseVectorLayer.extend({
   continueLoad(leafletObject) {
     let loadedBounds = this.get('loadedBounds');
 
-    if (!leafletObject) {
+    if (!leafletObject || !(leafletObject instanceof L.FeatureGroup)) {
       leafletObject = this.get('_leafletObject');
     }
 
@@ -787,8 +802,8 @@ export default BaseVectorLayer.extend({
 
         let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs);
         let filter = oldPart ? new L.Filter.And(newPart, oldPart) : newPart;
-        let optFilter = leafletObject.options.filter;
-        filter = Ember.isNone(optFilter) ? filter : new L.Filter.And(filter, optFilter);
+        let layerFilter = this.get('filter');
+        filter = Ember.isEmpty(layerFilter) ? filter : new L.Filter.And(filter, layerFilter);
 
         leafletObject.loadFeatures(filter);
         needPromise = true;
@@ -824,18 +839,49 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-    Initializes DOM-related component's properties.
+    Adds a listener function to leafletMap.
+
+    @method onLeafletMapEvent
+    @return nothing.
   */
-  didInsertElement() {
+  onLeafletMapEvent() {
     this._super(...arguments);
 
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
-      leafletMap.on('moveend', () => { this.continueLoad(); });
+      leafletMap.on('moveend', this.continueLoad, this);
       leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
     }
   },
 
+  /**
+    Initializes DOM-related component's properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+    this.onLeafletMapEvent();
+  },
+
+  /**
+    Deinitializes DOM-related component's properties.
+  */
+  willDestroyElement() {
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.off('moveend', this.continueLoad, this);
+      leafletMap.off('flexberry-map:moveend', this._continueLoad, this);
+    }
+
+    this._super(...arguments);
+  },
+
+  /**
+    Clear changes.
+
+    @method clearChanges
+    @param {Array} ids Array contains internal leaflet IDs for a layer.
+    @return {Array} Array contains primarykey features which need load.
+  */
   clearChanges(ids) {
     let leafletObject = this.get('_leafletObject');
     let editTools = leafletObject.leafletMap.editTools;
@@ -879,7 +925,10 @@ export default BaseVectorLayer.extend({
       leafletObject.changes = {};
     }
 
-    editTools.editLayer.clearLayers();
+    if (Ember.isNone(ids) || ids.length === 0) {
+      editTools.editLayer.clearLayers();
+    }
+
     return featuresIds;
   },
 
@@ -887,6 +936,7 @@ export default BaseVectorLayer.extend({
     Handles 'flexberry-map:cancelEdit' event of leaflet map.
 
     @method cancelEdit
+    @param {Array} ids Array contains internal leaflet IDs for a layer.
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   cancelEdit(ids) {
@@ -902,6 +952,205 @@ export default BaseVectorLayer.extend({
           results: Ember.A()
         };
         this.loadLayerFeatures(e).then(() => { resolve(); }).catch((e) => reject(e));
+      }
+    });
+  },
+
+  /**
+    Create body of request gs:Nearest for WPS.
+
+    @method getWPSgsNearest
+    @param {String} point Coordinates of point in EWKT.
+    @return {String} Xml for request gs:Nearest.
+  */
+  getWPSgsNearest(point) {
+    let leafletObject = this.get('_leafletObject');
+    let typeNS = leafletObject.options.typeNS;
+    let typeName = leafletObject.options.typeName;
+    let crsName = L.CRS.EPSG4326.code;
+    return '<?xml version="1.0" encoding="UTF-8"?>' +
+      '<wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+        'xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" ' +
+        'xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" ' +
+        'xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" ' +
+        'xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">' +
+        '<ows:Identifier>gs:Nearest</ows:Identifier>' +
+        '<wps:DataInputs>' +
+          '<wps:Input>' +
+            '<ows:Identifier>features</ows:Identifier>' +
+            '<wps:Reference mimeType="text/xml; subtype=wfs-collection/1.0" xlink:href="http://geoserver/wfs" method="POST">' +
+              '<wps:Body>' +
+                '<wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2">' +
+                  '<wfs:Query typeName="' + typeNS + ':' + typeName + '"/>' +
+                '</wfs:GetFeature>' +
+              '</wps:Body>' +
+            '</wps:Reference>' +
+          '</wps:Input>' +
+          '<wps:Input>' +
+            '<ows:Identifier>point</ows:Identifier>' +
+            '<wps:Data>' +
+              '<wps:ComplexData mimeType="text/xml; subtype=gml/3.1.1"><![CDATA[' + point + ']]></wps:ComplexData>' +
+            '</wps:Data>' +
+          '</wps:Input>' +
+          '<wps:Input>' +
+            '<ows:Identifier>crs</ows:Identifier>' +
+            '<wps:Data>' +
+              '<wps:LiteralData>' + crsName + '</wps:LiteralData>' +
+            '</wps:Data>' +
+          '</wps:Input>' +
+        '</wps:DataInputs>' +
+        '<wps:ResponseForm>' +
+          '<wps:RawDataOutput mimeType="application/json">' +
+            '<ows:Identifier>result</ows:Identifier>' +
+          '</wps:RawDataOutput>' +
+        '</wps:ResponseForm>' +
+      '</wps:Execute>';
+  },
+
+  /**
+    Request with filter DWithin.
+
+    @method dwithin
+    @param {Object} featureLayer Leaflet layer object.
+    @param {Number} distance Distance in meter.
+    @param {Boolean} exceptFeature Flag indicates that need to exclude feature,
+    so that when request it in the same layer, do not get the same object.
+    @return {Ember.RSVP.Promise}
+  */
+  dwithin(featureLayer, distance, exceptFeature) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let geometryField = this.get('geometryField');
+      let crs = this.get('crs');
+      let filter = new L.Filter.DWithin(geometryField, featureLayer, crs, distance, 'meter');
+      if (exceptFeature) {
+        let layerModel = this.get('layerModel');
+        let fieldName = this.getPkField(layerModel);
+        const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layerModel, featureLayer);
+        filter = new L.Filter.And(filter, new L.Filter.NotEQ(fieldName, id));
+      }
+
+      let filterPromise = this._getFeature({
+        filter
+      });
+      resolve(filterPromise);
+    });
+  },
+
+  /**
+    Recursively calls itself increasing the distance until it gets the result.
+
+    @method upDistance
+    @param {Object} featureLayer Leaflet layer object.
+    @param {Array} distances Array of distance in meter.
+    @param {Number} iter Iteration number to get the distance
+    @param {Boolean} exceptFeature Flag indicates that need to exclude feature,
+    so that when request it in the same layer, do not get the same object (for dwithin()).
+    @return {Ember.RSVP.Promise}
+  */
+  upDistance(featureLayer, distances, iter, exceptFeature) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this.dwithin(featureLayer, distances[iter], exceptFeature)
+        .then((res) => {
+          if (Ember.isArray(res) && res.length > 0) {
+            resolve(res);
+          } else if (iter++ < distances.length) {
+            resolve(this.upDistance(featureLayer, distances, iter, exceptFeature));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  /**
+    Get nearest object.
+    If settings of layer has wpsUrl, it do request to WPS service with request 'gs:Nearest'. It get data for request calling getWPSgsNearest().
+    Response of WPS servise is FeatureCollection in json format with one feature without themselves properties of feature.
+    Therefore, feature by id is loaded and distance is calculated.
+    If settings of layer has not wpsUrl, it do call upDistance() for array of distances [1, 10, 100, 1000, 10000, 100000, 1000000].
+    Result being processed base-vector-layer's method _calcNearestObject.
+
+    @method getNearObject
+    @param {Object} e Event object..
+    @param {Object} featureLayer Leaflet layer object.
+    @param {Number} featureId Leaflet layer object id.
+    @param {Number} layerObjectId Leaflet layer id.
+    @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
+  */
+  getNearObject(e) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let result = null;
+      let mapApi = this.get('mapApi').getFromApi('mapModel');
+      let leafletObject = this.get('_leafletObject');
+      let layerModel = this.get('layerModel');
+      let wpsUrl = leafletObject.options.wpsUrl;
+      if (!Ember.isNone(wpsUrl)) {
+        let point = L.marker(mapApi.getObjectCenter(e.featureLayer)).toEWKT(L.CRS.EPSG4326).replace('SRID=4326;', '');
+        let data = this.getWPSgsNearest(point);
+        let _this = this;
+        Ember.$.ajax({
+          url: `${wpsUrl}?`,
+          type: 'POST',
+          contentType: 'text/xml',
+          data: data,
+          headers: leafletObject.options.headers || {},
+          withCredentials: leafletObject.options.withCredentials,
+          success: function (responseText) {
+            // If some exception occur, WFS-service can response successfully, but with ExceptionReport,
+            // and such situation must be handled.
+            let exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
+            if (exceptionReport) {
+              return reject(exceptionReport.message);
+            }
+
+            let nearObject = leafletObject.readFormat.responseToLayers(responseText, {
+              coordsToLatLng: leafletObject.options.coordsToLatLng,
+              pointToLayer: leafletObject.options.pointToLayer
+            });
+            if (Ember.isArray(nearObject) && nearObject.length === 1) {
+              const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, nearObject[0]);
+              const id = mapApi._getLayerFeatureId(layerModel, nearObject[0]).replace(leafletObject.options.typeName + '.', '');
+              let obj = {
+                featureIds: [id]
+              };
+              _this.getLayerFeatures(obj).then((object) => {
+                if (Ember.isArray(object) && object.length === 1) {
+                  result = {
+                    distance: distance,
+                    layer: layerModel,
+                    object: object[0],
+                  };
+                  resolve(result);
+                } else {
+                  reject(`Don't loaded feature with id: ${id} for layer ${layerModel.get('name')}`);
+                }
+              });
+            } else {
+              resolve('Nearest object not found');
+            }
+          },
+          error: function (error) {
+            reject(`Error for request getNearObject via WPS ${wpsUrl} for layer ${layerModel.get('name')}: ${error}`);
+          }
+        });
+      } else {
+        let distances = [1, 10, 100, 1000, 10000, 100000, 1000000];
+        let layerId = layerModel.get('id');
+        let exceptFeature = layerId === e.layerObjectId;
+        this.upDistance(e.featureLayer, distances, 0, exceptFeature)
+          .then((resultDwithin) => {
+            if (!Ember.isNone(resultDwithin)) {
+              resolve(this._calcNearestObject(resultDwithin, e));
+            } else {
+              resolve('Nearest object not found');
+            }
+          })
+          .catch((error) => {
+            reject(error);
+          });
       }
     });
   }

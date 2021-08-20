@@ -83,7 +83,9 @@ export default BaseLayer.extend({
     @readOnly
   */
   _pane: Ember.computed('layerModel.id', function () {
-    return 'vectorLayer' + this.get('layerModel.id');
+    // to switch combine-layer
+    let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
+    return 'vectorLayer' + this.get('layerModel.id') + layerId;
   }),
 
   /**
@@ -93,7 +95,9 @@ export default BaseLayer.extend({
   */
   _paneLabel: Ember.computed('layerModel.id', 'labelSettings.signMapObjects', function () {
     if (this.get('labelSettings.signMapObjects')) {
-      return 'labelLayer' + this.get('layerModel.id');
+      // to switch combine-layer
+      let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
+      return 'labelLayer' + this.get('layerModel.id') + layerId;
     }
 
     return null;
@@ -134,19 +138,24 @@ export default BaseLayer.extend({
     }
   },
 
-  _setFeaturesProcessCallback() {
-    let leafletObject = this.get('_leafletObject');
+  _setFeaturesProcessCallback(leafletObject) {
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
+
     leafletObject.on('load', (loaded) => {
-      let promise = this._featuresProcessCallback(loaded.layers);
+      let promise = this._featuresProcessCallback(loaded.layers, leafletObject);
       if (loaded.results && Ember.isArray(loaded.results)) {
         loaded.results.push(promise);
       }
     });
   },
 
-  _featuresProcessCallback(layers) {
+  _featuresProcessCallback(layers, leafletObject) {
     return new Ember.RSVP.Promise((resolve) => {
-      let leafletObject = this.get('_leafletObject');
+      if (!leafletObject) {
+        leafletObject = this.get('_leafletObject');
+      }
 
       if (!layers) {
         resolve();
@@ -163,7 +172,7 @@ export default BaseLayer.extend({
 
       let p = typeof featuresProcessCallback === 'function' ? featuresProcessCallback(layers) : Ember.RSVP.resolve();
       p.then(() => {
-        this._addLayersOnMap(layers);
+        this._addLayersOnMap(layers, leafletObject);
 
         if (this.get('labelSettings.signMapObjects')) {
           this._addLabelsToLeafletContainer(layers);
@@ -346,6 +355,248 @@ export default BaseLayer.extend({
     clusterLayer._featureGroup.off('layerremove', this._setLayerOpacity, this);
   },
 
+  /*
+    Get the field to search for objects
+    @method getPkField
+    @param {Object} layer.
+    @return {String} Field name.
+  */
+  getPkField(layer) {
+    const getPkField = this.get('mapApi').getFromApi('getPkField');
+    if (typeof getPkField === 'function') {
+      return getPkField(layer);
+    }
+
+    let field = Ember.get(layer, 'settingsAsObject.pkField');
+    return Ember.isNone(field) ? 'primarykey' : field;
+  },
+
+  /**
+    Show all layer objects.
+    @method showAllLayerObjects
+    @return {Promise}
+  */
+  showAllLayerObjects() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletObject = this.get('_leafletObject');
+      let map = this.get('leafletMap');
+      let layer = this.get('layerModel');
+
+      let continueLoading = leafletObject.options.continueLoading;
+      if (!continueLoading) {
+        if (!Ember.isNone(leafletObject)) {
+          leafletObject.eachLayer((layerShape) => {
+            if (map.hasLayer(layerShape)) {
+              map.removeLayer(layerShape);
+            }
+          });
+          if (!leafletObject.options.showExisting) {
+            leafletObject.clearLayers();
+          }
+        }
+
+        leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve) => {
+          let e = {
+            featureIds: null
+          };
+
+          leafletObject.loadLayerFeatures(e).then(() => {
+            resolve('Features loaded');
+          });
+        });
+      } else {
+        leafletObject.showLayerObjects = true;
+        leafletObject.statusLoadLayer = true;
+        let e = {
+          layers: [layer],
+          results: Ember.A()
+        };
+
+        this.continueLoad(leafletObject);
+        if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+          leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+        }
+      }
+
+      leafletObject.promiseLoadLayer.then(() => {
+        leafletObject.statusLoadLayer = false;
+        leafletObject.promiseLoadLayer = null;
+        leafletObject.eachLayer(function (layerShape) {
+          if (!map.hasLayer(layerShape)) {
+            map.addLayer(layerShape);
+          }
+        });
+        let labelLayer = leafletObject._labelsLayer;
+        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer) && !map.hasLayer(labelLayer)) {
+          map.addLayer(labelLayer);
+        }
+
+        resolve('success');
+      });
+    });
+  },
+
+  /**
+    Hide all layer objects.
+    @method hideAllLayerObjects
+    @return nothing
+  */
+  hideAllLayerObjects() {
+    let leafletObject = this.get('_leafletObject');
+    let map = this.get('leafletMap');
+    let layer = this.get('layerModel');
+
+    leafletObject.showLayerObjects = false;
+
+    leafletObject.eachLayer(function (layerShape) {
+      if (map.hasLayer(layerShape)) {
+        map.removeLayer(layerShape);
+      }
+    });
+    let labelLayer = leafletObject._labelsLayer;
+    if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer) && map.hasLayer(labelLayer)) {
+      map.removeLayer(labelLayer);
+    }
+  },
+
+  /**
+    Determine the visibility of the specified objects by id for the layer.
+    @method _setVisibilityObjects
+    @param {string[]} objectIds Array of objects IDs.
+    @param {boolean} [visibility=false] visibility Object Visibility.
+    @return {Ember.RSVP.Promise}
+  */
+  _setVisibilityObjects(objectIds, visibility = false) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletObject = this.get('_leafletObject');
+      let map = this.get('leafletMap');
+      let layer = this.get('layerModel');
+
+      if (visibility) {
+        let continueLoading = leafletObject.options.continueLoading;
+        if (!continueLoading) {
+          leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve) => {
+            let e = {
+              featureIds: objectIds
+            };
+
+            leafletObject.loadLayerFeatures(e).then(() => {
+              resolve('Features loaded');
+            });
+          });
+        } else {
+          reject('Not working to layer with continueLoading');
+        }
+      } else {
+        leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+      }
+
+      leafletObject.promiseLoadLayer.then(() => {
+        leafletObject.statusLoadLayer = false;
+        leafletObject.promiseLoadLayer = null;
+        objectIds.forEach(objectId => {
+          let objects = Object.values(leafletObject._layers).filter(shape => {
+            return this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layer, shape) === objectId;
+          });
+          if (objects.length > 0) {
+            objects.forEach(obj => {
+              if (visibility) {
+                map.addLayer(obj);
+              } else {
+                map.removeLayer(obj);
+              }
+            });
+          }
+        });
+        let labelLayer = leafletObject._labelsLayer;
+        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer)) {
+          objectIds.forEach(objectId => {
+            let objects = Object.values(labelLayer._layers).filter(shape => {
+              return this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layer, shape) === objectId;
+            });
+            if (objects.length > 0) {
+              objects.forEach(obj => {
+                if (visibility) {
+                  map.addLayer(obj);
+                } else {
+                  map.removeLayer(obj);
+                }
+              });
+            }
+          });
+        }
+
+        resolve('success');
+      });
+    });
+  },
+
+  /**
+    Get nearest object.
+    Gets all leaflet layer objects and processes them _calcNearestObject().
+
+    @method getNearObject
+    @param {Object} e Event object..
+    @param {Object} featureLayer Leaflet layer object.
+    @param {Number} featureId Leaflet layer object id.
+    @param {Number} layerObjectId Leaflet layer id.
+    @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
+  */
+  getNearObject(e) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let features = {
+        featureIds: null
+      };
+      this.getLayerFeatures(features)
+        .then((featuresLayer) => {
+          if (Ember.isArray(featuresLayer) && featuresLayer.length > 0) {
+            resolve(this._calcNearestObject(featuresLayer, e));
+          } else {
+            resolve('Nearest object not found');
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  /**
+    Calculates nearest object.
+    Iterates all objects and calculates min distance. If it searches for nearest object in same layer, it is excluded e.featureLayer.
+
+    @method getNearObject
+    @param {Array} featuresLayer Leaflet layer objects.
+    @param {Object} e Event object..
+    @param {Object} featureLayer Leaflet layer object.
+    @param {Number} featureId Leaflet layer object id.
+    @param {Number} layerObjectId Leaflet layer id.
+    @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
+  */
+  _calcNearestObject(featuresLayer, e) {
+    let result = null;
+    let mapApi = this.get('mapApi').getFromApi('mapModel');
+    let layerModel = this.get('layerModel');
+    let layerId = layerModel.get('id');
+    featuresLayer.forEach(obj => {
+      let  leafletLayer = Ember.isNone(obj.leafletLayer) ? obj : obj.leafletLayer;
+      const id = mapApi._getLayerFeatureId(layerModel, leafletLayer);
+      if (layerId === e.layerObjectId && e.featureId === id) {
+        return;
+      }
+
+      const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, leafletLayer);
+      if (Ember.isNone(result) || distance < result.distance) {
+        result = {
+          distance: distance,
+          layer: layerModel,
+          object: leafletLayer,
+        };
+      }
+    });
+    return result;
+  },
+
   /**
     Creates leaflet layer related to layer type.
 
@@ -361,6 +612,11 @@ export default BaseLayer.extend({
         // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
         let readFormat = vectorLayer.readFormat;
         if (Ember.isNone(readFormat)) {
+          // For combine layer
+          if (!Ember.isNone(this.dynamicProperties) && !Ember.isNone(this.dynamicProperties.type)) {
+            vectorLayer.type = this.dynamicProperties.type;
+          }
+
           vectorLayer.readFormat = this.createReadFormat(vectorLayer);
         }
 
@@ -368,6 +624,14 @@ export default BaseLayer.extend({
         vectorLayer.maxZoom = this.get('maxZoom');
 
         vectorLayer.getContainer = this.get('_getContainer').bind(this);
+        vectorLayer.getPkField = this.get('getPkField').bind(this);
+        vectorLayer.showAllLayerObjects = this.get('showAllLayerObjects').bind(this);
+        vectorLayer.hideAllLayerObjects = this.get('hideAllLayerObjects').bind(this);
+        vectorLayer._setVisibilityObjects = this.get('_setVisibilityObjects').bind(this);
+
+        if (Ember.isNone(vectorLayer.loadLayerFeatures)) {
+          Ember.set(vectorLayer, 'loadLayerFeatures', this.loadLayerFeatures.bind(this));
+        }
 
         if (this.get('clusterize')) {
           let clusterLayer = this.createClusterLayer(vectorLayer);
@@ -672,16 +936,25 @@ export default BaseLayer.extend({
   },
 
   /**
-    Initializes DOM-related component's properties.
-  */
-  didInsertElement() {
-    this._super(...arguments);
+    Adds a listener function to leafletMap.
 
+    @method onLeafletMapEvent
+    @return nothing.
+  */
+  onLeafletMapEvent() {
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       leafletMap.on('flexberry-map:getOrLoadLayerFeatures', this._getOrLoadLayerFeatures, this);
       leafletMap.on('zoomend', this._checkZoomPane, this);
     }
+  },
+
+  /**
+    Initializes DOM-related component's properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+    this.onLeafletMapEvent();
   },
 
   /**
