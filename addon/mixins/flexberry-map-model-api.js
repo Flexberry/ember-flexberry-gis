@@ -1449,14 +1449,14 @@ export default Ember.Mixin.create(SnapDraw, {
         }
 
         let count = 0;
-
+        let scale = this.get('mapApi').getFromApi('precisionScale');
         let resultObjs = Ember.A();
 
         layerFeatures.forEach((r, i) => {
           let geometries = Ember.A();
           r.value[2].forEach((obj, ind) => {
             if (Ember.get(obj, 'feature.geometry') && Ember.get(obj, 'options.crs.code')) {
-              let feature = obj.toJsts(obj.options.crs);
+              let feature = obj.toJsts(obj.options.crs, scale);
               geometries.pushObject(feature);
             }
           });
