@@ -407,10 +407,6 @@ export default BaseLayer.extend({
       } else {
         leafletObject.showLayerObjects = true;
         leafletObject.statusLoadLayer = true;
-        let e = {
-          layers: [layer],
-          results: Ember.A()
-        };
 
         this.continueLoad(leafletObject);
         if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
