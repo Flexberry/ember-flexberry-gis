@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Added
+* Nuget package ember-test-selectors
 * Add `>x`, `<y`, `>=x`, `<=y` intervals support for graduated layer-style.
 * Add base component for graduated and unique layers-styles.
 * Add automatic set fill and stroke color from gradient range to symbols in graduated and unique layers-styles.
@@ -15,6 +16,8 @@ All notable changes to this project will be documented in this file.
 * Add constant scale on mapApi
 
 ### Changed
+* Version of ember-flexberry and ember-flexberry-data
+* Name of package daterangepicker
 * Change chart's library from `highcharts` to `chart.js`.
 * ContinueLoad with showExisting layers (odata-vector/wfs).
 * ShowAllLayerObjects doesn't clear objects on layer if showExitsting = true.
