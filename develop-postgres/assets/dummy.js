@@ -201,6 +201,14 @@ define('dummy/components/div-control', ['exports', 'ember-flexberry-gis/componen
     }
   });
 });
+define('dummy/components/drag-box', ['exports', 'ember-flexberry-gis/components/drag-box'], function (exports, _emberFlexberryGisComponentsDragBox) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisComponentsDragBox['default'];
+    }
+  });
+});
 define('dummy/components/favorites-list', ['exports', 'ember-flexberry-gis/components/favorites-list'], function (exports, _emberFlexberryGisComponentsFavoritesList) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -311,6 +319,14 @@ define('dummy/components/flexberry-edit-crs', ['exports', 'ember-flexberry-gis/c
     enumerable: true,
     get: function get() {
       return _emberFlexberryGisComponentsFlexberryEditCrs['default'];
+    }
+  });
+});
+define('dummy/components/flexberry-edit-layer-feature', ['exports', 'ember-flexberry-gis/components/flexberry-edit-layer-feature'], function (exports, _emberFlexberryGisComponentsFlexberryEditLayerFeature) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisComponentsFlexberryEditLayerFeature['default'];
     }
   });
 });
@@ -728,6 +744,14 @@ define('dummy/components/layers-dialogs/remove', ['exports', 'ember-flexberry-gi
     }
   });
 });
+define('dummy/components/layers-dialogs/settings/combine', ['exports', 'ember-flexberry-gis/components/layers-dialogs/settings/combine'], function (exports, _emberFlexberryGisComponentsLayersDialogsSettingsCombine) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisComponentsLayersDialogsSettingsCombine['default'];
+    }
+  });
+});
 define('dummy/components/layers-dialogs/settings/geocoder-osm-overpass', ['exports', 'ember-flexberry-gis/components/layers-dialogs/settings/geocoder-osm-overpass'], function (exports, _emberFlexberryGisComponentsLayersDialogsSettingsGeocoderOsmOverpass) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -1024,6 +1048,14 @@ define('dummy/components/layers-styles/unique', ['exports', 'ember-flexberry-gis
     }
   });
 });
+define('dummy/components/layers/combine-layer', ['exports', 'ember-flexberry-gis/components/layers/combine-layer'], function (exports, _emberFlexberryGisComponentsLayersCombineLayer) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisComponentsLayersCombineLayer['default'];
+    }
+  });
+});
 define('dummy/components/layers/geocoder-base-layer', ['exports', 'ember-flexberry-gis/components/layers/geocoder-base-layer'], function (exports, _emberFlexberryGisComponentsLayersGeocoderBaseLayer) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -1141,6 +1173,14 @@ define('dummy/components/legend-control', ['exports', 'ember-flexberry-gis/compo
     enumerable: true,
     get: function get() {
       return _emberFlexberryGisComponentsLegendControl['default'];
+    }
+  });
+});
+define('dummy/components/legends/combine-legend', ['exports', 'ember-flexberry-gis/components/legends/combine-legend'], function (exports, _emberFlexberryGisComponentsLegendsCombineLegend) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisComponentsLegendsCombineLegend['default'];
     }
   });
 });
@@ -1365,6 +1405,14 @@ define('dummy/components/map-dialogs/edit', ['exports', 'ember-flexberry-gis/com
     enumerable: true,
     get: function get() {
       return _emberFlexberryGisComponentsMapDialogsEdit['default'];
+    }
+  });
+});
+define('dummy/components/map-tools/background-layers', ['exports', 'ember-flexberry-gis/components/map-tools/background-layers'], function (exports, _emberFlexberryGisComponentsMapToolsBackgroundLayers) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisComponentsMapToolsBackgroundLayers['default'];
     }
   });
 });
@@ -2029,7 +2077,7 @@ define('dummy/controllers/list-form', ['exports', 'ember-flexberry/controllers/l
 define('dummy/controllers/lookup-dialog', ['exports', 'ember-flexberry/controllers/lookup-dialog'], function (exports, _emberFlexberryControllersLookupDialog) {
   exports['default'] = _emberFlexberryControllersLookupDialog['default'];
 });
-define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/controllers/edit-map', 'ember-flexberry/mixins/edit-form-controller-operations-indication'], function (exports, _ember, _emberFlexberryGisControllersEditMap, _emberFlexberryMixinsEditFormControllerOperationsIndication) {
+define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/controllers/edit-map', 'ember-flexberry/mixins/edit-form-controller-operations-indication', 'npm:leaflet-side-by-side'], function (exports, _ember, _emberFlexberryGisControllersEditMap, _emberFlexberryMixinsEditFormControllerOperationsIndication, _npmLeafletSideBySide) {
 
   /**
     Map controller.
@@ -2039,6 +2087,14 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
     @uses EditFormControllerOperationsIndicationMixin
   */
   exports['default'] = _emberFlexberryGisControllersEditMap['default'].extend(_emberFlexberryMixinsEditFormControllerOperationsIndication['default'], {
+    /**
+      Property contatining sideBySide component.
+      @property sideBySide
+      @type L.control.sideBySide
+      @default null
+    */
+    sideBySide: L.control.sideBySide(),
+
     /**
       Parent route.
        @property parentRoute
@@ -2086,6 +2142,14 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
       @default 0
     */
     identifyToolBufferRadius: 0,
+
+    /**
+      Placeholder or default text (will be displayed if there is no selected item).
+       @property placeholderSearch
+      @type String
+      @default null
+    */
+    placeholderSearch: null,
 
     /**
       Identify tool name computed by the specified tool settings.
@@ -2151,6 +2215,13 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
     */
     switchScaleControlScales: [500, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 150000, 200000],
 
+    _leafletMapDidChange: _ember['default'].observer('leafletMap', function () {
+      var leafletMap = this.get('leafletMap');
+      if (leafletMap) {
+        leafletMap.on('flexberry-map:toggleSidebar', this.onToggleSidebar, this);
+      }
+    }),
+
     /**
      Flat indicates that map should fire create object on first load
     */
@@ -2183,22 +2254,45 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
       captionPath: 'forms.map.favoritesbuttontooltip',
       iconClass: 'favorites icon',
       'class': 'favorite'
+    }, {
+      selector: 'createObject',
+      captionPath: 'forms.map.createobjectbuttontooltip',
+      iconClass: 'createObject icon'
+    }, {
+      selector: 'createOrEditObject',
+      captionPath: 'forms.map.createoreditobjectbuttontooltip',
+      iconClass: 'createOrEditObject icon',
+      'class': 'createOrEditObject'
+    }, {
+      selector: 'compare',
+      captionPath: 'forms.map.comparebuttontooltip',
+      iconClass: 'compare icon',
+      'class': 'compare'
+    }, {
+      selector: 'compareObjects',
+      caption: 'Сравнение объектов',
+      iconClass: 'compareObjects icon',
+      'class': 'compareObjects'
+    }, {
+      selector: 'intersectionObjects',
+      caption: 'Сравнение объектов',
+      iconClass: 'intersectionObjects icon',
+      'class': 'intersectionObjects'
     }]),
 
-    _sidebarFiltered: _ember['default'].computed('sidebar', 'createObject', function () {
+    _showFavorites: false,
+
+    _sidebarFiltered: _ember['default'].computed('sidebar', 'createObject', 'createOrEditObject', 'compareObjects', 'showIntersectionPanel', function () {
+      var _this = this;
+
       var result = _ember['default'].A();
       var sidebar = this.get('sidebar');
       sidebar.forEach(function (item) {
-        result.push(item);
+        if ((item.selector !== 'createObject' || _this.get('createObject')) && (item.selector !== 'createOrEditObject' || _this.get('createOrEditObject')) && (item.selector !== 'intersectionObjects' || _this.get('showIntersectionPanel')) && (item.selector !== 'compareObjects' || _this.get('compareObjects'))) /* &&
+                                                                                                                                                                                                                                                                                                                      (item.selector !== 'compare' || this.get('compare'))) */{
+            result.push(item);
+          }
       });
-
-      if (this.get('createObject')) {
-        result.push({
-          selector: 'createObject',
-          captionPath: 'forms.map.createobjectbuttontooltip',
-          iconClass: 'createObject icon'
-        });
-      }
 
       return result;
     }),
@@ -2299,7 +2393,7 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
         editedLayersSelectedTabIndex: 0,
         editedLayersPanelFolded: true,
         editedLayersPanelSettings: {
-          withToolbar: false,
+          withToolbar: true,
           sidebarOpened: false
         }
       });
@@ -2318,6 +2412,29 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
           withToolbar: false,
           sidebarOpened: false
         }
+      });
+    },
+
+    onToggleSidebar: function onToggleSidebar() {
+      var tab = undefined;
+      if (this.get('sidebarOpened')) {
+        _ember['default'].$('.sidebar-wrapper .main-map-tab-bar > .item.tab.active').removeClass('active');
+      } else {
+        // поищем поcледнюю активную. у самих data-tab класс не сбрасывается
+        var activeTab = _ember['default'].$('.sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
+        if (activeTab.length > 0) {
+          var dataTab = activeTab.attr('data-tab');
+          _ember['default'].$('.sidebar-wrapper .main-map-tab-bar > .item.tab[data-tab=' + dataTab + ']').addClass('active');
+          tab = dataTab;
+        } else {
+          this.set('sidebar.0.active', true);
+          tab = 'treeview';
+        }
+      }
+
+      this.send('toggleSidebar', {
+        changed: false,
+        tabName: tab
       });
     },
 
@@ -2347,43 +2464,160 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
     },
 
     actions: {
+      OnCompareTwoGeometries: function OnCompareTwoGeometries() {
+        var _this2 = this;
+
+        this.set('compareObjects', true);
+        _ember['default'].run.later(function () {
+          var tab = undefined;
+          var activeTab = _ember['default'].$('.sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
+          if (activeTab.length > 0) {
+            tab = activeTab.attr('data-tab');
+          }
+
+          _ember['default'].$('.sidebar-wrapper .main-map-tab-bar > .item.tab.active').removeClass('active');
+
+          _this2.set('sidebar.8.active', true);
+
+          _this2.send('toggleSidebar', {
+            changed: _this2.get('sidebarOpened'),
+            tabName: 'compareObjects',
+            prevTab: tab
+          });
+        });
+      },
+
+      onCompareTwoGeometriesEnd: function onCompareTwoGeometriesEnd() {
+        this.set('compareObjects', false);
+
+        this.set('sidebar.8.class', 'compareObjects');
+        this.set('sidebar.8.active', false);
+
+        this.set('sidebar.3.active', true);
+        this.send('toggleSidebar', {
+          changed: true,
+          tabName: 'bookmarks'
+        });
+      },
+
       /**
         Handles create object.
          @method  actions.onCreateObject
       */
       onCreateObject: function onCreateObject(createItems) {
-        var _this = this;
+        var _this3 = this;
 
         this.set('createItems', createItems);
         this.set('createObject', true);
 
         if (this.get('createObject')) {
           _ember['default'].run.later(function () {
-            if (_this.get('_sidebarFiltered.4.active') !== true) {
-              _this.set('_sidebarFiltered.4.active', true);
+            if (_this3.get('sidebar.5.active') !== true) {
+              _this3.set('sidebar.5.active', true);
             }
 
-            _this.send('toggleSidebar', {
-              changed: false,
-              tabName: 'createObject'
-            });
+            if (!_this3.get('sidebarOpened')) {
+              _this3.send('toggleSidebar', {
+                changed: false,
+                tabName: 'createObject'
+              });
+            }
           });
         }
       },
 
+      /**
+        Handles create/edit feature.
+         @method  actions.onCreateOrEditFeature
+      */
+      onCreateOrEditFeature: function onCreateOrEditFeature(e) {
+        var _this4 = this;
+
+        this.set('createOrEditedFeature', e);
+        this.set('createOrEditObject', true);
+
+        if (this.get('createOrEditObject')) {
+          _ember['default'].run.later(function () {
+            if (_this4.get('sidebar.6.class').indexOf('active') === -1 && _this4.get('sidebarOpened')) {
+              _ember['default'].$('.sidebar-wrapper .item.active').removeClass('active');
+            }
+
+            _this4.set('sidebar.6.active', true);
+
+            if (!_this4.get('sidebarOpened')) {
+              _this4.send('toggleSidebar', {
+                changed: false,
+                tabName: 'createOrEditObject'
+              });
+            }
+          });
+        }
+      },
+
+      onCreateOrEditFeatureEnd: function onCreateOrEditFeatureEnd() {
+        this.set('createOrEditedFeature', null);
+        this.set('createOrEditObject', false);
+
+        this.set('sidebar.6.class', 'createOrEditObject');
+        this.set('sidebar.6.active', false);
+
+        this.set('sidebar.0.active', true);
+      },
+
+      attrSearch: function attrSearch(queryString) {
+        if (this.get('sidebar.1.active') !== true) {
+          this.set('sidebar.1.active', true);
+        }
+
+        this.set('attrVisible', true);
+        this.set('queryString', queryString);
+
+        if (!this.get('sidebarOpened')) {
+          this.send('toggleSidebar', {
+            changed: false,
+            tabName: 'search'
+          });
+        }
+      },
+
+      showCompareSideBar: function showCompareSideBar() {
+        var _this5 = this;
+
+        if (_npmLeafletSideBySide['default']) {
+          if (!this.get('compareLayersEnabled')) {
+            this.set('sidebar.7.active', true);
+          } else {
+            this.set('sidebar.0.active', true);
+          }
+
+          if (!this.get('sidebarOpened')) {
+            this.send('toggleSidebar', {
+              changed: false,
+              tabName: 'compare'
+            });
+          }
+
+          setTimeout(function () {
+            _this5.toggleProperty('compareLayersEnabled');
+          }, 500);
+        }
+      },
+
       onQueryFinished: function onQueryFinished(e) {
-        var _this2 = this;
+        var _this6 = this;
 
         if (this.get('createObject')) {
           _ember['default'].run.later(function () {
-            if (_this2.get('sidebarItems.4.active') !== true) {
-              _this2.set('sidebarItems.4.active', true);
+            if (_this6.get('sidebar.5.active') !== true) {
+              _this6.set('sidebar.5.active', true);
             }
 
-            _this2.send('toggleSidebar', {
-              changed: false,
-              tabName: 'createObject'
-            });
+            if (!_this6.get('sidebarOpened')) {
+              _this6.send('toggleSidebar', {
+                changed: false,
+                tabName: 'createObject'
+              });
+            }
           });
         } else {
           this._identificationFinished(e);
@@ -2398,11 +2632,6 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
         this._super.apply(this, arguments);
 
         this.initializeEditPanel();
-
-        var leafletMap = this.get('leafletMap');
-        if (!_ember['default'].isNone(leafletMap)) {
-          leafletMap.on('containerResizeStart', this.onLeafletMapContainerResizeStart, this);
-        }
       },
 
       /**
@@ -2410,12 +2639,13 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
          @method  actions.onMapLeafletDestroy
       */
       onMapLeafletDestroy: function onMapLeafletDestroy() {
-        var leafletMap = this.get('leafletMap');
-        if (!_ember['default'].isNone(leafletMap)) {
-          leafletMap.off('containerResizeStart', this.onLeafletMapContainerResizeStart, this);
-        }
-
         this.destroyEditPanel();
+        this.set('sidebarOpened', false);
+        this.set('showTree', false);
+        var leafletMap = this.get('leafletMap');
+        if (leafletMap) {
+          leafletMap.off('flexberry-map:toggleSidebar', this.onToggleSidebar, this);
+        }
 
         this._super.apply(this, arguments);
       },
@@ -2425,7 +2655,7 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
          @method actions.toggleSidebar
       */
       toggleSidebar: function toggleSidebar(e) {
-        var _this3 = this;
+        var _this7 = this;
 
         if (!e.changed) {
           var sidebarOpened = !this.get('sidebarOpened');
@@ -2436,7 +2666,16 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
             _ember['default'].$('.sidebar-wrapper').addClass('visible');
           } else {
             _ember['default'].$('.sidebar-wrapper').removeClass('visible');
+            this.set('attrVisible', false);
           }
+        }
+
+        if (e.tabName !== 'search') {
+          this.set('attrVisible', false);
+        }
+
+        if (e.tabName !== 'compare' && this.get('compareLayersEnabled')) {
+          this.set('compareLayersEnabled', false);
         }
 
         if (e.tabName === 'identify') {
@@ -2462,9 +2701,38 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
         if (e.tabName === 'treeview') {
           if (!this.get('showTree')) {
             _ember['default'].run.later(function () {
-              _this3.set('showTree', true);
+              _this7.set('showTree', true);
             }, 500);
           }
+        }
+
+        if (e.prevTab === 'createOrEditObject') {
+          if (e.changed) {
+            this.set('createOrEditObject', false);
+            this.set('createOrEditedFeature', null);
+          }
+
+          this.set('sidebar.6.class', 'createOrEditObject');
+          this.set('sidebar.6.active', false);
+        }
+
+        if (e.prevTab === 'intersectionObjects') {
+          if (e.changed) {
+            this.set('showIntersectionPanel', false);
+            this.set('feature', null);
+          }
+
+          this.set('sidebar.9.class', 'intersectionObjects');
+          this.set('sidebar.9.active', false);
+        }
+
+        if (e.prevTab === 'compareObjects') {
+          if (e.changed) {
+            this.set('compareObjects', null);
+          }
+
+          this.set('sidebar.8.class', 'compareObjects');
+          this.set('sidebar.8.active', false);
         }
       },
 
@@ -2472,24 +2740,22 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
         Performs search.
          @method actions.querySearch
       */
-      querySearch: function querySearch(queryString) {
+      querySearch: function querySearch(e) {
         var leafletMap = this.get('leafletMap');
-        var e = {
-          context: true,
-          latlng: leafletMap.getCenter(),
-          searchOptions: {
-            queryString: queryString,
-            maxResultsCount: 10
-          },
-          filter: function filter(layerModel) {
-            return layerModel.get('canBeContextSearched') && layerModel.get('visibility');
-          },
-          results: _ember['default'].A()
-        };
 
         leafletMap.fire('flexberry-map:search', e);
 
         this.set('searchResults', e.results);
+
+        if (this.get('sidebar.1.active') !== true) {
+          this.set('sidebar.1.active', true);
+          if (!this.get('sidebarOpened')) {
+            this.send('toggleSidebar', {
+              changed: false,
+              tabName: 'search'
+            });
+          }
+        }
       },
 
       /**
@@ -2498,6 +2764,54 @@ define('dummy/controllers/map', ['exports', 'ember', 'ember-flexberry-gis/contro
       */
       clearSearch: function clearSearch() {
         this.set('searchResults', null);
+      },
+
+      /**
+        Action shows intersection panel.
+         @method actions.onIntersectionPanel
+      */
+      onIntersectionPanel: function onIntersectionPanel(feature) {
+        var _this8 = this;
+
+        this.set('feature', feature);
+        this.set('showIntersectionPanel', true);
+        _ember['default'].run.later(function () {
+          var tab = undefined;
+          var activeTab = _ember['default'].$('.rgis-sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
+          if (activeTab.length > 0) {
+            tab = activeTab.attr('data-tab');
+          }
+
+          _ember['default'].$('.rgis-sidebar-wrapper .main-map-tab-bar > .item.tab.active').removeClass('active');
+
+          _this8.set('sidebar.9.active', true);
+
+          _this8.send('toggleSidebar', {
+            changed: _this8.get('sidebarOpened'),
+            tabName: 'intersectionObjects',
+            prevTab: tab
+          });
+        });
+      },
+
+      /**
+        Close intersection panel.
+         @method actions.findIntersection
+      */
+      closeIntersectionPanel: function closeIntersectionPanel() {
+        this.set('intersection', false);
+        this.set('showIntersectionPanel', false);
+
+        this.set('feature', null);
+
+        this.set('sidebar.9.class', 'createOrEditObject');
+        this.set('sidebar.9.active', false);
+
+        this.set('sidebar.0.active', true);
+        this.send('toggleSidebar', {
+          changed: true,
+          tabName: 'treeview'
+        });
       },
 
       /**
@@ -2868,6 +3182,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/d
     assert.ok(true, 'modules/ember-flexberry-gis/components/div-control.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/drag-box.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/components');
+  test('modules/ember-flexberry-gis/components/drag-box.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/components/drag-box.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/drag-box.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/components/drag-box.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/components/drag-box.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/favorites-list.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/components');
   test('modules/ember-flexberry-gis/components/favorites-list.js should pass jscs', function () {
@@ -2957,6 +3284,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/f
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/components/flexberry-edit-crs.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/flexberry-edit-layer-feature.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/components');
+  test('modules/ember-flexberry-gis/components/flexberry-edit-layer-feature.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/components/flexberry-edit-layer-feature.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/flexberry-edit-layer-feature.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/components/flexberry-edit-layer-feature.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/components/flexberry-edit-layer-feature.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/flexberry-edit-layermap.jscs-test', ['exports'], function (exports) {
@@ -3425,6 +3765,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/l
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/components/layers-dialogs/remove.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers-dialogs/settings/combine.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/components/layers-dialogs/settings');
+  test('modules/ember-flexberry-gis/components/layers-dialogs/settings/combine.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/components/layers-dialogs/settings/combine.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers-dialogs/settings/combine.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/components/layers-dialogs/settings/combine.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/components/layers-dialogs/settings/combine.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers-dialogs/settings/geocoder-osm-overpass.jscs-test', ['exports'], function (exports) {
@@ -3908,6 +4261,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/l
     assert.ok(true, 'modules/ember-flexberry-gis/components/layers-styles/unique.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers/combine-layer.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/components/layers');
+  test('modules/ember-flexberry-gis/components/layers/combine-layer.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/components/layers/combine-layer.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers/combine-layer.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/components/layers/combine-layer.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/components/layers/combine-layer.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers/geocoder-base-layer.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/components/layers');
   test('modules/ember-flexberry-gis/components/layers/geocoder-base-layer.js should pass jscs', function () {
@@ -4127,6 +4493,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/l
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/components/legends/-private/vector-legend.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/legends/combine-legend.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/components/legends');
+  test('modules/ember-flexberry-gis/components/legends/combine-legend.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/components/legends/combine-legend.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/legends/combine-legend.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/components/legends/combine-legend.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/components/legends/combine-legend.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/legends/geojson-legend.jscs-test', ['exports'], function (exports) {
@@ -4517,6 +4896,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/m
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/components/map-dialogs/edit.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/map-tools/background-layers.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/components/map-tools');
+  test('modules/ember-flexberry-gis/components/map-tools/background-layers.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/components/map-tools/background-layers.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/map-tools/background-layers.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/components/map-tools/background-layers.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/components/map-tools/background-layers.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/map-tools/base.jscs-test', ['exports'], function (exports) {
@@ -5273,6 +5665,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/instance-ini
     assert.ok(true, 'modules/ember-flexberry-gis/instance-initializers/owner.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/instance-initializers/precision-scale.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/instance-initializers');
+  test('modules/ember-flexberry-gis/instance-initializers/precision-scale.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/instance-initializers/precision-scale.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/instance-initializers/precision-scale.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/instance-initializers/precision-scale.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/instance-initializers/precision-scale.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/layers-prototyping-modes/-private/base.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/layers-prototyping-modes/-private');
   test('modules/ember-flexberry-gis/layers-prototyping-modes/-private/base.js should pass jscs', function () {
@@ -5401,6 +5806,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/layers/-priv
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/layers/-private/vector.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/layers/combine.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/layers');
+  test('modules/ember-flexberry-gis/layers/combine.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/layers/combine.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/layers/combine.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/layers/combine.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/layers/combine.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/layers/geocoder-osm-overpass.jscs-test', ['exports'], function (exports) {
@@ -5689,6 +6107,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/c
     assert.ok(true, 'modules/ember-flexberry-gis/locales/en/components/flexberry-edit-crs.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/components/flexberry-edit-layer-feature.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/locales/en/components');
+  test('modules/ember-flexberry-gis/locales/en/components/flexberry-edit-layer-feature.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/locales/en/components/flexberry-edit-layer-feature.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/components/flexberry-edit-layer-feature.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/locales/en/components/flexberry-edit-layer-feature.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/locales/en/components/flexberry-edit-layer-feature.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/components/flexberry-identify-panel.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/locales/en/components');
   test('modules/ember-flexberry-gis/locales/en/components/flexberry-identify-panel.js should pass jscs', function () {
@@ -5869,6 +6300,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/c
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/locales/en/components/geometry-add-modes.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/components/geometry-add-modes/draw.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/locales/en/components/geometry-add-modes');
+  test('modules/ember-flexberry-gis/locales/en/components/geometry-add-modes/draw.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/locales/en/components/geometry-add-modes/draw.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/components/geometry-add-modes/draw.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/locales/en/components/geometry-add-modes/draw.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/locales/en/components/geometry-add-modes/draw.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/components/geometry-add-modes/geoprovider.jscs-test', ['exports'], function (exports) {
@@ -6573,6 +7017,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/c
     assert.ok(true, 'modules/ember-flexberry-gis/locales/en/components/markers-styles/image/icon-editor.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/components/minimap.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/locales/en/components');
+  test('modules/ember-flexberry-gis/locales/en/components/minimap.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/locales/en/components/minimap.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/components/minimap.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/locales/en/components/minimap.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/locales/en/components/minimap.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/components/spatial-bookmarks.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/locales/en/components');
   test('modules/ember-flexberry-gis/locales/en/components/spatial-bookmarks.js should pass jscs', function () {
@@ -7080,6 +7537,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/c
     assert.ok(true, 'modules/ember-flexberry-gis/locales/ru/components/flexberry-edit-crs.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/components/flexberry-edit-layer-feature.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/locales/ru/components');
+  test('modules/ember-flexberry-gis/locales/ru/components/flexberry-edit-layer-feature.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/locales/ru/components/flexberry-edit-layer-feature.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/components/flexberry-edit-layer-feature.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/locales/ru/components/flexberry-edit-layer-feature.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/locales/ru/components/flexberry-edit-layer-feature.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/components/flexberry-identify-panel.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/locales/ru/components');
   test('modules/ember-flexberry-gis/locales/ru/components/flexberry-identify-panel.js should pass jscs', function () {
@@ -7260,6 +7730,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/c
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/locales/ru/components/geometry-add-modes.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/components/geometry-add-modes/draw.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/locales/ru/components/geometry-add-modes');
+  test('modules/ember-flexberry-gis/locales/ru/components/geometry-add-modes/draw.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/locales/ru/components/geometry-add-modes/draw.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/components/geometry-add-modes/draw.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/locales/ru/components/geometry-add-modes/draw.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/locales/ru/components/geometry-add-modes/draw.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/components/geometry-add-modes/geoprovider.jscs-test', ['exports'], function (exports) {
@@ -7962,6 +8445,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/c
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/locales/ru/components/markers-styles/image/icon-editor.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/components/minimap.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/locales/ru/components');
+  test('modules/ember-flexberry-gis/locales/ru/components/minimap.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/locales/ru/components/minimap.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/components/minimap.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/locales/ru/components/minimap.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/locales/ru/components/minimap.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/components/spatial-bookmarks.jscs-test', ['exports'], function (exports) {
@@ -9030,6 +9526,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/dynam
     assert.ok(true, 'modules/ember-flexberry-gis/mixins/dynamic-properties.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/edit-feature.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/mixins');
+  test('modules/ember-flexberry-gis/mixins/edit-feature.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/mixins/edit-feature.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/edit-feature.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/mixins/edit-feature.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/mixins/edit-feature.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/favorites-features.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/mixins');
   test('modules/ember-flexberry-gis/mixins/favorites-features.js should pass jscs', function () {
@@ -9054,6 +9563,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/flexb
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/mixins/flexberry-boundingbox-map-loader.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/flexberry-layers-action-handler.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/mixins');
+  test('modules/ember-flexberry-gis/mixins/flexberry-layers-action-handler.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/mixins/flexberry-layers-action-handler.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/flexberry-layers-action-handler.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/mixins/flexberry-layers-action-handler.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/mixins/flexberry-layers-action-handler.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/flexberry-links-editor-actions-handler.jscs-test', ['exports'], function (exports) {
@@ -10278,6 +10800,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/transforms/j
     assert.ok(true, 'modules/ember-flexberry-gis/transforms/json.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/change-index-on-map-layers.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/utils');
+  test('modules/ember-flexberry-gis/utils/change-index-on-map-layers.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/utils/change-index-on-map-layers.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/change-index-on-map-layers.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/utils/change-index-on-map-layers.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/utils/change-index-on-map-layers.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/check-zoom.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/utils');
   test('modules/ember-flexberry-gis/utils/check-zoom.js should pass jscs', function () {
@@ -10315,6 +10850,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/color-
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/utils/color-interpolation.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/coordinates-to.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/utils');
+  test('modules/ember-flexberry-gis/utils/coordinates-to.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/utils/coordinates-to.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/coordinates-to.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/utils/coordinates-to.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/utils/coordinates-to.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/copy-layer.jscs-test', ['exports'], function (exports) {
@@ -10499,6 +11047,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/leafle
     assert.ok(true, 'modules/ember-flexberry-gis/utils/leaflet-opacity.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/open-close-sub-menu.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/utils');
+  test('modules/ember-flexberry-gis/utils/open-close-sub-menu.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/utils/open-close-sub-menu.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/open-close-sub-menu.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/utils/open-close-sub-menu.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/utils/open-close-sub-menu.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/polygon-intersect-check.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/utils');
   test('modules/ember-flexberry-gis/utils/polygon-intersect-check.js should pass jscs', function () {
@@ -10536,6 +11097,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/state.
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/utils/state.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/zoom-to-bounds.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/utils');
+  test('modules/ember-flexberry-gis/utils/zoom-to-bounds.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/utils/zoom-to-bounds.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/zoom-to-bounds.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/utils/zoom-to-bounds.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/utils/zoom-to-bounds.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/views/gis-search-form.jscs-test', ['exports'], function (exports) {
@@ -11796,6 +12370,20 @@ define('dummy/instance-initializers/perf', ['exports', 'ember-flexberry/instance
     }
   });
 });
+define('dummy/instance-initializers/precision-scale', ['exports', 'ember-flexberry-gis/instance-initializers/precision-scale'], function (exports, _emberFlexberryGisInstanceInitializersPrecisionScale) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisInstanceInitializersPrecisionScale['default'];
+    }
+  });
+  Object.defineProperty(exports, 'initialize', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisInstanceInitializersPrecisionScale.initialize;
+    }
+  });
+});
 define('dummy/instance-initializers/set-singletons', ['exports', 'ember-flexberry-data/instance-initializers/set-singletons'], function (exports, _emberFlexberryDataInstanceInitializersSetSingletons) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -11847,6 +12435,14 @@ define('dummy/layers-styles/unique', ['exports', 'ember-flexberry-gis/layers-sty
     enumerable: true,
     get: function get() {
       return _emberFlexberryGisLayersStylesUnique['default'];
+    }
+  });
+});
+define('dummy/layers/combine', ['exports', 'ember-flexberry-gis/layers/combine'], function (exports, _emberFlexberryGisLayersCombine) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisLayersCombine['default'];
     }
   });
 });
@@ -12096,6 +12692,8 @@ define('dummy/locales/en/forms/map', ['exports'], function (exports) {
     'identifybuttontooltip': 'Show identification',
     'favoritesbuttontooltip': 'Show favorites',
     'createobjectbuttontooltip': 'Show object creation',
+    'createoreditobjectbuttontooltip': 'Show object creation/editing',
+    'comparebuttontooltip': 'Compare layers',
     'xCaption': 'Longitude',
     'yCaption': 'Latitude',
 
@@ -12117,6 +12715,12 @@ define('dummy/locales/en/forms/map', ['exports'], function (exports) {
       },
       'createObject': {
         'caption': 'Create object'
+      },
+      'createOrEditObject': {
+        'caption': 'Create/Edit object'
+      },
+      'compare': {
+        'caption': 'Compare layers'
       }
     }
   };
@@ -12296,6 +12900,8 @@ define('dummy/locales/ru/forms/map', ['exports'], function (exports) {
     'identifybuttontooltip': 'Идентификация',
     'favoritesbuttontooltip': 'Избранное',
     'createobjectbuttontooltip': 'Создание объекта',
+    'createoreditobjectbuttontooltip': 'Создание/редактирование объекта',
+    'comparebuttontooltip': 'Сравнение слоев',
     'xCaption': 'Долгота',
     'yCaption': 'Широта',
 
@@ -12317,6 +12923,12 @@ define('dummy/locales/ru/forms/map', ['exports'], function (exports) {
       },
       'createObject': {
         'caption': 'Создание объекта'
+      },
+      'createOrEditObject': {
+        'caption': 'Создание/редактирование объекта'
+      },
+      'compare': {
+        'caption': 'Сравнить слои'
       }
     }
   };
@@ -13653,8 +14265,8 @@ define('dummy/services/perf', ['exports', 'ember', 'ember-flexberry/services/per
 
   exports['default'] = _emberFlexberryServicesPerf['default'];
 });
-define('dummy/services/store', ['exports', 'ember-flexberry-data/stores/online-store', 'ember-flexberry-data/mixins/store'], function (exports, _emberFlexberryDataStoresOnlineStore, _emberFlexberryDataMixinsStore) {
-  exports['default'] = _emberFlexberryDataStoresOnlineStore['default'].reopen(_emberFlexberryDataMixinsStore['default']);
+define('dummy/services/store', ['exports', 'ember-flexberry-data'], function (exports, _emberFlexberryData) {
+  exports['default'] = _emberFlexberryData.Projection.OnlineStore.reopen(_emberFlexberryData.Projection.StoreMixin);
 });
 /**
   @module ember-flexberry-gis-dummy
@@ -34886,11 +35498,11 @@ define("dummy/templates/map", ["exports"], function (exports) {
           "loc": {
             "source": null,
             "start": {
-              "line": 37,
+              "line": 52,
               "column": 8
             },
             "end": {
-              "line": 98,
+              "line": 122,
               "column": 8
             }
           },
@@ -34915,7 +35527,7 @@ define("dummy/templates/map", ["exports"], function (exports) {
           morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
           return morphs;
         },
-        statements: [["inline", "flexberry-maplayers", [], ["class", "styled", "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [40, 23], [40, 33]]]]], [], []], "compareLayersEnabled", ["subexpr", "@mut", [["get", "compareLayersEnabled", ["loc", [null, [41, 33], [41, 53]]]]], [], []], "sideBySide", ["subexpr", "@mut", [["get", "sideBySide", ["loc", [null, [42, 23], [42, 33]]]]], [], []], "layers", ["subexpr", "get-with-dynamic-actions", [["get", "this", ["loc", [null, [43, 45], [43, 49]]]], "model.hierarchy"], ["hierarchyPropertyName", "layers", "pathKeyword", "layerPath", "dynamicActions", ["subexpr", "array", [["subexpr", "hash", [], ["on", "add", "actionName", "onMapLayerAdd", "actionArguments", ["subexpr", "array", ["{% layerPath %}"], [], ["loc", [null, [50, 34], [50, 59]]]]], ["loc", [null, [47, 16], [51, 17]]]], ["subexpr", "hash", [], ["on", "copy", "actionName", "onMapLayerCopy", "actionArguments", ["subexpr", "array", ["model.hierarchy"], [], ["loc", [null, [55, 34], [55, 59]]]]], ["loc", [null, [52, 16], [56, 17]]]], ["subexpr", "hash", [], ["on", "edit", "actionName", "onMapLayerEdit", "actionArguments", ["subexpr", "array", ["{% layerPath %}"], [], ["loc", [null, [60, 34], [60, 59]]]]], ["loc", [null, [57, 16], [61, 17]]]], ["subexpr", "hash", [], ["on", "remove", "actionName", "onMapLayerRemove", "actionArguments", ["subexpr", "array", ["{% layerPath %}"], [], ["loc", [null, [65, 34], [65, 59]]]]], ["loc", [null, [62, 16], [66, 17]]]], ["subexpr", "hash", [], ["on", "changeVisibility", "actionName", "onMapLayerChangeVisibility", "actionArguments", ["subexpr", "array", ["{% layerPath %}.visibility"], [], ["loc", [null, [70, 34], [70, 70]]]]], ["loc", [null, [67, 16], [71, 17]]]], ["subexpr", "hash", [], ["on", "changeOpacity", "actionName", "onMapLayerChangeOpacity", "actionArguments", ["subexpr", "array", ["{% layerPath %}.settingsAsObject.opacity"], [], ["loc", [null, [75, 34], [75, 84]]]]], ["loc", [null, [72, 16], [76, 17]]]], ["subexpr", "hash", [], ["on", "fitBounds", "actionName", "onMapLayerFitBounds", "actionArguments", ["subexpr", "array", ["{% layerPath %}.bounds"], [], ["loc", [null, [80, 34], [80, 66]]]]], ["loc", [null, [77, 16], [81, 17]]]], ["subexpr", "hash", [], ["on", "attributesEdit", "actionName", "onAttributesEdit", "actionArguments", ["subexpr", "array", ["{% layerPath %}", ["subexpr", "hash", [], ["itemsPath", "editedLayers", "selectedTabIndexPath", "editedLayersSelectedTabIndex", "foldedPath", "editedLayersPanelFolded", "loadingPath", "editedLayersPanelLoading"], ["loc", [null, [86, 20], [91, 21]]]]], [], ["loc", [null, [85, 34], [92, 19]]]]], ["loc", [null, [82, 16], [93, 17]]]]], [], ["loc", [null, [46, 29], [94, 15]]]]], ["loc", [null, [43, 19], [95, 13]]]], "add", ["subexpr", "action", ["onMapLayerAdd", "model.hierarchy"], [], ["loc", [null, [96, 16], [96, 58]]]]], ["loc", [null, [38, 10], [97, 12]]]]],
+        statements: [["inline", "flexberry-maplayers", [], ["class", "styled", "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [55, 23], [55, 33]]]]], [], []], "sideBySide", ["subexpr", "@mut", [["get", "sideBySide", ["loc", [null, [56, 23], [56, 33]]]]], [], []], "layers", ["subexpr", "get-with-dynamic-actions", [["get", "this", ["loc", [null, [57, 45], [57, 49]]]], "model.otherLayers"], ["hierarchyPropertyName", "layers", "pathKeyword", "layerPath", "dynamicActions", ["subexpr", "array", [["subexpr", "hash", [], ["on", "add", "actionName", "onMapLayerAdd", "actionArguments", ["subexpr", "array", ["{% layerPath %}"], [], ["loc", [null, [64, 34], [64, 59]]]]], ["loc", [null, [61, 16], [65, 17]]]], ["subexpr", "hash", [], ["on", "copy", "actionName", "onMapLayerCopy", "actionArguments", ["subexpr", "array", ["model.otherLayers"], [], ["loc", [null, [69, 34], [69, 61]]]]], ["loc", [null, [66, 16], [70, 17]]]], ["subexpr", "hash", [], ["on", "edit", "actionName", "onMapLayerEdit", "actionArguments", ["subexpr", "array", ["{% layerPath %}"], [], ["loc", [null, [74, 34], [74, 59]]]]], ["loc", [null, [71, 16], [75, 17]]]], ["subexpr", "hash", [], ["on", "remove", "actionName", "onMapLayerRemove", "actionArguments", ["subexpr", "array", ["{% layerPath %}"], [], ["loc", [null, [79, 34], [79, 59]]]]], ["loc", [null, [76, 16], [80, 17]]]], ["subexpr", "hash", [], ["on", "changeVisibility", "actionName", "onMapLayerChangeVisibility", "actionArguments", ["subexpr", "array", ["{% layerPath %}.visibility"], [], ["loc", [null, [84, 34], [84, 70]]]]], ["loc", [null, [81, 16], [85, 17]]]], ["subexpr", "hash", [], ["on", "changeOpacity", "actionName", "onMapLayerChangeOpacity", "actionArguments", ["subexpr", "array", ["{% layerPath %}.settingsAsObject.opacity"], [], ["loc", [null, [89, 34], [89, 84]]]]], ["loc", [null, [86, 16], [90, 17]]]], ["subexpr", "hash", [], ["on", "fitBounds", "actionName", "onMapLayerFitBounds", "actionArguments", ["subexpr", "array", ["{% layerPath %}.bounds"], [], ["loc", [null, [94, 34], [94, 66]]]]], ["loc", [null, [91, 16], [95, 17]]]], ["subexpr", "hash", [], ["on", "attributesEdit", "actionName", "onAttributesEdit", "actionArguments", ["subexpr", "array", ["{% layerPath %}", ["subexpr", "hash", [], ["itemsPath", "editedLayers", "selectedTabIndexPath", "editedLayersSelectedTabIndex", "foldedPath", "editedLayersPanelFolded", "loadingPath", "editedLayersPanelLoading"], ["loc", [null, [100, 20], [105, 21]]]]], [], ["loc", [null, [99, 34], [106, 19]]]]], ["loc", [null, [96, 16], [107, 17]]]], ["subexpr", "hash", [], ["on", "featureEdit", "actionName", "onFeatureEdit", "actionArguments", ["subexpr", "array", ["{% layerPath %}", ["subexpr", "hash", [], ["mapAction", "onCreateOrEditFeature", "loadingPath", "editedLayersPanelLoading"], ["loc", [null, [112, 20], [115, 21]]]]], [], ["loc", [null, [111, 34], [116, 19]]]]], ["loc", [null, [108, 16], [117, 17]]]]], [], ["loc", [null, [60, 29], [118, 15]]]]], ["loc", [null, [57, 19], [119, 13]]]], "add", ["subexpr", "action", ["onMapLayerAdd", "model.hierarchy"], [], ["loc", [null, [120, 16], [120, 58]]]]], ["loc", [null, [53, 10], [121, 12]]]]],
         locals: [],
         templates: []
       };
@@ -34928,11 +35540,11 @@ define("dummy/templates/map", ["exports"], function (exports) {
           "loc": {
             "source": null,
             "start": {
-              "line": 98,
+              "line": 122,
               "column": 8
             },
             "end": {
-              "line": 101,
+              "line": 125,
               "column": 8
             }
           },
@@ -34972,11 +35584,55 @@ define("dummy/templates/map", ["exports"], function (exports) {
           "loc": {
             "source": null,
             "start": {
-              "line": 152,
+              "line": 129,
+              "column": 8
+            },
+            "end": {
+              "line": 131,
+              "column": 8
+            }
+          },
+          "moduleName": "dummy/templates/map.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("          ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("h5");
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 0, 0);
+          return morphs;
+        },
+        statements: [["inline", "t", ["components.flexberry-search.result-caption"], [], ["loc", [null, [130, 14], [130, 64]]]]],
+        locals: [],
+        templates: []
+      };
+    })();
+    var child4 = (function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 177,
               "column": 6
             },
             "end": {
-              "line": 157,
+              "line": 182,
               "column": 6
             }
           },
@@ -35001,12 +35657,140 @@ define("dummy/templates/map", ["exports"], function (exports) {
           morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
           return morphs;
         },
-        statements: [["inline", "flexberry-create-object-geometry", [], ["createItem", ["subexpr", "@mut", [["get", "createItem", ["loc", [null, [154, 21], [154, 31]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [155, 21], [155, 31]]]]], [], []]], ["loc", [null, [153, 8], [156, 10]]]]],
+        statements: [["inline", "flexberry-create-object-geometry", [], ["createItem", ["subexpr", "@mut", [["get", "createItem", ["loc", [null, [179, 21], [179, 31]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [180, 21], [180, 31]]]]], [], []]], ["loc", [null, [178, 8], [181, 10]]]]],
         locals: ["createItem"],
         templates: []
       };
     })();
-    var child4 = (function () {
+    var child5 = (function () {
+      var child0 = (function () {
+        var child0 = (function () {
+          var child0 = (function () {
+            return {
+              meta: {
+                "fragmentReason": false,
+                "revision": "Ember@2.4.6",
+                "loc": {
+                  "source": null,
+                  "start": {
+                    "line": 314,
+                    "column": 10
+                  },
+                  "end": {
+                    "line": 323,
+                    "column": 10
+                  }
+                },
+                "moduleName": "dummy/templates/map.hbs"
+              },
+              isEmpty: false,
+              arity: 1,
+              cachedFragment: null,
+              hasRendered: false,
+              buildFragment: function buildFragment(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createTextNode("            ");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createComment("");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createTextNode("\n");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+                var morphs = new Array(1);
+                morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+                return morphs;
+              },
+              statements: [["inline", "flexberry-layers", [], ["leafletContainer", ["subexpr", "@mut", [["get", "groupLayers", ["loc", [null, [319, 31], [319, 42]]]]], [], []], "layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [320, 21], [320, 36]]]]], [], []], "forMinimap", true], ["loc", [null, [318, 12], [322, 14]]]]],
+              locals: ["groupLayers"],
+              templates: []
+            };
+          })();
+          return {
+            meta: {
+              "fragmentReason": false,
+              "revision": "Ember@2.4.6",
+              "loc": {
+                "source": null,
+                "start": {
+                  "line": 312,
+                  "column": 10
+                },
+                "end": {
+                  "line": 324,
+                  "column": 10
+                }
+              },
+              "moduleName": "dummy/templates/map.hbs"
+            },
+            isEmpty: false,
+            arity: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            buildFragment: function buildFragment(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createTextNode("            ");
+              dom.appendChild(el0, el1);
+              var el1 = dom.createComment("");
+              dom.appendChild(el0, el1);
+              var el1 = dom.createTextNode("\n");
+              dom.appendChild(el0, el1);
+              var el1 = dom.createComment("");
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+              var morphs = new Array(2);
+              morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+              morphs[1] = dom.createMorphAt(fragment, 3, 3, contextualElement);
+              dom.insertBoundary(fragment, null);
+              return morphs;
+            },
+            statements: [["inline", "map-tools/measure", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [313, 43], [313, 53]]]]], [], []], "addHaArea", true], ["loc", [null, [313, 12], [313, 70]]]], ["block", "minimap-control", [], ["minimized", true, "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [316, 23], [316, 33]]]]], [], []]], 0, null, ["loc", [null, [314, 10], [323, 30]]]]],
+            locals: [],
+            templates: [child0]
+          };
+        })();
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.4.6",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 306,
+                "column": 8
+              },
+              "end": {
+                "line": 325,
+                "column": 8
+              }
+            },
+            "moduleName": "dummy/templates/map.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createComment("");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var morphs = new Array(1);
+            morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+            dom.insertBoundary(fragment, 0);
+            dom.insertBoundary(fragment, null);
+            return morphs;
+          },
+          statements: [["block", "block-slot", ["submenu"], [], 0, null, ["loc", [null, [312, 10], [324, 25]]]]],
+          locals: [],
+          templates: [child0]
+        };
+      })();
       return {
         meta: {
           "fragmentReason": false,
@@ -35014,11 +35798,11 @@ define("dummy/templates/map", ["exports"], function (exports) {
           "loc": {
             "source": null,
             "start": {
-              "line": 207,
+              "line": 260,
               "column": 6
             },
             "end": {
-              "line": 254,
+              "line": 327,
               "column": 6
             }
           },
@@ -35082,11 +35866,7 @@ define("dummy/templates/map", ["exports"], function (exports) {
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
-          dom.appendChild(el0, el1);
-          var el1 = dom.createComment("");
-          dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -35095,7 +35875,7 @@ define("dummy/templates/map", ["exports"], function (exports) {
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var morphs = new Array(15);
+          var morphs = new Array(14);
           morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
           morphs[1] = dom.createMorphAt(fragment, 3, 3, contextualElement);
           morphs[2] = dom.createMorphAt(fragment, 5, 5, contextualElement);
@@ -35110,57 +35890,14 @@ define("dummy/templates/map", ["exports"], function (exports) {
           morphs[11] = dom.createMorphAt(fragment, 23, 23, contextualElement);
           morphs[12] = dom.createMorphAt(fragment, 25, 25, contextualElement);
           morphs[13] = dom.createMorphAt(fragment, 27, 27, contextualElement);
-          morphs[14] = dom.createMorphAt(fragment, 29, 29, contextualElement);
           return morphs;
         },
-        statements: [["inline", "map-commands/full-extent", [], ["lat", ["subexpr", "@mut", [["get", "model.lat", ["loc", [null, [209, 14], [209, 23]]]]], [], []], "lng", ["subexpr", "@mut", [["get", "model.lng", ["loc", [null, [210, 14], [210, 23]]]]], [], []], "zoom", ["subexpr", "@mut", [["get", "model.zoom", ["loc", [null, [211, 15], [211, 25]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [212, 21], [212, 31]]]]], [], []]], ["loc", [null, [208, 8], [213, 10]]]], ["inline", "map-commands/edit", [], ["mapModel", ["subexpr", "@mut", [["get", "model", ["loc", [null, [215, 19], [215, 24]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [216, 21], [216, 31]]]]], [], []]], ["loc", [null, [214, 8], [217, 10]]]], ["inline", "scale-control", [], ["imperial", false, "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [220, 21], [220, 31]]]]], [], []]], ["loc", [null, [218, 8], [221, 10]]]], ["inline", "history-control", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [222, 37], [222, 47]]]]], [], []]], ["loc", [null, [222, 8], [222, 49]]]], ["inline", "map-tools/drag", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [223, 36], [223, 46]]]]], [], []]], ["loc", [null, [223, 8], [223, 48]]]], ["inline", "map-tools/zoom-in", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [224, 39], [224, 49]]]]], [], []]], ["loc", [null, [224, 8], [224, 51]]]], ["inline", "map-tools/zoom-out", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [225, 40], [225, 50]]]]], [], []]], ["loc", [null, [225, 8], [225, 52]]]], ["inline", "map-tools/identify", [], ["layerMode", ["subexpr", "@mut", [["get", "identifyToolLayerMode", ["loc", [null, [227, 20], [227, 41]]]]], [], []], "toolMode", ["subexpr", "@mut", [["get", "identifyToolToolMode", ["loc", [null, [228, 19], [228, 39]]]]], [], []], "bufferActive", ["subexpr", "@mut", [["get", "identifyToolBufferActive", ["loc", [null, [229, 23], [229, 47]]]]], [], []], "bufferUnits", ["subexpr", "@mut", [["get", "identifyToolBufferUnits", ["loc", [null, [230, 22], [230, 45]]]]], [], []], "bufferRadius", ["subexpr", "@mut", [["get", "identifyToolBufferRadius", ["loc", [null, [231, 23], [231, 47]]]]], [], []], "layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [232, 17], [232, 32]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [233, 21], [233, 31]]]]], [], []]], ["loc", [null, [226, 8], [234, 10]]]], ["inline", "map-tools/compare", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [236, 21], [236, 31]]]]], [], []], "showCompareSideBar", ["subexpr", "action", ["showCompareSideBar"], [], ["loc", [null, [237, 29], [237, 58]]]]], ["loc", [null, [235, 8], [238, 10]]]], ["inline", "map-commands/go-to", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [239, 40], [239, 50]]]]], [], []]], ["loc", [null, [239, 8], [239, 52]]]], ["inline", "map-commands/locate", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [240, 41], [240, 51]]]]], [], []]], ["loc", [null, [240, 8], [240, 53]]]], ["inline", "map-commands/search", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [242, 21], [242, 31]]]]], [], []], "layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [243, 17], [243, 32]]]]], [], []]], ["loc", [null, [241, 8], [244, 10]]]], ["inline", "map-tools/measure", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [245, 39], [245, 49]]]]], [], []]], ["loc", [null, [245, 8], [245, 51]]]], ["inline", "map-tools/draw", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [246, 36], [246, 46]]]]], [], []]], ["loc", [null, [246, 8], [246, 48]]]], ["inline", "map-commands/export", [], ["iconClass", "external share icon", "timeout", 30000, "defaultMapCaption", ["subexpr", "@mut", [["get", "model.name", ["loc", [null, [250, 28], [250, 38]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [251, 21], [251, 31]]]]], [], []], "layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [252, 17], [252, 32]]]]], [], []]], ["loc", [null, [247, 8], [253, 10]]]]],
+        statements: [["inline", "map-commands/full-extent", [], ["lat", ["subexpr", "@mut", [["get", "model.lat", ["loc", [null, [262, 14], [262, 23]]]]], [], []], "lng", ["subexpr", "@mut", [["get", "model.lng", ["loc", [null, [263, 14], [263, 23]]]]], [], []], "zoom", ["subexpr", "@mut", [["get", "model.zoom", ["loc", [null, [264, 15], [264, 25]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [265, 21], [265, 31]]]]], [], []]], ["loc", [null, [261, 8], [266, 10]]]], ["inline", "map-commands/edit", [], ["mapModel", ["subexpr", "@mut", [["get", "model", ["loc", [null, [268, 19], [268, 24]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [269, 21], [269, 31]]]]], [], []]], ["loc", [null, [267, 8], [270, 10]]]], ["inline", "scale-control", [], ["imperial", false, "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [273, 21], [273, 31]]]]], [], []]], ["loc", [null, [271, 8], [274, 10]]]], ["inline", "history-control", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [275, 37], [275, 47]]]]], [], []]], ["loc", [null, [275, 8], [275, 49]]]], ["inline", "map-tools/drag", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [276, 36], [276, 46]]]]], [], []]], ["loc", [null, [276, 8], [276, 48]]]], ["inline", "map-tools/zoom-in", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [277, 39], [277, 49]]]]], [], []]], ["loc", [null, [277, 8], [277, 51]]]], ["inline", "map-tools/zoom-out", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [278, 40], [278, 50]]]]], [], []]], ["loc", [null, [278, 8], [278, 52]]]], ["inline", "map-tools/identify", [], ["layerMode", ["subexpr", "@mut", [["get", "identifyToolLayerMode", ["loc", [null, [280, 20], [280, 41]]]]], [], []], "toolMode", ["subexpr", "@mut", [["get", "identifyToolToolMode", ["loc", [null, [281, 19], [281, 39]]]]], [], []], "bufferActive", ["subexpr", "@mut", [["get", "identifyToolBufferActive", ["loc", [null, [282, 23], [282, 47]]]]], [], []], "bufferUnits", ["subexpr", "@mut", [["get", "identifyToolBufferUnits", ["loc", [null, [283, 22], [283, 45]]]]], [], []], "bufferRadius", ["subexpr", "@mut", [["get", "identifyToolBufferRadius", ["loc", [null, [284, 23], [284, 47]]]]], [], []], "layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [285, 17], [285, 32]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [286, 21], [286, 31]]]]], [], []]], ["loc", [null, [279, 8], [287, 10]]]], ["inline", "map-tools/compare", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [289, 21], [289, 31]]]]], [], []], "compareLayersEnabled", ["subexpr", "@mut", [["get", "compareLayersEnabled", ["loc", [null, [290, 31], [290, 51]]]]], [], []], "showCompareSideBar", ["subexpr", "action", ["showCompareSideBar"], [], ["loc", [null, [291, 29], [291, 58]]]]], ["loc", [null, [288, 8], [292, 10]]]], ["inline", "map-commands/go-to", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [293, 40], [293, 50]]]]], [], []]], ["loc", [null, [293, 8], [293, 52]]]], ["inline", "map-commands/locate", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [294, 41], [294, 51]]]]], [], []]], ["loc", [null, [294, 8], [294, 53]]]], ["inline", "map-commands/search", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [296, 21], [296, 31]]]]], [], []], "layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [297, 17], [297, 32]]]]], [], []]], ["loc", [null, [295, 8], [298, 10]]]], ["inline", "map-commands/export", [], ["iconClass", "external share icon", "timeout", 30000, "defaultMapCaption", ["subexpr", "@mut", [["get", "model.name", ["loc", [null, [302, 28], [302, 38]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [303, 21], [303, 31]]]]], [], []], "layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [304, 17], [304, 32]]]]], [], []]], ["loc", [null, [299, 8], [305, 10]]]], ["block", "map-commands/base", [], ["class", "flexberry-more-map-command no-arrow", "name", "base", "iconClass", "more icon", "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [310, 21], [310, 31]]]]], [], []]], 0, null, ["loc", [null, [306, 8], [325, 30]]]]],
         locals: [],
-        templates: []
+        templates: [child0]
       };
     })();
-    var child5 = (function () {
-      var child0 = (function () {
-        return {
-          meta: {
-            "fragmentReason": false,
-            "revision": "Ember@2.4.6",
-            "loc": {
-              "source": null,
-              "start": {
-                "line": 286,
-                "column": 8
-              },
-              "end": {
-                "line": 295,
-                "column": 8
-              }
-            },
-            "moduleName": "dummy/templates/map.hbs"
-          },
-          isEmpty: false,
-          arity: 1,
-          cachedFragment: null,
-          hasRendered: false,
-          buildFragment: function buildFragment(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("          ");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createComment("");
-            dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n");
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-            var morphs = new Array(1);
-            morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
-            return morphs;
-          },
-          statements: [["inline", "flexberry-layers", [], ["leafletContainer", ["subexpr", "@mut", [["get", "groupLayers", ["loc", [null, [291, 29], [291, 40]]]]], [], []], "layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [292, 19], [292, 34]]]]], [], []], "forMinimap", true], ["loc", [null, [290, 10], [294, 12]]]]],
-          locals: ["groupLayers"],
-          templates: []
-        };
-      })();
+    var child6 = (function () {
       return {
         meta: {
           "fragmentReason": false,
@@ -35168,11 +35905,53 @@ define("dummy/templates/map", ["exports"], function (exports) {
           "loc": {
             "source": null,
             "start": {
-              "line": 259,
+              "line": 330,
+              "column": 2
+            },
+            "end": {
+              "line": 332,
+              "column": 2
+            }
+          },
+          "moduleName": "dummy/templates/map.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("    ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [["inline", "map-tools/background-layers", [], ["layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [331, 41], [331, 56]]]]], [], []]], ["loc", [null, [331, 4], [331, 58]]]]],
+        locals: [],
+        templates: []
+      };
+    })();
+    var child7 = (function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.4.6",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 335,
               "column": 6
             },
             "end": {
-              "line": 296,
+              "line": 373,
               "column": 6
             }
           },
@@ -35192,23 +35971,19 @@ define("dummy/templates/map", ["exports"], function (exports) {
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n");
-          dom.appendChild(el0, el1);
-          var el1 = dom.createComment("");
+          var el1 = dom.createTextNode("\n\n");
           dom.appendChild(el0, el1);
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var morphs = new Array(3);
+          var morphs = new Array(2);
           morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
           morphs[1] = dom.createMorphAt(fragment, 3, 3, contextualElement);
-          morphs[2] = dom.createMorphAt(fragment, 5, 5, contextualElement);
-          dom.insertBoundary(fragment, null);
           return morphs;
         },
-        statements: [["inline", "flexberry-layers", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [277, 21], [277, 31]]]]], [], []], "leafletContainer", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [278, 27], [278, 37]]]]], [], []], "layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [279, 17], [279, 32]]]]], [], []]], ["loc", [null, [276, 8], [280, 10]]]], ["inline", "switch-scale-control", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [282, 21], [282, 31]]]]], [], []], "updateWhenIdle", true, "scales", ["subexpr", "@mut", [["get", "switchScaleControlScales", ["loc", [null, [284, 17], [284, 41]]]]], [], []]], ["loc", [null, [281, 8], [285, 10]]]], ["block", "minimap-control", [], ["minimized", true, "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [288, 21], [288, 31]]]]], [], []]], 0, null, ["loc", [null, [286, 8], [295, 28]]]]],
+        statements: [["inline", "flexberry-layers", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [354, 21], [354, 31]]]]], [], []], "leafletContainer", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [355, 27], [355, 37]]]]], [], []], "layers", ["subexpr", "get-with-dynamic-actions", [["get", "this", ["loc", [null, [356, 43], [356, 47]]]], "model.hierarchy"], ["hierarchyPropertyName", "layers", "pathKeyword", "layerPath", "dynamicActions", ["subexpr", "array", [["subexpr", "hash", [], ["on", "layerInit", "actionName", "onLayerInit"], ["loc", [null, [360, 14], [363, 15]]]]], [], ["loc", [null, [359, 27], [364, 13]]]]], ["loc", [null, [356, 17], [365, 11]]]]], ["loc", [null, [353, 8], [366, 10]]]], ["inline", "switch-scale-control", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [368, 21], [368, 31]]]]], [], []], "updateWhenIdle", true, "scales", ["subexpr", "@mut", [["get", "switchScaleControlScales", ["loc", [null, [370, 17], [370, 41]]]]], [], []]], ["loc", [null, [367, 8], [371, 10]]]]],
         locals: [],
-        templates: [child0]
+        templates: []
       };
     })();
     return {
@@ -35225,7 +36000,7 @@ define("dummy/templates/map", ["exports"], function (exports) {
             "column": 0
           },
           "end": {
-            "line": 304,
+            "line": 381,
             "column": 7
           }
         },
@@ -35285,6 +36060,10 @@ define("dummy/templates/map", ["exports"], function (exports) {
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n  ");
         dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "sidebar-wrapper");
         var el3 = dom.createTextNode("\n    ");
@@ -35324,11 +36103,11 @@ define("dummy/templates/map", ["exports"], function (exports) {
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n        ");
+        var el5 = dom.createTextNode("        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
@@ -35411,6 +36190,42 @@ define("dummy/templates/map", ["exports"], function (exports) {
         var el5 = dom.createTextNode("\n      ");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4, "data-tab", "createOrEditObject");
+        dom.setAttribute(el4, "class", "ui tab createOrEditObject");
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("h3");
+        var el6 = dom.createComment("");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n      ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4, "data-tab", "compare");
+        dom.setAttribute(el4, "class", "ui tab compare");
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("h3");
+        var el6 = dom.createComment("");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n        ");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n      ");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n    ");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
@@ -35430,6 +36245,7 @@ define("dummy/templates/map", ["exports"], function (exports) {
         var el2 = dom.createTextNode("\n  ");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
+        dom.setAttribute(el2, "class", "ui tab bottompanel-wrapper intersection-panel");
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
@@ -35440,6 +36256,7 @@ define("dummy/templates/map", ["exports"], function (exports) {
         var el2 = dom.createTextNode("\n  ");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
+        dom.setAttribute(el2, "class", "ui tab bottompanel-wrapper compare-geometries-panel");
         var el3 = dom.createTextNode("\n    ");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
@@ -35465,7 +36282,11 @@ define("dummy/templates/map", ["exports"], function (exports) {
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n  ");
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("  ");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "mappanel");
@@ -35496,7 +36317,7 @@ define("dummy/templates/map", ["exports"], function (exports) {
         var element3 = dom.childAt(fragment, [2]);
         var element4 = dom.childAt(element3, [5, 1]);
         var element5 = dom.childAt(element4, [3]);
-        var element6 = dom.childAt(element3, [7]);
+        var element6 = dom.childAt(element3, [9]);
         var element7 = dom.childAt(element6, [3]);
         var element8 = dom.childAt(element7, [1]);
         var element9 = dom.childAt(element7, [3]);
@@ -35504,45 +36325,49 @@ define("dummy/templates/map", ["exports"], function (exports) {
         var element11 = dom.childAt(element7, [7]);
         var element12 = dom.childAt(element7, [9]);
         var element13 = dom.childAt(element7, [11]);
-        var element14 = dom.childAt(element3, [9]);
-        var element15 = dom.childAt(element3, [11]);
-        var element16 = dom.childAt(element3, [13]);
-        var morphs = new Array(30);
+        var element14 = dom.childAt(element7, [13]);
+        var element15 = dom.childAt(element7, [15]);
+        var element16 = dom.childAt(element3, [11]);
+        var morphs = new Array(34);
         morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]), 0, 0);
         morphs[1] = dom.createMorphAt(element3, 1, 1);
         morphs[2] = dom.createMorphAt(element3, 3, 3);
         morphs[3] = dom.createMorphAt(element4, 1, 1);
         morphs[4] = dom.createElementMorph(element5);
         morphs[5] = dom.createMorphAt(element5, 0, 0);
-        morphs[6] = dom.createMorphAt(element6, 1, 1);
-        morphs[7] = dom.createMorphAt(dom.childAt(element8, [1]), 0, 0);
-        morphs[8] = dom.createMorphAt(element8, 3, 3);
-        morphs[9] = dom.createMorphAt(dom.childAt(element9, [1]), 0, 0);
-        morphs[10] = dom.createMorphAt(element9, 3, 3);
-        morphs[11] = dom.createMorphAt(element9, 5, 5);
-        morphs[12] = dom.createMorphAt(dom.childAt(element10, [1]), 0, 0);
-        morphs[13] = dom.createMorphAt(element10, 3, 3);
-        morphs[14] = dom.createMorphAt(element10, 5, 5);
-        morphs[15] = dom.createMorphAt(dom.childAt(element11, [1]), 0, 0);
-        morphs[16] = dom.createMorphAt(element11, 3, 3);
-        morphs[17] = dom.createMorphAt(dom.childAt(element12, [1]), 0, 0);
-        morphs[18] = dom.createMorphAt(element12, 3, 3);
-        morphs[19] = dom.createMorphAt(dom.childAt(element13, [1]), 0, 0);
-        morphs[20] = dom.createMorphAt(element13, 3, 3);
-        morphs[21] = dom.createAttrMorph(element14, 'class');
-        morphs[22] = dom.createMorphAt(element14, 1, 1);
-        morphs[23] = dom.createAttrMorph(element15, 'class');
-        morphs[24] = dom.createMorphAt(element15, 1, 1);
-        morphs[25] = dom.createAttrMorph(element16, 'class');
-        morphs[26] = dom.createMorphAt(element16, 1, 1);
-        morphs[27] = dom.createMorphAt(dom.childAt(element3, [15, 1]), 1, 1);
-        morphs[28] = dom.createMorphAt(dom.childAt(element3, [17, 1]), 1, 1);
-        morphs[29] = dom.createMorphAt(element3, 19, 19);
+        morphs[6] = dom.createMorphAt(element3, 7, 7);
+        morphs[7] = dom.createMorphAt(element6, 1, 1);
+        morphs[8] = dom.createMorphAt(dom.childAt(element8, [1]), 0, 0);
+        morphs[9] = dom.createMorphAt(element8, 3, 3);
+        morphs[10] = dom.createMorphAt(dom.childAt(element9, [1]), 0, 0);
+        morphs[11] = dom.createMorphAt(element9, 3, 3);
+        morphs[12] = dom.createMorphAt(element9, 5, 5);
+        morphs[13] = dom.createMorphAt(dom.childAt(element10, [1]), 0, 0);
+        morphs[14] = dom.createMorphAt(element10, 3, 3);
+        morphs[15] = dom.createMorphAt(element10, 5, 5);
+        morphs[16] = dom.createMorphAt(dom.childAt(element11, [1]), 0, 0);
+        morphs[17] = dom.createMorphAt(element11, 3, 3);
+        morphs[18] = dom.createMorphAt(dom.childAt(element12, [1]), 0, 0);
+        morphs[19] = dom.createMorphAt(element12, 3, 3);
+        morphs[20] = dom.createMorphAt(dom.childAt(element13, [1]), 0, 0);
+        morphs[21] = dom.createMorphAt(element13, 3, 3);
+        morphs[22] = dom.createMorphAt(dom.childAt(element14, [1]), 0, 0);
+        morphs[23] = dom.createMorphAt(element14, 3, 3);
+        morphs[24] = dom.createMorphAt(dom.childAt(element15, [1]), 0, 0);
+        morphs[25] = dom.createMorphAt(element15, 3, 3);
+        morphs[26] = dom.createAttrMorph(element16, 'class');
+        morphs[27] = dom.createMorphAt(element16, 1, 1);
+        morphs[28] = dom.createMorphAt(dom.childAt(element3, [13]), 1, 1);
+        morphs[29] = dom.createMorphAt(dom.childAt(element3, [15]), 1, 1);
+        morphs[30] = dom.createMorphAt(dom.childAt(element3, [17, 1]), 1, 1);
+        morphs[31] = dom.createMorphAt(element3, 19, 19);
+        morphs[32] = dom.createMorphAt(dom.childAt(element3, [21, 1]), 1, 1);
+        morphs[33] = dom.createMorphAt(element3, 23, 23);
         return morphs;
       },
-      statements: [["inline", "t", ["forms.map.caption"], [], ["loc", [null, [1, 22], [1, 47]]]], ["inline", "ui-message", [], ["type", "success", "closeable", true, "visible", ["subexpr", "@mut", [["get", "showFormSuccessMessage", ["loc", [null, [6, 12], [6, 34]]]]], [], []], "caption", ["subexpr", "@mut", [["get", "formSuccessMessageCaption", ["loc", [null, [7, 12], [7, 37]]]]], [], []], "message", ["subexpr", "@mut", [["get", "formSuccessMessage", ["loc", [null, [8, 12], [8, 30]]]]], [], []], "onShow", ["subexpr", "action", ["onSuccessMessageShow"], [], ["loc", [null, [9, 11], [9, 42]]]], "onHide", ["subexpr", "action", ["onSuccessMessageHide"], [], ["loc", [null, [10, 11], [10, 42]]]]], ["loc", [null, [3, 2], [11, 4]]]], ["inline", "flexberry-error", [], ["error", ["subexpr", "@mut", [["get", "error", ["loc", [null, [12, 26], [12, 31]]]]], [], []]], ["loc", [null, [12, 2], [12, 33]]]], ["block", "unless", [["get", "readonly", ["loc", [null, [15, 16], [15, 24]]]]], [], 0, null, ["loc", [null, [15, 6], [25, 17]]]], ["element", "action", ["close"], [], ["loc", [null, [26, 59], [26, 77]]]], ["inline", "t", ["forms.edit-form.close-button-text"], [], ["loc", [null, [26, 78], [26, 119]]]], ["inline", "flexberry-tab-bar", [], ["change", ["subexpr", "action", ["toggleSidebar"], [], ["loc", [null, [31, 13], [31, 37]]]], "items", ["subexpr", "@mut", [["get", "_sidebarFiltered", ["loc", [null, [32, 12], [32, 28]]]]], [], []]], ["loc", [null, [30, 4], [33, 6]]]], ["inline", "t", ["forms.map.tabbar.treeview.caption"], [], ["loc", [null, [36, 12], [36, 53]]]], ["block", "if", [["get", "showTree", ["loc", [null, [37, 14], [37, 22]]]]], [], 1, 2, ["loc", [null, [37, 8], [101, 15]]]], ["inline", "t", ["forms.map.tabbar.search.caption"], [], ["loc", [null, [104, 12], [104, 51]]]], ["inline", "flexberry-search-panel", [], ["querySearch", ["subexpr", "action", ["querySearch"], [], ["loc", [null, [106, 22], [106, 44]]]], "clearSearch", ["subexpr", "action", ["clearSearch"], [], ["loc", [null, [107, 22], [107, 44]]]], "searchInProcess", ["subexpr", "@mut", [["get", "searchInProcess", ["loc", [null, [108, 26], [108, 41]]]]], [], []], "searchSettings", ["subexpr", "flexberry-search-properties-osm-ru", ["http://openstreetmap.ru/api/autocomplete?q={query}"], [], ["loc", [null, [109, 25], [109, 114]]]]], ["loc", [null, [105, 8], [110, 10]]]], ["inline", "layer-result-list", [], ["results", ["subexpr", "@mut", [["get", "searchResults", ["loc", [null, [112, 18], [112, 31]]]]], [], []], "serviceLayer", ["subexpr", "@mut", [["get", "serviceLayer", ["loc", [null, [113, 23], [113, 35]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [114, 21], [114, 31]]]]], [], []], "showIntersectionPanel", ["subexpr", "action", ["onIntersectionPanel"], [], ["loc", [null, [115, 32], [115, 62]]]], "featureSelected", ["subexpr", "action", ["onLayerFeatureSelected"], [], ["loc", [null, [116, 26], [116, 59]]]], "addToFavorite", ["subexpr", "action", ["addToFavorite"], [], ["loc", [null, [117, 24], [117, 48]]]]], ["loc", [null, [111, 8], [118, 10]]]], ["inline", "t", ["forms.map.tabbar.identify.caption"], [], ["loc", [null, [121, 12], [121, 53]]]], ["inline", "flexberry-identify-panel", [], ["layerMode", ["subexpr", "@mut", [["get", "identifyToolLayerMode", ["loc", [null, [123, 20], [123, 41]]]]], [], []], "toolMode", ["subexpr", "@mut", [["get", "identifyToolToolMode", ["loc", [null, [124, 19], [124, 39]]]]], [], []], "bufferActive", ["subexpr", "@mut", [["get", "identifyToolBufferActive", ["loc", [null, [125, 23], [125, 47]]]]], [], []], "bufferUnits", ["subexpr", "@mut", [["get", "identifyToolBufferUnits", ["loc", [null, [126, 22], [126, 45]]]]], [], []], "bufferRadius", ["subexpr", "@mut", [["get", "identifyToolBufferRadius", ["loc", [null, [127, 23], [127, 47]]]]], [], []], "layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [128, 17], [128, 32]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [129, 21], [129, 31]]]]], [], []], "identificationFinished", ["subexpr", "action", ["onIdentificationFinished"], [], ["loc", [null, [130, 33], [130, 68]]]], "identificationClear", ["subexpr", "action", ["onIdentificationClear"], [], ["loc", [null, [131, 30], [131, 62]]]]], ["loc", [null, [122, 8], [132, 10]]]], ["inline", "layer-result-list", [], ["results", ["subexpr", "@mut", [["get", "identifyToolResults", ["loc", [null, [134, 18], [134, 37]]]]], [], []], "serviceLayer", ["subexpr", "@mut", [["get", "serviceLayer", ["loc", [null, [135, 23], [135, 35]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [136, 21], [136, 31]]]]], [], []], "showIntersectionPanel", ["subexpr", "action", ["onIntersectionPanel"], [], ["loc", [null, [137, 32], [137, 62]]]], "featureSelected", ["subexpr", "action", ["onLayerFeatureSelected"], [], ["loc", [null, [138, 26], [138, 59]]]], "addToFavorite", ["subexpr", "action", ["addToFavorite"], [], ["loc", [null, [139, 24], [139, 48]]]], "availableCRS", ["subexpr", "@mut", [["get", "availableCRS", ["loc", [null, [140, 23], [140, 35]]]]], [], []]], ["loc", [null, [133, 8], [141, 10]]]], ["inline", "t", ["forms.map.tabbar.bookmarks.caption"], [], ["loc", [null, [144, 12], [144, 54]]]], ["inline", "spatial-bookmark", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [146, 21], [146, 31]]]]], [], []], "storageKey", ["subexpr", "@mut", [["get", "model.id", ["loc", [null, [147, 21], [147, 29]]]]], [], []]], ["loc", [null, [145, 8], [148, 10]]]], ["inline", "t", ["forms.map.tabbar.createObject.caption"], [], ["loc", [null, [151, 10], [151, 55]]]], ["block", "each", [["get", "createItems", ["loc", [null, [152, 14], [152, 25]]]]], [], 3, null, ["loc", [null, [152, 6], [157, 15]]]], ["inline", "t", ["forms.map.tabbar.favorites.caption"], [], ["loc", [null, [160, 12], [160, 54]]]], ["inline", "favorites-list", [], ["features", ["subexpr", "@mut", [["get", "result", ["loc", [null, [162, 19], [162, 25]]]]], [], []], "compareBtnDisabled", ["subexpr", "@mut", [["get", "compareBtnDisabled", ["loc", [null, [163, 29], [163, 47]]]]], [], []], "serviceLayer", ["subexpr", "@mut", [["get", "serviceLayer", ["loc", [null, [164, 23], [164, 35]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [165, 21], [165, 31]]]]], [], []], "showIntersectionPanel", ["subexpr", "action", ["onIntersectionPanel"], [], ["loc", [null, [166, 32], [166, 62]]]], "compareTwoGeometries", ["subexpr", "action", ["OnCompareTwoGeometries"], [], ["loc", [null, [167, 31], [167, 64]]]], "addToFavorite", ["subexpr", "action", ["addToFavorite"], [], ["loc", [null, [168, 24], [168, 48]]]], "addToCompareGeometries", ["subexpr", "action", ["addToCompareGeometries"], [], ["loc", [null, [169, 33], [169, 66]]]]], ["loc", [null, [161, 8], [170, 10]]]], ["attribute", "class", ["subexpr", "concat", ["bottompanel-wrapper", ["subexpr", "if", [["subexpr", "or", [["subexpr", "gt", [["get", "editedLayers.length", ["loc", [null, [174, 56], [174, 75]]]], 0], [], ["loc", [null, [174, 52], [174, 78]]]], ["get", "editedLayersPanelLoading", ["loc", [null, [174, 79], [174, 103]]]]], [], ["loc", [null, [174, 48], [174, 104]]]], "", " hidden"], [], ["loc", [null, [174, 44], [174, 118]]]]], [], ["loc", [null, [174, 13], [174, 120]]]]], ["inline", "flexberry-layers-attributes-panel", [], ["items", ["subexpr", "@mut", [["get", "editedLayers", ["loc", [null, [176, 12], [176, 24]]]]], [], []], "serviceLayer", ["subexpr", "@mut", [["get", "serviceLayer", ["loc", [null, [177, 19], [177, 31]]]]], [], []], "selectedTabIndex", ["subexpr", "@mut", [["get", "editedLayersSelectedTabIndex", ["loc", [null, [178, 23], [178, 51]]]]], [], []], "folded", ["subexpr", "@mut", [["get", "editedLayersPanelFolded", ["loc", [null, [179, 13], [179, 36]]]]], [], []], "settings", ["subexpr", "@mut", [["get", "editedLayersPanelSettings", ["loc", [null, [180, 15], [180, 40]]]]], [], []], "loading", ["subexpr", "@mut", [["get", "editedLayersPanelLoading", ["loc", [null, [181, 14], [181, 38]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [182, 17], [182, 27]]]]], [], []]], ["loc", [null, [175, 4], [183, 6]]]], ["attribute", "class", ["subexpr", "concat", ["bottompanel-wrapper intersection-panel", ["subexpr", "if", [["get", "showIntersectionPanel", ["loc", [null, [185, 67], [185, 88]]]], "", " hidden"], [], ["loc", [null, [185, 63], [185, 102]]]]], [], ["loc", [null, [185, 13], [185, 104]]]]], ["inline", "flexberry-layers-intersections-panel", [], ["layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [187, 13], [187, 28]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [188, 17], [188, 27]]]]], [], []], "settings", ["subexpr", "@mut", [["get", "editedLayersPanelSettings", ["loc", [null, [189, 15], [189, 40]]]]], [], []], "loading", ["subexpr", "@mut", [["get", "editedLayersPanelLoading", ["loc", [null, [190, 14], [190, 38]]]]], [], []], "closeIntersectionPanel", ["subexpr", "action", ["closeIntersectionPanel"], [], ["loc", [null, [191, 29], [191, 62]]]], "feature", ["subexpr", "@mut", [["get", "feature", ["loc", [null, [192, 14], [192, 21]]]]], [], []], "disaplayName", ["subexpr", "@mut", [["get", "feature.properties.name", ["loc", [null, [193, 19], [193, 42]]]]], [], []]], ["loc", [null, [186, 4], [194, 6]]]], ["attribute", "class", ["subexpr", "concat", ["bottompanel-wrapper compare-geometries-panel", ["subexpr", "if", [["get", "showComapreGeometriesPanel", ["loc", [null, [196, 73], [196, 99]]]], "", " hidden"], [], ["loc", [null, [196, 69], [196, 113]]]]], [], ["loc", [null, [196, 13], [196, 115]]]]], ["inline", "compare-object-geometries-panel", [], ["layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [198, 13], [198, 28]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [199, 17], [199, 27]]]]], [], []], "settings", ["subexpr", "@mut", [["get", "editedLayersPanelSettings", ["loc", [null, [200, 15], [200, 40]]]]], [], []], "closeComparePanel", ["subexpr", "action", ["closeComparePanel"], [], ["loc", [null, [201, 24], [201, 52]]]], "twoObjects", ["subexpr", "@mut", [["get", "twoObjectToCompare", ["loc", [null, [202, 17], [202, 35]]]]], [], []]], ["loc", [null, [197, 4], [203, 6]]]], ["block", "flexberry-maptoolbar", [], [], 4, null, ["loc", [null, [207, 6], [254, 31]]]], ["block", "flexberry-map", [], ["zoomSnap", 1, "zoomDelta", 1, "lat", ["subexpr", "@mut", [["get", "model.lat", ["loc", [null, [262, 12], [262, 21]]]]], [], []], "lng", ["subexpr", "@mut", [["get", "model.lng", ["loc", [null, [263, 12], [263, 21]]]]], [], []], "zoom", ["subexpr", "@mut", [["get", "model.zoom", ["loc", [null, [264, 13], [264, 23]]]]], [], []], "zoomControl", true, "queryFilter", ["subexpr", "@mut", [["get", "queryFilter", ["loc", [null, [266, 20], [266, 31]]]]], [], []], "mapObjectSetting", ["subexpr", "@mut", [["get", "setting", ["loc", [null, [267, 25], [267, 32]]]]], [], []], "leafletInit", ["subexpr", "action", ["onMapLeafletInit", "leafletMap"], [], ["loc", [null, [268, 20], [268, 60]]]], "serviceLayerInit", ["subexpr", "action", ["onServiceLayerInit", "serviceLayer"], [], ["loc", [null, [269, 25], [269, 69]]]], "leafletDestroy", ["subexpr", "action", ["onMapLeafletDestroy", "leafletMap"], [], ["loc", [null, [270, 23], [270, 66]]]], "moveend", ["subexpr", "action", ["onMapMoveend", "model.lat", "model.lng"], [], ["loc", [null, [271, 16], [271, 63]]]], "zoomend", ["subexpr", "action", ["onMapZoomend", "model.zoom"], [], ["loc", [null, [272, 16], [272, 52]]]], "queryFinished", ["subexpr", "action", ["onQueryFinished"], [], ["loc", [null, [273, 22], [273, 48]]]], "onCreateObject", ["subexpr", "action", ["onCreateObject"], [], ["loc", [null, [274, 23], [274, 48]]]]], 5, null, ["loc", [null, [259, 6], [296, 24]]]], ["inline", "flexberry-mapinfo", [], ["mapId", ["subexpr", "@mut", [["get", "model.id", ["loc", [null, [300, 10], [300, 18]]]]], [], []], "name", ["subexpr", "@mut", [["get", "model.name", ["loc", [null, [301, 9], [301, 19]]]]], [], []], "description", ["subexpr", "@mut", [["get", "model.description", ["loc", [null, [302, 16], [302, 33]]]]], [], []]], ["loc", [null, [299, 2], [303, 4]]]]],
+      statements: [["inline", "t", ["forms.map.caption"], [], ["loc", [null, [1, 22], [1, 47]]]], ["inline", "ui-message", [], ["type", "success", "closeable", true, "visible", ["subexpr", "@mut", [["get", "showFormSuccessMessage", ["loc", [null, [6, 12], [6, 34]]]]], [], []], "caption", ["subexpr", "@mut", [["get", "formSuccessMessageCaption", ["loc", [null, [7, 12], [7, 37]]]]], [], []], "message", ["subexpr", "@mut", [["get", "formSuccessMessage", ["loc", [null, [8, 12], [8, 30]]]]], [], []], "onShow", ["subexpr", "action", ["onSuccessMessageShow"], [], ["loc", [null, [9, 11], [9, 42]]]], "onHide", ["subexpr", "action", ["onSuccessMessageHide"], [], ["loc", [null, [10, 11], [10, 42]]]]], ["loc", [null, [3, 2], [11, 4]]]], ["inline", "flexberry-error", [], ["error", ["subexpr", "@mut", [["get", "error", ["loc", [null, [12, 26], [12, 31]]]]], [], []]], ["loc", [null, [12, 2], [12, 33]]]], ["block", "unless", [["get", "readonly", ["loc", [null, [15, 16], [15, 24]]]]], [], 0, null, ["loc", [null, [15, 6], [25, 17]]]], ["element", "action", ["close"], [], ["loc", [null, [26, 59], [26, 77]]]], ["inline", "t", ["forms.edit-form.close-button-text"], [], ["loc", [null, [26, 78], [26, 119]]]], ["inline", "flexberry-search-panel", [], ["querySearch", ["subexpr", "action", ["querySearch"], [], ["loc", [null, [30, 16], [30, 38]]]], "clearSearch", ["subexpr", "action", ["clearSearch"], [], ["loc", [null, [31, 16], [31, 38]]]], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [32, 15], [32, 25]]]]], [], []], "layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [33, 11], [33, 26]]]]], [], []], "searchInProcess", ["subexpr", "@mut", [["get", "searchInProcess", ["loc", [null, [34, 20], [34, 35]]]]], [], []], "maxResultsCount", 10, "attrVisible", ["subexpr", "@mut", [["get", "attrVisible", ["loc", [null, [36, 16], [36, 27]]]]], [], []], "isSearch", ["subexpr", "@mut", [["get", "isSearch", ["loc", [null, [37, 13], [37, 21]]]]], [], []], "class", "outer-search", "searchSettings", ["subexpr", "flexberry-search-properties-osm-ru", ["http://openstreetmap.ru/api/autocomplete?q={query}"], [], ["loc", [null, [39, 19], [39, 108]]]], "attrSearch", ["subexpr", "action", ["attrSearch"], [], ["loc", [null, [40, 15], [40, 36]]]], "placeholder", ["subexpr", "@mut", [["get", "placeholderSearch", ["loc", [null, [41, 16], [41, 33]]]]], [], []]], ["loc", [null, [29, 2], [42, 4]]]], ["inline", "flexberry-tab-bar", [], ["class", "main-map-tab-bar", "change", ["subexpr", "action", ["toggleSidebar"], [], ["loc", [null, [46, 13], [46, 37]]]], "items", ["subexpr", "@mut", [["get", "_sidebarFiltered", ["loc", [null, [47, 12], [47, 28]]]]], [], []]], ["loc", [null, [44, 4], [48, 6]]]], ["inline", "t", ["forms.map.tabbar.treeview.caption"], [], ["loc", [null, [51, 12], [51, 53]]]], ["block", "if", [["get", "showTree", ["loc", [null, [52, 14], [52, 22]]]]], [], 1, 2, ["loc", [null, [52, 8], [125, 15]]]], ["inline", "t", ["forms.map.tabbar.search.caption"], [], ["loc", [null, [128, 12], [128, 51]]]], ["block", "if", [["subexpr", "gt", [["get", "searchResults.length", ["loc", [null, [129, 18], [129, 38]]]], 0], [], ["loc", [null, [129, 14], [129, 41]]]]], [], 3, null, ["loc", [null, [129, 8], [131, 15]]]], ["inline", "layer-result-list", [], ["results", ["subexpr", "@mut", [["get", "searchResults", ["loc", [null, [133, 18], [133, 31]]]]], [], []], "serviceLayer", ["subexpr", "@mut", [["get", "serviceLayer", ["loc", [null, [134, 23], [134, 35]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [135, 21], [135, 31]]]]], [], []], "showIntersectionPanel", ["subexpr", "action", ["onIntersectionPanel"], [], ["loc", [null, [136, 32], [136, 62]]]], "featureSelected", ["subexpr", "action", ["onLayerFeatureSelected"], [], ["loc", [null, [137, 26], [137, 59]]]], "addToFavorite", ["subexpr", "action", ["addToFavorite"], [], ["loc", [null, [138, 24], [138, 48]]]], "editFeature", ["subexpr", "action", ["onCreateOrEditFeature"], [], ["loc", [null, [139, 22], [139, 54]]]], "availableEdit", true], ["loc", [null, [132, 8], [141, 10]]]], ["inline", "t", ["forms.map.tabbar.identify.caption"], [], ["loc", [null, [144, 12], [144, 53]]]], ["inline", "flexberry-identify-panel", [], ["layerMode", ["subexpr", "@mut", [["get", "identifyToolLayerMode", ["loc", [null, [146, 20], [146, 41]]]]], [], []], "toolMode", ["subexpr", "@mut", [["get", "identifyToolToolMode", ["loc", [null, [147, 19], [147, 39]]]]], [], []], "bufferActive", ["subexpr", "@mut", [["get", "identifyToolBufferActive", ["loc", [null, [148, 23], [148, 47]]]]], [], []], "bufferUnits", ["subexpr", "@mut", [["get", "identifyToolBufferUnits", ["loc", [null, [149, 22], [149, 45]]]]], [], []], "bufferRadius", ["subexpr", "@mut", [["get", "identifyToolBufferRadius", ["loc", [null, [150, 23], [150, 47]]]]], [], []], "layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [151, 17], [151, 32]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [152, 21], [152, 31]]]]], [], []], "identificationFinished", ["subexpr", "action", ["onIdentificationFinished"], [], ["loc", [null, [153, 33], [153, 68]]]], "identificationClear", ["subexpr", "action", ["onIdentificationClear"], [], ["loc", [null, [154, 30], [154, 62]]]]], ["loc", [null, [145, 8], [155, 10]]]], ["inline", "layer-result-list", [], ["results", ["subexpr", "@mut", [["get", "identifyToolResults", ["loc", [null, [157, 18], [157, 37]]]]], [], []], "serviceLayer", ["subexpr", "@mut", [["get", "serviceLayer", ["loc", [null, [158, 23], [158, 35]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [159, 21], [159, 31]]]]], [], []], "showIntersectionPanel", ["subexpr", "action", ["onIntersectionPanel"], [], ["loc", [null, [160, 32], [160, 62]]]], "featureSelected", ["subexpr", "action", ["onLayerFeatureSelected"], [], ["loc", [null, [161, 26], [161, 59]]]], "addToFavorite", ["subexpr", "action", ["addToFavorite"], [], ["loc", [null, [162, 24], [162, 48]]]], "availableCRS", ["subexpr", "@mut", [["get", "availableCRS", ["loc", [null, [163, 23], [163, 35]]]]], [], []], "editFeature", ["subexpr", "action", ["onCreateOrEditFeature"], [], ["loc", [null, [164, 22], [164, 54]]]], "availableEdit", true], ["loc", [null, [156, 8], [166, 10]]]], ["inline", "t", ["forms.map.tabbar.bookmarks.caption"], [], ["loc", [null, [169, 12], [169, 54]]]], ["inline", "spatial-bookmark", [], ["leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [171, 21], [171, 31]]]]], [], []], "storageKey", ["subexpr", "@mut", [["get", "model.id", ["loc", [null, [172, 21], [172, 29]]]]], [], []]], ["loc", [null, [170, 8], [173, 10]]]], ["inline", "t", ["forms.map.tabbar.createObject.caption"], [], ["loc", [null, [176, 10], [176, 55]]]], ["block", "each", [["get", "createItems", ["loc", [null, [177, 14], [177, 25]]]]], [], 4, null, ["loc", [null, [177, 6], [182, 15]]]], ["inline", "t", ["forms.map.tabbar.favorites.caption"], [], ["loc", [null, [185, 12], [185, 54]]]], ["inline", "favorites-list", [], ["features", ["subexpr", "@mut", [["get", "result", ["loc", [null, [187, 19], [187, 25]]]]], [], []], "compareBtnDisabled", ["subexpr", "@mut", [["get", "compareBtnDisabled", ["loc", [null, [188, 29], [188, 47]]]]], [], []], "serviceLayer", ["subexpr", "@mut", [["get", "serviceLayer", ["loc", [null, [189, 23], [189, 35]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [190, 21], [190, 31]]]]], [], []], "_showFavorites", ["subexpr", "@mut", [["get", "_showFavorites", ["loc", [null, [191, 25], [191, 39]]]]], [], []], "showIntersectionPanel", ["subexpr", "action", ["onIntersectionPanel"], [], ["loc", [null, [192, 32], [192, 62]]]], "compareTwoGeometries", ["subexpr", "action", ["OnCompareTwoGeometries"], [], ["loc", [null, [193, 31], [193, 64]]]], "addToFavorite", ["subexpr", "action", ["addToFavorite"], [], ["loc", [null, [194, 24], [194, 48]]]], "addToCompareGeometries", ["subexpr", "action", ["addToCompareGeometries"], [], ["loc", [null, [195, 33], [195, 66]]]]], ["loc", [null, [186, 8], [196, 10]]]], ["inline", "t", ["forms.map.tabbar.createOrEditObject.caption"], [], ["loc", [null, [199, 10], [199, 61]]]], ["inline", "flexberry-edit-layer-feature", [], ["isFavorite", ["subexpr", "@mut", [["get", "createOrEditedFeature.isFavorite", ["loc", [null, [201, 21], [201, 53]]]]], [], []], "dataItems", ["subexpr", "@mut", [["get", "createOrEditedFeature.dataItems", ["loc", [null, [202, 20], [202, 51]]]]], [], []], "layerModel", ["subexpr", "@mut", [["get", "createOrEditedFeature.layerModel", ["loc", [null, [203, 21], [203, 53]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [204, 21], [204, 31]]]]], [], []], "serviceLayer", ["subexpr", "@mut", [["get", "serviceLayer", ["loc", [null, [205, 23], [205, 35]]]]], [], []], "editFeatureEnd", ["subexpr", "action", ["onCreateOrEditFeatureEnd"], [], ["loc", [null, [206, 25], [206, 60]]]], "rhumbMode", true, "drawMode", true, "geoproviderMode", true], ["loc", [null, [200, 8], [210, 10]]]], ["inline", "t", ["forms.map.tabbar.compare.caption"], [], ["loc", [null, [213, 10], [213, 50]]]], ["inline", "flexberry-maplayers", [], ["class", "styled", "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [216, 21], [216, 31]]]]], [], []], "compareLayersEnabled", ["subexpr", "@mut", [["get", "compareLayersEnabled", ["loc", [null, [217, 31], [217, 51]]]]], [], []], "sideBySide", ["subexpr", "@mut", [["get", "sideBySide", ["loc", [null, [218, 21], [218, 31]]]]], [], []], "layers", ["subexpr", "get-with-dynamic-actions", [["get", "this", ["loc", [null, [219, 43], [219, 47]]]], "model.hierarchy"], ["hierarchyPropertyName", "layers", "pathKeyword", "layerPath"], ["loc", [null, [219, 17], [221, 38]]]]], ["loc", [null, [214, 8], [222, 10]]]], ["attribute", "class", ["subexpr", "concat", ["bottompanel-wrapper", ["subexpr", "if", [["subexpr", "or", [["subexpr", "gt", [["get", "editedLayers.length", ["loc", [null, [226, 56], [226, 75]]]], 0], [], ["loc", [null, [226, 52], [226, 78]]]], ["get", "editedLayersPanelLoading", ["loc", [null, [226, 79], [226, 103]]]]], [], ["loc", [null, [226, 48], [226, 104]]]], "", " hidden"], [], ["loc", [null, [226, 44], [226, 118]]]]], [], ["loc", [null, [226, 13], [226, 120]]]]], ["inline", "flexberry-layers-attributes-panel", [], ["items", ["subexpr", "@mut", [["get", "editedLayers", ["loc", [null, [228, 12], [228, 24]]]]], [], []], "serviceLayer", ["subexpr", "@mut", [["get", "serviceLayer", ["loc", [null, [229, 19], [229, 31]]]]], [], []], "selectedTabIndex", ["subexpr", "@mut", [["get", "editedLayersSelectedTabIndex", ["loc", [null, [230, 23], [230, 51]]]]], [], []], "folded", ["subexpr", "@mut", [["get", "editedLayersPanelFolded", ["loc", [null, [231, 13], [231, 36]]]]], [], []], "settings", ["subexpr", "@mut", [["get", "editedLayersPanelSettings", ["loc", [null, [232, 15], [232, 40]]]]], [], []], "loading", ["subexpr", "@mut", [["get", "editedLayersPanelLoading", ["loc", [null, [233, 14], [233, 38]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [234, 17], [234, 27]]]]], [], []], "editFeature", ["subexpr", "action", ["onCreateOrEditFeature"], [], ["loc", [null, [235, 18], [235, 50]]]]], ["loc", [null, [227, 4], [236, 6]]]], ["inline", "flexberry-layers-intersections-panel", [], ["layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [240, 13], [240, 28]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [241, 17], [241, 27]]]]], [], []], "settings", ["subexpr", "@mut", [["get", "editedLayersPanelSettings", ["loc", [null, [242, 15], [242, 40]]]]], [], []], "loading", ["subexpr", "@mut", [["get", "editedLayersPanelLoading", ["loc", [null, [243, 14], [243, 38]]]]], [], []], "closeIntersectionPanel", ["subexpr", "action", ["closeIntersectionPanel"], [], ["loc", [null, [244, 29], [244, 62]]]], "feature", ["subexpr", "@mut", [["get", "feature", ["loc", [null, [245, 14], [245, 21]]]]], [], []], "disaplayName", ["subexpr", "@mut", [["get", "feature.properties.name", ["loc", [null, [246, 19], [246, 42]]]]], [], []]], ["loc", [null, [239, 4], [247, 6]]]], ["inline", "compare-object-geometries-panel", [], ["layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [251, 13], [251, 28]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [252, 17], [252, 27]]]]], [], []], "settings", ["subexpr", "@mut", [["get", "editedLayersPanelSettings", ["loc", [null, [253, 15], [253, 40]]]]], [], []], "closeComparePanel", ["subexpr", "action", ["onCompareTwoGeometriesEnd"], [], ["loc", [null, [254, 24], [254, 60]]]], "twoObjects", ["subexpr", "@mut", [["get", "twoObjectToCompare", ["loc", [null, [255, 17], [255, 35]]]]], [], []]], ["loc", [null, [250, 4], [256, 6]]]], ["block", "flexberry-maptoolbar", [], [], 5, null, ["loc", [null, [260, 6], [327, 31]]]], ["block", "flexberry-maptoolbar", [], ["class", "background-layers"], 6, null, ["loc", [null, [330, 2], [332, 27]]]], ["block", "flexberry-map", [], ["zoomSnap", 1, "zoomDelta", 1, "lat", ["subexpr", "@mut", [["get", "model.lat", ["loc", [null, [338, 12], [338, 21]]]]], [], []], "lng", ["subexpr", "@mut", [["get", "model.lng", ["loc", [null, [339, 12], [339, 21]]]]], [], []], "zoom", ["subexpr", "@mut", [["get", "model.zoom", ["loc", [null, [340, 13], [340, 23]]]]], [], []], "zoomControl", true, "queryFilter", ["subexpr", "@mut", [["get", "queryFilter", ["loc", [null, [342, 20], [342, 31]]]]], [], []], "mapObjectSetting", ["subexpr", "@mut", [["get", "setting", ["loc", [null, [343, 25], [343, 32]]]]], [], []], "mainMap", true, "leafletInit", ["subexpr", "action", ["onMapLeafletInit", "leafletMap"], [], ["loc", [null, [345, 20], [345, 60]]]], "serviceLayerInit", ["subexpr", "action", ["onServiceLayerInit", "serviceLayer"], [], ["loc", [null, [346, 25], [346, 69]]]], "leafletDestroy", ["subexpr", "action", ["onMapLeafletDestroy", "leafletMap"], [], ["loc", [null, [347, 23], [347, 66]]]], "moveend", ["subexpr", "action", ["onMapMoveend", "model.lat", "model.lng"], [], ["loc", [null, [348, 16], [348, 63]]]], "zoomend", ["subexpr", "action", ["onMapZoomend", "model.zoom"], [], ["loc", [null, [349, 16], [349, 52]]]], "queryFinished", ["subexpr", "action", ["onQueryFinished"], [], ["loc", [null, [350, 22], [350, 48]]]], "onCreateObject", ["subexpr", "action", ["onCreateObject"], [], ["loc", [null, [351, 23], [351, 48]]]]], 7, null, ["loc", [null, [335, 6], [373, 24]]]], ["inline", "flexberry-mapinfo", [], ["mapId", ["subexpr", "@mut", [["get", "model.id", ["loc", [null, [377, 10], [377, 18]]]]], [], []], "name", ["subexpr", "@mut", [["get", "model.name", ["loc", [null, [378, 9], [378, 19]]]]], [], []], "description", ["subexpr", "@mut", [["get", "model.description", ["loc", [null, [379, 16], [379, 33]]]]], [], []]], ["loc", [null, [376, 2], [380, 4]]]]],
       locals: [],
-      templates: [child0, child1, child2, child3, child4, child5]
+      templates: [child0, child1, child2, child3, child4, child5, child6, child7]
     };
   })());
 });
@@ -40505,6 +41330,14 @@ define('dummy/utils/check-zoom', ['exports', 'ember-flexberry-gis/utils/check-zo
     }
   });
 });
+define('dummy/utils/coordinates-to-string', ['exports', 'ember-flexberry-gis/utils/coordinates-to-string'], function (exports, _emberFlexberryGisUtilsCoordinatesToString) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisUtilsCoordinatesToString['default'];
+    }
+  });
+});
 define('dummy/utils/cut-string-by-length', ['exports', 'ember-flexberry/utils/cut-string-by-length'], function (exports, _emberFlexberryUtilsCutStringByLength) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -40669,6 +41502,14 @@ define('dummy/utils/state', ['exports', 'ember-flexberry-gis/utils/state'], func
     }
   });
 });
+define('dummy/utils/zoom-to-bounds', ['exports', 'ember-flexberry-gis/utils/zoom-to-bounds'], function (exports, _emberFlexberryGisUtilsZoomToBounds) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisUtilsZoomToBounds['default'];
+    }
+  });
+});
 define('dummy/validators/local/datetime', ['exports', 'ember-flexberry/validators/local/datetime'], function (exports, _emberFlexberryValidatorsLocalDatetime) {
   exports['default'] = _emberFlexberryValidatorsLocalDatetime['default'];
 });
@@ -40738,7 +41579,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","keywordForCosmos":"cosmos","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0+3c722448"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","keywordForCosmos":"cosmos","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0+4bf8a46d"});
 }
 
 /* jshint ignore:end */
