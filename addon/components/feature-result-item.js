@@ -6,6 +6,7 @@ import Ember from 'ember';
 import layout from '../templates/components/feature-result-item';
 import { translationMacro as t } from 'ember-i18n';
 import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
+import zoomToBounds from '../utils/zoom-to-bounds';
 
 /**
   Component for display GeoJSON feature object details
@@ -304,7 +305,9 @@ export default Ember.Component.extend({
           bounds = feature.leafletLayer.getBounds();
         }
 
-        leafletMap.fitBounds(bounds);
+        let minZoom = Ember.get(feature.leafletLayer, 'minZoom');
+        let maxZoom = Ember.get(feature.leafletLayer, 'maxZoom');
+        zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
         if (Ember.isNone(object.promiseLoadLayer) || !(object.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
           object.promiseLoadLayer = Ember.RSVP.resolve();
         }

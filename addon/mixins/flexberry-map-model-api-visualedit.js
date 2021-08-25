@@ -54,7 +54,7 @@ export default Ember.Mixin.create(SnapDraw, {
 
         let minZoom = Ember.get(leafletObject, 'minZoom');
         let maxZoom = Ember.get(leafletObject, 'maxZoom');
-        zoomToBounds(bounds, leafletMap, leafletObject, minZoom, maxZoom);
+        zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
         if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
           leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
         }
