@@ -11,6 +11,10 @@ export default {
     'caption': '',
     'tooltip': 'Zoom Out'
   },
+  'background-layers': {
+    'caption': '',
+    'tooltip': 'Background layers'
+  },
   'comapre-layers': {
     'caption': '',
     'tooltip': 'Compare layers'
@@ -40,20 +44,30 @@ export default {
   'measure': {
     'caption': 'Measure',
     'tooltip': 'Measure',
+    'title': 'Measure',
     'measure-coordinates': {
       'caption': 'Coordinates'
     },
     'measure-radius': {
       'caption': 'Radius'
     },
-    'measure-distance': {
-      'caption': 'Distance'
+    'measure-area-distance': {
+      'caption': 'Area/Distance'
     },
     'measure-area': {
       'caption': 'Area'
     },
+    'measure-show': {
+      'caption': 'Show'
+    },
+    'measure-hide': {
+      'caption': 'Hide'
+    },
     'measure-clear': {
       'caption': 'Clear'
+    },
+    'measure-close': {
+      'caption': 'Close'
     }
   },
   'draw': {

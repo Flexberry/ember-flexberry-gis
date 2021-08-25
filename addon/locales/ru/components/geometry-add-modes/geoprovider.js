@@ -8,5 +8,6 @@ export default {
   'results-label': 'Результаты запроса',
   'results-header-select': 'Выбрать',
   'results-header-name': 'Наименование',
-  'results-header-position': 'Местоположение'
+  'results-header-position': 'Местоположение',
+  'apply': 'Применить'
 };

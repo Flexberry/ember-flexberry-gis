@@ -1,204 +1,115 @@
-{{flexberry-button
-  tooltip=menuButtonTooltip
-  click=(action "onOpenDialog")
-  iconClass="flexberry-map-command-icon location compass icon"
-}}
-{{!
-  Semantic UI modal dialogs takes long time to be initialized
-  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
-}}
-{{#if _dialogHasBeenRequested}}
-  {{#flexberry-dialog
-    class=flexberryClassNames.dialog
-    caption=menuButtonTooltip
-    approveButtonCaption=dialogApproveButtonCaption
-    denyButtonCaption=dialogDenyButtonCaption
-    visible=_dialogVisible
-    approve=(action "onApprove")
-    deny=(action "onDeny")
-  }}
-    <form class="ui form" role="form">
-      {{#if isError}}
-        {{ui-message
+{{#if isError}}
+{{ui-message
           type="error"
           message=message
         }}
-      {{/if}}
-      <div class="ui grid">
-        <div class="rhumb">
-          <div class="field {{if _formValid.startPointValid "error" ""}}">
-            <label>
-              {{startPointFieldLabel}}
-            </label>
-            {{input
-              type="text"
-              value=_dataForm.startPoint
-              placeholder=coordinatesFieldPlaceholder
-              class = "first"
-              key-up=(action 'validCoord')
-            }}
-          </div>
-        </div>
-        <div class="rhumb">
-          <div class="field">
-            {{flexberry-edit-crs
-              crsCaption=coordinatesSystemFieldLabel
-              coordinateReferenceSystem=settings.layerCRS
-            }}
-          </div>
-        </div>
-        <div class="rhumb last">
-          <div class="field {{if _formValid.typeObjectValid "error" ""}}">
-            <label>
-              {{typeObjectFieldLabel}}
-            </label>
-            {{flexberry-dropdown items=_availableType value=_curType onChange=(action 'validType')}}
-          </div>
-        </div>
-      </div>
-      <div class="field {{if _formValid.tableValid "error"}}">
-        <label>
-          {{addCoordinatesFieldLabel}}
-        </label>
-      </div>
-      <table class="ui celled table flexberry-table">
-        <thead>
-          <tr>
-            <th class="direction">
-              {{directionTh}}
-            </th>
-            <th>
-              {{rhumbTh}}
-            </th>
-            <th>
-              {{distanceTh}}
-            </th>
-            <th class="narrow rhumb">
-              {{tableColumnOperation}}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="field {{if _addValid.directionValid "error"}}">
-                {{flexberry-dropdown
-                  items=_availableDirection
-                  value=_dataFormTable.direction
-                }}
-              </div>
-            </td>
-            <td>
-              <div class="field {{if _addValid.rhumbValid "error"}}">
-                {{input type="text" value=_dataFormTable.rhumb placeholder=placeholderNoValue key-up=(action "onInputLimit")}}
-              </div>
-            </td>
-            <td>
-              <div class="field {{if _addValid.distanceValid "error"}}">
-                {{input type="text" value=_dataFormTable.distance placeholder=placeholderNoValue key-up=(action "onInputLimit")}}
-              </div>
-            </td>
-            <td class="narrow rhumb">
-              {{flexberry-button
-                iconClass="plus icon"
-                click=(action "onAddRow")
-              }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      {{#if (gt _tableData.length 0)}}
-        <div class="field">
-          <label>
-            {{tableFieldLabel}}
-          </label>
-          <div class="{{flexberryClassNames.tableBlock}}">
-            {{#flexberry-table perPageAvailable=true model=_tableData}}
-             {{#block-slot "column-header-head-0"}}
-                <th>
-                  {{rhumbNumber}}
-                </th>
-              {{/block-slot}}
-              {{#block-slot "column-header-head-0"}}
-                <th>
-                  {{directionTh}}
-                </th>
-              {{/block-slot}}
-              {{#block-slot "column-header-head-0"}}
-                <th>
-                  {{rhumbTh}}
-                </th>
-              {{/block-slot}}
-              {{#block-slot "column-header-head-0"}}
-                <th>
-                  {{distanceTh}}
-                </th>
-              {{/block-slot}}
-              {{#block-slot "column-header-head-0"}}
-                <th>
-                  {{rhumbObjectStart}}
-                </th>
-              {{/block-slot}}
-              {{#block-slot "column-header-head-0"}}
-                <th class="narrow rhumb">
-                  {{tableColumnOperation}}
-                </th>
-              {{/block-slot}}
-              {{#block-slot "column-cell-head-0" as |row|}}
-                <td>
-                  {{row.number}}
-                </td>
-              {{/block-slot}}
-              {{#block-slot "column-cell-head-0" as |row|}}
-                <td>
-                  <div class="field {{if row.directionValid "error"}}">
-                    {{flexberry-dropdown
-                      items=_availableDirection
-                      value=row.direction
-                      readonly=row.readonly
-                    }}
-                  </div>
-                </td>
-              {{/block-slot}}
-              {{#block-slot "column-cell-head-0" as |row|}}
-                <td>
-                  <div class="field {{if row.rhumbValid "error"}}">
-                    {{input type="text" value=row.rhumb readonly=(if row.readonly "" readonly) placeholder=placeholderNoValue key-up=(action "onInputLimit")}}
-                  </div>
-                </td>
-              {{/block-slot}}
-              {{#block-slot "column-cell-head-0" as |row|}}
-                <td>
-                  <div class="field {{if row.distanceValid "error"}}">
-                    {{input type="text" value=row.distance readonly=(if row.readonly "" readonly) placeholder=placeholderNoValue key-up=(action "onInputLimit")}}
-                  </div>
-                </td>
-              {{/block-slot}}
-              {{#block-slot "column-cell-head-0" as |row|}}
-                <td class="checkbox-rhumb">
-                  {{flexberry-checkbox
-                    value=(get row._skip (ember-guid row))
-                    onChange=(action "onRhumbSkipChange" (ember-guid row) row)
-                  }}
-                </td>
-              {{/block-slot}}
-              {{#block-slot "column-cell-head-0" as |row|}}
-                <td class="narrow rhumb">
-                  {{flexberry-button
-                    iconClass="edit icon"
-                    class =(concat "small-button" (if (not-eq row.readonly true) " active" ""))
-                    click=(action "OnEditRow" row.id)
-                  }}
-                  {{flexberry-button
-                    iconClass="trash icon"
-                    click=(action "OnRemoveRow" row.id)
-                  }}
-                </td>
-              {{/block-slot}}
-            {{/flexberry-table}}
-          </div>
-        </div>
-      {{/if}}
-    </form>
-  {{/flexberry-dialog}}
 {{/if}}
+<div class="ui form">
+  <div class="rhumb-first">
+    <div class="row">
+      <div class="field">
+        {{flexberry-edit-crs
+                crsCaption=coordinatesSystemFieldLabel
+                coordinateReferenceSystem=_crs
+              }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field {{if _formValid.startPointValid "error" ""}}">
+        <label>
+          {{startPointFieldLabel}}
+        </label>
+        {{input
+                type="text"
+                value=_dataForm.startPoint
+                placeholder=""
+                class = "first"
+                key-up=(action 'validCoord')
+              }}
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <div class="{{flexberryClassNames.tableBlock}}">
+      {{#flexberry-table perPageAvailable=true model=_tableData}}
+      {{#block-slot "column-header-head-0"}}
+      <th colspan="2">
+          {{directionTh}}
+      </th>
+      {{/block-slot}}
+      {{#block-slot "column-header-head-0"}}
+
+      {{/block-slot}}
+      {{#block-slot "column-header-head-0"}}
+      <th>
+        {{rhumbTh}}
+      </th>
+      {{/block-slot}}
+      {{#block-slot "column-header-head-0"}}
+      <th>
+        {{distanceTh}}
+      </th>
+      {{/block-slot}}
+      {{#block-slot "column-header-head-0"}}
+      <th  colspan="2" class="small narrow-rhumb">
+        {{rhumbObjectStart}}
+      </th>
+      {{/block-slot}}
+      {{#block-slot "column-header-head-0"}}
+
+      {{/block-slot}}
+      {{#block-slot "column-cell-head-0" as |row|}}
+      <td class="small rhumb-number">
+        {{row.number}}
+      </td>
+      {{/block-slot}}
+      {{#block-slot "column-cell-head-0" as |row|}}
+      <td>
+        <div class="field {{if row.directionValid "error"}}">
+          {{flexberry-dropdown
+                        items=_availableDirection
+                        value=row.direction
+                        placeholder=null
+                      }}
+        </div>
+      </td>
+      {{/block-slot}}
+      {{#block-slot "column-cell-head-0" as |row|}}
+      <td>
+        <div class="field {{if row.rhumbValid "error"}}">
+          {{input type="text" value=row.rhumb key-up=(action "onInputLimit")}}
+        </div>
+      </td>
+      {{/block-slot}}
+      {{#block-slot "column-cell-head-0" as |row|}}
+      <td>
+        <div class="field {{if row.distanceValid "error"}}">
+          {{input type="text" value=row.distance key-up=(action "onInputLimit")}}
+        </div>
+      </td>
+      {{/block-slot}}
+      {{#block-slot "column-cell-head-0" as |row|}}
+      <td colspan="2" class="checkbox-rhumb small">
+        {{flexberry-checkbox
+                      value=row.skip
+                      readonly=row.skip
+                      onChange=(action "onRhumbSkipChange" row)
+                    }}
+        <i class="plus icon" {{action "OnAddRow" row.id}}></i>
+        {{#if (gt _tableData.length 1)}}
+          <i class="trash icon" {{action "OnRemoveRow" row.id}}></i>
+        {{/if}}
+      </td>
+      {{/block-slot}}
+
+      {{/flexberry-table}}
+    </div>
+  </div>
+</div>
+
+<div class="flex-buttons">
+  <button type="submit" class="ui button positive" {{action "apply"}}>
+    {{t "components.geometry-add-modes.draw.movexy.apply"}}
+  </button>
+</div>

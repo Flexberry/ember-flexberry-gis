@@ -79,6 +79,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     param = Ember.$.extend(param, options);
 
     bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
+
     let getBounds = function() {
       return bounds;
     };
@@ -99,6 +100,15 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
       return {};
     };
 
+    let leafletMap = L.map(document.createElement('div'));
+    leafletMap.getBounds = getBounds;
+    leafletMap.getPane = getPane;
+    leafletMap.createPane = createPane;
+    leafletMap.removeLayer = removeLayer;
+    leafletMap.hasLayer = hasLayer;
+    let editTools = new L.Editable(leafletMap);
+    Ember.set(leafletMap, 'editTools', editTools);
+
     store = app.__container__.lookup('service:store');
     let layerModel = store.createRecord('test-model');
     layerModel.type = 'odata-vector';
@@ -113,13 +123,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
       'continueLoading': true,
       'store': store,
       'layerModel': layerModel,
-      'leafletMap': {
-        getBounds,
-        getPane,
-        createPane,
-        hasLayer,
-        removeLayer
-      }
+      'leafletMap': leafletMap
     });
 
     odataServerFake = sinon.fakeServer.create();
@@ -663,7 +667,6 @@ test('test method createDynamicModel() with json', function(assert) {
 
     assert.equal(spyCreateModelHierarchy.callCount, 1);
 
-    done();
     spyRegister.restore();
     spyCreateAdapterForModel.restore();
     spyCreateModel.restore();
@@ -673,6 +676,7 @@ test('test method createDynamicModel() with json', function(assert) {
     spyCreateModelHierarchy.restore();
     stubAjax.restore();
     _lookupFactoryStub.restore();
+    done(1);
   });
 });
 
@@ -924,7 +928,7 @@ test('test method save() no modified objects', function(assert) {
 });
 
 test('test method save() with objects', function(assert) {
-  assert.expect(15);
+  assert.expect(17);
   var done = assert.async(1);
   let component = this.subject(param);
 
@@ -940,7 +944,20 @@ test('test method save() with objects', function(assert) {
 
       let layerUpdate = leafletObject.getLayers()[0];
       layerUpdate.feature.properties.name = 'test';
+
+      let newFeature = L.geoJSON({
+        type: 'Polygon',
+        coordinates: [[[56.432487, 58.14725], [56.432133, 58.146749], [56.434, 58.146737]]]
+      }).getLayers()[0];
+
+      layerUpdate.setLatLngs(newFeature.getLatLngs());
+
       leafletObject.editLayer(layerUpdate);
+
+      assert.equal(layerUpdate.feature.geometry.coordinates[0].length, 4);
+      let coordinates = '6282035.717038031,7998313.982057768,6281996.30993829,' +
+          '7998208.303352221,6282204.143427601,7998205.77214398,6282035.717038031,7998313.982057768';
+      assert.equal(layerUpdate.feature.geometry.coordinates.toString(), coordinates);
 
       assert.equal(realCountArr(leafletObject.models), 1);
       assert.equal(leafletObject.getLayers().length, 2);
@@ -1133,5 +1150,182 @@ test('test method clearLayers()', function(assert) {
       assert.equal(leafletObject.getLayers().length, 0);
       done();
     });
+  });
+});
+
+test('test method clearChanges() with no changes', function(assert) {
+  assert.expect(7);
+  var done = assert.async(1);
+  let component = this.subject(param);
+
+  component.get('_leafletLayerPromise').then((leafletLayer) => {
+    component.set('_leafletObject', leafletLayer);
+    leafletLayer.promiseLoadLayer.then(() => {
+      let leafletObject = component.get('_leafletObject');
+      let leafletMap = component.get('leafletMap');
+
+      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(leafletObject.getLayers().length, 2);
+      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+      let layerUpdate = leafletObject.getLayers()[0];
+      layerUpdate.enableEdit(leafletMap);
+
+      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(leafletObject.getLayers().length, 2);
+      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+
+      component.clearChanges();
+      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+      done();
+    });
+  });
+});
+
+test('test method clearChanges() with create', function(assert) {
+  assert.expect(7);
+  var done = assert.async(1);
+  let component = this.subject(param);
+
+  component.get('_leafletLayerPromise').then((leafletLayer) => {
+    component.set('_leafletObject', leafletLayer);
+    leafletLayer.promiseLoadLayer.then(() => {
+      let leafletObject = component.get('_leafletObject');
+      let leafletMap = component.get('leafletMap');
+
+      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(leafletObject.getLayers().length, 2);
+      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+      let feature = {
+        type: 'Polygon',
+        coordinates: [
+          [[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]
+        ]
+      };
+      let layerAdd = L.geoJSON(feature).getLayers()[0];
+      layerAdd._label = {
+        _leaflet_id: 1000
+      };
+      leafletObject.addLayer(layerAdd);
+      leafletObject._labelsLayer = {
+        1000: {}
+      };
+      layerAdd.enableEdit(leafletMap);
+
+      assert.equal(realCountArr(leafletObject.models), 1);
+      assert.equal(leafletObject.getLayers().length, 3);
+      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+
+      component.clearChanges();
+      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+      done();
+    });
+  });
+});
+
+test('test method clearChanges() with update and delete', function(assert) {
+  assert.expect(10);
+  var done = assert.async(1);
+  let component = this.subject(param);
+
+  component.get('_leafletLayerPromise').then((leafletLayer) => {
+    component.set('_leafletObject', leafletLayer);
+    leafletLayer.promiseLoadLayer.then(() => {
+      let leafletObject = component.get('_leafletObject');
+      let leafletMap = component.get('leafletMap');
+
+      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(leafletObject.getLayers().length, 2);
+      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+      let layerUpdate = leafletObject.getLayers()[0];
+      layerUpdate.feature.properties.name = 'test';
+      layerUpdate.enableEdit(leafletMap);
+      leafletObject.editLayer(layerUpdate);
+
+      assert.equal(realCountArr(leafletObject.models), 1);
+      assert.equal(leafletObject.getLayers().length, 2);
+      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+
+      let layerRemove = leafletObject.getLayers()[1];
+      layerRemove.enableEdit(leafletMap);
+      leafletObject.removeLayer(layerRemove);
+
+      assert.equal(realCountArr(leafletObject.models), 2);
+      assert.equal(leafletObject.getLayers().length, 1);
+      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 2);
+
+      component.clearChanges();
+      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+      done();
+    });
+  });
+});
+
+test('test method getNearObject()', function(assert) {
+  assert.expect(6);
+  var done = assert.async(2);
+  param = Ember.$.extend(param, { pkField: 'primarykey' });
+  param.continueLoading = false;
+  let component = this.subject(param);
+
+  let store = app.__container__.lookup('service:store');
+  let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+  let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+  getmapApiStub.returns(mapModel);
+  let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+  let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+  let stubAjax = sinon.stub(Ember.$, 'ajax');
+  stubAjax.yieldsTo('success', { modelName: 'testModel' });
+  let obj = component.get('_adapterStoreModelProjectionGeom');
+  let _callAjaxStub = sinon.stub(obj.adapter, '_callAjax');
+  _callAjaxStub.yields({
+    '@odata.context': 'http://localhost/smartforest/odata/$metadata#ICSSoftSTORMNETDataObjects',
+    'value': [{
+      '@odata.type': '#IIS.RGISPK.VydelUtverzhdenoPolygon32640',
+      '__PrimaryKey': '57bfb1e1-6a73-4850-a065-1de96d4d93a4',
+      'Shape': {
+        'coordinates': [[[[465991.9001, 6445952.6774], [466300.6857, 6446025.6799],
+        [466192.0721, 6445729.0941], [465991.9001, 6445952.6774]]]],
+        'type': 'MultiPolygon'
+      }
+    }]
+  });
+  let registerStub = sinon.stub(Ember.getOwner(this), 'resolveRegistration');
+  registerStub.returns({
+    APP: {
+      backendActions: {
+        getNearDistance: 'getNearDistance'
+      }
+    }
+  });
+
+  component.get('_leafletLayerPromise').then((leafletLayer) => {
+    component.set('_leafletObject', leafletLayer);
+    leafletLayer.options = param;
+    let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+    let e = {
+      featureLayer: featureLayer,
+      featureId: '234',
+      layerObjectId: '123'
+    };
+
+    let promise = component.getNearObject(e).then((result) => {
+      assert.equal(result.distance, 12168517.065042155);
+      assert.ok(result.layer);
+      assert.equal(result.object.feature.properties.primarykey, '57bfb1e1-6a73-4850-a065-1de96d4d93a4');
+      assert.equal(getObjectCenterSpy.callCount, 3);
+      assert.equal(_getDistanceBetweenObjectsSpy.callCount, 1);
+    }).finally(() => {
+      done(1);
+      getmapApiStub.restore();
+      getObjectCenterSpy.restore();
+      _getDistanceBetweenObjectsSpy.restore();
+      stubAjax.restore();
+      _callAjaxStub.restore();
+    });
+    assert.ok(promise instanceof Ember.RSVP.Promise);
+    done(1);
   });
 });

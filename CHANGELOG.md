@@ -3,20 +3,33 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Added
+* Nuget package ember-test-selectors
 * Add `>x`, `<y`, `>=x`, `<=y` intervals support for graduated layer-style.
 * Add base component for graduated and unique layers-styles.
 * Add automatic set fill and stroke color from gradient range to symbols in graduated and unique layers-styles.
 * Add geometry filters into `geojson` layers.
 * Add layer polygons intersection check.
 * Add support for point objects (markers) in vector layers legends.
+* Add pane and renderer on objects in layer WFS when layer is created.
+* Add utils open\close sub menu in componetns: feature-result-item and flexberry-maplayers.
+* Add geometryPrecisionReducer in functions utils/layer-to-jsts
+* Add constant scale on mapApi
 
 ### Changed
+* Version of ember-flexberry and ember-flexberry-data
+* Name of package daterangepicker
 * Change chart's library from `highcharts` to `chart.js`.
+* ContinueLoad with showExisting layers (odata-vector/wfs).
+* ShowAllLayerObjects doesn't clear objects on layer if showExitsting = true.
+* Style icon minus on identification container.
 * Change leafletLayer loading, moved from layer-styles to `layers-styles-editor` component.
 * Update dependency on the `jquery-minicolors` bower package to version `2.3.4`.
+* icon on indetify panel: rectangle and broken line.
+* height on list of feature in identify panel.
 
 ### Fixed
 * Fix legends for graduated layer-style.
+* Fix check all objects in attributes panel.
 * Fix `bboxEWKT` in `flexberry-boundingbox` component.
 * Identification on `geojson` layers, when them contains multigeometries or collections.
 * Fix not reseting map tool when draw new geometry from attributes table.

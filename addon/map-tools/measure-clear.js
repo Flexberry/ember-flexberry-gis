@@ -21,14 +21,9 @@ export default MeasureMapTool.extend({
   _enable() {
     this._super(...arguments);
 
-    let editLayer = this.get('_measureTools.options.editOptions.editLayer');
-    if (!Ember.isNone(editLayer)) {
-      editLayer.clearLayers();
-    }
-
-    let featuresLayer = this.get('_measureTools.options.editOptions.featuresLayer');
-    if (!Ember.isNone(featuresLayer)) {
-      featuresLayer.clearLayers();
+    let _measureTools = this.get('_measureTools');
+    if (!Ember.isNone(_measureTools)) {
+      _measureTools.clearLayers();
     }
 
     this.disable();

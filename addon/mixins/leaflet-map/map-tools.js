@@ -51,6 +51,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
       }
 
       if (!Ember.isNone(mapToolProperties)) {
+        Ember.set(mapTool, 'mapToolProperties', mapToolProperties);
         Ember.A(Object.keys(mapToolProperties)).forEach((propertyName) => {
           Ember.set(mapTool, propertyName, Ember.get(mapToolProperties, propertyName));
         });
@@ -96,6 +97,10 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
           return;
         }
 
+        leafletMap.fire('flexberry-map:tools:choose', {
+          mapTool: mapTool
+        });
+
         if (mapTool === enabledMapTool) {
           return enabledMapTool;
         }
@@ -119,7 +124,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
         return enabledMapTool;
       },
 
-      // Sets map-tool properties without enabling or disbling it.
+      // Sets map-tool properties without enabling or disabling it.
       setProperties(mapToolName, mapToolProperties) {
         return lookupMapTool(mapToolName, mapToolProperties);
       },

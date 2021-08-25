@@ -152,10 +152,11 @@ export default Ember.Mixin.create(rhumbOperations, {
     let separateObjects = [];
     let resultObject = null;
     let geometries = [];
+    let scale = this.get('mapApi').getFromApi('precisionScale');
     objects.forEach((element, i) => {
       let g = element;
       if (isJsts) {
-        g = geometryToJsts(element.geometry);
+        g = geometryToJsts(element.geometry, scale);
         g.setSRID(element.crs.properties.name.split(':')[1]);
       }
 
@@ -205,7 +206,7 @@ export default Ember.Mixin.create(rhumbOperations, {
 
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let unionres = geojsonWriter.write(resultObject);
-    let crsResult = 'EPSG:' + geometries[0].getSRID();
+    let crsResult = 'EPSG:' + (Ember.isNone(geometries) ? '' :  geometries[0].getSRID());
 
     let type = unionres.type;
     let coordinates = unionres.coordinates;

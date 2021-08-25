@@ -6,6 +6,8 @@ export default {
   'identifybuttontooltip': 'Show identification',
   'favoritesbuttontooltip': 'Show favorites',
   'createobjectbuttontooltip': 'Show object creation',
+  'createoreditobjectbuttontooltip': 'Show object creation/editing',
+  'comparebuttontooltip': 'Compare layers',
   'xCaption': 'Longitude',
   'yCaption': 'Latitude',
 
@@ -27,6 +29,12 @@ export default {
     },
     'createObject': {
       'caption': 'Create object'
+    },
+    'createOrEditObject': {
+      'caption': 'Create/Edit object'
+    },
+    'compare': {
+      'caption': 'Compare layers'
     }
   }
 };

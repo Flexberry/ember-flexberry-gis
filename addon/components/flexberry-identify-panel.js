@@ -95,17 +95,17 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @private
   */
   _identifyToolProperties: Ember.computed(
-    'bufferActive',
     'bufferUnits',
     'bufferRadius',
     'layerMode',
     'toolMode',
     'layers',
     function() {
+      let radius = typeof this.get('bufferRadius') === 'string' ? this.get('bufferRadius').replace(',', '.') : this.get('bufferRadius');
       return {
-        bufferActive: this.get('bufferActive'),
+        bufferActive: !Ember.isNone(this.get('bufferRadius')) || !Ember.isBlank(this.get('bufferRadius')),
         bufferUnits: this.get('bufferUnits'),
-        bufferRadius: this.get('bufferRadius'),
+        bufferRadius: radius,
         layerMode: this.get('layerMode'),
         toolMode: this.get('toolMode'),
         layers: this.get('layers')
@@ -249,7 +249,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @type String
     @default 'square outline icon'
   */
-  rectangleIconClass: 'square outline icon',
+  rectangleIconClass: 'rectangle icon',
 
   /**
     Tools option's 'polygon' mode's caption.
@@ -288,22 +288,13 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   clearIconClass: 'remove icon',
 
   /**
-    Active buffer caption.
-
-    @property bufferActiveCaption
-    @type String
-    @default t('components.flexberry-identify-panel.buffer.active-caption')
-  */
-  bufferActiveCaption: t('components.flexberry-identify-panel.buffer.active-caption'),
-
-  /**
     Buffer radius caption.
 
     @property bufferRadiusCaption
     @type String
-    @default t('components.flexberry-identify-panel.buffer.radius-caption')
+    @default t('components.flexberry-identify-panel.buffer.active-caption')
   */
-  bufferRadiusCaption: t('components.flexberry-identify-panel.buffer.radius-caption'),
+  bufferRadiusCaption: t('components.flexberry-identify-panel.buffer.active-caption'),
 
   /**
     Buffer radius units with locale.
@@ -335,15 +326,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   toolMode: 'marker',
 
   /**
-    Flag: indicates whether idenify tool's buffer if active or not.
-
-    @property bufferActive
-    @type Boolean
-    @default false
-  */
-  bufferActive: false,
-
-  /**
     Idenify tool buffer raduus units.
 
     @property bufferUnits
@@ -357,9 +339,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     @property bufferRadius
     @type Number
-    @default 0
+    @default null
   */
-  bufferRadius: 0,
+  bufferRadius: null,
 
   /**
     Leaflet map.
@@ -428,6 +410,17 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       if (Ember.typeOf(identificationClear) === 'function') {
         identificationClear();
       }
+    },
+
+    /**
+      Handles input limit.
+      @method actions.inputLimit
+    */
+    onInputLimit(str, e) {
+      const regex = /^\.|^,|\.,|,\.|[^\d\.,]|\.(?=.*\.)|,(?=.*,)|\.(?=.*,)|,(?=.*\.)|^0+(?=\d)/g;
+      if (!Ember.isEmpty(str) && regex.test(str)) {
+        Ember.$(e.target).val(str.replace(regex, ''));
+      }
     }
   },
 
@@ -464,7 +457,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     @method _bufferSettingsDidChange
   */
-  _bufferSettingsDidChange: Ember.observer('bufferActive', 'bufferUnits', 'bufferRadius', function() {
+  _bufferSettingsDidChange: Ember.observer('bufferUnits', 'bufferRadius', function() {
     Ember.run.once(this, '_enableActualIdentifyTool');
   }),
 

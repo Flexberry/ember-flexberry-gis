@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import VectorLayer from '../../../layers/-private/vector';
 import layout from '../../../templates/components/layers-dialogs/tabs/legend-settings';
 
 /**
@@ -52,6 +51,6 @@ export default Ember.Component.extend({
       null :
       Ember.getOwner(this).knownForType('layer', className);
 
-    return !Ember.isNone(layerClass) && layerClass instanceof VectorLayer;
+    return !Ember.isNone(layerClass) && layerClass.isVectorType(this.get('layerModel'));
   })
 });

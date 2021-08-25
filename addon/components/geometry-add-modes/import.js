@@ -96,6 +96,8 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
   */
   importAllSelect: false,
 
+  active: false,
+
   /**
     List of available CRS for import.
 
@@ -433,9 +435,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
         return;
       }
 
-      newLayers.forEach((layer) => {
-        this.sendAction('importComplete', layer);
-      }, this);
+      this.sendAction('importComplete', newLayers);
     },
 
     /**

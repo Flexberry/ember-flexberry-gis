@@ -5,6 +5,8 @@
 import Ember from 'ember';
 import layout from '../templates/components/feature-result-item';
 import { translationMacro as t } from 'ember-i18n';
+import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
+import zoomToBounds from '../utils/zoom-to-bounds';
 
 /**
   Component for display GeoJSON feature object details
@@ -27,6 +29,13 @@ export default Ember.Component.extend({
     @type MapApiService
   */
   showAllCords: false,
+
+  /**
+    Loader
+    @property _showLoader
+    @type boolean
+  */
+  _showLoader: false,
 
   /**
     Map command's caption.
@@ -192,6 +201,15 @@ export default Ember.Component.extend({
   hasEditForm: false,
 
   /**
+    Flag: indicates whether submenu is visible.
+
+    @property isSubmenu
+    @type boolean
+    @default false
+  */
+  isSubmenu: false,
+
+  /**
     Initializes DOM-related component's properties.
   */
   didInsertElement() {
@@ -217,9 +235,118 @@ export default Ember.Component.extend({
       this.set('featureId', shapeId);
       this.set('hasEditForm', hasEditForm);
     }
+
+    let _this = this;
+    let $caption = this.$('.feature-result-item-caption');
+    if ($caption.length > 0) {
+      $caption.hover(
+        function () {
+          let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
+          $toolbar.removeClass('hidden');
+          _this.$(this).addClass('blur');
+        },
+        function () {
+          let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
+          $toolbar.hover(
+            () => { },
+            () => {
+              $toolbar.addClass('hidden');
+              _this.$(this).removeClass('blur');
+              _this.set('isSubmenu', false);
+            });
+        }
+      );
+    }
   },
 
   actions: {
+    /**
+      Show\hide submenu
+
+      @method actions.onSubmenu
+    */
+    onSubmenu() {
+      let component = this.get('element');
+      let moreButton = component.getElementsByClassName('icon item more');
+      let elements = component.getElementsByClassName('more submenu hidden');
+      openCloseSubmenu(this, moreButton, elements, false, 1, 8);
+    },
+    /**
+      Performs row editing.
+
+      @method actions.onRowEdit
+    */
+    onRowEdit() {
+      let feature = this.get('feature');
+      let layerModel = feature.layerModel;
+      let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
+
+      if (Ember.isNone(getAttributesOptions)) {
+        return;
+      }
+
+      let mapModelApi = this.get('mapApi').getFromApi('mapModel');
+      let id = mapModelApi._getLayerFeatureId(layerModel, feature.leafletLayer);
+
+      this.set('_showLoader', true);
+
+      getAttributesOptions().then(({ object, settings }) => {
+        let name = Ember.get(layerModel, 'name');
+
+        // редактируемый объект должен быть загружен
+        let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+        object.statusLoadLayer = true;
+
+        let bounds;
+        if (feature.leafletLayer instanceof L.Marker) {
+          let featureGroup = L.featureGroup().addLayer(feature.leafletLayer);
+          bounds = featureGroup.getBounds();
+        } else {
+          bounds = feature.leafletLayer.getBounds();
+        }
+
+        let minZoom = Ember.get(feature.leafletLayer, 'minZoom');
+        let maxZoom = Ember.get(feature.leafletLayer, 'maxZoom');
+        zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
+        if (Ember.isNone(object.promiseLoadLayer) || !(object.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+          object.promiseLoadLayer = Ember.RSVP.resolve();
+        }
+
+        object.promiseLoadLayer.then(() => {
+          object.statusLoadLayer = false;
+          object.promiseLoadLayer = null;
+
+          this.set('_showLoader', false);
+
+          let layers = object._layers;
+          let layerObject = Object.values(layers).find(layer => {
+            return mapModelApi._getLayerFeatureId(layerModel, layer) === id;
+          });
+
+          if (!layerObject) {
+            console.error('Object not found');
+            return;
+          }
+
+          let editedProperty = layerObject.feature.properties;
+
+          let dataItems = {
+            mode: 'Edit',
+            items: [{
+              data: Object.assign({}, editedProperty),
+              initialData: editedProperty,
+              layer: layerObject,
+            }]
+          };
+
+          this.sendAction('editFeature', {
+            isFavorite: feature.properties.isFavorite,
+            dataItems: dataItems,
+            layerModel: { name: name, leafletObject: object, settings, layerModel }
+          });
+        });
+      });
+    },
 
     /**
       Handles click on show/hide all intersection coordinates.
@@ -295,6 +422,7 @@ export default Ember.Component.extend({
       @method actions.findIntersection
     */
     findIntersection() {
+      this.set('isSubmenu', false);
       this.sendAction('findIntersection', this.get('feature'));
     },
 

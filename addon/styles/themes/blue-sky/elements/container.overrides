@@ -1,0 +1,828 @@
+.mappanel {
+  /* left control container */
+  .leaflet-bar {
+    a {
+      border: @buttonMenuBorder;
+
+      &.leaflet-disabled i.icon:before {
+        color: #E5E5E5;
+      }
+    }
+  }
+
+  .leaflet-right.leaflet-top {
+    top: 30px;
+    right: 90px;
+
+    .history-control.leaflet-bar a {
+      border: @buttonMenuBorder;
+
+      &:not(.leaflet-disabled).active,
+      &:not(.leaflet-disabled):hover {
+        background: @buttonMenuHoveredBackground;
+        border: @buttonMenuHoveredBorder;
+      }
+
+      i {
+        margin: 0 !important;
+      }
+
+      height: 40px;
+      width: 40px;
+      border: 1px solid @light-grey-color;
+
+      &:first-child{
+        border-radius: @defaultBorderRadius 0 0 @defaultBorderRadius;
+      }
+
+      &:last-child {
+        border-radius: 0 @defaultBorderRadius @defaultBorderRadius 0 ;
+      }
+    }
+  }
+
+  .leaflet-left.leaflet-top {
+    right: 29px;
+    left: initial;
+    top: 90px;
+
+    .leaflet-bar a {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .leaflet-top.leaflet-left .leaflet-control .history-control {
+    margin-top: 60px;
+    width: 40px;
+  }
+
+  .leaflet-bottom.leaflet-left {
+      bottom: 27px;
+
+    .leaflet-control-scale {
+      margin-bottom: 8px;
+      margin-left: 0px;
+      &.map-control-scalebar {
+        margin-bottom: 0px;
+      }
+    }
+
+    .leaflet-control-scale-line,
+    .map-control-scalebar-ratiomenu {
+      width: 90px !important;
+      height: 16px;
+      background: #ffffff;
+      border: @defaultGrayBorder;
+      border-radius: @defaultBorderRadius;
+      padding: 1px 5px 1px 5px;
+
+      text {
+        height: 12px;
+        line-height: 12px;
+        display: block;
+      }
+
+      .menu.transition.visible {
+        border-radius: @defaultBorderRadius;
+      }
+
+    }
+  }
+
+  .leaflet-left {
+    left: 400px;
+
+    .history-control.leaflet-bar.horizontal a {
+      i {
+        padding-top: 0px;
+      }
+    }
+    .leaflet-control-zoom.leaflet-bar {
+      margin: 0px;
+
+      a {
+        border: @buttonMenuBorder;
+        &:not(.leaflet-disabled).active,
+        &:not(.leaflet-disabled):hover {
+            background: @buttonMenuHoveredBackground;
+            border: @buttonMenuHoveredBorder;
+        }
+        &:first-child {
+          border-radius: @defaultBorderRadius @defaultBorderRadius 0px 0px ;
+        }
+        &:last-child {
+          border-radius: 0px 0px @defaultBorderRadius @defaultBorderRadius;
+        }
+      }
+    }
+  }
+}
+
+/* minimap-drag-panel*/
+div.minimap-drag-panel {
+  border: @defaultGrayBorder;
+  border-radius: @defaultBorderRadius;
+  box-shadow: @defaultBoxShadow;
+  width: 201px;
+  height: 179px;
+  padding: 25px 11px 10px 11px;
+  .flexberry-minimap-close i.icon.close:before {
+    font-size: 13px;
+  }
+
+  .leaflet-control-minimap {
+    border: @defaultGrayBorder;
+    border-radius: 0px;
+  }
+}
+
+/* measure-drag-panel*/
+div.measure-drag-panel {
+  border: @defaultGrayBorder;
+  border-radius: @defaultBorderRadius;
+  box-shadow: @defaultBoxShadow;
+  width: 320px;
+  height: 90px;
+
+  .measure-map-tool-panel-title {
+    font-size: 18px;
+    text-transform: uppercase;
+    padding: 4px 15px;
+  }
+
+  .div-tools {
+    padding: 4px 18px;
+    display: flex;
+    justify-content: space-between;
+
+    a.flexberry-map-tool {
+      border: @defaultGrayBorder;
+      border-radius: @defaultBorderRadius;
+      box-shadow: @defaultBoxShadow;
+      width: 40px;
+      height: 40px;
+      padding: 9px 7px;
+
+      i.circle.icon:before {
+        content: "\E82B";
+        font-family: Crimean;
+      }
+
+      i.star.icon:before {
+        content: "\E802";
+        font-family: Crimean;
+      }
+    }
+  }
+}
+
+/* Идентификация */
+.flexberry-identify-panel {
+  background-color: @white;
+  margin-left: -10px;
+
+  .flexberry-identify-panel-tools-options,
+  .flexberry-identify-panel-layers-options,
+  .flexberry-identify-panel-options {
+    font-size:0;
+  }
+  .flexberry-identify-panel-layers-options {
+    margin-right: 9px;
+  }
+
+  .flexberry-identify-panel-tools-options {
+    margin-right: 8px;
+    i.icon.rectangle:before {
+      content: "\f096";
+      font-family: FontAwesome;
+    }
+
+    i.icon.star:before {
+      content: "\e802";
+      font-family: Crimean;
+    }
+  }
+
+  .flexberry-identify-panel-polyline-tools-option .ui.button.icon i.minus.icon {
+    left: 0px;
+    margin-right: 0px;
+  }
+  .buffer-caption {
+    margin-top: 6px;
+    label {
+      font-size: @labelFontSize;
+      color: @labelColor;
+      font-family: Tahoma;
+    }
+  }
+  .buffer-tools {
+    margin-top: 2px;
+    .field {
+      height: 32px !important;
+      border: @defaultGrayBorder;
+      box-shadow: @defaultFieldBoxShadow;
+      border-radius: @defaultBorderRadius;
+      box-sizing: border-box;
+      width: 155px;
+      &:first-child {
+        margin-bottom: 0px;
+        margin-right: 12px;
+        width: 168px;
+        input[type="text"] {
+          border: none;
+          box-shadow: none;
+          padding-left: 10px;
+          color: @textColor;
+        }
+      }
+      &:last-child {
+        i.icon.dropdown {
+          margin-right: 4px;
+            &:before {
+            font-family: Crimean;
+            content: "\e82f";
+            font-size: 6px;
+            color: @greyIconColor;
+            opacity: 1;
+          }
+        }
+        .text {
+          padding-left: 10px;
+          color: @textColor;
+        }
+      }
+    }
+  }
+}
+
+.ui.styled.accordion {
+  width: 1000px;
+  .accordion.flexberry-maplayers {
+    box-shadow: none;
+    background-color: @white;
+  }
+}
+
+.ui.menu.flexberry-maptoolbar {
+  i.icon.more {
+    &:before {
+      content: "...";
+      font-family: Crimean;
+    }
+  }
+
+  .flexberry-compare-map-tool {
+    border-radius: 0px 5px 5px 0px;
+  }
+
+>.item:hover,
+> a.item:hover,
+.dropdown.item:hover {
+  background-color: @buttonMenuHoveredBackground;
+  border: @buttonMenuHoveredBorder;
+}
+
+a.item:active,
+.active.item:hover {
+  background: @buttonMenuActiveBackground;
+  box-shadow: none;
+}
+
+
+.flexberry-search-map-command,
+.flexberry-measure-map-tool,
+.flexberry-draw-map-tool,
+.flexberry-go-to-map-command,
+.flexberry-export-map-command {
+    width: auto;
+
+    i.flexberry-map-tool-submenu-icon.dropdown.icon,
+    i.flexberry-map-command-submenu-icon.dropdown.icon {
+        font-size: 12px;
+        display: block;
+        margin: 0 0 0 1em;
+    }
+    &.active {
+        i.flexberry-map-tool-submenu-icon.dropdown.icon,
+        i.flexberry-map-command-submenu-icon.dropdown.icon {
+            margin-left: 1em;
+            transform: none;
+            display: block;
+            &:before {
+                font-size: 20px;
+            }
+        }
+    }
+    /* IE10+ фиксы */
+    @media screen and (-ms-high-contrast: active),
+    (-ms-high-contrast: none) {
+        &.active {
+            i.flexberry-map-tool-submenu-icon.dropdown.icon,
+            i.flexberry-map-command-submenu-icon.dropdown.icon {
+                margin-left: 50px;
+                margin-top: -20px;
+            }
+        }
+    }
+}
+}
+
+/*********************************************
+          Layers result list
+*********************************************/
+
+.layer-result-list {
+  .item.active {
+    background: @layerResultListActiveBackground;
+    color: @primaryColor;
+  }
+
+  .flexberry-toggler-content {
+    padding-top: 0px !important;
+  }
+}
+
+.layer-result-list .flexberry-toggler-content .item:not(.icon) .ui.table {
+  margin-top: 15px;
+  color: @textColor;
+  tr th {
+    background: @yellowGreenColor;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-weight: 400;
+  }
+}
+
+/* создание объектов */
+.ui.tab.createObject .coordinates-area {
+  width: 100%;
+  margin: 8px 0 0 0;
+
+  .flexberry-textarea {
+    width: 100%;
+
+    textarea {
+      min-height: 240px;
+      max-height: 480px;
+      min-width: 100%;
+      max-width: 100%;
+    }
+  }
+}
+
+/*********************************************
+              Bottom panel
+*********************************************/
+// Панель атрибутов
+div.bottompanel-wrapper {
+  height: 100%;
+
+  i.icon.checkall:before {
+    content: "\e815";
+    font-family: 'Crimean';
+    color: #8F928F;
+  }
+
+  .ui.bottom.bottompanel {
+
+    &.bottom-attributes-panel {
+      width: ~"calc(100% - 20px)";
+      max-height: ~"calc(100% - 20px)";
+      height: ~"calc(100% - 20px)";
+      border: @defaultGrayBorder;
+      box-shadow: none;
+      border-radius: 0;
+
+      &.folded {
+        bottom: 0;
+        height: 69px;
+        left: 520px;
+        width: auto;
+        max-width: ~"calc(100% - 620px)";
+
+        .ui.tab.active,
+        .ui.tab.open {
+          display: none;
+        }
+        .bottompanel-tab-nav-panel {
+          padding: 7px 37px 0 37px;
+        }
+
+        .bottompanel-tab-nav-button {
+          margin-top: 16px;
+          width: 23px;
+          i.icon {
+            margin: 0;
+          }
+        }
+      }
+
+      .bottompanel-tab-nav-panel {
+        padding-left: 60px;
+        padding-right: 60px;
+
+        .bottompanel-tab-nav-panel-tabs .item {
+          font-size: 18px;
+          text-transform: uppercase;
+          height: 44px;
+          padding: 8px 15px 8px 10px;
+          margin-top: 8px;
+          border: none;
+          color: #8F928F;
+          background: @white;
+          border-left: @defaultGrayBorder;
+          border-top-left-radius: 0 !important;
+          border-bottom-left-radius: 0 !important;
+
+          &:first-child {
+            padding-left: 0px;
+            border: none;
+          }
+
+          &.active {
+            color: @textColor;
+          }
+        }
+      }
+
+      .bottompanel-tab-nav-button {
+        border: none;
+        height: 44px;
+        width: 60px;
+        margin-top: 8px;
+        i.icon:before {
+          color: @textColor;
+          font-size: 25px;
+        }
+        &:focus {
+          border: none;
+          outline: none;
+        }
+      }
+
+      .bottompanel-tab-data-panel {
+        border-top: none !important;
+      }
+
+      .bottompanel-tab-head-panel {
+        padding-bottom: 10px;
+        padding-top: 10px;
+
+        .buttons {
+          font-size: 0;
+          .ui.button.flexberry-button,
+          .flexberry-geometry-buffer {
+            box-shadow: @defaultBoxShadow;
+            border-radius: @defaultBorderRadius !important;
+            font-size: 1rem;
+            width: 40px;
+            height: 40px;
+            margin: 0 20px 0 0;
+            vertical-align: bottom;
+            &:hover {
+              background: @white;
+            }
+          }
+
+          & > label {
+            i.icon {
+              &:before {
+                font-size: 20px;
+              }
+            }
+
+            i.icon.diff {
+              margin-top: -1px;
+              margin-left: -2px;
+              font-size: 20px;
+              &:before {
+                font-family: Icons;
+                content: "\F0C8";
+                font-size: 18px;
+              }
+              &:after {
+                font-family: Icons;
+                content: "\F096";
+                margin-left: -10px;
+                vertical-align: -webkit-baseline-middle;
+              }
+            }
+
+            i.icon.combined {
+              margin-top: -1px;
+              margin-left: -2px;
+              &:before {
+                font-family: Icons;
+                content: "\F096";
+                font-size: 20px;
+              }
+              &:after {
+                font-family: Icons;
+                content: "\F096";
+                margin-left: -10px;
+                vertical-align: -webkit-baseline-middle;
+                font-size: 20px;
+              }
+            }
+
+            i.icon.split {
+              margin-top: 1px;
+              margin-left: -3px;
+
+              &:before {
+                font-family: Icons;
+                content: "\f0c4";
+              }
+            }
+
+            i.icon.marker {
+              margin-top: 3px;
+            }
+
+            i.icon.trash {
+              margin-top: 1px;
+            }
+
+            i.icon.folder.open:before {
+              content: "\F15B";
+              font-family: Icons;
+              font-size: 16px;
+            }
+
+            i.icon.erase {
+              margin-left: -11px;
+              margin-top: 3px;
+
+              &:before {
+                font-size: 19px;
+              }
+            }
+          }
+
+          i.icon.dot.circle:before {
+            font-family: Crimean;
+            content: "\E82B";
+            font-size: 20px;
+          }
+
+          i.icon.erase {
+              &:before {
+                font-family: Crimean;
+                content: "\E804";
+              }
+            }
+
+          .flexberry-geometry-buffer {
+            border: @defaultGrayBorder;
+
+            i.icon.erase {
+              margin-left: -3px;
+              margin-right: 14px;
+            }
+
+            &:hover {
+              border: @defaultGrayBorder !important;
+              border-bottom-left-radius: 0px;
+              border-bottom-right-radius: 0px;
+            }
+
+            .ui.dropdown.item {
+              &:hover::after {
+                content: '';
+                width: 100%;
+                height: 1px;
+                position: absolute;
+                bottom: 1px;
+                background-color: @white;
+                z-index: 100;
+                left: 0;
+              }
+              & > .menu {
+                margin-top: -2px;
+                margin-left: -1px;
+                border-radius: @defaultBorderRadius;
+                border-top-left-radius: 0px;
+                border: @defaultGrayBorder;
+                box-shadow: none;
+                .item, label {
+                  font-size: 11px;
+                }
+
+                a.item {
+                  padding: 10px 12px !important;
+                }
+
+                i.icon:before {
+                  font-size: 15px;
+                  color: @textColor;
+                }
+
+                .flexberry-field {
+                  margin: 0px 12px;
+                  padding-left: 0;
+
+                  .flexberry-textbox {
+                    border: @defaultGrayBorder;
+                    border-radius: @defaultBorderRadius;
+                    height: 30px;
+                    input {
+                      border: none;
+                      font-size: 11px;
+                      padding: 2px 3px;
+                    }
+                  }
+                }
+
+                label {
+                  color: @textColor;
+                  display: inline-block;
+                  cursor: pointer;
+                  width: 40%;
+                  &.unactive {
+                    color: #8F928F;
+                  }
+                }
+              }
+            }
+
+            & > div {
+              line-height: 38px;
+              margin: 0;
+              width: 100%;
+              > i.icon {
+                margin: 0;
+                width: 100%;
+              }
+            }
+          }
+
+        }
+      }
+
+      .tab.segment {
+          overflow: hidden;
+          height: ~"calc(100% - 65px)";
+      }
+
+      .flexberry-table-wrapper {
+          height: ~"calc(100% - 85px)";
+          padding: 0 10px 10px 0;
+
+          tbody {
+            box-shadow: @defaultBoxShadow;
+          }
+      }
+
+      .layers-attributes-tab-container,
+      .tab.layers-attributes-segment,
+      .tab.layers-attributes-segment > div {
+          height: 100%;
+      }
+
+      .layers-attributes-segment {
+        padding: 0 60px 0 60px;
+      }
+
+      .flexberry-table-wrapper {
+        overflow: auto;
+      }
+
+      .ui.table.flexberry-table {
+        width: 98%;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 17px;
+        letter-spacing: 0em;
+        text-align: left;
+        border: none;
+        border-collapse: collapse;
+
+        .ui.checkbox label:before {
+          width: 18px;
+          height: 18px;
+        }
+
+        .ui.checkbox input:checked ~ .box:before,
+        .ui.checkbox input:checked ~ label:before {
+          background: @primaryColor;
+          border-color: @primaryColor;
+        }
+
+        td, th {
+          height: 44px;
+          border-radius: 0px;
+          color: #000000;
+          border: @defaultGrayBorder;
+          font-weight: 400;
+        }
+
+        td.checkbox {
+          padding: 13px 10px 7px 10px;
+        }
+
+        th {
+          border: none;
+          word-break: normal;
+          white-space: normal;
+          color: #8F928F;
+          vertical-align: bottom;
+          background-color: white;
+          padding: 0 10px 3px 10px;
+          height: 30px;
+
+          &:first-child {
+            text-align: center;
+          }
+        }
+
+        .ui.checkbox {
+          min-height: 25px;
+          height: 25px;
+        }
+
+        .ui.button.flexberry-button {
+          border: none;
+          color: @primaryColor;
+          padding-left: 0;
+          padding-right: 0;
+          min-width: 0px;
+          padding: 0;
+          height: 25px;
+
+          &.find {
+            padding-top: 3px;
+            i.icon {
+              font-size: 18px;
+            }
+          }
+
+          i.icon {
+            font-size: 16px;
+            vertical-align: text-top
+          }
+        }
+
+      }
+    }
+
+    .intersections-panel-form-row {
+      .intersections-panel-input-params-row {
+        padding-left: 27px;
+      }
+      .button.intersect {
+        height: 39px;
+        color: @primaryColor;
+        border: 1px solid @lightGreyColor;
+        margin-right: 24px;
+        &:hover {
+          border-color: @primaryColor;
+          background-color: @white;
+        }
+        &:active {
+          color: @primaryColor;
+          background-color: @white;
+        }
+      }
+      button:last-of-type {
+        display: none;
+      }
+      .ui.input input{
+        border-bottom: 1px solid @controlBorderColor;
+      }
+      .ui.label {
+        border: 1px solid @controlBorderColor;
+      }
+      .flexberry-dropdown.multi-dropdown.selection {
+          height: 44px;
+          width: 100%;
+          margin-top: -4px;
+          & > i.close.icon {
+              margin-right: 0px;
+              margin-top: 15px;
+              right: 0;
+              position: absolute;
+              font-size: 12px;
+          }
+          & > i.dropdown.icon {
+              margin-top: 10px;
+              margin-right: 15px;
+          }
+          .text {
+              margin-top: 8px;
+          }
+      }
+      .field .ui.right.labeled.input {
+        height: 40px;
+        input {
+          width: 100%
+        }
+      }
+      .field .ui.right.labeled div.label {
+        height: 34px;
+        margin-top: 6px;
+      }
+    }
+  }
+}

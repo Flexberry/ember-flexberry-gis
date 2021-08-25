@@ -68,6 +68,7 @@ i.icon.angle.right:before {
             .ui.icon.button .icon {
                 &:before {
                   font-family: Crimean;
+                  opacity: 1;
                 }
                 &.minus:before,
                 &.remove:before {
@@ -150,4 +151,90 @@ i.icon.datalist:before {
 
 i.icon.intersections:before {
   content: "\f24d";
+}
+
+/*********************************************
+        Flexberry edit layer feature
+*********************************************/
+
+i.icon.keyboard:before {
+  font-family: Arial;
+  content: "XY";
+}
+
+i.icon.compass:before {
+  font-family: Icons;
+  content: "\f14e";
+}
+
+i.icon.draw-area:before {
+  font-family: 'Crimean';
+  content: "\e802";
+}
+
+i.icon.poly:before {
+  font-family: 'Crimean';
+  content: "\e802";
+}
+
+i.icon.multi-poly:before {
+  font-family: 'Crimean';
+  content: "\e802";
+}
+
+i.icon.multi-poly:after {
+  font-family: 'Icons';
+  content: "\f067";
+  font-size: 12px;
+  margin-left: -2px;
+  vertical-align: sub;
+}
+
+i.icon.line:before {
+  font-family: 'Crimean';
+  content: "\e802";
+}
+
+i.icon.multi-line:before {
+  font-family: 'Crimean';
+  content: "\e802";
+}
+
+i.icon.multi-line:after {
+  font-family: 'Icons';
+  content: "\f067";
+  font-size: 12px;
+  margin-left: -2px;
+  vertical-align: sub;
+}
+
+i.icon.world:before {
+  font-family: Icons;
+  content: "\f0ac";
+}
+
+i.icon.move:before {
+  font-family: Icons;
+  content: "\f047";
+}
+
+i.icon.movexy:before {
+  font-family: Icons;
+  content: "\f047";
+}
+
+i.icon.movexy:after {
+  content: "xy";
+  font-size: 12px;
+  margin-left: -2px;
+  vertical-align: sub;
+}
+
+i.icon.checkall:before {
+  content: "\e815";
+  font-family: 'Crimean';
+}
+
+i.icon.intersection-panel-exit-icon:hover::before {
+  color: @buttonHoverColor;
 }

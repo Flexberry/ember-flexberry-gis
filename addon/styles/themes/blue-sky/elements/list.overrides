@@ -6,18 +6,20 @@
   .flexberry-toggler-content .item:not(.icon) {
     padding: 5px;
   }
-  .flexberry-toggler-content .item:not(.icon) {
-    padding: 5px;
-  }
-  .feature-result-item-upload, .feature-result-item-select, .feature-result-item-list {
+  .feature-result-item-upload,
+  .feature-result-item-select,
+  .feature-result-item-list {
     margin-top: 0.6em;
+  }
+  .ui.list.transaction {
+    margin-left: 10px;
+  }
+  .feature-result-item-buttons {
     position: absolute;
-  }
-  .feature-result-item-select {
-    left: 1.7em
-  }
-  .feature-result-item-upload {
-    left: 3em
+    top: 11px;
+    left: 20px;
+    width: 300px;
+    margin-left: 7px;
   }
   .feature-result-item-list+.layer-result-list-toggler,.feature-result-item-upload+.layer-result-list-toggler {
     .title .flexberry-toggler-caption {
@@ -25,12 +27,219 @@
       max-width: ~"calc(100% - 4em)";
     }
   }
+  .feature-result-item-list+.feature-result-item-upload+.layer-result-list-toggler .title .flexberry-toggler-caption {
+    margin-left: 5.7em;
+    max-width: ~"calc(100% - 6em)";
+  }
+}
+
+
+// ====== RGIS ========
+.layer-result-list {
+  padding-top: 0px;
+  .ui.fluid.accordion.flexberry-toggler .accordion.flexberry-toggler {
+    border: none;
+  }
+  .ui.accordion.flexberry-toggler .title:not(.ui) {
+    background-color: @whitecolor;
+  }
+  .layer-result-list-toggler.flexberry-toggler.accordion.fluid {
+    border: none;
+  }
+  .icon {
+    font-size: 18px;
+  }
+
+  .item.active {
+    border: none;
+  }
+
+  .feature-result-item-buttons {
+    i.icon:before {
+      font-size: 16px;
+    }
+    position: absolute;
+    height: 25px;
+    width: 300px;
+    left: 30px;
+    top: 9px;
+    z-index: 100;
+    .icon.item {
+      bottom: 2px;
+      &.feature-result-item-select {
+        left: 0px;
+      }
+      &.feature-result-item-upload.icon.item {
+        left: 30px;
+      }
+    }
+  }
+
+  .flexberry-toggler-content {
+    .item:not(.icon):first-child {
+      .feature-result-item-title {
+        padding-top: 12px;
+      }
+    }
+    .item:not(.icon) {
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+
+      .feature-result-item-title {
+        padding-top: 13px;
+
+        .ui.small.loader {
+          right: 0;
+          left: initial;
+          top: 21px;
+        }
+
+        .feature-result-item-toolbar {
+          z-index: 100;
+          height: 100%;
+          top: 7px;
+          left: 22px;
+          i.icon:before {
+            font-size: 16px;
+          }
+          a.icon.item {
+            position: relative;
+            top: 5px;
+          }
+          a.icon.item.more {
+            color: @textColor;
+            position: relative;
+            top: 5px;
+          }
+          .more.submenu {
+            top: 7px;
+            left: 41px;
+            height: auto;
+            width: 158px;
+            a.icon.item {
+              position: static;
+              font-size: 11px;
+            }
+            a {
+              opacity: 0.75;
+            }
+            a:hover {
+              opacity: 1;
+            }
+            p {
+              margin-bottom: 16px;
+              color: @textColor;
+              font-size: 16px;
+            }
+
+            div {
+              margin-bottom: 6px;
+              &:not(:first-child) {
+                margin-left: 7px;
+              }
+              &:first-child {
+                margin-left: 4px;
+                margin-bottom: 18px;
+              }
+              i.icon:before {
+                font-size: 12px
+              }
+            }
+
+            &.reversed {
+              display: flex;
+              flex-direction: column-reverse;
+
+              div {
+                margin-bottom: 4px;
+                &:first-child {
+                  margin-left: 4px;
+                  margin-bottom: 0;
+                }
+              }
+            }
+          }
+          .feature-result-item-object {
+            margin-left: 2px;
+          }
+          &.favorite {
+            left: 48px;
+          }
+        }
+        .feature-result-item-toolbar .feature-result-item-edit-forms~.more.submenu {
+          left: 69px;
+        }
+        .feature-result-item-toolbar .feature-result-item-edit-forms~a.icon.item.more {
+          margin-left: 3px;
+        }
+
+        .feature-result-item-caption {
+          min-width: 0;
+          width: 300px;
+        }
+
+      }
+
+      &:first-child .feature-result-item-title {
+        border-top: none;
+      }
+    }
+    .feature-result-item-content {
+      .feature-div-property-name:first-child {
+        padding-top: 6px;
+      }
+    }
+  }
+
+  .feature-result-item-select {
+    margin-top: .6em;
+    left: 1.9em;
+    position: absolute;
+  }
+  .feature-result-item-list {
+    margin-top: .7em;
+    left: 3.4em;
+    position: absolute;
+
+  }
+  .feature-result-item-upload {
+    margin-top: .8em;
+    left: 3.4em;
+    position: absolute;
+  }
+
+  .feature-result-item-group {
+    .layer-result-list-toggler {
+      margin-bottom: 0px;
+      padding-bottom: 0px;
+    }
+  }
+  .feature-result-item-group:not(:first-child) {
+    .layer-result-list-toggler {
+      margin-top: 0px;
+      padding-top: 0px;
+    }
+    .feature-result-item-buttons {
+      top: 6px;
+    }
+  }
+
+  /* обыгрывание кнопок за то что они вкорячиваются в тогглер */
+  /* когда есть одна кнопка*/
+  .feature-result-item-list+.layer-result-list-toggler,
+  .feature-result-item-upload+.layer-result-list-toggler {
+    .title .flexberry-toggler-caption {
+      margin-left: 3.7em;
+      max-width: ~"calc(100% - 4em)";
+    }
+  }
+
+  /* когда есть обе */
   .feature-result-item-list+.feature-result-item-upload {
     left: 4.7em;
   }
-  .feature-result-item-list {
-    left: 3.3em;
-  }
+
   .feature-result-item-list+.feature-result-item-upload+.layer-result-list-toggler .title .flexberry-toggler-caption {
     margin-left: 5.7em;
     max-width: ~"calc(100% - 6em)";

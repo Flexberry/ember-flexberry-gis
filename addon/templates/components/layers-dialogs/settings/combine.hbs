@@ -1,0 +1,38 @@
+{{#if settings.type}}
+  <div class="ui segment">
+    <h5 class="ui header">
+      {{concat mainSettingsCaption settings.type}}
+    </h5>
+    {{component (concat "layers-dialogs/settings/" settings.type) settings=settings bounds=settings.wgs84bbox}}
+  </div>
+{{/if}}
+{{#if settings.innerLayers}}
+  {{#each settings.innerLayers as |innerLayerSettings|}}
+    <div class="ui segment">
+      <h5 class="ui header">
+        {{concat innerSettingsCaption innerLayerSettings.type}}
+      </h5>
+      {{component (concat "layers-dialogs/settings/" innerLayerSettings.type) settings=innerLayerSettings bounds=innerLayerSettings.wgs84bbox}}
+    </div>
+  {{/each}}
+{{/if}}
+<div class="combineAdd">
+  <div class="field">
+    <label>
+      {{t "components.layers-dialogs.settings.combine.type-dropdown"}}
+    </label>
+    {{flexberry-dropdown
+      class="fluid"
+      items=_availableTypes
+      value=_type
+      readonly=false
+    }}
+  </div>
+  <div class="field">
+    {{flexberry-button
+      class="fluid"
+      click=(action "addTypeSettings")
+      caption=(t "components.layers-dialogs.settings.combine.add-button-caption")
+    }}
+  </div>
+</div>

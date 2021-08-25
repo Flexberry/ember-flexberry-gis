@@ -51,24 +51,14 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
   tagName: '',
 
   /**
-    Flag indicates whether geometry adding dialog has been already requested by user or not.
-
-    @property _dialogHasBeenRequested
-    @type Boolean
-    @default false
+    @property layer
+    @type Leaflet layer
+    @default null
     @private
   */
-  _dialogHasBeenRequested: false,
+  layer: null,
 
-  /**
-    Flag indicates whether to show geometry adding dialog.
-
-    @property _dialogVisible
-    @type Boolean
-    @default false
-    @private
-  */
-  _dialogVisible: false,
+  active: false,
 
   /**
     Flag indicates that provider request is running.
@@ -125,12 +115,6 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
   */
   _queryResultsTotalCount: 0,
 
-  menuButtonTooltip: t('components.geometry-add-modes.geoprovider.menu-button-tooltip'),
-
-  dialogApproveButtonCaption: t('components.geometry-add-modes.geoprovider.dialog-approve-button-caption'),
-
-  dialogDenyButtonCaption: t('components.geometry-add-modes.geoprovider.dialog-deny-button-caption'),
-
   addressLabel: t('components.geometry-add-modes.geoprovider.address-field-label'),
 
   providerLabel: t('components.geometry-add-modes.geoprovider.provider-field-label'),
@@ -165,14 +149,6 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
 
   actions: {
     /**
-      Handles button click.
-    */
-    onButtonClick() {
-      this.set('_dialogHasBeenRequested', true);
-      this.set('_dialogVisible', true);
-    },
-
-    /**
       Handles search button click.
     */
     onSearchClick() {
@@ -202,13 +178,7 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
       this._doSearch(options);
     },
 
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryGeometryAddModeGeoProviderComponent/sendingActions.complete:method"}}'complete' action{{/crossLink}}.
-
-      @method actions.onApprove
-    */
-    onApprove(e) {
+    apply() {
       let _selectedRow = this.get('_selectedRow');
 
       if (Ember.isNone(_selectedRow)) {
@@ -216,37 +186,38 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
         errors.results = true;
         this.set('_parsingErrors', errors);
 
-        // Prevent dialog from being closed.
-        e.closeDialog = false;
         return;
       }
 
-      let geoObject = this.get('_queryResults').find((row) => {
-        return Ember.isEqual(_selectedRow, Ember.guidFor(row));
-      });
+      let geoObject = this.get('_queryResults').find((row) => { return Ember.isEqual(_selectedRow, Ember.guidFor(row)); });
 
       if (Ember.isNone(geoObject)) {
         let errors = this.get('_parsingErrors');
         errors.results = true;
         this.set('_parsingErrors', errors);
 
-        // Prevent dialog from being closed.
-        e.closeDialog = false;
         return;
       }
 
       let addedLayer = this.getLayer(geoObject);
-      this.sendAction('complete', addedLayer, { panToAddedObject: true });
-      this._cleanUpForm();
-    },
+      if (Ember.isNone(addedLayer)) {
+        return;
+      }
 
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
+      let layer = this.get('layer');
+      if (!Ember.isNone(layer)) {
+        layer.setLatLng(addedLayer.getLatLng());
 
-      @method actions.onDeny
-    */
-    onDeny() {
+        layer.disableEdit();
+        layer.enableEdit();
+
+        addedLayer.remove();
+
+        addedLayer = layer;
+      }
+
       this._cleanUpForm();
+      this.sendAction('updateLayer', addedLayer, true);
     }
   },
 
@@ -257,6 +228,10 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
     this._super(...arguments);
     this.initProviders();
   },
+
+  initialSettings: Ember.on('init', Ember.observer('settings', function () {
+    this._cleanUpForm();
+  })),
 
   /**
     Makes a request to the selected geoprovider with specified options.
@@ -292,7 +267,7 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
       this.set('_queryResultsTotalCount', result.total);
 
     }).catch(() => {
-      console.log(arguments);
+      console.error(arguments);
     }).finally(() => {
       this.set('_loading', false);
     });
@@ -357,8 +332,8 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
   getLayer(data) {
     switch (data.type) {
       case 'marker':
-        let [lng, lat] = data.position.split(' ');
-        return L.marker([lat, lng]);
+        let latlng = data.position.split(' ');
+        return L.marker([latlng[1], latlng[0]]);
       default:
         return null;
     }

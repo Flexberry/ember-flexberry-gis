@@ -1,10 +1,7 @@
 import Ember from 'ember';
 import turfCombine from 'npm:@turf/combine';
-import WfsLayer from '../layers/wfs';
-import OdataLayer from '../layers/odata-vector';
-import state from '../utils/state';
-
 import SnapDraw from './snap-draw';
+import zoomToBounds from '../utils/zoom-to-bounds';
 
 export default Ember.Mixin.create(SnapDraw, {
 
@@ -46,6 +43,7 @@ export default Ember.Mixin.create(SnapDraw, {
       this._getModelLayerFeature(layerId, [featureId]).then(([layerModel, leafletObject, featureLayer]) => {
         let leafletMap = this.get('mapApi').getFromApi('leafletMap');
         leafletObject.statusLoadLayer = true;
+
         let bounds;
         if (featureLayer[0] instanceof L.Marker) {
           let featureGroup = L.featureGroup().addLayer(featureLayer[0]);
@@ -54,7 +52,9 @@ export default Ember.Mixin.create(SnapDraw, {
           bounds = featureLayer[0].getBounds();
         }
 
-        leafletMap.fitBounds(bounds);
+        let minZoom = Ember.get(leafletObject, 'minZoom');
+        let maxZoom = Ember.get(leafletObject, 'maxZoom');
+        zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
         if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
           leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
         }
@@ -132,43 +132,15 @@ export default Ember.Mixin.create(SnapDraw, {
     this._stopSnap();
 
     if (!Ember.isNone(layer) && !Ember.isNone(layer.layerId)) {
-      let [layerModel, leafletObject] = this._getModelLeafletObject(layer.layerId);
-      if (!Ember.isNone(leafletObject)) {
-        let className = Ember.get(layerModel, 'type');
-        let layerType = Ember.getOwner(this).knownForType('layer', className);
-        if (layerType instanceof OdataLayer) {
-          let model = Ember.get(layer, 'model');
-          model.rollbackAttributes();
-        }
-
-        if (layer.state === state.insert) {
-          leafletObject.removeLayer(layer);
-          if (editTools.featuresLayer.getLayers().length !== 0) {
-            let id = editTools.featuresLayer.getLayerId(layer);
-            let editLayer = editTools.featuresLayer.getLayer(id).editor.editLayer;
-            editTools.editLayer.removeLayer(editLayer);
-            editTools.featuresLayer.removeLayer(layer);
-          }
-        } else if (layer.state === state.update) {
-          let editLayer = layer.editor.editLayer;
-          editTools.editLayer.removeLayer(editLayer);
-          let map = Ember.get(leafletObject, '_map');
-          map.removeLayer(layer);
-          let id = leafletObject.getLayerId(layer);
-          delete leafletObject._layers[id];
-          if (layerType instanceof WfsLayer) {
-            let filter = new L.Filter.EQ('primarykey', Ember.get(layer, 'feature.properties.primarykey'));
-            leafletObject.loadFeatures(filter);
-            delete leafletObject.changes[id];
-          } else if (layerType instanceof OdataLayer) {
-            let e = {
-              featureIds: [Ember.get(layer, 'feature.properties.primarykey')]
-            };
-            leafletObject.loadLayerFeatures(e);
-          }
-        }
-      }
-
+      let [, leafletObject] = this._getModelLeafletObject(layer.layerId);
+      let id = leafletObject.getLayerId(layer);
+      let e = {
+        layerIds: [layer.layerId],
+        ids: [id],
+        results: Ember.A()
+      };
+      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+      leafletMap.fire('flexberry-map:cancelEdit', e);
       layer.layerId = null;
     }
   },
@@ -353,6 +325,7 @@ export default Ember.Mixin.create(SnapDraw, {
   _getModelLayerFeature(layerId, featureIds, load = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+
       let e = {
         featureIds: featureIds,
         layer: layerId,
@@ -377,13 +350,11 @@ export default Ember.Mixin.create(SnapDraw, {
           let featureLayer = [];
           if (load) {
             let layers = layerObject._layers;
-            if (!Ember.isNone(featureIds) && featureIds.length === 1) {
-              let obj = Object.values(layers).find(feature => {
+            if (!Ember.isNone(featureIds) && featureIds.length > 0) {
+              featureLayer = Object.values(layers).filter(feature => {
                 const layerFeatureId = this._getLayerFeatureId(e.results[0].layerModel, feature);
-                return layerFeatureId === featureIds[0];
+                return featureIds.some((f) => { return layerFeatureId === f; });
               });
-
-              featureLayer.push(obj);
             }
           } else {
             featureLayer = layerObject;

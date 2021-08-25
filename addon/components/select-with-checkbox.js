@@ -5,6 +5,7 @@ import { translationMacro as t } from 'ember-i18n';
 
 const {
   observer,
+  A,
   on,
   $
 } = Ember;
@@ -88,7 +89,7 @@ export default FlexberryDropdown.extend({
 
   init() {
     this._super(...arguments);
-    this.set('state', Ember.A());
+    this.set('state', new A());
     let noRes = this.get('noResults').toString();
     this.set('message', { noResults:  noRes });
   },

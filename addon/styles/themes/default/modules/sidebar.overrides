@@ -6,102 +6,9 @@
   width: 100%;
 }
 
-.sidebar-wrapper {
-  position: absolute;
-  width: @sidebarWrapperWidth;
-  height: @sidebarWrapperHeight;
-  right: @sidebarWrapperRight;
-  transition: @sidebarWrapperTransition;
-  &.visible {
-    right: @visibleRight;
-    .ui.right.sidebar {
-      right: 10px !important;
-    }
-    .ui.tabular.menu.flexberry-tab-bar {
-      right: 410px;
-    }
-  }
-  .ui.right.sidebar {
-    right: -10px !important;
-  }
-  .ui.right.sidebar,
-  .ui.right.sidebar.visible {
-    position: absolute;
-    top: 0px;
-    z-index: 1010;
-    visibility: visible;
-    transform: none;
-    transition: none;
-    background-color: @visibleRightSidebarBackgroundColor;
-    margin: @visibleRightSidebarMargin;
-    min-height: @visibleRightSidebarMinHeight;
-    height: @visibleRightSidebarHeight;
-    border-radius: @visibleRightSidebarBorderRadius;
-    box-shadow: @visibleRightSidebarBoxShadow;
-    width: @visibleRightSidebarWidth;
-    .ui.tab {
-      padding: 10px;
-      color: @sidebarWrapperTabColor;
-    }
-  }
-  .ui.button.flexberry-button {
-    min-width: 30px;
-  }
-  .ui.tabular.menu.flexberry-tab-bar {
-    position: absolute;
-    top: 10px;
-    z-index: 899;
-    overflow: visible;
-    display: block;
-    border: @flexberryTabBarBorder;
-    box-shadow: @flexberryTabBarBoxShadow;
-    background-color: @flexberryTabBarBackgroundColor;
-    border-radius: @flexberryTabBarBorderRadius;
-    right: @flexberryTabBarRight;
-    margin-right: @flexberryTabBarMarginRight;
-    &>* {
-      width: 50px;
-      height: 50px;
-      display: block;
-    }
-    .tab.item {
-      color: @flexberryTabBarItemColor;
-      border: @flexberryTabBarItemBorder;
-      border-radius: @flexberryTabBarItemBorderRadius;
-      box-shadow: @flexberryTabBarItemBoxShadow;
-      margin: @flexberryTabBarItemMargin;
-      padding: @flexberryTabBarItemPadding;
-      &.active.item {
-        border-radius: @flexberryTabBarActiveItemBorderRaius;
-        background: @flexberryTabBarActiveItemBackground;
-        margin: @flexberryTabBarActiveItemMargin;
-      }
-      .flexberry-tab-bar-tab-icon {
-        padding: 5px 5px 0px 0px;
-        &.bookmark {
-          padding: 5px 2px 0 2px;
-        }
-      }
-    }
-    .tab.item:first-child {
-      border-top-left-radius: 5px;
-      &.active.item {
-        border-top-left-radius: 5px !important;
-      }
-    }
-    .tab.item:last-child {
-      border-bottom-left-radius: 5px;
-      &.active.item {
-        border-bottom-left-radius: 5px !important;
-      }
-    }
-  }
-}
-
 /************************************
           Bookmark Block
 *************************************/
-
 .sidebar-wrapper {
   .bookmark-block {
     padding: 0;
@@ -222,12 +129,18 @@
 /***************************************************
                     Layers
 ****************************************************/
-
+.blur {
+  filter: blur(2px);
+  color: rgba(52, 58, 50, 0.2);
+}
+.layer-result-list .feature-result-item-caption.blur {
+  color: lighten(@primaryColor, 40);
+}
 .ui.right.sidebar {
     .ui.tab {
         border-radius: 5px;
         h3 {
-            margin: 7px 0px 13px 0px;
+            margin: 10px 0px 13px 0px;
         }
     }
     .flexberry-tree-header {
@@ -252,6 +165,9 @@
     }
     .ui.styled.accordion {
         box-shadow: none;
+        .title {
+          border: none;
+        }
         .accordion {
             margin: .5em 0;
             border-radius: 5px 0px 0px 5px;
@@ -281,26 +197,26 @@
                 }
                 .flexberry-maplayer-caption-label {
                     font-size: 12px;
+                    word-break: break-word;
                 }
                 .button,
                 .flexberry-maplayer-opacity-label {
-                    vertical-align: baseline;
                     width: 30px;
                     height: 30px;
                     color: @flexberryMaplayerOpacitiLabelColor;
                     background-color: @flexberryMaplayerOpacitiLabelBackgroundColor;
-                    box-shadow: @flexberryMaplayerOpacitiLabelBoxShadow;
                     padding: @flexberryMaplayerOpacitiLabelPadding;
                     margin: @flexberryMaplayerOpacitiLabelMargin;
                     &:hover {
                         background-color: @flexberryMaplayerOpacitiLabelHoveredBackground;
                     }
                 }
-                .flexberry-maplayer-add-button {
-                    padding: 7px 0;
-                }
                 .flexberry-maplayer-opacity-label {
                     padding: 10px 0;
+                    vertical-align: baseline;
+                }
+                .button {
+                  vertical-align: top;
                 }
             }
         }
@@ -309,7 +225,7 @@
         .accordion .content {
             padding: 0px 0px 8px 30px;
             .flexberry-slider {
-                margin: @flexberrySliderMargin;
+                margin: 5px 0px 0px 25px;
                 .ui-slider .slider {
                     &.slider.slider-horizontal {
                         height: 7px;
@@ -372,6 +288,290 @@
             }
         }
     }
+}
+.flexberry-maplayers {
+  .flexberry-treenode-expand-collapse-icon.dropdown.icon:before {
+    content: '\f105';
+    font-family: Icons;
+  }
+  .flexberry-treenode {
+    .flexberry-treenode-header.title {
+      border: none;
+    }
+
+    .layer-legend {
+      margin-left: 25px;
+      label {
+        color: #8F928F;
+      }
+    }
+    .flexberry-treenode-caption-block {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .flexberry-treenode-buttons-block {
+      position: absolute;
+      width: 200px;
+      top: -9px;
+      left: 30px;
+      a.icon.item.more {
+        line-height: 5px;
+      }
+      label.floated.flexberry-treenode-prevent-expand-collapse.flexberry-button.ui.button.icon {
+        border: none;
+        box-shadow: none;
+        vertical-align: top;
+      }
+      .allmore.floated.flexberry-button.ui.button.icon {
+        border: none;
+        box-shadow: none;
+        vertical-align: top;
+        i.icon.more {
+          line-height: 0;
+        }
+        i.icon.more:before {
+          content: "...";
+          font-size: 26px;
+        }
+        .more.submenu {
+          width: 200px;
+          height: auto;
+          position: absolute;
+          top: 10px;
+          z-index: 100;
+          background: @whitecolor;
+          border: 1px solid #E5E5E5;
+          border-radius: 3.5px;
+          box-sizing: border-box;
+          &.reversed {
+            div {
+              padding-top: 16px;
+            }
+            .button-more-submenu {
+              height: 20px;
+              margin-top: 2px;
+            }
+          }
+          div {
+            padding-top: 10px;
+            padding-left: 8px;
+            text-align: left;
+          }
+          .button-more-submenu {
+            height: 0px;
+            label.more.submenu {
+              position: relative;
+              top: -25px;
+              right: 10px;
+              background-color: rgba(255,255,255,0);
+              height: 30px;
+              width: 30px;
+              border: none;
+              margin: 0;
+            }
+          }
+          label.ui.button {
+            color: #343A32;
+            font-size: 11px;
+            width: 200px;
+            text-align: left;
+          }
+          .flexberry-maplayer-add-button {
+            padding-left: 1px;
+            i.plus.icon {
+              margin-right: 13px;
+            }
+          }
+        }
+      }
+
+    }
+    .flexberry-maplayer-type-icon.folder~.flexberry-treenode-buttons-block {
+      left: 48px;
+    }
+  }
+}
+
+
+/************************************
+          Create/Edit Block
+*************************************/
+
+.right-sidebar-wrapper {
+  .ui.right.sidebar {
+    .ui.tab.createOrEditObject {
+
+      h3 {
+        position: absolute;
+        top: 5px;
+      }
+
+      padding: 50px 25px;
+
+      .create-edit-block {
+        height: @visibleCreateEditBlockHeight;
+        width: @visibleCreateEditBlockWidth;
+        position: absolute;
+        overflow-y: scroll;
+        padding-right: 8px;
+
+        .editfeature-tab-data-panel {
+          padding: 21px 17px 15px 17px;
+          margin: 0px;
+          border: 1px solid #b1cae8;
+          border-radius: @defaultBorderRadius;
+          margin-bottom: 15px;
+
+          &.manual.active {
+            border-top-left-radius: 0px !important;
+          }
+
+          .ui.celled.table.flexberry-table {
+            border: none;
+            th {
+              color: #8F928F;
+              font-weight: normal;
+              font-size: 0.9em;
+            }
+
+            td, th {
+              border: none;
+              min-width: 65px;
+              padding: 1px;
+              background: none;
+              &.small {
+                min-width: 30px;
+                width: 30px;
+              }
+
+              &.checkbox-rhumb {
+                .flexberry-checkbox.checkbox {
+                  width: 17px;
+                }
+              }
+
+              &.narrow-rhumb {
+                min-width: 40px;
+                width: 40px;
+              }
+            }
+          }
+
+          label.flexberry-button {
+            border-radius: @defaultBorderRadius;
+            box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.1);
+            border: 1px solid #b1cae8;
+
+            &.geoprovider-search {
+              width: 35px;
+            }
+          }
+
+          .draw-tools {
+            display: flex;
+            justify-content: space-between;
+          }
+
+          div.offset {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+
+            .offset-inner {
+              width: 45%;
+            }
+          }
+        }
+
+        .editfeature-tab-nav-panel {
+          .editfeature-tab-nav-panel-tabs {
+            border: none;
+            margin-bottom: 10px;
+
+            .editfeature.tab {
+              border: 1px solid #b1cae8;
+              border-radius: @defaultBorderRadius;
+              padding: 10px;
+              margin-right: 10px;
+              height: 40px;
+
+              i.icon {
+                display: flex;
+                justify-content: center;
+                margin: 0;
+              }
+
+              &.curtab {
+                border-bottom-right-radius: 0px !important;
+                border-bottom-left-radius: 0px !important;
+                border-bottom: 1px solid @white;
+                height: 51px;
+                padding-bottom: 21px;
+                z-index: 1;
+              }
+            }
+          }
+        }
+
+        .field {
+          margin-bottom: 10px;
+
+          textarea.ember-text-area,
+          .flexberry-dropdown.selection.dropdown,
+          .ember-text-field {
+            margin: 0;
+            min-width: 0px;
+          }
+
+          label {
+            color: #8F928F;
+          }
+        }
+      }
+
+      .flex-buttons {
+        display: flex;
+        justify-content: center;
+
+        .button {
+          width: 40%;
+        }
+      }
+
+      .create-edit-block-buttons {
+        position: absolute;
+        bottom: 0px;
+        width: @visibleCreateEditBlockWidth;
+        padding: 10px 0;
+      }
+
+      .create-edit-block-attributes {
+        padding-top: 10px;
+      }
+    }
+  }
+}
+
+.outer-search.flexberry-search-panel {
+  display: block;
+  z-index: 899;
+  position: absolute;
+  left: 375px;
+  width: 300px;
+  background: @whitecolor;
+  top: 59px;
+  border-radius: 5px;
+  box-shadow: 0 0 4px #3c4f76;
+  height: 35px;
+  .flexberry-search input {
+    border: none;
+  }
+}
+
+.flexberry-search-panel+h5 {
+  margin-top: 17px;
+  margin-bottom: 5px;
 }
 
 /***************************************************

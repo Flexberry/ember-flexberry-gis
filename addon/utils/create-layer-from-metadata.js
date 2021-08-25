@@ -4,7 +4,6 @@
 
 import Ember from 'ember';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
-
 /**
   Creates map layer from metadata.
 
@@ -21,9 +20,9 @@ let createLayerFromMetadata = function(metadata, store) {
       keyWords: metadata.get('keyWords'),
       type: metadata.get('type'),
       settings: metadata.get('settings'),
-      scale: metadata.get('scale'),
-      coordinateReferenceSystem: metadata.get('coordinateReferenceSystem'),
-      boundingBox: metadata.get('boundingBox'),
+      scale:metadata.get('scale'),
+      coordinateReferenceSystem:metadata.get('coordinateReferenceSystem'),
+      boundingBox:metadata.get('boundingBox'),
 
       // If user has chosen to open metadata on map, then layer created on metadata basics must be visible by default.
       visibility: true

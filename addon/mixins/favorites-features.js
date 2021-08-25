@@ -17,6 +17,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
   */
   result: Ember.A(),
 
+  favorites: Ember.A(),
+
   /**
     Array of 2 features that will be compared.
     @property twoObjectToCompare
@@ -82,17 +84,18 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
   _onLeafletMapDidChange: Ember.observer('leafletMap', function () {
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
-      leafletMap.on('flexberry-map:load', (e) => {
-        Ember.RSVP.allSettled(e.results).then(() => {
-          let store = this.get('store');
-          let idFeaturesArray = store.findAll('i-i-s-r-g-i-s-p-k-favorite-features');
-          idFeaturesArray.then((result) => {
-            this.fromIdArrayToFeatureArray(result);
-          });
-        });
-      });
+      leafletMap.on('flexberry-map:allLayersLoaded', this.fromIdArrayToFeatureArray, this);
+      leafletMap.on('flexberry-map:updateFavorite', this._updateFavorite, this);
     }
   }),
+
+  willDestroyElement() {
+    this._super(...arguments);
+    let leafletMap = this.get('leafletMap');
+    leafletMap.off('flexberry-map:allLayersLoaded', this.fromIdArrayToFeatureArray, this);
+    leafletMap.off('flexberry-map:updateFavorite', this._updateFavorite, this);
+
+  },
 
   /**
     Injected ember storage.
@@ -119,7 +122,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
           let record = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
             .filterBy('objectKey', feature.properties.primarykey)
             .filterBy('objectLayerKey', feature.layerModel.id);
-          record[0].destroyRecord();
+          record[0].deleteRecord();
+          record[0].save();
         }
 
         Ember.set(feature.properties, 'isFavorite', false);
@@ -260,52 +264,124 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
 
     @method fromIdArrayToFeatureArray
   */
-  fromIdArrayToFeatureArray(favFeaturesIds) {
-    let favFeatures = Ember.A();
-    favFeaturesIds.forEach(layer => {
-      let [layerModel, featureLayer] = this.getModelLayerFeature(layer.get('objectLayerKey'), layer.get('objectKey'));
-      featureLayer.feature.leafletLayer = L.geoJSON(featureLayer.feature, { color: featureLayer.options.color });
-      featureLayer.feature.layerModel = layerModel;
-      Ember.set(featureLayer.feature.properties, 'isFavorite', true);
-      let layerModelIndex = this.isLayerModelInArray(favFeatures, layerModel);
-      if (layerModelIndex !== false) {
-        favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, featureLayer.feature);
+  fromIdArrayToFeatureArray() {
+    let store = this.get('store');
+    let idFeaturesArray = store.findAll('i-i-s-r-g-i-s-p-k-favorite-features');
+    idFeaturesArray.then((favorites) => {
+      let favFeaturesArray = Ember.A();
+      favorites.forEach(layer => {
+        let id = this.isLayerModelInArray(favFeaturesArray, { id: layer.get('objectLayerKey') });
+        if (id !== false) {
+          favFeaturesArray[id].features.push(layer.get('objectKey'));
+        } else {
+          favFeaturesArray.addObject({ layerModel: { id: layer.get('objectLayerKey') }, features: [layer.get('objectKey')] });
+        }
+      });
+
+      let promises = [];
+      favFeaturesArray.forEach((item) => {
+        let featurePromises = this.get('mapApi').getFromApi('mapModel').loadingFeaturesByPackages(item.layerModel.id, item.features);
+        promises = promises.concat(featurePromises);
+      });
+      if (!Ember.isBlank(promises)) {
+        Ember.RSVP.allSettled(promises).then((res) => {
+          let favFeatures = Ember.A();
+          let result = Ember.A();
+          res.forEach((promiseResult) => {
+            if (promiseResult.state !== 'rejected') {
+              let favorites = Ember.A();
+              promiseResult.value[2].forEach((layerObject) => {
+                Ember.set(layerObject.feature.properties, 'isFavorite', true);
+                favorites.push(layerObject.feature);
+              });
+              let promiseFeature = null;
+              let layerModelIndex = this.isLayerModelInArray(result, promiseResult.value[0]);
+              if (layerModelIndex !== false) {
+                favorites = favorites.concat(favorites, favFeatures[layerModelIndex].features);
+                promiseFeature = new Ember.RSVP.Promise((resolve) => {
+                  resolve(favorites);
+                });
+                result[layerModelIndex].features = promiseFeature;
+                favFeatures[layerModelIndex].features = favorites;
+              } else {
+                promiseFeature = new Ember.RSVP.Promise((resolve) => {
+                  resolve(favorites);
+                });
+                result.addObject({ layerModel: promiseResult.value[0], features: promiseFeature });
+                favFeatures.addObject({ layerModel: promiseResult.value[0], features: favorites });
+              }
+            }
+          });
+          this.set('result', result);
+          this.set('favFeatures', favFeatures);
+          this.set('_showFavorites', true);
+        });
       } else {
-        favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, layerModel, featureLayer.feature);
+        this.set('result', Ember.A());
+        this.set('favFeatures', Ember.A());
+        this.set('_showFavorites', true);
       }
     });
-
-    let layerModelPromise = Ember.A();
-    favFeatures.forEach(object => {
-      let promise = new Ember.RSVP.Promise((resolve) => {
-        resolve(object.features);
-      });
-      layerModelPromise.addObject({ layerModel: object.layerModel, features: promise });
-    });
-    this.set('favFeatures', favFeatures);
-    this.set('result', layerModelPromise);
   },
 
   /**
-    Get [layerModel, featureLayer] by layer id or layer id and object id.
+   * This method update favorite feature when feature is edited
+   * @param {Object} data This parameter contain layerModel and layer (object) which the was edited.
+   */
+  _updateFavorite(data) {
+    let result = Ember.A();
+    let favFeatures = Ember.A();
+    let twoObjects = this.get('twoObjectToCompare');
+    let updatedLayer = data.layers[0];
+    let idUpdatedFavorite = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(data.layerModel.layerModel, data.layers[0]);
+    this.get('favFeatures').forEach((favoriteObject) => {
+      let favorites = Ember.A();
+      if (favoriteObject.layerModel.id === data.layerModel.layerModel.id) {
+        favoriteObject.features.forEach((feature) => {
+          let id = feature.properties.primarykey;
+          if (idUpdatedFavorite === id) {
+            updatedLayer.feature.layerModel = data.layerModel.layerModel;
+            Ember.set(updatedLayer.feature.properties, 'isFavorite', true);
+            if (!Ember.isEmpty(twoObjects)) {
+              if (Ember.get(feature, 'compareEnabled')) {
+                twoObjects.removeObject(feature);
+                Ember.set(updatedLayer.feature, 'compareEnabled', true);
+                twoObjects.pushObject(updatedLayer.feature);
+              }
+            }
 
-    @param {string} layerId Layer id.
-    @param {string} [featureId] Object id.
-    @returns {[layerModel, leafletObject, featureLayer]} Get [layerModel, featureLayer] or [layerModel, undefined].
-    @private
-  */
-  getModelLayerFeature(layerId, featureId) {
-    let layerModel = this.get('model.hierarchy').findBy('id', layerId);
-    let leafletObject = layerModel.get('_leafletObject');
-    let layers = leafletObject._layers;
-    let featureLayer;
-    if (!Ember.isNone(featureId)) {
-      featureLayer = Object.values(layers).find(feature => {
-        const layerFeatureId = feature.feature.properties.primarykey;
-        return layerFeatureId === featureId;
-      });
-    }
+            favorites.push(updatedLayer.feature);
+          } else {
+            favorites.push(feature);
+          }
+        });
 
-    return [layerModel, featureLayer];
-  },
+        let promiseFeature = new Ember.RSVP.Promise((resolve) => {
+          resolve(favorites);
+        });
+        result.addObject({ layerModel: favoriteObject.layerModel, features: promiseFeature });
+        favFeatures.addObject({ layerModel: favoriteObject.layerModel, features: favorites });
+      } else {
+        let promiseFeature = null;
+        let layerModelIndex = this.isLayerModelInArray(result, favoriteObject.layerModel);
+        if (layerModelIndex !== false) {
+          favorites = favorites.concat(favorites, favoriteObject.features);
+          promiseFeature = new Ember.RSVP.Promise((resolve) => {
+            resolve(favorites);
+          });
+          result[layerModelIndex].features = promiseFeature;
+          favFeatures[layerModelIndex].features = favorites;
+        } else {
+          favorites = favoriteObject.features;
+          promiseFeature = new Ember.RSVP.Promise((resolve) => {
+            resolve(favorites);
+          });
+          result.addObject({ layerModel: favoriteObject.layerModel, features: promiseFeature });
+          favFeatures.addObject({ layerModel: favoriteObject.layerModel, features: favorites });
+        }
+      }
+    });
+    this.set('result', result);
+    this.set('favFeatures', favFeatures);
+  }
 });

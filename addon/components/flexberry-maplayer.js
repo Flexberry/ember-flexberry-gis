@@ -13,6 +13,7 @@ import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import { copyLayer } from '../utils/copy-layer';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
+import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
 import layout from '../templates/components/flexberry-maplayer';
 import {
   translationMacro as t
@@ -163,6 +164,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     _requiredActionNames: ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds'],
 
     /**
+      Used to identify this component on the page by component name.
+      @property componentName
+      @type String
+      @readonly
+    */
+    componentName: Ember.computed('elementId', function () {
+      return 'treenode' + this.get('elementId');
+    }),
+
+    /**
       Flag: indicates whether some {{#crossLink "FlexberryMaplayerComponent/layers:property"}}'layers'{{/childNodes}} are defined.
 
       @property _hasLayers
@@ -280,10 +291,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _attributesOperationIsAvailable: Ember.computed('_layerClassFactory', function () {
+    _attributesOperationIsAvailable: Ember.computed('_layerClassFactory', 'layer.layerInitialized', function () {
       let layerClassFactory = this.get('_layerClassFactory');
 
-      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('attributes');
+      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).includes('attributes') && this.get('layer.layerInitialized');
     }),
 
     /**
@@ -458,7 +469,189 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     //compare enabled
     compareLayersEnabled: false,
 
+    /**
+      Flag: indicates whether submenu is visible.
+
+      @property isSubmenu
+      @type boolean
+      @default false
+    */
+    isSubmenu: false,
+
+    /**
+      Flag: indicates whether layer is group.
+
+      @property isSubmenu
+      @type boolean
+      @default false
+    */
+    isGroup: false,
+
+    /**
+      CSS class 'disabled' if layer is group.
+
+      @property disabled
+      @type String
+      @default ''
+    */
+    disabled: '',
+
+    /**
+      Initializes DOM-related component's properties.
+    */
+    didInsertElement() {
+      if (this.get('layer.type') === 'group') {
+        this.set('isGroup', true);
+        this.set('disabled', 'disabled');
+      }
+
+      if (!this.get('readonly')) {
+        let _this = this;
+        let $caption = Ember.$('.ui.tab.treeview label.flexberry-maplayer-caption-label');
+        if ($caption.length > 0) {
+          $caption.hover(
+            function() {
+              let $toolbar = Ember.$(this).parent().children('.flexberry-treenode-buttons-block');
+              $toolbar.removeClass('hidden');
+              Ember.$(this).addClass('blur');
+            },
+            function() {
+              let $toolbar = Ember.$(this).parent().children('.flexberry-treenode-buttons-block');
+              $toolbar.hover(
+                () => {},
+                () => {
+                  $toolbar.addClass('hidden');
+                  Ember.$(this).removeClass('blur');
+                  _this.set('isSubmenu', false);
+                });
+            }
+          );
+        }
+      }
+    },
+
+    /**
+      Redefine L.Control.SideBySide._updateClip for work with layer and label layer.
+
+      @method updateClip
+    */
+    updateClip: function () {
+      let map = this.get('leafletMap');
+      let sbs = this.get('sideBySide');
+      var nw = map.containerPointToLayerPoint([0, 0]);
+      var se = map.containerPointToLayerPoint(map.getSize());
+      var clipX = nw.x + sbs.getPosition();
+      var dividerX = sbs.getPosition();
+      sbs._divider.style.left = dividerX + 'px';
+      var clipLeft = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)';
+      var clipRight = 'rect(' + [nw.y, se.x, se.y, clipX].join('px,') + 'px)';
+      sbs._leftLayers.forEach(function (layer) {
+        if (!Ember.isNone(layer) && !Ember.isNone(layer.getContainer)) {
+          layer.getContainer().style.clip = clipLeft;
+        }
+      });
+      sbs._rightLayers.forEach(function (layer) {
+        if (!Ember.isNone(layer) && !Ember.isNone(layer.getContainer)) {
+          layer.getContainer().style.clip = clipRight;
+        }
+      });
+    },
+
     actions: {
+      /**
+        Handles click on checkbox.
+        @method action.onChange
+        @param {Object} e event args.
+      */
+      onChange(e) {
+        let layer = this.get('layer');
+        let sbs = this.get('sideBySide');
+        Ember.set(sbs, 'baseUpdateClip', sbs._updateClip);
+        if (e.newValue === false) {
+          sbs.off('dividermove', this.updateClip, this);
+          if (this.get('side') === 'Left') {
+            sbs.setLeftLayers(null);
+            this.get('leftLayer._leafletObject').remove();
+            if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
+              this.get('leftLayer._leafletObject._labelsLayer').remove();
+            }
+
+            this.set('leftLayer.side', null);
+            this.set('leftLayer.visibility', false);
+            this.set('leftLayer', null);
+          } else {
+            sbs.setRightLayers(null);
+            this.get('rightLayer._leafletObject').remove();
+            if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
+              this.get('rightLayer._leafletObject._labelsLayer').remove();
+            }
+
+            this.set('rightLayer.side', null);
+            this.set('rightLayer.visibility', false);
+            this.set('rightLayer', null);
+          }
+        } else {
+          Ember.set(layer, 'visibility', true);
+          let map = this.get('leafletMap');
+          sbs._updateClip = this.get('updateClip').bind(this);
+          sbs.on('dividermove', this.updateClip, this);
+
+          if (this.get('side') === 'Left') {
+            if (this.get('leftLayer') !== null) {
+              sbs.setLeftLayers(null);
+              this.get('leftLayer._leafletObject').remove();
+              this.set('leftLayer.visibility', false);
+              this.set('leftLayer.side', null);
+            }
+
+            let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
+            let left = [];
+            left.push(leafletObject);
+            if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
+              left.push(leafletObject._labelsLayer.addTo(map));
+            }
+
+            Ember.set(layer, 'side', 'Left');
+            this.set('leftLayer', layer);
+            sbs.setLeftLayers(left);
+          }
+
+          if (this.get('side') === 'Right')  {
+            if (this.get('rightLayer') !== null) {
+              sbs.setRightLayers(null);
+              this.get('rightLayer._leafletObject').remove();
+              this.set('rightLayer.visibility', false);
+              this.set('rightLayer.side', null);
+            }
+
+            let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
+            let right = [];
+            right.push(leafletObject);
+            if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
+              right.push(leafletObject._labelsLayer.addTo(map));
+            }
+
+            Ember.set(layer, 'side', 'Right');
+            this.set('rightLayer', layer);
+            sbs.setRightLayers(right);
+          }
+        }
+
+        this.sendAction('onChangeLayer', this.get('leftLayer'), this.get('rightLayer'));
+      },
+
+      /**
+        Show\hide submenu
+
+        @method actions.onSubmenu
+      */
+      onSubmenu() {
+        let component = Ember.$('.' + this.get('componentName'));
+        let moreButton = Ember.$('.more.floated.button', component);
+        let elements = Ember.$('.more.submenu.hidden', component);
+        openCloseSubmenu(this, moreButton, elements,  2);
+      },
+
       onAddCompare() {
         //добавление в зависимости от стороны
       },
@@ -547,6 +740,18 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onAttributesButtonClick(...args) {
         this.sendAction('attributesEdit', ...args);
+      },
+
+      /**
+        Handles create feature button's 'click' event.
+        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.attributes:method"}}'attributes'{{/crossLink}} action.
+
+        @method actions.onFeatureCreateButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onFeatureCreateButtonClick(...args) {
+        this.sendAction('featureEdit', ...args);
       },
 
       /**

@@ -7,8 +7,8 @@ import { latlngToPointJsts, latlngToPolylineJsts, latlngToPolygonJsts } from '..
 export function initialize(application) {
   // Add custom leaflet functions
   let PointToJsts = {
-    toJsts: function (crs, precision) {
-      return latlngToPointJsts(this.getLatLng(), crs, precision);
+    toJsts: function (crs, scale, precision) {
+      return latlngToPointJsts(this.getLatLng(), crs, precision, scale);
     }
   };
 
@@ -17,14 +17,14 @@ export function initialize(application) {
   L.CircleMarker.include(PointToJsts);
 
   L.Polyline.include({
-    toJsts: function (crs, precision) {
-      return latlngToPolylineJsts(this._latlngs, crs, precision);
+    toJsts: function (crs, scale, precision) {
+      return latlngToPolylineJsts(this._latlngs, crs, precision, scale);
     }
   });
 
   L.Polygon.include({
-    toJsts: function (crs, precision) {
-      return latlngToPolygonJsts(this._latlngs, crs, precision);
+    toJsts: function (crs, scale, precision) {
+      return latlngToPolygonJsts(this._latlngs, crs, precision, scale);
     }
   });
 }
