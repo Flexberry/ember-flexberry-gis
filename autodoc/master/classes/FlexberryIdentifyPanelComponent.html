@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>FlexberryIdentifyPanelComponent - Flexberry Documentation</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+	    <img alt="Flexberry Documentation" src="../assets/css/logo.png" style="max-height: 65%;" title="Flexberry Documentation">
+            Flexberry Documentation
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>master</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/ApplicationInitializer", "classes/ApplicationInstance", "classes/ApplicationInstanceInitializer", "classes/ArrayContainsHelper", "classes/BaseChartTypeComponent", "classes/BaseControlComponent", "classes/BaseEditMode", "classes/BaseGeoProvider", "classes/BaseLayer", "classes/BaseLayerComponent", "classes/BaseLayerStyle", "classes/BaseLayerStyleLegendComponent", "classes/BaseLayerTreenodeContentComponent", "classes/BaseLegendComponent", "classes/BaseMapCommand", "classes/BaseMapCommandComponent", "classes/BaseMapTool", "classes/BaseMapToolComponent", "classes/BaseMarkerStyle", "classes/BaseModeComponent", "classes/BaseNonclickableMapTool", "classes/BaseVectorLayerComponent", "classes/CategorizedLayersStyleGradientToolsComponent", "classes/CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent", "classes/CategorizedLayersStyleLayerPropertyDropdownComponent", "classes/CategorizedLayerStyle", "classes/CategorizedLayerStyleLegendComponent", "classes/ChartsRendererService", "classes/ColumnComponent", "classes/DefaultMarkersStyleComponent", "classes/DefaultMarkerStyle", "classes/DivControlComponent", "classes/DragMapTool", "classes/DragMapToolComponent", "classes/DrawCircleMapTool", "classes/DrawClearMapTool", "classes/DrawMapTool", "classes/DrawMapToolComponent", "classes/DrawMarkerMapTool", "classes/DrawPolygonMapTool", "classes/DrawPolylineMapTool", "classes/DrawRectangleMapTool", "classes/DynamicPropertiesMixin", "classes/EarthCrs", "classes/EditMapCommand", "classes/EditMapCommandComponent", "classes/EditMapController", "classes/EditMapNewRoute", "classes/EmberGuidHelper", "classes/EmptyLayersStyleComponent", "classes/EmptyLayerStyle", "classes/EmptyLayerStyleLegendComponent", "classes/Epsg3395Crs", "classes/Epsg3857Crs", "classes/Epsg4326Crs", "classes/ExportDownloadMapCommand", "classes/ExportMapCommand", "classes/ExportMapCommandComponent", "classes/ExportPrintMapCommand", "classes/FeatureResultItemComponent", "classes/FlexberryAddLayerDialogComponent", "classes/FlexberryBoundingboxComponent", "classes/FlexberryBoundingboxMapLoaderMixin", "classes/FlexberryCopyLayerDialogComponent", "classes/FlexberryDisplaySettingsComponent", "classes/FlexberryEditLayerAttributesDialogComponent", "classes/FlexberryEditLayerDialogComponent", "classes/FlexberryEditMapDialogComponent", "classes/FlexberryExportMapCommandDialogComponent", "classes/FlexberryGeometryAddModeDrawComponent", "classes/FlexberryGeometryAddModeGeoProviderComponent", "classes/FlexberryGeometryAddModeManualComponent", "classes/FlexberryGeometryAddModeRhumbComponent", "classes/FlexberryGoToMapCommandDialogComponent", "classes/FlexberryIdentificationSettingsComponent", "classes/FlexberryIdentifyPanelComponent", "classes/FlexberryLayersAttributesPanelComponent", "classes/FlexberryLayersComponent", "classes/FlexberryLayersDropdownComponent", "classes/FlexberryLayerslegendsComponent", "classes/FlexberryLinksEditorActionsHandlerMixin", "classes/FlexberryLinksEditorComponent", "classes/FlexberryMapActionsHandlerMixin", "classes/FlexberryMapComponent", "classes/FlexberryMapinfoComponent", "classes/FlexberryMaplayerActionsHandlerMixin", "classes/FlexberryMaplayerComponent", "classes/FlexberryMaplayersComponent", "classes/FlexberryMaptoolbarComponent", "classes/FlexberryMaptoolbarComponet", "classes/FlexberryMultipleSelectComponent", "classes/FlexberryRemoveLayerDialogComponent", "classes/FlexberrySearchComponent", "classes/FlexberrySearchMapCommandDialogComponent", "classes/FlexberryTableComponent", "classes/FullExtentMapCommand", "classes/FullExtentMapCommandComponent", "classes/GeocoderBaseLayerComponent", "classes/GeocoderOsmOverpassLayerComponent", "classes/GeocoderOsmOverpassLayerSettingsComponent", "classes/GeocoderOsmRuLayer", "classes/GeocoderOsmRuLayerComponent", "classes/GeocoderOsmRuLayerSettingsComponent", "classes/GeocoderOsmRuSearchSettingsComponent", "classes/GeoJsonFilterParserMixin", "classes/GeoJSONLayer", "classes/GeoJSONLayerComponent", "classes/GeoJSONLayerSettingsComponent", "classes/GeojsonLegendComponent", "classes/GeoJSONSearchSettingsComponent", "classes/GisSearchFormController", "classes/GisSearchFormRoute", "classes/GoToMapCommand", "classes/GoToMapCommandComponent", "classes/GradientEditComponent", "classes/GradientStylesLoadRendererService", "classes/GraduatedLayersStyleComponent", "classes/GraduatedLayerStyleLegendComponent", "classes/GroupLayer", "classes/GroupLayerComponent", "classes/GroupLayerSettingsComponent", "classes/HeaderFromProjectionHelper", "classes/HistoryControlComponent", "classes/IdentifyAllMarkerMapTool", "classes/IdentifyAllMixin", "classes/IdentifyAllPolygonMapTool", "classes/IdentifyAllPolylineMapTool", "classes/IdentifyAllRectangleMapTool", "classes/IdentifyAllVisibleMarkerMapTool", "classes/IdentifyAllVisiblePolygonMapTool", "classes/IdentifyAllVisiblePolylineMapTool", "classes/IdentifyAllVisibleRectangleMapTool", "classes/IdentifyMapTool", "classes/IdentifyMapToolComponent", "classes/IdentifyTopMixin", "classes/IdentifyTopVisibleMarkerMapTool", "classes/IdentifyTopVisiblePolygonMapTool", "classes/IdentifyTopVisiblePolylineMapTool", "classes/IdentifyTopVisibleRectangleMapTool", "classes/IdentifyVisibleMixin", "classes/ImageMarkersStyleComponent", "classes/ImageMarkersStyleIconEditorComponent", "classes/ImageMarkerStyle", "classes/IndexChartComponent", "classes/IsNoneHelper", "classes/JsonTransform", "classes/KmlLayer", "classes/KmlLayerComponent", "classes/KmlLayerSettingsComponent", "classes/KmlLegendComponent", "classes/KMLSearchSettingsComponent", "classes/KnownForTypeHelper", "classes/LayerModelMixin", "classes/LayerResultListActionsHandlerMixin", "classes/LayerResultListComponent", "classes/LayersStylesEditorComponent", "classes/LayersStylesRendererService", "classes/LeafletCrsMixin", "classes/LeafletEventsMixin", "classes/LeafletMapCommandsMixin", "classes/LeafletMapInteractionMixin", "classes/LeafletMapLoaderMixin", "classes/LeafletMapToolsMixin", "classes/LeafletMapVisibilityMixin", "classes/LeafletOptionsMixin", "classes/LeafletPropertiesMixin", "classes/LeafletZoomToFeatureMixin", "classes/LegendControlComponent", "classes/LineComponent", "classes/ListMapController", "classes/ListMapRoute", "classes/LocalStorageBindingMixin", "classes/LocalStorageService", "classes/LocateMapCommand", "classes/LocateMapCommandComponent", "classes/MapApiService", "classes/MapInfoComponent", "classes/MapRoute", "classes/MapStoreService", "classes/MarkerIdentifyMapTool", "classes/MarkersStylesEditorComponent", "classes/MarkersStylesRendererService", "classes/MeasureAreaMapTool", "classes/MeasureClearMapTool", "classes/MeasureCoordinatesMapTool", "classes/MeasureDistanceMapTool", "classes/MeasureMapTool", "classes/MeasureMapToolComponent", "classes/MeasureRadiusMapTool", "classes/MetadataEditMode", "classes/MetadataModeComponent", "classes/MiniMapComponent", "classes/NewNewPlatformFlexberryGISLayerMetadataERoute", "classes/NewPlatformFlexberrtGISLayerMetadataEController", "classes/NewPlatformFlexberrtGISLayerMetadataLController", "classes/NewPlatformFlexberryGISLayerLayerMetadataOfflineSerializer", "classes/NewPlatformFlexberryGISLayerLinkModel", "classes/NewPlatformFlexberryGISLayerLinkOfflineSerializer", "classes/NewPlatformFlexberryGISLayerLinkSerializer", "classes/NewPlatformFlexberryGISLayerMetadataERoute", "classes/NewPlatformFlexberryGISLayerMetadataLRoute", "classes/NewPlatformFlexberryGISLayerMetadataModel", "classes/NewPlatformFlexberryGISLayerMetadataSerializer", "classes/NewPlatformFlexberryGISLinkMetadataModel", "classes/NewPlatformFlexberryGISLinkMetadataOfflineSerializer", "classes/NewPlatformFlexberryGISLinkMetadataSerializer", "classes/NewPlatformFlexberryGISLinkParameterModel", "classes/NewPlatformFlexberryGISLinkParameterOfflineSerializer", "classes/NewPlatformFlexberryGISLinkParameterSerializer", "classes/NewPlatformFlexberryGISMapLayerModel", "classes/NewPlatformFlexberryGISMapLayerOfflineSerializer", "classes/NewPlatformFlexberryGISMapLayerSerializer", "classes/NewPlatformFlexberryGISMapModel", "classes/NewPlatformFlexberryGISMapObjectSettingModel", "classes/NewPlatformFlexberryGISMapObjectSettingOfflineSerializer", "classes/NewPlatformFlexberryGISMapObjectSettingSerializer", "classes/NewPlatformFlexberryGISMapOfflineSerializer", "classes/NewPlatformFlexberryGISMapSerializer", "classes/NewPlatformFlexberryGISParameterMetadataOfflineSerializer", "classes/NewPlatformFlexberryGISParameterMetadataSerializer", "classes/NewPlatformFlexberyGISLayerLinkModelMixin", "classes/NewPlatformFlexberyGISLayerLinkOfflineSerializerMixin", "classes/NewPlatformFlexberyGISLayerLinkSerializerMixin", "classes/NewPlatformFlexberyGISLayerMetadataModelMixin", "classes/NewPlatformFlexberyGISLayerMetadataOfflineSerializerMixin", "classes/NewPlatformFlexberyGISLayerMetadataSerializerMixin", "classes/NewPlatformFlexberyGISLinkMetadataModelMixin", "classes/NewPlatformFlexberyGISLinkMetadataOfflineSerializerMixin", "classes/NewPlatformFlexberyGISLinkMetadataSerializerMixin", "classes/NewPlatformFlexberyGISLinkParameterModelMixin", "classes/NewPlatformFlexberyGISLinkParameterOfflineSerializerMixin", "classes/NewPlatformFlexberyGISLinkParameterSerializerMixin", "classes/NewPlatformFlexberyGISMapLayerModelMixin", "classes/NewPlatformFlexberyGISMapLayerOfflineSerializerMixin", "classes/NewPlatformFlexberyGISMapLayerSerializerMixin", "classes/NewPlatformFlexberyGISMapModelMixin", "classes/NewPlatformFlexberyGISMapObjectSettingModelMixin", "classes/NewPlatformFlexberyGISMapObjectSettingOfflineSerializerMixin", "classes/NewPlatformFlexberyGISMapObjectSettingSerializerMixin", "classes/NewPlatformFlexberyGISMapOfflineSerializerMixin", "classes/NewPlatformFlexberyGISMapSerializerMixin", "classes/NewPlatformFlexberyGISParameterMetadataModelMixin", "classes/NewPlatformFlexberyGISParameterMetadataOfflineSerializerMixin", "classes/NewPlatformFlexberyGISParameterMetadataSerializerMixin", "classes/ObjectContainsHelper", "classes/OdataFilterParserMixin", "classes/ODataSettingsComponent", "classes/ODataVectorlayer", "classes/ODataVectorLayerComponent", "classes/ODataVectorSearchSettingsComponent", "classes/OSMLayerComponent", "classes/PieComponent", "classes/PolygonIdentifyMapTool", "classes/PolylineIdentifyMapTool", "classes/Proj4Crs", "classes/RectangleIdentifyMapTool", "classes/RectangleMapTool", "classes/RegexTestHelper", "classes/ScaleControlComponent", "classes/SearchAttributesMapCommand", "classes/SearchClearMapCommand", "classes/SearchMapCommand", "classes/SearchMapCommandComponent", "classes/SearchShowMapCommand", "classes/SimpleCrs", "classes/SimpleLayersStyleComponent", "classes/SimpleLayersStyleFillEditorComponent", "classes/SimpleLayersStylePathEditorComponent", "classes/SimpleLayersStyleStrokeDashArrayDropdownComponent", "classes/SimpleLayersStyleStrokeEditorComponent", "classes/SimpleLayersStyleStrokeLineCapDropdownComponent", "classes/SimpleLayersStyleStrokeLineJoinDropdownComponent", "classes/SimpleLayerStyle", "classes/SimpleLayerStyleLegendComponent", "classes/SpatialBookmarkComponent", "classes/SwitchScaleControlComponent", "classes/TileLayer", "classes/TileLayerComponent", "classes/TileLayerSettingsComponent", "classes/UniqueLayersStyleComponent", "classes/UniqueLayerStyle", "classes/UniqueLayerStyleLegendComponent", "classes/Utils.CheckIntersect", "classes/Utils.Convertor", "classes/Utils.Interpolator", "classes/Utils.LayerCopy", "classes/Utils.LayerCreate", "classes/Utils.Layers", "classes/Utils.LeafletOpacity", "classes/VectorLayer", "classes/VectorLegendComponent", "classes/WfsFilterParserMixin", "classes/WfsLayer", "classes/WfsLayerComponent", "classes/WfsLayerSettingsComponent", "classes/WfsLegendComponent", "classes/WFSSearchSettingsComponent", "classes/WmsLayer", "classes/WMSLayerComponent", "classes/WmsLayerSettingsComponent", "classes/WmsLegendComponent", "classes/WmsSingleTileLayer", "classes/WMSSingleTileLayerComponent", "classes/WmsSingleTileLayerSettingsComponent", "classes/WmsSingleTileLegendComponent", "classes/WmsWfsLayer", "classes/WmsWfsLayerComponent", "classes/YandexMapsGeoCoder", "classes/ZoomInMapTool", "classes/ZoomInMapToolComponent", "classes/ZoomOutMaptool", "classes/ZoomOutMapToolComponent", "classes/ZoomsliderControlComponent", "modules/ember-flexberry", "modules/ember-flexberry-gis", "modules/ember-flexberry-gis-csw", "modules/ember-flexberry-gis-dummy"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <h3>APIs</h3>
+	        <div id="sidebar">
+	            <ul id="main-nav" class="nav nav-tabs" style="margin-bottom:0;">
+	                <li class="active"><a href="#classes" data-toggle="tab">Classes</a></li>
+	                <li><a href="#modules" data-toggle="tab">Modules</a></li>
+	            </ul>
+	    
+	            <div id="api-tabview-filter">
+	                <input type="search" placeholder="Type to filter APIs">
+	            </div>
+	    
+	            <div class="tab-content" style="border: 1px solid #DDD; border-top:0;">
+	                <div class="tab-pane active" id="classes">
+	                    <ul id="api-classes" class="nav nav-list">
+	                            <li><a href="../classes/ApplicationInitializer.html">ApplicationInitializer</a></li>
+	                            <li><a href="../classes/ApplicationInstance.html">ApplicationInstance</a></li>
+	                            <li><a href="../classes/ApplicationInstanceInitializer.html">ApplicationInstanceInitializer</a></li>
+	                            <li><a href="../classes/ArrayContainsHelper.html">ArrayContainsHelper</a></li>
+	                            <li><a href="../classes/BaseChartTypeComponent.html">BaseChartTypeComponent</a></li>
+	                            <li><a href="../classes/BaseControlComponent.html">BaseControlComponent</a></li>
+	                            <li><a href="../classes/BaseEditMode.html">BaseEditMode</a></li>
+	                            <li><a href="../classes/BaseGeoProvider.html">BaseGeoProvider</a></li>
+	                            <li><a href="../classes/BaseLayer.html">BaseLayer</a></li>
+	                            <li><a href="../classes/BaseLayerComponent.html">BaseLayerComponent</a></li>
+	                            <li><a href="../classes/BaseLayerStyle.html">BaseLayerStyle</a></li>
+	                            <li><a href="../classes/BaseLayerStyleLegendComponent.html">BaseLayerStyleLegendComponent</a></li>
+	                            <li><a href="../classes/BaseLayerTreenodeContentComponent.html">BaseLayerTreenodeContentComponent</a></li>
+	                            <li><a href="../classes/BaseLegendComponent.html">BaseLegendComponent</a></li>
+	                            <li><a href="../classes/BaseMapCommand.html">BaseMapCommand</a></li>
+	                            <li><a href="../classes/BaseMapCommandComponent.html">BaseMapCommandComponent</a></li>
+	                            <li><a href="../classes/BaseMapTool.html">BaseMapTool</a></li>
+	                            <li><a href="../classes/BaseMapToolComponent.html">BaseMapToolComponent</a></li>
+	                            <li><a href="../classes/BaseMarkerStyle.html">BaseMarkerStyle</a></li>
+	                            <li><a href="../classes/BaseModeComponent.html">BaseModeComponent</a></li>
+	                            <li><a href="../classes/BaseNonclickableMapTool.html">BaseNonclickableMapTool</a></li>
+	                            <li><a href="../classes/BaseVectorLayerComponent.html">BaseVectorLayerComponent</a></li>
+	                            <li><a href="../classes/CategorizedLayersStyleGradientToolsComponent.html">CategorizedLayersStyleGradientToolsComponent</a></li>
+	                            <li><a href="../classes/CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent.html">CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent</a></li>
+	                            <li><a href="../classes/CategorizedLayersStyleLayerPropertyDropdownComponent.html">CategorizedLayersStyleLayerPropertyDropdownComponent</a></li>
+	                            <li><a href="../classes/CategorizedLayerStyle.html">CategorizedLayerStyle</a></li>
+	                            <li><a href="../classes/CategorizedLayerStyleLegendComponent.html">CategorizedLayerStyleLegendComponent</a></li>
+	                            <li><a href="../classes/ChartsRendererService.html">ChartsRendererService</a></li>
+	                            <li><a href="../classes/ColumnComponent.html">ColumnComponent</a></li>
+	                            <li><a href="../classes/DefaultMarkersStyleComponent.html">DefaultMarkersStyleComponent</a></li>
+	                            <li><a href="../classes/DefaultMarkerStyle.html">DefaultMarkerStyle</a></li>
+	                            <li><a href="../classes/DivControlComponent.html">DivControlComponent</a></li>
+	                            <li><a href="../classes/DragMapTool.html">DragMapTool</a></li>
+	                            <li><a href="../classes/DragMapToolComponent.html">DragMapToolComponent</a></li>
+	                            <li><a href="../classes/DrawCircleMapTool.html">DrawCircleMapTool</a></li>
+	                            <li><a href="../classes/DrawClearMapTool.html">DrawClearMapTool</a></li>
+	                            <li><a href="../classes/DrawMapTool.html">DrawMapTool</a></li>
+	                            <li><a href="../classes/DrawMapToolComponent.html">DrawMapToolComponent</a></li>
+	                            <li><a href="../classes/DrawMarkerMapTool.html">DrawMarkerMapTool</a></li>
+	                            <li><a href="../classes/DrawPolygonMapTool.html">DrawPolygonMapTool</a></li>
+	                            <li><a href="../classes/DrawPolylineMapTool.html">DrawPolylineMapTool</a></li>
+	                            <li><a href="../classes/DrawRectangleMapTool.html">DrawRectangleMapTool</a></li>
+	                            <li><a href="../classes/DynamicPropertiesMixin.html">DynamicPropertiesMixin</a></li>
+	                            <li><a href="../classes/EarthCrs.html">EarthCrs</a></li>
+	                            <li><a href="../classes/EditMapCommand.html">EditMapCommand</a></li>
+	                            <li><a href="../classes/EditMapCommandComponent.html">EditMapCommandComponent</a></li>
+	                            <li><a href="../classes/EditMapController.html">EditMapController</a></li>
+	                            <li><a href="../classes/EditMapNewRoute.html">EditMapNewRoute</a></li>
+	                            <li><a href="../classes/EmberGuidHelper.html">EmberGuidHelper</a></li>
+	                            <li><a href="../classes/EmptyLayersStyleComponent.html">EmptyLayersStyleComponent</a></li>
+	                            <li><a href="../classes/EmptyLayerStyle.html">EmptyLayerStyle</a></li>
+	                            <li><a href="../classes/EmptyLayerStyleLegendComponent.html">EmptyLayerStyleLegendComponent</a></li>
+	                            <li><a href="../classes/Epsg3395Crs.html">Epsg3395Crs</a></li>
+	                            <li><a href="../classes/Epsg3857Crs.html">Epsg3857Crs</a></li>
+	                            <li><a href="../classes/Epsg4326Crs.html">Epsg4326Crs</a></li>
+	                            <li><a href="../classes/ExportDownloadMapCommand.html">ExportDownloadMapCommand</a></li>
+	                            <li><a href="../classes/ExportMapCommand.html">ExportMapCommand</a></li>
+	                            <li><a href="../classes/ExportMapCommandComponent.html">ExportMapCommandComponent</a></li>
+	                            <li><a href="../classes/ExportPrintMapCommand.html">ExportPrintMapCommand</a></li>
+	                            <li><a href="../classes/FeatureResultItemComponent.html">FeatureResultItemComponent</a></li>
+	                            <li><a href="../classes/FlexberryAddLayerDialogComponent.html">FlexberryAddLayerDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryBoundingboxComponent.html">FlexberryBoundingboxComponent</a></li>
+	                            <li><a href="../classes/FlexberryBoundingboxMapLoaderMixin.html">FlexberryBoundingboxMapLoaderMixin</a></li>
+	                            <li><a href="../classes/FlexberryCopyLayerDialogComponent.html">FlexberryCopyLayerDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryDisplaySettingsComponent.html">FlexberryDisplaySettingsComponent</a></li>
+	                            <li><a href="../classes/FlexberryEditLayerAttributesDialogComponent.html">FlexberryEditLayerAttributesDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryEditLayerDialogComponent.html">FlexberryEditLayerDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryEditMapDialogComponent.html">FlexberryEditMapDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryExportMapCommandDialogComponent.html">FlexberryExportMapCommandDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryGeometryAddModeDrawComponent.html">FlexberryGeometryAddModeDrawComponent</a></li>
+	                            <li><a href="../classes/FlexberryGeometryAddModeGeoProviderComponent.html">FlexberryGeometryAddModeGeoProviderComponent</a></li>
+	                            <li><a href="../classes/FlexberryGeometryAddModeManualComponent.html">FlexberryGeometryAddModeManualComponent</a></li>
+	                            <li><a href="../classes/FlexberryGeometryAddModeRhumbComponent.html">FlexberryGeometryAddModeRhumbComponent</a></li>
+	                            <li><a href="../classes/FlexberryGoToMapCommandDialogComponent.html">FlexberryGoToMapCommandDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryIdentificationSettingsComponent.html">FlexberryIdentificationSettingsComponent</a></li>
+	                            <li><a href="../classes/FlexberryIdentifyPanelComponent.html">FlexberryIdentifyPanelComponent</a></li>
+	                            <li><a href="../classes/FlexberryLayersAttributesPanelComponent.html">FlexberryLayersAttributesPanelComponent</a></li>
+	                            <li><a href="../classes/FlexberryLayersComponent.html">FlexberryLayersComponent</a></li>
+	                            <li><a href="../classes/FlexberryLayersDropdownComponent.html">FlexberryLayersDropdownComponent</a></li>
+	                            <li><a href="../classes/FlexberryLayerslegendsComponent.html">FlexberryLayerslegendsComponent</a></li>
+	                            <li><a href="../classes/FlexberryLinksEditorActionsHandlerMixin.html">FlexberryLinksEditorActionsHandlerMixin</a></li>
+	                            <li><a href="../classes/FlexberryLinksEditorComponent.html">FlexberryLinksEditorComponent</a></li>
+	                            <li><a href="../classes/FlexberryMapActionsHandlerMixin.html">FlexberryMapActionsHandlerMixin</a></li>
+	                            <li><a href="../classes/FlexberryMapComponent.html">FlexberryMapComponent</a></li>
+	                            <li><a href="../classes/FlexberryMapinfoComponent.html">FlexberryMapinfoComponent</a></li>
+	                            <li><a href="../classes/FlexberryMaplayerActionsHandlerMixin.html">FlexberryMaplayerActionsHandlerMixin</a></li>
+	                            <li><a href="../classes/FlexberryMaplayerComponent.html">FlexberryMaplayerComponent</a></li>
+	                            <li><a href="../classes/FlexberryMaplayersComponent.html">FlexberryMaplayersComponent</a></li>
+	                            <li><a href="../classes/FlexberryMaptoolbarComponent.html">FlexberryMaptoolbarComponent</a></li>
+	                            <li><a href="../classes/FlexberryMaptoolbarComponet.html">FlexberryMaptoolbarComponet</a></li>
+	                            <li><a href="../classes/FlexberryMultipleSelectComponent.html">FlexberryMultipleSelectComponent</a></li>
+	                            <li><a href="../classes/FlexberryRemoveLayerDialogComponent.html">FlexberryRemoveLayerDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberrySearchComponent.html">FlexberrySearchComponent</a></li>
+	                            <li><a href="../classes/FlexberrySearchMapCommandDialogComponent.html">FlexberrySearchMapCommandDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryTableComponent.html">FlexberryTableComponent</a></li>
+	                            <li><a href="../classes/FullExtentMapCommand.html">FullExtentMapCommand</a></li>
+	                            <li><a href="../classes/FullExtentMapCommandComponent.html">FullExtentMapCommandComponent</a></li>
+	                            <li><a href="../classes/GeocoderBaseLayerComponent.html">GeocoderBaseLayerComponent</a></li>
+	                            <li><a href="../classes/GeocoderOsmOverpassLayerComponent.html">GeocoderOsmOverpassLayerComponent</a></li>
+	                            <li><a href="../classes/GeocoderOsmOverpassLayerSettingsComponent.html">GeocoderOsmOverpassLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/GeocoderOsmRuLayer.html">GeocoderOsmRuLayer</a></li>
+	                            <li><a href="../classes/GeocoderOsmRuLayerComponent.html">GeocoderOsmRuLayerComponent</a></li>
+	                            <li><a href="../classes/GeocoderOsmRuLayerSettingsComponent.html">GeocoderOsmRuLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/GeocoderOsmRuSearchSettingsComponent.html">GeocoderOsmRuSearchSettingsComponent</a></li>
+	                            <li><a href="../classes/GeoJsonFilterParserMixin.html">GeoJsonFilterParserMixin</a></li>
+	                            <li><a href="../classes/GeoJSONLayer.html">GeoJSONLayer</a></li>
+	                            <li><a href="../classes/GeoJSONLayerComponent.html">GeoJSONLayerComponent</a></li>
+	                            <li><a href="../classes/GeoJSONLayerSettingsComponent.html">GeoJSONLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/GeojsonLegendComponent.html">GeojsonLegendComponent</a></li>
+	                            <li><a href="../classes/GeoJSONSearchSettingsComponent.html">GeoJSONSearchSettingsComponent</a></li>
+	                            <li><a href="../classes/GisSearchFormController.html">GisSearchFormController</a></li>
+	                            <li><a href="../classes/GisSearchFormRoute.html">GisSearchFormRoute</a></li>
+	                            <li><a href="../classes/GoToMapCommand.html">GoToMapCommand</a></li>
+	                            <li><a href="../classes/GoToMapCommandComponent.html">GoToMapCommandComponent</a></li>
+	                            <li><a href="../classes/GradientEditComponent.html">GradientEditComponent</a></li>
+	                            <li><a href="../classes/GradientStylesLoadRendererService.html">GradientStylesLoadRendererService</a></li>
+	                            <li><a href="../classes/GraduatedLayersStyleComponent.html">GraduatedLayersStyleComponent</a></li>
+	                            <li><a href="../classes/GraduatedLayerStyleLegendComponent.html">GraduatedLayerStyleLegendComponent</a></li>
+	                            <li><a href="../classes/GroupLayer.html">GroupLayer</a></li>
+	                            <li><a href="../classes/GroupLayerComponent.html">GroupLayerComponent</a></li>
+	                            <li><a href="../classes/GroupLayerSettingsComponent.html">GroupLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/HeaderFromProjectionHelper.html">HeaderFromProjectionHelper</a></li>
+	                            <li><a href="../classes/HistoryControlComponent.html">HistoryControlComponent</a></li>
+	                            <li><a href="../classes/IdentifyAllMarkerMapTool.html">IdentifyAllMarkerMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllMixin.html">IdentifyAllMixin</a></li>
+	                            <li><a href="../classes/IdentifyAllPolygonMapTool.html">IdentifyAllPolygonMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllPolylineMapTool.html">IdentifyAllPolylineMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllRectangleMapTool.html">IdentifyAllRectangleMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllVisibleMarkerMapTool.html">IdentifyAllVisibleMarkerMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllVisiblePolygonMapTool.html">IdentifyAllVisiblePolygonMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllVisiblePolylineMapTool.html">IdentifyAllVisiblePolylineMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllVisibleRectangleMapTool.html">IdentifyAllVisibleRectangleMapTool</a></li>
+	                            <li><a href="../classes/IdentifyMapTool.html">IdentifyMapTool</a></li>
+	                            <li><a href="../classes/IdentifyMapToolComponent.html">IdentifyMapToolComponent</a></li>
+	                            <li><a href="../classes/IdentifyTopMixin.html">IdentifyTopMixin</a></li>
+	                            <li><a href="../classes/IdentifyTopVisibleMarkerMapTool.html">IdentifyTopVisibleMarkerMapTool</a></li>
+	                            <li><a href="../classes/IdentifyTopVisiblePolygonMapTool.html">IdentifyTopVisiblePolygonMapTool</a></li>
+	                            <li><a href="../classes/IdentifyTopVisiblePolylineMapTool.html">IdentifyTopVisiblePolylineMapTool</a></li>
+	                            <li><a href="../classes/IdentifyTopVisibleRectangleMapTool.html">IdentifyTopVisibleRectangleMapTool</a></li>
+	                            <li><a href="../classes/IdentifyVisibleMixin.html">IdentifyVisibleMixin</a></li>
+	                            <li><a href="../classes/ImageMarkersStyleComponent.html">ImageMarkersStyleComponent</a></li>
+	                            <li><a href="../classes/ImageMarkersStyleIconEditorComponent.html">ImageMarkersStyleIconEditorComponent</a></li>
+	                            <li><a href="../classes/ImageMarkerStyle.html">ImageMarkerStyle</a></li>
+	                            <li><a href="../classes/IndexChartComponent.html">IndexChartComponent</a></li>
+	                            <li><a href="../classes/IsNoneHelper.html">IsNoneHelper</a></li>
+	                            <li><a href="../classes/JsonTransform.html">JsonTransform</a></li>
+	                            <li><a href="../classes/KmlLayer.html">KmlLayer</a></li>
+	                            <li><a href="../classes/KmlLayerComponent.html">KmlLayerComponent</a></li>
+	                            <li><a href="../classes/KmlLayerSettingsComponent.html">KmlLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/KmlLegendComponent.html">KmlLegendComponent</a></li>
+	                            <li><a href="../classes/KMLSearchSettingsComponent.html">KMLSearchSettingsComponent</a></li>
+	                            <li><a href="../classes/KnownForTypeHelper.html">KnownForTypeHelper</a></li>
+	                            <li><a href="../classes/LayerModelMixin.html">LayerModelMixin</a></li>
+	                            <li><a href="../classes/LayerResultListActionsHandlerMixin.html">LayerResultListActionsHandlerMixin</a></li>
+	                            <li><a href="../classes/LayerResultListComponent.html">LayerResultListComponent</a></li>
+	                            <li><a href="../classes/LayersStylesEditorComponent.html">LayersStylesEditorComponent</a></li>
+	                            <li><a href="../classes/LayersStylesRendererService.html">LayersStylesRendererService</a></li>
+	                            <li><a href="../classes/LeafletCrsMixin.html">LeafletCrsMixin</a></li>
+	                            <li><a href="../classes/LeafletEventsMixin.html">LeafletEventsMixin</a></li>
+	                            <li><a href="../classes/LeafletMapCommandsMixin.html">LeafletMapCommandsMixin</a></li>
+	                            <li><a href="../classes/LeafletMapInteractionMixin.html">LeafletMapInteractionMixin</a></li>
+	                            <li><a href="../classes/LeafletMapLoaderMixin.html">LeafletMapLoaderMixin</a></li>
+	                            <li><a href="../classes/LeafletMapToolsMixin.html">LeafletMapToolsMixin</a></li>
+	                            <li><a href="../classes/LeafletMapVisibilityMixin.html">LeafletMapVisibilityMixin</a></li>
+	                            <li><a href="../classes/LeafletOptionsMixin.html">LeafletOptionsMixin</a></li>
+	                            <li><a href="../classes/LeafletPropertiesMixin.html">LeafletPropertiesMixin</a></li>
+	                            <li><a href="../classes/LeafletZoomToFeatureMixin.html">LeafletZoomToFeatureMixin</a></li>
+	                            <li><a href="../classes/LegendControlComponent.html">LegendControlComponent</a></li>
+	                            <li><a href="../classes/LineComponent.html">LineComponent</a></li>
+	                            <li><a href="../classes/ListMapController.html">ListMapController</a></li>
+	                            <li><a href="../classes/ListMapRoute.html">ListMapRoute</a></li>
+	                            <li><a href="../classes/LocalStorageBindingMixin.html">LocalStorageBindingMixin</a></li>
+	                            <li><a href="../classes/LocalStorageService.html">LocalStorageService</a></li>
+	                            <li><a href="../classes/LocateMapCommand.html">LocateMapCommand</a></li>
+	                            <li><a href="../classes/LocateMapCommandComponent.html">LocateMapCommandComponent</a></li>
+	                            <li><a href="../classes/MapApiService.html">MapApiService</a></li>
+	                            <li><a href="../classes/MapInfoComponent.html">MapInfoComponent</a></li>
+	                            <li><a href="../classes/MapRoute.html">MapRoute</a></li>
+	                            <li><a href="../classes/MapStoreService.html">MapStoreService</a></li>
+	                            <li><a href="../classes/MarkerIdentifyMapTool.html">MarkerIdentifyMapTool</a></li>
+	                            <li><a href="../classes/MarkersStylesEditorComponent.html">MarkersStylesEditorComponent</a></li>
+	                            <li><a href="../classes/MarkersStylesRendererService.html">MarkersStylesRendererService</a></li>
+	                            <li><a href="../classes/MeasureAreaMapTool.html">MeasureAreaMapTool</a></li>
+	                            <li><a href="../classes/MeasureClearMapTool.html">MeasureClearMapTool</a></li>
+	                            <li><a href="../classes/MeasureCoordinatesMapTool.html">MeasureCoordinatesMapTool</a></li>
+	                            <li><a href="../classes/MeasureDistanceMapTool.html">MeasureDistanceMapTool</a></li>
+	                            <li><a href="../classes/MeasureMapTool.html">MeasureMapTool</a></li>
+	                            <li><a href="../classes/MeasureMapToolComponent.html">MeasureMapToolComponent</a></li>
+	                            <li><a href="../classes/MeasureRadiusMapTool.html">MeasureRadiusMapTool</a></li>
+	                            <li><a href="../classes/MetadataEditMode.html">MetadataEditMode</a></li>
+	                            <li><a href="../classes/MetadataModeComponent.html">MetadataModeComponent</a></li>
+	                            <li><a href="../classes/MiniMapComponent.html">MiniMapComponent</a></li>
+	                            <li><a href="../classes/NewNewPlatformFlexberryGISLayerMetadataERoute.html">NewNewPlatformFlexberryGISLayerMetadataERoute</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberrtGISLayerMetadataEController.html">NewPlatformFlexberrtGISLayerMetadataEController</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberrtGISLayerMetadataLController.html">NewPlatformFlexberrtGISLayerMetadataLController</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerLayerMetadataOfflineSerializer.html">NewPlatformFlexberryGISLayerLayerMetadataOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerLinkModel.html">NewPlatformFlexberryGISLayerLinkModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerLinkOfflineSerializer.html">NewPlatformFlexberryGISLayerLinkOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerLinkSerializer.html">NewPlatformFlexberryGISLayerLinkSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerMetadataERoute.html">NewPlatformFlexberryGISLayerMetadataERoute</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerMetadataLRoute.html">NewPlatformFlexberryGISLayerMetadataLRoute</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerMetadataModel.html">NewPlatformFlexberryGISLayerMetadataModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerMetadataSerializer.html">NewPlatformFlexberryGISLayerMetadataSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLinkMetadataModel.html">NewPlatformFlexberryGISLinkMetadataModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLinkMetadataOfflineSerializer.html">NewPlatformFlexberryGISLinkMetadataOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLinkMetadataSerializer.html">NewPlatformFlexberryGISLinkMetadataSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLinkParameterModel.html">NewPlatformFlexberryGISLinkParameterModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLinkParameterOfflineSerializer.html">NewPlatformFlexberryGISLinkParameterOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLinkParameterSerializer.html">NewPlatformFlexberryGISLinkParameterSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapLayerModel.html">NewPlatformFlexberryGISMapLayerModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapLayerOfflineSerializer.html">NewPlatformFlexberryGISMapLayerOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapLayerSerializer.html">NewPlatformFlexberryGISMapLayerSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapModel.html">NewPlatformFlexberryGISMapModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapObjectSettingModel.html">NewPlatformFlexberryGISMapObjectSettingModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapObjectSettingOfflineSerializer.html">NewPlatformFlexberryGISMapObjectSettingOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapObjectSettingSerializer.html">NewPlatformFlexberryGISMapObjectSettingSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapOfflineSerializer.html">NewPlatformFlexberryGISMapOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapSerializer.html">NewPlatformFlexberryGISMapSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISParameterMetadataOfflineSerializer.html">NewPlatformFlexberryGISParameterMetadataOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISParameterMetadataSerializer.html">NewPlatformFlexberryGISParameterMetadataSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLayerLinkModelMixin.html">NewPlatformFlexberyGISLayerLinkModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLayerLinkOfflineSerializerMixin.html">NewPlatformFlexberyGISLayerLinkOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLayerLinkSerializerMixin.html">NewPlatformFlexberyGISLayerLinkSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLayerMetadataModelMixin.html">NewPlatformFlexberyGISLayerMetadataModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLayerMetadataOfflineSerializerMixin.html">NewPlatformFlexberyGISLayerMetadataOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLayerMetadataSerializerMixin.html">NewPlatformFlexberyGISLayerMetadataSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLinkMetadataModelMixin.html">NewPlatformFlexberyGISLinkMetadataModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLinkMetadataOfflineSerializerMixin.html">NewPlatformFlexberyGISLinkMetadataOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLinkMetadataSerializerMixin.html">NewPlatformFlexberyGISLinkMetadataSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLinkParameterModelMixin.html">NewPlatformFlexberyGISLinkParameterModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLinkParameterOfflineSerializerMixin.html">NewPlatformFlexberyGISLinkParameterOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLinkParameterSerializerMixin.html">NewPlatformFlexberyGISLinkParameterSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapLayerModelMixin.html">NewPlatformFlexberyGISMapLayerModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapLayerOfflineSerializerMixin.html">NewPlatformFlexberyGISMapLayerOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapLayerSerializerMixin.html">NewPlatformFlexberyGISMapLayerSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapModelMixin.html">NewPlatformFlexberyGISMapModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapObjectSettingModelMixin.html">NewPlatformFlexberyGISMapObjectSettingModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapObjectSettingOfflineSerializerMixin.html">NewPlatformFlexberyGISMapObjectSettingOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapObjectSettingSerializerMixin.html">NewPlatformFlexberyGISMapObjectSettingSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapOfflineSerializerMixin.html">NewPlatformFlexberyGISMapOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapSerializerMixin.html">NewPlatformFlexberyGISMapSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISParameterMetadataModelMixin.html">NewPlatformFlexberyGISParameterMetadataModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISParameterMetadataOfflineSerializerMixin.html">NewPlatformFlexberyGISParameterMetadataOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISParameterMetadataSerializerMixin.html">NewPlatformFlexberyGISParameterMetadataSerializerMixin</a></li>
+	                            <li><a href="../classes/ObjectContainsHelper.html">ObjectContainsHelper</a></li>
+	                            <li><a href="../classes/OdataFilterParserMixin.html">OdataFilterParserMixin</a></li>
+	                            <li><a href="../classes/ODataSettingsComponent.html">ODataSettingsComponent</a></li>
+	                            <li><a href="../classes/ODataVectorlayer.html">ODataVectorlayer</a></li>
+	                            <li><a href="../classes/ODataVectorLayerComponent.html">ODataVectorLayerComponent</a></li>
+	                            <li><a href="../classes/ODataVectorSearchSettingsComponent.html">ODataVectorSearchSettingsComponent</a></li>
+	                            <li><a href="../classes/OSMLayerComponent.html">OSMLayerComponent</a></li>
+	                            <li><a href="../classes/PieComponent.html">PieComponent</a></li>
+	                            <li><a href="../classes/PolygonIdentifyMapTool.html">PolygonIdentifyMapTool</a></li>
+	                            <li><a href="../classes/PolylineIdentifyMapTool.html">PolylineIdentifyMapTool</a></li>
+	                            <li><a href="../classes/Proj4Crs.html">Proj4Crs</a></li>
+	                            <li><a href="../classes/RectangleIdentifyMapTool.html">RectangleIdentifyMapTool</a></li>
+	                            <li><a href="../classes/RectangleMapTool.html">RectangleMapTool</a></li>
+	                            <li><a href="../classes/RegexTestHelper.html">RegexTestHelper</a></li>
+	                            <li><a href="../classes/ScaleControlComponent.html">ScaleControlComponent</a></li>
+	                            <li><a href="../classes/SearchAttributesMapCommand.html">SearchAttributesMapCommand</a></li>
+	                            <li><a href="../classes/SearchClearMapCommand.html">SearchClearMapCommand</a></li>
+	                            <li><a href="../classes/SearchMapCommand.html">SearchMapCommand</a></li>
+	                            <li><a href="../classes/SearchMapCommandComponent.html">SearchMapCommandComponent</a></li>
+	                            <li><a href="../classes/SearchShowMapCommand.html">SearchShowMapCommand</a></li>
+	                            <li><a href="../classes/SimpleCrs.html">SimpleCrs</a></li>
+	                            <li><a href="../classes/SimpleLayersStyleComponent.html">SimpleLayersStyleComponent</a></li>
+	                            <li><a href="../classes/SimpleLayersStyleFillEditorComponent.html">SimpleLayersStyleFillEditorComponent</a></li>
+	                            <li><a href="../classes/SimpleLayersStylePathEditorComponent.html">SimpleLayersStylePathEditorComponent</a></li>
+	                            <li><a href="../classes/SimpleLayersStyleStrokeDashArrayDropdownComponent.html">SimpleLayersStyleStrokeDashArrayDropdownComponent</a></li>
+	                            <li><a href="../classes/SimpleLayersStyleStrokeEditorComponent.html">SimpleLayersStyleStrokeEditorComponent</a></li>
+	                            <li><a href="../classes/SimpleLayersStyleStrokeLineCapDropdownComponent.html">SimpleLayersStyleStrokeLineCapDropdownComponent</a></li>
+	                            <li><a href="../classes/SimpleLayersStyleStrokeLineJoinDropdownComponent.html">SimpleLayersStyleStrokeLineJoinDropdownComponent</a></li>
+	                            <li><a href="../classes/SimpleLayerStyle.html">SimpleLayerStyle</a></li>
+	                            <li><a href="../classes/SimpleLayerStyleLegendComponent.html">SimpleLayerStyleLegendComponent</a></li>
+	                            <li><a href="../classes/SpatialBookmarkComponent.html">SpatialBookmarkComponent</a></li>
+	                            <li><a href="../classes/SwitchScaleControlComponent.html">SwitchScaleControlComponent</a></li>
+	                            <li><a href="../classes/TileLayer.html">TileLayer</a></li>
+	                            <li><a href="../classes/TileLayerComponent.html">TileLayerComponent</a></li>
+	                            <li><a href="../classes/TileLayerSettingsComponent.html">TileLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/UniqueLayersStyleComponent.html">UniqueLayersStyleComponent</a></li>
+	                            <li><a href="../classes/UniqueLayerStyle.html">UniqueLayerStyle</a></li>
+	                            <li><a href="../classes/UniqueLayerStyleLegendComponent.html">UniqueLayerStyleLegendComponent</a></li>
+	                            <li><a href="../classes/Utils.CheckIntersect.html">Utils.CheckIntersect</a></li>
+	                            <li><a href="../classes/Utils.Convertor.html">Utils.Convertor</a></li>
+	                            <li><a href="../classes/Utils.Interpolator.html">Utils.Interpolator</a></li>
+	                            <li><a href="../classes/Utils.LayerCopy.html">Utils.LayerCopy</a></li>
+	                            <li><a href="../classes/Utils.LayerCreate.html">Utils.LayerCreate</a></li>
+	                            <li><a href="../classes/Utils.Layers.html">Utils.Layers</a></li>
+	                            <li><a href="../classes/Utils.LeafletOpacity.html">Utils.LeafletOpacity</a></li>
+	                            <li><a href="../classes/VectorLayer.html">VectorLayer</a></li>
+	                            <li><a href="../classes/VectorLegendComponent.html">VectorLegendComponent</a></li>
+	                            <li><a href="../classes/WfsFilterParserMixin.html">WfsFilterParserMixin</a></li>
+	                            <li><a href="../classes/WfsLayer.html">WfsLayer</a></li>
+	                            <li><a href="../classes/WfsLayerComponent.html">WfsLayerComponent</a></li>
+	                            <li><a href="../classes/WfsLayerSettingsComponent.html">WfsLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/WfsLegendComponent.html">WfsLegendComponent</a></li>
+	                            <li><a href="../classes/WFSSearchSettingsComponent.html">WFSSearchSettingsComponent</a></li>
+	                            <li><a href="../classes/WmsLayer.html">WmsLayer</a></li>
+	                            <li><a href="../classes/WMSLayerComponent.html">WMSLayerComponent</a></li>
+	                            <li><a href="../classes/WmsLayerSettingsComponent.html">WmsLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/WmsLegendComponent.html">WmsLegendComponent</a></li>
+	                            <li><a href="../classes/WmsSingleTileLayer.html">WmsSingleTileLayer</a></li>
+	                            <li><a href="../classes/WMSSingleTileLayerComponent.html">WMSSingleTileLayerComponent</a></li>
+	                            <li><a href="../classes/WmsSingleTileLayerSettingsComponent.html">WmsSingleTileLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/WmsSingleTileLegendComponent.html">WmsSingleTileLegendComponent</a></li>
+	                            <li><a href="../classes/WmsWfsLayer.html">WmsWfsLayer</a></li>
+	                            <li><a href="../classes/WmsWfsLayerComponent.html">WmsWfsLayerComponent</a></li>
+	                            <li><a href="../classes/YandexMapsGeoCoder.html">YandexMapsGeoCoder</a></li>
+	                            <li><a href="../classes/ZoomInMapTool.html">ZoomInMapTool</a></li>
+	                            <li><a href="../classes/ZoomInMapToolComponent.html">ZoomInMapToolComponent</a></li>
+	                            <li><a href="../classes/ZoomOutMaptool.html">ZoomOutMaptool</a></li>
+	                            <li><a href="../classes/ZoomOutMapToolComponent.html">ZoomOutMapToolComponent</a></li>
+	                            <li><a href="../classes/ZoomsliderControlComponent.html">ZoomsliderControlComponent</a></li>
+	                    </ul>
+	                </div>
+	    
+	                <div class="tab-pane" id="modules">
+	                    <ul id="api-modules" class="nav nav-list">
+	                            <li><a href="../modules/ember-flexberry.html">ember-flexberry</a></li>
+	                            <li><a href="../modules/ember-flexberry-gis.html">ember-flexberry-gis</a></li>
+	                            <li><a href="../modules/ember-flexberry-gis-csw.html">ember-flexberry-gis-csw</a></li>
+	                            <li><a href="../modules/ember-flexberry-gis-dummy.html">ember-flexberry-gis-dummy</a></li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>FlexberryIdentifyPanelComponent <small>Class</small></h1>
+</div>
+
+<div class="well well-small">
+
+        <div class="extends">
+            Extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+        </div>
+
+        <div class="foundat">
+            Defined in: <a href="../files/addon_components_flexberry-identify-panel.js.html#l47"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:47</code></a>
+        </div>
+
+            Module: <a href="../modules/ember-flexberry-gis.html">ember-flexberry-gis</a>
+
+</div>
+
+
+<div class="well well-small">
+    <p>Flexberry identify panel component.</p>
+<p>Usage:
+templates/my-map-form.hbs</p>
+<pre class="code prettyprint"><code class="language-handlebars">{{flexberry-identify-panel
+  layerMode=identifyToolSettings.layerMode
+  toolMode=identifyToolSettings.toolMode
+  bufferActive=identifyToolSettings.bufferActive
+  bufferUnits=identifyToolSettings.bufferUnits
+  bufferRadius=identifyToolSettings.bufferRadius
+  layers=model.hierarchy
+  leafletMap=leafletMap
+  identificationFinished=(action "onIdentificationFinished")
+  identificationClear=(action "onIdentificationClear")
+}}
+</code></pre>
+
+</div>
+
+
+<div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#index">Index</a></li>
+
+            <li><a data-toggle="tab" href="#methods">Methods</a></li>
+            <li><a data-toggle="tab" href="#properties">Properties</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="index" class="tab-pane active">
+            <h2 class="off-left">Item Index</h2>
+
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods extends">
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__bufferSettingsDidChange" data-tablink="_bufferSettingsDidChange">_bufferSettingsDidChange</a>
+
+                            </li>
+                            <li class="index-item method private">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__enableActualIdentifyTool" data-tablink="_enableActualIdentifyTool">_enableActualIdentifyTool</a>
+
+                            </li>
+                            <li class="index-item method private">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__leafletMapDidChange" data-tablink="_leafletMapDidChange">_leafletMapDidChange</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_actions.onBufferUnitsChange" data-tablink="actions.onBufferUnitsChange">actions.onBufferUnitsChange</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_actions.onIdentificationClear" data-tablink="actions.onIdentificationClear">actions.onIdentificationClear</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_actions.onLayerModeChange" data-tablink="actions.onLayerModeChange">actions.onLayerModeChange</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_actions.onToolModeChange" data-tablink="actions.onToolModeChange">actions.onToolModeChange</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_onIdentificationFinished" data-tablink="onIdentificationFinished">onIdentificationFinished</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_sendingActions.identificationClear" data-tablink="sendingActions.identificationClear">sendingActions.identificationClear</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_sendingActions.identificationFinished" data-tablink="sendingActions.identificationFinished">sendingActions.identificationFinished</a>
+
+                            </li>
+                    </ul>
+                </div>
+
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties extends">
+                            <li class="index-item property private">
+                                <a href="#" data-tabid="#properties" data-anchor="#property__getIdentifyToolProperties" data-tablink="_getIdentifyToolProperties">_getIdentifyToolProperties</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property__identifyToolName" data-tablink="_identifyToolName">_identifyToolName</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_allCaption" data-tablink="allCaption">allCaption</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_allIconClass" data-tablink="allIconClass">allIconClass</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_bufferActive" data-tablink="bufferActive">bufferActive</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_bufferActiveCaption" data-tablink="bufferActiveCaption">bufferActiveCaption</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_bufferRadius" data-tablink="bufferRadius">bufferRadius</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_bufferRadiusCaption" data-tablink="bufferRadiusCaption">bufferRadiusCaption</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_bufferUnits" data-tablink="bufferUnits">bufferUnits</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_bufferUnitsList" data-tablink="bufferUnitsList">bufferUnitsList</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_class" data-tablink="class">class</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_clearCaption" data-tablink="clearCaption">clearCaption</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_clearIconClass" data-tablink="clearIconClass">clearIconClass</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_flexberryClassNames" data-tablink="flexberryClassNames">flexberryClassNames</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_layerMode" data-tablink="layerMode">layerMode</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_leafletMap" data-tablink="leafletMap">leafletMap</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_markerCaption" data-tablink="markerCaption">markerCaption</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_markerIconClass" data-tablink="markerIconClass">markerIconClass</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_polygonCaption" data-tablink="polygonCaption">polygonCaption</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_polygonIconClass" data-tablink="polygonIconClass">polygonIconClass</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_polylineCaption" data-tablink="polylineCaption">polylineCaption</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_polylineIconClass" data-tablink="polylineIconClass">polylineIconClass</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_rectangleCaption" data-tablink="rectangleCaption">rectangleCaption</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_rectangleIconClass" data-tablink="rectangleIconClass">rectangleIconClass</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_tagName" data-tablink="tagName">tagName</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_toolMode" data-tablink="toolMode">toolMode</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_topCaption" data-tablink="topCaption">topCaption</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_topIconClass" data-tablink="topIconClass">topIconClass</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_visibleCaption" data-tablink="visibleCaption">visibleCaption</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_visibleIconClass" data-tablink="visibleIconClass">visibleIconClass</a>
+
+                            </li>
+                    </ul>
+                </div>
+
+
+        </div>
+
+            <div id="methods" class="tab-pane">
+                <h2 class="off-left">Methods</h2>
+
+                    <div id="method__bufferSettingsDidChange" class="method item">
+                        <h3 class="name"><code>_bufferSettingsDidChange</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l462"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:462</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Handles changes in buffer settings.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+                    <div id="method__enableActualIdentifyTool" class="method item private">
+                        <h3 class="name"><code>_enableActualIdentifyTool</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l471"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:471</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Enables identify tool related to actual settings.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+                    <div id="method__leafletMapDidChange" class="method item private">
+                        <h3 class="name"><code>_leafletMapDidChange</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l446"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:446</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Observes changes in 'leafletMap' property</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+                    <div id="method_actions.onBufferUnitsChange" class="method item">
+                        <h3 class="name"><code>actions.onBufferUnitsChange</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>unitsLocalizedCaption</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>unitsValue</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l396"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:396</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Handles buffer units dropdown value change.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">unitsLocalizedCaption</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Selected units localized caption.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">unitsValue</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Selected units value.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
+                    <div id="method_actions.onIdentificationClear" class="method item">
+                        <h3 class="name"><code>actions.onIdentificationClear</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>e</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l420"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:420</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Handles clear button's 'click' action.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">e</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Click event-object.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
+                    <div id="method_actions.onLayerModeChange" class="method item">
+                        <h3 class="name"><code>actions.onLayerModeChange</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l374"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:374</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Handles layer mode button's 'click' action.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+                    <div id="method_actions.onToolModeChange" class="method item">
+                        <h3 class="name"><code>actions.onToolModeChange</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l385"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:385</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Handles tool mode button's 'click' action.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+                    <div id="method_onIdentificationFinished" class="method item">
+                        <h3 class="name"><code>onIdentificationFinished</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>e</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l407"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:407</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Handles 'flexberry-map:identificationFinished' event of leaflet map.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">e</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Event object.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
+                    <div id="method_sendingActions.identificationClear" class="method item">
+                        <h3 class="name"><code>sendingActions.identificationClear</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l494"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:494</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Component's action invoking when idenification results must be cleared.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+                    <div id="method_sendingActions.identificationFinished" class="method item">
+                        <h3 class="name"><code>sendingActions.identificationFinished</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l488"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:488</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Component's action invoking when idenification finished and results must be handled.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+            </div>
+
+            <div id="properties" class="tab-pane">
+                <h2 class="off-left">Properties</h2>
+
+                    <div id="property__getIdentifyToolProperties" class="property item private">
+                        <h3 class="name"><code>_getIdentifyToolProperties</code></h3>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l89"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:89</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Gets actual 'identify' tool properties.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+                    <div id="property__identifyToolName" class="property item">
+                        <h3 class="name"><code>_identifyToolName</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l70"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:70</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Identify tool name computed by the specified tool settings.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+                    <div id="property_allCaption" class="property item">
+                        <h3 class="name"><code>allCaption</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l146"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:146</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>layers option's 'all' mode's caption.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> t(&#x27;components.flexberry-identify-panel.identify-all.caption&#x27;)</p>
+                    
+                    
+                    </div>
+                    <div id="property_allIconClass" class="property item">
+                        <h3 class="name"><code>allIconClass</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l155"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:155</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>layers option's 'all' mode's icon CSS-class names.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;square outline icon&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="property_bufferActive" class="property item">
+                        <h3 class="name"><code>bufferActive</code></h3>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l337"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:337</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Flag: indicates whether idenify tool's buffer if active or not.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> false</p>
+                    
+                    
+                    </div>
+                    <div id="property_bufferActiveCaption" class="property item">
+                        <h3 class="name"><code>bufferActiveCaption</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l290"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:290</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Active buffer caption.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> t(&#x27;components.flexberry-identify-panel.buffer.active-caption&#x27;)</p>
+                    
+                    
+                    </div>
+                    <div id="property_bufferRadius" class="property item">
+                        <h3 class="name"><code>bufferRadius</code></h3>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l355"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:355</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Idenify tool buffer radius in selected units.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> 0</p>
+                    
+                    
+                    </div>
+                    <div id="property_bufferRadiusCaption" class="property item">
+                        <h3 class="name"><code>bufferRadiusCaption</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l299"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:299</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Buffer radius caption.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> t(&#x27;components.flexberry-identify-panel.buffer.radius-caption&#x27;)</p>
+                    
+                    
+                    </div>
+                    <div id="property_bufferUnits" class="property item">
+                        <h3 class="name"><code>bufferUnits</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l346"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:346</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Idenify tool buffer raduus units.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;kilometers&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="property_bufferUnitsList" class="property item">
+                        <h3 class="name"><code>bufferUnitsList</code></h3>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l308"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:308</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Buffer radius units with locale.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+                    <div id="property_class" class="property item">
+                        <h3 class="name"><code>class</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l137"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:137</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>layers option's additional CSS-class.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> null</p>
+                    
+                    
+                    </div>
+                    <div id="property_clearCaption" class="property item">
+                        <h3 class="name"><code>clearCaption</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l272"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:272</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>clear button's caption.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> t(&#x27;components.flexberry-identify-panel.clear.caption&#x27;)</p>
+                    
+                    
+                    </div>
+                    <div id="property_clearIconClass" class="property item">
+                        <h3 class="name"><code>clearIconClass</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l281"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:281</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>clear button's icon CSS-class names.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;remove icon&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="property_flexberryClassNames" class="property item">
+                        <h3 class="name"><code>flexberryClassNames</code></h3>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                    
+                    
+                            <span class="flag static">static</span>
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l9"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:9</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Component's CSS-classes names.
+                    JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                            <h4>Sub-properties:</h4>
+                    
+                            <ul class="params-list">
+                                <li class="param">
+                                        <code class="param-name">prefix</code>
+                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                                    <div class="param-description">
+                                        <p>Component's CSS-class names prefix ('flexberry-identify-panel').</p>
+                    
+                                    </div>
+                    
+                                </li>
+                                <li class="param">
+                                        <code class="param-name">wrapper</code>
+                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                                    <div class="param-description">
+                                        <p>Component's wrapping <div> CSS-class name ('flexberry-identify-panel').</p>
+                    
+                                    </div>
+                    
+                                </li>
+                                <li class="param">
+                                        <code class="param-name">layersOptions</code>
+                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                                    <div class="param-description">
+                                        <p>Component's layers-options menu CSS-class name ('flexberry-identify-panel-layers-options').</p>
+                    
+                                    </div>
+                    
+                                </li>
+                                <li class="param">
+                                        <code class="param-name">toolsOptions</code>
+                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                                    <div class="param-description">
+                                        <p>Component's tools-options menu CSS-class name ('flexberry-identify-panel-tools-options').</p>
+                    
+                                    </div>
+                    
+                                </li>
+                                <li class="param">
+                                        <code class="param-name">identifyAll</code>
+                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                                    <div class="param-description">
+                                        <p>Component's identify-all mode's CSS-class name ('flexberry-identify-panel-all-layers-option').</p>
+                    
+                                    </div>
+                    
+                                </li>
+                                <li class="param">
+                                        <code class="param-name">identifyAllVisible</code>
+                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                                    <div class="param-description">
+                                        <p>Component's identify-all-visible mode's CSS-class name ('flexberry-identify-panel-all-visible-layers-option').</p>
+                    
+                                    </div>
+                    
+                                </li>
+                                <li class="param">
+                                        <code class="param-name">identifyTopVisible</code>
+                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                                    <div class="param-description">
+                                        <p>Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-top-visible-layers-option').</p>
+                    
+                                    </div>
+                    
+                                </li>
+                                <li class="param">
+                                        <code class="param-name">identifyRectangle</code>
+                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                                    <div class="param-description">
+                                        <p>Component's identify-all-visible mode's CSS-class name ('flexberry-identify-panel-rectangle-tools-option').</p>
+                    
+                                    </div>
+                    
+                                </li>
+                                <li class="param">
+                                        <code class="param-name">identifyPolygon</code>
+                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                                    <div class="param-description">
+                                        <p>Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-polygon-tools-option').</p>
+                    
+                                    </div>
+                    
+                                </li>
+                                <li class="param">
+                                        <code class="param-name">identifyMarke</code>
+                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                                    <div class="param-description">
+                                        <p>Component's identify-all-visible mode's CSS-class name ('flexberry-identify-panel-marker-tools-option').</p>
+                    
+                                    </div>
+                    
+                                </li>
+                                <li class="param">
+                                        <code class="param-name">identifyPolyline</code>
+                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                                    <div class="param-description">
+                                        <p>Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-polyline-tools-option').</p>
+                    
+                                    </div>
+                    
+                                </li>
+                                <li class="param">
+                                        <code class="param-name">otherOptions</code>
+                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                                    <div class="param-description">
+                                        <p>Component's options div CSS-class name ('flexberry-identify-panel-options').</p>
+                    
+                                    </div>
+                    
+                                </li>
+                            </ul>
+                    </div>
+                    <div id="property_layerMode" class="property item">
+                        <h3 class="name"><code>layerMode</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l319"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:319</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Idenify tool layers mode (which layers to identify).</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;visible&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="property_leafletMap" class="property item">
+                        <h3 class="name"><code>leafletMap</code></h3>
+                        <span class="type"><a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l364"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:364</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Leaflet map.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> null</p>
+                    
+                    
+                    </div>
+                    <div id="property_markerCaption" class="property item">
+                        <h3 class="name"><code>markerCaption</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l200"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:200</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Tools option's 'marker' mode's caption.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> t(&#x27;components.flexberry-identify-panel.marker.caption&#x27;)</p>
+                    
+                    
+                    </div>
+                    <div id="property_markerIconClass" class="property item">
+                        <h3 class="name"><code>markerIconClass</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l209"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:209</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Tools option's 'marker' mode's icon CSS-class names.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;map marker icon&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="property_polygonCaption" class="property item">
+                        <h3 class="name"><code>polygonCaption</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l254"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:254</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Tools option's 'polygon' mode's caption.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> t(&#x27;components.flexberry-identify-panel.polygon.caption&#x27;)</p>
+                    
+                    
+                    </div>
+                    <div id="property_polygonIconClass" class="property item">
+                        <h3 class="name"><code>polygonIconClass</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l263"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:263</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Tools option's 'polygon' mode's icon CSS-class names.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;star icon&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="property_polylineCaption" class="property item">
+                        <h3 class="name"><code>polylineCaption</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l218"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:218</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Tools option's 'polyline' mode's caption.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> t(&#x27;components.flexberry-identify-panel.polyline.caption&#x27;)</p>
+                    
+                    
+                    </div>
+                    <div id="property_polylineIconClass" class="property item">
+                        <h3 class="name"><code>polylineIconClass</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l227"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:227</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Tools option's 'polyline' mode's icon CSS-class names.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;minus icon&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="property_rectangleCaption" class="property item">
+                        <h3 class="name"><code>rectangleCaption</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l236"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:236</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Tools option's 'rectangle' mode's caption.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> t(&#x27;components.flexberry-identify-panel.rectangle.caption&#x27;)</p>
+                    
+                    
+                    </div>
+                    <div id="property_rectangleIconClass" class="property item">
+                        <h3 class="name"><code>rectangleIconClass</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l245"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:245</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Tools option's 'rectangle' mode's icon CSS-class names.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;square outline icon&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="property_tagName" class="property item">
+                        <h3 class="name"><code>tagName</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l127"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:127</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Overridden <a href="http://emberjs.com/api/classes/Ember.Component.html#property_tagName">'tagName'</a>
+                    to disable a component's wrapping element.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="property_toolMode" class="property item">
+                        <h3 class="name"><code>toolMode</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l328"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:328</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Identify tool mode (in which type of area to identify).</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;marker&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="property_topCaption" class="property item">
+                        <h3 class="name"><code>topCaption</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l182"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:182</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>layers option's 'top' mode's caption.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> t(&#x27;components.flexberry-identify-panel.identify-top-visible.caption&#x27;)</p>
+                    
+                    
+                    </div>
+                    <div id="property_topIconClass" class="property item">
+                        <h3 class="name"><code>topIconClass</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l191"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:191</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>layers option's 'top' mode's icon CSS-class names.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;square outline icon&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="property_visibleCaption" class="property item">
+                        <h3 class="name"><code>visibleCaption</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l164"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:164</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>layers option's 'visible' mode's caption.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> t(&#x27;components.flexberry-identify-panel.identify-all-visible.caption&#x27;)</p>
+                    
+                    
+                    </div>
+                    <div id="property_visibleIconClass" class="property item">
+                        <h3 class="name"><code>visibleIconClass</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l173"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:173</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>layers option's 'visible' mode's icon CSS-class names.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;square outline icon&#x27;</p>
+                    
+                    
+                    </div>
+            </div>
+
+
+    </div>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>
