@@ -3,7 +3,7 @@
  */
 
 import Ember from 'ember';
-import zoomToBounds from '../utils/zoom-to-bounds';
+import { zoomToBounds } from '../utils/zoom-to-bounds';
 
 /**
   Mixin with the logic of finding a feature on the map.

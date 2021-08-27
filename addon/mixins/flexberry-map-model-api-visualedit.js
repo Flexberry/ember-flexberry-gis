@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import turfCombine from 'npm:@turf/combine';
 import SnapDraw from './snap-draw';
-import zoomToBounds from '../utils/zoom-to-bounds';
+import { zoomToBounds } from '../utils/zoom-to-bounds';
 
 export default Ember.Mixin.create(SnapDraw, {
 

@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import layout from '../../templates/components/map-commands-dialogs/export';
 import html2canvasClone from '../../utils/html2canvas-clone';
+import { fitBounds } from '../../utils/zoom-to-bounds';
 
 /**
   Constants representing default print/eport options.
@@ -923,6 +924,15 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   _leafletMapInitialBounds: null,
 
   /**
+    Leaflet map's initial zoom which must be restored after dialog will be closed.
+
+    @property _leafletMapInitialZoom
+    @type Number
+    @private
+  */
+  _leafletMapInitialZoom: null,
+
+  /**
     Leaflet map container's clone.
 
     @property _$leafletMapClone
@@ -1379,17 +1389,18 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     @returns <a htef="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Promise which will be resolved when fitting will be finished.
   */
-  _fitBoundsOfLeafletMap(bounds) {
+  _fitBoundsOfLeafletMap(bounds, zoom) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletMap = this.get('leafletMap');
+      if (Ember.isNone(zoom)) {
+        zoom = leafletMap.getZoom();
+      }
 
       leafletMap.once('moveend', () => {
         resolve();
       });
 
-      leafletMap.fitBounds(bounds, {
-        animate: false
-      });
+      fitBounds(leafletMap, bounds, { maxZoom: zoom });
     });
   },
 
@@ -1508,6 +1519,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let leafletMap = this.get('leafletMap');
     let leafletMapInitialBounds = leafletMap.getBounds();
     this.set('_leafletMapInitialBounds', leafletMapInitialBounds);
+    let _leafletMapInitialZoom = leafletMap.getZoom();
+    this.set('_leafletMapInitialZoom', _leafletMapInitialZoom);
 
     // Retrieve leaflet map wrapper.
     let $leafletMap = Ember.$(leafletMap._container);
@@ -1548,6 +1561,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let leafletMap = this.get('leafletMap');
     let $leafletMap = Ember.$(leafletMap._container);
     let leafletMapInitialBounds = this.get('_leafletMapInitialBounds');
+    let leafletMapInitialZoom = this.get('_leafletMapInitialZoom');
 
     // Retrieve leaflet map wrapper.
     let $leafletMapClone = this.get('_$leafletMapClone');
@@ -1565,12 +1579,12 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     Ember.$('.leaflet-bottom.leaflet-right', $leafletMapControls).children().show();
 
     // Fit bounds to avoid visual jumps inside restored interactive map.
-    this._fitBoundsOfLeafletMap(leafletMapInitialBounds).then(() => {
+    this._fitBoundsOfLeafletMap(leafletMapInitialBounds, leafletMapInitialZoom).then(() => {
       $leafletMap.appendTo($leafletMapWrapper[0]);
 
       // Invalidate map size and then fit it's bounds again.
       return this._invalidateSizeOfLeafletMap();
-    }).then(() => { return this._fitBoundsOfLeafletMap(leafletMapInitialBounds); });
+    }).then(() => { return this._fitBoundsOfLeafletMap(leafletMapInitialBounds, leafletMapInitialZoom); });
   },
 
   /**
