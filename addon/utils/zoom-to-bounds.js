@@ -25,7 +25,7 @@ let zoomToBounds = function(bounds, leafletMap, minZoom, maxZoom) {
   }
 
   fitBounds(leafletMap, bounds, { paddingTopLeft: [widthPadding, 0], maxZoom: zoom });
-}
+};
 
 // Overwrites, because L.Map._getBoundsCenterZoom return min zoom from zoom of bounds and maxZoom from options.
 let fitBounds = function(leafletMap, bounds, options) {

@@ -1,4 +1,4 @@
-import zoomToBounds from 'ember-flexberry-gis/utils/zoom-to-bounds';
+import { zoomToBounds } from 'ember-flexberry-gis/utils/zoom-to-bounds';
 import { module, test } from 'qunit';
 import sinon from 'sinon';
 
