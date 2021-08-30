@@ -14948,7 +14948,7 @@ define('dummy/tests/unit/utils/zoom-to-bounds-test', ['exports', 'ember-flexberr
       done();
       fitBoundsSpy.restore();
     });
-    (0, _emberFlexberryGisUtilsZoomToBounds['default'])(bounds, leafletMap);
+    (0, _emberFlexberryGisUtilsZoomToBounds.zoomToBounds)(bounds, leafletMap);
   });
   (0, _qunit.test)('fitBounds by minZoom', function (assert) {
     assert.expect(2);
@@ -14968,7 +14968,7 @@ define('dummy/tests/unit/utils/zoom-to-bounds-test', ['exports', 'ember-flexberr
     });
     var minZoom = 11;
     var maxZoom = undefined;
-    (0, _emberFlexberryGisUtilsZoomToBounds['default'])(bounds, leafletMap, minZoom, maxZoom);
+    (0, _emberFlexberryGisUtilsZoomToBounds.zoomToBounds)(bounds, leafletMap, minZoom, maxZoom);
   });
   (0, _qunit.test)('fitBounds by maxZoom', function (assert) {
     assert.expect(2);
@@ -14988,7 +14988,7 @@ define('dummy/tests/unit/utils/zoom-to-bounds-test', ['exports', 'ember-flexberr
     });
     var minZoom = undefined;
     var maxZoom = 9;
-    (0, _emberFlexberryGisUtilsZoomToBounds['default'])(bounds, leafletMap, minZoom, maxZoom);
+    (0, _emberFlexberryGisUtilsZoomToBounds.zoomToBounds)(bounds, leafletMap, minZoom, maxZoom);
   });
   (0, _qunit.test)('fitBounds by maxZoom and minZoom', function (assert) {
     assert.expect(2);
@@ -15008,7 +15008,7 @@ define('dummy/tests/unit/utils/zoom-to-bounds-test', ['exports', 'ember-flexberr
     });
     var minZoom = 9;
     var maxZoom = 11;
-    (0, _emberFlexberryGisUtilsZoomToBounds['default'])(bounds, leafletMap, minZoom, maxZoom);
+    (0, _emberFlexberryGisUtilsZoomToBounds.zoomToBounds)(bounds, leafletMap, minZoom, maxZoom);
   });
   (0, _qunit.test)('fitBounds by zoom of bounds', function (assert) {
     assert.expect(2);
@@ -15028,7 +15028,7 @@ define('dummy/tests/unit/utils/zoom-to-bounds-test', ['exports', 'ember-flexberr
     });
     var minZoom = 9;
     var maxZoom = 11;
-    (0, _emberFlexberryGisUtilsZoomToBounds['default'])(bounds, leafletMap, minZoom, maxZoom);
+    (0, _emberFlexberryGisUtilsZoomToBounds.zoomToBounds)(bounds, leafletMap, minZoom, maxZoom);
   });
 });
 define('dummy/tests/unit/utils/zoom-to-bounds-test.jscs-test', ['exports'], function (exports) {
