@@ -49394,6 +49394,9 @@ img.item-minus {
 .leaflet-zoomto-pane {
   z-index: 2000;
 }
+.hidden {
+  display: none !important;
+}
 /**
  * All ember-flexberry addon styles.
  */
