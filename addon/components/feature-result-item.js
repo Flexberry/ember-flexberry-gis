@@ -6,7 +6,7 @@ import Ember from 'ember';
 import layout from '../templates/components/feature-result-item';
 import { translationMacro as t } from 'ember-i18n';
 import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
-import zoomToBounds from '../utils/zoom-to-bounds';
+import { zoomToBounds } from '../utils/zoom-to-bounds';
 
 /**
   Component for display GeoJSON feature object details
