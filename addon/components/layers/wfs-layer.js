@@ -450,6 +450,7 @@ export default BaseVectorLayer.extend({
       leafletObject.clearLayers();
       leafletObject._labelsLayer.clearLayers();
     }
+
     this.continueLoad();
   }),
 

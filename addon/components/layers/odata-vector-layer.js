@@ -1164,6 +1164,7 @@ export default BaseVectorLayer.extend({
       leafletObject.clearLayers();
       leafletObject._labelsLayer.clearLayers();
     }
+
     this.continueLoad();
   }),
 
@@ -1222,11 +1223,11 @@ export default BaseVectorLayer.extend({
               .from(obj.modelName)
               .selectByProjection(obj.projectionName);
 
-              if (equals.length === 1) {
-                queryBuilder.where(this.addIsForFilter(this.addTimeFilter(equals[0])));
-              } else {
-                queryBuilder.where(this.addIsForFilter(this.addTimeFilter(new Query.ComplexPredicate(Query.Condition.Or, ...equals))));
-              }
+            if (equals.length === 1) {
+              queryBuilder.where(this.addIsForFilter(this.addTimeFilter(equals[0])));
+            } else {
+              queryBuilder.where(this.addIsForFilter(this.addTimeFilter(new Query.ComplexPredicate(Query.Condition.Or, ...equals))));
+            }
 
             let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 
