@@ -66,6 +66,30 @@ export default Ember.Component.extend(
     */
     tagName: '',
 
+    time: null,
+
+    customFilter: Ember.computed('time', function () {
+      let time = this.get('time');
+      let formattedTime;
+      if (Ember.isBlank(time) || time === 'present') {
+        formattedTime = moment().toISOString();
+      } else {
+        formattedTime = moment(time).toISOString();
+      }
+
+      return new L.Filter.And(
+        new L.Filter.LEQ('archivestart', formattedTime),
+        new L.Filter.GEQ('archiveend', formattedTime));
+    }),
+
+    addTimeFilter(filter) {
+      if (this.get('layerModel.settingsAsObject.time') && !Ember.isNone(filter)) {
+        filter = new L.Filter.And(this.get('customFilter'), filter);
+      }
+
+      return filter;
+    },
+
     /**
       Array containing component's properties which are also leaflet layer options (see leaflet-options mixin).
 
@@ -764,6 +788,8 @@ export default Ember.Component.extend(
     */
     init() {
       this._super(...arguments);
+      let today = new Date();
+      this.set('time', today.toISOString());
 
       // Create leaflet layer.
       this._createLayer();

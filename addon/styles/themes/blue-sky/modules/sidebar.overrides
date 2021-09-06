@@ -625,7 +625,7 @@
         padding: 10px 12px;
       }
       &.create-edit-object-tab, &.compareObjects, &.intersectionObjects,
-      &.compare, &.timelapse {
+      &.compare, &.timelapse, &.history {
         display: none;
         position: absolute;
       }

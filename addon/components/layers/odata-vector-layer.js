@@ -375,6 +375,7 @@ export default BaseVectorLayer.extend({
         queryBuilder.top(maxFeatures);
       }
 
+      filter = this.addIsForFilter(this.addTimeFilter(filter));
       queryBuilder.where(filter);
       let build = queryBuilder.build();
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
@@ -778,6 +779,7 @@ export default BaseVectorLayer.extend({
             if (!Ember.isNone(dataModel)) {
               let parentModelName = dataModel.parentModelName;
               if (Ember.isNone(parentModelName)) {
+                _this.set('namespace', dataModel.nameSpace);
                 let modelMixin = _this.createMixin(dataModel);
                 let model = _this.createModel(modelMixin);
                 resolve({ model: model, dataModel: dataModel, modelMixin: modelMixin });
@@ -1071,7 +1073,7 @@ export default BaseVectorLayer.extend({
             });
 
             if (!Ember.isEmpty(remainingFeat)) {
-              queryBuilder.where(makeFilterEqOr(remainingFeat));
+              queryBuilder.where(this.addIsForFilter(this.addTimeFilter(makeFilterEqOr(remainingFeat))));
             } else { // If objects is already loaded, return leafletObject
               resolve(leafletObject);
               return;
@@ -1080,7 +1082,7 @@ export default BaseVectorLayer.extend({
             let alreadyLoaded = getLoadedFeatures(null);
             let filterEqOr = makeFilterEqOr(alreadyLoaded);
             if (!Ember.isNone(filterEqOr)) {
-              queryBuilder.where(new Query.NotPredicate(makeFilterEqOr(alreadyLoaded)));
+              queryBuilder.where(this.addIsForFilter(this.addTimeFilter(new Query.NotPredicate(makeFilterEqOr(alreadyLoaded)))));
             }
           }
 
@@ -1132,10 +1134,53 @@ export default BaseVectorLayer.extend({
         .top(1)
         .count();
 
+      if (this.get('layerModel.settingsAsObject.time')) {
+        queryBuilder.where(this.addIsForFilter(this.get('customFilter')));
+      } else {
+        queryBuilder.where(new Query.IsOfPredicate(this.get('modelName')));
+      }
+
       store.query(modelName, queryBuilder.build()).then((result) => {
         resolve(result.meta.count);
       });
     });
+  },
+
+  customFilter: Ember.computed('time', function () {
+    let time = this.get('time');
+    let formattedTime;
+    if (Ember.isBlank(time) || time === 'present') {
+      formattedTime = moment().toISOString();
+    } else {
+      formattedTime = moment(time).toISOString();
+    }
+
+    return new Query.DatePredicate('archiveStart', Query.FilterOperator.Leq, time);
+  }),
+
+  timeObserver: Ember.observer('time', function () {
+    let leafletObject = this.get('_leafletObject');
+    if (leafletObject.getLayers().length !== 0) {
+      leafletObject.clearLayers();
+      leafletObject._labelsLayer.clearLayers();
+    }
+    this.continueLoad();
+  }),
+
+  addTimeFilter(filter) {
+    if (this.get('layerModel.settingsAsObject.time') && !Ember.isNone(filter)) {
+      filter = new Query.ComplexPredicate(Query.Condition.And, filter, this.get('customFilter'));
+    }
+
+    return filter;
+  },
+
+  addIsForFilter(filter) {
+    if (!Ember.isNone(filter)) {
+      filter = new Query.ComplexPredicate(Query.Condition.And, filter, new Query.IsOfPredicate(this.get('modelName')));
+    }
+
+    return filter;
   },
 
   /**
@@ -1177,11 +1222,11 @@ export default BaseVectorLayer.extend({
               .from(obj.modelName)
               .selectByProjection(obj.projectionName);
 
-            if (equals.length === 1) {
-              queryBuilder.where(equals[0]);
-            } else {
-              queryBuilder.where(new Query.ComplexPredicate(Query.Condition.Or, ...equals));
-            }
+              if (equals.length === 1) {
+                queryBuilder.where(this.addIsForFilter(this.addTimeFilter(equals[0])));
+              } else {
+                queryBuilder.where(this.addIsForFilter(this.addTimeFilter(new Query.ComplexPredicate(Query.Condition.Or, ...equals))));
+              }
 
             let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 
@@ -1203,6 +1248,12 @@ export default BaseVectorLayer.extend({
                   .skip(skip)
                   .orderBy('id');
 
+                if (this.get('layerModel.settingsAsObject.time')) {
+                  queryBuilder.where(this.addIsForFilter(this.get('customFilter')));
+                } else {
+                  queryBuilder.where(new Query.IsOfPredicate(this.get('modelName')));
+                }
+
                 promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
                 count -= maxBatchFeatures;
                 skip += maxBatchFeatures;
@@ -1215,6 +1266,12 @@ export default BaseVectorLayer.extend({
                   .top(count)
                   .skip(skip)
                   .orderBy('id');
+
+                if (this.get('layerModel.settingsAsObject.time')) {
+                  queryBuilder.where(this.addIsForFilter(this.get('customFilter')));
+                } else {
+                  queryBuilder.where(new Query.IsOfPredicate(this.get('modelName')));
+                }
 
                 promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
               }
@@ -1280,7 +1337,7 @@ export default BaseVectorLayer.extend({
         }
 
         let oldPart;
-        if (!Ember.isNone(loadedBounds)) {
+        if (!Ember.isNone(loadedBounds) && Ember.isNone(this.get('layerModel.settingsAsObject.time'))) {
           if (loadedBounds instanceof L.LatLngBounds) {
             loadedBounds = L.rectangle(loadedBounds);
           }
@@ -1336,6 +1393,7 @@ export default BaseVectorLayer.extend({
       .from(obj.modelName)
       .selectByProjection(obj.projectionName);
 
+    filter = this.addIsForFilter(this.addTimeFilter(filter));
     if (!Ember.isNone(filter)) {
       queryBuilder.where(filter);
     }

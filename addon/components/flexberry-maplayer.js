@@ -496,6 +496,32 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     */
     disabled: '',
 
+    maxDate: Ember.computed(function() {
+      let date = new Date();
+      return date;
+    }),
+
+    dateTime: null,
+
+    dateTimeObserver: Ember.observer('dateTime', function() {
+      let dateTime = this.get('dateTime');
+      let layerModel = this.get('layer');
+      layerModel.set('settingsAsObject.time', Ember.isNone(dateTime) ? new Date() : dateTime.toISOString());
+    }),
+
+    init() {
+      this._super(...arguments);
+      let today = new Date();
+      if (this.get('layer.settingsAsObject.time')) {
+        this.set('dateTime', today);
+        this.get('layer').set('setDate', this.get('setDate').bind(this));
+      }
+    },
+
+    setDate: function(date) {
+      this.set('dateTime', date);
+    },
+
     /**
       Initializes DOM-related component's properties.
     */
