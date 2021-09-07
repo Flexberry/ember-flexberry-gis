@@ -71,7 +71,7 @@ export default Ember.Component.extend(
     customFilter: Ember.computed('time', function () {
       let time = this.get('time');
       let formattedTime;
-      if (Ember.isBlank(time) || time === 'present') {
+      if (Ember.isBlank(time) || time === 'present' || Ember.isNone(time)) {
         formattedTime = moment().toISOString();
       } else {
         formattedTime = moment(time).toISOString();
