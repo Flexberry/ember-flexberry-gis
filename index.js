@@ -3,9 +3,6 @@
 
 module.exports = {
   name: 'ember-flexberry-gis',
-  isDevelopingAddon() {
-    return true;
-  },
 
   included: function (app) {
     this._super.included.apply(this._super, arguments);
