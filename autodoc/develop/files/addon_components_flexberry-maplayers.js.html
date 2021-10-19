@@ -907,7 +907,13 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       }
     }),
 
+    dynamicButtons: [],
+
     actions: {
+      external(actionName, layer) {
+        this.sendAction(actionName, layer);
+      },
+
       onChangeLayer(leftLayer, rightLayer) {
         this.set(&#x27;leftLayer&#x27;, leftLayer);
         this.set(&#x27;rightLayer&#x27;, rightLayer);
