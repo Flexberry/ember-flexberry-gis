@@ -143,6 +143,8 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
 
+    dynamicButtons: [],
+
     /**
       Layer copy's name postfix
 
@@ -558,6 +560,11 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     },
 
     actions: {
+      external(actionName) {
+        this.set('isSubmenu', false);
+        this.sendAction('external', actionName, this.get('layer'));
+      },
+
       /**
         Handles click on checkbox.
         @method action.onChange
