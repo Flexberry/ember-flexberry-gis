@@ -496,31 +496,11 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     */
     disabled: '',
 
-    maxDate: Ember.computed(function() {
-      let date = new Date();
+    maxDate: Ember.computed(function () {
+      let date = new Date(new Date().toDateString());
+      date.setDate(date.getDate() + 1);
       return date;
     }),
-
-    dateTime: null,
-
-    dateTimeObserver: Ember.observer('dateTime', function() {
-      let dateTime = this.get('dateTime');
-      let layerModel = this.get('layer');
-      layerModel.set('settingsAsObject.time', Ember.isNone(dateTime) ? new Date() : dateTime.toISOString());
-    }),
-
-    init() {
-      this._super(...arguments);
-      let today = new Date();
-      if (this.get('layer.settingsAsObject.time')) {
-        this.set('dateTime', today);
-        this.get('layer').set('setDate', this.get('setDate').bind(this));
-      }
-    },
-
-    setDate: function(date) {
-      this.set('dateTime', date);
-    },
 
     /**
       Initializes DOM-related component's properties.
@@ -536,15 +516,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         let $caption = Ember.$('.ui.tab.treeview label.flexberry-maplayer-caption-label');
         if ($caption.length > 0) {
           $caption.hover(
-            function() {
+            function () {
               let $toolbar = Ember.$(this).parent().children('.flexberry-treenode-buttons-block');
               $toolbar.removeClass('hidden');
               Ember.$(this).addClass('blur');
             },
-            function() {
+            function () {
               let $toolbar = Ember.$(this).parent().children('.flexberry-treenode-buttons-block');
               $toolbar.hover(
-                () => {},
+                () => { },
                 () => {
                   $toolbar.addClass('hidden');
                   Ember.$(this).removeClass('blur');
@@ -584,6 +564,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     },
 
     actions: {
+      onLayerTimeChange() {
+        this.sendAction('layerTimeChanged', this.get('layer'), this.get('layer.archTime'));
+      },
+
       /**
         Handles click on checkbox.
         @method action.onChange
@@ -642,7 +626,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
             sbs.setLeftLayers(left);
           }
 
-          if (this.get('side') === 'Right')  {
+          if (this.get('side') === 'Right') {
             if (this.get('rightLayer') !== null) {
               sbs.setRightLayers(null);
               this.get('rightLayer._leafletObject').remove();
@@ -675,7 +659,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         let component = Ember.$('.' + this.get('componentName'));
         let moreButton = Ember.$('.more.floated.button', component);
         let elements = Ember.$('.more.submenu.hidden', component);
-        openCloseSubmenu(this, moreButton, elements,  2);
+        openCloseSubmenu(this, moreButton, elements, 2);
       },
 
       onAddCompare() {

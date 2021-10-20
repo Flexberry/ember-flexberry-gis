@@ -31,7 +31,7 @@ export default Ember.Component.extend(
       @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
       @default null
       @private
-     */
+    */
     _leafletObject: null,
 
     /**
@@ -66,35 +66,45 @@ export default Ember.Component.extend(
     */
     tagName: '',
 
-    time: null,
+    archTime: null,
+    hasTime: null,
 
-    customFilter: Ember.computed('time', function () {
-      let time = this.get('time');
-      let formattedTime;
-      if (Ember.isBlank(time) || time === 'present' || Ember.isNone(time)) {
-        formattedTime = moment().toISOString();
-      } else {
-        formattedTime = moment(time).toISOString();
-      }
-
-      return new L.Filter.And(
-        new L.Filter.LEQ('archivestart', formattedTime),
-        new L.Filter.GEQ('archiveend', formattedTime));
+    timeObserver: Ember.observer('layerModel.archTime', function () {
+      if (this.reload && typeof(this.reload) === "function")
+        Ember.run.debounce(this, this.reload, 1500);
     }),
 
-    addTimeFilter(filter) {
-      if (this.get('layerModel.settingsAsObject.time') && !Ember.isNone(filter)) {
-        filter = new L.Filter.And(this.get('customFilter'), filter);
+    customFilter: Ember.computed('layerModel.archTime', function () {
+      if (this.get('layerModel.settingsAsObject.hasTime')) {
+        let time = this.get('layerModel.archTime');
+        let formattedTime;
+        if (Ember.isBlank(time) || time === 'present' || Ember.isNone(time)) {
+          formattedTime = moment().toISOString();
+        } else {
+          formattedTime = moment(time).toISOString();
+        }
+
+        return new L.Filter.And(
+          new L.Filter.LEQ('archivestart', formattedTime),
+          new L.Filter.GEQ('archiveend', formattedTime));
+      }
+    }),
+
+    addCustomFilter(filter) {
+      let customFilter = this.get('customFilter');
+
+      if (!Ember.isNone(customFilter) && !Ember.isNone(filter)) {
+        return new L.Filter.And(filter, customFilter);
       }
 
-      return filter;
+      return customFilter || filter;
     },
 
     /**
       Array containing component's properties which are also leaflet layer options (see leaflet-options mixin).
 
       @property leafletOptions
-      @type Stirng[]
+      @type String[]
     */
     leafletOptions: null,
 
@@ -696,16 +706,16 @@ export default Ember.Component.extend(
     /**
       Handles 'flexberry-map:query' event of leaflet map.
 
-     @method query
-     @param {Object} e Event object.
-     @param {Object} queryFilter Object with query filter parameters
-     @param {Object} mapObjectSetting Object describing current query setting
-     @param {Object[]} results Objects describing query results.
-     Every result-object has the following structure: { layer: ..., features: [...] },
-     where 'layer' is metadata of layer related to query result, features is array
-     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
-     or a promise returning such array.
-   */
+      @method query
+      @param {Object} e Event object.
+      @param {Object} queryFilter Object with query filter parameters
+      @param {Object} mapObjectSetting Object describing current query setting
+      @param {Object[]} results Objects describing query results.
+      Every result-object has the following structure: { layer: ..., features: [...] },
+      where 'layer' is metadata of layer related to query result, features is array
+      containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+      or a promise returning such array.
+    */
     _query(e) {
       // Filter current layer links by setting.
       let layerLinks =
@@ -788,8 +798,14 @@ export default Ember.Component.extend(
     */
     init() {
       this._super(...arguments);
-      let today = new Date();
-      this.set('time', today.toISOString());
+
+      // Не будем задавать дату. Пустая дата - это то же самое, что текущая.
+      // А чтобы везде ставить одинаковую текущую - нужен какой-то сервис
+      /*if (this.get('layerModel.settingsAsObject.hasTime')){
+        let today = new Date();
+        let layerModel = this.get('layerModel');
+        layerModel.set('archTime', today);
+      }*/
 
       // Create leaflet layer.
       this._createLayer();
@@ -1070,14 +1086,14 @@ export default Ember.Component.extend(
     @param {Object} eventObject Action param
     @param {Object} eventObject.leafletObject Created (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
     @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
-   */
+  */
 
   /**
    Component's action invoking before the layer destroying.
 
-   @method sendingActions.layerDestroy
-   @param {Object} eventObject Action param
-   @param {Object} eventObject.leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
-   @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
+  @method sendingActions.layerDestroy
+  @param {Object} eventObject Action param
+  @param {Object} eventObject.leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
+  @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
   */
 );

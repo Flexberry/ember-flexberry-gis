@@ -375,8 +375,10 @@ export default BaseVectorLayer.extend({
         queryBuilder.top(maxFeatures);
       }
 
-      filter = this.addIsForFilter(this.addTimeFilter(filter));
-      queryBuilder.where(filter);
+      filter = this.addCustomFilter(filter);
+      if (!Ember.isNone(filter)) {
+        queryBuilder.where(filter);
+      }
       let build = queryBuilder.build();
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
       let intersectionArea = config.APP.intersectionArea;
@@ -1073,7 +1075,7 @@ export default BaseVectorLayer.extend({
             });
 
             if (!Ember.isEmpty(remainingFeat)) {
-              queryBuilder.where(this.addIsForFilter(this.addTimeFilter(makeFilterEqOr(remainingFeat))));
+              queryBuilder.where(this.addCustomFilter(makeFilterEqOr(remainingFeat)));
             } else { // If objects is already loaded, return leafletObject
               resolve(leafletObject);
               return;
@@ -1082,7 +1084,7 @@ export default BaseVectorLayer.extend({
             let alreadyLoaded = getLoadedFeatures(null);
             let filterEqOr = makeFilterEqOr(alreadyLoaded);
             if (!Ember.isNone(filterEqOr)) {
-              queryBuilder.where(this.addIsForFilter(this.addTimeFilter(new Query.NotPredicate(makeFilterEqOr(alreadyLoaded)))));
+              queryBuilder.where(this.addCustomFilter(new Query.NotPredicate(makeFilterEqOr(alreadyLoaded))));
             }
           }
 
@@ -1134,10 +1136,9 @@ export default BaseVectorLayer.extend({
         .top(1)
         .count();
 
-      if (this.get('layerModel.settingsAsObject.time')) {
-        queryBuilder.where(this.addIsForFilter(this.get('customFilter')));
-      } else {
-        queryBuilder.where(new Query.IsOfPredicate(this.get('modelName')));
+      let filter = this.addCustomFilter(null);
+      if (!Ember.isNone(filter)) {
+        queryBuilder.where(filter);
       }
 
       store.query(modelName, queryBuilder.build()).then((result) => {
@@ -1146,42 +1147,41 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  customFilter: Ember.computed('time', function () {
-    let time = this.get('time');
-    let formattedTime;
-    if (Ember.isBlank(time) || time === 'present' || Ember.isNone(time)) {
-      formattedTime = moment().toISOString();
-    } else {
-      formattedTime = moment(time).toISOString();
+  customFilter: Ember.computed('layerModel.archTime', 'layerModel.settingsAsObject.hasTime', 'modelName', function () {
+    let predicates = [];
+    if (this.get('layerModel.settingsAsObject.hasTime')) {
+      let time = this.get('layerModel.archTime');
+      let formattedTime;
+      if (Ember.isBlank(time) || time === 'present' || Ember.isNone(time)) {
+        formattedTime = moment().toISOString();
+      } else {
+        formattedTime = moment(time).toISOString();
+      }
+
+      predicates.push(new Query.DatePredicate('archiveStart', Query.FilterOperator.Leq, formattedTime));
     }
 
-    return new Query.DatePredicate('archiveStart', Query.FilterOperator.Leq, time);
+    predicates.push(new Query.IsOfPredicate(this.get('modelName')));
+
+    if (predicates.length > 0) {
+      if (predicates.length === 1) {
+        return predicates[0];
+      } else {
+        return new Query.ComplexPredicate(Query.Condition.And, ...predicates);
+      }
+    }
+
+    return null;
   }),
 
-  timeObserver: Ember.observer('time', function () {
-    let leafletObject = this.get('_leafletObject');
-    if (leafletObject.getLayers().length !== 0) {
-      leafletObject.clearLayers();
-      leafletObject._labelsLayer.clearLayers();
+  addCustomFilter(filter) {
+    let customFilter = this.get('customFilter');
+
+    if (!Ember.isNone(customFilter) && !Ember.isNone(filter)) {
+      return new Query.ComplexPredicate(Query.Condition.And, filter, customFilter);
     }
 
-    this.continueLoad();
-  }),
-
-  addTimeFilter(filter) {
-    if (this.get('layerModel.settingsAsObject.time') && !Ember.isNone(filter)) {
-      filter = new Query.ComplexPredicate(Query.Condition.And, filter, this.get('customFilter'));
-    }
-
-    return filter;
-  },
-
-  addIsForFilter(filter) {
-    if (!Ember.isNone(filter)) {
-      filter = new Query.ComplexPredicate(Query.Condition.And, filter, new Query.IsOfPredicate(this.get('modelName')));
-    }
-
-    return filter;
+    return customFilter || filter;
   },
 
   /**
@@ -1224,9 +1224,9 @@ export default BaseVectorLayer.extend({
               .selectByProjection(obj.projectionName);
 
             if (equals.length === 1) {
-              queryBuilder.where(this.addIsForFilter(this.addTimeFilter(equals[0])));
+              queryBuilder.where(this.addCustomFilter(equals[0]));
             } else {
-              queryBuilder.where(this.addIsForFilter(this.addTimeFilter(new Query.ComplexPredicate(Query.Condition.Or, ...equals))));
+              queryBuilder.where(this.addCustomFilter(new Query.ComplexPredicate(Query.Condition.Or, ...equals)));
             }
 
             let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
@@ -1249,10 +1249,9 @@ export default BaseVectorLayer.extend({
                   .skip(skip)
                   .orderBy('id');
 
-                if (this.get('layerModel.settingsAsObject.time')) {
-                  queryBuilder.where(this.addIsForFilter(this.get('customFilter')));
-                } else {
-                  queryBuilder.where(new Query.IsOfPredicate(this.get('modelName')));
+                let customFilter = this.addCustomFilter(null);
+                if (!Ember.isNone(this.get(customFilter))) {
+                  queryBuilder.where(customFilter);
                 }
 
                 promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
@@ -1268,10 +1267,9 @@ export default BaseVectorLayer.extend({
                   .skip(skip)
                   .orderBy('id');
 
-                if (this.get('layerModel.settingsAsObject.time')) {
-                  queryBuilder.where(this.addIsForFilter(this.get('customFilter')));
-                } else {
-                  queryBuilder.where(new Query.IsOfPredicate(this.get('modelName')));
+                let customFilter = this.addCustomFilter(null);
+                if (!Ember.isNone(this.get(customFilter))) {
+                  queryBuilder.where(customFilter);
                 }
 
                 promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
@@ -1321,7 +1319,7 @@ export default BaseVectorLayer.extend({
 
     if (!Ember.isNone(leafletObject)) {
       // it's from api showAllLayerObjects, to load objects if layer is not visibility
-      let showLayerObjects =  (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
+      let showLayerObjects = (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
       let show = this.get('layerModel.visibility');
       let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
       let showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading && Ember.isEmpty(Object.values(leafletObject._layers));
@@ -1338,7 +1336,7 @@ export default BaseVectorLayer.extend({
         }
 
         let oldPart;
-        if (!Ember.isNone(loadedBounds) && Ember.isNone(this.get('layerModel.settingsAsObject.time'))) {
+        if (!Ember.isNone(loadedBounds)) {
           if (loadedBounds instanceof L.LatLngBounds) {
             loadedBounds = L.rectangle(loadedBounds);
           }
@@ -1394,7 +1392,7 @@ export default BaseVectorLayer.extend({
       .from(obj.modelName)
       .selectByProjection(obj.projectionName);
 
-    filter = this.addIsForFilter(this.addTimeFilter(filter));
+    filter = this.addCustomFilter(filter);
     if (!Ember.isNone(filter)) {
       queryBuilder.where(filter);
     }
@@ -1568,7 +1566,7 @@ export default BaseVectorLayer.extend({
       Ember.$.ajax({
         url: layerModel.get('_leafletObject.options.metadataUrl') + layerModel.get('_leafletObject.modelName') + '.json',
         success: function (dataClass) {
-          let odataQueryName =  Ember.String.pluralize(capitalize(camelize(dataClass.modelName)));
+          let odataQueryName = Ember.String.pluralize(capitalize(camelize(dataClass.modelName)));
           let odataUrl = _this.get('odataUrl');
           obj.adapter.callAction(
             config.APP.backendActions.getNearDistance,

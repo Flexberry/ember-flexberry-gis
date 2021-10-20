@@ -134,23 +134,7 @@ export default EditFormRoute.extend({
     this._super(...arguments);
     let layers = model.get('mapLayer');
 
-    if (layers) {
-      let rootLayers = layers.filter(layer => Ember.isEmpty(layer.get('parent')));
-
-      let hierarchy = this.sortLayersByIndex(rootLayers);
-      model.set('hierarchy', hierarchy);
-
-      let backgroundLayers = Ember.A();
-      backgroundLayers.addObjects(hierarchy.filterBy('settingsAsObject.backgroundSettings.canBeBackground', true));
-      model.set('backgroundLayers', backgroundLayers);
-
-      let other = hierarchy.filter((layer) => {
-        return Ember.isNone(layer.get('settingsAsObject')) || !layer.get('settingsAsObject.backgroundSettings.canBeBackground');
-      });
-      let otherLayers = Ember.A();
-      otherLayers.addObjects(other);
-      model.set('otherLayers', otherLayers);
-    }
+    this.setLayerCategories(model, layers);
 
     let urlParams = ['zoom', 'lat', 'lng'];
     let currentParams = {};
@@ -168,6 +152,26 @@ export default EditFormRoute.extend({
     this.transitionTo({
       queryParams: currentParams
     });
+  },
+
+  setLayerCategories(model, layers) {
+    if (layers) {
+      let rootLayers = layers.filter(layer => Ember.isEmpty(layer.get('parent')));
+
+      let hierarchy = this.sortLayersByIndex(rootLayers);
+      model.set('hierarchy', hierarchy);
+
+      let backgroundLayers = Ember.A();
+      backgroundLayers.addObjects(hierarchy.filterBy('settingsAsObject.backgroundSettings.canBeBackground', true));
+      model.set('backgroundLayers', backgroundLayers);
+
+      let other = hierarchy.filter((layer) => {
+        return Ember.isNone(layer.get('settingsAsObject')) || !layer.get('settingsAsObject.backgroundSettings.canBeBackground');
+      });
+      let otherLayers = Ember.A();
+      otherLayers.addObjects(other);
+      model.set('otherLayers', otherLayers);
+    }
   },
 
   /**
@@ -201,8 +205,8 @@ export default EditFormRoute.extend({
     }
 
     let queryBuilder = new Query.Builder(this.get('store'))
-    .from(this.get('metadataModelName'))
-    .selectByProjection(this.get('metadataProjection'));
+      .from(this.get('metadataModelName'))
+      .selectByProjection(this.get('metadataProjection'));
 
     let conditions = metadata.split(',').map((item) => {
       let id = item.trim().toLowerCase();

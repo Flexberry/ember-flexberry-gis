@@ -19,6 +19,8 @@ export default Ember.Mixin.create({
   */
   localStorageService: Ember.inject.service('local-storage'),
 
+  archTime: null,
+
   /**
     Object with layer's settings.
     @property settingsAsObject
