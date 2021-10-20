@@ -70,8 +70,9 @@ export default Ember.Component.extend(
     hasTime: null,
 
     timeObserver: Ember.observer('layerModel.archTime', function () {
-      if (this.reload && typeof(this.reload) === "function")
+      if (this.reload && typeof (this.reload) === 'function') {
         Ember.run.debounce(this, this.reload, 1500);
+      }
     }),
 
     customFilter: Ember.computed('layerModel.archTime', function () {

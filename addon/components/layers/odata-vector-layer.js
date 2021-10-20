@@ -379,6 +379,7 @@ export default BaseVectorLayer.extend({
       if (!Ember.isNone(filter)) {
         queryBuilder.where(filter);
       }
+
       let build = queryBuilder.build();
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
       let intersectionArea = config.APP.intersectionArea;
@@ -1250,7 +1251,7 @@ export default BaseVectorLayer.extend({
                   .orderBy('id');
 
                 let customFilter = this.addCustomFilter(null);
-                if (!Ember.isNone(this.get(customFilter))) {
+                if (!Ember.isNone(customFilter)) {
                   queryBuilder.where(customFilter);
                 }
 
@@ -1268,7 +1269,7 @@ export default BaseVectorLayer.extend({
                   .orderBy('id');
 
                 let customFilter = this.addCustomFilter(null);
-                if (!Ember.isNone(this.get(customFilter))) {
+                if (!Ember.isNone(customFilter)) {
                   queryBuilder.where(customFilter);
                 }
 
