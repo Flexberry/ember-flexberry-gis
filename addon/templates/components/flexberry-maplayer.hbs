@@ -111,6 +111,15 @@
                     caption=(t "components.flexberry-maplayer.remove-button.tooltip")
                     click=(action "onRemoveButtonClick")
                   }}
+
+                  {{#each dynamicButtons as |dynamicButton|}}
+                    {{flexberry-button
+                      class=(concat dynamicButton.class " floated " flexberryClassNames.preventExpandCollapse)
+                      iconClass=dynamicButton.icon
+                      caption=dynamicButton.caption
+                      click=(action "external" dynamicButton.action)
+                    }}
+                  {{/each}}
                 </div>
               </div>
             {{/if}}

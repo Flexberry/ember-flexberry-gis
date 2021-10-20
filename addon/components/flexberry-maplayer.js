@@ -143,6 +143,8 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
 
+    dynamicButtons: [],
+
     /**
       Layer copy's name postfix
 
@@ -566,6 +568,11 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     actions: {
       onLayerTimeChange() {
         this.sendAction('layerTimeChanged', this.get('layer'), this.get('layer.archTime'));
+      },
+
+      external(actionName) {
+        this.set('isSubmenu', false);
+        this.sendAction('external', actionName, this.get('layer'));
       },
 
       /**

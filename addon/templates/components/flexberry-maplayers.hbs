@@ -45,7 +45,7 @@
   {{#block-slot "content"}}
     {{#each layers as |layer|}}
       {{#if (not layer.isDeleted)}}
-        {{flexberry-maplayer
+        {{#flexberry-maplayer
           readonly=readonly
           leafletMap=leafletMap
           layer=layer
@@ -58,7 +58,15 @@
           rightLayer=rightLayer
           onChangeLayer = (action "onChangeLayer")
           layerTimeChanged=(action "onLayerTimeChanged")
+          dynamicButtons=dynamicButtons
+          external=(action 'external')
         }}
+        {{#block-slot "maplayer-operations" as |external|}}
+          {{#yield-slot "maplayer-operations" (block-params this)}}
+            {{yield}}
+          {{/yield-slot}}
+        {{/block-slot}}
+        {{/flexberry-maplayer}}
       {{/if}}
     {{/each}}
     {{#yield-slot "content" (block-params this)}}

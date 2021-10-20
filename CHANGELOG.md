@@ -28,6 +28,9 @@ All notable changes to this project will be documented in this file.
 * height on list of feature in identify panel.
 
 ### Fixed
+* Fix !important for class hidden.
+* Fix jump fitBounds when export map.
+* Delete callAction.
 * Fix legends for graduated layer-style.
 * Fix check all objects in attributes panel.
 * Fix `bboxEWKT` in `flexberry-boundingbox` component.

@@ -7,7 +7,7 @@ import Ember from 'ember';
   @param {Object} leafletMap Map.
   @param {Object} leafletObject Layer.
 */
-export default function zoomToBounds(bounds, leafletMap, minZoom, maxZoom) {
+let zoomToBounds = function(bounds, leafletMap, minZoom, maxZoom) {
 
   let sidebarElement = Ember.$('div[class*="sidebar-wrapper"].visible .sidebar');
   const widthPadding = sidebarElement.width() || 0;
@@ -25,10 +25,10 @@ export default function zoomToBounds(bounds, leafletMap, minZoom, maxZoom) {
   }
 
   fitBounds(leafletMap, bounds, { paddingTopLeft: [widthPadding, 0], maxZoom: zoom });
-}
+};
 
 // Overwrites, because L.Map._getBoundsCenterZoom return min zoom from zoom of bounds and maxZoom from options.
-const fitBounds = (leafletMap, bounds, options) => {
+let fitBounds = function(leafletMap, bounds, options) {
   if (!(bounds instanceof L.LatLngBounds) || Ember.isNone(leafletMap)) {
     return;
   }
@@ -39,4 +39,9 @@ const fitBounds = (leafletMap, bounds, options) => {
 
   var target = leafletMap._getBoundsCenterZoom(bounds, options);
   return leafletMap.setView(target.center, options.maxZoom, options);
+};
+
+export {
+  zoomToBounds,
+  fitBounds
 };

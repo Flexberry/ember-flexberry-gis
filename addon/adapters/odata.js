@@ -69,19 +69,5 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
         return reject(e);
       }
     }).fail(reject));
-  },
-
-  callAction(actionName, data, url, fields, successCallback, failCallback, alwaysCallback) {
-    var resultUrl = this.generateActionUrl(actionName, data, url);
-
-    return this._callAjax({
-      headers: this.get('headers'),
-      data: JSON.stringify(data),
-      url: resultUrl,
-      method: 'POST',
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      xhrFields: Ember.isNone(fields) ? {} : fields
-    }, null, null, successCallback, failCallback, alwaysCallback);
   }
 });
