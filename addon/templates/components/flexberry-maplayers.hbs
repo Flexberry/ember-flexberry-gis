@@ -15,6 +15,13 @@
 {{/if}}
   {{#yield-slot "above-tree" (block-params this)}}
     {{yield}}
+
+    {{#if (not compareLayersEnabled)}}
+      <div class="flexberry-check-all">
+        <span {{action "onAllLayerVisibilityChanged"}}>{{#if allLayerVisible}}Снять выделение{{else}}Выделить все{{/if}}</span>
+      </div>
+    {{/if}}
+
   {{/yield-slot}}
   {{#flexberry-tree
     _isRoot=_isRoot
@@ -60,11 +67,6 @@
           dynamicButtons=dynamicButtons
           external=(action 'external')
         }}
-        {{#block-slot "maplayer-operations" as |external|}}
-          {{#yield-slot "maplayer-operations" (block-params this)}}
-            {{yield}}
-          {{/yield-slot}}
-        {{/block-slot}}
         {{/flexberry-maplayer}}
       {{/if}}
     {{/each}}
