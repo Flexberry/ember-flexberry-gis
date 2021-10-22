@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { assert } from '@ember/debug';
+
+import { isPresent, typeOf } from '@ember/utils';
+import { A } from '@ember/array';
+import { Promise } from 'rsvp';
 import EditMapRoute from './edit-map';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
@@ -33,11 +37,11 @@ export default EditMapRoute.extend({
     @return {*} Model of map project for current route.
   */
   model(params, transition) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let mapProject = this.store.createRecord(this.get('modelName'), { id: generateUniqueId() });
-      mapProject.set('mapLayer', Ember.A());
+      mapProject.set('mapLayer', A());
 
-      if (Ember.isPresent(params.metadata)) {
+      if (isPresent(params.metadata)) {
         this._getMetadata(params.metadata).then((metadata) => {
           this._addMetadata(mapProject, metadata);
           resolve(mapProject);
@@ -60,10 +64,10 @@ export default EditMapRoute.extend({
   */
   renderTemplate(controller, model) {
     let templateName = this.get('templateName');
-    Ember.assert(
+    assert(
       `Wrong type of controller\`s \`templateName\` property: ` +
-      `actual type is \`${Ember.typeOf(templateName)}\`, but \`string\` is expected.`,
-      Ember.typeOf(templateName) === 'string');
+      `actual type is \`${typeOf(templateName)}\`, but \`string\` is expected.`,
+      typeOf(templateName) === 'string');
 
     this.render(templateName, { model, controller });
   }

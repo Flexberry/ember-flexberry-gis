@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import Component from '@ember/component';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../../mixins/dynamic-properties';
@@ -8,7 +9,7 @@ import {
   translationMacro as t
 } from 'ember-i18n';
 
-export default Ember.Component.extend(
+export default Component.extend(
   RequiredActionsMixin,
   DynamicActionsMixin,
   DynamicPropertiesMixin,
@@ -122,9 +123,9 @@ export default Ember.Component.extend(
       @param {Object} e Click event object.
     */
     onTabClick(e) {
-      e = Ember.$.event.fix(e);
+      e = $.event.fix(e);
 
-      let $clickedTab = Ember.$(e.currentTarget);
+      let $clickedTab = $(e.currentTarget);
       let clickedTabName = $clickedTab.attr('data-tab');
 
       this.set('_activeTab', clickedTabName);

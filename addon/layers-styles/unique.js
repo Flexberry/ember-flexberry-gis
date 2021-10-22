@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { get } from '@ember/object';
 import CategorizedLayerStyle from './-private/categorized';
 
 /**
@@ -23,7 +23,7 @@ export default CategorizedLayerStyle.extend({
   */
   categoryIsRelevantToPropertyValue({ propertyValue, category }) {
     propertyValue = propertyValue + '';
-    let categoryValue = Ember.get(category, 'value') + '';
+    let categoryValue = get(category, 'value') + '';
 
     return propertyValue === categoryValue;
   }

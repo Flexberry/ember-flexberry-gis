@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { Promise } from 'rsvp';
 
 export function initialize(appInstance) {
   let mapApi = appInstance.lookup('service:map-api');
@@ -19,7 +19,7 @@ export function initialize(appInstance) {
       };
 */
 function openMap(mapId, options) {
-  return new Ember.RSVP.Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (mapId) {
       let service = this.lookup('service:map-store');
       service.getMapById(mapId).then((mapModel)=> {

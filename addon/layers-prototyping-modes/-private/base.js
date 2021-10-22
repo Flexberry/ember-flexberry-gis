@@ -2,18 +2,18 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import EmberObject, { get } from '@ember/object';
 
 /**
   Base edit mode object.
 
   @class BaseEditMode
 */
-export default Ember.Object.extend({
+export default EmberObject.extend({
   name: null,
 
   componentCanBeInserted(parentView) {
-    let requiredProperties = Ember.get(this, 'requiredProperties');
+    let requiredProperties = get(this, 'requiredProperties');
 
     requiredProperties.forEach((property) => {
       let value = parentView.get(property);

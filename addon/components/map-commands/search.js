@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from '../../templates/components/map-commands/search';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -44,7 +44,7 @@ const flexberryClassNames = {
   @class SearchMapCommandComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let SearchMapCommandComponent = Ember.Component.extend({
+let SearchMapCommandComponent = Component.extend({
   features: null,
   /**
     Additional properties for 'search' map-commands.

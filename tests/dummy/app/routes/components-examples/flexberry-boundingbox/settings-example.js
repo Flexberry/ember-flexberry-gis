@@ -1,7 +1,7 @@
-import Ember from 'ember';
+import Route from '@ember/routing/route';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
-export default Ember.Route.extend({
+export default Route.extend({
 
   /**
     Returns model related to current route.

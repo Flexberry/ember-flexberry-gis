@@ -2,6 +2,12 @@
   @module ember-flexberry-gis
 */
 
+import { get } from '@ember/object';
+
+import { getOwner } from '@ember/application';
+import { isNone } from '@ember/utils';
+import Service from '@ember/service';
+
 import Ember from 'ember';
 
 /**
@@ -10,7 +16,7 @@ import Ember from 'ember';
   @class MarkersStylesRendererService
   @extends Ember.Service
 */
-export default Ember.Service.extend({
+export default Service.extend({
   /**
     Hash containing cached instances of available markers styles.
 
@@ -40,7 +46,7 @@ export default Ember.Service.extend({
   */
   _getMarkerStyle(type) {
     let markerStyle = this.get(`_markersStyles.${type}`);
-    if (Ember.isNone(markerStyle)) {
+    if (isNone(markerStyle)) {
       Ember.Logger.error(`Service 'markers-styles-renderer' can't find '${type}' markers-style, it doesn't exist.`);
     }
 
@@ -54,7 +60,7 @@ export default Ember.Service.extend({
     this._super(...arguments);
 
     let availableMarkersStyles = {};
-    let owner = Ember.getOwner(this);
+    let owner = getOwner(this);
     let availableMarkersStylesTypes = owner.knownNamesForType(`markers-style`);
     availableMarkersStylesTypes.forEach((type) => {
       availableMarkersStyles[type] = owner.lookup(`markers-style:${type}`);
@@ -84,7 +90,7 @@ export default Ember.Service.extend({
   */
   getDefaultStyleSettings(type) {
     let markerStyle = this._getMarkerStyle(type);
-    if (Ember.isNone(markerStyle)) {
+    if (isNone(markerStyle)) {
       Ember.Logger.error(`Service 'markers-styles-renderer' can't get default style settings for '${type}' markers-style.`);
       return null;
     }
@@ -105,11 +111,11 @@ export default Ember.Service.extend({
     @param {Object} options.styleSettings Hash containing style settings.
   */
   renderOnLeafletMarker({ marker, styleSettings }) {
-    let type = Ember.get(styleSettings, 'type');
-    let style = Ember.get(styleSettings, 'style');
+    let type = get(styleSettings, 'type');
+    let style = get(styleSettings, 'style');
 
     let markerStyle = this._getMarkerStyle(type);
-    if (Ember.isNone(markerStyle)) {
+    if (isNone(markerStyle)) {
       Ember.Logger.error(`Service 'markers-styles-renderer' can't render '${type}' markers-style on leaflet marker.`);
       return;
     }
@@ -129,11 +135,11 @@ export default Ember.Service.extend({
   renderOnCanvas({ canvas, styleSettings, target }) {
     target = target || 'preview';
 
-    let type = Ember.get(styleSettings, 'type');
-    let style = Ember.get(styleSettings, 'style');
+    let type = get(styleSettings, 'type');
+    let style = get(styleSettings, 'style');
 
     let markerStyle = this._getMarkerStyle(type);
-    if (Ember.isNone(markerStyle)) {
+    if (isNone(markerStyle)) {
       Ember.Logger.error(`Service 'markers-styles-renderer' can't render '${type}' markers-style on canvas.`);
       return;
     }

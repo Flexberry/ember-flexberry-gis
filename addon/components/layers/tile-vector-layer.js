@@ -1,5 +1,9 @@
-import Ember from 'ember';
-import { default as BaseVectorLayer, begIndex } from '../base-vector-layer';
+import { get } from '@ember/object';
+import { isNone, typeOf } from '@ember/utils';
+import {
+  default as BaseVectorLayer,
+  begIndex
+} from '../base-vector-layer';
 
 export default BaseVectorLayer.extend({
   leafletOptions: [
@@ -67,12 +71,12 @@ export default BaseVectorLayer.extend({
   */
   _setLayerZIndex() {
     const leafletLayer = this.get('_leafletObject');
-    if (Ember.isNone(leafletLayer)) {
+    if (isNone(leafletLayer)) {
       return;
     }
 
-    const setZIndexFunc = Ember.get(leafletLayer, 'setZIndex');
-    if (Ember.typeOf(setZIndexFunc) !== 'function') {
+    const setZIndexFunc = get(leafletLayer, 'setZIndex');
+    if (typeOf(setZIndexFunc) !== 'function') {
       return;
     }
 

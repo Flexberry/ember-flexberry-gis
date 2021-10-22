@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import EmberObject from '@ember/object';
+
+import Mixin from '@ember/object/mixin';
 import FlexberryDdauCheckboxActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-ddau-checkbox-actions-handler';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
@@ -13,7 +15,7 @@ import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
   @class FlexberryLinksEditorActionsHandlerMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Layer's links' property path.
 
@@ -102,7 +104,7 @@ export default Ember.Mixin.create({
         ```
     */
     onLayerLinkChangeVisibility(...args) {
-      let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
+      let objectContainingActionHandler = EmberObject.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
 
       actionHandler.apply(this, args);

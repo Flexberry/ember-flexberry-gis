@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+import Service, { inject as service } from '@ember/service';
 import { Query } from 'ember-flexberry-data';
 import epsg3857 from '../coordinate-reference-systems/epsg-3857';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
@@ -13,7 +14,7 @@ const {
   @class MapStoreService
   @extends Ember.Service
 */
-export default Ember.Service.extend({
+export default Service.extend({
 
   /**
    Model name for store operations with Map
@@ -36,7 +37,7 @@ export default Ember.Service.extend({
    */
   _defaultModelProjName: 'MapE',
 
-  store: Ember.inject.service(),
+  store: service(),
 
   /**
    Map stub with one layer based on OSM public tile service
@@ -89,7 +90,7 @@ export default Ember.Service.extend({
     @param {string} modelProjName
    */
   getMapById(mapId, modelProjName) {
-    modelProjName = Ember.isNone(modelProjName) ? this.get('_defaultModelProjName') : modelProjName;
+    modelProjName = isNone(modelProjName) ? this.get('_defaultModelProjName') : modelProjName;
     let store = this.get('store');
     let builder = new Builder(store)
       .from(this.get('_mapModelName'))

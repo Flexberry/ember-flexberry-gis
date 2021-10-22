@@ -1,23 +1,15 @@
-import { moduleForModel, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
-moduleForModel('new-platform-flexberry-g-i-s-map-layer', 'Unit | Model | new-platform-flexberry-g-i-s-map-layer', {
-  // Specify the other units that are required for this test.
-  needs: [
-    'model:custom-inflector-rules',
-    'model:new-platform-flexberry-g-i-s-layer-link',
-    'model:new-platform-flexberry-g-i-s-layer-metadata',
-    'model:new-platform-flexberry-g-i-s-link-metadata',
-    'model:new-platform-flexberry-g-i-s-link-parameter',
-    'model:new-platform-flexberry-g-i-s-map-layer',
-    'model:new-platform-flexberry-g-i-s-map-object-setting',
-    'model:new-platform-flexberry-g-i-s-map',
-    'model:new-platform-flexberry-g-i-s-parameter-metadata'
-  ]
-});
+import { run } from '@ember/runloop';
 
-test('it exists', function(assert) {
-  let model = this.subject();
+module('Unit | Model | new-platform-flexberry-g-i-s-map-layer', function(hooks) {
+  setupTest(hooks);
 
-  // let store = this.store();
-  assert.ok(!!model);
+  test('it exists', function(assert) {
+    let model = run(() => this.owner.lookup('service:store').createRecord('new-platform-flexberry-g-i-s-map-layer'));
+
+    // let store = this.store();
+    assert.ok(!!model);
+  });
 });

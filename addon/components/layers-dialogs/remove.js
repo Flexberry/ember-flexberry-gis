@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { computed } from '@ember/object';
+
+import Component from '@ember/component';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
@@ -36,7 +38,7 @@ const flexberryClassNames = {
   @uses DynamicActionsMixin
   @uses DynamicPropertiesMixin
 */
-let FlexberryRemoveLayerDialogComponent = Ember.Component.extend(
+let FlexberryRemoveLayerDialogComponent = Component.extend(
   RequiredActionsMixin,
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
@@ -87,7 +89,7 @@ let FlexberryRemoveLayerDialogComponent = Ember.Component.extend(
       @type String
       @default null
     */
-    content: Ember.computed('i18n.locale', 'layer.name', function() {
+    content: computed('i18n.locale', 'layer.name', function() {
       return this.get('i18n').t('components.layers-dialogs.remove.content', {
         layerName: this.get('layer.name')
       });

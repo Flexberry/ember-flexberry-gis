@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
 import WfsFilterParserMixin from '../mixins/wfs-filter-parser';
 import TileLayer from './tile';
 
@@ -30,7 +30,7 @@ export default TileLayer.extend(WfsFilterParserMixin, {
   */
   createSettings() {
     let settings = this._super(...arguments);
-    Ember.$.extend(true, settings, {
+    $.extend(true, settings, {
       info_format: undefined,
       feature_count: 100,
       url: undefined,

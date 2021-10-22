@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+
+import $ from 'jquery';
+import Mixin from '@ember/object/mixin';
 
 /**
   Mixin which injects visibility methods into map-tools and map-commands.
@@ -10,7 +13,7 @@ import Ember from 'ember';
   @class LeafletMapVisibilityMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   // Add class hidden
   addClassHidden($commandControl) {
     if ($commandControl.length === 1 && !$commandControl.hasClass('hidden')) {
@@ -18,8 +21,8 @@ export default Ember.Mixin.create({
     } else {
       let $commandControlInner = $commandControl.children();
       for (var command of $commandControlInner) {
-        if (!Ember.$(command).hasClass('hidden')) {
-          Ember.$(command).addClass('hidden');
+        if (!$(command).hasClass('hidden')) {
+          $(command).addClass('hidden');
         }
       }
     }
@@ -32,8 +35,8 @@ export default Ember.Mixin.create({
     } else {
       let $commandControlInner = $commandControl.children();
       for (var command of $commandControlInner) {
-        if (Ember.$(command).hasClass('hidden')) {
-          Ember.$(command).removeClass('hidden');
+        if ($(command).hasClass('hidden')) {
+          $(command).removeClass('hidden');
         }
       }
     }
@@ -48,10 +51,10 @@ export default Ember.Mixin.create({
     @param {boolean} isTool flag, which indicate that is tool, that hide/show tools zoom.
   */
   showHide(mapCommandName, funcClass, leafletMap, isTool) {
-    let $leafletContainer = Ember.$(leafletMap._container);
+    let $leafletContainer = $(leafletMap._container);
 
-    if (Ember.isNone(mapCommandName)) {
-      funcClass(Ember.$('.flexberry-maptoolbar'));
+    if (isNone(mapCommandName)) {
+      funcClass($('.flexberry-maptoolbar'));
       funcClass($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
       funcClass($leafletContainer.find('.leaflet-control-container .history-control'));
       return true;
@@ -75,7 +78,7 @@ export default Ember.Mixin.create({
     }
 
     let mapToolClass = `.flexberry-${mapToolName}${endClass}.flexberry-map-tool`;
-    let $toolControl = Ember.$(`.flexberry-maptoolbar ${mapToolClass}`);
+    let $toolControl = $(`.flexberry-maptoolbar ${mapToolClass}`);
     funcClass($toolControl);
   }
 });

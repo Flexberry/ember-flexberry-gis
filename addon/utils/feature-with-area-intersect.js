@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
 import jsts from 'npm:jsts';
 
 /**
@@ -26,7 +26,7 @@ export default function featureWithAreaIntersect(featureA, geoLayer, leafletLaye
     let intersectionRes = geojsonWriter.write(intersected);
     if (intersectionRes) {
       let intersectArea = intersected.getArea();
-      if (!Ember.isNone(geoLayer.properties)) {
+      if (!isNone(geoLayer.properties)) {
         geoLayer.properties.intersectionArea = intersectArea;
       } else {
         geoLayer.properties = { intersectionArea: intersectArea };

@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/settings/geocoder-osm-overpass';
 
 /**
@@ -11,7 +11,7 @@ import layout from '../../../templates/components/layers-dialogs/settings/geocod
   @class GeocoderOsmOverpassLayerSettingsComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
 
   /**
     Reference to component's template.

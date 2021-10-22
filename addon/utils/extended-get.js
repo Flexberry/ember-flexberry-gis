@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { get } from '@ember/object';
+
+import { isArray } from '@ember/array';
 
 /**
   Used for getting objects by path containing Ember.RecordArray
@@ -34,10 +36,10 @@ let getRecord = function (source, keyName) {
       let keyValue = parseInt(keys[i]);
 
       // if previous object is array and key is index
-      if (Ember.isArray(result) && !isNaN(keyValue)) {
+      if (isArray(result) && !isNaN(keyValue)) {
         result = result.objectAt(keys[i]);
       } else {
-        result = Ember.get(result, keys[i]);
+        result = get(result, keys[i]);
       }
     }
   }

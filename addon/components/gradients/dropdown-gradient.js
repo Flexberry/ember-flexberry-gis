@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
+
+import { scheduleOnce, later } from '@ember/runloop';
+import { isNone, isEqual } from '@ember/utils';
+import { observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../templates/components/gradients/dropdown-gradient';
 
 /**
@@ -12,7 +17,7 @@ import layout from '../../templates/components/gradients/dropdown-gradient';
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Custom gradient element for dropdown list.
 
@@ -39,15 +44,15 @@ export default Ember.Component.extend({
     @method _isGradientCustomized
     @private
   */
-  _isGradientCustomized: Ember.observer('customGradientColorStart', 'customGradientColorEnd', function () {
+  _isGradientCustomized: observer('customGradientColorStart', 'customGradientColorEnd', function () {
     let colorStart = this.get('customGradientColorStart');
     let colorEnd = this.get('customGradientColorEnd');
 
-    if (Ember.isNone(colorStart)) {
+    if (isNone(colorStart)) {
       colorStart = this.get('gradientColorStart');
     }
 
-    if (Ember.isNone(colorEnd)) {
+    if (isNone(colorEnd)) {
       colorEnd = this.get('gradientColorEnd');
     }
 
@@ -159,10 +164,10 @@ export default Ember.Component.extend({
     let colorStart = this.get('gradientColorStart');
     let colorEnd = this.get('gradientColorEnd');
 
-    if (Ember.isNone(colorStart) || Ember.isNone(colorEnd)) {
-      Ember.run.scheduleOnce('afterRender', this, '_showDefaultItem');
+    if (isNone(colorStart) || isNone(colorEnd)) {
+      scheduleOnce('afterRender', this, '_showDefaultItem');
     } else {
-      Ember.run.scheduleOnce('afterRender', this, '_applyExistGradientSettings', colorStart, colorEnd);
+      scheduleOnce('afterRender', this, '_applyExistGradientSettings', colorStart, colorEnd);
     }
 
   },
@@ -227,7 +232,7 @@ export default Ember.Component.extend({
     @private
   */
   _showItem(itemName, colorStart, colorEnd) {
-    Ember.run.later(() => {
+    later(() => {
       let gradientDropdown = this.$('.ui.dropdown');
       gradientDropdown.dropdown('set selected', itemName);
       this.gradientDrawing(itemName, colorStart, colorEnd);
@@ -245,8 +250,8 @@ export default Ember.Component.extend({
   _applyExistGradientSettings(colorStart, colorEnd) {
     let gradientList = this.get('gradientList');
     let findedItemIdex = gradientList.findIndex((item) =>
-      Ember.isEqual(item.colorStart, colorStart) &&
-      Ember.isEqual(item.colorEnd, colorEnd)
+      isEqual(item.colorStart, colorStart) &&
+      isEqual(item.colorEnd, colorEnd)
     );
     if (findedItemIdex >= 0) {
       let gradientListItem = this.get('gradientList')[findedItemIdex];
@@ -265,7 +270,7 @@ export default Ember.Component.extend({
     @returns Object[] color list gradient.
   */
   getColorGradient(search) {
-    let colorsGradient = Ember.A([]);
+    let colorsGradient = A([]);
     let gradientList = this.get('gradientList');
 
     gradientList.forEach(function(item) {

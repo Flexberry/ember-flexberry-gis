@@ -1,3 +1,6 @@
+import { isBlank } from '@ember/utils';
+import { A } from '@ember/array';
+import { computed, get } from '@ember/object';
 import Ember from 'ember';
 import BaseLegendComponent from './-private/base-legend';
 
@@ -18,7 +21,7 @@ export default BaseLegendComponent.extend({
     @private
     @readOnly
   */
-  _legends: Ember.computed(
+  _legends: computed(
     'layer.settingsAsObject.url',
     'layer.settingsAsObject.version',
     'layer.settingsAsObject.imageFormat',
@@ -28,11 +31,11 @@ export default BaseLegendComponent.extend({
     'layer.settingsAsObject.legendSettings.format',
     'layer.settingsAsObject.legendSettings.layers',
     function() {
-      let legends = Ember.A();
+      let legends = A();
       let layerSettings = this.get('layer.settingsAsObject') || {};
 
-      let url = Ember.get(layerSettings, 'legendSettings.url') || Ember.get(layerSettings, 'url');
-      if (Ember.isBlank(url)) {
+      let url = get(layerSettings, 'legendSettings.url') || get(layerSettings, 'url');
+      if (isBlank(url)) {
         Ember.Logger.error(
           `Unable to compute legends for '${this.get('layer.name')}' layer, because both required settings 'url' and 'legendSettings.url' are blank`
         );
@@ -40,12 +43,12 @@ export default BaseLegendComponent.extend({
         return legends;
       }
 
-      Ember.A((Ember.get(layerSettings, 'legendSettings.layers') || Ember.get(layerSettings, 'layers') || '').split(',')).forEach((layerName) => {
+      A((get(layerSettings, 'legendSettings.layers') || get(layerSettings, 'layers') || '').split(',')).forEach((layerName) => {
         let parameters = {
           service: 'WMS',
           request: 'GetLegendGraphic',
-          version: Ember.get(layerSettings, 'legendSettings.version') || Ember.get(layerSettings, 'version') || '1.1.0',
-          format: Ember.get(layerSettings, 'legendSettings.format') || Ember.get(layerSettings, 'imageFormat') || 'image/png',
+          version: get(layerSettings, 'legendSettings.version') || get(layerSettings, 'version') || '1.1.0',
+          format: get(layerSettings, 'legendSettings.format') || get(layerSettings, 'imageFormat') || 'image/png',
           layer: layerName
         };
 

@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
+
+import Mixin from '@ember/object/mixin';
 
 /**
   Mixin containing initializetion logic for layer link serializer.
@@ -10,7 +12,7 @@ import Ember from 'ember';
   @class NewPlatformFlexberyGISLayerLinkSerializerMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export let Serializer = Ember.Mixin.create({
+export let Serializer = Mixin.create({
   getAttrs: function () {
     let parentAttrs = this._super();
     let attrs = {
@@ -19,7 +21,7 @@ export let Serializer = Ember.Mixin.create({
       parameters: { serialize: false, deserialize: 'records' }
     };
 
-    return Ember.$.extend(true, {}, parentAttrs, attrs);
+    return $.extend(true, {}, parentAttrs, attrs);
   },
 
   init: function () {

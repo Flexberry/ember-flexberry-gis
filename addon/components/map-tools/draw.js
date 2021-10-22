@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from '../../templates/components/map-tools/draw';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -50,7 +50,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let DrawMapToolComponent = Ember.Component.extend({
+let DrawMapToolComponent = Component.extend({
   /**
     Properties which will be passed to the map-tool when it will be instantiated.
 

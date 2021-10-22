@@ -2,7 +2,11 @@
   @module ember-flexberry
 */
 
-import { latlngToPointJsts, latlngToPolylineJsts, latlngToPolygonJsts } from '../utils/layer-to-jsts';
+import {
+  latlngToPointJsts,
+  latlngToPolylineJsts,
+  latlngToPolygonJsts
+} from '../utils/layer-to-jsts';
 
 export function initialize(application) {
   // Add custom leaflet functions

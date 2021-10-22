@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import { translationMacro as t } from 'ember-i18n';
 import layout from '../../templates/components/map-tools/compare';
 
@@ -24,7 +24,7 @@ const flexberryClassNames = {
   wrapper: flexberryClassNamesPrefix
 };
 
-let ComapreToolComponent =  Ember.Component.extend({
+let ComapreToolComponent =  Component.extend({
   layout,
 
   /**

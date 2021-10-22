@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 import layout from '../../../../templates/components/legends/layers-styles/-private/base';
 
 /**
@@ -26,7 +27,7 @@ const flexberryClassNames = {
   @class BaseLayerStyleLegendComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to 'layers-styles-renderer' service.
 
@@ -34,7 +35,7 @@ export default Ember.Component.extend({
     @type LayersStylesRendererService
     @private
   */
-  _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
+  _layersStylesRenderer: service('layers-styles-renderer'),
 
   /**
     Reference to 'markers-styles-renderer' service.
@@ -43,7 +44,7 @@ export default Ember.Component.extend({
     @type MarkersStylesRendererService
     @private
   */
-  _markersStylesRenderer: Ember.inject.service('markers-styles-renderer'),
+  _markersStylesRenderer: service('markers-styles-renderer'),
 
   /**
     Reference to component's template.

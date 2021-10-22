@@ -2,9 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
 
-const { computed, run } = Ember;
+import Mixin from '@ember/object/mixin';
+import { computed } from '@ember/object';
+import { run } from '@ember/runloop';
 
 /**
   Leaflet events mixin.
@@ -13,7 +15,7 @@ const { computed, run } = Ember;
   @class LeafletEventsMixin
   @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Array of leaflet object events on which component should raise action.
 
@@ -65,7 +67,7 @@ export default Ember.Mixin.create({
 
           // Allow classes to add custom logic on events as well.
           if (typeof this[methodName] === 'function') {
-            Ember.run(this, this[methodName], e);
+            run(this, this[methodName], e);
           }
         });
       };
@@ -84,7 +86,7 @@ export default Ember.Mixin.create({
   _removeEventListeners() {
     let eventHandlers = this.get('_eventHandlers');
     let leafletObject = this.get('_leafletObject');
-    if (Ember.isNone(eventHandlers) || Ember.isNone(leafletObject)) {
+    if (isNone(eventHandlers) || isNone(leafletObject)) {
       return;
     }
 

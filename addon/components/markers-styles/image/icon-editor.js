@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import Evented from '@ember/object/evented';
+
+import { once } from '@ember/runloop';
+import { isBlank, isNone } from '@ember/utils';
+import { isArray } from '@ember/array';
+import EmberObject, { computed, observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../../templates/components/markers-styles/image/icon-editor';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -12,7 +18,7 @@ import { translationMacro as t } from 'ember-i18n';
   @class ImageMarkersStyleIconEditorComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
 
     Property containing color of ancor-picker circle.
@@ -120,9 +126,9 @@ export default Ember.Component.extend({
     @private
     @readOnly
   */
-  _iconSize: Ember.computed('iconSize.[]', function() {
+  _iconSize: computed('iconSize.[]', function() {
     let iconSize = this.get('iconSize');
-    return Ember.isArray(iconSize) ?
+    return isArray(iconSize) ?
       { width: iconSize[0], height: iconSize[1] } :
       { width: 0, height: 0 };
   }),
@@ -135,9 +141,9 @@ export default Ember.Component.extend({
     @private
     @readOnly
   */
-  _iconAnchor: Ember.computed('iconAnchor.[]', function() {
+  _iconAnchor: computed('iconAnchor.[]', function() {
     let iconAnchor = this.get('iconAnchor');
-    return Ember.isArray(iconAnchor) ?
+    return isArray(iconAnchor) ?
     { x: iconAnchor[0], y: iconAnchor[1] } :
     { x: 0, y: 0 };
   }),
@@ -150,9 +156,9 @@ export default Ember.Component.extend({
     @private
     @readOnly
   */
-  _iconZoomAnchor: Ember.computed('iconZoomAnchor.[]', function() {
+  _iconZoomAnchor: computed('iconZoomAnchor.[]', function() {
     let iconAnchor = this.get('iconZoomAnchor');
-    return Ember.isArray(iconAnchor) ?
+    return isArray(iconAnchor) ?
       { x: iconAnchor[0], y: iconAnchor[1] } :
       { x: 0, y: 0 };
   }),
@@ -165,11 +171,11 @@ export default Ember.Component.extend({
     @private
     @readOnly
   */
-  _showIconImage: Ember.computed('iconUrl', '_iconSize', function() {
+  _showIconImage: computed('iconUrl', '_iconSize', function() {
     let iconUrl = this.get('iconUrl');
     let iconSize = this.get('_iconSize');
 
-    return !Ember.isBlank(iconUrl) && iconSize.width > 0 && iconSize.height > 0;
+    return !isBlank(iconUrl) && iconSize.width > 0 && iconSize.height > 0;
   }),
 
   /**
@@ -285,7 +291,7 @@ export default Ember.Component.extend({
     @private
     @readOnly
   */
-  _iconZoomSize: Ember.computed('iconZoomSize.[]', 'iconSize.[]', 'iconSizeNew', function() {
+  _iconZoomSize: computed('iconZoomSize.[]', 'iconSize.[]', 'iconSizeNew', function() {
     let iconZoomSize = this.get('iconZoomSize');
     let iconSize = this.get('iconSize');
 
@@ -301,7 +307,7 @@ export default Ember.Component.extend({
       this.set('_isZoom', true);
     }
 
-    return Ember.isArray(iconZoomSize) ?
+    return isArray(iconZoomSize) ?
       { width: w, height: h } :
       { width: 0, height: 0 };
   }),
@@ -376,7 +382,7 @@ export default Ember.Component.extend({
     @method _enabledDidChange
     @private
   */
-  _enabledDidChange: Ember.observer(
+  _enabledDidChange: observer(
     '_enabled',
     function() {
       if (!this.get('_enabled')) {
@@ -418,12 +424,12 @@ export default Ember.Component.extend({
     @method   _styleSettingsForResizingChanged
     @private
   */
-  _styleSettingsForResizingChanged: Ember.observer(
+  _styleSettingsForResizingChanged: observer(
     'iconKeepOrigAspectRatio',
     'iconSizeNew.0',
     'iconSizeNew.1',
     function() {
-      Ember.run.once(this, '_setNewSize');
+      once(this, '_setNewSize');
     }
   ),
 
@@ -485,14 +491,14 @@ export default Ember.Component.extend({
     @method _styleSettingsDidChange
     @private
   */
-  _styleSettingsDidChange: Ember.observer(
+  _styleSettingsDidChange: observer(
     'iconUrl',
     'iconSize',
     'iconAnchor',
     'iconZoomSize',
     'iconZoomAnchor',
     function() {
-      Ember.run.once(this, '_sendChangeAction');
+      once(this, '_sendChangeAction');
     }
   ),
 
@@ -515,7 +521,7 @@ export default Ember.Component.extend({
   */
   _loadIconFile(iconFile) {
     let iconFileReader = this.get('_iconFileReader');
-    if (Ember.isNone(iconFileReader)) {
+    if (isNone(iconFileReader)) {
       return;
     }
 
@@ -625,7 +631,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     let iconSize = this.get('iconSize');
-    if (Ember.isNone(iconSize)) {
+    if (isNone(iconSize)) {
       this.set('iconSize', [0, 0]);
     }
 
@@ -634,18 +640,18 @@ export default Ember.Component.extend({
     this.set('_iconOrigAspectRatio', iconSize[0] / iconSize[1]);
 
     let iconAnchor = this.get('iconAnchor');
-    if (Ember.isNone(iconAnchor)) {
+    if (isNone(iconAnchor)) {
       this.set('iconAnchor', [0, 0]);
     }
 
     let iconZoomAnchor = this.get('iconZoomAnchor');
-    if (Ember.isNone(iconZoomAnchor)) {
+    if (isNone(iconZoomAnchor)) {
       this.set('iconZoomAnchor', [0, 0]);
     }
 
     let iconZoomSize = this.get('iconZoomSize');
 
-    if (Ember.isNone(iconZoomSize)) {
+    if (isNone(iconZoomSize)) {
       this.set('iconZoomSize', [0, 0]);
     }
 
@@ -662,10 +668,10 @@ export default Ember.Component.extend({
     this.set('_iconImage', iconImage);
 
     // Evented stub for flexberry-file's 'relatedModel' property.
-    let relatedModelStub = Ember.Object.extend(Ember.Evented, {}).create();
+    let relatedModelStub = EmberObject.extend(Evented, {}).create();
     this.set('_relatedModelStub', relatedModelStub);
 
-    if (this.get('allowDisabling') && Ember.isNone(this.get('iconUrl'))) {
+    if (this.get('allowDisabling') && isNone(this.get('iconUrl'))) {
       this.set('_enabled', false);
     }
   },
@@ -763,7 +769,7 @@ export default Ember.Component.extend({
       let iconFile = uploadData && uploadData.files && uploadData.files.length > 0 ?
         uploadData.files[0] :
         null;
-      if (Ember.isNone(iconFile)) {
+      if (isNone(iconFile)) {
         this._clearIconFile();
       } else {
         this._loadIconFile(iconFile);

@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { get } from '@ember/object';
 
 let maxGeometryOpacity = 0.65;
 
@@ -24,7 +24,7 @@ let setLeafletLayerOpacity = function({ leafletLayer, opacity,
   if (typeof leafletLayer.setOpacity === 'function') {
     leafletLayer.setOpacity(opacity);
   } else if (typeof leafletLayer.setStyle === 'function') {
-    let style = Ember.get(leafletLayer, 'options.style') || {};
+    let style = get(leafletLayer, 'options.style') || {};
     if (typeof style === 'function') {
       let opacityFromFunction = 1;
       if (leafletLayer.feature) {
@@ -39,7 +39,7 @@ let setLeafletLayerOpacity = function({ leafletLayer, opacity,
   }
 
   if (leafletLayer instanceof L.MarkerClusterGroup) {
-    setLeafletLayerOpacity({ leafletLayer: Ember.get(leafletLayer, '_featureGroup'), opacity, maxGeomOpacity, maxGeomFillOpacity });
+    setLeafletLayerOpacity({ leafletLayer: get(leafletLayer, '_featureGroup'), opacity, maxGeomOpacity, maxGeomFillOpacity });
   }
 
   if (typeof leafletLayer.eachLayer === 'function') {

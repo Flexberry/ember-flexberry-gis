@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
+
+import { Promise } from 'rsvp';
+import { get } from '@ember/object';
+import { getOwner } from '@ember/application';
+import { inject as service } from '@ember/service';
+import Mixin from '@ember/object/mixin';
 
 /**
   Mixin containing method for loading flexberry-boundingbox component's map.
@@ -10,11 +16,11 @@ import Ember from 'ember';
   @class FlexberryBoundingboxMapLoaderMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
    Service for Map loading from store
   */
-  mapStore: Ember.inject.service(),
+  mapStore: service(),
 
   /**
     Map id for boundingbox component.
@@ -31,11 +37,11 @@ export default Ember.Mixin.create({
     @return {Promise} Promise, that returning map model.
   */
   getBoundingBoxComponentMapModel() {
-    let config = Ember.getOwner(this).factoryFor('config:environment').class;
-    let mapId = this.get('boundingBoxComponentMapId') || Ember.get(config, 'APP.components.flexberryBoundingbox.mapId');
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    let config = getOwner(this).factoryFor('config:environment').class;
+    let mapId = this.get('boundingBoxComponentMapId') || get(config, 'APP.components.flexberryBoundingbox.mapId');
+    return new Promise((resolve, reject) => {
       let osmmap = this.get('mapStore.osmmap');
-      if (Ember.isBlank(mapId)) {
+      if (isBlank(mapId)) {
         resolve(osmmap);
       } else {
         this.get('mapStore').getMapById(mapId).then(record => {

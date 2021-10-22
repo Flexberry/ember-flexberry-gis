@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { guidFor } from '@ember/object/internals';
+
+import { scheduleOnce } from '@ember/runloop';
+import $ from 'jquery';
+import { isNone } from '@ember/utils';
+import { computed, set, observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-table';
 import PaginatedControllerMixin from 'ember-flexberry/mixins/paginated-controller';
 import SlotsMixin from 'ember-block-slots';
@@ -16,7 +22,7 @@ import SlotsMixin from 'ember-block-slots';
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @extends <a href="https://github.com/ciena-blueplanet/ember-block-slots">Ember block slots</a>
 */
-export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
+export default Component.extend(PaginatedControllerMixin, SlotsMixin, {
   /**
     Computes - how many block-slots are used.
 
@@ -26,7 +32,7 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
     @readonly
     @private
   */
-  _additionalColumnsCount: Ember.computed('_slots.[]', function() {
+  _additionalColumnsCount: computed('_slots.[]', function() {
     let slots = ['column-header-head-0', 'column-cell-head-1', 'column-header-tail-0'];
     let result = 0;
     slots.forEach((item) => {
@@ -45,7 +51,7 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
     @private
     @readOnly
   */
-  _columnCount: Ember.computed('header', {
+  _columnCount: computed('header', {
     get() {
       let additionalColumnsCount = this.get('_additionalColumnsCount');
       return Object.keys(this.get('header')).length + additionalColumnsCount;
@@ -145,18 +151,18 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
       @param {Object} e Event object.
     */
     onCellClick(newSelectedCellName, e) {
-      if (Ember.isNone(newSelectedCellName)) {
+      if (isNone(newSelectedCellName)) {
         return;
       }
 
       this.set('_selectedCellName', newSelectedCellName);
 
       // Convert native event object into jQuery event object.
-      e = Ember.$.event.fix(e);
+      e = $.event.fix(e);
 
       // Wait while input will be embeded into clicked cell (after render), and focus on it.
-      Ember.run.scheduleOnce('afterRender', this, function () {
-        let $cellInput = Ember.$(e.target).find('input').first();
+      scheduleOnce('afterRender', this, function () {
+        let $cellInput = $(e.target).find('input').first();
         $cellInput.focus();
       });
     },
@@ -179,8 +185,8 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
       let value = fieldParsers[fieldName](inputText);
       let valueIsValid = fieldValidators[fieldName](value);
       if (valueIsValid) {
-        Ember.set(row, fieldName, value);
-        this.sendAction('rowEdited', Ember.guidFor(row));
+        set(row, fieldName, value);
+        this.sendAction('rowEdited', guidFor(row));
       }
 
       this.set('_selectedCellName', null);
@@ -193,7 +199,7 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
       @param {Object} e Event object.
      */
     onCellCheckboxChange(row, e) {
-      this.sendAction('rowEdited', Ember.guidFor(row));
+      this.sendAction('rowEdited', guidFor(row));
     },
 
     /**
@@ -222,7 +228,7 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
     @method _pageDidChange
     @private
   */
-  _pageDidChange: Ember.observer('page', function () {
+  _pageDidChange: observer('page', function () {
     this._reload();
   }),
 

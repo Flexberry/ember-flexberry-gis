@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { set, get } from '@ember/object';
+
+import { isNone, isBlank } from '@ember/utils';
+import { getOwner } from '@ember/application';
+import Service from '@ember/service';
 
 /**
   Map api service.
@@ -11,7 +15,7 @@ import Ember from 'ember';
   @class MapApiService
   @extends Ember.Service
 */
-export default Ember.Service.extend({
+export default Service.extend({
   /**
     Flag: indicates when map API available.
     This flag is readed from config setting `APP.mapApiService`.
@@ -24,8 +28,8 @@ export default Ember.Service.extend({
 
   init() {
     this._super(...arguments);
-    const appConfig = Ember.getOwner(this)._lookupFactory('config:environment');
-    if (!Ember.isNone(appConfig) && !Ember.isNone(appConfig.APP.mapApiService)) {
+    const appConfig = getOwner(this)._lookupFactory('config:environment');
+    if (!isNone(appConfig) && !isNone(appConfig.APP.mapApiService)) {
       this.set('isApiAvailable', appConfig.APP.mapApiService);
     }
   },
@@ -38,8 +42,8 @@ export default Ember.Service.extend({
     @param {Object} value Specified value.
   */
   addToApi(path, value) {
-    if (this.get('isApiAvailable') && !Ember.isBlank(path)) {
-      if (Ember.isNone(window.mapApi)) {
+    if (this.get('isApiAvailable') && !isBlank(path)) {
+      if (isNone(window.mapApi)) {
         window.mapApi = {};
       }
 
@@ -48,10 +52,10 @@ export default Ember.Service.extend({
       pathArray.forEach((pathPart, index, array) => {
         currentPath += `.${pathPart}`;
         if (index === array.length - 1) {
-          Ember.set(window, currentPath, value);
+          set(window, currentPath, value);
         } else {
-          if (Ember.isNone(Ember.get(window, currentPath))) {
-            Ember.set(window, currentPath, {});
+          if (isNone(get(window, currentPath))) {
+            set(window, currentPath, {});
           }
         }
       });
@@ -65,8 +69,8 @@ export default Ember.Service.extend({
     @param {String} path Path in the map API.
   */
   getFromApi(path) {
-    if (this.get('isApiAvailable') && !Ember.isBlank(path)) {
-      return Ember.get(window, `mapApi.${path}`);
+    if (this.get('isApiAvailable') && !isBlank(path)) {
+      return get(window, `mapApi.${path}`);
     }
   }
 });

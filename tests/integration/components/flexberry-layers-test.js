@@ -1,67 +1,76 @@
-import Ember from 'ember';
-import { moduleForComponent, test } from 'ember-qunit';
+import { get } from '@ember/object';
+import { isNone } from '@ember/utils';
+import { A } from '@ember/array';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('flexberry-layers', 'Integration | Component | flexberry layers', {
-  integration: true
-});
+module('Integration | Component | flexberry layers', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function(assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  hooks.beforeEach(function() {
+    this.actions = {};
+    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+  });
 
-  this.render(hbs`{{flexberry-layers}}`);
+  test('it renders', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
 
-  assert.equal(this.$().text().trim(), '');
-});
+    await render(hbs`{{flexberry-layers}}`);
 
-test('layer component sends actions', function(assert) {
-  let geoJsonData = `
-    {
-      "type": "FeatureCollection",
-      "features": [{
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [102.0, 0.5]
-        },
-        "properties": {
-          "prop0": "value0"
+    assert.equal(this.element.textContent.trim(), '');
+  });
+
+  test('layer component sends actions', async function(assert) {
+    let geoJsonData = `
+      {
+        "type": "FeatureCollection",
+        "features": [{
+          "type": "Feature",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [102.0, 0.5]
+          },
+          "properties": {
+            "prop0": "value0"
+          }
         }
-      }
-    ]
-  }`;
-  let geoJson = L.geoJSON(JSON.parse(geoJsonData));
-  this.set('items', Ember.A([{
-    name: 'test layer',
-    type: 'geojson',
-    leafletObject: geoJson
-  }]));
-  this.set('leafletContainer', L.layerGroup());
+      ]
+    }`;
+    let geoJson = L.geoJSON(JSON.parse(geoJsonData));
+    this.set('items', A([{
+      name: 'test layer',
+      type: 'geojson',
+      leafletObject: geoJson
+    }]));
+    this.set('leafletContainer', L.layerGroup());
 
-  this.on('onLayerInit', ({ leafletObject, layerModel }) => {
-    assert.ok(!Ember.isNone(leafletObject), 'leafletObject should not be null');
-    assert.equal(Ember.get(layerModel, 'name'), 'test layer');
-  });
+    this.actions.onLayerInit = ({ leafletObject, layerModel }) => {
+      assert.ok(!isNone(leafletObject), 'leafletObject should not be null');
+      assert.equal(get(layerModel, 'name'), 'test layer');
+    };
 
-  this.on('onLayerDestroy', ({ leafletObject, layerModel }) => {
-    assert.ok(!Ember.isNone(leafletObject), 'leafletObject should not be null');
-    assert.equal(Ember.get(layerModel, 'name'), 'test layer');
-  });
+    this.actions.onLayerDestroy = ({ leafletObject, layerModel }) => {
+      assert.ok(!isNone(leafletObject), 'leafletObject should not be null');
+      assert.equal(get(layerModel, 'name'), 'test layer');
+    };
 
-  this.render(hbs`
-    {{flexberry-layers
-      leafletContainer=leafletContainer
-      layers=(get-with-dynamic-actions this "items"
-        dynamicActions=(array
-          (hash
-            on="layerInit"
-            actionName="onLayerInit"
+    await render(hbs`
+      {{flexberry-layers
+        leafletContainer=leafletContainer
+        layers=(get-with-dynamic-actions this "items"
+          dynamicActions=(array
+            (hash
+              on="layerInit"
+              actionName="onLayerInit"
+            )
+            (hash
+              on="layerDestroy"
+              actionName="onLayerDestroy"
+            )
           )
-          (hash
-            on="layerDestroy"
-            actionName="onLayerDestroy"
-          )
-        )
-      )}}`);
+        )}}`);
+  });
 });

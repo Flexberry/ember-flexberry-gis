@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { getOwner } from '@ember/application';
+
+import Helper from '@ember/component/helper';
 
 /**
   Known for type helper.
@@ -19,8 +21,8 @@ import Ember from 'ember';
   {{/#if}}
   ```
 */
-export default Ember.Helper.extend({
+export default Helper.extend({
   compute([type, name]) {
-    return Ember.getOwner(this).isKnownNameForType(type, name);
+    return getOwner(this).isKnownNameForType(type, name);
   }
 });

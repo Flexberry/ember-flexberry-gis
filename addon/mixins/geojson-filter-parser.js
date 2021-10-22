@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { get } from '@ember/object';
+
+import { A } from '@ember/array';
+import { isNone, isBlank } from '@ember/utils';
+import Mixin from '@ember/object/mixin';
 
 /**
   Geojson filter parser mixin.
@@ -11,7 +15,7 @@ import Ember from 'ember';
   @class GeoJsonFilterParserMixin
   @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Get properties names from leaflet layer object.
 
@@ -20,15 +24,15 @@ export default Ember.Mixin.create({
     @returns {Array} Array with properties names
   */
   getLayerProperties(leafletObject) {
-    if (Ember.isNone(leafletObject)) {
-      return Ember.A();
+    if (isNone(leafletObject)) {
+      return A();
     }
 
     let geojson = leafletObject.toGeoJSON() || {};
     let features = geojson.features || [];
-    let fields = Ember.A();
+    let fields = A();
 
-    for (let property in Ember.get(features, '0.properties') || {}) {
+    for (let property in get(features, '0.properties') || {}) {
       fields.addObject(property);
     }
 
@@ -47,7 +51,7 @@ export default Ember.Mixin.create({
   parseFilter(filter, geometryField, isInnerExpression) {
     let result = this._super(...arguments);
 
-    if (!(Ember.isBlank(result) || isInnerExpression)) {
+    if (!(isBlank(result) || isInnerExpression)) {
       let intersectFunction = `\nvar intersectCheck = function(condition, geoJSON) {` +
         `var intersects = true;\n` +
         `var bounds = new Terraformer.Polygon(geoJSON);\n` +
@@ -80,13 +84,13 @@ export default Ember.Mixin.create({
   parseFilterConditionExpression(field, condition, value) {
     switch (condition) {
       case '=':
-        if (Ember.isBlank(value)) {
+        if (isBlank(value)) {
           return `feature.properties.${field} == null`;
         }
 
         return `feature.properties.${field} === '${value}'`;
       case '!=':
-        if (Ember.isBlank(value)) {
+        if (isBlank(value)) {
           return `feature.properties.${field} != null`;
         }
 
@@ -96,13 +100,13 @@ export default Ember.Mixin.create({
       case '<':
         return `feature.properties.${field} < '${value}'`;
       case '>=':
-        if (Ember.isBlank(value)) {
+        if (isBlank(value)) {
           return `feature.properties.${field} >= null`;
         }
 
         return `feature.properties.${field} >== '${value}'`;
       case '<=':
-        if (Ember.isBlank(value)) {
+        if (isBlank(value)) {
           return `feature.properties.${field} <= null`;
         }
 

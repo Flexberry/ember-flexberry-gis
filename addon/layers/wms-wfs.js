@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { set } from '@ember/object';
+
+import { getOwner } from '@ember/application';
 import WmsLayer from './wms';
 
 /**
@@ -38,20 +40,20 @@ export default WmsLayer.extend({
   */
   createSettings() {
     let settings = this._super(...arguments);
-    let owner = Ember.getOwner(this);
+    let owner = getOwner(this);
     let wfsLayer = owner.lookup('layer:wfs');
     let wfsSettings = wfsLayer.createSettings();
 
-    Ember.set(settings, 'identifySettings', wfsSettings.identifySettings);
+    set(settings, 'identifySettings', wfsSettings.identifySettings);
     delete wfsSettings.identifySettings;
 
-    Ember.set(settings, 'searchSettings', wfsSettings.searchSettings);
+    set(settings, 'searchSettings', wfsSettings.searchSettings);
     delete wfsSettings.searchSettings;
 
-    Ember.set(settings, 'displaySettings', wfsSettings.displaySettings);
+    set(settings, 'displaySettings', wfsSettings.displaySettings);
     delete wfsSettings.displaySettings;
 
-    Ember.set(settings, 'wfs', wfsSettings);
+    set(settings, 'wfs', wfsSettings);
 
     return settings;
   },
@@ -63,7 +65,7 @@ export default WmsLayer.extend({
     @returns {Object} New search settings object (with search settings related to layer-type).
   */
   createSearchSettings() {
-    let owner = Ember.getOwner(this);
+    let owner = getOwner(this);
     let wfsLayer = owner.lookup('layer:wfs');
 
     return wfsLayer.createSearchSettings();

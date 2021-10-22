@@ -2,8 +2,14 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
-import { Model as MapMixin, defineProjections } from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map';
+import { once } from '@ember/runloop';
+
+import { observer } from '@ember/object';
+import { on } from '@ember/object/evented';
+import {
+  Model as MapMixin,
+  defineProjections
+} from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map';
 import MapModelApiMixin from '../mixins/flexberry-map-model-api';
 import MapModelApiVisualEditMixin from '../mixins/flexberry-map-model-api-visualedit';
 import MapModelApiSaveLayerMixin from '../mixins/flexberry-map-model-api-savelayer';
@@ -34,8 +40,8 @@ let Model = Projection.Model.extend(
   MapModelApiExpansionMixin,
   MapModelApiCosmosMixin,
   {
-  _anyTextChanged: Ember.on('init', Ember.observer('name', 'description', 'keyWords', function() {
-    Ember.run.once(this, '_anyTextCompute');
+  _anyTextChanged: on('init', observer('name', 'description', 'keyWords', function() {
+    once(this, '_anyTextCompute');
   })),
 
   anyTextCompute() {

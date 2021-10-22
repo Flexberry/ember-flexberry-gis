@@ -2,7 +2,14 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { scheduleOnce } from '@ember/runloop';
+
+import { A } from '@ember/array';
+import { set, get } from '@ember/object';
+import { assert } from '@ember/debug';
+import { isNone } from '@ember/utils';
+import { getOwner } from '@ember/application';
+import Mixin from '@ember/object/mixin';
 import LeafletMapVisibilityMixin from './map-visibility';
 
 /**
@@ -11,7 +18,7 @@ import LeafletMapVisibilityMixin from './map-visibility';
   @class LeafletMapToolsMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
+export default Mixin.create(LeafletMapVisibilityMixin, {
   /**
     Performs some initialization before leaflet map will be initialized.
 
@@ -20,7 +27,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
   willInitLeafletMap(leafletMap) {
     this._super(...arguments);
 
-    let owner = Ember.getOwner(this);
+    let owner = getOwner(this);
 
     let _this = this;
 
@@ -36,11 +43,11 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
     // lookups specified map-tool with given tool properties.
     let lookupMapTool = (mapToolName, mapToolProperties) => {
       let mapTool = alreadyLookupedMapTools[mapToolName];
-      if (Ember.isNone(mapTool)) {
+      if (isNone(mapTool)) {
         mapTool = owner.lookup(`map-tool:${mapToolName}`);
-        Ember.assert(
+        assert(
           `Can't lookup \`map-tool:${mapToolName}\` such map-tool doesn\`t exist.`,
-          !Ember.isNone(mapTool));
+          !isNone(mapTool));
 
         mapTool.setProperties({
           name: mapToolName,
@@ -50,10 +57,10 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
         alreadyLookupedMapTools[mapToolName] = mapTool;
       }
 
-      if (!Ember.isNone(mapToolProperties)) {
-        Ember.set(mapTool, 'mapToolProperties', mapToolProperties);
-        Ember.A(Object.keys(mapToolProperties)).forEach((propertyName) => {
-          Ember.set(mapTool, propertyName, Ember.get(mapToolProperties, propertyName));
+      if (!isNone(mapToolProperties)) {
+        set(mapTool, 'mapToolProperties', mapToolProperties);
+        A(Object.keys(mapToolProperties)).forEach((propertyName) => {
+          set(mapTool, propertyName, get(mapToolProperties, propertyName));
         });
       }
 
@@ -66,7 +73,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
       // Sets default map-tool.
       setDefault(mapToolName, mapToolProperties) {
         let mapTool = lookupMapTool(mapToolName, mapToolProperties);
-        if (Ember.isNone(mapTool)) {
+        if (isNone(mapTool)) {
           return;
         }
 
@@ -81,11 +88,11 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
 
       // Enables default map-tool.
       enableDefault(mapToolProperties) {
-        Ember.assert(
+        assert(
           `Can't enable default map-tool because it isn't defined, ` +
           `use \`leafletMap.flexberryMap.tools.setDefault\` method to define it.`,
-          !Ember.isNone(defaultMapTool));
-        let defaultMapToolName = Ember.get(defaultMapTool, 'name');
+          !isNone(defaultMapTool));
+        let defaultMapToolName = get(defaultMapTool, 'name');
 
         return tools.enable(defaultMapToolName, mapToolProperties);
       },
@@ -93,7 +100,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
       // Enables specified map-tool.
       enable(mapToolName, mapToolProperties) {
         let mapTool = lookupMapTool(mapToolName, mapToolProperties);
-        if (Ember.isNone(mapTool)) {
+        if (isNone(mapTool)) {
           return;
         }
 
@@ -107,7 +114,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
 
         // Disable enabled map-tool.
         // It will also trigger 'flexberry-map:tools:disable' event on leaflet map.
-        if (!Ember.isNone(enabledMapTool)) {
+        if (!isNone(enabledMapTool)) {
           enabledMapTool.disable();
         }
 
@@ -135,7 +142,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
 
         if (!result) {
           let mapCommand = lookupMapTool(mapCommandName, null);
-          if (Ember.isNone(mapCommand)) {
+          if (isNone(mapCommand)) {
             return;
           }
 
@@ -149,7 +156,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
 
         if (!result) {
           let mapCommand = lookupMapTool(mapCommandName, null);
-          if (Ember.isNone(mapCommand)) {
+          if (isNone(mapCommand)) {
             return;
           }
 
@@ -159,7 +166,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
 
       // Disables enabled map-tool.
       disable() {
-        if (Ember.isNone(enabledMapTool)) {
+        if (isNone(enabledMapTool)) {
           return;
         }
 
@@ -179,19 +186,19 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
       // Destroys specified map-tool.
       destroy(mapToolName) {
         let mapTool = alreadyLookupedMapTools[mapToolName];
-        if (!Ember.isNone(mapTool)) {
+        if (!isNone(mapTool)) {
           return;
         }
 
-        Ember.assert(
+        assert(
           `Can't destroy \`map-tool:${mapToolName}\` it is set as map's currently enabled map-tool, ` +
           `use \`leafletMap.flexberryMap.tools.disable\` method to disable it.`,
-          Ember.isNone(enabledMapTool) || Ember.get(enabledMapTool, 'name') !== mapToolName);
+          isNone(enabledMapTool) || get(enabledMapTool, 'name') !== mapToolName);
 
-        Ember.assert(
+        assert(
           `Can't destroy \`map-tool:${mapToolName}\` it is set as map's default map-tool, ` +
           `use \`leafletMap.flexberryMap.tools.setDefault\` method to set another map-tool as default.`,
-          Ember.isNone(defaultMapTool) || Ember.get(defaultMapTool, 'name') !== mapToolName);
+          isNone(defaultMapTool) || get(defaultMapTool, 'name') !== mapToolName);
 
         mapTool.destroy();
 
@@ -204,7 +211,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
         defaultMapTool = null;
         enabledMapTool = null;
 
-        Ember.A(Object.keys(alreadyLookupedMapTools)).forEach((mapToolName) => {
+        A(Object.keys(alreadyLookupedMapTools)).forEach((mapToolName) => {
           let mapTool = alreadyLookupedMapTools[mapToolName];
           mapTool.destroy();
 
@@ -216,7 +223,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
     };
 
     // Set 'drag' map-tool as default & enable it.
-    Ember.run.scheduleOnce('afterRender', this, function () {
+    scheduleOnce('afterRender', this, function () {
       tools.setDefault('drag');
       tools.enable('drag');
     });

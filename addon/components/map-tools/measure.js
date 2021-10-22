@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+
+import { observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../templates/components/map-tools/measure';
 import {
   translationMacro as t
@@ -56,7 +59,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let MeasureMapToolComponent = Ember.Component.extend({
+let MeasureMapToolComponent = Component.extend({
   /**
     Properties which will be passed to the map-tool when it will be instantiated.
 
@@ -498,9 +501,9 @@ let MeasureMapToolComponent = Ember.Component.extend({
 
     @method initControl
   */
-  initControl: Ember.observer('leafletMap', function () {
+  initControl: observer('leafletMap', function () {
     let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
+    if (!isNone(leafletMap)) {
       let prop = this.get('_measureToolProperties');
       prop._measureTools = new L.MeasureBase(leafletMap, {
         editOptions: {

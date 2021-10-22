@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { get, set } from '@ember/object';
+
+import { A, isArray } from '@ember/array';
+import Mixin from '@ember/object/mixin';
 
 /**
   Mixin for identify-top map tools.
@@ -10,7 +13,7 @@ import Ember from 'ember';
   @class IdentifyTopMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Returns flat array of layers satisfying to current identification mode.
 
@@ -21,9 +24,9 @@ export default Ember.Mixin.create({
     @private
   */
   _getLayersToIdentify({ excludedLayers }) {
-    let allVisibleLayersToIdentify = Ember.A(this._super(...arguments) || []);
+    let allVisibleLayersToIdentify = A(this._super(...arguments) || []);
 
-    let topVisibleLayerToIdenify = Ember.A();
+    let topVisibleLayerToIdenify = A();
     if (allVisibleLayersToIdentify.length > 0) {
       topVisibleLayerToIdenify.pushObject(allVisibleLayersToIdentify[0]);
     }
@@ -49,15 +52,15 @@ export default Ember.Mixin.create({
     @private
   */
   _finishIdentification(e) {
-    let excludedLayers = Ember.get(e, 'excludedLayers');
-    if (!Ember.isArray(excludedLayers)) {
-      excludedLayers = Ember.A();
-      Ember.set(e, 'excludedLayers', excludedLayers);
+    let excludedLayers = get(e, 'excludedLayers');
+    if (!isArray(excludedLayers)) {
+      excludedLayers = A();
+      set(e, 'excludedLayers', excludedLayers);
     }
 
-    let result = Ember.get(e, 'results.0') || {};
-    let layer = Ember.get(result, 'layerModel') || {};
-    let features = Ember.get(result, 'features') || [];
+    let result = get(e, 'results.0') || {};
+    let layer = get(result, 'layerModel') || {};
+    let features = get(result, 'features') || [];
     let _this = this;
     let superFunction = this._super;
     let handleResult = function(condition) {

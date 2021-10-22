@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { scheduleOnce } from '@ember/runloop';
+
+import $ from 'jquery';
+import { observer } from '@ember/object';
 import BaseControl from 'ember-flexberry-gis/components/base-control';
 
 /**
@@ -67,9 +70,9 @@ export default BaseControl.extend({
     @method localeDidChange
     @private
   */
-  _localeDidChange: Ember.observer('i18n.locale', function() {
+  _localeDidChange: observer('i18n.locale', function() {
     let i18n = this.get('i18n');
-    let $historyControl = Ember.$(this.get('leafletMap._container')).find('.leaflet-control-container .history-control');
+    let $historyControl = $(this.get('leafletMap._container')).find('.leaflet-control-container .history-control');
     let $historyBackButton = $historyControl.find('.history-back-button');
     let $historyForwardButton = $historyControl.find('.history-forward-button');
 
@@ -84,7 +87,7 @@ export default BaseControl.extend({
     @return {L.Control} Returns new created control
   */
   createControl() {
-    Ember.run.scheduleOnce('afterRender', this, '_localeDidChange');
+    scheduleOnce('afterRender', this, '_localeDidChange');
 
     return new L.HistoryControl(this.get('options'));
   }

@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
+
+import Mixin from '@ember/object/mixin';
 import DS from 'ember-data';
 import { Projection } from 'ember-flexberry-data';
 
@@ -12,7 +14,7 @@ import { Projection } from 'ember-flexberry-data';
   @class NewPlatformFlexberyGISLinkMetadataModelMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export let Model = Ember.Mixin.create({
+export let Model = Mixin.create({
   allowShow: DS.attr('boolean'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),
@@ -28,7 +30,7 @@ export let Model = Ember.Mixin.create({
       mapObjectSetting: { presence: true },
       layer: { presence: true }
     };
-    return Ember.$.extend(true, {}, parentValidations, thisValidations);
+    return $.extend(true, {}, parentValidations, thisValidations);
   },
 
   init: function () {

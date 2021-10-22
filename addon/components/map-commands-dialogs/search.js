@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { getOwner } from '@ember/application';
+
+import { isNone, isEmpty } from '@ember/utils';
+import { isArray, A } from '@ember/array';
+import { computed, get, set, observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../templates/components/map-commands-dialogs/search';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -32,7 +37,7 @@ const flexberryClassNames = {
   @class FlexberrySearchMapCommandDialogComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
+let FlexberrySearchMapCommandDialogComponent = Component.extend({
   /**
     Available layers.
   */
@@ -46,14 +51,14 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     @default null
     @private
   */
-  _availableLayersTypes: Ember.computed('_availableLayers.@each.type', function () {
+  _availableLayersTypes: computed('_availableLayers.@each.type', function () {
     let availableLayers = this.get('_availableLayers');
-    if (!Ember.isArray(availableLayers)) {
-      return Ember.A();
+    if (!isArray(availableLayers)) {
+      return A();
     }
 
-    return Ember.A(availableLayers.map((layer) => {
-      return Ember.get(layer, 'type');
+    return A(availableLayers.map((layer) => {
+      return get(layer, 'type');
     }));
   }),
 
@@ -75,9 +80,9 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     @default null
     @private
   */
-  _selectedLayerTypeIsValid: Ember.computed('_selectedLayer.type', '_availableLayersTypes', function () {
+  _selectedLayerTypeIsValid: computed('_selectedLayer.type', '_availableLayersTypes', function () {
     let availableLayersTypes = this.get('_availableLayersTypes');
-    if (!Ember.isArray(availableLayersTypes)) {
+    if (!isArray(availableLayersTypes)) {
       return false;
     }
 
@@ -92,10 +97,10 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     @readOnly
     @private
   */
-  _selectedLayerFeaturesExcludedProperties: Ember.computed(
+  _selectedLayerFeaturesExcludedProperties: computed(
     '_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.excludedProperties',
     function () {
-      let excludedProperties = Ember.A(
+      let excludedProperties = A(
         this.get('_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.excludedProperties') || []);
       return excludedProperties;
     }
@@ -109,7 +114,7 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     @readOnly
     @private
   */
-  _selectedLayerFeaturesLocalizedProperties: Ember.computed(
+  _selectedLayerFeaturesLocalizedProperties: computed(
     '_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.localizedProperties',
     'i18n.locale',
     function () {
@@ -149,8 +154,8 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     @readOnly
     @private
   */
-  _hasFoundedFeatures: Ember.computed('foundedFeatures', function () {
-    return Ember.isArray(this.get('foundedFeatures'));
+  _hasFoundedFeatures: computed('foundedFeatures', function () {
+    return isArray(this.get('foundedFeatures'));
   }),
 
   /**
@@ -161,14 +166,14 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     @default false
     @private
   */
-  _allFoundedFeaturesAreSelected: Ember.computed('foundedFeatures.@each._selected', function () {
+  _allFoundedFeaturesAreSelected: computed('foundedFeatures.@each._selected', function () {
     let foundedFeatures = this.get('foundedFeatures');
-    if (!Ember.isArray(foundedFeatures)) {
+    if (!isArray(foundedFeatures)) {
       return false;
     }
 
     return foundedFeatures.every((feature) => {
-      return Ember.get(feature, '_selected') === true;
+      return get(feature, '_selected') === true;
     });
   }),
 
@@ -340,23 +345,23 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     onLayersDropdownAvailableLayersChange(availableLayers) {
       this.set('_availableLayers', availableLayers);
 
-      if (Ember.isNone(this.get('_selectedLayer')) && Ember.isArray(availableLayers) && availableLayers.length > 0) {
+      if (isNone(this.get('_selectedLayer')) && isArray(availableLayers) && availableLayers.length > 0) {
         this.set('_selectedLayer', availableLayers[0]);
       }
 
       let availableLayersOptions = this.get('_availableLayersOptions');
-      if (!Ember.isArray(availableLayersOptions)) {
-        availableLayersOptions = Ember.A();
+      if (!isArray(availableLayersOptions)) {
+        availableLayersOptions = A();
       }
 
-      if (!Ember.isArray(availableLayers)) {
+      if (!isArray(availableLayers)) {
         return;
       }
 
       // Align cached search options to current state of available layers array.
       // If cache is empty it will be generated.
-      let newAvailableLayerOptions = Ember.A();
-      let owner = Ember.getOwner(this);
+      let newAvailableLayerOptions = A();
+      let owner = getOwner(this);
       availableLayers.forEach((availableLayer) => {
         let alreadyExistingOptions = null;
         let alreadyExistingFoundedFeatures = null;
@@ -369,14 +374,14 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
           }
         });
 
-        if (!Ember.isNone(alreadyExistingOptions)) {
+        if (!isNone(alreadyExistingOptions)) {
           newAvailableLayerOptions.pushObject({
             layer: availableLayer,
             options: alreadyExistingOptions,
             foundedFeatures: alreadyExistingFoundedFeatures
           });
         } else {
-          let availableLayerClass = owner.knownForType('layer', Ember.get(availableLayer, 'type'));
+          let availableLayerClass = owner.knownForType('layer', get(availableLayer, 'type'));
           newAvailableLayerOptions.pushObject({
             layer: availableLayer,
             options: availableLayerClass.createSearchSettings(),
@@ -413,20 +418,20 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     */
     onApprove(e) {
       let selectedLayer = this.get('_selectedLayer');
-      if (Ember.isNone(e)) {
+      if (isNone(e)) {
         e = {};
       }
 
-      if (Ember.isNone(selectedLayer)) {
+      if (isNone(selectedLayer)) {
         this.set('errorMessage', this.get('i18n').t('components.map-commands-dialogs.search.error-message-empty-selected-layer'));
         this.set('showErrorMessage', true);
-        Ember.set(e, 'closeDialog', false);
+        set(e, 'closeDialog', false);
 
         return;
       }
 
-      Ember.set(e, 'layer', this.get('_selectedLayer'));
-      Ember.set(e, 'searchOptions', this.get('_options'));
+      set(e, 'layer', this.get('_selectedLayer'));
+      set(e, 'searchOptions', this.get('_options'));
 
       this.sendAction('approve', e);
     },
@@ -498,13 +503,13 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     */
     onSelectAllFeaturesCheckboxChange(e) {
       let foundedFeatures = this.get('foundedFeatures');
-      if (!Ember.isArray(foundedFeatures)) {
+      if (!isArray(foundedFeatures)) {
         return;
       }
 
       // Select all founded features.
       foundedFeatures.forEach((feature) => {
-        Ember.set(feature, '_selected', e.newValue);
+        set(feature, '_selected', e.newValue);
       });
     },
 
@@ -519,11 +524,11 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     */
     onSelectFeatureCheckboxChange(featureIndex, e) {
       let foundedFeatures = this.get('foundedFeatures');
-      if (!Ember.isArray(foundedFeatures)) {
+      if (!isArray(foundedFeatures)) {
         return;
       }
 
-      Ember.set(foundedFeatures[featureIndex], '_selected', e.newValue);
+      set(foundedFeatures[featureIndex], '_selected', e.newValue);
     },
 
     /**
@@ -534,13 +539,13 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     */
     onShowAllFeaturesButtonClick() {
       let foundedFeatures = this.get('foundedFeatures');
-      if (!Ember.isArray(foundedFeatures)) {
+      if (!isArray(foundedFeatures)) {
         return;
       }
 
       // Show all selected features.
       let features = foundedFeatures.filter((feature) => {
-        return Ember.get(feature, '_selected') === true;
+        return get(feature, '_selected') === true;
       });
 
       this._showFoundedFeatures(features, this.get('_selectedLayer'));
@@ -555,7 +560,7 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     */
     onShowFeatureButtonClick(featureIndex) {
       let foundedFeatures = this.get('foundedFeatures');
-      if (!Ember.isArray(foundedFeatures)) {
+      if (!isArray(foundedFeatures)) {
         return;
       }
 
@@ -571,13 +576,13 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     @method _availableOrSelectedLayerDidChange
     @private
   */
-  _availableOrSelectedLayerDidChange: Ember.observer('_availableLayersOptions.[]', '_selectedLayer', function () {
+  _availableOrSelectedLayerDidChange: observer('_availableLayersOptions.[]', '_selectedLayer', function () {
     let selectedLayerSearchOptions = {};
     let selectedLayerFoundedFeatures = null;
 
     let availableLayersOptions = this.get('_availableLayersOptions');
     let selectedLayer = this.get('_selectedLayer');
-    if (Ember.isArray(availableLayersOptions) && !Ember.isNone(selectedLayer)) {
+    if (isArray(availableLayersOptions) && !isNone(selectedLayer)) {
       availableLayersOptions.forEach(({ layer, options, foundedFeatures }) => {
         if (layer === selectedLayer) {
           selectedLayerSearchOptions = options;
@@ -599,28 +604,28 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     @method _foundedFeaturesDidChange
     @private
   */
-  _foundedFeaturesDidChange: Ember.observer('foundedFeatures', function () {
+  _foundedFeaturesDidChange: observer('foundedFeatures', function () {
     let availableLayersOptions = this.get('_availableLayersOptions');
     let selectedLayer = this.get('_selectedLayer');
 
-    if (Ember.isArray(availableLayersOptions) && !Ember.isNone(selectedLayer)) {
+    if (isArray(availableLayersOptions) && !isNone(selectedLayer)) {
       availableLayersOptions.forEach((cachedEntry) => {
-        if (Ember.get(cachedEntry, 'layer') === selectedLayer) {
-          let dateFormat = Ember.get(selectedLayer, 'settingsAsObject.displaySettings.dateFormat');
-          if (!Ember.isEmpty(dateFormat)) {
+        if (get(cachedEntry, 'layer') === selectedLayer) {
+          let dateFormat = get(selectedLayer, 'settingsAsObject.displaySettings.dateFormat');
+          if (!isEmpty(dateFormat)) {
             this.get('foundedFeatures').forEach((feature) => {
-              let featureProperties = Ember.get(feature, 'properties') || {};
+              let featureProperties = get(feature, 'properties') || {};
 
               for (var prop in featureProperties) {
                 let value = featureProperties[prop];
-                if (value instanceof Date && !Ember.isNone(value) && !Ember.isEmpty(value) && !Ember.isEmpty(dateFormat)) {
+                if (value instanceof Date && !isNone(value) && !isEmpty(value) && !isEmpty(dateFormat)) {
                   featureProperties[prop] = moment(value).format(dateFormat);
                 }
               }
             });
           }
 
-          Ember.set(cachedEntry, 'foundedFeatures', this.get('foundedFeatures'));
+          set(cachedEntry, 'foundedFeatures', this.get('foundedFeatures'));
           return false;
         }
       });
@@ -635,7 +640,7 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     @private
   */
   _showFoundedFeatures(features, layer) {
-    if (!Ember.isArray(features) || Ember.get(features, 'length') === 0) {
+    if (!isArray(features) || get(features, 'length') === 0) {
       return;
     }
 
@@ -657,7 +662,7 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     @private
   */
   _layerCanBeSearched(layer) {
-    return Ember.get(layer, 'canBeSearched');
+    return get(layer, 'canBeSearched');
   },
 
   /**

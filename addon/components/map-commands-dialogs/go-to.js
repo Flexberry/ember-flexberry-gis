@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone, isBlank } from '@ember/utils';
+
+import { A } from '@ember/array';
+import { computed, set, get } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../templates/components/map-commands-dialogs/go-to';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -30,7 +34,7 @@ const flexberryClassNames = {
   @class FlexberryGoToMapCommandDialogComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
+let FlexberryGoToMapCommandDialogComponent = Component.extend({
     /**
       Available command modes.
 
@@ -48,9 +52,9 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
       @type String[]
       @private
     */
-    _availableCaptions: Ember.computed('_availableModes.[]', function() {
+    _availableCaptions: computed('_availableModes.[]', function() {
       let availableModes = this.get('_availableModes');
-      let captions = Ember.A();
+      let captions = A();
       availableModes.forEach(function(item) {
         captions.push(item.name);
       });
@@ -75,7 +79,7 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
       @type object
       @private
     */
-    _selectedCrs: Ember.computed('_selectedMode', function() {
+    _selectedCrs: computed('_selectedMode', function() {
       let selectedMode = this.get('_selectedMode');
       let availableModes = this.get('_availableModes');
       let current = null;
@@ -282,7 +286,7 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
       */
       onApprove(e) {
         let gotoOptions = this._getGoToOptions();
-        if (Ember.isNone(gotoOptions)) {
+        if (isNone(gotoOptions)) {
           // Prevent dialog from being closed.
           e.closeDialog = false;
 
@@ -295,7 +299,7 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
         // Hide possibly shown error message.
         this.set('_showErrorMessage', false);
 
-        Ember.set(e, 'gotoOptions', gotoOptions);
+        set(e, 'gotoOptions', gotoOptions);
         this.sendAction('approve', e);
       },
 
@@ -345,8 +349,8 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
       let innerOptions = this.get('_options');
       let crs = this.get('_selectedCrs');
 
-      let x = Ember.get(innerOptions, 'x').replace(',', '.');
-      let y = Ember.get(innerOptions, 'y').replace(',', '.');
+      let x = get(innerOptions, 'x').replace(',', '.');
+      let y = get(innerOptions, 'y').replace(',', '.');
       let regEx = /^(\-|\+)?([0-9]+(\.[0-9]+)?)$/;
       if (!(regEx.test(x) && regEx.test(y))) {
         this.set('errorMessageContent', t('components.map-commands-dialogs.go-to.error-message.content'));
@@ -356,11 +360,11 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
       x = parseFloat(x);
       y = parseFloat(y);
 
-      let isLatlng = Ember.get(crs, 'isLatlng');
-      let usedCrs = Ember.get(crs, 'crs');
+      let isLatlng = get(crs, 'isLatlng');
+      let usedCrs = get(crs, 'crs');
       let leafletMap = this.get('leafletMap');
-      let maxBounds = Ember.get(leafletMap, 'options.maxBounds');
-      if (Ember.isBlank(maxBounds)) {
+      let maxBounds = get(leafletMap, 'options.maxBounds');
+      if (isBlank(maxBounds)) {
         let maxPixelBounds = leafletMap.getPixelWorldBounds(0);
         maxBounds = L.latLngBounds(leafletMap.unproject(maxPixelBounds.min, 0), leafletMap.unproject(maxPixelBounds.max, 0));
       }
@@ -371,11 +375,11 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
         return null;
       }
 
-      Ember.set(gotoOptions, 'point', new L.Point(x, y));
-      Ember.set(gotoOptions, 'crs', usedCrs);
-      Ember.set(gotoOptions, 'xCaption', Ember.get(crs, 'xCaption'));
-      Ember.set(gotoOptions, 'yCaption', Ember.get(crs, 'yCaption'));
-      Ember.set(gotoOptions, 'isLatlng', isLatlng);
+      set(gotoOptions, 'point', new L.Point(x, y));
+      set(gotoOptions, 'crs', usedCrs);
+      set(gotoOptions, 'xCaption', get(crs, 'xCaption'));
+      set(gotoOptions, 'yCaption', get(crs, 'yCaption'));
+      set(gotoOptions, 'isLatlng', isLatlng);
       return gotoOptions;
     },
 
@@ -391,7 +395,7 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
       });
 
       let availableModes = this.get('_availableModes');
-      if (!Ember.isNone(availableModes) && availableModes.length > 0) {
+      if (!isNone(availableModes) && availableModes.length > 0) {
         this.set('_selectedMode', availableModes[0].name);
       }
     }

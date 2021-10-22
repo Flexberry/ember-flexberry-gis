@@ -1,4 +1,12 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import { later } from '@ember/runloop';
+import { getOwner } from '@ember/application';
+import { A, isArray } from '@ember/array';
+import { get } from '@ember/object';
+import { isNone, isEmpty } from '@ember/utils';
+import { Promise, allSettled, all } from 'rsvp';
+import { inject as service } from '@ember/service';
+import Mixin from '@ember/object/mixin';
 import distance from 'npm:@turf/distance';
 import helpers from 'npm:@turf/helpers';
 import booleanContains from 'npm:@turf/boolean-contains';
@@ -14,13 +22,13 @@ import { geometryToJsts } from '../utils/layer-to-jsts';
 import { downloadFile, downloadBlob } from '../utils/download-file';
 import { getCrsByName } from '../utils/get-crs-by-name';
 
-export default Ember.Mixin.create(SnapDraw, {
+export default Mixin.create(SnapDraw, {
   /**
     Service for managing map API.
     @property mapApi
     @type MapApiService
   */
-  mapApi: Ember.inject.service(),
+  mapApi: service(),
 
   /**
     Shows layers specified by IDs.
@@ -76,14 +84,14 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise}
   */
   showAllLayerObjects(layerId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const layer = this.get('mapLayer').findBy('id', layerId);
-      if (Ember.isNone(layer)) {
+      if (isNone(layer)) {
         reject(`Layer '${layerId}' not found.`);
       }
 
-      const leafletObject = Ember.get(layer, '_leafletObject');
-      if (!Ember.isNone(leafletObject) && typeof leafletObject.showAllLayerObjects === 'function') {
+      const leafletObject = get(layer, '_leafletObject');
+      if (!isNone(leafletObject) && typeof leafletObject.showAllLayerObjects === 'function') {
         leafletObject.showAllLayerObjects().then((result) => {
           resolve(result);
         });
@@ -102,12 +110,12 @@ export default Ember.Mixin.create(SnapDraw, {
   */
   hideAllLayerObjects(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
-    if (Ember.isNone(layer)) {
+    if (isNone(layer)) {
       throw `Layer '${layerId}' not found.`;
     }
 
-    const leafletObject = Ember.get(layer, '_leafletObject');
-    if (!Ember.isNone(leafletObject) && typeof leafletObject.hideAllLayerObjects === 'function') {
+    const leafletObject = get(layer, '_leafletObject');
+    if (!isNone(leafletObject) && typeof leafletObject.hideAllLayerObjects === 'function') {
       leafletObject.hideAllLayerObjects();
     } else {
       throw 'Is not a vector layer';
@@ -151,13 +159,13 @@ export default Ember.Mixin.create(SnapDraw, {
     @return Promise.
   */
   deleteLayerObjects(layerId, featureIds) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let ids = [];
       this._getModelLayerFeature(layerId, featureIds, true).then(([layer, leafletObject]) => {
         leafletObject.eachLayer(function (shape) {
           const id = this._getLayerFeatureId(layer, shape);
 
-          if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
+          if (!isNone(id) && featureIds.indexOf(id) !== -1) {
             ids.push(id);
             leafletObject.removeLayer(shape);
           }
@@ -185,13 +193,13 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Array of layers and objects which intersected selected object.
   */
   getIntersectionObjects(feature, crsName, layerIds) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      if (!Ember.isNone(feature) && feature.hasOwnProperty('geometry')) {
+    return new Promise((resolve, reject) => {
+      if (!isNone(feature) && feature.hasOwnProperty('geometry')) {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         let layersIntersect = [];
         layerIds.forEach(id => {
           const layer = this.get('mapLayer').findBy('id', id);
-          if (!Ember.isNone(layer)) {
+          if (!isNone(layer)) {
             if (layer.get('settingsAsObject.identifySettings.canBeIdentified')) {
               layersIntersect.push(layer);
             }
@@ -209,28 +217,28 @@ export default Ember.Mixin.create(SnapDraw, {
           bufferedMainPolygonLayer: featureLayer,
           excludedLayers: [],
           layers: layersIntersect,
-          results: Ember.A()
+          results: A()
         };
 
         if (e.layers.length > 0) {
           leafletMap.fire('flexberry-map:identify', e);
         }
 
-        e.results = Ember.isArray(e.results) ? e.results : Ember.A();
-        let promises = Ember.A();
+        e.results = isArray(e.results) ? e.results : A();
+        let promises = A();
 
         // Handle each result.
         // Detach promises from already received features.
         e.results.forEach((result) => {
-          if (Ember.isNone(result)) {
+          if (isNone(result)) {
             return;
           }
 
-          promises.pushObject(Ember.get(result, 'features'));
+          promises.pushObject(get(result, 'features'));
         });
 
         // Wait for all promises to be settled & call '_finishIdentification' hook.
-        Ember.RSVP.allSettled(promises).then(() => {
+        allSettled(promises).then(() => {
           resolve(e.results);
         });
       }
@@ -246,7 +254,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Object constains distance, layer and layer object.
   */
   getNearObject(layerId, layerObjectId, layerIds) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, [layerObjectId]).then(([, leafletObject, layerObject]) => {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         let layersGetNeatObject = [];
@@ -260,27 +268,27 @@ export default Ember.Mixin.create(SnapDraw, {
           featureId: layerObjectId,
           layerObjectId: layerId,
           layers: layersGetNeatObject,
-          results: Ember.A()
+          results: A()
         };
 
         if (e.layers.length > 0) {
           leafletMap.fire('flexberry-map:getNearObject', e);
         }
 
-        e.results = Ember.isArray(e.results) ? e.results : Ember.A();
-        let promises = Ember.A();
+        e.results = isArray(e.results) ? e.results : A();
+        let promises = A();
 
         // Handle each result.
         // Detach promises from already received features.
         e.results.forEach((result) => {
-          if (Ember.isNone(result)) {
+          if (isNone(result)) {
             return;
           }
 
-          promises.pushObject(Ember.get(result, 'features'));
+          promises.pushObject(get(result, 'features'));
         });
 
-        Ember.RSVP.allSettled(promises).then((results) => {
+        allSettled(promises).then((results) => {
           const rejected = results.filter((item) => { return item.state === 'rejected'; }).length > 0;
           if (rejected) {
             return reject('Failed to get nearest object');
@@ -288,7 +296,7 @@ export default Ember.Mixin.create(SnapDraw, {
 
           let res = null;
           results.forEach((item) => {
-            if (Ember.isNone(res) || item.value.distance < res.distance) {
+            if (isNone(res) || item.value.distance < res.distance) {
               res = item.value;
             }
           });
@@ -299,7 +307,7 @@ export default Ember.Mixin.create(SnapDraw, {
   },
 
   getObjectCenter(object) {
-    const type = Ember.get(object, 'feature.geometry.type');
+    const type = get(object, 'feature.geometry.type');
     if (type === 'Point') {
       return object._latlng;
     } else {
@@ -335,8 +343,8 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Distance between objects in meters.
   */
   getDistanceBetweenObjects(firstLayerId, firstLayerObjectId, secondLayerId, secondLayerObjectId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.RSVP.all([
+    return new Promise((resolve, reject) => {
+      all([
         this._getModelLayerFeature(firstLayerId, [firstLayerObjectId]),
         this._getModelLayerFeature(secondLayerId, [secondLayerObjectId])
       ]).then((result) => {
@@ -358,7 +366,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Attributes and coordinates
   */
   getLayerObjectOptions(layerId, featureId, crsName) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let result;
       this._getModelLayerFeature(layerId, [featureId]).then(([, leafletLayer, features]) => {
         let featureLayer = features[0];
@@ -393,8 +401,8 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} true or false.
   */
   isContainsObject(layerAId, objectAId, layerBId, objectBId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.RSVP.all([
+    return new Promise((resolve, reject) => {
+      all([
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) => {
@@ -433,8 +441,8 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Area
   */
   getAreaExtends(layerAId, objectAId, layerBId, objectBId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.RSVP.all([
+    return new Promise((resolve, reject) => {
+      all([
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) => {
@@ -464,14 +472,14 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Object} layer type
   */
   _getTypeLayer(layerModel) {
-    let className = Ember.get(layerModel, 'type');
-    let layerType = Ember.getOwner(this).knownForType('layer', className);
+    let className = get(layerModel, 'type');
+    let layerType = getOwner(this).knownForType('layer', className);
     return layerType;
   },
 
   _setVisibility(layerIds, visibility = false) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      if (Ember.isArray(layerIds)) {
+    return new Promise((resolve, reject) => {
+      if (isArray(layerIds)) {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         let currentLayerIds = [];
         layerIds.forEach(id => {
@@ -480,34 +488,34 @@ export default Ember.Mixin.create(SnapDraw, {
             layer.set('visibility', visibility);
             currentLayerIds.push(id);
           } else {
-            Ember.run.later(this, () => { reject(`Layer '${id}' not found.`); }, 1);
+            later(this, () => { reject(`Layer '${id}' not found.`); }, 1);
           }
         });
         if (visibility) {
           if (currentLayerIds.length > 0) {
             let e = {
               layers: currentLayerIds,
-              results: Ember.A()
+              results: A()
             };
             leafletMap.fire('flexberry-map:moveend', e);
-            e.results = Ember.isArray(e.results) ? e.results : Ember.A();
-            let promises = Ember.A();
+            e.results = isArray(e.results) ? e.results : A();
+            let promises = A();
             e.results.forEach((result) => {
-              if (Ember.isNone(result)) {
+              if (isNone(result)) {
                 return;
               }
 
-              promises.pushObject(Ember.get(result, 'promise'));
+              promises.pushObject(get(result, 'promise'));
             });
 
-            Ember.RSVP.allSettled(promises).then(() => {
-              Ember.run.later(this, () => { resolve('success'); }, 1);
+            allSettled(promises).then(() => {
+              later(this, () => { resolve('success'); }, 1);
             });
           } else {
-            Ember.run.later(this, () => { reject('all layerIds is not found'); }, 1);
+            later(this, () => { reject('all layerIds is not found'); }, 1);
           }
         } else {
-          Ember.run.later(this, () => { resolve('success'); }, 1);
+          later(this, () => { resolve('success'); }, 1);
         }
       } else {
         reject('Parametr is not a Array');
@@ -527,10 +535,10 @@ export default Ember.Mixin.create(SnapDraw, {
     let field = this._getPkField(layer);
     if (layerObject.state !== state.insert) {
       if (layerObject.feature.properties.hasOwnProperty(field)) {
-        return Ember.get(layerObject, 'feature.properties.' + field);
+        return get(layerObject, 'feature.properties.' + field);
       }
 
-      return Ember.get(layerObject, 'feature.id');
+      return get(layerObject, 'feature.id');
     } else {
       return null;
     }
@@ -546,14 +554,14 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Ember.RSVP.Promise}
   */
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      if (Ember.isArray(objectIds)) {
+    return new Promise((resolve, reject) => {
+      if (isArray(objectIds)) {
         let [layer, leafletObject] = this._getModelLeafletObject(layerId);
-        if (Ember.isNone(layer)) {
+        if (isNone(layer)) {
           return reject(`Layer '${layerId}' not found.`);
         }
 
-        if (!Ember.isNone(leafletObject) && typeof leafletObject._setVisibilityObjects === 'function') {
+        if (!isNone(leafletObject) && typeof leafletObject._setVisibilityObjects === 'function') {
           leafletObject._setVisibilityObjects(objectIds, visibility).then((result) => {
             resolve(result);
           });
@@ -581,7 +589,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Object in Destination layer
   */
   copyObject(source, destination) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this._getModelLayerFeature(source.layerId, [source.objectId], source.shouldRemove).then(([, sourceLeafletLayer, obj]) => {
         let sourceFeature = obj[0];
         let [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
@@ -600,7 +608,7 @@ export default Ember.Mixin.create(SnapDraw, {
             reject(`Unknown layer type: '${destLayerModel.get('settingsAsObject.typeGeometry')}`);
         }
 
-        if (!Ember.isNone(destFeature)) {
+        if (!isNone(destFeature)) {
           destFeature.feature = {
             properties: Object.assign({}, sourceFeature.feature.properties, destination.properties || {})
           };
@@ -613,10 +621,10 @@ export default Ember.Mixin.create(SnapDraw, {
             delete destFeature.feature.properties[destLeafletLayer.geometryField];
           }
 
-          let e = { layers: [destFeature], results: Ember.A() };
+          let e = { layers: [destFeature], results: A() };
           destLeafletLayer.fire('load', e);
 
-          Ember.RSVP.allSettled(e.results).then(() => {
+          allSettled(e.results).then(() => {
             if (source.shouldRemove) {
               sourceLeafletLayer.removeLayer(sourceFeature);
             }
@@ -647,11 +655,11 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Object in Destination layer
   */
   copyObjectsBatch(source, destination) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      if (Ember.isNone(source.layerId) || Ember.isNone(source.objectIds) || Ember.isNone(destination.layerId)) {
+    return new Promise((resolve, reject) => {
+      if (isNone(source.layerId) || isNone(source.objectIds) || isNone(destination.layerId)) {
         reject('Check the parameters you are passing');
       } else {
-        let loadPromise = new Ember.RSVP.all(this.loadingFeaturesByPackages(source.layerId, source.objectIds, source.shouldRemove));
+        let loadPromise = new all(this.loadingFeaturesByPackages(source.layerId, source.objectIds, source.shouldRemove));
 
         loadPromise.then((res) => {
           let destFeatures = [];
@@ -687,7 +695,7 @@ export default Ember.Mixin.create(SnapDraw, {
                 reject(`Unknown layer type: '${destLayerModel.get('settingsAsObject.typeGeometry')}`);
             }
 
-            if (!Ember.isNone(destFeature)) {
+            if (!isNone(destFeature)) {
               destFeature.feature = { properties: {} };
               if (destination.withProperties) {
                 destFeature.feature.properties = Object.assign({}, sourceFeature.feature.properties);
@@ -709,10 +717,10 @@ export default Ember.Mixin.create(SnapDraw, {
 
           });
 
-          let e = { layers: destFeatures, results: Ember.A() };
+          let e = { layers: destFeatures, results: A() };
           destLeafletLayer.fire('load', e);
 
-          Ember.RSVP.allSettled(e.results).then(() => {
+          allSettled(e.results).then(() => {
             if (source.shouldRemove) {
               sourceFeatures.forEach(sourceFeature => {
                 sourceLeafletLayer.removeLayer(sourceFeature);
@@ -737,9 +745,9 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} If showOnMap = true, return objects, which show on map in serviceLayer, and area, else only area.
   */
   getIntersectionArea(layerAId, objectAId, layerBId, objectBIds, showOnMap) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      let result = Ember.A();
-      Ember.RSVP.all([
+    return new Promise((resolve, reject) => {
+      let result = A();
+      all([
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, objectBIds)
       ]).then((res) => {
@@ -774,7 +782,7 @@ export default Ember.Mixin.create(SnapDraw, {
             });
           }
         });
-        if (!Ember.isNone(result)) {
+        if (!isNone(result)) {
           resolve(result);
         }
       }).catch((e) => {
@@ -809,7 +817,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Image url.
   */
   getSnapShot({ layerId, objectId, layerArrIds, options }) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, [objectId]).then(([layerModel, leafletObject, featureLayer]) => {
         let allLayers = this.get('mapLayer.canonicalState');
         let allLayersIds = allLayers.map((l) => l.id);
@@ -824,21 +832,21 @@ export default Ember.Mixin.create(SnapDraw, {
 
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
-        let $mapPicture = Ember.$(leafletMap._container);
+        let $mapPicture = $(leafletMap._container);
         let heightMap = $mapPicture.height();
         let widthMap = $mapPicture.width();
         let heightNew = heightMap;
         let widthNew = widthMap;
-        if (!Ember.isNone(options)) {
-          heightNew = Ember.isNone(options.height) ? heightMap : options.height;
-          widthNew = Ember.isNone(options.width) ? widthMap : options.width;
+        if (!isNone(options)) {
+          heightNew = isNone(options.height) ? heightMap : options.height;
+          widthNew = isNone(options.width) ? widthMap : options.width;
         }
 
         $mapPicture.height(heightNew);
         $mapPicture.width(widthNew);
 
         let load = [];
-        let ids = Ember.isEmpty(layerArrIds) ? allLayersIds : layerArrIds;
+        let ids = isEmpty(layerArrIds) ? allLayersIds : layerArrIds;
         if (ids) {
           ids.forEach((lid) => {
             if (lid !== layerId) {
@@ -853,18 +861,18 @@ export default Ember.Mixin.create(SnapDraw, {
         load.push(leafletObject);
 
         leafletMap.once('moveend', () => {
-          Ember.run.later(() => {
+          later(() => {
             document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'none';
             document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'none';
-            Ember.$(document).find('.leaflet-top.leaflet-left').css('display', 'none');
-            Ember.$(document).find('.leaflet-top.leaflet-right').css('display', 'none');
-            Ember.$(document).find('.leaflet-bottom.leaflet-right').css('display', 'none');
+            $(document).find('.leaflet-top.leaflet-left').css('display', 'none');
+            $(document).find('.leaflet-top.leaflet-right').css('display', 'none');
+            $(document).find('.leaflet-bottom.leaflet-right').css('display', 'none');
 
             let promises = load.map((object) => {
-              return !Ember.isNone(leafletObject.promiseLoadLayer) && (leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise);
+              return !isNone(leafletObject.promiseLoadLayer) && (leafletObject.promiseLoadLayer instanceof Promise);
             });
 
-            Ember.RSVP.allSettled(promises).then((e) => {
+            allSettled(promises).then((e) => {
               load.forEach((obj) => {
                 obj.statusLoadLayer = false;
                 obj.promiseLoadLayer = null;
@@ -886,9 +894,9 @@ export default Ember.Mixin.create(SnapDraw, {
                 .finally(() => {
                   document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'block';
                   document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'block';
-                  Ember.$(document).find('.leaflet-top.leaflet-left').css('display', 'block');
-                  Ember.$(document).find('.leaflet-top.leaflet-right').css('display', 'block');
-                  Ember.$(document).find('.leaflet-bottom.leaflet-right').css('display', 'block');
+                  $(document).find('.leaflet-top.leaflet-left').css('display', 'block');
+                  $(document).find('.leaflet-top.leaflet-right').css('display', 'block');
+                  $(document).find('.leaflet-bottom.leaflet-right').css('display', 'block');
                   $mapPicture.height(heightMap);
                   $mapPicture.width(widthMap);
                 });
@@ -897,7 +905,7 @@ export default Ember.Mixin.create(SnapDraw, {
         });
 
         let bounds = featureLayer[0].getBounds();
-        if (!Ember.isNone(bounds)) {
+        if (!isNone(bounds)) {
           leafletMap.fitBounds(bounds.pad(0.5));
         }
       }).catch((e) => {
@@ -1055,7 +1063,7 @@ export default Ember.Mixin.create(SnapDraw, {
       for (let i = 0; i < coords.length - 1; i++) {
         startPoint = i === 0 ? coords[i] : startPoint;
         point1 = coords[i];
-        n = !Ember.isNone(coords[i + 1]) ? i + 1 : 0;
+        n = !isNone(coords[i + 1]) ? i + 1 : 0;
         point2 = coords[n];
         rhumbs.push(calcRhumb(point1, point2));
       }
@@ -1110,12 +1118,12 @@ export default Ember.Mixin.create(SnapDraw, {
   */
   moveLayerToGroup(layerId, layerGroupId) {
     const layer = this.get('mapLayer').findBy('id', layerGroupId);
-    if (Ember.isNone(layer)) {
+    if (isNone(layer)) {
       throw (`Group layer '${layerGroupId}' not found`);
     }
 
     let layerModel = this.getLayerModel(layerId);
-    if (Ember.isNone(layerModel)) {
+    if (isNone(layerModel)) {
       throw (`Layer '${layerId}' not found`);
     }
 
@@ -1132,12 +1140,12 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Layer object.
   */
   editLayerObject(layerId, objectId, polygon, crsName) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       if (polygon) {
         this._getModelLayerFeature(layerId, [objectId], true).then(([, leafletLayer, featureLayer]) => {
           if (leafletLayer && featureLayer) {
             let crs = leafletLayer.options.crs;
-            if (!Ember.isNone(crsName)) {
+            if (!isNone(crsName)) {
               crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
             }
 
@@ -1146,14 +1154,14 @@ export default Ember.Mixin.create(SnapDraw, {
             };
 
             let geoJSON = null;
-            if (!Ember.isNone(crs) && crs.code !== 'EPSG:4326') {
+            if (!isNone(crs) && crs.code !== 'EPSG:4326') {
               geoJSON = L.geoJSON(polygon, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
             } else {
               geoJSON = L.geoJSON(polygon).getLayers()[0];
             }
 
-            if (!Ember.isNone(Ember.get(geoJSON, 'feature.geometry'))) {
-              if (Ember.get(geoJSON, 'feature.geometry.type').toLowerCase() !== 'point') {
+            if (!isNone(get(geoJSON, 'feature.geometry'))) {
+              if (get(geoJSON, 'feature.geometry.type').toLowerCase() !== 'point') {
                 featureLayer[0].setLatLngs(geoJSON._latlngs);
               } else {
                 featureLayer[0].setLatLng(geoJSON._latlng);
@@ -1187,12 +1195,12 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Object in geoJSON format
   */
   uploadFile(file) {
-    let config = Ember.getOwner(this).resolveRegistration('config:environment');
+    let config = getOwner(this).resolveRegistration('config:environment');
     let data = new FormData();
     data.append(file.name, file);
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.$.ajax({
+    return new Promise((resolve, reject) => {
+      $.ajax({
         url: `${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}`,
         type: 'POST',
         data: data,
@@ -1245,15 +1253,15 @@ export default Ember.Mixin.create(SnapDraw, {
       }, {});
     };
 
-    let knownCrs = Ember.getOwner(this).knownForType('coordinate-reference-system');
-    let knownCrsArray = Ember.A(Object.values(knownCrs));
+    let knownCrs = getOwner(this).knownForType('coordinate-reference-system');
+    let knownCrsArray = A(Object.values(knownCrs));
     let firstProjection = projection ? projection : 'EPSG:4326';
     let secondProjection = crsName ? crsName : 'EPSG:4326';
     let firstCrs = knownCrsArray.findBy('code', firstProjection);
     let secondCrs = knownCrsArray.findBy('code', secondProjection);
     if (firstCrs && secondCrs) {
-      let firstDefinition = Ember.get(firstCrs, 'definition');
-      let secondDefinition = Ember.get(secondCrs, 'definition');
+      let firstDefinition = get(firstCrs, 'definition');
+      let secondDefinition = get(secondCrs, 'definition');
       if (firstDefinition && secondDefinition) {
         if (firstDefinition !== secondDefinition) {
           let result = mergeDeep({}, object);
@@ -1312,7 +1320,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {String} Field name.
   */
   _getPkField(layer) {
-    if (!Ember.isNone(layer) && !Ember.isNone(layer._leafletObject) && typeof layer._leafletObject.getPkField === 'function') {
+    if (!isNone(layer) && !isNone(layer._leafletObject) && typeof layer._leafletObject.getPkField === 'function') {
       return layer._leafletObject.getPkField(layer);
     } else {
       throw 'Layer is not VectorLayer';
@@ -1330,9 +1338,9 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Coordinate.
   */
   getCoordPoint(crsName, snap, snapLayers, snapDistance, snapOnlyVertex) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const leafletMap = this.get('mapApi').getFromApi('leafletMap');
-      Ember.$(leafletMap._container).css('cursor', 'crosshair');
+      $(leafletMap._container).css('cursor', 'crosshair');
 
       var getCoord = (e) => {
         if (snap) {
@@ -1349,9 +1357,9 @@ export default Ember.Mixin.create(SnapDraw, {
 
         this._cleanupSnapping();
 
-        Ember.$(leafletMap._container).css('cursor', '');
-        let crs = Ember.get(leafletMap, 'options.crs');
-        if (!Ember.isNone(crsName)) {
+        $(leafletMap._container).css('cursor', '');
+        let crs = get(leafletMap, 'options.crs');
+        if (!isNone(crsName)) {
           crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
         }
 
@@ -1375,7 +1383,7 @@ export default Ember.Mixin.create(SnapDraw, {
           this.set('_snapDistance', snapDistance);
         }
 
-        if (!Ember.isNone(snapOnlyVertex)) {
+        if (!isNone(snapOnlyVertex)) {
           this.set('_snapOnlyVertex', snapOnlyVertex);
         }
 
@@ -1435,11 +1443,11 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} GeoJson Feature.
   */
   getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, isUnion = false, failIfInvalid = false, forceMulti = true) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let layerAPromises = this.loadingFeaturesByPackages(layerAId, objectAIds);
       let layerBPromises = this.loadingFeaturesByPackages(layerBId, objectBIds);
 
-      Ember.RSVP.allSettled(
+      allSettled(
         layerAPromises.concat(layerBPromises)
       ).then((layerFeatures) => {
         const rejected = layerFeatures.filter((item) => { return item.state === 'rejected'; }).length > 0;
@@ -1450,12 +1458,12 @@ export default Ember.Mixin.create(SnapDraw, {
 
         let count = 0;
         let scale = this.get('mapApi').getFromApi('precisionScale');
-        let resultObjs = Ember.A();
+        let resultObjs = A();
 
         layerFeatures.forEach((r, i) => {
-          let geometries = Ember.A();
+          let geometries = A();
           r.value[2].forEach((obj, ind) => {
-            if (Ember.get(obj, 'feature.geometry') && Ember.get(obj, 'options.crs.code')) {
+            if (get(obj, 'feature.geometry') && get(obj, 'options.crs.code')) {
               let feature = obj.toJsts(obj.options.crs, scale);
               geometries.pushObject(feature);
             }
@@ -1486,14 +1494,14 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} array of points and feature.
   */
   _addToArrayPointsAndFeature(layerId, crsName) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, null).then(([, layerObject, layerFeatures]) => {
-        if (!Ember.isEmpty(layerFeatures)) {
-          let arrPoints = Ember.A();
-          let features = Ember.A();
+        if (!isEmpty(layerFeatures)) {
+          let arrPoints = A();
+          let features = A();
           layerFeatures.forEach((layer) => {
             let obj = layer.feature;
-            if (!Ember.isNone(crsName)) {
+            if (!isNone(crsName)) {
               obj = this._convertObjectCoordinates(layerObject.options.crs.code, obj, crsName);
             }
 
@@ -1520,7 +1528,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} array of Object { diffFeatures, layerAFeatures, layerBFeatures }.
   */
   differenceLayers(layerAId, layerBId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let crsA = this._getModelLeafletObject(layerAId)[1].options.crs.code;
       let crsB = this._getModelLeafletObject(layerBId)[1].options.crs.code;
       let arrayPointsAndFeaturePromises = [this._addToArrayPointsAndFeature(layerAId), this._addToArrayPointsAndFeature(layerBId)];
@@ -1528,7 +1536,7 @@ export default Ember.Mixin.create(SnapDraw, {
         arrayPointsAndFeaturePromises = [this._addToArrayPointsAndFeature(layerAId), this._addToArrayPointsAndFeature(layerBId, crsA)];
       }
 
-      Ember.RSVP.all(arrayPointsAndFeaturePromises).then((res) => {
+      all(arrayPointsAndFeaturePromises).then((res) => {
         let subj = res[0].arrPoints; // layer A
         let clip = res[1].arrPoints; // layer B
         let solution = ClipperLib.Paths();
@@ -1536,7 +1544,7 @@ export default Ember.Mixin.create(SnapDraw, {
 
         // Add 'Subject' paths - layer A
         for (let s = 0, slen = subj.length; s < slen; s++) {
-          if (Ember.isArray(subj[s])) { // multipolygon
+          if (isArray(subj[s])) { // multipolygon
             for (let k = 0, klen = subj[s].length; k < klen; k++) {
               cpr.AddPaths(subj[s][k], ClipperLib.PolyType.ptSubject, true);
             }
@@ -1547,7 +1555,7 @@ export default Ember.Mixin.create(SnapDraw, {
 
         // Add 'Clipping' paths - layer B
         for (let c = 0, clen = clip.length; c < clen; c++) {
-          if (Ember.isArray(clip[c])) { // multipolygon
+          if (isArray(clip[c])) { // multipolygon
             for (let k = 0, klen = clip[c].length; k < klen; k++) {
               cpr.AddPaths(clip[c][k], ClipperLib.PolyType.ptClip, true);
             }
@@ -1560,7 +1568,7 @@ export default Ember.Mixin.create(SnapDraw, {
         cpr.Execute(ClipperLib.ClipType.ctDifference, solution);
 
         // filtering 'solution' by area !== 0, transformating of geometry in jsts for comparison and calculate area, filtering after transformation by area > 0
-        if (!Ember.isEmpty(solution)) {
+        if (!isEmpty(solution)) {
           let jstsGeoJSONReader = new jsts.io.GeoJSONReader();
           let diffNotNullArea = solution.filter((geom) => {
             return ClipperLib.Clipper.Area(geom) !== 0;
@@ -1603,8 +1611,8 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} array of objects with {areaDifference, objectDifference, id of layerB, that matches the condition}.
   */
   compareLayers(layerAId, layerBId, condition, showOnMap) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      let result = Ember.A();
+    return new Promise((resolve, reject) => {
+      let result = A();
       let cond = ['contains', 'intersects', 'notIntersects'];
       let diffLayerPromise = this.differenceLayers(layerAId, layerBId);
       if (!cond.includes(condition)) {
@@ -1749,7 +1757,7 @@ export default Ember.Mixin.create(SnapDraw, {
   },
 
   _requestDownloadFile(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       downloadFile(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url).then((res) => {
         resolve(res);
       }).catch((e) => {
@@ -1769,12 +1777,12 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Object consist of fileName and blob. If isFile = true then returns file too.
   */
   downloadFile(layerId, objectIds, outputFormat, crsName, isFile = true) {
-    let config = Ember.getOwner(this).resolveRegistration('config:environment');
+    let config = getOwner(this).resolveRegistration('config:environment');
     let url = config.APP.backendUrls.featureExportApi;
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const layerModel = this.get('mapLayer').findBy('id', layerId);
-      if (Ember.isNone(layerModel)) {
+      if (isNone(layerModel)) {
         reject(`Layer '${layerId}' not found.`);
       }
 
@@ -1795,7 +1803,7 @@ export default Ember.Mixin.create(SnapDraw, {
   setLayerFilter(layerId, filter) {
     let layerModel = this.getLayerModel(layerId);
 
-    if (Ember.isNone(layerModel)) {
+    if (isNone(layerModel)) {
       return;
     }
 

@@ -1,8 +1,10 @@
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+import { all, Promise } from 'rsvp';
+import Mixin from '@ember/object/mixin';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   reloadLayers(layersIds) {
-    return Ember.RSVP.all(layersIds.map((layerId) => this.reloadLayer(layerId)));
+    return all(layersIds.map((layerId) => this.reloadLayer(layerId)));
   },
 
   /**
@@ -15,8 +17,8 @@ export default Ember.Mixin.create({
   reloadLayer(layerId) {
     let [, leafletObject] = this._getModelLeafletObject(layerId);
 
-    if (Ember.isNone(leafletObject)) {
-      return new Ember.RSVP.Promise(() => {
+    if (isNone(leafletObject)) {
+      return new Promise(() => {
         throw new Error('Layer type not supported');
       });
     }

@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-styles/categorized/gradient-tools';
 
 /**
@@ -11,7 +13,7 @@ import layout from '../../../templates/components/layers-styles/categorized/grad
   @class CategorizedLayersStyleGradientToolsComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -24,7 +26,7 @@ export default Ember.Component.extend({
     @type <a href="http://emberjs.com/api/classes/Ember.Service.html">Ember.Service</a>
     @default service:param-gradient
   */
-  paramGradient: Ember.inject.service('param-gradient'),
+  paramGradient: service('param-gradient'),
 
   /**
     Flag indicates when stroke gradient enable.

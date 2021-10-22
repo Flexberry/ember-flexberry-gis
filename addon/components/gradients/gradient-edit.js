@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { observer } from '@ember/object';
+
+import Component from '@ember/component';
 import layout from '../../templates/components/gradients/gradient-edit';
 
 /**
@@ -12,7 +14,7 @@ import layout from '../../templates/components/gradients/gradient-edit';
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 
-export default Ember.Component.extend({
+export default Component.extend({
 
   /**
     Initial gradient color.
@@ -74,7 +76,7 @@ export default Ember.Component.extend({
 
     @method gradientColorStartObserver
   */
-  gradientColorStartObserver: Ember.observer('gradientColorStart', function() {
+  gradientColorStartObserver: observer('gradientColorStart', function() {
     let startPickerClass = this.get('gradientStartPickerClass');
     let gradientColorStart = this.get('gradientColorStart');
     this.$(`.${startPickerClass} input`).minicolors('value', { color: gradientColorStart });
@@ -85,7 +87,7 @@ export default Ember.Component.extend({
 
     @method gradientColorEndObserver
   */
-  gradientColorEndObserver: Ember.observer('gradientColorEnd', function() {
+  gradientColorEndObserver: observer('gradientColorEnd', function() {
     let endPickerClass = this.get('gradientEndPickerClass');
     let gradientColorEnd = this.get('gradientColorEnd');
     this.$(`.${endPickerClass} input`).minicolors('value', { color: gradientColorEnd });

@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { set, get } from '@ember/object';
+
+import { A } from '@ember/array';
+import { assert } from '@ember/debug';
+import { isNone } from '@ember/utils';
+import { getOwner } from '@ember/application';
+import Mixin from '@ember/object/mixin';
 import LeafletMapVisibilityMixin from './map-visibility';
 
 /**
@@ -11,7 +17,7 @@ import LeafletMapVisibilityMixin from './map-visibility';
   @class LeafletMapCommandsMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
+export default Mixin.create(LeafletMapVisibilityMixin, {
   /**
     Performs some initialization before leaflet map will be initialized.
 
@@ -20,7 +26,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
   willInitLeafletMap(leafletMap) {
     this._super(...arguments);
 
-    let owner = Ember.getOwner(this);
+    let owner = getOwner(this);
 
     let _this = this;
 
@@ -30,11 +36,11 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
     // lookups specified map-command with given command properties.
     let lookupMapCommand = (mapCommandName, mapCommandProperties) => {
       let mapCommand = alreadyLookupedMapCommands[mapCommandName];
-      if (Ember.isNone(mapCommand)) {
+      if (isNone(mapCommand)) {
         mapCommand = owner.lookup(`map-command:${mapCommandName}`);
-        Ember.assert(
+        assert(
           `Can't lookup \`map-command:${mapCommandName}\` such map-command doesn\`t exist.`,
-          !Ember.isNone(mapCommand));
+          !isNone(mapCommand));
 
         mapCommand.setProperties({
           name: mapCommandName,
@@ -44,9 +50,9 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
         alreadyLookupedMapCommands[mapCommandName] = mapCommand;
       }
 
-      if (!Ember.isNone(mapCommandProperties)) {
-        Ember.A(Object.keys(mapCommandProperties)).forEach((propertyName) => {
-          Ember.set(mapCommand, propertyName, Ember.get(mapCommandProperties, propertyName));
+      if (!isNone(mapCommandProperties)) {
+        A(Object.keys(mapCommandProperties)).forEach((propertyName) => {
+          set(mapCommand, propertyName, get(mapCommandProperties, propertyName));
         });
       }
 
@@ -59,7 +65,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
       // Executes specified map-command.
       execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions) {
         let mapCommand = lookupMapCommand(mapCommandName, mapCommandProperties);
-        if (Ember.isNone(mapCommand)) {
+        if (isNone(mapCommand)) {
           return;
         }
 
@@ -76,7 +82,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
       // Destroys specified map-command.
       destroy(mapCommandName) {
         let mapCommand = alreadyLookupedMapCommands[mapCommandName];
-        if (!Ember.isNone(mapCommand)) {
+        if (!isNone(mapCommand)) {
           return;
         }
 
@@ -88,7 +94,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
       // Destroys flexberryMap.tools.
       _destroy() {
         // Remove flexberryMap.commands namespace & related methods & properties.
-        Ember.A(Object.keys(alreadyLookupedMapCommands)).forEach((mapCommandName) => {
+        A(Object.keys(alreadyLookupedMapCommands)).forEach((mapCommandName) => {
           let mapCommand = alreadyLookupedMapCommands[mapCommandName];
           mapCommand.destroy();
 
@@ -104,7 +110,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
 
         if (!result) {
           let mapCommand = lookupMapCommand(mapCommandName, null);
-          if (Ember.isNone(mapCommand)) {
+          if (isNone(mapCommand)) {
             return;
           }
 
@@ -118,7 +124,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
 
         if (!result) {
           let mapCommand = lookupMapCommand(mapCommandName, null);
-          if (Ember.isNone(mapCommand)) {
+          if (isNone(mapCommand)) {
             return;
           }
 

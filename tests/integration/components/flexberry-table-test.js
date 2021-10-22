@@ -1,25 +1,27 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('flexberry-table', 'Integration | Component | flexberry table', {
-  integration: true
-});
+module('Integration | Component | flexberry table', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function(assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  this.set('header', { name: 'gis-search-form.layer-metadata.header.name' });
+  test('it renders', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+    this.set('header', { name: 'gis-search-form.layer-metadata.header.name' });
 
-  this.render(hbs`{{flexberry-table header=header}}`);
+    await render(hbs`{{flexberry-table header=header}}`);
 
-  assert.notEqual(this.$().text().indexOf('No data'), -1, 'Should contain "No data"');
+    assert.notEqual(this.element.textContent.indexOf('No data'), -1, 'Should contain "No data"');
 
-  // Template block usage:
-  // this.render(hbs`
-  //   {{#flexberry-table}}
-  //     template block text
-  //   {{/flexberry-table}}
-  // `);
+    // Template block usage:
+    // this.render(hbs`
+    //   {{#flexberry-table}}
+    //     template block text
+    //   {{/flexberry-table}}
+    // `);
 
-  // assert.equal(this.$().text().trim(), 'template block text');
+    // assert.equal(this.$().text().trim(), 'template block text');
+  });
 });

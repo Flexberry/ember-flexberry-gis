@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { Promise } from 'rsvp';
+
+import EmberObject from '@ember/object';
 
 /**
   Base geoprovider.
@@ -10,7 +12,7 @@ import Ember from 'ember';
   @class BaseGeoProvider
   @extends <a href="http://emberjs.com/api/classes/Ember.Object.html">Ember.Object</a>
 */
-export default Ember.Object.extend({
+export default EmberObject.extend({
 
   /**
     Makes a request.
@@ -38,8 +40,8 @@ export default Ember.Object.extend({
   executeGeocoding(options) {
     let requestResult = this._executeRequest(options);
 
-    if (!(requestResult instanceof Ember.RSVP.Promise)) {
-      requestResult = new Ember.RSVP.Promise((resolve, reject) => {
+    if (!(requestResult instanceof Promise)) {
+      requestResult = new Promise((resolve, reject) => {
         resolve(requestResult);
       });
     }

@@ -3,7 +3,9 @@
 */
 
 import FlexberryData from 'ember-flexberry-data';
-import { Serializer as MapObjectSettingSerializer } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-map-object-setting';
+import {
+  Serializer as MapObjectSettingSerializer
+} from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-map-object-setting';
 
 /**
   Map object setting serializer.

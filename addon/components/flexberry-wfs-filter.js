@@ -1,7 +1,12 @@
-import Ember from 'ember';
+import { scheduleOnce } from '@ember/runloop';
+import { getOwner } from '@ember/application';
+import { isBlank, isNone } from '@ember/utils';
+import { computed, get } from '@ember/object';
+import { A, isArray } from '@ember/array';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-wfs-filter';
 
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -41,7 +46,7 @@ export default Ember.Component.extend({
     @type Array
     @default Ember.A()
   */
-  fields: Ember.A(),
+  fields: A(),
 
   /**
     Array contains shown values of current field.
@@ -50,7 +55,7 @@ export default Ember.Component.extend({
     @type Array
     @default Ember.A()
   */
-  values: Ember.A(),
+  values: A(),
 
   /**
     Values count for 'Example' button.
@@ -196,13 +201,13 @@ export default Ember.Component.extend({
     @private
     @readOnly
   */
-  _availableLayerProperties: Ember.computed('fields.[]', 'featuresPropertiesSettings', 'i18n.locale', function() {
+  _availableLayerProperties: computed('fields.[]', 'featuresPropertiesSettings', 'i18n.locale', function() {
     let availableLayerProperties = {};
 
     let layerProperties = this.get('fields');
     let localizedProperties = this.get(`featuresPropertiesSettings.localizedProperties.${this.get('i18n.locale')}`) || {};
     let excludedProperties = this.get(`featuresPropertiesSettings.excludedProperties`);
-    excludedProperties = Ember.isArray(excludedProperties) ? Ember.A(excludedProperties) : Ember.A();
+    excludedProperties = isArray(excludedProperties) ? A(excludedProperties) : A();
 
     for (let i = 0, len = layerProperties.length; i < len; i++) {
       let propertyName = layerProperties[i];
@@ -210,8 +215,8 @@ export default Ember.Component.extend({
         continue;
       }
 
-      let propertyCaption = Ember.get(localizedProperties, propertyName);
-      availableLayerProperties[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;
+      let propertyCaption = get(localizedProperties, propertyName);
+      availableLayerProperties[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
     }
 
     return availableLayerProperties;
@@ -236,17 +241,17 @@ export default Ember.Component.extend({
     this.$('.ui.accordion.attribute-selector').accordion({
       onOpening: () => {
         let leafletObject = _this.get('_leafletObject');
-        if (Ember.isNone(leafletObject)) {
+        if (isNone(leafletObject)) {
           let type = _this.get('_layerType');
           let leafletObjectMethod = _this.get('_leafletObjectMethod');
-          if (!(Ember.isBlank(leafletObjectMethod) || Ember.isBlank(type))) {
+          if (!(isBlank(leafletObjectMethod) || isBlank(type))) {
             _this.set('_leafletObjectIsLoading', true);
             leafletObjectMethod().then(leafletObject => {
               _this.set('_leafletObject', leafletObject);
               _this.set('_leafletObjectIsLoading', false);
-              let layerClass = Ember.getOwner(_this).knownForType('layer', type);
-              if (!Ember.isBlank(layerClass)) {
-                _this.set('fields', Ember.A(layerClass.getLayerProperties(leafletObject)));
+              let layerClass = getOwner(_this).knownForType('layer', type);
+              if (!isBlank(layerClass)) {
+                _this.set('fields', A(layerClass.getLayerProperties(leafletObject)));
               }
             }).catch(() => {
               _this.set('_leafletObjectIsLoading', false);
@@ -269,13 +274,13 @@ export default Ember.Component.extend({
     filterStringValue = filterStringValue.replace(/[\n\r]/g, '');
     let type = this.get('_layerType');
     this.set('_filterIsCorrect', false);
-    let layerClass = Ember.getOwner(this).knownForType('layer', type);
+    let layerClass = getOwner(this).knownForType('layer', type);
     let filter;
-    if (!Ember.isNone(layerClass)) {
+    if (!isNone(layerClass)) {
       filter =  layerClass.parseFilter(filterStringValue, this.get('geometryField'));
     }
 
-    if (!Ember.isNone(filter)) {
+    if (!isNone(filter)) {
       this.set('_filterIsCorrect', true);
     }
 
@@ -305,7 +310,7 @@ export default Ember.Component.extend({
 
     caretPosition = caretPosition + (caretShift || 0);
     this.set('filterStringValue', newFilterString);
-    Ember.run.scheduleOnce('afterRender', this, function () {
+    scheduleOnce('afterRender', this, function () {
       textarea.focus();
       textarea.setSelectionRange(caretPosition, caretPosition);
     });
@@ -352,7 +357,7 @@ export default Ember.Component.extend({
     */
     fieldClick(text) {
       if (this.get('_selectedField') !== text) {
-        this.set('values', Ember.A());
+        this.set('values', A());
         this.set('_selectedValue', undefined);
         this.set('_selectedField', text);
       }
@@ -378,10 +383,10 @@ export default Ember.Component.extend({
       let type = this.get('_layerType');
       let leafletObject = this.get('_leafletObject');
       let selectedField = this.get('_selectedField');
-      let layerClass = Ember.getOwner(this).knownForType('layer', type);
-      let values = Ember.A();
-      if (!Ember.isNone(layerClass)) {
-        values = Ember.A(layerClass.getLayerPropertyValues(leafletObject, selectedField, count));
+      let layerClass = getOwner(this).knownForType('layer', type);
+      let values = A();
+      if (!isNone(layerClass)) {
+        values = A(layerClass.getLayerPropertyValues(leafletObject, selectedField, count));
       }
 
       values.sort();
@@ -424,7 +429,7 @@ export default Ember.Component.extend({
     */
     pasteBboxExpression(condition) {
       let bboxString = this.get('_currentSelectedBbox');
-      if (!Ember.isBlank(bboxString)) {
+      if (!isBlank(bboxString)) {
         let expressionString = `${condition} (${bboxString})`;
         this._pasteIntoFilterString(expressionString);
       }
@@ -448,7 +453,7 @@ export default Ember.Component.extend({
       @param {String} value
     */
     pasteFieldValue(value) {
-      if (Ember.isNone(value)) {
+      if (isNone(value)) {
         this._pasteIntoFilterString('NULL');
         return;
       }

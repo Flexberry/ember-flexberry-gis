@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
+
+import { on } from '@ember/object/evented';
+import { computed, get, set, observer } from '@ember/object';
+import { isNone, isEmpty } from '@ember/utils';
+import { A } from '@ember/array';
+import Component from '@ember/component';
 import layout from '../../templates/components/geometry-add-modes/rhumb';
 import { translationMacro as t } from 'ember-i18n';
 import rhumbOperations from '../../utils/rhumb-operations';
@@ -28,7 +34,7 @@ const flexberryClassNames = {
   tableBlock: flexberryClassNamesPrefix + '-table-block'
 };
 
-let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
+let FlexberryGeometryAddModeRhumbComponent = Component.extend({
 
   /**
     Reference to component's template.
@@ -98,7 +104,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     @readonly
     @private
   */
-  _objectDirections: Ember.A([
+  _objectDirections: A([
     {
       captionPath: 'components.geometry-add-modes.rhumb.NE',
       type: 'NE'
@@ -125,7 +131,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     @default Ember.A([])
     @private
   */
-  _tableData: Ember.A([]),
+  _tableData: A([]),
 
   /**
     Form fields.
@@ -198,7 +204,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     let directionItems = this.get('directionItems');
     let availableDirection = [];
 
-    if (!Ember.isNone(directionItems)) {
+    if (!isNone(directionItems)) {
       directionItems.forEach((item) => {
         availableDirection.push(item.caption);
       });
@@ -213,24 +219,24 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     @property directionItems
     @type Object[]
   */
-  directionItems: Ember.computed('_objectDirections.[]', '_objectDirections.@each.active', 'i18n', function () {
+  directionItems: computed('_objectDirections.[]', '_objectDirections.@each.active', 'i18n', function () {
     let i18n = this.get('i18n');
     let _objectDirections = this.get('_objectDirections');
 
-    let result = Ember.A(_objectDirections);
+    let result = A(_objectDirections);
     result.forEach((item) => {
-      let caption = Ember.get(item, 'caption');
-      let captionPath = Ember.get(item, 'captionPath');
+      let caption = get(item, 'caption');
+      let captionPath = get(item, 'captionPath');
 
       if (!caption && captionPath) {
-        Ember.set(item, 'caption', i18n.t(captionPath));
+        set(item, 'caption', i18n.t(captionPath));
       }
     });
 
     return result;
   }),
 
-  initialSettings: Ember.on('init', Ember.observer('settings', function () {
+  initialSettings: on('init', observer('settings', function () {
     this.set('isError', false);
     this.set('_crs', this.get('settings.layerCRS'));
     this._dropForm();
@@ -245,14 +251,14 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     error |= !this._validStartPoint(this._dataForm.startPoint);
 
     let skipNum = this._countSkip();
-    if (Ember.isNone(skipNum)) {
+    if (isNone(skipNum)) {
       this.set('isError', true);
       this.set('message', this.get('cannotChangePermission'));
     }
 
     let type = this.get('settings.typeGeometry');
 
-    if (Ember.isNone(skipNum) || this._tableData.length === 0 || (type === 'polygon' && this._tableData.length < skipNum + 2) ||
+    if (isNone(skipNum) || this._tableData.length === 0 || (type === 'polygon' && this._tableData.length < skipNum + 2) ||
       (type === 'polyline' && this._tableData.length < skipNum + 1)) {
       this.set('_formValid.tableValid', true);
       error = true;
@@ -263,10 +269,10 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
     for (let i = 0; i < this._tableData.length; i++) {
       let item = this._tableData[i];
-      Ember.set(item, 'directionValid', Ember.isNone(item.direction));
-      Ember.set(item, 'rhumbValid', !this._validFloatNumber(item.rhumb));
-      Ember.set(item, 'distanceValid', !this._validFloatNumber(item.distance));
-      error |= Ember.isNone(item.direction) || !this._validFloatNumber(item.rhumb) || !this._validFloatNumber(item.distance);
+      set(item, 'directionValid', isNone(item.direction));
+      set(item, 'rhumbValid', !this._validFloatNumber(item.rhumb));
+      set(item, 'distanceValid', !this._validFloatNumber(item.distance));
+      error |= isNone(item.direction) || !this._validFloatNumber(item.rhumb) || !this._validFloatNumber(item.distance);
     }
 
     if (error) {
@@ -289,7 +295,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       let factories = this.get('_objectDirections');
       let res = null;
 
-      if (!Ember.isNone(direction)) {
+      if (!isNone(direction)) {
         res = factories.filter((factory) => factory.caption.toString() === direction)[0].type;
       }
 
@@ -349,7 +355,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       }
 
       let layer = this.get('layer');
-      if (!Ember.isNone(layer)) {
+      if (!isNone(layer)) {
         const type = this.get('settings.typeGeometry');
         if (type === 'marker') {
           layer.setLatLng(addedLayer.getLatLng());
@@ -431,11 +437,11 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         let item = this._tableData[i];
         if (item.id === id) {
           this._tableData.removeAt(i, 1);
-          if (Ember.get(item, 'skip')) {
+          if (get(item, 'skip')) {
             if (this._tableData.length === 1) {
-              Ember.set(this._tableData[0], 'skip', true);
+              set(this._tableData[0], 'skip', true);
             } else {
-              Ember.set(this._tableData[1], 'skip', true);
+              set(this._tableData[1], 'skip', true);
             }
           }
 
@@ -457,7 +463,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
       // не будем давать снимать галку, только перевесить
       if (!checked) {
-        Ember.set(row.skip, true);
+        set(row.skip, true);
         return;
       }
 
@@ -466,11 +472,11 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
           for (let i = 0; i < this._tableData.length; i++) {
             let item = this._tableData[i];
             if (item.id !== row.id) {
-              Ember.set(item, 'skip', false);
+              set(item, 'skip', false);
             }
           }
         } else {
-          Ember.set(row, 'skip', false);
+          set(row, 'skip', false);
         }
       }
     },
@@ -481,8 +487,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     */
     onInputLimit(str, e) {
       const regex = /^\.|[^\d\.]|\.(?=.*\.)|^0+(?=\d)/g;
-      if (!Ember.isEmpty(str) && regex.test(str)) {
-        Ember.$(e.target).val(str.replace(regex, ''));
+      if (!isEmpty(str) && regex.test(str)) {
+        $(e.target).val(str.replace(regex, ''));
       }
     }
   },
@@ -495,7 +501,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   _countOrder() {
     for (let i = 0; i < this._tableData.length; i++) {
       let item = this._tableData[i];
-      Ember.set(item, 'number', `${i}-${i + 1}`);
+      set(item, 'number', `${i}-${i + 1}`);
     }
   },
 
@@ -507,7 +513,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   _countSkip() {
     for (let i = 0; i < this._tableData.length; i++) {
       let item = this._tableData[i];
-      if (Ember.get(item, 'skip')) {
+      if (get(item, 'skip')) {
         return i;
       }
     }
@@ -521,10 +527,10 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     this.set('_dataForm.startPoint', '');
     this.set('_curType', null);
 
-    this.set('_tableData', Ember.A());
+    this.set('_tableData', A());
     this.send('OnAddRow');
 
-    Object.keys(this._formValid).forEach(v => Ember.set(this, `_formValid.${v}`, false));
+    Object.keys(this._formValid).forEach(v => set(this, `_formValid.${v}`, false));
   },
 
   /**

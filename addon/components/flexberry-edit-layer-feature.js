@@ -1,17 +1,23 @@
-import Ember from 'ember';
+import { Promise, resolve, allSettled } from 'rsvp';
+import { keys } from '@ember/polyfills';
+import { isArray, A } from '@ember/array';
+import { isNone, isBlank, isEqual } from '@ember/utils';
+import { computed, observer, get, set } from '@ember/object';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-edit-layer-feature';
 import SnapDrawMixin from '../mixins/snap-draw';
 import EditFeatureMixin from '../mixins/edit-feature';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import { translationMacro as t } from 'ember-i18n';
 
-export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFeatureMixin, {
+export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFeatureMixin, {
   /**
     Service for managing map API.
     @property mapApi
     @type MapApiService
   */
-  mapApi: Ember.inject.service(),
+  mapApi: service(),
 
   /**
     Reference to component's template.
@@ -67,7 +73,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   */
   mode: null,
 
-  state: Ember.computed('mode', function () {
+  state: computed('mode', function () {
     let mode = this.get('mode');
 
     if (mode === 'Union' || mode === 'Split' || mode === 'Diff' || mode === 'Import' || mode === 'Create') {
@@ -117,16 +123,16 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
   isFavorite: false,
 
-  dataItemCount: Ember.computed('dataItems', function () {
+  dataItemCount: computed('dataItems', function () {
     let items = this.get('dataItems.items');
-    if (Ember.isNone(items)) {
+    if (isNone(items)) {
       return 0;
     }
 
     return items.length;
   }),
 
-  _dataItemObserver: Ember.observer('dataItems', function () {
+  _dataItemObserver: observer('dataItems', function () {
     let leafletMap = this.get('leafletMap');
     leafletMap.flexberryMap.tools.enable('drag');
 
@@ -135,8 +141,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     // Уберем редактирование с объектов, если оно было
     let layers = this.get('layers');
     if (layers) {
-      Object.values(layers).filter((layer) => !Ember.isNone(layer)).forEach((layer) => {
-        let enabled = Ember.get(layer, 'editor._enabled');
+      Object.values(layers).filter((layer) => !isNone(layer)).forEach((layer) => {
+        let enabled = get(layer, 'editor._enabled');
         if (enabled) {
           layer.disableEdit();
         }
@@ -163,14 +169,14 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       this.set('choiceValueData', dataItems.choiceValueData); // эта штука должна быть только одна
 
       let editTools = this._getEditTools();
-      Ember.set(leafletMap, 'editTools', editTools);
+      set(leafletMap, 'editTools', editTools);
 
       dataItems.items.forEach((dataItem) => {
         let layer = dataItem.layer;
 
-        if (!Ember.isNone(layer)) {
-          if (Ember.isNone(layer.feature.leafletLayer)) {
-            Ember.set(layer.feature, 'leafletLayer', layer);
+        if (!isNone(layer)) {
+          if (isNone(layer.feature.leafletLayer)) {
+            set(layer.feature, 'leafletLayer', layer);
           }
 
           if (this.get('state') === 'Edit') {
@@ -193,7 +199,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
               label: null
             };
 
-            let label = Ember.get(layer, '_label');
+            let label = get(layer, '_label');
             if (label) {
               latlngcopy.label = this.copy(label.getLatLng());
             }
@@ -264,24 +270,24 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   */
   leafletObject: null,
 
-  _model: Ember.computed('layerModel', 'i18n.locale', function () {
+  _model: computed('layerModel', 'i18n.locale', function () {
     let layer = this.get('layerModel');
 
-    if (Ember.isNone(layer)) {
+    if (isNone(layer)) {
       return {};
     }
 
-    let settings = Ember.get(layer, 'settings') || {};
+    let settings = get(layer, 'settings') || {};
 
-    let leafletObject = Ember.get(layer, 'leafletObject');
+    let leafletObject = get(layer, 'leafletObject');
     this.set('leafletObject', leafletObject);
-    let readonly = Ember.get(settings, 'readonly') || false;
+    let readonly = get(settings, 'readonly') || false;
 
     let availableDrawTools = null;
     let typeGeometry = null;
 
     if (!readonly) {
-      let geometryFields = Ember.get(leafletObject, 'readFormat.featureType.geometryFields');
+      let geometryFields = get(leafletObject, 'readFormat.featureType.geometryFields');
       availableDrawTools = this._getAvailableDrawTools(geometryFields);
       typeGeometry = this._getTypeGeometry(geometryFields);
     }
@@ -289,18 +295,18 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     let getHeader = () => {
       let result = {};
       let locale = this.get('i18n.locale');
-      let localizedProperties = Ember.get(settings, `localizedProperties.${locale}`) || {};
-      let excludedProperties = Ember.get(settings, `excludedProperties`);
-      excludedProperties = Ember.isArray(excludedProperties) ? Ember.A(excludedProperties) : Ember.A();
+      let localizedProperties = get(settings, `localizedProperties.${locale}`) || {};
+      let excludedProperties = get(settings, `excludedProperties`);
+      excludedProperties = isArray(excludedProperties) ? A(excludedProperties) : A();
 
-      for (let propertyName in Ember.get(leafletObject, 'readFormat.featureType.fields')) {
+      for (let propertyName in get(leafletObject, 'readFormat.featureType.fields')) {
         if (excludedProperties.contains(propertyName)) {
           continue;
         }
 
-        let propertyCaption = Ember.get(localizedProperties, propertyName);
+        let propertyCaption = get(localizedProperties, propertyName);
 
-        result[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;
+        result[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
       }
 
       return result;
@@ -309,12 +315,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     return {
       availableDrawTools: availableDrawTools,
       typeGeometry: typeGeometry,
-      name: Ember.get(layer, 'layerModel.name'),
-      layerCRS: Ember.get(leafletObject, 'options.crs'),
-      layerFields: Ember.get(leafletObject, 'readFormat.featureType.fields'),
-      fieldTypes: Ember.get(leafletObject, 'readFormat.featureType.fieldTypes'),
-      fieldParsers: Ember.get(leafletObject, 'readFormat.featureType.fields'),
-      fieldValidators: Ember.get(leafletObject, 'readFormat.featureType.fieldValidators'),
+      name: get(layer, 'layerModel.name'),
+      layerCRS: get(leafletObject, 'options.crs'),
+      layerFields: get(leafletObject, 'readFormat.featureType.fields'),
+      fieldTypes: get(leafletObject, 'readFormat.featureType.fieldTypes'),
+      fieldParsers: get(leafletObject, 'readFormat.featureType.fields'),
+      fieldValidators: get(leafletObject, 'readFormat.featureType.fieldValidators'),
       fieldNames: getHeader()
     };
   }),
@@ -353,13 +359,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     @method choiceValueObserver
     @private
   */
-  choiceValueObserver: Ember.observer('choiceValue', function () {
+  choiceValueObserver: observer('choiceValue', function () {
     let choiceValueData = this.get('choiceValueData');
     let choiceValue = this.get('choiceValue');
     let index = this.get('curIndex');
     this.set('data', {});
-    if (!Ember.isNone(choiceValueData)) {
-      if (!Ember.isNone(choiceValue) && !Ember.isBlank(choiceValue)) {
+    if (!isNone(choiceValueData)) {
+      if (!isNone(choiceValue) && !isBlank(choiceValue)) {
         this.set(`data.${index}`, choiceValueData[`${choiceValue}` - 1]);
       } else {
         this.set(`data.${index}`, choiceValueData[`${choiceValueData.length}` - 1]);
@@ -374,9 +380,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     @method choiceValueDataObserver
     @private
   */
-  choiceValueDataObserver: Ember.observer('choiceValueData', function () {
+  choiceValueDataObserver: observer('choiceValueData', function () {
     let choiceValueData = this.get('choiceValueData');
-    if (!Ember.isNone(choiceValueData)) {
+    if (!isNone(choiceValueData)) {
       let choice = Object.keys(choiceValueData).map((index) => {
         return Number(index) + 1;
       });
@@ -419,16 +425,16 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         continue;
       }
 
-      let text = Ember.get(data, fieldName);
+      let text = get(data, fieldName);
       let value = fieldParsers[fieldName](text);
       let valueIsValid = fieldValidators[fieldName](value);
 
       if (valueIsValid) {
-        Ember.set(data, fieldName, value);
+        set(data, fieldName, value);
       }
 
       dataIsValid = dataIsValid && valueIsValid;
-      Ember.set(parsingErrors, fieldName, !valueIsValid);
+      set(parsingErrors, fieldName, !valueIsValid);
     }
 
     this.set(`parsingErrors.${index}`, parsingErrors);
@@ -463,7 +469,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     @param {Object} geometryFields Hash with the layer geometry field names and their types.
   */
   _getAvailableDrawTools(geometryFields) {
-    if (!Ember.isNone(geometryFields)) {
+    if (!isNone(geometryFields)) {
       let firstField = Object.keys(geometryFields)[0];
       switch (geometryFields[firstField]) {
         case 'PointPropertyType':
@@ -490,7 +496,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     @param {Object} geometryFields Hash with the layer geometry field names and their types.
   */
   _getTypeGeometry(geometryFields) {
-    if (!Ember.isNone(geometryFields)) {
+    if (!isNone(geometryFields)) {
       let firstField = Object.keys(geometryFields)[0];
       switch (geometryFields[firstField]) {
         case 'PointPropertyType':
@@ -539,13 +545,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     leafletMap.on('editable:vertex:dragend', this._cleanupSnapping, this);
   },
 
-  _snapLeafletLayers: Ember.computed('_snapLayers', function () {
+  _snapLeafletLayers: computed('_snapLayers', function () {
     return this.get('_snapLayers');
   }),
 
-  mapObserver: Ember.observer('leafletMap', function () {
+  mapObserver: observer('leafletMap', function () {
     let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
+    if (!isNone(leafletMap)) {
       leafletMap.on('flexberry-map:delete-feature:start', this._onDelete, this);
     }
   }),
@@ -565,11 +571,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   _onDelete(e) {
     let datas = this.get('initialData');
     let layers = this.get('layers');
-    if (Ember.isNone(datas) || Ember.isNone(layers)) {
+    if (isNone(datas) || isNone(layers)) {
       return;
     }
 
-    if (Ember.isNone(e.ids)) {
+    if (isNone(e.ids)) {
       return;
     }
 
@@ -583,9 +589,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       let id;
       if (data.hasOwnProperty(pkField)) {
-        id = Ember.get(data, pkField);
+        id = get(data, pkField);
       } else {
-        id = Ember.get(layer, 'feature.id');
+        id = get(layer, 'feature.id');
       }
 
       if (e.ids.filter((idForDelete) => { return id === idForDelete; }).length > 0) {
@@ -626,15 +632,15 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     let datas = this.get('data');
     let initialDatas = this.get('initialData');
 
-    if (!Ember.isNone(layers) && mode !== 'Saved') {
-      Ember.keys(layers).forEach((index) => {
+    if (!isNone(layers) && mode !== 'Saved') {
+      keys(layers).forEach((index) => {
         let layer = layers[index];
 
         if (mode === 'Edit') {
           // отменим изменения в слое
           let latlng = latlngs[index];
 
-          if (!Ember.isNone(layer) && !Ember.isNone(latlng)) {
+          if (!isNone(layer) && !isNone(latlng)) {
             switch (layer.feature.geometry.type) {
               case 'Point':
                 layer.setLatLng(latlng.layer);
@@ -647,7 +653,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
                 break;
             }
 
-            let label = Ember.get(layer, '_label');
+            let label = get(layer, '_label');
             if (label) {
               label.setLatLng(latlng.label);
             }
@@ -655,12 +661,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
           if (afterSave) { // если уходим после неудачного сохранения, то надо данные вернуть
             let data = initialDatas[index];
-            if (!Ember.isNone(data)) {
+            if (!isNone(data)) {
               for (var key in data) {
                 if (data.hasOwnProperty(key)) {
                   var element = data[key];
-                  if (!Ember.isEqual(element, Ember.get(layer.feature, `properties.${key}`))) {
-                    Ember.set(layer.feature, `properties.${key}`, element);
+                  if (!isEqual(element, get(layer.feature, `properties.${key}`))) {
+                    set(layer.feature, `properties.${key}`, element);
                   }
                 }
               }
@@ -677,8 +683,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
         } else {
           // удалить слой
-          if (!Ember.isNone(layer)) {
-            if (!Ember.isNone(leafletObject) && leafletObject.hasLayer(layer)) {
+          if (!isNone(layer)) {
+            if (!isNone(leafletObject) && leafletObject.hasLayer(layer)) {
               leafletObject.removeLayer(layer);
             }
 
@@ -686,9 +692,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
               leafletMap.removeLayer(layer);
             }
 
-            let label = Ember.get(layer, '_label');
-            if (!Ember.isNone(label)) {
-              if (!Ember.isNone(leafletObject) && leafletObject.hasLayer(label)) {
+            let label = get(layer, '_label');
+            if (!isNone(label)) {
+              if (!isNone(leafletObject) && leafletObject.hasLayer(label)) {
                 leafletObject.removeLayer(label);
               }
 
@@ -701,7 +707,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       });
     }
 
-    if (!Ember.isNone(layers)) {
+    if (!isNone(layers)) {
       // Сервисный слой общий с панелью атрибутов. Не надо очищать, если ничего не редактировали
       this.send('clearSelected');
     }
@@ -721,11 +727,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     @private
   */
   restoreLayers() {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let initialLayers = this.get('dataItems.initialLayers');
       let leafletObject = this.get('leafletObject');
 
-      if (!Ember.isNone(initialLayers) && !Ember.isNone(leafletObject)) {
+      if (!isNone(initialLayers) && !isNone(leafletObject)) {
         let featureIds = initialLayers.map((layer) => {
           return leafletObject.getLayerId(layer);
         });
@@ -733,7 +739,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         let promise = leafletObject.cancelEdit(featureIds);
 
         this.set('loading', true);
-        (promise ? promise : Ember.RSVP.resolve()).then(() => {
+        (promise ? promise : resolve()).then(() => {
           this.set('loading', false);
           this.cancelEdit(true);
           resolve();
@@ -752,7 +758,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
   selectLayer() {
     let layer = this.get(`layers.${this.get('curIndex')}`);
-    if (!Ember.isNone(layer)) {
+    if (!isNone(layer)) {
       this.send('selectFeature', [layer.feature]);
     }
   },
@@ -766,7 +772,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
     let leafletObject = _this.get('leafletObject');
 
-    if (Ember.get(leafletObject, 'updateLabel') && typeof (leafletObject.updateLabel) === 'function') {
+    if (get(leafletObject, 'updateLabel') && typeof (leafletObject.updateLabel) === 'function') {
       leafletObject.updateLabel(layer);
     }
   },
@@ -778,12 +784,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     },
 
     updateLayer(layer, zoom) {
-      if (Ember.isNone(layer.feature)) {
-        Ember.set(layer, 'feature', { type: 'Feature' });
+      if (isNone(layer.feature)) {
+        set(layer, 'feature', { type: 'Feature' });
       }
 
-      if (Ember.isNone(layer.feature.leafletLayer)) {
-        Ember.set(layer.feature, 'leafletLayer', layer);
+      if (isNone(layer.feature.leafletLayer)) {
+        set(layer.feature, 'leafletLayer', layer);
       }
 
       let leafletMap = this.get('leafletMap');
@@ -855,7 +861,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       Object.keys(datas).forEach((index) => {
         let parsedData = this.parseData(index, datas[index]);
-        if (Ember.isNone(parsedData)) {
+        if (isNone(parsedData)) {
           this.set('error', t('components.flexberry-edit-layer-feature.validation.data-errors'));
           error = true;
           return;
@@ -870,9 +876,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let leafletObject = this.get('layerModel.leafletObject');
       let initialLayers = this.get('dataItems.initialLayers');
 
-      if (!Ember.isNone(initialLayers)) {
+      if (!isNone(initialLayers)) {
         initialLayers.forEach((l) => {
-          if (!Ember.isNone(l)) {
+          if (!isNone(l)) {
             l.disableEdit();
             leafletObject.removeLayer(l);
           }
@@ -888,14 +894,14 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       if (state === 'New') {
         let e = {
           layers: [],
-          results: Ember.A()
+          results: A()
         };
 
         Object.keys(layers).forEach((index) => {
           let layer = layers[index];
           let data = datas[index];
 
-          if (Ember.isNone(layer)) {
+          if (isNone(layer)) {
             this.set('error', t('components.flexberry-edit-layer-feature.validation.no-layer'));
             error = true;
             return;
@@ -909,14 +915,14 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             layer = leafletObject.createLayerObject(leafletObject, data, layer.toGeoJSON().geometry);
           } else {
             this.get('leafletMap').removeLayer(layer);
-            Ember.set(layer, 'feature', { type: 'Feature' });
-            Ember.set(layer.feature, 'properties', data);
-            Ember.set(layer.feature, 'leafletLayer', layer);
+            set(layer, 'feature', { type: 'Feature' });
+            set(layer.feature, 'properties', data);
+            set(layer.feature, 'leafletLayer', layer);
 
-            if (Ember.isNone(Ember.get(layer, 'feature.geometry'))) {
+            if (isNone(get(layer, 'feature.geometry'))) {
               let baseCrs = this.get('leafletObject.options.crs');
               let geometry = layer.toProjectedGeoJSON(baseCrs).geometry;
-              Ember.set(layer, 'feature.geometry', geometry);
+              set(layer, 'feature.geometry', geometry);
             }
 
             e.layers.push(layer);
@@ -929,8 +935,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
         leafletObject.fire('load', e);
 
-        createPromise = new Ember.RSVP.Promise((resolve) => {
-          Ember.RSVP.allSettled(e.results).then(() => {
+        createPromise = new Promise((resolve) => {
+          allSettled(e.results).then(() => {
             resolve();
           });
         });
@@ -943,7 +949,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           let layer = layers[index];
           let data = datas[index];
 
-          if (Ember.isNone(layer)) {
+          if (isNone(layer)) {
             this.set('error', t('components.flexberry-edit-layer-feature.validation.no-layer'));
             error = true;
             return;
@@ -959,8 +965,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
             if (data.hasOwnProperty(key)) {
               var element = data[key];
-              if (!Ember.isEqual(element, Ember.get(layer.feature, `properties.${key}`))) {
-                Ember.set(layer.feature, `properties.${key}`, element);
+              if (!isEqual(element, get(layer.feature, `properties.${key}`))) {
+                set(layer.feature, `properties.${key}`, element);
               }
             }
           }
@@ -999,7 +1005,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         this.set('loading', false);
         leafletObject.off('save:failed', saveFailed);
 
-        if (!Ember.isNone(data.layers) && Ember.isArray(data.layers) && data.layers.length > 0) {
+        if (!isNone(data.layers) && isArray(data.layers) && data.layers.length > 0) {
           if (state === 'New') {
             e.layers.forEach((l) => {
               this.get('leafletMap').removeLayer(l);
@@ -1007,12 +1013,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
 
           data.layers.forEach((layer) => {
-            if (Ember.isNone(Ember.get(layer, 'feature.leafletLayer'))) {
-              Ember.set(layer.feature, 'leafletLayer', layer);
+            if (isNone(get(layer, 'feature.leafletLayer'))) {
+              set(layer.feature, 'leafletLayer', layer);
             }
           });
 
-          Ember.set(e, 'layers', data.layers);
+          set(e, 'layers', data.layers);
         }
 
         if (this.get('isFavorite')) {
@@ -1032,7 +1038,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       this.set('loading', true);
       try {
-        (createPromise ? createPromise : Ember.RSVP.resolve()).then(() => {
+        (createPromise ? createPromise : resolve()).then(() => {
           leafletObject.save();
         });
       }
@@ -1064,7 +1070,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       this.set('_snapLayers', allLayers);
       let leafletMap = this.get('leafletMap');
       let editTools = this._getEditTools();
-      Ember.set(leafletMap, 'editTools', editTools);
+      set(leafletMap, 'editTools', editTools);
       this.set('_snapMarker', L.marker(leafletMap.getCenter(), {
         icon: leafletMap.editTools.createVertexIcon({ className: 'leaflet-div-icon leaflet-drawing-icon' }),
         opacity: 1,

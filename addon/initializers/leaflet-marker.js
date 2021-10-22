@@ -2,7 +2,7 @@
   @module ember-flexberry
 */
 
-import Ember from 'ember';
+import { isNone, isBlank } from '@ember/utils';
 
 export function initialize() {
   L.Marker.include({
@@ -25,8 +25,8 @@ export function initialize() {
         style: null
       };
 
-      if (Ember.isNone(this.styleIsSet) || !this.styleIsSet) {
-        if (!Ember.isNone(style) && !Ember.isNone(style.isImage) && (style.isImage === 'false' || !style.isImage)) {
+      if (isNone(this.styleIsSet) || !this.styleIsSet) {
+        if (!isNone(style) && !isNone(style.isImage) && (style.isImage === 'false' || !style.isImage)) {
           let html = this._parseString(style.options.html);
           let label = this._createStringLabel(html, this);
           let opt = Object.assign({}, style.options);
@@ -34,24 +34,24 @@ export function initialize() {
           this.setIcon(new L.divIcon(opt));
           this.style = opt;
           this.styleIsSet = true;
-        } else if (!Ember.isNone(style) && !Ember.isNone(style.options)) {
+        } else if (!isNone(style) && !isNone(style.options)) {
           this.setIcon(new L.Icon(style.options));
           legendStyle = {
             type: 'image',
             style: style.options
           };
-        } else if (Ember.isNone(this.options.icon.options.iconUrl)) {
+        } else if (isNone(this.options.icon.options.iconUrl)) {
           this.setIcon(new L.Icon.Default());
         }
-      } else if (Ember.isNone(this.styleIsSet)) {
-        if (!Ember.isNone(this.style) && !Ember.isNone(this.style.html)) {
+      } else if (isNone(this.styleIsSet)) {
+        if (!isNone(this.style) && !isNone(this.style.html)) {
           this.setIcon(new L.divIcon(this.style));
         }
 
         this.styleIsSet = false;
       }
 
-      if (!Ember.isNone(this.layerModel) && Ember.isNone(this.layerModel.legendStyle)) {
+      if (!isNone(this.layerModel) && isNone(this.layerModel.legendStyle)) {
         this.layerModel.legendStyle = legendStyle;
       }
 
@@ -64,7 +64,7 @@ export function initialize() {
       @param {String} expression String for parsing
     */
     _parseString(expression) {
-      if (Ember.isBlank(expression)) {
+      if (isBlank(expression)) {
         return null;
       }
 
@@ -84,7 +84,7 @@ export function initialize() {
       let isProp = false;
       expResult.forEach(function(element) {
         for (let key in featureLayer.feature.properties) {
-          if (key === element && !Ember.isNone(featureLayer.feature.properties[key]) && !Ember.isBlank(featureLayer.feature.properties[key])) {
+          if (key === element && !isNone(featureLayer.feature.properties[key]) && !isBlank(featureLayer.feature.properties[key])) {
             label += featureLayer.feature.properties[key];
             isProp = true;
           }

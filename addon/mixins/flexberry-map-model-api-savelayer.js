@@ -1,8 +1,11 @@
-import Ember from 'ember';
+import { set, get } from '@ember/object';
+import { isNone } from '@ember/utils';
+import { all, Promise } from 'rsvp';
+import Mixin from '@ember/object/mixin';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   saveLayers(layersIds) {
-    return Ember.RSVP.all(layersIds.map((layerId) => this.saveLayer(layerId)));
+    return all(layersIds.map((layerId) => this.saveLayer(layerId)));
   },
 
   /**
@@ -15,18 +18,18 @@ export default Ember.Mixin.create({
   saveLayer(layerId) {
     let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
 
-    if (Ember.isNone(leafletObject)) {
-      return new Ember.RSVP.Promise(() => {
+    if (isNone(leafletObject)) {
+      return new Promise(() => {
         throw new Error('Layer type not supported');
       });
     }
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const saveSuccess = (data) => {
-        Ember.set(leafletObject, '_wasChanged', false);
+        set(leafletObject, '_wasChanged', false);
         const map = this.get('mapApi').getFromApi('leafletMap');
 
-        if (!Ember.isNone(map)) {
+        if (!isNone(map)) {
           // Remove layer editing.
           this.disableLayerEditing(map);
         }
@@ -57,7 +60,7 @@ export default Ember.Mixin.create({
   */
   disableLayerEditing(map) {
     map.eachLayer(function (object) {
-      let enabled = Ember.get(object, 'editor._enabled');
+      let enabled = get(object, 'editor._enabled');
       if (enabled === true) {
         object.disableEdit();
       }

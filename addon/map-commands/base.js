@@ -2,7 +2,14 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { Promise } from 'rsvp';
+
+import { scheduleOnce } from '@ember/runloop';
+import { typeOf } from '@ember/utils';
+import { assert } from '@ember/debug';
+import { inject as service } from '@ember/service';
+import Evented from '@ember/object/evented';
+import EmberObject from '@ember/object';
 import LeafletMapVisibilityMixin from '../mixins/leaflet-map/map-visibility';
 
 /**
@@ -12,7 +19,7 @@ import LeafletMapVisibilityMixin from '../mixins/leaflet-map/map-visibility';
   @extends <a href="http://emberjs.com/api/classes/Ember.Object.html">Ember.Object</a>
   @uses <a href="http://emberjs.com/api/classes/Ember.Evented.html">Ember.Evented</a>
 */
-export default Ember.Object.extend(Ember.Evented,
+export default EmberObject.extend(Evented,
   LeafletMapVisibilityMixin, {
   /**
     Flag: indicates whether map-command is executing now or not.
@@ -31,7 +38,7 @@ export default Ember.Object.extend(Ember.Evented,
     @type <a href="https://github.com/jamesarosen/ember-i18n">I18nService</a>
     @default Ember.inject.service('i18n')
   */
-  i18n: Ember.inject.service('i18n'),
+  i18n: service('i18n'),
 
   /**
     Tool's name.
@@ -71,15 +78,15 @@ export default Ember.Object.extend(Ember.Evented,
     }
 
     let leafletMap = this.get('leafletMap');
-    Ember.assert(
+    assert(
       `Wrong type of map-command \`leafletMap\` property: ` +
-      `actual type is ${Ember.typeOf(this.get('leafletMap'))}, but \`L.Map\` is expected.`,
+      `actual type is ${typeOf(this.get('leafletMap'))}, but \`L.Map\` is expected.`,
       leafletMap instanceof L.Map);
 
     this.set('_executing', true);
     let executionResult = this._execute(...arguments);
 
-    Ember.run.scheduleOnce('afterRender', this, function () {
+    scheduleOnce('afterRender', this, function () {
 
       // Trigger common 'execute' event.
       leafletMap.fire('flexberry-map:commands:execute', {
@@ -97,7 +104,7 @@ export default Ember.Object.extend(Ember.Evented,
       });
     });
 
-    if (executionResult instanceof Ember.RSVP.Promise) {
+    if (executionResult instanceof Promise) {
       // Command is asynchronous & executing is in progress.
       executionResult.finally(() => {
         this.set('_executing', false);

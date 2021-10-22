@@ -2,7 +2,15 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A, isArray } from '@ember/array';
+
+import { inject as service } from '@ember/service';
+import { isNone, isBlank } from '@ember/utils';
+import { Promise } from 'rsvp';
+import { once } from '@ember/runloop';
+import { observer, computed } from '@ember/object';
+import { on } from '@ember/object/evented';
+import Component from '@ember/component';
 import layout from '../templates/components/layers-styles-editor';
 
 /**
@@ -11,7 +19,7 @@ import layout from '../templates/components/layers-styles-editor';
   @class LayersStylesEditorComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -103,8 +111,8 @@ export default Ember.Component.extend({
   */
   layerType: null,
 
-  _layerLoader: Ember.on('init', Ember.observer('layerLoaderIsReady', function () {
-    Ember.run.once(this, '_loadLeafletLayer');
+  _layerLoader: on('init', observer('layerLoaderIsReady', function () {
+    once(this, '_loadLeafletLayer');
   })),
 
   _loadLeafletLayer() {
@@ -125,9 +133,9 @@ export default Ember.Component.extend({
     Promise which will be then resolved with leaflet layer (just loaded or already cached).
   */
   _getLeafletLayer() {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let leafletLayer = this.get('_leafletLayer');
-      if (!Ember.isNone(leafletLayer)) {
+      if (!isNone(leafletLayer)) {
         resolve(leafletLayer);
         return;
       }
@@ -159,7 +167,7 @@ export default Ember.Component.extend({
     @type LayersStylesRendererService
     @private
   */
-  _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
+  _layersStylesRenderer: service('layers-styles-renderer'),
 
   /**
     Available layer styles.
@@ -179,11 +187,11 @@ export default Ember.Component.extend({
     @type String[]
     @readonly
   */
-  _availableLayerStylesCaptions: Ember.computed('_availableLayerStyles', 'i18n.locale', function() {
+  _availableLayerStylesCaptions: computed('_availableLayerStyles', 'i18n.locale', function() {
     let availableLayerStyles = this.get('_availableLayerStyles');
 
-    let layerStylesCaptions = Ember.A();
-    if (Ember.isArray(availableLayerStyles) && availableLayerStyles.length > 0) {
+    let layerStylesCaptions = A();
+    if (isArray(availableLayerStyles) && availableLayerStyles.length > 0) {
       let i18n = this.get('i18n');
       layerStylesCaptions.pushObjects(availableLayerStyles.map((layerStyle) => {
         return i18n.t(`layers-styles.${layerStyle}.caption`);
@@ -209,7 +217,7 @@ export default Ember.Component.extend({
     @method _availableLayerStylesCaptionsOrSelectedLayerStyleDidChange
     @private
   */
-  _availableLayerStylesCaptionsOrSelectedLayerStyleDidChange: Ember.observer(
+  _availableLayerStylesCaptionsOrSelectedLayerStyleDidChange: observer(
     '_availableLayerStylesCaptions.[]',
     'styleSettings.type',
     function() {
@@ -232,8 +240,8 @@ export default Ember.Component.extend({
     @method _selectedLayerStyleCaptionDidChange
     @private
   */
-  _selectedLayerStyleCaptionDidChange: Ember.observer('_selectedLayerStyleCaption', function () {
-    Ember.run.once(this, '_setSelectedLayerStyle');
+  _selectedLayerStyleCaptionDidChange: observer('_selectedLayerStyleCaption', function () {
+    once(this, '_setSelectedLayerStyle');
   }),
 
   /**
@@ -247,7 +255,7 @@ export default Ember.Component.extend({
     let availableLayerStylesCaptions = this.get('_availableLayerStylesCaptions');
     let selectedLayerStyleCaption = this.get('_selectedLayerStyleCaption');
 
-    if (!Ember.isArray(availableLayerStyles) || !Ember.isArray(availableLayerStylesCaptions) || Ember.isBlank(selectedLayerStyleCaption)) {
+    if (!isArray(availableLayerStyles) || !isArray(availableLayerStylesCaptions) || isBlank(selectedLayerStyleCaption)) {
       return null;
     }
 
@@ -268,8 +276,8 @@ export default Ember.Component.extend({
     @method _selectedLayerStyleDidChange
     @private
   */
-  _selectedLayerStyleDidChange: Ember.observer('styleSettings.type', function() {
-    Ember.run.once(this, '_setSelectedLayerStyleDefaultSettings');
+  _selectedLayerStyleDidChange: observer('styleSettings.type', function() {
+    once(this, '_setSelectedLayerStyleDefaultSettings');
   }),
 
   /**
@@ -290,7 +298,7 @@ export default Ember.Component.extend({
   _setSelectedLayerStyleDefaultSettings() {
     let previouslySelectedLayerStyle = this.get('_previouslySelectedLayerStyle');
     let selectedLayerStyle = this.get('styleSettings.type');
-    if (Ember.isBlank(selectedLayerStyle) || previouslySelectedLayerStyle === selectedLayerStyle) {
+    if (isBlank(selectedLayerStyle) || previouslySelectedLayerStyle === selectedLayerStyle) {
       return;
     }
 

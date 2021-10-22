@@ -1,7 +1,8 @@
-import Ember from 'ember';
+import { A } from '@ember/array';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-dropdown-input';
 
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -14,7 +15,7 @@ export default Ember.Component.extend({
     @type Array
     @default Ember.A()
   */
-  items: Ember.A(),
+  items: A(),
 
   /**
     Dropdown value.

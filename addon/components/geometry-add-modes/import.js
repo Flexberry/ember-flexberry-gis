@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone, isBlank } from '@ember/utils';
+
+import { getOwner } from '@ember/application';
+import $ from 'jquery';
+import { A } from '@ember/array';
+import { computed, get, set } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../templates/components/geometry-add-modes/import';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -29,7 +35,7 @@ const flexberryClassNames = {
   result: flexberryClassNamesPrefix + '-result',
 };
 
-let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
+let FlexberryGeometryAddModeImportComponent = Component.extend({
   /**
     Reference to component's template.
   */
@@ -104,7 +110,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
     @property availableCRS
     @type Array
   */
-  availableCRS: Ember.computed(function () {
+  availableCRS: computed(function () {
     return [{
       crs: L.CRS.EPSG4326,
       name: 'EPSG:4326'
@@ -122,7 +128,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
     @property selectedCRS
     @type Object
   */
-  selectedCRS: Ember.computed('selectedCRSName', function () {
+  selectedCRS: computed('selectedCRSName', function () {
     return this.get('availableCRS').filter((crs) => crs.name === this.get('selectedCRSName'))[0].crs;
   }),
 
@@ -300,7 +306,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
 
     let defaultCrs = factories.filter((crs) => crs.crs.code === defaultCrsCode);
     if (defaultCrs.length > 0) {
-      defaultCrsName = Ember.get(defaultCrs, '0.name');
+      defaultCrsName = get(defaultCrs, '0.name');
     }
 
     this.set('availableCRSNames', availableCRSNames);
@@ -315,11 +321,11 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
   */
   handleImportResponse(response) {
     this.set('responseJSON', response);
-    let importedProperties = Ember.get(response, 'features.0.properties');
+    let importedProperties = get(response, 'features.0.properties');
     if (importedProperties) {
       this.set('headersTable', Object.keys(importedProperties));
 
-      let layerProperties = Ember.A(Object.keys(this.get('settings.layerFields') || {}));
+      let layerProperties = A(Object.keys(this.get('settings.layerFields') || {}));
       let propertiesConnection = {};
       for (let property in importedProperties) {
         if (layerProperties.contains(property)) {
@@ -346,13 +352,13 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
       this.set('responseJSON', undefined);
       this.set('_importInProcess', true);
       let file = e.target.files[0];
-      this.set('fileControl', Ember.$(e.target));
+      this.set('fileControl', $(e.target));
       let _this = this;
-      let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      let config = getOwner(this).resolveRegistration('config:environment');
       let data = new FormData();
       data.append(file.name, file);
 
-      Ember.$.ajax({
+      $.ajax({
         url: `${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}`,
         type: 'POST',
         data: data,
@@ -410,10 +416,10 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
         }
       }.bind(this);
 
-      let newLayers = Ember.A();
+      let newLayers = A();
 
       selectedJSON.features.forEach((feature) => {
-        if (!Ember.isNone(feature.geometry)) {
+        if (!isNone(feature.geometry)) {
           let newLayer = L.geoJSON(feature, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
           if (newLayer.getLatLng instanceof Function) {
             let coords = newLayer.getLatLng();
@@ -465,10 +471,10 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
         let selectedFeatures = responseJSON.features.filter((feature) => feature.selected).map((feature) => {
           delete feature.selected;
           Object.keys(feature.properties).forEach((property) => {
-            let connectedProperty = Ember.get(propertiesConnection, `${property}`);
+            let connectedProperty = get(propertiesConnection, `${property}`);
             if (connectedProperty !== property) {
               if (connectedProperty) {
-                Ember.set(feature, `properties.${connectedProperty}`, Ember.get(feature, `properties.${property}`));
+                set(feature, `properties.${connectedProperty}`, get(feature, `properties.${property}`));
               }
 
               delete feature.properties[property];
@@ -513,7 +519,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
       let importAllSelect = this.get('importAllSelect');
 
       importedFeatures.forEach((feature) => {
-        Ember.set(feature, 'selected', !importAllSelect);
+        set(feature, 'selected', !importAllSelect);
       });
 
       this.toggleProperty('importAllSelect');
@@ -527,7 +533,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
       @param {String} newValue New value of connected property name.
     */
     onPropertyConnectionChange(property, component, newValue) {
-      if (Ember.isBlank(newValue)) {
+      if (isBlank(newValue)) {
         newValue = undefined;
       }
 

@@ -2,7 +2,14 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isArray } from '@ember/array';
+
+import $ from 'jquery';
+import { scheduleOnce, schedule } from '@ember/runloop';
+import { isBlank } from '@ember/utils';
+import { computed, observer, get } from '@ember/object';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 
 /**
   Component containing GUI for categorized layers-styles (unique, graduated)
@@ -10,7 +17,7 @@ import Ember from 'ember';
   @class CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to 'layers-styles-renderer' service.
 
@@ -18,7 +25,7 @@ export default Ember.Component.extend({
     @type LayersStylesRendererService
     @private
   */
-  _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
+  _layersStylesRenderer: service('layers-styles-renderer'),
 
   /**
     Flag: indicates whether classification can be performed now or not.
@@ -28,8 +35,8 @@ export default Ember.Component.extend({
     @private
     @readOnly
   */
-  _classificationCanBePerformed: Ember.computed('styleSettings.style.propertyName', function() {
-    return !Ember.isBlank(this.get('styleSettings.style.propertyName'));
+  _classificationCanBePerformed: computed('styleSettings.style.propertyName', function() {
+    return !isBlank(this.get('styleSettings.style.propertyName'));
   }),
 
   /**
@@ -40,7 +47,7 @@ export default Ember.Component.extend({
     @private
     @readOnly
   */
-  _removeCanBePerformed: Ember.computed('_selectedCategoriesCount', function() {
+  _removeCanBePerformed: computed('_selectedCategoriesCount', function() {
     return this.get('_selectedCategoriesCount') > 0;
   }),
 
@@ -151,8 +158,8 @@ export default Ember.Component.extend({
     @method _categoriesDidChange
     @private
   */
-  _categoriesDidChange: Ember.observer('styleSettings.style.categories.[]', function() {
-    Ember.run.scheduleOnce('afterRender', this, '_renderCategorySymbolsOnCanvases');
+  _categoriesDidChange: observer('styleSettings.style.categories.[]', function() {
+    scheduleOnce('afterRender', this, '_renderCategorySymbolsOnCanvases');
   }),
 
   /**
@@ -356,8 +363,8 @@ export default Ember.Component.extend({
       this.set('_editingCell', editingCell);
 
       // Wait while input will be embeded into clicked cell (after render), and focus on it.
-      Ember.run.schedule('afterRender', () => {
-        let $cellInput = Ember.$(e.target).find('input').first();
+      schedule('afterRender', () => {
+        let $cellInput = $(e.target).find('input').first();
         $cellInput.focus();
       });
     },
@@ -458,7 +465,7 @@ export default Ember.Component.extend({
   _renderCategorySymbolsOnCanvases(categoryIndex) {
     let layersStylesRenderer = this.get('_layersStylesRenderer');
     let categories = this.get('styleSettings.style.categories');
-    if (!Ember.isArray(categories) || categories.length === 0) {
+    if (!isArray(categories) || categories.length === 0) {
       return;
     }
 
@@ -466,17 +473,17 @@ export default Ember.Component.extend({
       // Render symbol for the specified category.
       let canvas = this.$('canvas.category-symbol-preview[category=' + categoryIndex + ']')[0];
       let category = categories[categoryIndex];
-      let categoryStyleSettings = Ember.get(category, 'styleSettings');
+      let categoryStyleSettings = get(category, 'styleSettings');
 
       layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
     } else {
       // Render symbols for all categories.
       this.$('canvas.category-symbol-preview').each(function() {
         let canvas = this;
-        let $canvas = Ember.$(canvas);
+        let $canvas = $(canvas);
         let categoryIndex = Number($canvas.attr('category'));
         let category = categories[categoryIndex];
-        let categoryStyleSettings = Ember.get(category, 'styleSettings');
+        let categoryStyleSettings = get(category, 'styleSettings');
 
         layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
       });

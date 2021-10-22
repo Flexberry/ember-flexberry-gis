@@ -1,13 +1,14 @@
-import Ember from 'ember';
+import { observer } from '@ember/object';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Observes changhes in application's current locale, and refreshes some GUI related to it.
 
     @method localeDidChange
     @private
   */
-  _localeDidChange: Ember.observer('i18n.locale', function() {
+  _localeDidChange: observer('i18n.locale', function() {
     this.$('.mapItems .default.text').text(this.get('i18n').t('forms.gis-search-form.layer-metadata.select-a-map'));
   }),
 

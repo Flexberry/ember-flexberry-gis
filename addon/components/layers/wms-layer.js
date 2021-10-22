@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
+
+import { getOwner } from '@ember/application';
+import { get } from '@ember/object';
+import { A } from '@ember/array';
+import { Promise } from 'rsvp';
+import { isNone, isBlank } from '@ember/utils';
 import TileLayer from './tile-layer';
 
 /**
@@ -28,13 +34,13 @@ export default TileLayer.extend({
   _getFeatureInfo(latlng) {
     let layer = this.get('_leafletObject');
 
-    if (Ember.isNone(layer)) {
-      return new Ember.RSVP.Promise((resolve, reject) => {
+    if (isNone(layer)) {
+      return new Promise((resolve, reject) => {
         reject(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`);
       });
     }
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       layer.getFeatureInfo({
         latlng: latlng,
         infoFormat: this.get('info_format'),
@@ -42,7 +48,7 @@ export default TileLayer.extend({
         crs: this.get('crs'),
         featureCount: this.get('feature_count'),
         done(featuresCollection, xhr) {
-          let features = Ember.A(Ember.get(featuresCollection, 'features') || []);
+          let features = A(get(featuresCollection, 'features') || []);
           resolve(features);
         },
         fail(errorThrown, xhr) {
@@ -60,7 +66,7 @@ export default TileLayer.extend({
     @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
   */
   _getBoundingBox(layer) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       layer.getBoundingBox({
         done(boundingBox, xhr) {
           resolve(boundingBox);
@@ -81,12 +87,12 @@ export default TileLayer.extend({
   */
   createLayer() {
     let options = this.get('options') || {};
-    let filter = Ember.get(options, 'filter');
+    let filter = get(options, 'filter');
     if (typeof filter === 'string') {
-      filter = Ember.getOwner(this).lookup('layer:wms').parseFilter(filter);
+      filter = getOwner(this).lookup('layer:wms').parseFilter(filter);
     }
 
-    if (!Ember.isBlank(filter) && filter.toGml) {
+    if (!isBlank(filter) && filter.toGml) {
       filter = filter.toGml();
     }
 
@@ -94,7 +100,7 @@ export default TileLayer.extend({
       filter = L.XmlUtil.serializeXmlDocumentString(filter);
     }
 
-    options = Ember.$.extend(true, {}, options, { filter: filter });
+    options = $.extend(true, {}, options, { filter: filter });
 
     return L.tileLayer.wms(this.get('url'), options);
   },

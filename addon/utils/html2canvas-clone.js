@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import $ from 'jquery';
 
 /**
   Callback function which is called when the Document has been cloned for rendering, can be used to modify
@@ -6,9 +6,9 @@ import Ember from 'ember';
   @param {html} clonedDoc
 */
 export default function html2canvasClone(clonedDoc) {
-  let elem = Ember.$(clonedDoc).find('[style*="transform: translate"]');
+  let elem = $(clonedDoc).find('[style*="transform: translate"]');
   elem.each((ind) => {
-    let $item = Ember.$(elem[ind]);
+    let $item = $(elem[ind]);
     let matrix = $item.css('transform');
     if (matrix !== 'none') {
       let tr = matrix.split(', ');

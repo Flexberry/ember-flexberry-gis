@@ -2,7 +2,14 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { scheduleOnce } from '@ember/runloop';
+
+import { assert } from '@ember/debug';
+import { inject as service } from '@ember/service';
+import $ from 'jquery';
+import { isNone, isBlank, typeOf } from '@ember/utils';
+import Evented from '@ember/object/evented';
+import EmberObject, { computed } from '@ember/object';
 import LeafletMapVisibilityMixin from '../mixins/leaflet-map/map-visibility';
 
 /**
@@ -12,7 +19,7 @@ import LeafletMapVisibilityMixin from '../mixins/leaflet-map/map-visibility';
   @extends <a href="http://emberjs.com/api/classes/Ember.Object.html">Ember.Object</a>
   @uses <a href="http://emberjs.com/api/classes/Ember.Evented.html">Ember.Evented</a>
 */
-export default Ember.Object.extend(Ember.Evented,
+export default EmberObject.extend(Evented,
   LeafletMapVisibilityMixin, {
   /**
     Flag: indicates whether map-tool is enabled or not.
@@ -32,9 +39,9 @@ export default Ember.Object.extend(Ember.Evented,
     @readOnly
     @private
   */
-  _leafletMapContainer: Ember.computed('leafletMap', function() {
+  _leafletMapContainer: computed('leafletMap', function() {
     let container = this.get('leafletMap._container');
-    return Ember.isNone(container) ? null : Ember.$(container);
+    return isNone(container) ? null : $(container);
   }),
 
   /**
@@ -44,7 +51,7 @@ export default Ember.Object.extend(Ember.Evented,
     @type <a href="https://github.com/jamesarosen/ember-i18n">I18nService</a>
     @default Ember.inject.service('i18n')
   */
-  i18n: Ember.inject.service('i18n'),
+  i18n: service('i18n'),
 
   /**
     Tool's name.
@@ -82,7 +89,7 @@ export default Ember.Object.extend(Ember.Evented,
   _enable() {
     let $leafletMapContainer = this.get('_leafletMapContainer');
     let cursor = this.get('cursor');
-    if (!Ember.isNone($leafletMapContainer) && !Ember.isBlank(cursor) && !$leafletMapContainer.hasClass(cursor)) {
+    if (!isNone($leafletMapContainer) && !isBlank(cursor) && !$leafletMapContainer.hasClass(cursor)) {
       $leafletMapContainer.addClass(cursor);
     }
   },
@@ -96,7 +103,7 @@ export default Ember.Object.extend(Ember.Evented,
   _disable() {
     let $leafletMapContainer = this.get('_leafletMapContainer');
     let cursor = this.get('cursor');
-    if (!Ember.isNone($leafletMapContainer) && !Ember.isBlank(cursor) && $leafletMapContainer.hasClass(cursor)) {
+    if (!isNone($leafletMapContainer) && !isBlank(cursor) && $leafletMapContainer.hasClass(cursor)) {
       $leafletMapContainer.removeClass(cursor);
     }
   },
@@ -112,15 +119,15 @@ export default Ember.Object.extend(Ember.Evented,
     }
 
     let leafletMap = this.get('leafletMap');
-    Ember.assert(
+    assert(
       `Wrong type of map-tool \`leafletMap\` property: ` +
-      `actual type is ${Ember.typeOf(this.get('leafletMap'))}, but \`L.Map\` is expected.`,
+      `actual type is ${typeOf(this.get('leafletMap'))}, but \`L.Map\` is expected.`,
       leafletMap instanceof L.Map);
 
     this.set('_enabled', true);
     this._enable(...arguments);
 
-    Ember.run.scheduleOnce('afterRender', this, function () {
+    scheduleOnce('afterRender', this, function () {
 
       // Trigger common 'enable' event.
       leafletMap.fire('flexberry-map:tools:enable', {
@@ -146,9 +153,9 @@ export default Ember.Object.extend(Ember.Evented,
     }
 
     let leafletMap = this.get('leafletMap');
-    Ember.assert(
+    assert(
       `Wrong type of map-tool \`leafletMap\` property: ` +
-      `actual type is ${Ember.typeOf(this.get('leafletMap'))}, but \`L.Map\` is expected.`,
+      `actual type is ${typeOf(this.get('leafletMap'))}, but \`L.Map\` is expected.`,
       leafletMap instanceof L.Map);
 
     this.set('_enabled', false);

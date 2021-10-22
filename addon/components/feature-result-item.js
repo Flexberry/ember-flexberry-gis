@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { Promise, resolve } from 'rsvp';
+
+import { isNone } from '@ember/utils';
+import { computed, get } from '@ember/object';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 import layout from '../templates/components/feature-result-item';
 import { translationMacro as t } from 'ember-i18n';
 import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
@@ -14,14 +19,14 @@ import { zoomToBounds } from '../utils/zoom-to-bounds';
   @class FeatureResultItemComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
   /**
     Service for managing map API.
     @property mapApi
     @type MapApiService
   */
-  mapApi: Ember.inject.service(),
+  mapApi: service(),
 
   /**
     Flag indicates whether to show all coordinates.
@@ -121,7 +126,7 @@ export default Ember.Component.extend({
     @readOnly
     @private
    */
-  _excludedProperties: Ember.computed('displaySettings', function () {
+  _excludedProperties: computed('displaySettings', function () {
     return this.get('displaySettings.excludedProperties');
   }),
 
@@ -133,7 +138,7 @@ export default Ember.Component.extend({
     @readOnly
     @private
   */
-  _localizedProperties: Ember.computed('displaySettings', 'i18n.locale', function () {
+  _localizedProperties: computed('displaySettings', 'i18n.locale', function () {
     let currentLocale = this.get('i18n.locale');
     let localizedProperties = this.get(`displaySettings.localizedProperties.${currentLocale}`) || {};
     return localizedProperties;
@@ -146,7 +151,7 @@ export default Ember.Component.extend({
     @type boolean
     @readonly
    */
-  expanded: Ember.computed('infoExpanded', '_infoExpanded', function () {
+  expanded: computed('infoExpanded', '_infoExpanded', function () {
     return this.get('infoExpanded') || this.get('_infoExpanded');
   }),
 
@@ -157,7 +162,7 @@ export default Ember.Component.extend({
     @type boolean
     @readonly
    */
-  isActive: Ember.computed('selectedFeature', 'feature', function () {
+  isActive: computed('selectedFeature', 'feature', function () {
     return this.get('selectedFeature') === this.get('feature');
   }),
 
@@ -279,9 +284,9 @@ export default Ember.Component.extend({
     onRowEdit() {
       let feature = this.get('feature');
       let layerModel = feature.layerModel;
-      let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
+      let getAttributesOptions = get(layerModel, '_attributesOptions');
 
-      if (Ember.isNone(getAttributesOptions)) {
+      if (isNone(getAttributesOptions)) {
         return;
       }
 
@@ -291,7 +296,7 @@ export default Ember.Component.extend({
       this.set('_showLoader', true);
 
       getAttributesOptions().then(({ object, settings }) => {
-        let name = Ember.get(layerModel, 'name');
+        let name = get(layerModel, 'name');
 
         // редактируемый объект должен быть загружен
         let leafletMap = this.get('mapApi').getFromApi('leafletMap');
@@ -305,11 +310,11 @@ export default Ember.Component.extend({
           bounds = feature.leafletLayer.getBounds();
         }
 
-        let minZoom = Ember.get(feature.leafletLayer, 'minZoom');
-        let maxZoom = Ember.get(feature.leafletLayer, 'maxZoom');
+        let minZoom = get(feature.leafletLayer, 'minZoom');
+        let maxZoom = get(feature.leafletLayer, 'maxZoom');
         zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
-        if (Ember.isNone(object.promiseLoadLayer) || !(object.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
-          object.promiseLoadLayer = Ember.RSVP.resolve();
+        if (isNone(object.promiseLoadLayer) || !(object.promiseLoadLayer instanceof Promise)) {
+          object.promiseLoadLayer = resolve();
         }
 
         object.promiseLoadLayer.then(() => {

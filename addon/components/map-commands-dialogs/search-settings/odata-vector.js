@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { computed } from '@ember/object';
+
+import Component from '@ember/component';
 import layout from '../../../templates/components/map-commands-dialogs/search-settings/odata-vector';
 
 /**
@@ -11,9 +13,9 @@ import layout from '../../../templates/components/map-commands-dialogs/search-se
   @class ODataVectorSearchSettingsComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
 
-  _searchPropertiesArray: Ember.computed('searchProperties', function () {
+  _searchPropertiesArray: computed('searchProperties', function () {
     let props = [];
     let searchProperties = this.get('searchProperties');
     for (var property in searchProperties) {

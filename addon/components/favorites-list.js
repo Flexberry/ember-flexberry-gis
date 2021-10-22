@@ -1,7 +1,9 @@
-import Ember from 'ember';
+import { observer } from '@ember/object';
+import { A } from '@ember/array';
+import Component from '@ember/component';
 import layout from '../templates/components/favorites-list';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
-export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
+export default Component.extend(LeafletZoomToFeatureMixin, {
 
   /**
     Reference to component's template.
@@ -15,7 +17,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @type Array
     @default Ember.A()
   */
-  features: Ember.A(),
+  features: A(),
 
   /**
     Array contains identification result features and layerModels.
@@ -34,7 +36,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   compareBtnDisabled: true,
 
-  onTwoObjectsChange: Ember.observer('features.[]', function() {
+  onTwoObjectsChange: observer('features.[]', function() {
     this.set('data', this.get('features'));
   }),
 

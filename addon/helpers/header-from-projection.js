@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isPresent } from '@ember/utils';
+
+import { capitalize } from '@ember/string';
+import { assert } from '@ember/debug';
+import { observer, get } from '@ember/object';
+import { inject as service } from '@ember/service';
+import Helper from '@ember/component/helper';
 import { getValueFromLocales } from 'ember-flexberry-data/utils/model-functions';
 
 /**
@@ -18,22 +24,22 @@ import { getValueFromLocales } from 'ember-flexberry-data/utils/model-functions'
   {{my-component header=(header-from-projection modelName='test' projectionName='testView')}}
   ```
 */
-export default Ember.Helper.extend({
+export default Helper.extend({
 
   /**
     Explicit injection of internalization service.
   */
-  i18n: Ember.inject.service('i18n'),
+  i18n: service('i18n'),
 
   /**
     Explicit injection of store service.
   */
-  store: Ember.inject.service('store'),
+  store: service('store'),
 
   /**
     Observer that recomputes the value of helper when locale changes.
   */
-  _localeDidChange: Ember.observer('i18n.locale', function () {
+  _localeDidChange: observer('i18n.locale', function () {
     this.recompute();
   }),
 
@@ -54,7 +60,7 @@ export default Ember.Helper.extend({
       }
 
       let attr = attributes[attrName];
-      Ember.assert(`Unknown kind of projection attribute: ${attr.kind}`, attr.kind === 'attr' || attr.kind === 'belongsTo' || attr.kind === 'hasMany');
+      assert(`Unknown kind of projection attribute: ${attr.kind}`, attr.kind === 'attr' || attr.kind === 'belongsTo' || attr.kind === 'hasMany');
       switch (attr.kind) {
         case 'hasMany':
           break;
@@ -105,7 +111,7 @@ export default Ember.Helper.extend({
     let valueFromLocales = getValueFromLocales(this.get('i18n'), key);
 
     let column = {
-      header: valueFromLocales || attr.caption || Ember.String.capitalize(attrName),
+      header: valueFromLocales || attr.caption || capitalize(attrName),
       propName: bindingPath, // TODO: rename column.propName
     };
 
@@ -142,20 +148,20 @@ export default Ember.Helper.extend({
       modelName = args[0];
       projectionName = args[1];
     } else {
-      modelName = Ember.get(hash, 'modelName');
-      projectionName = Ember.get(hash, 'projectionName');
+      modelName = get(hash, 'modelName');
+      projectionName = get(hash, 'projectionName');
     }
 
     let modelClass = this.get('store').modelFor(modelName);
-    Ember.assert(
+    assert(
       `Unable to find a model with name ${modelName}`,
-      Ember.isPresent(modelClass)
+      isPresent(modelClass)
     );
     let projection = modelClass.projections.get(projectionName);
 
-    Ember.assert(
+    assert(
       `Unable to find a projection ${projectionName} in model ${modelName}`,
-      Ember.isPresent(projection)
+      isPresent(projection)
     );
     this.set('modelProjection', projection);
 

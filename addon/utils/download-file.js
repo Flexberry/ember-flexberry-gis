@@ -1,4 +1,6 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import { isNone } from '@ember/utils';
+import { Promise } from 'rsvp';
 
 /**
   Download file. Create request in xml format. Specific request for odata layer.
@@ -16,7 +18,7 @@ import Ember from 'ember';
   @return {Promise} Object consist of fileName and blob.
 */
 let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url, header = {}) {
-  return new Ember.RSVP.Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let req = null;
     let headers = {};
     let layerName;
@@ -56,14 +58,14 @@ let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLa
         let layerElem = doc.createElement('layer');
         layerElem.setAttribute('odataClass', layerSettings.odataClass);
         layerElem.setAttribute('odataUrl', layerSettings.odataUrl);
-        if (!Ember.isNone(crsOuput.definition)) {
+        if (!isNone(crsOuput.definition)) {
           layerElem.setAttribute('srsName', crsOuput.definition);
         } else {
           layerElem.setAttribute('srsName', crsOuput.crs.code);
         }
 
         layerElem.setAttribute('layerName', layerName);
-        if (!Ember.isNone(crsLayer.definition)) {
+        if (!isNone(crsLayer.definition)) {
           layerElem.setAttribute('srslayer', crsLayer.definition);
         } else {
           layerElem.setAttribute('srslayer', crsLayer.crs.code);
@@ -85,7 +87,7 @@ let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLa
       reject('Error getting data for the request: ' + error);
     }
 
-    Ember.$.ajax({
+    $.ajax({
       async: true,
       method: 'POST',
       url: url,

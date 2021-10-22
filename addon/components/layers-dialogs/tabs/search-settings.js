@@ -1,4 +1,7 @@
-import Ember from 'ember';
+import { getOwner } from '@ember/application';
+import { isNone, isBlank } from '@ember/utils';
+import { A } from '@ember/array';
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/tabs/search-settings';
 
 /**
@@ -7,7 +10,7 @@ import layout from '../../../templates/components/layers-dialogs/tabs/search-set
   @class FlexberryIdentificationSettingsComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
 
   /**
     Reference to component's template.
@@ -96,7 +99,7 @@ export default Ember.Component.extend({
     @type Array
     @default Ember.A()
   */
-  fields: Ember.A(),
+  fields: A(),
 
   /**
     Style class for checkbox component.
@@ -127,17 +130,17 @@ export default Ember.Component.extend({
   didInsertElement() {
     let _this = this;
     let leafletObject = _this.get('_leafletObject');
-    if (Ember.isNone(leafletObject)) {
+    if (isNone(leafletObject)) {
       let type = _this.get('layerType');
       let leafletObjectMethod = _this.get('_leafletObjectMethod');
-      if (!(Ember.isBlank(leafletObjectMethod) || Ember.isBlank(type))) {
+      if (!(isBlank(leafletObjectMethod) || isBlank(type))) {
         _this.set('_leafletObjectIsLoading', true);
         leafletObjectMethod().then(leafletObject => {
           _this.set('_leafletObject', leafletObject);
           _this.set('_leafletObjectIsLoading', false);
-          let layerClass = Ember.getOwner(_this).knownForType('layer', type);
-          if (!Ember.isBlank(layerClass)) {
-            _this.set('fields', Ember.A(layerClass.getLayerProperties(leafletObject)));
+          let layerClass = getOwner(_this).knownForType('layer', type);
+          if (!isBlank(layerClass)) {
+            _this.set('fields', A(layerClass.getLayerProperties(leafletObject)));
           }
         }).catch(() => {
           _this.set('_leafletObjectIsLoading', false);

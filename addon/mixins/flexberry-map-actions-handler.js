@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { set } from '@ember/object';
+
+import { typeOf } from '@ember/utils';
+import { assert } from '@ember/debug';
+import Mixin from '@ember/object/mixin';
 
 /**
   Mixin containing handlers for
@@ -11,7 +15,7 @@ import Ember from 'ember';
   @class FlexberryMapActionsHandlerMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   actions: {
     /**
       Handles {{#crossLink "FlexberryMapComponent/sendingActions.leafletInit:method"}}flexberry-map component's 'leafletInit' action{{/crossLink}}.
@@ -50,13 +54,13 @@ export default Ember.Mixin.create({
       let leafletMapPropertyPath = args[0];
       let e = args[args.length - 1];
 
-      Ember.assert(
+      assert(
         `Wrong type of \`leafletMapPropertyPath\` argument: actual type is \`${leafletMapPropertyPath}\`, ` +
         `but \`string\` is expected`,
-        Ember.typeOf(leafletMapPropertyPath) === 'string');
+        typeOf(leafletMapPropertyPath) === 'string');
 
-      Ember.set(this, leafletMapPropertyPath, e.map);
-      Ember.set(window, leafletMapPropertyPath, e.map);
+      set(this, leafletMapPropertyPath, e.map);
+      set(window, leafletMapPropertyPath, e.map);
     },
 
     onServiceLayerInit(property, serviceLayer) {
@@ -95,13 +99,13 @@ export default Ember.Mixin.create({
     */
     onMapLeafletDestroy(...args) {
       let leafletMapPropertyPath = args[0];
-      Ember.assert(
-        `Wrong type of \`leafletMapPropertyPath\` argument: actual type is \`${Ember.typeOf(leafletMapPropertyPath)}\`, ` +
+      assert(
+        `Wrong type of \`leafletMapPropertyPath\` argument: actual type is \`${typeOf(leafletMapPropertyPath)}\`, ` +
         `but \`string\` is expected`,
-        Ember.typeOf(leafletMapPropertyPath) === 'string');
+        typeOf(leafletMapPropertyPath) === 'string');
 
-      Ember.set(this, leafletMapPropertyPath, null);
-      Ember.set(window, leafletMapPropertyPath, null);
+      set(this, leafletMapPropertyPath, null);
+      set(window, leafletMapPropertyPath, null);
     },
 
     /**
@@ -144,14 +148,14 @@ export default Ember.Mixin.create({
       let lngPropertyPath = args[1];
       let e = args[args.length - 1];
 
-      Ember.assert(
-        `Wrong type of \`latPropertyPath\` argument: actual type is \`${Ember.typeOf(latPropertyPath)}\`, ` +
+      assert(
+        `Wrong type of \`latPropertyPath\` argument: actual type is \`${typeOf(latPropertyPath)}\`, ` +
         `but \`string\` is expected`,
-        Ember.typeOf(latPropertyPath) === 'string');
-      Ember.assert(
-        `Wrong type of \`lngPropertyPath\` argument: actual type is \`${Ember.typeOf(lngPropertyPath)}\`, ` +
+        typeOf(latPropertyPath) === 'string');
+      assert(
+        `Wrong type of \`lngPropertyPath\` argument: actual type is \`${typeOf(lngPropertyPath)}\`, ` +
         `but \`string\` is expected`,
-        Ember.typeOf(lngPropertyPath) === 'string');
+        typeOf(lngPropertyPath) === 'string');
 
       let newCenterLatLng = e.target.getCenter();
       this.transitionToRoute({ queryParams: { lat: newCenterLatLng.lat, lng: newCenterLatLng.lng, zoom: e.target.getZoom() } });
@@ -195,10 +199,10 @@ export default Ember.Mixin.create({
       let zoomPropertyPath = args[0];
       let e = args[args.length - 1];
 
-      Ember.assert(
-        `Wrong type of \`zoomPropertyPath\` argument: actual type is \`${Ember.typeOf(zoomPropertyPath)}\`, ` +
+      assert(
+        `Wrong type of \`zoomPropertyPath\` argument: actual type is \`${typeOf(zoomPropertyPath)}\`, ` +
         `but \`string\` is expected`,
-        Ember.typeOf(zoomPropertyPath) === 'string');
+        typeOf(zoomPropertyPath) === 'string');
 
       let newZoom = e.target.getZoom();
       this.transitionToRoute({ queryParams: { zoom: newZoom } });

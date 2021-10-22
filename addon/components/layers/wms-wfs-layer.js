@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
+
+import { getOwner } from '@ember/application';
+import { isNone, isBlank } from '@ember/utils';
+import { on } from '@ember/object/evented';
+import { set, observer } from '@ember/object';
+import $ from 'jquery';
 import WmsLayerComponent from './wms-layer';
 import WfsLayerComponent from './wfs-layer';
 
@@ -35,13 +41,13 @@ export default WmsLayerComponent.extend({
 
       return attribitesOptions;
     }).then((attribitesOptions) => {
-      let options = Ember.$.extend(this.get('_wfsLayer.options') || {}, { showExisting: true, clusterize: false });
+      let options = $.extend(this.get('_wfsLayer.options') || {}, { showExisting: true, clusterize: false });
       let wfsLayer = this.get('_wfsLayer').createVectorLayer(options);
 
       return wfsLayer;
     }).then((wfsLayer) => {
-      Ember.set(resultingAttribitesOptions, 'object', wfsLayer);
-      Ember.set(resultingAttribitesOptions, 'settings.readonly', this.get('wfs.readonly'));
+      set(resultingAttribitesOptions, 'object', wfsLayer);
+      set(resultingAttribitesOptions, 'settings.readonly', this.get('wfs.readonly'));
 
       return resultingAttribitesOptions;
     });
@@ -50,7 +56,7 @@ export default WmsLayerComponent.extend({
   /**
     Sets wfs layer's filter, when wms filter was changed.
   */
-  filterObserver: Ember.on('init', Ember.observer('options.filter', function() {
+  filterObserver: on('init', observer('options.filter', function() {
     let filter = this.get('options.filter');
     this.set('_wfsLayer.options.filter', filter);
   })),
@@ -63,7 +69,7 @@ export default WmsLayerComponent.extend({
     Leaflet layer or promise returning such layer.
   */
   getLeafletObject() {
-    let options = Ember.$.extend(this.get('_wfsLayer.options') || {}, { showExisting: false });
+    let options = $.extend(this.get('_wfsLayer.options') || {}, { showExisting: false });
     return this.get('_wfsLayer').createVectorLayer(options).then(layer => {
       return layer;
     });
@@ -85,7 +91,7 @@ export default WmsLayerComponent.extend({
   */
   identify(e) {
     let innerWfsLayer = this.get('_wfsLayer');
-    if (!Ember.isNone(innerWfsLayer)) {
+    if (!isNone(innerWfsLayer)) {
       return innerWfsLayer.identify.apply(innerWfsLayer, arguments);
     }
   },
@@ -102,7 +108,7 @@ export default WmsLayerComponent.extend({
   */
   query(layerLinks, e) {
     let innerWfsLayer = this.get('_wfsLayer');
-    if (!Ember.isNone(innerWfsLayer)) {
+    if (!isNone(innerWfsLayer)) {
       return innerWfsLayer.query.apply(innerWfsLayer, arguments);
     }
   },
@@ -121,7 +127,7 @@ export default WmsLayerComponent.extend({
   */
   search(e) {
     let innerWfsLayer = this.get('_wfsLayer');
-    if (!Ember.isNone(innerWfsLayer)) {
+    if (!isNone(innerWfsLayer)) {
       return innerWfsLayer.search.apply(innerWfsLayer, arguments);
     }
   },
@@ -142,15 +148,15 @@ export default WmsLayerComponent.extend({
     };
 
     // Set creating component's owner to avoid possible lookup exceptions.
-    let owner = Ember.getOwner(this);
+    let owner = getOwner(this);
     let ownerKey = null;
-    Ember.A(Object.keys(this) || []).forEach((key) => {
+    A(Object.keys(this) || []).forEach((key) => {
       if (this[key] === owner) {
         ownerKey = key;
         return false;
       }
     });
-    if (!Ember.isBlank(ownerKey)) {
+    if (!isBlank(ownerKey)) {
       innerWfsLayerProperties[ownerKey] = owner;
     }
 
@@ -165,7 +171,7 @@ export default WmsLayerComponent.extend({
     this._super(...arguments);
 
     let innerWfsLayer = this.get('_wfsLayer');
-    if (!Ember.isNone(innerWfsLayer)) {
+    if (!isNone(innerWfsLayer)) {
       innerWfsLayer.destroy();
       this.set('_wfsLayer', null);
     }

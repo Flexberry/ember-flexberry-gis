@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { get } from '@ember/object';
+
+import $ from 'jquery';
+import { isNone, isBlank } from '@ember/utils';
+import { inject as service } from '@ember/service';
 import BaseLayerStyle from './-private/base';
 
 /**
@@ -19,7 +23,7 @@ export default BaseLayerStyle.extend({
     @property markersStylesRenderer
     @type MarkersStylesRendererService
   */
-  markersStylesRenderer: Ember.inject.service('markers-styles-renderer'),
+  markersStylesRenderer: service('markers-styles-renderer'),
 
   /**
     Applies layer-style to the specified leaflet layer.
@@ -54,9 +58,9 @@ export default BaseLayerStyle.extend({
     @param {Object} options.style Hash containing style settings.
   */
   _renderOnLeafletPath({ path, style }) {
-    if (Ember.isNone(path.styleIsSet) || !path.styleIsSet) {
+    if (isNone(path.styleIsSet) || !path.styleIsSet) {
       let pathStyle = style.path || {};
-      pathStyle = Ember.$.extend(true, {}, pathStyle, {
+      pathStyle = $.extend(true, {}, pathStyle, {
         // Fill must be disabled for non polygon layers, because filled polylines and other lines-like geometries looks ugly in leaflet.
         fill: pathStyle.fill === true && path instanceof L.Polygon
       });
@@ -154,9 +158,9 @@ export default BaseLayerStyle.extend({
     ctx.clearRect(0, 0, width, height);
 
     // Set line dashig.
-    let pathStyle = Ember.get(style, 'path') || {};
-    let dashArray = Ember.get(pathStyle, 'dashArray');
-    dashArray = Ember.isBlank(dashArray) ?
+    let pathStyle = get(style, 'path') || {};
+    let dashArray = get(pathStyle, 'dashArray');
+    dashArray = isBlank(dashArray) ?
       [] :
       dashArray.split(',').map((value) => {
         return Number(value);
@@ -164,7 +168,7 @@ export default BaseLayerStyle.extend({
         return !isNaN(value);
       });
 
-    let dashOffset = Number(Ember.get(pathStyle, 'dashOffset'));
+    let dashOffset = Number(get(pathStyle, 'dashOffset'));
     dashOffset = isNaN(dashOffset) ? 0 : dashOffset;
 
     ctx.setLineDash(dashArray);
@@ -178,33 +182,33 @@ export default BaseLayerStyle.extend({
     }
 
     // Set fill style.
-    let fill = Ember.get(pathStyle, 'fill');
+    let fill = get(pathStyle, 'fill');
     if (fill) {
       // Fill opacity is always 1.
       ctx.globalAlpha = 1;
 
-      let fillColor = Ember.get(pathStyle, 'fillColor');
+      let fillColor = get(pathStyle, 'fillColor');
       ctx.fillStyle = fillColor;
 
       ctx.fill();
     }
 
     // Set stroke style.
-    let stroke = Ember.get(pathStyle, 'stroke');
+    let stroke = get(pathStyle, 'stroke');
     if (stroke) {
       // Stroke oapcity is always 1.
       ctx.globalAlpha = 1;
 
-      let strokeWeight = Number(Ember.get(pathStyle, 'weight'));
+      let strokeWeight = Number(get(pathStyle, 'weight'));
       ctx.lineWidth = strokeWeight;
 
-      let strokeColor = Ember.get(pathStyle, 'color');
+      let strokeColor = get(pathStyle, 'color');
       ctx.strokeStyle = strokeColor;
 
-      let strokeLineCap = Ember.get(pathStyle, 'lineCap');
+      let strokeLineCap = get(pathStyle, 'lineCap');
       ctx.lineCap = strokeLineCap;
 
-      let strokeLineJoin = Ember.get(pathStyle, 'lineJoin');
+      let strokeLineJoin = get(pathStyle, 'lineJoin');
       ctx.lineJoin = strokeLineJoin;
 
       ctx.stroke();

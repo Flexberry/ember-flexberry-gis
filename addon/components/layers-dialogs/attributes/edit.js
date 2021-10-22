@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
+
+import { isNone, isBlank } from '@ember/utils';
+import { observer, get, set } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/attributes/edit';
 import {
   translationMacro as t
@@ -28,7 +32,7 @@ const flexberryClassNames = {
   form: 'flexberry-edit-layer-attributes'
 };
 
-let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
+let FlexberryEditLayerAttributesDialogComponent = Component.extend({
   /**
     If user apply or deny data his made decision.
 
@@ -202,10 +206,10 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
     @method choiceValueObserver
     @private
   */
-  choiceValueObserver: Ember.observer('choiceValue', function() {
+  choiceValueObserver: observer('choiceValue', function() {
     let choiceValueData = this.get('choiceValueData');
     let choiceValue = this.get('choiceValue');
-    if (!Ember.isNone(choiceValue) && !Ember.isBlank(choiceValue)) {
+    if (!isNone(choiceValue) && !isBlank(choiceValue)) {
       this.set('data', choiceValueData[`${choiceValue}` - 1]);
     } else {
       this.set('data', choiceValueData[`${choiceValueData.length}` - 1]);
@@ -219,9 +223,9 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
     @method choiceValueDataObserver
     @private
   */
-  choiceValueDataObserver: Ember.observer('choiceValueData', function() {
+  choiceValueDataObserver: observer('choiceValueData', function() {
     let choiceValueData = this.get('choiceValueData');
-    if (!Ember.isNone(choiceValueData)) {
+    if (!isNone(choiceValueData)) {
       let choice = Object.keys(choiceValueData).map((index) => {
         return Number(index) + 1;
       });
@@ -244,7 +248,7 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
     let fieldParsers = this.get('fieldParsers');
     let fieldValidators = this.get('fieldValidators');
 
-    let data = Ember.$.extend(true, {}, this.get('data'));
+    let data = $.extend(true, {}, this.get('data'));
     let parsingErrors = {};
     let dataIsValid = true;
 
@@ -253,16 +257,16 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
         continue;
       }
 
-      let text = Ember.get(data, fieldName);
+      let text = get(data, fieldName);
       let value = fieldParsers[fieldName](text);
       let valueIsValid = fieldValidators[fieldName](value);
 
       if (valueIsValid) {
-        Ember.set(data, fieldName, value);
+        set(data, fieldName, value);
       }
 
       dataIsValid = dataIsValid && valueIsValid;
-      Ember.set(parsingErrors, fieldName, !valueIsValid);
+      set(parsingErrors, fieldName, !valueIsValid);
     }
 
     this.set('parsingErrors', parsingErrors);
@@ -341,7 +345,7 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
     */
     onApprove(e) {
       let parsedData = this.parseData();
-      if (Ember.isNone(parsedData)) {
+      if (isNone(parsedData)) {
         // Prevent dialog from being closed.
         e.closeDialog = false;
 

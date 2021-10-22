@@ -1,16 +1,25 @@
+import { run } from '@ember/runloop';
+import { A } from '@ember/array';
+import $ from 'jquery';
+import { reject, Promise } from 'rsvp';
+import { isNone } from '@ember/utils';
 import Ember from 'ember';
 import { Projection, Adapter } from 'ember-flexberry-data';
 import ODataQueryAdapter from 'ember-flexberry-data/query/odata-adapter';
-import { getResponseMeta, getBatchResponses, parseBatchResponse } from 'ember-flexberry-data/utils/batch-queries';
+import {
+  getResponseMeta,
+  getBatchResponses,
+  parseBatchResponse
+} from 'ember-flexberry-data/utils/batch-queries';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
 export default Adapter.Odata.extend(Projection.AdapterMixin, {
   batchLoadModel(modelName, query, store) {
-    if (Ember.isNone(modelName) || Ember.isNone(query)) {
-      return Ember.RSVP.reject();
+    if (isNone(modelName) || isNone(query)) {
+      return reject();
     }
 
-    if (Ember.isNone(store)) {
+    if (isNone(store)) {
       store = this.get('store');
     }
 
@@ -30,7 +39,7 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
 
     const url = `${this._buildURL()}/$batch`;
 
-    const headers = Ember.$.extend({}, this.get('headers'));
+    const headers = $.extend({}, this.get('headers'));
     headers['Content-Type'] = `multipart/mixed;boundary=${boundary}`;
     const httpMethod = 'POST';
 
@@ -40,7 +49,7 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
       dataType: 'text',
       data: requestBody };
 
-    return new Ember.RSVP.Promise((resolve, reject) => Ember.$.ajax(url, options).done((response, statusText, xhr) => {
+    return new Promise((resolve, reject) => $.ajax(url, options).done((response, statusText, xhr) => {
       const meta = getResponseMeta(xhr.getResponseHeader('Content-Type'));
       if (meta.contentType !== 'multipart/mixed') {
         return reject(new Ember.DS.AdapterError('Invalid response type.'));
@@ -50,9 +59,9 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
         const batchResponses = getBatchResponses(response, meta.boundary).map(parseBatchResponse);
         const result = batchResponses.filter(r => r.contentType === 'application/http')[0];
 
-        const normalizedRecords = { data: Ember.A(), included: Ember.A() };
+        const normalizedRecords = { data: A(), included: A() };
         let odataValue = result.response.body.value;
-        if (!Ember.isNone(odataValue)) {
+        if (!isNone(odataValue)) {
           odataValue.forEach(record => {
             const normalized = store.normalize(modelName, record);
             normalizedRecords.data.addObject(normalized.data);
@@ -64,7 +73,7 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
           console.error('Error batch: ' + result.response.body);
         }
 
-        return resolve(Ember.run(store, store.push, normalizedRecords));
+        return resolve(run(store, store.push, normalizedRecords));
       } catch (e) {
         return reject(e);
       }

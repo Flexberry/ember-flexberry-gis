@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from '../../templates/components/map-commands/locate';
 import {
   translationMacro as t
@@ -39,7 +39,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let LocateMapCommandComponent = Ember.Component.extend({
+let LocateMapCommandComponent = Component.extend({
   /**
     Reference to component's template.
   */

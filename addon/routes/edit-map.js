@@ -2,9 +2,20 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A, isArray } from '@ember/array';
+
+import {
+  isEmpty,
+  isNone,
+  isBlank,
+  isPresent
+} from '@ember/utils';
+import { Promise, all } from 'rsvp';
+import { inject as service } from '@ember/service';
 import EditFormRoute from 'ember-flexberry/routes/edit-form';
-import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
+import {
+  createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-laye
+} from-metadata';
 import { Query } from 'ember-flexberry-data';
 
 /**
@@ -51,7 +62,7 @@ export default EditFormRoute.extend({
   /**
    Service for Map loading from store
    */
-  mapStore: Ember.inject.service(),
+  mapStore: service(),
 
   /**
     Service for managing map API.
@@ -59,7 +70,7 @@ export default EditFormRoute.extend({
     @property mapApi
     @type MapApiService
   */
-  mapApi: Ember.inject.service(),
+  mapApi: service(),
 
   /**
     Name of model projection to be used as record's properties limitation.
@@ -111,8 +122,8 @@ export default EditFormRoute.extend({
     let modelQuery = this.get('mapStore').getMapById(mapId);
     let metadataQuery = this._getMetadata(params.metadata);
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.RSVP.all([modelQuery, metadataQuery]).then((data) => {
+    return new Promise((resolve, reject) => {
+      all([modelQuery, metadataQuery]).then((data) => {
         let [model, metadata] = data;
         this._addMetadata(model, metadata);
         resolve(model);
@@ -135,19 +146,19 @@ export default EditFormRoute.extend({
     let layers = model.get('mapLayer');
 
     if (layers) {
-      let rootLayers = layers.filter(layer => Ember.isEmpty(layer.get('parent')));
+      let rootLayers = layers.filter(layer => isEmpty(layer.get('parent')));
 
       let hierarchy = this.sortLayersByIndex(rootLayers);
       model.set('hierarchy', hierarchy);
 
-      let backgroundLayers = Ember.A();
+      let backgroundLayers = A();
       backgroundLayers.addObjects(hierarchy.filterBy('settingsAsObject.backgroundSettings.canBeBackground', true));
       model.set('backgroundLayers', backgroundLayers);
 
       let other = hierarchy.filter((layer) => {
-        return Ember.isNone(layer.get('settingsAsObject')) || !layer.get('settingsAsObject.backgroundSettings.canBeBackground');
+        return isNone(layer.get('settingsAsObject')) || !layer.get('settingsAsObject.backgroundSettings.canBeBackground');
       });
-      let otherLayers = Ember.A();
+      let otherLayers = A();
       otherLayers.addObjects(other);
       model.set('otherLayers', otherLayers);
     }
@@ -156,7 +167,7 @@ export default EditFormRoute.extend({
     let currentParams = {};
     urlParams.forEach((param) => {
       currentParams[param] = controller.get(param);
-      if (!Ember.isBlank(currentParams[param])) {
+      if (!isBlank(currentParams[param])) {
         model.set(param, currentParams[param]);
       } else {
         currentParams[param] = model.get(param);
@@ -196,7 +207,7 @@ export default EditFormRoute.extend({
     @param {String} metadata Metadata ids to be used as query limitation.
   */
   _getMetadata(metadata) {
-    if (!Ember.isPresent(metadata)) {
+    if (!isPresent(metadata)) {
       return null;
     }
 
@@ -208,7 +219,7 @@ export default EditFormRoute.extend({
       let id = item.trim().toLowerCase();
       return new Query.SimplePredicate('id', Query.FilterOperator.Eq, id);
     });
-    if (Ember.isArray(conditions)) {
+    if (isArray(conditions)) {
       let condition = conditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.Or, ...conditions) : conditions[0];
       queryBuilder = queryBuilder.where(condition);
     }
@@ -223,7 +234,7 @@ export default EditFormRoute.extend({
     @param {NewPlatformFlexberryGISLayerMetadata[]} metadata Metadata collection.
   */
   _addMetadata(model, metadata) {
-    if (!Ember.isArray(metadata)) {
+    if (!isArray(metadata)) {
       return;
     }
 
@@ -245,7 +256,7 @@ export default EditFormRoute.extend({
     if (result) {
       result = result.sortBy('index').reverse();
       result.forEach((item) => {
-        if (Ember.isArray(item.get('layers'))) {
+        if (isArray(item.get('layers'))) {
           item.set('layers', this.sortLayersByIndex(item.get('layers')));
         }
       }, this);

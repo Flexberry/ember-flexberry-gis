@@ -2,14 +2,14 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import EmberObject from '@ember/object';
 
 /**
   Class implementing base stylization for markers.
 
   @class BaseMarkerStyle
 */
-export default Ember.Object.extend({
+export default EmberObject.extend({
   /**
     Gets default style settings.
 

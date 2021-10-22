@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { Promise } from 'rsvp';
+
+import { A } from '@ember/array';
+import { isBlank } from '@ember/utils';
+import { computed } from '@ember/object';
 import layout from '../../../templates/components/layers-dialogs/settings/wfs';
 import WmsSettingsComponent from './wms';
 
@@ -37,7 +41,7 @@ export default WmsSettingsComponent.extend({
     @type String
     @readonly
   */
-  getCapabilitiesErrorMessage: Ember.computed(
+  getCapabilitiesErrorMessage: computed(
     'getCapabilitiesPromiseError',
     'i18n',
     'settings.url',
@@ -47,13 +51,13 @@ export default WmsSettingsComponent.extend({
     function () {
       let getCapabilitiesPromiseError = this.get('getCapabilitiesPromiseError');
 
-      if (!Ember.isBlank(getCapabilitiesPromiseError)) {
+      if (!isBlank(getCapabilitiesPromiseError)) {
         this.set('getCapabilitiesPromiseError', null);
         return getCapabilitiesPromiseError;
       }
 
       let message;
-      let fields = Ember.A();
+      let fields = A();
 
       let i18n = this.get('i18n');
 
@@ -62,23 +66,23 @@ export default WmsSettingsComponent.extend({
       let typeName = this.get('settings.typeName');
       let version = this.get('settings.version');
 
-      if (Ember.isBlank(url) || Ember.isBlank(url.toString().match(new RegExp(urlRegex)))) {
+      if (isBlank(url) || isBlank(url.toString().match(new RegExp(urlRegex)))) {
         fields.pushObject(i18n.t('components.layers-dialogs.settings.wfs.url-textbox.caption'));
       }
 
-      if (Ember.isBlank(typeName)) {
+      if (isBlank(typeName)) {
         fields.pushObject(i18n.t('components.layers-dialogs.settings.wfs.type-name-textbox.caption'));
       }
 
-      if (Ember.isBlank(typeNS)) {
+      if (isBlank(typeNS)) {
         fields.pushObject(i18n.t('components.layers-dialogs.settings.wfs.type-ns-textbox.caption'));
       }
 
-      if (Ember.isBlank(version)) {
+      if (isBlank(version)) {
         fields.pushObject(i18n.t('components.layers-dialogs.settings.wfs.version-textbox.caption'));
       }
 
-      if (!Ember.isBlank(fields)) {
+      if (!isBlank(fields)) {
         message = i18n.t('components.layers-dialogs.edit.get-capabilities-button.error-caption') + fields.join(', ');
       }
 
@@ -104,10 +108,10 @@ export default WmsSettingsComponent.extend({
   getCapabilities(settings) {
     let _this = this;
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       L.wfs(settings, null).getBoundingBox(
         (boundingBox) => {
-          if (Ember.isBlank(boundingBox)) {
+          if (isBlank(boundingBox)) {
             reject(`Service ${settings.url} had not returned any bounding box`);
           }
 
@@ -134,11 +138,11 @@ export default WmsSettingsComponent.extend({
     this._super(...arguments);
 
     // Initialize available formats.
-    let availableFormats = Ember.A(Object.keys(L.Format) || []).filter((format) => {
+    let availableFormats = A(Object.keys(L.Format) || []).filter((format) => {
       format = format.toLowerCase();
       return format !== 'base' && format !== 'scheme';
     });
-    this.set('_availableInfoFormats', Ember.A(availableFormats));
+    this.set('_availableInfoFormats', A(availableFormats));
   },
 
   /**

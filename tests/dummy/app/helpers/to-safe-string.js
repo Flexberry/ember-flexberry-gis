@@ -1,3 +1,4 @@
+import Helper from '@ember/component/helper';
 import Ember from 'ember';
 
 /**
@@ -10,7 +11,7 @@ import Ember from 'ember';
   @see {Ember.Handlebars.SafeString}
   @public
 */
-export default Ember.Helper.extend({
+export default Helper.extend({
   compute: function ([value]) {
     return new Ember.Handlebars.SafeString(value);
   }

@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
+
+import { computed, get, observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../templates/components/map-commands/go-to';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -50,7 +53,7 @@ const flexberryClassNames = {
   @class GoToMapCommandComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let GoToMapCommandComponent = Ember.Component.extend({
+let GoToMapCommandComponent = Component.extend({
   /**
     Options which will be passed to the map-command's 'execute' method.
 
@@ -144,8 +147,8 @@ let GoToMapCommandComponent = Ember.Component.extend({
     @property availableCRS
     @type Object[]
   */
-  availableCRS: Ember.computed('i18n.locale', function () {
-    let availableModes = Ember.A();
+  availableCRS: computed('i18n.locale', function () {
+    let availableModes = A();
     let i18n = this.get('i18n');
     availableModes.push({
       crs: this.get('leafletMap.options.crs'),
@@ -185,7 +188,7 @@ let GoToMapCommandComponent = Ember.Component.extend({
       let leafletMap = this.get('leafletMap');
       let mapCommandName = 'go-to';
       let mapCommandProperties = null;
-      let mapCommandExecutionOptions = Ember.get(e, 'gotoOptions');
+      let mapCommandExecutionOptions = get(e, 'gotoOptions');
 
       leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions);
     }
@@ -231,7 +234,7 @@ let GoToMapCommandComponent = Ember.Component.extend({
     @method _localeDidChange
     @private
   */
-  _localeDidChange: Ember.observer('i18n.locale', function() {
+  _localeDidChange: observer('i18n.locale', function() {
     // Exclude dialog from markup.
     // It will force dialog's recreation next time.
     this.set('_gotoDialogHasBeenRequested', false);

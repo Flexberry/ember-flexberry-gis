@@ -1,10 +1,13 @@
-import Ember from 'ember';
+import { getOwner } from '@ember/application';
+import { isNone } from '@ember/utils';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/tabs/legend-settings';
 
 /**
  Component for legend settings tab in layer settings.
  */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -27,10 +30,10 @@ export default Ember.Component.extend({
     @default false
     @private
   */
-  _isWmsType: Ember.computed('type', function () {
+  _isWmsType: computed('type', function () {
     let type = this.get('type');
 
-    if (!Ember.isNone(type) && type.indexOf('wms') > -1) {
+    if (!isNone(type) && type.indexOf('wms') > -1) {
       return true;
     } else {
       return false;
@@ -45,12 +48,12 @@ export default Ember.Component.extend({
     @default false
     @private
   */
-  _isVectorType: Ember.computed('type', function() {
+  _isVectorType: computed('type', function() {
     let className = this.get('type');
-    let layerClass = Ember.isNone(className) ?
+    let layerClass = isNone(className) ?
       null :
-      Ember.getOwner(this).knownForType('layer', className);
+      getOwner(this).knownForType('layer', className);
 
-    return !Ember.isNone(layerClass) && layerClass.isVectorType(this.get('layerModel'));
+    return !isNone(layerClass) && layerClass.isVectorType(this.get('layerModel'));
   })
 });

@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { typeOf, isNone } from '@ember/utils';
+
+import { assert } from '@ember/debug';
 import BaseMapCommand from './base';
 
 /**
@@ -31,9 +33,9 @@ export default BaseMapCommand.extend({
 
     let leafletMap = this.get('leafletMap');
     let featuresLayer = this.get('featuresLayer');
-    Ember.assert(
+    assert(
       `Wrong type of \`featuresLayer\` property:` +
-      ` actual is \`${Ember.typeOf(featuresLayer)}\` but L.LayerGroup is expected`,
+      ` actual is \`${typeOf(featuresLayer)}\` but L.LayerGroup is expected`,
       featuresLayer instanceof L.LayerGroup);
 
     if (!leafletMap.hasLayer(featuresLayer)) {
@@ -48,7 +50,7 @@ export default BaseMapCommand.extend({
     this._super(...arguments);
 
     let featuresLayer = this.get('featuresLayer');
-    if (!Ember.isNone(featuresLayer)) {
+    if (!isNone(featuresLayer)) {
       featuresLayer.clearLayers();
       featuresLayer.remove();
     }

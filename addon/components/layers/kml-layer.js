@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { Promise } from 'rsvp';
+
+import { isPresent } from '@ember/utils';
+import { assert } from '@ember/debug';
+import $ from 'jquery';
+import { getOwner } from '@ember/application';
 import BaseVectorLayer from '../base-vector-layer';
 
 /**
@@ -45,7 +50,7 @@ export default BaseVectorLayer.extend({
   parseLeafletOptionsCallback({ callbackName, serializedCallback }) {
     // First filter must be converted into serialized function from temporary filter language.
     if (callbackName === 'filter' && typeof serializedCallback === 'string') {
-      serializedCallback = Ember.getOwner(this).lookup('layer:kml').parseFilter(serializedCallback);
+      serializedCallback = getOwner(this).lookup('layer:kml').parseFilter(serializedCallback);
     }
 
     return this._super({ callbackName, serializedCallback });
@@ -59,7 +64,7 @@ export default BaseVectorLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer(options) {
-    options = Ember.$.extend({}, this.get('options'), options);
+    options = $.extend({}, this.get('options'), options);
 
     let pane = this.get('_pane');
     if (pane) {
@@ -68,10 +73,10 @@ export default BaseVectorLayer.extend({
     }
 
     let layerWithOptions = L.geoJSON([], options);
-    Ember.assert('The option \'kmlUrl\' or \'kmlString\' should be defined!', Ember.isPresent(options.kmlUrl) || Ember.isPresent(options.kmlString));
+    assert('The option \'kmlUrl\' or \'kmlString\' should be defined!', isPresent(options.kmlUrl) || isPresent(options.kmlString));
 
     if (options.kmlUrl) {
-      return new Ember.RSVP.Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         let layer = omnivore.kml(options.kmlUrl, {}, layerWithOptions)
           .on('ready', (e) => {
             resolve(layer);

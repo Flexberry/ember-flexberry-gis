@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
  */
 
-import Ember from 'ember';
+import $ from 'jquery';
 import BaseControl from 'ember-flexberry-gis/components/base-control';
 import layout from '../templates/components/minimap-control';
 
@@ -209,7 +209,7 @@ export default BaseControl.extend({
   },
 
   afterCreateControl() {
-    Ember.$(this.get('control')._container).appendTo('.minimap-drag-panel');
+    $(this.get('control')._container).appendTo('.minimap-drag-panel');
     this.get('control')._restore();
   },
 

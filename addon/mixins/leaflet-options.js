@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
  */
 
-import Ember from 'ember';
+import { get, set } from '@ember/object';
+
+import { isNone, typeOf, isBlank } from '@ember/utils';
+import { A, isArray } from '@ember/array';
+import { once } from '@ember/runloop';
+import Mixin from '@ember/object/mixin';
 
 /**
   Mixin containing logic aggregating propertis marked as leaflet options into 'options' JSON-object.
@@ -30,7 +35,7 @@ import Ember from 'ember';
   @class LeafletOptionsMixin
   @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
  */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Array containing properties which are also leaflet options.
 
@@ -72,7 +77,7 @@ export default Ember.Mixin.create({
     @private
   */
   _leafletOptionDidChange() {
-    Ember.run.once(this, '_leafletOptionsDidChange');
+    once(this, '_leafletOptionsDidChange');
   },
 
   /**
@@ -85,8 +90,8 @@ export default Ember.Mixin.create({
   _leafletOptionsDidChange() {
     let options = {};
     let previousOptions = this.get('options');
-    let leafletOptions = Ember.A(this.get('leafletOptions') || []);
-    let changedOptions = Ember.A();
+    let leafletOptions = A(this.get('leafletOptions') || []);
+    let changedOptions = A();
 
     // Parse options.
     leafletOptions.forEach((optionName) => {
@@ -97,11 +102,11 @@ export default Ember.Mixin.create({
 
       options[optionName] = optionValue;
 
-      if (Ember.isNone(previousOptions)) {
+      if (isNone(previousOptions)) {
         return;
       }
 
-      let previousOptionValue = Ember.get(previousOptions, optionName);
+      let previousOptionValue = get(previousOptions, optionName);
       if (JSON.stringify(optionValue) !== JSON.stringify(previousOptionValue)) {
         changedOptions.pushObject(optionName);
       }
@@ -109,11 +114,11 @@ export default Ember.Mixin.create({
 
     // Parse options which are also callback functions.
     let leafletOptionsCallbacks = this.get('leafletOptionsCallbacks');
-    if (Ember.isArray(leafletOptionsCallbacks) && leafletOptionsCallbacks.length > 0) {
+    if (isArray(leafletOptionsCallbacks) && leafletOptionsCallbacks.length > 0) {
       for (let i = 0; i < leafletOptionsCallbacks.length; i++) {
         let callbackName = leafletOptionsCallbacks[i];
 
-        let customCallback = Ember.get(options, callbackName);
+        let customCallback = get(options, callbackName);
         customCallback = this.parseLeafletOptionsCallback({ callbackName, serializedCallback: customCallback });
 
         let resultingCallback;
@@ -125,7 +130,7 @@ export default Ember.Mixin.create({
         }
 
         if (typeof resultingCallback === 'function') {
-          Ember.set(options, callbackName, resultingCallback);
+          set(options, callbackName, resultingCallback);
         }
       }
     }
@@ -133,7 +138,7 @@ export default Ember.Mixin.create({
     // Set parsed options.
     this.set('options', options);
 
-    if (Ember.typeOf(this.leafletOptionsDidChange) === 'function') {
+    if (typeOf(this.leafletOptionsDidChange) === 'function') {
       this.leafletOptionsDidChange.call(this, {
         changedOptions
       });
@@ -150,7 +155,7 @@ export default Ember.Mixin.create({
     @return {Function} Deserialized callback function.
   */
   parseLeafletOptionsCallback({ callbackName, serializedCallback }) {
-    return typeof serializedCallback === 'string' && !Ember.isBlank(serializedCallback) ?
+    return typeof serializedCallback === 'string' && !isBlank(serializedCallback) ?
       new Function('return ' + serializedCallback)() :
       null;
   },
@@ -171,7 +176,7 @@ export default Ember.Mixin.create({
   init() {
     this._super(...arguments);
 
-    let leafletOptions = Ember.A(this.get('leafletOptions') || []);
+    let leafletOptions = A(this.get('leafletOptions') || []);
     leafletOptions.forEach((optionName) => {
       this.addObserver(optionName, this._leafletOptionDidChange);
     });
@@ -185,7 +190,7 @@ export default Ember.Mixin.create({
   willDestroy() {
     this._super(...arguments);
 
-    let leafletOptions = Ember.A(this.get('leafletOptions') || []);
+    let leafletOptions = A(this.get('leafletOptions') || []);
     leafletOptions.forEach((optionName) => {
       this.removeObserver(optionName, this._leafletOptionDidChange);
     });

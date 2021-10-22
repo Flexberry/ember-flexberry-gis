@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
 import BaseMapCommand from './base';
 import LeafletOptionsMixin from '../mixins/leaflet-options';
 
@@ -192,17 +192,17 @@ export default BaseMapCommand.extend(LeafletOptionsMixin, {
     let locatePopup = this.get('locatePopup');
 
     // Clean up only if closed popup is locate popup, otherwise break because some other popup has been closed.
-    if (!(Ember.isNone(e) || e.popup === locatePopup)) {
+    if (!(isNone(e) || e.popup === locatePopup)) {
       return;
     }
 
-    if (!Ember.isNone(locateMarker)) {
+    if (!isNone(locateMarker)) {
       locateMarker.unbindPopup();
       locateMarker.remove();
       this.set('locateMarker', null);
     }
 
-    if (!Ember.isNone(locatePopup)) {
+    if (!isNone(locatePopup)) {
       leafletMap.off('popupclose', this.onLocationPopupClose, this);
       locatePopup.remove();
       this.set('locatePopup', null);

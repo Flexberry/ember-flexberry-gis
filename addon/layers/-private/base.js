@@ -2,11 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone, isBlank } from '@ember/utils';
 
-const {
-  assert
-} = Ember;
+import { A, isArray } from '@ember/array';
+import EmberObject, { set, get } from '@ember/object';
+import { assert } from '@ember/debug';
 
 const createFeaturesPropertiesSettings = function () {
   return {
@@ -84,7 +84,7 @@ const createCommonBackgroundLayerSettings = function () {
 
   @class BaseLayer
 */
-export default Ember.Object.extend({
+export default EmberObject.extend({
   /**
     Icon class related to layer type.
 
@@ -116,25 +116,25 @@ export default Ember.Object.extend({
     };
 
     // Inject search & identify settings.
-    let availableOperations = Ember.A(this.get('operations') || []);
+    let availableOperations = A(this.get('operations') || []);
 
     if (availableOperations.contains('search')) {
-      Ember.set(settings, 'searchSettings', createCommonSearchSettings());
+      set(settings, 'searchSettings', createCommonSearchSettings());
     }
 
     if (availableOperations.contains('identify')) {
-      Ember.set(settings, 'identifySettings', createCommonIdentifySettings());
+      set(settings, 'identifySettings', createCommonIdentifySettings());
     }
 
-    Ember.set(settings, 'displaySettings', createDisplaySettings());
+    set(settings, 'displaySettings', createDisplaySettings());
 
     if (availableOperations.contains('legend')) {
-      Ember.set(settings, 'legendSettings', createCommonLegendSettings());
+      set(settings, 'legendSettings', createCommonLegendSettings());
     }
 
-    Ember.set(settings, 'labelSettings', createcommonLabelSettings());
+    set(settings, 'labelSettings', createcommonLabelSettings());
 
-    Ember.set(settings, 'backgroundSettings', createCommonBackgroundLayerSettings());
+    set(settings, 'backgroundSettings', createCommonBackgroundLayerSettings());
 
     return settings;
   },
@@ -181,20 +181,20 @@ export default Ember.Object.extend({
     @returns {Array} Array with selected property values
   */
   getLayerPropertyValues(leafletObject, selectedField, count) {
-    if (Ember.isNone(leafletObject)) {
-      return Ember.A();
+    if (isNone(leafletObject)) {
+      return A();
     }
 
-    if (Ember.isNone(leafletObject.toGeoJSON)) {
+    if (isNone(leafletObject.toGeoJSON)) {
       assert('Method \'getLayerPropertyValues\' should be overridden, because layer hasn\'t toGeoJSON function.');
     }
 
     let geojson = leafletObject.toGeoJSON() || {};
     let features = geojson.features || [];
-    let values = Ember.A();
+    let values = A();
 
     for (let i = 0; i < features.length; i++) {
-      let property = Ember.get(features, `${i}.properties.${selectedField}`);
+      let property = get(features, `${i}.properties.${selectedField}`);
       values.addObject(property);
 
       if (values.length === count) {
@@ -220,7 +220,7 @@ export default Ember.Object.extend({
     const conditionExp = /^\s*('[^']+'|"[^"]+")\s*(=|<|>|<=|>=|!=|[Ii]?[Ll][Ii][Kk][Ee])\s*('[^']+'|"[^"]+"|[Nn][Uu][Ll][Ll])\s*$/;
     const geometryExp = /^\s*((?:[Nn][Oo][Tt]\s)?[Ii][Nn])\s*\((.+)\)\s*$/;
 
-    if (Ember.isBlank(expression)) {
+    if (isBlank(expression)) {
       return '';
     }
 
@@ -240,13 +240,13 @@ export default Ember.Object.extend({
 
       let field = conditionExpResult[1];
 
-      if (field.startsWith('@') && !Ember.isNone(layerLinks) && layerLinks.length > 0) {
+      if (field.startsWith('@') && !isNone(layerLinks) && layerLinks.length > 0) {
         layerLinks.forEach((link) => {
           let linkParameters = link.get('parameters');
 
-          if (Ember.isArray(linkParameters) && linkParameters.length > 0) {
+          if (isArray(linkParameters) && linkParameters.length > 0) {
             let linkParam = linkParameters.filter(linkParam => linkParam.get('queryKey') === field.slice(1));
-            if (!Ember.isNone(linkParam) && linkParam.length > 0) {
+            if (!isNone(linkParam) && linkParam.length > 0) {
               field = linkParam[0].get('layerField');
               return;
             }
@@ -259,7 +259,7 @@ export default Ember.Object.extend({
 
     let logicalExpResult = logicalExp.exec(exp);
     if (logicalExpResult) {
-      let properties = Ember.A();
+      let properties = A();
       let propertiesString = logicalExpResult[2];
       let index = 0;
       while (propertiesString.length > 0) {

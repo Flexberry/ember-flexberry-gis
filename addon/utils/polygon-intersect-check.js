@@ -1,8 +1,8 @@
 /**
   @module ember-flexberry-gis
 */
+import { isNone } from '@ember/utils';
 import kinks from 'npm:@turf/kinks';
-import Ember from 'ember';
 
 /**
   Check polygons on intersection.
@@ -22,7 +22,7 @@ export default function checkIntersect(polygon) {
   }
 
   let isIntersect = false;
-  if (!Ember.isNone(workingPolygon)) {
+  if (!isNone(workingPolygon)) {
     let intersectPoints = kinks(workingPolygon);
     isIntersect = intersectPoints.features.length > 0;
   }

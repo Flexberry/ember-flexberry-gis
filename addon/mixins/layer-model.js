@@ -2,22 +2,34 @@
   @module ember-flexberry-gis
 */
 
+import { A } from '@ember/array';
+
+import $ from 'jquery';
+import { getOwner } from '@ember/application';
+import { isBlank, isNone } from '@ember/utils';
+import { observer, get, computed } from '@ember/object';
+import { on } from '@ember/object/evented';
+import { inject as service } from '@ember/service';
+import Mixin from '@ember/object/mixin';
+
 import Ember from 'ember';
-import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
+import {
+  getBounds } from 'ember-flexberry-gis/utils/get-bound
+} from-polygon';
 
 /**
   Mixin containing additional logic for layer and layer-like models.
   @class LayerModelMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Injected local-storage service.
 
     @property localStorageService
     @type <a href="http://emberjs.com/api/classes/Ember.Service.html">Ember.Service</a>
   */
-  localStorageService: Ember.inject.service('local-storage'),
+  localStorageService: service('local-storage'),
 
   /**
     Object with layer's settings.
@@ -36,15 +48,15 @@ export default Ember.Mixin.create({
     @method _settingsDidChange
     @private
   */
-  _settingsDidChange: Ember.on('init', Ember.observer('settings', function() {
+  _settingsDidChange: on('init', observer('settings', function() {
     let stringToDeserialize = this.get('settings');
     let settingsAsObject = {};
 
-    if (!Ember.isBlank(stringToDeserialize)) {
+    if (!isBlank(stringToDeserialize)) {
       try {
-        let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
+        let layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
         let defaultSettings = layerClassFactory.createSettings();
-        settingsAsObject = Ember.$.extend(true, defaultSettings, JSON.parse(stringToDeserialize));
+        settingsAsObject = $.extend(true, defaultSettings, JSON.parse(stringToDeserialize));
       } catch (e) {
         Ember.Logger.error(`Computation of 'settingsAsObject' property for '${this.get('name')}' layer has been failed: ${e}`);
       }
@@ -65,10 +77,10 @@ export default Ember.Mixin.create({
   _applyLayerPropertiesFromLocalStorage() {
     let mapId = this.get('map.id');
     let layerId = this.get('id');
-    let localStorageLayer = Ember.isBlank(mapId) || Ember.isBlank(layerId) ?
+    let localStorageLayer = isBlank(mapId) || isBlank(layerId) ?
       null :
       this.get('localStorageService').getFromStorage('layers', mapId).findBy('id', layerId);
-    if (!Ember.isNone(localStorageLayer)) {
+    if (!isNone(localStorageLayer)) {
       // Remove id to avoid explicit merge.
       delete localStorageLayer.id;
 
@@ -78,8 +90,8 @@ export default Ember.Mixin.create({
           continue;
         }
 
-        let value = Ember.get(localStorageLayer, propertyName);
-        value = typeof value === 'object' ? Ember.$.extend(true, this.get(propertyName), value) : value;
+        let value = get(localStorageLayer, propertyName);
+        value = typeof value === 'object' ? $.extend(true, this.get(propertyName), value) : value;
 
         this.set(propertyName, value);
       }
@@ -92,13 +104,13 @@ export default Ember.Mixin.create({
     @type Boolean
     @readOnly
   */
-  canBeIdentified: Ember.computed('isDeleted', 'type', 'settingsAsObject.identifySettings.canBeIdentified', function () {
+  canBeIdentified: computed('isDeleted', 'type', 'settingsAsObject.identifySettings.canBeIdentified', function () {
     if (this.get('isDeleted')) {
       return false;
     }
 
-    let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
-    let identifyOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('identify');
+    let layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
+    let identifyOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('identify');
     let identifyOperationIsAvailableForLayerInstance = this.get('settingsAsObject.identifySettings.canBeIdentified') !== false;
 
     return identifyOperationIsAvailableForLayerClass && identifyOperationIsAvailableForLayerInstance;
@@ -110,13 +122,13 @@ export default Ember.Mixin.create({
     @type Boolean
     @readOnly
   */
-  canBeSearched: Ember.computed('isDeleted', 'type', 'settingsAsObject.searchSettings.canBeSearched', function () {
+  canBeSearched: computed('isDeleted', 'type', 'settingsAsObject.searchSettings.canBeSearched', function () {
     if (this.get('isDeleted')) {
       return false;
     }
 
-    let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
-    let searchOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('search');
+    let layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
+    let searchOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('search');
     let searchOperationIsAvailableForLayerInstance = this.get('settingsAsObject.searchSettings.canBeSearched') !== false;
 
     return searchOperationIsAvailableForLayerClass && searchOperationIsAvailableForLayerInstance;
@@ -128,13 +140,13 @@ export default Ember.Mixin.create({
     @type Boolean
     @readOnly
   */
-  canBeContextSearched: Ember.computed('isDeleted', 'type', 'settingsAsObject.searchSettings.canBeContextSearched', function () {
+  canBeContextSearched: computed('isDeleted', 'type', 'settingsAsObject.searchSettings.canBeContextSearched', function () {
     if (this.get('isDeleted')) {
       return false;
     }
 
-    let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
-    let searchOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('search');
+    let layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
+    let searchOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('search');
     let searchOperationIsAvailableForLayerInstance = this.get('settingsAsObject.searchSettings.canBeContextSearched') !== false;
 
     return searchOperationIsAvailableForLayerClass && searchOperationIsAvailableForLayerInstance;
@@ -146,7 +158,7 @@ export default Ember.Mixin.create({
     @type {Boolean} Flag: indicates whether layer should be shown on minimap.
     @readOnly
   */
-  showOnMinimap: Ember.computed('settingsAsObject.showOnMinimap', function () {
+  showOnMinimap: computed('settingsAsObject.showOnMinimap', function () {
     return this.get('settingsAsObject.showOnMinimap');
   }),
 
@@ -156,13 +168,13 @@ export default Ember.Mixin.create({
     @type Boolean
     @readOnly
   */
-  legendCanBeDisplayed: Ember.computed('isDeleted', 'type', 'settingsAsObject.legendSettings.legendCanBeDisplayed', function () {
+  legendCanBeDisplayed: computed('isDeleted', 'type', 'settingsAsObject.legendSettings.legendCanBeDisplayed', function () {
     if (this.get('isDeleted')) {
       return false;
     }
 
-    let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
-    let legendIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('legend');
+    let layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
+    let legendIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('legend');
     let legendIsAvailableForLayerInstance = this.get('settingsAsObject.legendSettings.legendCanBeDisplayed') !== false;
 
     return legendIsAvailableForLayerClass && legendIsAvailableForLayerInstance;
@@ -173,12 +185,12 @@ export default Ember.Mixin.create({
     @property layers
     @return {Array} collection of child layers
   */
-  layers: Ember.computed('map', 'map.mapLayer', function () {
+  layers: computed('map', 'map.mapLayer', function () {
     try {
       let layers = this.get('map.mapLayer');
       if (layers) {
         let id = this.get('id');
-        if (!Ember.isBlank(id)) {
+        if (!isBlank(id)) {
           return layers.filterBy('parent.id', id);
         }
       }
@@ -186,7 +198,7 @@ export default Ember.Mixin.create({
       Ember.Logger.error(`Computation of 'layers' property for '${this.get('name')}' layer has been failed: ${e}`);
     }
 
-    return Ember.A();
+    return A();
   }),
 
   /**
@@ -195,7 +207,7 @@ export default Ember.Mixin.create({
     @readonly
     @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a> this layer's latLngBounds.
   */
-  bounds: Ember.computed(function () {
+  bounds: computed(function () {
     let layers = this.get('layers').filterBy('visibility', true);
     let type = this.get('type');
 

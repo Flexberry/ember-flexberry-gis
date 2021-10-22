@@ -2,7 +2,10 @@
   @module ember-flexberry
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
+
+import { assert } from '@ember/debug';
+import { isNone } from '@ember/utils';
 
 /**
   Adds some additional methods into [ember application instance]("http://emberjs.com/api/classes/Ember.ApplicationInstance.html).
@@ -27,8 +30,8 @@ export function initialize(applicationInstance) {
     or a single factory if the class name is specified too.
   */
   let knownForType = applicationInstance.knownForType = function(type, className) {
-    if (!Ember.isNone(className)) {
-      Ember.assert(
+    if (!isNone(className)) {
+      assert(
         `Wrong value of \`className\` parameter: \`${className}\`. ` +
         `Allowed values for type \`${type}\` are: [\`${knownNamesForType(type).join(`\`, \``)}\`].`,
         isKnownNameForType(type, className));
@@ -37,11 +40,11 @@ export function initialize(applicationInstance) {
     }
 
     let knownClasses = known[type];
-    if (Ember.isNone(knownClasses)) {
+    if (isNone(knownClasses)) {
       knownClasses = {};
 
       let resolver = applicationInstance.application.__registry__.resolver;
-      Ember.A(Object.keys(resolver.knownForType(type))).forEach((knownClass) => {
+      A(Object.keys(resolver.knownForType(type))).forEach((knownClass) => {
         let className = knownClass.split(':')[1];
         let classFactory = applicationInstance._lookupFactory(knownClass);
 
@@ -63,7 +66,7 @@ export function initialize(applicationInstance) {
     @returns {String[]} Array containing names of known classes for the specified type.
   */
   let knownNamesForType = applicationInstance.knownNamesForType = function(type) {
-    return Ember.A(Object.keys(knownForType(type)));
+    return A(Object.keys(knownForType(type)));
   };
 
   /**

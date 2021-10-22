@@ -1,8 +1,11 @@
-import Ember from 'ember';
+import { A } from '@ember/array';
+import { isBlank, isNone } from '@ember/utils';
+import { computed, get, observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-search-panel';
 import { translationMacro as t } from 'ember-i18n';
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ['flexberry-search-panel'],
 
   layout,
@@ -25,7 +28,7 @@ export default Ember.Component.extend({
     @readOnly
     @private
   */
-  _selectedLayerFeaturesLocalizedProperties: Ember.computed(
+  _selectedLayerFeaturesLocalizedProperties: computed(
     '_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.localizedProperties',
     'i18n.locale',
     function () {
@@ -47,7 +50,7 @@ export default Ember.Component.extend({
     @private
   */
   _layerCanBeSearched(layer) {
-    return Ember.get(layer, 'canBeSearched');
+    return get(layer, 'canBeSearched');
   },
 
   /**
@@ -125,8 +128,8 @@ export default Ember.Component.extend({
   */
   queryStringEmpty: '',
 
-  queryStringObserver: Ember.observer('queryString', function() {
-    this.set('queryStringEmpty', !Ember.isBlank(this.get('queryString')));
+  queryStringObserver: observer('queryString', function() {
+    this.set('queryStringEmpty', !isBlank(this.get('queryString')));
   }),
 
   /**
@@ -158,8 +161,8 @@ export default Ember.Component.extend({
     let latlng = new L.LatLng(coord1, coord2);
     let xCaption = this.get('xCaption');
     let yCaption = this.get('yCaption');
-    let lat = !Ember.isNone(degMinSec1) ? degMinSec1 : latlng.lat;
-    let lng = !Ember.isNone(degMinSec2) ? degMinSec2 : latlng.lng;
+    let lat = !isNone(degMinSec1) ? degMinSec1 : latlng.lat;
+    let lng = !isNone(degMinSec2) ? degMinSec2 : latlng.lng;
     let popupContent =
       `${xCaption}: ${lat}; ` +
       `${yCaption}: ${lng}`;
@@ -172,11 +175,11 @@ export default Ember.Component.extend({
   actions: {
     querySearch() {
       if (this.get('attrVisible')) {
-        if (Ember.isNone(this.get('_selectedLayer'))) {
+        if (isNone(this.get('_selectedLayer'))) {
           this.set('errorMessage', this.get('i18n').t('components.flexberry-search.error-message-empty-selected-layer'));
           this.set('showErrorMessage', true);
           return;
-        } else if (Ember.isNone(this.get('propertyName'))) {
+        } else if (isNone(this.get('propertyName'))) {
           this.set('errorMessage', this.get('i18n').t('components.flexberry-search.error-message-empty-attr-layer'));
           this.set('showErrorMessage', true);
           return;
@@ -222,7 +225,7 @@ export default Ember.Component.extend({
           searchOptions: searchOptions,
           context: !this.get('attrVisible'),
           filter: filter,
-          results: Ember.A()
+          results: A()
         };
         this.sendAction('querySearch', e);
       }

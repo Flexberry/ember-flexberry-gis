@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+
+import $ from 'jquery';
+import { A, isArray } from '@ember/array';
+import { hash, all } from 'rsvp';
+import Route from '@ember/routing/route';
 import { Query } from 'ember-flexberry-data';
 import FlexberryBoundingboxMapLoaderMixin from '../mixins/flexberry-boundingbox-map-loader';
 
@@ -12,7 +17,7 @@ import FlexberryBoundingboxMapLoaderMixin from '../mixins/flexberry-boundingbox-
   @class GisSearchFormRoute
   @extends <a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Route</a>
 */
-export default Ember.Route.extend(FlexberryBoundingboxMapLoaderMixin, {
+export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
   /**
     Query settings for layer metadata loading.
   */
@@ -46,7 +51,7 @@ export default Ember.Route.extend(FlexberryBoundingboxMapLoaderMixin, {
     @param {Object} transition
   */
   model() {
-    return Ember.RSVP.hash({
+    return hash({
       // Get available maps list to be displayed in founded layer metadata toolbar.
       availableMaps: this._getQuery(this.get('_mapSettings.modelName'), this.get('_mapSettings.projectionName'), null, null, null),
 
@@ -101,7 +106,7 @@ export default Ember.Route.extend(FlexberryBoundingboxMapLoaderMixin, {
         let queries = tabSettings.map((item) => {
           return this._getQuery(item.modelName, item.projectionName, item.top, null, req.searchConditions);
         });
-        Ember.RSVP.all(queries).then((data) => {
+        all(queries).then((data) => {
           for (let i = 0; i < tabSettings.length; i++) {
             this.get('controller').set(tabSettings[i].fieldName, data[i]);
           }
@@ -134,14 +139,14 @@ export default Ember.Route.extend(FlexberryBoundingboxMapLoaderMixin, {
 
     // If there are conditions - add them to the query.
     let condition;
-    let filterConditions = Ember.A();
+    let filterConditions = A();
 
     let getOrSeparatedCondition = (searchObject, key) => {
       let conditions = searchObject.split(',').map((item) => {
         let str = item.trim();
         return new Query.StringPredicate(key).contains(str);
       });
-      if (Ember.isArray(conditions)) {
+      if (isArray(conditions)) {
         return conditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.Or, ...conditions) : conditions[0];
       }
 
@@ -164,7 +169,7 @@ export default Ember.Route.extend(FlexberryBoundingboxMapLoaderMixin, {
 
     if (searchConditions && searchConditions.scaleFilters && searchConditions.scaleFilters.length) {
       let scaleConditions = searchConditions.scaleFilters.map((item) => {
-        let currentCondition = Ember.$('<textarea/>').html(item.condition).text();
+        let currentCondition = $('<textarea/>').html(item.condition).text();
         if (currentCondition === '=') {
           currentCondition = '==';
         }
@@ -179,7 +184,7 @@ export default Ember.Route.extend(FlexberryBoundingboxMapLoaderMixin, {
       }
     }
 
-    if (searchConditions && !Ember.isNone(searchConditions.boundingBoxEWKT)) {
+    if (searchConditions && !isNone(searchConditions.boundingBoxEWKT)) {
 
       let boundingBoxIntersectionCondition = new Query.GeographyPredicate('boundingBox').intersects(searchConditions.boundingBoxEWKT);
       let boundingBoxIsNullCondition = new Query.SimplePredicate('boundingBox', Query.FilterOperator.Eq, null);

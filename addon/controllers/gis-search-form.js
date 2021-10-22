@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
+
+import { isNone } from '@ember/utils';
+import { computed, get, observer } from '@ember/object';
+import { A, isArray } from '@ember/array';
+import Controller from '@ember/controller';
 
 /**
   GIS search form controller.
@@ -10,7 +15,7 @@ import Ember from 'ember';
   @class GisSearchFormController
   @extends <a href="http://emberjs.com/api/classes/Ember.Controller.html">Ember.Controller</a>
 */
-export default Ember.Controller.extend({
+export default Controller.extend({
   /**
     Hash containing search conditions.
 
@@ -41,7 +46,7 @@ export default Ember.Controller.extend({
       @type Array
       @default []
     */
-    scaleFilters: Ember.A(),
+    scaleFilters: A(),
 
     /**
       Min longitude value. Used for search.
@@ -100,7 +105,7 @@ export default Ember.Controller.extend({
     @type Number[]
     @default Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000])
   */
-  scales: Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),
+  scales: A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),
 
   /**
     Hash with ids of selected rows.
@@ -119,9 +124,9 @@ export default Ember.Controller.extend({
     @private
     @readOnly
   */
-  _selectedRowsCount: Ember.computed('_selectedRows', function () {
+  _selectedRowsCount: computed('_selectedRows', function () {
     let selectedRows = this.get('_selectedRows');
-    return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
+    return Object.keys(selectedRows).filter((item) => get(selectedRows, item)).length;
   }),
 
   /**
@@ -132,9 +137,9 @@ export default Ember.Controller.extend({
     @private
     @readOnly
   */
-  _metadataIds: Ember.computed('_selectedRows', function() {
+  _metadataIds: computed('_selectedRows', function() {
     let selectedRows = this.get('_selectedRows');
-    return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
+    return Object.keys(selectedRows).filter((item) => get(selectedRows, item));
   }),
 
   /**
@@ -152,8 +157,8 @@ export default Ember.Controller.extend({
     @method _canOpenMapWithMetadataObserver
     @private
   */
-  _canOpenMapWithMetadataObserver: Ember.observer('_selectedRowsCount', '_selectedMap', function () {
-    this.set('_canOpenMapWithMetadata', this.get('_selectedRowsCount') > 0 && !Ember.isNone(this.get('_selectedMap')));
+  _canOpenMapWithMetadataObserver: observer('_selectedRowsCount', '_selectedMap', function () {
+    this.set('_canOpenMapWithMetadata', this.get('_selectedRowsCount') > 0 && !isNone(this.get('_selectedMap')));
   }),
 
   /**
@@ -212,7 +217,7 @@ export default Ember.Controller.extend({
       @param {Object} data Hash object containing paging and filtering data.
     */
     getData(field, data) {
-      let req = Ember.$().extend(data, {
+      let req = $().extend(data, {
         searchConditions: this.get('searchConditions'),
         fieldName: field
       });
@@ -226,7 +231,7 @@ export default Ember.Controller.extend({
     */
     addScaleFilterCondition() {
       let searchConditions = this.get('searchConditions');
-      if (searchConditions && Ember.isArray(searchConditions.scaleFilters)) {
+      if (searchConditions && isArray(searchConditions.scaleFilters)) {
         searchConditions.scaleFilters.addObject({ condition: '=', scale: '0' });
       }
 
@@ -242,7 +247,7 @@ export default Ember.Controller.extend({
     */
     deleteScaleFilterCondition(index) {
       let searchConditions = this.get('searchConditions');
-      if (searchConditions && Ember.isArray(searchConditions.scaleFilters)) {
+      if (searchConditions && isArray(searchConditions.scaleFilters)) {
         searchConditions.scaleFilters.removeAt(index);
       }
     },

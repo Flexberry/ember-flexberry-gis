@@ -2,7 +2,7 @@
   @module ember-flexberry
 */
 
-import Ember from 'ember';
+import { addObserver } from '@ember/object/observers';
 
 /**
   Configures a <a href="https://github.com/Flexberry/Leaflet.Editable.Measures">Leaflet.Editable.Measures</a> i18n.
@@ -65,7 +65,7 @@ export function initialize(applicationInstance) {
 
   // Initialize locales and change it every time i18n.locale changes.
   changeLeafletEditableMeasuresLocales();
-  Ember.addObserver(i18n, 'locale', changeLeafletEditableMeasuresLocales);
+  addObserver(i18n, 'locale', changeLeafletEditableMeasuresLocales);
 }
 
 export default {

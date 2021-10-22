@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { get, set } from '@ember/object';
+
+import { isArray } from '@ember/array';
+import { isBlank } from '@ember/utils';
+import Mixin from '@ember/object/mixin';
 
 /**
   Mixin containing handlers for
@@ -11,7 +15,7 @@ import Ember from 'ember';
   @class LayerResultListActionsHandlerMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   actions: {
 
     /**
@@ -56,17 +60,17 @@ export default Ember.Mixin.create({
       ```
     */
     onLayerFeatureSelected(feature) {
-      if (!Ember.isBlank(feature)) {
+      if (!isBlank(feature)) {
         let layerModel;
 
         // Features in array have the same layerModel, so it's enough to take the first one.
-        if (Ember.isArray(feature)) {
-          layerModel = Ember.get(feature, '0.layerModel');
+        if (isArray(feature)) {
+          layerModel = get(feature, '0.layerModel');
         } else {
-          layerModel = Ember.get(feature, 'layerModel');
+          layerModel = get(feature, 'layerModel');
         }
 
-        if (!Ember.isBlank(layerModel)) {
+        if (!isBlank(layerModel)) {
           this._setLayerVisibility(layerModel);
         }
       }
@@ -81,11 +85,11 @@ export default Ember.Mixin.create({
     @private
   */
   _setLayerVisibility(layerModel) {
-    Ember.set(layerModel, 'visibility', true);
+    set(layerModel, 'visibility', true);
     let parent = layerModel.get('parent');
 
     // Change it's parents visibility to if it's nested.
-    if (!Ember.isBlank(parent)) {
+    if (!isBlank(parent)) {
       this._setLayerVisibility(parent);
     }
   }

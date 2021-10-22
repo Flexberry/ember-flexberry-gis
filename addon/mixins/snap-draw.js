@@ -1,6 +1,8 @@
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+import { computed, get } from '@ember/object';
+import Mixin from '@ember/object/mixin';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     GroupLayers for snap (wfs, odata)
 
@@ -40,7 +42,7 @@ export default Ember.Mixin.create({
     @type Array
     @readOnly
   */
-  _snapLeafletLayers: Ember.computed('_snapLayers', function () {
+  _snapLeafletLayers: computed('_snapLayers', function () {
     let layers = [];
     let featuresByLayer = this.get('_snapLayers');
     for (var layer in featuresByLayer) {
@@ -107,7 +109,7 @@ export default Ember.Mixin.create({
       return;
     }
 
-    let isDraw = Ember.isNone(e.vertex);
+    let isDraw = isNone(e.vertex);
     let snapMarker = e.vertex || this.get('_snapMarker');
 
     let snapDistance = this.get('_snapDistance');
@@ -152,7 +154,7 @@ export default Ember.Mixin.create({
   */
   _drawClick(e) {
     let snapMarker = this.get('_snapMarker');
-    let isSnap = !Ember.isNone(Ember.get(snapMarker, '_map'));
+    let isSnap = !isNone(get(snapMarker, '_map'));
     if (isSnap) {
       var latlng = snapMarker.getLatLng();
       e.latlng.lat = latlng.lat;
@@ -200,7 +202,7 @@ export default Ember.Mixin.create({
     layers.filter(l => l._bounds.intersects(bounds)).forEach((layer, index) => {
       let layerDistance = this._calculateDistance(latlng, layer);
 
-      if (Ember.isNone(closestLayer.distance) || layerDistance.distance < closestLayer.distance) {
+      if (isNone(closestLayer.distance) || layerDistance.distance < closestLayer.distance) {
         closestLayer = layerDistance;
         closestLayer.layer = layer;
       }

@@ -4,7 +4,9 @@
 
 import DS from 'ember-data';
 import { Serializer } from 'ember-flexberry-data';
-import { OfflineSerializer as ParameterMetadataSerializer } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-parameter-metadata-offline';
+import {
+  OfflineSerializer as ParameterMetadataSerializer
+} from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-parameter-metadata-offline';
 
 /**
   Parameter metadata offline serializer.

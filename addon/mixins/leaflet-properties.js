@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
  */
 
-import Ember from 'ember';
+import { assert } from '@ember/debug';
+
+import { isNone } from '@ember/utils';
+import { once } from '@ember/runloop';
+import { classify } from '@ember/string';
+import Mixin from '@ember/object/mixin';
 
 /**
   Mixin for use observable properties with corresponding leaflet objects
@@ -27,7 +32,7 @@ import Ember from 'ember';
   @class LeafletPropertiesMixin
   @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
  */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Array of properties, thats should be observe by leaflet object specified method.
     @property leafletProperties
@@ -47,19 +52,19 @@ export default Ember.Mixin.create({
 
       let [property, leafletProperty, ...params] = propExp.split(':');
 
-      if (!leafletProperty) { leafletProperty = 'set' + Ember.String.classify(property); }
+      if (!leafletProperty) { leafletProperty = 'set' + classify(property); }
 
       let objectProperty = property.replace(/\.\[]/, ''); //allow usage of .[] to observe array changes
 
       this._observers[property] = () => {
-        Ember.run.once(() => {
+        once(() => {
           let leafletObject = this.get('_leafletObject');
-          if (Ember.isNone(leafletObject)) {
+          if (isNone(leafletObject)) {
             return;
           }
 
           let value = this.get(objectProperty);
-          Ember.assert(this.constructor + ' must have a ' + leafletProperty + ' function.', !!leafletObject[leafletProperty]);
+          assert(this.constructor + ' must have a ' + leafletProperty + ' function.', !!leafletObject[leafletProperty]);
           let propertyParams = params.map(p => this.get(p));
           leafletObject[leafletProperty].call(leafletObject, value, ...propertyParams);
         });

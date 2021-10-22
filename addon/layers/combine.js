@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { get } from '@ember/object';
+
+import { getOwner } from '@ember/application';
+import { A } from '@ember/array';
+import { isNone } from '@ember/utils';
+import $ from 'jquery';
 import BaseLayer from './-private/base';
 
 /**
@@ -38,7 +43,7 @@ export default BaseLayer.extend({
   */
   createSettings() {
     let settings = this._super(...arguments);
-    Ember.$.extend(true, settings, {
+    $.extend(true, settings, {
       type: undefined,
       innerLayers: undefined,
     });
@@ -53,12 +58,12 @@ export default BaseLayer.extend({
     @returns {Array} Array with properties names
   */
   getLayerProperties(leafletObject) {
-    if (Ember.isNone(leafletObject) || Ember.isNone(leafletObject.type)) {
-      return Ember.A();
+    if (isNone(leafletObject) || isNone(leafletObject.type)) {
+      return A();
     }
 
     //let layerClass = Ember.getOwner(this).lookup(`layer:${this.get('layerModel.type')}`);
-    let layerClass = Ember.getOwner(this).lookup(`layer:${leafletObject.type}`);
+    let layerClass = getOwner(this).lookup(`layer:${leafletObject.type}`);
     let layerProperties = layerClass.getLayerProperties(leafletObject);
 
     return layerProperties;
@@ -74,11 +79,11 @@ export default BaseLayer.extend({
     @returns {Array} Array with selected property values
   */
   getLayerPropertyValues(leafletObject, selectedField, count) {
-    if (Ember.isNone(leafletObject) || Ember.isNone(leafletObject.type)) {
-      return Ember.A();
+    if (isNone(leafletObject) || isNone(leafletObject.type)) {
+      return A();
     }
 
-    let layerClass = Ember.getOwner(this).lookup(`layer:${leafletObject.type}`);
+    let layerClass = getOwner(this).lookup(`layer:${leafletObject.type}`);
     let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, selectedField, count);
 
     return layerPropertyValue;
@@ -93,16 +98,16 @@ export default BaseLayer.extend({
     @returns {Boolean}
   */
   isVectorType(layer) {
-    if (Ember.isNone(layer)) {
+    if (isNone(layer)) {
       return false;
     }
 
-    let combineType = !Ember.isNone(Ember.get(layer, 'settingsAsObject')) ? Ember.get(layer, 'settingsAsObject.type') : null;
-    if (Ember.isNone(combineType)) {
+    let combineType = !isNone(get(layer, 'settingsAsObject')) ? get(layer, 'settingsAsObject.type') : null;
+    if (isNone(combineType)) {
       return false;
     }
 
-    let layerClass = Ember.getOwner(this).knownForType('layer', combineType);
-    return !Ember.isNone(layerClass) && layerClass.isVectorType(layer);
+    let layerClass = getOwner(this).knownForType('layer', combineType);
+    return !isNone(layerClass) && layerClass.isVectorType(layer);
   }
 });

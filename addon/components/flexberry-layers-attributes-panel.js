@@ -2,7 +2,26 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { addObserver, removeObserver } from '@ember/object/observers';
+
+import $ from 'jquery';
+import { getOwner } from '@ember/application';
+import { guidFor } from '@ember/object/internals';
+import {
+  isPresent,
+  isBlank,
+  isNone,
+  isEqual
+} from '@ember/utils';
+import EmberObject, {
+  computed,
+  get,
+  set,
+  observer
+} from '@ember/object';
+import { A, isArray } from '@ember/array';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import SnapDrawMixin from '../mixins/snap-draw';
@@ -31,13 +50,13 @@ import jsts from 'npm:jsts';
   @uses LeafletZoomToFeatureMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
-export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFeatureMixin, {
+export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFeatureMixin, {
   /**
     Service for managing map API.
     @property mapApi
     @type MapApiService
   */
-  mapApi: Ember.inject.service(),
+  mapApi: service(),
 
   /**
     Reference to 'layers-styles-renderer' servie.
@@ -45,7 +64,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     @property layersStylesRenderer
     @type LayersStylesRendererService
   */
-  layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
+  layersStylesRenderer: service('layers-styles-renderer'),
 
   /**
     Measure units for buffer tool.
@@ -97,7 +116,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     @type Array
     @private
   */
-  _tabModelsCache: Ember.A(),
+  _tabModelsCache: A(),
 
   /**
    Object contains extra data for OData layer
@@ -107,7 +126,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
    @param {String} modelName Layer's model name
    @param {String} projectionName Layer's projection name
    */
-  extraLayerData: Ember.Object.extend({
+  extraLayerData: EmberObject.extend({
     model: null,
     modelProj: null,
     modelName: null,
@@ -158,53 +177,53 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     @private
     @readonly
   */
-  _tabModels: Ember.computed('items.[]', 'i18n.locale', function () {
+  _tabModels: computed('items.[]', 'i18n.locale', function () {
     let editedLayers = this.get('items');
-    if (Ember.isPresent(editedLayers)) {
+    if (isPresent(editedLayers)) {
       if (editedLayers.length === 1) {
         this.set('_featureTabsOffset', 0);
         this.send('onTabMove', true);
       }
 
       let tabModels = editedLayers.map((item) => {
-        let name = Ember.get(item, 'name');
-        let layerModel = Ember.get(item, 'layerModel');
-        let leafletObject = Ember.get(item, 'leafletObject');
-        let readonly = Ember.get(item, 'settings.readonly') || false;
-        let styleSettings = Ember.get(item, 'settings.styleSettings') || {};
-        let settings = Ember.get(item, 'settings') || {};
+        let name = get(item, 'name');
+        let layerModel = get(item, 'layerModel');
+        let leafletObject = get(item, 'leafletObject');
+        let readonly = get(item, 'settings.readonly') || false;
+        let styleSettings = get(item, 'settings.styleSettings') || {};
+        let settings = get(item, 'settings') || {};
 
         let getHeader = () => {
           let result = {};
           let locale = this.get('i18n.locale');
-          let localizedProperties = Ember.get(item, `settings.localizedProperties.${locale}`) || {};
-          let excludedProperties = Ember.get(item, `settings.excludedProperties`);
-          excludedProperties = Ember.isArray(excludedProperties) ? Ember.A(excludedProperties) : Ember.A();
+          let localizedProperties = get(item, `settings.localizedProperties.${locale}`) || {};
+          let excludedProperties = get(item, `settings.excludedProperties`);
+          excludedProperties = isArray(excludedProperties) ? A(excludedProperties) : A();
 
-          for (let propertyName in Ember.get(leafletObject, 'readFormat.featureType.fields')) {
+          for (let propertyName in get(leafletObject, 'readFormat.featureType.fields')) {
             if (excludedProperties.contains(propertyName)) {
               continue;
             }
 
-            let propertyCaption = Ember.get(localizedProperties, propertyName);
+            let propertyCaption = get(localizedProperties, propertyName);
 
-            result[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;
+            result[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
           }
 
           return result;
         };
 
-        let tabModel = Ember.Object.extend({
+        let tabModel = EmberObject.extend({
           _top: this.get('pageSize'),
           _skip: 0,
           _selectedRows: {},
           _editedRows: {},
-          _selectedRowsCount: Ember.computed('_selectedRows', function () {
-            let selectedRows = Ember.get(this, '_selectedRows');
-            return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
+          _selectedRowsCount: computed('_selectedRows', function () {
+            let selectedRows = get(this, '_selectedRows');
+            return Object.keys(selectedRows).filter((item) => get(selectedRows, item)).length;
           }),
 
-          _typeSelectedRows: Ember.computed('_selectedRows', function () {
+          _typeSelectedRows: computed('_selectedRows', function () {
             let typeElements = {
               point: 0,
               line: 0,
@@ -212,8 +231,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
               multiLine: 0,
               multiPolygon: 0
             };
-            let selectedRows = Ember.get(this, '_selectedRows');
-            Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+            let selectedRows = get(this, '_selectedRows');
+            Object.keys(selectedRows).filter((item) => get(selectedRows, item))
               .map((key) => {
                 let feature = this.get('featureLink')[key].feature;
                 let layer = feature.leafletLayer.toGeoJSON();
@@ -238,15 +257,15 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             return typeElements;
           }),
 
-          _selectedRowsProperties: Ember.computed('_selectedRows', 'featureLink', function () {
-            let selectedRows = Ember.get(this, '_selectedRows');
-            let featureLink = Ember.get(this, 'featureLink');
-            let result = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+          _selectedRowsProperties: computed('_selectedRows', 'featureLink', function () {
+            let selectedRows = get(this, '_selectedRows');
+            let featureLink = get(this, 'featureLink');
+            let result = Object.keys(selectedRows).filter((item) => get(selectedRows, item))
               .map((key) => {
                 return featureLink[key].feature.properties;
               });
 
-            return result.length > 0 ? result : Ember.get(this, 'properties');
+            return result.length > 0 ? result : get(this, 'properties');
           }),
 
           featureLink: null,
@@ -256,32 +275,32 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           selectAll: false,
 
           // paging implementation
-          propertiesToShow: Ember.computed('properties.[]', '_top', '_skip', function () {
+          propertiesToShow: computed('properties.[]', '_top', '_skip', function () {
             let properties = this.get('properties');
             let top = this.get('_top');
             let skip = this.get('_skip');
             return properties.slice(skip, skip + top);
           }),
 
-          i18n: Ember.inject.service('i18n'),
+          i18n: service('i18n'),
 
-          header: Ember.computed('i18n.locale', getHeader),
+          header: computed('i18n.locale', getHeader),
 
           _reload(data) {
             this.set('featureLink', {});
             this.set('propertyLink', {});
-            let properties = Ember.A();
+            let properties = A();
             let _this = this;
 
             var addProperties = function (layer) {
-              if (Ember.isNone(Ember.get(layer, 'feature'))) {
-                Ember.set(layer, 'feature', {});
+              if (isNone(get(layer, 'feature'))) {
+                set(layer, 'feature', {});
               }
 
-              let props = Ember.get(layer, 'feature.properties');
-              let propId = Ember.guidFor(props);
-              if (Ember.isNone(Ember.get(layer, 'feature.leafletLayer'))) {
-                Ember.set(layer.feature, 'leafletLayer', layer);
+              let props = get(layer, 'feature.properties');
+              let propId = guidFor(props);
+              if (isNone(get(layer, 'feature.leafletLayer'))) {
+                set(layer.feature, 'leafletLayer', layer);
               }
 
               // the hash containing guid of properties object and link to feature layer
@@ -293,7 +312,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
               properties.pushObject(props);
             };
 
-            if (!Ember.isNone(data)) {
+            if (!isNone(data)) {
               properties = this.get('properties');
               data.forEach((layer) => {
                 addProperties(layer);
@@ -314,8 +333,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           */
           _triggerChanged(e) {
             let [tabModel, layer, setEdited] = this;
-            if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(layer))) {
-              Ember.set(tabModel, 'leafletObject._wasChanged', true);
+            if (isEqual(guidFor(e.layer), guidFor(layer))) {
+              set(tabModel, 'leafletObject._wasChanged', true);
               tabModel.notifyPropertyChange('leafletObject._wasChanged');
 
               if (setEdited) {
@@ -336,15 +355,15 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
         });
 
-        let cachedTab = this.get('_tabModelsCache').find((tab) => Ember.isEqual(tab.get('leafletObject'), leafletObject));
-        if (!Ember.isNone(cachedTab)) {
+        let cachedTab = this.get('_tabModelsCache').find((tab) => isEqual(tab.get('leafletObject'), leafletObject));
+        if (!isNone(cachedTab)) {
           cachedTab.set('name', name);
 
           return cachedTab;
         }
 
         let newTab = tabModel.create(
-          Ember.getOwner(this).ownerInjection(),
+          getOwner(this).ownerInjection(),
           {
             name,
             allowEdit: !readonly,
@@ -465,9 +484,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     this.get('mapApi').addToApi('_deleteLayerFromAttrPanel', this._deleteLayerById.bind(this));
   },
 
-  mapObserver: Ember.observer('leafletMap', function () {
+  mapObserver: observer('leafletMap', function () {
     let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
+    if (!isNone(leafletMap)) {
       leafletMap.on('flexberry-map:create-feature:end', this._onCreate, this);
       leafletMap.on('flexberry-map:edit-feature:end', this._onEdit, this);
       leafletMap.on('flexberry-map:create-feature:fail', this._onFail, this);
@@ -492,14 +511,14 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
   _getTab(e) {
     let _tabModels = this.get('_tabModels');
-    let id = Ember.get(e.layerModel, 'layerModel.id');
+    let id = get(e.layerModel, 'layerModel.id');
 
-    if (Ember.isNone(_tabModels) || Ember.isNone(id)) {
+    if (isNone(_tabModels) || isNone(id)) {
       return null;
     }
 
     let tab = _tabModels.find((tab) => {
-      return Ember.get(tab, 'layerModel.id') === id;
+      return get(tab, 'layerModel.id') === id;
     });
 
     return tab;
@@ -507,37 +526,37 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
   _onFail(e) {
     let tabModel = this._getTab(e);
-    if (Ember.isNone(tabModel)) {
+    if (isNone(tabModel)) {
       return;
     }
 
     tabModel._reload();
-    Ember.set(tabModel, '_selectedRows', {});
-    Ember.set(tabModel, '_editedRows', {});
+    set(tabModel, '_selectedRows', {});
+    set(tabModel, '_editedRows', {});
   },
 
   _onCreate(e) {
     let tabModel = this._getTab(e);
-    if (Ember.isNone(tabModel)) {
+    if (isNone(tabModel)) {
       return;
     }
 
     if (e.layers.filter((l) => {
-      return Ember.isNone(Ember.get(l, 'feature.leafletLayer'));
+      return isNone(get(l, 'feature.leafletLayer'));
     }).length > 0) {
       return;
     }
 
-    Ember.set(tabModel, '_selectedRows', {});
-    Ember.set(tabModel, '_editedRows', {});
+    set(tabModel, '_selectedRows', {});
+    set(tabModel, '_editedRows', {});
 
     let features = [];
     e.layers.forEach((layer) => {
-      let props = Ember.get(layer, 'feature.properties');
-      let propId = Ember.guidFor(props);
+      let props = get(layer, 'feature.properties');
+      let propId = guidFor(props);
 
-      Ember.set(tabModel, `featureLink.${propId}`, layer);
-      Ember.set(tabModel, `propertyLink.${propId}`, props);
+      set(tabModel, `featureLink.${propId}`, layer);
+      set(tabModel, `propertyLink.${propId}`, props);
       tabModel.properties.addObject(props);
 
       features.push(layer.feature);
@@ -545,9 +564,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
     this.send('zoomTo', features);
 
-    if (!Ember.isNone(e.initialFeatureKeys)) {
-      let selectedRows = Ember.get(tabModel, '_selectedRows');
-      let editedRows = Ember.get(tabModel, '_editedRows');
+    if (!isNone(e.initialFeatureKeys)) {
+      let selectedRows = get(tabModel, '_selectedRows');
+      let editedRows = get(tabModel, '_editedRows');
 
       e.initialFeatureKeys.forEach((key) => {
         this._deleteLayerByKey(tabModel, key, selectedRows, editedRows);
@@ -556,7 +575,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
     const lastPage = Math.ceil(tabModel.properties.length / tabModel._top);
 
-    Ember.set(this, 'lastPage', lastPage);
+    set(this, 'lastPage', lastPage);
 
     const skip = tabModel._top * (lastPage - 1);
     tabModel.set('_skip', skip);
@@ -583,7 +602,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         tabModel.leafletObject.removeLayer(layer);
       }
 
-      let enabled = Ember.get(layer, 'editor._enabled');
+      let enabled = get(layer, 'editor._enabled');
       if (enabled) {
         layer.disableEdit();
       }
@@ -593,11 +612,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     delete tabModel.propertyLink[key];
     delete tabModel.featureLink[key];
 
-    if (Ember.get(selectedRows, key) || false) {
+    if (get(selectedRows, key) || false) {
       delete selectedRows[key];
     }
 
-    if (Ember.get(editedRows, key) || false) {
+    if (get(editedRows, key) || false) {
       delete editedRows[key];
     }
   },
@@ -609,7 +628,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     this._super(...arguments);
 
     let settings = this.get('settings');
-    if (Ember.isNone(settings)) {
+    if (isNone(settings)) {
       settings = {
         withToolbar: false,
         sidebarOpened: false,
@@ -682,10 +701,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       @param {Object} e Event object.
     */
     onTabClick(tabModelName, e) {
-      e = Ember.$.event.fix(e);
-      let clickedTabName = Ember.$(e.currentTarget).attr('data-tab');
+      e = $.event.fix(e);
+      let clickedTabName = $(e.currentTarget).attr('data-tab');
 
-      Ember.set(this, `_activeTabs.${tabModelName}`, clickedTabName);
+      set(this, `_activeTabs.${tabModelName}`, clickedTabName);
     },
 
     /**
@@ -697,9 +716,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       @param {Object} options Selection options.
     */
     onRowSelect(tabModel, rowId, options) {
-      let selectedRows = Ember.get(tabModel, '_selectedRows');
-      Ember.set(selectedRows, rowId, options.checked);
-      Ember.set(tabModel, '_selectedRows', selectedRows);
+      let selectedRows = get(tabModel, '_selectedRows');
+      set(selectedRows, rowId, options.checked);
+      set(tabModel, '_selectedRows', selectedRows);
       tabModel.notifyPropertyChange('_selectedRows');
     },
 
@@ -710,8 +729,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       @param {Object} tabModel Related tab.
     */
     onFindItemClick(tabModel) {
-      let selectedRows = Ember.get(tabModel, '_selectedRows');
-      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+      let selectedRows = get(tabModel, '_selectedRows');
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => get(selectedRows, item))
         .map((key) => {
           return tabModel.featureLink[key].feature;
         });
@@ -754,10 +773,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       let radius = this.get('_radius');
       let unit = this.get('_selectedUnit');
-      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let selectedRows = get(tabModel, '_selectedRows');
       let leafletMap = this.get('leafletMap');
       let _bufferLayer = this.get('_bufferLayer');
-      if (Ember.isNone(_bufferLayer)) {
+      if (isNone(_bufferLayer)) {
         _bufferLayer = L.featureGroup();
         leafletMap.addLayer(_bufferLayer);
       }
@@ -782,11 +801,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     */
     deleteBuffer(tabModel) {
       let _bufferLayer = this.get('_bufferLayer');
-      if (Ember.isNone(_bufferLayer)) {
+      if (isNone(_bufferLayer)) {
         return;
       }
 
-      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let selectedRows = get(tabModel, '_selectedRows');
       Object.keys(selectedRows).forEach(key => {
         if (selectedRows[key]) {
           Object.values(_bufferLayer._layers).forEach(layer => {
@@ -805,7 +824,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     */
     onClearFoundItemClick() {
       let serviceLayer = this.get('serviceLayer');
-      if (!Ember.isNone(serviceLayer)) {
+      if (!isNone(serviceLayer)) {
         serviceLayer.clearLayers();
       }
     },
@@ -815,15 +834,15 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       @method actions.onFindIntersectPolygons
     */
     onFindIntersectPolygons(tabModel) {
-      let selectedRows = Ember.get(tabModel, '_selectedRows');
-      let selectedFeaturesKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
-      let intersectPolygonFeatures = Ember.A();
-      let intersectPolygonFeaturesKeys = Ember.A();
+      let selectedRows = get(tabModel, '_selectedRows');
+      let selectedFeaturesKeys = Object.keys(selectedRows).filter((item) => get(selectedRows, item));
+      let intersectPolygonFeatures = A();
+      let intersectPolygonFeaturesKeys = A();
       selectedFeaturesKeys.forEach((item, index) => {
         let currentFeature = tabModel.featureLink[item].feature;
         let currentFeatureGeoJson = currentFeature.leafletLayer.toGeoJSON();
         let currentFeatureGeometry = currentFeatureGeoJson.geometry;
-        let isIntersect = !Ember.isNone(currentFeatureGeometry) ? checkIntersect(currentFeatureGeometry) : false;
+        let isIntersect = !isNone(currentFeatureGeometry) ? checkIntersect(currentFeatureGeometry) : false;
 
         if (isIntersect) {
           intersectPolygonFeaturesKeys.push(item);
@@ -832,13 +851,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       });
 
       if (intersectPolygonFeatures.length !== 0) {
-        Ember.set(tabModel, '_selectedRows', {});
-        Ember.set(tabModel, 'selectAll', false);
-        let selectedInterctItemsRows = Ember.get(tabModel, '_selectedRows');
+        set(tabModel, '_selectedRows', {});
+        set(tabModel, 'selectAll', false);
+        let selectedInterctItemsRows = get(tabModel, '_selectedRows');
         intersectPolygonFeaturesKeys.forEach((item, index) => {
-          Ember.set(selectedInterctItemsRows, item, true);
+          set(selectedInterctItemsRows, item, true);
         });
-        Ember.set(tabModel, '_selectedRows', selectedInterctItemsRows);
+        set(tabModel, '_selectedRows', selectedInterctItemsRows);
         this.send('zoomTo', intersectPolygonFeatures);
       }
     },
@@ -849,7 +868,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       @param {Object} tabModel Related tab.
     */
     onSelectAllClick(tabModel) {
-      this.changeSelectedAll(tabModel, !Ember.get(tabModel, 'selectAll'));
+      this.changeSelectedAll(tabModel, !get(tabModel, 'selectAll'));
     },
 
     /**
@@ -860,8 +879,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       @param {Object} options
     */
     onTabGetData(tabModel, options) {
-      Ember.set(tabModel, '_skip', options.skip);
-      Ember.set(tabModel, '_top', options.top);
+      set(tabModel, '_skip', options.skip);
+      set(tabModel, '_top', options.top);
     },
 
     /**
@@ -878,11 +897,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           offset -= Math.min(25, offset);
         }
       } else {
-        let panelWidth = Ember.$('.bottompanel-tab-nav-panel-tabs').innerWidth();
+        let panelWidth = $('.bottompanel-tab-nav-panel-tabs').innerWidth();
         let itemsWidth = 0;
         const navButtonWidth = 25;
-        Ember.$('.bottompanel-tab-nav-panel-tabs').children().each((index, item) => {
-          itemsWidth += Ember.$(item).outerWidth();
+        $('.bottompanel-tab-nav-panel-tabs').children().each((index, item) => {
+          itemsWidth += $(item).outerWidth();
         });
         let offsetDelta = Math.min(25, (panelWidth >= itemsWidth ? 0 :
           (offset >= itemsWidth - panelWidth + navButtonWidth ? 0 :
@@ -891,7 +910,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       }
 
       this.set('_featureTabsOffset', offset);
-      Ember.$('.bottompanel-tab-nav-panel-tabs').css('left', `-${offset}px`);
+      $('.bottompanel-tab-nav-panel-tabs').css('left', `-${offset}px`);
     },
 
     onDeleteRowDialogDeny() {
@@ -902,14 +921,14 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       this.set('_deleteRowDialogIsVisible', false);
 
       let tabModel = this.get('_deleteRowTabModel');
-      if (Ember.isNone(tabModel)) {
+      if (isNone(tabModel)) {
         return;
       }
 
       this.set('_deleteRowTabModel', null);
 
-      let selectedRows = Ember.get(tabModel, '_selectedRows');
-      let editedRows = Ember.get(tabModel, '_editedRows');
+      let selectedRows = get(tabModel, '_selectedRows');
+      let editedRows = get(tabModel, '_editedRows');
 
       let mapModelApi = this.get('mapApi').getFromApi('mapModel');
       let selectedFeatureIds = Object.keys(selectedRows).map((key) => {
@@ -920,7 +939,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let leafletMap = this.get('leafletMap');
       leafletMap.fire('flexberry-map:delete-feature:start', { ids: selectedFeatureIds });
 
-      let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
+      let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => get(selectedRows, item));
       selectedFeatureKeys.forEach((key) => {
         this._deleteLayerByKey(tabModel, key, selectedRows, editedRows);
       });
@@ -995,7 +1014,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       @param {Object} addedLayers Added layer.
     */
     onImportComplete(tabModel, addedLayers) {
-      let fields = Ember.get(tabModel, 'leafletObject.readFormat.featureType.fields');
+      let fields = get(tabModel, 'leafletObject.readFormat.featureType.fields');
 
       let items = [];
       addedLayers.forEach((layer) => {
@@ -1005,7 +1024,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         }, {});
 
         Object.keys(layer.feature.properties).forEach((key) => {
-          Ember.set(properties, key, layer.feature.properties[key]);
+          set(properties, key, layer.feature.properties[key]);
         });
 
         items.push({
@@ -1034,8 +1053,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       @param {Object} tabModel Related tab model.
     */
     onDifferenceClick(tabModel) {
-      let selectedRows = Ember.get(tabModel, '_selectedRows');
-      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+      let selectedRows = get(tabModel, '_selectedRows');
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => get(selectedRows, item))
         .map((key) => {
           let feature = tabModel.featureLink[key].feature;
           let layer = feature.leafletLayer.toGeoJSON();
@@ -1044,13 +1063,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
 
           delete selectedRows[key];
-        }).filter((item) => !Ember.isNone(item));
+        }).filter((item) => !isNone(item));
 
       if (selectedFeatures.length < 1) {
         return;
       }
 
-      if (Ember.isNone(this.get('_dataForDifference'))) {
+      if (isNone(this.get('_dataForDifference'))) {
         this.set('_dataForDifference', selectedRows);
         this.changeSelectedAll(tabModel, false);
 
@@ -1063,17 +1082,17 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
         };
 
-        Ember.addObserver(tabModel, '_typeSelectedRows', null, tabModel._typeSelectedRowsObserverForDifference);
+        addObserver(tabModel, '_typeSelectedRows', null, tabModel._typeSelectedRowsObserverForDifference);
       } else {
         // Remove observer and function.
-        Ember.removeObserver(tabModel, '_typeSelectedRows', null, tabModel._typeSelectedRowsObserverForDifference);
+        removeObserver(tabModel, '_typeSelectedRows', null, tabModel._typeSelectedRowsObserverForDifference);
         tabModel._typeSelectedRowsObserverForDifference = undefined;
 
         let geojsonReader = new jsts.io.GeoJSONReader();
 
         // Find intersecting polygons with splitter.
         let dataForDifference = this.get('_dataForDifference');
-        let intersectingFeatures = Object.keys(dataForDifference).filter((item) => Ember.get(dataForDifference, item))
+        let intersectingFeatures = Object.keys(dataForDifference).filter((item) => get(dataForDifference, item))
           .map((key) => {
             let feature = tabModel.featureLink[key].feature;
             let layer = feature.leafletLayer.toGeoJSON();
@@ -1086,13 +1105,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
               let geojsonWriter = new jsts.io.GeoJSONWriter();
               let intersectionRes = geojsonWriter.write(intersection);
 
-              if (!Ember.isNone(intersectionRes)) {
+              if (!isNone(intersectionRes)) {
                 return layer;
               }
             }
 
             delete dataForDifference[key];
-          }).filter((item) => !Ember.isNone(item));
+          }).filter((item) => !isNone(item));
 
         let items = [];
 
@@ -1122,7 +1141,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
         let selectedLayers = Object.keys(dataForDifference).map((key) => {
           return tabModel.featureLink[key];
-        }).filter((item) => !Ember.isNone(item));
+        }).filter((item) => !isNone(item));
 
         let dataItems = {
           mode: 'Diff',
@@ -1167,8 +1186,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     */
     doCombinedPolygon(tabModel) {
       // собираем геометрию у выделенных объектов
-      let selectedRows = Ember.get(tabModel, '_selectedRows');
-      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+      let selectedRows = get(tabModel, '_selectedRows');
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => get(selectedRows, item))
         .map((key) => {
           let feature = tabModel.featureLink[key].feature;
           let layer = feature.leafletLayer.toGeoJSON();
@@ -1177,15 +1196,15 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
 
           delete selectedRows[key];
-        }).filter((item) => !Ember.isNone(item));
+        }).filter((item) => !isNone(item));
 
-      let selectedLayers = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).map((key) => {
+      let selectedLayers = Object.keys(selectedRows).filter((item) => get(selectedRows, item)).map((key) => {
         let feature = tabModel.featureLink[key].feature;
         let layer = feature.leafletLayer.toGeoJSON();
         if ((layer.geometry.type === 'Polygon') || (layer.geometry.type === 'MultiPolygon')) {
           return tabModel.featureLink[key];
         }
-      }).filter((item) => !Ember.isNone(item));
+      }).filter((item) => !isNone(item));
 
       // если подходящих действительно несколько, то собираем в один новый мультиполигон
       if (selectedFeatures.length > 1) {
@@ -1207,7 +1226,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         });
 
         // готовим пустые данные
-        let fields = Ember.get(tabModel, 'leafletObject.readFormat.featureType.fields');
+        let fields = get(tabModel, 'leafletObject.readFormat.featureType.fields');
         let data = Object.keys(fields).reduce((result, item) => {
           result[item] = null;
           return result;
@@ -1221,7 +1240,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }],
           choiceValueData: layerProperties,
           initialLayers: selectedLayers, // нужны для удаления
-          initialFeatureKeys: Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+          initialFeatureKeys: Object.keys(selectedRows).filter((item) => get(selectedRows, item))
         };
 
         this.sendAction('editFeature', {
@@ -1242,19 +1261,19 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     @param {Boolean} selectedFlag Indicates select or deselect objects.
   */
   changeSelectedAll(tabModel, selectedFlag) {
-    let selectAll = Ember.get(tabModel, 'selectAll');
-    if (!Ember.isNone(selectedFlag)) {
-      Ember.set(tabModel, 'selectAll', selectedFlag);
+    let selectAll = get(tabModel, 'selectAll');
+    if (!isNone(selectedFlag)) {
+      set(tabModel, 'selectAll', selectedFlag);
       selectAll = selectedFlag;
     }
 
     if (!selectAll) {
-      Ember.set(tabModel, '_selectedRows', {});
+      set(tabModel, '_selectedRows', {});
     } else {
-      let selectedRows = Object.assign(...Object.keys(Ember.get(tabModel, 'propertyLink')).map(k => ({
+      let selectedRows = Object.assign(...Object.keys(get(tabModel, 'propertyLink')).map(k => ({
         [k]: true
       })));
-      Ember.set(tabModel, '_selectedRows', selectedRows);
+      set(tabModel, '_selectedRows', selectedRows);
     }
 
     tabModel.notifyPropertyChange('_selectedRows');
@@ -1267,8 +1286,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     @param {Boolean} func Processing function.
   */
   _treatmentSelectedEditedRows(tabModel, func) {
-    let selectedRows = Ember.get(tabModel, '_selectedRows');
-    let editedRows = Ember.get(tabModel, '_editedRows');
+    let selectedRows = get(tabModel, '_selectedRows');
+    let editedRows = get(tabModel, '_editedRows');
 
     func(selectedRows, editedRows);
   },
@@ -1282,7 +1301,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   _deleteLayerById(featureId, layer) {
     let tabModels = this.get('_tabModels');
 
-    if (!Ember.isNone(tabModels)) {
+    if (!isNone(tabModels)) {
       for (let i = 0; i < tabModels.length; i++) {
         let tabModel = tabModels[i];
 
@@ -1293,9 +1312,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             if (typeof getLayerFeatureIdFunc === 'function') {
 
               //Need to implement id definition function
-              id = getLayerFeatureIdFunc(Ember.get(tabModel, `featureLink.${key}`));
+              id = getLayerFeatureIdFunc(get(tabModel, `featureLink.${key}`));
             } else {
-              id = Ember.get(tabModel, `featureLink.${key}.feature.id`);
+              id = get(tabModel, `featureLink.${key}.feature.id`);
             }
 
             if (id === featureId) {
@@ -1317,8 +1336,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   _disableDrawSplitGeometry(e) {
     let [tabModel, _this] = this;
 
-    let selectedRows = Ember.get(tabModel, '_selectedRows');
-    let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+    let selectedRows = get(tabModel, '_selectedRows');
+    let selectedFeatures = Object.keys(selectedRows).filter((item) => get(selectedRows, item))
       .map((key) => {
         let feature = tabModel.featureLink[key].feature;
         let layer = feature.leafletLayer.toGeoJSON();
@@ -1329,19 +1348,19 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         }
 
         return layer;
-      }).filter((item) => !Ember.isNone(item));
+      }).filter((item) => !isNone(item));
 
     let editTools = _this._getEditTools();
     editTools.off('editable:drawing:end', _this._disableDrawSplitGeometry, this);
     editTools.stopDrawing();
 
     let editLayer = editTools.editLayer;
-    if (!Ember.isNone(editLayer)) {
+    if (!isNone(editLayer)) {
       editLayer.clearLayers();
     }
 
     let featuresLayer = editTools.featuresLayer;
-    if (!Ember.isNone(featuresLayer)) {
+    if (!isNone(featuresLayer)) {
       featuresLayer.clearLayers();
     }
 
@@ -1391,8 +1410,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       }
 
       if (split.features.length === 0) {
-        let selectedRows = Ember.get(tabModel, '_selectedRows');
-        let key = Ember.guidFor(layer.properties);
+        let selectedRows = get(tabModel, '_selectedRows');
+        let key = guidFor(layer.properties);
         delete selectedRows[key];
       }
 
@@ -1409,16 +1428,16 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       return;
     }
 
-    selectedRows = Ember.get(tabModel, '_selectedRows');
-    let selectedLayers = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).map((key) => {
+    selectedRows = get(tabModel, '_selectedRows');
+    let selectedLayers = Object.keys(selectedRows).filter((item) => get(selectedRows, item)).map((key) => {
       return tabModel.featureLink[key];
-    }).filter((item) => !Ember.isNone(item));
+    }).filter((item) => !isNone(item));
 
     let dataItems = {
       mode: 'Split',
       items: items,
       initialLayers: selectedLayers, // нужны для удаления
-      initialFeatureKeys: Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+      initialFeatureKeys: Object.keys(selectedRows).filter((item) => get(selectedRows, item))
     };
 
     _this.sendAction('editFeature', {
@@ -1445,7 +1464,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     while (i !== splitLine.geometry.coordinates.length) {
       let point = helper.default.point(splitLine.geometry.coordinates[i]);
       if (!booleanWithin.default(point, layer) && !waitEndPoint) {
-        if (!Ember.isNone(startPoint) && lineIntersect.default(layer, lineSlice.default(startPoint, point, splitLine)).features.length > 0) {
+        if (!isNone(startPoint) && lineIntersect.default(layer, lineSlice.default(startPoint, point, splitLine)).features.length > 0) {
           let resultlineIntersect = lineIntersect.default(layer, lineSlice.default(startPoint, point, splitLine));
           if (resultlineIntersect.features.length === 2) {
             arraySplitLine.push(lineSlice.default(startPoint, point, splitLine));

@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
+
+import Mixin from '@ember/object/mixin';
 
 /**
   Mixin containing initializetion logic for parameter metadata offline serializer.
@@ -10,14 +12,14 @@ import Ember from 'ember';
   @class NewPlatformFlexberyGISParameterMetadataOfflineSerializerMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export let OfflineSerializer = Ember.Mixin.create({
+export let OfflineSerializer = Mixin.create({
   getAttrs: function () {
     let parentAttrs = this._super();
     let attrs = {
       layerLink: { serialize: 'id', deserialize: 'records' }
     };
 
-    return Ember.$.extend(true, {}, parentAttrs, attrs);
+    return $.extend(true, {}, parentAttrs, attrs);
   },
 
   init: function () {

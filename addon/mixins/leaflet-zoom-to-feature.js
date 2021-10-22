@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
  */
 
-import Ember from 'ember';
+import { get } from '@ember/object';
+
+import { isArray } from '@ember/array';
+import { isNone } from '@ember/utils';
+import Mixin from '@ember/object/mixin';
 import { zoomToBounds } from '../utils/zoom-to-bounds';
 
 /**
@@ -11,7 +15,7 @@ import { zoomToBounds } from '../utils/zoom-to-bounds';
   @class LeafletZoomToFeatureMixin
   @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
 
   actions: {
     /**
@@ -23,12 +27,12 @@ export default Ember.Mixin.create({
     */
     selectFeature(feature) {
       let leafletMap = this.get('leafletMap');
-      if (Ember.isNone(leafletMap)) {
+      if (isNone(leafletMap)) {
         return;
       }
 
       let serviceLayer = this.get('serviceLayer');
-      if (Ember.isNone(serviceLayer)) {
+      if (isNone(serviceLayer)) {
         serviceLayer = L.featureGroup().addTo(leafletMap);
         this.set('serviceLayer', serviceLayer);
       }
@@ -37,7 +41,7 @@ export default Ember.Mixin.create({
       if (selectedFeature !== feature) {
         serviceLayer.clearLayers();
 
-        if (Ember.isArray(feature)) {
+        if (isArray(feature)) {
           feature.forEach((item) => this._selectFeature(item));
         } else {
           this._selectFeature(feature);
@@ -57,7 +61,7 @@ export default Ember.Mixin.create({
     */
     zoomTo(feature) {
       let leafletMap = this.get('leafletMap');
-      if (Ember.isNone(leafletMap)) {
+      if (isNone(leafletMap)) {
         return;
       }
 
@@ -72,9 +76,9 @@ export default Ember.Mixin.create({
         bounds = featureGroup.getBounds();
       }
 
-      if (!Ember.isNone(bounds)) {
-        let minZoom = Ember.isArray(feature) ? Ember.get(feature[0], 'leafletLayer.minZoom') : Ember.get(feature, 'leafletLayer.minZoom');
-        let maxZoom = Ember.isArray(feature) ? Ember.get(feature[0], 'leafletLayer.maxZoom') : Ember.get(feature, 'leafletLayer.maxZoom');
+      if (!isNone(bounds)) {
+        let minZoom = isArray(feature) ? get(feature[0], 'leafletLayer.minZoom') : get(feature, 'leafletLayer.minZoom');
+        let maxZoom = isArray(feature) ? get(feature[0], 'leafletLayer.maxZoom') : get(feature, 'leafletLayer.maxZoom');
         zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
       }
     },
@@ -86,7 +90,7 @@ export default Ember.Mixin.create({
     */
     panTo(feature) {
       let leafletMap = this.get('leafletMap');
-      if (Ember.isNone(leafletMap)) {
+      if (isNone(leafletMap)) {
         return;
       }
 
@@ -108,7 +112,7 @@ export default Ember.Mixin.create({
     */
     clearSelected() {
       let serviceLayer = this.get('serviceLayer');
-      if (!Ember.isNone(serviceLayer)) {
+      if (!isNone(serviceLayer)) {
         serviceLayer.clearLayers();
       }
 
@@ -125,7 +129,7 @@ export default Ember.Mixin.create({
   */
   _selectFeature(feature) {
     let serviceLayer = this.get('serviceLayer');
-    if (!Ember.isNone(feature)) {
+    if (!isNone(feature)) {
       serviceLayer.addLayer(this._prepareLayer(feature.leafletLayer));
     }
   },

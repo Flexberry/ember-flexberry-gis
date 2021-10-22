@@ -2,6 +2,13 @@
   @module ember-flexberry-gis
 */
 
+import { assert } from '@ember/debug';
+
+import { A, isArray } from '@ember/array';
+import { isNone, isEqual, typeOf } from '@ember/utils';
+import EmberObject, { get, set } from '@ember/object';
+import Mixin from '@ember/object/mixin';
+
 import Ember from 'ember';
 import FlexberryDdauCheckboxActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-ddau-checkbox-actions-handler';
 import FlexberryDdauSliderActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-ddau-slider-actions-handler';
@@ -19,7 +26,7 @@ import {
   @class FlexberryMaplayerActionsHandlerMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   actions: {
     /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.headerClick:method"}}flexberry-maplayers component's 'headerClick' action{{/crossLink}}.
@@ -136,7 +143,7 @@ export default Ember.Mixin.create({
       ```
     */
     onMapLayerChangeVisibility(...args) {
-      let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
+      let objectContainingActionHandler = EmberObject.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
 
       actionHandler.apply(this, args);
@@ -178,7 +185,7 @@ export default Ember.Mixin.create({
       ```
     */
     onMapLayerChangeOpacity(...args) {
-      let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauSliderActionsHandlerMixin).create();
+      let objectContainingActionHandler = EmberObject.extend(FlexberryDdauSliderActionsHandlerMixin).create();
       let actionHandler = objectContainingActionHandler.get('actions.onSliderChange');
 
       actionHandler.apply(this, args);
@@ -250,10 +257,10 @@ export default Ember.Mixin.create({
     */
     onAttributesEdit(layerPath, { itemsPath, selectedTabIndexPath, foldedPath, loadingPath }) {
       let layerModel = getRecord(this, layerPath);
-      let name = Ember.get(layerModel, 'name');
-      let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
+      let name = get(layerModel, 'name');
+      let getAttributesOptions = get(layerModel, '_attributesOptions');
 
-      if (Ember.isNone(getAttributesOptions)) {
+      if (isNone(getAttributesOptions)) {
         return;
       }
 
@@ -263,8 +270,8 @@ export default Ember.Mixin.create({
       }
 
       getAttributesOptions().then(({ object, settings }) => {
-        let items = this.get(itemsPath) || Ember.A();
-        let index = items.findIndex((item) => Ember.isEqual(item.name, name));
+        let items = this.get(itemsPath) || A();
+        let index = items.findIndex((item) => isEqual(item.name, name));
         if (index >= 0) {
           this.set(selectedTabIndexPath, index);
         } else {
@@ -292,15 +299,15 @@ export default Ember.Mixin.create({
     */
     onFeatureEdit(layerPath, { loadingPath, mapAction }) {
       let layerModel = getRecord(this, layerPath);
-      let name = Ember.get(layerModel, 'name');
-      let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
+      let name = get(layerModel, 'name');
+      let getAttributesOptions = get(layerModel, '_attributesOptions');
 
-      if (Ember.isNone(getAttributesOptions)) {
+      if (isNone(getAttributesOptions)) {
         return;
       }
 
       getAttributesOptions().then(({ object, settings }) => {
-        let fields = Ember.get(object, 'readFormat.featureType.fields');
+        let fields = get(object, 'readFormat.featureType.fields');
         let data = Object.keys(fields).reduce((result, item) => {
           result[item] = null;
           return result;
@@ -360,10 +367,10 @@ export default Ember.Mixin.create({
       let rootPath = 'model.mapLayer';
 
       let primaryParentLayerPath = args[0];
-      Ember.assert(
-        `Wrong type of \`parentLayerPath\` argument: actual type is \`${Ember.typeOf(primaryParentLayerPath)}\`, ` +
+      assert(
+        `Wrong type of \`parentLayerPath\` argument: actual type is \`${typeOf(primaryParentLayerPath)}\`, ` +
         `but \`string\` is expected`,
-        Ember.typeOf(primaryParentLayerPath) === 'string');
+        typeOf(primaryParentLayerPath) === 'string');
 
       let secondaryParentLayerPath = primaryParentLayerPath.indexOf('hierarchy') !== -1 ? 'model.otherLayers' : 'model.hierarchy';
       let backgroundLayerPath = 'model.backgroundLayers';
@@ -372,41 +379,41 @@ export default Ember.Mixin.create({
         layerProperties,
         layer
       } = args[args.length - 1];
-      Ember.assert(
-        `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
+      assert(
+        `Wrong type of \`layerProperties\` property: actual type is \`${typeOf(layerProperties)}\`, ` +
         `but \`object\` or  \`instance\` is expected`,
-        Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
+        typeOf(layerProperties) === 'object' || typeOf(layerProperties) === 'instance');
 
       let primaryParentLayer = getRecord(this, primaryParentLayerPath);
-      Ember.assert(
-        `Wrong type of \`parentLayer\` property: actual type is \`${Ember.typeOf(primaryParentLayer)}\`, ` +
+      assert(
+        `Wrong type of \`parentLayer\` property: actual type is \`${typeOf(primaryParentLayer)}\`, ` +
         `but \`array\` or \`object\` or  \`instance\` is expected`,
-        Ember.isArray(primaryParentLayer) || Ember.typeOf(primaryParentLayer) === 'object' || Ember.typeOf(primaryParentLayer) === 'instance');
+        isArray(primaryParentLayer) || typeOf(primaryParentLayer) === 'object' || typeOf(primaryParentLayer) === 'instance');
 
       let secondaryParentLayer = getRecord(this, secondaryParentLayerPath);
       let backgroundLayer = getRecord(this, backgroundLayerPath);
 
-      let primaryChildLayers = Ember.isArray(primaryParentLayer) ? primaryParentLayer : Ember.get(primaryParentLayer, 'layers');
-      if (Ember.isNone(primaryChildLayers)) {
-        primaryChildLayers = Ember.A();
-        Ember.set(primaryParentLayer, 'layers', primaryChildLayers);
+      let primaryChildLayers = isArray(primaryParentLayer) ? primaryParentLayer : get(primaryParentLayer, 'layers');
+      if (isNone(primaryChildLayers)) {
+        primaryChildLayers = A();
+        set(primaryParentLayer, 'layers', primaryChildLayers);
       }
 
-      Ember.assert(
-        `Wrong type of \`parentLayer.layers\` property: actual type is \`${Ember.typeOf(primaryChildLayers)}\`, ` +
+      assert(
+        `Wrong type of \`parentLayer.layers\` property: actual type is \`${typeOf(primaryChildLayers)}\`, ` +
         `but \`Ember.NativeArray\` is expected`,
-        Ember.isArray(primaryChildLayers) && Ember.typeOf(primaryChildLayers.pushObject) === 'function');
+        isArray(primaryChildLayers) && typeOf(primaryChildLayers.pushObject) === 'function');
 
       let childLayer;
-      if (Ember.isNone(layer)) {
+      if (isNone(layer)) {
         childLayer = this.createLayer({ parentLayer: primaryParentLayer, layerProperties: layerProperties });
       } else {
         layer.setProperties(layerProperties);
         childLayer = layer;
       }
 
-      if (Ember.get(childLayer, 'type') === 'group' && !Ember.isArray(Ember.get(childLayer, 'layers'))) {
-        Ember.set(childLayer, 'layers', Ember.A());
+      if (get(childLayer, 'type') === 'group' && !isArray(get(childLayer, 'layers'))) {
+        set(childLayer, 'layers', A());
       }
 
       let canBeBackground = childLayer.get('settingsAsObject.backgroundSettings.canBeBackground');
@@ -418,12 +425,12 @@ export default Ember.Mixin.create({
           secondaryParentLayer.pushObject(childLayer);
         }
 
-        if (!Ember.isNone(backgroundLayer)) {
+        if (!isNone(backgroundLayer)) {
           backgroundLayer.pushObject(childLayer);
         }
       } else {
         primaryChildLayers.pushObject(childLayer);
-        if (!Ember.isNone(secondaryParentLayer)) {
+        if (!isNone(secondaryParentLayer)) {
           secondaryParentLayer.pushObject(childLayer);
         }
       }
@@ -495,24 +502,24 @@ export default Ember.Mixin.create({
     */
     onMapLayerEdit(...args) {
       let layerPath = args[0];
-      Ember.assert(
-        `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
+      assert(
+        `Wrong type of \`layerPath\` argument: actual type is \`${typeOf(layerPath)}\`, ` +
         `but \`string\` is expected`,
-        Ember.typeOf(layerPath) === 'string');
+        typeOf(layerPath) === 'string');
 
       let {
         layerProperties
       } = args[args.length - 1];
-      Ember.assert(
-        `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
+      assert(
+        `Wrong type of \`layerProperties\` property: actual type is \`${typeOf(layerProperties)}\`, ` +
         `but \`object\` or  \`instance\` is expected`,
-        Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
+        typeOf(layerProperties) === 'object' || typeOf(layerProperties) === 'instance');
 
       let layer = getRecord(this, layerPath);
-      Ember.assert(
-        `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
+      assert(
+        `Wrong type of \`layer\` property: actual type is \`${typeOf(layer)}\`, ` +
         `but \`object\` or  \`instance\` is expected`,
-        Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
+        typeOf(layer) === 'object' || typeOf(layer) === 'instance');
 
       this.editLayer({
         layer: layer,
@@ -549,16 +556,16 @@ export default Ember.Mixin.create({
     onMapLayerRemove(...args) {
       let rootPath = 'model.mapLayer';
       let layerPath = args[0];
-      Ember.assert(
-        `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
+      assert(
+        `Wrong type of \`layerPath\` argument: actual type is \`${typeOf(layerPath)}\`, ` +
         `but \`string\` is expected`,
-        Ember.typeOf(layerPath) === 'string');
+        typeOf(layerPath) === 'string');
 
       let layer = getRecord(this, layerPath);
-      Ember.assert(
-        `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
+      assert(
+        `Wrong type of \`layer\` property: actual type is \`${typeOf(layer)}\`, ` +
         `but \`object\` or  \`instance\` is expected`,
-        Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
+        typeOf(layer) === 'object' || typeOf(layer) === 'instance');
 
       this.removeLayer({
         layer: layer
@@ -582,7 +589,7 @@ export default Ember.Mixin.create({
   */
   createLayer(options) {
     options = options || {};
-    let layerProperties = Ember.get(options, 'layerProperties');
+    let layerProperties = get(options, 'layerProperties');
 
     return layerProperties;
   },
@@ -599,8 +606,8 @@ export default Ember.Mixin.create({
   */
   editLayer(options) {
     options = options || {};
-    let layerProperties = Ember.get(options, 'layerProperties');
-    let layer = Ember.get(options, 'layer');
+    let layerProperties = get(options, 'layerProperties');
+    let layer = get(options, 'layer');
     layer.setProperties(layerProperties);
 
     return layer;
@@ -617,11 +624,11 @@ export default Ember.Mixin.create({
   */
   removeLayer(options) {
     options = options || {};
-    let layer = Ember.get(options, 'layer');
+    let layer = get(options, 'layer');
 
-    let childLayers = Ember.get(layer, 'layers');
+    let childLayers = get(layer, 'layers');
 
-    if (Ember.isArray(childLayers)) {
+    if (isArray(childLayers)) {
       childLayers.forEach((item) => {
         this.removeLayer({
           layer: item
@@ -629,7 +636,7 @@ export default Ember.Mixin.create({
       }, this);
     }
 
-    Ember.set(layer, 'isDeleted', true);
+    set(layer, 'isDeleted', true);
     return layer;
   }
 });

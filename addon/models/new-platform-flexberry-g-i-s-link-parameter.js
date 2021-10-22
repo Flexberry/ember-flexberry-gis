@@ -1,4 +1,7 @@
-import { Model as LinkParameterMixin, defineProjections } from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-link-parameter';
+import {
+  Model as LinkParameterMixin,
+  defineProjections
+} from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-link-parameter';
 import { Projection } from 'ember-flexberry-data';
 import { Offline } from 'ember-flexberry-data';
 

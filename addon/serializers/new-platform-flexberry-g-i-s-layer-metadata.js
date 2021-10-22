@@ -3,7 +3,9 @@
 */
 
 import FlexberryData from 'ember-flexberry-data';
-import { Serializer as LayerMetadataSerializer } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-layer-metadata';
+import {
+  Serializer as LayerMetadataSerializer
+} from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-layer-metadata';
 
 /**
   Layer metadata serializer.

@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
+
+import $ from 'jquery';
+import { run } from '@ember/runloop';
+import { Promise } from 'rsvp';
+import { A } from '@ember/array';
+import { get } from '@ember/object';
 import GeocoderBaseLayer from './geocoder-base-layer';
 
 /**
@@ -31,9 +37,9 @@ export default GeocoderBaseLayer.extend({
     @returns {Object[]} Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
   */
   parseGeocodingResults(results) {
-    let matches = Ember.get(results || { matches: [] }, 'matches');
+    let matches = get(results || { matches: [] }, 'matches');
 
-    let features = Ember.A(matches).map((match) => {
+    let features = A(matches).map((match) => {
       return {
         type: 'Feature',
         geometry: {
@@ -41,7 +47,7 @@ export default GeocoderBaseLayer.extend({
 
           // AS GeoJSON specification declares, point coordinates are in x, y order
           // (easting, northing for projected coordinates, longitude, latitude for geographic coordinates).
-          coordinates: [Ember.get(match, 'lon'), Ember.get(match, 'lat')]
+          coordinates: [get(match, 'lon'), get(match, 'lat')]
         },
         properties: match
       };
@@ -73,10 +79,10 @@ export default GeocoderBaseLayer.extend({
   */
   executeGeocoding(options) {
     options = options || {};
-    let queryString = Ember.get(options, 'searchOptions.queryString');
-    let searchType = Ember.get(options, 'searchOptions.searchType') || 'all';
-    let maxResultsCount = Ember.get(options, 'searchOptions.maxResultsCount');
-    let latlng = Ember.get(options, 'latlng');
+    let queryString = get(options, 'searchOptions.queryString');
+    let searchType = get(options, 'searchOptions.searchType') || 'all';
+    let maxResultsCount = get(options, 'searchOptions.maxResultsCount');
+    let latlng = get(options, 'latlng');
 
     let osmRuBaseUrl = this.get('url');
     let requestUrl = `${osmRuBaseUrl}?q=${queryString}&` +
@@ -84,9 +90,9 @@ export default GeocoderBaseLayer.extend({
       `cnt=${maxResultsCount}&` +
       `lat=${latlng.lat}&lon=${latlng.lng}`;
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.run(() => {
-        Ember.$.ajax(requestUrl, { dataType: 'text' }).done((data, textStatus, jqXHR) => {
+    return new Promise((resolve, reject) => {
+      run(() => {
+        $.ajax(requestUrl, { dataType: 'text' }).done((data, textStatus, jqXHR) => {
           // For some reason jQuery fails when parsing OSM.ru response text into JSON,
           // even when request where successful.
           // So we use dataType 'text' & parse response manually.
@@ -97,7 +103,7 @@ export default GeocoderBaseLayer.extend({
             reject(parseError);
           }
 
-          if (!Ember.isBlank(results.error)) {
+          if (!isBlank(results.error)) {
             reject(results.error);
           }
 

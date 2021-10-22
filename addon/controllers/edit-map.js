@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isArray } from '@ember/array';
+
+import $ from 'jquery';
+import { isNone, isBlank } from '@ember/utils';
+import { computed, get } from '@ember/object';
 import EditFormController from 'ember-flexberry/controllers/edit-form';
 import FlexberryMapActionsHandlerMixin from '../mixins/flexberry-map-actions-handler';
 import FlexberryMaplayerActionsHandlerMixin from '../mixins/flexberry-maplayer-actions-handler';
@@ -113,9 +117,9 @@ export default EditFormController.extend(
       @type object
       @computed
      */
-    queryFilter: Ember.computed('geofilter', function () {
+    queryFilter: computed('geofilter', function () {
       let filter = this.get('geofilter');
-      if (!Ember.isNone(filter)) {
+      if (!isNone(filter)) {
         try {
           return JSON.parse(filter);
         } catch (e) {
@@ -181,7 +185,7 @@ export default EditFormController.extend(
       let currentParam;
       urlParams.forEach((param) => {
         currentParam = this.get(param);
-        if (!Ember.isBlank(currentParam)) {
+        if (!isBlank(currentParam)) {
           model.set(param, currentParam);
         }
       }, this);
@@ -203,8 +207,8 @@ export default EditFormController.extend(
     */
     createLayer(options) {
       options = options || {};
-      let parentLayer = Ember.get(options, 'parentLayer');
-      let layerProperties = Ember.$.extend({ id: generateUniqueId() }, Ember.get(options, 'layerProperties'));
+      let parentLayer = get(options, 'parentLayer');
+      let layerProperties = $.extend({ id: generateUniqueId() }, get(options, 'layerProperties'));
 
       let store = this.get('store');
       let layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', layerProperties);
@@ -246,14 +250,14 @@ export default EditFormController.extend(
     */
     removeLayer(options) {
       options = options || {};
-      let layer = Ember.get(options, 'layer');
+      let layer = get(options, 'layer');
 
-      if (!Ember.isNone(layer)) {
+      if (!isNone(layer)) {
         layer.deleteRecord();
       }
 
-      let layers = Ember.get(layer, 'layers');
-      if (Ember.isArray(layers)) {
+      let layers = get(layer, 'layers');
+      if (isArray(layers)) {
         layers.forEach((childLayer) => {
           this.removeLayer({
             layer: childLayer

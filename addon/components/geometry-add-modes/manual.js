@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
+
+import { getOwner } from '@ember/application';
+import { isNone, isEmpty } from '@ember/utils';
+import { observer, get } from '@ember/object';
+import { on } from '@ember/object/evented';
+import Component from '@ember/component';
 import layout from '../../templates/components/geometry-add-modes/manual';
 import LeafletZoomToFeatureMixin from '../../mixins/leaflet-zoom-to-feature';
 import { translationMacro as t } from 'ember-i18n';
@@ -30,7 +36,7 @@ const flexberryClassNames = {
   form: flexberryClassNamesPrefix + '-form'
 };
 
-let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoomToFeatureMixin, {
+let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeatureMixin, {
 
   /**
     Reference to component's template.
@@ -135,19 +141,19 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     this.clear();
   },
 
-  initialSettings: Ember.on('init', Ember.observer('settings', 'layer', function () {
+  initialSettings: on('init', observer('settings', 'layer', function () {
     this.clear();
 
     let settings = this.get('settings');
 
-    if (Ember.isNone(settings)) {
+    if (isNone(settings)) {
       return;
     }
 
     this.set('_crs', settings.layerCRS);
 
     let layer = this.get('layer');
-    const edit = !Ember.isNone(layer);
+    const edit = !isNone(layer);
 
     if (edit) {
       this._updateCoordinates();
@@ -169,7 +175,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   _updateCoordinates() {
     let layer = this.get('layer');
 
-    if (Ember.isNone(layer)) {
+    if (isNone(layer)) {
       return;
     }
 
@@ -184,7 +190,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     let error = false;
 
     const coordinates = this.get('_coordinates');
-    if (Ember.isEmpty(coordinates)) {
+    if (isEmpty(coordinates)) {
       error = true;
       this.set('_coordinatesWithError', true);
     } else {
@@ -213,7 +219,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       return [true, null];
     };
 
-    if (Ember.isNone(parsedCoordinates) || parsedCoordinates.length === 0) {
+    if (isNone(parsedCoordinates) || parsedCoordinates.length === 0) {
       return coordinatesWithError();
     }
 
@@ -281,7 +287,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       }
 
       let layer = this.get('layer');
-      if (!Ember.isNone(layer)) {
+      if (!isNone(layer)) {
         const type = this.get('settings.typeGeometry');
         if (type === 'marker') {
           layer.setLatLng(addedLayer.getLatLng());
@@ -322,7 +328,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     @returns {string[]} Array of coordinates of type [[["55.472379","58.733686"]],[["55.472336","58.733789"]]]. (latlng)
   */
   _parseStringToCoordinates(coordinates) {
-    if (Ember.isNone(coordinates)) {
+    if (isNone(coordinates)) {
       return null;
     }
 
@@ -395,12 +401,12 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     @returns {string[]} Pair of coordinates of type [55.472379, 58.733686].
   */
   _projectCoordinates(from, to, coordinates) {
-    let knownCrs = Ember.getOwner(this).knownForType('coordinate-reference-system');
-    let knownCrsArray = Ember.A(Object.values(knownCrs));
+    let knownCrs = getOwner(this).knownForType('coordinate-reference-system');
+    let knownCrsArray = A(Object.values(knownCrs));
     let fromCrs = knownCrsArray.findBy('code', from);
-    let fromCrsDefinition = Ember.get(fromCrs, 'definition');
+    let fromCrsDefinition = get(fromCrs, 'definition');
     let toCrs = knownCrsArray.findBy('code', to);
-    let toCrsDefinition = Ember.get(toCrs, 'definition');
+    let toCrsDefinition = get(toCrs, 'definition');
     let cords = proj4(fromCrsDefinition, toCrsDefinition, coordinates);
     return cords;
   },

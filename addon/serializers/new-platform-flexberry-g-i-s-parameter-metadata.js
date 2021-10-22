@@ -3,7 +3,9 @@
 */
 
 import FlexberryData from 'ember-flexberry-data';
-import { Serializer as ParameterMetadataSerializer } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-parameter-metadata';
+import {
+  Serializer as ParameterMetadataSerializer
+} from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-parameter-metadata';
 
 /**
   Parameter metadata serializer.

@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { schedule, later } from '@ember/runloop';
+
+import { isArray, A } from '@ember/array';
+import { isNone, isBlank } from '@ember/utils';
+import { computed, get } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-styles/categorized/layer-property-dropdown';
 
 /**
@@ -11,7 +16,7 @@ import layout from '../../../templates/components/layers-styles/categorized/laye
   @class CategorizedLayersStyleLayerPropertyDropdownComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
 
   /**
     Related leaflet layer.
@@ -30,28 +35,28 @@ export default Ember.Component.extend({
     @private
     @readOnly
   */
-  _availableLayerProperties: Ember.computed('leafletLayer', 'propertyType', 'displaySettings.featuresPropertiesSettings', 'i18n.locale', function() {
+  _availableLayerProperties: computed('leafletLayer', 'propertyType', 'displaySettings.featuresPropertiesSettings', 'i18n.locale', function() {
     let availableLayerProperties = {};
 
     let propertyType = this.get('propertyType');
     let layerFieldTypes = this.get('leafletLayer.readFormat.featureType.fieldTypes');
-    if (Ember.isNone(layerFieldTypes)) {
+    if (isNone(layerFieldTypes)) {
       return availableLayerProperties;
     }
 
     let layerProperties = Object.keys(layerFieldTypes);
     let localizedProperties = this.get(`displaySettings.featuresPropertiesSettings.localizedProperties.${this.get('i18n.locale')}`) || {};
     let excludedProperties = this.get(`displaySettings.featuresPropertiesSettings.excludedProperties`);
-    excludedProperties = Ember.isArray(excludedProperties) ? Ember.A(excludedProperties) : Ember.A();
+    excludedProperties = isArray(excludedProperties) ? A(excludedProperties) : A();
 
     for (let i = 0, len = layerProperties.length; i < len; i++) {
       let propertyName = layerProperties[i];
-      if (excludedProperties.contains(propertyName) || (!Ember.isBlank(propertyType) && layerFieldTypes[propertyName] !== propertyType)) {
+      if (excludedProperties.contains(propertyName) || (!isBlank(propertyType) && layerFieldTypes[propertyName] !== propertyType)) {
         continue;
       }
 
-      let propertyCaption = Ember.get(localizedProperties, propertyName);
-      availableLayerProperties[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;
+      let propertyCaption = get(localizedProperties, propertyName);
+      availableLayerProperties[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
     }
 
     return availableLayerProperties;
@@ -130,17 +135,17 @@ export default Ember.Component.extend({
   */
   click() {
     let leafletLayer = this.get('leafletLayer');
-    if (!Ember.isNone(leafletLayer)) {
+    if (!isNone(leafletLayer)) {
       return;
     }
 
     // Leaflet layer is loaded.
     // Allow items to be computed, and then set initial value and show dropdow menu.
-    Ember.run.schedule('afterRender', () => {
-      Ember.run.later(() => {
+    schedule('afterRender', () => {
+      later(() => {
         let $dropdown = this.get('_$dropdown');
         let initialValue = this.get('value');
-        if (!Ember.isBlank(initialValue)) {
+        if (!isBlank(initialValue)) {
           $dropdown.dropdown('set selected', initialValue);
         }
 
@@ -163,7 +168,7 @@ export default Ember.Component.extend({
     });
 
     let initialValue = this.get('value');
-    if (!Ember.isBlank(initialValue)) {
+    if (!isBlank(initialValue)) {
       $dropdown.dropdown('set selected', initialValue);
     }
 
