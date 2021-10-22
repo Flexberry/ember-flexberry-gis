@@ -2,12 +2,18 @@
   @module ember-flexberry-gis
 */
 
-import {
-  Model as LinkMetadataMixin,
-  defineProjections
-} from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-link-metadata';
+import { buildValidations } from 'ember-cp-validations';
 import EmberFlexberryDataModel from 'ember-flexberry-data/models/model';
 import OfflineModelMixin from 'ember-flexberry-data/mixins/offline-model';
+import {
+  Model as LinkMetadataMixin,
+  defineProjections,
+  ValidationRules
+} from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-link-metadata';
+
+const Validations = buildValidations(ValidationRules, {
+  dependentKeys: ['model.i18n.locale'],
+});
 
 /**
   Link metadata model.
@@ -17,7 +23,7 @@ import OfflineModelMixin from 'ember-flexberry-data/mixins/offline-model';
   @uses OfflineModelMixin
   @uses NewPlatformFlexberryGISLinkMetadataModelMixin
 */
-let Model = EmberFlexberryDataModel.extend(OfflineModelMixin, LinkMetadataMixin, {
+let Model = EmberFlexberryDataModel.extend(OfflineModelMixin, LinkMetadataMixin, Validations, {
 });
 
 defineProjections(Model);

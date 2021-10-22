@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import FlexberryData from 'ember-flexberry-data';
+import OdataSerializer from 'ember-flexberry-data/serializers/odata';
 import {
   Serializer as MapObjectSettingSerializer
 } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-map-object-setting';
@@ -14,7 +14,7 @@ import {
   @extends OdataSerializer
   @uses NewPlatformFlexberryGISMapObjectSettingSerializerMixin
 */
-export default FlexberryData.Serializer.Odata.extend(MapObjectSettingSerializer, {
+export default OdataSerializer.extend(MapObjectSettingSerializer, {
   /**
   * Field name where object identifier is kept.
   */

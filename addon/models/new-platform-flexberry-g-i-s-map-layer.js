@@ -2,18 +2,23 @@
   @module ember-flexberry-gis
 */
 
-import { once } from '@ember/runloop';
-
-import { observer } from '@ember/object';
 import { on } from '@ember/object/evented';
-import {
-  Model as MapLayerMixin,
-  defineProjections
-} from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map-layer';
+import { once } from '@ember/runloop';
+import { observer } from '@ember/object';
+import { buildValidations } from 'ember-cp-validations';
 import LayerModelMixin from '../mixins/layer-model';
 import LeafletCrsMixin from '../mixins/leaflet-crs';
 import EmberFlexberryDataModel from 'ember-flexberry-data/models/model';
 import OfflineModelMixin from 'ember-flexberry-data/mixins/offline-model';
+import {
+  Model as MapLayerMixin,
+  defineProjections,
+  ValidationRules
+} from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map-layer';
+
+const Validations = buildValidations(ValidationRules, {
+  dependentKeys: ['model.i18n.locale'],
+});
 
 /**
   Map layer model.
@@ -25,7 +30,7 @@ import OfflineModelMixin from 'ember-flexberry-data/mixins/offline-model';
   @uses LayerModelMixin
   @uses LeafletCrsMixin
 */
-let Model = EmberFlexberryDataModel.extend(OfflineModelMixin, MapLayerMixin, LayerModelMixin, LeafletCrsMixin, {
+let Model = EmberFlexberryDataModel.extend(OfflineModelMixin, MapLayerMixin, LayerModelMixin, LeafletCrsMixin, Validations, {
   /**
     Leaflet layer related to layer model.
 

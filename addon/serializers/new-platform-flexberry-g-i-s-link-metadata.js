@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import FlexberryData from 'ember-flexberry-data';
+import OdataSerializer from 'ember-flexberry-data/serializers/odata';
 import {
   Serializer as LinkMetadataSerializer
 } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-link-metadata';
@@ -14,7 +14,7 @@ import {
   @extends OdataSerializer
   @uses NewPlatformFlexberryGISLinkMetadataSerializerMixin
 */
-export default FlexberryData.Serializer.Odata.extend(LinkMetadataSerializer, {
+export default OdataSerializer.extend(LinkMetadataSerializer, {
   /**
   * Field name where object identifier is kept.
   */

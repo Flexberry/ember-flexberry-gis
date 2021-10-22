@@ -2,8 +2,6 @@
   @module ember-flexberry-gis
 */
 
-import $ from 'jquery';
-
 import Mixin from '@ember/object/mixin';
 import DS from 'ember-data';
 import { attr, belongsTo } from 'ember-flexberry-data/utils/attributes';
@@ -20,19 +18,10 @@ export let Model = Mixin.create({
   editForm: DS.attr('string'),
   title: DS.attr('string'),
   defaultMap: DS.belongsTo('new-platform-flexberry-g-i-s-map', { inverse: null, async: false }),
-
-  getValidations: function () {
-    let parentValidations = this._super();
-    let thisValidations = {
-    };
-    return $.extend(true, {}, parentValidations, thisValidations);
-  },
-
-  init: function () {
-    this.set('validations', this.getValidations());
-    this._super.apply(this, arguments);
-  }
 });
+
+export let ValidationRules = {
+};
 
 export let defineProjections = function (modelClass) {
   modelClass.defineProjection('MapObjectSetting', 'new-platform-flexberry-g-i-s-map-object-setting', {

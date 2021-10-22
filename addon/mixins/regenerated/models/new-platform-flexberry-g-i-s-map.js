@@ -2,10 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import $ from 'jquery';
-
 import Mixin from '@ember/object/mixin';
 import DS from 'ember-data';
+import { validator } from 'ember-cp-validations';
 import { attr, belongsTo, hasMany } from 'ember-flexberry-data/utils/attributes';
 
 /**
@@ -56,21 +55,18 @@ export let Model = Mixin.create({
   editTime: DS.attr('date'),
   editor: DS.attr('string'),
   mapLayer: DS.hasMany('new-platform-flexberry-g-i-s-map-layer', { inverse: 'map', async: false }),
-
-  getValidations: function () {
-    let parentValidations = this._super();
-    let thisValidations = {
-      name: { presence: true },
-      public: { presence: true }
-    };
-    return $.extend(true, {}, parentValidations, thisValidations);
-  },
-
-  init: function () {
-    this.set('validations', this.getValidations());
-    this._super.apply(this, arguments);
-  }
 });
+
+export let ValidationRules = {
+  name: validator('presence', {
+    presence: true,
+    message: 'Name is required',
+  }),
+  public: validator('presence', {
+    presence: true,
+    message: 'Public is required',
+  }),
+};
 
 export let defineProjections = function (modelClass) {
   modelClass.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-map', {
