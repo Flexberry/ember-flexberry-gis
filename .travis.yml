@@ -17,16 +17,10 @@ env:
 matrix:
   fast_finish: true
 
-dist: trusty
 
 addons:
   chrome: stable
 
-before_install:
-  - sudo chown root /opt/google/chrome/chrome-sandbox
-  - sudo chmod 4755 /opt/google/chrome/chrome-sandbox
-  - google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost &
-  - yarn global add ember-cli@2.4.3
   - yarn global add bower
 install:
   - yarn install
