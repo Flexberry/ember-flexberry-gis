@@ -6,8 +6,8 @@ import {
   Model as LayerLinkMixin,
   defineProjections
 } from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-layer-link';
-import { Projection } from 'ember-flexberry-data';
-import { Offline } from 'ember-flexberry-data';
+import EmberFlexberryDataModel from 'ember-flexberry-data/models/model';
+import OfflineModelMixin from 'ember-flexberry-data/mixins/offline-model';
 
 /**
   Layer link model.
@@ -17,7 +17,7 @@ import { Offline } from 'ember-flexberry-data';
   @uses OfflineModelMixin
   @uses NewPlatformFlexberryGISLayerLinkModelMixin
 */
-let Model = Projection.Model.extend(Offline.ModelMixin, LayerLinkMixin, {
+let Model = EmberFlexberryDataModel.extend(OfflineModelMixin, LayerLinkMixin, {
 });
 
 defineProjections(Model);

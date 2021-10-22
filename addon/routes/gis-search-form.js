@@ -8,8 +8,12 @@ import $ from 'jquery';
 import { A, isArray } from '@ember/array';
 import { hash, all } from 'rsvp';
 import Route from '@ember/routing/route';
-import { Query } from 'ember-flexberry-data';
 import FlexberryBoundingboxMapLoaderMixin from '../mixins/flexberry-boundingbox-map-loader';
+
+import QueryBuilder from 'ember-flexberry-data/query/builder';
+import Condition from 'ember-flexberry-data/query/condition';
+import FilterOperator from 'ember-flexberry-data/query/filter-operator';
+import { SimplePredicate, ComplexPredicate, StringPredicate, GeographyPredicate } from 'ember-flexberry-data/query/predicate';
 
 /**
   Route for GIS search form.
@@ -133,7 +137,7 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
     @private
    */
   _getQuery(modelName, projectionName, top, skip, searchConditions) {
-    let queryBuilder = new Query.Builder(this.get('store'))
+    let queryBuilder = new QueryBuilder(this.get('store'))
       .from(modelName)
       .selectByProjection(projectionName);
 
@@ -144,10 +148,10 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
     let getOrSeparatedCondition = (searchObject, key) => {
       let conditions = searchObject.split(',').map((item) => {
         let str = item.trim();
-        return new Query.StringPredicate(key).contains(str);
+        return new StringPredicate(key).contains(str);
       });
       if (isArray(conditions)) {
-        return conditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.Or, ...conditions) : conditions[0];
+        return conditions.length > 1 ? new ComplexPredicate(Condition.Or, ...conditions) : conditions[0];
       }
 
       return null;
@@ -175,25 +179,25 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
         }
 
         let scale = parseInt(item.scale) || 0;
-        return new Query.SimplePredicate('scale', currentCondition, scale);
+        return new SimplePredicate('scale', currentCondition, scale);
       });
 
       if (scaleConditions.length) {
-        let scaleCondition = scaleConditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.And, ...scaleConditions) : scaleConditions[0];
+        let scaleCondition = scaleConditions.length > 1 ? new ComplexPredicate(Condition.And, ...scaleConditions) : scaleConditions[0];
         filterConditions.addObject(scaleCondition);
       }
     }
 
     if (searchConditions && !isNone(searchConditions.boundingBoxEWKT)) {
 
-      let boundingBoxIntersectionCondition = new Query.GeographyPredicate('boundingBox').intersects(searchConditions.boundingBoxEWKT);
-      let boundingBoxIsNullCondition = new Query.SimplePredicate('boundingBox', Query.FilterOperator.Eq, null);
+      let boundingBoxIntersectionCondition = new GeographyPredicate('boundingBox').intersects(searchConditions.boundingBoxEWKT);
+      let boundingBoxIsNullCondition = new SimplePredicate('boundingBox', FilterOperator.Eq, null);
 
-      filterConditions.addObject(new Query.ComplexPredicate(Query.Condition.Or, boundingBoxIsNullCondition, boundingBoxIntersectionCondition));
+      filterConditions.addObject(new ComplexPredicate(Condition.Or, boundingBoxIsNullCondition, boundingBoxIntersectionCondition));
     }
 
     if (filterConditions.length) {
-      condition = filterConditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.And, ...filterConditions) : filterConditions[0];
+      condition = filterConditions.length > 1 ? new ComplexPredicate(Condition.And, ...filterConditions) : filterConditions[0];
     }
 
     if (condition) { queryBuilder = queryBuilder.where(condition); }

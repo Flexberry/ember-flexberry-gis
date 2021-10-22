@@ -3,15 +3,16 @@ import { Promise } from 'rsvp';
 import { isNone } from '@ember/utils';
 import Mixin from '@ember/object/mixin';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
-import { Query } from 'ember-flexberry-data';
 import { getCrsByName } from '../utils/get-crs-by-name';
 import { geometryToJsts } from '../utils/layer-to-jsts';
-import {
-  createLayerFromMetadata } from '../utils/create-laye
-} from-metadata';
+import { createLayerFromMetadata } from '../utils/create-layer-from-metadata';
 import {
   setIndexes
 } from '../utils/change-index-on-map-layers';
+
+import QueryBuilder from 'ember-flexberry-data/query/builder';
+import Condition from 'ember-flexberry-data/query/condition';
+import { ComplexPredicate, StringPredicate, GeographyPredicate } from 'ember-flexberry-data/query/predicate';
 
 export default Mixin.create({
   /**
@@ -48,7 +49,7 @@ export default Mixin.create({
     @return {Object} Query builder
   */
   _getQueryBuilderLayerMetadata() {
-    let queryBuilder = new Query.Builder(this.get('store'))
+    let queryBuilder = new QueryBuilder(this.get('store'))
     .from(this.get('metadataModelName'))
     .selectByProjection(this.get('metadataProjection'));
     return queryBuilder;
@@ -100,20 +101,20 @@ export default Mixin.create({
 
         let geoJSON = L.geoJSON(geometryIntersectsBbox, { coordsToLatLng: coordsToLatLng.bind(this) });
 
-        let predicateBBox = new Query.GeographyPredicate('boundingBox');
+        let predicateBBox = new GeographyPredicate('boundingBox');
         filter.push(predicateBBox.intersects(geoJSON.getLayers()[0].toEWKT(crsFactory4326.create())));
       }
 
       if (!isNone(attributes) && isArray(attributes)) {
         let equals = A();
         attributes.forEach((strSearch) => {
-          equals.push(new Query.StringPredicate('anyText').contains(strSearch));
+          equals.push(new StringPredicate('anyText').contains(strSearch));
         });
 
         if (equals.length === 1) {
           filter.push(equals[0]);
         } else {
-          filter.push(new Query.ComplexPredicate(Query.Condition.Or, ...equals));
+          filter.push(new ComplexPredicate(Condition.Or, ...equals));
         }
       }
 
@@ -125,7 +126,7 @@ export default Mixin.create({
       if (filter.length === 1) {
         condition = filter[0];
       } else {
-        condition = new Query.ComplexPredicate(Query.Condition.And, ...filter);
+        condition = new ComplexPredicate(Condition.And, ...filter);
       }
 
       let queryBuilder = this._getQueryBuilderLayerMetadata().where(condition);

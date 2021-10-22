@@ -21,7 +21,6 @@ import { inject as service } from '@ember/service';
 
 import Ember from 'ember';
 import BaseVectorLayer from 'ember-flexberry-gis/components/base-vector-layer';
-import { Query, Projection, Serializer } from 'ember-flexberry-data';
 import { checkMapZoom } from '../../utils/check-zoom';
 import state from '../../utils/state';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
@@ -29,7 +28,22 @@ import GisAdapter from 'ember-flexberry-gis/adapters/odata';
 import DS from 'ember-data';
 import jsts from 'npm:jsts';
 import { capitalize, camelize } from 'ember-flexberry-data/utils/string-functions';
-const { Builder } = Query;
+import AdapterMixin from 'ember-flexberry-data/mixins/adapter';
+import EmberFlexberryDataModel from 'ember-flexberry-data/models/model';
+import { attr } from 'ember-flexberry-data/utils/attributes';
+import OdataSerializer from 'ember-flexberry-data/serializers/odata';
+import Condition from 'ember-flexberry-data/query/condition';
+import FilterOperator from 'ember-flexberry-data/query/filter-operator';
+
+import {
+  SimplePredicate,
+  ComplexPredicate,
+  StringPredicate,
+  GeometryPredicate,
+  NotPredicate,
+} from 'ember-flexberry-data/query/predicate';
+
+import QueryBuilder from 'ember-flexberry-data/query/builder';
 
 /**
   For batch reading
@@ -384,7 +398,7 @@ export default BaseVectorLayer.extend({
     return new Promise((resolve, reject) => {
       let obj = this.get('_adapterStoreModelProjectionGeom');
 
-      let queryBuilder = new Builder(obj.store)
+      let queryBuilder = new QueryBuilder(obj.store)
         .from(obj.modelName)
         .selectByProjection(obj.projectionName);
 
@@ -437,7 +451,7 @@ export default BaseVectorLayer.extend({
   **/
   identify(e) {
     let geometryField = this.get('geometryField') || 'geometry';
-    let pred = new Query.GeometryPredicate(geometryField);
+    let pred = new GeometryPredicate(geometryField);
     let predicate = pred.intersects(e.polygonLayer.toEWKT(this.get('crs')));
     let featuresPromise = this._getFeature(predicate, null, true);
     return featuresPromise;
@@ -485,9 +499,9 @@ export default BaseVectorLayer.extend({
             let layerPropertyType = typeof layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
             let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
             if (layerPropertyType !== 'string' || (layerPropertyType === 'object' && layerPropertyValue instanceof Date)) {
-              equals.push(new Query.SimplePredicate(field, Query.FilterOperator.Eq, e.searchOptions.queryString));
+              equals.push(new SimplePredicate(field, FilterOperator.Eq, e.searchOptions.queryString));
             } else {
-              equals.push(new Query.StringPredicate(field).contains(e.searchOptions.queryString));
+              equals.push(new StringPredicate(field).contains(e.searchOptions.queryString));
             }
           }
         });
@@ -500,7 +514,7 @@ export default BaseVectorLayer.extend({
     } else if (equals.length === 1) {
       filter = equals[0];
     } else {
-      filter = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
+      filter = new ComplexPredicate(Condition.Or, ...equals);
     }
 
     let featuresPromise = this._getFeature(filter, e.searchOptions.maxResultsCount);
@@ -529,12 +543,12 @@ export default BaseVectorLayer.extend({
         if (equals.length === 1) {
           linkEquals.pushObject(equals[0]);
         } else {
-          linkEquals.pushObject(new Query.ComplexPredicate(Query.Condition.And, ...equals));
+          linkEquals.pushObject(new ComplexPredicate(Condition.And, ...equals));
         }
       }
     });
 
-    let filter = linkEquals.length === 1 ? linkEquals[0] : new Query.ComplexPredicate(Query.Condition.Or, ...linkEquals);
+    let filter = linkEquals.length === 1 ? linkEquals[0] : new ComplexPredicate(Condition.Or, ...linkEquals);
 
     let featuresPromise = this._getFeature(filter);
 
@@ -557,16 +571,16 @@ export default BaseVectorLayer.extend({
       if (isArray(propertyValue)) {
         let propertyEquals = A();
         propertyValue.forEach((value) => {
-          propertyEquals.pushObject(new Query.SimplePredicate(property, Query.FilterOperator.Eq, value));
+          propertyEquals.pushObject(new SimplePredicate(property, FilterOperator.Eq, value));
         });
 
         if (propertyEquals.length === 1) {
           equals.pushObject(propertyEquals[0]);
         } else {
-          equals.pushObject(new Query.ComplexPredicate(Query.Condition.Or, ...propertyEquals));
+          equals.pushObject(new ComplexPredicate(Condition.Or, ...propertyEquals));
         }
       } else {
-        equals.pushObject(new Query.SimplePredicate(property, Query.FilterOperator.Eq, propertyValue));
+        equals.pushObject(new SimplePredicate(property, FilterOperator.Eq, propertyValue));
       }
     });
 
@@ -689,7 +703,7 @@ export default BaseVectorLayer.extend({
       return;
     }
 
-    let modelAdapter = GisAdapter.extend(Projection.AdapterMixin, {
+    let modelAdapter = GisAdapter.extend(AdapterMixin, {
       host: odataUrl
     });
 
@@ -705,7 +719,7 @@ export default BaseVectorLayer.extend({
   */
   createModel(modelMixin) {
     let namespace = this.get('namespace');
-    let model = Projection.Model.extend(modelMixin);
+    let model = EmberFlexberryDataModel.extend(modelMixin);
     model.reopenClass({
       namespace: namespace
     });
@@ -726,7 +740,7 @@ export default BaseVectorLayer.extend({
     let modelProjection = {};
     if (projJson.length > 0) {
       projJson[0].attrs.forEach((attr) => {
-        modelProjection[attr.name] = Projection.attr('');
+        modelProjection[attr.name] = attr('');
       });
     }
 
@@ -777,7 +791,7 @@ export default BaseVectorLayer.extend({
       }
     });
 
-    let modelSerializer = Serializer.Odata.extend(serializer);
+    let modelSerializer = OdataSerializer.extend(serializer);
     return modelSerializer;
   },
 
@@ -1068,13 +1082,13 @@ export default BaseVectorLayer.extend({
             if (loadedFeatures.length > 0) {
               let equals = A();
               loadedFeatures.forEach((id) => {
-                equals.pushObject(new Query.SimplePredicate('id', Query.FilterOperator.Eq, id));
+                equals.pushObject(new SimplePredicate('id', FilterOperator.Eq, id));
               });
 
               if (equals.length === 1) {
                 return equals[0];
               } else {
-                return new Query.ComplexPredicate(Query.Condition.Or, ...equals);
+                return new ComplexPredicate(Condition.Or, ...equals);
               }
             }
 
@@ -1082,7 +1096,7 @@ export default BaseVectorLayer.extend({
           };
 
           let obj = this.get('_adapterStoreModelProjectionGeom');
-          let queryBuilder = new Builder(obj.store)
+          let queryBuilder = new QueryBuilder(obj.store)
             .from(obj.modelName)
             .selectByProjection(obj.projectionName);
 
@@ -1103,7 +1117,7 @@ export default BaseVectorLayer.extend({
             let alreadyLoaded = getLoadedFeatures(null);
             let filterEqOr = makeFilterEqOr(alreadyLoaded);
             if (!isNone(filterEqOr)) {
-              queryBuilder.where(this.addCustomFilter(new Query.NotPredicate(makeFilterEqOr(alreadyLoaded))));
+              queryBuilder.where(this.addCustomFilter(new NotPredicate(makeFilterEqOr(alreadyLoaded))));
             }
           }
 
@@ -1149,7 +1163,7 @@ export default BaseVectorLayer.extend({
       const store = this.get('store');
       const modelName = this.get('modelName');
       const projectionName = this.get('projectionName');
-      let queryBuilder = new Builder(store)
+      let queryBuilder = new QueryBuilder(store)
         .from(modelName)
         .selectByProjection(projectionName)
         .top(1)
@@ -1235,17 +1249,17 @@ export default BaseVectorLayer.extend({
           if (isArray(featureIds) && !isNone(featureIds)) {
             let equals = A();
             featureIds.forEach((id) => {
-              equals.pushObject(new Query.SimplePredicate('id', Query.FilterOperator.Eq, id));
+              equals.pushObject(new SimplePredicate('id', FilterOperator.Eq, id));
             });
 
-            let queryBuilder = new Builder(obj.store)
+            let queryBuilder = new QueryBuilder(obj.store)
               .from(obj.modelName)
               .selectByProjection(obj.projectionName);
 
             if (equals.length === 1) {
               queryBuilder.where(this.addCustomFilter(equals[0]));
             } else {
-              queryBuilder.where(this.addCustomFilter(new Query.ComplexPredicate(Query.Condition.Or, ...equals)));
+              queryBuilder.where(this.addCustomFilter(new ComplexPredicate(Condition.Or, ...equals)));
             }
 
             let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
@@ -1261,7 +1275,7 @@ export default BaseVectorLayer.extend({
               let count = res;
               let skip = 0;
               do {
-                let queryBuilder = new Builder(obj.store)
+                let queryBuilder = new QueryBuilder(obj.store)
                   .from(obj.modelName)
                   .selectByProjection(obj.projectionName)
                   .top(maxBatchFeatures)
@@ -1279,7 +1293,7 @@ export default BaseVectorLayer.extend({
               } while (count - maxBatchFeatures >= 0);
 
               if (count > 0) {
-                let queryBuilder = new Builder(obj.store)
+                let queryBuilder = new QueryBuilder(obj.store)
                   .from(obj.modelName)
                   .selectByProjection(obj.projectionName)
                   .top(count)
@@ -1371,8 +1385,8 @@ export default BaseVectorLayer.extend({
             return resolve('Features in bounds is already loaded');
           }
 
-          let queryOldBounds = new Query.GeometryPredicate(obj.geometryField);
-          oldPart = new Query.NotPredicate(queryOldBounds.intersects(loadedBounds.toEWKT(this.get('crs'))));
+          let queryOldBounds = new GeometryPredicate(obj.geometryField);
+          oldPart = new NotPredicate(queryOldBounds.intersects(loadedBounds.toEWKT(this.get('crs'))));
 
           let unionJsts = loadedBoundsJsts.union(boundsJsts);
           let geojsonWriter = new jsts.io.GeoJSONWriter();
@@ -1383,11 +1397,11 @@ export default BaseVectorLayer.extend({
 
         this.set('loadedBounds', loadedBounds);
 
-        let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
+        let queryNewBounds = new GeometryPredicate(obj.geometryField);
         let newPart = queryNewBounds.intersects(loadedBounds.toEWKT(this.get('crs')));
-        let filter = oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart;
+        let filter = oldPart ? new ComplexPredicate(Condition.And, oldPart, newPart) : newPart;
         let layerFilter = this.get('filter');
-        filter = isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
+        filter = isEmpty(layerFilter) ? filter : new ComplexPredicate(Condition.And, filter, layerFilter);
 
         promise = this._downloadFeaturesWithOrNotFilter(leafletObject, obj, filter);
       } else if (showExisting || (showExisting && showLayerObjects)) {
@@ -1407,7 +1421,7 @@ export default BaseVectorLayer.extend({
   },
 
   _downloadFeaturesWithOrNotFilter(leafletObject, obj, filter) {
-    let queryBuilder = new Builder(obj.store)
+    let queryBuilder = new QueryBuilder(obj.store)
       .from(obj.modelName)
       .selectByProjection(obj.projectionName);
 

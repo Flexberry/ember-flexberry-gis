@@ -7,10 +7,8 @@ import { isArray } from '@ember/array';
 import { inject as service } from '@ember/service';
 import BaseModeComponent from 'ember-flexberry-gis/components/layers-dialogs/layers-prototyping-modes/base';
 import layout from '../../../templates/components/layers-dialogs/layers-prototyping-modes/metadata-mode';
-import {
-  createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-laye
-} from-metadata';
-import { Query } from 'ember-flexberry-data';
+import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
+import QueryBuilder from 'ember-flexberry-data/query/builder';
 
 /**
   Component's CSS-classes names.
@@ -132,7 +130,7 @@ let MetadataModeComponent = BaseModeComponent.extend({
     this.set('_metadataIsLoading', true);
 
     let store = this.get('store');
-    let queryBuilder = new Query.Builder(store)
+    let queryBuilder = new QueryBuilder(store)
       .from('new-platform-flexberry-g-i-s-layer-metadata')
       .selectByProjection('LayerMetadataE');
 

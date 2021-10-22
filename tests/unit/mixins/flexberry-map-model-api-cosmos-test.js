@@ -4,14 +4,14 @@ import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
 import FlexberryMapModelApiCosmosMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api-cosmos';
-import {
-  createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-laye
-} from-metadata';
+import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
 import startApp from 'dummy/tests/helpers/start-app';
-import { Query } from 'ember-flexberry-data';
 import { module, test } from 'qunit';
 import sinon from 'sinon';
+
+import QueryBuilder from 'ember-flexberry-data/query/builder';
+import { ComplexPredicate, StringPredicate, GeographyPredicate } from 'ember-flexberry-data/query/predicate';
 
 let app;
 let store;
@@ -117,7 +117,7 @@ test('test method findCosmos for only with parameter feature', function(assert) 
 
   let subject = mapApiMixinObject.create({
     _getQueryBuilderLayerMetadata() {
-      return new Query.Builder(store, metadataModelName)
+      return new QueryBuilder(store, metadataModelName)
       .from(metadataModelName)
       .selectByProjection(metadataProjection);
     },
@@ -133,7 +133,7 @@ test('test method findCosmos for only with parameter feature', function(assert) 
     //Assert
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.GeographyPredicate);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof GeographyPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._attributePath, 'boundingBox');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._intersectsValue,
       'SRID=4326;POLYGON((30 10, 40 40, 20 40, 10 20, 30 10))');
@@ -166,7 +166,7 @@ test('test method findCosmos for only with parameter attributes one', function(a
 
   let subject = mapApiMixinObject.create({
     _getQueryBuilderLayerMetadata() {
-      return new Query.Builder(store, metadataModelName)
+      return new QueryBuilder(store, metadataModelName)
       .from(metadataModelName)
       .selectByProjection(metadataProjection);
     },
@@ -182,7 +182,7 @@ test('test method findCosmos for only with parameter attributes one', function(a
     //Assert
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.StringPredicate);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof StringPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._attributePath, 'anyText');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._containsValue, 'test');
     assert.equal(layers.length, 1);
@@ -214,7 +214,7 @@ test('test method findCosmos for only with parameter attributes two', function(a
 
   let subject = mapApiMixinObject.create({
     _getQueryBuilderLayerMetadata() {
-      return new Query.Builder(store, metadataModelName)
+      return new QueryBuilder(store, metadataModelName)
       .from(metadataModelName)
       .selectByProjection(metadataProjection);
     },
@@ -230,13 +230,13 @@ test('test method findCosmos for only with parameter attributes two', function(a
     //Assert
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.ComplexPredicate);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof ComplexPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._condition, 'or');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates.length, 2);
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof Query.StringPredicate);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof StringPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._attributePath, 'anyText');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._containsValue, 'test1');
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof Query.StringPredicate);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof StringPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'anyText');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'test2');
     assert.equal(layers.length, 1);
@@ -283,7 +283,7 @@ test('test method findCosmos for with feature and attributes', function(assert) 
 
   let subject = mapApiMixinObject.create({
     _getQueryBuilderLayerMetadata() {
-      return new Query.Builder(store, metadataModelName)
+      return new QueryBuilder(store, metadataModelName)
       .from(metadataModelName)
       .selectByProjection(metadataProjection);
     },
@@ -299,15 +299,15 @@ test('test method findCosmos for with feature and attributes', function(assert) 
     //Assert
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof Query.ComplexPredicate);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof ComplexPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._condition, 'and');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates.length, 2);
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof Query.GeographyPredicate);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof GeographyPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._attributePath, 'boundingBox');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._intersectsValue,
       'SRID=4326;POLYGON((29.999999999999964 9.999999999999961, 40 39.999999999999964, 19.999999999999964 39.99999999999997, ' +
       '10.000000000000059 19.999999999999943, 29.999999999999964 9.999999999999961))');
-    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof Query.StringPredicate);
+    assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof StringPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'anyText');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'test');
     assert.equal(layers.length, 1);
@@ -328,7 +328,7 @@ test('test method addLayerFromLayerMetadata', function(assert) {
   let subject = mapApiMixinObject.create({
     mapLayer: mapLayer,
     _getQueryBuilderLayerMetadata() {
-      return new Query.Builder(store, metadataModelName)
+      return new QueryBuilder(store, metadataModelName)
       .from(metadataModelName)
       .selectByProjection(metadataProjection);
     },
@@ -366,7 +366,7 @@ test('test method addLayerFromLayerMetadata not found layer', function(assert) {
   let hierarchy = A();
   let subject = mapApiMixinObject.create({
     _getQueryBuilderLayerMetadata() {
-      return new Query.Builder(store, metadataModelName)
+      return new QueryBuilder(store, metadataModelName)
       .from(metadataModelName)
       .selectByProjection(metadataProjection);
     },

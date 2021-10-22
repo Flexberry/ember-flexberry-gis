@@ -5,7 +5,9 @@
 import { isBlank } from '@ember/utils';
 
 import Mixin from '@ember/object/mixin';
-import { Query } from 'ember-flexberry-data';
+import Condition from 'ember-flexberry-data/query/condition';
+import FilterOperator from 'ember-flexberry-data/query/filter-operator';
+import { SimplePredicate, ComplexPredicate, StringPredicate, NotPredicate } from 'ember-flexberry-data/query/predicate';
 
 /**
   Odata filter parser mixin.
@@ -28,27 +30,27 @@ export default Mixin.create({
     switch (condition) {
       case '=':
         if (isBlank(value)) {
-          return new Query.SimplePredicate(field, Query.FilterOperator.Eq, null);
+          return new SimplePredicate(field, FilterOperator.Eq, null);
         }
 
-        return new Query.SimplePredicate(field, Query.FilterOperator.Eq, value);
+        return new SimplePredicate(field, FilterOperator.Eq, value);
       case '!=':
         if (isBlank(value)) {
-          return new Query.SimplePredicate(field, Query.FilterOperator.Neq, null);
+          return new SimplePredicate(field, FilterOperator.Neq, null);
         }
 
-        return new Query.ComplexPredicate(Query.Condition.Or, new Query.SimplePredicate(field, Query.FilterOperator.Neq, value),
-          new Query.SimplePredicate(field, Query.FilterOperator.Eq, null));
+        return new ComplexPredicate(Condition.Or, new SimplePredicate(field, FilterOperator.Neq, value),
+          new SimplePredicate(field, FilterOperator.Eq, null));
       case '>':
-        return new Query.SimplePredicate(field, Query.FilterOperator.Ge, value);
+        return new SimplePredicate(field, FilterOperator.Ge, value);
       case '<':
-        return new Query.SimplePredicate(field, Query.FilterOperator.Le, value);
+        return new SimplePredicate(field, FilterOperator.Le, value);
       case '>=':
-        return new Query.SimplePredicate(field, Query.FilterOperator.Geq, value);
+        return new SimplePredicate(field, FilterOperator.Geq, value);
       case '<=':
-        return new Query.SimplePredicate(field, Query.FilterOperator.Leq, value);
+        return new SimplePredicate(field, FilterOperator.Leq, value);
       case 'like':
-        return new Query.StringPredicate(field).contains(value);
+        return new StringPredicate(field).contains(value);
     }
   },
 
@@ -63,11 +65,11 @@ export default Mixin.create({
   parseFilterLogicalExpression(condition, properties) {
     switch (condition) {
       case 'and':
-        return new Query.ComplexPredicate(Query.Condition.And, ...properties);
+        return new ComplexPredicate(Condition.And, ...properties);
       case 'or':
-        return new Query.ComplexPredicate(Query.Condition.Or, ...properties);
+        return new ComplexPredicate(Condition.Or, ...properties);
       case 'not':
-        return new Query.NotPredicate(properties[0]);
+        return new NotPredicate(properties[0]);
     }
   }
 });

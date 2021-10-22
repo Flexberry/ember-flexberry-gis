@@ -3,7 +3,7 @@
 */
 
 import DS from 'ember-data';
-import { Serializer } from 'ember-flexberry-data';
+import OfflineSerializer from 'ember-flexberry-data/serializers/offline';
 
 /**
   Application offline serializer.
@@ -11,7 +11,7 @@ import { Serializer } from 'ember-flexberry-data';
   @class ApplicationOfflineSerializer
   @extends OfflineSerializer
 */
-export default Serializer.Offline.extend(DS.EmbeddedRecordsMixin, {
+export default OfflineSerializer.extend(DS.EmbeddedRecordsMixin, {
   attrs: {
   }
 });

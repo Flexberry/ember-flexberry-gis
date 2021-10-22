@@ -4,7 +4,6 @@ import $ from 'jquery';
 import { reject, Promise } from 'rsvp';
 import { isNone } from '@ember/utils';
 import Ember from 'ember';
-import { Projection, Adapter } from 'ember-flexberry-data';
 import ODataQueryAdapter from 'ember-flexberry-data/query/odata-adapter';
 import {
   getResponseMeta,
@@ -13,7 +12,10 @@ import {
 } from 'ember-flexberry-data/utils/batch-queries';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
-export default Adapter.Odata.extend(Projection.AdapterMixin, {
+import AdapterMixin from 'ember-flexberry-data/mixins/adapter';
+import OdataAdapter from 'ember-flexberry-data/adapters/odata';
+
+export default OdataAdapter.extend(AdapterMixin, {
   batchLoadModel(modelName, query, store) {
     if (isNone(modelName) || isNone(query)) {
       return reject();

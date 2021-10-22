@@ -2,8 +2,8 @@ import {
   Model as LinkParameterMixin,
   defineProjections
 } from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-link-parameter';
-import { Projection } from 'ember-flexberry-data';
-import { Offline } from 'ember-flexberry-data';
+import EmberFlexberryDataModel from 'ember-flexberry-data/models/model';
+import OfflineModelMixin from 'ember-flexberry-data/mixins/offline-model';
 
 /**
   Link parameter model.
@@ -13,7 +13,7 @@ import { Offline } from 'ember-flexberry-data';
   @uses OfflineModelMixin
   @uses NewPlatformFlexberryGISLinkParameterModelMixin
 */
-let Model = Projection.Model.extend(Offline.ModelMixin, LinkParameterMixin, {
+let Model = EmberFlexberryDataModel.extend(OfflineModelMixin, LinkParameterMixin, {
 });
 
 defineProjections(Model);

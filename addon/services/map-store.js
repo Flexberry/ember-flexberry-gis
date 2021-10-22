@@ -1,12 +1,9 @@
 import { isNone } from '@ember/utils';
 import Service, { inject as service } from '@ember/service';
-import { Query } from 'ember-flexberry-data';
 import epsg3857 from '../coordinate-reference-systems/epsg-3857';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
-const {
-  Builder
-} = Query;
+import QueryBuilder from 'ember-flexberry-data/query/builder';
 
 /**
   Service for interact with maps
@@ -92,7 +89,7 @@ export default Service.extend({
   getMapById(mapId, modelProjName) {
     modelProjName = isNone(modelProjName) ? this.get('_defaultModelProjName') : modelProjName;
     let store = this.get('store');
-    let builder = new Builder(store)
+    let builder = new QueryBuilder(store)
       .from(this.get('_mapModelName'))
       .selectByProjection(modelProjName)
       .byId(mapId);

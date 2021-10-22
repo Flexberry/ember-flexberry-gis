@@ -10,10 +10,13 @@ import DS from 'ember-data';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import startApp from 'dummy/tests/helpers/start-app';
-import { Query, Projection } from 'ember-flexberry-data';
 import sinon from 'sinon';
-import { Serializer } from 'ember-flexberry-data';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
+
+import EmberFlexberryDataModel from 'ember-flexberry-data/models/model';
+import { attr } from 'ember-flexberry-data/utils/attributes';
+import OdataSerializer from 'ember-flexberry-data/serializers/odata';
+import { SimplePredicate, GeometryPredicate } from 'ember-flexberry-data/query/predicate';
 
 let app;
 let options;
@@ -33,13 +36,13 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
       shape: DS.attr('json')
     });
 
-    let testModel = Projection.Model.extend(testModelMixin);
+    let testModel = EmberFlexberryDataModel.extend(testModelMixin);
     testModel.defineProjection('TestModelL', 'test-model', {
-      name: Projection.attr(''),
-      shape: Projection.attr('')
+      name: attr(''),
+      shape: attr('')
     });
 
-    let testSerializer = Serializer.Odata.extend({
+    let testSerializer = OdataSerializer.extend({
       primaryKey: '__PrimaryKey'
     });
 
@@ -452,7 +455,7 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
 
       // assert
       let firstValue = result[0];
-      assert.ok(firstValue instanceof Query.SimplePredicate);
+      assert.ok(firstValue instanceof SimplePredicate);
       assert.equal(firstValue.toString(), '(testField eq id1)');
       done();
     });
@@ -590,7 +593,7 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
 
       component.identify(e);
 
-      assert.ok(spyGetFeature.getCall(0).args[0] instanceof Query.GeometryPredicate);
+      assert.ok(spyGetFeature.getCall(0).args[0] instanceof GeometryPredicate);
       assert.equal(spyGetFeature.getCall(0).args[0]._attributePath, 'shape');
       assert.equal(spyGetFeature.getCall(0).args[0]._intersectsValue,
         'SRID=4326;POLYGON((10 30, 40 40, 40 20, 20 10, 10 30))');

@@ -1,10 +1,6 @@
-/**
-  @module ember-flexberry-gis-dummy
-*/
-
-import { Projection } from 'ember-flexberry-data';
 import config from '../config/environment';
 import GisAdapter from 'ember-flexberry-gis/adapters/odata';
+import AdapterMixin from 'ember-flexberry-data/mixins/adapter';
 
 /**
   Application adapter.
@@ -13,7 +9,7 @@ import GisAdapter from 'ember-flexberry-gis/adapters/odata';
   @extends OdataAdapter
   @uses AdapterMixin
 */
-export default GisAdapter.extend(Projection.AdapterMixin, {
+export default GisAdapter.extend(AdapterMixin, {
   /**
     Host address to which all requests will be sent.
 

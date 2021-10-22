@@ -17,7 +17,7 @@ module('Unit | Mixin | dynamic-properties mixin', function() {
         ClassWithDynamicPropertiesMixin.create({ dynamicProperties: wrongDynamicProperties });
       } catch (ex) {
         assert.strictEqual(
-          (/wrong\s*type\s*of\s*.*dynamicProperties.*/gi).test(ex.message),
+          (((((/wrong\s*type\s*of\s*.*dynamicProperties.*/gi))))).test(ex.message),
           true,
           'Throws assertion failed exception if specified \'dynamicProperties\' property is \'' + typeOf(wrongDynamicProperties) + '\'');
       }

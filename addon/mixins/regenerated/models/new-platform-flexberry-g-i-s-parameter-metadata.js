@@ -6,7 +6,7 @@ import $ from 'jquery';
 
 import Mixin from '@ember/object/mixin';
 import DS from 'ember-data';
-import { Projection } from 'ember-flexberry-data';
+import { attr, belongsTo } from 'ember-flexberry-data/utils/attributes';
 
 /**
   Mixin containing parameter metadata model attributes, relations & projections.
@@ -41,22 +41,22 @@ export let Model = Mixin.create({
 
 export let defineProjections = function (modelClass) {
   modelClass.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-parameter-metadata', {
-    objectField: Projection.attr('Поле объекта'),
-    layerField: Projection.attr('Поле слоя'),
-    expression: Projection.attr('Выражение'),
-    queryKey: Projection.attr('Ключ запроса'),
-    linkField: Projection.attr('Поле связи'),
-    layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
+    objectField: attr('Поле объекта'),
+    layerField: attr('Поле слоя'),
+    expression: attr('Выражение'),
+    queryKey: attr('Ключ запроса'),
+    linkField: attr('Поле связи'),
+    layerLink: belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
     })
   });
 
   modelClass.defineProjection('ParameterMetadataD', 'new-platform-flexberry-g-i-s-parameter-metadata', {
-    objectField: Projection.attr('Поле объекта'),
-    layerField: Projection.attr('Поле слоя'),
-    expression: Projection.attr('Выражение', { hidden: true }),
-    queryKey: Projection.attr('Ключ запроса'),
-    linkField: Projection.attr('Поле связи', { hidden: true }),
-    layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
+    objectField: attr('Поле объекта'),
+    layerField: attr('Поле слоя'),
+    expression: attr('Выражение', { hidden: true }),
+    queryKey: attr('Ключ запроса'),
+    linkField: attr('Поле связи', { hidden: true }),
+    layerLink: belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
     }, { hidden: true })
   });
 };

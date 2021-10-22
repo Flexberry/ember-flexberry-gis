@@ -13,10 +13,11 @@ import {
 import { Promise, all } from 'rsvp';
 import { inject as service } from '@ember/service';
 import EditFormRoute from 'ember-flexberry/routes/edit-form';
-import {
-  createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-laye
-} from-metadata';
-import { Query } from 'ember-flexberry-data';
+import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
+import QueryBuilder from 'ember-flexberry-data/query/builder';
+import Condition from 'ember-flexberry-data/query/condition';
+import FilterOperator from 'ember-flexberry-data/query/filter-operator';
+import { SimplePredicate, ComplexPredicate } from 'ember-flexberry-data/query/predicate';
 
 /**
   Edit map route.
@@ -215,16 +216,16 @@ export default EditFormRoute.extend({
       return null;
     }
 
-    let queryBuilder = new Query.Builder(this.get('store'))
+    let queryBuilder = new QueryBuilder(this.get('store'))
       .from(this.get('metadataModelName'))
       .selectByProjection(this.get('metadataProjection'));
 
     let conditions = metadata.split(',').map((item) => {
       let id = item.trim().toLowerCase();
-      return new Query.SimplePredicate('id', Query.FilterOperator.Eq, id);
+      return new SimplePredicate('id', FilterOperator.Eq, id);
     });
     if (isArray(conditions)) {
-      let condition = conditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.Or, ...conditions) : conditions[0];
+      let condition = conditions.length > 1 ? new ComplexPredicate(Condition.Or, ...conditions) : conditions[0];
       queryBuilder = queryBuilder.where(condition);
     }
 

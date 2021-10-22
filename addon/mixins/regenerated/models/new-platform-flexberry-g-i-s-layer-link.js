@@ -6,7 +6,7 @@ import $ from 'jquery';
 
 import Mixin from '@ember/object/mixin';
 import DS from 'ember-data';
-import { Projection } from 'ember-flexberry-data';
+import { attr, belongsTo, hasMany } from 'ember-flexberry-data/utils/attributes';
 
 /**
   Mixin containing layer link model attributes, relations & projections.
@@ -36,69 +36,69 @@ export let Model = Mixin.create({
 });
 export let defineProjections = function (modelClass) {
   modelClass.defineProjection('LayerLinkD', 'new-platform-flexberry-g-i-s-layer-link', {
-    mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Тип', {
-      typeName: Projection.attr('Тип объекта', { hidden: true }),
-      listForm: Projection.attr('Списковая форма', { hidden: true }),
-      editForm: Projection.attr('Форма редактирования', { hidden: true })
+    mapObjectSetting: belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Тип', {
+      typeName: attr('Тип объекта', { hidden: true }),
+      listForm: attr('Списковая форма', { hidden: true }),
+      editForm: attr('Форма редактирования', { hidden: true })
     }),
-    layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
-      name: Projection.attr('Слой', { hidden: true })
+    layer: belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
+      name: attr('Слой', { hidden: true })
     }, { hidden: true }),
-    allowShow: Projection.attr('Показывать'),
-    parameters: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', 'Параметры связи', {
-      objectField: Projection.attr('Поле объекта'),
-      layerField: Projection.attr('Поле слоя'),
-      expression: Projection.attr('Выражение', { hidden: true }),
-      queryKey: Projection.attr('Ключ запроса', { hidden: true }),
-      linkField: Projection.attr('Ключ связи', { hidden: true }),
-      layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
+    allowShow: attr('Показывать'),
+    parameters: hasMany('new-platform-flexberry-g-i-s-link-parameter', 'Параметры связи', {
+      objectField: attr('Поле объекта'),
+      layerField: attr('Поле слоя'),
+      expression: attr('Выражение', { hidden: true }),
+      queryKey: attr('Ключ запроса', { hidden: true }),
+      linkField: attr('Ключ связи', { hidden: true }),
+      layerLink: belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
 
       })
     })
   });
 
   modelClass.defineProjection('LayerLinkE', 'new-platform-flexberry-g-i-s-layer-link', {
-    allowShow: Projection.attr('Показывать'),
-    layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Слой карты', {
+    allowShow: attr('Показывать'),
+    layer: belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Слой карты', {
     }),
-    mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
+    mapObjectSetting: belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
     })
   });
   modelClass.defineProjection('LayerLinkI', 'new-platform-flexberry-g-i-s-layer-link', {
-    mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
-      listForm: Projection.attr(''),
-      editForm: Projection.attr('')
+    mapObjectSetting: belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
+      listForm: attr(''),
+      editForm: attr('')
     }, { hidden: true }),
-    allowShow: Projection.attr('Показывать'),
-    layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
+    allowShow: attr('Показывать'),
+    layer: belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
 
     }),
-    parameters: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', 'Параметры связи', {
-      objectField: Projection.attr('Поле объекта'),
-      layerField: Projection.attr('Поле слоя'),
-      expression: Projection.attr('Выражение', { hidden: true }),
-      queryKey: Projection.attr('Ключ запроса', { hidden: true }),
-      linkField: Projection.attr('Ключ связи', { hidden: true }),
-      layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
+    parameters: hasMany('new-platform-flexberry-g-i-s-link-parameter', 'Параметры связи', {
+      objectField: attr('Поле объекта'),
+      layerField: attr('Поле слоя'),
+      expression: attr('Выражение', { hidden: true }),
+      queryKey: attr('Ключ запроса', { hidden: true }),
+      linkField: attr('Ключ связи', { hidden: true }),
+      layerLink: belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
 
       })
     })
   });
   modelClass.defineProjection('LayerLinkQ', 'new-platform-flexberry-g-i-s-layer-link', {
-    allowShow: Projection.attr('Показывать'),
-    layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
+    allowShow: attr('Показывать'),
+    layer: belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
 
     }),
-    mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
+    mapObjectSetting: belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
 
     }),
-    parameters: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', 'Параметры связи', {
-      objectField: Projection.attr('Поле объекта'),
-      layerField: Projection.attr('Поле слоя'),
-      expression: Projection.attr('Выражение', { hidden: true }),
-      queryKey: Projection.attr('Ключ запроса', { hidden: true }),
-      linkField: Projection.attr('Ключ связи', { hidden: true }),
-      layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
+    parameters: hasMany('new-platform-flexberry-g-i-s-link-parameter', 'Параметры связи', {
+      objectField: attr('Поле объекта'),
+      layerField: attr('Поле слоя'),
+      expression: attr('Выражение', { hidden: true }),
+      queryKey: attr('Ключ запроса', { hidden: true }),
+      linkField: attr('Ключ связи', { hidden: true }),
+      layerLink: belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
 
       })
     })

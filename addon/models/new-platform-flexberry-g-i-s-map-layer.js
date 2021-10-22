@@ -10,10 +10,10 @@ import {
   Model as MapLayerMixin,
   defineProjections
 } from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map-layer';
-import { Projection } from 'ember-flexberry-data';
-import { Offline } from 'ember-flexberry-data';
 import LayerModelMixin from '../mixins/layer-model';
 import LeafletCrsMixin from '../mixins/leaflet-crs';
+import EmberFlexberryDataModel from 'ember-flexberry-data/models/model';
+import OfflineModelMixin from 'ember-flexberry-data/mixins/offline-model';
 
 /**
   Map layer model.
@@ -25,7 +25,7 @@ import LeafletCrsMixin from '../mixins/leaflet-crs';
   @uses LayerModelMixin
   @uses LeafletCrsMixin
 */
-let Model = Projection.Model.extend(Offline.ModelMixin, MapLayerMixin, LayerModelMixin, LeafletCrsMixin, {
+let Model = EmberFlexberryDataModel.extend(OfflineModelMixin, MapLayerMixin, LayerModelMixin, LeafletCrsMixin, {
   /**
     Leaflet layer related to layer model.
 

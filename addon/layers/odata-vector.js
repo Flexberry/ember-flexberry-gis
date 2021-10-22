@@ -10,7 +10,7 @@ import { set, get } from '@ember/object';
 import $ from 'jquery';
 import VectorLayer from 'ember-flexberry-gis/layers/-private/vector';
 import OdataFilterParserMixin from '../mixins/odata-filter-parser';
-import { Query } from 'ember-flexberry-data';
+import { GeometryPredicate, NotPredicate } from 'ember-flexberry-data/query/predicate';
 
 /**
   Class describing odata vector layer metadata.
@@ -141,11 +141,11 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
     switch (condition) {
       case 'in':
       case 'not in':
-        let geomPredicate = new Query.GeometryPredicate(geometryField);
+        let geomPredicate = new GeometryPredicate(geometryField);
         let geom = L.geoJSON(geoJSON).getLayers()[0].toEWKT(this.get('crs'));
         let filter = geomPredicate.intersects(geom);
 
-        return condition === 'in' ? filter : new Query.NotPredicate(filter);
+        return condition === 'in' ? filter : new NotPredicate(filter);
     }
   }
 });

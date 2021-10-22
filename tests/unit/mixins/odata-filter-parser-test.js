@@ -1,7 +1,8 @@
 import EmberObject from '@ember/object';
 import OdataFilterParserMixin from 'ember-flexberry-gis/mixins/odata-filter-parser';
 import { module, test } from 'qunit';
-import { Query } from 'ember-flexberry-data';
+import FilterOperator from 'ember-flexberry-data/query/filter-operator';
+import { SimplePredicate, ComplexPredicate, StringPredicate, NotPredicate } from 'ember-flexberry-data/query/predicate';
 
 module('Unit | Mixin | odata filter parser', function() {
   let OdataFilterParserObject = EmberObject.extend(OdataFilterParserMixin);
@@ -17,7 +18,7 @@ module('Unit | Mixin | odata filter parser', function() {
 
     let filter = subject.parseFilterConditionExpression('field', '=', '');
 
-    assert.ok(filter instanceof Query.SimplePredicate);
+    assert.ok(filter instanceof SimplePredicate);
     assert.equal(filter._attributePath, 'field');
     assert.equal(filter._operator, 'eq');
     assert.equal(filter._value, null);
@@ -29,7 +30,7 @@ module('Unit | Mixin | odata filter parser', function() {
 
     let filter = subject.parseFilterConditionExpression('field', '=', 'test');
 
-    assert.ok(filter instanceof Query.SimplePredicate);
+    assert.ok(filter instanceof SimplePredicate);
     assert.equal(filter._attributePath, 'field');
     assert.equal(filter._operator, 'eq');
     assert.equal(filter._value, 'test');
@@ -41,7 +42,7 @@ module('Unit | Mixin | odata filter parser', function() {
 
     let filter = subject.parseFilterConditionExpression('field', '!=', null);
 
-    assert.ok(filter instanceof Query.SimplePredicate);
+    assert.ok(filter instanceof SimplePredicate);
     assert.equal(filter._attributePath, 'field');
     assert.equal(filter._operator, 'neq');
     assert.equal(filter._value, null);
@@ -53,7 +54,7 @@ module('Unit | Mixin | odata filter parser', function() {
 
     let filter = subject.parseFilterConditionExpression('field', '!=', 'test');
 
-    assert.ok(filter instanceof Query.ComplexPredicate);
+    assert.ok(filter instanceof ComplexPredicate);
     assert.equal(filter._condition, 'or');
     assert.equal(filter._predicates.length, 2);
     assert.equal(filter._predicates[0]._attributePath, 'field');
@@ -70,7 +71,7 @@ module('Unit | Mixin | odata filter parser', function() {
 
     let filter = subject.parseFilterConditionExpression('field', '>', 10);
 
-    assert.ok(filter instanceof Query.SimplePredicate);
+    assert.ok(filter instanceof SimplePredicate);
     assert.equal(filter._attributePath, 'field');
     assert.equal(filter._operator, 'ge');
     assert.equal(filter._value, 10);
@@ -82,7 +83,7 @@ module('Unit | Mixin | odata filter parser', function() {
 
     let filter = subject.parseFilterConditionExpression('field', '<', 10);
 
-    assert.ok(filter instanceof Query.SimplePredicate);
+    assert.ok(filter instanceof SimplePredicate);
     assert.equal(filter._attributePath, 'field');
     assert.equal(filter._operator, 'le');
     assert.equal(filter._value, 10);
@@ -94,7 +95,7 @@ module('Unit | Mixin | odata filter parser', function() {
 
     let filter = subject.parseFilterConditionExpression('field', '>=', 10);
 
-    assert.ok(filter instanceof Query.SimplePredicate);
+    assert.ok(filter instanceof SimplePredicate);
     assert.equal(filter._attributePath, 'field');
     assert.equal(filter._operator, 'geq');
     assert.equal(filter._value, 10);
@@ -106,7 +107,7 @@ module('Unit | Mixin | odata filter parser', function() {
 
     let filter = subject.parseFilterConditionExpression('field', '<=', 10);
 
-    assert.ok(filter instanceof Query.SimplePredicate);
+    assert.ok(filter instanceof SimplePredicate);
     assert.equal(filter._attributePath, 'field');
     assert.equal(filter._operator, 'leq');
     assert.equal(filter._value, 10);
@@ -118,7 +119,7 @@ module('Unit | Mixin | odata filter parser', function() {
 
     let filter = subject.parseFilterConditionExpression('field', 'like', 10);
 
-    assert.ok(filter instanceof Query.StringPredicate);
+    assert.ok(filter instanceof StringPredicate);
     assert.equal(filter._attributePath, 'field');
     assert.equal(filter._containsValue, 10);
   });
@@ -127,11 +128,11 @@ module('Unit | Mixin | odata filter parser', function() {
     assert.expect(3);
     let subject = OdataFilterParserObject.create({});
 
-    let predicates = [new Query.SimplePredicate('field', Query.FilterOperator.Eq, 'test1'),
-      new Query.SimplePredicate('field', Query.FilterOperator.Eq, 'test2')];
+    let predicates = [new SimplePredicate('field', FilterOperator.Eq, 'test1'),
+      new SimplePredicate('field', FilterOperator.Eq, 'test2')];
     let filter = subject.parseFilterLogicalExpression('and', predicates);
 
-    assert.ok(filter instanceof Query.ComplexPredicate);
+    assert.ok(filter instanceof ComplexPredicate);
     assert.equal(filter._condition, 'and');
     assert.equal(filter._predicates.length, 2);
   });
@@ -140,11 +141,11 @@ module('Unit | Mixin | odata filter parser', function() {
     assert.expect(3);
     let subject = OdataFilterParserObject.create({});
 
-    let predicates = [new Query.SimplePredicate('field', Query.FilterOperator.Eq, 'test1'),
-      new Query.SimplePredicate('field', Query.FilterOperator.Eq, 'test2')];
+    let predicates = [new SimplePredicate('field', FilterOperator.Eq, 'test1'),
+      new SimplePredicate('field', FilterOperator.Eq, 'test2')];
     let filter = subject.parseFilterLogicalExpression('or', predicates);
 
-    assert.ok(filter instanceof Query.ComplexPredicate);
+    assert.ok(filter instanceof ComplexPredicate);
     assert.equal(filter._condition, 'or');
     assert.equal(filter._predicates.length, 2);
   });
@@ -153,11 +154,11 @@ module('Unit | Mixin | odata filter parser', function() {
     assert.expect(2);
     let subject = OdataFilterParserObject.create({});
 
-    let predicates = [new Query.SimplePredicate('field', Query.FilterOperator.Eq, 'test1'),
-      new Query.SimplePredicate('field', Query.FilterOperator.Eq, 'test2')];
+    let predicates = [new SimplePredicate('field', FilterOperator.Eq, 'test1'),
+      new SimplePredicate('field', FilterOperator.Eq, 'test2')];
     let filter = subject.parseFilterLogicalExpression('not', predicates);
 
-    assert.ok(filter instanceof Query.NotPredicate);
-    assert.ok(filter._predicate instanceof Query.SimplePredicate);
+    assert.ok(filter instanceof NotPredicate);
+    assert.ok(filter._predicate instanceof SimplePredicate);
   });
 });

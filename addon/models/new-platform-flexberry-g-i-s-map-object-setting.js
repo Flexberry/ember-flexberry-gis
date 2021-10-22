@@ -6,8 +6,8 @@ import {
   Model as MapObjectSettingMixin,
   defineProjections
 } from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map-object-setting';
-import { Projection } from 'ember-flexberry-data';
-import { Offline } from 'ember-flexberry-data';
+import EmberFlexberryDataModel from 'ember-flexberry-data/models/model';
+import OfflineModelMixin from 'ember-flexberry-data/mixins/offline-model';
 
 /**
   Map object setting model.
@@ -17,7 +17,7 @@ import { Offline } from 'ember-flexberry-data';
   @uses OfflineModelMixin
   @uses NewPlatformFlexberryGISMapObjectSettingModelMixin
 */
-let Model = Projection.Model.extend(Offline.ModelMixin, MapObjectSettingMixin, {
+let Model = EmberFlexberryDataModel.extend(OfflineModelMixin, MapObjectSettingMixin, {
 });
 
 defineProjections(Model);
