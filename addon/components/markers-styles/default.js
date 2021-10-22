@@ -24,5 +24,5 @@ export default Component.extend({
     @type Object
     @default null
   */
-  styleSettings: null
+  styleSettings: null,
 });

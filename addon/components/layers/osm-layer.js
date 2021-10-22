@@ -12,5 +12,5 @@ export default TileLayer.extend({
 
   attribution: '© <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
 
-  noWrap: true
+  noWrap: true,
 });

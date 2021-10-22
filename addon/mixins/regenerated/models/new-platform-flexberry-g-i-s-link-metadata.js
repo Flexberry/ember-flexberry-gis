@@ -13,18 +13,18 @@ import { attr, belongsTo, hasMany } from 'ember-flexberry-data/utils/attributes'
   @class NewPlatformFlexberyGISLinkMetadataModelMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export let Model = Mixin.create({
+export const Model = Mixin.create({
   allowShow: DS.attr('boolean'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),
   editTime: DS.attr('date'),
   editor: DS.attr('string'),
-  mapObjectSetting: DS.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', { inverse: null, async: false }),
-  layer: DS.belongsTo('new-platform-flexberry-g-i-s-layer-metadata', { inverse: 'linkMetadata', async: false }),
-  parameters: DS.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', { inverse: 'layerLink', async: false }),
+  mapObjectSetting: DS.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', { inverse: null, async: false, }),
+  layer: DS.belongsTo('new-platform-flexberry-g-i-s-layer-metadata', { inverse: 'linkMetadata', async: false, }),
+  parameters: DS.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', { inverse: 'layerLink', async: false, }),
 });
 
-export let ValidationRules = {
+export const ValidationRules = {
   MapObjectSetting: validator('presence', {
     presence: true,
     message: 'MapObjectSetting is required',
@@ -35,7 +35,7 @@ export let ValidationRules = {
   }),
 };
 
-export let defineProjections = function (modelClass) {
+export const defineProjections = function (modelClass) {
   modelClass.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-link-metadata', {
     allowShow: attr('Показывать'),
     layer: belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
@@ -49,16 +49,16 @@ export let defineProjections = function (modelClass) {
       queryKey: attr('Ключ запроса'),
       linkField: attr('Поле связи'),
       layerLink: belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
-      })
-    })
+      }),
+    }),
   });
   modelClass.defineProjection('LinkMetadataD', 'new-platform-flexberry-g-i-s-link-metadata', {
     layer: belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
-      name: attr('', { hidden: true })
-    }, { displayMemberPath: 'name' }),
+      name: attr('', { hidden: true, }),
+    }, { displayMemberPath: 'name', }),
     mapObjectSetting: belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
-      typeName: attr('', { hidden: true })
-    }, { displayMemberPath: 'typeName' }),
+      typeName: attr('', { hidden: true, }),
+    }, { displayMemberPath: 'typeName', }),
     allowShow: attr('Показывать'),
     parameters: hasMany('new-platform-flexberry-g-i-s-parameter-metadata', 'Параметры связи', {
       objectField: attr('Поле объекта'),
@@ -67,7 +67,7 @@ export let defineProjections = function (modelClass) {
       queryKey: attr('Ключ запроса'),
       linkField: attr('Поле связи'),
       layerLink: belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
-      }, { hidden: true })
-    })
+      }, { hidden: true, }),
+    }),
   });
 };

@@ -9,5 +9,5 @@ export default {
   'results-header-select': 'Select',
   'results-header-name': 'Name',
   'results-header-position': 'Position',
-  'apply': 'Apply'
+  apply: 'Apply',
 };

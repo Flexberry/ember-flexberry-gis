@@ -37,21 +37,19 @@ export default GeocoderBaseLayer.extend({
     @returns {Object[]} Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
   */
   parseGeocodingResults(results) {
-    let matches = get(results || { matches: [] }, 'matches');
+    const matches = get(results || { matches: [], }, 'matches');
 
-    let features = A(matches).map((match) => {
-      return {
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
+    const features = A(matches).map((match) => ({
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
 
-          // AS GeoJSON specification declares, point coordinates are in x, y order
-          // (easting, northing for projected coordinates, longitude, latitude for geographic coordinates).
-          coordinates: [get(match, 'lon'), get(match, 'lat')]
-        },
-        properties: match
-      };
-    });
+        // AS GeoJSON specification declares, point coordinates are in x, y order
+        // (easting, northing for projected coordinates, longitude, latitude for geographic coordinates).
+        coordinates: [get(match, 'lon'), get(match, 'lat')],
+      },
+      properties: match,
+    }));
 
     return features;
   },
@@ -79,20 +77,20 @@ export default GeocoderBaseLayer.extend({
   */
   executeGeocoding(options) {
     options = options || {};
-    let queryString = get(options, 'searchOptions.queryString');
-    let searchType = get(options, 'searchOptions.searchType') || 'all';
-    let maxResultsCount = get(options, 'searchOptions.maxResultsCount');
-    let latlng = get(options, 'latlng');
+    const queryString = get(options, 'searchOptions.queryString');
+    const searchType = get(options, 'searchOptions.searchType') || 'all';
+    const maxResultsCount = get(options, 'searchOptions.maxResultsCount');
+    const latlng = get(options, 'latlng');
 
-    let osmRuBaseUrl = this.get('url');
-    let requestUrl = `${osmRuBaseUrl}?q=${queryString}&` +
-      `st=${searchType}&` +
-      `cnt=${maxResultsCount}&` +
-      `lat=${latlng.lat}&lon=${latlng.lng}`;
+    const osmRuBaseUrl = this.get('url');
+    const requestUrl = `${osmRuBaseUrl}?q=${queryString}&`
+      + `st=${searchType}&`
+      + `cnt=${maxResultsCount}&`
+      + `lat=${latlng.lat}&lon=${latlng.lng}`;
 
     return new Promise((resolve, reject) => {
       run(() => {
-        $.ajax(requestUrl, { dataType: 'text' }).done((data, textStatus, jqXHR) => {
+        $.ajax(requestUrl, { dataType: 'text', }).done((data, textStatus, jqXHR) => {
           // For some reason jQuery fails when parsing OSM.ru response text into JSON,
           // even when request where successful.
           // So we use dataType 'text' & parse response manually.
@@ -126,5 +124,5 @@ export default GeocoderBaseLayer.extend({
   */
   executeReverseGeocoding(options) {
     // OSM.ru layer doesn't implement reverse geocoding.
-  }
+  },
 });

@@ -6,7 +6,9 @@ import { A, isArray } from '@ember/array';
 
 import { getOwner } from '@ember/application';
 import { hash, Promise, resolve } from 'rsvp';
-import { computed, set, observer, get } from '@ember/object';
+import {
+  computed, set, observer, get
+} from '@ember/object';
 import { isNone, isPresent, typeOf } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -95,16 +97,16 @@ export default Component.extend(
       @type Object
     */
     defaultLeafletOptionsCallbacks: {
-      coordsToLatLng: function (coords) {
-        let crs = this.get('crs');
-        let point = new L.Point(coords[0], coords[1]);
-        let latlng = crs.projection.unproject(point);
+      coordsToLatLng(coords) {
+        const crs = this.get('crs');
+        const point = new L.Point(coords[0], coords[1]);
+        const latlng = crs.projection.unproject(point);
         if (!isNone(coords[2])) {
           latlng.alt = coords[2];
         }
 
         return latlng;
-      }
+      },
     },
 
     /**
@@ -216,23 +218,23 @@ export default Component.extend(
       @private
     */
     _createPane(name) {
-      let leafletMap = this.get('leafletMap');
-      let pane = leafletMap.createPane(name);
-      let layer = this;
+      const leafletMap = this.get('leafletMap');
+      const pane = leafletMap.createPane(name);
+      const layer = this;
 
       L.DomEvent.on(pane, 'click', function (e) {
         if (e._stopped) { return; }
 
-        var target = e.target;
+        let { target, } = e;
 
         // Проблема с пробрасыванием кликов была только из-за введения разных canvas. Если клик попал на другой элемент, то работает стандартная логика
         if (target.tagName.toLowerCase() !== 'canvas') {
           return;
         }
 
-        let l = layer;
+        const l = layer;
         if (l.leafletMap.hasLayer(l._leafletObject) && checkMapZoomLayer(l)) {
-          var point = l.leafletMap.mouseEventToLayerPoint(e);
+          const point = l.leafletMap.mouseEventToLayerPoint(e);
 
           let intersect = false;
           if (l._leafletObject && typeof (l._leafletObject.eachLayer) === 'function') {
@@ -246,13 +248,13 @@ export default Component.extend(
           if (intersect) { return; }
         }
 
-        var ev = new MouseEvent(e.type, e);
-        let removed = { node: target, pointerEvents: target.style.pointerEvents };
+        const ev = new MouseEvent(e.type, e);
+        const removed = { node: target, pointerEvents: target.style.pointerEvents, };
         target.style.pointerEvents = 'none';
         target = document.elementFromPoint(e.clientX, e.clientY);
 
         if (target && target !== pane && target.parentElement && target.parentElement.classList.value.indexOf('leaflet-vectorLayer') !== -1) {
-          let stopped = !target.dispatchEvent(ev);
+          const stopped = !target.dispatchEvent(ev);
           if (stopped || ev._stopped) {
             L.DomEvent.stop(e);
           }
@@ -281,9 +283,9 @@ export default Component.extend(
       // Call to 'createLayer' could potentially return a promise,
       // wraping this call into Ember.RSVP.hash helps us to handle straight/promise results universally.
       this.set('_leafletLayerPromise', hash({
-        leafletLayer: this.createLayer()
+        leafletLayer: this.createLayer(),
       }).then(({
-        leafletLayer
+        leafletLayer,
       }) => {
         set(leafletLayer, 'leafletMap', this.get('leafletMap'));
         this.set('_leafletObject', leafletLayer);
@@ -301,7 +303,7 @@ export default Component.extend(
           }
         }
 
-        this.sendAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel') });
+        this.sendAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel'), });
 
         const layerInitCallback = this.get('mapApi').getFromApi('layerInitCallback');
         if (typeof layerInitCallback === 'function') {
@@ -315,18 +317,16 @@ export default Component.extend(
     },
 
     _setFilter: observer('layerModel.filter', function () {
-
       let filter = this.get('layerModel.filter');
       if (typeof filter === 'string') {
         try {
-          let layerLinks = this.get('layerModel.layerLink');
-          let layerModel = this.get('layerModel');
+          const layerLinks = this.get('layerModel.layerLink');
+          const layerModel = this.get('layerModel');
 
           // this.get('type') to get type for layers in combine-layer
-          let type = !isNone(this.get('type')) ? this.get('type') : layerModel.get('type');
+          const type = !isNone(this.get('type')) ? this.get('type') : layerModel.get('type');
           filter = getOwner(this).lookup(`layer:${type}`).parseFilter(filter, (this.get('geometryField') || 'geometry'), null, layerLinks);
-        }
-        catch (ex) {
+        } catch (ex) {
           console.error(ex);
           return;
         }
@@ -343,7 +343,7 @@ export default Component.extend(
       @private
     */
     _destroyLayer() {
-      this.sendAction('layerDestroy', { leafletObject: this.get('_leafletObject'), layerModel: this.get('layerModel') });
+      this.sendAction('layerDestroy', { leafletObject: this.get('_leafletObject'), layerModel: this.get('layerModel'), });
 
       // Execute specific destroy logic related to layer's type.
       this.destroyLayer();
@@ -373,7 +373,7 @@ export default Component.extend(
             readonly: true,
             localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties'),
             excludedProperties: this.get('displaySettings.featuresPropertiesSettings.excludedProperties'),
-          }
+          },
         });
       });
     },
@@ -385,7 +385,6 @@ export default Component.extend(
       @private
     */
     _resetLayer() {
-
       // Destroy previously created leaflet layer (created with old settings).
       this._destroyLayer();
 
@@ -457,7 +456,7 @@ export default Component.extend(
       @private
     */
     _setLayerOpacity() {
-      let leafletLayer = this.get('_leafletObject');
+      const leafletLayer = this.get('_leafletObject');
       if (isNone(leafletLayer) || typeOf(leafletLayer.setOpacity) !== 'function') {
         return;
       }
@@ -472,19 +471,19 @@ export default Component.extend(
       @private
     */
     _setLayerStyle() {
-      let leafletLayer = this.get('_leafletObject');
+      const leafletLayer = this.get('_leafletObject');
 
       if (isNone(leafletLayer)) {
         return;
       }
 
-      let styleSettings = this.get('styleSettings');
+      const styleSettings = this.get('styleSettings');
       if (isNone(styleSettings)) {
         return;
       }
 
-      let layersStylesRenderer = this.get('_layersStylesRenderer');
-      layersStylesRenderer.renderOnLeafletLayer({ leafletLayer, styleSettings });
+      const layersStylesRenderer = this.get('_layersStylesRenderer');
+      layersStylesRenderer.renderOnLeafletLayer({ leafletLayer, styleSettings, });
     },
 
     /**
@@ -494,18 +493,18 @@ export default Component.extend(
       @private
     */
     _addLayerToLeafletContainer() {
-      let leafletContainer = this.get('leafletContainer');
-      let leafletLayer = this.get('_leafletObject');
+      const leafletContainer = this.get('leafletContainer');
+      const leafletLayer = this.get('_leafletObject');
 
       if (isNone(leafletContainer) || isNone(leafletLayer) || leafletContainer.hasLayer(leafletLayer)) {
         return;
       }
 
-      let thisPane = this.get('_pane');
+      const thisPane = this.get('_pane');
       if (thisPane) {
-        let leafletMap = this.get('leafletMap');
+        const leafletMap = this.get('leafletMap');
         if (thisPane && !isNone(leafletMap)) {
-          let pane = leafletMap.getPane(thisPane);
+          const pane = leafletMap.getPane(thisPane);
           if (!pane || isNone(pane)) {
             this._createPane(thisPane);
             this._setLayerZIndex();
@@ -514,11 +513,11 @@ export default Component.extend(
       }
 
       leafletContainer.addLayer(leafletLayer);
-      let leafletMap = this.get('leafletMap');
+      const leafletMap = this.get('leafletMap');
       if (!isNone(leafletMap) && leafletLayer.options.continueLoading) {
-        let e = {
+        const e = {
           layers: [this.get('layerModel')],
-          results: A()
+          results: A(),
         };
 
         leafletMap.fire('flexberry-map:moveend', e);
@@ -532,8 +531,8 @@ export default Component.extend(
       @private
     */
     _removeLayerFromLeafletContainer() {
-      let leafletContainer = this.get('leafletContainer');
-      let leafletLayer = this.get('_leafletObject');
+      const leafletContainer = this.get('leafletContainer');
+      const leafletLayer = this.get('_leafletObject');
 
       if (isNone(leafletContainer) || isNone(leafletLayer) || !leafletContainer.hasLayer(leafletLayer)) {
         return;
@@ -607,7 +606,7 @@ export default Component.extend(
       @private
     */
     _identify(e) {
-      let shouldIdentify = A(e.layers || []).contains(this.get('layerModel'));
+      const shouldIdentify = A(e.layers || []).contains(this.get('layerModel'));
       if (!shouldIdentify) {
         return;
       }
@@ -615,7 +614,7 @@ export default Component.extend(
       // Call public identify method, if layer should be identified.
       e.results.push({
         layerModel: this.get('layerModel'),
-        features: this.identify(e)
+        features: this.identify(e),
       });
     },
 
@@ -636,17 +635,17 @@ export default Component.extend(
       @private
     */
     _getNearObject(e) {
-      let layerModel = this.get('layerModel');
-      let isVectorLayer = getOwner(this).lookup('layer:' + layerModel.get('type')).isVectorType(layerModel);
-      let shouldGetNearObject = A(e.layers || []).contains(layerModel) && isVectorLayer;
+      const layerModel = this.get('layerModel');
+      const isVectorLayer = getOwner(this).lookup(`layer:${layerModel.get('type')}`).isVectorType(layerModel);
+      const shouldGetNearObject = A(e.layers || []).contains(layerModel) && isVectorLayer;
       if (!shouldGetNearObject) {
         return;
       }
 
       // Call public getNearObject method, if layer should be getNearObject.
       e.results.push({
-        layerModel: layerModel,
-        features: this.getNearObject(e)
+        layerModel,
+        features: this.getNearObject(e),
       });
     },
 
@@ -663,7 +662,7 @@ export default Component.extend(
       or a promise returning such array.
     */
     _search(e) {
-      let shouldSearch = typeof (e.filter) === 'function' && e.filter(this.get('layerModel'));
+      const shouldSearch = typeof (e.filter) === 'function' && e.filter(this.get('layerModel'));
       if (!shouldSearch) {
         return;
       }
@@ -671,7 +670,7 @@ export default Component.extend(
       // Call public search method, if layer should be searched.
       e.results.push({
         layerModel: this.get('layerModel'),
-        features: this.search(e)
+        features: this.search(e),
       });
     },
 
@@ -690,9 +689,8 @@ export default Component.extend(
    */
     _query(e) {
       // Filter current layer links by setting.
-      let layerLinks =
-        this.get('layerModel.layerLink')
-          .filter(link => link.get('mapObjectSetting.id') === e.mapObjectSetting);
+      const layerLinks = this.get('layerModel.layerLink')
+        .filter((link) => link.get('mapObjectSetting.id') === e.mapObjectSetting);
 
       if (!isArray(layerLinks) || layerLinks.length === 0) {
         return;
@@ -701,7 +699,7 @@ export default Component.extend(
       // Call public query method, if layer has links.
       e.results.push({
         layerModel: this.get('layerModel'),
-        features: this.query(layerLinks, e)
+        features: this.query(layerLinks, e),
       });
     },
 
@@ -726,9 +724,8 @@ export default Component.extend(
       @param {Object} results Hash containing createObject results.
     */
     _createObject(e) {
-      let layerLinks =
-        this.get('layerModel.layerLink')
-          .filter(link => link.get('mapObjectSetting.id').toLowerCase() === e.mapObjectSetting.toLowerCase());
+      const layerLinks = this.get('layerModel.layerLink')
+        .filter((link) => link.get('mapObjectSetting.id').toLowerCase() === e.mapObjectSetting.toLowerCase());
 
       if (!isArray(layerLinks) || layerLinks.length === 0) {
         return;
@@ -738,7 +735,7 @@ export default Component.extend(
         e.results.push({
           layerModel: this.get('layerModel'),
           linkParameters: link.get('parameters'),
-          queryFilter: e.queryFilter
+          queryFilter: e.queryFilter,
         });
       });
     },
@@ -795,9 +792,8 @@ export default Component.extend(
         this._setLayerState();
       });
 
-      let leafletMap = this.get('leafletMap');
+      const leafletMap = this.get('leafletMap');
       if (!isNone(leafletMap)) {
-
         // Attach custom event-handler.
         leafletMap.on('flexberry-map:identify', this._identify, this);
         leafletMap.on('flexberry-map:search', this._search, this);
@@ -818,7 +814,7 @@ export default Component.extend(
     willDestroyElement() {
       this._super(...arguments);
 
-      let leafletMap = this.get('leafletMap');
+      const leafletMap = this.get('leafletMap');
       if (!isNone(leafletMap)) {
         // Detach custom event-handler.
         leafletMap.off('flexberry-map:identify', this._identify, this);
@@ -945,7 +941,7 @@ export default Component.extend(
       @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
     */
     getBoundingBox() {
-      let layer = this.get('_leafletObject');
+      const layer = this.get('_leafletObject');
 
       if (isNone(layer)) {
         return new Promise((resolve, reject) => {
@@ -953,7 +949,7 @@ export default Component.extend(
         });
       }
 
-      let bounds = this._getBoundingBox(layer);
+      const bounds = this._getBoundingBox(layer);
 
       return bounds;
     },
@@ -967,15 +963,15 @@ export default Component.extend(
       @param {String[]} changedOptions Array containing names of all changed options.
     */
     leafletOptionsDidChange({
-      changedOptions
+      changedOptions,
     }) {
-      let optionsDidntChange = changedOptions.length === 0;
+      const optionsDidntChange = changedOptions.length === 0;
       if (optionsDidntChange) {
         // Prevent unnecessary leaflet layer's recreation.
         return;
       }
 
-      let onlyOpacityDidChange = changedOptions.length === 1 && changedOptions.contains('opacity');
+      const onlyOpacityDidChange = changedOptions.length === 1 && changedOptions.contains('opacity');
       if (onlyOpacityDidChange) {
         // Prevent unnecessary leaflet layer's recreation.
         return;
@@ -999,7 +995,7 @@ export default Component.extend(
 
       let featureCollection = {
         type: 'FeatureCollection',
-        features: []
+        features: [],
       };
 
       if (isArray(geojson)) {
@@ -1010,15 +1006,15 @@ export default Component.extend(
         featureCollection = geojson;
       }
 
-      let features = A(get(featureCollection, 'features') || []);
+      const features = A(get(featureCollection, 'features') || []);
       if (get(features, 'length') === 0) {
         return null;
       }
 
-      let crs = this.get('crs');
+      const crs = this.get('crs');
       set(options, 'coordsToLatLng', function (coords) {
-        let point = new L.Point(coords[0], coords[1]);
-        let latlng = crs.projection.unproject(point);
+        const point = new L.Point(coords[0], coords[1]);
+        const latlng = crs.projection.unproject(point);
         if (!isNone(coords[2])) {
           latlng.alt = coords[2];
         }
@@ -1027,7 +1023,7 @@ export default Component.extend(
       });
 
       // Define callback method on each feature.
-      let originalOnEachFeature = get(options, 'onEachFeature');
+      const originalOnEachFeature = get(options, 'onEachFeature');
       set(options, 'onEachFeature', function (feature, leafletLayer) {
         // Remember layer inside feature object.
         set(feature, 'leafletLayer', leafletLayer);
@@ -1040,7 +1036,7 @@ export default Component.extend(
 
       // Perform conversion & injection.
       return new L.GeoJSON(featureCollection, options);
-    }
+    },
   }
 
   /**

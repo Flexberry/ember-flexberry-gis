@@ -44,5 +44,5 @@ export default BaseControl.extend({
   */
   createControl() {
     return new L.Control.SwitchScaleControl(this.get('options'));
-  }
+  },
 });

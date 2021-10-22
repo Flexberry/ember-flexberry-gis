@@ -8,7 +8,7 @@ import I18nService from 'ember-i18n/services/i18n';
 import I18nRuLocale from 'ember-flexberry-gis/locales/ru/translations';
 import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
 
-module('Integration | Component | identification settings', function(hooks) {
+module('Integration | Component | identification settings', function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function (assert) {
@@ -18,24 +18,23 @@ module('Integration | Component | identification settings', function(hooks) {
 
     this.i18n = this.owner.lookup('service:i18n');
     Component.reopen({
-      i18n: service('i18n')
+      i18n: service('i18n'),
     });
 
     this.set('i18n.locale', 'ru');
 
-    let obj = {
+    const obj = {
       settings: {
         displaySettings: {
-          canBeIdentified: true
-        }
-      }
+          canBeIdentified: true,
+        },
+      },
     };
 
     this.set('_layer', obj);
   });
 
-  test('it renders', async function(assert) {
-
+  test('it renders', async function (assert) {
     await render(hbs`{{layers-dialogs/tabs/identification-settings value=_layer.settings.displaySettings}}`);
 
     assert.equal(this.element.textContent.trim(), 'Может быть идентифицирован');

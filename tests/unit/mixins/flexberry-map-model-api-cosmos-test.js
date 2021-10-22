@@ -22,37 +22,37 @@ module('Unit | Mixin | flexberry map model api cosmos', {
     'config:environment',
     'model:new-platform-flexberry-g-i-s-layer-metadata'
   ],
-  beforeEach: function () {
-    run(function() {
+  beforeEach() {
+    run(function () {
       app = startApp();
       app.deferReadiness();
       store = app.__container__.lookup('service:store');
     });
   },
-  afterEach: function () {
+  afterEach() {
     run(app, 'destroy');
-  }
+  },
 });
 
-let mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiCosmosMixin);
-let metadataProjection = 'LayerMetadataE';
-let metadataModelName = 'new-platform-flexberry-g-i-s-layer-metadata';
-let crsFactory32640 = {
+const mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiCosmosMixin);
+const metadataProjection = 'LayerMetadataE';
+const metadataModelName = 'new-platform-flexberry-g-i-s-layer-metadata';
+const crsFactory32640 = {
   code: 'EPSG:32640',
   definition: '+proj=utm +zone=40 +datum=WGS84 +units=m +no_defs',
   create() {
-    let crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
-      scale: function (zoom) {
+    const crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
+      scale(zoom) {
         return 256 * Math.pow(2, zoom);
       },
-      zoom: function (scale) {
+      zoom(scale) {
         return Math.log(scale / 256) / Math.LN2;
-      }
+      },
     });
     return crs;
-  }
+  },
 };
-let bbox = {
+const bbox = {
   type: 'Polygon',
   coordinates: [
     [[30, 20], [30, 30], [20, 30], [20, 20], [30, 20]]
@@ -60,11 +60,11 @@ let bbox = {
   crs: {
     type: 'name',
     properties: {
-      name: 'EPSG:4326'
-    }
-  }
+      name: 'EPSG:4326',
+    },
+  },
 };
-let testModel = EmberObject.create({
+const testModel = EmberObject.create({
   anyText: 'test',
   boundingBox: bbox,
   id: '123',
@@ -76,61 +76,61 @@ let testModel = EmberObject.create({
       mapObjectSetting: null,
       parameters: [
         A({
-          objectField: 'testObjectField'
+          objectField: 'testObjectField',
         })
-      ]
+      ],
     })
-  ]
+  ],
 });
 
-test('test method findCosmos for only with parameter feature', function(assert) {
-  //Arrange
+test('test method findCosmos for only with parameter feature', function (assert) {
+  // Arrange
   assert.expect(7);
-  var done = assert.async(1);
-  let feature = {
+  const done = assert.async(1);
+  const feature = {
     type: 'Feature',
     geometry: {
       type: 'Polygon',
-      coordinates:[
+      coordinates: [
         [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]
-      ]
+      ],
     },
     crs: {
       type: 'name',
       properties: {
-        name: 'EPSG:4326'
-      }
-    }
+        name: 'EPSG:4326',
+      },
+    },
   };
 
-  let ownerStub = sinon.stub(Ember, 'getOwner');
+  const ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
     knownForType() {
       return {
-        'epsg4326': crsFactory4326
+        epsg4326: crsFactory4326,
       };
     },
     lookup() {
       return null;
-    }
+    },
   });
 
-  let subject = mapApiMixinObject.create({
+  const subject = mapApiMixinObject.create({
     _getQueryBuilderLayerMetadata() {
       return new QueryBuilder(store, metadataModelName)
-      .from(metadataModelName)
-      .selectByProjection(metadataProjection);
+        .from(metadataModelName)
+        .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
       return resolve([testModel]);
-    }
+    },
   });
-  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
-  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
+  const spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
+  const spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
-  //Act
+  // Act
   subject.findLayerMetadata(feature, null).then((layers) => {
-    //Assert
+    // Assert
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof GeographyPredicate);
@@ -146,40 +146,40 @@ test('test method findCosmos for only with parameter feature', function(assert) 
   });
 });
 
-test('test method findCosmos for only with parameter attributes one', function(assert) {
-  //Arrange
+test('test method findCosmos for only with parameter attributes one', function (assert) {
+  // Arrange
   assert.expect(7);
-  var done = assert.async(1);
-  let attributes = ['test'];
+  const done = assert.async(1);
+  const attributes = ['test'];
 
-  let ownerStub = sinon.stub(Ember, 'getOwner');
+  const ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
     knownForType() {
       return {
-        'epsg4326': crsFactory4326
+        epsg4326: crsFactory4326,
       };
     },
     lookup() {
       return null;
-    }
+    },
   });
 
-  let subject = mapApiMixinObject.create({
+  const subject = mapApiMixinObject.create({
     _getQueryBuilderLayerMetadata() {
       return new QueryBuilder(store, metadataModelName)
-      .from(metadataModelName)
-      .selectByProjection(metadataProjection);
+        .from(metadataModelName)
+        .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
       return resolve([testModel]);
-    }
+    },
   });
-  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
-  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
+  const spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
+  const spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
-  //Act
+  // Act
   subject.findLayerMetadata(null, attributes).then((layers) => {
-    //Assert
+    // Assert
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof StringPredicate);
@@ -194,40 +194,40 @@ test('test method findCosmos for only with parameter attributes one', function(a
   });
 });
 
-test('test method findCosmos for only with parameter attributes two', function(assert) {
-  //Arrange
+test('test method findCosmos for only with parameter attributes two', function (assert) {
+  // Arrange
   assert.expect(12);
-  var done = assert.async(1);
-  let attributes = ['test1', 'test2'];
+  const done = assert.async(1);
+  const attributes = ['test1', 'test2'];
 
-  let ownerStub = sinon.stub(Ember, 'getOwner');
+  const ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
     knownForType() {
       return {
-        'epsg4326': crsFactory4326
+        epsg4326: crsFactory4326,
       };
     },
     lookup() {
       return null;
-    }
+    },
   });
 
-  let subject = mapApiMixinObject.create({
+  const subject = mapApiMixinObject.create({
     _getQueryBuilderLayerMetadata() {
       return new QueryBuilder(store, metadataModelName)
-      .from(metadataModelName)
-      .selectByProjection(metadataProjection);
+        .from(metadataModelName)
+        .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
       return resolve([testModel]);
-    }
+    },
   });
-  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
-  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
+  const spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
+  const spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
-  //Act
+  // Act
   subject.findLayerMetadata(null, attributes).then((layers) => {
-    //Assert
+    // Assert
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof ComplexPredicate);
@@ -247,56 +247,56 @@ test('test method findCosmos for only with parameter attributes two', function(a
   });
 });
 
-test('test method findCosmos for with feature and attributes', function(assert) {
-  //Arrange
+test('test method findCosmos for with feature and attributes', function (assert) {
+  // Arrange
   assert.expect(13);
-  var done = assert.async(1);
-  let feature = {
+  const done = assert.async(1);
+  const feature = {
     type: 'Feature',
     geometry: {
       type: 'Polygon',
       coordinates: [
         [[-2568154.38200208, 1238447.0003685], [-954618.679368619, 4568735.95227168], [-2683586.25264709, 5143088.31265003],
-        [-4878104.10393015, 3114937.3173714], [-2568154.38200208, 1238447.0003685]]
-      ]
+          [-4878104.10393015, 3114937.3173714], [-2568154.38200208, 1238447.0003685]]
+      ],
     },
     crs: {
       type: 'name',
       properties: {
-        name: 'EPSG:32640'
-      }
-    }
+        name: 'EPSG:32640',
+      },
+    },
   };
-  let attributes = ['test'];
+  const attributes = ['test'];
 
-  let ownerStub = sinon.stub(Ember, 'getOwner');
+  const ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
     knownForType() {
       return {
-        'epsg32640': crsFactory32640
+        epsg32640: crsFactory32640,
       };
     },
     lookup() {
       return null;
-    }
+    },
   });
 
-  let subject = mapApiMixinObject.create({
+  const subject = mapApiMixinObject.create({
     _getQueryBuilderLayerMetadata() {
       return new QueryBuilder(store, metadataModelName)
-      .from(metadataModelName)
-      .selectByProjection(metadataProjection);
+        .from(metadataModelName)
+        .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
       return resolve([testModel]);
-    }
+    },
   });
-  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
-  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
+  const spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
+  const spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
-  //Act
+  // Act
   subject.findLayerMetadata(feature, attributes).then((layers) => {
-    //Assert
+    // Assert
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate instanceof ComplexPredicate);
@@ -305,8 +305,8 @@ test('test method findCosmos for with feature and attributes', function(assert) 
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0] instanceof GeographyPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._attributePath, 'boundingBox');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[0]._intersectsValue,
-      'SRID=4326;POLYGON((29.999999999999964 9.999999999999961, 40 39.999999999999964, 19.999999999999964 39.99999999999997, ' +
-      '10.000000000000059 19.999999999999943, 29.999999999999964 9.999999999999961))');
+      'SRID=4326;POLYGON((29.999999999999964 9.999999999999961, 40 39.999999999999964, 19.999999999999964 39.99999999999997, '
+      + '10.000000000000059 19.999999999999943, 29.999999999999964 9.999999999999961))');
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1] instanceof StringPredicate);
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._attributePath, 'anyText');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._predicates[1]._containsValue, 'test');
@@ -319,31 +319,31 @@ test('test method findCosmos for with feature and attributes', function(assert) 
   });
 });
 
-test('test method addLayerFromLayerMetadata', function(assert) {
-  //Arrange
+test('test method addLayerFromLayerMetadata', function (assert) {
+  // Arrange
   assert.expect(9);
-  let done = assert.async(1);
-  let hierarchy = A();
-  let mapLayer = A();
-  let subject = mapApiMixinObject.create({
-    mapLayer: mapLayer,
+  const done = assert.async(1);
+  const hierarchy = A();
+  const mapLayer = A();
+  const subject = mapApiMixinObject.create({
+    mapLayer,
     _getQueryBuilderLayerMetadata() {
       return new QueryBuilder(store, metadataModelName)
-      .from(metadataModelName)
-      .selectByProjection(metadataProjection);
+        .from(metadataModelName)
+        .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
-      return resolve({ content: [testModel] });
+      return resolve({ content: [testModel], });
     },
-    store: store,
-    hierarchy: hierarchy
+    store,
+    hierarchy,
   });
-  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
-  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
+  const spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
+  const spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
-  //Act
+  // Act
   subject.addLayerFromLayerMetadata('123', 10).then((layer) => {
-    //Assert
+    // Assert
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._id, '123');
@@ -359,29 +359,29 @@ test('test method addLayerFromLayerMetadata', function(assert) {
   });
 });
 
-test('test method addLayerFromLayerMetadata not found layer', function(assert) {
-  //Arrange
+test('test method addLayerFromLayerMetadata not found layer', function (assert) {
+  // Arrange
   assert.expect(4);
-  let done = assert.async(1);
-  let hierarchy = A();
-  let subject = mapApiMixinObject.create({
+  const done = assert.async(1);
+  const hierarchy = A();
+  const subject = mapApiMixinObject.create({
     _getQueryBuilderLayerMetadata() {
       return new QueryBuilder(store, metadataModelName)
-      .from(metadataModelName)
-      .selectByProjection(metadataProjection);
+        .from(metadataModelName)
+        .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
-      return resolve({ content: [] });
+      return resolve({ content: [], });
     },
-    store: store,
-    hierarchy: hierarchy
+    store,
+    hierarchy,
   });
-  let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
-  let spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
+  const spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
+  const spyGetQueryBuilderLayerMetadata = sinon.spy(subject, '_getQueryBuilderLayerMetadata');
 
-  //Act
+  // Act
   subject.addLayerFromLayerMetadata('123', 10).catch((error) => {
-    //Assert
+    // Assert
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._id, '123');
@@ -392,19 +392,19 @@ test('test method addLayerFromLayerMetadata not found layer', function(assert) {
   });
 });
 
-test('test method createLayerFromMetadata', function(assert) {
-  //Arrange
+test('test method createLayerFromMetadata', function (assert) {
+  // Arrange
   assert.expect(5);
-  let done = assert.async(1);
-  let subject = mapApiMixinObject.create({
-    store: store
+  const done = assert.async(1);
+  const subject = mapApiMixinObject.create({
+    store,
   });
 
-  //Act
+  // Act
   run(() => {
-    let layerModel = createLayerFromMetadata(testModel, subject.get('store'));
+    const layerModel = createLayerFromMetadata(testModel, subject.get('store'));
 
-    //Assert
+    // Assert
     assert.ok(layerModel);
     assert.ok(!isNone(layerModel.get('id')));
     assert.equal(layerModel.get('type'), 'wms');

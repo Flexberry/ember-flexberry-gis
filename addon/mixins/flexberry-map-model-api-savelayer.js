@@ -16,7 +16,7 @@ export default Mixin.create({
     @return {Ember.RSVP.Promise} Returns promise.
   */
   saveLayer(layerId) {
-    let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
+    const [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
 
     if (isNone(leafletObject)) {
       return new Promise(() => {
@@ -37,7 +37,7 @@ export default Mixin.create({
         leafletObject.off('save:failed', saveFailed);
         resolve({
           layerModel,
-          newFeatures: data.layers
+          newFeatures: data.layers,
         });
       };
 
@@ -60,11 +60,11 @@ export default Mixin.create({
   */
   disableLayerEditing(map) {
     map.eachLayer(function (object) {
-      let enabled = get(object, 'editor._enabled');
+      const enabled = get(object, 'editor._enabled');
       if (enabled === true) {
         object.disableEdit();
       }
     });
     map.off('editable:editing');
-  }
+  },
 });

@@ -51,13 +51,14 @@ export default Mixin.create({
     onMapLeafletInit(...args) {
       // User can pass any additional arguments to action handler,
       // so original action's event object will be the last one in arguments array.
-      let leafletMapPropertyPath = args[0];
-      let e = args[args.length - 1];
+      const leafletMapPropertyPath = args[0];
+      const e = args[args.length - 1];
 
       assert(
-        `Wrong type of \`leafletMapPropertyPath\` argument: actual type is \`${leafletMapPropertyPath}\`, ` +
-        `but \`string\` is expected`,
-        typeOf(leafletMapPropertyPath) === 'string');
+        `Wrong type of \`leafletMapPropertyPath\` argument: actual type is \`${leafletMapPropertyPath}\`, `
+        + 'but `string` is expected',
+        typeOf(leafletMapPropertyPath) === 'string'
+      );
 
       set(this, leafletMapPropertyPath, e.map);
       set(window, leafletMapPropertyPath, e.map);
@@ -98,11 +99,12 @@ export default Mixin.create({
       ```
     */
     onMapLeafletDestroy(...args) {
-      let leafletMapPropertyPath = args[0];
+      const leafletMapPropertyPath = args[0];
       assert(
-        `Wrong type of \`leafletMapPropertyPath\` argument: actual type is \`${typeOf(leafletMapPropertyPath)}\`, ` +
-        `but \`string\` is expected`,
-        typeOf(leafletMapPropertyPath) === 'string');
+        `Wrong type of \`leafletMapPropertyPath\` argument: actual type is \`${typeOf(leafletMapPropertyPath)}\`, `
+        + 'but `string` is expected',
+        typeOf(leafletMapPropertyPath) === 'string'
+      );
 
       set(this, leafletMapPropertyPath, null);
       set(window, leafletMapPropertyPath, null);
@@ -144,21 +146,23 @@ export default Mixin.create({
     onMapMoveend(...args) {
       // User can pass any additional arguments to action handler,
       // so original action's event object will be the last one in arguments array.
-      let latPropertyPath = args[0];
-      let lngPropertyPath = args[1];
-      let e = args[args.length - 1];
+      const latPropertyPath = args[0];
+      const lngPropertyPath = args[1];
+      const e = args[args.length - 1];
 
       assert(
-        `Wrong type of \`latPropertyPath\` argument: actual type is \`${typeOf(latPropertyPath)}\`, ` +
-        `but \`string\` is expected`,
-        typeOf(latPropertyPath) === 'string');
+        `Wrong type of \`latPropertyPath\` argument: actual type is \`${typeOf(latPropertyPath)}\`, `
+        + 'but `string` is expected',
+        typeOf(latPropertyPath) === 'string'
+      );
       assert(
-        `Wrong type of \`lngPropertyPath\` argument: actual type is \`${typeOf(lngPropertyPath)}\`, ` +
-        `but \`string\` is expected`,
-        typeOf(lngPropertyPath) === 'string');
+        `Wrong type of \`lngPropertyPath\` argument: actual type is \`${typeOf(lngPropertyPath)}\`, `
+        + 'but `string` is expected',
+        typeOf(lngPropertyPath) === 'string'
+      );
 
-      let newCenterLatLng = e.target.getCenter();
-      this.transitionToRoute({ queryParams: { lat: newCenterLatLng.lat, lng: newCenterLatLng.lng, zoom: e.target.getZoom() } });
+      const newCenterLatLng = e.target.getCenter();
+      this.transitionToRoute({ queryParams: { lat: newCenterLatLng.lat, lng: newCenterLatLng.lng, zoom: e.target.getZoom(), }, });
     },
 
     /**
@@ -196,16 +200,17 @@ export default Mixin.create({
     onMapZoomend(...args) {
       // User can pass any additional arguments to action handler,
       // so original action's event object will be the last one in arguments array.
-      let zoomPropertyPath = args[0];
-      let e = args[args.length - 1];
+      const zoomPropertyPath = args[0];
+      const e = args[args.length - 1];
 
       assert(
-        `Wrong type of \`zoomPropertyPath\` argument: actual type is \`${typeOf(zoomPropertyPath)}\`, ` +
-        `but \`string\` is expected`,
-        typeOf(zoomPropertyPath) === 'string');
+        `Wrong type of \`zoomPropertyPath\` argument: actual type is \`${typeOf(zoomPropertyPath)}\`, `
+        + 'but `string` is expected',
+        typeOf(zoomPropertyPath) === 'string'
+      );
 
-      let newZoom = e.target.getZoom();
-      this.transitionToRoute({ queryParams: { zoom: newZoom } });
-    }
-  }
+      const newZoom = e.target.getZoom();
+      this.transitionToRoute({ queryParams: { zoom: newZoom, }, });
+    },
+  },
 });

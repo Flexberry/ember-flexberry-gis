@@ -50,7 +50,7 @@ export default {
   'layers-dialogs': LayersDialogsComponents,
   'map-commands-dialogs': MapCommandsDialogsComponents,
 
-  'legends': LegendsComponents,
+  legends: LegendsComponents,
 
   'flexberry-mapinfo': FlexberryMapInfoComponent,
   'flexberry-maptoolbar': FlexberryMapToolbarComponent,
@@ -68,12 +68,12 @@ export default {
   'flexberry-layers-intersections-panel': FlexberryLayersIntersectionPanel,
   'flexberry-multiple-select': FlexberryMultipleSelectComponent,
   'geometry-add-modes': GeometryAddModesComponents,
-  'charts': ChartsComponents,
+  charts: ChartsComponents,
   'layer-result-list': LayerResultListComponent,
   'feature-result-item': FeatureResultItemComponent,
   'history-control': HistoryControlComponent,
   'flexberry-create-object-geometry': FlexberryCreateObjectGeometry,
   'compare-object-geometries': CompareObjectGeometries,
-  'minimap': MinimapComponent,
-  'flexberry-edit-layer-feature': EditLayerFeatureComponent
+  minimap: MinimapComponent,
+  'flexberry-edit-layer-feature': EditLayerFeatureComponent,
 };

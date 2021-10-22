@@ -42,9 +42,9 @@ export default Mixin.create({
     @type String[]
   */
   usedLeafletEvents: computed('leafletEvents', function () {
-    return (this.get('leafletEvents') || []).filter(eventName => {
-      let methodName = '_' + eventName;
-      let actionName = eventName;
+    return (this.get('leafletEvents') || []).filter((eventName) => {
+      const methodName = `_${eventName}`;
+      const actionName = eventName;
       return this.get(methodName) !== undefined || this.get(actionName) !== undefined;
     });
   }),
@@ -55,10 +55,10 @@ export default Mixin.create({
     @method _addEventListeners
   */
   _addEventListeners() {
-    let eventHandlers = {};
-    this.get('usedLeafletEvents').forEach(eventName => {
-      let actionName = eventName;
-      let methodName = '_' + eventName;
+    const eventHandlers = {};
+    this.get('usedLeafletEvents').forEach((eventName) => {
+      const actionName = eventName;
+      const methodName = `_${eventName}`;
 
       // Create an event handler that runs the function inside an event loop.
       eventHandlers[eventName] = function (e) {
@@ -84,13 +84,13 @@ export default Mixin.create({
     @method _removeEventListeners
   */
   _removeEventListeners() {
-    let eventHandlers = this.get('_eventHandlers');
-    let leafletObject = this.get('_leafletObject');
+    const eventHandlers = this.get('_eventHandlers');
+    const leafletObject = this.get('_leafletObject');
     if (isNone(eventHandlers) || isNone(leafletObject)) {
       return;
     }
 
-    this.get('usedLeafletEvents').forEach(eventName => {
+    this.get('usedLeafletEvents').forEach((eventName) => {
       leafletObject.removeEventListener(eventName,
         eventHandlers[eventName], this);
       delete eventHandlers[eventName];
@@ -103,5 +103,5 @@ export default Mixin.create({
   willDestroyElement() {
     this._super(...arguments);
     this._removeEventListeners();
-  }
+  },
 });

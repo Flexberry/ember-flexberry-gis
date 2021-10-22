@@ -29,7 +29,7 @@ export default BaseLayerStyle.extend({
     @method getVisibleLeafletLayers
     @return {Object[]} Array containing visible leaflet layers (those nested layers which 'layers-style' doesn't hide).
   */
-  getVisibleLeafletLayers({ leafletLayer, style }) {
+  getVisibleLeafletLayers({ leafletLayer, style, }) {
     // There is no visible layers in 'empty' layers-style, all layer are hidden.
     return [];
   },
@@ -42,8 +42,8 @@ export default BaseLayerStyle.extend({
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} options.leafletLayer Leaflet layer to which layer-style must be applied.
     @param {Object} options.style Hash containing style settings.
   */
-  renderOnLeafletLayer({ leafletLayer, style }) {
-    setLeafletLayerOpacity({ leafletLayer, opacity: 0 });
+  renderOnLeafletLayer({ leafletLayer, style, }) {
+    setLeafletLayerOpacity({ leafletLayer, opacity: 0, });
   },
 
   /**
@@ -55,7 +55,7 @@ export default BaseLayerStyle.extend({
     @param {Object} options.style Hash containing style settings.
     @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style, target }) {
+  renderOnCanvas({ canvas, style, target, }) {
     // Nothing must be rendered on canvas for 'empty' layer style.
-  }
+  },
 });

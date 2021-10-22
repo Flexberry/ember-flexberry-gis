@@ -20,7 +20,7 @@ export default SearchMapCommand.extend({
   _execute(options) {
     this._super(...arguments);
 
-    let featuresLayer = this.get('featuresLayer');
+    const featuresLayer = this.get('featuresLayer');
     featuresLayer.clearLayers();
-  }
+  },
 });

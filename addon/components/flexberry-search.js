@@ -8,8 +8,8 @@ import { isArray } from '@ember/array';
 import { typeOf, isNone } from '@ember/utils';
 import { computed, observer } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../templates/components/flexberry-search';
 import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
+import layout from '../templates/components/flexberry-search';
 
 /**
   Component's CSS-classes names.
@@ -29,8 +29,8 @@ const flexberryClassNamesPrefix = 'flexberry-search';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
-  inpit: flexberryClassNamesPrefix + '-input',
-  results: flexberryClassNamesPrefix + '-results'
+  inpit: `${flexberryClassNamesPrefix}-input`,
+  results: `${flexberryClassNamesPrefix}-results`,
 };
 
 /**
@@ -50,7 +50,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses DynamicPropertiesMixin
 */
-let FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
+const FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
   /**
     Flag: indicates whether search type is 'category' or not.
 
@@ -60,7 +60,7 @@ let FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
     @private
   */
   _isCategory: computed('type', function () {
-    let type = this.get('type');
+    const type = this.get('type');
     return typeOf(type) === 'string' && type.toLowerCase() === 'category';
   }),
 
@@ -77,7 +77,7 @@ let FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
         return;
       }
 
-      let $component = this.$();
+      const $component = this.$();
       if (isNone($component)) {
         return;
       }
@@ -94,7 +94,7 @@ let FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
       } else {
         this.sendAction('enter');
       }
-    }
+    },
   },
 
   /**
@@ -239,10 +239,10 @@ let FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
 
     @method _valueChange
   */
-  _valueChange:  observer('value',  function () {
+  _valueChange: observer('value',  function () {
     this.set('_lastAction', null);
     this.set('_valueWasSelected', false);
-    }),
+  }),
 
   /**
     Initializes Semantic UI search module.
@@ -251,7 +251,7 @@ let FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
     @private
   */
   _initializeSearchModule() {
-    let $component = this.$();
+    const $component = this.$();
     if (isNone($component)) {
       return;
     }
@@ -260,18 +260,18 @@ let FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
       return;
     }
 
-    let semanticProperties = {};
+    const semanticProperties = {};
 
     this.get('semanticProperties').forEach((propertyName) => {
-      var propertyValue = this.get(propertyName);
+      const propertyValue = this.get(propertyName);
       if (!isNone(propertyValue)) {
         semanticProperties[propertyName] = propertyValue;
       }
     });
 
-    let _this = this;
-    let onSelect = function (element) {
-      var field = semanticProperties.fields && semanticProperties.fields.title ? semanticProperties.fields.title : null;
+    const _this = this;
+    const onSelect = function (element) {
+      const field = semanticProperties.fields && semanticProperties.fields.title ? semanticProperties.fields.title : null;
       if (field) {
         _this.set('value', element[field]);
         _this.set('_lastAction', 'select');
@@ -282,7 +282,7 @@ let FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
 
     semanticProperties.onSelect = onSelect;
 
-    let onSearchQuery = function (query) {
+    const onSearchQuery = function (query) {
       _this.set('_lastAction', null);
     };
 
@@ -298,7 +298,7 @@ let FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
     @private
   */
   _destroySearchModule() {
-    let $component = this.$();
+    const $component = this.$();
     if (isNone($component)) {
       return;
     }
@@ -327,7 +327,7 @@ let FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
     this._initializeSearchModule();
 
     // Add observers to search-related properties.
-    let observableProperties = this.get('observableProperties');
+    const observableProperties = this.get('observableProperties');
     if (isArray(observableProperties)) {
       observableProperties.forEach((propertyName) => {
         addObserver(this, propertyName, this._searchPropertiesDidChange);
@@ -345,13 +345,13 @@ let FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
     this._destroySearchModule();
 
     // Remove observers from search-related properties.
-    let observableProperties = this.get('observableProperties');
+    const observableProperties = this.get('observableProperties');
     if (isArray(observableProperties)) {
       observableProperties.forEach((propertyName) => {
         removeObserver(this, propertyName, this._searchPropertiesDidChange);
       });
     }
-  }
+  },
 
   /**
     Component's action invoking when user press enter in search box
@@ -362,7 +362,7 @@ let FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberrySearchComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberrySearchComponent;

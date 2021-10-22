@@ -1,3 +1,3 @@
 export default {
-  'caption': 'Без знака'
+  caption: 'Без знака',
 };

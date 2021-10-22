@@ -1,32 +1,32 @@
 export default {
-  'caption': 'Редактирование карты',
+  caption: 'Редактирование карты',
   'approve-button': {
-    'caption': 'Ок'
+    caption: 'Ок',
   },
   'deny-button': {
-    'caption': 'Отмена'
+    caption: 'Отмена',
   },
   'name-textbox': {
-    'caption': 'Имя карты',
-    'lat': 'Широта',
-    'lng': 'Долгота',
-    'zoom': 'Зум',
-    'public': 'Общая',
-    'description': 'Описание',
-    'keyWords': 'Ключевые слова',
-    'scale': 'Масштаб',
-    'crs': 'Система координат',
+    caption: 'Имя карты',
+    lat: 'Широта',
+    lng: 'Долгота',
+    zoom: 'Зум',
+    public: 'Общая',
+    description: 'Описание',
+    keyWords: 'Ключевые слова',
+    scale: 'Масштаб',
+    crs: 'Система координат',
   },
   mainTab: {
-    'caption': 'Основные настройки'
+    caption: 'Основные настройки',
   },
   crsTab: {
-    'caption': 'Система координат'
+    caption: 'Система координат',
   },
   positionTab: {
-    'caption': 'Положение'
+    caption: 'Положение',
   },
   bordersTab: {
-    'caption': 'Границы'
-  }
+    caption: 'Границы',
+  },
 };

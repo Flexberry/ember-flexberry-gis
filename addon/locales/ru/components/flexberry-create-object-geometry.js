@@ -1,17 +1,17 @@
 export default {
-  'draw': {
-    'caption': 'Нарисовать на карте'
+  draw: {
+    caption: 'Нарисовать на карте',
   },
-  'zoomTo': {
-    'caption': 'Перейти к объекту'
+  zoomTo: {
+    caption: 'Перейти к объекту',
   },
-  'remove': {
-    'caption': 'Удалить'
+  remove: {
+    caption: 'Удалить',
   },
-  'save': {
-    'caption': 'Сохранить'
+  save: {
+    caption: 'Сохранить',
   },
-  'coordinates': {
-    'caption': 'Координаты создаваемого объекта'
-  }
+  coordinates: {
+    caption: 'Координаты создаваемого объекта',
+  },
 };

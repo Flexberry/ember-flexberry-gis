@@ -21,6 +21,6 @@ export default Mixin.create({
     */
     onLayerInit(e) {
       e.layerModel.set('layerInitialized', true);
-    }
-  }
+    },
+  },
 });

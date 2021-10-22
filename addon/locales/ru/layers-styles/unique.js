@@ -1,3 +1,3 @@
 export default {
-  'caption': 'Уникальный знак'
+  caption: 'Уникальный знак',
 };

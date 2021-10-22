@@ -1,6 +1,6 @@
 import Component from '@ember/component';
-import layout from '../../../templates/components/layers-dialogs/tabs/load-file';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../../templates/components/layers-dialogs/tabs/load-file';
 
 export default Component.extend({
   layout,
@@ -24,7 +24,7 @@ export default Component.extend({
       @method actions.uploadFile
     */
     uploadFile(e) {
-      let file = e.target.files[0];
+      const file = e.target.files[0];
       this.set('_importInProcess', false);
       this.sendAction('onUploadFile', file);
     },
@@ -36,6 +36,6 @@ export default Component.extend({
     */
     clickFile() {
       this.set('_importInProcess', true);
-    }
-  }
+    },
+  },
 });

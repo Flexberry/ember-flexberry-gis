@@ -47,7 +47,7 @@ export default GeocoderBaseLayer.extend({
     @returns {Object[]} Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
   */
   parseReverseGeocodingResults(results) {
-    let featuresCollection = window.osmtogeojson(results, { flatProperties: true });
+    const featuresCollection = window.osmtogeojson(results, { flatProperties: true, });
     return get(featuresCollection, 'features');
   },
 
@@ -75,16 +75,16 @@ export default GeocoderBaseLayer.extend({
   */
   executeReverseGeocoding(options) {
     options = options || {};
-    let boundingBox = get(options, 'boundingBox');
-    let sw = boundingBox.getSouthWest();
-    let ne = boundingBox.getNorthEast();
+    const boundingBox = get(options, 'boundingBox');
+    const sw = boundingBox.getSouthWest();
+    const ne = boundingBox.getNorthEast();
 
-    let overpassBaseUrl = this.get('url');
-    let overpassBoundingBox = `${[sw.lat, sw.lng, ne.lat, ne.lng].join(',')}`;
-    let overpassNode = `node(${overpassBoundingBox})`;
+    const overpassBaseUrl = this.get('url');
+    const overpassBoundingBox = `${[sw.lat, sw.lng, ne.lat, ne.lng].join(',')}`;
+    const overpassNode = `node(${overpassBoundingBox})`;
 
     // Url to get all nodes within specified bounding box.
-    let overpassRequestUrl = `${overpassBaseUrl}?data=[out:json];(${overpassNode};<;);out;`;
+    const overpassRequestUrl = `${overpassBaseUrl}?data=[out:json];(${overpassNode};<;);out;`;
 
     return new Promise((resolve, reject) => {
       run(() => {
@@ -95,5 +95,5 @@ export default GeocoderBaseLayer.extend({
         });
       });
     });
-  }
+  },
 });

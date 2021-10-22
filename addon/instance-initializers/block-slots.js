@@ -19,8 +19,8 @@ import SlotsMixin from 'ember-block-slots';
 */
 export function initialize(applicationInstance) {
   SlotsMixin.reopen({
-    parentViewExcludingSlots: computed('parentView', 'targetObject', function() {
-      let getParent = function(context) {
+    parentViewExcludingSlots: computed('parentView', 'targetObject', function () {
+      const getParent = function (context) {
         return get(context, 'parentView') || get(context, 'targetObject');
       };
 
@@ -30,11 +30,11 @@ export function initialize(applicationInstance) {
       }
 
       return parent;
-    })
+    }),
   });
 }
 
 export default {
   name: 'blockSlots',
-  initialize
+  initialize,
 };

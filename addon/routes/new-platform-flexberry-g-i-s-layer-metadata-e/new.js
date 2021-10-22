@@ -38,5 +38,5 @@ export default EditFormNewRoute.extend(EditFormRouteOperationsIndicationMixin, {
     @type String
     @default 'new-platform-flexberry-g-i-s-layer-metadata-e'
   */
-  templateName: 'new-platform-flexberry-g-i-s-layer-metadata-e'
+  templateName: 'new-platform-flexberry-g-i-s-layer-metadata-e',
 });

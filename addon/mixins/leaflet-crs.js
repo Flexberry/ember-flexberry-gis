@@ -26,8 +26,8 @@ export default Mixin.create({
     @readOnly
   */
   crs: computed('coordinateReferenceSystem', function () {
-    let coordinateReferenceSystem = this.get('coordinateReferenceSystem');
+    const coordinateReferenceSystem = this.get('coordinateReferenceSystem');
 
     return getLeafletCrs(coordinateReferenceSystem, this);
-  })
+  }),
 });

@@ -3,53 +3,53 @@ import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api-expansion';
 
-module('Unit | Mixin | test method trimLineToPolygon', function() {
-  let mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
+module('Unit | Mixin | test method trimLineToPolygon', function () {
+  const mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
 
-  let aGeoJson = {
-    'type': 'Feature',
-    'properties': {},
-    'geometry': {
-      'type': 'Polygon',
-      'coordinates': [
+  const aGeoJson = {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'Polygon',
+      coordinates: [
         [[56.2, 58.1],
           [56.3, 58.1],
           [56.3, 58.2],
           [56.2, 58.2],
           [56.2, 58.1]]
-      ]
+      ],
     },
-    'crs': {
-      'type': 'name',
-      'properties': {
-        'name': 'EPSG:4326'
-      }
-    }
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:4326',
+      },
+    },
   };
-  let bGeoJson = {
-    'type': 'Feature',
-    'properties': {},
-    'geometry': {
-      'type': 'LineString',
-      'coordinates': [
+  const bGeoJson = {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'LineString',
+      coordinates: [
         [56.1, 58.1],
         [56.4, 58.1]
-      ]
+      ],
     },
-    'crs': {
-      'type': 'name',
-      'properties': {
-        'name': 'EPSG:4326'
-      }
-    }
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:4326',
+      },
+    },
   };
 
-  test('test method trimLineToPolygon with EPSG:4326', function(assert) {
+  test('test method trimLineToPolygon with EPSG:4326', function (assert) {
     assert.expect(2);
-    let done = assert.async(1);
-    let subject = mapApiMixinObject.create({});
+    const done = assert.async(1);
+    const subject = mapApiMixinObject.create({});
 
-    let promise = subject.trimLineToPolygon(aGeoJson, bGeoJson);
+    const promise = subject.trimLineToPolygon(aGeoJson, bGeoJson);
 
     assert.ok(promise instanceof Promise);
     promise.then((result) => {
@@ -58,13 +58,13 @@ module('Unit | Mixin | test method trimLineToPolygon', function() {
     });
   });
 
-  test('test method trimLineToPolygon. Error objects does\' not intersect', function(assert) {
+  test('test method trimLineToPolygon. Error objects does\' not intersect', function (assert) {
     assert.expect(2);
-    let done = assert.async(1);
+    const done = assert.async(1);
     bGeoJson.geometry.coordinates = [[56.1, 56], [56.4, 56]];
-    let subject = mapApiMixinObject.create({});
+    const subject = mapApiMixinObject.create({});
 
-    let promise = subject.trimLineToPolygon(aGeoJson, bGeoJson);
+    const promise = subject.trimLineToPolygon(aGeoJson, bGeoJson);
 
     assert.ok(promise instanceof Promise);
     promise.then().catch((result) => {
@@ -74,13 +74,13 @@ module('Unit | Mixin | test method trimLineToPolygon', function() {
     });
   });
 
-  test('test method trimLineToPolygon. Error different crs', function(assert) {
+  test('test method trimLineToPolygon. Error different crs', function (assert) {
     assert.expect(2);
-    let done = assert.async(1);
+    const done = assert.async(1);
     aGeoJson.crs.properties.name = 'EPSG:3395';
-    let subject = mapApiMixinObject.create({});
+    const subject = mapApiMixinObject.create({});
 
-    let promise = subject.trimLineToPolygon(aGeoJson, bGeoJson);
+    const promise = subject.trimLineToPolygon(aGeoJson, bGeoJson);
 
     assert.ok(promise instanceof Promise);
     promise.then().catch((result) => {

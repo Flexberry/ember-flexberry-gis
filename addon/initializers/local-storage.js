@@ -15,5 +15,5 @@ export function initialize(application) {
 
 export default {
   name: 'local-storage',
-  initialize
+  initialize,
 };

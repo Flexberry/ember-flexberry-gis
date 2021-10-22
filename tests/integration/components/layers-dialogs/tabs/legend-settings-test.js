@@ -8,7 +8,7 @@ import I18nService from 'ember-i18n/services/i18n';
 import I18nRuLocale from 'ember-flexberry-gis/locales/ru/translations';
 import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
 
-module('Integration | Component | layers dialogs/tabs/legend settings', function(hooks) {
+module('Integration | Component | layers dialogs/tabs/legend settings', function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function (assert) {
@@ -18,22 +18,22 @@ module('Integration | Component | layers dialogs/tabs/legend settings', function
 
     this.i18n = this.owner.lookup('service:i18n');
     Component.reopen({
-      i18n: service('i18n')
+      i18n: service('i18n'),
     });
 
     this.set('i18n.locale', 'ru');
 
-    let obj = {
+    const obj = {
       settings: {
         legendSettings: {
-          legendCanBeDisplayed: true
-        }
-      }
+          legendCanBeDisplayed: true,
+        },
+      },
     };
     this.set('_layer', obj);
   });
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 

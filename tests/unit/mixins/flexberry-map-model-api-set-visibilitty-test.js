@@ -6,45 +6,45 @@ import { module, test } from 'qunit';
 import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api';
 import sinon from 'sinon';
 
-module('Unit | Mixin | test method setVisibility ', function() {
-  let mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
+module('Unit | Mixin | test method setVisibility ', function () {
+  const mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
 
-  let layerModel = Component.extend({
-    visibility: false
+  const layerModel = Component.extend({
+    visibility: false,
   });
 
-  test('Test visibility = true', function(assert) {
-    //Arrange
+  test('Test visibility = true', function (assert) {
+    // Arrange
     assert.expect(9);
-    let firstLayer = layerModel.create({
-      id: '1'
+    const firstLayer = layerModel.create({
+      id: '1',
     });
-    let secondLayer = layerModel.create({
-      id: '2'
+    const secondLayer = layerModel.create({
+      id: '2',
     });
-    let map = L.map(document.createElement('div'), {
+    const map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
-      zoom: 13
+      zoom: 13,
     });
-    map.on('flexberry-map:moveend', ()=> {});
-    let done = assert.async(1);
-    let subject = mapApiMixinObject.create({
+    map.on('flexberry-map:moveend', () => {});
+    const done = assert.async(1);
+    const subject = mapApiMixinObject.create({
       mapApi: {
-        getFromApi() { return map; }
+        getFromApi() { return map; },
       },
       mapLayer: A([firstLayer, secondLayer]),
     });
-    let mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
-      e.results = A([{ promise: resolve() }]);
+    const mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
+      e.results = A([{ promise: resolve(), }]);
     });
-    let mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
+    const mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
 
-    //Act
-    let result = subject._setVisibility(['1'], true);
+    // Act
+    const result = subject._setVisibility(['1'], true);
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Equals result = Promise');
-    result.then((res)=> {
+    result.then((res) => {
       assert.equal(res, 'success', 'Check result message');
       assert.equal(firstLayer.get('visibility'), true, 'Check firstLayer visibility');
       assert.equal(secondLayer.get('visibility'), false, 'Check secondLayer visibility');
@@ -59,38 +59,38 @@ module('Unit | Mixin | test method setVisibility ', function() {
     });
   });
 
-  test('Test visibility = false', function(assert) {
-    //Arrange
+  test('Test visibility = false', function (assert) {
+    // Arrange
     assert.expect(10);
-    let firstLayer = layerModel.create({
-      id: '1'
+    const firstLayer = layerModel.create({
+      id: '1',
     });
-    let secondLayer = layerModel.create({
-      id: '2'
+    const secondLayer = layerModel.create({
+      id: '2',
     });
-    let map = L.map(document.createElement('div'), {
+    const map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
-      zoom: 13
+      zoom: 13,
     });
-    map.on('flexberry-map:moveend', ()=> {});
-    let done = assert.async(1);
-    let subject = mapApiMixinObject.create({
+    map.on('flexberry-map:moveend', () => {});
+    const done = assert.async(1);
+    const subject = mapApiMixinObject.create({
       mapApi: {
-        getFromApi() { return map; }
+        getFromApi() { return map; },
       },
       mapLayer: A([firstLayer, secondLayer]),
     });
-    let mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
-      e.results = A([{ promise: resolve() }]);
+    const mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
+      e.results = A([{ promise: resolve(), }]);
     });
-    let mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
+    const mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
 
-    //Act
-    let result = subject._setVisibility(['1', '2']);
+    // Act
+    const result = subject._setVisibility(['1', '2']);
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Equals result = Promise');
-    result.then((res)=> {
+    result.then((res) => {
       assert.equal(res, 'success', 'Check result message');
       assert.equal(firstLayer.get('visibility'), false, 'Check firstLayer visibility');
       assert.equal(secondLayer.get('visibility'), false, 'Check secondLayer visibility');
@@ -106,32 +106,32 @@ module('Unit | Mixin | test method setVisibility ', function() {
     });
   });
 
-  test('Test not founded layers', function(assert) {
-    //Arrange
+  test('Test not founded layers', function (assert) {
+    // Arrange
     assert.expect(8);
-    let map = L.map(document.createElement('div'), {
+    const map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
-      zoom: 13
+      zoom: 13,
     });
-    map.on('flexberry-map:moveend', ()=> {});
-    let done = assert.async(1);
-    let subject = mapApiMixinObject.create({
+    map.on('flexberry-map:moveend', () => {});
+    const done = assert.async(1);
+    const subject = mapApiMixinObject.create({
       mapApi: {
-        getFromApi() { return map; }
+        getFromApi() { return map; },
       },
       mapLayer: A([]),
     });
-    let mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
-      e.results = A([{ promise: resolve() }]);
+    const mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
+      e.results = A([{ promise: resolve(), }]);
     });
-    let mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
+    const mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
 
-    //Act
-    let result = subject._setVisibility(['3', '4'], true);
+    // Act
+    const result = subject._setVisibility(['3', '4'], true);
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Equals result = Promise');
-    result.catch((res)=> {
+    result.catch((res) => {
       assert.equal(res, 'Layer \'3\' not found.', 'Check result message');
       assert.equal(mapFireSpy.callCount, 0, 'Check call count method fire on map');
       assert.equal(mapLayerFindSpy.callCount, 2, 'Check call count method findBy on Array');
@@ -145,32 +145,32 @@ module('Unit | Mixin | test method setVisibility ', function() {
     });
   });
 
-  test('Test array is empty', function(assert) {
-    //Arrange
+  test('Test array is empty', function (assert) {
+    // Arrange
     assert.expect(4);
-    let map = L.map(document.createElement('div'), {
+    const map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
-      zoom: 13
+      zoom: 13,
     });
-    map.on('flexberry-map:moveend', ()=> {});
-    let done = assert.async(1);
-    let subject = mapApiMixinObject.create({
+    map.on('flexberry-map:moveend', () => {});
+    const done = assert.async(1);
+    const subject = mapApiMixinObject.create({
       mapApi: {
-        getFromApi() { return map; }
+        getFromApi() { return map; },
       },
       mapLayer: A([]),
     });
-    let mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
-      e.results = A([{ promise: resolve() }]);
+    const mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
+      e.results = A([{ promise: resolve(), }]);
     });
-    let mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
+    const mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
 
-    //Act
-    let result = subject._setVisibility([], true);
+    // Act
+    const result = subject._setVisibility([], true);
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Equals result = Promise');
-    result.catch((res)=> {
+    result.catch((res) => {
       assert.equal(res, 'all layerIds is not found', 'Check result message');
       assert.equal(mapFireSpy.callCount, 0, 'Check call count method fire on map');
       assert.equal(mapLayerFindSpy.callCount, 0, 'Check call count method findBy on Array');
@@ -180,21 +180,20 @@ module('Unit | Mixin | test method setVisibility ', function() {
     });
   });
 
-  test('Test parametr is not a array', function(assert) {
-    //Arrange
+  test('Test parametr is not a array', function (assert) {
+    // Arrange
     assert.expect(2);
-    let done = assert.async(1);
-    let subject = mapApiMixinObject.create();
+    const done = assert.async(1);
+    const subject = mapApiMixinObject.create();
 
-    //Act
-    let result = subject._setVisibility();
+    // Act
+    const result = subject._setVisibility();
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Equals result = Promise');
-    result.catch((res)=> {
+    result.catch((res) => {
       assert.equal(res, 'Parametr is not a Array', 'Check result message');
       done();
     });
   });
 });
-

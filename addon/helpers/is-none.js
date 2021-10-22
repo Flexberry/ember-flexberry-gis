@@ -24,5 +24,5 @@ export default Helper.extend({
   */
   compute([value]) {
     return isNone(value);
-  }
+  },
 });

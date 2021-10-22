@@ -11,7 +11,7 @@ import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
 import config from '../config/environment';
 
-const version = config.APP.version;
+const { version, } = config.APP;
 
 /**
   Application controller.
@@ -50,19 +50,19 @@ export default Controller.extend({
       @method actions.toggleSidebar
     */
     toggleSidebar() {
-      let sidebar = $('.ui.sidebar.main.menu');
+      const sidebar = $('.ui.sidebar.main.menu');
       sidebar.sidebar('toggle');
 
       if ($('.inverted.vertical.main.menu').hasClass('visible')) {
         $('.sidebar.icon.text-menu-show').removeClass('hidden');
         $('.sidebar.icon.text-menu-hide').addClass('hidden');
         $('.bgw-opacity').addClass('hidden');
-        $('.full.height').css({ transition: 'width 0.45s ease-in-out 0s', width: '100%' });
+        $('.full.height').css({ transition: 'width 0.45s ease-in-out 0s', width: '100%', });
       } else {
         $('.sidebar.icon.text-menu-show').addClass('hidden');
         $('.sidebar.icon.text-menu-hide').removeClass('hidden');
         $('.bgw-opacity').removeClass('hidden');
-        $('.full.height').css({ transition: 'width 0.3s ease-in-out 0s', width: 'calc(100% - ' + sidebar.width() + 'px)' });
+        $('.full.height').css({ transition: 'width 0.3s ease-in-out 0s', width: `calc(100% - ${sidebar.width()}px)`, });
       }
     },
 
@@ -83,7 +83,7 @@ export default Controller.extend({
         $('.sidebar.icon.text-menu-hide').removeClass('hidden');
         $('.bgw-opacity').removeClass('hidden');
       }
-    }
+    },
   },
 
   /**
@@ -110,11 +110,11 @@ export default Controller.extend({
     @property addonVersionHref
     @type String
   */
-  addonVersionHref: computed('addonVersion', function() {
-    let addonVersion = this.get('addonVersion');
-    let commitSha = addonVersion.split('+')[1];
+  addonVersionHref: computed('addonVersion', function () {
+    const addonVersion = this.get('addonVersion');
+    const commitSha = addonVersion.split('+')[1];
 
-    return 'https://github.com/Flexberry/ember-flexberry/commit/' + commitSha;
+    return `https://github.com/Flexberry/ember-flexberry/commit/${commitSha}`;
   }),
 
   /**
@@ -123,8 +123,8 @@ export default Controller.extend({
     @property browserIsInternetExplorer
     @type Boolean
   */
-  browserIsInternetExplorer: computed(function() {
-    let userAgent = window.navigator.userAgent;
+  browserIsInternetExplorer: computed(function () {
+    const { userAgent, } = window.navigator;
 
     return userAgent.indexOf('MSIE ') > 0 || userAgent.indexOf('Trident/') > 0 || userAgent.indexOf('Edge/') > 0;
   }),
@@ -144,7 +144,7 @@ export default Controller.extend({
     @method _userSettingsServiceChanged
     @private
   */
-  _userSettingsServiceChanged: observer('userSettingsService.isUserSettingsServiceEnabled', function() {
+  _userSettingsServiceChanged: observer('userSettingsService.isUserSettingsServiceEnabled', function () {
     this.get('target.router').refresh();
   }),
 
@@ -154,14 +154,14 @@ export default Controller.extend({
   init() {
     this._super(...arguments);
 
-    let i18n = this.get('i18n');
+    const i18n = this.get('i18n');
     if (isNone(i18n)) {
       return;
     }
 
     // If i18n.locale is long value like 'ru-RU', 'en-GB', ... this code will return short variant 'ru', 'en', etc.
-    let shortCurrentLocale = this.get('i18n.locale').split('-')[0];
-    let availableLocales = A(this.get('locales'));
+    const shortCurrentLocale = this.get('i18n.locale').split('-')[0];
+    const availableLocales = A(this.get('locales'));
 
     // Force current locale to be one of available,
     // if browser's current language is not supported by dummy application,
@@ -180,14 +180,14 @@ export default Controller.extend({
     @type Object
   */
   sitemap: computed('i18n.locale', function () {
-    let i18n = this.get('i18n');
+    const i18n = this.get('i18n');
 
     return {
       nodes: [{
         link: 'index',
         caption: i18n.t('forms.application.sitemap.index.caption'),
         title: i18n.t('forms.application.sitemap.index.title'),
-        children: null
+        children: null,
       }, {
         link: null,
         caption: i18n.t('forms.application.sitemap.gis.caption'),
@@ -196,23 +196,23 @@ export default Controller.extend({
           link: 'maps',
           caption: i18n.t('forms.application.sitemap.gis.maps.caption'),
           title: i18n.t('forms.application.sitemap.gis.maps.title'),
-          children: null
+          children: null,
         }, {
           link: 'new-platform-flexberry-g-i-s-layer-metadata-l',
           caption: i18n.t('forms.application.sitemap.gis.map-metadata.caption'),
           title: i18n.t('forms.application.sitemap.gis.map-metadata.title'),
-          children: null
+          children: null,
         }, {
           link: 'gis-search-form',
           caption: i18n.t('forms.application.sitemap.gis.gis-search-form.caption'),
           title: i18n.t('forms.application.sitemap.gis.gis-search-form.title'),
-          children: null
+          children: null,
         }, {
           link: 'new-platform-flexberry-g-i-s-map-object-setting-l',
           caption: i18n.t('forms.application.sitemap.map-object-setting.caption'),
           title: i18n.t('forms.application.sitemap.map-object-setting.title'),
-          children: null
-        }]
+          children: null,
+        }],
       }, {
         link: null,
         caption: i18n.t('forms.application.sitemap.components-examples.caption'),
@@ -221,9 +221,9 @@ export default Controller.extend({
           link: 'components-examples/flexberry-boundingbox/settings-example',
           caption: i18n.t('forms.application.sitemap.components-examples.flexberry-boundingbox.caption'),
           title: i18n.t('forms.application.sitemap.components-examples.flexberry-boundingbox.title'),
-          children: null
-        }]
-      }]
+          children: null,
+        }],
+      }],
     };
-  })
+  }),
 });

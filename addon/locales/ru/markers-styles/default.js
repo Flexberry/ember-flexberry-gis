@@ -1,3 +1,3 @@
 export default {
-  'caption': 'Маркер по умолчанию'
+  caption: 'Маркер по умолчанию',
 };

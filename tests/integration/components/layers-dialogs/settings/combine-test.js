@@ -2,7 +2,9 @@ import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, findAll, find } from '@ember/test-helpers';
+import {
+  render, click, findAll, find
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 import I18nService from 'ember-i18n/services/i18n';
@@ -10,7 +12,7 @@ import I18nRuLocale from 'ember-flexberry-gis/locales/ru/translations';
 import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
 import sinon from 'sinon';
 
-module('Integration | Component | layers dialogs/settings/combine', function(hooks) {
+module('Integration | Component | layers dialogs/settings/combine', function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -20,15 +22,15 @@ module('Integration | Component | layers dialogs/settings/combine', function(hoo
 
     this.i18n = this.owner.lookup('service:i18n');
     Component.reopen({
-      i18n: service('i18n')
+      i18n: service('i18n'),
     });
 
     this.set('i18n.locale', 'ru');
   });
 
-  test('it renders without settings and test action addTypeSettings', async function(assert) {
+  test('it renders without settings and test action addTypeSettings', async function (assert) {
     assert.expect(7);
-    let ownerStub = sinon.stub(Ember, 'getOwner');
+    const ownerStub = sinon.stub(Ember, 'getOwner');
     ownerStub.returns({
       knownNamesForType() {
         return ['wfs', 'wms'];
@@ -38,9 +40,9 @@ module('Integration | Component | layers dialogs/settings/combine', function(hoo
       },
       _lookupFactory() {
         return {
-          'APP': {
-            'mapApiService': true
-          }
+          APP: {
+            mapApiService: true,
+          },
         };
       },
       knownForType() {
@@ -50,7 +52,7 @@ module('Integration | Component | layers dialogs/settings/combine', function(hoo
               crs: undefined,
               showExisting: undefined,
             };
-          }
+          },
         };
       },
     });
@@ -73,9 +75,9 @@ module('Integration | Component | layers dialogs/settings/combine', function(hoo
     ownerStub.restore();
   });
 
-  test('it renders with settings', async function(assert) {
+  test('it renders with settings', async function (assert) {
     assert.expect(4);
-    let ownerStub = sinon.stub(Ember, 'getOwner');
+    const ownerStub = sinon.stub(Ember, 'getOwner');
     ownerStub.returns({
       knownNamesForType() {
         return ['wfs', 'wms'];
@@ -85,11 +87,11 @@ module('Integration | Component | layers dialogs/settings/combine', function(hoo
       },
       _lookupFactory() {
         return {
-          'APP': {
-            'mapApiService': true
-          }
+          APP: {
+            mapApiService: true,
+          },
         };
-      }
+      },
     });
 
     this.set('settings',
@@ -97,11 +99,10 @@ module('Integration | Component | layers dialogs/settings/combine', function(hoo
         type: 'wfs',
         innerLayers: [
           {
-            'type': 'wms'
+            type: 'wms',
           }
-        ]
-      }
-    );
+        ],
+      });
 
     await render(hbs`{{layers-dialogs/settings/combine settings=settings}}`);
 

@@ -12,21 +12,21 @@ import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
   @param {NewPlatformFlexberryGISMapLayer} layerModel
   @return {NewPlatformFlexberryGISMapLayer} Layer model.
 */
-let createLayerFromMetadata = function(metadata, store) {
-  let mapLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', {
-      id: generateUniqueId(),
-      name: metadata.get('name'),
-      description: metadata.get('description'),
-      keyWords: metadata.get('keyWords'),
-      type: metadata.get('type'),
-      settings: metadata.get('settings'),
-      scale:metadata.get('scale'),
-      coordinateReferenceSystem:metadata.get('coordinateReferenceSystem'),
-      boundingBox:metadata.get('boundingBox'),
+const createLayerFromMetadata = function (metadata, store) {
+  const mapLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', {
+    id: generateUniqueId(),
+    name: metadata.get('name'),
+    description: metadata.get('description'),
+    keyWords: metadata.get('keyWords'),
+    type: metadata.get('type'),
+    settings: metadata.get('settings'),
+    scale: metadata.get('scale'),
+    coordinateReferenceSystem: metadata.get('coordinateReferenceSystem'),
+    boundingBox: metadata.get('boundingBox'),
 
-      // If user has chosen to open metadata on map, then layer created on metadata basics must be visible by default.
-      visibility: true
-    });
+    // If user has chosen to open metadata on map, then layer created on metadata basics must be visible by default.
+    visibility: true,
+  });
 
   addLinkMetadata(mapLayer, metadata.get('linkMetadata'), store);
   return mapLayer;
@@ -40,16 +40,16 @@ let createLayerFromMetadata = function(metadata, store) {
   @param {NewPlatformFlexberryGISLinkMetadata} linkMetadata Link metadata collection.
   @private
 */
-let addLinkMetadata = function(layerModel, linkMetadata, store) {
+let addLinkMetadata = function (layerModel, linkMetadata, store) {
   if (!isArray(linkMetadata)) {
     return;
   }
 
   linkMetadata.forEach((item) => {
-    let newLayerLink = store.createRecord('new-platform-flexberry-g-i-s-layer-link', {
+    const newLayerLink = store.createRecord('new-platform-flexberry-g-i-s-layer-link', {
       id: generateUniqueId(),
       allowShow: item.get('allowShow'),
-      mapObjectSetting: item.get('mapObjectSetting')
+      mapObjectSetting: item.get('mapObjectSetting'),
     });
 
     addLinkParametersMetadata(newLayerLink, item.get('parameters'), store);
@@ -65,19 +65,19 @@ let addLinkMetadata = function(layerModel, linkMetadata, store) {
   @param {NewPlatformFlexberryGISParameterMetadata} parameters Layer link parameters metadata collection.
   @private
 */
-let addLinkParametersMetadata = function(layerLinkModel, parameters, store) {
+let addLinkParametersMetadata = function (layerLinkModel, parameters, store) {
   if (!isArray(parameters)) {
     return;
   }
 
   parameters.forEach((item) => {
-    let newLinkParameter = store.createRecord('new-platform-flexberry-g-i-s-link-parameter', {
+    const newLinkParameter = store.createRecord('new-platform-flexberry-g-i-s-link-parameter', {
       id: generateUniqueId(),
       objectField: item.get('objectField'),
       layerField: item.get('layerField'),
       expression: item.get('expression'),
       queryKey: item.get('queryKey'),
-      linkField: item.get('linkField')
+      linkField: item.get('linkField'),
     });
 
     layerLinkModel.get('parameters').pushObject(newLinkParameter);

@@ -14,14 +14,14 @@ import { get } from '@ember/object';
   @param {Object} polygon
   @return {Object} Retriveved bounds from polygon
 */
-let getBounds = function (polygon) {
+const getBounds = function (polygon) {
   let minLat;
   let minLng;
   let maxLat;
   let maxLng;
-  let boundingBox = polygon || {};
-  let boundingBoxCoords = get(boundingBox, 'coordinates.0') || [];
-  boundingBoxCoords.forEach(coordinate => {
+  const boundingBox = polygon || {};
+  const boundingBoxCoords = get(boundingBox, 'coordinates.0') || [];
+  boundingBoxCoords.forEach((coordinate) => {
     if (coordinate[0] > maxLng || isNone(maxLng)) {
       maxLng = coordinate[0];
     }
@@ -39,7 +39,9 @@ let getBounds = function (polygon) {
     }
   });
 
-  return { minLat: minLat || -90, minLng: minLng || -180, maxLat: maxLat || 90, maxLng: maxLng || 180 };
+  return {
+    minLat: minLat || -90, minLng: minLng || -180, maxLat: maxLat || 90, maxLng: maxLng || 180,
+  };
 };
 
 export {

@@ -172,17 +172,17 @@ export default Component.extend({
     @default null
     @private
   */
-  _availableLineLocation: computed('i18n.locale', function() {
+  _availableLineLocation: computed('i18n.locale', function () {
     let result = [];
-    let i18n = this.get('i18n');
-    let over = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.over`).toString();
-    let along = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.along`).toString();
-    let under = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.under`).toString();
+    const i18n = this.get('i18n');
+    const over = i18n.t('components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.over').toString();
+    const along = i18n.t('components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.along').toString();
+    const under = i18n.t('components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.under').toString();
     result = A([over, along, under]);
-    let itemLineLocation = {
-      over: over,
-      along: along,
-      under: under
+    const itemLineLocation = {
+      over,
+      along,
+      under,
     };
     this.set('_itemsLineLocation', itemLineLocation);
     return result;
@@ -196,13 +196,13 @@ export default Component.extend({
     @default null
     @private
   */
-  _lineLocationSelect: computed('value.location.lineLocationSelect', '_itemsLineLocation', function() {
-    let location = this.get('value.location.lineLocationSelect');
-    let items = this.get('_itemsLineLocation');
+  _lineLocationSelect: computed('value.location.lineLocationSelect', '_itemsLineLocation', function () {
+    const location = this.get('value.location.lineLocationSelect');
+    const items = this.get('_itemsLineLocation');
     let result = items.over;
     let setting = 'over';
     if (!isNone(items)) {
-      for (var key in items) {
+      for (const key in items) {
         if (key === location) {
           result = items[key];
           setting = key;
@@ -228,9 +228,9 @@ export default Component.extend({
   */
   _arrLabelString: null,
 
-  _error: computed('_leafletObject', 'leafletMap', function() {
-    let leafletObject = this.get('_leafletObject');
-    let leafletMap = this.get('leafletMap');
+  _error: computed('_leafletObject', 'leafletMap', function () {
+    const leafletObject = this.get('_leafletObject');
+    const leafletMap = this.get('leafletMap');
     return leafletMap && !leafletMap.hasLayer(leafletObject);
   }),
 
@@ -268,30 +268,30 @@ export default Component.extend({
     @method getAllProperties
   */
   getAllProperties() {
-    let _this = this;
-    let leafletObject = _this.get('_leafletObject');
+    const _this = this;
+    const leafletObject = _this.get('_leafletObject');
     if (isNone(leafletObject)) {
-      let type = _this.get('layerType');
-      let leafletObjectMethod = _this.get('leafletObjectMethod');
+      const type = _this.get('layerType');
+      const leafletObjectMethod = _this.get('leafletObjectMethod');
       if (!(isBlank(leafletObjectMethod) || isBlank(type))) {
         _this.set('_leafletObjectIsLoading', true);
-        leafletObjectMethod().then(leafletObject => {
+        leafletObjectMethod().then((leafletObject) => {
           _this.set('_leafletObject', leafletObject);
           _this.set('_leafletObjectIsLoading', false);
-          let layerClass = getOwner(_this).knownForType('layer', type);
+          const layerClass = getOwner(_this).knownForType('layer', type);
           if (!isBlank(layerClass)) {
-            let allProperties = A(layerClass.getLayerProperties(leafletObject));
+            const allProperties = A(layerClass.getLayerProperties(leafletObject));
 
-            let localizedProperties = this.get(`value.featuresPropertiesSettings.localizedProperties.${this.get('i18n.locale')}`) || {};
-            let excludedProperties = this.get(`value.featuresPropertiesSettings.excludedProperties`);
+            const localizedProperties = this.get(`value.featuresPropertiesSettings.localizedProperties.${this.get('i18n.locale')}`) || {};
+            let excludedProperties = this.get('value.featuresPropertiesSettings.excludedProperties');
             excludedProperties = isArray(excludedProperties) ? A(excludedProperties) : A();
-            let availableLayerProperties = {};
-            for (var propertyName of allProperties) {
+            const availableLayerProperties = {};
+            for (const propertyName of allProperties) {
               if (excludedProperties.contains(propertyName)) {
                 continue;
               }
 
-              let propertyCaption = get(localizedProperties, propertyName);
+              const propertyCaption = get(localizedProperties, propertyName);
               availableLayerProperties[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
             }
 
@@ -313,8 +313,8 @@ export default Component.extend({
     @private
   */
   _pasteIntoLabelString(pasteString, caretShift) {
-    let textarea = this.$('.edit-label-textarea')[0];
-    let labelString = this.get('value.labelSettingsString') || '';
+    const textarea = this.$('.edit-label-textarea')[0];
+    const labelString = this.get('value.labelSettingsString') || '';
     let newLabelString = '';
     let caretPosition = 0;
     if (labelString.length > 0) {
@@ -325,7 +325,7 @@ export default Component.extend({
       caretPosition = pasteString.length;
     }
 
-    caretPosition = caretPosition + (caretShift || 0);
+    caretPosition += (caretShift || 0);
     this.set('value.labelSettingsString', newLabelString);
     scheduleOnce('afterRender', this, function () {
       textarea.focus();
@@ -353,10 +353,10 @@ export default Component.extend({
       @method actions.onLineLocationSelect
     */
     onLineLocationSelect(location) {
-      let items = this.get('_itemsLineLocation');
+      const items = this.get('_itemsLineLocation');
       let result = 'over';
       if (!isNone(items)) {
-        for (var key in items) {
+        for (const key in items) {
           if (items[key] === location) {
             result = key;
             break;
@@ -405,7 +405,7 @@ export default Component.extend({
           return;
         }
 
-        let newString = `'${value}'`;
+        const newString = `'${value}'`;
         this._pasteIntoLabelString(newString);
       }
     },
@@ -425,7 +425,7 @@ export default Component.extend({
       @method actions.onBoldFontButtonClick
     */
     onBoldFontButtonClick() {
-      let previousFontWeight = this.get('value.options.captionFontWeight');
+      const previousFontWeight = this.get('value.options.captionFontWeight');
       this.set('value.options.captionFontWeight', previousFontWeight !== 'bold' ? 'bold' : 'normal');
     },
 
@@ -435,7 +435,7 @@ export default Component.extend({
       @method actions.onItalicFontButtonClick
     */
     onItalicFontButtonClick() {
-      let previousFontWeight = this.get('value.options.captionFontStyle');
+      const previousFontWeight = this.get('value.options.captionFontStyle');
       this.set('value.options.captionFontStyle', previousFontWeight !== 'italic' ? 'italic' : 'normal');
     },
 
@@ -445,7 +445,7 @@ export default Component.extend({
       @method actions.onUnderlineFontButtonClick
     */
     onUnderlineFontButtonClick() {
-      let previousFontWeight = this.get('value.options.captionFontDecoration');
+      const previousFontWeight = this.get('value.options.captionFontDecoration');
       this.set('value.options.captionFontDecoration', previousFontWeight !== 'underline' ? 'underline' : 'none');
     },
 
@@ -455,7 +455,7 @@ export default Component.extend({
       @method actions.onLeftFontButtonClick
     */
     onLeftFontButtonClick() {
-      let previousFontWeight = this.get('value.options.captionFontAlign');
+      const previousFontWeight = this.get('value.options.captionFontAlign');
       this.set('value.options.captionFontAlign', previousFontWeight !== 'left' ? 'left' : 'auto');
     },
 
@@ -465,7 +465,7 @@ export default Component.extend({
       @method actions.onCenterFontButtonClick
     */
     onCenterFontButtonClick() {
-      let previousFontWeight = this.get('value.options.captionFontAlign');
+      const previousFontWeight = this.get('value.options.captionFontAlign');
       this.set('value.options.captionFontAlign', previousFontWeight !== 'center' ? 'center' : 'auto');
     },
 
@@ -475,7 +475,7 @@ export default Component.extend({
       @method actions.onRightFontButtonClick
     */
     onRightFontButtonClick() {
-      let previousFontWeight = this.get('value.options.captionFontAlign');
+      const previousFontWeight = this.get('value.options.captionFontAlign');
       this.set('value.options.captionFontAlign', previousFontWeight !== 'right' ? 'right' : 'auto');
     },
 
@@ -495,6 +495,6 @@ export default Component.extend({
     */
     onLocationPointButtonClick(num) {
       this.set('value.location.locationPoint', num);
-    }
-  }
+    },
+  },
 });

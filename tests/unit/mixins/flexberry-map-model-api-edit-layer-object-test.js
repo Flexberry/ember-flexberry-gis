@@ -6,49 +6,49 @@ import sinon from 'sinon';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
 import crsFactory3395 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-3395';
 
-module('Unit | Mixin | test method editLayerObject', function() {
-  let mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
-  let geoJsonObject = L.polygon([[0, 100], [0, 101], [1, 101], [1, 100]]).toGeoJSON();
-  let leafletObject = L.polygon([[1, 0], [2, 3], [3, 1], [3, 0]]);
-  let leafletLayer = {
+module('Unit | Mixin | test method editLayerObject', function () {
+  const mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
+  const geoJsonObject = L.polygon([[0, 100], [0, 101], [1, 101], [1, 100]]).toGeoJSON();
+  const leafletObject = L.polygon([[1, 0], [2, 3], [3, 1], [3, 0]]);
+  const leafletLayer = {
     options: {
       crs: {
-        code: 'EPSG:4326'
-      }
+        code: 'EPSG:4326',
+      },
     },
-    editLayer: () => {}
+    editLayer: () => {},
   };
 
-  test('test method editLayerObject with EPSG:4326', function(assert) {
-    //Arrange
+  test('test method editLayerObject with EPSG:4326', function (assert) {
+    // Arrange
     assert.expect(6);
-    let done = assert.async(1);
-    let ownerStub = sinon.stub(Ember, 'getOwner');
+    const done = assert.async(1);
+    const ownerStub = sinon.stub(Ember, 'getOwner');
     ownerStub.returns({
       knownForType() {
         return {
-          'epsg4326': crsFactory4326,
-          'epsg3395': crsFactory3395,
+          epsg4326: crsFactory4326,
+          epsg3395: crsFactory3395,
         };
       },
       knownNamesForType() {
         return ['epsg4326', 'epsg3395'];
-      }
+      },
     });
-    let getModelLayerFeature = () => { return resolve([{}, leafletLayer, [leafletObject]]); };
+    const getModelLayerFeature = () => resolve([{}, leafletLayer, [leafletObject]]);
 
-    let subject = mapApiMixinObject.create({
-      _getModelLayerFeature() {}
+    const subject = mapApiMixinObject.create({
+      _getModelLayerFeature() {},
     });
-    let spyEditLayer = sinon.spy(leafletLayer, 'editLayer');
-    let getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+    const spyEditLayer = sinon.spy(leafletLayer, 'editLayer');
+    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
 
-    //Act
-    let result = subject.editLayerObject('1', '1', geoJsonObject, 'EPSG:4326');
+    // Act
+    const result = subject.editLayerObject('1', '1', geoJsonObject, 'EPSG:4326');
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Check result instance of Promise');
-    result.then((res)=> {
+    result.then((res) => {
       assert.equal(spyEditLayer.callCount, 1, 'Check call count to method editLayer');
       assert.deepEqual(res._latlngs,
         [
@@ -69,37 +69,37 @@ module('Unit | Mixin | test method editLayerObject', function() {
     });
   });
 
-  test('test method editLayerObject with EPSG:3395', function(assert) {
-    //Arrange
+  test('test method editLayerObject with EPSG:3395', function (assert) {
+    // Arrange
     assert.expect(7);
-    let done = assert.async(1);
-    let ownerStub = sinon.stub(Ember, 'getOwner');
+    const done = assert.async(1);
+    const ownerStub = sinon.stub(Ember, 'getOwner');
     ownerStub.returns({
       knownForType() {
         return {
-          'epsg4326': crsFactory4326,
-          'epsg3395': crsFactory3395,
+          epsg4326: crsFactory4326,
+          epsg3395: crsFactory3395,
         };
       },
       knownNamesForType() {
         return ['epsg4326', 'epsg3395'];
-      }
+      },
     });
-    let getModelLayerFeature = () => { return resolve([{}, leafletLayer, [leafletObject]]); };
+    const getModelLayerFeature = () => resolve([{}, leafletLayer, [leafletObject]]);
 
-    let subject = mapApiMixinObject.create({
-      _getModelLayerFeature() {}
+    const subject = mapApiMixinObject.create({
+      _getModelLayerFeature() {},
     });
-    let spyEditLayer = sinon.spy(leafletLayer, 'editLayer');
-    let spyUnProject = sinon.spy(L.CRS.EPSG3395, 'unproject');
-    let getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+    const spyEditLayer = sinon.spy(leafletLayer, 'editLayer');
+    const spyUnProject = sinon.spy(L.CRS.EPSG3395, 'unproject');
+    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
 
-    //Act
-    let result = subject.editLayerObject('1', '1', geoJsonObject, 'EPSG:3395');
+    // Act
+    const result = subject.editLayerObject('1', '1', geoJsonObject, 'EPSG:3395');
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Check result instance of Promise');
-    result.then((res)=> {
+    result.then((res) => {
       assert.equal(spyEditLayer.callCount, 1, 'Check call count to method editLayer');
       assert.equal(spyUnProject.callCount, 5, 'Check call count to method unproject');
       assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');

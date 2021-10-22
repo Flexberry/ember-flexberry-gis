@@ -2,8 +2,8 @@
   @module ember-flexberry-gis
 */
 
-import { hexToRgb } from 'ember-flexberry-gis/utils/color-convertor';
-import { rgbToHex } from 'ember-flexberry-gis/utils/color-convertor';
+import { hexToRgb, rgbToHex } from 'ember-flexberry-gis/utils/color-convertor';
+
 
 /**
   Get color range between start and end colors
@@ -15,17 +15,17 @@ import { rgbToHex } from 'ember-flexberry-gis/utils/color-convertor';
   @param int steps
   @return [] hexArray
 */
-let getGradientColors = function(colorStart, colorEnd, steps) {
-  let interpolatedColorArray = [];
+const getGradientColors = function (colorStart, colorEnd, steps) {
+  const interpolatedColorArray = [];
 
   if (steps <= 1) {
     interpolatedColorArray.push(colorStart);
     return interpolatedColorArray;
   }
 
-  let rgbColorStart = hexToRgb(colorStart);
-  let rgbColorEnd = hexToRgb(colorEnd);
-  let stepFactor = 1 / (steps - 1);
+  const rgbColorStart = hexToRgb(colorStart);
+  const rgbColorEnd = hexToRgb(colorEnd);
+  const stepFactor = 1 / (steps - 1);
 
   for (let i = 0; i < steps; i++) {
     interpolatedColorArray.push(
@@ -46,12 +46,12 @@ let getGradientColors = function(colorStart, colorEnd, steps) {
   @return [] rgbArray
   @private
 */
-let interpolateColor = function(color1, color2, factor) {
+let interpolateColor = function (color1, color2, factor) {
   if (arguments.length < 3) {
     factor = 0.5;
   }
 
-  let result = color1.slice();
+  const result = color1.slice();
   for (let i = 0; i < 3; i++) {
     result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
   }

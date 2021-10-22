@@ -28,15 +28,15 @@ export default RectangleMapTool.extend({
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.layer Drawn rectangle layer.
     @private
   */
-  _rectangleDrawingDidEnd({ layer }) {
+  _rectangleDrawingDidEnd({ layer, }) {
     this._super(...arguments);
-    let bounds = layer.getBounds();
-    let leafletMap = this.get('leafletMap');
+    const bounds = layer.getBounds();
+    const leafletMap = this.get('leafletMap');
     if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
-      let zoom = leafletMap.getZoom() + 1;
+      const zoom = leafletMap.getZoom() + 1;
       leafletMap.setView(bounds.getNorthEast(), zoom);
     } else {
       leafletMap.fitBounds(layer.getBounds());
     }
-  }
+  },
 });

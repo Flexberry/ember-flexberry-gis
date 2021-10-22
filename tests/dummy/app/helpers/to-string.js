@@ -10,7 +10,7 @@ import Helper from '@ember/component/helper';
   @public
 */
 export default Helper.extend({
-  compute: function ([value]) {
-    return '' + value;
-  }
+  compute([value]) {
+    return `${value}`;
+  },
 });

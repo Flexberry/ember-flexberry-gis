@@ -3,6 +3,9 @@ import { Promise } from 'rsvp';
 import { isNone } from '@ember/utils';
 import Mixin from '@ember/object/mixin';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
+import QueryBuilder from 'ember-flexberry-data/query/builder';
+import Condition from 'ember-flexberry-data/query/condition';
+import { ComplexPredicate, StringPredicate, GeographyPredicate } from 'ember-flexberry-data/query/predicate';
 import { getCrsByName } from '../utils/get-crs-by-name';
 import { geometryToJsts } from '../utils/layer-to-jsts';
 import { createLayerFromMetadata } from '../utils/create-layer-from-metadata';
@@ -10,9 +13,6 @@ import {
   setIndexes
 } from '../utils/change-index-on-map-layers';
 
-import QueryBuilder from 'ember-flexberry-data/query/builder';
-import Condition from 'ember-flexberry-data/query/condition';
-import { ComplexPredicate, StringPredicate, GeographyPredicate } from 'ember-flexberry-data/query/predicate';
 
 export default Mixin.create({
   /**
@@ -49,9 +49,9 @@ export default Mixin.create({
     @return {Object} Query builder
   */
   _getQueryBuilderLayerMetadata() {
-    let queryBuilder = new QueryBuilder(this.get('store'))
-    .from(this.get('metadataModelName'))
-    .selectByProjection(this.get('metadataProjection'));
+    const queryBuilder = new QueryBuilder(this.get('store'))
+      .from(this.get('metadataModelName'))
+      .selectByProjection(this.get('metadataProjection'));
     return queryBuilder;
   },
 
@@ -84,7 +84,7 @@ export default Mixin.create({
   */
   findLayerMetadata(geometryIntersectsBbox, attributes) {
     return new Promise((resolve, reject) => {
-      let filter = A();
+      const filter = A();
       let crsName;
       let crsLayer;
       if (!isNone(geometryIntersectsBbox)) {
@@ -95,18 +95,18 @@ export default Mixin.create({
         crsName = geometryIntersectsBbox.crs.properties.name;
         crsLayer = getCrsByName(crsName, this).crs;
 
-        let coordsToLatLng = function (coords) {
+        const coordsToLatLng = function (coords) {
           return crsLayer.unproject(L.point(coords));
         };
 
-        let geoJSON = L.geoJSON(geometryIntersectsBbox, { coordsToLatLng: coordsToLatLng.bind(this) });
+        const geoJSON = L.geoJSON(geometryIntersectsBbox, { coordsToLatLng: coordsToLatLng.bind(this), });
 
-        let predicateBBox = new GeographyPredicate('boundingBox');
+        const predicateBBox = new GeographyPredicate('boundingBox');
         filter.push(predicateBBox.intersects(geoJSON.getLayers()[0].toEWKT(crsFactory4326.create())));
       }
 
       if (!isNone(attributes) && isArray(attributes)) {
-        let equals = A();
+        const equals = A();
         attributes.forEach((strSearch) => {
           equals.push(new StringPredicate('anyText').contains(strSearch));
         });
@@ -129,24 +129,24 @@ export default Mixin.create({
         condition = new ComplexPredicate(Condition.And, ...filter);
       }
 
-      let queryBuilder = this._getQueryBuilderLayerMetadata().where(condition);
+      const queryBuilder = this._getQueryBuilderLayerMetadata().where(condition);
 
       this._getMetadataModels(queryBuilder).then((meta) => {
         let models = meta;
-        let result = [];
+        const result = [];
         if (meta && typeof meta.toArray === 'function') {
           models = meta.toArray();
         }
 
-        models.forEach(model => {
-          let resObject = {
-            layerMatadata: model
+        models.forEach((model) => {
+          const resObject = {
+            layerMatadata: model,
           };
           if (!isNone(geometryIntersectsBbox)) {
-            let bbox = model.get('boundingBox');
-            let bboxLayer = L.geoJSON(bbox).getLayers()[0];
-            let bboxJsts = bboxLayer.toJsts(crsLayer);
-            let featureJsts = geometryToJsts(geometryIntersectsBbox.geometry);
+            const bbox = model.get('boundingBox');
+            const bboxLayer = L.geoJSON(bbox).getLayers()[0];
+            const bboxJsts = bboxLayer.toJsts(crsLayer);
+            const featureJsts = geometryToJsts(geometryIntersectsBbox.geometry);
             featureJsts.setSRID(crsName.split(':')[1]);
             resObject.areaIntersections = bboxJsts.intersection(featureJsts).getArea();
           }
@@ -172,43 +172,41 @@ export default Mixin.create({
   */
   addLayerFromLayerMetadata(layerId, index) {
     return new Promise((resolve, reject) => {
-      let queryBuilder = this._getQueryBuilderLayerMetadata().byId(layerId);
+      const queryBuilder = this._getQueryBuilderLayerMetadata().byId(layerId);
       this._getMetadataModels(queryBuilder).then((meta) => {
         if (meta.content.length === 0) {
           return reject(`LayerMetadata ${layerId} not found.`);
-        } else {
-          let model = meta.content[0];
-          if (meta && typeof meta.toArray === 'function') {
-            model = meta.toArray()[0];
-          }
-
-          let mapLayer = createLayerFromMetadata(model, this.get('store'));
-          mapLayer.set('index', index);
-          mapLayer.set('map', this);
-          let canBeBackground = mapLayer.get('settingsAsObject.backgroundSettings.canBeBackground');
-          const layers = this.get('hierarchy');
-          const layersInTree = this.get('otherLayers');
-          const layerBackground = this.get('backgroundLayers');
-          layers.addObject(mapLayer);
-          if (canBeBackground) {
-            if (!isNone(layerBackground)) {
-              layerBackground.addObject(mapLayer);
-            }
-          } else {
-            if (!isNone(layersInTree)) {
-              layersInTree.addObject(mapLayer);
-            }
-          }
-
-          let rootArray = this.get('mapLayer');
-          rootArray.pushObject(mapLayer);
-          if (isNone(index)) {
-            setIndexes(rootArray, layers);
-          }
-
-          resolve(mapLayer);
         }
+
+        let model = meta.content[0];
+        if (meta && typeof meta.toArray === 'function') {
+          model = meta.toArray()[0];
+        }
+
+        const mapLayer = createLayerFromMetadata(model, this.get('store'));
+        mapLayer.set('index', index);
+        mapLayer.set('map', this);
+        const canBeBackground = mapLayer.get('settingsAsObject.backgroundSettings.canBeBackground');
+        const layers = this.get('hierarchy');
+        const layersInTree = this.get('otherLayers');
+        const layerBackground = this.get('backgroundLayers');
+        layers.addObject(mapLayer);
+        if (canBeBackground) {
+          if (!isNone(layerBackground)) {
+            layerBackground.addObject(mapLayer);
+          }
+        } else if (!isNone(layersInTree)) {
+          layersInTree.addObject(mapLayer);
+        }
+
+        const rootArray = this.get('mapLayer');
+        rootArray.pushObject(mapLayer);
+        if (isNone(index)) {
+          setIndexes(rootArray, layers);
+        }
+
+        resolve(mapLayer);
       });
     });
-  }
+  },
 });

@@ -1,35 +1,35 @@
 export default {
-  'caption': 'Go to specified point',
+  caption: 'Go to specified point',
   'error-message': {
-    'caption': 'Go to error',
-    'content': 'Specified coordinates are wrong & can\'t be successfully converted into numbers',
-    'large-coords': 'Specified coordinates doesn\'t exist in allowable map area'
+    caption: 'Go to error',
+    content: 'Specified coordinates are wrong & can\'t be successfully converted into numbers',
+    'large-coords': 'Specified coordinates doesn\'t exist in allowable map area',
   },
   'approve-button': {
-    'caption': 'Go'
+    caption: 'Go',
   },
   'deny-button': {
-    'caption': 'Cancel'
+    caption: 'Cancel',
   },
   'mode-dropdown': {
-    'caption': 'Coordinates handling mode',
+    caption: 'Coordinates handling mode',
   },
   'latlng-crs-mode': {
-    'caption': 'Latitude & Longitude'
+    caption: 'Latitude & Longitude',
   },
   'map-crs-mode': {
-    'caption': 'In map\'s coordinate system'
+    caption: 'In map\'s coordinate system',
   },
   'x-textbox': {
-    'caption': 'X'
+    caption: 'X',
   },
   'y-textbox': {
-    'caption': 'Y'
+    caption: 'Y',
   },
   'lat-textbox': {
-    'caption': 'Latitude'
+    caption: 'Latitude',
   },
   'lng-textbox': {
-    'caption': 'Longitude'
-  }
+    caption: 'Longitude',
+  },
 };

@@ -24,7 +24,7 @@ export default Controller.extend({
       @method actions.subMenuEl
     */
     subMenuEl(e) {
-      let $this = $(e.currentTarget).parent().find('.subMenu:first');
+      const $this = $(e.currentTarget).parent().find('.subMenu:first');
       if ($this.hasClass('hidden')) {
         $this.removeClass('hidden');
         $(e.target).parent().find('.item-minus:first').removeClass('hidden');
@@ -34,6 +34,6 @@ export default Controller.extend({
         $(e.target).parent().find('.item-minus:first').addClass('hidden');
         $(e.target).parent().find('.item-plus:first').removeClass('hidden');
       }
-    }
-  }
+    },
+  },
 });

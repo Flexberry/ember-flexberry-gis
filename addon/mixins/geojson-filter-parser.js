@@ -28,11 +28,11 @@ export default Mixin.create({
       return A();
     }
 
-    let geojson = leafletObject.toGeoJSON() || {};
-    let features = geojson.features || [];
-    let fields = A();
+    const geojson = leafletObject.toGeoJSON() || {};
+    const features = geojson.features || [];
+    const fields = A();
 
-    for (let property in get(features, '0.properties') || {}) {
+    for (const property in get(features, '0.properties') || {}) {
       fields.addObject(property);
     }
 
@@ -49,23 +49,23 @@ export default Mixin.create({
     @returns {Object} Filter object for layer
   */
   parseFilter(filter, geometryField, isInnerExpression) {
-    let result = this._super(...arguments);
+    const result = this._super(...arguments);
 
     if (!(isBlank(result) || isInnerExpression)) {
-      let intersectFunction = `\nvar intersectCheck = function(condition, geoJSON) {` +
-        `var intersects = true;\n` +
-        `var bounds = new Terraformer.Polygon(geoJSON);\n` +
-        `var primitive = new Terraformer.Primitive(feature.geometry);\n` +
-        `if (typeof primitive.forEach === 'function') {\n` +
-        `  primitive.forEach(function(geometry, index) {\n` +
-        `    var primitive = this.get(index);\n` +
-        `    intersects = intersects || primitive.within(bounds) || primitive.intersects(bounds);\n` +
-        `  });\n` +
-        `} else {\n` +
-        `  intersects = primitive.within(bounds) || primitive.intersects(bounds);\n` +
-        `}\n` +
-        `return condition === 'not in' ? !intersects : intersects;\n` +
-        `};\n`;
+      const intersectFunction = '\nvar intersectCheck = function(condition, geoJSON) {'
+        + 'var intersects = true;\n'
+        + 'var bounds = new Terraformer.Polygon(geoJSON);\n'
+        + 'var primitive = new Terraformer.Primitive(feature.geometry);\n'
+        + 'if (typeof primitive.forEach === \'function\') {\n'
+        + '  primitive.forEach(function(geometry, index) {\n'
+        + '    var primitive = this.get(index);\n'
+        + '    intersects = intersects || primitive.within(bounds) || primitive.intersects(bounds);\n'
+        + '  });\n'
+        + '} else {\n'
+        + '  intersects = primitive.within(bounds) || primitive.intersects(bounds);\n'
+        + '}\n'
+        + 'return condition === \'not in\' ? !intersects : intersects;\n'
+        + '};\n';
       return `function(feature) {${intersectFunction} return ${result}}`;
     }
 

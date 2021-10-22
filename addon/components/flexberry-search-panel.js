@@ -2,8 +2,8 @@ import { A } from '@ember/array';
 import { isBlank, isNone } from '@ember/utils';
 import { computed, get, observer } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../templates/components/flexberry-search-panel';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../templates/components/flexberry-search-panel';
 
 export default Component.extend({
   classNames: ['flexberry-search-panel'],
@@ -32,10 +32,11 @@ export default Component.extend({
     '_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.localizedProperties',
     'i18n.locale',
     function () {
-      let currentLocale = this.get('i18n.locale');
-      let localizedProperties = this.get(
-        `_selectedLayer.settingsAsObject.displaySettings.` +
-        `featuresPropertiesSettings.localizedProperties.${currentLocale}`) || {};
+      const currentLocale = this.get('i18n.locale');
+      const localizedProperties = this.get(
+        '_selectedLayer.settingsAsObject.displaySettings.'
+        + `featuresPropertiesSettings.localizedProperties.${currentLocale}`
+      ) || {};
       this.set('_localizedValue', null);
       return localizedProperties;
     }
@@ -128,7 +129,7 @@ export default Component.extend({
   */
   queryStringEmpty: '',
 
-  queryStringObserver: observer('queryString', function() {
+  queryStringObserver: observer('queryString', function () {
     this.set('queryStringEmpty', !isBlank(this.get('queryString')));
   }),
 
@@ -141,10 +142,10 @@ export default Component.extend({
     @private
   */
   degreeMinSecToDegree(degMinSec) {
-    let degree = degMinSec.substring(0, degMinSec.indexOf('°'));
-    let min = degMinSec.substring(degMinSec.indexOf('°') + 1, degMinSec.indexOf('\''));
-    let sec = degMinSec.substring(degMinSec.indexOf('\'') + 1, degMinSec.indexOf('"'));
-    let coord = Number(degree) + Number(min) / 60 + Number(sec) / 3600;
+    const degree = degMinSec.substring(0, degMinSec.indexOf('°'));
+    const min = degMinSec.substring(degMinSec.indexOf('°') + 1, degMinSec.indexOf('\''));
+    const sec = degMinSec.substring(degMinSec.indexOf('\'') + 1, degMinSec.indexOf('"'));
+    const coord = Number(degree) + Number(min) / 60 + Number(sec) / 3600;
     return coord.toFixed(5);
   },
 
@@ -158,16 +159,15 @@ export default Component.extend({
     @private
   */
   goTo(coord1, coord2, degMinSec1, degMinSec2) {
-    let latlng = new L.LatLng(coord1, coord2);
-    let xCaption = this.get('xCaption');
-    let yCaption = this.get('yCaption');
-    let lat = !isNone(degMinSec1) ? degMinSec1 : latlng.lat;
-    let lng = !isNone(degMinSec2) ? degMinSec2 : latlng.lng;
-    let popupContent =
-      `${xCaption}: ${lat}; ` +
-      `${yCaption}: ${lng}`;
+    const latlng = new L.LatLng(coord1, coord2);
+    const xCaption = this.get('xCaption');
+    const yCaption = this.get('yCaption');
+    const lat = !isNone(degMinSec1) ? degMinSec1 : latlng.lat;
+    const lng = !isNone(degMinSec2) ? degMinSec2 : latlng.lng;
+    const popupContent = `${xCaption}: ${lat}; `
+      + `${yCaption}: ${lng}`;
 
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     leafletMap.openPopup(popupContent, latlng);
     leafletMap.panTo(latlng);
   },
@@ -179,7 +179,9 @@ export default Component.extend({
           this.set('errorMessage', this.get('i18n').t('components.flexberry-search.error-message-empty-selected-layer'));
           this.set('showErrorMessage', true);
           return;
-        } else if (isNone(this.get('propertyName'))) {
+        }
+
+        if (isNone(this.get('propertyName'))) {
           this.set('errorMessage', this.get('i18n').t('components.flexberry-search.error-message-empty-attr-layer'));
           this.set('showErrorMessage', true);
           return;
@@ -187,45 +189,45 @@ export default Component.extend({
       }
 
       this.set('showErrorMessage', false);
-      let queryString =  this.get('queryString');
-      let leafletMap = this.get('leafletMap');
+      const queryString = this.get('queryString');
+      const leafletMap = this.get('leafletMap');
       const regexDegree = /^([-]?[0-9]+[.]?[0-9]*) ([-]?[0-9]+[.]?[0-9]*)/;
       const regexDegreeMinSec = /^([-]?[0-9]+[°][0-9]+['][0-9]+[.]?[0-9]*["]) ([-]?[0-9]+[°][0-9]+['][0-9]+[.]?[0-9]*["])/;
       if (regexDegree.test(queryString)) {
         // Go to coordinates
-        let coords = regexDegree.exec(queryString);
+        const coords = regexDegree.exec(queryString);
         this.goTo(coords[1], coords[2]);
       } else if (regexDegreeMinSec.test(queryString)) {
         // Go to coordinates with degree, minute, second
-        let degMinSec = regexDegreeMinSec.exec(queryString);
-        let coord1 = this.degreeMinSecToDegree(degMinSec[1]);
-        let coord2 = this.degreeMinSecToDegree(degMinSec[2]);
+        const degMinSec = regexDegreeMinSec.exec(queryString);
+        const coord1 = this.degreeMinSecToDegree(degMinSec[1]);
+        const coord2 = this.degreeMinSecToDegree(degMinSec[2]);
         this.goTo(coord1, coord2, degMinSec[1], degMinSec[2]);
       } else {
         // Сontext search and coordinate search
         let filter;
-        let searchOptions = {
-          queryString: queryString,
-          maxResultsCount: this.get('maxResultsCount')
+        const searchOptions = {
+          queryString,
+          maxResultsCount: this.get('maxResultsCount'),
         };
         if (!this.get('attrVisible')) {
-          filter = function(layerModel) {
+          filter = function (layerModel) {
             return layerModel.get('canBeContextSearched') && layerModel.get('visibility');
           };
         } else {
           searchOptions.propertyName = this.get('propertyName');
-          let selectedLayer = this.get('_selectedLayer');
-          filter = function(layerModel) {
+          const selectedLayer = this.get('_selectedLayer');
+          filter = function (layerModel) {
             return layerModel === selectedLayer;
           };
         }
 
-        let e = {
+        const e = {
           latlng: leafletMap.getCenter(),
-          searchOptions: searchOptions,
+          searchOptions,
           context: !this.get('attrVisible'),
-          filter: filter,
-          results: A()
+          filter,
+          results: A(),
         };
         this.sendAction('querySearch', e);
       }
@@ -239,15 +241,15 @@ export default Component.extend({
     },
 
     attrSearch() {
-      let attrVisible = !this.get('attrVisible');
+      const attrVisible = !this.get('attrVisible');
       if (attrVisible) {
         this.set('attrVisible', attrVisible);
-        let searchSettings = this.get('searchSettings');
+        const searchSettings = this.get('searchSettings');
         this.set('_searchSettings', searchSettings);
         this.set('searchSettings', null);
         this.sendAction('attrSearch', this.get('queryString'));
       } else {
-        let _searchSettings = this.get('_searchSettings');
+        const _searchSettings = this.get('_searchSettings');
         this.set('searchSettings', _searchSettings);
         this.set('_searchSettings', null);
         this.set('attrVisible', attrVisible);
@@ -259,8 +261,8 @@ export default Component.extend({
     },
 
     onChange(selectedText) {
-      let searchProperties = this.get('_selectedLayerFeaturesLocalizedProperties');
-      for (var property in searchProperties) {
+      const searchProperties = this.get('_selectedLayerFeaturesLocalizedProperties');
+      for (const property in searchProperties) {
         if (searchProperties[property] === selectedText) {
           this.set('propertyName', property);
         }
@@ -283,5 +285,5 @@ export default Component.extend({
     onErrorMessageHide() {
       this.set('showErrorMessage', false);
     },
-  }
+  },
 });

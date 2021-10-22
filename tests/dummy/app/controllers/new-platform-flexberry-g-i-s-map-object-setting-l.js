@@ -8,5 +8,5 @@ export default ListFormController.extend({
     @type String
     @default 'new-platform-flexberry-g-i-s-map-object-setting-e'
    */
-  editFormRoute: 'new-platform-flexberry-g-i-s-map-object-setting-e'
+  editFormRoute: 'new-platform-flexberry-g-i-s-map-object-setting-e',
 });

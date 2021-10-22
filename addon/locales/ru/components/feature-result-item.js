@@ -8,5 +8,5 @@ export default {
   'select-object-caption': 'К объекту',
   'action-object-caption': 'К объекту',
   'find-intersection-caption': 'Поиск пересечений',
-  'edit-caption': 'Редактировать объект'
+  'edit-caption': 'Редактировать объект',
 };

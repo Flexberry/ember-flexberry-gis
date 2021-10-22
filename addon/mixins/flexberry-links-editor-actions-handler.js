@@ -59,8 +59,8 @@ export default Mixin.create({
       @method actions.addLayerLink
     */
     addLayerLink() {
-      let model = this.get(this.get('linksPropertyPath'));
-      let record = this.get('store').createRecord(this.get('linksModelName'), { id: generateUniqueId() });
+      const model = this.get(this.get('linksPropertyPath'));
+      const record = this.get('store').createRecord(this.get('linksModelName'), { id: generateUniqueId(), });
 
       model.pushObject(record);
     },
@@ -104,10 +104,10 @@ export default Mixin.create({
         ```
     */
     onLayerLinkChangeVisibility(...args) {
-      let objectContainingActionHandler = EmberObject.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
-      let actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
+      const objectContainingActionHandler = EmberObject.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
+      const actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
 
       actionHandler.apply(this, args);
-    }
-  }
+    },
+  },
 });

@@ -6,11 +6,13 @@ import { once } from '@ember/runloop';
 
 import { on } from '@ember/object/evented';
 import $ from 'jquery';
-import { isBlank, isNone, typeOf, isEmpty } from '@ember/utils';
+import {
+  isBlank, isNone, typeOf, isEmpty
+} from '@ember/utils';
 import { computed, observer } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../templates/components/flexberry-identify-panel';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../templates/components/flexberry-identify-panel';
 
 /**
   Component's CSS-classes names.
@@ -38,16 +40,16 @@ const flexberryClassNamesPrefix = 'flexberry-identify-panel';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
-  layersOptions: flexberryClassNamesPrefix + '-layers-options',
-  identifyAll: flexberryClassNamesPrefix + '-all-layers-option',
-  identifyAllVisible: flexberryClassNamesPrefix + '-all-visible-layers-option',
-  identifyTopVisible: flexberryClassNamesPrefix + '-top-visible-layers-option',
-  toolsOptions: flexberryClassNamesPrefix + '-tools-options',
-  identifyRectangle: flexberryClassNamesPrefix + '-rectangle-tools-option',
-  identifyPolygon: flexberryClassNamesPrefix + '-polygon-tools-option',
-  identifyMarker: flexberryClassNamesPrefix + '-marker-tools-option',
-  identifyPolyline: flexberryClassNamesPrefix + '-polyline-tools-option',
-  otherOptions: flexberryClassNamesPrefix + '-options'
+  layersOptions: `${flexberryClassNamesPrefix}-layers-options`,
+  identifyAll: `${flexberryClassNamesPrefix}-all-layers-option`,
+  identifyAllVisible: `${flexberryClassNamesPrefix}-all-visible-layers-option`,
+  identifyTopVisible: `${flexberryClassNamesPrefix}-top-visible-layers-option`,
+  toolsOptions: `${flexberryClassNamesPrefix}-tools-options`,
+  identifyRectangle: `${flexberryClassNamesPrefix}-rectangle-tools-option`,
+  identifyPolygon: `${flexberryClassNamesPrefix}-polygon-tools-option`,
+  identifyMarker: `${flexberryClassNamesPrefix}-marker-tools-option`,
+  identifyPolyline: `${flexberryClassNamesPrefix}-polyline-tools-option`,
+  otherOptions: `${flexberryClassNamesPrefix}-options`,
 };
 
 /**
@@ -72,7 +74,7 @@ const flexberryClassNames = {
   @class FlexberryIdentifyPanelComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let FlexberryIdentifyPanelComponent = Component.extend({
+const FlexberryIdentifyPanelComponent = Component.extend({
   /**
     Identify tool name computed by the specified tool settings.
 
@@ -80,10 +82,10 @@ let FlexberryIdentifyPanelComponent = Component.extend({
     @type String
     @readOnly
   */
-  _identifyToolName: computed('layerMode', 'toolMode', function() {
+  _identifyToolName: computed('layerMode', 'toolMode', function () {
     let identifyToolName = 'identify';
-    let layerMode = this.get('layerMode');
-    let toolMode = this.get('toolMode');
+    const layerMode = this.get('layerMode');
+    const toolMode = this.get('toolMode');
 
     if (!(isBlank(layerMode) || isBlank(toolMode))) {
       identifyToolName = `identify-${layerMode}-${toolMode}`;
@@ -106,15 +108,15 @@ let FlexberryIdentifyPanelComponent = Component.extend({
     'layerMode',
     'toolMode',
     'layers',
-    function() {
-      let radius = typeof this.get('bufferRadius') === 'string' ? this.get('bufferRadius').replace(',', '.') : this.get('bufferRadius');
+    function () {
+      const radius = typeof this.get('bufferRadius') === 'string' ? this.get('bufferRadius').replace(',', '.') : this.get('bufferRadius');
       return {
         bufferActive: !isNone(this.get('bufferRadius')) || !isBlank(this.get('bufferRadius')),
         bufferUnits: this.get('bufferUnits'),
         bufferRadius: radius,
         layerMode: this.get('layerMode'),
         toolMode: this.get('toolMode'),
-        layers: this.get('layers')
+        layers: this.get('layers'),
       };
     }
   ),
@@ -310,7 +312,7 @@ let FlexberryIdentifyPanelComponent = Component.extend({
   */
   bufferUnitsList: {
     meters: 'components.flexberry-identify-panel.buffer.units.meters',
-    kilometers: 'components.flexberry-identify-panel.buffer.units.kilometers'
+    kilometers: 'components.flexberry-identify-panel.buffer.units.kilometers',
   },
 
   /**
@@ -399,7 +401,7 @@ let FlexberryIdentifyPanelComponent = Component.extend({
       @param {Object} e Event object.
     */
     onIdentificationFinished(e) {
-      let identificationFinished = this.get('identificationFinished');
+      const identificationFinished = this.get('identificationFinished');
       if (typeOf(identificationFinished) === 'function') {
         identificationFinished(e);
       }
@@ -412,7 +414,7 @@ let FlexberryIdentifyPanelComponent = Component.extend({
       @param {Object} e Click event-object.
     */
     onIdentificationClear(e) {
-      let identificationClear = this.get('identificationClear');
+      const identificationClear = this.get('identificationClear');
       if (typeOf(identificationClear) === 'function') {
         identificationClear();
       }
@@ -427,14 +429,14 @@ let FlexberryIdentifyPanelComponent = Component.extend({
       if (!isEmpty(str) && regex.test(str)) {
         $(e.target).val(str.replace(regex, ''));
       }
-    }
+    },
   },
 
   /**
     Destroys DOM-related component's properties.
   */
   willDestroyElement() {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
       leafletMap.off('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
     }
@@ -450,7 +452,7 @@ let FlexberryIdentifyPanelComponent = Component.extend({
     @private
   */
   _leafletMapDidChange: on('didInsertElement', observer('leafletMap', function () {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (isNone(leafletMap)) {
       return;
     }
@@ -463,7 +465,7 @@ let FlexberryIdentifyPanelComponent = Component.extend({
 
     @method _bufferSettingsDidChange
   */
-  _bufferSettingsDidChange: observer('bufferUnits', 'bufferRadius', function() {
+  _bufferSettingsDidChange: observer('bufferUnits', 'bufferRadius', function () {
     once(this, '_enableActualIdentifyTool');
   }),
 
@@ -474,15 +476,15 @@ let FlexberryIdentifyPanelComponent = Component.extend({
     @private
   */
   _enableActualIdentifyTool() {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (isNone(leafletMap)) {
       return;
     }
 
-    let identifyToolName = this.get('_identifyToolName');
-    let identifyToolProperties = this.get('_identifyToolProperties');
+    const identifyToolName = this.get('_identifyToolName');
+    const identifyToolProperties = this.get('_identifyToolProperties');
     leafletMap.flexberryMap.tools.enable(identifyToolName, identifyToolProperties);
-  }
+  },
 
   /**
     Component's action invoking when idenification finished and results must be handled.
@@ -500,7 +502,7 @@ let FlexberryIdentifyPanelComponent = Component.extend({
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryIdentifyPanelComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryIdentifyPanelComponent;

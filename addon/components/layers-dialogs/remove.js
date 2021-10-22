@@ -7,9 +7,9 @@ import { computed } from '@ember/object';
 import Component from '@ember/component';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
+import { translationMacro as t } from 'ember-i18n';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
 import layout from '../../templates/components/layers-dialogs/remove';
-import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -26,7 +26,7 @@ import { translationMacro as t } from 'ember-i18n';
 const flexberryClassNamesPrefix = 'flexberry-remove-layer-dialog';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: null
+  wrapper: null,
 };
 
 /**
@@ -38,7 +38,7 @@ const flexberryClassNames = {
   @uses DynamicActionsMixin
   @uses DynamicPropertiesMixin
 */
-let FlexberryRemoveLayerDialogComponent = Component.extend(
+const FlexberryRemoveLayerDialogComponent = Component.extend(
   RequiredActionsMixin,
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
@@ -89,9 +89,9 @@ let FlexberryRemoveLayerDialogComponent = Component.extend(
       @type String
       @default null
     */
-    content: computed('i18n.locale', 'layer.name', function() {
+    content: computed('i18n.locale', 'layer.name', function () {
       return this.get('i18n').t('components.layers-dialogs.remove.content', {
-        layerName: this.get('layer.name')
+        layerName: this.get('layer.name'),
       });
     }),
 
@@ -191,8 +191,8 @@ let FlexberryRemoveLayerDialogComponent = Component.extend(
       */
       onHide() {
         this.sendAction('hide');
-      }
-    }
+      },
+    },
 
     /**
       Component's action invoking when dialog starts to show.
@@ -235,7 +235,7 @@ let FlexberryRemoveLayerDialogComponent = Component.extend(
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryRemoveLayerDialogComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryRemoveLayerDialogComponent;

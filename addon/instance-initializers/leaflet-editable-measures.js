@@ -13,9 +13,9 @@ import { addObserver } from '@ember/object/observers';
   @param {<a href="http://emberjs.com/api/classes/Ember.ApplicationInstance.html">Ember.ApplicationInstance</a>} applicationInstance Ember application instance.
 */
 export function initialize(applicationInstance) {
-  let i18n = applicationInstance.lookup('service:i18n');
+  const i18n = applicationInstance.lookup('service:i18n');
 
-  let changeLeafletEditableMeasuresLocales = function() {
+  const changeLeafletEditableMeasuresLocales = function () {
     // Measure coordinates tool.
     L.Measure.MarkerBase.prototype.popupText.move = i18n.t('map-tools.measure.measure-coordinates.move').toString();
     L.Measure.MarkerBase.prototype.popupText.drag = i18n.t('map-tools.measure.measure-coordinates.drag').toString();
@@ -71,5 +71,5 @@ export function initialize(applicationInstance) {
 export default {
   after: 'i18n',
   name: 'leaflet-editable-measures',
-  initialize
+  initialize,
 };

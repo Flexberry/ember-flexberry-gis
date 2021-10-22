@@ -1,10 +1,10 @@
 export default {
-  'caption': 'Удаление слоя',
-  'content': 'Вы действительно хотите удалить слой \'{{layerName}}\'?',
+  caption: 'Удаление слоя',
+  content: 'Вы действительно хотите удалить слой \'{{layerName}}\'?',
   'approve-button': {
-    'caption': 'Да'
+    caption: 'Да',
   },
   'deny-button': {
-    'caption': 'Нет'
-  }
+    caption: 'Нет',
+  },
 };

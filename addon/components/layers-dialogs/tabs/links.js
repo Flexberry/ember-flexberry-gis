@@ -13,18 +13,18 @@ export default Component.extend(
   /**
     Reference to component's template.
   */
-  layout,
+    layout,
 
-  /**
+    /**
     See [EmberJS API](https://emberjs.com/api/).
 
     @property classNames
     @type Array
     @default ['layers-dialogs-data-tabs']
   */
-  classNames: ['layers-dialogs-data-tabs'],
+    classNames: ['layers-dialogs-data-tabs'],
 
-  /**
+    /**
     Currently active tab name.
 
     @property _activeTab
@@ -32,51 +32,51 @@ export default Component.extend(
     @default 'links-tab'
     @private
   */
-  _activeTab: 'links-tab',
+    _activeTab: 'links-tab',
 
-  init() {
-    this._super(...arguments);
-    this.set('_activeTab', 'links-tab');
-  },
+    init() {
+      this._super(...arguments);
+      this.set('_activeTab', 'links-tab');
+    },
 
-  actions: {
+    actions: {
     /**
       Handles clicks on tabs.
 
       @method actions.onTabClick
       @param {Object} e Click event object.
     */
-    onTabClick(e) {
-      e = $.event.fix(e);
+      onTabClick(e) {
+        e = $.event.fix(e);
 
-      let $clickedTab = $(e.currentTarget);
-      let clickedTabName = $clickedTab.attr('data-tab');
+        const $clickedTab = $(e.currentTarget);
+        const clickedTabName = $clickedTab.attr('data-tab');
 
-      this.set('_activeTab', clickedTabName);
-    },
+        this.set('_activeTab', clickedTabName);
+      },
 
-    /**
+      /**
       Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.updateLookupValue:method"}}'flexberry-links-editor' component's 'updateLookupValue' action{{/crossLink}}.
 
       @method actions.updateLookupValue
       @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
     */
-    updateLookupValue(updateData) {
-      this.sendAction('updateLookupValue', updateData);
-    },
+      updateLookupValue(updateData) {
+        this.sendAction('updateLookupValue', updateData);
+      },
 
-    /**
+      /**
       Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
 
       @method actions.allowShowCheckboxChange
       @param {Object} e eventObject Event object from {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
     */
-    allowShowCheckboxChange(...args) {
-      this.sendAction('allowShowCheckboxChange', ...args);
-    }
-  }
+      allowShowCheckboxChange(...args) {
+        this.sendAction('allowShowCheckboxChange', ...args);
+      },
+    },
 
-  /**
+    /**
     Component's action invoking to update relation value at model.
     @method sendingActions.updateLookupValue
     @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
@@ -90,4 +90,5 @@ export default Component.extend(
     @param {Object} e Event object from
     {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
   */
-});
+  }
+);

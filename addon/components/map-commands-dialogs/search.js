@@ -6,10 +6,12 @@ import { getOwner } from '@ember/application';
 
 import { isNone, isEmpty } from '@ember/utils';
 import { isArray, A } from '@ember/array';
-import { computed, get, set, observer } from '@ember/object';
+import {
+  computed, get, set, observer
+} from '@ember/object';
 import Component from '@ember/component';
-import layout from '../../templates/components/map-commands-dialogs/search';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../templates/components/map-commands-dialogs/search';
 
 /**
   Component's CSS-classes names.
@@ -27,8 +29,8 @@ const flexberryClassNamesPrefix = 'flexberry-search-map-command-dialog';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
-  settings: flexberryClassNamesPrefix + '-settings',
-  results: flexberryClassNamesPrefix + '-results'
+  settings: `${flexberryClassNamesPrefix}-settings`,
+  results: `${flexberryClassNamesPrefix}-results`,
 };
 
 /**
@@ -37,7 +39,7 @@ const flexberryClassNames = {
   @class FlexberrySearchMapCommandDialogComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let FlexberrySearchMapCommandDialogComponent = Component.extend({
+const FlexberrySearchMapCommandDialogComponent = Component.extend({
   /**
     Available layers.
   */
@@ -52,14 +54,12 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
     @private
   */
   _availableLayersTypes: computed('_availableLayers.@each.type', function () {
-    let availableLayers = this.get('_availableLayers');
+    const availableLayers = this.get('_availableLayers');
     if (!isArray(availableLayers)) {
       return A();
     }
 
-    return A(availableLayers.map((layer) => {
-      return get(layer, 'type');
-    }));
+    return A(availableLayers.map((layer) => get(layer, 'type')));
   }),
 
   /**
@@ -81,7 +81,7 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
     @private
   */
   _selectedLayerTypeIsValid: computed('_selectedLayer.type', '_availableLayersTypes', function () {
-    let availableLayersTypes = this.get('_availableLayersTypes');
+    const availableLayersTypes = this.get('_availableLayersTypes');
     if (!isArray(availableLayersTypes)) {
       return false;
     }
@@ -100,8 +100,9 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
   _selectedLayerFeaturesExcludedProperties: computed(
     '_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.excludedProperties',
     function () {
-      let excludedProperties = A(
-        this.get('_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.excludedProperties') || []);
+      const excludedProperties = A(
+        this.get('_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.excludedProperties') || []
+      );
       return excludedProperties;
     }
   ),
@@ -118,10 +119,11 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
     '_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.localizedProperties',
     'i18n.locale',
     function () {
-      let currentLocale = this.get('i18n.locale');
-      let localizedProperties = this.get(
-        `_selectedLayer.settingsAsObject.displaySettings.` +
-        `featuresPropertiesSettings.localizedProperties.${currentLocale}`) || {};
+      const currentLocale = this.get('i18n.locale');
+      const localizedProperties = this.get(
+        '_selectedLayer.settingsAsObject.displaySettings.'
+        + `featuresPropertiesSettings.localizedProperties.${currentLocale}`
+      ) || {};
       return localizedProperties;
     }
   ),
@@ -167,14 +169,12 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
     @private
   */
   _allFoundedFeaturesAreSelected: computed('foundedFeatures.@each._selected', function () {
-    let foundedFeatures = this.get('foundedFeatures');
+    const foundedFeatures = this.get('foundedFeatures');
     if (!isArray(foundedFeatures)) {
       return false;
     }
 
-    return foundedFeatures.every((feature) => {
-      return get(feature, '_selected') === true;
-    });
+    return foundedFeatures.every((feature) => get(feature, '_selected') === true);
   }),
 
   /**
@@ -360,13 +360,13 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
 
       // Align cached search options to current state of available layers array.
       // If cache is empty it will be generated.
-      let newAvailableLayerOptions = A();
-      let owner = getOwner(this);
+      const newAvailableLayerOptions = A();
+      const owner = getOwner(this);
       availableLayers.forEach((availableLayer) => {
         let alreadyExistingOptions = null;
         let alreadyExistingFoundedFeatures = null;
 
-        availableLayersOptions.forEach(({ layer, options, foundedFeatures }) => {
+        availableLayersOptions.forEach(({ layer, options, foundedFeatures, }) => {
           if (layer === availableLayer) {
             alreadyExistingOptions = options;
             alreadyExistingFoundedFeatures = foundedFeatures;
@@ -378,14 +378,14 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
           newAvailableLayerOptions.pushObject({
             layer: availableLayer,
             options: alreadyExistingOptions,
-            foundedFeatures: alreadyExistingFoundedFeatures
+            foundedFeatures: alreadyExistingFoundedFeatures,
           });
         } else {
-          let availableLayerClass = owner.knownForType('layer', get(availableLayer, 'type'));
+          const availableLayerClass = owner.knownForType('layer', get(availableLayer, 'type'));
           newAvailableLayerOptions.pushObject({
             layer: availableLayer,
             options: availableLayerClass.createSearchSettings(),
-            foundedFeatures: null
+            foundedFeatures: null,
           });
         }
       });
@@ -417,7 +417,7 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
       @method actions.onApprove
     */
     onApprove(e) {
-      let selectedLayer = this.get('_selectedLayer');
+      const selectedLayer = this.get('_selectedLayer');
       if (isNone(e)) {
         e = {};
       }
@@ -489,7 +489,7 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
       this.set('_options', {
         localizedValue: '',
         propertyName: '',
-        queryString: ''
+        queryString: '',
       });
     },
 
@@ -502,7 +502,7 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
       @param {Boolean} e.newValue Checkboxes new value.
     */
     onSelectAllFeaturesCheckboxChange(e) {
-      let foundedFeatures = this.get('foundedFeatures');
+      const foundedFeatures = this.get('foundedFeatures');
       if (!isArray(foundedFeatures)) {
         return;
       }
@@ -523,7 +523,7 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
       @param {Boolean} e.newValue Checkboxes new value.
     */
     onSelectFeatureCheckboxChange(featureIndex, e) {
-      let foundedFeatures = this.get('foundedFeatures');
+      const foundedFeatures = this.get('foundedFeatures');
       if (!isArray(foundedFeatures)) {
         return;
       }
@@ -538,15 +538,13 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
       @method actions.onShowAllFeaturesButtonClick
     */
     onShowAllFeaturesButtonClick() {
-      let foundedFeatures = this.get('foundedFeatures');
+      const foundedFeatures = this.get('foundedFeatures');
       if (!isArray(foundedFeatures)) {
         return;
       }
 
       // Show all selected features.
-      let features = foundedFeatures.filter((feature) => {
-        return get(feature, '_selected') === true;
-      });
+      const features = foundedFeatures.filter((feature) => get(feature, '_selected') === true);
 
       this._showFoundedFeatures(features, this.get('_selectedLayer'));
     },
@@ -559,14 +557,14 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
       @param {Number} featureIndex Index of the specified feature in 'foundedFeatures' array.
     */
     onShowFeatureButtonClick(featureIndex) {
-      let foundedFeatures = this.get('foundedFeatures');
+      const foundedFeatures = this.get('foundedFeatures');
       if (!isArray(foundedFeatures)) {
         return;
       }
 
-      let features = [foundedFeatures[featureIndex]];
+      const features = [foundedFeatures[featureIndex]];
       this._showFoundedFeatures(features, this.get('_selectedLayer'));
-    }
+    },
   },
 
   /**
@@ -580,10 +578,10 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
     let selectedLayerSearchOptions = {};
     let selectedLayerFoundedFeatures = null;
 
-    let availableLayersOptions = this.get('_availableLayersOptions');
-    let selectedLayer = this.get('_selectedLayer');
+    const availableLayersOptions = this.get('_availableLayersOptions');
+    const selectedLayer = this.get('_selectedLayer');
     if (isArray(availableLayersOptions) && !isNone(selectedLayer)) {
-      availableLayersOptions.forEach(({ layer, options, foundedFeatures }) => {
+      availableLayersOptions.forEach(({ layer, options, foundedFeatures, }) => {
         if (layer === selectedLayer) {
           selectedLayerSearchOptions = options;
           selectedLayerFoundedFeatures = foundedFeatures;
@@ -605,19 +603,19 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
     @private
   */
   _foundedFeaturesDidChange: observer('foundedFeatures', function () {
-    let availableLayersOptions = this.get('_availableLayersOptions');
-    let selectedLayer = this.get('_selectedLayer');
+    const availableLayersOptions = this.get('_availableLayersOptions');
+    const selectedLayer = this.get('_selectedLayer');
 
     if (isArray(availableLayersOptions) && !isNone(selectedLayer)) {
       availableLayersOptions.forEach((cachedEntry) => {
         if (get(cachedEntry, 'layer') === selectedLayer) {
-          let dateFormat = get(selectedLayer, 'settingsAsObject.displaySettings.dateFormat');
+          const dateFormat = get(selectedLayer, 'settingsAsObject.displaySettings.dateFormat');
           if (!isEmpty(dateFormat)) {
             this.get('foundedFeatures').forEach((feature) => {
-              let featureProperties = get(feature, 'properties') || {};
+              const featureProperties = get(feature, 'properties') || {};
 
-              for (var prop in featureProperties) {
-                let value = featureProperties[prop];
+              for (const prop in featureProperties) {
+                const value = featureProperties[prop];
                 if (value instanceof Date && !isNone(value) && !isEmpty(value) && !isEmpty(dateFormat)) {
                   featureProperties[prop] = moment(value).format(dateFormat);
                 }
@@ -645,8 +643,8 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
     }
 
     this.sendAction('showFoundedFeatures', {
-      features: features,
-      layer: layer
+      features,
+      layer,
     });
 
     // Hide dialog.
@@ -672,7 +670,7 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
     this._super(...arguments);
 
     this.set('_options', {});
-  }
+  },
 
   /**
     Component's action invoking when dialog starts to show.
@@ -717,13 +715,12 @@ let FlexberrySearchMapCommandDialogComponent = Component.extend({
     @param {Object} e Action's event-object.
     @param {Object[]} e.features Founded features to show.
   */
-}
-);
+});
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberrySearchMapCommandDialogComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberrySearchMapCommandDialogComponent;

@@ -28,25 +28,24 @@ export default RectangleMaptool.extend({
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.layer Drawn rectangle layer.
     @private
   */
-  _rectangleDrawingDidEnd({ layer }) {
+  _rectangleDrawingDidEnd({ layer, }) {
     this._super(...arguments);
 
-    let leafletMap = this.get('leafletMap');
-    let mapSize = leafletMap.getBounds();
-    let zoomSize = layer.getBounds();
+    const leafletMap = this.get('leafletMap');
+    const mapSize = leafletMap.getBounds();
+    const zoomSize = layer.getBounds();
 
     if (zoomSize.getNorthEast().equals(zoomSize.getSouthWest())) {
-      let zoom = Math.max(leafletMap.getZoom() - 1, leafletMap.getMinZoom());
+      const zoom = Math.max(leafletMap.getZoom() - 1, leafletMap.getMinZoom());
       leafletMap.setView(zoomSize.getNorthEast(), zoom);
     } else {
+      const dx = (mapSize.getEast() - mapSize.getWest()) / (zoomSize.getEast() - zoomSize.getWest());
+      const dy = (mapSize.getNorth() - mapSize.getSouth()) / (zoomSize.getNorth() - zoomSize.getSouth());
+      const maxD = dx > dy ? dx : dy;
 
-      let dx = (mapSize.getEast() - mapSize.getWest()) / (zoomSize.getEast() - zoomSize.getWest());
-      let dy = (mapSize.getNorth() - mapSize.getSouth()) / (zoomSize.getNorth() - zoomSize.getSouth());
-      let maxD = dx > dy ? dx : dy;
-
-      let zoom = leafletMap.getScaleZoom(1 / maxD, leafletMap.getZoom());
+      const zoom = leafletMap.getScaleZoom(1 / maxD, leafletMap.getZoom());
       leafletMap.panTo(zoomSize.getCenter());
       leafletMap.setZoom(Math.floor(zoom));
     }
-  }
+  },
 });

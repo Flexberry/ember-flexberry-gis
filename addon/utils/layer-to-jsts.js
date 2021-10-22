@@ -2,19 +2,19 @@ import { isNone } from '@ember/utils';
 import jsts from 'npm:jsts';
 import { latLngToCoords, latLngsToCoords } from './lat-lng-to-coord';
 
-let geometryFactory = new jsts.geom.GeometryFactory();
+const geometryFactory = new jsts.geom.GeometryFactory();
 let geometryReducer = null;
 
 // convert coordinates in jsts object
-let coordinatesFunction = function(coord, altitude) {
-  return altitude ?
-    new jsts.geom.Coordinate(coord.x, coord.y, altitude) :
-    new jsts.geom.Coordinate(coord.x, coord.y);
+const coordinatesFunction = function (coord, altitude) {
+  return altitude
+    ? new jsts.geom.Coordinate(coord.x, coord.y, altitude)
+    : new jsts.geom.Coordinate(coord.x, coord.y);
 };
 
 // for point
-let latlngToPointJsts = function(latlng, crs, precision, scale) {
-  let coord = latLngToCoords(latlng, crs, precision, coordinatesFunction);
+const latlngToPointJsts = function (latlng, crs, precision, scale) {
+  const coord = latLngToCoords(latlng, crs, precision, coordinatesFunction);
   let point = geometryFactory.createPoint(coord);
   if (!isNone(scale)) {
     point = geometryPrecisionReducer(scale).reduce(point);
@@ -28,19 +28,19 @@ let latlngToPointJsts = function(latlng, crs, precision, scale) {
 };
 
 // for polyline
-let coordinatesToLineString = function (coordinates) {
+const coordinatesToLineString = function (coordinates) {
   return geometryFactory.createLineString(coordinates);
 };
 
-let latlngToPolylineJsts = function (latlngs, crs, precision, scale) {
-  let multi = !L.LineUtil.isFlat(latlngs);
-  let coords = latLngsToCoords(latlngs, crs, multi ? 1 : 0, false, precision, coordinatesFunction);
+const latlngToPolylineJsts = function (latlngs, crs, precision, scale) {
+  const multi = !L.LineUtil.isFlat(latlngs);
+  const coords = latLngsToCoords(latlngs, crs, multi ? 1 : 0, false, precision, coordinatesFunction);
 
   let polyline;
   if (!multi) {
     polyline = coordinatesToLineString(coords);
   } else {
-    let geometries = coords.map(coordinatesToLineString);
+    const geometries = coords.map(coordinatesToLineString);
     polyline = geometryFactory.createMultiLineString(geometries);
   }
 
@@ -56,22 +56,22 @@ let latlngToPolylineJsts = function (latlngs, crs, precision, scale) {
 };
 
 // for polygon
-let coordinatesToLinearRing = function(coordinates) {
+const coordinatesToLinearRing = function (coordinates) {
   return geometryFactory.createLinearRing(coordinates);
 };
 
-let coordinatesToPolygon = function(coordinates) {
-  let rings = coordinates.map(coordinatesToLinearRing);
-  if (rings.length  < 2) {
+const coordinatesToPolygon = function (coordinates) {
+  const rings = coordinates.map(coordinatesToLinearRing);
+  if (rings.length < 2) {
     return geometryFactory.createPolygon(rings[0], []);
-  } else {
-    return geometryFactory.createPolygon(rings[0], rings.slice(1));
   }
+
+  return geometryFactory.createPolygon(rings[0], rings.slice(1));
 };
 
-let latlngToPolygonJsts = function(latlngs, crs, precision, scale) {
-  let holes = !L.LineUtil.isFlat(latlngs);
-  let multi = holes && !L.LineUtil.isFlat(latlngs[0]);
+const latlngToPolygonJsts = function (latlngs, crs, precision, scale) {
+  const holes = !L.LineUtil.isFlat(latlngs);
+  const multi = holes && !L.LineUtil.isFlat(latlngs[0]);
   let coords = latLngsToCoords(latlngs, crs, multi ? 2 : holes ? 1 : 0, true, precision, coordinatesFunction);
 
   if (!holes) {
@@ -82,7 +82,7 @@ let latlngToPolygonJsts = function(latlngs, crs, precision, scale) {
   if (!multi) {
     polygon = coordinatesToPolygon(coords);
   } else {
-    let geometries = coords.map(coordinatesToPolygon);
+    const geometries = coords.map(coordinatesToPolygon);
     polygon = geometryFactory.createMultiPolygon(geometries);
   }
 
@@ -98,16 +98,16 @@ let latlngToPolygonJsts = function(latlngs, crs, precision, scale) {
 };
 
 // all type
-let coordToJsts = function(coord) {
+const coordToJsts = function (coord) {
   coord = (coord instanceof Array) ? coord : Array.from(coord);
-  return coord.length === 3 ?
-    new jsts.geom.Coordinate(coord[0], coord[1], coord[2]) :
-      coord.length === 2 ?
-        new jsts.geom.Coordinate(coord[0], coord[1]) :
-        null;
+  return coord.length === 3
+    ? new jsts.geom.Coordinate(coord[0], coord[1], coord[2])
+    : coord.length === 2
+      ? new jsts.geom.Coordinate(coord[0], coord[1])
+      : null;
 };
 
-let geometryPrecisionReducer = function(scale) {
+let geometryPrecisionReducer = function (scale) {
   if (geometryReducer === null) {
     geometryReducer = new jsts.precision.GeometryPrecisionReducer(new jsts.geom.PrecisionModel(scale));
   }
@@ -115,48 +115,48 @@ let geometryPrecisionReducer = function(scale) {
   return geometryReducer;
 };
 
-let geometryToJsts = function(geometry, scale) {
+const geometryToJsts = function (geometry, scale) {
   let coords = [];
   switch (geometry.type) {
     case 'Point':
       coords = coordToJsts(geometry.coordinates);
-      let point = geometryFactory.createPoint(coords);
+      const point = geometryFactory.createPoint(coords);
       return isNone(scale) ? point : geometryPrecisionReducer(scale).reduce(point);
     case 'LineString':
-      let coordsAsArray = geometry.coordinates instanceof Array ? geometry.coordinates : Array.from(geometry.coordinates);
+      const coordsAsArray = geometry.coordinates instanceof Array ? geometry.coordinates : Array.from(geometry.coordinates);
       coords = coordsAsArray.map(coordToJsts);
-      let line = coordinatesToLineString(coords);
+      const line = coordinatesToLineString(coords);
       return isNone(scale) ? line : geometryPrecisionReducer(scale).reduce(line);
     case 'MultiLineString':
       for (let i = 0; i < geometry.coordinates.length; i++) {
-        let coordsAsArray = geometry.coordinates[i] instanceof Array ? geometry.coordinates[i] : Array.from(geometry.coordinates[i]);
+        const coordsAsArray = geometry.coordinates[i] instanceof Array ? geometry.coordinates[i] : Array.from(geometry.coordinates[i]);
         coords.push(coordsAsArray.map(coordToJsts));
       }
 
-      let geometries = coords.map(coordinatesToLineString);
-      let multiLine = geometryFactory.createMultiLineString(geometries);
+      const geometries = coords.map(coordinatesToLineString);
+      const multiLine = geometryFactory.createMultiLineString(geometries);
       return isNone(scale) ? multiLine : geometryPrecisionReducer(scale).reduce(multiLine);
     case 'Polygon':
       for (let i = 0; i < geometry.coordinates.length; i++) {
-        let coordsAsArray = geometry.coordinates[i] instanceof Array ? geometry.coordinates[i] : Array.from(geometry.coordinates[i]);
+        const coordsAsArray = geometry.coordinates[i] instanceof Array ? geometry.coordinates[i] : Array.from(geometry.coordinates[i]);
         coords.push(coordsAsArray.map(coordToJsts));
       }
 
-      let polygon = coordinatesToPolygon(coords);
+      const polygon = coordinatesToPolygon(coords);
       return isNone(scale) ? polygon : geometryPrecisionReducer(scale).reduce(polygon);
     case 'MultiPolygon':
       for (let i = 0; i < geometry.coordinates.length; i++) {
-        let coordinates = [];
+        const coordinates = [];
         for (let j = 0; j < geometry.coordinates[i].length; j++) {
-          let coordsAsArray = geometry.coordinates[i][j] instanceof Array ? geometry.coordinates[i][j] : Array.from(geometry.coordinates[i][j]);
+          const coordsAsArray = geometry.coordinates[i][j] instanceof Array ? geometry.coordinates[i][j] : Array.from(geometry.coordinates[i][j]);
           coordinates.push(coordsAsArray.map(coordToJsts));
         }
 
         coords.push(coordinates);
       }
 
-      let geom = coords.map(coordinatesToPolygon);
-      let multiPolygon = geometryFactory.createMultiPolygon(geom);
+      const geom = coords.map(coordinatesToPolygon);
+      const multiPolygon = geometryFactory.createMultiPolygon(geom);
       return isNone(scale) ? multiPolygon : geometryPrecisionReducer(scale).reduce(multiPolygon);
   }
 };

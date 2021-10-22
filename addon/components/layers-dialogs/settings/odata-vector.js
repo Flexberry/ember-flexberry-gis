@@ -45,5 +45,5 @@ export default Component.extend({
     @default []
   */
   geometryTypes: ['PointPropertyType', 'LineStringPropertyType', 'PolygonPropertyType',
-                  'MultiPointPropertyType', 'MultiLineStringPropertyType', 'MultiPolygonPropertyType']
+    'MultiPointPropertyType', 'MultiLineStringPropertyType', 'MultiPolygonPropertyType'],
 });

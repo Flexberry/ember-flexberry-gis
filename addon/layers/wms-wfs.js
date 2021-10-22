@@ -39,10 +39,10 @@ export default WmsLayer.extend({
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = this._super(...arguments);
-    let owner = getOwner(this);
-    let wfsLayer = owner.lookup('layer:wfs');
-    let wfsSettings = wfsLayer.createSettings();
+    const settings = this._super(...arguments);
+    const owner = getOwner(this);
+    const wfsLayer = owner.lookup('layer:wfs');
+    const wfsSettings = wfsLayer.createSettings();
 
     set(settings, 'identifySettings', wfsSettings.identifySettings);
     delete wfsSettings.identifySettings;
@@ -65,8 +65,8 @@ export default WmsLayer.extend({
     @returns {Object} New search settings object (with search settings related to layer-type).
   */
   createSearchSettings() {
-    let owner = getOwner(this);
-    let wfsLayer = owner.lookup('layer:wfs');
+    const owner = getOwner(this);
+    const wfsLayer = owner.lookup('layer:wfs');
 
     return wfsLayer.createSearchSettings();
   },
@@ -85,5 +85,5 @@ export default WmsLayer.extend({
     }
 
     return false;
-  }
+  },
 });

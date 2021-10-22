@@ -52,5 +52,5 @@ export default ListFormRoute.extend({
     @type Object
     @default {}
   */
-  developerUserSettings: { NewPlatformFlexberryGISLayerMetadataL: {} }
+  developerUserSettings: { NewPlatformFlexberryGISLayerMetadataL: {}, },
 });

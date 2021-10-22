@@ -116,7 +116,7 @@ export default BaseMapCommand.extend(LeafletOptionsMixin, {
     this.cleanUpLocationResults();
 
     // Attach location events handlers & and execute geolocation.
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     leafletMap.on('locationfound', this.onLocationFound, this);
     leafletMap.on('locationerror', this.onLocationError, this);
 
@@ -132,14 +132,15 @@ export default BaseMapCommand.extend(LeafletOptionsMixin, {
   */
   onLocationFound(e) {
     // Show marker in founded location.
-    let leafletMap = this.get('leafletMap');
-    let locateMarker = L.marker(e.latlng).addTo(leafletMap);
+    const leafletMap = this.get('leafletMap');
+    const locateMarker = L.marker(e.latlng).addTo(leafletMap);
     this.set('locateMarker', locateMarker);
 
     // Create popup with founded location coordinates.
-    let locatePopup = L.popup().setContent(
-      this.get('i18n').t('components.map-commands.locate.lat') + e.latlng.lat.toFixed(5) + '<br>' +
-      this.get('i18n').t('components.map-commands.locate.lng') + e.latlng.lng.toFixed(5));
+    const locatePopup = L.popup().setContent(
+      `${this.get('i18n').t('components.map-commands.locate.lat') + e.latlng.lat.toFixed(5)}<br>${
+        this.get('i18n').t('components.map-commands.locate.lng')}${e.latlng.lng.toFixed(5)}`
+    );
     this.set('locatePopup', locatePopup);
 
     // Bind popup to marker.
@@ -163,11 +164,11 @@ export default BaseMapCommand.extend(LeafletOptionsMixin, {
     @param {Object} e.message Error message.
   */
   onLocationError(e) {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
 
     // Create popup with error message.
-    let locatePopup = L.popup().setLatLng(leafletMap.getCenter())
-      .setContent(this.get('i18n').t('components.map-commands.locate.error') + '<br>' + e.message)
+    const locatePopup = L.popup().setLatLng(leafletMap.getCenter())
+      .setContent(`${this.get('i18n').t('components.map-commands.locate.error')}<br>${e.message}`)
       .openOn(leafletMap);
     this.set('locatePopup', locatePopup);
 
@@ -187,9 +188,9 @@ export default BaseMapCommand.extend(LeafletOptionsMixin, {
     @param {Object} [e.popup] Reference to closed popup.
   */
   cleanUpLocationResults(e) {
-    let leafletMap = this.get('leafletMap');
-    let locateMarker = this.get('locateMarker');
-    let locatePopup = this.get('locatePopup');
+    const leafletMap = this.get('leafletMap');
+    const locateMarker = this.get('locateMarker');
+    const locatePopup = this.get('locatePopup');
 
     // Clean up only if closed popup is locate popup, otherwise break because some other popup has been closed.
     if (!(isNone(e) || e.popup === locatePopup)) {
@@ -216,5 +217,5 @@ export default BaseMapCommand.extend(LeafletOptionsMixin, {
     this._super(...arguments);
 
     this.cleanUpLocationResults();
-  }
+  },
 });

@@ -5,8 +5,8 @@
 import { A } from '@ember/array';
 
 import Component from '@ember/component';
-import layout from '../templates/components/spatial-bookmark';
 import Mixin from 'ember-validations';
+import layout from '../templates/components/spatial-bookmark';
 
 /**
   Flexberry component for display and add/remove spatial bookmarks
@@ -14,18 +14,18 @@ import Mixin from 'ember-validations';
   @class SpatialBookmarkComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let SpatialBookmarkComponent = Component.extend(Mixin, {
+const SpatialBookmarkComponent = Component.extend(Mixin, {
   /**
     Validation settings
   */
   validations: {
-    '_addBookmarkName': {
+    _addBookmarkName: {
       presence: true,
       length: {
         minimum: 1,
-        maximum: 200
-      }
-    }
+        maximum: 200,
+      },
+    },
   },
 
   /**
@@ -86,9 +86,9 @@ let SpatialBookmarkComponent = Component.extend(Mixin, {
   init() {
     this._super(...arguments);
 
-    let service = this.get('local-storage-service');
-    let className = this.get('_storageClassName');
-    let key = this.get('storageKey');
+    const service = this.get('local-storage-service');
+    const className = this.get('_storageClassName');
+    const key = this.get('storageKey');
 
     this.set('bookmarks', service.getFromStorage(className, key));
   },
@@ -115,15 +115,15 @@ let SpatialBookmarkComponent = Component.extend(Mixin, {
         return;
       }
 
-      let map = this.get('leafletMap');
-      let service = this.get('local-storage-service');
-      let className = this.get('_storageClassName');
-      let key = this.get('storageKey');
-      let bookmarks = this.get('bookmarks');
-      let bookmark = {
+      const map = this.get('leafletMap');
+      const service = this.get('local-storage-service');
+      const className = this.get('_storageClassName');
+      const key = this.get('storageKey');
+      const bookmarks = this.get('bookmarks');
+      const bookmark = {
         name: this.get('_addBookmarkName'),
         center: map.getCenter(),
-        zoom: map.getZoom()
+        zoom: map.getZoom(),
       };
 
       bookmarks.pushObject(bookmark);
@@ -152,7 +152,7 @@ let SpatialBookmarkComponent = Component.extend(Mixin, {
       @private
     */
     zoomMap(bookmark) {
-      let map = this.get('leafletMap');
+      const map = this.get('leafletMap');
       map.setView([bookmark.center.lat, bookmark.center.lng], bookmark.zoom);
     },
 
@@ -163,17 +163,17 @@ let SpatialBookmarkComponent = Component.extend(Mixin, {
       @private
     */
     delBookmark(bookmark) {
-      let bookmarks = this.get('bookmarks');
-      let service = this.get('local-storage-service');
-      let className = this.get('_storageClassName');
-      let key = this.get('storageKey');
+      const bookmarks = this.get('bookmarks');
+      const service = this.get('local-storage-service');
+      const className = this.get('_storageClassName');
+      const key = this.get('storageKey');
 
       bookmarks.removeObject(bookmark);
       service.setToStorage(className, key, bookmarks);
 
       this.set('bookmarks', bookmarks);
-    }
-  }
+    },
+  },
 });
 
 SpatialBookmarkComponent.reopenClass({});

@@ -145,10 +145,10 @@ export default Component.extend({
       @method actions.onFillGradientEdited
     */
     onFillGradientEdited() {
-      let colorStart = this.get('fillGradientColorStart');
+      const colorStart = this.get('fillGradientColorStart');
       this.set('customFillGradientColorStart', colorStart);
 
-      let colorEnd = this.get('fillGradientColorEnd');
+      const colorEnd = this.get('fillGradientColorEnd');
       this.set('customFillGradientColorEnd', colorEnd);
     },
 
@@ -158,12 +158,12 @@ export default Component.extend({
       @method actions.onStrokeGradientEdited
     */
     onStrokeGradientEdited() {
-      let colorStart = this.get('strokeGradientColorStart');
+      const colorStart = this.get('strokeGradientColorStart');
       this.set('customStrokeGradientColorStart', colorStart);
 
-      let colorEnd = this.get('strokeGradientColorEnd');
+      const colorEnd = this.get('strokeGradientColorEnd');
       this.set('customStrokeGradientColorEnd', colorEnd);
-    }
+    },
   },
 
   /**
@@ -172,8 +172,8 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    let paramGradient = this.get('paramGradient');
-    let listOfGradients = paramGradient.getGradientList();
+    const paramGradient = this.get('paramGradient');
+    const listOfGradients = paramGradient.getGradientList();
     this.set('gradientList', listOfGradients);
-  }
+  },
 });

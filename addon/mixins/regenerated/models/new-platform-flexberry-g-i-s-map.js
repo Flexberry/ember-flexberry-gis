@@ -12,8 +12,8 @@ import { attr, belongsTo, hasMany } from 'ember-flexberry-data/utils/attributes'
   @class NewPlatformFlexberyGISMapModelMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export let Model = Mixin.create({
-  name: DS.attr('string', { defaultValue: '' }),
+export const Model = Mixin.create({
+  name: DS.attr('string', { defaultValue: '', }),
   description: DS.attr('string'),
   keyWords: DS.attr('string'),
 
@@ -38,26 +38,26 @@ export let Model = Mixin.create({
       }))
       ```
   */
-  _anyTextCompute: function() {
-    let result = (this.anyTextCompute && typeof this.anyTextCompute === 'function') ? this.anyTextCompute() : null;
+  _anyTextCompute() {
+    const result = (this.anyTextCompute && typeof this.anyTextCompute === 'function') ? this.anyTextCompute() : null;
     this.set('anyText', result);
   },
 
-  lat: DS.attr('number', { defaultValue: 0 }),
-  lng: DS.attr('number', { defaultValue: 0 }),
-  zoom: DS.attr('number', { defaultValue: 0 }),
-  public: DS.attr('boolean', { defaultValue: false }),
-  scale: DS.attr('number', { defaultValue: 0 }),
-  coordinateReferenceSystem: DS.attr('string', { defaultValue: '{"code":"EPSG:3857"}' }),
+  lat: DS.attr('number', { defaultValue: 0, }),
+  lng: DS.attr('number', { defaultValue: 0, }),
+  zoom: DS.attr('number', { defaultValue: 0, }),
+  public: DS.attr('boolean', { defaultValue: false, }),
+  scale: DS.attr('number', { defaultValue: 0, }),
+  coordinateReferenceSystem: DS.attr('string', { defaultValue: '{"code":"EPSG:3857"}', }),
   boundingBox: DS.attr('json'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),
   editTime: DS.attr('date'),
   editor: DS.attr('string'),
-  mapLayer: DS.hasMany('new-platform-flexberry-g-i-s-map-layer', { inverse: 'map', async: false }),
+  mapLayer: DS.hasMany('new-platform-flexberry-g-i-s-map-layer', { inverse: 'map', async: false, }),
 });
 
-export let ValidationRules = {
+export const ValidationRules = {
   name: validator('presence', {
     presence: true,
     message: 'Name is required',
@@ -68,22 +68,22 @@ export let ValidationRules = {
   }),
 };
 
-export let defineProjections = function (modelClass) {
+export const defineProjections = function (modelClass) {
   modelClass.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-map', {
     name: attr('Наименование'),
     creator: attr('Создатель'),
     createTime: attr('Время создания'),
     editor: attr('Редактор'),
-    editTime: attr('Время редактирования')
+    editTime: attr('Время редактирования'),
   });
 
   modelClass.defineProjection('Map', 'new-platform-flexberry-g-i-s-map', {
     name: attr('Наименование'),
-    lat: attr('Широта', { hidden: true }),
-    lng: attr('Долгота', { hidden: true }),
-    zoom: attr('Зум', { hidden: true }),
-    public: attr('Общая', { hidden: true }),
-    coordinateReferenceSystem: attr('Система координат', { hidden: true })
+    lat: attr('Широта', { hidden: true, }),
+    lng: attr('Долгота', { hidden: true, }),
+    zoom: attr('Зум', { hidden: true, }),
+    public: attr('Общая', { hidden: true, }),
+    coordinateReferenceSystem: attr('Система координат', { hidden: true, }),
   });
 
   modelClass.defineProjection('MapE', 'new-platform-flexberry-g-i-s-map', {
@@ -109,30 +109,30 @@ export let defineProjections = function (modelClass) {
       coordinateReferenceSystem: attr('Система координат'),
       boundingBox: attr('Граница'),
       parent: belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
-      }, { hidden: true }),
+      }, { hidden: true, }),
       map: belongsTo('new-platform-flexberry-g-i-s-map', 'Карта', {
-      }, { hidden: true }),
+      }, { hidden: true, }),
       layerLink: hasMany('new-platform-flexberry-g-i-s-layer-link', '', {
         mapObjectSetting: belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Тип', {
-          typeName: attr('Тип объекта', { hidden: true }),
-          listForm: attr('Списковая форма', { hidden: true }),
-          editForm: attr('Форма редактирования', { hidden: true })
+          typeName: attr('Тип объекта', { hidden: true, }),
+          listForm: attr('Списковая форма', { hidden: true, }),
+          editForm: attr('Форма редактирования', { hidden: true, }),
         }),
         layer: belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
-          name: attr('Слой', { hidden: true })
-        }, { hidden: true }),
+          name: attr('Слой', { hidden: true, }),
+        }, { hidden: true, }),
         allowShow: attr('Показывать'),
         parameters: hasMany('new-platform-flexberry-g-i-s-link-parameter', 'Параметры связи', {
           objectField: attr('Поле объекта'),
           layerField: attr('Поле слоя'),
-          expression: attr('Выражение', { hidden: true }),
-          queryKey: attr('Ключ запроса', { hidden: true }),
-          linkField: attr('Ключ связи', { hidden: true }),
+          expression: attr('Выражение', { hidden: true, }),
+          queryKey: attr('Ключ запроса', { hidden: true, }),
+          linkField: attr('Ключ связи', { hidden: true, }),
           layerLink: belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
-          })
-        })
-      })
-    })
+          }),
+        }),
+      }),
+    }),
   });
 
   modelClass.defineProjection('MapL', 'new-platform-flexberry-g-i-s-map', {
@@ -140,10 +140,10 @@ export let defineProjections = function (modelClass) {
     lat: attr('Широта'),
     lng: attr('Долгота'),
     zoom: attr('Зум'),
-    public: attr('Общая')
+    public: attr('Общая'),
   });
 
   modelClass.defineProjection('MapGisSearchFormL', 'new-platform-flexberry-g-i-s-map', {
-    name: attr('Наименование')
+    name: attr('Наименование'),
   });
 };

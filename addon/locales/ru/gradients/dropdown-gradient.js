@@ -1,3 +1,3 @@
 export default {
-  'default-text': 'Выберите градиент'
+  'default-text': 'Выберите градиент',
 };

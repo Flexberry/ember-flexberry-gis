@@ -35,7 +35,7 @@ export default OdataAdapter.extend(AdapterMixin, {
     const queryAdapter = new ODataQueryAdapter(getUrl, store);
     const fullUrl = queryAdapter.getODataFullUrl(query);
 
-    requestBody += '\r\nGET ' + fullUrl + ' HTTP/1.1\r\n';
+    requestBody += `\r\nGET ${fullUrl} HTTP/1.1\r\n`;
     requestBody += 'Content-Type: application/json;type=entry\r\n';
     requestBody += 'Prefer: return=representation\r\n';
 
@@ -49,7 +49,8 @@ export default OdataAdapter.extend(AdapterMixin, {
       method: httpMethod,
       headers,
       dataType: 'text',
-      data: requestBody };
+      data: requestBody,
+    };
 
     return new Promise((resolve, reject) => $.ajax(url, options).done((response, statusText, xhr) => {
       const meta = getResponseMeta(xhr.getResponseHeader('Content-Type'));
@@ -59,12 +60,12 @@ export default OdataAdapter.extend(AdapterMixin, {
 
       try {
         const batchResponses = getBatchResponses(response, meta.boundary).map(parseBatchResponse);
-        const result = batchResponses.filter(r => r.contentType === 'application/http')[0];
+        const result = batchResponses.filter((r) => r.contentType === 'application/http')[0];
 
-        const normalizedRecords = { data: A(), included: A() };
-        let odataValue = result.response.body.value;
+        const normalizedRecords = { data: A(), included: A(), };
+        const odataValue = result.response.body.value;
         if (!isNone(odataValue)) {
-          odataValue.forEach(record => {
+          odataValue.forEach((record) => {
             const normalized = store.normalize(modelName, record);
             normalizedRecords.data.addObject(normalized.data);
             if (normalized.included) {
@@ -72,7 +73,7 @@ export default OdataAdapter.extend(AdapterMixin, {
             }
           });
         } else {
-          console.error('Error batch: ' + result.response.body);
+          console.error(`Error batch: ${result.response.body}`);
         }
 
         return resolve(run(store, store.push, normalizedRecords));
@@ -80,5 +81,5 @@ export default OdataAdapter.extend(AdapterMixin, {
         return reject(e);
       }
     }).fail(reject));
-  }
+  },
 });

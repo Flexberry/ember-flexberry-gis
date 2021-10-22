@@ -1,11 +1,11 @@
 export default {
   'query-string-textbox': {
-    'caption': 'Строка запроса'
+    caption: 'Строка запроса',
   },
   'search-properties': {
-    'caption': 'Поле поиска'
+    caption: 'Поле поиска',
   },
   'max-results-count-textbox': {
-    'caption': 'Максимальное количество результатов'
-  }
+    caption: 'Максимальное количество результатов',
+  },
 };

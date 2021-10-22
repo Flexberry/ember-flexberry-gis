@@ -51,5 +51,5 @@ export default Component.extend({
     @type Function
     @default null
   */
-  getLeafletLayer: null
+  getLeafletLayer: null,
 });

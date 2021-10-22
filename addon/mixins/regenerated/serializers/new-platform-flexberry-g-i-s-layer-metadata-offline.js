@@ -12,18 +12,18 @@ import Mixin from '@ember/object/mixin';
   @class NewPlatformFlexberyGISLayerMetadataOfflineSerializerMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export let OfflineSerializer = Mixin.create({
-  getAttrs: function () {
-    let parentAttrs = this._super();
-    let attrs = {
-      linkMetadata: { serialize: 'ids', deserialize: 'records' }
+export const OfflineSerializer = Mixin.create({
+  getAttrs() {
+    const parentAttrs = this._super();
+    const attrs = {
+      linkMetadata: { serialize: 'ids', deserialize: 'records', },
     };
 
     return $.extend(true, {}, parentAttrs, attrs);
   },
 
-  init: function () {
+  init() {
     this.set('attrs', this.getAttrs());
     this._super(...arguments);
-  }
+  },
 });

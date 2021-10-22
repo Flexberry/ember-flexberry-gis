@@ -57,9 +57,9 @@ export default Component.extend({
 
     @method _checkboxDidChange
   */
-  _checkboxDidChange: observer('_checkboxValue', function() {
-    let obj = {
-      canBeIdentified: this.get('_checkboxValue')
+  _checkboxDidChange: observer('_checkboxValue', function () {
+    const obj = {
+      canBeIdentified: this.get('_checkboxValue'),
     };
     this.set('value', obj);
   }),
@@ -69,7 +69,7 @@ export default Component.extend({
   */
   init() {
     this._super(...arguments);
-    let value = this.get('value');
+    const value = this.get('value');
     this.set('_checkboxValue', value.canBeIdentified);
-  }
+  },
 });

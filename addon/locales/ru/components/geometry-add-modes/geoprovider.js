@@ -9,5 +9,5 @@ export default {
   'results-header-select': 'Выбрать',
   'results-header-name': 'Наименование',
   'results-header-position': 'Местоположение',
-  'apply': 'Применить'
+  apply: 'Применить',
 };

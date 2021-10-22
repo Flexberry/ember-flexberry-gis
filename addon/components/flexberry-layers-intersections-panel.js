@@ -6,9 +6,9 @@ import { isNone, isEmpty, typeOf } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import { observer, get, set } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../templates/components/flexberry-layers-intersections-panel';
 import * as buffer from 'npm:@turf/buffer';
 import * as jsts from 'npm:jsts';
+import layout from '../templates/components/flexberry-layers-intersections-panel';
 import { coordinatesToArray } from '../utils/coordinates-to';
 
 /**
@@ -67,8 +67,8 @@ export default Component.extend({
     @readonly
   */
   _OnMapChanged: observer('leafletMap', function () {
-    let map = this.get('leafletMap');
-    let group = L.featureGroup().addTo(map);
+    const map = this.get('leafletMap');
+    const group = L.featureGroup().addTo(map);
     this.set('resultsLayer', group);
   }),
 
@@ -163,10 +163,10 @@ export default Component.extend({
   }),
 
   _checkTypeLayer(layer) {
-    let className = get(layer, 'type');
-    let layerClass = isNone(className) ?
-      null :
-      getOwner(this).knownForType('layer', className);
+    const className = get(layer, 'type');
+    const layerClass = isNone(className)
+      ? null
+      : getOwner(this).knownForType('layer', className);
 
     return !isNone(layerClass) && layerClass.isVectorType(layer, true);
   },
@@ -176,19 +176,17 @@ export default Component.extend({
   */
   init() {
     this._super(...arguments);
-    let vlayers = [];
-    this.get('layers').forEach(item => {
-      let layers = get(item, 'layers');
+    const vlayers = [];
+    this.get('layers').forEach((item) => {
+      const layers = get(item, 'layers');
       if (layers.length > 0) {
-        layers.forEach(layer => {
+        layers.forEach((layer) => {
           if (this._checkTypeLayer(layer)) {
             vlayers.push(layer);
           }
         });
-      } else {
-        if (this._checkTypeLayer(item)) {
-          vlayers.push(item);
-        }
+      } else if (this._checkTypeLayer(item)) {
+        vlayers.push(item);
       }
     });
     this.set('vectorLayers', vlayers);
@@ -201,24 +199,24 @@ export default Component.extend({
     */
     findIntersections() {
       this.removeLayers();
-      let selectedLayers = this.get('selectedLayers');
+      const selectedLayers = this.get('selectedLayers');
 
-      let store = this.get('store');
+      const store = this.get('store');
 
-      //Object clicked on menu
-      let currentFeature = this.get('feature');
+      // Object clicked on menu
+      const currentFeature = this.get('feature');
 
       let polygonLayer = null;
 
       let bufferedMainPolygonLayer;
-      let bufferR = isNone(this.get('bufferR')) ? 0 : this.get('bufferR');
+      const bufferR = isNone(this.get('bufferR')) ? 0 : this.get('bufferR');
 
       let latlng;
       let workingPolygon;
-      let selected = A();
+      const selected = A();
 
       selectedLayers.forEach(function (item) {
-        let result = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', item);
+        const result = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', item);
         selected.pushObject(result);
       });
 
@@ -236,20 +234,20 @@ export default Component.extend({
       latlng = polygonLayer instanceof L.Marker ? polygonLayer.getLatLng() : polygonLayer.getBounds().getCenter();
 
       if (bufferR > 0) {
-        let feat = buffer.default(polygonLayer.toGeoJSON(), bufferR, { units: 'meters' });
+        const feat = buffer.default(polygonLayer.toGeoJSON(), bufferR, { units: 'meters', });
         workingPolygon = L.geoJSON(feat).getLayers()[0];
       } else {
         workingPolygon = polygonLayer;
       }
 
       // Show map loader.
-      let leafletMap = this.get('leafletMap');
-      leafletMap.flexberryMap.loader.show({ content: this.get('i18n').t('map-tools.identify.loader-message') });
+      const leafletMap = this.get('leafletMap');
+      leafletMap.flexberryMap.loader.show({ content: this.get('i18n').t('map-tools.identify.loader-message'), });
       this._startIdentification({
         polygonLayer: workingPolygon,
-        bufferedMainPolygonLayer: bufferedMainPolygonLayer,
-        latlng: latlng,
-        selectedLayers: selected
+        bufferedMainPolygonLayer,
+        latlng,
+        selectedLayers: selected,
       });
     },
 
@@ -279,10 +277,10 @@ export default Component.extend({
       @param {Object} feature Selected feature to zoom.
     */
     zoomToIntersection(feature) {
-      let group = this.get('resultsLayer');
+      const group = this.get('resultsLayer');
       group.clearLayers();
-      let obj = L.geoJSON(feature.intersection.intersectedObject, {
-        style: { color: 'green' }
+      const obj = L.geoJSON(feature.intersection.intersectedObject, {
+        style: { color: 'green', },
       });
       obj.addTo(group);
     },
@@ -297,7 +295,7 @@ export default Component.extend({
       if (!isEmpty(str) && regex.test(str)) {
         this.$(e.target).val(str.replace(regex, ''));
       }
-    }
+    },
   },
   /**
   Starts identification by array of satisfying layers inside given polygon area.
@@ -315,17 +313,17 @@ export default Component.extend({
     bufferedMainPolygonLayer,
     latlng,
     excludedLayers,
-    selectedLayers
+    selectedLayers,
   }) {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
 
-    let e = {
-      latlng: latlng,
-      polygonLayer: polygonLayer,
-      bufferedMainPolygonLayer: bufferedMainPolygonLayer,
+    const e = {
+      latlng,
+      polygonLayer,
+      bufferedMainPolygonLayer,
       excludedLayers: A(excludedLayers || []),
       layers: selectedLayers,
-      results: A()
+      results: A(),
     };
 
     // Fire custom event on leaflet map (if there is layers to identify).
@@ -335,7 +333,7 @@ export default Component.extend({
 
     // Promises array could be totally changed in 'flexberry-map:identify' event handlers, we should prevent possible errors.
     e.results = isArray(e.results) ? e.results : A();
-    let promises = A();
+    const promises = A();
 
     // Handle each result.
     // Detach promises from already received features.
@@ -344,7 +342,7 @@ export default Component.extend({
         return;
       }
 
-      let features = get(result, 'features');
+      const features = get(result, 'features');
 
       if (!(features instanceof Promise)) {
         return;
@@ -387,47 +385,47 @@ export default Component.extend({
     e.results.forEach((identificationResult) => {
       identificationResult.features.then(
         (features) => {
-          //Show new features.
+          // Show new features.
           features.forEach((feature) => {
             if (feature.intersection) {
-              let leafletLayer = get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+              const leafletLayer = get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
               if (typeOf(leafletLayer.setStyle) === 'function') {
                 leafletLayer.setStyle({
                   color: 'salmon',
                   weight: 2,
-                  fillOpacity: 0.2
+                  fillOpacity: 0.2,
                 });
               }
 
               set(feature, 'leafletLayer', leafletLayer);
             } else {
-              let leafletLayer = get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+              const leafletLayer = get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
               if (typeOf(leafletLayer.setStyle) === 'function') {
                 leafletLayer.setStyle({
                   color: 'salmon',
                   weight: 0,
-                  fillOpacity: 0
+                  fillOpacity: 0,
                 });
               }
 
               set(feature, 'leafletLayer', leafletLayer);
             }
           });
-        });
+        }
+      );
     });
 
     // Hide map loader.
-    let leafletMap = this.get('leafletMap');
-    leafletMap.flexberryMap.loader.hide({ content: '' });
+    const leafletMap = this.get('leafletMap');
+    leafletMap.flexberryMap.loader.hide({ content: '', });
 
-    //Assign current tool's boundingBoxLayer
-    let polygonLayer = get(e, 'polygonLayer');
+    // Assign current tool's boundingBoxLayer
+    const polygonLayer = get(e, 'polygonLayer');
     this.set('polygonLayer', polygonLayer);
 
     // Assign current tool's boundingBoxLayer
-    let bufferedLayer = get(e, 'bufferedMainPolygonLayer');
+    const bufferedLayer = get(e, 'bufferedMainPolygonLayer');
     this.set('bufferedMainPolygonLayer', bufferedLayer);
-
   },
 
   /**
@@ -436,7 +434,7 @@ export default Component.extend({
     @method clearPanel
   */
   clearPanel() {
-    let group = this.get('resultsLayer');
+    const group = this.get('resultsLayer');
     group.clearLayers();
     this.removeLayers();
     this.set('selectedLayers', []);
@@ -462,14 +460,15 @@ export default Component.extend({
     @method removeLayers
   */
   removeLayers() {
-    let res = this.get('results');
+    const res = this.get('results');
     res.forEach((identificationResult) => {
       identificationResult.features.then(
         (features) => {
           features.forEach((feature) => {
             get(feature, 'leafletLayer').remove();
           });
-        });
+        }
+      );
     });
     this.set('results', []);
   },
@@ -482,27 +481,27 @@ export default Component.extend({
     @private
   */
   _findIntersections(e) {
-    let $listLayer = $('.fb-selector .menu');
+    const $listLayer = $('.fb-selector .menu');
     if ($listLayer.hasClass('visible')) {
       $listLayer.removeClass('visible');
       $listLayer.addClass('hidden');
     }
 
-    let square = isNone(this.get('square')) ? 0 : this.get('square');
+    const square = isNone(this.get('square')) ? 0 : this.get('square');
     e.results.forEach((layer) => {
       layer.features.then((features) => {
         features.forEach((item) => {
-          let objA = item.leafletLayer.toGeoJSON();
-          let objB = e.polygonLayer.toGeoJSON();
+          const objA = item.leafletLayer.toGeoJSON();
+          const objB = e.polygonLayer.toGeoJSON();
           item.isIntersect = false;
           if (objB.id !== objA.id) {
-            let crs = item.leafletLayer.options.crs;
-            let objAJsts = item.leafletLayer.toJsts(crs);
-            let objBJsts = e.polygonLayer.toJsts(crs);
-            let intersected = objAJsts.intersection(objBJsts);
-            let areaIntersection = intersected.getArea().toFixed(3);
-            let geojsonWriter = new jsts.default.io.GeoJSONWriter();
-            let res = geojsonWriter.write(intersected);
+            const { crs, } = item.leafletLayer.options;
+            const objAJsts = item.leafletLayer.toJsts(crs);
+            const objBJsts = e.polygonLayer.toJsts(crs);
+            const intersected = objAJsts.intersection(objBJsts);
+            const areaIntersection = intersected.getArea().toFixed(3);
+            const geojsonWriter = new jsts.default.io.GeoJSONWriter();
+            const res = geojsonWriter.write(intersected);
             if (res && areaIntersection >= square) {
               item.isIntersect = true;
               item.intersection = {};
@@ -535,5 +534,5 @@ export default Component.extend({
     }
 
     return null;
-  }
+  },
 });

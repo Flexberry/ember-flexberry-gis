@@ -28,9 +28,9 @@ export default Mixin.create({
       return A();
     }
 
-    let fields = A();
-    let fieldsDescription = get(leafletObject, 'readFormat.featureType.fields') || {};
-    for (let field in fieldsDescription) {
+    const fields = A();
+    const fieldsDescription = get(leafletObject, 'readFormat.featureType.fields') || {};
+    for (const field in fieldsDescription) {
       fields.addObject(field);
     }
 
@@ -47,7 +47,7 @@ export default Mixin.create({
     @returns {Object} Filter object
   */
   parseFilterConditionExpression(field, condition, value) {
-    let properties = A([field, value]);
+    const properties = A([field, value]);
     switch (condition) {
       case '=':
         if (isBlank(value)) {
@@ -70,9 +70,9 @@ export default Mixin.create({
       case '<=':
         return new L.Filter.LEQ(...properties, true);
       case 'like':
-        return new L.Filter.Like(...properties, { matchCase: true });
+        return new L.Filter.Like(...properties, { matchCase: true, });
       case 'ilike':
-        return new L.Filter.Like(...properties, { matchCase: false });
+        return new L.Filter.Like(...properties, { matchCase: false, });
     }
   },
 
@@ -109,8 +109,8 @@ export default Mixin.create({
     switch (condition) {
       case 'in':
       case 'not in':
-        let bounds = new Terraformer.Primitive(geoJSON).bbox();
-        let filter = new L.Filter.BBox(
+        const bounds = new Terraformer.Primitive(geoJSON).bbox();
+        const filter = new L.Filter.BBox(
           geometryField,
           L.latLngBounds(L.latLng(bounds[1], bounds[0]), L.latLng(bounds[3], bounds[2])),
           L.CRS.EPSG4326

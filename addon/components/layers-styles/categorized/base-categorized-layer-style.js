@@ -35,7 +35,7 @@ export default Component.extend({
     @private
     @readOnly
   */
-  _classificationCanBePerformed: computed('styleSettings.style.propertyName', function() {
+  _classificationCanBePerformed: computed('styleSettings.style.propertyName', function () {
     return !isBlank(this.get('styleSettings.style.propertyName'));
   }),
 
@@ -47,7 +47,7 @@ export default Component.extend({
     @private
     @readOnly
   */
-  _removeCanBePerformed: computed('_selectedCategoriesCount', function() {
+  _removeCanBePerformed: computed('_selectedCategoriesCount', function () {
     return this.get('_selectedCategoriesCount') > 0;
   }),
 
@@ -158,7 +158,7 @@ export default Component.extend({
     @method _categoriesDidChange
     @private
   */
-  _categoriesDidChange: observer('styleSettings.style.categories.[]', function() {
+  _categoriesDidChange: observer('styleSettings.style.categories.[]', function () {
     scheduleOnce('afterRender', this, '_renderCategorySymbolsOnCanvases');
   }),
 
@@ -216,14 +216,14 @@ export default Component.extend({
       @param {Object} e Event object.
       @param {Boolean} e.checked Flag indicating whether checkbox is checked now or not.
     */
-    onSelectAllCategoriesCheckboxChange({ checked }) {
+    onSelectAllCategoriesCheckboxChange({ checked, }) {
       if (checked) {
-        let categoriesCount = this.get('styleSettings.style.categories.length');
+        const categoriesCount = this.get('styleSettings.style.categories.length');
         this.set('_selectedCategoriesCount', categoriesCount);
 
-        let selectedCategories = {};
+        const selectedCategories = {};
         for (let i = 0; i < categoriesCount; i++) {
-          selectedCategories[i + ''] = true;
+          selectedCategories[`${i}`] = true;
         }
 
         this.set('_selectedCategories', selectedCategories);
@@ -240,7 +240,7 @@ export default Component.extend({
       @param {Object} e Event object.
       @param {Boolean} e.checked Flag indicating whether checkbox is checked now or not.
     */
-    onSelectCategoryCheckboxChange(categoryIndex, { checked }) {
+    onSelectCategoryCheckboxChange(categoryIndex, { checked, }) {
       let selectedCategoriesCount = this.get('_selectedCategoriesCount');
       if (checked) {
         selectedCategoriesCount++;
@@ -248,7 +248,7 @@ export default Component.extend({
         selectedCategoriesCount--;
       }
 
-      let categoriesCount = this.get('styleSettings.style.categories.length');
+      const categoriesCount = this.get('styleSettings.style.categories.length');
       if (selectedCategoriesCount < 0) {
         selectedCategoriesCount = 0;
       } else if (selectedCategoriesCount > categoriesCount) {
@@ -271,12 +271,12 @@ export default Component.extend({
       @param {Object} e Event object.
     */
     onAddCategoryButtonClick(e) {
-      let layersStylesRenderer = this.get('_layersStylesRenderer');
-      let categories = this.get('styleSettings.style.categories').slice(0);
+      const layersStylesRenderer = this.get('_layersStylesRenderer');
+      const categories = this.get('styleSettings.style.categories').slice(0);
       categories.push({
         name: categories.length,
         value: null,
-        styleSettings: layersStylesRenderer.getDefaultStyleSettings('simple')
+        styleSettings: layersStylesRenderer.getDefaultStyleSettings('simple'),
       });
 
       this.set('styleSettings.style.categories', categories);
@@ -293,12 +293,12 @@ export default Component.extend({
       if (this.get('_allCategoriesAreSelected')) {
         this.set('styleSettings.style.categories', []);
       } else {
-        let newCategories = [];
-        let categories = this.get('styleSettings.style.categories');
-        let selectedCategories = this.get('_selectedCategories');
+        const newCategories = [];
+        const categories = this.get('styleSettings.style.categories');
+        const selectedCategories = this.get('_selectedCategories');
 
         for (let i = 0, len = categories.length; i < len; i++) {
-          if (selectedCategories[i + ''] !== true) {
+          if (selectedCategories[`${i}`] !== true) {
             newCategories.push(categories[i]);
           }
         }
@@ -318,14 +318,14 @@ export default Component.extend({
       @param {Object} e Event object.
     */
     onCategoryStyleEditorOpen(categoryIndex, e) {
-      let categories = this.get('styleSettings.style.categories');
+      const categories = this.get('styleSettings.style.categories');
       this.set('_activeCategory', categories[categoryIndex]);
 
-      let $categoryStyleEditor = this.$('.category-style-editor');
+      const $categoryStyleEditor = this.$('.category-style-editor');
       $categoryStyleEditor.attr('category', categoryIndex);
       $categoryStyleEditor.addClass('active');
 
-      let $styleSettingsTab = $categoryStyleEditor.closest('.tab.segment');
+      const $styleSettingsTab = $categoryStyleEditor.closest('.tab.segment');
       $styleSettingsTab.attr('scrollTop', $styleSettingsTab.scrollTop());
       $styleSettingsTab.scrollTop(0);
       $styleSettingsTab.css('overflow', 'hidden');
@@ -338,12 +338,12 @@ export default Component.extend({
       @param {Object} e Event object.
     */
     onCategoryStyleEditorClose(e) {
-      let $categoryStyleEditor = this.$('.category-style-editor');
-      let categoryIndex = Number($categoryStyleEditor.attr('category'));
+      const $categoryStyleEditor = this.$('.category-style-editor');
+      const categoryIndex = Number($categoryStyleEditor.attr('category'));
       $categoryStyleEditor.removeAttr('category');
       $categoryStyleEditor.removeClass('active');
 
-      let $styleSettingsTab = $categoryStyleEditor.closest('.tab.segment');
+      const $styleSettingsTab = $categoryStyleEditor.closest('.tab.segment');
       $styleSettingsTab.css('overflow', 'auto');
       $styleSettingsTab.scrollTop($styleSettingsTab.attr('scrollTop'));
       $styleSettingsTab.removeAttr('scrollTop');
@@ -364,7 +364,7 @@ export default Component.extend({
 
       // Wait while input will be embeded into clicked cell (after render), and focus on it.
       schedule('afterRender', () => {
-        let $cellInput = $(e.target).find('input').first();
+        const $cellInput = $(e.target).find('input').first();
         $cellInput.focus();
       });
     },
@@ -389,12 +389,12 @@ export default Component.extend({
     */
     onEditingCellKeyDown(inputText, e) {
       // If Enter (keycode: 13) or Esc (keycode: 27) was pressed, remove input from the cell.
-      let code = e.keyCode || e.which;
+      const code = e.keyCode || e.which;
       if (code === 13 || code === 27) {
         e.preventDefault();
         this.send('onEditingCellFocusOut', inputText, e);
       }
-    }
+    },
   },
 
   /**
@@ -433,22 +433,22 @@ export default Component.extend({
     @private
   */
   _loadGradientSettings() {
-    let existPathSettings = this.get('styleSettings').style.path;
-    let existCategories = this.get('styleSettings').style.categories;
+    const existPathSettings = this.get('styleSettings').style.path;
+    const existCategories = this.get('styleSettings').style.categories;
 
     if (existCategories.length !== 0) {
       if (existPathSettings.fillGradientEnable) {
         this.set('_fillGradientEnable', true);
-        let colorStart = existCategories[0].styleSettings.style.path.fillColor;
-        let colorEnd = existCategories[existCategories.length - 1].styleSettings.style.path.fillColor;
+        const colorStart = existCategories[0].styleSettings.style.path.fillColor;
+        const colorEnd = existCategories[existCategories.length - 1].styleSettings.style.path.fillColor;
         this.set('_fillGradientColorStart', colorStart);
         this.set('_fillGradientColorEnd', colorEnd);
       }
 
       if (existPathSettings.strokeGradientEnable) {
         this.set('_strokeGradientEnable', true);
-        let colorStart = existCategories[0].styleSettings.style.path.color;
-        let colorEnd = existCategories[existCategories.length - 1].styleSettings.style.path.color;
+        const colorStart = existCategories[0].styleSettings.style.path.color;
+        const colorEnd = existCategories[existCategories.length - 1].styleSettings.style.path.color;
         this.set('_strokeGradientColorStart', colorStart);
         this.set('_strokeGradientColorEnd', colorEnd);
       }
@@ -463,30 +463,30 @@ export default Component.extend({
     @private
   */
   _renderCategorySymbolsOnCanvases(categoryIndex) {
-    let layersStylesRenderer = this.get('_layersStylesRenderer');
-    let categories = this.get('styleSettings.style.categories');
+    const layersStylesRenderer = this.get('_layersStylesRenderer');
+    const categories = this.get('styleSettings.style.categories');
     if (!isArray(categories) || categories.length === 0) {
       return;
     }
 
     if (categoryIndex >= 0 && categoryIndex < categories.length) {
       // Render symbol for the specified category.
-      let canvas = this.$('canvas.category-symbol-preview[category=' + categoryIndex + ']')[0];
-      let category = categories[categoryIndex];
-      let categoryStyleSettings = get(category, 'styleSettings');
+      const canvas = this.$(`canvas.category-symbol-preview[category=${categoryIndex}]`)[0];
+      const category = categories[categoryIndex];
+      const categoryStyleSettings = get(category, 'styleSettings');
 
-      layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
+      layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend', });
     } else {
       // Render symbols for all categories.
-      this.$('canvas.category-symbol-preview').each(function() {
-        let canvas = this;
-        let $canvas = $(canvas);
-        let categoryIndex = Number($canvas.attr('category'));
-        let category = categories[categoryIndex];
-        let categoryStyleSettings = get(category, 'styleSettings');
+      this.$('canvas.category-symbol-preview').each(function () {
+        const canvas = this;
+        const $canvas = $(canvas);
+        const categoryIndex = Number($canvas.attr('category'));
+        const category = categories[categoryIndex];
+        const categoryStyleSettings = get(category, 'styleSettings');
 
-        layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
+        layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend', });
       });
     }
-  }
+  },
 });

@@ -90,7 +90,7 @@ export default EditFormController.extend(EditFormControllerOperationsIndicationM
       this._mutateModel();
 
       this._super(...arguments);
-    }
+    },
   },
 
   /**
@@ -100,11 +100,11 @@ export default EditFormController.extend(EditFormControllerOperationsIndicationM
     @private
   */
   _mutateModel() {
-    let model = this.get('model');
-    let layerProperties = this.get('getLayerProperties')();
+    const model = this.get('model');
+    const layerProperties = this.get('getLayerProperties')();
 
-    for (let attr of Object.keys(layerProperties)) {
+    for (const attr of Object.keys(layerProperties)) {
       model.set(attr, layerProperties[attr]);
     }
-  }
+  },
 });

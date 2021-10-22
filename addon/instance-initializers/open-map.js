@@ -1,7 +1,7 @@
 import { Promise } from 'rsvp';
 
 export function initialize(appInstance) {
-  let mapApi = appInstance.lookup('service:map-api');
+  const mapApi = appInstance.lookup('service:map-api');
   mapApi.addToApi('openMap', openMap.bind(appInstance));
 }
 
@@ -21,12 +21,12 @@ export function initialize(appInstance) {
 function openMap(mapId, options) {
   return new Promise((resolve, reject) => {
     if (mapId) {
-      let service = this.lookup('service:map-store');
-      service.getMapById(mapId).then((mapModel)=> {
-        let router = this.lookup('router:main');
-        let queryParams = Object.assign({}, options);
-        resolve(router.transitionTo('map', mapModel, { queryParams: queryParams }));
-      }).catch(()=> {
+      const service = this.lookup('service:map-store');
+      service.getMapById(mapId).then((mapModel) => {
+        const router = this.lookup('router:main');
+        const queryParams = Object.assign({}, options);
+        resolve(router.transitionTo('map', mapModel, { queryParams, }));
+      }).catch(() => {
         reject('map is not exists');
       });
     } else {
@@ -37,5 +37,5 @@ function openMap(mapId, options) {
 
 export default {
   name: 'open-map',
-  initialize
+  initialize,
 };

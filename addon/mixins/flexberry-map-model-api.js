@@ -12,12 +12,12 @@ import helpers from 'npm:@turf/helpers';
 import booleanContains from 'npm:@turf/boolean-contains';
 import area from 'npm:@turf/area';
 import intersect from 'npm:@turf/intersect';
+import ClipperLib from 'npm:clipper-lib';
+import jsts from 'npm:jsts';
 import { getLeafletCrs } from '../utils/leaflet-crs';
 import html2canvasClone from '../utils/html2canvas-clone';
 import state from '../utils/state';
 import SnapDraw from './snap-draw';
-import ClipperLib from 'npm:clipper-lib';
-import jsts from 'npm:jsts';
 import { geometryToJsts } from '../utils/layer-to-jsts';
 import { downloadFile, downloadBlob } from '../utils/download-file';
 import { getCrsByName } from '../utils/get-crs-by-name';
@@ -131,7 +131,7 @@ export default Mixin.create(SnapDraw, {
   createNewLayer(options) {
     options = options || {};
     const store = this.get('store');
-    let layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', options);
+    const layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', options);
     layer.set('map', this);
     return layer.save().then(() => {
       const layers = this.get('hierarchy');
@@ -160,7 +160,7 @@ export default Mixin.create(SnapDraw, {
   */
   deleteLayerObjects(layerId, featureIds) {
     return new Promise((resolve, reject) => {
-      let ids = [];
+      const ids = [];
       this._getModelLayerFeature(layerId, featureIds, true).then(([layer, leafletObject]) => {
         leafletObject.eachLayer(function (shape) {
           const id = this._getLayerFeatureId(layer, shape);
@@ -196,8 +196,8 @@ export default Mixin.create(SnapDraw, {
     return new Promise((resolve, reject) => {
       if (!isNone(feature) && feature.hasOwnProperty('geometry')) {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
-        let layersIntersect = [];
-        layerIds.forEach(id => {
+        const layersIntersect = [];
+        layerIds.forEach((id) => {
           const layer = this.get('mapLayer').findBy('id', id);
           if (!isNone(layer)) {
             if (layer.get('settingsAsObject.identifySettings.canBeIdentified')) {
@@ -206,18 +206,18 @@ export default Mixin.create(SnapDraw, {
           }
         });
 
-        let crs = crsName || 'EPSG:4326';
-        let featureCrs = crs === 'EPSG:4326' ? feature : this._convertObjectCoordinates(crs, feature);
-        let featureLayer = L.GeoJSON.geometryToLayer(featureCrs);
-        let latlng = featureLayer instanceof L.Marker || featureLayer instanceof L.CircleMarker ?
-          featureLayer.getLatLng() : featureLayer.getBounds().getCenter();
-        let e = {
-          latlng: latlng,
+        const crs = crsName || 'EPSG:4326';
+        const featureCrs = crs === 'EPSG:4326' ? feature : this._convertObjectCoordinates(crs, feature);
+        const featureLayer = L.GeoJSON.geometryToLayer(featureCrs);
+        const latlng = featureLayer instanceof L.Marker || featureLayer instanceof L.CircleMarker
+          ? featureLayer.getLatLng() : featureLayer.getBounds().getCenter();
+        const e = {
+          latlng,
           polygonLayer: featureLayer,
           bufferedMainPolygonLayer: featureLayer,
           excludedLayers: [],
           layers: layersIntersect,
-          results: A()
+          results: A(),
         };
 
         if (e.layers.length > 0) {
@@ -225,7 +225,7 @@ export default Mixin.create(SnapDraw, {
         }
 
         e.results = isArray(e.results) ? e.results : A();
-        let promises = A();
+        const promises = A();
 
         // Handle each result.
         // Detach promises from already received features.
@@ -257,18 +257,18 @@ export default Mixin.create(SnapDraw, {
     return new Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, [layerObjectId]).then(([, leafletObject, layerObject]) => {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
-        let layersGetNeatObject = [];
-        layerIds.forEach(id => {
+        const layersGetNeatObject = [];
+        layerIds.forEach((id) => {
           const layer = this.get('mapLayer').findBy('id', id);
           layersGetNeatObject.push(layer);
         });
 
-        let e = {
+        const e = {
           featureLayer: layerObject[0],
           featureId: layerObjectId,
           layerObjectId: layerId,
           layers: layersGetNeatObject,
-          results: A()
+          results: A(),
         };
 
         if (e.layers.length > 0) {
@@ -276,7 +276,7 @@ export default Mixin.create(SnapDraw, {
         }
 
         e.results = isArray(e.results) ? e.results : A();
-        let promises = A();
+        const promises = A();
 
         // Handle each result.
         // Detach promises from already received features.
@@ -289,7 +289,7 @@ export default Mixin.create(SnapDraw, {
         });
 
         allSettled(promises).then((results) => {
-          const rejected = results.filter((item) => { return item.state === 'rejected'; }).length > 0;
+          const rejected = results.filter((item) => item.state === 'rejected').length > 0;
           if (rejected) {
             return reject('Failed to get nearest object');
           }
@@ -310,9 +310,9 @@ export default Mixin.create(SnapDraw, {
     const type = get(object, 'feature.geometry.type');
     if (type === 'Point') {
       return object._latlng;
-    } else {
-      return object.getBounds().getCenter();
     }
+
+    return object.getBounds().getCenter();
   },
 
   /**
@@ -330,7 +330,7 @@ export default Mixin.create(SnapDraw, {
     const secondObject = helpers.point([secondPoint.lat, secondPoint.lng]);
 
     // Get distance in meters.
-    return distance.default(firstObject, secondObject, { units: 'kilometers' }) * 1000;
+    return distance.default(firstObject, secondObject, { units: 'kilometers', }) * 1000;
   },
 
   /**
@@ -348,8 +348,8 @@ export default Mixin.create(SnapDraw, {
         this._getModelLayerFeature(firstLayerId, [firstLayerObjectId]),
         this._getModelLayerFeature(secondLayerId, [secondLayerObjectId])
       ]).then((result) => {
-        let objA = result[0][2][0];
-        let objB = result[1][2][0];
+        const objA = result[0][2][0];
+        const objB = result[1][2][0];
         resolve(this._getDistanceBetweenObjects(objA, objB));
       }).catch((e) => {
         reject(e);
@@ -369,19 +369,19 @@ export default Mixin.create(SnapDraw, {
     return new Promise((resolve, reject) => {
       let result;
       this._getModelLayerFeature(layerId, [featureId]).then(([, leafletLayer, features]) => {
-        let featureLayer = features[0];
+        const featureLayer = features[0];
         if (leafletLayer && featureLayer) {
           result = Object.assign({}, featureLayer.feature.properties);
           if (crsName) {
-            let NewObjCrs = this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer.feature, crsName);
+            const NewObjCrs = this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer.feature, crsName);
             result.geometry = NewObjCrs.geometry.coordinates;
           } else {
             result.geometry = featureLayer.feature.geometry.coordinates;
           }
 
-          let jstsGeoJSONReader = new jsts.io.GeoJSONReader();
-          let featureLayerGeoJSON = featureLayer.toProjectedGeoJSON(leafletLayer.options.crs);
-          let jstsGeoJSON = jstsGeoJSONReader.read(featureLayerGeoJSON);
+          const jstsGeoJSONReader = new jsts.io.GeoJSONReader();
+          const featureLayerGeoJSON = featureLayer.toProjectedGeoJSON(leafletLayer.options.crs);
+          const jstsGeoJSON = jstsGeoJSONReader.read(featureLayerGeoJSON);
           result.area = jstsGeoJSON.geometry.getArea();
           resolve(result);
         }
@@ -406,10 +406,10 @@ export default Mixin.create(SnapDraw, {
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) => {
-        let objA = result[0][2][0].feature;
-        let objB = result[1][2][0].feature;
-        let leafletLayerA = result[0][1];
-        let leafletLayerB = result[1][1];
+        const objA = result[0][2][0].feature;
+        const objB = result[1][2][0].feature;
+        const leafletLayerA = result[0][1];
+        const leafletLayerB = result[1][1];
         if (objA && objB && leafletLayerA && leafletLayerB) {
           let feature1 = leafletLayerA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(leafletLayerA.options.crs.code, objA);
           let feature2 = leafletLayerB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(leafletLayerB.options.crs.code, objB);
@@ -424,7 +424,6 @@ export default Mixin.create(SnapDraw, {
 
           resolve(booleanContains(feature1, feature2));
         }
-
       }).catch((e) => {
         reject(e);
       });
@@ -446,15 +445,15 @@ export default Mixin.create(SnapDraw, {
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) => {
-        let objA = result[0][2][0].feature;
-        let objB = result[1][2][0].feature;
-        let layerObjectA = result[0][1];
-        let layerObjectB = result[1][1];
-        let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
-        let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
-        let intersectionRes = intersect.default(feature2, feature1);
+        const objA = result[0][2][0].feature;
+        const objB = result[1][2][0].feature;
+        const layerObjectA = result[0][1];
+        const layerObjectB = result[1][1];
+        const feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
+        const feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
+        const intersectionRes = intersect.default(feature2, feature1);
         if (intersectionRes) {
-          let resultArea = area(feature2) - area(intersectionRes);
+          const resultArea = area(feature2) - area(intersectionRes);
           resolve(resultArea);
         } else {
           resolve(area(feature2));
@@ -472,8 +471,8 @@ export default Mixin.create(SnapDraw, {
     @return {Object} layer type
   */
   _getTypeLayer(layerModel) {
-    let className = get(layerModel, 'type');
-    let layerType = getOwner(this).knownForType('layer', className);
+    const className = get(layerModel, 'type');
+    const layerType = getOwner(this).knownForType('layer', className);
     return layerType;
   },
 
@@ -481,8 +480,8 @@ export default Mixin.create(SnapDraw, {
     return new Promise((resolve, reject) => {
       if (isArray(layerIds)) {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
-        let currentLayerIds = [];
-        layerIds.forEach(id => {
+        const currentLayerIds = [];
+        layerIds.forEach((id) => {
           const layer = this.get('mapLayer').findBy('id', id);
           if (layer) {
             layer.set('visibility', visibility);
@@ -493,13 +492,13 @@ export default Mixin.create(SnapDraw, {
         });
         if (visibility) {
           if (currentLayerIds.length > 0) {
-            let e = {
+            const e = {
               layers: currentLayerIds,
-              results: A()
+              results: A(),
             };
             leafletMap.fire('flexberry-map:moveend', e);
             e.results = isArray(e.results) ? e.results : A();
-            let promises = A();
+            const promises = A();
             e.results.forEach((result) => {
               if (isNone(result)) {
                 return;
@@ -532,16 +531,16 @@ export default Mixin.create(SnapDraw, {
     @return {number} Object ID.
   */
   _getLayerFeatureId(layer, layerObject) {
-    let field = this._getPkField(layer);
+    const field = this._getPkField(layer);
     if (layerObject.state !== state.insert) {
       if (layerObject.feature.properties.hasOwnProperty(field)) {
-        return get(layerObject, 'feature.properties.' + field);
+        return get(layerObject, `feature.properties.${field}`);
       }
 
       return get(layerObject, 'feature.id');
-    } else {
-      return null;
     }
+
+    return null;
   },
 
   /**
@@ -556,7 +555,7 @@ export default Mixin.create(SnapDraw, {
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
     return new Promise((resolve, reject) => {
       if (isArray(objectIds)) {
-        let [layer, leafletObject] = this._getModelLeafletObject(layerId);
+        const [layer, leafletObject] = this._getModelLeafletObject(layerId);
         if (isNone(layer)) {
           return reject(`Layer '${layerId}' not found.`);
         }
@@ -591,8 +590,8 @@ export default Mixin.create(SnapDraw, {
   copyObject(source, destination) {
     return new Promise((resolve, reject) => {
       this._getModelLayerFeature(source.layerId, [source.objectId], source.shouldRemove).then(([, sourceLeafletLayer, obj]) => {
-        let sourceFeature = obj[0];
-        let [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
+        const sourceFeature = obj[0];
+        const [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
         let destFeature;
         switch (destLayerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
           case 'polygon':
@@ -610,7 +609,7 @@ export default Mixin.create(SnapDraw, {
 
         if (!isNone(destFeature)) {
           destFeature.feature = {
-            properties: Object.assign({}, sourceFeature.feature.properties, destination.properties || {})
+            properties: Object.assign({}, sourceFeature.feature.properties, destination.properties || {}),
           };
 
           if (sourceLeafletLayer.geometryField) {
@@ -621,7 +620,7 @@ export default Mixin.create(SnapDraw, {
             delete destFeature.feature.properties[destLeafletLayer.geometryField];
           }
 
-          let e = { layers: [destFeature], results: A() };
+          const e = { layers: [destFeature], results: A(), };
           destLeafletLayer.fire('load', e);
 
           allSettled(e.results).then(() => {
@@ -659,27 +658,27 @@ export default Mixin.create(SnapDraw, {
       if (isNone(source.layerId) || isNone(source.objectIds) || isNone(destination.layerId)) {
         reject('Check the parameters you are passing');
       } else {
-        let loadPromise = new all(this.loadingFeaturesByPackages(source.layerId, source.objectIds, source.shouldRemove));
+        const loadPromise = new all(this.loadingFeaturesByPackages(source.layerId, source.objectIds, source.shouldRemove));
 
         loadPromise.then((res) => {
-          let destFeatures = [];
-          let sourceFeatures = [];
-          let [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
-          let [sourceModel, sourceLeafletLayer] = this._getModelLeafletObject(source.layerId);
+          const destFeatures = [];
+          const sourceFeatures = [];
+          const [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
+          const [sourceModel, sourceLeafletLayer] = this._getModelLeafletObject(source.layerId);
           let objects = [];
           if (source.shouldRemove) {
-            sourceLeafletLayer.eachLayer(shape => {
+            sourceLeafletLayer.eachLayer((shape) => {
               if (source.objectIds.indexOf(this._getLayerFeatureId(sourceModel, shape)) !== -1) {
                 objects.push(shape);
               }
             });
           } else {
-            res.forEach(result => {
+            res.forEach((result) => {
               objects = objects.concat(result[2]);
             });
           }
 
-          objects.forEach(sourceFeature => {
+          objects.forEach((sourceFeature) => {
             let destFeature;
             switch (destLayerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
               case 'polygon':
@@ -696,7 +695,7 @@ export default Mixin.create(SnapDraw, {
             }
 
             if (!isNone(destFeature)) {
-              destFeature.feature = { properties: {} };
+              destFeature.feature = { properties: {}, };
               if (destination.withProperties) {
                 destFeature.feature.properties = Object.assign({}, sourceFeature.feature.properties);
 
@@ -714,22 +713,21 @@ export default Mixin.create(SnapDraw, {
                 sourceFeatures.push(sourceFeature);
               }
             }
-
           });
 
-          let e = { layers: destFeatures, results: A() };
+          const e = { layers: destFeatures, results: A(), };
           destLeafletLayer.fire('load', e);
 
           allSettled(e.results).then(() => {
             if (source.shouldRemove) {
-              sourceFeatures.forEach(sourceFeature => {
+              sourceFeatures.forEach((sourceFeature) => {
                 sourceLeafletLayer.removeLayer(sourceFeature);
               });
             }
 
             resolve(destFeatures);
           });
-        }).catch(e => reject(e));
+        }).catch((e) => reject(e));
       }
     });
   },
@@ -746,30 +744,30 @@ export default Mixin.create(SnapDraw, {
   */
   getIntersectionArea(layerAId, objectAId, layerBId, objectBIds, showOnMap) {
     return new Promise((resolve, reject) => {
-      let result = A();
+      const result = A();
       all([
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, objectBIds)
       ]).then((res) => {
-        let layerObjectA = res[0][1];
-        let layerObjectB = res[1][1];
-        let objA = res[0][2][0].feature;
-        let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
-        let featuresB = res[1][2];
+        const layerObjectA = res[0][1];
+        const layerObjectB = res[1][1];
+        const objA = res[0][2][0].feature;
+        const feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
+        const featuresB = res[1][2];
         featuresB.forEach((feat) => {
-          let objB = feat.feature;
-          let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
-          let intersectionRes = intersect.default(feature1, feature2);
+          const objB = feat.feature;
+          const feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
+          const intersectionRes = intersect.default(feature1, feature2);
           if (intersectionRes) {
-            let object = {
+            const object = {
               id: objB.properties.primarykey,
-              area: area(intersectionRes)
+              area: area(intersectionRes),
             };
             if (showOnMap) {
-              let obj = L.geoJSON(intersectionRes, {
-                style: { color: 'green' }
+              const obj = L.geoJSON(intersectionRes, {
+                style: { color: 'green', },
               });
-              let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+              const serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
               obj.addTo(serviceLayer);
               object.objectIntesect = obj;
             }
@@ -778,7 +776,7 @@ export default Mixin.create(SnapDraw, {
           } else {
             result.pushObject({
               id: objB.properties.primarykey,
-              area: 'Intersection not found'
+              area: 'Intersection not found',
             });
           }
         });
@@ -797,7 +795,7 @@ export default Mixin.create(SnapDraw, {
     @return nothing
   */
   clearServiceLayer() {
-    let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+    const serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
     serviceLayer.clearLayers();
   },
 
@@ -816,25 +814,27 @@ export default Mixin.create(SnapDraw, {
     }
     @return {Promise} Image url.
   */
-  getSnapShot({ layerId, objectId, layerArrIds, options }) {
+  getSnapShot({
+    layerId, objectId, layerArrIds, options,
+  }) {
     return new Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, [objectId]).then(([layerModel, leafletObject, featureLayer]) => {
-        let allLayers = this.get('mapLayer.canonicalState');
-        let allLayersIds = allLayers.map((l) => l.id);
+        const allLayers = this.get('mapLayer.canonicalState');
+        const allLayersIds = allLayers.map((l) => l.id);
         if (layerArrIds) {
-          let showLayersIds = layerArrIds;
+          const showLayersIds = layerArrIds;
           showLayersIds.push(layerId);
 
           this.showLayers(showLayersIds);
-          let hideLayersIds = allLayersIds.filter((i) => { return showLayersIds.indexOf(i) < 0; });
+          const hideLayersIds = allLayersIds.filter((i) => showLayersIds.indexOf(i) < 0);
           this.hideLayers(hideLayersIds);
         }
 
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
-        let $mapPicture = $(leafletMap._container);
-        let heightMap = $mapPicture.height();
-        let widthMap = $mapPicture.width();
+        const $mapPicture = $(leafletMap._container);
+        const heightMap = $mapPicture.height();
+        const widthMap = $mapPicture.width();
         let heightNew = heightMap;
         let widthNew = widthMap;
         if (!isNone(options)) {
@@ -845,12 +845,12 @@ export default Mixin.create(SnapDraw, {
         $mapPicture.height(heightNew);
         $mapPicture.width(widthNew);
 
-        let load = [];
-        let ids = isEmpty(layerArrIds) ? allLayersIds : layerArrIds;
+        const load = [];
+        const ids = isEmpty(layerArrIds) ? allLayersIds : layerArrIds;
         if (ids) {
           ids.forEach((lid) => {
             if (lid !== layerId) {
-              let [, layerObject] = this._getModelLeafletObject(lid);
+              const [, layerObject] = this._getModelLeafletObject(lid);
               layerObject.statusLoadLayer = true;
               load.push(layerObject);
             }
@@ -868,9 +868,7 @@ export default Mixin.create(SnapDraw, {
             $(document).find('.leaflet-top.leaflet-right').css('display', 'none');
             $(document).find('.leaflet-bottom.leaflet-right').css('display', 'none');
 
-            let promises = load.map((object) => {
-              return !isNone(leafletObject.promiseLoadLayer) && (leafletObject.promiseLoadLayer instanceof Promise);
-            });
+            const promises = load.map((object) => !isNone(leafletObject.promiseLoadLayer) && (leafletObject.promiseLoadLayer instanceof Promise));
 
             allSettled(promises).then((e) => {
               load.forEach((obj) => {
@@ -878,16 +876,16 @@ export default Mixin.create(SnapDraw, {
                 obj.promiseLoadLayer = null;
               });
 
-              let html2canvasOptions = Object.assign({
+              const html2canvasOptions = Object.assign({
                 useCORS: true,
-                onclone: function (clonedDoc) {
+                onclone(clonedDoc) {
                   html2canvasClone(clonedDoc);
-                }
+                },
               });
               window.html2canvas($mapPicture[0], html2canvasOptions)
                 .then((canvas) => {
-                  let type = 'image/png';
-                  var image64 = canvas.toDataURL(type);
+                  const type = 'image/png';
+                  const image64 = canvas.toDataURL(type);
                   resolve(image64);
                 })
                 .catch((e) => reject(e))
@@ -904,7 +902,7 @@ export default Mixin.create(SnapDraw, {
           });
         });
 
-        let bounds = featureLayer[0].getBounds();
+        const bounds = featureLayer[0].getBounds();
         if (!isNone(bounds)) {
           leafletMap.fitBounds(bounds.pad(0.5));
         }
@@ -930,20 +928,24 @@ export default Mixin.create(SnapDraw, {
     }
     @return {File} Image file.
   */
-  downloadSnapShot({ layerId, objectId, layerArrIds, options, fileName }) {
-    this.getSnapShot({ layerId, objectId, layerArrIds, options }).then((uri) => {
-      var link = document.createElement('a');
+  downloadSnapShot({
+    layerId, objectId, layerArrIds, options, fileName,
+  }) {
+    this.getSnapShot({
+      layerId, objectId, layerArrIds, options,
+    }).then((uri) => {
+      const link = document.createElement('a');
       if (typeof link.download === 'string') {
         link.href = uri;
         link.download = fileName;
 
-        //Firefox requires the link to be in the body
+        // Firefox requires the link to be in the body
         document.body.appendChild(link);
 
-        //simulate click
+        // simulate click
         link.click();
 
-        //remove the link when done
+        // remove the link when done
         document.body.removeChild(link);
       } else {
         window.open(uri);
@@ -1000,26 +1002,26 @@ export default Mixin.create(SnapDraw, {
     @return {Array} Array object rhumb.
   */
   getRhumb(feature, crsName) {
-    let coords = feature.geometry.coordinates;
-    let result = [];
+    const coords = feature.geometry.coordinates;
+    const result = [];
 
-    var calcRhumb = function (point1, point2) {
+    const calcRhumb = function (point1, point2) {
       // Get distance
-      let geojson1 = {
+      const geojson1 = {
         type: 'Point',
-        coordinates: point1
+        coordinates: point1,
       };
-      let geojson2 = {
+      const geojson2 = {
         type: 'Point',
-        coordinates: point2
+        coordinates: point2,
       };
 
-      let jsts1 = geometryToJsts(geojson1);
-      let jsts2 = geometryToJsts(geojson2);
+      const jsts1 = geometryToJsts(geojson1);
+      const jsts2 = geometryToJsts(geojson2);
       const distance = jsts1.distance(jsts2);
 
       // Get the angle.
-      var getAngle = function (p1, p2) {
+      const getAngle = function (p1, p2) {
         return Math.atan2(p1[1] - p2[1], p1[0] - p2[0]) / Math.PI * 180;
       };
 
@@ -1041,25 +1043,27 @@ export default Mixin.create(SnapDraw, {
         // SW
         rhumb = 'SW';
         angle = (-1 * bearing - 90);
-      } if (bearing <= 0 && bearing >= -90) {
+      }
+
+      if (bearing <= 0 && bearing >= -90) {
         // SE
         rhumb = 'SE';
         angle = (90 + bearing);
       }
 
       return {
-        rhumb: rhumb,
-        angle: angle,
-        distance: distance
+        rhumb,
+        angle,
+        distance,
       };
     };
 
-    let coordToRhumbs = function(type, coords) {
+    const coordToRhumbs = function (type, coords) {
       let startPoint = null;
       let n;
       let point1;
       let point2;
-      let rhumbs = [];
+      const rhumbs = [];
       for (let i = 0; i < coords.length - 1; i++) {
         startPoint = i === 0 ? coords[i] : startPoint;
         point1 = coords[i];
@@ -1069,11 +1073,11 @@ export default Mixin.create(SnapDraw, {
       }
 
       return {
-        type: type,
+        type,
         crs: crsName,
-        startPoint: startPoint,
+        startPoint,
         skip: 0,
-        points: rhumbs
+        points: rhumbs,
       };
     };
 
@@ -1090,7 +1094,7 @@ export default Mixin.create(SnapDraw, {
       case 'Polygon':
         for (let i = 0; i < coords.length; i++) {
           result.push(coordToRhumbs('Polygon', coords[i]));
-          result[i].hole = i > 0 ? true : false;
+          result[i].hole = i > 0;
         }
 
         break;
@@ -1098,7 +1102,7 @@ export default Mixin.create(SnapDraw, {
         for (let i = 0; i < coords.length; i++) {
           for (let j = 0; j < coords[i].length; j++) {
             result.push(coordToRhumbs('Polygon', coords[i][j]));
-            result[result.length - 1].hole = j > 0 ? true : false;
+            result[result.length - 1].hole = j > 0;
           }
         }
 
@@ -1122,7 +1126,7 @@ export default Mixin.create(SnapDraw, {
       throw (`Group layer '${layerGroupId}' not found`);
     }
 
-    let layerModel = this.getLayerModel(layerId);
+    const layerModel = this.getLayerModel(layerId);
     if (isNone(layerModel)) {
       throw (`Layer '${layerId}' not found`);
     }
@@ -1144,18 +1148,18 @@ export default Mixin.create(SnapDraw, {
       if (polygon) {
         this._getModelLayerFeature(layerId, [objectId], true).then(([, leafletLayer, featureLayer]) => {
           if (leafletLayer && featureLayer) {
-            let crs = leafletLayer.options.crs;
+            let { crs, } = leafletLayer.options;
             if (!isNone(crsName)) {
-              crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
+              crs = getLeafletCrs(`{ "code": "${crsName.toUpperCase()}", "definition": "" }`, this);
             }
 
-            let coordsToLatLng = function (coords) {
+            const coordsToLatLng = function (coords) {
               return crs.unproject(L.point(coords));
             };
 
             let geoJSON = null;
             if (!isNone(crs) && crs.code !== 'EPSG:4326') {
-              geoJSON = L.geoJSON(polygon, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
+              geoJSON = L.geoJSON(polygon, { coordsToLatLng: coordsToLatLng.bind(this), }).getLayers()[0];
             } else {
               geoJSON = L.geoJSON(polygon).getLayers()[0];
             }
@@ -1195,24 +1199,24 @@ export default Mixin.create(SnapDraw, {
     @return {Promise} Object in geoJSON format
   */
   uploadFile(file) {
-    let config = getOwner(this).resolveRegistration('config:environment');
-    let data = new FormData();
+    const config = getOwner(this).resolveRegistration('config:environment');
+    const data = new FormData();
     data.append(file.name, file);
 
     return new Promise((resolve, reject) => {
       $.ajax({
         url: `${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}`,
         type: 'POST',
-        data: data,
+        data,
         cache: false,
         contentType: false,
         processData: false,
-        success: function (data) {
+        success(data) {
           resolve(data);
         },
-        error: function (e) {
+        error(e) {
           reject(e);
-        }
+        },
       });
     });
   },
@@ -1229,14 +1233,13 @@ export default Mixin.create(SnapDraw, {
     @private
   */
   _convertObjectCoordinates(projection, object, crsName = null) {
-
     // copy from https://stackoverflow.com/a/48218209/2014079 for replace $.extend
     // such as it is not properly work with Proxy properties
     var mergeDeep = function (...objects) {
-      const isObject = obj => obj && typeof obj === 'object';
+      const isObject = (obj) => obj && typeof obj === 'object';
 
       return objects.reduce((prev, obj) => {
-        Object.keys(obj).forEach(key => {
+        Object.keys(obj).forEach((key) => {
           const pVal = prev[key];
           const oVal = obj[key];
 
@@ -1253,49 +1256,46 @@ export default Mixin.create(SnapDraw, {
       }, {});
     };
 
-    let knownCrs = getOwner(this).knownForType('coordinate-reference-system');
-    let knownCrsArray = A(Object.values(knownCrs));
-    let firstProjection = projection ? projection : 'EPSG:4326';
-    let secondProjection = crsName ? crsName : 'EPSG:4326';
-    let firstCrs = knownCrsArray.findBy('code', firstProjection);
-    let secondCrs = knownCrsArray.findBy('code', secondProjection);
+    const knownCrs = getOwner(this).knownForType('coordinate-reference-system');
+    const knownCrsArray = A(Object.values(knownCrs));
+    const firstProjection = projection || 'EPSG:4326';
+    const secondProjection = crsName || 'EPSG:4326';
+    const firstCrs = knownCrsArray.findBy('code', firstProjection);
+    const secondCrs = knownCrsArray.findBy('code', secondProjection);
     if (firstCrs && secondCrs) {
-      let firstDefinition = get(firstCrs, 'definition');
-      let secondDefinition = get(secondCrs, 'definition');
+      const firstDefinition = get(firstCrs, 'definition');
+      const secondDefinition = get(secondCrs, 'definition');
       if (firstDefinition && secondDefinition) {
         if (firstDefinition !== secondDefinition) {
-          let result = mergeDeep({}, object);
+          const result = mergeDeep({}, object);
           let coordinatesArray = [];
           if (result.geometry.type !== 'Point') {
-            result.geometry.coordinates.forEach(arr => {
-              var arr1 = [];
+            result.geometry.coordinates.forEach((arr) => {
+              const arr1 = [];
               if (result.geometry.type.indexOf('Multi') !== -1) {
-                arr.forEach(pair => {
+                arr.forEach((pair) => {
                   if (result.geometry.type === 'MultiPolygon') {
-                    let arr2 = [];
-                    pair.forEach(cords => {
-                      let transdormedCords = proj4(firstDefinition, secondDefinition, cords);
+                    const arr2 = [];
+                    pair.forEach((cords) => {
+                      const transdormedCords = proj4(firstDefinition, secondDefinition, cords);
                       arr2.push(transdormedCords);
                     });
                     arr1.push(arr2);
                   } else {
-                    let cords = proj4(firstDefinition, secondDefinition, pair);
+                    const cords = proj4(firstDefinition, secondDefinition, pair);
                     arr1.push(cords);
                   }
-
+                });
+                coordinatesArray.push(arr1);
+              } else if (result.geometry.type === 'Polygon') {
+                arr.forEach((cords) => {
+                  const transdormedCords = proj4(firstDefinition, secondDefinition, cords);
+                  arr1.push(transdormedCords);
                 });
                 coordinatesArray.push(arr1);
               } else {
-                if (result.geometry.type === 'Polygon') {
-                  arr.forEach(cords => {
-                    let transdormedCords = proj4(firstDefinition, secondDefinition, cords);
-                    arr1.push(transdormedCords);
-                  });
-                  coordinatesArray.push(arr1);
-                } else {
-                  let cords = proj4(firstDefinition, secondDefinition, arr);
-                  coordinatesArray.push(cords);
-                }
+                const cords = proj4(firstDefinition, secondDefinition, arr);
+                coordinatesArray.push(cords);
               }
             });
           } else {
@@ -1304,9 +1304,9 @@ export default Mixin.create(SnapDraw, {
 
           result.geometry.coordinates = coordinatesArray;
           return result;
-        } else {
-          return object;
         }
+
+        return object;
       }
     } else {
       throw 'unknown coordinate reference system';
@@ -1322,9 +1322,9 @@ export default Mixin.create(SnapDraw, {
   _getPkField(layer) {
     if (!isNone(layer) && !isNone(layer._leafletObject) && typeof layer._leafletObject.getPkField === 'function') {
       return layer._leafletObject.getPkField(layer);
-    } else {
-      throw 'Layer is not VectorLayer';
     }
+
+    throw 'Layer is not VectorLayer';
   },
 
   /**
@@ -1342,13 +1342,13 @@ export default Mixin.create(SnapDraw, {
       const leafletMap = this.get('mapApi').getFromApi('leafletMap');
       $(leafletMap._container).css('cursor', 'crosshair');
 
-      var getCoord = (e) => {
+      const getCoord = (e) => {
         if (snap) {
           this._drawClick(e);
         }
 
         leafletMap.off('mousemove', this._handleSnapping, this);
-        let layers = this.get('_snapLayersGroups');
+        const layers = this.get('_snapLayersGroups');
         if (layers) {
           layers.forEach((l, i) => {
             l.off('load', this._setSnappingFeatures, this);
@@ -1360,17 +1360,17 @@ export default Mixin.create(SnapDraw, {
         $(leafletMap._container).css('cursor', '');
         let crs = get(leafletMap, 'options.crs');
         if (!isNone(crsName)) {
-          crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
+          crs = getLeafletCrs(`{ "code": "${crsName.toUpperCase()}", "definition": "" }`, this);
         }
 
         resolve(crs.project(e.latlng));
       };
 
       if (snap) {
-        let layers = snapLayers.map((id) => {
-          let [, leafletObject] = this._getModelLeafletObject(id);
+        const layers = snapLayers.map((id) => {
+          const [, leafletObject] = this._getModelLeafletObject(id);
           return leafletObject;
-        }).filter(l => !!l);
+        }).filter((l) => !!l);
 
         layers.forEach((l, i) => {
           l.on('load', this._setSnappingFeatures, this);
@@ -1387,12 +1387,12 @@ export default Mixin.create(SnapDraw, {
           this.set('_snapOnlyVertex', snapOnlyVertex);
         }
 
-        let editTools = this._getEditTools();
+        const editTools = this._getEditTools();
         leafletMap.on('mousemove', this._handleSnapping, this);
         this.set('_snapMarker', L.marker(leafletMap.getCenter(), {
-          icon: editTools.createVertexIcon({ className: 'leaflet-div-icon leaflet-drawing-icon' }),
+          icon: editTools.createVertexIcon({ className: 'leaflet-div-icon leaflet-drawing-icon', }),
           opacity: 1,
-          zIndexOffset: 1000
+          zIndexOffset: 1000,
         }));
       }
 
@@ -1408,15 +1408,15 @@ export default Mixin.create(SnapDraw, {
     @return {Promise}
   */
   loadingFeaturesByPackages(layerId, objectIds, shouldRemove = false) {
-    let packageSize = 100;
+    const packageSize = 100;
 
-    let layerPromises = [];
+    const layerPromises = [];
 
     let startPackage = 0;
     while (startPackage < objectIds.length) {
-      let endPackage = (startPackage + packageSize) <= objectIds.length ? startPackage + packageSize : objectIds.length;
-      let objectsPackage = [];
-      for (var i = startPackage; i < endPackage; i++) {
+      const endPackage = (startPackage + packageSize) <= objectIds.length ? startPackage + packageSize : objectIds.length;
+      const objectsPackage = [];
+      for (let i = startPackage; i < endPackage; i++) {
         objectsPackage.push(objectIds[i]);
       }
 
@@ -1444,27 +1444,27 @@ export default Mixin.create(SnapDraw, {
   */
   getMergedGeometry(layerAId, objectAIds, layerBId, objectBIds, isUnion = false, failIfInvalid = false, forceMulti = true) {
     return new Promise((resolve, reject) => {
-      let layerAPromises = this.loadingFeaturesByPackages(layerAId, objectAIds);
-      let layerBPromises = this.loadingFeaturesByPackages(layerBId, objectBIds);
+      const layerAPromises = this.loadingFeaturesByPackages(layerAId, objectAIds);
+      const layerBPromises = this.loadingFeaturesByPackages(layerBId, objectBIds);
 
       allSettled(
         layerAPromises.concat(layerBPromises)
       ).then((layerFeatures) => {
-        const rejected = layerFeatures.filter((item) => { return item.state === 'rejected'; }).length > 0;
+        const rejected = layerFeatures.filter((item) => item.state === 'rejected').length > 0;
 
         if (rejected) {
           reject('Error loading objects');
         }
 
         let count = 0;
-        let scale = this.get('mapApi').getFromApi('precisionScale');
-        let resultObjs = A();
+        const scale = this.get('mapApi').getFromApi('precisionScale');
+        const resultObjs = A();
 
         layerFeatures.forEach((r, i) => {
-          let geometries = A();
+          const geometries = A();
           r.value[2].forEach((obj, ind) => {
             if (get(obj, 'feature.geometry') && get(obj, 'options.crs.code')) {
-              let feature = obj.toJsts(obj.options.crs, scale);
+              const feature = obj.toJsts(obj.options.crs, scale);
               geometries.pushObject(feature);
             }
           });
@@ -1472,14 +1472,14 @@ export default Mixin.create(SnapDraw, {
           count += 1;
 
           // если вся геометрия невалидна, то будет null
-          let merged = this._getMulti(geometries, isUnion, failIfInvalid);
+          const merged = this._getMulti(geometries, isUnion, failIfInvalid);
           if (merged) {
             resultObjs.pushObject(merged);
           }
         });
 
-        let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, isUnion, failIfInvalid, true, forceMulti) : null;
-        resolve(resultObj ? resultObj : null);
+        const resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, isUnion, failIfInvalid, true, forceMulti) : null;
+        resolve(resultObj || null);
       }).catch((e) => {
         reject(e);
       });
@@ -1497,20 +1497,20 @@ export default Mixin.create(SnapDraw, {
     return new Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, null).then(([, layerObject, layerFeatures]) => {
         if (!isEmpty(layerFeatures)) {
-          let arrPoints = A();
-          let features = A();
+          const arrPoints = A();
+          const features = A();
           layerFeatures.forEach((layer) => {
             let obj = layer.feature;
             if (!isNone(crsName)) {
               obj = this._convertObjectCoordinates(layerObject.options.crs.code, obj, crsName);
             }
 
-            let featureLayer = L.GeoJSON.geometryToLayer(obj);
+            const featureLayer = L.GeoJSON.geometryToLayer(obj);
             arrPoints.push(this._coordsToPoints(featureLayer.getLatLngs()));
             features.push(layer);
           });
 
-          resolve({ arrPoints, features });
+          resolve({ arrPoints, features, });
         } else {
           reject('Error to load objects');
         }
@@ -1529,18 +1529,18 @@ export default Mixin.create(SnapDraw, {
   */
   differenceLayers(layerAId, layerBId) {
     return new Promise((resolve, reject) => {
-      let crsA = this._getModelLeafletObject(layerAId)[1].options.crs.code;
-      let crsB = this._getModelLeafletObject(layerBId)[1].options.crs.code;
+      const crsA = this._getModelLeafletObject(layerAId)[1].options.crs.code;
+      const crsB = this._getModelLeafletObject(layerBId)[1].options.crs.code;
       let arrayPointsAndFeaturePromises = [this._addToArrayPointsAndFeature(layerAId), this._addToArrayPointsAndFeature(layerBId)];
       if (crsA !== crsB) {
         arrayPointsAndFeaturePromises = [this._addToArrayPointsAndFeature(layerAId), this._addToArrayPointsAndFeature(layerBId, crsA)];
       }
 
       all(arrayPointsAndFeaturePromises).then((res) => {
-        let subj = res[0].arrPoints; // layer A
-        let clip = res[1].arrPoints; // layer B
-        let solution = ClipperLib.Paths();
-        let cpr = new ClipperLib.Clipper(); // The Clipper constructor creates an instance of the Clipper class
+        const subj = res[0].arrPoints; // layer A
+        const clip = res[1].arrPoints; // layer B
+        const solution = ClipperLib.Paths();
+        const cpr = new ClipperLib.Clipper(); // The Clipper constructor creates an instance of the Clipper class
 
         // Add 'Subject' paths - layer A
         for (let s = 0, slen = subj.length; s < slen; s++) {
@@ -1569,29 +1569,25 @@ export default Mixin.create(SnapDraw, {
 
         // filtering 'solution' by area !== 0, transformating of geometry in jsts for comparison and calculate area, filtering after transformation by area > 0
         if (!isEmpty(solution)) {
-          let jstsGeoJSONReader = new jsts.io.GeoJSONReader();
-          let diffNotNullArea = solution.filter((geom) => {
-            return ClipperLib.Clipper.Area(geom) !== 0;
-          }).map((geom) => {
-            let feature = {
+          const jstsGeoJSONReader = new jsts.io.GeoJSONReader();
+          const diffNotNullArea = solution.filter((geom) => ClipperLib.Clipper.Area(geom) !== 0).map((geom) => {
+            const feature = {
               type: 'Feature',
               geometry: {
                 type: 'Polygon',
                 coordinates: [this._pointsToCoords(geom)],
-              }
+              },
             };
-            let jstsFeature = jstsGeoJSONReader.read(feature);
+            const jstsFeature = jstsGeoJSONReader.read(feature);
             if (jstsFeature.geometry.isValid()) {
-              let area = jstsFeature.geometry.getArea();
-              return { feature, jstsGeometry: jstsFeature.geometry, area };
-            } else {
-              return { feature, jstsGeometry: jstsFeature.geometry, area: 0 };
+              const area = jstsFeature.geometry.getArea();
+              return { feature, jstsGeometry: jstsFeature.geometry, area, };
             }
-          }).filter((diff) => {
-            return diff.area > 0;
-          });
 
-          resolve({ diffFeatures: diffNotNullArea, layerA: res[0].features, layerB: res[1].features });
+            return { feature, jstsGeometry: jstsFeature.geometry, area: 0, };
+          }).filter((diff) => diff.area > 0);
+
+          resolve({ diffFeatures: diffNotNullArea, layerA: res[0].features, layerB: res[1].features, });
         } else {
           resolve('The difference is not found');
         }
@@ -1612,8 +1608,8 @@ export default Mixin.create(SnapDraw, {
   */
   compareLayers(layerAId, layerBId, condition, showOnMap) {
     return new Promise((resolve, reject) => {
-      let result = A();
-      let cond = ['contains', 'intersects', 'notIntersects'];
+      const result = A();
+      const cond = ['contains', 'intersects', 'notIntersects'];
       let diffLayerPromise = this.differenceLayers(layerAId, layerBId);
       if (!cond.includes(condition)) {
         reject('The comparison condition is set incorrectly. It must be ["contains", "intersects", "notIntersects"].');
@@ -1623,7 +1619,7 @@ export default Mixin.create(SnapDraw, {
 
       diffLayerPromise.then((res) => {
         if (res.hasOwnProperty('diffFeatures')) {
-          let jstsGeoJSONReader = new jsts.io.GeoJSONReader();
+          const jstsGeoJSONReader = new jsts.io.GeoJSONReader();
           res.diffFeatures.forEach((diff) => {
             if (!cond.includes(condition)) {
               reject('The comparison condition is set incorrectly. It must be ["contains", "intersects", "notIntersects"].');
@@ -1634,46 +1630,49 @@ export default Mixin.create(SnapDraw, {
               layerFeatures = res.layerA;
             }
 
-            let crs = res.layerA[0].options.crs;
-            let coordsToLatLng = function(coords) {
+            const { crs, } = res.layerA[0].options;
+            const coordsToLatLng = function (coords) {
               return crs.unproject(L.point(coords));
             };
 
-            let featureLayer = L.geoJSON(diff.feature, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
-            let object = {
+            const featureLayer = L.geoJSON(diff.feature, { coordsToLatLng: coordsToLatLng.bind(this), }).getLayers()[0];
+            const object = {
               areaDifference: diff.area,
-              objectDifference: featureLayer
+              objectDifference: featureLayer,
             };
 
             layerFeatures.every((feat) => {
-              let jstsFeat = jstsGeoJSONReader.read(feat.feature);
+              const jstsFeat = jstsGeoJSONReader.read(feat.feature);
               if (jstsFeat.geometry.isValid()) {
                 switch (condition) {
                   case cond[0]:
                     if (jstsFeat.geometry.contains(diff.jstsGeometry)) {
                       object.id = jstsFeat.properties.primarykey;
                       return false;
-                    } else {
-                      return true;
                     }
+
+                    return true;
+
 
                     break;
                   case cond[1]:
                     if (jstsFeat.geometry.intersects(diff.jstsGeometry) && !jstsFeat.geometry.contains(diff.jstsGeometry)) {
                       object.id = jstsFeat.properties.primarykey;
                       return false;
-                    } else {
-                      return true;
                     }
+
+                    return true;
+
 
                     break;
                   case cond[2]:
                     if (jstsFeat.geometry.intersects(diff.jstsGeometry)) {
                       object.id = jstsFeat.properties.primarykey;
                       return false;
-                    } else {
-                      return true;
                     }
+
+                    return true;
+
 
                     break;
                   default:
@@ -1685,7 +1684,7 @@ export default Mixin.create(SnapDraw, {
             });
 
             if (showOnMap) {
-              let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+              const serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
               featureLayer.addTo(serviceLayer);
             }
 
@@ -1717,9 +1716,9 @@ export default Mixin.create(SnapDraw, {
     @return {Array} Array of points.
   */
   _coordsToPoints(polygons) {
-    let amp = this._pointAmplifier();
+    const amp = this._pointAmplifier();
     if (Array.isArray(polygons[0]) || (!(polygons instanceof L.LatLng) && (polygons[0] instanceof L.LatLng))) {
-      let coords = [];
+      const coords = [];
       for (let i = 0; i < polygons.length; i++) {
         coords.push(this._coordsToPoints(polygons[i]));
       }
@@ -1727,7 +1726,7 @@ export default Mixin.create(SnapDraw, {
       return coords;
     }
 
-    return { X: Math.round(polygons.lng * amp), Y: Math.round(polygons.lat * amp) };
+    return { X: Math.round(polygons.lng * amp), Y: Math.round(polygons.lat * amp), };
   },
 
   /**
@@ -1737,16 +1736,16 @@ export default Mixin.create(SnapDraw, {
     @return {Array} Array of coordinates.
   */
   _pointsToCoords(points) {
-    let amp = this._pointAmplifier();
+    const amp = this._pointAmplifier();
     if (Array.isArray(points[0]) || (!(points instanceof ClipperLib.IntPoint) && (points[0] instanceof ClipperLib.IntPoint))) {
-      let coord = [];
+      const coord = [];
       for (let i = 0; i < points.length; i++) {
         coord.push(this._pointsToCoords(points[i]));
       }
 
       // closing polygon
       if (!Array.isArray(coord[0][0])) {
-        let first = coord[0];
+        const first = coord[0];
         coord.push(first);
       }
 
@@ -1777,8 +1776,8 @@ export default Mixin.create(SnapDraw, {
     @return {Promise} Object consist of fileName and blob. If isFile = true then returns file too.
   */
   downloadFile(layerId, objectIds, outputFormat, crsName, isFile = true) {
-    let config = getOwner(this).resolveRegistration('config:environment');
-    let url = config.APP.backendUrls.featureExportApi;
+    const config = getOwner(this).resolveRegistration('config:environment');
+    const url = config.APP.backendUrls.featureExportApi;
 
     return new Promise((resolve, reject) => {
       const layerModel = this.get('mapLayer').findBy('id', layerId);
@@ -1786,8 +1785,8 @@ export default Mixin.create(SnapDraw, {
         reject(`Layer '${layerId}' not found.`);
       }
 
-      let crsOuput = getCrsByName(crsName, this);
-      let crsLayer = getCrsByName(layerModel.get('crs').code, this);
+      const crsOuput = getCrsByName(crsName, this);
+      const crsLayer = getCrsByName(layerModel.get('crs').code, this);
       this._requestDownloadFile(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url).then((res) => {
         if (isFile) {
           downloadBlob(res.fileName, res.blob);
@@ -1801,12 +1800,12 @@ export default Mixin.create(SnapDraw, {
   },
 
   setLayerFilter(layerId, filter) {
-    let layerModel = this.getLayerModel(layerId);
+    const layerModel = this.getLayerModel(layerId);
 
     if (isNone(layerModel)) {
       return;
     }
 
     layerModel.set('filter', filter);
-  }
+  },
 });

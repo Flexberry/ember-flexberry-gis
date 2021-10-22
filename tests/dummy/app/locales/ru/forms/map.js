@@ -1,40 +1,40 @@
 export default {
-  'caption': 'Карта',
-  'treeviewbuttontooltip': 'Список слоев',
-  'searchbuttontooltip': 'Поиск',
-  'bookmarksbuttontooltip': 'Пространственные закладки',
-  'identifybuttontooltip': 'Идентификация',
-  'favoritesbuttontooltip': 'Избранное',
-  'createobjectbuttontooltip': 'Создание объекта',
-  'createoreditobjectbuttontooltip': 'Создание/редактирование объекта',
-  'comparebuttontooltip': 'Сравнение слоев',
-  'xCaption': 'Долгота',
-  'yCaption': 'Широта',
+  caption: 'Карта',
+  treeviewbuttontooltip: 'Список слоев',
+  searchbuttontooltip: 'Поиск',
+  bookmarksbuttontooltip: 'Пространственные закладки',
+  identifybuttontooltip: 'Идентификация',
+  favoritesbuttontooltip: 'Избранное',
+  createobjectbuttontooltip: 'Создание объекта',
+  createoreditobjectbuttontooltip: 'Создание/редактирование объекта',
+  comparebuttontooltip: 'Сравнение слоев',
+  xCaption: 'Долгота',
+  yCaption: 'Широта',
 
-  'tabbar': {
-    'treeview': {
-      'caption': 'Список слоев'
+  tabbar: {
+    treeview: {
+      caption: 'Список слоев',
     },
-    'search': {
-      'caption': 'Поиск'
+    search: {
+      caption: 'Поиск',
     },
-    'identify': {
-      'caption': 'Идентификация'
+    identify: {
+      caption: 'Идентификация',
     },
-    'bookmarks': {
-      'caption': 'Пространственные закладки'
+    bookmarks: {
+      caption: 'Пространственные закладки',
     },
-    'favorites': {
-      'caption': 'Избранное'
+    favorites: {
+      caption: 'Избранное',
     },
-    'createObject': {
-      'caption': 'Создание объекта'
+    createObject: {
+      caption: 'Создание объекта',
     },
-    'createOrEditObject': {
-      'caption': 'Создание/редактирование объекта'
+    createOrEditObject: {
+      caption: 'Создание/редактирование объекта',
     },
-    'compare': {
-      'caption': 'Сравнить слои'
-    }
-  }
+    compare: {
+      caption: 'Сравнить слои',
+    },
+  },
 };

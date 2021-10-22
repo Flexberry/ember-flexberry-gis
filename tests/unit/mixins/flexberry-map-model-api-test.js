@@ -4,35 +4,35 @@ import { module, test } from 'qunit';
 import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api';
 import sinon from 'sinon';
 
-module('Unit | Mixin | flexberry map model api test', function() {
-  let mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
+module('Unit | Mixin | flexberry map model api test', function () {
+  const mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
 
   // Replace this with your real tests.
   test('it works FlexberryMapModelApiMixin', function (assert) {
-    let subject = mapApiMixinObject.create();
+    const subject = mapApiMixinObject.create();
     assert.ok(subject);
   });
 
   test('uploadFile should send post request with fileName and data to backend and return Ember.RSVP.Promise', function (assert) {
     assert.expect(4);
-    let done = assert.async(1);
-    let server = sinon.fakeServer.create();
+    const done = assert.async(1);
+    const server = sinon.fakeServer.create();
     server.respondWith('uploadfileresponse');
-    let configStub = sinon.stub(Ember, 'getOwner');
+    const configStub = sinon.stub(Ember, 'getOwner');
     configStub.returns({
       resolveRegistration() {
         return {
-          'APP': {
-            'backendUrl': 'stubbackend'
-          }
+          APP: {
+            backendUrl: 'stubbackend',
+          },
         };
-      }
+      },
     });
 
-    let subject = mapApiMixinObject.create();
-    let payload = { 'name': 'testFile' };
+    const subject = mapApiMixinObject.create();
+    const payload = { name: 'testFile', };
 
-    let result = subject.uploadFile(payload);
+    const result = subject.uploadFile(payload);
     server.respond();
 
     assert.ok(result instanceof Promise);

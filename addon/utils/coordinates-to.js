@@ -5,7 +5,7 @@
   @param {Object[]} value Array.
   @returns {number} value Array depth.
 */
-let countDimensions = function(value) {
+const countDimensions = function (value) {
   return Array.isArray(value) ? 1 + Math.max(...value.map(countDimensions.bind(this))) : 0;
 };
 
@@ -15,8 +15,7 @@ let countDimensions = function(value) {
   @method coordinatesToArray
   @param {Object[]} coordinates Coordinates.
 */
-let coordinatesToArray = function(coordinates) {
-
+const coordinatesToArray = function (coordinates) {
   // Get array depth.
   const arrDepth = countDimensions(coordinates);
 
@@ -31,7 +30,7 @@ let coordinatesToArray = function(coordinates) {
     case 3: // Polygon and MultiLineString.
       for (let i = 0; i < coordinates.length; i++) {
         for (let j = 0; j < coordinates[i].length; j++) {
-          let item = coordinates[i][j];
+          const item = coordinates[i][j];
           coors.push(item);
         }
 
@@ -45,7 +44,7 @@ let coordinatesToArray = function(coordinates) {
       for (let i = 0; i < coordinates.length; i++) {
         for (let j = 0; j < coordinates[i].length; j++) {
           for (let k = 0; k < coordinates[i][j].length; k++) {
-            let item = coordinates[i][j][k];
+            const item = coordinates[i][j][k];
             coors.push(item);
           }
         }
@@ -69,10 +68,10 @@ let coordinatesToArray = function(coordinates) {
   @method coordinatesToString
   @param {Object[]} coordinates Coordinates.
 */
-let coordinatesToString = function(coordinates) {
-  let coords = coordinatesToArray(coordinates);
+const coordinatesToString = function (coordinates) {
+  const coords = coordinatesToArray(coordinates);
   let result = '';
-  coords.forEach(item => {
+  coords.forEach((item) => {
     result += item !== null ? `${item[0]} ${item[1]} \n` : '\n';
   });
 

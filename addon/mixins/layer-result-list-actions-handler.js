@@ -74,7 +74,7 @@ export default Mixin.create({
           this._setLayerVisibility(layerModel);
         }
       }
-    }
+    },
   },
 
   /**
@@ -86,11 +86,11 @@ export default Mixin.create({
   */
   _setLayerVisibility(layerModel) {
     set(layerModel, 'visibility', true);
-    let parent = layerModel.get('parent');
+    const parent = layerModel.get('parent');
 
     // Change it's parents visibility to if it's nested.
     if (!isBlank(parent)) {
       this._setLayerVisibility(parent);
     }
-  }
+  },
 });

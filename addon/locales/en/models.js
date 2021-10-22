@@ -15,5 +15,5 @@ export default {
   'new-platform-flexberry-g-i-s-map-layer': NewPlatformFlexberryGISMapLayerModel,
   'new-platform-flexberry-g-i-s-map-object-setting': NewPlatformFlexberryGISMapObjectSettingModel,
   'new-platform-flexberry-g-i-s-map': NewPlatformFlexberryGISMapModel,
-  'new-platform-flexberry-g-i-s-parameter-metadata': NewPlatformFlexberryGISParameterMetadataModel
+  'new-platform-flexberry-g-i-s-parameter-metadata': NewPlatformFlexberryGISParameterMetadataModel,
 };

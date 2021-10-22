@@ -26,24 +26,24 @@ let bounds;
 let store;
 let responseBatchUpdate;
 
-module('Unit | Component | layers/odata vector layer', function(hooks) {
+module('Unit | Component | layers/odata vector layer', function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
     app = startApp();
-    let testModelMixin = Mixin.create({
-      name: DS.attr('string', { defaultValue: '' }),
-      shape: DS.attr('json')
+    const testModelMixin = Mixin.create({
+      name: DS.attr('string', { defaultValue: '', }),
+      shape: DS.attr('json'),
     });
 
-    let testModel = EmberFlexberryDataModel.extend(testModelMixin);
+    const testModel = EmberFlexberryDataModel.extend(testModelMixin);
     testModel.defineProjection('TestModelL', 'test-model', {
       name: attr(''),
-      shape: attr('')
+      shape: attr(''),
     });
 
-    let testSerializer = OdataSerializer.extend({
-      primaryKey: '__PrimaryKey'
+    const testSerializer = OdataSerializer.extend({
+      primaryKey: '__PrimaryKey',
     });
 
     this.owner.register('model:test-model', testModel);
@@ -59,10 +59,10 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
       showExisting: false,
       withCredentials: false,
       crs: L.CRS.EPSG3857,
-      continueLoading: false
+      continueLoading: false,
     };
 
-    let leafletOptions = [
+    const leafletOptions = [
       'geometryField',
       'crs',
       'maxFeatures',
@@ -75,56 +75,56 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
 
     param = {
       format: 'GeoJSON',
-      leafletOptions: leafletOptions
+      leafletOptions,
     };
     param = $.extend(param, options);
 
     bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
 
-    let getBounds = function() {
+    const getBounds = function () {
       return bounds;
     };
 
-    let getPane = function() {
+    const getPane = function () {
       return undefined;
     };
 
-    let createPane = function() {
+    const createPane = function () {
       return {};
     };
 
-    let hasLayer = function() {
+    const hasLayer = function () {
       return true;
     };
 
-    let removeLayer = function() {
+    const removeLayer = function () {
       return {};
     };
 
-    let leafletMap = L.map(document.createElement('div'));
+    const leafletMap = L.map(document.createElement('div'));
     leafletMap.getBounds = getBounds;
     leafletMap.getPane = getPane;
     leafletMap.createPane = createPane;
     leafletMap.removeLayer = removeLayer;
     leafletMap.hasLayer = hasLayer;
-    let editTools = new L.Editable(leafletMap);
+    const editTools = new L.Editable(leafletMap);
     set(leafletMap, 'editTools', editTools);
 
     store = app.__container__.lookup('service:store');
-    let layerModel = store.createRecord('test-model');
+    const layerModel = store.createRecord('test-model');
     layerModel.type = 'odata-vector';
     layerModel.visibility = true;
     $.extend(param, {
-      'geometryType': 'MultiPolygonPropertyType',
-      'modelName': 'test-model',
-      'projectionName':'TestModelL',
-      'geometryField': 'shape',
-      'typeName': 'test-model',
-      'odataClass': 'TestModel',
-      'continueLoading': true,
-      'store': store,
-      'layerModel': layerModel,
-      'leafletMap': leafletMap
+      geometryType: 'MultiPolygonPropertyType',
+      modelName: 'test-model',
+      projectionName: 'TestModelL',
+      geometryField: 'shape',
+      typeName: 'test-model',
+      odataClass: 'TestModel',
+      continueLoading: true,
+      store,
+      layerModel,
+      leafletMap,
     });
 
     odataServerFake = sinon.fakeServer.create();
@@ -340,14 +340,13 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     odataServerFake.respondWith('POST', 'http://134.209.30.115:1818/odata/$batch',
       function (request) {
         if (request.requestBody.indexOf('POST') !== -1) {
-          request.respond(200, { 'content-type': 'multipart/mixed; boundary=batchresponse_36948c8f-1a0a-46f7-b66d-6692dc185197' },
-          responseBatchUpdate);
+          request.respond(200, { 'content-type': 'multipart/mixed; boundary=batchresponse_36948c8f-1a0a-46f7-b66d-6692dc185197', },
+            responseBatchUpdate);
         } else {
-          request.respond(200, { 'content-type': 'multipart/mixed; boundary=batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f' },
-          responseText);
+          request.respond(200, { 'content-type': 'multipart/mixed; boundary=batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f', },
+            responseText);
         }
-      }
-    );
+      });
   });
 
   hooks.afterEach(function () {
@@ -355,7 +354,7 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     odataServerFake.restore();
   });
 
-  var jsonModel = {
+  const jsonModel = {
     name: 'TestModel',
     modelName: 'test-model',
     className: 'TestModel',
@@ -370,7 +369,7 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
         notNull: false,
         defaultValue: '',
         stored: true,
-        ordered: false
+        ordered: false,
       },
       {
         name: 'nomer',
@@ -379,7 +378,7 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
         notNull: false,
         defaultValue: '',
         stored: true,
-        ordered: false
+        ordered: false,
       }
     ],
     belongsTo: [],
@@ -393,17 +392,17 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
             name: 'shape',
             caption: '',
             hidden: false,
-            index: 0
+            index: 0,
           },
           {
             name: 'nomer',
             caption: '',
             hidden: false,
-            index: 1
+            index: 1,
           }
         ],
         belongsTo: [],
-        hasMany: []
+        hasMany: [],
       },
       {
         name: 'TestModel_L',
@@ -413,25 +412,25 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
             name: 'shape',
             caption: '',
             hidden: false,
-            index: 0
+            index: 0,
           },
           {
             name: 'nomer',
             caption: '',
             hidden: false,
-            index: 1
+            index: 1,
           }
         ],
         belongsTo: [],
-        hasMany: []
+        hasMany: [],
       }
     ],
     stored: true,
     offline: true,
-    external: false
+    external: false,
   };
 
-  let realCountArr = function (arr) {
+  const realCountArr = function (arr) {
     return arr.filter((item) => {
       if (item) {
         return item;
@@ -441,43 +440,43 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
 
   test('getFilterParameters return SimplePredicate on single value in array', function (assert) {
     assert.expect(2);
-    var done = assert.async(1);
+    const done = assert.async(1);
     run(() => {
       // arrange
-      let component = this.owner.factoryFor('component:layers/odata-vector-layer').create();
-      let linkParameter = EmberObject.create({
-        'queryKey': 'PK',
-        'layerField': 'testField'
+      const component = this.owner.factoryFor('component:layers/odata-vector-layer').create();
+      const linkParameter = EmberObject.create({
+        queryKey: 'PK',
+        layerField: 'testField',
       });
 
       // act
-      let result = component.getFilterParameters([linkParameter], { 'PK': ['id1'] });
+      const result = component.getFilterParameters([linkParameter], { PK: ['id1'], });
 
       // assert
-      let firstValue = result[0];
+      const firstValue = result[0];
       assert.ok(firstValue instanceof SimplePredicate);
       assert.equal(firstValue.toString(), '(testField eq id1)');
       done();
     });
   });
 
-  test('loadLayerFeatures() with featureIds=null', function(assert) {
+  test('loadLayerFeatures() with featureIds=null', function (assert) {
     assert.expect(2);
-    var done = assert.async(3);
+    const done = assert.async(3);
     run(() => {
-      let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+      const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
 
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      let getPkFieldStub = sinon.stub(mapModel, '_getLayerFeatureId');
+      const getPkFieldStub = sinon.stub(mapModel, '_getLayerFeatureId');
       getPkFieldStub.returns('123');
 
-      let e = {
+      const e = {
         featureIds: null,
         layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-        results: A()
+        results: A(),
       };
 
       component.get('_leafletLayerPromise').then((leafletLayer) => {
@@ -498,19 +497,19 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('getLayerFeatures() with featureIds=null', function(assert) {
+  test('getLayerFeatures() with featureIds=null', function (assert) {
     assert.expect(2);
-    var done = assert.async(3);
+    const done = assert.async(3);
     run(() => {
-      let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+      const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
 
-      let getCountFeaturesStub = sinon.stub(component, 'getCountFeatures');
-      getCountFeaturesStub.returns(run(() => { return resolve(123); }));
+      const getCountFeaturesStub = sinon.stub(component, 'getCountFeatures');
+      getCountFeaturesStub.returns(run(() => resolve(123)));
 
-      let e = {
+      const e = {
         featureIds: null,
         layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-        results: A()
+        results: A(),
       };
 
       component.get('_leafletLayerPromise').then((leafletLayer) => {
@@ -530,12 +529,12 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('continueLoad()', function(assert) {
+  test('continueLoad()', function (assert) {
     assert.expect(7);
-    var done = assert.async(3);
+    const done = assert.async(3);
 
     run(() => {
-      let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+      const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
       run(() => {
         component.get('_leafletLayerPromise').then((leafletLayer) => {
           component.set('_leafletObject', leafletLayer);
@@ -547,12 +546,12 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
 
             bounds = L.latLngBounds(L.latLng(58.46807257997011, 56.61014556884766), L.latLng(58.443780224452524, 56.44535064697266));
 
-            let load = component.continueLoad();
+            const load = component.continueLoad();
             load.then(run(() => {
               loadedBounds = component.get('loadedBounds');
               assert.ok(loadedBounds, 'loadedBounds');
               assert.ok(loadedBounds.getBounds() instanceof L.LatLngBounds, 'loadedBounds.getBounds() is L.LatLngBounds');
-              let strBounds = '{"_southWest":{"lat":58.4436454695997,"lng":56.369991302490234},"_northEast":{"lat":58.46807257997011,"lng":56.61014556884766}}';
+              const strBounds = '{"_southWest":{"lat":58.4436454695997,"lng":56.369991302490234},"_northEast":{"lat":58.46807257997011,"lng":56.61014556884766}}';
               assert.ok(JSON.stringify(loadedBounds.getBounds()) === strBounds, 'loadedBounds get from map');
 
               done();
@@ -568,16 +567,16 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test methos identify()', function(assert) {
+  test('test methos identify()', function (assert) {
     assert.expect(3);
-    var done = assert.async(1);
+    const done = assert.async(1);
     run(() => {
-      let latlngs = [
+      const latlngs = [
         [L.latLng(30, 10), L.latLng(40, 40), L.latLng(20, 40), L.latLng(10, 20)]
       ];
-      let layer = L.polygon(latlngs);
-      let e = {
-        polygonLayer: layer
+      const layer = L.polygon(latlngs);
+      const e = {
+        polygonLayer: layer,
       };
       $.extend(param, {
         crs: crsFactory4326.create(),
@@ -586,10 +585,10 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
         },
         _addLayersOnMap() {
           return null;
-        }
+        },
       });
-      let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
-      let spyGetFeature = sinon.spy(component, '_getFeature');
+      const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+      const spyGetFeature = sinon.spy(component, '_getFeature');
 
       component.identify(e);
 
@@ -602,47 +601,47 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method createAdapterForModel() with odataUrl', function(assert) {
+  test('test method createAdapterForModel() with odataUrl', function (assert) {
     assert.expect(1);
     $.extend(param, {
-      'odataUrl': 'http://localhost:6500/odata/'
+      odataUrl: 'http://localhost:6500/odata/',
     });
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
 
-    let adapterModel = component.createAdapterForModel();
+    const adapterModel = component.createAdapterForModel();
 
     assert.ok(adapterModel);
   });
 
-  test('test method createAdapterForModel() without odataUrl', function(assert) {
+  test('test method createAdapterForModel() without odataUrl', function (assert) {
     assert.expect(1);
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
 
-    let adapterModel = component.createAdapterForModel();
+    const adapterModel = component.createAdapterForModel();
 
     assert.notOk(adapterModel);
   });
 
-  test('test method createDynamicModel() with json', function(assert) {
+  test('test method createDynamicModel() with json', function (assert) {
     assert.expect(19);
-    var done = assert.async(1);
+    const done = assert.async(1);
     $.extend(param, {
-      'odataUrl': 'http://localhost:6500/odata/',
-      'namespace': 'NS',
-      'metadataUrl': 'assert/felxberry/models/'
+      odataUrl: 'http://localhost:6500/odata/',
+      namespace: 'NS',
+      metadataUrl: 'assert/felxberry/models/',
     });
     jsonModel.parentModelName = null;
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
-    let spyRegister = sinon.spy(this.owner, 'register');
-    let spyCreateAdapterForModel = sinon.spy(component, 'createAdapterForModel');
-    let spyCreateModel = sinon.spy(component, 'createModel');
-    let spyCreateProjection = sinon.spy(component, 'createProjection');
-    let spyCreateMixin = sinon.spy(component, 'createMixin');
-    let spyCreateSerializer = sinon.spy(component, 'createSerializer');
-    let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
-    let stubAjax = sinon.stub($, 'ajax');
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const spyRegister = sinon.spy(this.owner, 'register');
+    const spyCreateAdapterForModel = sinon.spy(component, 'createAdapterForModel');
+    const spyCreateModel = sinon.spy(component, 'createModel');
+    const spyCreateProjection = sinon.spy(component, 'createProjection');
+    const spyCreateMixin = sinon.spy(component, 'createMixin');
+    const spyCreateSerializer = sinon.spy(component, 'createSerializer');
+    const spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+    const stubAjax = sinon.stub($, 'ajax');
     stubAjax.yieldsTo('success', jsonModel);
-    let _lookupFactoryStub = sinon.stub(this.owner, '_lookupFactory');
+    const _lookupFactoryStub = sinon.stub(this.owner, '_lookupFactory');
     _lookupFactoryStub.returns(null);
 
     component.createDynamicModel().then(() => {
@@ -681,28 +680,28 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method createDynamicModel() with json with parent', function(assert) {
+  test('test method createDynamicModel() with json with parent', function (assert) {
     assert.expect(22);
-    var done = assert.async(1);
+    const done = assert.async(1);
     $.extend(param, {
-      'odataUrl': 'http://localhost:6500/odata/',
-      'namespace': 'NS',
-      'metadataUrl': 'assert/felxberry/models/'
+      odataUrl: 'http://localhost:6500/odata/',
+      namespace: 'NS',
+      metadataUrl: 'assert/felxberry/models/',
     });
 
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
-    let spyRegister = sinon.spy(this.owner, 'register');
-    let spyCreateAdapterForModel = sinon.spy(component, 'createAdapterForModel');
-    let spyCreateModel = sinon.spy(component, 'createModel');
-    let spyCreateProjection = sinon.spy(component, 'createProjection');
-    let spyCreateMixin = sinon.spy(component, 'createMixin');
-    let spyCreateSerializer = sinon.spy(component, 'createSerializer');
-    let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
-    let _lookupFactoryStub = sinon.stub(this.owner, '_lookupFactory');
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const spyRegister = sinon.spy(this.owner, 'register');
+    const spyCreateAdapterForModel = sinon.spy(component, 'createAdapterForModel');
+    const spyCreateModel = sinon.spy(component, 'createModel');
+    const spyCreateProjection = sinon.spy(component, 'createProjection');
+    const spyCreateMixin = sinon.spy(component, 'createMixin');
+    const spyCreateSerializer = sinon.spy(component, 'createSerializer');
+    const spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+    const _lookupFactoryStub = sinon.stub(this.owner, '_lookupFactory');
     _lookupFactoryStub.returns(null);
 
     jsonModel.parentModelName = 'Polygon32640';
-    let parentJsonModel = {
+    const parentJsonModel = {
       name: 'Polygon32640',
       modelName: 'Polygon32640',
       className: 'Polygon32640',
@@ -717,7 +716,7 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
           notNull: false,
           defaultValue: '',
           stored: true,
-          ordered: false
+          ordered: false,
         }
       ],
       belongsTo: [],
@@ -725,10 +724,10 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
       projections: [],
       stored: false,
       offline: true,
-      external: false
+      external: false,
     };
 
-    let stubAjax = sinon.stub($, 'ajax');
+    const stubAjax = sinon.stub($, 'ajax');
     stubAjax.onCall(0).yieldsTo('success', jsonModel)
       .onCall(1).yieldsTo('success', parentJsonModel);
 
@@ -771,16 +770,16 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method createDynamicModel() without json', function(assert) {
+  test('test method createDynamicModel() without json', function (assert) {
     assert.expect(1);
-    var done = assert.async(1);
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
-    let _lookupFactoryStub = sinon.stub(this.owner, '_lookupFactory');
+    const done = assert.async(1);
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const _lookupFactoryStub = sinon.stub(this.owner, '_lookupFactory');
     _lookupFactoryStub.withArgs('model:test-model').returns(null);
     _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
     _lookupFactoryStub.withArgs('serializer:test-model').returns({});
 
-    let registerStub = sinon.stub(this.owner, 'register');
+    const registerStub = sinon.stub(this.owner, 'register');
     registerStub.returns({});
 
     component.createDynamicModel().catch((error) => {
@@ -790,11 +789,11 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method createDynamicModel() already registered', function(assert) {
+  test('test method createDynamicModel() already registered', function (assert) {
     assert.expect(1);
-    var done = assert.async(1);
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
-    let _lookupFactoryStub = sinon.stub(this.owner, '_lookupFactory');
+    const done = assert.async(1);
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const _lookupFactoryStub = sinon.stub(this.owner, '_lookupFactory');
     _lookupFactoryStub.returns(1);
 
     component.createDynamicModel().then((msg) => {
@@ -804,13 +803,13 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method _createVectorLayer()', function(assert) {
+  test('test method _createVectorLayer()', function (assert) {
     assert.expect(3);
     param.layerModel.visibility = false;
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
-    let spyContinueLoad = sinon.spy(component, 'continueLoad');
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const spyContinueLoad = sinon.spy(component, 'continueLoad');
 
-    let layerResult = component._createVectorLayer();
+    const layerResult = component._createVectorLayer();
 
     assert.ok(layerResult);
     assert.equal(spyContinueLoad.callCount, 1);
@@ -819,23 +818,23 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     spyContinueLoad.restore();
   });
 
-  test('test method createVectorLayer() without dynamicModel', function(assert) {
+  test('test method createVectorLayer() without dynamicModel', function (assert) {
     assert.expect(7);
-    var done = assert.async(1);
+    const done = assert.async(1);
     param.layerModel.visibility = false;
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
-    let spyContinueLoad = sinon.spy(component, 'continueLoad');
-    let _createVectorLayerSpy = sinon.spy(component, '_createVectorLayer');
-    let spyCreateDynamicModel = sinon.spy(component, 'createDynamicModel');
-    let spyAjax = sinon.spy($, 'ajax');
-    let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const spyContinueLoad = sinon.spy(component, 'continueLoad');
+    const _createVectorLayerSpy = sinon.spy(component, '_createVectorLayer');
+    const spyCreateDynamicModel = sinon.spy(component, 'createDynamicModel');
+    const spyAjax = sinon.spy($, 'ajax');
+    const spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
 
-    let _lookupFactoryStub = sinon.stub(this.owner, '_lookupFactory');
+    const _lookupFactoryStub = sinon.stub(this.owner, '_lookupFactory');
     _lookupFactoryStub.withArgs('model:test-model').returns(null);
     _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
     _lookupFactoryStub.withArgs('serializer:test-model').returns({});
 
-    let registerStub = sinon.stub(this.owner, 'register');
+    const registerStub = sinon.stub(this.owner, 'register');
     registerStub.returns({});
 
     component.createVectorLayer().then((layer) => {
@@ -857,28 +856,28 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method createVectorLayer() with dynamicModel=true', function(assert) {
+  test('test method createVectorLayer() with dynamicModel=true', function (assert) {
     assert.expect(8);
-    var done = assert.async(1);
+    const done = assert.async(1);
     param.layerModel.visibility = false;
     param.dynamicModel = true;
     param.metadataUrl = 'assert/felxberry/models/';
     param.odataUrl = 'http://localhost:6500/odata/';
     jsonModel.parentModelName = null;
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
-    let spyContinueLoad = sinon.spy(component, 'continueLoad');
-    let _createVectorLayerSpy = sinon.spy(component, '_createVectorLayer');
-    let spyCreateDynamicModel = sinon.spy(component, 'createDynamicModel');
-    let stubAjax = sinon.stub($, 'ajax');
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const spyContinueLoad = sinon.spy(component, 'continueLoad');
+    const _createVectorLayerSpy = sinon.spy(component, '_createVectorLayer');
+    const spyCreateDynamicModel = sinon.spy(component, 'createDynamicModel');
+    const stubAjax = sinon.stub($, 'ajax');
     stubAjax.yieldsTo('success', jsonModel);
-    let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+    const spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
 
-    let _lookupFactoryStub = sinon.stub(this.owner, '_lookupFactory');
+    const _lookupFactoryStub = sinon.stub(this.owner, '_lookupFactory');
     _lookupFactoryStub.withArgs('model:test-model').returns(null);
     _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
     _lookupFactoryStub.withArgs('serializer:test-model').returns({});
 
-    let registerStub = sinon.stub(this.owner, 'register');
+    const registerStub = sinon.stub(this.owner, 'register');
     registerStub.returns({});
 
     component.createVectorLayer().then((layer) => {
@@ -901,17 +900,17 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method save() no modified objects', function(assert) {
+  test('test method save() no modified objects', function (assert) {
     assert.expect(5);
-    var done = assert.async(1);
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const done = assert.async(1);
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
 
     component.get('_leafletLayerPromise').then((leafletLayer) => {
       component.set('_leafletObject', leafletLayer);
       leafletLayer.promiseLoadLayer.then(() => {
-        let leafletObject = component.get('_leafletObject');
-        let obj = component.get('_adapterStoreModelProjectionGeom');
-        let spyBatchUpdate = sinon.spy(obj.adapter, 'batchUpdate');
+        const leafletObject = component.get('_leafletObject');
+        const obj = component.get('_adapterStoreModelProjectionGeom');
+        const spyBatchUpdate = sinon.spy(obj.adapter, 'batchUpdate');
 
         assert.equal(realCountArr(leafletObject.models), 0);
         assert.equal(leafletObject.getLayers().length, 2);
@@ -928,27 +927,27 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method save() with objects', function(assert) {
+  test('test method save() with objects', function (assert) {
     assert.expect(17);
-    var done = assert.async(1);
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const done = assert.async(1);
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
 
     component.get('_leafletLayerPromise').then((leafletLayer) => {
       component.set('_leafletObject', leafletLayer);
       leafletLayer.promiseLoadLayer.then(() => {
-        let leafletObject = component.get('_leafletObject');
-        let obj = component.get('_adapterStoreModelProjectionGeom');
-        let spyBatchUpdate = sinon.spy(obj.adapter, 'batchUpdate');
+        const leafletObject = component.get('_leafletObject');
+        const obj = component.get('_adapterStoreModelProjectionGeom');
+        const spyBatchUpdate = sinon.spy(obj.adapter, 'batchUpdate');
 
         assert.equal(realCountArr(leafletObject.models), 0);
         assert.equal(leafletObject.getLayers().length, 2);
 
-        let layerUpdate = leafletObject.getLayers()[0];
+        const layerUpdate = leafletObject.getLayers()[0];
         layerUpdate.feature.properties.name = 'test';
 
-        let newFeature = L.geoJSON({
+        const newFeature = L.geoJSON({
           type: 'Polygon',
-          coordinates: [[[56.432487, 58.14725], [56.432133, 58.146749], [56.434, 58.146737]]]
+          coordinates: [[[56.432487, 58.14725], [56.432133, 58.146749], [56.434, 58.146737]]],
         }).getLayers()[0];
 
         layerUpdate.setLatLngs(newFeature.getLatLngs());
@@ -956,44 +955,44 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
         leafletObject.editLayer(layerUpdate);
 
         assert.equal(layerUpdate.feature.geometry.coordinates[0].length, 4);
-        let coordinates = '6282035.717038031,7998313.982057768,6281996.30993829,' +
-            '7998208.303352221,6282204.143427601,7998205.77214398,6282035.717038031,7998313.982057768';
+        const coordinates = '6282035.717038031,7998313.982057768,6281996.30993829,'
+            + '7998208.303352221,6282204.143427601,7998205.77214398,6282035.717038031,7998313.982057768';
         assert.equal(layerUpdate.feature.geometry.coordinates.toString(), coordinates);
 
         assert.equal(realCountArr(leafletObject.models), 1);
         assert.equal(leafletObject.getLayers().length, 2);
 
-        let layerRemove = leafletObject.getLayers()[1];
+        const layerRemove = leafletObject.getLayers()[1];
         leafletObject.removeLayer(layerRemove);
 
         assert.equal(realCountArr(leafletObject.models), 2);
         assert.equal(leafletObject.getLayers().length, 1);
 
-        let feature = {
+        const feature = {
           type: 'Polygon',
           coordinates: [
             [[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]
-          ]
+          ],
         };
-        let layerAdd = L.geoJSON(feature).getLayers()[0];
+        const layerAdd = L.geoJSON(feature).getLayers()[0];
         layerAdd._label = {
-          _leaflet_id: 1000
+          _leaflet_id: 1000,
         };
         leafletObject.addLayer(layerAdd);
         leafletObject._labelsLayer = {
-          1000: {}
+          1000: {},
         };
-        let pk = layerAdd.feature.properties.primarykey;
+        const pk = layerAdd.feature.properties.primarykey;
         responseBatchUpdate.replace('a5532858-dbdc-4d3c-9eaf-3d71d097ceb0', pk);
 
         assert.equal(realCountArr(leafletObject.models), 3);
         assert.equal(leafletObject.getLayers().length, 2);
 
-        let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-        let stubGetmapApi = sinon.stub(component.get('mapApi'), 'getFromApi');
+        const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+        const stubGetmapApi = sinon.stub(component.get('mapApi'), 'getFromApi');
         stubGetmapApi.returns(mapModel);
 
-        let _getModelLayerFeatureStub = sinon.stub(mapModel, '_getModelLayerFeature');
+        const _getModelLayerFeatureStub = sinon.stub(mapModel, '_getModelLayerFeature');
         _getModelLayerFeatureStub.returns(resolve([null, null, [layerAdd]]));
 
         const saveSuccess = (data) => {
@@ -1018,19 +1017,19 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method createModelHierarchy() with 3 parent', function(assert) {
+  test('test method createModelHierarchy() with 3 parent', function (assert) {
     assert.expect(11);
-    var done = assert.async(1);
+    const done = assert.async(1);
     $.extend(param, {
-      'odataUrl': 'http://localhost:6500/odata/',
-      'namespace': 'ns',
-      'metadataUrl': 'assert/felxberry/models/'
+      odataUrl: 'http://localhost:6500/odata/',
+      namespace: 'ns',
+      metadataUrl: 'assert/felxberry/models/',
     });
 
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
 
     jsonModel.parentModelName = 'parent1';
-    let parent1JsonModel = {
+    const parent1JsonModel = {
       name: 'parent1',
       parentModelName: 'parent2',
       modelName: 'parent1',
@@ -1044,7 +1043,7 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
           notNull: false,
           defaultValue: '',
           stored: true,
-          ordered: false
+          ordered: false,
         }
       ],
       belongsTo: [],
@@ -1052,10 +1051,10 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
       projections: [],
       stored: false,
       offline: true,
-      external: false
+      external: false,
     };
 
-    let parent2JsonModel = {
+    const parent2JsonModel = {
       name: 'parent2',
       parentModelName: 'parent3',
       modelName: 'parent2',
@@ -1069,7 +1068,7 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
           notNull: false,
           defaultValue: '',
           stored: true,
-          ordered: false
+          ordered: false,
         }
       ],
       belongsTo: [],
@@ -1077,10 +1076,10 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
       projections: [],
       stored: false,
       offline: true,
-      external: false
+      external: false,
     };
 
-    let parent3JsonModel = {
+    const parent3JsonModel = {
       name: 'parent3',
       parentModelName: null,
       modelName: 'parent3',
@@ -1094,7 +1093,7 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
           notNull: false,
           defaultValue: '',
           stored: true,
-          ordered: false
+          ordered: false,
         }
       ],
       belongsTo: [],
@@ -1102,19 +1101,21 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
       projections: [],
       stored: false,
       offline: true,
-      external: false
+      external: false,
     };
-    let stubAjax = sinon.stub($, 'ajax');
+    const stubAjax = sinon.stub($, 'ajax');
     stubAjax.onCall(0).yieldsTo('success', jsonModel)
       .onCall(1).yieldsTo('success', parent1JsonModel)
-      .onCall(2).yieldsTo('success', parent2JsonModel)
-      .onCall(3).yieldsTo('success', parent3JsonModel);
+      .onCall(2)
+      .yieldsTo('success', parent2JsonModel)
+      .onCall(3)
+      .yieldsTo('success', parent3JsonModel);
 
-    let spyCreateModel = sinon.spy(component, 'createModel');
-    let spyCreateMixin = sinon.spy(component, 'createMixin');
-    let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+    const spyCreateModel = sinon.spy(component, 'createModel');
+    const spyCreateMixin = sinon.spy(component, 'createMixin');
+    const spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
 
-    component.сreateModelHierarchy(param.metadataUrl, param.modelName).then(({ model, dataModel, modelMixin }) => {
+    component.сreateModelHierarchy(param.metadataUrl, param.modelName).then(({ model, dataModel, modelMixin, }) => {
       assert.equal(stubAjax.callCount, 4);
       assert.equal(spyCreateModel.callCount, 1);
       assert.equal(spyCreateMixin.callCount, 4);
@@ -1134,15 +1135,15 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method clearLayers()', function(assert) {
+  test('test method clearLayers()', function (assert) {
     assert.expect(4);
-    var done = assert.async(1);
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const done = assert.async(1);
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
 
     component.get('_leafletLayerPromise').then((leafletLayer) => {
       component.set('_leafletObject', leafletLayer);
       leafletLayer.promiseLoadLayer.then(() => {
-        let leafletObject = component.get('_leafletObject');
+        const leafletObject = component.get('_leafletObject');
 
         assert.equal(realCountArr(leafletObject.models), 0);
         assert.equal(leafletObject.getLayers().length, 2);
@@ -1154,22 +1155,22 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method clearChanges() with no changes', function(assert) {
+  test('test method clearChanges() with no changes', function (assert) {
     assert.expect(7);
-    var done = assert.async(1);
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const done = assert.async(1);
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
 
     component.get('_leafletLayerPromise').then((leafletLayer) => {
       component.set('_leafletObject', leafletLayer);
       leafletLayer.promiseLoadLayer.then(() => {
-        let leafletObject = component.get('_leafletObject');
-        let leafletMap = component.get('leafletMap');
+        const leafletObject = component.get('_leafletObject');
+        const leafletMap = component.get('leafletMap');
 
         assert.equal(realCountArr(leafletObject.models), 0);
         assert.equal(leafletObject.getLayers().length, 2);
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
 
-        let layerUpdate = leafletObject.getLayers()[0];
+        const layerUpdate = leafletObject.getLayers()[0];
         layerUpdate.enableEdit(leafletMap);
 
         assert.equal(realCountArr(leafletObject.models), 0);
@@ -1183,34 +1184,34 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method clearChanges() with create', function(assert) {
+  test('test method clearChanges() with create', function (assert) {
     assert.expect(7);
-    var done = assert.async(1);
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const done = assert.async(1);
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
 
     component.get('_leafletLayerPromise').then((leafletLayer) => {
       component.set('_leafletObject', leafletLayer);
       leafletLayer.promiseLoadLayer.then(() => {
-        let leafletObject = component.get('_leafletObject');
-        let leafletMap = component.get('leafletMap');
+        const leafletObject = component.get('_leafletObject');
+        const leafletMap = component.get('leafletMap');
 
         assert.equal(realCountArr(leafletObject.models), 0);
         assert.equal(leafletObject.getLayers().length, 2);
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
 
-        let feature = {
+        const feature = {
           type: 'Polygon',
           coordinates: [
             [[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]
-          ]
+          ],
         };
-        let layerAdd = L.geoJSON(feature).getLayers()[0];
+        const layerAdd = L.geoJSON(feature).getLayers()[0];
         layerAdd._label = {
-          _leaflet_id: 1000
+          _leaflet_id: 1000,
         };
         leafletObject.addLayer(layerAdd);
         leafletObject._labelsLayer = {
-          1000: {}
+          1000: {},
         };
         layerAdd.enableEdit(leafletMap);
 
@@ -1225,22 +1226,22 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method clearChanges() with update and delete', function(assert) {
+  test('test method clearChanges() with update and delete', function (assert) {
     assert.expect(10);
-    var done = assert.async(1);
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const done = assert.async(1);
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
 
     component.get('_leafletLayerPromise').then((leafletLayer) => {
       component.set('_leafletObject', leafletLayer);
       leafletLayer.promiseLoadLayer.then(() => {
-        let leafletObject = component.get('_leafletObject');
-        let leafletMap = component.get('leafletMap');
+        const leafletObject = component.get('_leafletObject');
+        const leafletMap = component.get('leafletMap');
 
         assert.equal(realCountArr(leafletObject.models), 0);
         assert.equal(leafletObject.getLayers().length, 2);
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
 
-        let layerUpdate = leafletObject.getLayers()[0];
+        const layerUpdate = leafletObject.getLayers()[0];
         layerUpdate.feature.properties.name = 'test';
         layerUpdate.enableEdit(leafletMap);
         leafletObject.editLayer(layerUpdate);
@@ -1249,7 +1250,7 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
         assert.equal(leafletObject.getLayers().length, 2);
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
-        let layerRemove = leafletObject.getLayers()[1];
+        const layerRemove = leafletObject.getLayers()[1];
         layerRemove.enableEdit(leafletMap);
         leafletObject.removeLayer(layerRemove);
 
@@ -1264,55 +1265,55 @@ module('Unit | Component | layers/odata vector layer', function(hooks) {
     });
   });
 
-  test('test method getNearObject()', function(assert) {
+  test('test method getNearObject()', function (assert) {
     assert.expect(6);
-    var done = assert.async(2);
-    param = $.extend(param, { pkField: 'primarykey' });
+    const done = assert.async(2);
+    param = $.extend(param, { pkField: 'primarykey', });
     param.continueLoading = false;
-    let component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
+    const component = this.owner.factoryFor('component:layers/odata-vector-layer').create(param);
 
-    let store = app.__container__.lookup('service:store');
-    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
     getmapApiStub.returns(mapModel);
-    let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
-    let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
-    let stubAjax = sinon.stub($, 'ajax');
-    stubAjax.yieldsTo('success', { modelName: 'testModel' });
-    let obj = component.get('_adapterStoreModelProjectionGeom');
-    let _callAjaxStub = sinon.stub(obj.adapter, '_callAjax');
+    const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+    const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+    const stubAjax = sinon.stub($, 'ajax');
+    stubAjax.yieldsTo('success', { modelName: 'testModel', });
+    const obj = component.get('_adapterStoreModelProjectionGeom');
+    const _callAjaxStub = sinon.stub(obj.adapter, '_callAjax');
     _callAjaxStub.yields({
       '@odata.context': 'http://localhost/smartforest/odata/$metadata#ICSSoftSTORMNETDataObjects',
-      'value': [{
+      value: [{
         '@odata.type': '#IIS.RGISPK.VydelUtverzhdenoPolygon32640',
-        '__PrimaryKey': '57bfb1e1-6a73-4850-a065-1de96d4d93a4',
-        'Shape': {
-          'coordinates': [[[[465991.9001, 6445952.6774], [466300.6857, 6446025.6799],
-          [466192.0721, 6445729.0941], [465991.9001, 6445952.6774]]]],
-          'type': 'MultiPolygon'
-        }
-      }]
+        __PrimaryKey: '57bfb1e1-6a73-4850-a065-1de96d4d93a4',
+        Shape: {
+          coordinates: [[[[465991.9001, 6445952.6774], [466300.6857, 6446025.6799],
+            [466192.0721, 6445729.0941], [465991.9001, 6445952.6774]]]],
+          type: 'MultiPolygon',
+        },
+      }],
     });
-    let registerStub = sinon.stub(this.owner, 'resolveRegistration');
+    const registerStub = sinon.stub(this.owner, 'resolveRegistration');
     registerStub.returns({
       APP: {
         backendActions: {
-          getNearDistance: 'getNearDistance'
-        }
-      }
+          getNearDistance: 'getNearDistance',
+        },
+      },
     });
 
     component.get('_leafletLayerPromise').then((leafletLayer) => {
       component.set('_leafletObject', leafletLayer);
       leafletLayer.options = param;
-      let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
-      let e = {
-        featureLayer: featureLayer,
+      const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+      const e = {
+        featureLayer,
         featureId: '234',
-        layerObjectId: '123'
+        layerObjectId: '123',
       };
 
-      let promise = component.getNearObject(e).then((result) => {
+      const promise = component.getNearObject(e).then((result) => {
         assert.equal(result.distance, 12168517.065042155);
         assert.ok(result.layer);
         assert.equal(result.object.feature.properties.primarykey, '57bfb1e1-6a73-4850-a065-1de96d4d93a4');

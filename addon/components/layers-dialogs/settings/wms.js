@@ -11,7 +11,7 @@ import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/settings/wms';
 
 // Regular expression used to derive whether settings' url is correct.
-let urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
+const urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
 
 /**
   Settings-part of WMS layer modal dialog.
@@ -108,7 +108,7 @@ export default Component.extend({
     'settings.layers',
     'settings.version',
     function () {
-      let getCapabilitiesPromiseError = this.get('getCapabilitiesPromiseError');
+      const getCapabilitiesPromiseError = this.get('getCapabilitiesPromiseError');
 
       if (!isBlank(getCapabilitiesPromiseError)) {
         this.set('getCapabilitiesPromiseError', null);
@@ -116,13 +116,13 @@ export default Component.extend({
       }
 
       let message;
-      let fields = A();
+      const fields = A();
 
-      let i18n = this.get('i18n');
+      const i18n = this.get('i18n');
 
-      let url = this.get('settings.url');
-      let layers = this.get('settings.layers');
-      let version = this.get('settings.version');
+      const url = this.get('settings.url');
+      const layers = this.get('settings.layers');
+      const version = this.get('settings.version');
 
       if (isBlank(url) || isBlank(url.toString().match(new RegExp(urlRegex)))) {
         fields.pushObject(i18n.t('components.layers-dialogs.settings.wms.url-textbox.caption'));
@@ -169,19 +169,19 @@ export default Component.extend({
       @method actions.onGetCapabilitiesClick
     */
     onGetCapabilitiesClick(...args) {
-      let getCapabilitiesErrorMessage = this.get('getCapabilitiesErrorMessage');
+      const getCapabilitiesErrorMessage = this.get('getCapabilitiesErrorMessage');
 
       if (getCapabilitiesErrorMessage) {
         this.send('onErrorMessageShow', ...args);
         return;
       }
 
-      let settings = this.get('settings');
-      let getCapabilitiesPromise = this.getCapabilities(settings);
+      const settings = this.get('settings');
+      const getCapabilitiesPromise = this.getCapabilities(settings);
 
       this.set('getCapabilitiesPromise', getCapabilitiesPromise);
       this.send('onErrorMessageHide', ...args);
-    }
+    },
   },
 
   /**
@@ -192,24 +192,24 @@ export default Component.extend({
     @private
   */
   _urlDidChange: observer('settings.url', function () {
-    let url = this.get('settings.url');
-    let regEx = new RegExp(urlRegex);
+    const url = this.get('settings.url');
+    const regEx = new RegExp(urlRegex);
 
     if (!url || isBlank(url.toString().match(regEx))) {
       return;
     }
 
-    let _this = this;
+    const _this = this;
     new Promise((resolve, reject) => {
       L.TileLayer.WMS.Format.getAvailable({
-        url: url,
+        url,
         done(capableFormats, xhr) {
           if (!isArray(capableFormats) || capableFormats.length === 0) {
             reject(`Service ${url} had not returned any available formats`);
           }
 
           // Change current info format to available one.
-          let currentInfoFormat = _this.get('settings.info_format');
+          const currentInfoFormat = _this.get('settings.info_format');
           if (capableFormats.indexOf(currentInfoFormat) < 0) {
             _this.set('settings.info_format', capableFormats[0]);
           }
@@ -219,7 +219,7 @@ export default Component.extend({
         },
         fail(errorThrown, xhr) {
           reject(errorThrown);
-        }
+        },
       });
     });
   }),
@@ -230,12 +230,12 @@ export default Component.extend({
     @param {Object} settings
   */
   getCapabilities(settings) {
-    let _this = this;
+    const _this = this;
 
     return new Promise((resolve, reject) => {
       L.tileLayer.wms(settings.url, {
         layers: settings.layers,
-        version: settings.version
+        version: settings.version,
       }).getBoundingBox({
         done(boundingBox, xhr) {
           if (isBlank(boundingBox)) {
@@ -253,7 +253,7 @@ export default Component.extend({
           _this.set('getCapabilitiesPromiseError', errorThrown);
           _this.send('onErrorMessageShow');
           reject(errorThrown);
-        }
+        },
       });
     });
   },
@@ -265,7 +265,7 @@ export default Component.extend({
     this._super(...arguments);
 
     // Initialize available info formats.
-    let availableFormats = L.TileLayer.WMS.Format.getExisting();
+    const availableFormats = L.TileLayer.WMS.Format.getExisting();
     this.set('_availableInfoFormats', A(availableFormats));
-  }
+  },
 });

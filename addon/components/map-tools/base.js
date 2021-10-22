@@ -32,9 +32,9 @@ const flexberryClassNamesPrefix = 'flexberry-map-tool';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
-  icon: flexberryClassNamesPrefix + '-icon',
-  submenu: flexberryClassNamesPrefix + '-submenu',
-  submenuIcon: flexberryClassNamesPrefix + '-submenu-icon'
+  icon: `${flexberryClassNamesPrefix}-icon`,
+  submenu: `${flexberryClassNamesPrefix}-submenu`,
+  submenuIcon: `${flexberryClassNamesPrefix}-submenu-icon`,
 };
 
 /**
@@ -55,7 +55,7 @@ const flexberryClassNames = {
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
   @uses DomActionsMixin
 */
-let BaseMapToolComponent = Component.extend(SlotsMixin, {
+const BaseMapToolComponent = Component.extend(SlotsMixin, {
   /**
     Mutation observer that observes changes in component's 'class' attribute.
 
@@ -89,10 +89,10 @@ let BaseMapToolComponent = Component.extend(SlotsMixin, {
     @private
   */
   _hasCaption: computed('caption', function () {
-    let caption = this.get('caption');
-    return typeOf(caption) === 'string' && $.trim(caption) !== '' ||
-      typeOf(isHTMLSafe) === 'function' && isHTMLSafe(caption) && $.trim(get(caption, 'string')) !== '' ||
-      caption instanceof Ember.Handlebars.SafeString && $.trim(get(caption, 'string')) !== '';
+    const caption = this.get('caption');
+    return typeOf(caption) === 'string' && $.trim(caption) !== ''
+      || typeOf(isHTMLSafe) === 'function' && isHTMLSafe(caption) && $.trim(get(caption, 'string')) !== ''
+      || caption instanceof Ember.Handlebars.SafeString && $.trim(get(caption, 'string')) !== '';
   }),
 
   /**
@@ -104,7 +104,7 @@ let BaseMapToolComponent = Component.extend(SlotsMixin, {
     @private
   */
   _hasIcon: computed('iconClass', function () {
-    let iconClass = this.get('iconClass');
+    const iconClass = this.get('iconClass');
     return typeOf(iconClass) === 'string' && $.trim(iconClass) !== '';
   }),
 
@@ -303,9 +303,9 @@ let BaseMapToolComponent = Component.extend(SlotsMixin, {
       return;
     }
 
-    let leafletMap = this.get('leafletMap');
-    let mapToolName = this.get('name');
-    let mapToolProperties = this.get('mapToolProperties');
+    const leafletMap = this.get('leafletMap');
+    const mapToolName = this.get('name');
+    const mapToolProperties = this.get('mapToolProperties');
 
     leafletMap.flexberryMap.tools.enable(mapToolName, mapToolProperties);
   },
@@ -316,7 +316,7 @@ let BaseMapToolComponent = Component.extend(SlotsMixin, {
     @param {Object} leafletMap Leaflet map.
   */
   attachLeafletMapEventHandlers(leafletMap) {
-    let mapToolName = this.get('name');
+    const mapToolName = this.get('name');
     if (!isNone(leafletMap) && !isBlank(mapToolName)) {
       leafletMap.off(`flexberry-map:tools:${mapToolName}:enable`, this.onMapToolEnable, this);
       leafletMap.off(`flexberry-map:tools:${mapToolName}:disable`, this.onMapToolDisable, this);
@@ -329,13 +329,13 @@ let BaseMapToolComponent = Component.extend(SlotsMixin, {
     @param {Object} leafletMap Leaflet map.
   */
   detachLeafletMapEventHandlers(leafletMap) {
-    let mapToolPreviousName = this.get('_previousName');
+    const mapToolPreviousName = this.get('_previousName');
     if (!isNone(leafletMap) && !isBlank(mapToolPreviousName)) {
       leafletMap.off(`flexberry-map:tools:${mapToolPreviousName}:enable`, this.onMapToolEnable, this);
       leafletMap.off(`flexberry-map:tools:${mapToolPreviousName}:disable`, this.onMapToolDisable, this);
     }
 
-    let mapToolName = this.get('name');
+    const mapToolName = this.get('name');
     if (!isNone(leafletMap) && !isBlank(mapToolName)) {
       leafletMap.off(`flexberry-map:tools:${mapToolName}:enable`, this.onMapToolEnable, this);
       leafletMap.off(`flexberry-map:tools:${mapToolName}:disable`, this.onMapToolDisable, this);
@@ -349,7 +349,7 @@ let BaseMapToolComponent = Component.extend(SlotsMixin, {
     this._super(...arguments);
 
     // Store initila tool name is '_previousName'.
-    let mapToolName = this.get('name');
+    const mapToolName = this.get('name');
     this.set('_previousName', mapToolName);
   },
 
@@ -359,17 +359,15 @@ let BaseMapToolComponent = Component.extend(SlotsMixin, {
   didInsertElement() {
     this._super(...arguments);
 
-    let $item = this.$();
+    const $item = this.$();
     if (this.get('_hasSubmenu')) {
-
       // Initialize Semantic UI dropdown module.
       $item.dropdown();
     } else if (!isNone(MutationObserver)) {
-
       // Sometimes Semantic UI adds/removes classes too late what breaks results of component's class name bindings.
       // So to fix it, we need to observe changes in 'class' attribute through mutation observer.
-      let classObserver = new MutationObserver((mutations) => {
-        let isActive = this.get('_isActive');
+      const classObserver = new MutationObserver((mutations) => {
+        const isActive = this.get('_isActive');
         if (isActive && !$item.hasClass('active')) {
           $item.addClass('active');
           return;
@@ -377,13 +375,12 @@ let BaseMapToolComponent = Component.extend(SlotsMixin, {
 
         if (!isActive && $item.hasClass('active')) {
           $item.removeClass('active');
-          return;
         }
       });
 
       classObserver.observe($item[0], {
         attributes: true,
-        attributeFilter: ['class']
+        attributeFilter: ['class'],
       });
 
       this.set('_classObserver', classObserver);
@@ -397,18 +394,18 @@ let BaseMapToolComponent = Component.extend(SlotsMixin, {
     this._super(...arguments);
 
     // Deinitialize Semantic UI dropdown module.
-    let $item = this.$();
+    const $item = this.$();
     $item.dropdown('destroy');
 
     // Disconnect mutation observer.
-    let classObserver = this.get('_classObserver');
+    const classObserver = this.get('_classObserver');
     if (!isNone(classObserver)) {
       classObserver.disconnect();
       this.set('_classObserver', null);
     }
 
     // Detach leaflet map event handlers.
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     this.detachLeafletMapEventHandlers(leafletMap);
   },
 
@@ -421,13 +418,13 @@ let BaseMapToolComponent = Component.extend(SlotsMixin, {
     @private
   */
   _leafletMapOrNameDidChange: observer('leafletMap', 'name', function () {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (isNone(leafletMap)) {
       return;
     }
 
-    let mapToolPreviousName = this.get('_previousName');
-    let mapToolName = this.get('name');
+    const mapToolPreviousName = this.get('_previousName');
+    const mapToolName = this.get('name');
     if (!isBlank(mapToolPreviousName) && mapToolPreviousName !== mapToolName) {
       // Detach previously attached leaflet map event handlers.
       this.detachLeafletMapEventHandlers(leafletMap);
@@ -439,13 +436,13 @@ let BaseMapToolComponent = Component.extend(SlotsMixin, {
     }
 
     this.set('_previousName', mapToolName);
-  })
+  }),
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 BaseMapToolComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default BaseMapToolComponent;

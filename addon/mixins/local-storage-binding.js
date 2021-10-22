@@ -81,7 +81,7 @@ export default Mixin.create({
     let value = this.get('keyValue');
 
     if (isBlank(value)) {
-      let propertyPath = this.get('keyProperty');
+      const propertyPath = this.get('keyProperty');
       value = this.get(propertyPath);
     }
 
@@ -98,23 +98,23 @@ export default Mixin.create({
   */
   mutateStorage(bindingName, mutablePropertyPath, newValue) {
     // Get relative property path.
-    let propertyPath = this.get('binding.' + bindingName);
+    const propertyPath = this.get(`binding.${bindingName}`);
 
     // Get direct owner of property.
-    let objectPath = isBlank(propertyPath) ? mutablePropertyPath : mutablePropertyPath.slice(0, mutablePropertyPath.indexOf(propertyPath) - 1);
-    let bindingObject = this.get(objectPath);
+    const objectPath = isBlank(propertyPath) ? mutablePropertyPath : mutablePropertyPath.slice(0, mutablePropertyPath.indexOf(propertyPath) - 1);
+    const bindingObject = this.get(objectPath);
 
     if (isBlank(bindingObject)) {
       return;
     }
 
-    let service = this.get('service');
-    let className = this.get('bindingClass');
-    let key = this.get('bindingKey');
+    const service = this.get('service');
+    const className = this.get('bindingClass');
+    const key = this.get('bindingKey');
 
     // Get object from local storage.
-    let objectId = get(bindingObject, 'id');
-    let collection = service.getFromStorage(className, key);
+    const objectId = get(bindingObject, 'id');
+    const collection = service.getFromStorage(className, key);
     let storedObject = collection.findBy('id', objectId);
 
     if (!isBlank(storedObject)) {
@@ -123,8 +123,8 @@ export default Mixin.create({
     }
 
     // Prepare new object to put in storage.
-    let mutatedObject = {
-      id: objectId
+    const mutatedObject = {
+      id: objectId,
     };
 
     // Assign new value despite of blank elements on path.
@@ -136,5 +136,5 @@ export default Mixin.create({
     // Save changes.
     collection.pushObject(storedObject);
     service.setToStorage(className, key, collection);
-  }
+  },
 });

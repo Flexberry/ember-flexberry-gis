@@ -16,7 +16,7 @@ import { isNone } from '@ember/utils';
 */
 export function initialize(applicationInstance) {
   // Known classes cache.
-  let known = {};
+  const known = {};
 
   /**
     Returns object containing factories of known classes for the specified type,
@@ -29,12 +29,13 @@ export function initialize(applicationInstance) {
     @returns {Object} Object containing factories of known classes for the specified type,
     or a single factory if the class name is specified too.
   */
-  let knownForType = applicationInstance.knownForType = function(type, className) {
+  const knownForType = applicationInstance.knownForType = function (type, className) {
     if (!isNone(className)) {
       assert(
-        `Wrong value of \`className\` parameter: \`${className}\`. ` +
-        `Allowed values for type \`${type}\` are: [\`${knownNamesForType(type).join(`\`, \``)}\`].`,
-        isKnownNameForType(type, className));
+        `Wrong value of \`className\` parameter: \`${className}\`. `
+        + `Allowed values for type \`${type}\` are: [\`${knownNamesForType(type).join('`, `')}\`].`,
+        isKnownNameForType(type, className)
+      );
 
       return knownForType(type)[className];
     }
@@ -43,10 +44,10 @@ export function initialize(applicationInstance) {
     if (isNone(knownClasses)) {
       knownClasses = {};
 
-      let resolver = applicationInstance.application.__registry__.resolver;
+      const { resolver, } = applicationInstance.application.__registry__;
       A(Object.keys(resolver.knownForType(type))).forEach((knownClass) => {
-        let className = knownClass.split(':')[1];
-        let classFactory = applicationInstance._lookupFactory(knownClass);
+        const className = knownClass.split(':')[1];
+        const classFactory = applicationInstance._lookupFactory(knownClass);
 
         knownClasses[className] = classFactory;
       });
@@ -65,7 +66,7 @@ export function initialize(applicationInstance) {
     @param {String} type Type for which known names must be returned.
     @returns {String[]} Array containing names of known classes for the specified type.
   */
-  let knownNamesForType = applicationInstance.knownNamesForType = function(type) {
+  let knownNamesForType = applicationInstance.knownNamesForType = function (type) {
     return A(Object.keys(knownForType(type)));
   };
 
@@ -78,12 +79,12 @@ export function initialize(applicationInstance) {
     @param {String} [className] Class name.
     @returns {String[]} Flag indicating whether class with given name is known for the specified type or not.
   */
-  let isKnownNameForType = applicationInstance.isKnownNameForType = function(type, className) {
+  let isKnownNameForType = applicationInstance.isKnownNameForType = function (type, className) {
     return knownNamesForType(type).contains(className);
   };
 }
 
 export default {
   name: 'owner',
-  initialize
+  initialize,
 };

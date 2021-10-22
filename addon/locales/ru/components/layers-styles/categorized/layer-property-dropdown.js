@@ -1,3 +1,3 @@
 export default {
-  'placeholder': 'Веберете свойство слоя'
+  placeholder: 'Веберете свойство слоя',
 };

@@ -20,5 +20,5 @@ export default MeasureMapTool.extend({
   _enable() {
     this._super(...arguments);
     this.get('_measureTools').circleBaseTool.startMeasure();
-  }
+  },
 });

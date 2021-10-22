@@ -20,7 +20,7 @@ import layout from '../templates/components/flexberry-maptoolbar';
 const flexberryClassNamesPrefix = 'flexberry-maptoolbar';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix
+  wrapper: flexberryClassNamesPrefix,
 };
 
 /**
@@ -38,7 +38,7 @@ const flexberryClassNames = {
   @class FlexberryMaptoolbarComponet
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let FlexberryMaptoolbarComponent = Component.extend({
+const FlexberryMaptoolbarComponent = Component.extend({
   /**
     Component's template reference.
   */
@@ -64,13 +64,13 @@ let FlexberryMaptoolbarComponent = Component.extend({
     @type String[]
     @default ['flexberry-maptoolbar', 'ui', 'menu']
   */
-  classNames: [flexberryClassNames.wrapper, 'ui', 'menu']
+  classNames: [flexberryClassNames.wrapper, 'ui', 'menu'],
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryMaptoolbarComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryMaptoolbarComponent;

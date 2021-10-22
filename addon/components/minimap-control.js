@@ -196,7 +196,7 @@ export default BaseControl.extend({
   */
   strings: {
     hideText: '',
-    showText: ''
+    showText: '',
   },
 
   init() {
@@ -220,6 +220,6 @@ export default BaseControl.extend({
 
     close() {
       this.set('showPanel', false);
-    }
-  }
+    },
+  },
 });

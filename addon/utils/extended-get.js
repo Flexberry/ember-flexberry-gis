@@ -23,9 +23,9 @@ import { isArray } from '@ember/array';
 
   ```
 */
-let getRecord = function (source, keyName) {
+const getRecord = function (source, keyName) {
   // array of keys
-  let keys = keyName.split('.');
+  const keys = keyName.split('.');
 
   // first object from path
   let result = source.get(keys[0] || keyName);
@@ -33,7 +33,7 @@ let getRecord = function (source, keyName) {
   if (keys.length > 1) {
     for (let i = 1, len = keys.length; i < len; i++) {
       // needed for recognition if key is index
-      let keyValue = parseInt(keys[i]);
+      const keyValue = parseInt(keys[i]);
 
       // if previous object is array and key is index
       if (isArray(result) && !isNaN(keyValue)) {

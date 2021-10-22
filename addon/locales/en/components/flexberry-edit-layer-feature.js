@@ -1,19 +1,19 @@
 export default {
-  'buttons': {
-    'save': {
-      'caption': 'Save',
-      'tooltip': 'Save'
+  buttons: {
+    save: {
+      caption: 'Save',
+      tooltip: 'Save',
     },
-    'cancel': {
-      'caption': 'Cancel',
-      'tooltip': 'Cancel'
-    }
+    cancel: {
+      caption: 'Cancel',
+      tooltip: 'Cancel',
+    },
   },
-  'attributes': 'ATTRIBUTES',
-  'validation': {
+  attributes: 'ATTRIBUTES',
+  validation: {
     'no-layer': 'No layer',
     'data-errors': 'Validation errors',
     'field-error': 'Validation error',
-    'save-fail': 'Save failed'
-  }
+    'save-fail': 'Save failed',
+  },
 };

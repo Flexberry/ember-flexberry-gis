@@ -60,13 +60,13 @@ export default BaseVectorLayer.extend({
     @param {String} options.serializedCallback Serialized callback.
     @return {Function} Deserialized callback function.
   */
-  parseLeafletOptionsCallback({ callbackName, serializedCallback }) {
+  parseLeafletOptionsCallback({ callbackName, serializedCallback, }) {
     // First filter must be converted into serialized function from temporary filter language.
     if (callbackName === 'filter' && typeof serializedCallback === 'string') {
       serializedCallback = getOwner(this).lookup('layer:geojson').parseFilter(serializedCallback);
     }
 
-    return this._super({ callbackName, serializedCallback });
+    return this._super({ callbackName, serializedCallback, });
   },
 
   /**
@@ -78,37 +78,37 @@ export default BaseVectorLayer.extend({
   createVectorLayer(options) {
     options = $.extend(true, {}, this.get('options'), options);
 
-    let pane = this.get('_pane');
+    const pane = this.get('_pane');
     if (pane) {
       options.pane = pane;
       options.renderer = this.get('_renderer');
     }
 
-    let url = this.get('url');
+    const url = this.get('url');
     if (!isNone(url)) {
       return new Promise((resolve, reject) => {
         $.ajax({
           type: 'get',
-          url: url,
+          url,
           dataType: 'json',
-          success: function (response) {
+          success(response) {
             if (typeof (response) === 'string') {
               response = JSON.parse(response);
             }
 
             resolve(L.geoJson(response, options));
           },
-          error: function (error) {
+          error(error) {
             reject(error);
-          }
+          },
         });
       });
     }
 
-    let geojson = options.geojson || {};
+    const geojson = options.geojson || {};
     let featureCollection = {
       type: 'FeatureCollection',
-      features: []
+      features: [],
     };
 
     if (isArray(geojson)) {
@@ -119,11 +119,11 @@ export default BaseVectorLayer.extend({
       featureCollection = geojson;
     }
 
-    let features = A(get(featureCollection, 'features') || []);
+    const features = A(get(featureCollection, 'features') || []);
     if (get(features, 'length') === 0) {
       return L.geoJSON();
     }
 
     return L.geoJSON(featureCollection, options);
-  }
+  },
 });

@@ -7,8 +7,8 @@ import { assert } from '@ember/debug';
 import { isPresent, typeOf } from '@ember/utils';
 import { A } from '@ember/array';
 import { Promise } from 'rsvp';
-import EditMapRoute from './edit-map';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
+import EditMapRoute from './edit-map';
 
 /**
   Edit new map route.
@@ -38,7 +38,7 @@ export default EditMapRoute.extend({
   */
   model(params, transition) {
     return new Promise((resolve, reject) => {
-      let mapProject = this.store.createRecord(this.get('modelName'), { id: generateUniqueId() });
+      const mapProject = this.store.createRecord(this.get('modelName'), { id: generateUniqueId(), });
       mapProject.set('mapLayer', A());
 
       if (isPresent(params.metadata)) {
@@ -63,12 +63,13 @@ export default EditMapRoute.extend({
     @param {Object} model
   */
   renderTemplate(controller, model) {
-    let templateName = this.get('templateName');
+    const templateName = this.get('templateName');
     assert(
-      `Wrong type of controller\`s \`templateName\` property: ` +
-      `actual type is \`${typeOf(templateName)}\`, but \`string\` is expected.`,
-      typeOf(templateName) === 'string');
+      'Wrong type of controller`s `templateName` property: '
+      + `actual type is \`${typeOf(templateName)}\`, but \`string\` is expected.`,
+      typeOf(templateName) === 'string'
+    );
 
-    this.render(templateName, { model, controller });
-  }
+    this.render(templateName, { model, controller, });
+  },
 });

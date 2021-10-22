@@ -4,5 +4,5 @@ export default {
   'save-error-message-caption': 'Save operation failed',
   'delete-success-message-caption': 'Delete operation succeed',
   'delete-success-message': 'Object deleted',
-  'delete-error-message-caption': 'Delete operation failed'
+  'delete-error-message-caption': 'Delete operation failed',
 };

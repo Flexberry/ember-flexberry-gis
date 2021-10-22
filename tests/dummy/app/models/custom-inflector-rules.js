@@ -4,7 +4,7 @@
 
 import Inflector from 'ember-inflector';
 
-const inflector = Inflector.inflector;
+const { inflector, } = Inflector;
 
 inflector.irregular('connection', 'connections');
 inflector.irregular('parameter', 'parameters');

@@ -23,7 +23,7 @@ export default function checkIntersect(polygon) {
 
   let isIntersect = false;
   if (!isNone(workingPolygon)) {
-    let intersectPoints = kinks(workingPolygon);
+    const intersectPoints = kinks(workingPolygon);
     isIntersect = intersectPoints.features.length > 0;
   }
 

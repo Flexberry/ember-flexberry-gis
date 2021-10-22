@@ -9,10 +9,10 @@ import { A } from '@ember/array';
 import { isNone } from '@ember/utils';
 import { computed, observer, get } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../../templates/components/charts/index-chart';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import layout from '../../templates/components/charts/index-chart';
 
 /**
   Component for charting.
@@ -34,7 +34,7 @@ export default Component.extend({
     @type string
     @default t(`components.charts.index-chart.default-caption`)
   */
-  _captionChart: t(`components.charts.index-chart.default-caption`),
+  _captionChart: t('components.charts.index-chart.default-caption'),
 
   /**
     Selected chart type.
@@ -69,7 +69,7 @@ export default Component.extend({
     @property _isObjPropertiesComputed
     @type Object[]
   */
-  _isObjPropertiesComputed: computed('_chosenClassifyPropertyObjProperties', function() {
+  _isObjPropertiesComputed: computed('_chosenClassifyPropertyObjProperties', function () {
     if (!isNone(this.get('_chosenClassifyPropertyObjProperties'))) {
       return this.get('_chosenClassifyPropertyObjProperties');
     }
@@ -138,7 +138,7 @@ export default Component.extend({
     @method _classifyPropertyObserver
     @private
   */
-  _classifyPropertyObserver: observer('_classifyProperty', function() {
+  _classifyPropertyObserver: observer('_classifyProperty', function () {
     if (!this.get('_classifyProperty')) {
       this.set('_propertyForClassifyValue', null);
       this.set('_uniqueSymbolClassifyPropertyValue', null);
@@ -153,21 +153,21 @@ export default Component.extend({
     @method _propertyForClassifyValueObserver
     @private
   */
-  _propertyForClassifyValueObserver: observer('_propertyForClassifyValue', function() {
+  _propertyForClassifyValueObserver: observer('_propertyForClassifyValue', function () {
     this.set('_uniqueSymbolClassifyPropertyValue', null);
     this.set('_chosenClassifyPropertyObjProperties', null);
 
     let propertyName = null;
-    let properties = this.get('_localizedProperties');
-    for (var key in properties) {
+    const properties = this.get('_localizedProperties');
+    for (const key in properties) {
       if (this.get('_propertyForClassifyValue') === properties[key]) {
         propertyName = key;
         this.set('_keyChosenClassifyProperty', key);
       }
     }
 
-    let propertyValues = this.get('_isObjProperties');
-    let values = A();
+    const propertyValues = this.get('_isObjProperties');
+    const values = A();
     propertyValues.forEach((prop) => {
       let property = get(prop, `${propertyName}`);
       if (isNone(property)) {
@@ -187,11 +187,11 @@ export default Component.extend({
     @method _uniqueSymbolClassifyPropertyObserver
     @private
   */
-  _uniqueSymbolClassifyPropertyObserver: observer('_uniqueSymbolClassifyPropertyValue', function() {
-    let uniqueSymbolClassifyPropertyValue = this.get('_uniqueSymbolClassifyPropertyValue');
-    let propertyName = this.get('_keyChosenClassifyProperty');
-    let propertyValues = this.get('_isObjProperties');
-    let chosenClassifyPropertyObjProperties = A();
+  _uniqueSymbolClassifyPropertyObserver: observer('_uniqueSymbolClassifyPropertyValue', function () {
+    const uniqueSymbolClassifyPropertyValue = this.get('_uniqueSymbolClassifyPropertyValue');
+    const propertyName = this.get('_keyChosenClassifyProperty');
+    const propertyValues = this.get('_isObjProperties');
+    const chosenClassifyPropertyObjProperties = A();
 
     propertyValues.forEach((prop) => {
       let property = get(prop, `${propertyName}`);
@@ -207,8 +207,8 @@ export default Component.extend({
     this.set('_chosenClassifyPropertyObjProperties', chosenClassifyPropertyObjProperties);
   }),
 
-  selectedModeType: computed('i18n.locale', '_selectedModeType', function() {
-    let type = this.get('_selectedModeType');
+  selectedModeType: computed('i18n.locale', '_selectedModeType', function () {
+    const type = this.get('_selectedModeType');
     return this.get('i18n').t(`components.charts.type-charts.${type}.name`).toString();
   }),
 
@@ -218,12 +218,12 @@ export default Component.extend({
     @property _availableTypes
     @type Object[]
   */
-  _availableTypes: computed('i18n.locale', function() {
-    let result = {};
-    let owner = getOwner(this) || {};
+  _availableTypes: computed('i18n.locale', function () {
+    const result = {};
+    const owner = getOwner(this) || {};
     if (owner.knownNamesForType) {
-      let types = owner.knownNamesForType('components/charts/type-chart');
-      types.forEach(type => {
+      const types = owner.knownNamesForType('components/charts/type-chart');
+      types.forEach((type) => {
         result[type] = this.get('i18n').t(`components.charts.type-charts.${type}.name`).toString();
       }, this);
     }
@@ -257,11 +257,11 @@ export default Component.extend({
     @private
   */
   _renderChartsCanvas() {
-    let json = this.get('getJsonCharts')();
-    let canvas = this.get('_chartsCanvas');
+    const json = this.get('getJsonCharts')();
+    const canvas = this.get('_chartsCanvas');
     this.get('_chartsRenderer').renderOnChartsCanvas({
-      canvas: canvas,
-      json: json
+      canvas,
+      json,
     });
   },
 
@@ -270,7 +270,7 @@ export default Component.extend({
   */
   didInsertElement() {
     this._super(...arguments);
-    let chartsCanvas = this.$('.chart-canvas')[0];
+    const chartsCanvas = this.$('.chart-canvas')[0];
     this.set('_chartsCanvas', chartsCanvas);
   },
 
@@ -307,6 +307,6 @@ export default Component.extend({
     onModeTypeChange(item, key) {
       this.get('_chartsRenderer').clearcharts();
       this.set('_selectedModeType', key);
-    }
-  }
+    },
+  },
 });

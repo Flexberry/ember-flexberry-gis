@@ -30,7 +30,7 @@ export default VectorLayer.extend({
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = this._super(...arguments);
+    const settings = this._super(...arguments);
     return settings;
   },
 
@@ -64,5 +64,5 @@ export default VectorLayer.extend({
     }
 
     return A();
-  }
+  },
 });

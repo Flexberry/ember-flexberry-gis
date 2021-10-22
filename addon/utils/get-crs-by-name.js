@@ -9,17 +9,17 @@ import { getOwner } from '@ember/application';
   @param {Object} that.
   @returns {Object} Сoordinate reference system and definition.
 */
-let getCrsByName = function(crsName, that) {
+const getCrsByName = function (crsName, that) {
   if (!crsName || !that) {
     return null;
   }
 
-  let knownCrs = getOwner(that).knownForType('coordinate-reference-system');
-  let knownCrsArray = A(Object.values(knownCrs));
-  let crsLayer = knownCrsArray.findBy('code', crsName);
-  let crs = crsLayer.create();
-  let definition = crsLayer.definition;
-  return { crs, definition };
+  const knownCrs = getOwner(that).knownForType('coordinate-reference-system');
+  const knownCrsArray = A(Object.values(knownCrs));
+  const crsLayer = knownCrsArray.findBy('code', crsName);
+  const crs = crsLayer.create();
+  const { definition, } = crsLayer;
+  return { crs, definition, };
 };
 
 export {

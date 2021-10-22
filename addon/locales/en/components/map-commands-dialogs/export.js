@@ -5,84 +5,84 @@ export default {
   'print-error-message-caption': 'Print map failed',
   'legend-caption': 'Legend',
   'approve-button': {
-    'caption': 'Ok'
+    caption: 'Ok',
   },
   'print-button': {
-    'caption': 'Print'
+    caption: 'Print',
   },
   'export-button': {
-    'caption': 'Export'
+    caption: 'Export',
   },
   'deny-button': {
-    'caption': 'Cancel'
+    caption: 'Cancel',
   },
   'caption-settings-tab': {
-    'caption': 'Map caption settings',
+    caption: 'Map caption settings',
     'caption-textbox': {
-      'caption': 'Map caption'
+      caption: 'Map caption',
     },
     'font-settings': {
-      'caption': 'Font'
-    }
+      caption: 'Font',
+    },
   },
   'display-mode-settings-tab': {
-    'caption': 'Display mode settings',
+    caption: 'Display mode settings',
     'display-mode-switcher': {
-      'caption': 'Display mode',
+      caption: 'Display mode',
       'standard-mode': {
-        'caption': 'Standard'
+        caption: 'Standard',
       },
       'map-only-mode': {
-        'caption': 'Map only'
+        caption: 'Map only',
       },
       'modes-divider': {
-        'caption': 'or'
-      }
+        caption: 'or',
+      },
     },
     'map-controls-panel': {
-      'caption': 'Visible map controls',
+      caption: 'Visible map controls',
       'legend-control': {
-        'caption': 'Legend'
+        caption: 'Legend',
       },
       'scale-control': {
-        'caption': 'Scale bar'
-      }
+        caption: 'Scale bar',
+      },
     },
     'legend-settings-panel': {
-      'caption': 'Legend position',
+      caption: 'Legend position',
       'under-map': {
-        'caption': 'Under the map'
+        caption: 'Under the map',
       },
       'second-page': {
-        'caption': 'Separately'
-      }
-    }
+        caption: 'Separately',
+      },
+    },
   },
   'paper-settings-tab': {
-    'caption': 'Sheet of paper settings',
+    caption: 'Sheet of paper settings',
     'paper-orientation-switcher': {
-      'caption': 'Sheet of paper orientation',
+      caption: 'Sheet of paper orientation',
       'landscape-orientation': {
-        'caption': 'Landscape'
+        caption: 'Landscape',
       },
       'portrait-orientation': {
-        'caption': 'Portrait'
+        caption: 'Portrait',
       },
       'orientations-divider': {
-        'caption': 'or'
-      }
+        caption: 'or',
+      },
     },
     'paper-format-dropdown': {
-      'caption': 'Sheet of paper format'
-    }
+      caption: 'Sheet of paper format',
+    },
   },
   'downloading-file-settings-tab': {
-    'caption': 'Downloading file settings',
+    caption: 'Downloading file settings',
     'file-name-textbox': {
-      'caption': 'File name'
+      caption: 'File name',
     },
     'file-type-dropdown': {
-      'caption': 'File type'
-    }
-  }
+      caption: 'File type',
+    },
+  },
 };

@@ -18,5 +18,5 @@ export default ListFormController.extend({
     @type String
     @default null
   */
-  editFormRoute: null
+  editFormRoute: null,
 });

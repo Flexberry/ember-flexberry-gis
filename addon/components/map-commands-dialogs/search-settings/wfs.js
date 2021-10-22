@@ -16,9 +16,9 @@ import layout from '../../../templates/components/map-commands-dialogs/search-se
 export default Component.extend({
 
   _searchPropertiesArray: computed('searchProperties', function () {
-    let props = [];
-    let searchProperties = this.get('searchProperties');
-    for (var property in searchProperties) {
+    const props = [];
+    const searchProperties = this.get('searchProperties');
+    for (const property in searchProperties) {
       if (searchProperties.hasOwnProperty(property)) {
         props.push(searchProperties[property]);
       }
@@ -29,13 +29,13 @@ export default Component.extend({
 
   actions: {
     onChange(selectedText) {
-      let searchProperties = this.get('searchProperties');
-      for (var property in searchProperties) {
+      const searchProperties = this.get('searchProperties');
+      for (const property in searchProperties) {
         if (searchProperties[property] === selectedText) {
           this.set('settings.propertyName', property);
         }
       }
-    }
+    },
   },
 
   /**
@@ -96,5 +96,5 @@ export default Component.extend({
     @type Object
     @default null
    */
-  searchProperties: null
+  searchProperties: null,
 });

@@ -18,5 +18,5 @@ export default ListFormController.extend({
     @type String
     @default 'new-platform-flexberry-g-i-s-layer-metadata-e'
    */
-  editFormRoute: 'new-platform-flexberry-g-i-s-layer-metadata-e'
+  editFormRoute: 'new-platform-flexberry-g-i-s-layer-metadata-e',
 });

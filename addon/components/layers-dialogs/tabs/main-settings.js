@@ -2,10 +2,10 @@ import { getOwner } from '@ember/application';
 import { computed } from '@ember/object';
 import { A } from '@ember/array';
 import Component from '@ember/component';
-import layout from '../../../templates/components/layers-dialogs/tabs/main-settings';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import layout from '../../../templates/components/layers-dialogs/tabs/main-settings';
 
 export default Component.extend({
   /**
@@ -76,7 +76,7 @@ export default Component.extend({
     @readonly
   */
   _scaleSettingsAreAvailableForType: computed('_layer.type', function () {
-    let className = this.get('_layer.type');
+    const className = this.get('_layer.type');
 
     return getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
   }),
@@ -88,11 +88,11 @@ export default Component.extend({
       @method actions.scaleInputKeyDown
     */
     scaleInputKeyDown(e) {
-      let key = e.which;
+      const key = e.which;
 
       // Allow only numbers, backspace, arrows, etc.
-      return (key === 8 || key === 9 || key === 46 || (key >= 37 && key <= 40) ||
-        (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
-    }
-  }
+      return (key === 8 || key === 9 || key === 46 || (key >= 37 && key <= 40)
+        || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    },
+  },
 });

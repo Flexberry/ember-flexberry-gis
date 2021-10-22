@@ -18,7 +18,7 @@ import layout from '../../../../templates/components/legends/layers-styles/-priv
 const flexberryClassNames = {
   imageWrapper: 'layer-legend-image-wrapper',
   image: 'layer-legend-image',
-  caption: 'layer-legend-caption'
+  caption: 'layer-legend-caption',
 };
 
 /**
@@ -91,5 +91,5 @@ export default Component.extend({
     @type String
     @default null
   */
-  caption: null
+  caption: null,
 });

@@ -4,26 +4,26 @@ import { A } from '@ember/array';
 import { getOwner } from '@ember/application';
 import { computed, observer } from '@ember/object';
 import Component from '@ember/component';
+import {
+  translationMacro as t
+} from 'ember-i18n';
 import layout from '../templates/components/feature-export';
 import { downloadFile, downloadBlob } from '../utils/download-file';
 import { getCrsByName } from '../utils/get-crs-by-name';
 
-import {
-  translationMacro as t
-} from 'ember-i18n';
 
 /**
  * Default seettings.
  */
 const defaultOptions = {
   format: 'JSON',
-  coordSystem: 'EPSG:4326'
+  coordSystem: 'EPSG:4326',
 };
 
 /**
  * Export dialog of map feaure to file.
  */
-let FeatureExportDialogComponent = Component.extend({
+const FeatureExportDialogComponent = Component.extend({
   /**
    * Current settings.
    */
@@ -74,9 +74,9 @@ let FeatureExportDialogComponent = Component.extend({
   /**
    * Current crs.
    */
-  _crs: computed('_options.coordSystem', function() {
-    let _options = this.get('_options');
-    let factories = this.get('availableCRS');
+  _crs: computed('_options.coordSystem', function () {
+    const _options = this.get('_options');
+    const factories = this.get('availableCRS');
 
     return factories.filter((factory) => factory.name === _options.coordSystem)[0];
   }),
@@ -104,16 +104,16 @@ let FeatureExportDialogComponent = Component.extend({
   /**
    * GPX format only polyline and marker
    */
-  _GPXFormat: observer('result', function() {
-    let result = this.get('result');
-    let layer = result.layerModel;
-    let type = layer.get('settingsAsObject.typeGeometry');
-    let formats = this.get('_availableFormats');
+  _GPXFormat: observer('result', function () {
+    const result = this.get('result');
+    const layer = result.layerModel;
+    const type = layer.get('settingsAsObject.typeGeometry');
+    const formats = this.get('_availableFormats');
     if (type === 'polyline' || type === 'marker') {
       formats.push('GPX');
       this.set('_availableFormats', formats);
     } else {
-      let ind = formats.indexOf('GPX');
+      const ind = formats.indexOf('GPX');
       if (ind !== -1) {
         formats.splice(ind);
         this.set('_availableFormats', formats);
@@ -124,10 +124,10 @@ let FeatureExportDialogComponent = Component.extend({
   /**
    * Filter crs for difference formats
    */
-  _filterCRS: observer('_options.format', function() {
-    let selectedFormat = this.get('_options.format');
+  _filterCRS: observer('_options.format', function () {
+    const selectedFormat = this.get('_options.format');
     if (selectedFormat === 'KML') {
-      let crs4326Names = [];
+      const crs4326Names = [];
       crs4326Names.push(defaultOptions.coordSystem);
       this.set('_crs4326Names', crs4326Names);
       this.set('availableCRSNames', this.get('_crs4326Names'));
@@ -144,37 +144,37 @@ let FeatureExportDialogComponent = Component.extend({
      */
     onApprove(e) {
       // Objects for unloading.
-      let result = this.get('result');
-      let layer = result.layerModel;
-      let outputFormat = this.get('_options.format');
-      let crsOuput = this.get('_crs');
-      let crsLayer = getCrsByName(JSON.parse(layer.get('coordinateReferenceSystem')).code, this);
-      let type = layer.get('type');
-      let objectIds = result.features.map((feature) => {
+      const result = this.get('result');
+      const layer = result.layerModel;
+      const outputFormat = this.get('_options.format');
+      const crsOuput = this.get('_crs');
+      const crsLayer = getCrsByName(JSON.parse(layer.get('coordinateReferenceSystem')).code, this);
+      const type = layer.get('type');
+      const objectIds = result.features.map((feature) => {
         if (type !== 'odata-vector') {
           return feature.id;
-        } else {
-          return feature.properties.primarykey;
         }
+
+        return feature.properties.primarykey;
       });
 
-      let config = getOwner(this).resolveRegistration('config:environment');
-      let url = config.APP.backendUrls.featureExportApi;
-      let headers = {};
+      const config = getOwner(this).resolveRegistration('config:environment');
+      const url = config.APP.backendUrls.featureExportApi;
+      const headers = {};
 
       this._requestDownloadFile(layer, objectIds, outputFormat, crsOuput, crsLayer, url, headers);
-    }
+    },
   },
 
   _requestDownloadFile(layer, objectIds, outputFormat, crsOuput, crsLayer, url, headers) {
     downloadFile(layer, objectIds, outputFormat, crsOuput, crsLayer, url, headers)
-    .then((res) => {
-      downloadBlob(res.fileName, res.blob);
-    })
-    .catch((errorMessage) => {
-      console.error('Layer upload error ' + layer.get('name') + ': ' + errorMessage);
-      alert('When unloading a layer ' + layer.get('name') + ' an error occurred.');
-    });
+      .then((res) => {
+        downloadBlob(res.fileName, res.blob);
+      })
+      .catch((errorMessage) => {
+        console.error(`Layer upload error ${layer.get('name')}: ${errorMessage}`);
+        alert(`When unloading a layer ${layer.get('name')} an error occurred.`);
+      });
   },
 
   /**
@@ -195,8 +195,8 @@ let FeatureExportDialogComponent = Component.extend({
     ]));
 
     // CRS.
-    let factories = this.get('availableCRS');
-    let availableCRSNames = [];
+    const factories = this.get('availableCRS');
+    const availableCRSNames = [];
 
     if (!isNone(factories)) {
       factories.forEach((factory) => {
@@ -214,15 +214,14 @@ let FeatureExportDialogComponent = Component.extend({
   /**
    * When the first time show window, then his need to show.
    */
-  visibleObserver: observer('visible', function() {
-    let visible = this.get('visible');
+  visibleObserver: observer('visible', function () {
+    const visible = this.get('visible');
 
     if (visible) {
       this.set('_options', $.extend(true, {}, defaultOptions));
       this.set('_dialogRequested', true);
     }
-  })
+  }),
 });
 
 export default FeatureExportDialogComponent;
-

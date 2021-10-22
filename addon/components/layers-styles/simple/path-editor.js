@@ -43,6 +43,6 @@ export default Component.extend({
     */
     onStyleSettingsChange() {
       this.sendAction('change', this.get('styleSettings'));
-    }
-  }
+    },
+  },
 });

@@ -1,12 +1,12 @@
 export default {
-  'caption': 'Система координат слоя (CRS)',
+  caption: 'Система координат слоя (CRS)',
   'name-textbox': {
-    'caption': 'Название проекции'
+    caption: 'Название проекции',
   },
   'code-textbox': {
-    'caption': 'Код'
+    caption: 'Код',
   },
   'definition-textarea': {
-    'caption': 'Определение'
-  }
+    caption: 'Определение',
+  },
 };

@@ -11,5 +11,5 @@ export default BaseLegendComponent.extend({
   /**
     Reference to component's template.
   */
-  layout
+  layout,
 });

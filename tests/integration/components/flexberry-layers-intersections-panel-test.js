@@ -3,10 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 
 // import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | flexberry layers intersections panel', function(hooks) {
+module('Integration | Component | flexberry layers intersections panel', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', function(assert) {
+  test('it renders', function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 

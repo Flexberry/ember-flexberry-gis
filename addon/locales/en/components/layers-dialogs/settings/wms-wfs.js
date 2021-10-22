@@ -1,8 +1,8 @@
 export default {
   'wms-segment': {
-    'caption': 'WMS Settings'
+    caption: 'WMS Settings',
   },
   'wfs-segment': {
-    'caption': 'WFS Settings'
-  }
+    caption: 'WFS Settings',
+  },
 };

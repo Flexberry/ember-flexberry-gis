@@ -3,10 +3,10 @@
 */
 
 import Component from '@ember/component';
-import layout from '../../templates/components/map-commands/locate';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import layout from '../../templates/components/map-commands/locate';
 
 /**
   Component's CSS-classes names.
@@ -21,7 +21,7 @@ import {
 const flexberryClassNamesPrefix = 'flexberry-locate-map-command';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix
+  wrapper: flexberryClassNamesPrefix,
 };
 
 /**
@@ -39,7 +39,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let LocateMapCommandComponent = Component.extend({
+const LocateMapCommandComponent = Component.extend({
   /**
     Reference to component's template.
   */
@@ -96,7 +96,7 @@ let LocateMapCommandComponent = Component.extend({
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 LocateMapCommandComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default LocateMapCommandComponent;

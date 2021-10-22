@@ -12,7 +12,7 @@ import Ember from 'ember';
   @public
 */
 export default Helper.extend({
-  compute: function ([value]) {
+  compute([value]) {
     return new Ember.Handlebars.SafeString(value);
-  }
+  },
 });

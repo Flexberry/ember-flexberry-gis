@@ -1,8 +1,8 @@
 export default {
   'back-button': {
-    'title': 'Previous extent'
+    title: 'Previous extent',
   },
   'forward-button': {
-    'title': 'Next extent'
-  }
+    title: 'Next extent',
+  },
 };

@@ -42,7 +42,7 @@ export default BaseLayer.extend({
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = this._super(...arguments);
+    const settings = this._super(...arguments);
     $.extend(true, settings, {
       type: undefined,
       innerLayers: undefined,
@@ -62,9 +62,9 @@ export default BaseLayer.extend({
       return A();
     }
 
-    //let layerClass = Ember.getOwner(this).lookup(`layer:${this.get('layerModel.type')}`);
-    let layerClass = getOwner(this).lookup(`layer:${leafletObject.type}`);
-    let layerProperties = layerClass.getLayerProperties(leafletObject);
+    // let layerClass = Ember.getOwner(this).lookup(`layer:${this.get('layerModel.type')}`);
+    const layerClass = getOwner(this).lookup(`layer:${leafletObject.type}`);
+    const layerProperties = layerClass.getLayerProperties(leafletObject);
 
     return layerProperties;
   },
@@ -83,8 +83,8 @@ export default BaseLayer.extend({
       return A();
     }
 
-    let layerClass = getOwner(this).lookup(`layer:${leafletObject.type}`);
-    let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, selectedField, count);
+    const layerClass = getOwner(this).lookup(`layer:${leafletObject.type}`);
+    const layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, selectedField, count);
 
     return layerPropertyValue;
   },
@@ -102,12 +102,12 @@ export default BaseLayer.extend({
       return false;
     }
 
-    let combineType = !isNone(get(layer, 'settingsAsObject')) ? get(layer, 'settingsAsObject.type') : null;
+    const combineType = !isNone(get(layer, 'settingsAsObject')) ? get(layer, 'settingsAsObject.type') : null;
     if (isNone(combineType)) {
       return false;
     }
 
-    let layerClass = getOwner(this).knownForType('layer', combineType);
+    const layerClass = getOwner(this).knownForType('layer', combineType);
     return !isNone(layerClass) && layerClass.isVectorType(layer);
-  }
+  },
 });

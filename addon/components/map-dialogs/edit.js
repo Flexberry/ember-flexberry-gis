@@ -10,13 +10,13 @@ import { A } from '@ember/array';
 import Component from '@ember/component';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
-import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
-import FlexberryBoundingboxMapLoaderMixin from '../../mixins/flexberry-boundingbox-map-loader';
-import layout from '../../templates/components/map-dialogs/edit';
 import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
+import FlexberryBoundingboxMapLoaderMixin from '../../mixins/flexberry-boundingbox-map-loader';
+import layout from '../../templates/components/map-dialogs/edit';
 
 /**
   Component's CSS-classes names.
@@ -35,7 +35,7 @@ const flexberryClassNamesPrefix = 'flexberry-edit-map-dialog';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
-  form: 'flexberry-edit-map'
+  form: 'flexberry-edit-map',
 };
 
 /**
@@ -47,7 +47,7 @@ const flexberryClassNames = {
   @uses DynamicActionsMixin
   @uses DynamicPropertiesMixin
 */
-let FlexberryEditMapDialogComponent = Component.extend(
+const FlexberryEditMapDialogComponent = Component.extend(
   RequiredActionsMixin,
   DynamicActionsMixin,
   DynamicPropertiesMixin,
@@ -293,11 +293,11 @@ let FlexberryEditMapDialogComponent = Component.extend(
         @method actions.scaleInputKeyDown
       */
       scaleInputKeyDown(e) {
-        let key = e.which;
+        const key = e.which;
 
         // Allow only numbers, backspace, arrows, etc.
-        return (key === 8 || key === 9 || key === 46 || (key >= 37 && key <= 40) ||
-          (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+        return (key === 8 || key === 9 || key === 46 || (key >= 37 && key <= 40)
+          || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
       },
 
       /**
@@ -309,8 +309,8 @@ let FlexberryEditMapDialogComponent = Component.extend(
       onTabClick(e) {
         e = $.event.fix(e);
 
-        let $clickedTab = $(e.currentTarget);
-        let clickedTabName = $clickedTab.attr('data-tab');
+        const $clickedTab = $(e.currentTarget);
+        const clickedTabName = $clickedTab.attr('data-tab');
 
         this.set('_activeTab', clickedTabName);
       },
@@ -322,13 +322,13 @@ let FlexberryEditMapDialogComponent = Component.extend(
         @method actions.onApprove
       */
       onApprove() {
-        let mapModel = $.extend(true, {}, this.get('_mapModel'));
+        const mapModel = $.extend(true, {}, this.get('_mapModel'));
         let crs = get(mapModel, 'coordinateReferenceSystem');
         crs = $.isEmptyObject(crs) ? null : JSON.stringify(crs);
         set(mapModel, 'coordinateReferenceSystem', crs);
 
         this.sendAction('approve', {
-          mapProperties: mapModel
+          mapProperties: mapModel,
         });
       },
 
@@ -401,31 +401,31 @@ let FlexberryEditMapDialogComponent = Component.extend(
       @private
     */
     _createInnerMap() {
-      let name = this.get('mapModel.name');
-      let lat = this.get('mapModel.lat');
-      let lng = this.get('mapModel.lng');
-      let zoom = this.get('mapModel.zoom');
-      let isPublic = this.get('mapModel.public');
-      let description = this.get('mapModel.description');
-      let keyWords = this.get('mapModel.keyWords');
-      let scale = this.get('mapModel.scale');
+      const name = this.get('mapModel.name');
+      const lat = this.get('mapModel.lat');
+      const lng = this.get('mapModel.lng');
+      const zoom = this.get('mapModel.zoom');
+      const isPublic = this.get('mapModel.public');
+      const description = this.get('mapModel.description');
+      const keyWords = this.get('mapModel.keyWords');
+      const scale = this.get('mapModel.scale');
       let crs = this.get('mapModel.coordinateReferenceSystem');
-      let boundingBox = this.get('mapModel.boundingBox');
-      let bounds = getBounds(boundingBox);
+      const boundingBox = this.get('mapModel.boundingBox');
+      const bounds = getBounds(boundingBox);
 
       crs = isNone(crs) ? {} : JSON.parse(crs);
 
       this.set('_mapModel', {
-        name: name,
-        lat: lat,
-        lng: lng,
-        zoom: zoom,
+        name,
+        lat,
+        lng,
+        zoom,
         public: isPublic,
-        description: description,
-        keyWords: keyWords,
-        scale: scale,
+        description,
+        keyWords,
+        scale,
         coordinateReferenceSystem: crs,
-        boundingBox: boundingBox,
+        boundingBox,
         bboxCoords: {
           minLat: bounds.minLat,
           minLng: bounds.minLng,
@@ -450,10 +450,10 @@ let FlexberryEditMapDialogComponent = Component.extend(
     */
     init() {
       this._super(...arguments);
-      let _this = this;
+      const _this = this;
       this.set('_bboxMapIsLoading', true);
 
-      this.getBoundingBoxComponentMapModel().then(result => {
+      this.getBoundingBoxComponentMapModel().then((result) => {
         _this.set('boundingBoxComponentMap', result);
         _this.set('_bboxMapIsLoading', false);
       });
@@ -469,7 +469,7 @@ let FlexberryEditMapDialogComponent = Component.extend(
 
       this.set('boundingBoxComponentMap', null);
       this._destroyInnerMap();
-    }
+    },
 
     /**
       Component's action invoking when dialog starts to show.
@@ -512,7 +512,7 @@ let FlexberryEditMapDialogComponent = Component.extend(
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryEditMapDialogComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryEditMapDialogComponent;

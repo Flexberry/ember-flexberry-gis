@@ -201,21 +201,21 @@ export default Component.extend({
     @private
     @readOnly
   */
-  _availableLayerProperties: computed('fields.[]', 'featuresPropertiesSettings', 'i18n.locale', function() {
-    let availableLayerProperties = {};
+  _availableLayerProperties: computed('fields.[]', 'featuresPropertiesSettings', 'i18n.locale', function () {
+    const availableLayerProperties = {};
 
-    let layerProperties = this.get('fields');
-    let localizedProperties = this.get(`featuresPropertiesSettings.localizedProperties.${this.get('i18n.locale')}`) || {};
-    let excludedProperties = this.get(`featuresPropertiesSettings.excludedProperties`);
+    const layerProperties = this.get('fields');
+    const localizedProperties = this.get(`featuresPropertiesSettings.localizedProperties.${this.get('i18n.locale')}`) || {};
+    let excludedProperties = this.get('featuresPropertiesSettings.excludedProperties');
     excludedProperties = isArray(excludedProperties) ? A(excludedProperties) : A();
 
     for (let i = 0, len = layerProperties.length; i < len; i++) {
-      let propertyName = layerProperties[i];
+      const propertyName = layerProperties[i];
       if (excludedProperties.contains(propertyName)) {
         continue;
       }
 
-      let propertyCaption = get(localizedProperties, propertyName);
+      const propertyCaption = get(localizedProperties, propertyName);
       availableLayerProperties[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
     }
 
@@ -237,19 +237,19 @@ export default Component.extend({
     // Initialize Semantic UI accordion.
     this.$('.ui.accordion.bbox-selector').accordion();
 
-    let _this = this;
+    const _this = this;
     this.$('.ui.accordion.attribute-selector').accordion({
       onOpening: () => {
-        let leafletObject = _this.get('_leafletObject');
+        const leafletObject = _this.get('_leafletObject');
         if (isNone(leafletObject)) {
-          let type = _this.get('_layerType');
-          let leafletObjectMethod = _this.get('_leafletObjectMethod');
+          const type = _this.get('_layerType');
+          const leafletObjectMethod = _this.get('_leafletObjectMethod');
           if (!(isBlank(leafletObjectMethod) || isBlank(type))) {
             _this.set('_leafletObjectIsLoading', true);
-            leafletObjectMethod().then(leafletObject => {
+            leafletObjectMethod().then((leafletObject) => {
               _this.set('_leafletObject', leafletObject);
               _this.set('_leafletObjectIsLoading', false);
-              let layerClass = getOwner(_this).knownForType('layer', type);
+              const layerClass = getOwner(_this).knownForType('layer', type);
               if (!isBlank(layerClass)) {
                 _this.set('fields', A(layerClass.getLayerProperties(leafletObject)));
               }
@@ -258,7 +258,7 @@ export default Component.extend({
             });
           }
         }
-      }
+      },
     });
   },
 
@@ -272,12 +272,12 @@ export default Component.extend({
   _parseFilter() {
     let filterStringValue = this.get('filterStringValue') || '';
     filterStringValue = filterStringValue.replace(/[\n\r]/g, '');
-    let type = this.get('_layerType');
+    const type = this.get('_layerType');
     this.set('_filterIsCorrect', false);
-    let layerClass = getOwner(this).knownForType('layer', type);
+    const layerClass = getOwner(this).knownForType('layer', type);
     let filter;
     if (!isNone(layerClass)) {
-      filter =  layerClass.parseFilter(filterStringValue, this.get('geometryField'));
+      filter = layerClass.parseFilter(filterStringValue, this.get('geometryField'));
     }
 
     if (!isNone(filter)) {
@@ -296,8 +296,8 @@ export default Component.extend({
     @private
   */
   _pasteIntoFilterString(pasteString, caretShift) {
-    let textarea = this.$('.edit-filter-textarea')[0];
-    let filterString = this.get('filterStringValue') || '';
+    const textarea = this.$('.edit-filter-textarea')[0];
+    const filterString = this.get('filterStringValue') || '';
     let newFilterString = '';
     let caretPosition = 0;
     if (filterString.length > 0) {
@@ -308,7 +308,7 @@ export default Component.extend({
       caretPosition = pasteString.length;
     }
 
-    caretPosition = caretPosition + (caretShift || 0);
+    caretPosition += (caretShift || 0);
     this.set('filterStringValue', newFilterString);
     scheduleOnce('afterRender', this, function () {
       textarea.focus();
@@ -380,10 +380,10 @@ export default Component.extend({
       @param {Integer} count Values count to show
     */
     showFieldValues(count) {
-      let type = this.get('_layerType');
-      let leafletObject = this.get('_leafletObject');
-      let selectedField = this.get('_selectedField');
-      let layerClass = getOwner(this).knownForType('layer', type);
+      const type = this.get('_layerType');
+      const leafletObject = this.get('_leafletObject');
+      const selectedField = this.get('_selectedField');
+      const layerClass = getOwner(this).knownForType('layer', type);
       let values = A();
       if (!isNone(layerClass)) {
         values = A(layerClass.getLayerPropertyValues(leafletObject, selectedField, count));
@@ -406,7 +406,7 @@ export default Component.extend({
       @param {String} condition
     */
     pasteConditionExpression(condition) {
-      let expressionString = ` ${condition} `;
+      const expressionString = ` ${condition} `;
       this._pasteIntoFilterString(expressionString);
     },
 
@@ -417,7 +417,7 @@ export default Component.extend({
       @param {String} condition
     */
     pasteLogicalExpression(condition) {
-      let expressionString = `${condition} ()`;
+      const expressionString = `${condition} ()`;
       this._pasteIntoFilterString(expressionString, -1);
     },
 
@@ -428,9 +428,9 @@ export default Component.extend({
       @param {String} condition
     */
     pasteBboxExpression(condition) {
-      let bboxString = this.get('_currentSelectedBbox');
+      const bboxString = this.get('_currentSelectedBbox');
       if (!isBlank(bboxString)) {
-        let expressionString = `${condition} (${bboxString})`;
+        const expressionString = `${condition} (${bboxString})`;
         this._pasteIntoFilterString(expressionString);
       }
     },
@@ -442,7 +442,7 @@ export default Component.extend({
       @param {String} symbol
     */
     pasteSymbol(symbol) {
-      let expressionString = `${symbol}`;
+      const expressionString = `${symbol}`;
       this._pasteIntoFilterString(expressionString);
     },
 
@@ -458,7 +458,7 @@ export default Component.extend({
         return;
       }
 
-      let newString = `'${value}'`;
+      const newString = `'${value}'`;
       this._pasteIntoFilterString(newString);
     },
 
@@ -470,5 +470,5 @@ export default Component.extend({
     onBoundingBoxChange(e) {
       this.set('_currentSelectedBbox', JSON.stringify(e.bboxGeoJSON));
     },
-  }
+  },
 });

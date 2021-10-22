@@ -32,25 +32,25 @@ export default BaseLayerStyle.extend({
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} options.leafletLayer Leaflet layer to which layer-style must be applied.
     @param {Object} options.style Hash containing style settings.
   */
-  _renderOnLeafletLayer({ leafletLayer, style }) {
+  _renderOnLeafletLayer({ leafletLayer, style, }) {
     if (leafletLayer instanceof L.LayerGroup) {
       // First we must clean group layer's style options,
       // otherwise already defined style options won't be changed.
       leafletLayer.options.style = {};
 
       leafletLayer.eachLayer((layer) => {
-        this._renderOnLeafletLayer({ leafletLayer: layer, style });
+        this._renderOnLeafletLayer({ leafletLayer: layer, style, });
       });
     } else {
-      let layersStylesRenderer = this.get('layersStylesRenderer');
-      let relevantCategory = this._getCategoryRelevantToLeafletLayer({ leafletLayer, style });
+      const layersStylesRenderer = this.get('layersStylesRenderer');
+      const relevantCategory = this._getCategoryRelevantToLeafletLayer({ leafletLayer, style, });
 
       if (isNone(relevantCategory)) {
         // There is no relevant category for the specified laeflet layer, so empty style will be applied to it.
-        layersStylesRenderer.renderOnLeafletLayer({ leafletLayer, styleSettings: layersStylesRenderer.getDefaultStyleSettings('empty') });
+        layersStylesRenderer.renderOnLeafletLayer({ leafletLayer, styleSettings: layersStylesRenderer.getDefaultStyleSettings('empty'), });
       } else {
         // Style from relevant category will be applied to the specified laeflet layer.
-        layersStylesRenderer.renderOnLeafletLayer({ leafletLayer, styleSettings: relevantCategory.styleSettings });
+        layersStylesRenderer.renderOnLeafletLayer({ leafletLayer, styleSettings: relevantCategory.styleSettings, });
       }
     }
   },
@@ -65,18 +65,18 @@ export default BaseLayerStyle.extend({
     @return {Object} Hash containing category settings relevant to the specified leaflet layer.
     @private
   */
-  _getCategoryRelevantToLeafletLayer({ leafletLayer, style }) {
+  _getCategoryRelevantToLeafletLayer({ leafletLayer, style, }) {
     style = style || {};
-    let propertyName = get(style, 'propertyName');
-    let categories = get(style, 'categories');
+    const propertyName = get(style, 'propertyName');
+    const categories = get(style, 'categories');
     if (!isArray(categories) || isBlank(propertyName)) {
       return null;
     }
 
     let relevantCategory = null;
     for (let i = 0, len = categories.length; i < len; i++) {
-      let category = categories[i];
-      if (this._categoryIsRelevantToLeafletLayer({ leafletLayer, propertyName, category })) {
+      const category = categories[i];
+      if (this._categoryIsRelevantToLeafletLayer({ leafletLayer, propertyName, category, })) {
         relevantCategory = category;
         break;
       }
@@ -95,16 +95,16 @@ export default BaseLayerStyle.extend({
     @param {Object} options.category Hash containing category settings.
     @return {Boolean} Flag indicating whether specified category is relevant to the specified laeflet layer.
   */
-  _categoryIsRelevantToLeafletLayer({ leafletLayer, propertyName, category }) {
-    let featureProperties = get(leafletLayer, 'feature.properties');
+  _categoryIsRelevantToLeafletLayer({ leafletLayer, propertyName, category, }) {
+    const featureProperties = get(leafletLayer, 'feature.properties');
     if (isNone(featureProperties)) {
       return false;
     }
 
     // Get property value.
-    let propertyValue = get(featureProperties, propertyName);
+    const propertyValue = get(featureProperties, propertyName);
 
-    return this.categoryIsRelevantToPropertyValue({ propertyValue, category });
+    return this.categoryIsRelevantToPropertyValue({ propertyValue, category, });
   },
 
   /**
@@ -116,7 +116,7 @@ export default BaseLayerStyle.extend({
     @param {Object} options.category Hash containing category settings.
     @return {Boolean} Flag indicating whether specified category is relevant to the specified property value.
   */
-  categoryIsRelevantToPropertyValue({ propertyValue, category }) {
+  categoryIsRelevantToPropertyValue({ propertyValue, category, }) {
     throw 'Method \'categoryIsRelevantToPropertyValue\' isn\'t implemented in the specified categorized layers-style';
   },
 
@@ -132,7 +132,7 @@ export default BaseLayerStyle.extend({
       propertyName: null,
 
       // Array containing categories description ({ name: 'Category name', value: 'Layer property value related to category', styleSettings: { ... }}).
-      categories: []
+      categories: [],
     };
   },
 
@@ -142,15 +142,15 @@ export default BaseLayerStyle.extend({
     @method getVisibleLeafletLayers
     @return {Object[]} Array containing visible leaflet layers (those nested layers which 'layers-style' doesn't hide).
   */
-  getVisibleLeafletLayers({ leafletLayer, style, visibleLeafletLayers }) {
+  getVisibleLeafletLayers({ leafletLayer, style, visibleLeafletLayers, }) {
     visibleLeafletLayers = visibleLeafletLayers || [];
 
     if (leafletLayer instanceof L.LayerGroup) {
       leafletLayer.eachLayer((layer) => {
-        this.getVisibleLeafletLayers({ leafletLayer: layer, style, visibleLeafletLayers });
+        this.getVisibleLeafletLayers({ leafletLayer: layer, style, visibleLeafletLayers, });
       });
     } else {
-      let relevantCategory = this._getCategoryRelevantToLeafletLayer({ leafletLayer, style });
+      const relevantCategory = this._getCategoryRelevantToLeafletLayer({ leafletLayer, style, });
       if (!isNone(relevantCategory)) {
         visibleLeafletLayers.push(leafletLayer);
       }
@@ -167,9 +167,9 @@ export default BaseLayerStyle.extend({
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} options.leafletLayer Leaflet layer to which layer-style must be applied.
     @param {Object} options.style Hash containing style settings.
   */
-  renderOnLeafletLayer({ leafletLayer, style }) {
+  renderOnLeafletLayer({ leafletLayer, style, }) {
     style = style || {};
-    this._renderOnLeafletLayer({ leafletLayer, style });
+    this._renderOnLeafletLayer({ leafletLayer, style, });
   },
 
   /**
@@ -181,6 +181,6 @@ export default BaseLayerStyle.extend({
     @param {Object} options.style Hash containing style settings.
     @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style, target }) {
-  }
+  renderOnCanvas({ canvas, style, target, }) {
+  },
 });

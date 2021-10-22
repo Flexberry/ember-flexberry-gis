@@ -23,10 +23,10 @@ export default Mixin.create({
     @returns {Object[]} Flat array of layers satisfying to current identification mode.
     @private
   */
-  _getLayersToIdentify({ excludedLayers }) {
-    let allVisibleLayersToIdentify = A(this._super(...arguments) || []);
+  _getLayersToIdentify({ excludedLayers, }) {
+    const allVisibleLayersToIdentify = A(this._super(...arguments) || []);
 
-    let topVisibleLayerToIdenify = A();
+    const topVisibleLayerToIdenify = A();
     if (allVisibleLayersToIdentify.length > 0) {
       topVisibleLayerToIdenify.pushObject(allVisibleLayersToIdentify[0]);
     }
@@ -58,19 +58,19 @@ export default Mixin.create({
       set(e, 'excludedLayers', excludedLayers);
     }
 
-    let result = get(e, 'results.0') || {};
-    let layer = get(result, 'layerModel') || {};
-    let features = get(result, 'features') || [];
-    let _this = this;
-    let superFunction = this._super;
-    let handleResult = function(condition) {
+    const result = get(e, 'results.0') || {};
+    const layer = get(result, 'layerModel') || {};
+    const features = get(result, 'features') || [];
+    const _this = this;
+    const superFunction = this._super;
+    const handleResult = function (condition) {
       if (condition) {
         excludedLayers.pushObject(layer);
       }
 
       // If there is no identification results by current layer,
       // then try to identify next visible layer if possible.
-      let includedLayers = this._getLayersToIdentify({ excludedLayers });
+      const includedLayers = this._getLayersToIdentify({ excludedLayers, });
       if (condition && includedLayers.length > 0) {
         this._startIdentification(e);
       } else {
@@ -79,11 +79,11 @@ export default Mixin.create({
       }
     };
 
-    features.then(identifyResult => {
-      let condition = identifyResult.length === 0;
+    features.then((identifyResult) => {
+      const condition = identifyResult.length === 0;
       handleResult.call(_this, condition);
     }).catch(() => {
       handleResult.call(_this, true);
     });
-  }
+  },
 });

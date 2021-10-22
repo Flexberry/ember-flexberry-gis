@@ -4,34 +4,34 @@ import { module, test } from 'qunit';
 import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api';
 import sinon from 'sinon';
 
-module('Unit | Mixin | method deleteLayerObjects', function() {
-  let mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
+module('Unit | Mixin | method deleteLayerObjects', function () {
+  const mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
 
-  test('test method deleteLayerObjects', function(assert) {
-    //Arrange
+  test('test method deleteLayerObjects', function (assert) {
+    // Arrange
     assert.expect(8);
-    let done = assert.async(1);
-    let testLeafletObject = L.featureGroup();
-    let polygon = L.polygon([[1, 1], [2, 5], [2, 5]]).addTo(testLeafletObject);
+    const done = assert.async(1);
+    const testLeafletObject = L.featureGroup();
+    const polygon = L.polygon([[1, 1], [2, 5], [2, 5]]).addTo(testLeafletObject);
     polygon.id = '1';
-    let obj = { _deleteLayerFromAttrPanel:  function() {} };
-    let getModelLayerFeature = () => { return resolve([null, testLeafletObject]); };
+    const obj = { _deleteLayerFromAttrPanel() {}, };
+    const getModelLayerFeature = () => resolve([null, testLeafletObject]);
 
-    let subject = mapApiMixinObject.create({
+    const subject = mapApiMixinObject.create({
       _getModelLayerFeature() {},
-      mapApi: { getFromApi() { return obj._deleteLayerFromAttrPanel; } },
-      _getLayerFeatureId(layer, shape) { return shape.id; }
+      mapApi: { getFromApi() { return obj._deleteLayerFromAttrPanel; }, },
+      _getLayerFeatureId(layer, shape) { return shape.id; },
     });
-    let getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
-    let spyDeleteLayerFromAttrPanelFunc = sinon.spy(obj, '_deleteLayerFromAttrPanel');
-    let spyRemoveLayer = sinon.spy(testLeafletObject, 'removeLayer');
+    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+    const spyDeleteLayerFromAttrPanelFunc = sinon.spy(obj, '_deleteLayerFromAttrPanel');
+    const spyRemoveLayer = sinon.spy(testLeafletObject, 'removeLayer');
 
-    //Act
-    let result = subject.deleteLayerObjects('1', ['1']);
+    // Act
+    const result = subject.deleteLayerObjects('1', ['1']);
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Check result instance of Promise');
-    result.then(()=> {
+    result.then(() => {
       assert.equal(spyDeleteLayerFromAttrPanelFunc.callCount, 1, 'Check call count to method _deleteLayerFromAttrPanel');
       assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
       assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');

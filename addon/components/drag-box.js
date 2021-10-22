@@ -49,7 +49,7 @@ export default Component.extend({
   }),
 
   didInsertElement() {
-    let container = this.get('container');
+    const container = this.get('container');
     if (!isNone(container)) {
       $(container).css('position', 'relative');
       this.$().appendTo($(container));
@@ -71,7 +71,7 @@ export default Component.extend({
       }
 
       this.$().css('position', 'absolute');
-      this.$().dragOrResize({ mode: 'drag', containment: container });
+      this.$().dragOrResize({ mode: 'drag', containment: container, });
 
       this.setVisibility();
     }

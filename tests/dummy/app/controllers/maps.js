@@ -18,5 +18,5 @@ export default ListMapController.extend({
     @type String
     @default 'map'
   */
-  editFormRoute: 'map'
+  editFormRoute: 'map',
 });

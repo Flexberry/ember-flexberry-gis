@@ -5,13 +5,13 @@
 import { computed } from '@ember/object';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
-import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
 import FlexberryLinksEditorActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-links-editor-actions-handler';
 import FlexberryBaseComponent from 'ember-flexberry/components/flexberry-base-component';
-import layout from '../../templates/components/layers-dialogs/edit';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import layout from '../../templates/components/layers-dialogs/edit';
+import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
 
 /**
   Component's CSS-classes names.
@@ -28,7 +28,7 @@ import {
 const flexberryClassNamesPrefix = 'flexberry-edit-layer-dialog';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: null
+  wrapper: null,
 };
 
 /**
@@ -41,7 +41,7 @@ const flexberryClassNames = {
   @uses DynamicPropertiesMixin
   @uses FlexberryLinksEditorActionsHandlerMixin
 */
-let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
+const FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
   RequiredActionsMixin,
   DynamicActionsMixin,
   DynamicPropertiesMixin,
@@ -157,7 +157,7 @@ let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
       @readonly
     */
     store: computed('currentController', function () {
-      let controller = this.get('currentController');
+      const controller = this.get('currentController');
       return controller.get('store');
     }),
 
@@ -188,7 +188,7 @@ let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
       */
       onApprove() {
         this.sendAction('approve', {
-          layerProperties: this.get('getLayerProperties')()
+          layerProperties: this.get('getLayerProperties')(),
         });
       },
 
@@ -249,8 +249,8 @@ let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
       */
       onUploadFile(file) {
         this.sendAction('onUploadFile', file);
-      }
-    }
+      },
+    },
 
     /**
       Component's action invoking when dialog starts to show.
@@ -295,7 +295,7 @@ let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryEditLayerDialogComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryEditLayerDialogComponent;

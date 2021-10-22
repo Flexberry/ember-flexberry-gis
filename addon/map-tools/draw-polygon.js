@@ -20,5 +20,5 @@ export default DrawMapTool.extend({
   _enable() {
     this._super(...arguments);
     this.get('_editTools').startPolygon();
-  }
+  },
 });

@@ -3,12 +3,12 @@
 */
 
 import { computed } from '@ember/object';
-import layout from '../templates/components/flexberry-links-editor';
 import FlexberryLookupCompatibleComponentMixin from 'ember-flexberry/mixins/flexberry-lookup-compatible-component';
 import FlexberryBaseComponent from 'ember-flexberry/components/flexberry-base-component';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import layout from '../templates/components/flexberry-links-editor';
 
 /**
   Component's CSS-classes names.
@@ -28,8 +28,8 @@ const flexberryClassNamesPrefix = 'flexberry-links-editor';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
-  visibilityCheckbox: flexberryClassNamesPrefix + '-visibility-checkbox',
-  clearButton: flexberryClassNamesPrefix + '-clear-button'
+  visibilityCheckbox: `${flexberryClassNamesPrefix}-visibility-checkbox`,
+  clearButton: `${flexberryClassNamesPrefix}-clear-button`,
 };
 
 /**
@@ -39,7 +39,7 @@ const flexberryClassNames = {
   @extends FlexberryBaseComponent
   @uses FlexberryLookupCompatibleComponentMixin
 */
-let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLookupCompatibleComponentMixin, {
+const FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLookupCompatibleComponentMixin, {
 
   /**
     Reference to component's template.
@@ -208,7 +208,7 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
     @readonly
   */
   groupEditComponentName: computed('elementId', function () {
-    return 'parametersGroupedit' + this.get('elementId');
+    return `parametersGroupedit${this.get('elementId')}`;
   }),
 
   /**
@@ -218,7 +218,7 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
     @readonly
   */
   lookupComponentName: computed('elementId', function () {
-    return 'mosLookup' + this.get('elementId');
+    return `mosLookup${this.get('elementId')}`;
   }),
 
   /**
@@ -326,8 +326,8 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
     */
     onVisibilityCheckboxChange(...args) {
       this.sendAction('changeVisibility', ...args);
-    }
-  }
+    },
+  },
 
   /**
     Component's action invoking to update relation value at model.
@@ -353,7 +353,7 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryLinksEditorComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryLinksEditorComponent;

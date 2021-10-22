@@ -4,22 +4,22 @@ import LeafletPropertiesMixin from 'ember-flexberry-gis/mixins/leaflet-propertie
 import { module, test } from 'qunit';
 import sinon from 'sinon';
 
-module('Unit | Mixin | leaflet properties', function() {
-  let MixinImplementation = EmberObject.extend(LeafletPropertiesMixin);
+module('Unit | Mixin | leaflet properties', function () {
+  const MixinImplementation = EmberObject.extend(LeafletPropertiesMixin);
 
   // Replace this with your real tests.
   test('it works', function (assert) {
-    let subject = MixinImplementation.create();
+    const subject = MixinImplementation.create();
     assert.ok(subject);
   });
 
   test('_addObservers should call this.addObserver for specified properties', function (assert) {
-    let property = 'testProperty';
-    let subject = MixinImplementation.create({
-      leafletProperties: [property]
+    const property = 'testProperty';
+    const subject = MixinImplementation.create({
+      leafletProperties: [property],
     });
 
-    let addObserver = sinon.spy(subject, 'addObserver');
+    const addObserver = sinon.spy(subject, 'addObserver');
 
     subject._addObservers();
 
@@ -27,11 +27,11 @@ module('Unit | Mixin | leaflet properties', function() {
   });
 
   test('after addObserver property changed should fire specified layer function', function (assert) {
-    let callTestProperty = sinon.spy();
+    const callTestProperty = sinon.spy();
 
-    let subject = MixinImplementation.create({
+    const subject = MixinImplementation.create({
       leafletProperties: ['testProperty:callTestProperty'],
-      _leafletObject: { callTestProperty }
+      _leafletObject: { callTestProperty, },
     });
 
     subject._addObservers();
@@ -43,11 +43,11 @@ module('Unit | Mixin | leaflet properties', function() {
   });
 
   test('after addObserver property changed should fire default setter for property of layer', function (assert) {
-    let setTestProperty = sinon.spy();
+    const setTestProperty = sinon.spy();
 
-    let subject = MixinImplementation.create({
+    const subject = MixinImplementation.create({
       leafletProperties: ['testProperty'],
-      _leafletObject: { setTestProperty }
+      _leafletObject: { setTestProperty, },
     });
 
     subject._addObservers();
@@ -59,9 +59,9 @@ module('Unit | Mixin | leaflet properties', function() {
   });
 
   test('after addObserver property changed should throws if layer property setter is missing', function (assert) {
-    let subject = MixinImplementation.create({
+    const subject = MixinImplementation.create({
       leafletProperties: ['testProperty'],
-      _leafletObject: {}
+      _leafletObject: {},
     });
 
     subject._addObservers();

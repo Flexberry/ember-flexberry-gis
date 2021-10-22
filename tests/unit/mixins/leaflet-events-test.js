@@ -3,31 +3,30 @@ import LeafletEventsMixin from 'ember-flexberry-gis/mixins/leaflet-events';
 import { module, test } from 'qunit';
 import sinon from 'sinon';
 
-let MixinImplementation = EmberObject.extend(LeafletEventsMixin);
+const MixinImplementation = EmberObject.extend(LeafletEventsMixin);
 
-module('Unit | Mixin | leaflet events', function() {
+module('Unit | Mixin | leaflet events', function () {
   // Replace this with your real tests.
   test('it works', function (assert) {
-    let subject = MixinImplementation.create();
+    const subject = MixinImplementation.create();
     assert.ok(subject);
   });
 
   test('usedLeafletEvents should return events with exists methods', function (assert) {
-    let subject = MixinImplementation.create({
+    const subject = MixinImplementation.create({
       leafletEvents: ['testEvent1', 'testEvent2'],
-      testEvent1: () => { }
+      testEvent1: () => { },
     });
 
     assert.deepEqual(subject.get('usedLeafletEvents'), ['testEvent1']);
   });
 
   test('_addEventListeners should create eventHandles for used events', function (assert) {
+    const addEventListener = sinon.spy();
 
-    let addEventListener = sinon.spy();
-
-    let subject = MixinImplementation.create({
+    const subject = MixinImplementation.create({
       usedLeafletEvents: ['testEvent1', 'testEvent2'],
-      _leafletObject: { addEventListener }
+      _leafletObject: { addEventListener, },
     });
 
     subject._addEventListeners();
@@ -38,15 +37,15 @@ module('Unit | Mixin | leaflet events', function() {
   });
 
   test('_removeEventListener shoud remove all used eventHandles', function (assert) {
-    let removeEventListener = sinon.spy();
+    const removeEventListener = sinon.spy();
 
-    let subject = MixinImplementation.create({
+    const subject = MixinImplementation.create({
       usedLeafletEvents: ['testEvent1', 'testEvent2'],
       _eventHandlers: {
         testEvent1: '',
-        testEvent2: ''
+        testEvent2: '',
       },
-      _leafletObject: { removeEventListener }
+      _leafletObject: { removeEventListener, },
     });
 
     subject._removeEventListeners();

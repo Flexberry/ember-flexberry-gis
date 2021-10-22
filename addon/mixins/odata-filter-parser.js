@@ -7,7 +7,9 @@ import { isBlank } from '@ember/utils';
 import Mixin from '@ember/object/mixin';
 import Condition from 'ember-flexberry-data/query/condition';
 import FilterOperator from 'ember-flexberry-data/query/filter-operator';
-import { SimplePredicate, ComplexPredicate, StringPredicate, NotPredicate } from 'ember-flexberry-data/query/predicate';
+import {
+  SimplePredicate, ComplexPredicate, StringPredicate, NotPredicate
+} from 'ember-flexberry-data/query/predicate';
 
 /**
   Odata filter parser mixin.
@@ -71,5 +73,5 @@ export default Mixin.create({
       case 'not':
         return new NotPredicate(properties[0]);
     }
-  }
+  },
 });

@@ -38,7 +38,7 @@ export default BaseMapTool.extend({
     @param {Object} e Event object.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.layer Drawn rectangle layer.
   */
-  _rectangleDrawingDidEnd({ layer }) {
+  _rectangleDrawingDidEnd({ layer, }) {
     // Remove drawn rectangle.
     layer.disableEdit();
 
@@ -59,11 +59,11 @@ export default BaseMapTool.extend({
   _enable() {
     this._super(...arguments);
 
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     let editTools = this.get('_editTools');
     if (isNone(editTools)) {
       editTools = new L.Editable(leafletMap, {
-        drawingCursor: this.get('cursor')
+        drawingCursor: this.get('cursor'),
       });
       this.set('_editTools', editTools);
     }
@@ -81,7 +81,7 @@ export default BaseMapTool.extend({
   _disable() {
     this._super(...arguments);
 
-    let editTools = this.get('_editTools');
+    const editTools = this.get('_editTools');
     if (!isNone(editTools)) {
       editTools.off('editable:drawing:end', this._rectangleDrawingDidEnd, this);
       editTools.stopDrawing();
@@ -94,18 +94,18 @@ export default BaseMapTool.extend({
   willDestroy() {
     this._super(...arguments);
 
-    let editLayer = this.get('_editTools.editLayer');
+    const editLayer = this.get('_editTools.editLayer');
     if (!isNone(editLayer)) {
       editLayer.clearLayers();
       editLayer.remove();
     }
 
-    let featuresLayer = this.get('_editTools.featuresLayer');
+    const featuresLayer = this.get('_editTools.featuresLayer');
     if (!isNone(featuresLayer)) {
       featuresLayer.clearLayers();
       featuresLayer.remove();
     }
 
     this.set('_editTools', null);
-  }
+  },
 });

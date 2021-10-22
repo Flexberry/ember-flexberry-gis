@@ -42,5 +42,5 @@ export default ListFormRoute.extend({
     @type Object
     @default {}
   */
-  developerUserSettings: { NewPlatformFlexberryGISMapObjectSettingL: {} },
+  developerUserSettings: { NewPlatformFlexberryGISMapObjectSettingL: {}, },
 });

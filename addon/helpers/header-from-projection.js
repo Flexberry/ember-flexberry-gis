@@ -53,13 +53,13 @@ export default Helper.extend({
     columnsBuf = columnsBuf || [];
     relationshipPath = relationshipPath || '';
 
-    for (let attrName in attributes) {
+    for (const attrName in attributes) {
       let currentRelationshipPath = relationshipPath;
       if (!attributes.hasOwnProperty(attrName)) {
         continue;
       }
 
-      let attr = attributes[attrName];
+      const attr = attributes[attrName];
       assert(`Unknown kind of projection attribute: ${attr.kind}`, attr.kind === 'attr' || attr.kind === 'belongsTo' || attr.kind === 'hasMany');
       switch (attr.kind) {
         case 'hasMany':
@@ -67,12 +67,12 @@ export default Helper.extend({
 
         case 'belongsTo':
           if (!attr.options.hidden) {
-            let bindingPath = currentRelationshipPath + attrName;
-            let column = this._createColumn(attr, attrName, bindingPath);
+            const bindingPath = currentRelationshipPath + attrName;
+            const column = this._createColumn(attr, attrName, bindingPath);
 
             if (column.cellComponent.componentName === undefined) {
               if (attr.options.displayMemberPath) {
-                column.propName += '.' + attr.options.displayMemberPath;
+                column.propName += `.${attr.options.displayMemberPath}`;
               } else {
                 column.propName += '.id';
               }
@@ -81,7 +81,7 @@ export default Helper.extend({
             columnsBuf.push(column);
           }
 
-          currentRelationshipPath += attrName + '.';
+          currentRelationshipPath += `${attrName}.`;
           this._generateColumns(attr.attributes, columnsBuf, currentRelationshipPath);
           break;
 
@@ -90,8 +90,8 @@ export default Helper.extend({
             break;
           }
 
-          let bindingPath = currentRelationshipPath + attrName;
-          let column = this._createColumn(attr, attrName, bindingPath);
+          const bindingPath = currentRelationshipPath + attrName;
+          const column = this._createColumn(attr, attrName, bindingPath);
           columnsBuf.push(column);
           break;
       }
@@ -107,10 +107,10 @@ export default Helper.extend({
     @private
   */
   _createColumn(attr, attrName, bindingPath) {
-    let key = this._createKey(bindingPath);
-    let valueFromLocales = getValueFromLocales(this.get('i18n'), key);
+    const key = this._createKey(bindingPath);
+    const valueFromLocales = getValueFromLocales(this.get('i18n'), key);
 
-    let column = {
+    const column = {
       header: valueFromLocales || attr.caption || capitalize(attrName),
       propName: bindingPath, // TODO: rename column.propName
     };
@@ -126,8 +126,8 @@ export default Helper.extend({
     Create the key from locales.
   */
   _createKey(bindingPath) {
-    let projection = this.get('modelProjection');
-    let modelName = projection.modelName;
+    const projection = this.get('modelProjection');
+    const { modelName, } = projection;
     return `models.${modelName}.projections.${projection.projectionName}.${bindingPath}.__caption__`;
   },
 
@@ -152,12 +152,12 @@ export default Helper.extend({
       projectionName = get(hash, 'projectionName');
     }
 
-    let modelClass = this.get('store').modelFor(modelName);
+    const modelClass = this.get('store').modelFor(modelName);
     assert(
       `Unable to find a model with name ${modelName}`,
       isPresent(modelClass)
     );
-    let projection = modelClass.projections.get(projectionName);
+    const projection = modelClass.projections.get(projectionName);
 
     assert(
       `Unable to find a projection ${projectionName} in model ${modelName}`,
@@ -165,11 +165,11 @@ export default Helper.extend({
     );
     this.set('modelProjection', projection);
 
-    let cols = this._generateColumns(projection.attributes);
-    let result = {};
+    const cols = this._generateColumns(projection.attributes);
+    const result = {};
     cols.forEach(function (item) {
       result[item.propName] = item.header.string;
     });
     return result;
-  }
+  },
 });

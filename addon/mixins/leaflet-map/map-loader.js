@@ -20,8 +20,8 @@ import Mixin from '@ember/object/mixin';
 */
 const flexberryClassNamesPrefix = 'flexberry-map';
 const flexberryClassNames = {
-  loaderDimmer: flexberryClassNamesPrefix + '-loader-dimmer',
-  loader: flexberryClassNamesPrefix + '-loader'
+  loaderDimmer: `${flexberryClassNamesPrefix}-loader-dimmer`,
+  loader: `${flexberryClassNamesPrefix}-loader`,
 };
 
 /**
@@ -43,21 +43,21 @@ export default Mixin.create({
     let loaderIsShown = false;
 
     // Inject DOM-elements for loader & it's dimmer into map's container markup.
-    let $leafletMapContainer = this.get('_$leafletContainer');
-    let $dimmer = $('<div />')
+    const $leafletMapContainer = this.get('_$leafletContainer');
+    const $dimmer = $('<div />')
       .addClass(flexberryClassNames.loaderDimmer)
       .addClass('ui dimmer')
       .appendTo($leafletMapContainer);
-    let $loader = $('<div />')
+    const $loader = $('<div />')
       .addClass(flexberryClassNames.loader)
       .addClass('ui text loader')
       .appendTo($leafletMapContainer);
 
     // Reference to flexberryMap.interaction namespace.
-    let mapInteraction = leafletMap.flexberryMap.interaction;
+    const mapInteraction = leafletMap.flexberryMap.interaction;
 
     // Define flexberryMap.loader namespace & related methods & properties.
-    let loader = leafletMap.flexberryMap.loader = {
+    const loader = leafletMap.flexberryMap.loader = {
 
       // Loader's markup element.
       $loader,
@@ -73,7 +73,7 @@ export default Mixin.create({
       // Sets loader's content.
       setContent(content) {
         content = isNone(content) ? '' : content;
-        content = typeOf(content) === 'string' ? content : '' + content;
+        content = typeOf(content) === 'string' ? content : `${content}`;
 
         $loader.html(content);
       },
@@ -135,7 +135,7 @@ export default Mixin.create({
 
         // Remove flexberryMap.loader namespace & related methods & properties.
         delete leafletMap.flexberryMap.loader;
-      }
+      },
     };
   },
 
@@ -148,5 +148,5 @@ export default Mixin.create({
     this._super(...arguments);
 
     leafletMap.flexberryMap.loader._destroy();
-  }
+  },
 });

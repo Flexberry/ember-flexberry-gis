@@ -31,12 +31,13 @@ export default BaseMapCommand.extend({
   _execute(options) {
     this._super(...arguments);
 
-    let leafletMap = this.get('leafletMap');
-    let featuresLayer = this.get('featuresLayer');
+    const leafletMap = this.get('leafletMap');
+    const featuresLayer = this.get('featuresLayer');
     assert(
-      `Wrong type of \`featuresLayer\` property:` +
-      ` actual is \`${typeOf(featuresLayer)}\` but L.LayerGroup is expected`,
-      featuresLayer instanceof L.LayerGroup);
+      'Wrong type of `featuresLayer` property:'
+      + ` actual is \`${typeOf(featuresLayer)}\` but L.LayerGroup is expected`,
+      featuresLayer instanceof L.LayerGroup
+    );
 
     if (!leafletMap.hasLayer(featuresLayer)) {
       featuresLayer.addTo(leafletMap);
@@ -49,12 +50,12 @@ export default BaseMapCommand.extend({
   willDestroy() {
     this._super(...arguments);
 
-    let featuresLayer = this.get('featuresLayer');
+    const featuresLayer = this.get('featuresLayer');
     if (!isNone(featuresLayer)) {
       featuresLayer.clearLayers();
       featuresLayer.remove();
     }
 
     this.set('featuresLayer', null);
-  }
+  },
 });

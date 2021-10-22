@@ -5,48 +5,48 @@ import { module, test } from 'qunit';
 import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api';
 import sinon from 'sinon';
 
-module('Unit | Mixin | method copyObject', function() {
-  let mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
+module('Unit | Mixin | method copyObject', function () {
+  const mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
 
-  test('test method copyObject', function(assert) {
-    //Arrange
+  test('test method copyObject', function (assert) {
+    // Arrange
     assert.expect(8);
-    let done = assert.async(1);
-    let sourceLeafletLayer = L.featureGroup();
-    let destinationLeafletLayer = L.featureGroup();
-    let polygon = L.polygon([[1, 1], [5, 1], [2, 2], [3, 5]]);
+    const done = assert.async(1);
+    const sourceLeafletLayer = L.featureGroup();
+    const destinationLeafletLayer = L.featureGroup();
+    const polygon = L.polygon([[1, 1], [5, 1], [2, 2], [3, 5]]);
     polygon.feature = {
-      properties: {}
+      properties: {},
     };
-    let destinationLayerModel = A({
+    const destinationLayerModel = A({
       settingsAsObject: {
-        typeGeometry: 'polygon'
-      }
+        typeGeometry: 'polygon',
+      },
     });
-    let getModelLayerFeature = () => { return resolve([{}, sourceLeafletLayer, [polygon]]); };
+    const getModelLayerFeature = () => resolve([{}, sourceLeafletLayer, [polygon]]);
 
-    let getModelLeafletObject = () => { return [destinationLayerModel, destinationLeafletLayer]; };
+    const getModelLeafletObject = () => [destinationLayerModel, destinationLeafletLayer];
 
-    let subject = mapApiMixinObject.create({
+    const subject = mapApiMixinObject.create({
       _getModelLayerFeature() {},
-      _getModelLeafletObject() {}
+      _getModelLeafletObject() {},
     });
-    let getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
-    let getMLObject = sinon.stub(subject, '_getModelLeafletObject', getModelLeafletObject);
+    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+    const getMLObject = sinon.stub(subject, '_getModelLeafletObject', getModelLeafletObject);
 
-    //Act
-    let result = subject.copyObject({
+    // Act
+    const result = subject.copyObject({
       layerId: '1',
       objectId: '1',
-      shouldRemove: true
+      shouldRemove: true,
     }, {
       layerId: '2',
-      properties: {}
+      properties: {},
     });
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Check result instance of Promise');
-    result.then((data)=> {
+    result.then((data) => {
       assert.deepEqual(data.getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]], 'Check latLngs');
       assert.equal(getMLFeature.callCount, 1, 'Check call count to method _getModelLayerFeature');
       assert.equal(getMLFeature.args[0][0], '1', 'Check call first arg to method _getModelLayerFeature');

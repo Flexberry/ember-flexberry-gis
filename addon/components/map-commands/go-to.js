@@ -6,8 +6,8 @@ import { A } from '@ember/array';
 
 import { computed, get, observer } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../../templates/components/map-commands/go-to';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../templates/components/map-commands/go-to';
 
 /**
   Component's CSS-classes names.
@@ -25,7 +25,7 @@ const flexberryClassNamesPrefix = 'flexberry-go-to-map-command';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
-  gotoDialog: 'flexberry-go-to-map-command-dialog'
+  gotoDialog: 'flexberry-go-to-map-command-dialog',
 };
 
 /**
@@ -53,7 +53,7 @@ const flexberryClassNames = {
   @class GoToMapCommandComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let GoToMapCommandComponent = Component.extend({
+const GoToMapCommandComponent = Component.extend({
   /**
     Options which will be passed to the map-command's 'execute' method.
 
@@ -148,21 +148,21 @@ let GoToMapCommandComponent = Component.extend({
     @type Object[]
   */
   availableCRS: computed('i18n.locale', function () {
-    let availableModes = A();
-    let i18n = this.get('i18n');
+    const availableModes = A();
+    const i18n = this.get('i18n');
     availableModes.push({
       crs: this.get('leafletMap.options.crs'),
       name: i18n.t('map-commands.go-to.available-crs.current.name').toString(),
       xCaption: i18n.t('map-commands.go-to.available-crs.current.xCaption').toString(),
       yCaption: i18n.t('map-commands.go-to.available-crs.current.yCaption').toString(),
-      isLatlng: false
+      isLatlng: false,
     });
     availableModes.push({
       crs: L.CRS.EPSG4326,
       name: i18n.t('map-commands.go-to.available-crs.latlng.name').toString(),
       xCaption: i18n.t('map-commands.go-to.available-crs.latlng.xCaption').toString(),
       yCaption: i18n.t('map-commands.go-to.available-crs.latlng.yCaption').toString(),
-      isLatlng: true
+      isLatlng: true,
     });
 
     return availableModes;
@@ -185,13 +185,13 @@ let GoToMapCommandComponent = Component.extend({
       @param {Object} e Action's event object.
     */
     onGoToDialogApprove(e) {
-      let leafletMap = this.get('leafletMap');
-      let mapCommandName = 'go-to';
-      let mapCommandProperties = null;
-      let mapCommandExecutionOptions = get(e, 'gotoOptions');
+      const leafletMap = this.get('leafletMap');
+      const mapCommandName = 'go-to';
+      const mapCommandProperties = null;
+      const mapCommandExecutionOptions = get(e, 'gotoOptions');
 
       leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions);
-    }
+    },
   },
 
   /**
@@ -234,17 +234,17 @@ let GoToMapCommandComponent = Component.extend({
     @method _localeDidChange
     @private
   */
-  _localeDidChange: observer('i18n.locale', function() {
+  _localeDidChange: observer('i18n.locale', function () {
     // Exclude dialog from markup.
     // It will force dialog's recreation next time.
     this.set('_gotoDialogHasBeenRequested', false);
-  })
+  }),
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 GoToMapCommandComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default GoToMapCommandComponent;

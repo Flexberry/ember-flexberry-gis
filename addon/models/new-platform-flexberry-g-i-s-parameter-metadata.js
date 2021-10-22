@@ -23,7 +23,7 @@ const Validations = buildValidations(ValidationRules, {
   @uses OfflineModelMixin
   @uses NewPlatformFlexberryGISLayerLinkModelMixin
 */
-let Model = EmberFlexberryDataModel.extend(OfflineModelMixin, ParameterMetadataMixin, Validations, {
+const Model = EmberFlexberryDataModel.extend(OfflineModelMixin, ParameterMetadataMixin, Validations, {
 });
 
 defineProjections(Model);

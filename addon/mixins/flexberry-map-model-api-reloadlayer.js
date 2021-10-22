@@ -15,7 +15,7 @@ export default Mixin.create({
     @return {Ember.RSVP.Promise} Returns promise.
   */
   reloadLayer(layerId) {
-    let [, leafletObject] = this._getModelLeafletObject(layerId);
+    const [, leafletObject] = this._getModelLeafletObject(layerId);
 
     if (isNone(leafletObject)) {
       return new Promise(() => {
@@ -24,5 +24,5 @@ export default Mixin.create({
     }
 
     return leafletObject.reload();
-  }
+  },
 });

@@ -1,3 +1,3 @@
 export default {
-  'no-data': 'No data'
+  'no-data': 'No data',
 };

@@ -89,9 +89,9 @@ export default Component.extend(LeafletOptionsMixin, {
     @method initControl
   */
   initControl: observer('leafletMap', function () {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
-      let control = this.createControl();
+      const control = this.createControl();
       this.set('control', control);
 
       leafletMap.addControl(control);
@@ -105,12 +105,12 @@ export default Component.extend(LeafletOptionsMixin, {
     @method initControl
   */
   destroyControl() {
-    let leafletMap = this.get('leafletMap');
-    let control = this.get('control');
+    const leafletMap = this.get('leafletMap');
+    const control = this.get('control');
     if (!isNone(leafletMap) && !isNone(control)) {
       leafletMap.removeControl(control);
     }
 
     this.set('control', null);
-  }
+  },
 });

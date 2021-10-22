@@ -18,7 +18,7 @@ export default Mixin.create({
     Returns Leaflet.Editable instance.
   */
   _getEditTools() {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
 
     let editTools = this.get('_editTools');
     if (isNone(editTools)) {
@@ -38,7 +38,7 @@ export default Mixin.create({
     @private
   */
   _prepareLayer: function _prepareLayer(layer) {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     let pane = leafletMap.getPane('zoomto');
     if (!pane || isNone(pane)) {
       pane = leafletMap.createPane('zoomto');
@@ -46,12 +46,12 @@ export default Mixin.create({
     }
 
     return L.geoJson(layer.toGeoJSON(), {
-      pane: 'zoomto'
+      pane: 'zoomto',
     }).setStyle({
       color: 'salmon',
       weight: 2,
       opacity: 1,
-      fillOpacity: 0.3
+      fillOpacity: 0.3,
     });
-  }
+  },
 });

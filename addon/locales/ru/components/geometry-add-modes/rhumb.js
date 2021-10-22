@@ -12,7 +12,7 @@ export default {
   'table-field-label': 'Таблица румбов',
   'table-column-operation': 'Операция',
   'crs-code': 'Система координат',
-  'number': 'Номер',
+  number: 'Номер',
   'object-start': 'Начало объекта',
   'change-permission': 'Изменить начальный румб объекта?',
   'coordinates-field-placeholder': '(нет значения)',
@@ -20,9 +20,9 @@ export default {
   'object-types-line': 'Линия',
   'cannot-change-permission': 'Один румб должен быть обязательно выбран в качестве начала объекта.',
   'incorrect-permission': 'Некорректное начало объекта',
-  'placeholderNoValue': '(нет значения)',
-  'NE': 'СВ',
-  'SE': 'ЮВ',
-  'SW': 'ЮЗ',
-  'NW': 'СЗ'
+  placeholderNoValue: '(нет значения)',
+  NE: 'СВ',
+  SE: 'ЮВ',
+  SW: 'ЮЗ',
+  NW: 'СЗ',
 };

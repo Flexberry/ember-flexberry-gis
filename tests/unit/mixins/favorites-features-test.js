@@ -4,74 +4,74 @@ import EmberObject from '@ember/object';
 import FavoriteFeature from 'ember-flexberry-gis/mixins/favorites-features';
 import { module, test } from 'qunit';
 
-let mapApiMixinObject = EmberObject.extend(FavoriteFeature);
+const mapApiMixinObject = EmberObject.extend(FavoriteFeature);
 
-module('Unit | Mixin | favorite-feature mixin', function() {
-  let editedLayerModel = A({ id: 11, crs: {} });
+module('Unit | Mixin | favorite-feature mixin', function () {
+  const editedLayerModel = A({ id: 11, crs: {}, });
 
-  let editedPolygon = L.polygon([[1, 2], [2, 3], [3, 4]]);
+  const editedPolygon = L.polygon([[1, 2], [2, 3], [3, 4]]);
   editedPolygon.feature = editedPolygon.toGeoJSON();
   editedPolygon.feature.layerModel = editedLayerModel;
   editedPolygon.feature.properties.primarykey = 1;
   editedPolygon.feature.properties.prev = true;
 
-  let firstFavoriteFeature = L.polygon([[10, 20], [20, 30], [30, 40]]);
+  const firstFavoriteFeature = L.polygon([[10, 20], [20, 30], [30, 40]]);
   firstFavoriteFeature.feature = firstFavoriteFeature.toGeoJSON();
   firstFavoriteFeature.feature.layerModel = editedLayerModel;
   firstFavoriteFeature.feature.properties.primarykey = 2;
 
-  let secondLayerModel = A({ id: 14, crs: {} });
-  let secondFavoriteFeature = L.polygon([[11, 22], [22, 33], [33, 44]]);
+  const secondLayerModel = A({ id: 14, crs: {}, });
+  const secondFavoriteFeature = L.polygon([[11, 22], [22, 33], [33, 44]]);
   secondFavoriteFeature.feature = secondFavoriteFeature.toGeoJSON();
   secondFavoriteFeature.feature.layerModel = secondLayerModel;
   secondFavoriteFeature.feature.properties.primarykey = 3;
 
-  let thirdFavoriteFeature = L.polygon([[2, 3], [3, 4], [5, 6]]);
+  const thirdFavoriteFeature = L.polygon([[2, 3], [3, 4], [5, 6]]);
   thirdFavoriteFeature.feature = thirdFavoriteFeature.toGeoJSON();
   thirdFavoriteFeature.feature.layerModel = secondLayerModel;
   thirdFavoriteFeature.feature.properties.primarykey = 3;
 
-  let data = {
+  const data = {
     layerModel: {
-      layerModel: editedLayerModel
+      layerModel: editedLayerModel,
     },
-    layers: [editedPolygon]
+    layers: [editedPolygon],
   };
 
-  let favFeatures = [
+  const favFeatures = [
     {
       layerModel: editedLayerModel,
       features: [
         editedPolygon.feature,
         firstFavoriteFeature.feature
-      ]
+      ],
     },
     {
       layerModel: secondLayerModel,
       features: [
         secondFavoriteFeature.feature,
         thirdFavoriteFeature.feature
-      ]
+      ],
     }
   ];
 
   test('test method _updateFavorite with compareEnabled', function (assert) {
     assert.expect(4);
-    let result = null;
+    const result = null;
     editedPolygon.feature.compareEnabled = true;
-    let subject = mapApiMixinObject.create({
+    const subject = mapApiMixinObject.create({
       mapApi: {
         getFromApi() {
           return {
             _getLayerFeatureId() {
               return 1;
-            }
+            },
           };
-        }
+        },
       },
-      result: result,
-      favFeatures: favFeatures,
-      twoObjectToCompare: A([editedPolygon])
+      result,
+      favFeatures,
+      twoObjectToCompare: A([editedPolygon]),
     });
     subject._updateFavorite(data);
     assert.equal(subject.get('result').length, 2);
@@ -83,20 +83,20 @@ module('Unit | Mixin | favorite-feature mixin', function() {
 
   test('test method _updateFavorite with not compareEnabled', function (assert) {
     assert.expect(4);
-    let result = null;
-    let subject = mapApiMixinObject.create({
+    const result = null;
+    const subject = mapApiMixinObject.create({
       mapApi: {
         getFromApi() {
           return {
             _getLayerFeatureId() {
               return 1;
-            }
+            },
           };
-        }
+        },
       },
-      result: result,
-      favFeatures: favFeatures,
-      twoObjectToCompare: A([editedPolygon])
+      result,
+      favFeatures,
+      twoObjectToCompare: A([editedPolygon]),
     });
     subject._updateFavorite(data);
     assert.equal(subject.get('result').length, 2);

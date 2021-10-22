@@ -3,10 +3,10 @@
 */
 
 import DS from 'ember-data';
+import OfflineSerializer from 'ember-flexberry-data/serializers/offline';
 import {
   OfflineSerializer as LayerLinkSerializer
 } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-layer-link-offline';
-import OfflineSerializer from 'ember-flexberry-data/serializers/offline';
 
 /**
   Layer link offline serializer.

@@ -5,9 +5,9 @@ import GraduatedLayerStyle from './layers-styles/graduated';
 import GradientTools from './layers-styles/gradient-tools';
 
 export default {
-  'empty': EmptyLayerStyle,
-  'simple': SimpleLayerStyle,
-  'unique': UniqueLayerStyle,
-  'graduated': GraduatedLayerStyle,
-  'gradient-tools': GradientTools
+  empty: EmptyLayerStyle,
+  simple: SimpleLayerStyle,
+  unique: UniqueLayerStyle,
+  graduated: GraduatedLayerStyle,
+  'gradient-tools': GradientTools,
 };

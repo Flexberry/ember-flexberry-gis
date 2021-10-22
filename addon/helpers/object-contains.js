@@ -23,5 +23,5 @@ export default Helper.extend({
   */
   compute([obj, key]) {
     return obj.hasOwnProperty(key);
-  }
+  },
 });

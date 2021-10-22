@@ -12,10 +12,10 @@
 */
 export function initialize(application, baseURL) {
   // Set up leaflet images path (see index.js file where leaflet is imported into application's vendor.js).
-  L.Measure.imagePath = (baseURL || '/') + 'assets/images';
+  L.Measure.imagePath = `${baseURL || '/'}assets/images`;
 }
 
 export default {
   name: 'leaflet-editable-measures',
-  initialize
+  initialize,
 };

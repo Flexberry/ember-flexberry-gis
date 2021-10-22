@@ -1,19 +1,19 @@
 export default {
-  'buttons': {
-    'save': {
-      'caption': 'Сохранить',
-      'tooltip': 'Сохранить'
+  buttons: {
+    save: {
+      caption: 'Сохранить',
+      tooltip: 'Сохранить',
     },
-    'cancel': {
-      'caption': 'Отмена',
-      'tooltip': 'Отмена'
-    }
+    cancel: {
+      caption: 'Отмена',
+      tooltip: 'Отмена',
+    },
   },
-  'attributes': 'АТРИБУТЫ',
-  'validation': {
+  attributes: 'АТРИБУТЫ',
+  validation: {
     'no-layer': 'Необходимо создать геометрию объекта',
     'data-errors': 'Некорректные данные',
     'field-error': 'Некорректно заполнено поле',
-    'save-fail': 'Произошла ошибка во время сохранения'
-  }
+    'save-fail': 'Произошла ошибка во время сохранения',
+  },
 };

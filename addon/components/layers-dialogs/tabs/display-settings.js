@@ -261,7 +261,7 @@ export default Component.extend({
     @type String
     @default 'en'
   */
-  _defaultLocale: computed(function() {
+  _defaultLocale: computed(function () {
     return this.get('i18n.locale');
   }),
 
@@ -280,29 +280,29 @@ export default Component.extend({
     @method getAllProperties
   */
   getAllProperties() {
-    let _this = this;
-    let leafletObject = _this.get('_leafletObject');
+    const _this = this;
+    const leafletObject = _this.get('_leafletObject');
     if (isNone(leafletObject)) {
-      let type = _this.get('layerType');
-      let leafletObjectMethod = _this.get('leafletObjectMethod');
+      const type = _this.get('layerType');
+      const leafletObjectMethod = _this.get('leafletObjectMethod');
       if (!(isBlank(leafletObjectMethod) || isBlank(type))) {
         _this.set('_leafletObjectIsLoading', true);
-        leafletObjectMethod().then(leafletObject => {
+        leafletObjectMethod().then((leafletObject) => {
           _this.set('_leafletObject', leafletObject);
           _this.set('_leafletObjectIsLoading', false);
-          let layerClass = getOwner(_this).knownForType('layer', type);
+          const layerClass = getOwner(_this).knownForType('layer', type);
           if (!isBlank(layerClass)) {
-            let allProperties = A(layerClass.getLayerProperties(leafletObject));
+            const allProperties = A(layerClass.getLayerProperties(leafletObject));
             _this.set('allProperties', allProperties);
 
-            let value = _this.get('value');
+            const value = _this.get('value');
 
-            let _showableItems = {};
-            allProperties.forEach(function(item, i, allProperties) {
+            const _showableItems = {};
+            allProperties.forEach(function (item, i, allProperties) {
               _showableItems[item] = true;
             });
 
-            for (var item in _showableItems) {
+            for (const item in _showableItems) {
               if (value.featuresPropertiesSettings.excludedProperties.indexOf(item) !== -1) {
                 _showableItems[item] = false;
               }
@@ -325,19 +325,19 @@ export default Component.extend({
   didInsertElement() {
     this.getAllProperties();
 
-    let localesObj = {};
-    let allLocales = get(this, 'i18n.locales');
+    const localesObj = {};
+    const allLocales = get(this, 'i18n.locales');
 
     for (let i = 0; i < allLocales.length; i++) {
-      var key = allLocales[i];
+      const key = allLocales[i];
       localesObj[key] = true;
     }
 
-    let allLocalesObj = Object.keys(localesObj);
+    const allLocalesObj = Object.keys(localesObj);
     this.set('allLocales', allLocalesObj);
 
     if (allLocalesObj.length > 1) {
-      for (var i = 0; i < allLocales.length; i++) {
+      for (let i = 0; i < allLocales.length; i++) {
         if (allLocales[i] !== this.get('_defaultLocale')) {
           set(this, '_selectedLocale', allLocales[i]);
           break;
@@ -366,17 +366,17 @@ export default Component.extend({
       @param {Object} e Click event object.
     */
     showCheckboxDidChange(property, e) {
-      let _showableItems = this.get('_showableItems');
+      const _showableItems = this.get('_showableItems');
       set(this, `_showableItems.${property}`, e.checked);
 
-      let excluded = [];
-      for (var prop in _showableItems) {
+      const excluded = [];
+      for (const prop in _showableItems) {
         if (!_showableItems[prop]) {
           excluded.push(prop);
         }
       }
 
       this.set('value.featuresPropertiesSettings.excludedProperties', excluded);
-    }
-  }
+    },
+  },
 });

@@ -9,7 +9,7 @@ export default BaseVectorLayer.extend({
   leafletOptions: [
     'url',
     'layerName',
-    'style',
+    'style'
   ],
 
   /**
@@ -19,11 +19,11 @@ export default BaseVectorLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer() {
-    let options = this.get('options');
-    let nameLayer = options.layerName;
-    let url = options.url;
-    let vectorGridOptions = {
-      vectorTileLayerStyles: {}
+    const options = this.get('options');
+    const nameLayer = options.layerName;
+    const { url, } = options;
+    const vectorGridOptions = {
+      vectorTileLayerStyles: {},
     };
     vectorGridOptions.vectorTileLayerStyles[nameLayer] = options.style;
     return L.vectorGrid.protobuf(url, vectorGridOptions);

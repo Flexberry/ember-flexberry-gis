@@ -6,7 +6,9 @@ import { inject as service } from '@ember/service';
 
 import { isNone } from '@ember/utils';
 import { isArray } from '@ember/array';
-import { computed, get, observer, set } from '@ember/object';
+import {
+  computed, get, observer, set
+} from '@ember/object';
 import Component from '@ember/component';
 import FlexberryTreenodeComponent from 'ember-flexberry/components/flexberry-treenode';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
@@ -14,9 +16,9 @@ import SlotsMixin from 'ember-block-slots';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DomActionsMixin from 'ember-flexberry/mixins/dom-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
+import { translationMacro as t } from 'ember-i18n';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import layout from '../templates/components/flexberry-maplayers';
-import { translationMacro as t } from 'ember-i18n';
 /**
   Component's CSS-classes names.
   JSON-object containing string constants with CSS-classes names related to component's hbs-markup elements.
@@ -34,7 +36,7 @@ const flexberryClassNamesPrefix = 'flexberry-maplayers';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
-  addButton: flexberryClassNamesPrefix + '-add-button'
+  addButton: `${flexberryClassNamesPrefix}-add-button`,
 };
 
 /**
@@ -114,7 +116,7 @@ const flexberryClassNames = {
   @uses DynamicActionsMixin
   @uses DynamicPropertiesMixin
 */
-let FlexberryMaplayersComponent = Component.extend(
+const FlexberryMaplayersComponent = Component.extend(
   SlotsMixin,
   RequiredActionsMixin,
   DomActionsMixin,
@@ -140,8 +142,8 @@ let FlexberryMaplayersComponent = Component.extend(
       @readonly
       @private
     */
-    _isRoot: computed('parentViewExcludingSlots', function() {
-      let parentView = this.get('parentViewExcludingSlots');
+    _isRoot: computed('parentViewExcludingSlots', function () {
+      const parentView = this.get('parentViewExcludingSlots');
 
       return !(parentView instanceof FlexberryTreenodeComponent);
     }),
@@ -154,12 +156,10 @@ let FlexberryMaplayersComponent = Component.extend(
       @readOnly
       @private
     */
-    _hasLayers: computed('layers.[]', 'layers.@each.isDeleted', function() {
-      let layers = this.get('layers');
+    _hasLayers: computed('layers.[]', 'layers.@each.isDeleted', function () {
+      const layers = this.get('layers');
 
-      return isArray(layers) && layers.filter((layer) => {
-        return !isNone(layer) && get(layer, 'isDeleted') !== true;
-      }).length > 0;
+      return isArray(layers) && layers.filter((layer) => !isNone(layer) && get(layer, 'isDeleted') !== true).length > 0;
     }),
 
     /**
@@ -171,7 +171,7 @@ let FlexberryMaplayersComponent = Component.extend(
       @readOnly
       @private
     */
-    _hasHeader: computed('_slots.[]', '_isRoot', 'readonly', 'showHeader', function() {
+    _hasHeader: computed('_slots.[]', '_isRoot', 'readonly', 'showHeader', function () {
       // Yielded {{block-slot "header"}} is defined and current tree is root.
       return (this._isRegistered('header') || !this.get('readonly')) && this.get('_isRoot') && this.get('showHeader');
     }),
@@ -185,7 +185,7 @@ let FlexberryMaplayersComponent = Component.extend(
       @readOnly
       @private
     */
-    _hasContent: computed('_slots.[]', '_hasLayers', function() {
+    _hasContent: computed('_slots.[]', '_hasLayers', function () {
       // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
       return this._isRegistered('content') || this.get('_hasLayers');
     }),
@@ -199,7 +199,7 @@ let FlexberryMaplayersComponent = Component.extend(
       @readOnly
       @private
     */
-    _hasFooter: computed('_slots.[]', '_isRoot', 'showFooter', function() {
+    _hasFooter: computed('_slots.[]', '_isRoot', 'showFooter', function () {
       // Yielded {{block-slot "header"}} is defined and current tree is root.
       return this._isRegistered('footer') && this.get('_isRoot') && this.get('showFooter');
     }),
@@ -442,12 +442,12 @@ let FlexberryMaplayersComponent = Component.extend(
 
       @method onCompareLayersEnabled
     */
-    onCompareLayersEnabled: observer('compareLayersEnabled', function() {
-      let map = this.get('leafletMap');
+    onCompareLayersEnabled: observer('compareLayersEnabled', function () {
+      const map = this.get('leafletMap');
       if (this.get('compareLayersEnabled')) {
-        let layers = this.get('layers');
-        let layersArray = [];
-        layers.forEach(layer => {
+        const layers = this.get('layers');
+        const layersArray = [];
+        layers.forEach((layer) => {
           if (layer.get('visibility')) {
             layersArray.push(layer);
           }
@@ -458,7 +458,7 @@ let FlexberryMaplayersComponent = Component.extend(
         this.set('currentLayers', layersArray);
         this.get('sideBySide').addTo(map);
       } else {
-        let sbs = this.get('sideBySide');
+        const sbs = this.get('sideBySide');
         if (!isNone(sbs.baseUpdateClip)) {
           sbs.off('dividermove', this.updateClip, this);
           sbs._updateClip = get(sbs, 'baseUpdateClip').bind(this);
@@ -476,22 +476,22 @@ let FlexberryMaplayersComponent = Component.extend(
           }
         });
         sbs.remove();
-        let rightLayer = this.get('rightLayer');
+        const rightLayer = this.get('rightLayer');
         if (!isNone(rightLayer)) {
           rightLayer.set('visibility', false);
           rightLayer.set('side', null);
           this.set('rightLayer', null);
         }
 
-        let leftLayer = this.get('leftLayer');
+        const leftLayer = this.get('leftLayer');
         if (!isNone(leftLayer)) {
           leftLayer.set('visibility', false);
           leftLayer.set('side', null);
           this.set('leftLayer', null);
         }
 
-        let layersToAdd = this.get('currentLayers');
-        layersToAdd.forEach(layer => {
+        const layersToAdd = this.get('currentLayers');
+        layersToAdd.forEach((layer) => {
           set(layer, 'visibility', true);
         });
       }
@@ -518,8 +518,8 @@ let FlexberryMaplayersComponent = Component.extend(
       */
       onAddButtonClick(e) {
         // Create empty layer model.
-        let store = this.get('store');
-        let addDialogLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId() });
+        const store = this.get('store');
+        const addDialogLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId(), });
         this.set('_addDialogLayer', addDialogLayer);
 
         // Include dialog to markup.
@@ -558,7 +558,7 @@ let FlexberryMaplayersComponent = Component.extend(
       */
       onRightClick() {
         this.set('side', 'Right');
-      }
+      },
     },
 
     /**
@@ -575,7 +575,7 @@ let FlexberryMaplayersComponent = Component.extend(
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryMaplayersComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryMaplayersComponent;

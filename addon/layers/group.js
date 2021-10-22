@@ -37,5 +37,5 @@ export default BaseLayer.extend({
   */
   createSettings() {
     return this._super(...arguments);
-  }
+  },
 });

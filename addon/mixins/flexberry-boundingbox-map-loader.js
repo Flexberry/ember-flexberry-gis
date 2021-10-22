@@ -37,19 +37,19 @@ export default Mixin.create({
     @return {Promise} Promise, that returning map model.
   */
   getBoundingBoxComponentMapModel() {
-    let config = getOwner(this).factoryFor('config:environment').class;
-    let mapId = this.get('boundingBoxComponentMapId') || get(config, 'APP.components.flexberryBoundingbox.mapId');
+    const config = getOwner(this).factoryFor('config:environment').class;
+    const mapId = this.get('boundingBoxComponentMapId') || get(config, 'APP.components.flexberryBoundingbox.mapId');
     return new Promise((resolve, reject) => {
-      let osmmap = this.get('mapStore.osmmap');
+      const osmmap = this.get('mapStore.osmmap');
       if (isBlank(mapId)) {
         resolve(osmmap);
       } else {
-        this.get('mapStore').getMapById(mapId).then(record => {
+        this.get('mapStore').getMapById(mapId).then((record) => {
           resolve(record);
         }).catch(() => {
           resolve(osmmap);
         });
       }
     });
-  }
+  },
 });

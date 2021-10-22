@@ -21,5 +21,5 @@ export default Component.extend(DynamicActionsMixin, {
     @type NewPlatformFlexberryGISMapLayerModel
     @default null
   */
-  layer: null
+  layer: null,
 });

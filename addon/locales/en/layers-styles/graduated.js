@@ -1,3 +1,3 @@
 export default {
-  'caption': 'Graduated symbol'
+  caption: 'Graduated symbol',
 };

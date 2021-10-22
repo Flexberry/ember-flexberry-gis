@@ -21,16 +21,16 @@ export default DrawMapTool.extend({
   _enable() {
     this._super(...arguments);
 
-    let editLayer = this.get('_editTools.editLayer');
+    const editLayer = this.get('_editTools.editLayer');
     if (!isNone(editLayer)) {
       editLayer.clearLayers();
     }
 
-    let featuresLayer = this.get('_editTools.featuresLayer');
+    const featuresLayer = this.get('_editTools.featuresLayer');
     if (!isNone(featuresLayer)) {
       featuresLayer.clearLayers();
     }
 
     this.disable();
-  }
+  },
 });

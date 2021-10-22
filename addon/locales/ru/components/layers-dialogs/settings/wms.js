@@ -1,23 +1,23 @@
 export default {
   'info-format-dropdown': {
-    'caption': 'Формат ответов GetFeatureInfo'
+    caption: 'Формат ответов GetFeatureInfo',
   },
   'feature-count-textbox': {
-    'caption': 'Количество объектов в ответе GetFeatureInfo'
+    caption: 'Количество объектов в ответе GetFeatureInfo',
   },
   'url-textbox': {
-    'caption': 'Url'
+    caption: 'Url',
   },
   'version-textbox': {
-    'caption': 'Версия WMS'
+    caption: 'Версия WMS',
   },
   'layers-textbox': {
-    'caption': 'Слои'
+    caption: 'Слои',
   },
   'format-textbox': {
-    'caption': 'Формат изображений'
+    caption: 'Формат изображений',
   },
   'transparent-checkbox': {
-    'caption': 'Разрешить прозрачность на изображениях'
-  }
+    caption: 'Разрешить прозрачность на изображениях',
+  },
 };

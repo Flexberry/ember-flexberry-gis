@@ -26,29 +26,29 @@ import { isBlank, isNone } from '@ember/utils';
 
   ```
 */
-let getLeafletCrs = (coordinateReferenceSystem, context) => {
+const getLeafletCrs = (coordinateReferenceSystem, context) => {
   coordinateReferenceSystem = isBlank(coordinateReferenceSystem) ? null : JSON.parse(coordinateReferenceSystem);
 
   if (isNone(coordinateReferenceSystem)) {
     return null;
   }
 
-  let code = get(coordinateReferenceSystem, 'code');
-  let definition = get(coordinateReferenceSystem, 'definition');
+  const code = get(coordinateReferenceSystem, 'code');
+  const definition = get(coordinateReferenceSystem, 'definition');
   if (isBlank(code) && isBlank(definition)) {
     return null;
   }
 
   let crs = null;
-  let owner = getOwner(context);
+  const owner = getOwner(context);
   if (isBlank(definition)) {
     // Only code is defined.
     // Try to find existing CRS with the same code.
-    let availableCrsCodes = A();
-    let crsFactories = owner.knownForType('coordinate-reference-system');
+    const availableCrsCodes = A();
+    const crsFactories = owner.knownForType('coordinate-reference-system');
     owner.knownNamesForType('coordinate-reference-system').forEach((crsName) => {
-      let crsFactory = get(crsFactories, crsName);
-      let crsFactoryCode = get(crsFactory, 'code');
+      const crsFactory = get(crsFactories, crsName);
+      const crsFactoryCode = get(crsFactory, 'code');
       availableCrsCodes.pushObject(crsFactoryCode);
 
       // CRS code is the same.
@@ -60,12 +60,13 @@ let getLeafletCrs = (coordinateReferenceSystem, context) => {
     });
 
     assert(
-      `Wrong value of \`coordinateReferenceSystem.code\` parameter: \`${code}\`. ` +
-      `Allowed values are: [\`${availableCrsCodes.join(`\`, \``)}\`].`, !isNone(crs));
+      `Wrong value of \`coordinateReferenceSystem.code\` parameter: \`${code}\`. `
+      + `Allowed values are: [\`${availableCrsCodes.join('`, `')}\`].`, !isNone(crs)
+    );
   } else if (!isBlank(definition)) {
     // CRS has definition.
     // Try to create CRS from proj4.
-    let options = get(coordinateReferenceSystem, 'options');
+    const options = get(coordinateReferenceSystem, 'options');
     crs = owner.knownForType('coordinate-reference-system', 'proj4').create(code, definition, options);
   }
 

@@ -1,6 +1,6 @@
-import config from '../config/environment';
 import GisAdapter from 'ember-flexberry-gis/adapters/odata';
 import AdapterMixin from 'ember-flexberry-data/mixins/adapter';
+import config from '../config/environment';
 
 /**
   Application adapter.
@@ -17,5 +17,5 @@ export default GisAdapter.extend(AdapterMixin, {
     @type String
     @default config.APP.backendUrls.api
   */
-  host: config.APP.backendUrls.api
+  host: config.APP.backendUrls.api,
 });

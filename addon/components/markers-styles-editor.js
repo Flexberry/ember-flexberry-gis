@@ -68,15 +68,13 @@ export default Component.extend({
     @type String[]
     @readonly
   */
-  _availableMarkerStylesCaptions: computed('_availableMarkerStyles', 'i18n.locale', function() {
-    let availableMarkerStyles = this.get('_availableMarkerStyles');
+  _availableMarkerStylesCaptions: computed('_availableMarkerStyles', 'i18n.locale', function () {
+    const availableMarkerStyles = this.get('_availableMarkerStyles');
 
-    let markerStylesCaptions = A();
+    const markerStylesCaptions = A();
     if (isArray(availableMarkerStyles) && availableMarkerStyles.length > 0) {
-      let i18n = this.get('i18n');
-      markerStylesCaptions.pushObjects(availableMarkerStyles.map((markerStyle) => {
-        return i18n.t(`markers-styles.${markerStyle}.caption`);
-      }));
+      const i18n = this.get('i18n');
+      markerStylesCaptions.pushObjects(availableMarkerStyles.map((markerStyle) => i18n.t(`markers-styles.${markerStyle}.caption`)));
     }
 
     return markerStylesCaptions;
@@ -101,15 +99,13 @@ export default Component.extend({
   _availableMarkerStylesCaptionsOrSelectedMarkerStyleDidChange: observer(
     '_availableMarkerStylesCaptions.[]',
     'styleSettings.type',
-    function() {
-      let availableMarkerStyles = this.get('_availableMarkerStyles');
-      let selectedMarkerStyle = this.get('styleSettings.type');
-      let selectedMarkerStyleIndex = availableMarkerStyles.findIndex((markerStyle) => {
-        return selectedMarkerStyle === markerStyle;
-      });
+    function () {
+      const availableMarkerStyles = this.get('_availableMarkerStyles');
+      const selectedMarkerStyle = this.get('styleSettings.type');
+      const selectedMarkerStyleIndex = availableMarkerStyles.findIndex((markerStyle) => selectedMarkerStyle === markerStyle);
 
       if (selectedMarkerStyleIndex >= 0) {
-        let markerStylesCaptions = this.get('_availableMarkerStylesCaptions');
+        const markerStylesCaptions = this.get('_availableMarkerStylesCaptions');
         this.set('_selectedMarkerStyleCaption', markerStylesCaptions.objectAt(selectedMarkerStyleIndex));
       }
     }
@@ -132,21 +128,19 @@ export default Component.extend({
     @private
   */
   _setSelectedMarkerStyle() {
-    let availableMarkerStyles = this.get('_availableMarkerStyles');
-    let availableMarkerStylesCaptions = this.get('_availableMarkerStylesCaptions');
-    let selectedMarkerStyleCaption = this.get('_selectedMarkerStyleCaption');
+    const availableMarkerStyles = this.get('_availableMarkerStyles');
+    const availableMarkerStylesCaptions = this.get('_availableMarkerStylesCaptions');
+    const selectedMarkerStyleCaption = this.get('_selectedMarkerStyleCaption');
 
     if (!isArray(availableMarkerStyles) || !isArray(availableMarkerStylesCaptions) || isBlank(selectedMarkerStyleCaption)) {
       return null;
     }
 
-    let selectedMarkerStyleIndex = availableMarkerStylesCaptions.findIndex((markerStylesCaption) => {
-      return markerStylesCaption.toString() === selectedMarkerStyleCaption.toString();
-    });
+    const selectedMarkerStyleIndex = availableMarkerStylesCaptions.findIndex((markerStylesCaption) => markerStylesCaption.toString() === selectedMarkerStyleCaption.toString());
 
-    let selectedMarkerStyle = selectedMarkerStyleIndex > -1 ?
-      availableMarkerStyles.objectAt(selectedMarkerStyleIndex) :
-      null;
+    const selectedMarkerStyle = selectedMarkerStyleIndex > -1
+      ? availableMarkerStyles.objectAt(selectedMarkerStyleIndex)
+      : null;
 
     this.set('styleSettings.type', selectedMarkerStyle);
   },
@@ -157,7 +151,7 @@ export default Component.extend({
     @method _selectedMarkerStyleDidChange
     @private
   */
-  _selectedMarkerStyleDidChange: observer('styleSettings.type', function() {
+  _selectedMarkerStyleDidChange: observer('styleSettings.type', function () {
     once(this, '_setSelectedMarkerStyleDefaultSettings');
   }),
 
@@ -177,8 +171,8 @@ export default Component.extend({
     @private
   */
   _setSelectedMarkerStyleDefaultSettings() {
-    let previouslySelectedMarkerStyle = this.get('_previouslySelectedMarkerStyle');
-    let selectedMarkerStyle = this.get('styleSettings.type');
+    const previouslySelectedMarkerStyle = this.get('_previouslySelectedMarkerStyle');
+    const selectedMarkerStyle = this.get('styleSettings.type');
     if (isBlank(selectedMarkerStyle) || previouslySelectedMarkerStyle === selectedMarkerStyle) {
       return;
     }
@@ -209,6 +203,6 @@ export default Component.extend({
     */
     onStyleSettingsChange() {
       this.sendAction('change', this.get('styleSettings'));
-    }
-  }
+    },
+  },
 });

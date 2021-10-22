@@ -1,12 +1,12 @@
 export default {
-  'caption': 'Layer coordinate reference system (CRS)',
+  caption: 'Layer coordinate reference system (CRS)',
   'name-textbox': {
-    'caption': 'Projection name'
+    caption: 'Projection name',
   },
   'code-textbox': {
-    'caption': 'Code'
+    caption: 'Code',
   },
   'definition-textarea': {
-    'caption': 'Definition'
-  }
+    caption: 'Definition',
+  },
 };

@@ -1,3 +1,3 @@
 export default {
-  caption: 'Layers metadata'
+  caption: 'Layers metadata',
 };

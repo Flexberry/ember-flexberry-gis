@@ -1,9 +1,9 @@
 import { isNone } from '@ember/utils';
 import Service, { inject as service } from '@ember/service';
-import epsg3857 from '../coordinate-reference-systems/epsg-3857';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
 import QueryBuilder from 'ember-flexberry-data/query/builder';
+import epsg3857 from '../coordinate-reference-systems/epsg-3857';
 
 /**
   Service for interact with maps
@@ -53,26 +53,26 @@ export default Service.extend({
    @method setupCustomMaps
    */
   setupCustomMaps() {
-    let store = this.get('store');
-    let crs = JSON.stringify(epsg3857);
-    let mapModel = store.createRecord(this.get('_mapModelName'), {
+    const store = this.get('store');
+    const crs = JSON.stringify(epsg3857);
+    const mapModel = store.createRecord(this.get('_mapModelName'), {
       id: generateUniqueId(),
       name: 'OSM',
       lat: 0,
       lng: 0,
       zoom: 0,
       public: true,
-      coordinateReferenceSystem: crs
+      coordinateReferenceSystem: crs,
     });
 
-    let openStreetMapLayer = store.createRecord(this.get('_layerModelname'), {
+    const openStreetMapLayer = store.createRecord(this.get('_layerModelname'), {
       id: generateUniqueId(),
       name: 'OSM',
       type: 'osm',
       visibility: true,
       index: 0,
       coordinateReferenceSystem: crs,
-      opacity: 1
+      opacity: 1,
     });
 
     mapModel.get('mapLayer').pushObject(openStreetMapLayer);
@@ -88,11 +88,11 @@ export default Service.extend({
    */
   getMapById(mapId, modelProjName) {
     modelProjName = isNone(modelProjName) ? this.get('_defaultModelProjName') : modelProjName;
-    let store = this.get('store');
-    let builder = new QueryBuilder(store)
+    const store = this.get('store');
+    const builder = new QueryBuilder(store)
       .from(this.get('_mapModelName'))
       .selectByProjection(modelProjName)
       .byId(mapId);
     return store.queryRecord(this.get('_mapModelName'), builder.build());
-  }
+  },
 });

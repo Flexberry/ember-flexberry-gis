@@ -26,7 +26,7 @@ export default Mixin.create({
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     */
     selectFeature(feature) {
-      let leafletMap = this.get('leafletMap');
+      const leafletMap = this.get('leafletMap');
       if (isNone(leafletMap)) {
         return;
       }
@@ -37,7 +37,7 @@ export default Mixin.create({
         this.set('serviceLayer', serviceLayer);
       }
 
-      let selectedFeature = this.get('_selectedFeature');
+      const selectedFeature = this.get('_selectedFeature');
       if (selectedFeature !== feature) {
         serviceLayer.clearLayers();
 
@@ -60,7 +60,7 @@ export default Mixin.create({
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     */
     zoomTo(feature) {
-      let leafletMap = this.get('leafletMap');
+      const leafletMap = this.get('leafletMap');
       if (isNone(leafletMap)) {
         return;
       }
@@ -68,17 +68,17 @@ export default Mixin.create({
       this.send('selectFeature', feature);
 
       let bounds;
-      let serviceLayer = this.get('serviceLayer');
+      const serviceLayer = this.get('serviceLayer');
       if (typeof (serviceLayer.getBounds) === 'function') {
         bounds = serviceLayer.getBounds();
       } else {
-        let featureGroup = L.featureGroup(serviceLayer.getLayers());
+        const featureGroup = L.featureGroup(serviceLayer.getLayers());
         bounds = featureGroup.getBounds();
       }
 
       if (!isNone(bounds)) {
-        let minZoom = isArray(feature) ? get(feature[0], 'leafletLayer.minZoom') : get(feature, 'leafletLayer.minZoom');
-        let maxZoom = isArray(feature) ? get(feature[0], 'leafletLayer.maxZoom') : get(feature, 'leafletLayer.maxZoom');
+        const minZoom = isArray(feature) ? get(feature[0], 'leafletLayer.minZoom') : get(feature, 'leafletLayer.minZoom');
+        const maxZoom = isArray(feature) ? get(feature[0], 'leafletLayer.maxZoom') : get(feature, 'leafletLayer.maxZoom');
         zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
       }
     },
@@ -89,7 +89,7 @@ export default Mixin.create({
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     */
     panTo(feature) {
-      let leafletMap = this.get('leafletMap');
+      const leafletMap = this.get('leafletMap');
       if (isNone(leafletMap)) {
         return;
       }
@@ -111,13 +111,13 @@ export default Mixin.create({
       @method actions.clearSelected
     */
     clearSelected() {
-      let serviceLayer = this.get('serviceLayer');
+      const serviceLayer = this.get('serviceLayer');
       if (!isNone(serviceLayer)) {
         serviceLayer.clearLayers();
       }
 
       this.set('_selectedFeature', null);
-    }
+    },
   },
 
   /**
@@ -128,7 +128,7 @@ export default Mixin.create({
     @private
   */
   _selectFeature(feature) {
-    let serviceLayer = this.get('serviceLayer');
+    const serviceLayer = this.get('serviceLayer');
     if (!isNone(feature)) {
       serviceLayer.addLayer(this._prepareLayer(feature.leafletLayer));
     }

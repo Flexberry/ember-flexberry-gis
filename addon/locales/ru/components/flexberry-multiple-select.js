@@ -1,3 +1,3 @@
 export default {
-  'add': 'Добавить <b>{term}</b>'
+  add: 'Добавить <b>{term}</b>',
 };

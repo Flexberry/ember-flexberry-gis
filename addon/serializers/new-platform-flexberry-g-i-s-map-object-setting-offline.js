@@ -3,10 +3,10 @@
 */
 
 import DS from 'ember-data';
+import OfflineSerializer from 'ember-flexberry-data/serializers/offline';
 import {
   OfflineSerializer as MapObjectSettingSerializer
 } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-map-object-setting-offline';
-import OfflineSerializer from 'ember-flexberry-data/serializers/offline';
 
 /**
   Map object setting offline serializer.

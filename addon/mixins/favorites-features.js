@@ -9,9 +9,9 @@ import { isNone, isBlank, isEmpty } from '@ember/utils';
 import { observer, get, set } from '@ember/object';
 import { A } from '@ember/array';
 import Mixin from '@ember/object/mixin';
-import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import { translationMacro as t } from 'ember-i18n';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
+import LeafletZoomToFeatureMixin from './leaflet-zoom-to-feature';
 
 export default Mixin.create(LeafletZoomToFeatureMixin, {
 
@@ -88,7 +88,7 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
     @readonly
   */
   _onLeafletMapDidChange: observer('leafletMap', function () {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
       leafletMap.on('flexberry-map:allLayersLoaded', this.fromIdArrayToFeatureArray, this);
       leafletMap.on('flexberry-map:updateFavorite', this._updateFavorite, this);
@@ -97,10 +97,9 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
 
   willDestroyElement() {
     this._super(...arguments);
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     leafletMap.off('flexberry-map:allLayersLoaded', this.fromIdArrayToFeatureArray, this);
     leafletMap.off('flexberry-map:updateFavorite', this._updateFavorite, this);
-
   },
 
   /**
@@ -119,13 +118,13 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
       @param feature
     */
     addToFavorite(feature) {
-      let store = this.get('store');
+      const store = this.get('store');
       let favFeatures = this.get('favFeatures');
-      let layerModelIndex = this.isLayerModelInArray(favFeatures, feature.layerModel);
+      const layerModelIndex = this.isLayerModelInArray(favFeatures, feature.layerModel);
       if (get(feature.properties, 'isFavorite')) {
         if (layerModelIndex !== false) {
           favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
-          let record = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
+          const record = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
             .filterBy('objectKey', feature.properties.primarykey)
             .filterBy('objectLayerKey', feature.layerModel.id);
           record[0].deleteRecord();
@@ -136,30 +135,30 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
 
         if (get(feature, 'compareEnabled')) {
           set(feature, 'compareEnabled', false);
-          let twoObjects = this.get('twoObjectToCompare');
+          const twoObjects = this.get('twoObjectToCompare');
           twoObjects.removeObject(feature);
         }
       } else {
         set(feature.properties, 'isFavorite', true);
         if (layerModelIndex !== false) {
           favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);
-          let newRecord = { id: generateUniqueId(), objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
-          let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', newRecord);
+          const newRecord = { id: generateUniqueId(), objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id, };
+          const record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', newRecord);
           record.save();
         } else {
           favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature.layerModel, feature);
-          let newRecord = { id: generateUniqueId(), objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
-          let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', newRecord);
+          const newRecord = { id: generateUniqueId(), objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id, };
+          const record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', newRecord);
           record.save();
         }
       }
 
-      let layerModelPromise = A();
-      favFeatures.forEach(object => {
-        let promise = new Promise((resolve) => {
+      const layerModelPromise = A();
+      favFeatures.forEach((object) => {
+        const promise = new Promise((resolve) => {
           resolve(object.features);
         });
-        layerModelPromise.addObject({ layerModel: object.layerModel, features: promise });
+        layerModelPromise.addObject({ layerModel: object.layerModel, features: promise, });
       });
       this.set('result', layerModelPromise);
     },
@@ -171,7 +170,7 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
       @param feature
     */
     addToCompareGeometries(feature) {
-      let twoObjects = this.get('twoObjectToCompare');
+      const twoObjects = this.get('twoObjectToCompare');
       if (get(feature, 'compareEnabled')) {
         set(feature, 'compareEnabled', false);
         twoObjects.removeObject(feature);
@@ -179,7 +178,7 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
         set(feature, 'compareEnabled', true);
         twoObjects.pushObject(feature);
         if (twoObjects.length > 2) {
-          let secondFeature = twoObjects[1];
+          const secondFeature = twoObjects[1];
           twoObjects.removeObject(secondFeature);
           set(secondFeature, 'compareEnabled', false);
         }
@@ -192,7 +191,7 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
       @method OnCompareTwoGeometries
     */
     OnCompareTwoGeometries() {
-      let twoObjects = this.get('twoObjectToCompare');
+      const twoObjects = this.get('twoObjectToCompare');
       if (twoObjects.length !== 2) {
         alert(this.get('selectTwo'));
       } else {
@@ -207,7 +206,7 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
     */
     closeComparePanel() {
       this.set('showComapreGeometriesPanel', false);
-    }
+    },
   },
 
   /**
@@ -232,7 +231,7 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
     @method addNewFeatureToLayerModel
   */
   addNewFeatureToLayerModel(array, index, feature) {
-    let features = array[index].features;
+    const { features, } = array[index];
     features.push(feature);
     return array;
   },
@@ -243,9 +242,9 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
     @method addNewFeatureToNewLayerModel
   */
   addNewFeatureToNewLayerModel(array, layerModel, feature) {
-    let featureArray = A();
+    const featureArray = A();
     featureArray.addObject(feature);
-    array.addObject({ layerModel: layerModel, features: featureArray });
+    array.addObject({ layerModel, features: featureArray, });
     return array;
   },
 
@@ -255,8 +254,8 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
     @method removeFeatureFromLayerModel
   */
   removeFeatureFromLayerModel(array, index, feature) {
-    let features = array[index].features;
-    let featureToDelete = features.findBy('properties.primarykey', feature.properties.primarykey);
+    const { features, } = array[index];
+    const featureToDelete = features.findBy('properties.primarykey', feature.properties.primarykey);
     features.removeObject(featureToDelete);
     if (features.length === 0) {
       array.removeAt(index);
@@ -271,28 +270,28 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
     @method fromIdArrayToFeatureArray
   */
   fromIdArrayToFeatureArray() {
-    let store = this.get('store');
-    let idFeaturesArray = store.findAll('i-i-s-r-g-i-s-p-k-favorite-features');
+    const store = this.get('store');
+    const idFeaturesArray = store.findAll('i-i-s-r-g-i-s-p-k-favorite-features');
     idFeaturesArray.then((favorites) => {
-      let favFeaturesArray = A();
-      favorites.forEach(layer => {
-        let id = this.isLayerModelInArray(favFeaturesArray, { id: layer.get('objectLayerKey') });
+      const favFeaturesArray = A();
+      favorites.forEach((layer) => {
+        const id = this.isLayerModelInArray(favFeaturesArray, { id: layer.get('objectLayerKey'), });
         if (id !== false) {
           favFeaturesArray[id].features.push(layer.get('objectKey'));
         } else {
-          favFeaturesArray.addObject({ layerModel: { id: layer.get('objectLayerKey') }, features: [layer.get('objectKey')] });
+          favFeaturesArray.addObject({ layerModel: { id: layer.get('objectLayerKey'), }, features: [layer.get('objectKey')], });
         }
       });
 
       let promises = [];
       favFeaturesArray.forEach((item) => {
-        let featurePromises = this.get('mapApi').getFromApi('mapModel').loadingFeaturesByPackages(item.layerModel.id, item.features);
+        const featurePromises = this.get('mapApi').getFromApi('mapModel').loadingFeaturesByPackages(item.layerModel.id, item.features);
         promises = promises.concat(featurePromises);
       });
       if (!isBlank(promises)) {
         allSettled(promises).then((res) => {
-          let favFeatures = A();
-          let result = A();
+          const favFeatures = A();
+          const result = A();
           res.forEach((promiseResult) => {
             if (promiseResult.state !== 'rejected') {
               let favorites = A();
@@ -301,7 +300,7 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
                 favorites.push(layerObject.feature);
               });
               let promiseFeature = null;
-              let layerModelIndex = this.isLayerModelInArray(result, promiseResult.value[0]);
+              const layerModelIndex = this.isLayerModelInArray(result, promiseResult.value[0]);
               if (layerModelIndex !== false) {
                 favorites = favorites.concat(favorites, favFeatures[layerModelIndex].features);
                 promiseFeature = new Promise((resolve) => {
@@ -313,8 +312,8 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
                 promiseFeature = new Promise((resolve) => {
                   resolve(favorites);
                 });
-                result.addObject({ layerModel: promiseResult.value[0], features: promiseFeature });
-                favFeatures.addObject({ layerModel: promiseResult.value[0], features: favorites });
+                result.addObject({ layerModel: promiseResult.value[0], features: promiseFeature, });
+                favFeatures.addObject({ layerModel: promiseResult.value[0], features: favorites, });
               }
             }
           });
@@ -335,16 +334,16 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
    * @param {Object} data This parameter contain layerModel and layer (object) which the was edited.
    */
   _updateFavorite(data) {
-    let result = A();
-    let favFeatures = A();
-    let twoObjects = this.get('twoObjectToCompare');
-    let updatedLayer = data.layers[0];
-    let idUpdatedFavorite = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(data.layerModel.layerModel, data.layers[0]);
+    const result = A();
+    const favFeatures = A();
+    const twoObjects = this.get('twoObjectToCompare');
+    const updatedLayer = data.layers[0];
+    const idUpdatedFavorite = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(data.layerModel.layerModel, data.layers[0]);
     this.get('favFeatures').forEach((favoriteObject) => {
       let favorites = A();
       if (favoriteObject.layerModel.id === data.layerModel.layerModel.id) {
         favoriteObject.features.forEach((feature) => {
-          let id = feature.properties.primarykey;
+          const id = feature.properties.primarykey;
           if (idUpdatedFavorite === id) {
             updatedLayer.feature.layerModel = data.layerModel.layerModel;
             set(updatedLayer.feature.properties, 'isFavorite', true);
@@ -362,14 +361,14 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
           }
         });
 
-        let promiseFeature = new Promise((resolve) => {
+        const promiseFeature = new Promise((resolve) => {
           resolve(favorites);
         });
-        result.addObject({ layerModel: favoriteObject.layerModel, features: promiseFeature });
-        favFeatures.addObject({ layerModel: favoriteObject.layerModel, features: favorites });
+        result.addObject({ layerModel: favoriteObject.layerModel, features: promiseFeature, });
+        favFeatures.addObject({ layerModel: favoriteObject.layerModel, features: favorites, });
       } else {
         let promiseFeature = null;
-        let layerModelIndex = this.isLayerModelInArray(result, favoriteObject.layerModel);
+        const layerModelIndex = this.isLayerModelInArray(result, favoriteObject.layerModel);
         if (layerModelIndex !== false) {
           favorites = favorites.concat(favorites, favoriteObject.features);
           promiseFeature = new Promise((resolve) => {
@@ -382,12 +381,12 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
           promiseFeature = new Promise((resolve) => {
             resolve(favorites);
           });
-          result.addObject({ layerModel: favoriteObject.layerModel, features: promiseFeature });
-          favFeatures.addObject({ layerModel: favoriteObject.layerModel, features: favorites });
+          result.addObject({ layerModel: favoriteObject.layerModel, features: promiseFeature, });
+          favFeatures.addObject({ layerModel: favoriteObject.layerModel, features: favorites, });
         }
       }
     });
     this.set('result', result);
     this.set('favFeatures', favFeatures);
-  }
+  },
 });

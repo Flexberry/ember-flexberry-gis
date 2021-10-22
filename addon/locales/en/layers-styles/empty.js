@@ -1,3 +1,3 @@
 export default {
-  'caption': 'No symbol'
+  caption: 'No symbol',
 };

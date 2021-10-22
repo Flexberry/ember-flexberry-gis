@@ -1,10 +1,10 @@
 import { instanceOf } from 'dummy/helpers/instance-of';
 import { module, test } from 'qunit';
 
-module('Unit | Helper | instance of', function() {
-  test('it works', function(assert) {
+module('Unit | Helper | instance of', function () {
+  test('it works', function (assert) {
     assert.expect(2);
-    let obj = L.layerGroup();
+    const obj = L.layerGroup();
     let constructor = L.LayerGroup;
     let result = instanceOf([obj, constructor]);
     assert.ok(result);

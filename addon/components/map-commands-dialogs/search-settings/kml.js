@@ -70,5 +70,5 @@ export default Component.extend({
     @type Object
     @default null
    */
-  searchProperties: null
+  searchProperties: null,
 });

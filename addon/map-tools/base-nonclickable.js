@@ -30,7 +30,7 @@ export default BaseMapTool.extend({
   _enable() {
     this._super(...arguments);
 
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
 
     // disable zoom on double click while tool is enabled
     if (leafletMap) {
@@ -48,7 +48,7 @@ export default BaseMapTool.extend({
     this._super(...arguments);
 
     // enable zoom on double click while tool is disabled
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (leafletMap) {
       /*
         delayed activation because editable:drawing:end response is too late
@@ -56,5 +56,5 @@ export default BaseMapTool.extend({
       */
       later(() => leafletMap.doubleClickZoom.enable(), 200);
     }
-  }
+  },
 });

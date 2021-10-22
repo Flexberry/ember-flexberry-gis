@@ -56,11 +56,11 @@ export default Service.extend({
     @returns Object[] collection
   */
   getFromStorage(className, key) {
-    let collection = A();
+    const collection = A();
 
     if (this.get('available')) {
       try {
-        let inStore = A(JSON.parse(localStorage.getItem(`${className}_${key}`)));
+        const inStore = A(JSON.parse(localStorage.getItem(`${className}_${key}`)));
 
         if (!isBlank(inStore)) {
           inStore.forEach((element) => {
@@ -108,5 +108,5 @@ export default Service.extend({
     if (this.get('available')) {
       localStorage.setItem(`${className}_${key}`, JSON.stringify(value));
     }
-  }
+  },
 });

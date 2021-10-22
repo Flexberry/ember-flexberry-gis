@@ -47,25 +47,24 @@ export default Mixin.create({
    */
   _addObservers() {
     this._observers = {};
-    let properties = this.get('leafletProperties') || [];
-    properties.forEach(propExp => {
-
+    const properties = this.get('leafletProperties') || [];
+    properties.forEach((propExp) => {
       let [property, leafletProperty, ...params] = propExp.split(':');
 
-      if (!leafletProperty) { leafletProperty = 'set' + classify(property); }
+      if (!leafletProperty) { leafletProperty = `set${classify(property)}`; }
 
-      let objectProperty = property.replace(/\.\[]/, ''); //allow usage of .[] to observe array changes
+      const objectProperty = property.replace(/\.\[]/, ''); // allow usage of .[] to observe array changes
 
       this._observers[property] = () => {
         once(() => {
-          let leafletObject = this.get('_leafletObject');
+          const leafletObject = this.get('_leafletObject');
           if (isNone(leafletObject)) {
             return;
           }
 
-          let value = this.get(objectProperty);
-          assert(this.constructor + ' must have a ' + leafletProperty + ' function.', !!leafletObject[leafletProperty]);
-          let propertyParams = params.map(p => this.get(p));
+          const value = this.get(objectProperty);
+          assert(`${this.constructor} must have a ${leafletProperty} function.`, !!leafletObject[leafletProperty]);
+          const propertyParams = params.map((p) => this.get(p));
           leafletObject[leafletProperty].call(leafletObject, value, ...propertyParams);
         });
       };
@@ -80,10 +79,9 @@ export default Mixin.create({
    */
   _removeObservers() {
     if (this._observers) {
-      let properties = this.get('leafletProperties') || [];
-      properties.forEach(propExp => {
-
-        let [property] = propExp.split(':');
+      const properties = this.get('leafletProperties') || [];
+      properties.forEach((propExp) => {
+        const [property] = propExp.split(':');
 
         this.removeObserver(property, this, this._observers[property]);
         delete this._observers[property];
@@ -99,5 +97,5 @@ export default Mixin.create({
   willDestroyElement() {
     this._super(...arguments);
     this._removeObservers();
-  }
+  },
 });

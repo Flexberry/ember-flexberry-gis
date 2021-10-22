@@ -3,8 +3,8 @@
 */
 
 import Component from '@ember/component';
-import layout from '../../templates/components/map-commands/search';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../templates/components/map-commands/search';
 
 /**
   Component's CSS-classes names.
@@ -25,7 +25,7 @@ const flexberryClassNames = {
   wrapper: flexberryClassNamesPrefix,
   searchAttributes: 'flexberry-search-attributes-map-command',
   searchClear: 'flexberry-search-clear-map-command',
-  searchDialog: flexberryClassNamesPrefix + '-dialog'
+  searchDialog: `${flexberryClassNamesPrefix}-dialog`,
 };
 
 /**
@@ -44,7 +44,7 @@ const flexberryClassNames = {
   @class SearchMapCommandComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let SearchMapCommandComponent = Component.extend({
+const SearchMapCommandComponent = Component.extend({
   features: null,
   /**
     Additional properties for 'search' map-commands.
@@ -265,10 +265,10 @@ let SearchMapCommandComponent = Component.extend({
       @param {Object} e Base map-command's 'execute' action event-object.
     */
     onMapCommandButtonClearClick(e) {
-      let leafletMap = this.get('leafletMap');
-      let mapCommandName = 'search-clear';
-      let mapCommandProperties = this.get('_searchCommandProperties');
-      let mapCommandExecutionOptions = e;
+      const leafletMap = this.get('leafletMap');
+      const mapCommandName = 'search-clear';
+      const mapCommandProperties = this.get('_searchCommandProperties');
+      const mapCommandExecutionOptions = e;
 
       leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions);
     },
@@ -282,12 +282,12 @@ let SearchMapCommandComponent = Component.extend({
     */
     onSearchDialogApprove(e) {
       e.closeDialog = false;
-      let leafletMap = this.get('leafletMap');
-      let mapCommandName = 'search-attributes';
-      let mapCommandProperties = this.get('_searchCommandProperties');
+      const leafletMap = this.get('leafletMap');
+      const mapCommandName = 'search-attributes';
+      const mapCommandProperties = this.get('_searchCommandProperties');
       this.set('_searchIsInProgress', true);
-      leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, e).then(res=> {
-        res[0].features.then(result=> {
+      leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, e).then((res) => {
+        res[0].features.then((result) => {
           this.set('_foundedFeatures', result);
           this.set('_searchIsInProgress', false);
         });
@@ -301,12 +301,12 @@ let SearchMapCommandComponent = Component.extend({
       @param {Object} e Action's event object.
     */
     onSearchDialogShowFoundedFeatures(e) {
-      let leafletMap = this.get('leafletMap');
-      let mapCommandName = 'search-show';
-      let mapCommandProperties = this.get('_searchCommandProperties');
-      let mapCommandExecutionOptions = e;
+      const leafletMap = this.get('leafletMap');
+      const mapCommandName = 'search-show';
+      const mapCommandProperties = this.get('_searchCommandProperties');
+      const mapCommandExecutionOptions = e;
       this.set('features', leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions));
-    }
+    },
   },
 
   /**
@@ -341,7 +341,7 @@ let SearchMapCommandComponent = Component.extend({
     this._super(...arguments);
 
     this.set('_searchCommandProperties', {
-      featuresLayer: new L.FeatureGroup()
+      featuresLayer: new L.FeatureGroup(),
     });
   },
 
@@ -363,7 +363,7 @@ let SearchMapCommandComponent = Component.extend({
     this.get('_searchCommandProperties', null);
     this.set('_searchAttributesExecuteActionEventObject', null);
     this.set('_searchShowExecuteActionEventObject', null);
-  }
+  },
 
   /**
     Component's action invoking when map-command must be executed.
@@ -377,7 +377,7 @@ let SearchMapCommandComponent = Component.extend({
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 SearchMapCommandComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default SearchMapCommandComponent;

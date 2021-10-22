@@ -11,8 +11,8 @@ import { on } from '@ember/object/evented';
 import { guidFor } from '@ember/object/internals';
 import { isNone, isEqual, isBlank } from '@ember/utils';
 import Component from '@ember/component';
-import layout from '../../templates/components/geometry-add-modes/geoprovider';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../templates/components/geometry-add-modes/geoprovider';
 
 /**
   Component's CSS-classes names.
@@ -32,11 +32,11 @@ const flexberryClassNamesPrefix = 'flexberry-geometry-add-mode-geoprovider';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
-  dialog: flexberryClassNamesPrefix + '-dialog',
-  form: flexberryClassNamesPrefix + '-form'
+  dialog: `${flexberryClassNamesPrefix}-dialog`,
+  form: `${flexberryClassNamesPrefix}-form`,
 };
 
-let FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
+const FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
   /**
     Reference to component's template.
   */
@@ -160,14 +160,14 @@ let FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
       Handles search button click.
     */
     onSearchClick() {
-      let options = { skip: 0, top: 5 };
+      const options = { skip: 0, top: 5, };
       this._doSearch(options);
     },
 
     /**
       Handles row selection in query results table.
     */
-    onRowSelect(rowId, { checked }) {
+    onRowSelect(rowId, { checked, }) {
       // TODO set _selectedGeoObject
       if (checked) {
         this.set('_selectedRow', rowId);
@@ -187,20 +187,20 @@ let FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
     },
 
     apply() {
-      let _selectedRow = this.get('_selectedRow');
+      const _selectedRow = this.get('_selectedRow');
 
       if (isNone(_selectedRow)) {
-        let errors = this.get('_parsingErrors');
+        const errors = this.get('_parsingErrors');
         errors.results = true;
         this.set('_parsingErrors', errors);
 
         return;
       }
 
-      let geoObject = this.get('_queryResults').find((row) => { return isEqual(_selectedRow, guidFor(row)); });
+      const geoObject = this.get('_queryResults').find((row) => isEqual(_selectedRow, guidFor(row)));
 
       if (isNone(geoObject)) {
-        let errors = this.get('_parsingErrors');
+        const errors = this.get('_parsingErrors');
         errors.results = true;
         this.set('_parsingErrors', errors);
 
@@ -212,7 +212,7 @@ let FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
         return;
       }
 
-      let layer = this.get('layer');
+      const layer = this.get('layer');
       if (!isNone(layer)) {
         layer.setLatLng(addedLayer.getLatLng());
 
@@ -226,7 +226,7 @@ let FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
 
       this._cleanUpForm();
       this.sendAction('updateLayer', addedLayer, true);
-    }
+    },
   },
 
   /**
@@ -249,31 +249,30 @@ let FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
   _doSearch(options) {
     this.set('_selectedRow', null);
 
-    let parsedData = this.parseData();
+    const parsedData = this.parseData();
     if (isNone(parsedData)) {
       this.set('_queryResults', null);
       this.set('_queryResultsTotalCount', 0);
       return;
     }
 
-    let providerName = parsedData.provider;
+    const providerName = parsedData.provider;
     if (isNone(this.get(`_availableProviders.${providerName}`))) {
       return;
     }
 
     this.set('_loading', true);
-    let provider = this.get(`_availableProviders.${providerName}`);
+    const provider = this.get(`_availableProviders.${providerName}`);
 
-    let searchOptions = $.extend(options, { query: parsedData.address });
+    const searchOptions = $.extend(options, { query: parsedData.address, });
     provider.executeGeocoding(searchOptions).then((result) => {
       if (isBlank(result)) {
-        this.set('_parsingErrors', { address: true });
+        this.set('_parsingErrors', { address: true, });
         return;
       }
 
       this.set('_queryResults', result.data);
       this.set('_queryResultsTotalCount', result.total);
-
     }).catch(() => {
       console.error(arguments);
     }).finally(() => {
@@ -295,10 +294,10 @@ let FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
     Initialize available geoproviders.
   */
   initProviders() {
-    let availableProviderNames = getOwner(this).knownNamesForType('geo-provider');
+    const availableProviderNames = getOwner(this).knownNamesForType('geo-provider');
     if (isArray(availableProviderNames)) {
-      let providers = {};
-      let providerNames = [];
+      const providers = {};
+      const providerNames = [];
       availableProviderNames.forEach((name) => {
         if (!isEqual(name, 'base')) {
           providers[name] = getOwner(this).lookup(`geo-provider:${name}`);
@@ -317,10 +316,10 @@ let FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
     @return {Object} Parsed data if it is valid or null.
   */
   parseData() {
-    let address = this.get('address');
-    let provider = this.get('provider');
+    const address = this.get('address');
+    const provider = this.get('provider');
     let dataIsValid = true;
-    let errors = {};
+    const errors = {};
 
     if (isBlank(address)) {
       errors.address = true;
@@ -334,13 +333,13 @@ let FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
 
     this.set('_parsingErrors', errors);
 
-    return dataIsValid ? { address, provider } : null;
+    return dataIsValid ? { address, provider, } : null;
   },
 
   getLayer(data) {
     switch (data.type) {
       case 'marker':
-        let latlng = data.position.split(' ');
+        const latlng = data.position.split(' ');
         return L.marker([latlng[1], latlng[0]]);
       default:
         return null;
@@ -358,7 +357,7 @@ let FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
 });
 
 FlexberryGeometryAddModeGeoProviderComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryGeometryAddModeGeoProviderComponent;

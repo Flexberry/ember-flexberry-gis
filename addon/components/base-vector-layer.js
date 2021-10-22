@@ -10,11 +10,13 @@ import { isArray, A } from '@ember/array';
 import { isNone, isEqual } from '@ember/utils';
 import $ from 'jquery';
 import { once } from '@ember/runloop';
-import { observer, computed, get, set } from '@ember/object';
+import {
+  observer, computed, get, set
+} from '@ember/object';
 import { assert } from '@ember/debug';
+import jsts from 'npm:jsts';
 import BaseLayer from './base-layer';
 import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
-import jsts from 'npm:jsts';
 import { checkMapZoom } from '../utils/check-zoom';
 import featureWithAreaIntersect from '../utils/feature-with-area-intersect';
 
@@ -67,9 +69,9 @@ export default BaseLayer.extend({
     @return HTMLElement
     Returns the HTML element for this layer.
   */
-  _getContainer: function () {
-    let className = 'leaflet-' + this.get('_pane') + '-pane';
-    let container = $(`.${className}`);
+  _getContainer() {
+    const className = `leaflet-${this.get('_pane')}-pane`;
+    const container = $(`.${className}`);
     return container[0];
   },
 
@@ -78,9 +80,9 @@ export default BaseLayer.extend({
     @return HTMLElement
     Returns the HTML element for this label layer.
   */
-  _getContainerPane: function () {
-    let className = 'leaflet-' + this.get('_paneLabel') + '-pane';
-    let container = $(`.${className}`);
+  _getContainerPane() {
+    const className = `leaflet-${this.get('_paneLabel')}-pane`;
+    const container = $(`.${className}`);
     return container[0];
   },
 
@@ -91,8 +93,8 @@ export default BaseLayer.extend({
   */
   _pane: computed('layerModel.id', function () {
     // to switch combine-layer
-    let layerId = !isNone(this.get('layerId')) ? this.get('layerId') : '';
-    return 'vectorLayer' + this.get('layerModel.id') + layerId;
+    const layerId = !isNone(this.get('layerId')) ? this.get('layerId') : '';
+    return `vectorLayer${this.get('layerModel.id')}${layerId}`;
   }),
 
   /**
@@ -103,8 +105,8 @@ export default BaseLayer.extend({
   _paneLabel: computed('layerModel.id', 'labelSettings.signMapObjects', function () {
     if (this.get('labelSettings.signMapObjects')) {
       // to switch combine-layer
-      let layerId = !isNone(this.get('layerId')) ? this.get('layerId') : '';
-      return 'labelLayer' + this.get('layerModel.id') + layerId;
+      const layerId = !isNone(this.get('layerId')) ? this.get('layerId') : '';
+      return `labelLayer${this.get('layerModel.id')}${layerId}`;
     }
 
     return null;
@@ -116,8 +118,8 @@ export default BaseLayer.extend({
     @readOnly
   */
   _renderer: computed('_pane', function () {
-    let pane = this.get('_pane');
-    return L.canvas({ pane: pane });
+    const pane = this.get('_pane');
+    return L.canvas({ pane, });
   }),
 
   /**
@@ -126,21 +128,21 @@ export default BaseLayer.extend({
     @method _setLayerZIndex
     @private
   */
-  _setLayerZIndex: function () {
-    let thisPane = this.get('_pane');
-    let leafletMap = this.get('leafletMap');
+  _setLayerZIndex() {
+    const thisPane = this.get('_pane');
+    const leafletMap = this.get('leafletMap');
     if (thisPane && !isNone(leafletMap)) {
-      let pane = leafletMap.getPane(thisPane);
+      const pane = leafletMap.getPane(thisPane);
       if (pane) {
         pane.style.zIndex = this.get('index') + begIndex;
       }
     }
 
-    let thisPaneLabel = this.get('_paneLabel');
+    const thisPaneLabel = this.get('_paneLabel');
     if (thisPaneLabel && !isNone(leafletMap)) {
-      let pane = leafletMap.getPane(thisPaneLabel);
+      const pane = leafletMap.getPane(thisPaneLabel);
       if (pane) {
-        pane.style.zIndex = this.get('index') + begIndex + 1; //to make the label layer higher than the vector layer
+        pane.style.zIndex = this.get('index') + begIndex + 1; // to make the label layer higher than the vector layer
       }
     }
   },
@@ -151,7 +153,7 @@ export default BaseLayer.extend({
     }
 
     leafletObject.on('load', (loaded) => {
-      let promise = this._featuresProcessCallback(loaded.layers, leafletObject);
+      const promise = this._featuresProcessCallback(loaded.layers, leafletObject);
       if (loaded.results && isArray(loaded.results)) {
         loaded.results.push(promise);
       }
@@ -170,14 +172,14 @@ export default BaseLayer.extend({
         return;
       }
 
-      let featuresProcessCallback = get(leafletObject, 'featuresProcessCallback');
+      const featuresProcessCallback = get(leafletObject, 'featuresProcessCallback');
       if (typeof featuresProcessCallback === 'function') {
         layers.forEach((feature) => {
           feature.layerModel = this.get('layerModel');
         });
       }
 
-      let p = typeof featuresProcessCallback === 'function' ? featuresProcessCallback(layers) : resolve();
+      const p = typeof featuresProcessCallback === 'function' ? featuresProcessCallback(layers) : resolve();
       p.then(() => {
         this._addLayersOnMap(layers, leafletObject);
 
@@ -208,29 +210,31 @@ export default BaseLayer.extend({
     @private
   */
   _setLayerOpacity() {
-    let config = getOwner(this).resolveRegistration('config:environment');
-    let maxGeomOpacity = Number(config.userSettings.maxGeometryOpacity);
-    let maxGeomFillOpacity = Number(config.userSettings.maxGeometryFillOpacity);
+    const config = getOwner(this).resolveRegistration('config:environment');
+    const maxGeomOpacity = Number(config.userSettings.maxGeometryOpacity);
+    const maxGeomFillOpacity = Number(config.userSettings.maxGeometryFillOpacity);
 
-    let opacity = this.get('opacity');
+    const opacity = this.get('opacity');
     if (isNone(opacity)) {
       return;
     }
 
-    let leafletLayer = this.get('_leafletObject');
+    const leafletLayer = this.get('_leafletObject');
     if (isNone(leafletLayer)) {
       return;
     }
 
     // Some layers-styles hide some of layers with their opacity set to 0, so we don't change such layers opacity here.
-    let layersStylesRenderer = this.get('_layersStylesRenderer');
-    let styleSettings = this.get('styleSettings');
-    let visibleLeafletLayers = isNone(styleSettings) ?
-      [leafletLayer] :
-      layersStylesRenderer.getVisibleLeafletLayers({ leafletLayer, styleSettings });
+    const layersStylesRenderer = this.get('_layersStylesRenderer');
+    const styleSettings = this.get('styleSettings');
+    const visibleLeafletLayers = isNone(styleSettings)
+      ? [leafletLayer]
+      : layersStylesRenderer.getVisibleLeafletLayers({ leafletLayer, styleSettings, });
 
     for (let i = 0, len = visibleLeafletLayers.length; i < len; i++) {
-      setLeafletLayerOpacity({ leafletLayer: visibleLeafletLayers[i], opacity, maxGeomOpacity, maxGeomFillOpacity });
+      setLeafletLayerOpacity({
+        leafletLayer: visibleLeafletLayers[i], opacity, maxGeomOpacity, maxGeomFillOpacity,
+      });
     }
   },
 
@@ -241,8 +245,8 @@ export default BaseLayer.extend({
     @private
   */
   _getAttributesOptions() {
-    return this._super(...arguments).then((attribitesOptions => {
-      let leafletObject = get(attribitesOptions, 'object');
+    return this._super(...arguments).then(((attribitesOptions) => {
+      const leafletObject = get(attribitesOptions, 'object');
 
       // Return original vector layer for 'flexberry-layers-attributes-panel' component instead of marker cluster group.
       if (leafletObject instanceof L.MarkerClusterGroup) {
@@ -252,7 +256,7 @@ export default BaseLayer.extend({
       set(attribitesOptions, 'settings.styleSettings', this.get('styleSettings'));
 
       return attribitesOptions;
-    }).bind(this));
+    }));
   },
 
   /**
@@ -275,16 +279,16 @@ export default BaseLayer.extend({
     @returns {Object} Read format.
   */
   createReadFormat(vectorLayer) {
-    let crs = this.get('crs');
-    let geometryField = 'geometry';
-    let readFormat = new L.Format.GeoJSON({ crs, geometryField });
+    const crs = this.get('crs');
+    const geometryField = 'geometry';
+    const readFormat = new L.Format.GeoJSON({ crs, geometryField, });
 
-    let layerPropertiesDescription = ``;
-    let layerClass = getOwner(this).lookup(`layer:${this.get('layerModel.type')}`);
-    let layerProperties = layerClass.getLayerProperties(vectorLayer);
+    let layerPropertiesDescription = '';
+    const layerClass = getOwner(this).lookup(`layer:${this.get('layerModel.type')}`);
+    const layerProperties = layerClass.getLayerProperties(vectorLayer);
     for (let i = 0, len = layerProperties.length; i < len; i++) {
-      let layerProperty = layerProperties[i];
-      let layerPropertyValue = layerClass.getLayerPropertyValues(vectorLayer, layerProperty, 1)[0];
+      const layerProperty = layerProperties[i];
+      const layerPropertyValue = layerClass.getLayerPropertyValues(vectorLayer, layerProperty, 1)[0];
 
       let layerPropertyType = typeof layerPropertyValue;
       switch (layerPropertyType) {
@@ -304,29 +308,29 @@ export default BaseLayer.extend({
       layerPropertiesDescription += `<xsd:element maxOccurs="1" minOccurs="0" name="${layerProperty}" nillable="true" type="xsd:${layerPropertyType}"/>`;
     }
 
-    let describeFeatureTypeResponse = `` +
-      `<?xml version="1.0" encoding="UTF-8"?>` +
-      `<xsd:schema xmlns:gml="http://www.opengis.net/gml" ` +
-      `xmlns:flexberry="http://flexberry.ru" ` +
-      `xmlns:xsd="http://www.w3.org/2001/XMLSchema" ` +
-      `elementFormDefault="qualified" ` +
-      `targetNamespace="http://flexberry.ru">` +
-      `<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://flexberry.ru/schemas/gml/3.1.1/base/gml.xsd"/>` +
-      `<xsd:complexType name="layerType">` +
-      `<xsd:complexContent>` +
-      `<xsd:extension base="gml:AbstractFeatureType">` +
-      `<xsd:sequence>` +
-      `${layerPropertiesDescription}` +
-      `<xsd:element maxOccurs="1" minOccurs="0" name="${geometryField}" nillable="true" type="gml:GeometryPropertyType"/>` +
-      `</xsd:sequence>` +
-      `</xsd:extension>` +
-      `</xsd:complexContent>` +
-      `</xsd:complexType>` +
-      `<xsd:element name="layer" substitutionGroup="gml:_Feature" type="flexberry:layerType"/>` +
-      `</xsd:schema>`;
+    const describeFeatureTypeResponse = ''
+      + '<?xml version="1.0" encoding="UTF-8"?>'
+      + '<xsd:schema xmlns:gml="http://www.opengis.net/gml" '
+      + 'xmlns:flexberry="http://flexberry.ru" '
+      + 'xmlns:xsd="http://www.w3.org/2001/XMLSchema" '
+      + 'elementFormDefault="qualified" '
+      + 'targetNamespace="http://flexberry.ru">'
+      + '<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://flexberry.ru/schemas/gml/3.1.1/base/gml.xsd"/>'
+      + '<xsd:complexType name="layerType">'
+      + '<xsd:complexContent>'
+      + '<xsd:extension base="gml:AbstractFeatureType">'
+      + '<xsd:sequence>'
+      + `${layerPropertiesDescription}`
+      + `<xsd:element maxOccurs="1" minOccurs="0" name="${geometryField}" nillable="true" type="gml:GeometryPropertyType"/>`
+      + '</xsd:sequence>'
+      + '</xsd:extension>'
+      + '</xsd:complexContent>'
+      + '</xsd:complexType>'
+      + '<xsd:element name="layer" substitutionGroup="gml:_Feature" type="flexberry:layerType"/>'
+      + '</xsd:schema>';
 
-    let describeFeatureTypeXml = L.XmlUtil.parseXml(describeFeatureTypeResponse);
-    let featureInfo = describeFeatureTypeXml.documentElement;
+    const describeFeatureTypeXml = L.XmlUtil.parseXml(describeFeatureTypeResponse);
+    const featureInfo = describeFeatureTypeXml.documentElement;
     readFormat.setFeatureDescription(featureInfo);
 
     return readFormat;
@@ -340,7 +344,7 @@ export default BaseLayer.extend({
     @return {<a href="https://github.com/Leaflet/Leaflet.markercluster/blob/master/src/MarkerClusterGroup.js">L.MarkerClusterGroup</a>} Clusterized vector layer.
   */
   createClusterLayer(vectorLayer) {
-    let clusterLayer = L.markerClusterGroup(this.get('clusterOptions'));
+    const clusterLayer = L.markerClusterGroup(this.get('clusterOptions'));
     clusterLayer.addLayer(vectorLayer);
 
     clusterLayer._featureGroup.on('layeradd', this._setLayerOpacity, this);
@@ -374,7 +378,7 @@ export default BaseLayer.extend({
       return getPkField(layer);
     }
 
-    let field = get(layer, 'settingsAsObject.pkField');
+    const field = get(layer, 'settingsAsObject.pkField');
     return isNone(field) ? 'primarykey' : field;
   },
 
@@ -385,11 +389,11 @@ export default BaseLayer.extend({
   */
   showAllLayerObjects() {
     return new Promise((resolve, reject) => {
-      let leafletObject = this.get('_leafletObject');
-      let map = this.get('leafletMap');
-      let layer = this.get('layerModel');
+      const leafletObject = this.get('_leafletObject');
+      const map = this.get('leafletMap');
+      const layer = this.get('layerModel');
 
-      let continueLoading = leafletObject.options.continueLoading;
+      const { continueLoading, } = leafletObject.options;
       if (!continueLoading) {
         if (!isNone(leafletObject)) {
           leafletObject.eachLayer((layerShape) => {
@@ -403,8 +407,8 @@ export default BaseLayer.extend({
         }
 
         leafletObject.promiseLoadLayer = new Promise((resolve) => {
-          let e = {
-            featureIds: null
+          const e = {
+            featureIds: null,
           };
 
           leafletObject.loadLayerFeatures(e).then(() => {
@@ -429,7 +433,7 @@ export default BaseLayer.extend({
             map.addLayer(layerShape);
           }
         });
-        let labelLayer = leafletObject._labelsLayer;
+        const labelLayer = leafletObject._labelsLayer;
         if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !isNone(labelLayer) && !map.hasLayer(labelLayer)) {
           map.addLayer(labelLayer);
         }
@@ -445,9 +449,9 @@ export default BaseLayer.extend({
     @return nothing
   */
   hideAllLayerObjects() {
-    let leafletObject = this.get('_leafletObject');
-    let map = this.get('leafletMap');
-    let layer = this.get('layerModel');
+    const leafletObject = this.get('_leafletObject');
+    const map = this.get('leafletMap');
+    const layer = this.get('layerModel');
 
     leafletObject.showLayerObjects = false;
 
@@ -456,7 +460,7 @@ export default BaseLayer.extend({
         map.removeLayer(layerShape);
       }
     });
-    let labelLayer = leafletObject._labelsLayer;
+    const labelLayer = leafletObject._labelsLayer;
     if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !isNone(labelLayer) && map.hasLayer(labelLayer)) {
       map.removeLayer(labelLayer);
     }
@@ -471,16 +475,16 @@ export default BaseLayer.extend({
   */
   _setVisibilityObjects(objectIds, visibility = false) {
     return new Promise((resolve, reject) => {
-      let leafletObject = this.get('_leafletObject');
-      let map = this.get('leafletMap');
-      let layer = this.get('layerModel');
+      const leafletObject = this.get('_leafletObject');
+      const map = this.get('leafletMap');
+      const layer = this.get('layerModel');
 
       if (visibility) {
-        let continueLoading = leafletObject.options.continueLoading;
+        const { continueLoading, } = leafletObject.options;
         if (!continueLoading) {
           leafletObject.promiseLoadLayer = new Promise((resolve) => {
-            let e = {
-              featureIds: objectIds
+            const e = {
+              featureIds: objectIds,
             };
 
             leafletObject.loadLayerFeatures(e).then(() => {
@@ -497,12 +501,10 @@ export default BaseLayer.extend({
       leafletObject.promiseLoadLayer.then(() => {
         leafletObject.statusLoadLayer = false;
         leafletObject.promiseLoadLayer = null;
-        objectIds.forEach(objectId => {
-          let objects = Object.values(leafletObject._layers).filter(shape => {
-            return this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layer, shape) === objectId;
-          });
+        objectIds.forEach((objectId) => {
+          const objects = Object.values(leafletObject._layers).filter((shape) => this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layer, shape) === objectId);
           if (objects.length > 0) {
-            objects.forEach(obj => {
+            objects.forEach((obj) => {
               if (visibility) {
                 map.addLayer(obj);
               } else {
@@ -511,14 +513,12 @@ export default BaseLayer.extend({
             });
           }
         });
-        let labelLayer = leafletObject._labelsLayer;
+        const labelLayer = leafletObject._labelsLayer;
         if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !isNone(labelLayer)) {
-          objectIds.forEach(objectId => {
-            let objects = Object.values(labelLayer._layers).filter(shape => {
-              return this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layer, shape) === objectId;
-            });
+          objectIds.forEach((objectId) => {
+            const objects = Object.values(labelLayer._layers).filter((shape) => this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layer, shape) === objectId);
             if (objects.length > 0) {
-              objects.forEach(obj => {
+              objects.forEach((obj) => {
                 if (visibility) {
                   map.addLayer(obj);
                 } else {
@@ -547,8 +547,8 @@ export default BaseLayer.extend({
   */
   getNearObject(e) {
     return new Promise((resolve, reject) => {
-      let features = {
-        featureIds: null
+      const features = {
+        featureIds: null,
       };
       this.getLayerFeatures(features)
         .then((featuresLayer) => {
@@ -578,11 +578,11 @@ export default BaseLayer.extend({
   */
   _calcNearestObject(featuresLayer, e) {
     let result = null;
-    let mapApi = this.get('mapApi').getFromApi('mapModel');
-    let layerModel = this.get('layerModel');
-    let layerId = layerModel.get('id');
-    featuresLayer.forEach(obj => {
-      let  leafletLayer = isNone(obj.leafletLayer) ? obj : obj.leafletLayer;
+    const mapApi = this.get('mapApi').getFromApi('mapModel');
+    const layerModel = this.get('layerModel');
+    const layerId = layerModel.get('id');
+    featuresLayer.forEach((obj) => {
+      const leafletLayer = isNone(obj.leafletLayer) ? obj : obj.leafletLayer;
       const id = mapApi._getLayerFeatureId(layerModel, leafletLayer);
       if (layerId === e.layerObjectId && e.featureId === id) {
         return;
@@ -591,7 +591,7 @@ export default BaseLayer.extend({
       const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, leafletLayer);
       if (isNone(result) || distance < result.distance) {
         result = {
-          distance: distance,
+          distance,
           layer: layerModel,
           object: leafletLayer,
         };
@@ -610,10 +610,10 @@ export default BaseLayer.extend({
   createLayer() {
     return new Promise((resolve, reject) => {
       hash({
-        vectorLayer: this.createVectorLayer()
-      }).then(({ vectorLayer }) => {
+        vectorLayer: this.createVectorLayer(),
+      }).then(({ vectorLayer, }) => {
         // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
-        let readFormat = vectorLayer.readFormat;
+        const { readFormat, } = vectorLayer;
         if (isNone(readFormat)) {
           // For combine layer
           if (!isNone(this.dynamicProperties) && !isNone(this.dynamicProperties.type)) {
@@ -637,7 +637,7 @@ export default BaseLayer.extend({
         }
 
         if (this.get('clusterize')) {
-          let clusterLayer = this.createClusterLayer(vectorLayer);
+          const clusterLayer = this.createClusterLayer(vectorLayer);
           resolve(clusterLayer);
         } else {
           resolve(vectorLayer);
@@ -654,7 +654,7 @@ export default BaseLayer.extend({
     @method destroyLayer
   */
   destroyLayer() {
-    let leafletLayer = this.get('_leafletObject');
+    const leafletLayer = this.get('_leafletObject');
     if (leafletLayer instanceof L.MarkerClusterGroup) {
       this.destroyClusterLayer(leafletLayer);
     }
@@ -674,7 +674,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let primitiveSatisfiesBounds = (primitive, bounds) => {
+    const primitiveSatisfiesBounds = (primitive, bounds) => {
       let satisfiesBounds = false;
 
       if (typeof primitive.forEach === 'function') {
@@ -683,7 +683,7 @@ export default BaseLayer.extend({
             return;
           }
 
-          let nestedPrimitive = this.get(index);
+          const nestedPrimitive = this.get(index);
           satisfiesBounds = primitiveSatisfiesBounds(nestedPrimitive, bounds);
         });
       } else {
@@ -695,19 +695,19 @@ export default BaseLayer.extend({
 
     return new Promise((resolve, reject) => {
       try {
-        let features = A();
-        let bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
-        let leafletLayer = this.get('_leafletObject');
-        let mapModel = this.get('mapApi').getFromApi('mapModel');
-        let scale = this.get('mapApi').getFromApi('precisionScale');
+        const features = A();
+        const bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
+        const leafletLayer = this.get('_leafletObject');
+        const mapModel = this.get('mapApi').getFromApi('mapModel');
+        const scale = this.get('mapApi').getFromApi('precisionScale');
         leafletLayer.eachLayer(function (layer) {
-          let geoLayer = layer.toGeoJSON();
-          let primitive = new Terraformer.Primitive(geoLayer.geometry);
+          const geoLayer = layer.toGeoJSON();
+          const primitive = new Terraformer.Primitive(geoLayer.geometry);
 
           if (primitiveSatisfiesBounds(primitive, bounds)) {
             if (geoLayer.geometry.type === 'GeometryCollection') {
-              geoLayer.geometry.geometries.forEach(feat => {
-                let geoObj = { type: 'Feature', geometry: feat };
+              geoLayer.geometry.geometries.forEach((feat) => {
+                const geoObj = { type: 'Feature', geometry: feat, };
                 features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoObj, leafletLayer, mapModel, scale));
               });
             } else {
@@ -737,9 +737,9 @@ export default BaseLayer.extend({
   */
   search(e) {
     return new Promise((resolve, reject) => {
-      let searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
-      let leafletLayer = this.get('_leafletObject');
-      let features = A();
+      const searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
+      const leafletLayer = this.get('_leafletObject');
+      const features = A();
 
       let searchFields = (e.context ? this.get(`${searchSettingsPath}.contextSearchFields`) : this.get(`${searchSettingsPath}.searchFields`)) || A();
 
@@ -750,7 +750,7 @@ export default BaseLayer.extend({
 
       leafletLayer.eachLayer((layer) => {
         if (features.length < e.searchOptions.maxResultsCount) {
-          let feature = get(layer, 'feature');
+          const feature = get(layer, 'feature');
 
           // if layer satisfies search query
           let contains = false;
@@ -761,7 +761,7 @@ export default BaseLayer.extend({
           });
 
           if (contains) {
-            let foundFeature = layer.toGeoJSON();
+            const foundFeature = layer.toGeoJSON();
             foundFeature.leafletLayer = L.geoJson(foundFeature);
             features.pushObject(foundFeature);
           }
@@ -782,26 +782,26 @@ export default BaseLayer.extend({
   */
   query(layerLinks, e) {
     return new Promise((resolve, reject) => {
-      let queryFilter = e.queryFilter;
-      let features = A();
-      let equals = [];
+      const { queryFilter, } = e;
+      const features = A();
+      const equals = [];
 
       layerLinks.forEach((link) => {
-        let linkParameters = link.get('parameters');
+        const linkParameters = link.get('parameters');
 
         if (isArray(linkParameters) && linkParameters.length > 0) {
-          linkParameters.forEach(linkParam => {
-            let property = linkParam.get('layerField');
-            let propertyValue = queryFilter[linkParam.get('queryKey')];
+          linkParameters.forEach((linkParam) => {
+            const property = linkParam.get('layerField');
+            const propertyValue = queryFilter[linkParam.get('queryKey')];
 
-            equals.push({ 'prop': property, 'value': propertyValue });
+            equals.push({ prop: property, value: propertyValue, });
           });
         }
       });
 
-      let leafletLayer = this.get('_leafletObject');
+      const leafletLayer = this.get('_leafletObject');
       leafletLayer.eachLayer((layer) => {
-        let feature = get(layer, 'feature');
+        const feature = get(layer, 'feature');
         let meet = true;
         equals.forEach((equal) => {
           meet = meet && isEqual(feature.properties[equal.prop], equal.value);
@@ -838,15 +838,13 @@ export default BaseLayer.extend({
   */
   getLayerFeatures(e) {
     return new Promise((resolve, reject) => {
-      let leafletObject = this.get('_leafletObject');
-      let featureIds = e.featureIds;
+      const leafletObject = this.get('_leafletObject');
+      const { featureIds, } = e;
       if (isArray(featureIds) && !isNone(featureIds)) {
-        let objects = [];
+        const objects = [];
         featureIds.forEach((id) => {
-          let features = leafletObject._layers;
-          let obj = Object.values(features).find(feature => {
-            return this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), feature) === id;
-          });
+          const features = leafletObject._layers;
+          const obj = Object.values(features).find((feature) => this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), feature) === id);
           if (!isNone(obj)) {
             objects.push(obj);
           }
@@ -873,7 +871,7 @@ export default BaseLayer.extend({
     e.results.push({
       layerModel: this.get('layerModel'),
       leafletObject: this.get('_leafletObject'),
-      features: e.load ? this.loadLayerFeatures(e) : this.getLayerFeatures(e)
+      features: e.load ? this.loadLayerFeatures(e) : this.getLayerFeatures(e),
     });
   },
 
@@ -892,7 +890,7 @@ export default BaseLayer.extend({
     @param {Object} results Hash containing promise.
   */
   _continueLoad(e) {
-    let shouldContinueLoad = A(e.layers || []).contains(this.get('layerModel'));
+    const shouldContinueLoad = A(e.layers || []).contains(this.get('layerModel'));
     if (!shouldContinueLoad) {
       return;
     }
@@ -900,7 +898,7 @@ export default BaseLayer.extend({
     // Call public identify method, if layer should be continueLoad.
     e.results.push({
       layerModel: this.get('layerModel'),
-      promise: this.continueLoad(this.get('_leafletObject'))
+      promise: this.continueLoad(this.get('_leafletObject')),
     });
   },
 
@@ -913,8 +911,8 @@ export default BaseLayer.extend({
   reload() {
     this.clearChanges();
 
-    let leafletObject = this.get('_leafletObject');
-    let map = this.get('leafletMap');
+    const leafletObject = this.get('_leafletObject');
+    const map = this.get('leafletMap');
 
     leafletObject.eachLayer((layerShape) => {
       if (map.hasLayer(layerShape)) {
@@ -933,7 +931,7 @@ export default BaseLayer.extend({
     }
 
     this.set('loadedBounds', null);
-    let load = this.continueLoad();
+    const load = this.continueLoad();
 
     return load && load instanceof Promise ? load : resolve();
   },
@@ -945,7 +943,7 @@ export default BaseLayer.extend({
     @return nothing.
   */
   onLeafletMapEvent() {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
       leafletMap.on('flexberry-map:getOrLoadLayerFeatures', this._getOrLoadLayerFeatures, this);
       leafletMap.on('zoomend', this._checkZoomPane, this);
@@ -967,14 +965,14 @@ export default BaseLayer.extend({
     @private
   */
   _checkZoomPane() {
-    let leafletObject = this.get('_leafletObject');
-    let thisPane = this.get('_pane');
-    let leafletMap = this.get('leafletMap');
+    const leafletObject = this.get('_leafletObject');
+    const thisPane = this.get('_pane');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap) && thisPane && !isNone(leafletObject)) {
-      let pane = leafletMap.getPane(thisPane);
-      let mapPane = leafletMap._mapPane;
+      const pane = leafletMap.getPane(thisPane);
+      const mapPane = leafletMap._mapPane;
       if (!isNone(mapPane) && !isNone(pane)) {
-        let existPaneDomElem = $(mapPane).children(`[class*='${thisPane}']`).length;
+        const existPaneDomElem = $(mapPane).children(`[class*='${thisPane}']`).length;
         if (existPaneDomElem > 0 && !checkMapZoom(leafletObject)) {
           L.DomUtil.remove(pane);
         } else if (existPaneDomElem === 0 && checkMapZoom(leafletObject)) {
@@ -983,13 +981,13 @@ export default BaseLayer.extend({
       }
     }
 
-    let thisPaneLabel = this.get('_paneLabel');
+    const thisPaneLabel = this.get('_paneLabel');
     if (this.get('labelSettings.signMapObjects') && !isNone(leafletMap) && thisPaneLabel && !isNone(leafletObject)) {
-      let pane = leafletMap.getPane(thisPaneLabel);
-      let labelsLayer = this.get('_labelsLayer');
-      let mapPane = leafletMap._mapPane;
+      const pane = leafletMap.getPane(thisPaneLabel);
+      const labelsLayer = this.get('_labelsLayer');
+      const mapPane = leafletMap._mapPane;
       if (!isNone(mapPane) && !isNone(pane) && !isNone(labelsLayer)) {
-        let existPaneDomElem = $(mapPane).children(`[class*='${thisPaneLabel}']`).length;
+        const existPaneDomElem = $(mapPane).children(`[class*='${thisPaneLabel}']`).length;
         if (existPaneDomElem > 0 && !checkMapZoom(labelsLayer)) {
           L.DomUtil.remove(pane);
         } else if (existPaneDomElem === 0 && checkMapZoom(labelsLayer)) {
@@ -1005,7 +1003,7 @@ export default BaseLayer.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
       leafletMap.off('flexberry-map:getOrLoadLayerFeatures', this._getOrLoadLayerFeatures, this);
 
@@ -1030,8 +1028,8 @@ export default BaseLayer.extend({
     @private
   */
   _zoomMinDidChange: observer('labelSettings.scaleRange.minScaleRange', function () {
-    let minZoom = this.get('labelSettings.scaleRange.minScaleRange');
-    let labelsLayer = this.get('_labelsLayer');
+    const minZoom = this.get('labelSettings.scaleRange.minScaleRange');
+    const labelsLayer = this.get('_labelsLayer');
     if (!isNone(labelsLayer) && !isNone(minZoom)) {
       labelsLayer.minZoom = minZoom;
       this._checkZoomPane();
@@ -1045,8 +1043,8 @@ export default BaseLayer.extend({
     @private
   */
   _zoomMaxDidChange: observer('labelSettings.scaleRange.maxScaleRange', function () {
-    let maxZoom = this.get('labelSettings.scaleRange.maxScaleRange');
-    let labelsLayer = this.get('_labelsLayer');
+    const maxZoom = this.get('labelSettings.scaleRange.maxScaleRange');
+    const labelsLayer = this.get('_labelsLayer');
     if (!isNone(labelsLayer) && !isNone(maxZoom)) {
       labelsLayer.maxZoom = maxZoom;
       this._checkZoomPane();
@@ -1073,11 +1071,11 @@ export default BaseLayer.extend({
     }
 
     if (propName.length === 0) { // if main node
-      propName = $(str + ' propertyname');
+      propName = $(`${str} propertyname`);
     }
 
     if (propName.length > 0) {
-      for (var prop of propName) {
+      for (const prop of propName) {
         let property = prop.innerHTML;
         if (prop.localName !== 'propertyname') {
           property = prop.innerText;
@@ -1096,9 +1094,9 @@ export default BaseLayer.extend({
 
     if (hasReplace) {
       return str.replaceAll('\\"', '"').replaceAll('\\(', '(').replaceAll('\\)', ')');
-    } else {
-      return str;
     }
+
+    return str;
   },
 
   /**
@@ -1120,22 +1118,22 @@ export default BaseLayer.extend({
     }
 
     if (func.length === 0) { // if main node
-      func = $(str + ' function');
+      func = $(`${str} function`);
     }
 
     if (func.length > 0) {
-      for (var item of func) {
+      for (const item of func) {
         let nameFunc = $(item).attr('name');
         if (!isNone(nameFunc)) {
           nameFunc = $(item).attr('name').replaceAll('\\"', '');
           switch (nameFunc) {
             case 'toFixed':
-              let attr = $(item).attr('attr').replaceAll('\\"', '');
-              let property = item.innerHTML;
-              let numProp = Number.parseFloat(property);
-              let numAttr = Number.parseFloat(attr);
+              const attr = $(item).attr('attr').replaceAll('\\"', '');
+              const property = item.innerHTML;
+              const numProp = Number.parseFloat(property);
+              const numAttr = Number.parseFloat(attr);
               if (!isNone(attr) && !isNone(property) && !Number.isNaN(numProp) && !Number.isNaN(numAttr)) {
-                let newStr = numProp.toFixed(numAttr);
+                const newStr = numProp.toFixed(numAttr);
                 str = str.replace(item.outerHTML, newStr);
               }
 
@@ -1147,9 +1145,9 @@ export default BaseLayer.extend({
 
     if (hasReplace) {
       return str.replaceAll('\\"', '"').replaceAll('\\(', '(').replaceAll('\\)', ')');
-    } else {
-      return str;
     }
+
+    return str;
   },
 
   /**
@@ -1160,26 +1158,27 @@ export default BaseLayer.extend({
     @param {Array} layers new layers for add labels
   */
   _createStringLabel(labelsLayer, layers) {
-    let optionsLabel = this.get('labelSettings.options');
-    let labelSettingsString = this.get('labelSettings.labelSettingsString');
-    let style = htmlSafe(
-      `font-family: ${get(optionsLabel, 'captionFontFamily')}; ` +
-      `font-size: ${get(optionsLabel, 'captionFontSize')}px; ` +
-      `font-weight: ${get(optionsLabel, 'captionFontWeight')}; ` +
-      `font-style: ${get(optionsLabel, 'captionFontStyle')}; ` +
-      `text-decoration: ${get(optionsLabel, 'captionFontDecoration')}; ` +
-      `color: ${get(optionsLabel, 'captionFontColor')}; ` +
-      `text-align: ${get(optionsLabel, 'captionFontAlign')}; `);
+    const optionsLabel = this.get('labelSettings.options');
+    const labelSettingsString = this.get('labelSettings.labelSettingsString');
+    const style = htmlSafe(
+      `font-family: ${get(optionsLabel, 'captionFontFamily')}; `
+      + `font-size: ${get(optionsLabel, 'captionFontSize')}px; `
+      + `font-weight: ${get(optionsLabel, 'captionFontWeight')}; `
+      + `font-style: ${get(optionsLabel, 'captionFontStyle')}; `
+      + `text-decoration: ${get(optionsLabel, 'captionFontDecoration')}; `
+      + `color: ${get(optionsLabel, 'captionFontColor')}; `
+      + `text-align: ${get(optionsLabel, 'captionFontAlign')}; `
+    );
 
-    let leafletMap = this.get('leafletMap');
-    let bbox = leafletMap.getBounds();
+    const leafletMap = this.get('leafletMap');
+    const bbox = leafletMap.getBounds();
     if (layers) {
       layers.forEach((layer) => {
-        let showExisting = this.get('showExisting');
-        let intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
-        let staticLoad = showExisting !== false && intersectBBox;
+        const showExisting = this.get('showExisting');
+        const intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
+        const staticLoad = showExisting !== false && intersectBBox;
         if (!layer._label && (showExisting === false || staticLoad)) {
-          let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
+          const label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
           this._createLabel(label, layer, style, labelsLayer);
         }
       });
@@ -1196,7 +1195,7 @@ export default BaseLayer.extend({
     @param {Object} labelsLayer
   */
   _createLabel(text, layer, style, labelsLayer) {
-    let lType = layer.toGeoJSON().geometry.type;
+    const lType = layer.toGeoJSON().geometry.type;
     let latlng = null;
     let iconWidth = 10;
     let iconHeight = 40;
@@ -1204,33 +1203,32 @@ export default BaseLayer.extend({
     let html = '';
 
     if (lType.indexOf('Polygon') !== -1) {
-      let geojsonReader = new jsts.io.GeoJSONReader();
-      let objJsts = geojsonReader.read(layer.toGeoJSON().geometry);
+      const geojsonReader = new jsts.io.GeoJSONReader();
+      const objJsts = geojsonReader.read(layer.toGeoJSON().geometry);
 
       try {
-        let centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
-        let geojsonWriter = new jsts.io.GeoJSONWriter();
-        let centroid = geojsonWriter.write(centroidJsts);
+        const centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
+        const geojsonWriter = new jsts.io.GeoJSONWriter();
+        const centroid = geojsonWriter.write(centroidJsts);
         latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0]);
-        html = '<div style="' + style + '">' + text + '</div>';
-      }
-      catch (e) {
-        console.error(e.message + ': ' + layer.toGeoJSON().id);
+        html = `<div style="${style}">${text}</div>`;
+      } catch (e) {
+        console.error(`${e.message}: ${layer.toGeoJSON().id}`);
       }
     }
 
     if (lType.indexOf('Point') !== -1) {
       latlng = layer.getLatLng();
       positionPoint = this._setPositionPoint(iconWidth);
-      html = '<div style="' + style + positionPoint + '">' + text + '</div>';
+      html = `<div style="${style}${positionPoint}">${text}</div>`;
     }
 
     if (lType.indexOf('LineString') !== -1) {
-      let optionsLabel = this.get('labelSettings.options');
+      const optionsLabel = this.get('labelSettings.options');
       latlng = L.latLng(layer._bounds._northEast.lat, layer._bounds._southWest.lng);
-      let options = {
+      const options = {
         fillColor: get(optionsLabel, 'captionFontColor'),
-        align: get(optionsLabel, 'captionFontAlign')
+        align: get(optionsLabel, 'captionFontAlign'),
       };
       this._addTextForLine(layer, text, options, style);
       iconWidth = 12;
@@ -1242,19 +1240,19 @@ export default BaseLayer.extend({
       return;
     }
 
-    let label = L.marker(latlng, {
+    const label = L.marker(latlng, {
       icon: L.divIcon({
         className: 'label',
-        html: html,
-        iconSize: [iconWidth, iconHeight]
+        html,
+        iconSize: [iconWidth, iconHeight],
       }),
       zIndexOffset: 1000,
-      pane: this.get('_paneLabel')
+      pane: this.get('_paneLabel'),
     });
     label.style = {
       className: 'label',
-      html: html,
-      iconSize: [iconWidth, iconHeight]
+      html,
+      iconSize: [iconWidth, iconHeight],
     };
     labelsLayer.addLayer(label);
     label.feature = layer.feature;
@@ -1270,39 +1268,39 @@ export default BaseLayer.extend({
   */
   _setPositionPoint(width) {
     let stylePoint = '';
-    let shiftHor = Math.round(width / 2);
-    let shiftVerTop = '-60px;';
-    let shiftVerBottom = '30px;';
+    const shiftHor = Math.round(width / 2);
+    const shiftVerTop = '-60px;';
+    const shiftVerBottom = '30px;';
 
     switch (this.get('labelSettings.location.locationPoint')) {
       case 'overLeft':
-        stylePoint = 'margin-right: ' + shiftHor + 'px; margin-top: ' + shiftVerTop;
+        stylePoint = `margin-right: ${shiftHor}px; margin-top: ${shiftVerTop}`;
         break;
       case 'overMiddle':
-        stylePoint = 'margin-top: ' + shiftVerTop;
+        stylePoint = `margin-top: ${shiftVerTop}`;
         break;
       case 'overRight':
-        stylePoint = 'margin-left: ' + shiftHor + 'px; margin-top: ' + shiftVerTop;
+        stylePoint = `margin-left: ${shiftHor}px; margin-top: ${shiftVerTop}`;
         break;
       case 'alongLeft':
-        stylePoint = 'margin-right: ' + shiftHor + 'px;';
+        stylePoint = `margin-right: ${shiftHor}px;`;
         break;
       case 'alongMidle':
         break;
       case 'alongRight':
-        stylePoint = 'margin-left: ' + shiftHor + 'px;';
+        stylePoint = `margin-left: ${shiftHor}px;`;
         break;
       case 'underLeft':
-        stylePoint = 'margin-right: ' + shiftHor + 'px; margin-top: ' + shiftVerBottom;
+        stylePoint = `margin-right: ${shiftHor}px; margin-top: ${shiftVerBottom}`;
         break;
       case 'underMiddle':
-        stylePoint = 'margin-top: ' + shiftVerBottom;
+        stylePoint = `margin-top: ${shiftVerBottom}`;
         break;
       case 'underRight':
-        stylePoint = 'margin-left: ' + shiftHor + 'px; margin-top: ' + shiftVerBottom;
+        stylePoint = `margin-left: ${shiftHor}px; margin-top: ${shiftVerBottom}`;
         break;
       default:
-        stylePoint = 'margin-left: ' + shiftHor + 'px; margin-top: ' + shiftVerTop;
+        stylePoint = `margin-left: ${shiftHor}px; margin-top: ${shiftVerTop}`;
         break;
     }
 
@@ -1321,7 +1319,7 @@ export default BaseLayer.extend({
     @param {String} textDecoration
   */
   _getWidthText(text, font, fontSize, fontWeight, fontStyle, textDecoration) {
-    let div = document.createElement('div');
+    const div = document.createElement('div');
     div.style.position = 'absolute';
     div.style.visibility = 'hidden';
     div.style.height = 'auto';
@@ -1335,7 +1333,7 @@ export default BaseLayer.extend({
     div.innerHTML = text;
     document.body.appendChild(div);
 
-    let clientWidth = div.clientWidth;
+    const { clientWidth, } = div;
     document.body.removeChild(div);
 
     return clientWidth;
@@ -1349,12 +1347,12 @@ export default BaseLayer.extend({
     @param {Object} svg
   */
   _setLabelLine(layer, svg) {
-    let leafletMap = this.get('leafletMap');
-    let latlngArr = layer.getLatLngs();
-    let rings = [];
+    const leafletMap = this.get('leafletMap');
+    const latlngArr = layer.getLatLngs();
+    const rings = [];
     let begCoord;
     let endCoord;
-    let lType = layer.toGeoJSON().geometry.type;
+    const lType = layer.toGeoJSON().geometry.type;
     if (lType === 'LineString') {
       begCoord = leafletMap.latLngToLayerPoint(latlngArr[0]);
       endCoord = leafletMap.latLngToLayerPoint(latlngArr[latlngArr.length - 1]);
@@ -1388,13 +1386,13 @@ export default BaseLayer.extend({
     }
 
     let d = '';
-    let kx = minX - 6;
-    let ky = minY - 6;
+    const kx = minX - 6;
+    const ky = minY - 6;
 
     for (let i = 0; i < rings.length; i++) {
       d += i === 0 ? 'M' : 'L';
-      let x = rings[i].x - kx;
-      let y = rings[i].y - ky;
+      const x = rings[i].x - kx;
+      const y = rings[i].y - ky;
       if (x > maxX) {
         maxX = x;
       }
@@ -1403,12 +1401,12 @@ export default BaseLayer.extend({
         maxY = y;
       }
 
-      d += x + ' ' + y;
+      d += `${x} ${y}`;
     }
 
     layer._path.setAttribute('d', d);
-    svg.setAttribute('width', maxX + 'px');
-    svg.setAttribute('height', maxY + 'px');
+    svg.setAttribute('width', `${maxX}px`);
+    svg.setAttribute('height', `${maxY}px`);
   },
 
   /**
@@ -1419,9 +1417,9 @@ export default BaseLayer.extend({
     @param {Object} svg
   */
   _setAlignForLine(layer, text, align, textNode) {
-    let pathLength = layer._path.getTotalLength();
-    let optionsLabel = this.get('labelSettings.options');
-    let textLength = this._getWidthText(
+    const pathLength = layer._path.getTotalLength();
+    const optionsLabel = this.get('labelSettings.options');
+    const textLength = this._getWidthText(
       text,
       get(optionsLabel, 'captionFontFamily'),
       get(optionsLabel, 'captionFontSize'),
@@ -1453,17 +1451,17 @@ export default BaseLayer.extend({
     @param {String} style
   */
   _addTextForLine(layer, text, options, style) {
-    let lsvg = L.svg();
+    const lsvg = L.svg();
     lsvg._initContainer();
     lsvg._initPath(layer);
-    let svg = lsvg._container;
+    const svg = lsvg._container;
 
     layer._text = text;
 
-    let defaults = {
+    const defaults = {
       fillColor: 'black',
       align: 'left',
-      location: 'over'
+      location: 'over',
     };
     options = L.Util.extend(defaults, options);
 
@@ -1478,14 +1476,14 @@ export default BaseLayer.extend({
       return;
     }
 
-    let id = 'pathdef-' + L.Util.stamp(layer);
+    const id = `pathdef-${L.Util.stamp(layer)}`;
     layer._path.setAttribute('id', id);
 
-    let textNode = L.SVG.create('text');
-    let textPath = L.SVG.create('textPath');
+    const textNode = L.SVG.create('text');
+    const textPath = L.SVG.create('textPath');
     let dy = 0;
-    let sizeFont = parseInt(this.get('labelSettings.options.captionFontSize'));
-    let _lineLocationSelect = this.get('labelSettings.location.lineLocationSelect');
+    const sizeFont = parseInt(this.get('labelSettings.options.captionFontSize'));
+    const _lineLocationSelect = this.get('labelSettings.location.lineLocationSelect');
 
     if (_lineLocationSelect === 'along') {
       dy = Math.ceil(sizeFont / 4);
@@ -1495,10 +1493,10 @@ export default BaseLayer.extend({
       dy = Math.ceil(sizeFont / 2);
     }
 
-    textPath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + id);
+    textPath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#${id}`);
     textNode.setAttribute('fill', options.fillColor);
     textNode.setAttribute('style', style);
-    textNode.setAttribute('id', 'text-' + id);
+    textNode.setAttribute('id', `text-${id}`);
     textNode.setAttribute('dy', dy);
     textNode.setAttribute('alignment-baseline', 'baseline');
     textPath.appendChild(document.createTextNode(text));
@@ -1508,10 +1506,10 @@ export default BaseLayer.extend({
     layer._path.setAttribute('stroke-opacity', 0);
     layer._textNode = textNode;
     svg.firstChild.appendChild(layer._path);
-    svg.setAttribute('id', 'svg-' + id);
+    svg.setAttribute('id', `svg-${id}`);
     svg.appendChild(textNode);
     layer._svg = svg;
-    let div = L.DomUtil.create('div');
+    const div = L.DomUtil.create('div');
     div.appendChild(svg);
     layer._svgConteiner = div;
 
@@ -1524,30 +1522,30 @@ export default BaseLayer.extend({
     @method _updatePositionLabelForLine
   */
   _updatePositionLabelForLine() {
-    let labelsLayer = this.get('_labelsLayer');
+    const labelsLayer = this.get('_labelsLayer');
     if (this.get('leafletMap').hasLayer(labelsLayer)) {
-      let _this = this;
-      let leafletObject = _this.get('_leafletObject');
+      const _this = this;
+      const leafletObject = _this.get('_leafletObject');
       if (!isNone(leafletObject)) {
         leafletObject.eachLayer(function (layer) {
           if (!isNone(layer._path)) {
-            let svg = layer._svg;
+            const svg = layer._svg;
             _this._setLabelLine(layer, svg);
-            let d = layer._path.getAttribute('d');
-            let path = svg.firstChild.firstChild;
+            const d = layer._path.getAttribute('d');
+            const path = svg.firstChild.firstChild;
             path.setAttribute('d', d);
-            let id = path.getAttribute('id');
+            const id = path.getAttribute('id');
 
-            $('path#' + id).attr('d', d);
-            $('svg#svg-' + id).attr('width', svg.getAttribute('width'));
-            $('svg#svg-' + id).attr('height', svg.getAttribute('height'));
+            $(`path#${id}`).attr('d', d);
+            $(`svg#svg-${id}`).attr('width', svg.getAttribute('width'));
+            $(`svg#svg-${id}`).attr('height', svg.getAttribute('height'));
 
-            let options = layer._textOptions;
-            let text = layer._text;
-            let textNode = layer._textNode;
+            const options = layer._textOptions;
+            const text = layer._text;
+            const textNode = layer._textNode;
 
             _this._setAlignForLine(layer, text, options.align, textNode);
-            $('text#text-' + id).attr('dx', textNode.getAttribute('dx'));
+            $(`text#text-${id}`).attr('dx', textNode.getAttribute('dx'));
           }
         });
       }
@@ -1563,10 +1561,10 @@ export default BaseLayer.extend({
     @param {Array} layers new layers for add labels
   */
   _showLabels(layers) {
-    let labelSettingsString = this.get('labelSettings.labelSettingsString');
+    const labelSettingsString = this.get('labelSettings.labelSettingsString');
     if (!isNone(labelSettingsString)) {
-      let leafletMap = this.get('leafletMap');
-      let leafletObject = this.get('_leafletObject');
+      const leafletMap = this.get('leafletMap');
+      const leafletObject = this.get('_leafletObject');
       let labelsLayer = this.get('_labelsLayer');
       if (!isNone(labelsLayer) && isNone(leafletObject._labelsLayer)) {
         labelsLayer.clearLayers();
@@ -1574,8 +1572,8 @@ export default BaseLayer.extend({
 
       if (isNone(labelsLayer)) {
         labelsLayer = L.featureGroup();
-        let minScaleRange = this.get('labelSettings.scaleRange.minScaleRange') || this.get('minZoom');
-        let maxScaleRange = this.get('labelSettings.scaleRange.maxScaleRange') || this.get('maxZoom');
+        const minScaleRange = this.get('labelSettings.scaleRange.minScaleRange') || this.get('minZoom');
+        const maxScaleRange = this.get('labelSettings.scaleRange.maxScaleRange') || this.get('maxZoom');
         labelsLayer.minZoom = minScaleRange;
         labelsLayer.maxZoom = maxScaleRange;
         labelsLayer.leafletMap = leafletMap;
@@ -1610,13 +1608,13 @@ export default BaseLayer.extend({
   */
   _addLabelsToLeafletContainer(layers) {
     let labelsLayer = this.get('_labelsLayer');
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
 
-    let thisPane = this.get('_paneLabel');
+    const thisPane = this.get('_paneLabel');
     if (thisPane) {
-      let leafletMap = this.get('leafletMap');
+      const leafletMap = this.get('leafletMap');
       if (thisPane && !isNone(leafletMap)) {
-        let pane = leafletMap.getPane(thisPane);
+        const pane = leafletMap.getPane(thisPane);
         if (!pane || isNone(pane)) {
           this._createPane(thisPane);
           this._setLayerZIndex();
@@ -1642,12 +1640,12 @@ export default BaseLayer.extend({
     @private
   */
   _removeLabelsFromLeafletContainer() {
-    let labelsLayer = this.get('_labelsLayer');
+    const labelsLayer = this.get('_labelsLayer');
     if (isNone(labelsLayer)) {
       return;
     }
 
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     leafletMap.removeLayer(labelsLayer);
   },
 
@@ -1672,14 +1670,14 @@ export default BaseLayer.extend({
   },
 
   _getGeometry(layer) {
-    let geoJSONLayer = layer.toProjectedGeoJSON(this.get('crs'));
-    let type = layer.toGeoJSON().geometry.type;
-    let forceMulti = this.get('forceMulti') || false;
+    const geoJSONLayer = layer.toProjectedGeoJSON(this.get('crs'));
+    const { type, } = layer.toGeoJSON().geometry;
+    const forceMulti = this.get('forceMulti') || false;
 
     if (forceMulti && (type === 'Polygon' || type === 'LineString')) {
       return [geoJSONLayer.geometry.coordinates];
-    } else {
-      return geoJSONLayer.geometry.coordinates;
     }
-  }
+
+    return geoJSONLayer.geometry.coordinates;
+  },
 });

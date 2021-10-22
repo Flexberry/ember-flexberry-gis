@@ -38,8 +38,8 @@ export default BaseLayer.extend({
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = this._super(...arguments);
-    let layersStylesRenderer = this.get('layersStylesRenderer');
+    const settings = this._super(...arguments);
+    const layersStylesRenderer = this.get('layersStylesRenderer');
 
     $.extend(true, settings, {
       clusterize: false,
@@ -53,8 +53,8 @@ export default BaseLayer.extend({
 
       legendSettings: {
         geometriesCanBeDisplayed: true,
-        markersCanBeDisplayed: true
-      }
+        markersCanBeDisplayed: true,
+      },
     });
 
     return settings;
@@ -67,10 +67,10 @@ export default BaseLayer.extend({
     @returns {Object} New search settings object (with search settings related to layer-type).
   */
   createSearchSettings() {
-    let settings = this._super(...arguments);
+    const settings = this._super(...arguments);
     $.extend(true, settings, {
       queryString: '',
-      maxResultsCount: 10
+      maxResultsCount: 10,
     });
 
     return settings;
@@ -86,5 +86,5 @@ export default BaseLayer.extend({
   */
   isVectorType(layer) {
     return true;
-  }
+  },
 });

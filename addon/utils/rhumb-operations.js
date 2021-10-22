@@ -34,7 +34,7 @@ const createObjectRhumb = (data, layerCrs, that) => {
     throw new Error('Not data.');
   }
 
-  const type = data.type;
+  const { type, } = data;
   if (isNone(type)) {
     throw new Error('Specify type.');
   } else {
@@ -68,32 +68,32 @@ const createObjectRhumb = (data, layerCrs, that) => {
 
   // Calculation rhumb by point, distance (unit metre) and angle (unit radian).
   const rhumbToPoint = function (point, distance, angle) {
-    let x = point[0] + distance * Math.sin(angle);
-    let y = point[1] + distance * Math.cos(angle);
+    const x = point[0] + distance * Math.sin(angle);
+    const y = point[1] + distance * Math.cos(angle);
 
     return [x, y];
   };
 
-  let coors = [];
+  const coors = [];
   let startPointInCrs = data.startPoint;
 
   // startPoint transformed in crs of layer.
   if ((!isNone(data.crs) && data.crs !== layerCrs.code) || (isNone(data.crs))) {
-    let knownCrs = getOwner(that).knownForType('coordinate-reference-system');
-    let knownCrsArray = A(Object.values(knownCrs));
+    const knownCrs = getOwner(that).knownForType('coordinate-reference-system');
+    const knownCrsArray = A(Object.values(knownCrs));
     if (!isNone(data.crs)) {
-      let crs = knownCrsArray.findBy('code', data.crs).create();
+      const crs = knownCrsArray.findBy('code', data.crs).create();
       startPointInCrs = crs.unproject(L.point(data.startPoint[0], data.startPoint[1]));
     } else {
       startPointInCrs = layerCrs.unproject(L.point(data.startPoint[0], data.startPoint[1]));
     }
 
-    let point = layerCrs.project(startPointInCrs);
+    const point = layerCrs.project(startPointInCrs);
     startPointInCrs = [point.x, point.y];
   }
 
   let startPoint;
-  let coordinates = [];
+  const coordinates = [];
   let skip = !isNone(data.skip) ? data.skip : 0;
   const vertexCount = data.points;
 
@@ -134,16 +134,16 @@ const createObjectRhumb = (data, layerCrs, that) => {
   const obj = {
     type: 'Feature',
     geometry: {
-      type: type,
-      coordinates: coors
+      type,
+      coordinates: coors,
     },
     properties: data.properties,
     crs: {
       type: 'name',
       properties: {
-        name: layerCrs.code
-      }
-    }
+        name: layerCrs.code,
+      },
+    },
   };
 
   return obj;

@@ -6,33 +6,33 @@ import sinon from 'sinon';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
 import crsFactory3395 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-3395';
 
-module('Unit | Mixin | test method addObjectToLayer', function() {
-  let mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
-  let geoJsonObject = L.polygon([[0, 100], [0, 101], [1, 101], [1, 100]]).toGeoJSON();
+module('Unit | Mixin | test method addObjectToLayer', function () {
+  const mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
+  const geoJsonObject = L.polygon([[0, 100], [0, 101], [1, 101], [1, 100]]).toGeoJSON();
 
-  test('test method addObjectToLayer with EPSG:4326', function(assert) {
-    //Arrange
-    let done = assert.async(1);
-    let ownerStub = sinon.stub(Ember, 'getOwner');
+  test('test method addObjectToLayer with EPSG:4326', function (assert) {
+    // Arrange
+    const done = assert.async(1);
+    const ownerStub = sinon.stub(Ember, 'getOwner');
     ownerStub.returns({
       knownForType() {
         return {
-          'epsg4326': crsFactory4326,
-          'epsg3395': crsFactory3395,
+          epsg4326: crsFactory4326,
+          epsg3395: crsFactory3395,
         };
-      }
+      },
     });
-    let leafletObject = L.featureGroup();
-    leafletObject.options = { crs: { code: 'EPSG:4326' } };
-    let getModelLeafletObject = () => { return [{ id: 1 }, leafletObject]; };
+    const leafletObject = L.featureGroup();
+    leafletObject.options = { crs: { code: 'EPSG:4326', }, };
+    const getModelLeafletObject = () => [{ id: 1, }, leafletObject];
 
-    let subject = mapApiMixinObject.create({
-      _getModelLeafletObject() {}
+    const subject = mapApiMixinObject.create({
+      _getModelLeafletObject() {},
     });
-    let getMLObject = sinon.stub(subject, '_getModelLeafletObject', getModelLeafletObject);
+    const getMLObject = sinon.stub(subject, '_getModelLeafletObject', getModelLeafletObject);
 
-    //Act
-    let promise = subject.addObjectToLayer('1', geoJsonObject);
+    // Act
+    const promise = subject.addObjectToLayer('1', geoJsonObject);
 
     assert.ok(promise instanceof Promise);
 
@@ -48,33 +48,33 @@ module('Unit | Mixin | test method addObjectToLayer', function() {
     });
   });
 
-  test('test method addObjectToLayer with EPSG:3395', function(assert) {
-    //Arrange
-    let done = assert.async(1);
-    let ownerStub = sinon.stub(Ember, 'getOwner');
+  test('test method addObjectToLayer with EPSG:3395', function (assert) {
+    // Arrange
+    const done = assert.async(1);
+    const ownerStub = sinon.stub(Ember, 'getOwner');
     ownerStub.returns({
       knownForType() {
         return {
-          'epsg4326': crsFactory4326,
-          'epsg3395': crsFactory3395,
+          epsg4326: crsFactory4326,
+          epsg3395: crsFactory3395,
         };
       },
       knownNamesForType() {
         return ['epsg4326', 'epsg3395'];
-      }
+      },
     });
-    let leafletObject = L.featureGroup();
-    leafletObject.options = { crs: { code: 'EPSG:4326' } };
-    let getModelLeafletObject = () => { return [{ id: 1 }, leafletObject]; };
+    const leafletObject = L.featureGroup();
+    leafletObject.options = { crs: { code: 'EPSG:4326', }, };
+    const getModelLeafletObject = () => [{ id: 1, }, leafletObject];
 
-    let subject = mapApiMixinObject.create({
-      _getModelLeafletObject() {}
+    const subject = mapApiMixinObject.create({
+      _getModelLeafletObject() {},
     });
-    let getMLObject = sinon.stub(subject, '_getModelLeafletObject', getModelLeafletObject);
+    const getMLObject = sinon.stub(subject, '_getModelLeafletObject', getModelLeafletObject);
 
-    //Act
+    // Act
     subject.addObjectToLayer('1', geoJsonObject, 'EPSG:3395').then((result) => {
-      //Assert
+      // Assert
       assert.equal(leafletObject.getLayers().length, 0);
       assert.equal(result.layerId, '1');
       assert.deepEqual(result._latlngs,

@@ -22,7 +22,7 @@ import FlexberryMapActionsHandlerMixin from '../mixins/flexberry-map-actions-han
 const flexberryClassNamesPrefix = 'flexberry-boundingbox';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix
+  wrapper: flexberryClassNamesPrefix,
 };
 
 /**
@@ -101,8 +101,8 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     @readOnly
     @private
   */
-  _minLatIsValid: computed('_minLat', function() {
-    let minLat = parseFloat(this.get('_minLat'));
+  _minLatIsValid: computed('_minLat', function () {
+    const minLat = parseFloat(this.get('_minLat'));
 
     return minLat >= -90 && minLat <= 90;
   }),
@@ -115,8 +115,8 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     @readOnly
     @private
   */
-  _minLngIsValid: computed('_minLng', function() {
-    let minLng = parseFloat(this.get('_minLng'));
+  _minLngIsValid: computed('_minLng', function () {
+    const minLng = parseFloat(this.get('_minLng'));
 
     return minLng >= -180 && minLng <= 180;
   }),
@@ -129,8 +129,8 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     @readOnly
     @private
   */
-  _maxLatIsValid: computed('_maxLat', function() {
-    let maxLat = parseFloat(this.get('_maxLat'));
+  _maxLatIsValid: computed('_maxLat', function () {
+    const maxLat = parseFloat(this.get('_maxLat'));
 
     return maxLat >= -90 && maxLat <= 90;
   }),
@@ -143,8 +143,8 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     @readOnly
     @private
   */
-  _maxLngIsValid: computed('_maxLng', function() {
-    let maxLng = parseFloat(this.get('_maxLng'));
+  _maxLngIsValid: computed('_maxLng', function () {
+    const maxLng = parseFloat(this.get('_maxLng'));
 
     return maxLng >= -180 && maxLng <= 180;
   }),
@@ -157,7 +157,7 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     @readOnly
     @private
   */
-  _coordinatesAreValid: computed('_minLatIsValid', '_minLngIsValid', '_maxLatIsValid', '_maxLngIsValid', function() {
+  _coordinatesAreValid: computed('_minLatIsValid', '_minLngIsValid', '_maxLatIsValid', '_maxLngIsValid', function () {
     return this.get('_minLatIsValid') && this.get('_minLngIsValid') && this.get('_maxLatIsValid') && this.get('_maxLngIsValid');
   }),
 
@@ -169,7 +169,7 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     @readOnly
     @private
   */
-  _coordinatesAreChanged: computed('_minLat', '_minLng', '_maxLat', '_maxLng', 'minLat', 'minLng', 'maxLat', 'maxLng', function() {
+  _coordinatesAreChanged: computed('_minLat', '_minLng', '_maxLat', '_maxLng', 'minLat', 'minLng', 'maxLat', 'maxLng', function () {
     if (parseFloat(this.get('_minLat')) !== parseFloat(this.get('minLat'))) {
       return true;
     }
@@ -312,8 +312,8 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     @method _leafletMapDidChange
     @private
   */
-  _leafletMapDidChange: observer('_leafletMap', function() {
-    let leafletMap = this.get('_leafletMap');
+  _leafletMapDidChange: observer('_leafletMap', function () {
+    const leafletMap = this.get('_leafletMap');
     if (isNone(leafletMap)) {
       return;
     }
@@ -331,7 +331,7 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     @private
   */
   _leafletMapOnContainerResizeStart() {
-    let areaSelect = this.get('_areaSelect');
+    const areaSelect = this.get('_areaSelect');
     if (!isNone(areaSelect)) {
       // Temporary unbind 'change' event handler to avoid changes in coordinates while resize is in process.
       areaSelect.off('change', this._areaSelectOnChange, this);
@@ -345,13 +345,13 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     @private
   */
   _leafletMapOnContainerResizeEnd() {
-    let areaSelect = this.get('_areaSelect');
+    const areaSelect = this.get('_areaSelect');
     if (isNone(areaSelect)) {
       this._initizlizeAreaSelect();
     } else {
-      let leafletMap = this.get('_leafletMap');
-      let leafletMapSize = leafletMap.getSize();
-      this._updateAreaSelect({ fitBounds: areaSelect._width > leafletMapSize.x || areaSelect._height > leafletMapSize.y });
+      const leafletMap = this.get('_leafletMap');
+      const leafletMapSize = leafletMap.getSize();
+      this._updateAreaSelect({ fitBounds: areaSelect._width > leafletMapSize.x || areaSelect._height > leafletMapSize.y, });
     }
   },
 
@@ -368,18 +368,18 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
       return;
     }
 
-    let leafletMap = this.get('_leafletMap');
+    const leafletMap = this.get('_leafletMap');
     if (isNone(leafletMap)) {
       return;
     }
 
-    let leafletMapSize = leafletMap.getSize();
+    const leafletMapSize = leafletMap.getSize();
     if (leafletMapSize.x <= 0 || leafletMapSize.y <= 0) {
       // Map is invisible, so area select can't be initialized properly.
       return;
     }
 
-    areaSelect = L.areaSelect({ width: this.get('areaSelectDefaultWidth'), height: this.get('areaSelectDefaultHeight') });
+    areaSelect = L.areaSelect({ width: this.get('areaSelectDefaultWidth'), height: this.get('areaSelectDefaultHeight'), });
     this.set('_areaSelect', areaSelect);
 
     areaSelect.addTo(leafletMap);
@@ -394,7 +394,7 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     @method _bboxCoordinatesDidChange
     @private
   */
-  _boundingBoxCoordinatesDidChange: observer('minLat', 'minLng', 'maxLat', 'maxLng', function() {
+  _boundingBoxCoordinatesDidChange: observer('minLat', 'minLng', 'maxLat', 'maxLng', function () {
     once(this, '_updateBoundingBoxCoordiantes');
   }),
 
@@ -405,34 +405,34 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     @private
   */
   _updateBoundingBoxCoordiantes() {
-    let minLat = this.get('minLat');
-    let minLng = this.get('minLng');
-    let maxLat = this.get('maxLat');
-    let maxLng = this.get('maxLng');
+    const minLat = this.get('minLat');
+    const minLng = this.get('minLng');
+    const maxLat = this.get('maxLat');
+    const maxLng = this.get('maxLng');
 
     // Update coordiantes in textboxes.
     this.setProperties({
       _minLat: minLat,
       _minLng: minLng,
       _maxLat: maxLat,
-      _maxLng: maxLng
+      _maxLng: maxLng,
     });
 
-    let leafletMap = this.get('_leafletMap');
-    let areaSelect = this.get('_areaSelect');
-    let coordinatesAreValid = this.get('_coordinatesAreValid');
+    const leafletMap = this.get('_leafletMap');
+    const areaSelect = this.get('_areaSelect');
+    const coordinatesAreValid = this.get('_coordinatesAreValid');
     if (isNone(leafletMap) || isNone(areaSelect) || !coordinatesAreValid) {
       return;
     }
 
     // Update areaSelect if needed.
     if (this.get('_needToUpdateAreaSelect')) {
-      this._updateAreaSelect({ fitBounds: true });
+      this._updateAreaSelect({ fitBounds: true, });
     } else {
       this.set('_needToUpdateAreaSelect', true);
     }
 
-    let coordinatesBounds = [
+    const coordinatesBounds = [
       [minLng, minLat],
       [maxLng, minLat],
       [maxLng, maxLat],
@@ -448,25 +448,25 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     // If some of polygon's edges have length of 180 (for example from latitude -90 till latitude 90)
     // then PostGIS will throw an exception "Antipodal (180 degrees long) edge detected".
     // Workaround is to make each edge shorter (add additional points into polygon's edges).
-    let bboxEWKT = `SRID=4326;POLYGON((` +
-      `${minLng} ${minLat},` +
-      `${minLng + (maxLng - minLng) * 0.5} ${minLat},` +
-      `${maxLng} ${minLat},` +
-      `${maxLng} ${minLat + (maxLat - minLat) * 0.5},` +
-      `${maxLng} ${maxLat},` +
-      `${minLng + (maxLng - minLng) * 0.5} ${maxLat},` +
-      `${minLng} ${maxLat},` +
-      `${minLng} ${minLat + (maxLat - minLat) * 0.5},` +
-      `${minLng} ${minLat}))`;
+    const bboxEWKT = 'SRID=4326;POLYGON(('
+      + `${minLng} ${minLat},`
+      + `${minLng + (maxLng - minLng) * 0.5} ${minLat},`
+      + `${maxLng} ${minLat},`
+      + `${maxLng} ${minLat + (maxLat - minLat) * 0.5},`
+      + `${maxLng} ${maxLat},`
+      + `${minLng + (maxLng - minLng) * 0.5} ${maxLat},`
+      + `${minLng} ${maxLat},`
+      + `${minLng} ${minLat + (maxLat - minLat) * 0.5},`
+      + `${minLng} ${minLat}))`;
 
     // Send 'boundingBoxChange' action to report about changes in bounds.
     this.sendAction('boundingBoxChange', {
-      minLat: minLat,
-      minLng: minLng,
-      maxLat: maxLat,
-      maxLng: maxLng,
+      minLat,
+      minLng,
+      maxLat,
+      maxLng,
       bounds: L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng)),
-      bboxEWKT: bboxEWKT,
+      bboxEWKT,
       bboxGeoJSON: {
         type: 'Polygon',
         coordinates: [
@@ -475,10 +475,10 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
         crs: {
           type: 'name',
           properties: {
-            name: 'EPSG:4326'
-          }
-        }
-      }
+            name: 'EPSG:4326',
+          },
+        },
+      },
     });
   },
 
@@ -490,26 +490,26 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
   */
   _updateAreaSelect(options) {
     options = options || {};
-    let leafletMap = this.get('_leafletMap');
-    let areaSelect = this.get('_areaSelect');
+    const leafletMap = this.get('_leafletMap');
+    const areaSelect = this.get('_areaSelect');
     if (isNone(leafletMap) || isNone(areaSelect)) {
       return;
     }
 
-    let minLat = this.get('minLat');
-    let minLng = this.get('minLng');
-    let maxLat = this.get('maxLat');
-    let maxLng = this.get('maxLng');
+    const minLat = this.get('minLat');
+    const minLng = this.get('minLng');
+    const maxLat = this.get('maxLat');
+    const maxLng = this.get('maxLng');
 
-    let updateAreaSelect = () => {
+    const updateAreaSelect = () => {
       // Fit areaSelect to new bounds.
-      let newWidth = Math.abs(
-        leafletMap.latLngToLayerPoint(L.latLng(minLat, maxLng)).x) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLng)).x
-      );
-      let newHeight = Math.abs(
-        leafletMap.latLngToLayerPoint(L.latLng(maxLat, minLng)).y) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLng)).y
-      );
-      areaSelect.setDimensions({ width: Math.abs(newWidth), height: Math.abs(newHeight) });
+      const newWidth = Math.abs(
+        leafletMap.latLngToLayerPoint(L.latLng(minLat, maxLng)).x
+      ) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLng)).x);
+      const newHeight = Math.abs(
+        leafletMap.latLngToLayerPoint(L.latLng(maxLat, minLng)).y
+      ) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLng)).y);
+      areaSelect.setDimensions({ width: Math.abs(newWidth), height: Math.abs(newHeight), });
     };
 
     if (options.fitBounds) {
@@ -546,7 +546,7 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
   */
   _fitBoundsOfLeafletMap(bounds) {
     return new Promise((resolve, reject) => {
-      let leafletMap = this.get('_leafletMap');
+      const leafletMap = this.get('_leafletMap');
       if (isNone(leafletMap)) {
         reject('Leaflet map is not defined');
       }
@@ -556,7 +556,7 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
       });
 
       leafletMap.fitBounds(bounds, {
-        animate: false
+        animate: false,
       });
     });
   },
@@ -568,8 +568,8 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     @private
   */
   _areaSelectOnChange() {
-    let areaSelect = this.get('_areaSelect');
-    let bounds = areaSelect.getBounds();
+    const areaSelect = this.get('_areaSelect');
+    const bounds = areaSelect.getBounds();
 
     // Update component's public properties related to bounding box coordinates,
     // it will force '_bboxCoordinatesDidChange' observer to be called.
@@ -578,7 +578,7 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
       minLat: bounds.getSouth(),
       minLng: bounds.getWest(),
       maxLat: bounds.getNorth(),
-      maxLng: bounds.getEast()
+      maxLng: bounds.getEast(),
     });
   },
 
@@ -586,7 +586,7 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     Destroys DOM-related component's properties.
   */
   willDestroyElement() {
-    let areaSelect = this.get('_areaSelect');
+    const areaSelect = this.get('_areaSelect');
     if (!isNone(areaSelect)) {
       // Unbind 'change' event handler to avoid memory leaks.
       areaSelect.off('change', this._areaSelectOnChange, this);
@@ -594,7 +594,7 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
       this.set('_areaSelect', null);
     }
 
-    let leafletMap = this.get('_leafletMap');
+    const leafletMap = this.get('_leafletMap');
     if (!isNone(leafletMap)) {
       // Unbind 'containerResizeStart', 'containerResizeEnd' events handlers to avoid memory leaks.
       leafletMap.off('containerResizeStart', this._leafletMapOnContainerResizeStart, this);
@@ -621,10 +621,10 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
         minLat: parseFloat(this.get('_minLat')),
         minLng: parseFloat(this.get('_minLng')),
         maxLat: parseFloat(this.get('_maxLat')),
-        maxLng: parseFloat(this.get('_maxLng'))
+        maxLng: parseFloat(this.get('_maxLng')),
       });
-    }
-  }
+    },
+  },
 
   /**
     Component's action invoking when bounding box coordiantes did change.

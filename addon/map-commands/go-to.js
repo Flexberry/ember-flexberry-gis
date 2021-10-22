@@ -21,21 +21,21 @@ export default BaseMapCommand.extend({
   _execute(options) {
     this._super(...arguments);
 
-    let point = get(options, 'point');
-    let crs = get(options, 'crs');
-    let xCaption = get(options, 'xCaption');
-    let yCaption = get(options, 'yCaption');
-    let isLatlng = get(options, 'isLatlng');
+    const point = get(options, 'point');
+    const crs = get(options, 'crs');
+    const xCaption = get(options, 'xCaption');
+    const yCaption = get(options, 'yCaption');
+    const isLatlng = get(options, 'isLatlng');
 
-    let latlng = isLatlng ? new L.LatLng(point.x, point.y) : crs.unproject(point);
-    let leafletMap = this.get('leafletMap');
-    let popupContent = isLatlng ?
-      `${xCaption}: ${latlng.lat}; ` +
-      `${yCaption}: ${latlng.lng}` :
-      `${xCaption}: ${point.x}; ` +
-      `${yCaption}: ${point.y}`;
+    const latlng = isLatlng ? new L.LatLng(point.x, point.y) : crs.unproject(point);
+    const leafletMap = this.get('leafletMap');
+    const popupContent = isLatlng
+      ? `${xCaption}: ${latlng.lat}; `
+      + `${yCaption}: ${latlng.lng}`
+      : `${xCaption}: ${point.x}; `
+      + `${yCaption}: ${point.y}`;
 
     leafletMap.openPopup(popupContent, latlng);
     leafletMap.panTo(latlng);
-  }
+  },
 });

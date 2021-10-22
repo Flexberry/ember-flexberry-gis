@@ -8,7 +8,7 @@ export default Component.extend({
     @method localeDidChange
     @private
   */
-  _localeDidChange: observer('i18n.locale', function() {
+  _localeDidChange: observer('i18n.locale', function () {
     this.$('.mapItems .default.text').text(this.get('i18n').t('forms.gis-search-form.layer-metadata.select-a-map'));
   }),
 
@@ -42,5 +42,5 @@ export default Component.extend({
     this.$('.ui.accordion').accordion('destroy');
 
     this._super(...arguments);
-  }
+  },
 });
