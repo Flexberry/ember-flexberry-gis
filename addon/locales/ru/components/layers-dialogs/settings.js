@@ -5,8 +5,8 @@ import GeoJson from './settings/geojson';
 import Kml from './settings/kml';
 
 export default {
-  'group': {
-    'tab': {
+  group: {
+    tab: {
       'search-settings': {
         'can-be-context-searched-label': 'Может быть найдено в контексте',
         'can-be-searched-label': 'Может быть найдено',
@@ -26,7 +26,7 @@ export default {
         'properties-list-heading': 'Доступные свойства',
         'show-prop-heading': 'Показывать?',
         'locales-list-heading': 'Доступные локали',
-        'no-items-label': 'Нечего показать'
+        'no-items-label': 'Нечего показать',
       },
 
       'identification-settings': 'Может быть идентифицирован',
@@ -37,100 +37,100 @@ export default {
         'legend-can-be-displayed': 'Отображать легенду',
         'geometries-can-be-displayed': 'Отображать на легенде линейные и полигональные объекты',
         'markers-can-be-displayed': 'Отображать на легенде точечные объекты',
-        'url': 'URL',
-        'version': 'Версия',
-        'format': 'Формат',
-        'layers': 'Слои'
+        url: 'URL',
+        version: 'Версия',
+        format: 'Формат',
+        layers: 'Слои',
       },
 
-      'labels-settings':{
+      'labels-settings': {
         'sign-map-objects-label': 'Подписывать объекты карты',
         'field-caption': 'Атрибуты слоя',
         'no-fields': 'Поля не загружены',
-        'label': 'Надпись',
+        label: 'Надпись',
         'font-caption': 'Шрифт',
         'location-caption': 'Расположение',
         'scale-range-caption': 'Видимость в пределах масштаба',
-        'availableLineLocation': {
-          'over': 'Над линией',
-          'along': 'Поверх линии',
-          'under': 'Под линией'
+        availableLineLocation: {
+          over: 'Над линией',
+          along: 'Поверх линии',
+          under: 'Под линией',
         },
-        'error': 'Слой должен быть добавлен на карту'
-      }
+        error: 'Слой должен быть добавлен на карту',
+      },
     },
   },
 
-  'tile': {
+  tile: {
     'url-textbox': {
-      'caption': 'Url'
+      caption: 'Url',
     },
     'no-wrap-checkbox': {
-      'caption': 'Свойство слоя noWrap'
-    }
+      caption: 'Свойство слоя noWrap',
+    },
   },
 
   'tile-vector': {
     'url-textbox': {
-      'caption': 'Url'
+      caption: 'Url',
     },
     'layerName-textbox': {
-      'caption': 'Название слоя'
-    }
+      caption: 'Название слоя',
+    },
   },
 
-  'wms': Wms,
+  wms: Wms,
 
-  'wfs': Wfs,
+  wfs: Wfs,
 
   'wms-single-tile': Wms,
 
   'wms-wfs': WmsWfs,
 
-  'geojson': GeoJson,
+  geojson: GeoJson,
 
-  'kml': Kml,
+  kml: Kml,
 
   'odata-vector': {
     'model-name-textbox': {
-      'caption': 'Имя модели'
+      caption: 'Имя модели',
     },
     'projection-name-textbox': {
-      'caption': 'Представление'
+      caption: 'Представление',
     },
     'geometry-field-textbox': {
-      'caption': 'Поле геометрии'
+      caption: 'Поле геометрии',
     },
     'geometry-type-textbox': {
-      'caption': 'Тип геометрии'
+      caption: 'Тип геометрии',
     },
     'min-zoom': {
-      'caption': 'Минимальное приближение карты'
+      caption: 'Минимальное приближение карты',
     },
     'max-zoom': {
-      'caption': 'Максимальное приближение карты'
-    }
+      caption: 'Максимальное приближение карты',
+    },
   },
 
   'geocoder-osm-overpass': {
     'url-textbox': {
-      'caption': 'Url'
-    }
+      caption: 'Url',
+    },
   },
 
   'geocoder-osm-ru': {
     'url-textbox': {
-      'caption': 'Url'
+      caption: 'Url',
     },
     'autocomplete-url-textbox': {
-      'caption': 'Url для автокомплита'
-    }
+      caption: 'Url для автокомплита',
+    },
   },
 
-  'combine': {
+  combine: {
     'main-settings-caption': 'Настройки основного слоя ',
     'inner-settings-caption': 'Настройки ',
     'type-dropdown': 'Тип слоя',
-    'add-button-caption': 'Добавить'
-  }
+    'add-button-caption': 'Добавить',
+  },
 };

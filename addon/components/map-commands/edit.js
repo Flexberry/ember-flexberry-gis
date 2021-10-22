@@ -5,8 +5,8 @@
 import { scheduleOnce } from '@ember/runloop';
 
 import Component from '@ember/component';
-import layout from '../../templates/components/map-commands/edit';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../templates/components/map-commands/edit';
 
 /**
   Component's CSS-classes names.
@@ -24,7 +24,7 @@ const flexberryClassNamesPrefix = 'flexberry-edit-map-command';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
-  editdialog: 'flexberry-edit-dialog-map-command'
+  editdialog: 'flexberry-edit-dialog-map-command',
 };
 
 /**
@@ -44,7 +44,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let EditMapCommandComponent = Component.extend({
+const EditMapCommandComponent = Component.extend({
   /**
     Flag: indicates whether edit dialog has been already requested by user or not.
 
@@ -158,8 +158,8 @@ let EditMapCommandComponent = Component.extend({
     */
     onEditDialogApprove(e) {
       // Set edited properties values to map model.
-      let mapModel = e.mapProperties;
-      let model = this.get('mapModel');
+      const mapModel = e.mapProperties;
+      const model = this.get('mapModel');
 
       model.set('name', mapModel.name);
       model.set('lat', mapModel.lat);
@@ -172,10 +172,10 @@ let EditMapCommandComponent = Component.extend({
       model.set('coordinateReferenceSystem', mapModel.coordinateReferenceSystem);
       model.set('boundingBox', mapModel.boundingBox);
 
-      let leafletMap = this.get('leafletMap');
-      let mapCommandName = 'edit';
-      let mapCommandProperties = null;
-      let mapCommandExecutionOptions = null;
+      const leafletMap = this.get('leafletMap');
+      const mapCommandName = 'edit';
+      const mapCommandProperties = null;
+      const mapCommandExecutionOptions = null;
 
       leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions);
     },
@@ -237,7 +237,7 @@ let EditMapCommandComponent = Component.extend({
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 EditMapCommandComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default EditMapCommandComponent;

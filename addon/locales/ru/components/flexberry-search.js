@@ -1,17 +1,17 @@
 export default {
-  'placeholder': 'Найти...',
+  placeholder: 'Найти...',
   'no-results': {
-    'caption': 'Нет результатов',
-    'description': 'Ваш поиск не дал результатов'
+    caption: 'Нет результатов',
+    description: 'Ваш поиск не дал результатов',
   },
   'search-properties': {
-    'caption': 'Атрибут'
+    caption: 'Атрибут',
   },
   'search-layers': {
-    'caption': 'Слой'
+    caption: 'Слой',
   },
   'result-caption': 'Результаты поиска',
   'error-message-caption': 'Ошибка поиска',
   'error-message-empty-selected-layer': 'Не выбран слой для поиска',
-  'error-message-empty-attr-layer': 'Не выбран атрибут для поиска'
+  'error-message-empty-attr-layer': 'Не выбран атрибут для поиска',
 };

@@ -53,7 +53,7 @@ export default Component.extend({
     'styleSettings.lineJoin',
     'styleSettings.dashArray',
     'styleSettings.dashOffset',
-    function() {
+    function () {
       once(this, '_sendChangeAction');
     }
   ),
@@ -80,6 +80,6 @@ export default Component.extend({
     */
     onStrokeColorChange(strokeColorPath, e) {
       this.set(strokeColorPath, e.newValue);
-    }
-  }
+    },
+  },
 });

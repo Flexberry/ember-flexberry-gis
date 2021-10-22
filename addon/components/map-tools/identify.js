@@ -6,8 +6,8 @@ import { isBlank } from '@ember/utils';
 
 import { computed } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../../templates/components/map-tools/identify';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../templates/components/map-tools/identify';
 
 /**
   Component's CSS-classes names.
@@ -24,7 +24,7 @@ import { translationMacro as t } from 'ember-i18n';
 const flexberryClassNamesPrefix = 'flexberry-identify-map-tool';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix
+  wrapper: flexberryClassNamesPrefix,
 };
 
 /**
@@ -44,7 +44,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let IdentifyMapToolComponent = Component.extend({
+const IdentifyMapToolComponent = Component.extend({
   /**
     Identify tool name computed by the specified tool settings.
 
@@ -52,10 +52,10 @@ let IdentifyMapToolComponent = Component.extend({
     @type String
     @readOnly
   */
-  _identifyToolName: computed('layerMode', 'toolMode', function() {
+  _identifyToolName: computed('layerMode', 'toolMode', function () {
     let identifyToolName = 'identify';
-    let layerMode = this.get('layerMode');
-    let toolMode = this.get('toolMode');
+    const layerMode = this.get('layerMode');
+    const toolMode = this.get('toolMode');
 
     if (!(isBlank(layerMode) || isBlank(toolMode))) {
       identifyToolName = `identify-${layerMode}-${toolMode}`;
@@ -182,13 +182,13 @@ let IdentifyMapToolComponent = Component.extend({
     @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
     @default null
   */
-  leafletMap: null
+  leafletMap: null,
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 IdentifyMapToolComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default IdentifyMapToolComponent;

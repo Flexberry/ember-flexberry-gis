@@ -3,10 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 
 // import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | geometry add modes/manual', function(hooks) {
+module('Integration | Component | geometry add modes/manual', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('empty test', function(assert) {
+  test('empty test', function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 

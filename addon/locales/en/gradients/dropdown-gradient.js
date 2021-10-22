@@ -1,3 +1,3 @@
 export default {
-  'default-text': 'Choose gradient'
+  'default-text': 'Choose gradient',
 };

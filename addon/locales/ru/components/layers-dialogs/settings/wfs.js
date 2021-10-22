@@ -1,59 +1,59 @@
 export default {
   'format-dropdown': {
-    'caption': 'Формат'
+    caption: 'Формат',
   },
   'url-textbox': {
-    'caption': 'Url'
+    caption: 'Url',
   },
   'version-textbox': {
-    'caption': 'Версия WFS'
+    caption: 'Версия WFS',
   },
   'namespace-uri-textbox': {
-    'caption': 'URI пространства имен'
+    caption: 'URI пространства имен',
   },
   'type-ns-name-textbox': {
-    'caption': 'Имя пространства имен типа'
+    caption: 'Имя пространства имен типа',
   },
   'type-ns-textbox': {
-    'caption': 'Пространство имен типа'
+    caption: 'Пространство имен типа',
   },
   'type-name-textbox': {
-    'caption': 'Имя типа'
+    caption: 'Имя типа',
   },
   'geometry-field-textbox': {
-    'caption': 'Поле геометрии'
+    caption: 'Поле геометрии',
   },
   'max-features-textbox': {
-    'caption': 'Максимальное количество объектов'
+    caption: 'Максимальное количество объектов',
   },
   'show-existing-checkbox': {
-    'caption': 'Отображать существующие объекты'
+    caption: 'Отображать существующие объекты',
   },
-  'style': {
-    'caption': 'Стиль отображения',
+  style: {
+    caption: 'Стиль отображения',
     'color-textbox': {
-      'caption': 'Цвет заливки'
+      caption: 'Цвет заливки',
     },
     'weight-textbox': {
-      'caption': 'Толщина обводки'
-    }
+      caption: 'Толщина обводки',
+    },
   },
-  'clusterize': {
-    'caption': 'Кластеризовать'
+  clusterize: {
+    caption: 'Кластеризовать',
   },
-  'readonly': {
-    'caption': 'Только чтение'
+  readonly: {
+    caption: 'Только чтение',
   },
-  'forceMulti': {
-    'caption': 'Создавать многоконтурные геометрии'
+  forceMulti: {
+    caption: 'Создавать многоконтурные геометрии',
   },
   'min-zoom': {
-    'caption': 'Минимальное приближение карты'
+    caption: 'Минимальное приближение карты',
   },
   'max-zoom': {
-    'caption': 'Максимальное приближение карты'
+    caption: 'Максимальное приближение карты',
   },
-  'typeGeometry': {
-    'caption': 'Тип геометрии'
-  }
+  typeGeometry: {
+    caption: 'Тип геометрии',
+  },
 };

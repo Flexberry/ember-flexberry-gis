@@ -26,10 +26,10 @@ const flexberryClassNamesPrefix = 'layer-legend';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
-  imageWrapper: flexberryClassNamesPrefix + '-image-wrapper',
-  image: flexberryClassNamesPrefix + '-image',
-  defaultImage: flexberryClassNamesPrefix + '-default-image',
-  caption: flexberryClassNamesPrefix + '-caption'
+  imageWrapper: `${flexberryClassNamesPrefix}-image-wrapper`,
+  image: `${flexberryClassNamesPrefix}-image`,
+  defaultImage: `${flexberryClassNamesPrefix}-default-image`,
+  caption: `${flexberryClassNamesPrefix}-caption`,
 };
 
 /**
@@ -117,8 +117,8 @@ export default Component.extend({
     @method _legendsDidChange
     @private
   */
-  _legendsDidChange: on('init', observer('_legends', function() {
-    let legends = this.get('_legends');
+  _legendsDidChange: on('init', observer('_legends', function () {
+    const legends = this.get('_legends');
     if (legends instanceof Promise) {
       legends.then((result) => {
         this.sendAction('legendsLoaded', this.get('layer.name'), result);
@@ -134,10 +134,10 @@ export default Component.extend({
     @method _legendsDidChange
     @private
   */
-  _rightPaddingDidChange: observer('rightPadding', function() {
-    let rightPadding = this.get('rightPadding');
+  _rightPaddingDidChange: observer('rightPadding', function () {
+    const rightPadding = this.get('rightPadding');
     if (!isBlank(rightPadding)) {
-      this.$(`.${this.flexberryClassNames.imageWrapper}`).css('padding-right', rightPadding + 'px');
+      this.$(`.${this.flexberryClassNames.imageWrapper}`).css('padding-right', `${rightPadding}px`);
     }
   }),
 
@@ -147,9 +147,9 @@ export default Component.extend({
   didRender() {
     this._super(...arguments);
 
-    let height = this.get('height');
+    const height = this.get('height');
     if (!isBlank(height)) {
-      this.$(`.${this.flexberryClassNames.imageWrapper}`).css('height', height + 'px');
+      this.$(`.${this.flexberryClassNames.imageWrapper}`).css('height', `${height}px`);
     }
-  }
+  },
 });

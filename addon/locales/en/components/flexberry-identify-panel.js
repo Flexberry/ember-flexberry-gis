@@ -1,34 +1,34 @@
 export default {
   'identify-all': {
-    'caption': 'All layers'
+    caption: 'All layers',
   },
   'identify-all-visible': {
-    'caption': 'All visible layers'
+    caption: 'All visible layers',
   },
   'identify-top-visible': {
-    'caption': 'Top visible layer'
+    caption: 'Top visible layer',
   },
-  'rectangle': {
-    'caption': 'Rectangle'
+  rectangle: {
+    caption: 'Rectangle',
   },
-  'polygon': {
-    'caption': 'Polygon'
+  polygon: {
+    caption: 'Polygon',
   },
-  'marker': {
-    'caption': 'Point'
+  marker: {
+    caption: 'Point',
   },
-  'polyline': {
-    'caption': 'Polyline'
+  polyline: {
+    caption: 'Polyline',
   },
-  'clear': {
-    'caption': 'Clear'
+  clear: {
+    caption: 'Clear',
   },
-  'buffer': {
+  buffer: {
     'active-caption': 'Buffer',
     'radius-caption': 'Radius',
-    'units': {
-      'meters': 'Meters',
-      'kilometers': 'Kilometers'
-    }
-  }
+    units: {
+      meters: 'Meters',
+      kilometers: 'Kilometers',
+    },
+  },
 };

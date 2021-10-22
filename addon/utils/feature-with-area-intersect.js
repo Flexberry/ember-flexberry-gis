@@ -13,23 +13,23 @@ import jsts from 'npm:jsts';
   */
 export default function featureWithAreaIntersect(featureA, geoLayer, leafletLayer, mapModel, scale) {
   if (leafletLayer instanceof L.Polygon) {
-    let objB = geoLayer;
-    let precisionModel = new jsts.geom.PrecisionModel(scale);
-    let featureB = leafletLayer.options.crs.code === 'EPSG:4326' ? objB : mapModel._convertObjectCoordinates(leafletLayer.options.crs.code, objB);
-    let geojsonReader = new jsts.io.GeoJSONReader();
-    let objAJsts = geojsonReader.read(featureA.geometry);
-    let objBJsts = geojsonReader.read(featureB.geometry);
-    let objAJstsScaled = new jsts.precision.GeometryPrecisionReducer(precisionModel).reduce(objAJsts);
-    let objBJstsScaled = new jsts.precision.GeometryPrecisionReducer(precisionModel).reduce(objBJsts);
-    let intersected = objAJstsScaled.intersection(objBJstsScaled);
-    let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let intersectionRes = geojsonWriter.write(intersected);
+    const objB = geoLayer;
+    const precisionModel = new jsts.geom.PrecisionModel(scale);
+    const featureB = leafletLayer.options.crs.code === 'EPSG:4326' ? objB : mapModel._convertObjectCoordinates(leafletLayer.options.crs.code, objB);
+    const geojsonReader = new jsts.io.GeoJSONReader();
+    const objAJsts = geojsonReader.read(featureA.geometry);
+    const objBJsts = geojsonReader.read(featureB.geometry);
+    const objAJstsScaled = new jsts.precision.GeometryPrecisionReducer(precisionModel).reduce(objAJsts);
+    const objBJstsScaled = new jsts.precision.GeometryPrecisionReducer(precisionModel).reduce(objBJsts);
+    const intersected = objAJstsScaled.intersection(objBJstsScaled);
+    const geojsonWriter = new jsts.io.GeoJSONWriter();
+    const intersectionRes = geojsonWriter.write(intersected);
     if (intersectionRes) {
-      let intersectArea = intersected.getArea();
+      const intersectArea = intersected.getArea();
       if (!isNone(geoLayer.properties)) {
         geoLayer.properties.intersectionArea = intersectArea;
       } else {
-        geoLayer.properties = { intersectionArea: intersectArea };
+        geoLayer.properties = { intersectionArea: intersectArea, };
       }
     }
   }
@@ -45,13 +45,13 @@ export default function featureWithAreaIntersect(featureA, geoLayer, leafletLaye
  * @returns {double} area of intersection of features in measure units of coordinate references systems
 */
 export function intersectionArea(geoJsonA, geoJsonB, scale) {
-  let geojsonReader = new jsts.io.GeoJSONReader();
-  let precisionModel = new jsts.geom.PrecisionModel(scale); // number - scale
-  let objAJsts = geojsonReader.read(geoJsonA.geometry);
-  let objBJsts = geojsonReader.read(geoJsonB.geometry);
-  let objAJstsScaled = new jsts.precision.GeometryPrecisionReducer(precisionModel).reduce(objAJsts);
-  let objBJstsScaled = new jsts.precision.GeometryPrecisionReducer(precisionModel).reduce(objBJsts);
+  const geojsonReader = new jsts.io.GeoJSONReader();
+  const precisionModel = new jsts.geom.PrecisionModel(scale); // number - scale
+  const objAJsts = geojsonReader.read(geoJsonA.geometry);
+  const objBJsts = geojsonReader.read(geoJsonB.geometry);
+  const objAJstsScaled = new jsts.precision.GeometryPrecisionReducer(precisionModel).reduce(objAJsts);
+  const objBJstsScaled = new jsts.precision.GeometryPrecisionReducer(precisionModel).reduce(objBJsts);
 
-  let intersected = objAJstsScaled.intersection(objBJstsScaled);
+  const intersected = objAJstsScaled.intersection(objBJstsScaled);
   return intersected.getArea();
 }

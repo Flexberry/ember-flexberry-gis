@@ -24,9 +24,9 @@ const flexberryClassNamesPrefix = 'flexberry-map-command';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
-  icon: flexberryClassNamesPrefix + '-icon',
-  submenu: flexberryClassNamesPrefix + '-submenu',
-  submenuIcon: flexberryClassNamesPrefix + '-submenu-icon'
+  icon: `${flexberryClassNamesPrefix}-icon`,
+  submenu: `${flexberryClassNamesPrefix}-submenu`,
+  submenuIcon: `${flexberryClassNamesPrefix}-submenu-icon`,
 };
 
 /**
@@ -47,7 +47,7 @@ const flexberryClassNames = {
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
   @uses DomActionsMixin
 */
-let BaseMapCommandComponent = BaseMapToolComponent.extend({
+const BaseMapCommandComponent = BaseMapToolComponent.extend({
   /**
     Reference to component's template.
   */
@@ -99,10 +99,10 @@ let BaseMapCommandComponent = BaseMapToolComponent.extend({
       return;
     }
 
-    let leafletMap = this.get('leafletMap');
-    let mapCommandName = this.get('name');
-    let mapCommandProperties = this.get('mapCommandProperties');
-    let mapCommandExecutionOptions = this.get('mapCommandExecutionOptions');
+    const leafletMap = this.get('leafletMap');
+    const mapCommandName = this.get('name');
+    const mapCommandProperties = this.get('mapCommandProperties');
+    const mapCommandExecutionOptions = this.get('mapCommandExecutionOptions');
 
     leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions);
   },
@@ -121,13 +121,13 @@ let BaseMapCommandComponent = BaseMapToolComponent.extend({
     @param {Object} leafletMap Leaflet map.
   */
   detachLeafletMapEventHandlers(leafletMap) {
-  }
+  },
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 BaseMapCommandComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default BaseMapCommandComponent;

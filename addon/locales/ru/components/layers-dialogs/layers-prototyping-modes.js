@@ -1,8 +1,8 @@
 export default {
-  'new': 'Новый слой',
+  new: 'Новый слой',
   'metadata-mode': 'На основе существующих метаданных',
   'metadata-records-dropdown': {
-    'caption': 'Используемая запись с метаданными'
+    caption: 'Используемая запись с метаданными',
   },
-  'metadata-reload': 'Перезагрузить метаданные'
+  'metadata-reload': 'Перезагрузить метаданные',
 };

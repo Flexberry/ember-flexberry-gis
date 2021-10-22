@@ -14,7 +14,7 @@ import { A } from '@ember/array';
 export function initialize(applicationInstance) {
   // Retrieve known layers & replace factories with already created instances.
   // It is needed for a while to keep backward compatibility.
-  let knownLayers = applicationInstance.knownForType('layer');
+  const knownLayers = applicationInstance.knownForType('layer');
   A(Object.keys(knownLayers) || []).forEach((layerName) => {
     knownLayers[layerName] = applicationInstance.lookup(`layer:${layerName}`);
   });
@@ -23,5 +23,5 @@ export function initialize(applicationInstance) {
 export default {
   after: 'owner',
   name: 'layers',
-  initialize
+  initialize,
 };

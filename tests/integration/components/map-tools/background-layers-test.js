@@ -10,7 +10,7 @@ import I18nService from 'ember-i18n/services/i18n';
 import I18nRuLocale from 'ember-flexberry-gis/locales/ru/translations';
 import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
 
-module('Integration | Component | map tools/background layers', function(hooks) {
+module('Integration | Component | map tools/background layers', function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function (assert) {
@@ -20,13 +20,13 @@ module('Integration | Component | map tools/background layers', function(hooks) 
 
     this.i18n = this.owner.lookup('service:i18n');
     Component.reopen({
-      i18n: service('i18n')
+      i18n: service('i18n'),
     });
 
     this.set('i18n.locale', 'en');
   });
 
-  test('isVisible false', async function(assert) {
+  test('isVisible false', async function (assert) {
     this.set('layers', A());
     this.set('isVisible', false);
 
@@ -42,7 +42,7 @@ module('Integration | Component | map tools/background layers', function(hooks) 
     assert.equal(this.$().find('.child-background-layers').length, 0);
   });
 
-  test('isVisible true', async function(assert) {
+  test('isVisible true', async function (assert) {
     this.set('layers', A([
       EmberObject.create({
         name: 'test layer1',
@@ -52,8 +52,8 @@ module('Integration | Component | map tools/background layers', function(hooks) 
           backgroundSettings: {
             canBeBackground: true,
             picture: 'pic1',
-          }
-        }
+          },
+        },
       }),
       EmberObject.create({
         name: 'test layer2',
@@ -63,8 +63,8 @@ module('Integration | Component | map tools/background layers', function(hooks) 
           backgroundSettings: {
             canBeBackground: true,
             picture: 'pic2',
-          }
-        }
+          },
+        },
       })
     ]));
 

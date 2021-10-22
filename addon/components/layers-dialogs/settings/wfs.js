@@ -11,7 +11,7 @@ import layout from '../../../templates/components/layers-dialogs/settings/wfs';
 import WmsSettingsComponent from './wms';
 
 // Regular expression used to derive whether settings' url is correct.
-let urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
+const urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
 
 /**
   Settings-part of WFS layer modal dialog.
@@ -49,7 +49,7 @@ export default WmsSettingsComponent.extend({
     'settings.typeName',
     'settings.version',
     function () {
-      let getCapabilitiesPromiseError = this.get('getCapabilitiesPromiseError');
+      const getCapabilitiesPromiseError = this.get('getCapabilitiesPromiseError');
 
       if (!isBlank(getCapabilitiesPromiseError)) {
         this.set('getCapabilitiesPromiseError', null);
@@ -57,14 +57,14 @@ export default WmsSettingsComponent.extend({
       }
 
       let message;
-      let fields = A();
+      const fields = A();
 
-      let i18n = this.get('i18n');
+      const i18n = this.get('i18n');
 
-      let url = this.get('settings.url');
-      let typeNS = this.get('settings.typeNS');
-      let typeName = this.get('settings.typeName');
-      let version = this.get('settings.version');
+      const url = this.get('settings.url');
+      const typeNS = this.get('settings.typeNS');
+      const typeName = this.get('settings.typeName');
+      const version = this.get('settings.version');
 
       if (isBlank(url) || isBlank(url.toString().match(new RegExp(urlRegex)))) {
         fields.pushObject(i18n.t('components.layers-dialogs.settings.wfs.url-textbox.caption'));
@@ -106,7 +106,7 @@ export default WmsSettingsComponent.extend({
     @param {Object} settings
   */
   getCapabilities(settings) {
-    let _this = this;
+    const _this = this;
 
     return new Promise((resolve, reject) => {
       L.wfs(settings, null).getBoundingBox(
@@ -138,7 +138,7 @@ export default WmsSettingsComponent.extend({
     this._super(...arguments);
 
     // Initialize available formats.
-    let availableFormats = A(Object.keys(L.Format) || []).filter((format) => {
+    const availableFormats = A(Object.keys(L.Format) || []).filter((format) => {
       format = format.toLowerCase();
       return format !== 'base' && format !== 'scheme';
     });
@@ -152,5 +152,5 @@ export default WmsSettingsComponent.extend({
     @type Array
     @default []
   */
-  typeGeometry: ['polygon', 'polyline', 'marker']
+  typeGeometry: ['polygon', 'polyline', 'marker'],
 });

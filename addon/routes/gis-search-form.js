@@ -8,12 +8,14 @@ import $ from 'jquery';
 import { A, isArray } from '@ember/array';
 import { hash, all } from 'rsvp';
 import Route from '@ember/routing/route';
-import FlexberryBoundingboxMapLoaderMixin from '../mixins/flexberry-boundingbox-map-loader';
 
 import QueryBuilder from 'ember-flexberry-data/query/builder';
 import Condition from 'ember-flexberry-data/query/condition';
 import FilterOperator from 'ember-flexberry-data/query/filter-operator';
-import { SimplePredicate, ComplexPredicate, StringPredicate, GeographyPredicate } from 'ember-flexberry-data/query/predicate';
+import {
+  SimplePredicate, ComplexPredicate, StringPredicate, GeographyPredicate
+} from 'ember-flexberry-data/query/predicate';
+import FlexberryBoundingboxMapLoaderMixin from '../mixins/flexberry-boundingbox-map-loader';
 
 /**
   Route for GIS search form.
@@ -31,7 +33,7 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
     projectionName: 'LayerMetadataL',
     top: 5,
     fieldName: 'layerMetadata',
-    tab: 'layer-metadata'
+    tab: 'layer-metadata',
   },
 
   /**
@@ -43,7 +45,7 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
     projectionName: 'MapGisSearchFormL',
     top: 5,
     fieldName: 'maps',
-    tab: 'maps'
+    tab: 'maps',
   },
 
   /**
@@ -60,7 +62,7 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
       availableMaps: this._getQuery(this.get('_mapSettings.modelName'), this.get('_mapSettings.projectionName'), null, null, null),
 
       // Get map model to be displayed in `flexberry-boundingbox` component.
-      boundingBoxComponentMap: this.getBoundingBoxComponentMapModel()
+      boundingBoxComponentMap: this.getBoundingBoxComponentMapModel(),
     });
   },
 
@@ -85,43 +87,41 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
       @method actions.doSearch
     */
     doSearch(req) {
-      let controller = this.get('controller');
-      let tabSettings = controller.get('tabSettings');
+      const controller = this.get('controller');
+      const tabSettings = controller.get('tabSettings');
       controller.set('error', null);
       controller.set('isLoading', true);
 
       // wheter it's a request from a specific control or a common one
       if (req.modelName) {
         // update top setting for common search
-        let idx = tabSettings.findIndex((item) => { return item.modelName === req.modelName; });
+        const idx = tabSettings.findIndex((item) => item.modelName === req.modelName);
         tabSettings[idx].top = req.top;
         this.get('controller').set('tabSettings', tabSettings);
 
-        var query = this._getQuery(req.modelName, req.projectionName, req.top, req.skip, req.searchConditions);
+        const query = this._getQuery(req.modelName, req.projectionName, req.top, req.skip, req.searchConditions);
         query.then((data) => {
           this.get('controller').set(req.fieldName, data);
         }).catch((error) => {
-          let controller = this.get('controller');
+          const controller = this.get('controller');
           controller.set('error', error);
         }).finally(() => {
           this.get('controller').set('isLoading', false);
         });
       } else {
-        let queries = tabSettings.map((item) => {
-          return this._getQuery(item.modelName, item.projectionName, item.top, null, req.searchConditions);
-        });
+        const queries = tabSettings.map((item) => this._getQuery(item.modelName, item.projectionName, item.top, null, req.searchConditions));
         all(queries).then((data) => {
           for (let i = 0; i < tabSettings.length; i++) {
             this.get('controller').set(tabSettings[i].fieldName, data[i]);
           }
         }).catch((error) => {
-          let controller = this.get('controller');
+          const controller = this.get('controller');
           controller.set('error', error);
         }).finally(() => {
           this.get('controller').set('isLoading', false);
         });
       }
-    }
+    },
   },
 
   /**
@@ -143,11 +143,11 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
 
     // If there are conditions - add them to the query.
     let condition;
-    let filterConditions = A();
+    const filterConditions = A();
 
-    let getOrSeparatedCondition = (searchObject, key) => {
-      let conditions = searchObject.split(',').map((item) => {
-        let str = item.trim();
+    const getOrSeparatedCondition = (searchObject, key) => {
+      const conditions = searchObject.split(',').map((item) => {
+        const str = item.trim();
         return new StringPredicate(key).contains(str);
       });
       if (isArray(conditions)) {
@@ -158,40 +158,39 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
     };
 
     if (searchConditions && searchConditions.keyWords) {
-      let keyWordsCondition = getOrSeparatedCondition(searchConditions.keyWords, 'keyWords');
+      const keyWordsCondition = getOrSeparatedCondition(searchConditions.keyWords, 'keyWords');
       if (keyWordsCondition) {
         filterConditions.addObject(keyWordsCondition);
       }
     }
 
     if (searchConditions && searchConditions.anyText) {
-      let anyTextConditions = getOrSeparatedCondition(searchConditions.anyText, 'anyText');
+      const anyTextConditions = getOrSeparatedCondition(searchConditions.anyText, 'anyText');
       if (anyTextConditions) {
         filterConditions.addObject(anyTextConditions);
       }
     }
 
     if (searchConditions && searchConditions.scaleFilters && searchConditions.scaleFilters.length) {
-      let scaleConditions = searchConditions.scaleFilters.map((item) => {
+      const scaleConditions = searchConditions.scaleFilters.map((item) => {
         let currentCondition = $('<textarea/>').html(item.condition).text();
         if (currentCondition === '=') {
           currentCondition = '==';
         }
 
-        let scale = parseInt(item.scale) || 0;
+        const scale = parseInt(item.scale) || 0;
         return new SimplePredicate('scale', currentCondition, scale);
       });
 
       if (scaleConditions.length) {
-        let scaleCondition = scaleConditions.length > 1 ? new ComplexPredicate(Condition.And, ...scaleConditions) : scaleConditions[0];
+        const scaleCondition = scaleConditions.length > 1 ? new ComplexPredicate(Condition.And, ...scaleConditions) : scaleConditions[0];
         filterConditions.addObject(scaleCondition);
       }
     }
 
     if (searchConditions && !isNone(searchConditions.boundingBoxEWKT)) {
-
-      let boundingBoxIntersectionCondition = new GeographyPredicate('boundingBox').intersects(searchConditions.boundingBoxEWKT);
-      let boundingBoxIsNullCondition = new SimplePredicate('boundingBox', FilterOperator.Eq, null);
+      const boundingBoxIntersectionCondition = new GeographyPredicate('boundingBox').intersects(searchConditions.boundingBoxEWKT);
+      const boundingBoxIsNullCondition = new SimplePredicate('boundingBox', FilterOperator.Eq, null);
 
       filterConditions.addObject(new ComplexPredicate(Condition.Or, boundingBoxIsNullCondition, boundingBoxIntersectionCondition));
     }
@@ -209,5 +208,5 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
     queryBuilder = queryBuilder.count();
 
     return this.get('store').query(modelName, queryBuilder.build());
-  }
+  },
 });

@@ -88,14 +88,14 @@ export default Mixin.create({
     @private
   */
   _leafletOptionsDidChange() {
-    let options = {};
-    let previousOptions = this.get('options');
-    let leafletOptions = A(this.get('leafletOptions') || []);
-    let changedOptions = A();
+    const options = {};
+    const previousOptions = this.get('options');
+    const leafletOptions = A(this.get('leafletOptions') || []);
+    const changedOptions = A();
 
     // Parse options.
     leafletOptions.forEach((optionName) => {
-      let optionValue = this.get(optionName);
+      const optionValue = this.get(optionName);
       if (optionValue === undefined) {
         return;
       }
@@ -106,26 +106,26 @@ export default Mixin.create({
         return;
       }
 
-      let previousOptionValue = get(previousOptions, optionName);
+      const previousOptionValue = get(previousOptions, optionName);
       if (JSON.stringify(optionValue) !== JSON.stringify(previousOptionValue)) {
         changedOptions.pushObject(optionName);
       }
     });
 
     // Parse options which are also callback functions.
-    let leafletOptionsCallbacks = this.get('leafletOptionsCallbacks');
+    const leafletOptionsCallbacks = this.get('leafletOptionsCallbacks');
     if (isArray(leafletOptionsCallbacks) && leafletOptionsCallbacks.length > 0) {
       for (let i = 0; i < leafletOptionsCallbacks.length; i++) {
-        let callbackName = leafletOptionsCallbacks[i];
+        const callbackName = leafletOptionsCallbacks[i];
 
         let customCallback = get(options, callbackName);
-        customCallback = this.parseLeafletOptionsCallback({ callbackName, serializedCallback: customCallback });
+        customCallback = this.parseLeafletOptionsCallback({ callbackName, serializedCallback: customCallback, });
 
         let resultingCallback;
         if (typeof customCallback === 'function') {
           resultingCallback = customCallback;
         } else {
-          let defaultCallback = this.get(`defaultLeafletOptionsCallbacks.${callbackName}`);
+          const defaultCallback = this.get(`defaultLeafletOptionsCallbacks.${callbackName}`);
           resultingCallback = typeof defaultCallback === 'function' ? defaultCallback.bind(this) : null;
         }
 
@@ -140,7 +140,7 @@ export default Mixin.create({
 
     if (typeOf(this.leafletOptionsDidChange) === 'function') {
       this.leafletOptionsDidChange.call(this, {
-        changedOptions
+        changedOptions,
       });
     }
   },
@@ -154,10 +154,10 @@ export default Mixin.create({
     @param {String} options.serializedCallback Serialized callback.
     @return {Function} Deserialized callback function.
   */
-  parseLeafletOptionsCallback({ callbackName, serializedCallback }) {
-    return typeof serializedCallback === 'string' && !isBlank(serializedCallback) ?
-      new Function('return ' + serializedCallback)() :
-      null;
+  parseLeafletOptionsCallback({ callbackName, serializedCallback, }) {
+    return typeof serializedCallback === 'string' && !isBlank(serializedCallback)
+      ? new Function(`return ${serializedCallback}`)()
+      : null;
   },
 
   /**
@@ -176,7 +176,7 @@ export default Mixin.create({
   init() {
     this._super(...arguments);
 
-    let leafletOptions = A(this.get('leafletOptions') || []);
+    const leafletOptions = A(this.get('leafletOptions') || []);
     leafletOptions.forEach((optionName) => {
       this.addObserver(optionName, this._leafletOptionDidChange);
     });
@@ -190,9 +190,9 @@ export default Mixin.create({
   willDestroy() {
     this._super(...arguments);
 
-    let leafletOptions = A(this.get('leafletOptions') || []);
+    const leafletOptions = A(this.get('leafletOptions') || []);
     leafletOptions.forEach((optionName) => {
       this.removeObserver(optionName, this._leafletOptionDidChange);
     });
-  }
+  },
 });

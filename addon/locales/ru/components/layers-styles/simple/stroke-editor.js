@@ -5,5 +5,5 @@ export default {
   'stroke-linecap': 'Концы обводки',
   'stroke-linejoin': 'Углы обводки',
   'stroke-dasharray': 'Штриховка обводки',
-  'stroke-dashoffset': 'Смещение штриховки обводки'
+  'stroke-dashoffset': 'Смещение штриховки обводки',
 };

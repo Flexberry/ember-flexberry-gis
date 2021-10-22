@@ -1,32 +1,32 @@
 export default {
-  'caption': 'Нарисовать',
-  'tooltip': 'Нарисовать',
+  caption: 'Нарисовать',
+  tooltip: 'Нарисовать',
   'draw-marker': {
-    'caption': 'Добавить маркер'
+    caption: 'Добавить маркер',
   },
   'draw-polyline': {
-    'caption': 'Добавить ломаную'
+    caption: 'Добавить ломаную',
   },
   'draw-multi-line': {
-    'caption': 'Добавить часть'
+    caption: 'Добавить часть',
   },
   'draw-rectangle': {
-    'caption': 'Добавить прямоугольник'
+    caption: 'Добавить прямоугольник',
   },
   'draw-polygon': {
-    'caption': 'Добавить полигон'
+    caption: 'Добавить полигон',
   },
   'draw-multi-polygon': {
-    'caption': 'Добавить часть'
+    caption: 'Добавить часть',
   },
-  'move': {
-    'caption': 'Перетаскивание'
+  move: {
+    caption: 'Перетаскивание',
   },
-  'movexy': {
-    'caption': 'Смещение',
-    'x': 'X',
-    'y': 'Y',
-    'apply': 'Применить',
-    'error': 'Перемещение не удалось'
-  }
+  movexy: {
+    caption: 'Смещение',
+    x: 'X',
+    y: 'Y',
+    apply: 'Применить',
+    error: 'Перемещение не удалось',
+  },
 };

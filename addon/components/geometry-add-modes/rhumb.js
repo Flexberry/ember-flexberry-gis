@@ -5,12 +5,14 @@
 import $ from 'jquery';
 
 import { on } from '@ember/object/evented';
-import { computed, get, set, observer } from '@ember/object';
+import {
+  computed, get, set, observer
+} from '@ember/object';
 import { isNone, isEmpty } from '@ember/utils';
 import { A } from '@ember/array';
 import Component from '@ember/component';
-import layout from '../../templates/components/geometry-add-modes/rhumb';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../templates/components/geometry-add-modes/rhumb';
 import rhumbOperations from '../../utils/rhumb-operations';
 
 /**
@@ -30,11 +32,11 @@ const flexberryClassNamesPrefix = 'flexberry-geometry-add-mode-rhumb';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
-  dialog: flexberryClassNamesPrefix + '-dialog',
-  tableBlock: flexberryClassNamesPrefix + '-table-block'
+  dialog: `${flexberryClassNamesPrefix}-dialog`,
+  tableBlock: `${flexberryClassNamesPrefix}-table-block`,
 };
 
-let FlexberryGeometryAddModeRhumbComponent = Component.extend({
+const FlexberryGeometryAddModeRhumbComponent = Component.extend({
 
   /**
     Reference to component's template.
@@ -87,7 +89,7 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
   */
   _formValid: {
     startPointValid: false,
-    tableValid: false
+    tableValid: false,
   },
 
   /**
@@ -107,19 +109,19 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
   _objectDirections: A([
     {
       captionPath: 'components.geometry-add-modes.rhumb.NE',
-      type: 'NE'
+      type: 'NE',
     },
     {
       captionPath: 'components.geometry-add-modes.rhumb.SE',
-      type: 'SE'
+      type: 'SE',
     },
     {
       captionPath: 'components.geometry-add-modes.rhumb.SW',
-      type: 'SW'
+      type: 'SW',
     },
     {
       captionPath: 'components.geometry-add-modes.rhumb.NW',
-      type: 'NW'
+      type: 'NW',
     }
   ]),
 
@@ -144,7 +146,7 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
     @private
   */
   _dataForm: {
-    startPoint: ''
+    startPoint: '',
   },
 
   /**
@@ -201,8 +203,8 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
   init() {
     this._super(...arguments);
 
-    let directionItems = this.get('directionItems');
-    let availableDirection = [];
+    const directionItems = this.get('directionItems');
+    const availableDirection = [];
 
     if (!isNone(directionItems)) {
       directionItems.forEach((item) => {
@@ -220,13 +222,13 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
     @type Object[]
   */
   directionItems: computed('_objectDirections.[]', '_objectDirections.@each.active', 'i18n', function () {
-    let i18n = this.get('i18n');
-    let _objectDirections = this.get('_objectDirections');
+    const i18n = this.get('i18n');
+    const _objectDirections = this.get('_objectDirections');
 
-    let result = A(_objectDirections);
+    const result = A(_objectDirections);
     result.forEach((item) => {
-      let caption = get(item, 'caption');
-      let captionPath = get(item, 'captionPath');
+      const caption = get(item, 'caption');
+      const captionPath = get(item, 'captionPath');
 
       if (!caption && captionPath) {
         set(item, 'caption', i18n.t(captionPath));
@@ -250,16 +252,16 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
     this.set('_formValid.startPointValid', !this._validStartPoint(this._dataForm.startPoint));
     error |= !this._validStartPoint(this._dataForm.startPoint);
 
-    let skipNum = this._countSkip();
+    const skipNum = this._countSkip();
     if (isNone(skipNum)) {
       this.set('isError', true);
       this.set('message', this.get('cannotChangePermission'));
     }
 
-    let type = this.get('settings.typeGeometry');
+    const type = this.get('settings.typeGeometry');
 
-    if (isNone(skipNum) || this._tableData.length === 0 || (type === 'polygon' && this._tableData.length < skipNum + 2) ||
-      (type === 'polyline' && this._tableData.length < skipNum + 1)) {
+    if (isNone(skipNum) || this._tableData.length === 0 || (type === 'polygon' && this._tableData.length < skipNum + 2)
+      || (type === 'polyline' && this._tableData.length < skipNum + 1)) {
       this.set('_formValid.tableValid', true);
       error = true;
       this.set('message', this.get('incorrectPermission'));
@@ -268,7 +270,7 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
     }
 
     for (let i = 0; i < this._tableData.length; i++) {
-      let item = this._tableData[i];
+      const item = this._tableData[i];
       set(item, 'directionValid', isNone(item.direction));
       set(item, 'rhumbValid', !this._validFloatNumber(item.rhumb));
       set(item, 'distanceValid', !this._validFloatNumber(item.distance));
@@ -289,10 +291,10 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
         break;
     }
 
-    const startPoints = this._dataForm.startPoint.split(' ').map((p) => { return parseFloat(p); });
+    const startPoints = this._dataForm.startPoint.split(' ').map((p) => parseFloat(p));
 
-    let translateDirection = (direction) => {
-      let factories = this.get('_objectDirections');
+    const translateDirection = (direction) => {
+      const factories = this.get('_objectDirections');
       let res = null;
 
       if (!isNone(direction)) {
@@ -302,42 +304,42 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
       return res;
     };
 
-    let points = [];
+    const points = [];
     for (let i = 0; i < this._tableData.length; i++) {
-      let item = this._tableData[i];
-      let data = {
+      const item = this._tableData[i];
+      const data = {
         rhumb: `${translateDirection(item.direction)}`,
         angle: item.rhumb,
-        distance: parseFloat(item.distance)
+        distance: parseFloat(item.distance),
       };
 
       points.push(data);
     }
 
     const crsCode = this.get('_crs.code');
-    let data = {
+    const data = {
       type: objectType,
       startPoint: startPoints,
       skip: skipNum,
       crs: crsCode,
-      points: points
+      points,
     };
 
     try {
-      let crsRhumb = this.get('settings.layerCRS');
+      const crsRhumb = this.get('settings.layerCRS');
       const rhumbObj = rhumbOperations.createObjectRhumb(data, crsRhumb, this);
-      let coordsToLatLng = function (coords) {
+      const coordsToLatLng = function (coords) {
         return crsRhumb.unproject(L.point(coords));
       };
 
       let geoJSON = null;
       if (crsRhumb.code !== 'EPSG:4326') {
-        geoJSON = L.geoJSON(rhumbObj, { coordsToLatLng: coordsToLatLng.bind(this) });
+        geoJSON = L.geoJSON(rhumbObj, { coordsToLatLng: coordsToLatLng.bind(this), });
       } else {
         geoJSON = L.geoJSON(rhumbObj);
       }
 
-      let newObj = geoJSON.getLayers()[0];
+      const newObj = geoJSON.getLayers()[0];
 
       return [false, newObj];
     } catch (e) {
@@ -354,7 +356,7 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
         return;
       }
 
-      let layer = this.get('layer');
+      const layer = this.get('layer');
       if (!isNone(layer)) {
         const type = this.get('settings.typeGeometry');
         if (type === 'marker') {
@@ -389,15 +391,12 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
     OnAddRow(rowId) {
       const getGuid = () => {
         const templ = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
-        let result = templ.replace(/[xy]/g, (c, r) => {
-
-          return c === 'x' ? Math.random() * 16 | 0 : r & 0x3 | 0x8;
-        });
+        const result = templ.replace(/[xy]/g, (c, r) => (c === 'x' ? Math.random() * 16 | 0 : r & 0x3 | 0x8));
 
         return result.toString(16);
       };
 
-      let skip = (this._tableData.length === 1 && !this._tableData[0].skip) ? true : false;
+      const skip = !!((this._tableData.length === 1 && !this._tableData[0].skip));
       if (this.get('isError') && skip) {
         this.set('isError', false);
       }
@@ -413,13 +412,13 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
         id: getGuid(),
         number: '0-1',
         readonly: true,
-        skip: skip,
+        skip,
         direction: null,
         rhumb: null,
         distance: null,
         directionValid: false,
         rhumbValid: false,
-        distanceValid: false
+        distanceValid: false,
       };
 
       this._tableData.insertAt(index + 1, row);
@@ -434,7 +433,7 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
     */
     OnRemoveRow(id) {
       for (let i = 0; i < this._tableData.length; i++) {
-        let item = this._tableData[i];
+        const item = this._tableData[i];
         if (item.id === id) {
           this._tableData.removeAt(i, 1);
           if (get(item, 'skip')) {
@@ -457,7 +456,7 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
       @method actions.onRhumbSkipChange
     */
     onRhumbSkipChange(row, options) {
-      let checked = options.checked;
+      const { checked, } = options;
 
       this.set('isError', false);
 
@@ -470,7 +469,7 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
       if (this._tableData.length > 1 && this._tableData.filter((item) => item.skip).length > 1) {
         if (confirm(this.get('changePermission'))) {
           for (let i = 0; i < this._tableData.length; i++) {
-            let item = this._tableData[i];
+            const item = this._tableData[i];
             if (item.id !== row.id) {
               set(item, 'skip', false);
             }
@@ -490,7 +489,7 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
       if (!isEmpty(str) && regex.test(str)) {
         $(e.target).val(str.replace(regex, ''));
       }
-    }
+    },
   },
 
   /**
@@ -500,7 +499,7 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
   */
   _countOrder() {
     for (let i = 0; i < this._tableData.length; i++) {
-      let item = this._tableData[i];
+      const item = this._tableData[i];
       set(item, 'number', `${i}-${i + 1}`);
     }
   },
@@ -512,7 +511,7 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
   */
   _countSkip() {
     for (let i = 0; i < this._tableData.length; i++) {
-      let item = this._tableData[i];
+      const item = this._tableData[i];
       if (get(item, 'skip')) {
         return i;
       }
@@ -530,7 +529,7 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
     this.set('_tableData', A());
     this.send('OnAddRow');
 
-    Object.keys(this._formValid).forEach(v => set(this, `_formValid.${v}`, false));
+    Object.keys(this._formValid).forEach((v) => set(this, `_formValid.${v}`, false));
   },
 
   /**
@@ -551,7 +550,7 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
   _validStartPoint(str) {
     const regex = /^(([0-9]*[.])?[0-9]+) (([0-9]*[.])?[0-9]+)$/;
     return regex.exec(str);
-  }
+  },
 
   /**
     Component's action invoking when new geometry was added.
@@ -566,7 +565,7 @@ let FlexberryGeometryAddModeRhumbComponent = Component.extend({
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryGeometryAddModeRhumbComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryGeometryAddModeRhumbComponent;

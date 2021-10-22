@@ -1,8 +1,8 @@
 export default {
   'url-textbox': {
-    'caption': 'Url to KML source file'
+    caption: 'Url to KML source file',
   },
   'string-textbox': {
-    'caption': 'KML source string'
-  }
+    caption: 'KML source string',
+  },
 };

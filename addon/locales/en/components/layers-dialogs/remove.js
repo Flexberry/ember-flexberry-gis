@@ -1,10 +1,10 @@
 export default {
-  'caption': 'Remove layer',
-  'content': 'Do you really want to remove \'{{layerName}}\' layer?',
+  caption: 'Remove layer',
+  content: 'Do you really want to remove \'{{layerName}}\' layer?',
   'approve-button': {
-    'caption': 'Yes'
+    caption: 'Yes',
   },
   'deny-button': {
-    'caption': 'No'
-  }
+    caption: 'No',
+  },
 };

@@ -13,7 +13,7 @@ let leafletMap;
 let app;
 let geoserverFake;
 
-module('Unit | Component | layers/combine layer', function(hooks) {
+module('Unit | Component | layers/combine layer', function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
@@ -26,52 +26,52 @@ module('Unit | Component | layers/combine layer', function(hooks) {
     app.register('component:layers/wms-layer', wmsComponentLayer);
     app.register('layer:wfs', wfsLayer);
 
-    let settingsAsObject = {
-      'type': 'wfs',
-      'url': 'http://geoserverFake/geoserver/ows',
-      'style': { 'color': 'red', 'weight': '4' },
-      'filter': null,
-      'format': 'GeoJSON',
-      'typeNS': 'les',
-      'maxZoom': '13',
-      'minZoom': '11',
-      'opacity': null,
-      'pkField': 'primarykey',
-      'version': '1.1.0',
-      'typeName': 'test',
-      'clusterize': false,
-      'forceMulti': true,
-      'typeNSName': '',
-      'showExisting': false,
-      'continueLoading': false,
-      'typeGeometry': 'polygon',
-      'geometryField': 'shape',
-      'innerLayers': [
+    const settingsAsObject = {
+      type: 'wfs',
+      url: 'http://geoserverFake/geoserver/ows',
+      style: { color: 'red', weight: '4', },
+      filter: null,
+      format: 'GeoJSON',
+      typeNS: 'les',
+      maxZoom: '13',
+      minZoom: '11',
+      opacity: null,
+      pkField: 'primarykey',
+      version: '1.1.0',
+      typeName: 'test',
+      clusterize: false,
+      forceMulti: true,
+      typeNSName: '',
+      showExisting: false,
+      continueLoading: false,
+      typeGeometry: 'polygon',
+      geometryField: 'shape',
+      innerLayers: [
         {
-          'type': 'wms',
-          'info_format': 'application/json',
-          'url': 'http://geoserverFake/geoserver/ows',
-          'version': '1.3.0',
-          'layers': 'test:test',
-          'format': 'image/png',
-          'transparent': true,
-          'maxZoom':12,
-          'minZoom':1,
+          type: 'wms',
+          info_format: 'application/json',
+          url: 'http://geoserverFake/geoserver/ows',
+          version: '1.3.0',
+          layers: 'test:test',
+          format: 'image/png',
+          transparent: true,
+          maxZoom: 12,
+          minZoom: 1,
         }
-      ]
+      ],
     };
 
-    leafletMap = L.map(document.createElement('div'), { center: [51.505, -0.09], zoom: 13 });
-    let layerModel = EmberObject.create({
+    leafletMap = L.map(document.createElement('div'), { center: [51.505, -0.09], zoom: 13, });
+    const layerModel = EmberObject.create({
       type: 'combine',
       visibility: false,
-      settingsAsObject:settingsAsObject
+      settingsAsObject,
     });
 
     options = {
-      'layerModel': layerModel,
-      'leafletMap': leafletMap,
-      'visibility': false
+      layerModel,
+      leafletMap,
+      visibility: false,
     };
 
     geoserverFake = sinon.fakeServer.create();
@@ -79,71 +79,70 @@ module('Unit | Component | layers/combine layer', function(hooks) {
 
     geoserverFake.respondWith('POST', 'http://geoserverFake/geoserver/ows?',
       function (request) {
-        if (request.requestBody === '<wfs:GetFeature xmlns:wfs="http://www.opengis.net/wfs" service="WFS" version="1.1.0" outputFormat="application/json">' +
-          '<wfs:Query typeName="les:povorottochkipoint32640" srsName="EPSG:3857"><ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><Not><Or>' +
-          '<ogc:PropertyIsEqualTo matchCase="false"><ogc:PropertyName>primarykey</ogc:PropertyName><ogc:Literal>475adc5b-fee4-4e8c-bed0-93746a9f00f0' +
-          '</ogc:Literal></ogc:PropertyIsEqualTo></Or></Not></ogc:Filter></wfs:Query></wfs:GetFeature>') {
-          request.respond(200, { 'Content-Type': 'application/json' },
-          '{"type":"FeatureCollection","features":[],"totalFeatures":0,"numberMatched":0,"numberReturned":0,"timeStamp":"2020-02-27T04:44:49.909Z",' +
-          '"crs":null}');
+        if (request.requestBody === '<wfs:GetFeature xmlns:wfs="http://www.opengis.net/wfs" service="WFS" version="1.1.0" outputFormat="application/json">'
+          + '<wfs:Query typeName="les:povorottochkipoint32640" srsName="EPSG:3857"><ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><Not><Or>'
+          + '<ogc:PropertyIsEqualTo matchCase="false"><ogc:PropertyName>primarykey</ogc:PropertyName><ogc:Literal>475adc5b-fee4-4e8c-bed0-93746a9f00f0'
+          + '</ogc:Literal></ogc:PropertyIsEqualTo></Or></Not></ogc:Filter></wfs:Query></wfs:GetFeature>') {
+          request.respond(200, { 'Content-Type': 'application/json', },
+            '{"type":"FeatureCollection","features":[],"totalFeatures":0,"numberMatched":0,"numberReturned":0,"timeStamp":"2020-02-27T04:44:49.909Z",'
+          + '"crs":null}');
         }
 
         if (request.requestBody.indexOf('<wfs:GetFeature') !== -1) {
-          request.respond(200, { 'Content-Type': 'application/json' },
-          '{"type":"FeatureCollection","features":[{"type":"Feature","id":"vydel_utverzhdeno_polygon.06350c71-ec5c-431e-a5ab-e423cf662128",' +
-          '"geometry":{"type":"MultiPolygon","coordinates":[[[[6215353.89391635,8117916.10977998],[6215317.82640125,8117408.36954415],' +
-          '[6215322.83577823,8116959.81224657],[6213934.34777038,8117228.98625252],[6213930.67422719,8117229.84351009],' +
-          '[6214007.26203691,8117650.34021493],[6214045.44462228,8117860.38311881],[6214113.79478966,8118235.47443556],' +
-          '[6214237.35942438,8118229.9015124],[6214247.82345653,8118288.63175866],[6215053.10865244,8118087.57903733],' +
-          '[6215031.95794919,8118033.35145873],[6215042.3106618,8117957.47637766],[6215353.89391635,8117916.10977998]]]]},' +
-          '"geometry_name":"shape","properties":' +
-          '{"id":"000","lesnichestvo":"-","uchastkovoelesnichestvo":"-","nomerkvartala":"141","urochishe":null,"nomer":10,"ploshad":200,"kategoriyazemel":' +
-          '"Эксплуатационные леса","preobladayushayaporoda":"Сосна","bonitet":"2","gruppavozrasta":"Молодняки I гр.","klassvozrasta":"1","klasstovarnosti":' +
-          'null,"area":373798.7024302,"length":null,"primarykey":"06350c71-ec5c-431e-a5ab-e423cf662128","createtime":null,"creator":null,' +
-          '"edittime":null,"editor":null}}],"totalFeatures":1,"numberMatched":1,"numberReturned":1,"timeStamp":"2020-02-27T04:44:49.909Z",' +
-          '"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::3857"}}}');
+          request.respond(200, { 'Content-Type': 'application/json', },
+            '{"type":"FeatureCollection","features":[{"type":"Feature","id":"vydel_utverzhdeno_polygon.06350c71-ec5c-431e-a5ab-e423cf662128",'
+          + '"geometry":{"type":"MultiPolygon","coordinates":[[[[6215353.89391635,8117916.10977998],[6215317.82640125,8117408.36954415],'
+          + '[6215322.83577823,8116959.81224657],[6213934.34777038,8117228.98625252],[6213930.67422719,8117229.84351009],'
+          + '[6214007.26203691,8117650.34021493],[6214045.44462228,8117860.38311881],[6214113.79478966,8118235.47443556],'
+          + '[6214237.35942438,8118229.9015124],[6214247.82345653,8118288.63175866],[6215053.10865244,8118087.57903733],'
+          + '[6215031.95794919,8118033.35145873],[6215042.3106618,8117957.47637766],[6215353.89391635,8117916.10977998]]]]},'
+          + '"geometry_name":"shape","properties":'
+          + '{"id":"000","lesnichestvo":"-","uchastkovoelesnichestvo":"-","nomerkvartala":"141","urochishe":null,"nomer":10,"ploshad":200,"kategoriyazemel":'
+          + '"Эксплуатационные леса","preobladayushayaporoda":"Сосна","bonitet":"2","gruppavozrasta":"Молодняки I гр.","klassvozrasta":"1","klasstovarnosti":'
+          + 'null,"area":373798.7024302,"length":null,"primarykey":"06350c71-ec5c-431e-a5ab-e423cf662128","createtime":null,"creator":null,'
+          + '"edittime":null,"editor":null}}],"totalFeatures":1,"numberMatched":1,"numberReturned":1,"timeStamp":"2020-02-27T04:44:49.909Z",'
+          + '"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::3857"}}}');
         }
 
         if (request.requestBody.indexOf('<wfs:DescribeFeatureType') !== -1) {
-          request.respond(200, { 'Content-Type': 'text/plain;charset=utf-8' },
-          '<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" ' +
-          'xmlns:rgisperm="http://rgis.permkrai.ru" elementFormDefault="qualified" targetNamespace="http://rgis.permkrai.ru">' +
-          '<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://rgispk.wdepo.ru:80/geoserver/schemas/gml/3.1.1/base/gml.xsd"/>' +
-          '<xsd:complexType name="vydel_utverzhdeno_polygonType">' +
-          '<xsd:complexContent>' +
-          '<xsd:extension base="gml:AbstractFeatureType">' +
-          '<xsd:sequence>' +
-          '<xsd:element maxOccurs="1" minOccurs="1" name="primarykey" nillable="false" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="shape" nillable="true" type="gml:MultiSurfacePropertyType"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="id" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="lesnichestvo" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="uchastkovoelesnichestvo" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="nomerkvartala" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="urochishe" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="nomer" nillable="true" type="xsd:int"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="ploshad" nillable="true" type="xsd:decimal"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="kategoriyazemel" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="preobladayushayaporoda" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="bonitet" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="gruppavozrasta" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="klassvozrasta" nillable="true" type="xsd:int"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="klasstovarnosti" nillable="true" type="xsd:int"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="area" nillable="true" type="xsd:decimal"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="length" nillable="true" type="xsd:decimal"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="createtime" nillable="true" type="xsd:dateTime"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="creator" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="edittime" nillable="true" type="xsd:dateTime"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="editor" nillable="true" type="xsd:string"/>' +
-          '<xsd:element maxOccurs="1" minOccurs="0" name="kl" nillable="true" type="xsd:string"/>' +
-          '</xsd:sequence>' +
-          '</xsd:extension>' +
-          '</xsd:complexContent>' +
-          '</xsd:complexType>' +
-          '<xsd:element name="vydel_utverzhdeno_polygon" substitutionGroup="gml:_Feature" type="rgisperm:vydel_utverzhdeno_polygonType"/>' +
-          '</xsd:schema>');
+          request.respond(200, { 'Content-Type': 'text/plain;charset=utf-8', },
+            '<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" '
+          + 'xmlns:rgisperm="http://rgis.permkrai.ru" elementFormDefault="qualified" targetNamespace="http://rgis.permkrai.ru">'
+          + '<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://rgispk.wdepo.ru:80/geoserver/schemas/gml/3.1.1/base/gml.xsd"/>'
+          + '<xsd:complexType name="vydel_utverzhdeno_polygonType">'
+          + '<xsd:complexContent>'
+          + '<xsd:extension base="gml:AbstractFeatureType">'
+          + '<xsd:sequence>'
+          + '<xsd:element maxOccurs="1" minOccurs="1" name="primarykey" nillable="false" type="xsd:string"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="shape" nillable="true" type="gml:MultiSurfacePropertyType"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="id" nillable="true" type="xsd:string"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="lesnichestvo" nillable="true" type="xsd:string"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="uchastkovoelesnichestvo" nillable="true" type="xsd:string"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="nomerkvartala" nillable="true" type="xsd:string"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="urochishe" nillable="true" type="xsd:string"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="nomer" nillable="true" type="xsd:int"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="ploshad" nillable="true" type="xsd:decimal"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="kategoriyazemel" nillable="true" type="xsd:string"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="preobladayushayaporoda" nillable="true" type="xsd:string"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="bonitet" nillable="true" type="xsd:string"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="gruppavozrasta" nillable="true" type="xsd:string"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="klassvozrasta" nillable="true" type="xsd:int"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="klasstovarnosti" nillable="true" type="xsd:int"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="area" nillable="true" type="xsd:decimal"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="length" nillable="true" type="xsd:decimal"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="createtime" nillable="true" type="xsd:dateTime"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="creator" nillable="true" type="xsd:string"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="edittime" nillable="true" type="xsd:dateTime"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="editor" nillable="true" type="xsd:string"/>'
+          + '<xsd:element maxOccurs="1" minOccurs="0" name="kl" nillable="true" type="xsd:string"/>'
+          + '</xsd:sequence>'
+          + '</xsd:extension>'
+          + '</xsd:complexContent>'
+          + '</xsd:complexType>'
+          + '<xsd:element name="vydel_utverzhdeno_polygon" substitutionGroup="gml:_Feature" type="rgisperm:vydel_utverzhdeno_polygonType"/>'
+          + '</xsd:schema>');
         }
-      }
-    );
+      });
   });
 
   hooks.afterEach(function () {
@@ -151,21 +150,21 @@ module('Unit | Component | layers/combine layer', function(hooks) {
     geoserverFake.restore();
   });
 
-  test('Create combine component and check visibility', function(assert) {
+  test('Create combine component and check visibility', function (assert) {
     assert.expect(15);
-    var done = assert.async(4);
-    let component = this.owner.factoryFor('component:layers/combine-layer').create(options);
+    const done = assert.async(4);
+    const component = this.owner.factoryFor('component:layers/combine-layer').create(options);
     let getmapApiStub;
     run(() => {
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
       getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
     });
 
-    let _checkAndSetVisibilitySpy = sinon.spy(component, '_checkAndSetVisibility');
-    let _visibilityOfLayerByZoomSpy = sinon.spy(component, '_visibilityOfLayerByZoom');
-    let _setLayerVisibilitySpy = sinon.spy(component, '_setLayerVisibility');
+    const _checkAndSetVisibilitySpy = sinon.spy(component, '_checkAndSetVisibility');
+    const _visibilityOfLayerByZoomSpy = sinon.spy(component, '_visibilityOfLayerByZoom');
+    const _setLayerVisibilitySpy = sinon.spy(component, '_setLayerVisibility');
 
     component.get('_leafletLayerPromise').then((leafletObject) => {
       assert.ok(leafletObject instanceof L.FeatureGroup);
@@ -203,18 +202,18 @@ module('Unit | Component | layers/combine layer', function(hooks) {
     });
   });
 
-  test('test method createLayer()', function(assert) {
+  test('test method createLayer()', function (assert) {
     assert.expect(4);
-    var done = assert.async(1);
+    const done = assert.async(1);
     run(() => {
-      let component = this.owner.factoryFor('component:layers/combine-layer').create(options);
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const component = this.owner.factoryFor('component:layers/combine-layer').create(options);
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      let createAllLayerSpy = sinon.spy(component, 'createAllLayer');
-      let createLayerSpy = sinon.spy(component, 'createLayer');
+      const createAllLayerSpy = sinon.spy(component, 'createAllLayer');
+      const createLayerSpy = sinon.spy(component, 'createLayer');
 
       component.createLayer(0).then((leafletObject) => {
         assert.ok(leafletObject instanceof L.FeatureGroup);
@@ -229,97 +228,97 @@ module('Unit | Component | layers/combine layer', function(hooks) {
     });
   });
 
-  test('test method showAllLayerObjects() and hideAllLayerObjects()', function(assert) {
+  test('test method showAllLayerObjects() and hideAllLayerObjects()', function (assert) {
     assert.expect(16);
-    var done = assert.async(2);
+    const done = assert.async(2);
     run(() => {
-      let settingsAsObject = {
-        'type': 'wfs',
-        'url': 'http://geoserverFake/geoserver/ows',
-        'style': { 'color': 'red', 'weight': '4' },
-        'filter': null,
-        'format': 'GeoJSON',
-        'typeNS': 'les',
-        'maxZoom': '13',
-        'minZoom': '11',
-        'opacity': null,
-        'pkField': 'primarykey',
-        'version': '1.1.0',
-        'typeName': 'test',
-        'clusterize': false,
-        'forceMulti': true,
-        'typeNSName': '',
-        'showExisting': false,
-        'continueLoading': false,
-        'typeGeometry': 'polygon',
-        'geometryField': 'shape',
-        'innerLayers': [
+      const settingsAsObject = {
+        type: 'wfs',
+        url: 'http://geoserverFake/geoserver/ows',
+        style: { color: 'red', weight: '4', },
+        filter: null,
+        format: 'GeoJSON',
+        typeNS: 'les',
+        maxZoom: '13',
+        minZoom: '11',
+        opacity: null,
+        pkField: 'primarykey',
+        version: '1.1.0',
+        typeName: 'test',
+        clusterize: false,
+        forceMulti: true,
+        typeNSName: '',
+        showExisting: false,
+        continueLoading: false,
+        typeGeometry: 'polygon',
+        geometryField: 'shape',
+        innerLayers: [
           {
-            'type': 'wfs',
-            'url': 'http://geoserverFake/geoserver/ows',
-            'style': { 'color': 'red', 'weight': '4' },
-            'filter': null,
-            'format': 'GeoJSON',
-            'typeNS': 'les',
-            'maxZoom': '10',
-            'minZoom': '7',
-            'opacity': null,
-            'pkField': 'primarykey',
-            'version': '1.1.0',
-            'typeName': 'test',
-            'clusterize': false,
-            'forceMulti': true,
-            'typeNSName': '',
-            'showExisting': false,
-            'continueLoading': false,
-            'typeGeometry': 'polygon',
-            'geometryField': 'shape',
+            type: 'wfs',
+            url: 'http://geoserverFake/geoserver/ows',
+            style: { color: 'red', weight: '4', },
+            filter: null,
+            format: 'GeoJSON',
+            typeNS: 'les',
+            maxZoom: '10',
+            minZoom: '7',
+            opacity: null,
+            pkField: 'primarykey',
+            version: '1.1.0',
+            typeName: 'test',
+            clusterize: false,
+            forceMulti: true,
+            typeNSName: '',
+            showExisting: false,
+            continueLoading: false,
+            typeGeometry: 'polygon',
+            geometryField: 'shape',
           }
-        ]
+        ],
       };
 
-      let layerModel = EmberObject.create({
+      const layerModel = EmberObject.create({
         type: 'combine',
         visibility: false,
-        settingsAsObject:settingsAsObject
+        settingsAsObject,
       });
 
-      let options = {
-        'layerModel': layerModel,
-        'leafletMap': leafletMap,
-        'visibility': false
+      const options = {
+        layerModel,
+        leafletMap,
+        visibility: false,
       };
 
-      let component = this.owner.factoryFor('component:layers/combine-layer').create(options);
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const component = this.owner.factoryFor('component:layers/combine-layer').create(options);
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
       component.get('_leafletLayerPromise').then((leafletObject) => {
         assert.ok(leafletObject instanceof L.FeatureGroup);
-        let innerLeafletObject = leafletObject.mainLayer.innerLayers[0]._leafletObject;
+        const innerLeafletObject = leafletObject.mainLayer.innerLayers[0]._leafletObject;
         assert.ok(innerLeafletObject instanceof L.FeatureGroup);
 
         // spy for mainLeafletObject
-        let baseShowAllLayerObjectsSpy = sinon.spy(leafletObject, 'baseShowAllLayerObjects');
-        let showAllLayerObjectsSpy = sinon.spy(leafletObject, 'showAllLayerObjects');
-        let clearLayersSpy = sinon.spy(leafletObject, 'clearLayers');
-        let loadLayerFeaturesSpy = sinon.spy(leafletObject, 'loadLayerFeatures');
-        let baseHideAllLayerObjectsSpy = sinon.spy(leafletObject, 'baseHideAllLayerObjects');
-        let hideAllLayerObjectsSpy = sinon.spy(leafletObject, 'hideAllLayerObjects');
+        const baseShowAllLayerObjectsSpy = sinon.spy(leafletObject, 'baseShowAllLayerObjects');
+        const showAllLayerObjectsSpy = sinon.spy(leafletObject, 'showAllLayerObjects');
+        const clearLayersSpy = sinon.spy(leafletObject, 'clearLayers');
+        const loadLayerFeaturesSpy = sinon.spy(leafletObject, 'loadLayerFeatures');
+        const baseHideAllLayerObjectsSpy = sinon.spy(leafletObject, 'baseHideAllLayerObjects');
+        const hideAllLayerObjectsSpy = sinon.spy(leafletObject, 'hideAllLayerObjects');
 
         // spy for innerLeafletObject
-        let showAllLayerObjectsInnerSpy = sinon.spy(innerLeafletObject, 'showAllLayerObjects');
-        let clearLayersInnerSpy = sinon.spy(innerLeafletObject, 'clearLayers');
-        let loadLayerFeaturesInnerSpy = sinon.spy(innerLeafletObject, 'loadLayerFeatures');
-        let hideAllLayerObjectsInnerSpy = sinon.spy(innerLeafletObject, 'hideAllLayerObjects');
+        const showAllLayerObjectsInnerSpy = sinon.spy(innerLeafletObject, 'showAllLayerObjects');
+        const clearLayersInnerSpy = sinon.spy(innerLeafletObject, 'clearLayers');
+        const loadLayerFeaturesInnerSpy = sinon.spy(innerLeafletObject, 'loadLayerFeatures');
+        const hideAllLayerObjectsInnerSpy = sinon.spy(innerLeafletObject, 'hideAllLayerObjects');
 
         // spy for map
-        let removeLayerSpy = sinon.spy(leafletMap, 'removeLayer');
-        let addLayerSpy = sinon.spy(leafletMap, 'addLayer');
+        const removeLayerSpy = sinon.spy(leafletMap, 'removeLayer');
+        const addLayerSpy = sinon.spy(leafletMap, 'addLayer');
 
-        component.showAllLayerObjects().then(result => {
+        component.showAllLayerObjects().then((result) => {
           assert.equal(result, 'success');
 
           assert.equal(baseShowAllLayerObjectsSpy.callCount, 1);

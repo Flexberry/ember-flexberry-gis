@@ -1,32 +1,32 @@
 export default {
-  'caption': 'Edit map',
+  caption: 'Edit map',
   'approve-button': {
-    'caption': 'Ok'
+    caption: 'Ok',
   },
   'deny-button': {
-    'caption': 'Cancel'
+    caption: 'Cancel',
   },
   'name-textbox': {
-    'caption': 'Map name',
-    'lat': 'Lat',
-    'lng': 'Lng',
-    'zoom': 'Zoom',
-    'public': 'Public',
-    'description': 'Description',
-    'keyWords': 'Key words',
-    'scale': 'Scale',
-    'crs': 'CRS',
+    caption: 'Map name',
+    lat: 'Lat',
+    lng: 'Lng',
+    zoom: 'Zoom',
+    public: 'Public',
+    description: 'Description',
+    keyWords: 'Key words',
+    scale: 'Scale',
+    crs: 'CRS',
   },
   mainTab: {
-    'caption': 'Main settings'
+    caption: 'Main settings',
   },
   crsTab: {
-    'caption': 'Coordinate system'
+    caption: 'Coordinate system',
   },
   positionTab: {
-    'caption': 'Position'
+    caption: 'Position',
   },
   bordersTab: {
-    'caption': 'Borders'
-  }
+    caption: 'Borders',
+  },
 };

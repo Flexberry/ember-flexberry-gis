@@ -26,9 +26,9 @@ import { isArray } from '@ember/array';
 
   ```
 */
-let setRecord = function (source, keyName, value) {
+const setRecord = function (source, keyName, value) {
   // array of keys
-  let keys = keyName.split('.');
+  const keys = keyName.split('.');
 
   if (keys.length > 1) {
     // first object of path
@@ -36,16 +36,18 @@ let setRecord = function (source, keyName, value) {
 
     for (let i = 1, len = keys.length; i < len; i++) {
       // needed for recognition if key is index
-      let keyValue = parseInt(keys[i]);
+      const keyValue = parseInt(keys[i]);
 
       if (i === (len - 1)) {
         // if previous object is array and key is index
         if (isArray(result) && !isNaN(keyValue)) {
           return assign(result.objectAt(keys[i]), value);
-        } else {
-          return set(result, keys[i], value);
         }
-      } else if (isArray(result) && !isNaN(keyValue)) {
+
+        return set(result, keys[i], value);
+      }
+
+      if (isArray(result) && !isNaN(keyValue)) {
         result = result.objectAt(keys[i]);
       } else {
         result = result.get(keys[i]);
@@ -74,9 +76,9 @@ let setRecord = function (source, keyName, value) {
 
   ```
 */
-let setAndAssign = function (source, keyName, value) {
+const setAndAssign = function (source, keyName, value) {
   // Array of keys.
-  let keys = keyName.split('.');
+  const keys = keyName.split('.');
   let keyPath = keys[0];
 
   // Create empty object if object in path could not be found or was destroyed.
@@ -85,7 +87,7 @@ let setAndAssign = function (source, keyName, value) {
       set(source, keyPath, {});
     }
 
-    keyPath += '.' + keys[i];
+    keyPath += `.${keys[i]}`;
   }
 
   // Directly set value for this property.

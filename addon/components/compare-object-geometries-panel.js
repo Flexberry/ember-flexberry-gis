@@ -2,11 +2,11 @@ import { isNone, isBlank } from '@ember/utils';
 import { observer, set, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
-import layout from '../templates/components/compare-object-geometries-panel';
-import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import distance from 'npm:@turf/distance';
 import helpers from 'npm:@turf/helpers';
 import jsts from 'npm:jsts';
+import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
+import layout from '../templates/components/compare-object-geometries-panel';
 import { coordinatesToString } from '../utils/coordinates-to';
 
 export default Component.extend(LeafletZoomToFeatureMixin, {
@@ -58,13 +58,13 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
     @private
     @readonly
   */
-  _onTwoObjectsChange: observer('twoObjects.[]', function() {
-    let two = this.get('twoObjects');
+  _onTwoObjectsChange: observer('twoObjects.[]', function () {
+    const two = this.get('twoObjects');
     if (two.length === 2) {
-      let mapModel = this.get('mapApi').getFromApi('mapModel');
-      let crs = two[0].layerModel.get('_leafletObject.options.crs');
+      const mapModel = this.get('mapApi').getFromApi('mapModel');
+      const crs = two[0].layerModel.get('_leafletObject.options.crs');
       this.set('crs', crs);
-      let firstObject =  two[0];
+      const firstObject = two[0];
       let secondObject = null;
       if (two[1].layerModel.get('_leafletObject.options.crs').code !== crs.code) {
         secondObject = Object.assign({}, two[1]);
@@ -73,15 +73,15 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
         secondObject = two[1];
       }
 
-      let geojsonReader = new jsts.io.GeoJSONReader();
-      let firstObjectJstsGeom = geojsonReader.read(firstObject.geometry);
-      let secondObjectJstsGeom = geojsonReader.read(secondObject.geometry);
+      const geojsonReader = new jsts.io.GeoJSONReader();
+      const firstObjectJstsGeom = geojsonReader.read(firstObject.geometry);
+      const secondObjectJstsGeom = geojsonReader.read(secondObject.geometry);
       set(firstObject, 'area', firstObjectJstsGeom.getArea().toFixed(3));
       set(secondObject, 'area', secondObjectJstsGeom.getArea().toFixed(3));
 
       this.set('firstObject', firstObject);
       this.set('secondObject', secondObject);
-      let dist = this.getDistance(firstObject, secondObject);
+      const dist = this.getDistance(firstObject, secondObject);
       this.set('distanceBetween', dist);
       this.set('intersection', this.getIntersection(firstObjectJstsGeom, secondObjectJstsGeom));
       this.set('nonIntersection', this.getNonIntersection(firstObjectJstsGeom, secondObjectJstsGeom));
@@ -152,8 +152,8 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
     @readonly
   */
   _OnMapChanged: observer('leafletMap', function () {
-    let map = this.get('leafletMap');
-    let group = L.featureGroup().addTo(map);
+    const map = this.get('leafletMap');
+    const group = L.featureGroup().addTo(map);
     this.set('featuresLayer', group);
   }),
 
@@ -164,9 +164,9 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
       @method actions.findIntersections
     */
     closePanel() {
-      let group = this.get('featuresLayer');
+      const group = this.get('featuresLayer');
       group.clearLayers();
-      let serviceLayer = this.get('serviceLayer');
+      const serviceLayer = this.get('serviceLayer');
       if (!isNone(serviceLayer)) {
         serviceLayer.clearLayers();
       }
@@ -194,7 +194,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
       let featureLayer = null;
       if (geometry.type === 'GeometryCollection') {
         featureLayer = L.featureGroup();
-        geometry.geometries.forEach(geom => {
+        geometry.geometries.forEach((geom) => {
           featureLayer.addLayer(this._convertGeometryToFeatureLayer(geom));
         });
       } else {
@@ -202,8 +202,8 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       if (!isNone(featureLayer)) {
-        let center = featureLayer.getBounds().getCenter();
-        let leafletMap = this.get('leafletMap');
+        const center = featureLayer.getBounds().getCenter();
+        const leafletMap = this.get('leafletMap');
         leafletMap.panTo(center);
       }
     },
@@ -215,28 +215,28 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} geometry Contain intersection | non-intersection geometry. (Maybe contain many geometries)
     */
     zoomToIntersection(geometry) {
-      let group = this.get('featuresLayer');
+      const group = this.get('featuresLayer');
       group.clearLayers();
       let featureLayer = null;
       if (geometry.type === 'GeometryCollection') {
         featureLayer = L.featureGroup();
-        geometry.geometries.forEach(geom => {
+        geometry.geometries.forEach((geom) => {
           featureLayer.addLayer(this._convertGeometryToFeatureLayer(geom, {
-            style: { color: 'green' }
+            style: { color: 'green', },
           }));
         });
       } else {
         featureLayer = this._convertGeometryToFeatureLayer(geometry, {
-          style: { color: 'green' }
+          style: { color: 'green', },
         });
       }
 
       if (!isNone(featureLayer)) {
         featureLayer.addTo(group);
-        let map = this.get('leafletMap');
+        const map = this.get('leafletMap');
         map.fitBounds(featureLayer.getBounds());
       }
-    }
+    },
   },
 
   /**
@@ -249,9 +249,9 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
     */
   _convertGeometryToFeatureLayer(geometry, style) {
     if (!isBlank(geometry.coordinates[0])) {
-      let copyGeometry = Object.assign({}, geometry);
-      let mapModel = this.get('mapApi').getFromApi('mapModel');
-      let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
+      const copyGeometry = Object.assign({}, geometry);
+      const mapModel = this.get('mapApi').getFromApi('mapModel');
+      const convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry, });
       return L.geoJSON(convertedFeatureLayer.geometry, style);
     }
   },
@@ -271,25 +271,25 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
       secondCenter = secondObject.leafletLayer.getBounds().getCenter();
     }
 
-    let firstPoint = helpers.point([firstCenter.lat, firstCenter.lng]);
-    let secondPoint = helpers.point([secondCenter.lat, secondCenter.lng]);
-    return (distance.default(firstPoint, secondPoint, { units: 'kilometers' }) * 1000).toFixed(3);
+    const firstPoint = helpers.point([firstCenter.lat, firstCenter.lng]);
+    const secondPoint = helpers.point([secondCenter.lat, secondCenter.lng]);
+    return (distance.default(firstPoint, secondPoint, { units: 'kilometers', }) * 1000).toFixed(3);
   },
 
   convertCoordinates(feature) {
     if (get(feature, 'leafletLayer.options.crs.code')) {
-      let mapModel = this.get('mapApi').getFromApi('mapModel');
-      return feature.leafletLayer.options.crs.code === 'EPSG:4326' ?
-        feature : mapModel._convertObjectCoordinates(get(feature, 'leafletLayer.options.crs.code'), feature);
+      const mapModel = this.get('mapApi').getFromApi('mapModel');
+      return feature.leafletLayer.options.crs.code === 'EPSG:4326'
+        ? feature : mapModel._convertObjectCoordinates(get(feature, 'leafletLayer.options.crs.code'), feature);
     }
 
     return feature;
   },
 
   getIntersection(firstObject, secondObject) {
-    let intersection = firstObject.intersection(secondObject);
-    let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let intersectionRes = geojsonWriter.write(intersection);
+    const intersection = firstObject.intersection(secondObject);
+    const geojsonWriter = new jsts.io.GeoJSONWriter();
+    const intersectionRes = geojsonWriter.write(intersection);
 
     if (intersectionRes) {
       intersectionRes.area = intersection.getArea().toFixed(3);
@@ -298,16 +298,16 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
   },
 
   getNonIntersection(firstObject, secondObject) {
-    let nonIntersection = firstObject.symDifference(secondObject);
-    let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let nonIntersectionRes = geojsonWriter.write(nonIntersection);
+    const nonIntersection = firstObject.symDifference(secondObject);
+    const geojsonWriter = new jsts.io.GeoJSONWriter();
+    const nonIntersectionRes = geojsonWriter.write(nonIntersection);
 
     if (nonIntersectionRes) {
       nonIntersectionRes.area = nonIntersection.getArea().toFixed(3);
       return this.getObjectWithProperties(nonIntersectionRes);
     }
 
-    return { area: '0.000', intersectionCoordsText: '' };
+    return { area: '0.000', intersectionCoordsText: '', };
   },
 
   getObjectWithProperties(jstsGeometry) {
@@ -315,7 +315,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
       jstsGeometry.intersectionCoordsText = '';
       if (jstsGeometry.type === 'GeometryCollection') {
         jstsGeometry.geometries.forEach((geometry) => {
-          jstsGeometry.intersectionCoordsText += coordinatesToString(geometry.coordinates) + '\n';
+          jstsGeometry.intersectionCoordsText += `${coordinatesToString(geometry.coordinates)}\n`;
         });
       } else {
         jstsGeometry.intersectionCoordsText = coordinatesToString(jstsGeometry.coordinates);
@@ -325,5 +325,5 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
     }
 
     return null;
-  }
+  },
 });

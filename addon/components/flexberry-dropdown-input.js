@@ -61,7 +61,7 @@ export default Component.extend({
     */
     inputKeyDown(e) {
       if (e.which === 13) {
-        let inputValue = this.get('inputValue') || 0;
+        const inputValue = this.get('inputValue') || 0;
         this.$('.flexberry-dropdown').dropdown('hide');
         this.$('.flexberry-dropdown').dropdown('set value', inputValue);
         this.$('.flexberry-dropdown .text.default').removeClass('default');
@@ -71,6 +71,6 @@ export default Component.extend({
       }
 
       return this.onKeyDown.call(this, e);
-    }
-  }
+    },
+  },
 });

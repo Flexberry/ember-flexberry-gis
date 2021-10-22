@@ -3,8 +3,8 @@
 */
 
 import DS from 'ember-data';
-import { OfflineSerializer as MapSerializer } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-map-offline';
 import OfflineSerializer from 'ember-flexberry-data/serializers/offline';
+import { OfflineSerializer as MapSerializer } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-map-offline';
 
 /**
   Map offline serializer.

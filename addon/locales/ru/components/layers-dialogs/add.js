@@ -1,25 +1,25 @@
 export default {
-  'caption': 'Добавление нового слоя',
+  caption: 'Добавление нового слоя',
   'approve-button': {
-    'caption': 'Ok'
+    caption: 'Ok',
   },
   'deny-button': {
-    'caption': 'Отмена'
+    caption: 'Отмена',
   },
-  'loadFile': {
-    'load-button-caption': 'Загрузить из файла'
+  loadFile: {
+    'load-button-caption': 'Загрузить из файла',
   },
   'storeExist-error': {
-    'message': 'Хранилище с таким именем уже существует'
+    message: 'Хранилище с таким именем уже существует',
   },
   'createLayer-error': {
-    'message': 'Не удалось создать слой'
+    message: 'Не удалось создать слой',
   },
   'existWorkspace-error': {
-    'message': 'Можно создавать растры только в рабочей области'
+    message: 'Можно создавать растры только в рабочей области',
   },
-  'createLayer': {
-    'message': 'Слой успешно добавлен'
+  createLayer: {
+    message: 'Слой успешно добавлен',
   },
-  'captionRastr': 'Информация'
+  captionRastr: 'Информация',
 };

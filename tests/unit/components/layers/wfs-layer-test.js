@@ -13,7 +13,7 @@ let geoserverFake;
 let options;
 let param;
 
-module('Unit | Component | layers/wfs layer', function(hooks) {
+module('Unit | Component | layers/wfs layer', function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
@@ -30,10 +30,10 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
       version: '1.1.0',
       continueLoading: true,
       typeNS: 'les',
-      typeName: 'kvartalutverzhdenopolygon32640'
+      typeName: 'kvartalutverzhdenopolygon32640',
     };
 
-    let leafletOptions = [
+    const leafletOptions = [
       'url',
       'version',
       'namespaceUri',
@@ -53,115 +53,114 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
 
     param = {
       format: 'GeoJSON',
-      leafletOptions: leafletOptions,
+      leafletOptions,
       _pane: 'pane000',
-      _renderer: A()
+      _renderer: A(),
     };
     param = $.extend(param, options);
 
-    let bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
+    const bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
 
-    let getBounds = function () {
+    const getBounds = function () {
       return bounds;
     };
 
-    let getPane = function () {
+    const getPane = function () {
       return undefined;
     };
 
-    let createPane = function () {
+    const createPane = function () {
       return {};
     };
 
-    let hasLayer = function () {
+    const hasLayer = function () {
       return true;
     };
 
-    let removeLayer = function () {
+    const removeLayer = function () {
       return {};
     };
 
-    let leafletMap = L.map(document.createElement('div'));
+    const leafletMap = L.map(document.createElement('div'));
     leafletMap.getBounds = getBounds;
     leafletMap.getPane = getPane;
     leafletMap.createPane = createPane;
     leafletMap.removeLayer = removeLayer;
     leafletMap.hasLayer = hasLayer;
-    let editTools = new L.Editable(leafletMap);
+    const editTools = new L.Editable(leafletMap);
     set(leafletMap, 'editTools', editTools);
 
-    $.extend(param, { 'leafletMap': leafletMap });
+    $.extend(param, { leafletMap, });
 
     geoserverFake = sinon.fakeServer.create();
     geoserverFake.autoRespond = true;
 
     geoserverFake.respondWith('POST', 'http://geoserverFake/geoserver/ows?',
       function (request) {
-        if (request.requestBody === '<wfs:GetFeature xmlns:wfs="http://www.opengis.net/wfs" service="WFS" version="1.1.0" outputFormat="application/json">' +
-          '<wfs:Query typeName="les:povorottochkipoint32640" srsName="EPSG:3857"><ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><Not><Or>' +
-          '<ogc:PropertyIsEqualTo matchCase="false"><ogc:PropertyName>primarykey</ogc:PropertyName><ogc:Literal>475adc5b-fee4-4e8c-bed0-93746a9f00f0' +
-          '</ogc:Literal></ogc:PropertyIsEqualTo></Or></Not></ogc:Filter></wfs:Query></wfs:GetFeature>') {
-          request.respond(200, { 'Content-Type': 'application/json' },
-            '{"type":"FeatureCollection","features":[],"totalFeatures":0,"numberMatched":0,"numberReturned":0,"timeStamp":"2020-02-27T04:44:49.909Z",' +
-            '"crs":null}');
+        if (request.requestBody === '<wfs:GetFeature xmlns:wfs="http://www.opengis.net/wfs" service="WFS" version="1.1.0" outputFormat="application/json">'
+          + '<wfs:Query typeName="les:povorottochkipoint32640" srsName="EPSG:3857"><ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><Not><Or>'
+          + '<ogc:PropertyIsEqualTo matchCase="false"><ogc:PropertyName>primarykey</ogc:PropertyName><ogc:Literal>475adc5b-fee4-4e8c-bed0-93746a9f00f0'
+          + '</ogc:Literal></ogc:PropertyIsEqualTo></Or></Not></ogc:Filter></wfs:Query></wfs:GetFeature>') {
+          request.respond(200, { 'Content-Type': 'application/json', },
+            '{"type":"FeatureCollection","features":[],"totalFeatures":0,"numberMatched":0,"numberReturned":0,"timeStamp":"2020-02-27T04:44:49.909Z",'
+            + '"crs":null}');
         }
 
         if (request.requestBody.indexOf('<wfs:GetFeature') !== -1) {
-          request.respond(200, { 'Content-Type': 'application/json' },
-            '{"type":"FeatureCollection","features":[{"type":"Feature","id":"vydel_utverzhdeno_polygon.06350c71-ec5c-431e-a5ab-e423cf662128",' +
-            '"geometry":{"type":"MultiPolygon","coordinates":[[[[6215353.89391635,8117916.10977998],[6215317.82640125,8117408.36954415],' +
-            '[6215322.83577823,8116959.81224657],[6213934.34777038,8117228.98625252],[6213930.67422719,8117229.84351009],' +
-            '[6214007.26203691,8117650.34021493],[6214045.44462228,8117860.38311881],[6214113.79478966,8118235.47443556],' +
-            '[6214237.35942438,8118229.9015124],[6214247.82345653,8118288.63175866],[6215053.10865244,8118087.57903733],' +
-            '[6215031.95794919,8118033.35145873],[6215042.3106618,8117957.47637766],[6215353.89391635,8117916.10977998]]]]},' +
-            '"geometry_name":"shape","properties":' +
-            '{"id":"000","lesnichestvo":"-","uchastkovoelesnichestvo":"-","nomerkvartala":"141","urochishe":null,"nomer":10,"ploshad":200,"kategoriyazemel":' +
-            '"Эксплуатационные леса","preobladayushayaporoda":"Сосна","bonitet":"2","gruppavozrasta":"Молодняки I гр.","klassvozrasta":"1","klasstovarnosti":' +
-            'null,"area":373798.7024302,"length":null,"primarykey":"06350c71-ec5c-431e-a5ab-e423cf662128","createtime":null,"creator":null,' +
-            '"edittime":null,"editor":null}}],"totalFeatures":1,"numberMatched":1,"numberReturned":1,"timeStamp":"2020-02-27T04:44:49.909Z",' +
-            '"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::3857"}}}');
+          request.respond(200, { 'Content-Type': 'application/json', },
+            '{"type":"FeatureCollection","features":[{"type":"Feature","id":"vydel_utverzhdeno_polygon.06350c71-ec5c-431e-a5ab-e423cf662128",'
+            + '"geometry":{"type":"MultiPolygon","coordinates":[[[[6215353.89391635,8117916.10977998],[6215317.82640125,8117408.36954415],'
+            + '[6215322.83577823,8116959.81224657],[6213934.34777038,8117228.98625252],[6213930.67422719,8117229.84351009],'
+            + '[6214007.26203691,8117650.34021493],[6214045.44462228,8117860.38311881],[6214113.79478966,8118235.47443556],'
+            + '[6214237.35942438,8118229.9015124],[6214247.82345653,8118288.63175866],[6215053.10865244,8118087.57903733],'
+            + '[6215031.95794919,8118033.35145873],[6215042.3106618,8117957.47637766],[6215353.89391635,8117916.10977998]]]]},'
+            + '"geometry_name":"shape","properties":'
+            + '{"id":"000","lesnichestvo":"-","uchastkovoelesnichestvo":"-","nomerkvartala":"141","urochishe":null,"nomer":10,"ploshad":200,"kategoriyazemel":'
+            + '"Эксплуатационные леса","preobladayushayaporoda":"Сосна","bonitet":"2","gruppavozrasta":"Молодняки I гр.","klassvozrasta":"1","klasstovarnosti":'
+            + 'null,"area":373798.7024302,"length":null,"primarykey":"06350c71-ec5c-431e-a5ab-e423cf662128","createtime":null,"creator":null,'
+            + '"edittime":null,"editor":null}}],"totalFeatures":1,"numberMatched":1,"numberReturned":1,"timeStamp":"2020-02-27T04:44:49.909Z",'
+            + '"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::3857"}}}');
         }
 
         if (request.requestBody.indexOf('<wfs:DescribeFeatureType') !== -1) {
-          request.respond(200, { 'Content-Type': 'text/plain;charset=utf-8' },
-            '<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" ' +
-            'xmlns:rgisperm="http://rgis.permkrai.ru" elementFormDefault="qualified" targetNamespace="http://rgis.permkrai.ru">' +
-            '<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://rgispk.wdepo.ru:80/geoserver/schemas/gml/3.1.1/base/gml.xsd"/>' +
-            '<xsd:complexType name="vydel_utverzhdeno_polygonType">' +
-            '<xsd:complexContent>' +
-            '<xsd:extension base="gml:AbstractFeatureType">' +
-            '<xsd:sequence>' +
-            '<xsd:element maxOccurs="1" minOccurs="1" name="primarykey" nillable="false" type="xsd:string"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="shape" nillable="true" type="gml:MultiSurfacePropertyType"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="id" nillable="true" type="xsd:string"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="lesnichestvo" nillable="true" type="xsd:string"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="uchastkovoelesnichestvo" nillable="true" type="xsd:string"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="nomerkvartala" nillable="true" type="xsd:string"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="urochishe" nillable="true" type="xsd:string"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="nomer" nillable="true" type="xsd:int"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="ploshad" nillable="true" type="xsd:decimal"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="kategoriyazemel" nillable="true" type="xsd:string"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="preobladayushayaporoda" nillable="true" type="xsd:string"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="bonitet" nillable="true" type="xsd:string"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="gruppavozrasta" nillable="true" type="xsd:string"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="klassvozrasta" nillable="true" type="xsd:int"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="klasstovarnosti" nillable="true" type="xsd:int"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="area" nillable="true" type="xsd:decimal"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="length" nillable="true" type="xsd:decimal"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="createtime" nillable="true" type="xsd:dateTime"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="creator" nillable="true" type="xsd:string"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="edittime" nillable="true" type="xsd:dateTime"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="editor" nillable="true" type="xsd:string"/>' +
-            '<xsd:element maxOccurs="1" minOccurs="0" name="kl" nillable="true" type="xsd:string"/>' +
-            '</xsd:sequence>' +
-            '</xsd:extension>' +
-            '</xsd:complexContent>' +
-            '</xsd:complexType>' +
-            '<xsd:element name="vydel_utverzhdeno_polygon" substitutionGroup="gml:_Feature" type="rgisperm:vydel_utverzhdeno_polygonType"/>' +
-            '</xsd:schema>');
+          request.respond(200, { 'Content-Type': 'text/plain;charset=utf-8', },
+            '<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" '
+            + 'xmlns:rgisperm="http://rgis.permkrai.ru" elementFormDefault="qualified" targetNamespace="http://rgis.permkrai.ru">'
+            + '<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://rgispk.wdepo.ru:80/geoserver/schemas/gml/3.1.1/base/gml.xsd"/>'
+            + '<xsd:complexType name="vydel_utverzhdeno_polygonType">'
+            + '<xsd:complexContent>'
+            + '<xsd:extension base="gml:AbstractFeatureType">'
+            + '<xsd:sequence>'
+            + '<xsd:element maxOccurs="1" minOccurs="1" name="primarykey" nillable="false" type="xsd:string"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="shape" nillable="true" type="gml:MultiSurfacePropertyType"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="id" nillable="true" type="xsd:string"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="lesnichestvo" nillable="true" type="xsd:string"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="uchastkovoelesnichestvo" nillable="true" type="xsd:string"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="nomerkvartala" nillable="true" type="xsd:string"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="urochishe" nillable="true" type="xsd:string"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="nomer" nillable="true" type="xsd:int"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="ploshad" nillable="true" type="xsd:decimal"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="kategoriyazemel" nillable="true" type="xsd:string"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="preobladayushayaporoda" nillable="true" type="xsd:string"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="bonitet" nillable="true" type="xsd:string"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="gruppavozrasta" nillable="true" type="xsd:string"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="klassvozrasta" nillable="true" type="xsd:int"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="klasstovarnosti" nillable="true" type="xsd:int"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="area" nillable="true" type="xsd:decimal"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="length" nillable="true" type="xsd:decimal"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="createtime" nillable="true" type="xsd:dateTime"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="creator" nillable="true" type="xsd:string"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="edittime" nillable="true" type="xsd:dateTime"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="editor" nillable="true" type="xsd:string"/>'
+            + '<xsd:element maxOccurs="1" minOccurs="0" name="kl" nillable="true" type="xsd:string"/>'
+            + '</xsd:sequence>'
+            + '</xsd:extension>'
+            + '</xsd:complexContent>'
+            + '</xsd:complexType>'
+            + '<xsd:element name="vydel_utverzhdeno_polygon" substitutionGroup="gml:_Feature" type="rgisperm:vydel_utverzhdeno_polygonType"/>'
+            + '</xsd:schema>');
         }
-      }
-    );
+      });
   });
 
   hooks.afterEach(function () {
@@ -169,29 +168,29 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
     geoserverFake.restore();
   });
 
-  let realCountArr = function (arr) {
+  const realCountArr = function (arr) {
     return Object.values(arr).length;
   };
 
   test('getLayerFeatures() with options showExisting = false and continueLoading = true', function (assert) {
     assert.expect(2);
-    var done = assert.async(2);
+    const done = assert.async(2);
     run(() => {
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      let getPkFieldStub = sinon.stub(mapModel, '_getPkField');
+      const getPkFieldStub = sinon.stub(mapModel, '_getPkField');
       getPkFieldStub.returns('primarykey');
 
       L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        let e = {
+        const e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A()
+          results: A(),
         };
         component._leafletObject = res.target;
         component.getLayerFeatures(e).then((layers) => {
@@ -207,23 +206,23 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
 
   test('_addLayersOnMap() with options showExisting = true and continueLoading = false', function (assert) {
     assert.expect(3);
-    var done = assert.async(2);
+    const done = assert.async(2);
     run(() => {
       param.showExisting = true;
 
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        let layers = Object.values(res.target._layers);
+        const layers = Object.values(res.target._layers);
         component._addLayersOnMap(layers);
         assert.equal(layers[0].options.pane, component.get('_pane'), 'Pane on object eqals pane on layer');
         assert.equal(layers[0].options.renderer, component.get('_renderer'), 'Renderer on object eqals renderer on layer');
@@ -237,26 +236,26 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
 
   test('getLayerFeatures() with options showExisting = true', function (assert) {
     assert.expect(2);
-    var done = assert.async(2);
+    const done = assert.async(2);
     run(() => {
       param.showExisting = true;
 
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        let e = {
+        const e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A()
+          results: A(),
         };
 
         component._leafletObject = res.target;
@@ -274,23 +273,23 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
 
   test('loadLayerFeatures() with options showExisting = false', function (assert) {
     assert.expect(2);
-    var done = assert.async(2);
+    const done = assert.async(2);
     run(() => {
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      let getPkFieldStub = sinon.stub(mapModel, '_getPkField');
+      const getPkFieldStub = sinon.stub(mapModel, '_getPkField');
       getPkFieldStub.returns('primarykey');
 
       L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        let e = {
+        const e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A()
+          results: A(),
         };
         component._leafletObject = res.target;
 
@@ -308,26 +307,26 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
 
   test('loadLayerFeatures() with options showExisting = true', function (assert) {
     assert.expect(2);
-    var done = assert.async(2);
+    const done = assert.async(2);
     run(() => {
       param.showExisting = true;
 
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      let getPkFieldStub = sinon.stub(mapModel, '_getPkField');
+      const getPkFieldStub = sinon.stub(mapModel, '_getPkField');
       getPkFieldStub.returns('primarykey');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        let e = {
+        const e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A()
+          results: A(),
         };
 
         component._leafletObject = res.target;
@@ -346,45 +345,45 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
 
   test('loadLayerFeatures() with options showExisting = false, call 2 times', function (assert) {
     assert.expect(3);
-    var done = assert.async(3);
+    const done = assert.async(3);
     run(() => {
       param.continueLoading = false;
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      let getPkFieldStub = sinon.stub(mapModel, '_getPkField');
+      const getPkFieldStub = sinon.stub(mapModel, '_getPkField');
       getPkFieldStub.returns('primarykey');
 
       options.continueLoading = false;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        let e = {
+        const e = {
           featureIds: null,
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A()
+          results: A(),
         };
         component._leafletObject = res.target;
         component._leafletObject.loadFeatures = function (filter) {
-          return new Promise(resolve => {
-            var that = this;
+          return new Promise((resolve) => {
+            const that = this;
 
             L.Util.request({
               url: this.options.url,
               data: L.XmlUtil.serializeXmlDocumentString(that.getFeature(filter)),
-              success: function (responseText) {
-                var layers = that.readFormat.responseToLayers(responseText, {
+              success(responseText) {
+                const layers = that.readFormat.responseToLayers(responseText, {
                   coordsToLatLng: that.options.coordsToLatLng,
-                  pointToLayer: that.options.pointToLayer
+                  pointToLayer: that.options.pointToLayer,
                 });
                 layers.forEach(function (element) {
                   element.state = that.state.exist;
                   that.addLayer(element);
                 });
                 resolve(that);
-              }
+              },
             });
           });
         }.bind(component._leafletObject);
@@ -406,38 +405,38 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
 
   test('test method clearChanges() with no changes', function (assert) {
     assert.expect(7);
-    var done = assert.async(1);
+    const done = assert.async(1);
     run(() => {
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        let e = {
+        const e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A()
+          results: A(),
         };
 
         component._leafletObject = res.target;
 
         component.getLayerFeatures(e).then((layers) => {
-          let leafletObject = component.get('_leafletObject');
-          let leafletMap = component.get('leafletMap');
+          const leafletObject = component.get('_leafletObject');
+          const leafletMap = component.get('leafletMap');
           leafletObject.leafletMap = leafletMap;
 
           assert.equal(realCountArr(leafletObject.changes), 0);
           assert.equal(leafletObject.getLayers().length, 1);
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
 
-          let layerUpdate = leafletObject.getLayers()[0];
+          const layerUpdate = leafletObject.getLayers()[0];
           layerUpdate.enableEdit(leafletMap);
 
           assert.equal(realCountArr(leafletObject.changes), 0);
@@ -454,50 +453,50 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
 
   test('test method clearChanges() with create', function (assert) {
     assert.expect(7);
-    var done = assert.async(1);
+    const done = assert.async(1);
     run(() => {
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        let e = {
+        const e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A()
+          results: A(),
         };
 
         component._leafletObject = res.target;
 
         component.getLayerFeatures(e).then((layers) => {
-          let leafletObject = component.get('_leafletObject');
-          let leafletMap = component.get('leafletMap');
+          const leafletObject = component.get('_leafletObject');
+          const leafletMap = component.get('leafletMap');
           leafletObject.leafletMap = leafletMap;
 
           assert.equal(realCountArr(leafletObject.changes), 0);
           assert.equal(leafletObject.getLayers().length, 1);
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
 
-          let feature = {
+          const feature = {
             type: 'Polygon',
             coordinates: [
               [[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]
-            ]
+            ],
           };
-          let layerAdd = L.geoJSON(feature).getLayers()[0];
+          const layerAdd = L.geoJSON(feature).getLayers()[0];
           layerAdd._label = {
-            _leaflet_id: 1000
+            _leaflet_id: 1000,
           };
           leafletObject.addLayer(layerAdd);
           leafletObject._labelsLayer = {
-            1000: {}
+            1000: {},
           };
           layerAdd.enableEdit(leafletMap);
 
@@ -515,38 +514,38 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
 
   test('test method clearChanges() with update', function (assert) {
     assert.expect(7);
-    var done = assert.async(1);
+    const done = assert.async(1);
     run(() => {
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        let e = {
+        const e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A()
+          results: A(),
         };
 
         component._leafletObject = res.target;
 
         component.getLayerFeatures(e).then((layers) => {
-          let leafletObject = component.get('_leafletObject');
-          let leafletMap = component.get('leafletMap');
+          const leafletObject = component.get('_leafletObject');
+          const leafletMap = component.get('leafletMap');
           leafletObject.leafletMap = leafletMap;
 
           assert.equal(realCountArr(leafletObject.changes), 0);
           assert.equal(leafletObject.getLayers().length, 1);
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
 
-          let layerUpdate = leafletObject.getLayers()[0];
+          const layerUpdate = leafletObject.getLayers()[0];
           layerUpdate.feature.properties.name = 'test';
 
           layerUpdate.enableEdit(leafletMap);
@@ -566,38 +565,38 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
 
   test('test method clearChanges() with delete', function (assert) {
     assert.expect(7);
-    var done = assert.async(1);
+    const done = assert.async(1);
     run(() => {
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        let e = {
+        const e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A()
+          results: A(),
         };
 
         component._leafletObject = res.target;
 
         component.getLayerFeatures(e).then((layers) => {
-          let leafletObject = component.get('_leafletObject');
-          let leafletMap = component.get('leafletMap');
+          const leafletObject = component.get('_leafletObject');
+          const leafletMap = component.get('leafletMap');
           leafletObject.leafletMap = leafletMap;
 
           assert.equal(realCountArr(leafletObject.changes), 0);
           assert.equal(leafletObject.getLayers().length, 1);
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
 
-          let layerRemove = leafletObject.getLayers()[0];
+          const layerRemove = leafletObject.getLayers()[0];
           layerRemove.enableEdit(leafletMap);
           leafletObject.removeLayer(layerRemove);
 
@@ -614,18 +613,18 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
   });
   test('test getPkField without pkField', function (assert) {
     assert.expect(1);
-    var done = assert.async(1);
+    const done = assert.async(1);
     run(() => {
-      let layerModel = EmberObject.create({
+      const layerModel = EmberObject.create({
         type: 'wfs',
         visibility: false,
-        settingsAsObject:options
+        settingsAsObject: options,
       });
-      param = $.extend(param, { layerModel: layerModel });
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      param = $.extend(param, { layerModel, });
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
       component.get('_leafletLayerPromise').then((leafletObject) => {
-        let fieldName = leafletObject.getPkField(component.get('layerModel'));
+        const fieldName = leafletObject.getPkField(component.get('layerModel'));
         assert.equal(fieldName, 'primarykey');
         done(1);
       });
@@ -633,19 +632,19 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
   });
   test('test getPkField with pkField', function (assert) {
     assert.expect(1);
-    var done = assert.async(1);
+    const done = assert.async(1);
     run(() => {
-      options = $.extend(options, { pkField: 'pk' });
-      let layerModel = EmberObject.create({
+      options = $.extend(options, { pkField: 'pk', });
+      const layerModel = EmberObject.create({
         type: 'wfs',
         visibility: false,
-        settingsAsObject:options
+        settingsAsObject: options,
       });
-      param = $.extend(param, { layerModel: layerModel });
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      param = $.extend(param, { layerModel, });
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
       component.get('_leafletLayerPromise').then((leafletObject) => {
-        let fieldName = leafletObject.getPkField(component.get('layerModel'));
+        const fieldName = leafletObject.getPkField(component.get('layerModel'));
         assert.equal(fieldName, 'pk');
         done(1);
       });
@@ -653,43 +652,43 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
   });
   test('test editLayer', function (assert) {
     assert.expect(2);
-    var done = assert.async(2);
+    const done = assert.async(2);
     run(() => {
-      param = $.extend(param, { showExisting: true });
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      param = $.extend(param, { showExisting: true, });
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
 
       options.showExisting = true;
 
       component.get('_leafletLayerPromise').then((leafletObject) => {
         component.set('_leafletObject', leafletObject);
-        let leafletMap = component.get('leafletMap');
+        const leafletMap = component.get('leafletMap');
         leafletObject.leafletMap = leafletMap;
 
-        let e = {
+        const e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A()
+          results: A(),
         };
 
         done();
 
         component.getLayerFeatures(e).then((layers) => {
-          let layerUpdate = leafletObject.getLayers()[0];
+          const layerUpdate = leafletObject.getLayers()[0];
           layerUpdate.feature.properties.name = 'test';
 
           layerUpdate.enableEdit(leafletMap);
 
-          let newFeature = L.geoJSON({
+          const newFeature = L.geoJSON({
             type: 'Polygon',
-            coordinates: [[[56.432487, 58.14725], [56.432133, 58.146749], [56.434, 58.146737]]]
+            coordinates: [[[56.432487, 58.14725], [56.432133, 58.146749], [56.434, 58.146737]]],
           }).getLayers()[0];
 
           layerUpdate.setLatLngs(newFeature.getLatLngs());
@@ -697,8 +696,8 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
           leafletObject.editLayer(layerUpdate);
 
           assert.equal(layerUpdate.feature.geometry.coordinates[0].length, 4);
-          let coordinates = '6282035.717038031,7998313.982057768,6281996.30993829,' +
-            '7998208.303352221,6282204.143427601,7998205.77214398,6282035.717038031,7998313.982057768';
+          const coordinates = '6282035.717038031,7998313.982057768,6281996.30993829,'
+            + '7998208.303352221,6282204.143427601,7998205.77214398,6282035.717038031,7998313.982057768';
           assert.equal(layerUpdate.feature.geometry.coordinates.toString(), coordinates);
 
           done();
@@ -708,70 +707,70 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
   });
   test('test getNearObject with wpsUrl', function (assert) {
     assert.expect(9);
-    var done = assert.async(2);
+    const done = assert.async(2);
     run(() => {
-      options = $.extend(options, { pkField: 'primarykey', wpsUrl: 'http://localhost:8080/geoserver/wps' });
-      let layerModel = EmberObject.create({
+      options = $.extend(options, { pkField: 'primarykey', wpsUrl: 'http://localhost:8080/geoserver/wps', });
+      const layerModel = EmberObject.create({
         type: 'wfs',
         visibility: false,
-        settingsAsObject:options
+        settingsAsObject: options,
       });
-      param = $.extend(param, { layerModel: layerModel });
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      param = $.extend(param, { layerModel, });
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
-      let stubAjax = sinon.stub($, 'ajax');
-      let responseText = '{' +
-        '"type": "FeatureCollection",' +
-        '"crs": {' +
-          '"type": "name",' +
-          '"properties": {' +
-            '"name": "EPSG:32640"' +
-          '}' +
-        '},' +
-        '"features": [' +
-          '{' +
-            '"type": "Feature",' +
-            '"geometry": {' +
-              '"type": "MultiPolygon",' +
-              '"coordinates": [' +
-                '[[[465991.9001, 6445952.6774], [466300.6857, 6446025.6799],' +
-                  '[466192.0721, 6445729.0941], [465991.9001, 6445952.6774]]]' +
-              ']' +
-            '},' +
-            '"properties": {' +
-              '"nearest_distance": 123,' +
-              '"nearest_bearing": 73.58555983346304' +
-            '},' +
-            '"id": "kvartalutverzhdenopolygon32640.84b823eb-00f2-48eb-9fdf-a1b47dbe185d"' +
-          '}' +
-        ']' +
-      '}';
+      const stubAjax = sinon.stub($, 'ajax');
+      const responseText = '{'
+        + '"type": "FeatureCollection",'
+        + '"crs": {'
+          + '"type": "name",'
+          + '"properties": {'
+            + '"name": "EPSG:32640"'
+          + '}'
+        + '},'
+        + '"features": ['
+          + '{'
+            + '"type": "Feature",'
+            + '"geometry": {'
+              + '"type": "MultiPolygon",'
+              + '"coordinates": ['
+                + '[[[465991.9001, 6445952.6774], [466300.6857, 6446025.6799],'
+                  + '[466192.0721, 6445729.0941], [465991.9001, 6445952.6774]]]'
+              + ']'
+            + '},'
+            + '"properties": {'
+              + '"nearest_distance": 123,'
+              + '"nearest_bearing": 73.58555983346304'
+            + '},'
+            + '"id": "kvartalutverzhdenopolygon32640.84b823eb-00f2-48eb-9fdf-a1b47dbe185d"'
+          + '}'
+        + ']'
+      + '}';
       stubAjax.yieldsTo('success', responseText);
-      let getLayerFeaturesStub = sinon.stub(component, 'getLayerFeatures');
+      const getLayerFeaturesStub = sinon.stub(component, 'getLayerFeatures');
       getLayerFeaturesStub.returns(resolve([{
-        'feature': {
-          'properties': {
-            'primarykey': '84b823eb-00f2-48eb-9fdf-a1b47dbe185d'
-          }
-        }
+        feature: {
+          properties: {
+            primarykey: '84b823eb-00f2-48eb-9fdf-a1b47dbe185d',
+          },
+        },
       }]));
-      let getWPSgsNearestSpy = sinon.spy(component, 'getWPSgsNearest');
-      let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
-      let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
-      let _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+      const getWPSgsNearestSpy = sinon.spy(component, 'getWPSgsNearest');
+      const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+      const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+      const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
 
       component.get('_leafletLayerPromise').then((leafletObject) => {
         component.set('_leafletObject', leafletObject);
         leafletObject.options = options;
-        let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
-        let e = {
-          featureLayer: featureLayer,
+        const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+        const e = {
+          featureLayer,
         };
-        let promise = component.getNearObject(e).then((result) => {
+        const promise = component.getNearObject(e).then((result) => {
           assert.equal(result.distance, 12168517.065042155);
           assert.ok(result.layer);
           assert.equal(result.object.feature.properties.primarykey, '84b823eb-00f2-48eb-9fdf-a1b47dbe185d');
@@ -797,48 +796,48 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
   });
   test('test getNearObject with wpsUrl, Nearest object not found', function (assert) {
     assert.expect(7);
-    var done = assert.async(2);
+    const done = assert.async(2);
     run(() => {
-      options = $.extend(options, { pkField: 'primarykey', wpsUrl: 'http://localhost:8080/geoserver/wps' });
-      let layerModel = EmberObject.create({
+      options = $.extend(options, { pkField: 'primarykey', wpsUrl: 'http://localhost:8080/geoserver/wps', });
+      const layerModel = EmberObject.create({
         type: 'wfs',
         visibility: false,
-        settingsAsObject:options
+        settingsAsObject: options,
       });
-      param = $.extend(param, { layerModel: layerModel });
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      param = $.extend(param, { layerModel, });
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
-      let stubAjax = sinon.stub($, 'ajax');
-      let responseText = '{' +
-        '"type": "FeatureCollection",' +
-        '"crs": {' +
-          '"type": "name",' +
-          '"properties": {' +
-            '"name": "EPSG:32640"' +
-          '}' +
-        '},' +
-        '"features": []' +
-      '}';
+      const stubAjax = sinon.stub($, 'ajax');
+      const responseText = '{'
+        + '"type": "FeatureCollection",'
+        + '"crs": {'
+          + '"type": "name",'
+          + '"properties": {'
+            + '"name": "EPSG:32640"'
+          + '}'
+        + '},'
+        + '"features": []'
+      + '}';
       stubAjax.yieldsTo('success', responseText);
-      let getLayerFeaturesStub = sinon.stub(component, 'getLayerFeatures');
+      const getLayerFeaturesStub = sinon.stub(component, 'getLayerFeatures');
       getLayerFeaturesStub.returns(resolve([]));
-      let getWPSgsNearestSpy = sinon.spy(component, 'getWPSgsNearest');
-      let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
-      let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
-      let _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+      const getWPSgsNearestSpy = sinon.spy(component, 'getWPSgsNearest');
+      const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+      const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+      const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
 
       component.get('_leafletLayerPromise').then((leafletObject) => {
         component.set('_leafletObject', leafletObject);
         leafletObject.options = options;
-        let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
-        let e = {
-          featureLayer: featureLayer,
+        const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+        const e = {
+          featureLayer,
         };
-        let promise = component.getNearObject(e).then((result) => {
+        const promise = component.getNearObject(e).then((result) => {
           assert.equal(result, 'Nearest object not found');
           assert.equal(getWPSgsNearestSpy.callCount, 1);
           assert.equal(getObjectCenterSpy.callCount, 1);
@@ -863,128 +862,128 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
 
   test('test getNearObject without wpsUrl, same layer', function (assert) {
     assert.expect(10);
-    var done = assert.async(2);
+    const done = assert.async(2);
     run(() => {
-      options = $.extend(options, { pkField: 'primarykey' });
-      let layerModel = EmberObject.create({
+      options = $.extend(options, { pkField: 'primarykey', });
+      const layerModel = EmberObject.create({
         type: 'wfs',
         visibility: false,
-        settingsAsObject:options,
-        id: '123'
+        settingsAsObject: options,
+        id: '123',
       });
-      param = $.extend(param, { layerModel: layerModel });
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      param = $.extend(param, { layerModel, });
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
-      let dwithinStub = sinon.stub(component, 'dwithin');
+      const dwithinStub = sinon.stub(component, 'dwithin');
       dwithinStub.onCall(0).returns(resolve(null));
       dwithinStub.onCall(1).returns(resolve(null));
 
       // feature1
-      let feature1 = {
-        'type': 'Feature',
-        'id': 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb6',
-        'geometry': {
-          'type': 'MultiPolygon',
-          'coordinates': [[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]
+      const feature1 = {
+        type: 'Feature',
+        id: 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb6',
+        geometry: {
+          type: 'MultiPolygon',
+          coordinates: [[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]],
         },
-        'geometry_name': 'shape',
-        'properties': {
-          'primarykey': 'df5178d8-aa47-4b92-ba08-2404ea26fdb6',
-          'nomer': null,
-          'lesnichestvo': null,
-          'uchastkovoelesnichestvo': null,
-          'urochishe': null,
-          'area': null,
-          'length': null,
-          'id': null,
-          'createtime': null,
-          'creator': null,
-          'edittime': null,
-          'editor': null
+        geometry_name: 'shape',
+        properties: {
+          primarykey: 'df5178d8-aa47-4b92-ba08-2404ea26fdb6',
+          nomer: null,
+          lesnichestvo: null,
+          uchastkovoelesnichestvo: null,
+          urochishe: null,
+          area: null,
+          length: null,
+          id: null,
+          createtime: null,
+          creator: null,
+          edittime: null,
+          editor: null,
         },
       };
-      let polygon1 = L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
+      const polygon1 = L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
       polygon1.feature = feature1;
       feature1.leafletLayer = polygon1;
 
       // feature 2
-      let feature2 =  {
-        'type': 'Feature',
-        'id': 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb7',
-        'geometry': {
-          'type': 'MultiPolygon',
-          'coordinates': [[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]
+      const feature2 = {
+        type: 'Feature',
+        id: 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb7',
+        geometry: {
+          type: 'MultiPolygon',
+          coordinates: [[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]],
         },
-        'geometry_name': 'shape',
-        'properties': {
-          'primarykey': 'df5178d8-aa47-4b92-ba08-2404ea26fdb7',
-          'nomer': null,
-          'lesnichestvo': null,
-          'uchastkovoelesnichestvo': null,
-          'urochishe': null,
-          'area': null,
-          'length': null,
-          'id': null,
-          'createtime': null,
-          'creator': null,
-          'edittime': null,
-          'editor': null
+        geometry_name: 'shape',
+        properties: {
+          primarykey: 'df5178d8-aa47-4b92-ba08-2404ea26fdb7',
+          nomer: null,
+          lesnichestvo: null,
+          uchastkovoelesnichestvo: null,
+          urochishe: null,
+          area: null,
+          length: null,
+          id: null,
+          createtime: null,
+          creator: null,
+          edittime: null,
+          editor: null,
         },
       };
-      let polygon2 = L.polygon([[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]);
+      const polygon2 = L.polygon([[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]);
       polygon2.feature = feature2;
       feature2.leafletLayer = polygon2;
 
       // feature3 - same object
-      let feature3 =  {
-        'type': 'Feature',
-        'id': 'kvartalutverzhdenopolygon32640.234',
-        'geometry': {
-          'type': 'MultiPolygon',
-          'coordinates': [[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]
+      const feature3 = {
+        type: 'Feature',
+        id: 'kvartalutverzhdenopolygon32640.234',
+        geometry: {
+          type: 'MultiPolygon',
+          coordinates: [[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]],
         },
-        'geometry_name': 'shape',
-        'properties': {
-          'primarykey': '234',
-          'nomer': null,
-          'lesnichestvo': null,
-          'uchastkovoelesnichestvo': null,
-          'urochishe': null,
-          'area': null,
-          'length': null,
-          'id': null,
-          'createtime': null,
-          'creator': null,
-          'edittime': null,
-          'editor': null
+        geometry_name: 'shape',
+        properties: {
+          primarykey: '234',
+          nomer: null,
+          lesnichestvo: null,
+          uchastkovoelesnichestvo: null,
+          urochishe: null,
+          area: null,
+          length: null,
+          id: null,
+          createtime: null,
+          creator: null,
+          edittime: null,
+          editor: null,
         },
       };
-      let polygon3 = L.polygon([[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]);
+      const polygon3 = L.polygon([[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]);
       polygon3.feature = feature3;
       feature3.leafletLayer = polygon3;
 
       dwithinStub.onCall(2).returns(resolve([feature1, feature2, feature3]));
 
-      let upDistanceSpy = sinon.spy(component, 'upDistance');
-      let _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
-      let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
-      let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
-      let _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+      const upDistanceSpy = sinon.spy(component, 'upDistance');
+      const _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
+      const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+      const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+      const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
 
       component.get('_leafletLayerPromise').then((leafletObject) => {
         component.set('_leafletObject', leafletObject);
         leafletObject.options = options;
-        let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
-        let e = {
-          featureLayer: featureLayer,
+        const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+        const e = {
+          featureLayer,
           featureId: '234',
-          layerObjectId: '123'
+          layerObjectId: '123',
         };
-        let promise = component.getNearObject(e).then((result) => {
+        const promise = component.getNearObject(e).then((result) => {
           assert.equal(result.distance, 18060435.745686203);
           assert.ok(result.layer);
           assert.equal(result.object.feature.properties.primarykey, 'df5178d8-aa47-4b92-ba08-2404ea26fdb6');
@@ -1011,128 +1010,128 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
   });
   test('test getNearObject without wpsUrl, other layer', function (assert) {
     assert.expect(10);
-    var done = assert.async(2);
+    const done = assert.async(2);
     run(() => {
-      options = $.extend(options, { pkField: 'primarykey' });
-      let layerModel = EmberObject.create({
+      options = $.extend(options, { pkField: 'primarykey', });
+      const layerModel = EmberObject.create({
         type: 'wfs',
         visibility: false,
-        settingsAsObject:options,
-        id: '123'
+        settingsAsObject: options,
+        id: '123',
       });
-      param = $.extend(param, { layerModel: layerModel });
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      param = $.extend(param, { layerModel, });
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
-      let dwithinStub = sinon.stub(component, 'dwithin');
+      const dwithinStub = sinon.stub(component, 'dwithin');
       dwithinStub.onCall(0).returns(resolve(null));
       dwithinStub.onCall(1).returns(resolve(null));
 
       // feature1
-      let feature1 =  {
-        'type': 'Feature',
-        'id': 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb6',
-        'geometry': {
-          'type': 'MultiPolygon',
-          'coordinates': [[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]
+      const feature1 = {
+        type: 'Feature',
+        id: 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb6',
+        geometry: {
+          type: 'MultiPolygon',
+          coordinates: [[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]],
         },
-        'geometry_name': 'shape',
-        'properties': {
-          'primarykey': 'df5178d8-aa47-4b92-ba08-2404ea26fdb6',
-          'nomer': null,
-          'lesnichestvo': null,
-          'uchastkovoelesnichestvo': null,
-          'urochishe': null,
-          'area': null,
-          'length': null,
-          'id': null,
-          'createtime': null,
-          'creator': null,
-          'edittime': null,
-          'editor': null
+        geometry_name: 'shape',
+        properties: {
+          primarykey: 'df5178d8-aa47-4b92-ba08-2404ea26fdb6',
+          nomer: null,
+          lesnichestvo: null,
+          uchastkovoelesnichestvo: null,
+          urochishe: null,
+          area: null,
+          length: null,
+          id: null,
+          createtime: null,
+          creator: null,
+          edittime: null,
+          editor: null,
         },
       };
-      let polygon1 = L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
+      const polygon1 = L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
       polygon1.feature = feature1;
       feature1.leafletLayer = polygon1;
 
       // feature 2
-      let feature2 =  {
-        'type': 'Feature',
-        'id': 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb7',
-        'geometry': {
-          'type': 'MultiPolygon',
-          'coordinates': [[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]
+      const feature2 = {
+        type: 'Feature',
+        id: 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb7',
+        geometry: {
+          type: 'MultiPolygon',
+          coordinates: [[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]],
         },
-        'geometry_name': 'shape',
-        'properties': {
-          'primarykey': 'df5178d8-aa47-4b92-ba08-2404ea26fdb7',
-          'nomer': null,
-          'lesnichestvo': null,
-          'uchastkovoelesnichestvo': null,
-          'urochishe': null,
-          'area': null,
-          'length': null,
-          'id': null,
-          'createtime': null,
-          'creator': null,
-          'edittime': null,
-          'editor': null
+        geometry_name: 'shape',
+        properties: {
+          primarykey: 'df5178d8-aa47-4b92-ba08-2404ea26fdb7',
+          nomer: null,
+          lesnichestvo: null,
+          uchastkovoelesnichestvo: null,
+          urochishe: null,
+          area: null,
+          length: null,
+          id: null,
+          createtime: null,
+          creator: null,
+          edittime: null,
+          editor: null,
         },
       };
-      let polygon2 = L.polygon([[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]);
+      const polygon2 = L.polygon([[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]);
       polygon2.feature = feature2;
       feature2.leafletLayer = polygon2;
 
       // feature3 - same object
-      let feature3 =  {
-        'type': 'Feature',
-        'id': 'kvartalutverzhdenopolygon32640.234',
-        'geometry': {
-          'type': 'MultiPolygon',
-          'coordinates': [[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]
+      const feature3 = {
+        type: 'Feature',
+        id: 'kvartalutverzhdenopolygon32640.234',
+        geometry: {
+          type: 'MultiPolygon',
+          coordinates: [[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]],
         },
-        'geometry_name': 'shape',
-        'properties': {
-          'primarykey': '234',
-          'nomer': null,
-          'lesnichestvo': null,
-          'uchastkovoelesnichestvo': null,
-          'urochishe': null,
-          'area': null,
-          'length': null,
-          'id': null,
-          'createtime': null,
-          'creator': null,
-          'edittime': null,
-          'editor': null
+        geometry_name: 'shape',
+        properties: {
+          primarykey: '234',
+          nomer: null,
+          lesnichestvo: null,
+          uchastkovoelesnichestvo: null,
+          urochishe: null,
+          area: null,
+          length: null,
+          id: null,
+          createtime: null,
+          creator: null,
+          edittime: null,
+          editor: null,
         },
       };
-      let polygon3 = L.polygon([[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]);
+      const polygon3 = L.polygon([[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]);
       polygon3.feature = feature3;
       feature3.leafletLayer = polygon3;
 
       dwithinStub.onCall(2).returns(resolve([feature1, feature2, feature3]));
 
-      let upDistanceSpy = sinon.spy(component, 'upDistance');
-      let _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
-      let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
-      let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
-      let _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+      const upDistanceSpy = sinon.spy(component, 'upDistance');
+      const _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
+      const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+      const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+      const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
 
       component.get('_leafletLayerPromise').then((leafletObject) => {
         component.set('_leafletObject', leafletObject);
         leafletObject.options = options;
-        let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
-        let e = {
-          featureLayer: featureLayer,
+        const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+        const e = {
+          featureLayer,
           featureId: '234',
-          layerObjectId: '234'
+          layerObjectId: '234',
         };
-        let promise = component.getNearObject(e).then((result) => {
+        const promise = component.getNearObject(e).then((result) => {
           assert.equal(result.distance, 0);
           assert.ok(result.layer);
           assert.equal(result.object.feature.properties.primarykey, '234');
@@ -1159,41 +1158,41 @@ module('Unit | Component | layers/wfs layer', function(hooks) {
   });
   test('test getNearObject without wpsUrl, Nearest object not found', function (assert) {
     assert.expect(8);
-    var done = assert.async(2);
+    const done = assert.async(2);
     run(() => {
-      options = $.extend(options, { pkField: 'primarykey' });
-      let layerModel = EmberObject.create({
+      options = $.extend(options, { pkField: 'primarykey', });
+      const layerModel = EmberObject.create({
         type: 'wfs',
         visibility: false,
-        settingsAsObject:options,
-        id: '123'
+        settingsAsObject: options,
+        id: '123',
       });
-      param = $.extend(param, { layerModel: layerModel });
-      let component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+      param = $.extend(param, { layerModel, });
+      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
 
-      let store = app.__container__.lookup('service:store');
-      let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+      const store = app.__container__.lookup('service:store');
+      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
-      let dwithinStub = sinon.stub(component, 'dwithin');
+      const dwithinStub = sinon.stub(component, 'dwithin');
       dwithinStub.returns(resolve(null));
 
-      let upDistanceSpy = sinon.spy(component, 'upDistance');
-      let _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
-      let getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
-      let _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
-      let _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+      const upDistanceSpy = sinon.spy(component, 'upDistance');
+      const _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
+      const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+      const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+      const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
 
       component.get('_leafletLayerPromise').then((leafletObject) => {
         component.set('_leafletObject', leafletObject);
         leafletObject.options = options;
-        let featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
-        let e = {
-          featureLayer: featureLayer,
+        const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+        const e = {
+          featureLayer,
           featureId: '234',
-          layerObjectId: '234'
+          layerObjectId: '234',
         };
-        let promise = component.getNearObject(e).then((result) => {
+        const promise = component.getNearObject(e).then((result) => {
           assert.equal(result, 'Nearest object not found');
           assert.equal(getObjectCenterSpy.callCount, 0);
           assert.equal(_getDistanceBetweenObjectsSpy.callCount, 0);

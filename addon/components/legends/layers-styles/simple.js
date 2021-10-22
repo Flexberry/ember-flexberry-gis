@@ -18,7 +18,7 @@ export default BaseLayerStyleLegendComponent.extend({
     @private
     @readOnly
   */
-  _geometriesCanBeDisplayed: computed('legendSettings.geometriesCanBeDisplayed', function() {
+  _geometriesCanBeDisplayed: computed('legendSettings.geometriesCanBeDisplayed', function () {
     return this.get('legendSettings.geometriesCanBeDisplayed') !== false;
   }),
 
@@ -30,7 +30,7 @@ export default BaseLayerStyleLegendComponent.extend({
     @private
     @readOnly
   */
-  _markersCanBeDisplayed: computed('legendSettings.markersCanBeDisplayed', function() {
+  _markersCanBeDisplayed: computed('legendSettings.markersCanBeDisplayed', function () {
     return this.get('legendSettings.markersCanBeDisplayed') !== false;
   }),
 
@@ -67,34 +67,34 @@ export default BaseLayerStyleLegendComponent.extend({
 
     if (this.get('_geometriesCanBeDisplayed')) {
       let styleSettings = this.get('styleSettings');
-      let canvas = this.$('canvas.geometries')[0];
+      const canvas = this.$('canvas.geometries')[0];
 
-      let layersStylesRenderer = this.get('_layersStylesRenderer');
-      let legendStyle = this.parentView.layer.legendStyle;
+      const layersStylesRenderer = this.get('_layersStylesRenderer');
+      const { legendStyle, } = this.parentView.layer;
       if (!isNone(legendStyle)) {
         styleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
-        for (let opt in legendStyle.style.path) {
+        for (const opt in legendStyle.style.path) {
           styleSettings.style.path[opt] = legendStyle.style.path[opt];
         }
       }
 
       layersStylesRenderer.renderOnCanvas({
-        styleSettings: styleSettings,
-        canvas: canvas,
-        target: 'legend'
+        styleSettings,
+        canvas,
+        target: 'legend',
       });
     }
 
     if (this.get('_markersCanBeDisplayed')) {
-      let styleSettings = isNone(this.parentView.layer.legendStyle) ? this.get('styleSettings.style.marker') : this.parentView.layer.legendStyle;
-      let canvas = this.$('canvas.markers')[0];
+      const styleSettings = isNone(this.parentView.layer.legendStyle) ? this.get('styleSettings.style.marker') : this.parentView.layer.legendStyle;
+      const canvas = this.$('canvas.markers')[0];
 
-      let markersStylesRenderer = this.get('_markersStylesRenderer');
+      const markersStylesRenderer = this.get('_markersStylesRenderer');
       markersStylesRenderer.renderOnCanvas({
-        styleSettings: styleSettings,
-        canvas: canvas,
-        target: 'legend'
+        styleSettings,
+        canvas,
+        target: 'legend',
       });
     }
-  }
+  },
 });

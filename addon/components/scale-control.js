@@ -27,5 +27,5 @@ export default BaseControl.extend({
   */
   createControl() {
     return L.control.scale(this.get('options'));
-  }
+  },
 });

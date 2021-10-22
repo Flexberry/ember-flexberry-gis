@@ -5,9 +5,9 @@ import UniqueLayerStyle from './layers-styles/unique';
 import GraduatedLayerStyle from './layers-styles/graduated';
 
 export default {
-  'empty': EmptyLayerStyle,
-  'simple': SimpleLayerStyle,
-  'categorized': CategorizedLayerStyle,
-  'unique': UniqueLayerStyle,
-  'graduated': GraduatedLayerStyle
+  empty: EmptyLayerStyle,
+  simple: SimpleLayerStyle,
+  categorized: CategorizedLayerStyle,
+  unique: UniqueLayerStyle,
+  graduated: GraduatedLayerStyle,
 };

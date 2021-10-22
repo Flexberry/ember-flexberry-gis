@@ -3,14 +3,14 @@ import $ from 'jquery';
 import { observer, get, set } from '@ember/object';
 import { A } from '@ember/array';
 import Component from '@ember/component';
-import layout from '../../templates/components/map-tools/background-layers';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../templates/components/map-tools/background-layers';
 
 const flexberryClassNamesPrefix = 'flexberry-background-map-tool';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
-  div: flexberryClassNamesPrefix + '-div'
+  div: `${flexberryClassNamesPrefix}-div`,
 };
 
 export default Component.extend({
@@ -86,7 +86,7 @@ export default Component.extend({
   */
   selectedLayer: null,
 
-  _backgroundLayersChange: observer('layers.[]', function() {
+  _backgroundLayersChange: observer('layers.[]', function () {
     this._updateItems();
   }),
 
@@ -99,11 +99,11 @@ export default Component.extend({
   },
 
   _updateItems() {
-    let layers = this.get('layers');
-    let items = [];
+    const layers = this.get('layers');
+    const items = [];
     let i = 1;
-    let count = layers.length;
-    layers.forEach(layer => {
+    const count = layers.length;
+    layers.forEach((layer) => {
       let classChild = 'first-item';
       if (count === 1 || (count === 2 && i === 2) || (count >= 3 && i % 3 === 0)) {
         classChild = 'last-item';
@@ -119,9 +119,9 @@ export default Component.extend({
         name: get(layer, 'name'),
         pic: layer.get('settingsAsObject.backgroundSettings.picture'),
         class: classChild,
-        layer: layer,
-        classActive: classActive,
-        id: get(layer, 'id')
+        layer,
+        classActive,
+        id: get(layer, 'id'),
       });
       i++;
     });
@@ -136,7 +136,7 @@ export default Component.extend({
       @method actions.showBackgroundLayers
     */
     showBackgroundLayers() {
-      let $tool = $('.flexberry-background-map-tool');
+      const $tool = $('.flexberry-background-map-tool');
       if (!this.get('isVisible') && this.get('layers').length !== 0) {
         this.set('isVisible', true);
         $tool.addClass('visible');
@@ -152,7 +152,7 @@ export default Component.extend({
       @method actions.onLayerClick
     */
     onLayerClick(layer) {
-      let selectedLayer = this.get('selectedLayer');
+      const selectedLayer = this.get('selectedLayer');
       if (isNone(selectedLayer)) {
         set(layer, 'visibility', true);
         this.set('selectedLayer', layer);
@@ -166,8 +166,8 @@ export default Component.extend({
         }
       }
 
-      let items = this.get('items');
-      items.forEach(item => {
+      const items = this.get('items');
+      items.forEach((item) => {
         if (item.id === get(layer, 'id')) {
           if (get(item, 'classActive') !== 'active') {
             set(item, 'classActive', 'active');
@@ -182,6 +182,6 @@ export default Component.extend({
       });
 
       this.set('items', items);
-    }
-  }
+    },
+  },
 });

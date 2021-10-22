@@ -14,9 +14,9 @@ import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
   @param {Boolean} ignoreLinks Indicate whether copying links.
   @return {NewPlatformFlexberryGISMapLayer} Layer model copy.
 */
-let copyLayer = function(layerModel, store, ignoreLinks) {
+const copyLayer = function (layerModel, store, ignoreLinks) {
   // Create empty layer model.
-  let layerModelCopy = store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId() });
+  const layerModelCopy = store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId(), });
 
   // Copy attibutes values into created empty model.
   copyAttributes(layerModel, layerModelCopy);
@@ -32,19 +32,19 @@ let copyLayer = function(layerModel, store, ignoreLinks) {
   return layerModelCopy;
 };
 
-let copyAttributes = function(model, modelCopy) {
+let copyAttributes = function (model, modelCopy) {
   model.eachAttribute((attr) => {
     modelCopy.set(attr, model.get(attr));
   });
 };
 
-let copyLayerLinks = function(layerModel, layerModelCopy, store) {
-  let linkModels = layerModel.get('layerLink');
-  let linkModelsCopies = layerModelCopy.get('layerLink');
+let copyLayerLinks = function (layerModel, layerModelCopy, store) {
+  const linkModels = layerModel.get('layerLink');
+  const linkModelsCopies = layerModelCopy.get('layerLink');
 
   linkModels.forEach((linkModel) => {
     // Create empty layer link model.
-    let linkModelCopy = store.createRecord('new-platform-flexberry-g-i-s-layer-link', { id: generateUniqueId() });
+    const linkModelCopy = store.createRecord('new-platform-flexberry-g-i-s-layer-link', { id: generateUniqueId(), });
 
     // Copy attibutes values into created empty model.
     copyAttributes(linkModel, linkModelCopy);
@@ -60,13 +60,13 @@ let copyLayerLinks = function(layerModel, layerModelCopy, store) {
   });
 };
 
-let copyLinkParameters = function(linkModel, linkModelCopy, store) {
-  let parameterModels = linkModel.get('parameters');
-  let parameterModelsCopies = linkModelCopy.get('parameters');
+let copyLinkParameters = function (linkModel, linkModelCopy, store) {
+  const parameterModels = linkModel.get('parameters');
+  const parameterModelsCopies = linkModelCopy.get('parameters');
 
   parameterModels.forEach((parameterModel) => {
     // Create empty link parameter model.
-    let parameterModelCopy = store.createRecord('new-platform-flexberry-g-i-s-link-parameter', { id: generateUniqueId() });
+    const parameterModelCopy = store.createRecord('new-platform-flexberry-g-i-s-link-parameter', { id: generateUniqueId(), });
 
     // Copy attibutes values into created empty model.
     copyAttributes(parameterModel, parameterModelCopy);
@@ -76,8 +76,8 @@ let copyLinkParameters = function(linkModel, linkModelCopy, store) {
   });
 };
 
-let copyLeafletObjectGetter = function(layerModel, layerModelCopy) {
-  let leafletObjectGetter = layerModel.get('leafletObjectGetter');
+let copyLeafletObjectGetter = function (layerModel, layerModelCopy) {
+  const leafletObjectGetter = layerModel.get('leafletObjectGetter');
 
   layerModelCopy.set('leafletObjectGetter', leafletObjectGetter);
 };

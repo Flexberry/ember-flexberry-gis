@@ -9,5 +9,5 @@ export default Component.extend({
 
     // Initialize Semantic UI tabs.
     this.$('.tabular.menu .item').tab();
-  }
+  },
 });

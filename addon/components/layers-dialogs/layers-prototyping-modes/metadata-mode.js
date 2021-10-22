@@ -6,9 +6,9 @@ import { isArray } from '@ember/array';
 
 import { inject as service } from '@ember/service';
 import BaseModeComponent from 'ember-flexberry-gis/components/layers-dialogs/layers-prototyping-modes/base';
-import layout from '../../../templates/components/layers-dialogs/layers-prototyping-modes/metadata-mode';
 import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
 import QueryBuilder from 'ember-flexberry-data/query/builder';
+import layout from '../../../templates/components/layers-dialogs/layers-prototyping-modes/metadata-mode';
 
 /**
   Component's CSS-classes names.
@@ -23,14 +23,14 @@ import QueryBuilder from 'ember-flexberry-data/query/builder';
 const flexberryClassNamesPrefix = 'flexberry-edit-mode-metadata';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix
+  wrapper: flexberryClassNamesPrefix,
 };
 
 /**
   @class MetadataModeComponent
   @extends BaseModeComponent
 */
-let MetadataModeComponent = BaseModeComponent.extend({
+const MetadataModeComponent = BaseModeComponent.extend({
   /**
     Loaded metadata records.
 
@@ -113,7 +113,7 @@ let MetadataModeComponent = BaseModeComponent.extend({
   /**
     Initializes component.
   */
-  init: function() {
+  init() {
     this._super(...arguments);
 
     this._loadMetadataRecords();
@@ -129,16 +129,14 @@ let MetadataModeComponent = BaseModeComponent.extend({
     this.set('_errorMessage', '');
     this.set('_metadataIsLoading', true);
 
-    let store = this.get('store');
-    let queryBuilder = new QueryBuilder(store)
+    const store = this.get('store');
+    const queryBuilder = new QueryBuilder(store)
       .from('new-platform-flexberry-g-i-s-layer-metadata')
       .selectByProjection('LayerMetadataE');
 
     store.query('new-platform-flexberry-g-i-s-layer-metadata', queryBuilder.build()).then((result) => {
-      let metadataRecords = result.toArray();
-      let metadataRecordsNames = metadataRecords.map((item) => {
-        return item.get('name');
-      });
+      const metadataRecords = result.toArray();
+      const metadataRecordsNames = metadataRecords.map((item) => item.get('name'));
 
       this.set('_metadataRecords', metadataRecords);
       this.set('_metadataRecordsNames', metadataRecordsNames);
@@ -156,17 +154,17 @@ let MetadataModeComponent = BaseModeComponent.extend({
       @method actions.onSelectedMetadataRecordChanged
     */
     onSelectedMetadataRecordChanged() {
-      let metadataRecords = this.get('_metadataRecords');
+      const metadataRecords = this.get('_metadataRecords');
       if (!isArray(metadataRecords)) {
         return;
       }
 
-      let store = this.get('store');
-      let metadataRecordsNames = this.get('_metadataRecordsNames');
-      let selectedMetadataRecordName = this.get('_selectedMetadataRecordName');
-      let selectedMetadataRecord = metadataRecords[metadataRecordsNames.indexOf(selectedMetadataRecordName)];
+      const store = this.get('store');
+      const metadataRecordsNames = this.get('_metadataRecordsNames');
+      const selectedMetadataRecordName = this.get('_selectedMetadataRecordName');
+      const selectedMetadataRecord = metadataRecords[metadataRecordsNames.indexOf(selectedMetadataRecordName)];
 
-      let layer = createLayerFromMetadata(selectedMetadataRecord, store);
+      const layer = createLayerFromMetadata(selectedMetadataRecord, store);
       this.sendAction('editingFinished', layer);
     },
 
@@ -177,14 +175,14 @@ let MetadataModeComponent = BaseModeComponent.extend({
     */
     reloadMetadata() {
       this._loadMetadataRecords();
-    }
-  }
+    },
+  },
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 MetadataModeComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default MetadataModeComponent;

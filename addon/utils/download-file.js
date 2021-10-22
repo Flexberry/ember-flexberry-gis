@@ -17,45 +17,44 @@ import { Promise } from 'rsvp';
   @param {Object} header headers for request odata.
   @return {Promise} Object consist of fileName and blob.
 */
-let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url, header = {}) {
+const downloadFile = function (layerModel, objectIds, outputFormat, crsOuput, crsLayer, url, header = {}) {
   return new Promise((resolve, reject) => {
     let req = null;
     let headers = {};
     let layerName;
     try {
-      let type = layerModel.get('type');
+      const type = layerModel.get('type');
       let layerSettings = layerModel.get('settingsAsObject');
-      let readFormat = getWfsFormat(outputFormat, crsOuput.crs);
+      const readFormat = getWfsFormat(outputFormat, crsOuput.crs);
       layerName = layerModel.get('name');
       if (type === 'wms-wfs') {
         layerSettings = layerModel.get('settingsAsObject').wfs;
       }
 
       if (type !== 'odata-vector') {
-        let wfsLayer = new L.WFS({
+        const wfsLayer = new L.WFS({
           crs: crsOuput.crs,
           url: layerSettings.url,
           typeNS: layerSettings.typeNS,
           typeName: layerSettings.typeName,
           geometryField: layerSettings.geometryField,
-          showExisting: false
+          showExisting: false,
         }, readFormat);
 
-        let filters = objectIds.map((id) => new L.Filter.GmlObjectID(id));
-        let allfilters = new L.Filter.Or(...filters);
-        let wfsElem = wfsLayer.getFeature(allfilters);
+        const filters = objectIds.map((id) => new L.Filter.GmlObjectID(id));
+        const allfilters = new L.Filter.Or(...filters);
+        const wfsElem = wfsLayer.getFeature(allfilters);
         headers = wfsLayer.options.headers;
-        let doc = document.implementation.createDocument('', '', null);
-        let geoserverElem = doc.createElement('geoserver');
+        const doc = document.implementation.createDocument('', '', null);
+        const geoserverElem = doc.createElement('geoserver');
         geoserverElem.setAttribute('url', layerSettings.url);
         wfsElem.appendChild(geoserverElem);
         req = wfsElem;
-
       } else {
-        let doc = document.implementation.createDocument('', '', null);
-        let odataElem = doc.createElement('odata');
+        const doc = document.implementation.createDocument('', '', null);
+        const odataElem = doc.createElement('odata');
         odataElem.setAttribute('outputFormat', outputFormat);
-        let layerElem = doc.createElement('layer');
+        const layerElem = doc.createElement('layer');
         layerElem.setAttribute('odataClass', layerSettings.odataClass);
         layerElem.setAttribute('odataUrl', layerSettings.odataUrl);
         if (!isNone(crsOuput.definition)) {
@@ -71,9 +70,9 @@ let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLa
           layerElem.setAttribute('srslayer', crsLayer.crs.code);
         }
 
-        let pkListElem = doc.createElement('pkList');
+        const pkListElem = doc.createElement('pkList');
         objectIds.forEach((id) => {
-          let pkElem = doc.createElement('pk');
+          const pkElem = doc.createElement('pk');
           pkElem.setAttribute('primarykey', id);
           pkListElem.appendChild(pkElem);
         });
@@ -84,25 +83,25 @@ let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLa
         headers = header;
       }
     } catch (error) {
-      reject('Error getting data for the request: ' + error);
+      reject(`Error getting data for the request: ${error}`);
     }
 
     $.ajax({
       async: true,
       method: 'POST',
-      url: url,
+      url,
       data: L.XmlUtil.serializeXmlDocumentString(req),
       contentType: 'text/xml',
       headers: headers || {},
       dataType: 'blob',
       success: (blob) => {
-        let ext = getFileExt(outputFormat);
-        let fileName = layerName + '.' + ext;
-        resolve({ fileName, blob });
+        const ext = getFileExt(outputFormat);
+        const fileName = `${layerName}.${ext}`;
+        resolve({ fileName, blob, });
       },
       error: (errorMessage) => {
-        reject('Layer upload error ' + layerName + ': ' + errorMessage);
-      }
+        reject(`Layer upload error ${layerName}: ${errorMessage}`);
+      },
     });
   });
 };
@@ -113,12 +112,12 @@ let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLa
   @param {Object} crs crs in which to download data.
   @return {Object} L.Format.
 */
-let getWfsFormat = function(outputFormat, crs) {
+let getWfsFormat = function (outputFormat, crs) {
   if (outputFormat === 'JSON') {
-    return new L.Format.GeoJSON({ crs: crs });
+    return new L.Format.GeoJSON({ crs, });
   }
 
-  let format = new L.Format.Base({ crs: crs });
+  const format = new L.Format.Base({ crs, });
 
   format.outputFormat = outputFormat;
 
@@ -134,7 +133,7 @@ let getWfsFormat = function(outputFormat, crs) {
   @param {string} format Output format.
   @return {string} file extension.
 */
-let getFileExt = function(format) {
+let getFileExt = function (format) {
   switch (format) {
     case 'JSON':
       return 'json';
@@ -159,8 +158,8 @@ let getFileExt = function(format) {
   @param {string} filename File name.
   @param {Blob} blob Data array.
 */
-let downloadBlob = function(filename, blob) {
-  let element = document.createElement('a');
+const downloadBlob = function (filename, blob) {
+  const element = document.createElement('a');
 
   element.setAttribute('href', window.URL.createObjectURL(blob));
   element.setAttribute('download', filename);

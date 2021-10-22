@@ -5,84 +5,84 @@ export default {
   'print-error-message-caption': 'Ошибка печати карты',
   'legend-caption': 'Легенда',
   'approve-button': {
-    'caption': 'Ок'
+    caption: 'Ок',
   },
   'print-button': {
-    'caption': 'Печать карты'
+    caption: 'Печать карты',
   },
   'export-button': {
-    'caption': 'Сохранить изображение'
+    caption: 'Сохранить изображение',
   },
   'deny-button': {
-    'caption': 'Отмена'
+    caption: 'Отмена',
   },
   'caption-settings-tab': {
-    'caption': 'НАСТРОЙКИ ПЕЧАТИ',
+    caption: 'НАСТРОЙКИ ПЕЧАТИ',
     'caption-textbox': {
-      'caption': 'Заголовок карты'
+      caption: 'Заголовок карты',
     },
     'font-settings': {
-      'caption': 'Шрифт'
-    }
+      caption: 'Шрифт',
+    },
   },
   'display-mode-settings-tab': {
-    'caption': 'Настройки режима отображения карты',
+    caption: 'Настройки режима отображения карты',
     'display-mode-switcher': {
-      'caption': 'Режим отображения',
+      caption: 'Режим отображения',
       'standard-mode': {
-        'caption': 'Стандарт'
+        caption: 'Стандарт',
       },
       'map-only-mode': {
-        'caption': 'Только карта'
+        caption: 'Только карта',
       },
       'modes-divider': {
-        'caption': 'или'
-      }
+        caption: 'или',
+      },
     },
     'map-controls-panel': {
-      'caption': 'Отображаемые контролы карты',
+      caption: 'Отображаемые контролы карты',
       'legend-control': {
-        'caption': 'Легенда'
+        caption: 'Легенда',
       },
       'scale-control': {
-        'caption': 'Масштаб'
-      }
+        caption: 'Масштаб',
+      },
     },
     'legend-settings-panel': {
-      'caption': 'Отображение легенды',
+      caption: 'Отображение легенды',
       'under-map': {
-        'caption': 'Под картой'
+        caption: 'Под картой',
       },
       'second-page': {
-        'caption': 'Отдельно'
-      }
-    }
+        caption: 'Отдельно',
+      },
+    },
   },
   'paper-settings-tab': {
-    'caption': 'Настройки листа бумаги',
+    caption: 'Настройки листа бумаги',
     'paper-orientation-switcher': {
-      'caption': 'Ориентация листа бумаги',
+      caption: 'Ориентация листа бумаги',
       'landscape-orientation': {
-        'caption': 'Альбомная'
+        caption: 'Альбомная',
       },
       'portrait-orientation': {
-        'caption': 'Книжная'
+        caption: 'Книжная',
       },
       'orientations-divider': {
-        'caption': 'или'
-      }
+        caption: 'или',
+      },
     },
     'paper-format-dropdown': {
-      'caption': 'Формат листа бумаги'
-    }
+      caption: 'Формат листа бумаги',
+    },
   },
   'downloading-file-settings-tab': {
-    'caption': 'Настройки скачиваемого файла',
+    caption: 'Настройки скачиваемого файла',
     'file-name-textbox': {
-      'caption': 'Имя файла'
+      caption: 'Имя файла',
     },
     'file-type-dropdown': {
-      'caption': 'Тип файла'
-    }
-  }
+      caption: 'Тип файла',
+    },
+  },
 };

@@ -9,9 +9,9 @@ import $ from 'jquery';
 import { isNone } from '@ember/utils';
 import { computed, set, observer } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../templates/components/flexberry-table';
 import PaginatedControllerMixin from 'ember-flexberry/mixins/paginated-controller';
 import SlotsMixin from 'ember-block-slots';
+import layout from '../templates/components/flexberry-table';
 
 /**
   Flexberry table component with [Semantic UI table](https://semantic-ui.com/collections/table) style and paging handling.
@@ -32,8 +32,8 @@ export default Component.extend(PaginatedControllerMixin, SlotsMixin, {
     @readonly
     @private
   */
-  _additionalColumnsCount: computed('_slots.[]', function() {
-    let slots = ['column-header-head-0', 'column-cell-head-1', 'column-header-tail-0'];
+  _additionalColumnsCount: computed('_slots.[]', function () {
+    const slots = ['column-header-head-0', 'column-cell-head-1', 'column-header-tail-0'];
     let result = 0;
     slots.forEach((item) => {
       if (this._isRegistered(item)) {
@@ -53,9 +53,9 @@ export default Component.extend(PaginatedControllerMixin, SlotsMixin, {
   */
   _columnCount: computed('header', {
     get() {
-      let additionalColumnsCount = this.get('_additionalColumnsCount');
+      const additionalColumnsCount = this.get('_additionalColumnsCount');
       return Object.keys(this.get('header')).length + additionalColumnsCount;
-    }
+    },
   }),
 
   /**
@@ -162,7 +162,7 @@ export default Component.extend(PaginatedControllerMixin, SlotsMixin, {
 
       // Wait while input will be embeded into clicked cell (after render), and focus on it.
       scheduleOnce('afterRender', this, function () {
-        let $cellInput = $(e.target).find('input').first();
+        const $cellInput = $(e.target).find('input').first();
         $cellInput.focus();
       });
     },
@@ -177,13 +177,13 @@ export default Component.extend(PaginatedControllerMixin, SlotsMixin, {
       @param {String} inputText Actual input text.
       @param {Object} e Event object.
     */
-    onCellInputFocusOut({ row, fieldName }, inputText, e) {
+    onCellInputFocusOut({ row, fieldName, }, inputText, e) {
       inputText = inputText;
-      let fieldParsers = this.get('fieldParsers');
-      let fieldValidators = this.get('fieldValidators');
+      const fieldParsers = this.get('fieldParsers');
+      const fieldValidators = this.get('fieldValidators');
 
-      let value = fieldParsers[fieldName](inputText);
-      let valueIsValid = fieldValidators[fieldName](value);
+      const value = fieldParsers[fieldName](inputText);
+      const valueIsValid = fieldValidators[fieldName](value);
       if (valueIsValid) {
         set(row, fieldName, value);
         this.sendAction('rowEdited', guidFor(row));
@@ -214,12 +214,12 @@ export default Component.extend(PaginatedControllerMixin, SlotsMixin, {
     */
     onCellInputKeyDown(options, inputText, e) {
       // If Enter (keycode: 13) or Esc (keycode: 27) was pressed, remove input from the cell.
-      let code = e.keyCode || e.which;
+      const code = e.keyCode || e.which;
       if (code === 13 || code === 27) {
         e.preventDefault();
         this.send('onCellInputFocusOut', options, inputText, e);
       }
-    }
+    },
   },
 
   /**
@@ -242,13 +242,13 @@ export default Component.extend(PaginatedControllerMixin, SlotsMixin, {
     @private
   */
   _reload() {
-    let perPageValue = this.get('perPageValue');
-    let pageNum = this.get('page');
+    const perPageValue = this.get('perPageValue');
+    const pageNum = this.get('page');
     this.sendAction('getData', {
       modelName: this.get('modelName'),
       projectionName: this.get('projectionName'),
       top: perPageValue,
-      skip: pageNum > 0 ? (pageNum - 1) * perPageValue : 0
+      skip: pageNum > 0 ? (pageNum - 1) * perPageValue : 0,
     });
   },
 

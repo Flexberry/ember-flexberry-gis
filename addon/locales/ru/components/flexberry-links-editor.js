@@ -1,11 +1,11 @@
 export default {
   'map-object-setting-textbox': {
-    'caption': 'Настройка'
+    caption: 'Настройка',
   },
   'allow-show-textbox': {
-    'caption': 'Показывать'
+    caption: 'Показывать',
   },
   'clear-button': {
-    'caption': 'Удалить'
-  }
+    caption: 'Удалить',
+  },
 };

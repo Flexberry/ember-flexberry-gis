@@ -35,27 +35,27 @@ export default Component.extend({
     @private
     @readOnly
   */
-  _availableLayerProperties: computed('leafletLayer', 'propertyType', 'displaySettings.featuresPropertiesSettings', 'i18n.locale', function() {
-    let availableLayerProperties = {};
+  _availableLayerProperties: computed('leafletLayer', 'propertyType', 'displaySettings.featuresPropertiesSettings', 'i18n.locale', function () {
+    const availableLayerProperties = {};
 
-    let propertyType = this.get('propertyType');
-    let layerFieldTypes = this.get('leafletLayer.readFormat.featureType.fieldTypes');
+    const propertyType = this.get('propertyType');
+    const layerFieldTypes = this.get('leafletLayer.readFormat.featureType.fieldTypes');
     if (isNone(layerFieldTypes)) {
       return availableLayerProperties;
     }
 
-    let layerProperties = Object.keys(layerFieldTypes);
-    let localizedProperties = this.get(`displaySettings.featuresPropertiesSettings.localizedProperties.${this.get('i18n.locale')}`) || {};
-    let excludedProperties = this.get(`displaySettings.featuresPropertiesSettings.excludedProperties`);
+    const layerProperties = Object.keys(layerFieldTypes);
+    const localizedProperties = this.get(`displaySettings.featuresPropertiesSettings.localizedProperties.${this.get('i18n.locale')}`) || {};
+    let excludedProperties = this.get('displaySettings.featuresPropertiesSettings.excludedProperties');
     excludedProperties = isArray(excludedProperties) ? A(excludedProperties) : A();
 
     for (let i = 0, len = layerProperties.length; i < len; i++) {
-      let propertyName = layerProperties[i];
+      const propertyName = layerProperties[i];
       if (excludedProperties.contains(propertyName) || (!isBlank(propertyType) && layerFieldTypes[propertyName] !== propertyType)) {
         continue;
       }
 
-      let propertyCaption = get(localizedProperties, propertyName);
+      const propertyCaption = get(localizedProperties, propertyName);
       availableLayerProperties[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
     }
 
@@ -134,7 +134,7 @@ export default Component.extend({
     Click event handler.
   */
   click() {
-    let leafletLayer = this.get('leafletLayer');
+    const leafletLayer = this.get('leafletLayer');
     if (!isNone(leafletLayer)) {
       return;
     }
@@ -143,8 +143,8 @@ export default Component.extend({
     // Allow items to be computed, and then set initial value and show dropdow menu.
     schedule('afterRender', () => {
       later(() => {
-        let $dropdown = this.get('_$dropdown');
-        let initialValue = this.get('value');
+        const $dropdown = this.get('_$dropdown');
+        const initialValue = this.get('value');
         if (!isBlank(initialValue)) {
           $dropdown.dropdown('set selected', initialValue);
         }
@@ -160,14 +160,14 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    let $dropdown = this.$().dropdown({
+    const $dropdown = this.$().dropdown({
       onChange: (newValue) => {
         this.set('value', newValue);
         this.sendAction('change', newValue);
-      }
+      },
     });
 
-    let initialValue = this.get('value');
+    const initialValue = this.get('value');
     if (!isBlank(initialValue)) {
       $dropdown.dropdown('set selected', initialValue);
     }
@@ -180,10 +180,10 @@ export default Component.extend({
     Deinitializes component's DOM-related properties.
   */
   willDestroyElement() {
-    let $dropdown = this.get('_$dropdown');
+    const $dropdown = this.get('_$dropdown');
     $dropdown.dropdown('destroy');
     this.set('_$dropdown', null);
 
     this._super(...arguments);
-  }
+  },
 });

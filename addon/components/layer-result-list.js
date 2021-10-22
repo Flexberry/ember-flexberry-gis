@@ -7,7 +7,9 @@ import { allSettled } from 'rsvp';
 import { assert } from '@ember/debug';
 import { A, isArray } from '@ember/array';
 import { on } from '@ember/object/evented';
-import { isBlank, isNone, isEmpty, typeOf } from '@ember/utils';
+import {
+  isBlank, isNone, isEmpty, typeOf
+} from '@ember/utils';
 import { get, observer, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -251,27 +253,30 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
     upload(result) {
       this.set('exportResult', result);
       this.set('exportDialogVisible', true);
-    }
+    },
   },
 
   didUpdate() {
-    let _this = this;
-    let $caption = this.$('.title .flexberry-toggler-caption');
+    const _this = this;
+    const $caption = this.$('.title .flexberry-toggler-caption');
     if ($caption.length > 0) {
       $caption.hover(
         function () {
-          let $buttons = _this.$(this).parent().parent().parent().children('.feature-result-item-buttons');
+          const $buttons = _this.$(this).parent().parent().parent()
+            .children('.feature-result-item-buttons');
           $buttons.removeClass('hidden');
           _this.$(this).addClass('blur');
         },
         function () {
-          let $buttons = _this.$(this).parent().parent().parent().children('.feature-result-item-buttons');
+          const $buttons = _this.$(this).parent().parent().parent()
+            .children('.feature-result-item-buttons');
           $buttons.hover(
             () => { },
             () => {
               $buttons.addClass('hidden');
               _this.$(this).removeClass('blur');
-            });
+            }
+          );
         }
       );
     }
@@ -286,38 +291,38 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
      @private
    */
   _processLayerLinkForDisplayResults(searchResults, displayResult) {
-    let links = get(searchResults, 'layerModel.layerLink');
-    let layerLink = links.filter(link => link.get('allowShow') === true);
+    const links = get(searchResults, 'layerModel.layerLink');
+    const layerLink = links.filter((link) => link.get('allowShow') === true);
 
     layerLink.forEach((link) => {
       if (!isBlank(link)) {
-        let mos = link.get('mapObjectSetting');
+        const mos = link.get('mapObjectSetting');
         if (!isBlank(mos)) {
-          let editForm = mos.get('editForm');
+          const editForm = mos.get('editForm');
           if (!isBlank(editForm)) {
-            let linkParameters = link.get('parameters');
+            const linkParameters = link.get('parameters');
 
             linkParameters.forEach((param) => {
               if (!isBlank(param)) {
-                let queryKey = param.get('queryKey');
+                const queryKey = param.get('queryKey');
 
                 if (!isBlank(queryKey)) {
-                  let listForm = mos.get('listForm');
+                  const listForm = mos.get('listForm');
                   if (!isBlank(listForm)) {
                     displayResult.listForms.pushObject({
                       url: listForm,
                       typeName: mos.get('typeName'),
-                      queryKey: queryKey
+                      queryKey,
                     });
                   }
 
-                  let layerField = param.get('layerField');
+                  const layerField = param.get('layerField');
                   if (!isBlank(layerField)) {
                     displayResult.editForms.pushObject({
                       url: editForm,
                       typeName: mos.get('typeName'),
-                      queryKey: queryKey,
-                      layerField: layerField
+                      queryKey,
+                      layerField,
                     });
                   }
                 }
@@ -338,7 +343,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
     this.set('_noData', false);
     this.set('_displayResults', null);
 
-    let results = this.get('results') || A();
+    const results = this.get('results') || A();
 
     // If results had been cleared.
     if (isBlank(results)) {
@@ -347,7 +352,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
 
     this.set('_showLoader', true);
 
-    let displayResults = A();
+    const displayResults = A();
 
     // Prepare results format for template.
     results.forEach((result) => {
@@ -358,7 +363,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
       result.features.then(
         (features) => {
           if (features.length > 0) {
-            let intersectArray = features.filter((item) => {
+            const intersectArray = features.filter((item) => {
               item.isIntersect = false;
               if (!isNone(item.intersection)) {
                 item.isIntersect = true;
@@ -381,7 +386,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
 
             let layerIds = A();
             if (hasListForm) {
-              layerIds = A(features).map(feature => {
+              layerIds = A(features).map((feature) => {
                 const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
                 if (typeof getLayerFeatureIdFunc === 'function') {
                   return getLayerFeatureIdFunc(layerModel, feature.leafletLayer);
@@ -391,18 +396,18 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
               });
             }
 
-            let displayResult = {
+            const displayResult = {
               name: get(layerModel, 'name') || '',
               settings: get(layerModel, 'settingsAsObject.displaySettings.featuresPropertiesSettings'),
               displayProperties: get(layerModel, 'settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty'),
               listForms: A(),
               editForms: A(),
               features: A(features),
-              layerModel: layerModel,
-              hasListForm: hasListForm,
-              layerIds: layerIds,
+              layerModel,
+              hasListForm,
+              layerIds,
               dateFormat: get(layerModel, 'settingsAsObject.displaySettings.dateFormat'),
-              isIntersect: isIntersect
+              isIntersect,
             };
 
             this._processLayerLinkForDisplayResults(result, displayResult);
@@ -411,9 +416,9 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
         }
       );
     });
-    let getFeatureDisplayProperty = (feature, featuresPropertiesSettings, dateFormat) => {
-      let displayPropertyIsCallback = get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
-      let displayProperty = get(featuresPropertiesSettings, 'displayProperty');
+    const getFeatureDisplayProperty = (feature, featuresPropertiesSettings, dateFormat) => {
+      const displayPropertyIsCallback = get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
+      const displayProperty = get(featuresPropertiesSettings, 'displayProperty');
 
       if (!isArray(displayProperty) && !displayPropertyIsCallback) {
         return '';
@@ -424,10 +429,10 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       if (!displayPropertyIsCallback) {
-        let featureProperties = get(feature, 'properties') || {};
+        const featureProperties = get(feature, 'properties') || {};
 
-        for (var prop in featureProperties) {
-          let value = featureProperties[prop];
+        for (const prop in featureProperties) {
+          const value = featureProperties[prop];
           if (value instanceof Date && !isNone(value) && !isEmpty(value) && !isEmpty(dateFormat)) {
             featureProperties[prop] = moment(value).format(dateFormat);
           }
@@ -436,7 +441,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
         let displayValue = Ember.none;
         displayProperty.forEach((prop) => {
           if (featureProperties.hasOwnProperty(prop)) {
-            let value = featureProperties[prop];
+            const value = featureProperties[prop];
             if (isNone(displayValue) && !isNone(value) && !isEmpty(value) && value.toString().toLowerCase() !== 'null') {
               displayValue = value;
             }
@@ -446,18 +451,17 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
         return displayValue || '';
       }
 
-      let calculateDisplayProperty = eval(`(${displayProperty})`);
+      const calculateDisplayProperty = eval(`(${displayProperty})`);
       assert(
-        'Property \'settings.displaySettings.featuresPropertiesSettings.displayProperty\' ' +
-        'is not a valid javascript function',
-        typeOf(calculateDisplayProperty) === 'function');
+        'Property \'settings.displaySettings.featuresPropertiesSettings.displayProperty\' '
+        + 'is not a valid javascript function',
+        typeOf(calculateDisplayProperty) === 'function'
+      );
 
       return calculateDisplayProperty(feature);
     };
 
-    let promises = results.map((result) => {
-      return result.features;
-    });
+    const promises = results.map((result) => result.features);
 
     allSettled(promises).finally(() => {
       let order = 1;
@@ -490,10 +494,10 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
 
         if (!isBlank(result.features)) {
           let ownLayerField;
-          let objectList = A();
+          const objectList = A();
 
-          let editForms = result.editForms;
-          let listForms = result.listForms;
+          const { editForms, } = result;
+          const { listForms, } = result;
 
           result.features.forEach((feature) => {
             set(feature, 'displayValue', getFeatureDisplayProperty(feature, result.settings, result.dateFormat));
@@ -504,21 +508,21 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
             }
 
             editForms.forEach((editForm) => {
-              let url = editForm.url;
-              let layerField = editForm.layerField;
-              let queryKey = editForm.queryKey;
-              let typeName = editForm.typeName;
+              const { url, } = editForm;
+              const { layerField, } = editForm;
+              const { queryKey, } = editForm;
+              const { typeName, } = editForm;
 
               if (isBlank(url) || isBlank(layerField) || isBlank(queryKey)) {
                 return;
               }
 
-              let properties = feature.properties;
+              const { properties, } = feature;
               let queryValue;
 
               if (isBlank(ownLayerField)) {
-                for (var p in properties) {
-                  if (properties.hasOwnProperty(p) && layerField.toLowerCase() === (p + '').toLowerCase()) {
+                for (const p in properties) {
+                  if (properties.hasOwnProperty(p) && layerField.toLowerCase() === (`${p}`).toLowerCase()) {
                     ownLayerField = p;
                     break;
                   }
@@ -533,36 +537,36 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
                 return;
               }
 
-              let params = {};
+              const params = {};
               set(params, queryKey, queryValue);
               set(params, isMapLimitKey, true);
 
               feature.editForms.pushObject({
                 url: url + L.Util.getParamString(params, url),
-                typeName: typeName
+                typeName,
               });
 
               objectList.pushObject(queryValue);
             });
           });
 
-          let shapeIds = this._getFeatureShapeIds(result.features);
+          const shapeIds = this._getFeatureShapeIds(result.features);
           set(result, 'shapeIds', shapeIds);
 
-          let forms = A();
+          const forms = A();
           if (objectList.length === 0 || listForms.length === 0) {
             return;
           }
 
           listForms.forEach((listForm) => {
-            let params = {};
+            const params = {};
 
             set(params, isMapLimitKey, true);
             set(params, listForm.queryKey, objectList.join(','));
 
             forms.pushObject({
               url: listForm.url + L.Util.getParamString(params, listForm.url),
-              typeName: listForm.typeName
+              typeName: listForm.typeName,
             });
           });
 
@@ -588,13 +592,12 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
     @return {String[]} Array of layer shapes id
   */
   _getFeatureShapeIds(features) {
-    var shapeIds = [];
+    const shapeIds = [];
     features.forEach((feature) => {
       let shapeId;
       const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
       if (typeof getLayerFeatureIdFunc === 'function') {
-
-        //Need to implement id definition function
+        // Need to implement id definition function
         shapeId = getLayerFeatureIdFunc(feature.layerModel, feature.leafletLayer);
       } else {
         shapeId = feature.id;
@@ -603,5 +606,5 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
       shapeIds.push(shapeId);
     });
     return shapeIds;
-  }
+  },
 });

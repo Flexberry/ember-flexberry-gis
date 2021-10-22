@@ -1,3 +1,3 @@
 export default {
-  'caption': 'Default marker'
+  caption: 'Default marker',
 };

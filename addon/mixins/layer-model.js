@@ -48,14 +48,14 @@ export default Mixin.create({
     @method _settingsDidChange
     @private
   */
-  _settingsDidChange: on('init', observer('settings', function() {
-    let stringToDeserialize = this.get('settings');
+  _settingsDidChange: on('init', observer('settings', function () {
+    const stringToDeserialize = this.get('settings');
     let settingsAsObject = {};
 
     if (!isBlank(stringToDeserialize)) {
       try {
-        let layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
-        let defaultSettings = layerClassFactory.createSettings();
+        const layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
+        const defaultSettings = layerClassFactory.createSettings();
         settingsAsObject = $.extend(true, defaultSettings, JSON.parse(stringToDeserialize));
       } catch (e) {
         Ember.Logger.error(`Computation of 'settingsAsObject' property for '${this.get('name')}' layer has been failed: ${e}`);
@@ -75,17 +75,17 @@ export default Mixin.create({
     @private
   */
   _applyLayerPropertiesFromLocalStorage() {
-    let mapId = this.get('map.id');
-    let layerId = this.get('id');
-    let localStorageLayer = isBlank(mapId) || isBlank(layerId) ?
-      null :
-      this.get('localStorageService').getFromStorage('layers', mapId).findBy('id', layerId);
+    const mapId = this.get('map.id');
+    const layerId = this.get('id');
+    const localStorageLayer = isBlank(mapId) || isBlank(layerId)
+      ? null
+      : this.get('localStorageService').getFromStorage('layers', mapId).findBy('id', layerId);
     if (!isNone(localStorageLayer)) {
       // Remove id to avoid explicit merge.
       delete localStorageLayer.id;
 
       // Apply properties to layer model.
-      for (let propertyName in localStorageLayer) {
+      for (const propertyName in localStorageLayer) {
         if (!localStorageLayer.hasOwnProperty(propertyName)) {
           continue;
         }
@@ -109,9 +109,9 @@ export default Mixin.create({
       return false;
     }
 
-    let layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
-    let identifyOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('identify');
-    let identifyOperationIsAvailableForLayerInstance = this.get('settingsAsObject.identifySettings.canBeIdentified') !== false;
+    const layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
+    const identifyOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('identify');
+    const identifyOperationIsAvailableForLayerInstance = this.get('settingsAsObject.identifySettings.canBeIdentified') !== false;
 
     return identifyOperationIsAvailableForLayerClass && identifyOperationIsAvailableForLayerInstance;
   }),
@@ -127,9 +127,9 @@ export default Mixin.create({
       return false;
     }
 
-    let layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
-    let searchOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('search');
-    let searchOperationIsAvailableForLayerInstance = this.get('settingsAsObject.searchSettings.canBeSearched') !== false;
+    const layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
+    const searchOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('search');
+    const searchOperationIsAvailableForLayerInstance = this.get('settingsAsObject.searchSettings.canBeSearched') !== false;
 
     return searchOperationIsAvailableForLayerClass && searchOperationIsAvailableForLayerInstance;
   }),
@@ -145,9 +145,9 @@ export default Mixin.create({
       return false;
     }
 
-    let layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
-    let searchOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('search');
-    let searchOperationIsAvailableForLayerInstance = this.get('settingsAsObject.searchSettings.canBeContextSearched') !== false;
+    const layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
+    const searchOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('search');
+    const searchOperationIsAvailableForLayerInstance = this.get('settingsAsObject.searchSettings.canBeContextSearched') !== false;
 
     return searchOperationIsAvailableForLayerClass && searchOperationIsAvailableForLayerInstance;
   }),
@@ -173,9 +173,9 @@ export default Mixin.create({
       return false;
     }
 
-    let layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
-    let legendIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('legend');
-    let legendIsAvailableForLayerInstance = this.get('settingsAsObject.legendSettings.legendCanBeDisplayed') !== false;
+    const layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
+    const legendIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('legend');
+    const legendIsAvailableForLayerInstance = this.get('settingsAsObject.legendSettings.legendCanBeDisplayed') !== false;
 
     return legendIsAvailableForLayerClass && legendIsAvailableForLayerInstance;
   }),
@@ -187,9 +187,9 @@ export default Mixin.create({
   */
   layers: computed('map', 'map.mapLayer', function () {
     try {
-      let layers = this.get('map.mapLayer');
+      const layers = this.get('map.mapLayer');
       if (layers) {
-        let id = this.get('id');
+        const id = this.get('id');
         if (!isBlank(id)) {
           return layers.filterBy('parent.id', id);
         }
@@ -208,31 +208,31 @@ export default Mixin.create({
     @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a> this layer's latLngBounds.
   */
   bounds: computed(function () {
-    let layers = this.get('layers').filterBy('visibility', true);
-    let type = this.get('type');
+    const layers = this.get('layers').filterBy('visibility', true);
+    const type = this.get('type');
 
     let layerBounds;
 
     if (type === 'group' && layers.length > 0) {
-      let earthBounds = L.latLngBounds([
+      const earthBounds = L.latLngBounds([
         [-90, -180],
         [90, 180]
       ]);
 
-      for (let layer of layers) {
+      for (const layer of layers) {
         if (layerBounds && layerBounds.equals(earthBounds)) {
           break;
         }
 
-        let bounds = layer.get('bounds');
+        const bounds = layer.get('bounds');
         layerBounds = layerBounds ? layerBounds.extend(bounds) : L.latLngBounds(bounds);
       }
     } else {
-      let boundingBox = this.get('boundingBox');
-      let bounds = getBounds(boundingBox);
+      const boundingBox = this.get('boundingBox');
+      const bounds = getBounds(boundingBox);
       layerBounds = L.latLngBounds([bounds.minLat, bounds.minLng], [bounds.maxLat, bounds.maxLng]);
     }
 
     return layerBounds;
-  }).volatile()
+  }).volatile(),
 });

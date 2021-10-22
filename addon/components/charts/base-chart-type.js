@@ -75,14 +75,13 @@ export default Component.extend({
     @property _propertiesForXAxis
     @type Object
   */
-  _propertiesForXAxis: computed('localizedProperties', function() {
-    let allProperties = {};
-    let isObject = this.get('isObject');
-    let properties = Object.keys(isObject[0] || {});
-    let localizedProperties = this.get('localizedProperties');
+  _propertiesForXAxis: computed('localizedProperties', function () {
+    const allProperties = {};
+    const isObject = this.get('isObject');
+    const properties = Object.keys(isObject[0] || {});
+    const localizedProperties = this.get('localizedProperties');
 
-    for (var i in properties)
-    {
+    for (const i in properties) {
       allProperties[properties[i]] = localizedProperties[properties[i]] || properties[i];
     }
 
@@ -95,14 +94,13 @@ export default Component.extend({
     @property _propertiesForYAxis
     @type Object
   */
-  _propertiesForYAxis: computed('localizedProperties', function() {
-    let numberProperties = {};
-    let isObject = this.get('isObject');
-    let properties = Object.keys(isObject[0] || {});
-    let localizedProperties = this.get('localizedProperties');
+  _propertiesForYAxis: computed('localizedProperties', function () {
+    const numberProperties = {};
+    const isObject = this.get('isObject');
+    const properties = Object.keys(isObject[0] || {});
+    const localizedProperties = this.get('localizedProperties');
 
-    for (var i in properties)
-    {
+    for (const i in properties) {
       if (isFinite(isObject[0][properties[i]])) {
         numberProperties[properties[i]] = localizedProperties[properties[i]] || properties[i];
       }
@@ -146,6 +144,6 @@ export default Component.extend({
     */
     onYAxisPropertyChange(item, key) {
       this.set('_selectedYAxisProperty', key);
-    }
-  }
+    },
+  },
 });

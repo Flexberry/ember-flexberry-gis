@@ -20,14 +20,14 @@ export default VectorLayer.extend(GeoJsonFilterParserMixin, {
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = this._super(...arguments);
+    const settings = this._super(...arguments);
     return $.extend(settings, {
       pointToLayer: undefined,
       onEachFeature: null,
       filter: '',
       coordsToLatLng: null,
       geojson: null,
-      url: null
+      url: null,
     });
-  }
+  },
 });

@@ -1,4 +1,4 @@
 export default {
-  'gradientColorStart': 'Start color',
-  'gradientColorEnd': 'End color'
+  gradientColorStart: 'Start color',
+  gradientColorEnd: 'End color',
 };

@@ -8,9 +8,9 @@ import { isNone } from '@ember/utils';
 import { computed, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
-import layout from '../templates/components/feature-result-item';
 import { translationMacro as t } from 'ember-i18n';
 import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
+import layout from '../templates/components/feature-result-item';
 import { zoomToBounds } from '../utils/zoom-to-bounds';
 
 /**
@@ -139,8 +139,8 @@ export default Component.extend({
     @private
   */
   _localizedProperties: computed('displaySettings', 'i18n.locale', function () {
-    let currentLocale = this.get('i18n.locale');
-    let localizedProperties = this.get(`displaySettings.localizedProperties.${currentLocale}`) || {};
+    const currentLocale = this.get('i18n.locale');
+    const localizedProperties = this.get(`displaySettings.localizedProperties.${currentLocale}`) || {};
     return localizedProperties;
   }),
 
@@ -230,7 +230,7 @@ export default Component.extend({
         const layer = this.get('feature.layerModel');
         const shape = this.get('feature');
 
-        //Need to implement id definition function
+        // Need to implement id definition function
         shapeId = getLayerFeatureIdFunc(layer, shape.leafletLayer);
       } else {
         shapeId = this.get('feature.id');
@@ -241,24 +241,25 @@ export default Component.extend({
       this.set('hasEditForm', hasEditForm);
     }
 
-    let _this = this;
-    let $caption = this.$('.feature-result-item-caption');
+    const _this = this;
+    const $caption = this.$('.feature-result-item-caption');
     if ($caption.length > 0) {
       $caption.hover(
         function () {
-          let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
+          const $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
           $toolbar.removeClass('hidden');
           _this.$(this).addClass('blur');
         },
         function () {
-          let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
+          const $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
           $toolbar.hover(
             () => { },
             () => {
               $toolbar.addClass('hidden');
               _this.$(this).removeClass('blur');
               _this.set('isSubmenu', false);
-            });
+            }
+          );
         }
       );
     }
@@ -271,9 +272,9 @@ export default Component.extend({
       @method actions.onSubmenu
     */
     onSubmenu() {
-      let component = this.get('element');
-      let moreButton = component.getElementsByClassName('icon item more');
-      let elements = component.getElementsByClassName('more submenu hidden');
+      const component = this.get('element');
+      const moreButton = component.getElementsByClassName('icon item more');
+      const elements = component.getElementsByClassName('more submenu hidden');
       openCloseSubmenu(this, moreButton, elements, false, 1, 8);
     },
     /**
@@ -282,36 +283,36 @@ export default Component.extend({
       @method actions.onRowEdit
     */
     onRowEdit() {
-      let feature = this.get('feature');
-      let layerModel = feature.layerModel;
-      let getAttributesOptions = get(layerModel, '_attributesOptions');
+      const feature = this.get('feature');
+      const { layerModel, } = feature;
+      const getAttributesOptions = get(layerModel, '_attributesOptions');
 
       if (isNone(getAttributesOptions)) {
         return;
       }
 
-      let mapModelApi = this.get('mapApi').getFromApi('mapModel');
-      let id = mapModelApi._getLayerFeatureId(layerModel, feature.leafletLayer);
+      const mapModelApi = this.get('mapApi').getFromApi('mapModel');
+      const id = mapModelApi._getLayerFeatureId(layerModel, feature.leafletLayer);
 
       this.set('_showLoader', true);
 
-      getAttributesOptions().then(({ object, settings }) => {
-        let name = get(layerModel, 'name');
+      getAttributesOptions().then(({ object, settings, }) => {
+        const name = get(layerModel, 'name');
 
         // редактируемый объект должен быть загружен
-        let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+        const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         object.statusLoadLayer = true;
 
         let bounds;
         if (feature.leafletLayer instanceof L.Marker) {
-          let featureGroup = L.featureGroup().addLayer(feature.leafletLayer);
+          const featureGroup = L.featureGroup().addLayer(feature.leafletLayer);
           bounds = featureGroup.getBounds();
         } else {
           bounds = feature.leafletLayer.getBounds();
         }
 
-        let minZoom = get(feature.leafletLayer, 'minZoom');
-        let maxZoom = get(feature.leafletLayer, 'maxZoom');
+        const minZoom = get(feature.leafletLayer, 'minZoom');
+        const maxZoom = get(feature.leafletLayer, 'maxZoom');
         zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
         if (isNone(object.promiseLoadLayer) || !(object.promiseLoadLayer instanceof Promise)) {
           object.promiseLoadLayer = resolve();
@@ -323,31 +324,31 @@ export default Component.extend({
 
           this.set('_showLoader', false);
 
-          let layers = object._layers;
-          let layerObject = Object.values(layers).find(layer => {
-            return mapModelApi._getLayerFeatureId(layerModel, layer) === id;
-          });
+          const layers = object._layers;
+          const layerObject = Object.values(layers).find((layer) => mapModelApi._getLayerFeatureId(layerModel, layer) === id);
 
           if (!layerObject) {
             console.error('Object not found');
             return;
           }
 
-          let editedProperty = layerObject.feature.properties;
+          const editedProperty = layerObject.feature.properties;
 
-          let dataItems = {
+          const dataItems = {
             mode: 'Edit',
             items: [{
               data: Object.assign({}, editedProperty),
               initialData: editedProperty,
               layer: layerObject,
-            }]
+            }],
           };
 
           this.sendAction('editFeature', {
             isFavorite: feature.properties.isFavorite,
-            dataItems: dataItems,
-            layerModel: { name: name, leafletObject: object, settings, layerModel }
+            dataItems,
+            layerModel: {
+              name, leafletObject: object, settings, layerModel,
+            },
           });
         });
       });
@@ -465,8 +466,8 @@ export default Component.extend({
     zoomToIntersection() {
       this.sendAction('zoomTo', this.get('feature'));
       this.sendAction('zoomToIntersection', this.get('feature'));
-    }
-  }
+    },
+  },
 
   /**
     Component's action invoking for select feature

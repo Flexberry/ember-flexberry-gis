@@ -5,10 +5,10 @@
 import { isNone } from '@ember/utils';
 
 import Component from '@ember/component';
-import layout from '../../../templates/components/layers-dialogs/attributes/move';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import layout from '../../../templates/components/layers-dialogs/attributes/move';
 
 export default Component.extend({
   /**
@@ -127,8 +127,8 @@ export default Component.extend({
     */
     onDeny() {
       this.sendAction('deny');
-    }
-  }
+    },
+  },
 
   /**
     Component's action invoking when dialog starts to show.

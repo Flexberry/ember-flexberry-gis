@@ -6,8 +6,8 @@ import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-
 import sinon from 'sinon';
 import VectorLayer from 'ember-flexberry-gis/layers/-private/vector';
 
-module('Unit | Mixin | test api show and hide layers', function() {
-  let arrayFindBy = function(prop, value) {
+module('Unit | Mixin | test api show and hide layers', function () {
+  const arrayFindBy = function (prop, value) {
     return this.filter((elem) => {
       if (elem.hasOwnProperty(prop)) {
         return elem[prop] === value;
@@ -15,79 +15,79 @@ module('Unit | Mixin | test api show and hide layers', function() {
     })[0];
   };
 
-  let mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
+  const mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
 
-  let _labelsLayer = L.featureGroup();
-  let leafletObject = L.featureGroup();
+  const _labelsLayer = L.featureGroup();
+  const leafletObject = L.featureGroup();
   leafletObject.options = {
     showExisting: false,
-    continueLoading: false
+    continueLoading: false,
   };
   leafletObject._labelsLayer = _labelsLayer;
-  let firstTestLayer = L.polygon([[1, 2], [4, 2], [4, 4], [1, 2]]).addTo(leafletObject);
+  const firstTestLayer = L.polygon([[1, 2], [4, 2], [4, 4], [1, 2]]).addTo(leafletObject);
   firstTestLayer.id = '1';
-  let secondTestLayer = L.polygon([[10, 20], [40, 20], [40, 40], [10, 20]]).addTo(leafletObject);
+  const secondTestLayer = L.polygon([[10, 20], [40, 20], [40, 40], [10, 20]]).addTo(leafletObject);
   secondTestLayer.id = '2';
-  let thirdTestLayer = L.polygon([[0.1, 0.2], [0.4, 0.2], [0.4, 0.4], [0.1, 0.2]]).addTo(leafletObject);
+  const thirdTestLayer = L.polygon([[0.1, 0.2], [0.4, 0.2], [0.4, 0.4], [0.1, 0.2]]).addTo(leafletObject);
   thirdTestLayer.id = '3';
-  let firstTestLabelLayer = L.marker([1, 2]).addTo(_labelsLayer);
+  const firstTestLabelLayer = L.marker([1, 2]).addTo(_labelsLayer);
   firstTestLabelLayer.id = '1';
-  let secondTestLabelLayer = L.marker([40, 20]).addTo(_labelsLayer);
+  const secondTestLabelLayer = L.marker([40, 20]).addTo(_labelsLayer);
   secondTestLabelLayer.id = '2';
-  let thirdTestLabelLayer = L.marker([20, 40]).addTo(_labelsLayer);
+  const thirdTestLabelLayer = L.marker([20, 40]).addTo(_labelsLayer);
   thirdTestLabelLayer.id = '3';
 
-  let layer1 = EmberObject.create({
+  const layer1 = EmberObject.create({
     id: '1',
     visibility: false,
     _leafletObject: leafletObject,
     settingsAsObject: {
       labelSettings: {
-        signMapObjects: true
-      }
-    }
+        signMapObjects: true,
+      },
+    },
   });
-  let layer2 = EmberObject.create({
+  const layer2 = EmberObject.create({
     id: '2',
     visibility: false,
     _leafletObject: leafletObject,
     settingsAsObject: {
       labelSettings: {
-        signMapObjects: true
-      }
-    }
+        signMapObjects: true,
+      },
+    },
   });
-  let maplayers = A([layer1, layer2]);
+  const maplayers = A([layer1, layer2]);
 
   test('test method showLayers with continueLoading = false', function (assert) {
-    //Arrange
+    // Arrange
     assert.expect(6);
-    let done = assert.async(1);
+    const done = assert.async(1);
 
-    let map = L.map(document.createElement('div'), {
+    const map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
-      zoom: 13
+      zoom: 13,
     });
 
-    let subject = mapApiMixinObject.create({
+    const subject = mapApiMixinObject.create({
       _getTypeLayer() { return new VectorLayer(); },
       mapApi: {
-        getFromApi() { return map; }
+        getFromApi() { return map; },
       },
-      mapLayer: maplayers
+      mapLayer: maplayers,
     });
 
     leafletObject.options.continueLoading = false;
-    let leafletMapFireStub = sinon.stub(map, 'fire');
+    const leafletMapFireStub = sinon.stub(map, 'fire');
     leafletMapFireStub.returns(resolve());
-    let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+    const findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
-    //Act
-    let result = subject.showLayers(['1']);
+    // Act
+    const result = subject.showLayers(['1']);
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise);
-    result.then((res)=> {
+    result.then((res) => {
       assert.equal(res, 'success');
       assert.equal(findByStub.callCount, 1);
       assert.equal(findByStub.args[0][0], 'id');
@@ -100,34 +100,34 @@ module('Unit | Mixin | test api show and hide layers', function() {
   });
 
   test('test method showLayers with continueLoading = true', function (assert) {
-    //Arrange
+    // Arrange
     assert.expect(7);
-    let done = assert.async(1);
+    const done = assert.async(1);
 
-    let map = L.map(document.createElement('div'), {
+    const map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
-      zoom: 13
+      zoom: 13,
     });
 
-    let subject = mapApiMixinObject.create({
+    const subject = mapApiMixinObject.create({
       _getTypeLayer() { return new VectorLayer(); },
       mapApi: {
-        getFromApi() { return map; }
+        getFromApi() { return map; },
       },
-      mapLayer: maplayers
+      mapLayer: maplayers,
     });
 
     leafletObject.options.continueLoading = true;
-    let leafletMapFireStub = sinon.stub(map, 'fire');
+    const leafletMapFireStub = sinon.stub(map, 'fire');
     leafletMapFireStub.returns(resolve());
-    let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+    const findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
-    //Act
-    let result = subject.showLayers(['1']);
+    // Act
+    const result = subject.showLayers(['1']);
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise);
-    result.then((res)=> {
+    result.then((res) => {
       assert.equal(res, 'success');
       assert.equal(findByStub.callCount, 1);
       assert.equal(findByStub.args[0][0], 'id');
@@ -141,18 +141,18 @@ module('Unit | Mixin | test api show and hide layers', function() {
   });
 
   test('test method showAllLayerObjects with continueLoading = false', function (assert) {
-    //Arrange
+    // Arrange
     assert.expect(2);
-    let done = assert.async(1);
+    const done = assert.async(1);
 
-    let map = L.map(document.createElement('div'), {
+    const map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
-      zoom: 13
+      zoom: 13,
     });
 
-    let subject = mapApiMixinObject.create({
+    const subject = mapApiMixinObject.create({
       mapApi: {
-        getFromApi() { return map; }
+        getFromApi() { return map; },
       },
       _getModelLayerFeature() {
         leafletObject.addLayer(firstTestLayer);
@@ -160,18 +160,18 @@ module('Unit | Mixin | test api show and hide layers', function() {
         leafletObject.addLayer(thirdTestLayer);
         return resolve([null, null, [firstTestLayer, secondTestLayer, thirdTestLayer]]);
       },
-      mapLayer: maplayers
+      mapLayer: maplayers,
     });
     leafletObject.options.showExisting = false;
     leafletObject.options.continueLoading = false;
-    let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+    const findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
-    //Act
-    let result = subject.showAllLayerObjects('1');
+    // Act
+    const result = subject.showAllLayerObjects('1');
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise);
-    result.then((res)=> {
+    result.then((res) => {
       assert.equal(res, 'Is not a vector layer');
       done();
       findByStub.restore();
@@ -179,12 +179,12 @@ module('Unit | Mixin | test api show and hide layers', function() {
   });
 
   test('test method hideAllLayerObjects', function (assert) {
-    //Arrange
+    // Arrange
     assert.expect(4);
 
-    let map = L.map(document.createElement('div'), {
+    const map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
-      zoom: 13
+      zoom: 13,
     });
 
     map.addLayer(firstTestLayer);
@@ -192,23 +192,23 @@ module('Unit | Mixin | test api show and hide layers', function() {
     map.addLayer(thirdTestLayer);
     map.addLayer(_labelsLayer);
 
-    let subject = mapApiMixinObject.create({
+    const subject = mapApiMixinObject.create({
       mapApi: {
-        getFromApi() { return map; }
+        getFromApi() { return map; },
       },
-      mapLayer: maplayers
+      mapLayer: maplayers,
     });
 
-    let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+    const findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
-    //Act
+    // Act
     assert.throws(
       function () { subject.hideAllLayerObjects('1'); },
       function (err) { return err.toString() === 'Is not a vector layer'; },
       'Error thrown'
     );
 
-    //Assert
+    // Assert
     assert.equal(findByStub.callCount, 1);
     assert.equal(findByStub.args[0][0], 'id');
     assert.equal(findByStub.args[0][1], '1');
@@ -216,33 +216,33 @@ module('Unit | Mixin | test api show and hide layers', function() {
   });
 
   test('test method hideLayers with continueLoading = false', function (assert) {
-    //Arrange
+    // Arrange
     assert.expect(5);
 
-    let map = L.map(document.createElement('div'), {
+    const map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
-      zoom: 13
+      zoom: 13,
     });
 
-    let subject = mapApiMixinObject.create({
+    const subject = mapApiMixinObject.create({
       _getTypeLayer() { return new VectorLayer(); },
       mapApi: {
-        getFromApi() { return map; }
+        getFromApi() { return map; },
       },
       _getModelLayerFeature() { return resolve(); },
-      mapLayer: maplayers
+      mapLayer: maplayers,
     });
 
     leafletObject.options.continueLoading = false;
-    let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
-    let leafletMapFireStub = sinon.stub(map, 'fire');
+    const getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
+    const leafletMapFireStub = sinon.stub(map, 'fire');
     leafletMapFireStub.returns(resolve());
-    let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+    const findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
-    //Act
+    // Act
     subject.hideLayers(['1']);
 
-    //Assert
+    // Assert
     assert.equal(getModelLayerFeatureSpy.callCount, 0);
     assert.equal(leafletMapFireStub.callCount, 0);
     assert.equal(findByStub.callCount, 1);
@@ -254,33 +254,33 @@ module('Unit | Mixin | test api show and hide layers', function() {
   });
 
   test('test method hideLayers with continueLoading = true', function (assert) {
-    //Arrange
+    // Arrange
     assert.expect(5);
 
-    let map = L.map(document.createElement('div'), {
+    const map = L.map(document.createElement('div'), {
       center: [51.505, -0.09],
-      zoom: 13
+      zoom: 13,
     });
 
-    let subject = mapApiMixinObject.create({
+    const subject = mapApiMixinObject.create({
       _getTypeLayer() { return new VectorLayer(); },
       mapApi: {
-        getFromApi() { return map; }
+        getFromApi() { return map; },
       },
       _getModelLayerFeature() { return resolve(); },
-      mapLayer: maplayers
+      mapLayer: maplayers,
     });
 
     leafletObject.options.continueLoading = true;
-    let getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
-    let leafletMapFireStub = sinon.stub(map, 'fire');
+    const getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
+    const leafletMapFireStub = sinon.stub(map, 'fire');
     leafletMapFireStub.returns(resolve());
-    let findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+    const findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
 
-    //Act
+    // Act
     subject.hideLayers(['1']);
 
-    //Assert
+    // Assert
     assert.equal(getModelLayerFeatureSpy.callCount, 0);
     assert.equal(leafletMapFireStub.callCount, 0);
     assert.equal(findByStub.callCount, 1);

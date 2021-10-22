@@ -10,7 +10,7 @@ export default function openCloseSubmenu(context, moreButton, elements, incTop, 
     const topMainButtons = window.document.getElementsByClassName('main-map-tab-bar')[0].getBoundingClientRect().top;
     next(() => {
       // Устанавливаем фиксированное позиционирование для подменю, чтобы не зависеть от внешнего контенера.
-      let { top, left } = moreButton[0].getBoundingClientRect();
+      let { top, left, } = moreButton[0].getBoundingClientRect();
       if (topMainButtons <= (top + 1 + element.getBoundingClientRect().height)) {
         element.className = 'more submenu reversed';
         top = top - element.getBoundingClientRect().height + 18;
@@ -24,4 +24,3 @@ export default function openCloseSubmenu(context, moreButton, elements, incTop, 
     });
   }
 }
-

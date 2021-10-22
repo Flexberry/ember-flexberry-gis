@@ -18,7 +18,7 @@ export default UserSettingsService.extend({
     @type String
     @default 'admin'
     @for _userSettingsService
-  **/
+  * */
   userName: 'admin',
 
   /**
@@ -29,7 +29,7 @@ export default UserSettingsService.extend({
     @return {String} Current user name.
   */
   getCurrentUser() {
-    let user = this.get('userName');
+    const user = this.get('userName');
     return user;
-  }
+  },
 });

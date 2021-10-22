@@ -1,25 +1,25 @@
 export default {
-  'caption': 'Add new layer',
+  caption: 'Add new layer',
   'approve-button': {
-    'caption': 'Ok'
+    caption: 'Ok',
   },
   'deny-button': {
-    'caption': 'Cancel'
+    caption: 'Cancel',
   },
-  'loadFile': {
-    'load-button-caption': 'Load from file'
+  loadFile: {
+    'load-button-caption': 'Load from file',
   },
   'storeExist-error': {
-    'message': 'Store with this name already exists'
+    message: 'Store with this name already exists',
   },
   'createLayer-error': {
-    'message': 'Can not create layer'
+    message: 'Can not create layer',
   },
   'existWorkspace-error': {
-    'message': 'Can create rasters only in the workspace'
+    message: 'Can create rasters only in the workspace',
   },
-  'createLayer': {
-    'message': 'The layer successfully added'
+  createLayer: {
+    message: 'The layer successfully added',
   },
-  'captionRastr': 'information'
+  captionRastr: 'information',
 };

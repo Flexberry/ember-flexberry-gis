@@ -80,5 +80,5 @@ export default BaseLayer.extend({
   */
   search(e) {
     // Tile-layers hasn't any search logic.
-  }
+  },
 });

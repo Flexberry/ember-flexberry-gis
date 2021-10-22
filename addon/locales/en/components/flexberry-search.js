@@ -1,17 +1,17 @@
 export default {
-  'placeholder': 'Search...',
+  placeholder: 'Search...',
   'no-results': {
-    'caption': 'No results',
-    'description': 'Your search returned no results'
+    caption: 'No results',
+    description: 'Your search returned no results',
   },
   'search-properties': {
-    'caption': 'Attribute'
+    caption: 'Attribute',
   },
   'search-layers': {
-    'caption': 'Layer'
+    caption: 'Layer',
   },
   'result-caption': 'Search results',
   'error-message-caption': 'Search error',
   'error-message-empty-selected-layer': 'Search layer isn\'t selected',
-  'error-message-empty-attr-layer': 'Search attribute isn\'t selected'
+  'error-message-empty-attr-layer': 'Search attribute isn\'t selected',
 };

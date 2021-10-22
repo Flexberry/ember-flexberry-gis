@@ -1,21 +1,21 @@
 export default {
-  'menu': {
+  menu: {
     'sitemap-button': {
-      'caption': '',
-      'title': 'Меню'
+      caption: '',
+      title: 'Меню',
     },
     'user-settings-service-checkbox': {
-      'caption': 'Использовать сервис пользовательских настроек'
+      caption: 'Использовать сервис пользовательских настроек',
     },
     'show-menu': {
-      'caption': 'Показать меню'
+      caption: 'Показать меню',
     },
     'hide-menu': {
-      'caption': 'Скрыть меню'
+      caption: 'Скрыть меню',
     },
     'language-dropdown': {
-      'caption': 'Язык приложения',
-      'placeholder': 'Выберете язык'
-    }
-  }
+      caption: 'Язык приложения',
+      placeholder: 'Выберете язык',
+    },
+  },
 };

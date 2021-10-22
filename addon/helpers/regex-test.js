@@ -25,11 +25,11 @@ export default Helper.extend({
   */
   compute([item, expression]) {
     if (item) {
-      let regEx = new RegExp(expression);
+      const regEx = new RegExp(expression);
 
       return !isBlank(item.toString().match(regEx));
     }
 
     return false;
-  }
+  },
 });

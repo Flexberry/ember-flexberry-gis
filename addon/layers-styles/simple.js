@@ -33,19 +33,19 @@ export default BaseLayerStyle.extend({
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} options.leafletLayer Leaflet layer to which layer-style must be applied.
     @param {Object} options.style Hash containing style settings.
   */
-  _renderOnLeafletLayer({ leafletLayer, style }) {
+  _renderOnLeafletLayer({ leafletLayer, style, }) {
     if (leafletLayer instanceof L.LayerGroup) {
       // First we must clean group layer's style options,
       // otherwise already defined style options won't be changed.
       leafletLayer.options.style = {};
 
       leafletLayer.eachLayer((layer) => {
-        this._renderOnLeafletLayer({ leafletLayer: layer, style });
+        this._renderOnLeafletLayer({ leafletLayer: layer, style, });
       });
     } else if (leafletLayer instanceof L.Path) {
-      this._renderOnLeafletPath({ path: leafletLayer, style });
+      this._renderOnLeafletPath({ path: leafletLayer, style, });
     } else if (leafletLayer instanceof L.Marker) {
-      this._renderOnLeafletMarker({ marker: leafletLayer, style });
+      this._renderOnLeafletMarker({ marker: leafletLayer, style, });
     }
   },
 
@@ -57,12 +57,12 @@ export default BaseLayerStyle.extend({
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#path">L.Path</a>} options.path Leaflet path to which layer-style must be applied.
     @param {Object} options.style Hash containing style settings.
   */
-  _renderOnLeafletPath({ path, style }) {
+  _renderOnLeafletPath({ path, style, }) {
     if (isNone(path.styleIsSet) || !path.styleIsSet) {
       let pathStyle = style.path || {};
       pathStyle = $.extend(true, {}, pathStyle, {
         // Fill must be disabled for non polygon layers, because filled polylines and other lines-like geometries looks ugly in leaflet.
-        fill: pathStyle.fill === true && path instanceof L.Polygon
+        fill: pathStyle.fill === true && path instanceof L.Polygon,
       });
 
       path.setStyle(pathStyle);
@@ -77,8 +77,8 @@ export default BaseLayerStyle.extend({
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#marker">L.Marker</a>} options.marker Leaflet marker to which layer-style must be applied.
     @param {Object} options.style Hash containing style settings.
   */
-  _renderOnLeafletMarker({ marker, style }) {
-    this.get('markersStylesRenderer').renderOnLeafletMarker({ marker, styleSettings: style.marker });
+  _renderOnLeafletMarker({ marker, style, }) {
+    this.get('markersStylesRenderer').renderOnLeafletMarker({ marker, styleSettings: style.marker, });
   },
 
   /**
@@ -121,9 +121,9 @@ export default BaseLayerStyle.extend({
         fill: true,
 
         // Fill color.
-        fillColor: '#3388ff'
+        fillColor: '#3388ff',
       },
-      marker: this.get('markersStylesRenderer').getDefaultStyleSettings('default')
+      marker: this.get('markersStylesRenderer').getDefaultStyleSettings('default'),
     };
   },
 
@@ -135,9 +135,9 @@ export default BaseLayerStyle.extend({
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} options.leafletLayer Leaflet layer to which layer-style must be applied.
     @param {Object} options.style Hash containing style settings.
   */
-  renderOnLeafletLayer({ leafletLayer, style }) {
+  renderOnLeafletLayer({ leafletLayer, style, }) {
     style = style || {};
-    this._renderOnLeafletLayer({ leafletLayer, style });
+    this._renderOnLeafletLayer({ leafletLayer, style, });
   },
 
   /**
@@ -149,24 +149,20 @@ export default BaseLayerStyle.extend({
     @param {Object} options.style Hash containing style settings.
     @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style, target }) {
-    let width = canvas.width;
-    let height = canvas.height;
-    let ctx = canvas.getContext('2d');
+  renderOnCanvas({ canvas, style, target, }) {
+    const { width, } = canvas;
+    const { height, } = canvas;
+    const ctx = canvas.getContext('2d');
 
     // Clear canvas.
     ctx.clearRect(0, 0, width, height);
 
     // Set line dashig.
-    let pathStyle = get(style, 'path') || {};
+    const pathStyle = get(style, 'path') || {};
     let dashArray = get(pathStyle, 'dashArray');
-    dashArray = isBlank(dashArray) ?
-      [] :
-      dashArray.split(',').map((value) => {
-        return Number(value);
-      }).filter((value) => {
-        return !isNaN(value);
-      });
+    dashArray = isBlank(dashArray)
+      ? []
+      : dashArray.split(',').map((value) => Number(value)).filter((value) => !isNaN(value));
 
     let dashOffset = Number(get(pathStyle, 'dashOffset'));
     dashOffset = isNaN(dashOffset) ? 0 : dashOffset;
@@ -176,39 +172,39 @@ export default BaseLayerStyle.extend({
 
     // Render sample geometry.
     if (target === 'preview') {
-      this._renderPreviewGeometryOnCanvas({ canvas });
+      this._renderPreviewGeometryOnCanvas({ canvas, });
     } else {
-      this._renderLegendGeometryOnCanvas({ canvas });
+      this._renderLegendGeometryOnCanvas({ canvas, });
     }
 
     // Set fill style.
-    let fill = get(pathStyle, 'fill');
+    const fill = get(pathStyle, 'fill');
     if (fill) {
       // Fill opacity is always 1.
       ctx.globalAlpha = 1;
 
-      let fillColor = get(pathStyle, 'fillColor');
+      const fillColor = get(pathStyle, 'fillColor');
       ctx.fillStyle = fillColor;
 
       ctx.fill();
     }
 
     // Set stroke style.
-    let stroke = get(pathStyle, 'stroke');
+    const stroke = get(pathStyle, 'stroke');
     if (stroke) {
       // Stroke oapcity is always 1.
       ctx.globalAlpha = 1;
 
-      let strokeWeight = Number(get(pathStyle, 'weight'));
+      const strokeWeight = Number(get(pathStyle, 'weight'));
       ctx.lineWidth = strokeWeight;
 
-      let strokeColor = get(pathStyle, 'color');
+      const strokeColor = get(pathStyle, 'color');
       ctx.strokeStyle = strokeColor;
 
-      let strokeLineCap = get(pathStyle, 'lineCap');
+      const strokeLineCap = get(pathStyle, 'lineCap');
       ctx.lineCap = strokeLineCap;
 
-      let strokeLineJoin = get(pathStyle, 'lineJoin');
+      const strokeLineJoin = get(pathStyle, 'lineJoin');
       ctx.lineJoin = strokeLineJoin;
 
       ctx.stroke();
@@ -223,34 +219,34 @@ export default BaseLayerStyle.extend({
     @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which geometry must be rendered.
     @private
   */
-  _renderPreviewGeometryOnCanvas({ canvas }) {
+  _renderPreviewGeometryOnCanvas({ canvas, }) {
     // Render sample polygon.
-    let polygon = {
+    const polygon = {
       type: 'Polygon',
-      viewport: { width: 150, height: 150 },
+      viewport: { width: 150, height: 150, },
       coordinates: [
-        { x: 10, y: 40 },
-        { x: 50, y: 20 },
-        { x: 90, y: 30 },
-        { x: 130, y: 10 },
-        { x: 110, y: 70 },
-        { x: 120, y: 100 },
-        { x: 90, y: 120 },
-        { x: 40, y: 110 }
-      ]
+        { x: 10, y: 40, },
+        { x: 50, y: 20, },
+        { x: 90, y: 30, },
+        { x: 130, y: 10, },
+        { x: 110, y: 70, },
+        { x: 120, y: 100, },
+        { x: 90, y: 120, },
+        { x: 40, y: 110, }
+      ],
     };
-    this._renderGeometryOnCanvas({ canvas, geometry: polygon });
+    this._renderGeometryOnCanvas({ canvas, geometry: polygon, });
 
     // Render sample polyline.
-    let polyline = {
+    const polyline = {
       type: 'Polyline',
-      viewport: { width: 150, height: 150 },
+      viewport: { width: 150, height: 150, },
       coordinates: [
-        { x: 20, y: 130 },
-        { x: 130, y: 130 }
-      ]
+        { x: 20, y: 130, },
+        { x: 130, y: 130, }
+      ],
     };
-    this._renderGeometryOnCanvas({ canvas, geometry: polyline });
+    this._renderGeometryOnCanvas({ canvas, geometry: polyline, });
   },
 
   /**
@@ -261,19 +257,19 @@ export default BaseLayerStyle.extend({
     @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which geometry must be rendered.
     @private
   */
-  _renderLegendGeometryOnCanvas({ canvas }) {
+  _renderLegendGeometryOnCanvas({ canvas, }) {
     // Render full-size rectangle.
-    let rectangle = {
+    const rectangle = {
       type: 'Polygon',
-      viewport: { width: 150, height: 150 },
+      viewport: { width: 150, height: 150, },
       coordinates: [
-        { x: 0, y: 0 },
-        { x: 150, y: 0 },
-        { x: 150, y: 150 },
-        { x: 0, y: 150 }
-      ]
+        { x: 0, y: 0, },
+        { x: 150, y: 0, },
+        { x: 150, y: 150, },
+        { x: 0, y: 150, }
+      ],
     };
-    this._renderGeometryOnCanvas({ canvas, geometry: rectangle });
+    this._renderGeometryOnCanvas({ canvas, geometry: rectangle, });
   },
 
   /**
@@ -285,19 +281,19 @@ export default BaseLayerStyle.extend({
     @param {Object} options.geometry Hash containing geometry settings.
     @private
   */
-  _renderGeometryOnCanvas({ canvas, geometry }) {
-    let width = canvas.width;
-    let height = canvas.height;
-    let scale = Math.min(width / geometry.viewport.width, height / geometry.viewport.height);
-    let xOffset = (width - geometry.viewport.width * scale) / 2;
-    let yOffset = (height - geometry.viewport.height * scale) / 2;
+  _renderGeometryOnCanvas({ canvas, geometry, }) {
+    const { width, } = canvas;
+    const { height, } = canvas;
+    const scale = Math.min(width / geometry.viewport.width, height / geometry.viewport.height);
+    const xOffset = (width - geometry.viewport.width * scale) / 2;
+    const yOffset = (height - geometry.viewport.height * scale) / 2;
 
-    let ctx = canvas.getContext('2d');
-    let type = geometry.type;
-    let coordinates = geometry.coordinates;
+    const ctx = canvas.getContext('2d');
+    const { type, } = geometry;
+    const { coordinates, } = geometry;
     for (let i = 0, len = coordinates.length; i < len; i++) {
-      let point = coordinates[i];
-      let newPoint = { x: point.x * scale + xOffset, y: point.y * scale + yOffset };
+      const point = coordinates[i];
+      const newPoint = { x: point.x * scale + xOffset, y: point.y * scale + yOffset, };
       if (i === 0) {
         ctx.moveTo(newPoint.x, newPoint.y);
       } else {
@@ -308,5 +304,5 @@ export default BaseLayerStyle.extend({
     if (type === 'Polygon') {
       ctx.closePath();
     }
-  }
+  },
 });

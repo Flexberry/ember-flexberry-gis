@@ -9,9 +9,9 @@ import { isNone, isEmpty } from '@ember/utils';
 import { observer, get } from '@ember/object';
 import { on } from '@ember/object/evented';
 import Component from '@ember/component';
+import { translationMacro as t } from 'ember-i18n';
 import layout from '../../templates/components/geometry-add-modes/manual';
 import LeafletZoomToFeatureMixin from '../../mixins/leaflet-zoom-to-feature';
-import { translationMacro as t } from 'ember-i18n';
 import { coordinatesToString } from '../../utils/coordinates-to';
 
 /**
@@ -32,11 +32,11 @@ const flexberryClassNamesPrefix = 'flexberry-geometry-add-mode-manual';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
-  dialog: flexberryClassNamesPrefix + '-dialog',
-  form: flexberryClassNamesPrefix + '-form'
+  dialog: `${flexberryClassNamesPrefix}-dialog`,
+  form: `${flexberryClassNamesPrefix}-form`,
 };
 
-let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeatureMixin, {
+const FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeatureMixin, {
 
   /**
     Reference to component's template.
@@ -144,7 +144,7 @@ let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeat
   initialSettings: on('init', observer('settings', 'layer', function () {
     this.clear();
 
-    let settings = this.get('settings');
+    const settings = this.get('settings');
 
     if (isNone(settings)) {
       return;
@@ -152,7 +152,7 @@ let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeat
 
     this.set('_crs', settings.layerCRS);
 
-    let layer = this.get('layer');
+    const layer = this.get('layer');
     const edit = !isNone(layer);
 
     if (edit) {
@@ -173,14 +173,14 @@ let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeat
   })),
 
   _updateCoordinates() {
-    let layer = this.get('layer');
+    const layer = this.get('layer');
 
     if (isNone(layer)) {
       return;
     }
 
-    let baseCrs = this.get('settings.layerCRS');
-    let coordinates = layer.toProjectedGeoJSON(baseCrs).geometry.coordinates;
+    const baseCrs = this.get('settings.layerCRS');
+    const { coordinates, } = layer.toProjectedGeoJSON(baseCrs).geometry;
 
     const str = coordinatesToString(coordinates);
     this.set('_coordinates', str);
@@ -226,7 +226,7 @@ let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeat
     this.set('coordinatesTypeGeometryError', false);
     const typeGeometryError = (n) => {
       this.set('_coordinatesWithError', true);
-      let coordinatesTypeGeometryErrorLabel = this.get('coordinatesTypeGeometryErrorLabel').string.replace('%count%', n);
+      const coordinatesTypeGeometryErrorLabel = this.get('coordinatesTypeGeometryErrorLabel').string.replace('%count%', n);
       this.set('coordinatesTypeGeometryErrorLabel', coordinatesTypeGeometryErrorLabel);
       this.set('coordinatesTypeGeometryError', true);
 
@@ -286,7 +286,7 @@ let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeat
         return;
       }
 
-      let layer = this.get('layer');
+      const layer = this.get('layer');
       if (!isNone(layer)) {
         const type = this.get('settings.typeGeometry');
         if (type === 'marker') {
@@ -304,7 +304,7 @@ let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeat
       }
 
       this.sendAction('updateLayer', addedLayer, true);
-    }
+    },
   },
 
   /**
@@ -337,15 +337,14 @@ let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeat
     }
 
     const regex = /^([-]*[0-9]+[.][0-9]+) ([-]*[0-9]+[.][0-9]+)/gm;
-    let lines = coordinates.split('\n');
-    let result = [];
+    const lines = coordinates.split('\n');
+    const result = [];
 
-    let crs = this.get('_crs.code');
+    const crs = this.get('_crs.code');
     let k = 0;
     for (let i = 0; i < lines.length; i++) {
       lines[i] = lines[i].trim();
       if (lines[i] === '' || i === lines.length - 1) {
-
         let items;
 
         if (k === 0) {
@@ -356,10 +355,10 @@ let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeat
           items = lines.slice(k + 1, i);
         }
 
-        let mas = [];
+        const mas = [];
 
         for (let j = 0; j < items.length; j++) {
-          let str = items[j];
+          const str = items[j];
 
           let m;
           while ((m = regex.exec(str)) !== null) {
@@ -371,7 +370,7 @@ let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeat
             let y = parseFloat(m[2]);
 
             if (crs !== 'EPSG:4326') {
-              let projected = this._projectCoordinates(crs, 'EPSG:4326', [x, y]);
+              const projected = this._projectCoordinates(crs, 'EPSG:4326', [x, y]);
               x = projected[0];
               y = projected[1];
             }
@@ -401,13 +400,13 @@ let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeat
     @returns {string[]} Pair of coordinates of type [55.472379, 58.733686].
   */
   _projectCoordinates(from, to, coordinates) {
-    let knownCrs = getOwner(this).knownForType('coordinate-reference-system');
-    let knownCrsArray = A(Object.values(knownCrs));
-    let fromCrs = knownCrsArray.findBy('code', from);
-    let fromCrsDefinition = get(fromCrs, 'definition');
-    let toCrs = knownCrsArray.findBy('code', to);
-    let toCrsDefinition = get(toCrs, 'definition');
-    let cords = proj4(fromCrsDefinition, toCrsDefinition, coordinates);
+    const knownCrs = getOwner(this).knownForType('coordinate-reference-system');
+    const knownCrsArray = A(Object.values(knownCrs));
+    const fromCrs = knownCrsArray.findBy('code', from);
+    const fromCrsDefinition = get(fromCrs, 'definition');
+    const toCrs = knownCrsArray.findBy('code', to);
+    const toCrsDefinition = get(toCrs, 'definition');
+    const cords = proj4(fromCrsDefinition, toCrsDefinition, coordinates);
     return cords;
   },
 
@@ -419,9 +418,9 @@ let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeat
     @returns {Boolean} true if contains, otherwise false.
   */
   _isSinglePairInLine(coordinates) {
-    let lines = coordinates.split('\n');
+    const lines = coordinates.split('\n');
     let badLines = false;
-    lines.forEach(line => {
+    lines.forEach((line) => {
       line = line.trim();
       if (line !== '') {
         if (line.split(' ').length !== 2) {
@@ -431,16 +430,16 @@ let FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFeat
     });
     if (badLines) {
       return false;
-    } else {
-      return true;
     }
-  }
+
+    return true;
+  },
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryGeometryAddModeManualComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryGeometryAddModeManualComponent;

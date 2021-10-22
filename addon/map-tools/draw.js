@@ -51,13 +51,13 @@ export default BaseNonclickableMapTool.extend({
   _enable() {
     this._super(...arguments);
 
-    let leafletMap = this.get('leafletMap');
-    let editLayer = this.get('editLayer');
+    const leafletMap = this.get('leafletMap');
+    const editLayer = this.get('editLayer');
     if (!isNone(editLayer) && !leafletMap.hasLayer(editLayer)) {
       editLayer.addTo(leafletMap);
     }
 
-    let featuresLayer = this.get('featuresLayer');
+    const featuresLayer = this.get('featuresLayer');
     if (!isNone(featuresLayer) && !leafletMap.hasLayer(featuresLayer)) {
       featuresLayer.addTo(leafletMap);
     }
@@ -65,8 +65,8 @@ export default BaseNonclickableMapTool.extend({
     let editTools = this.get('_editTools');
     if (isNone(editTools)) {
       editTools = new L.Editable(leafletMap, {
-        editLayer: editLayer,
-        featuresLayer: featuresLayer
+        editLayer,
+        featuresLayer,
       });
       this.set('_editTools', editTools);
       set(leafletMap, 'drawTools', editTools);
@@ -84,7 +84,7 @@ export default BaseNonclickableMapTool.extend({
   _disable() {
     this._super(...arguments);
 
-    let editTools = this.get('_editTools');
+    const editTools = this.get('_editTools');
     if (!isNone(editTools)) {
       editTools.off('editable:drawing:end', this._onDrawingEnd, this);
       editTools.stopDrawing();
@@ -98,7 +98,7 @@ export default BaseNonclickableMapTool.extend({
     @private
   */
   _onDrawingEnd() {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
       // Disable current draw tool in favor of default map tool.
       leafletMap.flexberryMap.tools.disable();
@@ -111,13 +111,13 @@ export default BaseNonclickableMapTool.extend({
   willDestroy() {
     this._super(...arguments);
 
-    let editLayer = this.get('_editTools.editLayer');
+    const editLayer = this.get('_editTools.editLayer');
     if (!isNone(editLayer)) {
       editLayer.clearLayers();
       editLayer.remove();
     }
 
-    let featuresLayer = this.get('_editTools.featuresLayer');
+    const featuresLayer = this.get('_editTools.featuresLayer');
     if (!isNone(featuresLayer)) {
       featuresLayer.clearLayers();
       featuresLayer.remove();
@@ -126,5 +126,5 @@ export default BaseNonclickableMapTool.extend({
     this.set('editLayer', null);
     this.set('featuresLayer', null);
     this.set('_editTools', null);
-  }
+  },
 });

@@ -138,20 +138,20 @@ export default Component.extend({
       @method actions.onChangeGradient
     */
     onChangeGradient(element, value) {
-      let customGradientName = this.get('_customGradientName');
+      const customGradientName = this.get('_customGradientName');
       if (value !== customGradientName) {
-        let gradientColor = this.getColorGradient(value);
+        const gradientColor = this.getColorGradient(value);
         this.gradientDrawing(gradientColor[0], gradientColor[1], gradientColor[2]);
         this.set('gradientColorStart', gradientColor[1]);
         this.set('gradientColorEnd', gradientColor[2]);
       } else {
-        let colorStart = this.get('customGradientColorStart');
-        let colorEnd = this.get('customGradientColorEnd');
+        const colorStart = this.get('customGradientColorStart');
+        const colorEnd = this.get('customGradientColorEnd');
         this.set('gradientColorStart', colorStart);
         this.set('gradientColorEnd', colorEnd);
         this.gradientDrawing(customGradientName, colorStart, colorEnd);
       }
-    }
+    },
 
   },
 
@@ -161,26 +161,24 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    let colorStart = this.get('gradientColorStart');
-    let colorEnd = this.get('gradientColorEnd');
+    const colorStart = this.get('gradientColorStart');
+    const colorEnd = this.get('gradientColorEnd');
 
     if (isNone(colorStart) || isNone(colorEnd)) {
       scheduleOnce('afterRender', this, '_showDefaultItem');
     } else {
       scheduleOnce('afterRender', this, '_applyExistGradientSettings', colorStart, colorEnd);
     }
-
   },
 
   /**
     Initializes DOM-related component's properties.
   */
   didInsertElement() {
-    let gradientList = this.get('gradientList');
-    for (let i in gradientList) {
+    const gradientList = this.get('gradientList');
+    for (const i in gradientList) {
       this.gradientDrawing(gradientList[i].name, gradientList[i].colorStart, gradientList[i].colorEnd);
     }
-
   },
 
   /**
@@ -200,9 +198,9 @@ export default Component.extend({
     @private
   */
   _showDefaultItem() {
-    let gradientName = this.get('gradientList.0.name');
-    let colorStart = this.get('gradientList.0.colorStart');
-    let colorEnd = this.get('gradientList.0.colorEnd');
+    const gradientName = this.get('gradientList.0.name');
+    const colorStart = this.get('gradientList.0.colorStart');
+    const colorEnd = this.get('gradientList.0.colorEnd');
     this._showItem(gradientName, colorStart, colorEnd);
   },
 
@@ -216,8 +214,8 @@ export default Component.extend({
     @private
   */
   _showCustomGradientItem(colorStart, colorEnd) {
-    let customGradientName = this.get('_customGradientName');
-    let customGradient = { 'name': customGradientName, 'colorStart': colorStart, 'colorEnd': colorEnd };
+    const customGradientName = this.get('_customGradientName');
+    const customGradient = { name: customGradientName, colorStart, colorEnd, };
     this.set('_customGradient', customGradient);
     this._showItem(customGradient.name, customGradient.colorStart, customGradient.colorEnd);
   },
@@ -233,7 +231,7 @@ export default Component.extend({
   */
   _showItem(itemName, colorStart, colorEnd) {
     later(() => {
-      let gradientDropdown = this.$('.ui.dropdown');
+      const gradientDropdown = this.$('.ui.dropdown');
       gradientDropdown.dropdown('set selected', itemName);
       this.gradientDrawing(itemName, colorStart, colorEnd);
     }, 100);
@@ -248,13 +246,11 @@ export default Component.extend({
     @private
   */
   _applyExistGradientSettings(colorStart, colorEnd) {
-    let gradientList = this.get('gradientList');
-    let findedItemIdex = gradientList.findIndex((item) =>
-      isEqual(item.colorStart, colorStart) &&
-      isEqual(item.colorEnd, colorEnd)
-    );
+    const gradientList = this.get('gradientList');
+    const findedItemIdex = gradientList.findIndex((item) => isEqual(item.colorStart, colorStart)
+      && isEqual(item.colorEnd, colorEnd));
     if (findedItemIdex >= 0) {
-      let gradientListItem = this.get('gradientList')[findedItemIdex];
+      const gradientListItem = this.get('gradientList')[findedItemIdex];
       this._showItem(gradientListItem.name, gradientListItem.colorStart, gradientListItem.colorEnd);
     } else {
       this.set('customGradientColorStart', colorStart);
@@ -270,10 +266,10 @@ export default Component.extend({
     @returns Object[] color list gradient.
   */
   getColorGradient(search) {
-    let colorsGradient = A([]);
-    let gradientList = this.get('gradientList');
+    const colorsGradient = A([]);
+    const gradientList = this.get('gradientList');
 
-    gradientList.forEach(function(item) {
+    gradientList.forEach(function (item) {
       if (item.name === search) {
         colorsGradient.push(item.name, item.colorStart, item.colorEnd);
       }
@@ -291,12 +287,12 @@ export default Component.extend({
     @param {String} colorEnd End color.
   */
   gradientDrawing(canvasName, colorStart, colorEnd) {
-    let dropdownCanvases = this.$('.' + canvasName);
+    const dropdownCanvases = this.$(`.${canvasName}`);
     for (let i = 0; i < dropdownCanvases.length; i++) {
-      let ctx = dropdownCanvases[i].getContext('2d');
-      let width = dropdownCanvases[i].width;
-      let height = dropdownCanvases[i].height;
-      let grd = ctx.createLinearGradient(0, 0, width, 0);
+      const ctx = dropdownCanvases[i].getContext('2d');
+      const { width, } = dropdownCanvases[i];
+      const { height, } = dropdownCanvases[i];
+      const grd = ctx.createLinearGradient(0, 0, width, 0);
 
       grd.addColorStop(0, colorStart);
       grd.addColorStop(1, colorEnd);
@@ -304,5 +300,5 @@ export default Component.extend({
       ctx.fillStyle = grd;
       ctx.fillRect(0, 0, width, height);
     }
-  }
+  },
 });

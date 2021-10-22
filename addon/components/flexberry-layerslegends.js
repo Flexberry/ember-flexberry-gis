@@ -45,10 +45,10 @@ export default Component.extend({
     @property visibleLayers
     @type Object[]
   */
-  visibleLayers: computed('layers.[]', function() {
-    let result = A();
-    let getLayers = function(layers) {
-      layers.forEach(function(layer) {
+  visibleLayers: computed('layers.[]', function () {
+    const result = A();
+    const getLayers = function (layers) {
+      layers.forEach(function (layer) {
         if (layer.get('visibility') && !layer.get('isDeleted')) {
           if (layer.get('type') === 'group') {
             getLayers(layer.get('layers'));
@@ -59,7 +59,7 @@ export default Component.extend({
       }, this);
     };
 
-    let layers = this.get('layers');
+    const layers = this.get('layers');
     if (isArray(layers)) {
       getLayers(layers);
     }
@@ -75,6 +75,6 @@ export default Component.extend({
     */
     legendsLoaded(layerName, legends) {
       this.sendAction('legendsLoaded', layerName, legends);
-    }
-  }
+    },
+  },
 });

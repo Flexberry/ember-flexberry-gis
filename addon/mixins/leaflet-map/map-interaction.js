@@ -25,19 +25,17 @@ export default Mixin.create({
     let interactionIsEnabled = true;
 
     // Retrieve & remember all map interaction handlers.
-    let handlers = A(leafletMap._handlers);
+    const handlers = A(leafletMap._handlers);
 
     // Retrieved 'enable' methods related to handlers.
-    let handlersOriginalEnableMethods = A(handlers.map((handler) => {
-      return handler.enable;
-    }));
+    const handlersOriginalEnableMethods = A(handlers.map((handler) => handler.enable));
 
     // Array containing disabled handlers.
-    let disabledHandlers = A();
+    const disabledHandlers = A();
 
     // Override handlers 'enable' method to prevent their enabling if interaction is disabled.
     handlers.forEach((handler) => {
-      let originalEnable = handler.enable;
+      const originalEnable = handler.enable;
       handler.enable = (...args) => {
         if (!interactionIsEnabled) {
           return;
@@ -50,7 +48,7 @@ export default Mixin.create({
     // Override leaflet map's '_fireDOMEvent' method to prevent DOM events from being triggered while interaction is disabled.
     // Call to L.DOMEvent.StopPropagation fore every particular markup's element isn't rational &
     // anyway doesn't take an effect, so override leaflet map's '_fireDOMEvent' method is effective solution.
-    let originalFireDOMEvent = leafletMap._fireDOMEvent;
+    const originalFireDOMEvent = leafletMap._fireDOMEvent;
     leafletMap._fireDOMEvent = (...args) => {
       if (!interactionIsEnabled) {
         return;
@@ -118,7 +116,7 @@ export default Mixin.create({
 
         // Remove flexberryMap.interaction namespace & related methods & properties.
         delete leafletMap.flexberryMap.interaction;
-      }
+      },
     };
   },
 
@@ -131,5 +129,5 @@ export default Mixin.create({
     this._super(...arguments);
 
     leafletMap.flexberryMap.interaction._destroy();
-  }
+  },
 });

@@ -8,12 +8,11 @@ import $ from 'jquery';
   @param {Object} leafletMap Map.
   @param {Object} leafletObject Layer.
 */
-let zoomToBounds = function(bounds, leafletMap, minZoom, maxZoom) {
-
-  let sidebarElement = $('div[class*="sidebar-wrapper"].visible .sidebar');
+const zoomToBounds = function (bounds, leafletMap, minZoom, maxZoom) {
+  const sidebarElement = $('div[class*="sidebar-wrapper"].visible .sidebar');
   const widthPadding = sidebarElement.width() || 0;
 
-  let bboxZoom = leafletMap.getBoundsZoom(bounds);
+  const bboxZoom = leafletMap.getBoundsZoom(bounds);
   minZoom = Number.parseInt(minZoom);
   maxZoom = Number.parseInt(maxZoom);
   let zoom = leafletMap.getBoundsZoom(bounds.pad(1));
@@ -25,11 +24,11 @@ let zoomToBounds = function(bounds, leafletMap, minZoom, maxZoom) {
     bounds = bounds.pad(1);
   }
 
-  fitBounds(leafletMap, bounds, { paddingTopLeft: [widthPadding, 0], maxZoom: zoom });
+  fitBounds(leafletMap, bounds, { paddingTopLeft: [widthPadding, 0], maxZoom: zoom, });
 };
 
 // Overwrites, because L.Map._getBoundsCenterZoom return min zoom from zoom of bounds and maxZoom from options.
-let fitBounds = function(leafletMap, bounds, options) {
+let fitBounds = function (leafletMap, bounds, options) {
   if (!(bounds instanceof L.LatLngBounds) || isNone(leafletMap)) {
     return;
   }
@@ -38,7 +37,7 @@ let fitBounds = function(leafletMap, bounds, options) {
     throw new Error('Bounds are not valid.');
   }
 
-  var target = leafletMap._getBoundsCenterZoom(bounds, options);
+  const target = leafletMap._getBoundsCenterZoom(bounds, options);
   return leafletMap.setView(target.center, options.maxZoom, options);
 };
 

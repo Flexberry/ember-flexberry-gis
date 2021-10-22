@@ -35,5 +35,5 @@ export default Component.extend({
     @type Object
     @default null
   */
-  settings: null
+  settings: null,
 });

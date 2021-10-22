@@ -3,8 +3,8 @@
 */
 
 import Component from '@ember/component';
-import layout from '../../templates/components/map-tools/drag';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../templates/components/map-tools/drag';
 
 /**
   Component's CSS-classes names.
@@ -21,7 +21,7 @@ import { translationMacro as t } from 'ember-i18n';
 const flexberryClassNamesPrefix = 'flexberry-drag-map-tool';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix
+  wrapper: flexberryClassNamesPrefix,
 };
 
 /**
@@ -41,7 +41,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let DragMapToolComponent = Component.extend({
+const DragMapToolComponent = Component.extend({
   /**
     Reference to component's template.
   */
@@ -97,13 +97,13 @@ let DragMapToolComponent = Component.extend({
     @type String
     @default 'hand paper icon'
   */
-  iconClass: 'hand paper icon'
+  iconClass: 'hand paper icon',
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 DragMapToolComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default DragMapToolComponent;

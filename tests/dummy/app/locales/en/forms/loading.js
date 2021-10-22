@@ -1,3 +1,3 @@
 export default {
-  'spinner-caption': 'Loading data, please wait...'
+  'spinner-caption': 'Loading data, please wait...',
 };

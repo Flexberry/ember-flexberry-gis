@@ -1,101 +1,101 @@
 export default {
-  'drag': {
-    'caption': '',
-    'tooltip': 'Drag'
+  drag: {
+    caption: '',
+    tooltip: 'Drag',
   },
   'zoom-in': {
-    'caption': '',
-    'tooltip': 'Zoom In'
+    caption: '',
+    tooltip: 'Zoom In',
   },
   'zoom-out': {
-    'caption': '',
-    'tooltip': 'Zoom Out'
+    caption: '',
+    tooltip: 'Zoom Out',
   },
   'background-layers': {
-    'caption': '',
-    'tooltip': 'Background layers'
+    caption: '',
+    tooltip: 'Background layers',
   },
   'comapre-layers': {
-    'caption': '',
-    'tooltip': 'Compare layers'
+    caption: '',
+    tooltip: 'Compare layers',
   },
-  'identify': {
-    'caption': 'Identify',
-    'tooltip': 'Identify',
+  identify: {
+    caption: 'Identify',
+    tooltip: 'Identify',
     'identify-all': {
-      'caption': 'All layers'
+      caption: 'All layers',
     },
     'identify-all-visible': {
-      'caption': 'All visible layers'
+      caption: 'All visible layers',
     },
     'identify-top-visible': {
-      'caption': 'Top visible layer'
+      caption: 'Top visible layer',
     },
-    'rectangle': {
-      'caption': 'Rectangle'
+    rectangle: {
+      caption: 'Rectangle',
     },
-    'polygon': {
-      'caption': 'Polygon'
+    polygon: {
+      caption: 'Polygon',
     },
-    'clear': {
-      'caption': 'Clear'
-    }
+    clear: {
+      caption: 'Clear',
+    },
   },
-  'measure': {
-    'caption': 'Measure',
-    'tooltip': 'Measure',
-    'title': 'Measure',
+  measure: {
+    caption: 'Measure',
+    tooltip: 'Measure',
+    title: 'Measure',
     'measure-coordinates': {
-      'caption': 'Coordinates'
+      caption: 'Coordinates',
     },
     'measure-radius': {
-      'caption': 'Radius'
+      caption: 'Radius',
     },
     'measure-area-distance': {
-      'caption': 'Area/Distance'
+      caption: 'Area/Distance',
     },
     'measure-area': {
-      'caption': 'Area'
+      caption: 'Area',
     },
     'measure-show': {
-      'caption': 'Show'
+      caption: 'Show',
     },
     'measure-hide': {
-      'caption': 'Hide'
+      caption: 'Hide',
     },
     'measure-clear': {
-      'caption': 'Clear'
+      caption: 'Clear',
     },
     'measure-close': {
-      'caption': 'Close'
-    }
+      caption: 'Close',
+    },
   },
-  'draw': {
-    'caption': 'Draw',
-    'tooltip': 'Draw',
+  draw: {
+    caption: 'Draw',
+    tooltip: 'Draw',
     'draw-marker': {
-      'caption': 'Add marker'
+      caption: 'Add marker',
     },
     'draw-polyline': {
-      'caption': 'Add polyline'
+      caption: 'Add polyline',
     },
     'draw-circle': {
-      'caption': 'Add circle'
+      caption: 'Add circle',
     },
     'draw-rectangle': {
-      'caption': 'Add rectangle'
+      caption: 'Add rectangle',
     },
     'draw-polygon': {
-      'caption': 'Add polygon'
+      caption: 'Add polygon',
     },
     'draw-multy-polygon': {
-      'caption': 'Add part/ring'
+      caption: 'Add part/ring',
     },
     'draw-multy-line': {
-      'caption': 'Add part/ring'
+      caption: 'Add part/ring',
     },
     'draw-clear': {
-      'caption': 'Clear'
-    }
-  }
+      caption: 'Clear',
+    },
+  },
 };

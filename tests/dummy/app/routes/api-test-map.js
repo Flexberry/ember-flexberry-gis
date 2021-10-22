@@ -15,6 +15,6 @@ export default MapRoute.extend({
   actions: {
     refreshMap() {
       this.refresh();
-    }
-  }
+    },
+  },
 });

@@ -1,3 +1,3 @@
 export default {
-  'caption': 'Maps'
+  caption: 'Maps',
 };

@@ -8,10 +8,10 @@ import { on } from '@ember/object/evented';
 import { isNone } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
-import layout from '../templates/components/flexberry-mapinfo';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import layout from '../templates/components/flexberry-mapinfo';
 
 /**
   Component's CSS-classes names.
@@ -49,7 +49,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let MapInfoComponent = Component.extend({
+const MapInfoComponent = Component.extend({
   /**
     Injected local-storage-service.
 
@@ -208,21 +208,21 @@ let MapInfoComponent = Component.extend({
       @method actions.onApprove
     */
     onApprove() {
-      var showOnOpen = this.get('showOnOpen');
+      const showOnOpen = this.get('showOnOpen');
 
-      let service = this.get('service');
-      let storageClass = this.get('_storageClassName');
-      let mapId = this.get('mapId');
+      const service = this.get('service');
+      const storageClass = this.get('_storageClassName');
+      const mapId = this.get('mapId');
       service.setToStorage(storageClass, mapId, showOnOpen);
-    }
+    },
   },
 
   init() {
     this._super(...arguments);
-    let service = this.get('service');
-    let storageClass = this.get('_storageClassName');
-    let mapId = this.get('mapId');
-    let dialogVisibility = !isNone(mapId) && service.getFromStorageSingle(storageClass, mapId) !== false;
+    const service = this.get('service');
+    const storageClass = this.get('_storageClassName');
+    const mapId = this.get('mapId');
+    const dialogVisibility = !isNone(mapId) && service.getFromStorageSingle(storageClass, mapId) !== false;
 
     this.set('visible', dialogVisibility);
     this.set('showOnOpen', dialogVisibility);
@@ -239,13 +239,13 @@ let MapInfoComponent = Component.extend({
       // Include dialog to markup.
       this.set('_infoDialogHasBeenRequested', true);
     }
-  }))
+  })),
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 MapInfoComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default MapInfoComponent;

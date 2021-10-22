@@ -2,10 +2,10 @@ import { Promise, allSettled } from 'rsvp';
 import { A } from '@ember/array';
 import { isNone } from '@ember/utils';
 import Mixin from '@ember/object/mixin';
+import jsts from 'npm:jsts';
 import rhumbOperations from '../utils/rhumb-operations';
 import { getLeafletCrs } from '../utils/leaflet-crs';
 import { geometryToJsts } from '../utils/layer-to-jsts';
-import jsts from 'npm:jsts';
 
 export default Mixin.create(rhumbOperations, {
 
@@ -34,31 +34,31 @@ export default Mixin.create(rhumbOperations, {
       throw new Error('Passed object is null.');
     }
 
-    let [layer, leafletObject] = this._getModelLeafletObject(layerId);
+    const [layer, leafletObject] = this._getModelLeafletObject(layerId);
 
     if (isNone(layer)) {
       throw new Error('No layer with such id.');
     }
 
-    let crs = leafletObject.options.crs;
+    let { crs, } = leafletObject.options;
     if (!isNone(crsName)) {
-      crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
+      crs = getLeafletCrs(`{ "code": "${crsName.toUpperCase()}", "definition": "" }`, this);
     }
 
-    let coordsToLatLng = function (coords) {
+    const coordsToLatLng = function (coords) {
       return crs.unproject(L.point(coords));
     };
 
     let geoJSON = null;
     if (crs.code !== 'EPSG:4326') {
-      geoJSON = L.geoJSON(object, { coordsToLatLng: coordsToLatLng.bind(this) });
+      geoJSON = L.geoJSON(object, { coordsToLatLng: coordsToLatLng.bind(this), });
     } else {
       geoJSON = L.geoJSON(object);
     }
 
-    let newObj = geoJSON.getLayers()[0];
+    const newObj = geoJSON.getLayers()[0];
 
-    let e = { layers: [newObj], results: A() };
+    const e = { layers: [newObj], results: A(), };
     leafletObject.fire('load', e);
 
     return new Promise((resolve, reject) => {
@@ -152,10 +152,10 @@ export default Mixin.create(rhumbOperations, {
   },
 
   _getMulti(objects, isUnion = false, failIfInvalid = true, isJsts = false, forceMulti = true) {
-    let separateObjects = [];
+    const separateObjects = [];
     let resultObject = null;
-    let geometries = [];
-    let scale = this.get('mapApi').getFromApi('precisionScale');
+    const geometries = [];
+    const scale = this.get('mapApi').getFromApi('precisionScale');
     objects.forEach((element, i) => {
       let g = element;
       if (isJsts) {
@@ -165,7 +165,7 @@ export default Mixin.create(rhumbOperations, {
 
       if (g.isValid()) {
         geometries.push(g);
-        let j = geometries.length - 1;
+        const j = geometries.length - 1;
         if (j !== 0 && this.getGeometryKind(geometries[j]) !== this.getGeometryKind(geometries[j - 1])) {
           throw 'error: type mismatch. Objects must have the same type';
         } else if (j !== 0 && geometries[j].getSRID() !== geometries[j - 1].getSRID()) {
@@ -176,10 +176,10 @@ export default Mixin.create(rhumbOperations, {
       }
     });
 
-    //check the intersections and calculate the difference between objects
+    // check the intersections and calculate the difference between objects
     for (let i = 0; i < geometries.length; i++) {
       let current = geometries[i];
-      for (var j = 0; j < geometries.length; j++) {
+      for (let j = 0; j < geometries.length; j++) {
         if (i !== j) {
           if (geometries[i].intersects(geometries[j])) {
             if (isUnion) {
@@ -198,7 +198,7 @@ export default Mixin.create(rhumbOperations, {
       return null;
     }
 
-    //union the objects
+    // union the objects
     separateObjects.forEach((element, i) => {
       if (i === 0) {
         resultObject = element;
@@ -207,29 +207,29 @@ export default Mixin.create(rhumbOperations, {
       }
     });
 
-    let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let unionres = geojsonWriter.write(resultObject);
-    let crsResult = 'EPSG:' + (isNone(geometries) ? '' :  geometries[0].getSRID());
+    const geojsonWriter = new jsts.io.GeoJSONWriter();
+    const unionres = geojsonWriter.write(resultObject);
+    const crsResult = `EPSG:${isNone(geometries) ? '' : geometries[0].getSRID()}`;
 
-    let type = unionres.type;
-    let coordinates = unionres.coordinates;
+    let { type, } = unionres;
+    let { coordinates, } = unionres;
     if (unionres.type.indexOf('Multi') < 0 && forceMulti) {
-      type = 'Multi' + unionres.type;
+      type = `Multi${unionres.type}`;
       coordinates = [unionres.coordinates];
     }
 
     const multiObj = {
       type: 'Feature',
       geometry: {
-        type: type,
-        coordinates: coordinates
+        type,
+        coordinates,
       },
       crs: {
         type: 'name',
         properties: {
-          name: crsResult
-        }
-      }
+          name: crsResult,
+        },
+      },
     };
 
     return multiObj;
@@ -241,7 +241,7 @@ export default Mixin.create(rhumbOperations, {
     @returns {int} kind
   */
   getGeometryKind(g) {
-    let type = g.getGeometryType();
+    const type = g.getGeometryType();
 
     switch (type) {
       case 'Polygon':
@@ -282,7 +282,7 @@ export default Mixin.create(rhumbOperations, {
     @returns {Object} New GeoJSON Feature in crs of layer.
   */
   createPolygonObjectRhumb(layerId, data) {
-    let [, leafletObject] = this._getModelLeafletObject(layerId);
+    const [, leafletObject] = this._getModelLeafletObject(layerId);
     const obj = this.createObjectRhumb(data, leafletObject.options.crs, this);
 
     return obj;
@@ -343,9 +343,9 @@ export default Mixin.create(rhumbOperations, {
     return new Promise((resolve, reject) => {
       let resultObject = null;
 
-      let polygonGeom = geometryToJsts(polygonGeoJson.geometry);
+      const polygonGeom = geometryToJsts(polygonGeoJson.geometry);
       polygonGeom.setSRID(polygonGeoJson.crs.properties.name.split(':')[1]);
-      let lineGeom = geometryToJsts(lineGeoJson.geometry);
+      const lineGeom = geometryToJsts(lineGeoJson.geometry);
       lineGeom.setSRID(lineGeoJson.crs.properties.name.split(':')[1]);
       if (polygonGeom.isValid() && lineGeom.isValid()) {
         if (polygonGeom.getSRID() !== lineGeom.getSRID()) {
@@ -359,30 +359,30 @@ export default Mixin.create(rhumbOperations, {
 
       resultObject = lineGeom.intersection(polygonGeom);
 
-      let geojsonWriter = new jsts.io.GeoJSONWriter();
-      let intersectionRes = geojsonWriter.write(resultObject);
+      const geojsonWriter = new jsts.io.GeoJSONWriter();
+      const intersectionRes = geojsonWriter.write(resultObject);
       if (intersectionRes.coordinates.length === 0) {
         reject('objects does\' not intersect');
         return;
       }
 
-      let crsResult = 'EPSG:' + lineGeom.getSRID();
+      const crsResult = `EPSG:${lineGeom.getSRID()}`;
 
       const intersectObj = {
         type: 'Feature',
         geometry: {
           type: intersectionRes.type,
-          coordinates: intersectionRes.coordinates
+          coordinates: intersectionRes.coordinates,
         },
         crs: {
           type: 'name',
           properties: {
-            name: crsResult
-          }
-        }
+            name: crsResult,
+          },
+        },
       };
 
       resolve(intersectObj);
     });
-  }
+  },
 });

@@ -23,15 +23,15 @@ export default Mixin.create({
     @returns {Object[]} Flat array of layers satisfying to current identification mode.
     @private
   */
-  _getLayersToIdentify({ excludedLayers }) {
+  _getLayersToIdentify({ excludedLayers, }) {
     excludedLayers = A(excludedLayers || []);
 
-    let getVisibleLayersToIdentify = (layers) => {
-      let result = A();
+    const getVisibleLayersToIdentify = (layers) => {
+      const result = A();
 
       if (isArray(layers)) {
         layers.forEach((layer) => {
-          let layerIsVisible = get(layer, 'visibility') === true;
+          const layerIsVisible = get(layer, 'visibility') === true;
           if (get(layer, 'canBeIdentified') && layerIsVisible && !excludedLayers.contains(layer)) {
             result.pushObject(layer);
           }
@@ -42,7 +42,7 @@ export default Mixin.create({
             return result;
           }
 
-          let childLayers = get(layer, 'layers');
+          const childLayers = get(layer, 'layers');
           result.pushObjects(getVisibleLayersToIdentify(childLayers));
         });
       }
@@ -50,7 +50,7 @@ export default Mixin.create({
       return result;
     };
 
-    let rootLayers = this.get('layers');
+    const rootLayers = this.get('layers');
     return getVisibleLayersToIdentify(rootLayers);
-  }
+  },
 });

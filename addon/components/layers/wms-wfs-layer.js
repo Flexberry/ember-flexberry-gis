@@ -41,8 +41,8 @@ export default WmsLayerComponent.extend({
 
       return attribitesOptions;
     }).then((attribitesOptions) => {
-      let options = $.extend(this.get('_wfsLayer.options') || {}, { showExisting: true, clusterize: false });
-      let wfsLayer = this.get('_wfsLayer').createVectorLayer(options);
+      const options = $.extend(this.get('_wfsLayer.options') || {}, { showExisting: true, clusterize: false, });
+      const wfsLayer = this.get('_wfsLayer').createVectorLayer(options);
 
       return wfsLayer;
     }).then((wfsLayer) => {
@@ -56,8 +56,8 @@ export default WmsLayerComponent.extend({
   /**
     Sets wfs layer's filter, when wms filter was changed.
   */
-  filterObserver: on('init', observer('options.filter', function() {
-    let filter = this.get('options.filter');
+  filterObserver: on('init', observer('options.filter', function () {
+    const filter = this.get('options.filter');
     this.set('_wfsLayer.options.filter', filter);
   })),
 
@@ -69,10 +69,8 @@ export default WmsLayerComponent.extend({
     Leaflet layer or promise returning such layer.
   */
   getLeafletObject() {
-    let options = $.extend(this.get('_wfsLayer.options') || {}, { showExisting: false });
-    return this.get('_wfsLayer').createVectorLayer(options).then(layer => {
-      return layer;
-    });
+    const options = $.extend(this.get('_wfsLayer.options') || {}, { showExisting: false, });
+    return this.get('_wfsLayer').createVectorLayer(options).then((layer) => layer);
   },
 
   /**
@@ -90,7 +88,7 @@ export default WmsLayerComponent.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let innerWfsLayer = this.get('_wfsLayer');
+    const innerWfsLayer = this.get('_wfsLayer');
     if (!isNone(innerWfsLayer)) {
       return innerWfsLayer.identify.apply(innerWfsLayer, arguments);
     }
@@ -107,7 +105,7 @@ export default WmsLayerComponent.extend({
     or a promise returning such array.
   */
   query(layerLinks, e) {
-    let innerWfsLayer = this.get('_wfsLayer');
+    const innerWfsLayer = this.get('_wfsLayer');
     if (!isNone(innerWfsLayer)) {
       return innerWfsLayer.query.apply(innerWfsLayer, arguments);
     }
@@ -126,7 +124,7 @@ export default WmsLayerComponent.extend({
     or a promise returning such array.
   */
   search(e) {
-    let innerWfsLayer = this.get('_wfsLayer');
+    const innerWfsLayer = this.get('_wfsLayer');
     if (!isNone(innerWfsLayer)) {
       return innerWfsLayer.search.apply(innerWfsLayer, arguments);
     }
@@ -138,17 +136,17 @@ export default WmsLayerComponent.extend({
   init() {
     this._super(...arguments);
 
-    let innerWfsLayerProperties = {
+    const innerWfsLayerProperties = {
       leafletMap: this.get('leafletMap'),
       leafletContainer: this.get('leafletContainer'),
       layerModel: this.get('layerModel'),
       index: this.get('index'),
       visibility: false,
-      dynamicProperties: this.get('wfs')
+      dynamicProperties: this.get('wfs'),
     };
 
     // Set creating component's owner to avoid possible lookup exceptions.
-    let owner = getOwner(this);
+    const owner = getOwner(this);
     let ownerKey = null;
     A(Object.keys(this) || []).forEach((key) => {
       if (this[key] === owner) {
@@ -170,10 +168,10 @@ export default WmsLayerComponent.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    let innerWfsLayer = this.get('_wfsLayer');
+    const innerWfsLayer = this.get('_wfsLayer');
     if (!isNone(innerWfsLayer)) {
       innerWfsLayer.destroy();
       this.set('_wfsLayer', null);
     }
-  }
+  },
 });

@@ -13,10 +13,10 @@ export default EmberObject.extend({
   name: null,
 
   componentCanBeInserted(parentView) {
-    let requiredProperties = get(this, 'requiredProperties');
+    const requiredProperties = get(this, 'requiredProperties');
 
     requiredProperties.forEach((property) => {
-      let value = parentView.get(property);
+      const value = parentView.get(property);
 
       // Throw assertion failed exception, if value is not defined for required property.
       if (value === null || value === undefined) {
@@ -25,5 +25,5 @@ export default EmberObject.extend({
     }, this);
 
     return true;
-  }
+  },
 });

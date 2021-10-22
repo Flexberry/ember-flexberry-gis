@@ -13,30 +13,30 @@ import { attr, belongsTo } from 'ember-flexberry-data/utils/attributes';
   @class NewPlatformFlexberyGISLinkParameterModelMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export let Model = Mixin.create({
+export const Model = Mixin.create({
   objectField: DS.attr('string'),
   layerField: DS.attr('string'),
   expression: DS.attr('string'),
   queryKey: DS.attr('string'),
   linkField: DS.attr('boolean'),
-  layerLink: DS.belongsTo('new-platform-flexberry-g-i-s-layer-link', { inverse: 'parameters', async: false }),
+  layerLink: DS.belongsTo('new-platform-flexberry-g-i-s-layer-link', { inverse: 'parameters', async: false, }),
 });
 
-export let ValidationRules = {
+export const ValidationRules = {
   layerLink: validator('presence', {
     presence: true,
     message: 'LayerLink is required',
-  })
+  }),
 };
 
-export let defineProjections = function (modelClass) {
+export const defineProjections = function (modelClass) {
   modelClass.defineProjection('LinkParameterD', 'new-platform-flexberry-g-i-s-link-parameter', {
     objectField: attr('Поле объекта'),
     layerField: attr('Поле слоя'),
-    expression: attr('Выражение', { hidden: true }),
+    expression: attr('Выражение', { hidden: true, }),
     queryKey: attr('Параметр запроса'),
-    linkField: attr('Поле связи', { hidden: true }),
+    linkField: attr('Поле связи', { hidden: true, }),
     layerLink: belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
-    }, { hidden: true })
+    }, { hidden: true, }),
   });
 };

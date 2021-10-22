@@ -31,33 +31,33 @@ export default EditFormRoute.extend({
     setting: {
       refreshModel: false,
       replace: false,
-      as: 'setting'
+      as: 'setting',
     },
     geofilter: {
       refreshModel: false,
       replace: false,
-      as: 'geofilter'
+      as: 'geofilter',
     },
     zoom: {
       refreshModel: false,
       replace: false,
-      as: 'zoom'
+      as: 'zoom',
     },
     lat: {
       refreshModel: false,
       replace: false,
-      as: 'lat'
+      as: 'lat',
     },
     lng: {
       refreshModel: false,
       replace: false,
-      as: 'lng'
+      as: 'lng',
     },
     metadata: {
       refreshModel: false,
       replace: false,
-      as: 'metadata'
-    }
+      as: 'metadata',
+    },
   },
 
   /**
@@ -119,13 +119,13 @@ export default EditFormRoute.extend({
     @return {*} Model of map project for current route.
   */
   model(params, transition) {
-    let mapId = params.id;
-    let modelQuery = this.get('mapStore').getMapById(mapId);
-    let metadataQuery = this._getMetadata(params.metadata);
+    const mapId = params.id;
+    const modelQuery = this.get('mapStore').getMapById(mapId);
+    const metadataQuery = this._getMetadata(params.metadata);
 
     return new Promise((resolve, reject) => {
       all([modelQuery, metadataQuery]).then((data) => {
-        let [model, metadata] = data;
+        const [model, metadata] = data;
         this._addMetadata(model, metadata);
         resolve(model);
       }).catch((error) => {
@@ -144,12 +144,12 @@ export default EditFormRoute.extend({
   */
   setupController(controller, model) {
     this._super(...arguments);
-    let layers = model.get('mapLayer');
+    const layers = model.get('mapLayer');
 
     this.setLayerCategories(model, layers);
 
-    let urlParams = ['zoom', 'lat', 'lng'];
-    let currentParams = {};
+    const urlParams = ['zoom', 'lat', 'lng'];
+    const currentParams = {};
     urlParams.forEach((param) => {
       currentParams[param] = controller.get(param);
       if (!isBlank(currentParams[param])) {
@@ -162,7 +162,7 @@ export default EditFormRoute.extend({
     this.get('mapApi').addToApi('mapModel', model);
 
     this.transitionTo({
-      queryParams: currentParams
+      queryParams: currentParams,
     });
   },
 
@@ -220,12 +220,12 @@ export default EditFormRoute.extend({
       .from(this.get('metadataModelName'))
       .selectByProjection(this.get('metadataProjection'));
 
-    let conditions = metadata.split(',').map((item) => {
-      let id = item.trim().toLowerCase();
+    const conditions = metadata.split(',').map((item) => {
+      const id = item.trim().toLowerCase();
       return new SimplePredicate('id', FilterOperator.Eq, id);
     });
     if (isArray(conditions)) {
-      let condition = conditions.length > 1 ? new ComplexPredicate(Condition.Or, ...conditions) : conditions[0];
+      const condition = conditions.length > 1 ? new ComplexPredicate(Condition.Or, ...conditions) : conditions[0];
       queryBuilder = queryBuilder.where(condition);
     }
 
@@ -244,7 +244,7 @@ export default EditFormRoute.extend({
     }
 
     metadata.forEach((item) => {
-      let newLayer = createLayerFromMetadata(item, this.get('store'));
+      const newLayer = createLayerFromMetadata(item, this.get('store'));
       model.get('mapLayer').pushObject(newLayer);
     });
   },
@@ -268,5 +268,5 @@ export default EditFormRoute.extend({
     }
 
     return result;
-  }
+  },
 });

@@ -65,16 +65,16 @@ export default MeasureMapTool.extend({
   */
   _enable() {
     this._super(...arguments);
-    let crs = this.get('crs');
-    let captions = this.get('captions');
-    let precision = this.get('precision');
-    let displayCoordinates = this.get('displayCoordinates');
+    const crs = this.get('crs');
+    const captions = this.get('captions');
+    const precision = this.get('precision');
+    const displayCoordinates = this.get('displayCoordinates');
 
     this.get('_measureTools').markerBaseTool.startMeasure({
-      crs: crs,
-      precision: precision,
-      captions: captions,
-      displayCoordinates: displayCoordinates
+      crs,
+      precision,
+      captions,
+      displayCoordinates,
     });
-  }
+  },
 });

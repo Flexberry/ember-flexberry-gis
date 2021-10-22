@@ -4,8 +4,8 @@ import { get } from '@ember/object';
 import { isNone } from '@ember/utils';
 import { getOwner } from '@ember/application';
 import Component from '@ember/component';
-import layout from '../../../templates/components/layers-dialogs/settings/combine';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../../templates/components/layers-dialogs/settings/combine';
 
 export default Component.extend({
   layout,
@@ -80,16 +80,16 @@ export default Component.extend({
       @method actions.addTypeSettings
     */
     addTypeSettings() {
-      let type = this.get('_type');
+      const type = this.get('_type');
       if (!isNone(type)) {
-        let defaultSettings = getOwner(this).knownForType('layer', type).createSettings();
-        let settings = this.get('settings');
+        const defaultSettings = getOwner(this).knownForType('layer', type).createSettings();
+        const settings = this.get('settings');
         if (isNone(settings) || isNone(get(settings, 'type'))) {
-          let mainSettings = $.extend(true, defaultSettings, { 'type': type });
+          const mainSettings = $.extend(true, defaultSettings, { type, });
           this.set('settings', mainSettings);
         } else {
-          let innerLayerSettings = defaultSettings;
-          $.extend(true, innerLayerSettings, { 'type': type });
+          const innerLayerSettings = defaultSettings;
+          $.extend(true, innerLayerSettings, { type, });
           let innerLayers = this.get('settings.innerLayers');
           if (isNone(innerLayers)) {
             innerLayers = A();
@@ -101,6 +101,6 @@ export default Component.extend({
 
         this.set('_type', null);
       }
-    }
-  }
+    },
+  },
 });

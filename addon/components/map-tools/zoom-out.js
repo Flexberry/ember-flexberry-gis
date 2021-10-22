@@ -3,8 +3,8 @@
 */
 
 import Component from '@ember/component';
-import layout from '../../templates/components/map-tools/zoom-out';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../templates/components/map-tools/zoom-out';
 
 /**
   Component's CSS-classes names.
@@ -21,7 +21,7 @@ import { translationMacro as t } from 'ember-i18n';
 const flexberryClassNamesPrefix = 'flexberry-zoom-out-map-tool';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix
+  wrapper: flexberryClassNamesPrefix,
 };
 
 /**
@@ -41,19 +41,19 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let ZoomOutMapToolComponent = Component.extend({
-    /**
+const ZoomOutMapToolComponent = Component.extend({
+  /**
       Reference to component's template.
     */
-    layout,
+  layout,
 
-    /**
+  /**
       Reference to component's CSS-classes names.
       Must be also a component's instance property to be available from component's .hbs template.
     */
-    flexberryClassNames,
+  flexberryClassNames,
 
-    /**
+  /**
       Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
       to disable a component's wrapping element.
 
@@ -61,50 +61,49 @@ let ZoomOutMapToolComponent = Component.extend({
       @type String
       @default ''
     */
-    tagName: '',
+  tagName: '',
 
-    /**
+  /**
       Map tool's additional CSS-class.
 
       @property class
       @type String
       @default null
     */
-    class: null,
+  class: null,
 
-    /**
+  /**
       Map tool's caption.
 
       @property caption
       @type String
       @default t('components.map-tools.zoom-out.caption')
     */
-    caption: t('components.map-tools.zoom-out.caption'),
+  caption: t('components.map-tools.zoom-out.caption'),
 
-    /**
+  /**
       Map tool's tooltip text.
       Will be added as wrapper's element 'title' attribute.
 
       @property tooltip
       @default t('components.map-tools.zoom-out.tooltip')
     */
-    tooltip: t('components.map-tools.zoom-out.tooltip'),
+  tooltip: t('components.map-tools.zoom-out.tooltip'),
 
-    /**
+  /**
       Map tool's icon CSS-class names.
 
       @property iconClass
       @type String
       @default 'zoom out icon'
     */
-    iconClass: 'zoom out icon'
-  }
-);
+  iconClass: 'zoom out icon',
+});
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 ZoomOutMapToolComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default ZoomOutMapToolComponent;

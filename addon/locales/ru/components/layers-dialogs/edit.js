@@ -1,122 +1,122 @@
 export default {
-  'caption': 'Редактирование',
+  caption: 'Редактирование',
   'approve-button': {
-    'caption': 'Ok'
+    caption: 'Ok',
   },
   'deny-button': {
-    'caption': 'Отмена'
+    caption: 'Отмена',
   },
   'mode-dropdown': {
-    'caption': 'Режим добавления',
+    caption: 'Режим добавления',
   },
   'type-dropdown': {
-    'caption': 'Тип слоя'
+    caption: 'Тип слоя',
   },
   'name-textbox': {
-    'caption': 'Имя слоя'
+    caption: 'Имя слоя',
   },
   'scale-textbox': {
-    'caption': 'Масштаб'
+    caption: 'Масштаб',
   },
   'description-textbox': {
-    'caption': 'Описание слоя'
+    caption: 'Описание слоя',
   },
   'keywords-textbox': {
-    'caption': 'Ключевые слова'
+    caption: 'Ключевые слова',
   },
   'error-message': {
-    'caption': 'Ошибка'
+    caption: 'Ошибка',
   },
   'get-capabilities-button': {
-    'caption': 'Получить данные с сервиса',
-    'error-caption': 'Для получения данных заполните поля: '
+    caption: 'Получить данные с сервиса',
+    'error-caption': 'Для получения данных заполните поля: ',
   },
   'bounds-segment': {
-    'caption': 'Охват',
+    caption: 'Охват',
     'error-caption': 'Неверный формат введённых данных, введите числа',
     'min-x-textbox': {
-      'caption': 'Левая граница'
+      caption: 'Левая граница',
     },
     'min-y-textbox': {
-      'caption': 'Нижняя граница'
+      caption: 'Нижняя граница',
     },
     'max-x-textbox': {
-      'caption': 'Правая граница'
+      caption: 'Правая граница',
     },
     'max-y-textbox': {
-      'caption': 'Верхняя граница'
+      caption: 'Верхняя граница',
     },
-    'options': {
-      'wgs84bbox': {
-        'caption': 'Широта и долгота',
+    options: {
+      wgs84bbox: {
+        caption: 'Широта и долгота',
       },
-      'bbox': {
-        'caption': 'В системе координат слоя',
-      }
+      bbox: {
+        caption: 'В системе координат слоя',
+      },
     },
   },
   'links-segment': {
     'add-button': {
-      'caption': 'Добавить',
-    }
+      caption: 'Добавить',
+    },
   },
   'tabular-menu': {
     'main-tab': {
-      'caption': 'Основные настройки'
+      caption: 'Основные настройки',
     },
     'crs-tab': {
-      'caption': 'Система координат'
+      caption: 'Система координат',
     },
     'settings-tab': {
-      'caption': 'Настройки слоя'
+      caption: 'Настройки слоя',
     },
     'style-settings-tab': {
-      'caption': 'Настройки стиля'
+      caption: 'Настройки стиля',
     },
     'identify-settings-tab': {
-      'caption': 'Настройки идентификации'
+      caption: 'Настройки идентификации',
     },
     'search-settings-tab': {
-      'caption': 'Настройки поиска'
+      caption: 'Настройки поиска',
     },
     'display-settings-tab': {
-      'caption': 'Настройки отображения'
+      caption: 'Настройки отображения',
     },
     'legend-settings-tab': {
-      'caption': 'Настройки легенды'
+      caption: 'Настройки легенды',
     },
     'wfs-filter-settings-tab': {
-      'caption': 'Настройки фильтра'
+      caption: 'Настройки фильтра',
     },
     'links-tab': {
-      'caption': 'Настройки связей'
+      caption: 'Настройки связей',
     },
     'bbox-tab': {
-      'caption': 'Границы'
+      caption: 'Границы',
     },
     'pmodes-tab': {
-      'caption': 'Создание на основе'
+      caption: 'Создание на основе',
     },
     'label-settings-tab': {
-      'caption': 'Настройки надписей'
+      caption: 'Настройки надписей',
     },
     'loadfile-tab': {
-      'caption': 'Загрузить из файла'
-    }
+      caption: 'Загрузить из файла',
+    },
   },
-  'groups': {
+  groups: {
     'main-group': {
-      'caption': 'Основное'
+      caption: 'Основное',
     },
     'display-group': {
-      'caption': 'Отображение'
+      caption: 'Отображение',
     },
     'links-group': {
-      'caption': 'Связи'
-    }
+      caption: 'Связи',
+    },
   },
-  'move': {
-    'moveX': 'Смещение по X',
-    'moveY': 'Смещение по Y',
-  }
+  move: {
+    moveX: 'Смещение по X',
+    moveY: 'Смещение по Y',
+  },
 };

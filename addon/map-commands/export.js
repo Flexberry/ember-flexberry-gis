@@ -32,16 +32,16 @@ export default BaseMapCommand.extend({
           });
         });
       });
-    } else {
-      return new Promise((resolve, reject) => {
-        run(() => {
-          this.get('leafletMap').printExport(options.data).then((value) => {
-            resolve(value);
-          }).catch((reason) => {
-            reject(reason);
-          });
+    }
+
+    return new Promise((resolve, reject) => {
+      run(() => {
+        this.get('leafletMap').printExport(options.data).then((value) => {
+          resolve(value);
+        }).catch((reason) => {
+          reject(reason);
         });
       });
-    }
-  }
+    });
+  },
 });

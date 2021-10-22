@@ -8,10 +8,10 @@ import { getOwner } from '@ember/application';
 import { A } from '@ember/array';
 import { computed, observer, get } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../templates/components/flexberry-edit-crs';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import layout from '../templates/components/flexberry-edit-crs';
 
 // Proj4 CRS code.
 // Will be initialized in 'init' method.
@@ -63,11 +63,11 @@ export default Component.extend({
     @private
   */
   _createInnerCoordinateReferenceSystems() {
-    let coordinateReferenceSystems = {};
+    const coordinateReferenceSystems = {};
     A(this.get('_availableCoordinateReferenceSystemsCodes') || []).forEach((code) => {
       coordinateReferenceSystems[code] = {
         code: code === proj4CrsCode ? null : code,
-        definition: null
+        definition: null,
       };
     });
 
@@ -81,7 +81,7 @@ export default Component.extend({
     @private
   */
   _coordinateReferenceSystemCodeDidChange: observer('_coordinateReferenceSystemCode', function () {
-    let code = this.get('_coordinateReferenceSystemCode');
+    const code = this.get('_coordinateReferenceSystemCode');
     this.set('coordinateReferenceSystem', this.get(`_coordinateReferenceSystems.${code}`));
   }),
 
@@ -130,20 +130,20 @@ export default Component.extend({
     this._super(...arguments);
 
     // Retrieve & remember constant (proj4 CRS code).
-    let proj4CrsFactory = getOwner(this).knownForType('coordinate-reference-system', 'proj4');
+    const proj4CrsFactory = getOwner(this).knownForType('coordinate-reference-system', 'proj4');
     proj4CrsCode = get(proj4CrsFactory, 'code');
 
-    let owner = getOwner(this);
+    const owner = getOwner(this);
 
     // Available CRS codes for related dropdown.
-    let crsFactories = owner.knownForType('coordinate-reference-system');
-    let crsFactoriesNames = owner.knownNamesForType('coordinate-reference-system');
+    const crsFactories = owner.knownForType('coordinate-reference-system');
+    const crsFactoriesNames = owner.knownNamesForType('coordinate-reference-system');
     this.set('_availableCoordinateReferenceSystemsCodes', A(crsFactoriesNames.map((crsFactoryName) => {
-      let crsFactory = get(crsFactories, crsFactoryName);
+      const crsFactory = get(crsFactories, crsFactoryName);
       return get(crsFactory, 'code');
     })));
 
-    let crs = this.get('coordinateReferenceSystem');
+    const crs = this.get('coordinateReferenceSystem');
     let crsCode = get(crs, 'code');
     if (!isBlank(crsCode) && !this.get('_availableCoordinateReferenceSystemsCodes').contains(crsCode)) {
       // Unknown CRS code means that proj4 is used.
@@ -154,5 +154,5 @@ export default Component.extend({
 
     this._createInnerCoordinateReferenceSystems();
     this.set(`_coordinateReferenceSystems.${crsCode}`, crs);
-  }
+  },
 });

@@ -16,5 +16,5 @@ export default OdataSerializer.extend(MapLayerSerializer, {
   /**
   * Field name where object identifier is kept.
   */
-  primaryKey: '__PrimaryKey'
+  primaryKey: '__PrimaryKey',
 });

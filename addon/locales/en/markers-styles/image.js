@@ -1,3 +1,3 @@
 export default {
-  'caption': 'Image marker'
+  caption: 'Image marker',
 };

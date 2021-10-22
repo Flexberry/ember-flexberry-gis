@@ -5,11 +5,11 @@ import { isNone } from '@ember/utils';
 import { computed, get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
-import layout from '../templates/components/flexberry-create-object-geometry';
 import crsFactoryESPG3857 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-3857';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import layout from '../templates/components/flexberry-create-object-geometry';
 
 export default Component.extend({
   layout,
@@ -98,7 +98,7 @@ export default Component.extend({
   _coordinates: null,
 
   _editTools: computed('leafletMap', function () {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     let editTools = get(leafletMap, 'drawTools');
 
     if (isNone(editTools)) {
@@ -134,17 +134,17 @@ export default Component.extend({
   actions: {
     onDraw() {
       this._clearCurrentGeometry();
-      let editTools = this.get('_editTools');
+      const editTools = this.get('_editTools');
       editTools.on('editable:drawing:end', this._finishDraw, this);
       this.get('leafletMap').fire('flexberry-map:switchToDefaultMapTool');
       editTools.startPolygon();
     },
 
     onZoomTo() {
-      let editTools = this.get('_editTools');
-      let featuresLayer = editTools.featuresLayer;
+      const editTools = this.get('_editTools');
+      const { featuresLayer, } = editTools;
       if (featuresLayer.getLayers().length) {
-        let featureGroup = L.featureGroup(featuresLayer.getLayers());
+        const featureGroup = L.featureGroup(featuresLayer.getLayers());
         this.get('leafletMap').fitBounds(featureGroup.getBounds());
       }
     },
@@ -154,24 +154,24 @@ export default Component.extend({
     },
 
     onSave() {
-      let featuresLayer = this.get('_editTools.featuresLayer');
+      const featuresLayer = this.get('_editTools.featuresLayer');
 
       // возьмём первый объект, надо обработать создание мультиполигональных
-      let layer = featuresLayer.getLayers()[0];
-      let properties = {};
-      let queryFilter = this.get('queryFilter');
+      const layer = featuresLayer.getLayers()[0];
+      const properties = {};
+      const queryFilter = this.get('queryFilter');
 
       this.get('linkParameters').forEach((parameter) => {
         properties[parameter.get('layerField')] = queryFilter[parameter.get('queryKey')];
       });
 
-      let defaultProperties = this.get('layerModel.settingsAsObject.defaultProperties') || {};
+      const defaultProperties = this.get('layerModel.settingsAsObject.defaultProperties') || {};
 
-      layer.feature = { properties: merge(defaultProperties, properties) };
+      layer.feature = { properties: merge(defaultProperties, properties), };
 
-      let wfs = this.get('layerModel');
-      let leafletObject = this.get('layerModel._leafletObject');
-      let e = { layers: [layer], results: A() };
+      const wfs = this.get('layerModel');
+      const leafletObject = this.get('layerModel._leafletObject');
+      const e = { layers: [layer], results: A(), };
       leafletObject.fire('load', e);
 
       const saveObjectFunc = this.get('mapApi').getFromApi('saveObject');
@@ -184,17 +184,17 @@ export default Component.extend({
 
         leafletObject.save();
       }
-    }
+    },
   },
 
   saveObject() {
-    let leafletObject = this.get('layerModel._leafletObject');
+    const leafletObject = this.get('layerModel._leafletObject');
     return new Promise((resolve, reject) => {
       const saveSuccess = (data) => {
         leafletObject.off('save:failed', saveSuccess);
         this._clearCurrentGeometry();
-        let layers = Object.values(data.target._layers);
-        let feature = layers[layers.length - 1].feature;
+        const layers = Object.values(data.target._layers);
+        const { feature, } = layers[layers.length - 1];
         resolve(feature);
       };
 
@@ -215,30 +215,30 @@ export default Component.extend({
   },
 
   _clearCurrentGeometry() {
-    let editTools = this.get('_editTools');
+    const editTools = this.get('_editTools');
     editTools.featuresLayer.clearLayers();
     this.set('_coordinates', '');
     this.set('geometryCreated', false);
   },
 
   _finishDraw() {
-    let editTools = this.get('_editTools');
+    const editTools = this.get('_editTools');
     editTools.off('editable:drawing:end', this._finishDraw, this);
     editTools.stopDrawing();
     this.set('geometryCreated', true);
   },
 
   _updateCoordinates() {
-    let editTools = this.get('_editTools');
-    let layers = editTools.featuresLayer.getLayers();
-    let allCoords = [];
-    let crs = this.get('crs');
+    const editTools = this.get('_editTools');
+    const layers = editTools.featuresLayer.getLayers();
+    const allCoords = [];
+    const crs = this.get('crs');
     layers.forEach((layer) => {
       layer._latlngs.forEach((poly) => {
-        let coords = [];
+        const coords = [];
         poly.forEach(function (latlng) {
-          let point = crs.project(latlng);
-          coords.push(point.x.toFixed(3) + ' ' + point.y.toFixed(3));
+          const point = crs.project(latlng);
+          coords.push(`${point.x.toFixed(3)} ${point.y.toFixed(3)}`);
         });
 
         allCoords.push(coords.join('\n'));
@@ -246,5 +246,5 @@ export default Component.extend({
     });
 
     this.set('_coordinates', allCoords.join('\n\n'));
-  }
+  },
 });

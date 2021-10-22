@@ -46,8 +46,6 @@ export default EmberObject.extend({
       });
     }
 
-    return requestResult.then((response) => {
-      return this._parseRequestResult(response);
-    });
-  }
+    return requestResult.then((response) => this._parseRequestResult(response));
+  },
 });

@@ -4,126 +4,126 @@ export default {
       mapObjectSetting: {
         __caption__: ' Type',
         typeName: {
-          __caption__: 'Object type'
+          __caption__: 'Object type',
         },
         ListForm: {
-          __caption__: 'List form'
+          __caption__: 'List form',
         },
         editForm: {
-          __caption__: 'Edit form'
-        }
+          __caption__: 'Edit form',
+        },
       },
       layer: {
         __caption__: 'Layer',
         name: {
-          __caption__: 'Name'
-        }
+          __caption__: 'Name',
+        },
       },
       allowShow: {
-        __caption__: 'Allow show'
+        __caption__: 'Allow show',
       },
       parameters: {
         __caption__: 'Link parameters',
         objectField: {
-          __caption__: 'Object field'
+          __caption__: 'Object field',
         },
         layerField: {
-          __caption__: 'Layer field'
+          __caption__: 'Layer field',
         },
         expression: {
-          __caption__: 'Expression'
+          __caption__: 'Expression',
         },
         queryKey: {
-          __caption__: 'Query key'
+          __caption__: 'Query key',
         },
         linkField: {
-          __caption__: 'Link key'
+          __caption__: 'Link key',
         },
         layerLink: {
-          __caption__: 'Layer link'
-        }
-      }
+          __caption__: 'Layer link',
+        },
+      },
     },
     LayerLinkE: {
       allowShow: {
-        __caption__: 'Allow show'
+        __caption__: 'Allow show',
       },
       layer: {
-        __caption__: 'Layer'
+        __caption__: 'Layer',
       },
       mapObjectSetting: {
-        __caption__: 'Map object setting'
-      }
+        __caption__: 'Map object setting',
+      },
     },
     LayerLinkI: {
       mapObjectSetting: {
         __caption__: 'Map object setting',
         listForm: {
-          __caption__: 'List form'
+          __caption__: 'List form',
         },
         editForm: {
-          __caption__: 'Edit form'
-        }
+          __caption__: 'Edit form',
+        },
       },
       allowShow: {
-        __caption__: 'Allow show'
+        __caption__: 'Allow show',
       },
       layer: {
-        __caption__: 'Layer'
+        __caption__: 'Layer',
       },
       parameters: {
         __caption__: 'Link parameters',
         objectField: {
-          __caption__: 'Object field'
+          __caption__: 'Object field',
         },
         layerField: {
-          __caption__: 'Layer field'
+          __caption__: 'Layer field',
         },
         expression: {
-          __caption__: 'Expression'
+          __caption__: 'Expression',
         },
         queryKey: {
-          __caption__: 'Query key'
+          __caption__: 'Query key',
         },
         linkField: {
-          __caption__: 'Link key'
+          __caption__: 'Link key',
         },
         layerLink: {
-          __caption__: 'Layer link'
-        }
-      }
+          __caption__: 'Layer link',
+        },
+      },
     },
     LayerLinkQ: {
       allowShow: {
-        __caption__: 'Allow show'
+        __caption__: 'Allow show',
       },
       layer: {
-        __caption__: 'Layer'
+        __caption__: 'Layer',
       },
       mapObjectSetting: {
-        __caption__: ''
+        __caption__: '',
       },
       parameters: {
         __caption__: 'Link parameters',
         objectField: {
-          __caption__: 'Object field'
+          __caption__: 'Object field',
         },
         layerField: {
-          __caption__: 'Layer field'
+          __caption__: 'Layer field',
         },
         expression: {
-          __caption__: 'Expression'
+          __caption__: 'Expression',
         },
         queryKey: {
-          __caption__: 'Query key'
+          __caption__: 'Query key',
         },
         linkField: {
-          __caption__: 'Link key'
+          __caption__: 'Link key',
         },
         layerLink: {
-          __caption__: 'Layer link'
-        }
-      }
-    }
-  }
+          __caption__: 'Layer link',
+        },
+      },
+    },
+  },
 };

@@ -25,10 +25,10 @@ export default BaseMapCommand.extend({
   _execute(options) {
     this._super(...arguments);
 
-    let latLng = get(options, 'latLng');
-    let zoom = get(options, 'zoom');
+    const latLng = get(options, 'latLng');
+    const zoom = get(options, 'zoom');
 
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     leafletMap.setView(latLng, zoom);
-  }
+  },
 });

@@ -86,7 +86,7 @@ export default Controller.extend({
       @type String
       @default undefined
     */
-    boundingBoxEWKT: undefined
+    boundingBoxEWKT: undefined,
   },
 
   /**
@@ -125,7 +125,7 @@ export default Controller.extend({
     @readOnly
   */
   _selectedRowsCount: computed('_selectedRows', function () {
-    let selectedRows = this.get('_selectedRows');
+    const selectedRows = this.get('_selectedRows');
     return Object.keys(selectedRows).filter((item) => get(selectedRows, item)).length;
   }),
 
@@ -137,8 +137,8 @@ export default Controller.extend({
     @private
     @readOnly
   */
-  _metadataIds: computed('_selectedRows', function() {
-    let selectedRows = this.get('_selectedRows');
+  _metadataIds: computed('_selectedRows', function () {
+    const selectedRows = this.get('_selectedRows');
     return Object.keys(selectedRows).filter((item) => get(selectedRows, item));
   }),
 
@@ -206,7 +206,7 @@ export default Controller.extend({
     getSearchResults() {
       this.set('_selectedRows', {}); // clear selected rows
       this.notifyPropertyChange('_selectedRows');
-      this.send('doSearch', { searchConditions: this.get('searchConditions') });
+      this.send('doSearch', { searchConditions: this.get('searchConditions'), });
     },
 
     /**
@@ -217,9 +217,9 @@ export default Controller.extend({
       @param {Object} data Hash object containing paging and filtering data.
     */
     getData(field, data) {
-      let req = $().extend(data, {
+      const req = $().extend(data, {
         searchConditions: this.get('searchConditions'),
-        fieldName: field
+        fieldName: field,
       });
       this.send('doSearch', req);
     },
@@ -230,9 +230,9 @@ export default Controller.extend({
       @method actions.addScaleFilterCondition
     */
     addScaleFilterCondition() {
-      let searchConditions = this.get('searchConditions');
+      const searchConditions = this.get('searchConditions');
       if (searchConditions && isArray(searchConditions.scaleFilters)) {
-        searchConditions.scaleFilters.addObject({ condition: '=', scale: '0' });
+        searchConditions.scaleFilters.addObject({ condition: '=', scale: '0', });
       }
 
       // Prevent submit.
@@ -246,7 +246,7 @@ export default Controller.extend({
       @param {Integer} index Index of the condition for delete.
     */
     deleteScaleFilterCondition(index) {
-      let searchConditions = this.get('searchConditions');
+      const searchConditions = this.get('searchConditions');
       if (searchConditions && isArray(searchConditions.scaleFilters)) {
         searchConditions.scaleFilters.removeAt(index);
       }
@@ -258,11 +258,11 @@ export default Controller.extend({
       @method actions.scaleFilterKeyDown
     */
     scaleFilterKeyDown(e) {
-      let key = e.which;
+      const key = e.which;
 
       // Allow only numbers, backspace, arrows, etc.
-      return (key === 8 || key === 9 || key === 46 || (key >= 37 && key <= 40) ||
-        (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+      return (key === 8 || key === 9 || key === 46 || (key >= 37 && key <= 40)
+        || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
     },
 
     /**
@@ -306,6 +306,6 @@ export default Controller.extend({
     _clearSelectedRows() {
       this.set('_selectedRows', {});
       this.notifyPropertyChange('_selectedRows');
-    }
-  }
+    },
+  },
 });

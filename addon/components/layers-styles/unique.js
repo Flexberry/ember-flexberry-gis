@@ -6,9 +6,9 @@ import { A } from '@ember/array';
 
 import { getOwner } from '@ember/application';
 import { isBlank, isNone } from '@ember/utils';
+import { getGradientColors } from 'ember-flexberry-gis/utils/color-interpolation';
 import layout from '../../templates/components/layers-styles/unique';
 import BaseCustomStyle from './categorized/base-categorized-layer-style';
-import { getGradientColors } from 'ember-flexberry-gis/utils/color-interpolation';
 
 /**
   Component containing GUI for 'unique' layers-style
@@ -39,19 +39,19 @@ export default BaseCustomStyle.extend({
       @param {Object} e Event object.
     */
     onClassifyButtonClick() {
-      let layerType = this.get('layerType');
-      let leafletLayer = this.get('leafletLayer');
+      const layerType = this.get('layerType');
+      const leafletLayer = this.get('leafletLayer');
       if (isBlank(layerType) || isNone(leafletLayer)) {
         return;
       }
 
-      let layerClass = getOwner(this).lookup(`layer:${layerType}`);
-      let propertyName = this.get('styleSettings.style.propertyName');
-      let propertyValues = layerClass.getLayerPropertyValues(leafletLayer, propertyName);
-      let categories = A();
-      let layersStylesRenderer = this.get('_layersStylesRenderer');
-      let mainStyleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
-      let path = mainStyleSettings.style.path;
+      const layerClass = getOwner(this).lookup(`layer:${layerType}`);
+      const propertyName = this.get('styleSettings.style.propertyName');
+      const propertyValues = layerClass.getLayerPropertyValues(leafletLayer, propertyName);
+      const categories = A();
+      const layersStylesRenderer = this.get('_layersStylesRenderer');
+      const mainStyleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
+      const { path, } = mainStyleSettings.style;
 
       let fillGradientColors = A();
       if (this.get('_fillGradientEnable')) {
@@ -70,13 +70,13 @@ export default BaseCustomStyle.extend({
       }
 
       for (let i = 0, len = propertyValues.length; i < len; i++) {
-        let catStyleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
+        const catStyleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
         catStyleSettings.style.path.fillColor = (fillGradientColors[i] != null) ? fillGradientColors[i] : catStyleSettings.style.path.fillColor;
         catStyleSettings.style.path.color = (strokeGradientColors[i] != null) ? strokeGradientColors[i] : catStyleSettings.style.path.color;
         categories.push({
           name: i,
           value: propertyValues[i],
-          styleSettings: catStyleSettings
+          styleSettings: catStyleSettings,
         });
       }
 
@@ -85,6 +85,6 @@ export default BaseCustomStyle.extend({
       this.set('_selectedCategories', {});
       this.set('_selectedCategoriesCount', 0);
       this.set('_allCategoriesAreSelected', false);
-    }
-  }
+    },
+  },
 });

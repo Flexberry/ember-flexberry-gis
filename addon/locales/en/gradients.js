@@ -3,5 +3,5 @@ import GradientEdit from './gradients/gradient-edit';
 
 export default {
   'dropdown-gradient': DropdownGradient,
-  'gradient-edit': GradientEdit
+  'gradient-edit': GradientEdit,
 };

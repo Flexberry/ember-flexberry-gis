@@ -62,14 +62,14 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    let $dropdown = this.$().dropdown({
+    const $dropdown = this.$().dropdown({
       onChange: (newValue) => {
         this.set('value', newValue);
         this.sendAction('change', newValue);
-      }
+      },
     });
 
-    let initialValue = this.get('value');
+    const initialValue = this.get('value');
     if (!isBlank(initialValue)) {
       $dropdown.dropdown('set selected', initialValue);
     }
@@ -81,5 +81,5 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     this.$().dropdown('destroy');
-  }
+  },
 });

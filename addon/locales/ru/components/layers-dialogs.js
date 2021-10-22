@@ -7,11 +7,11 @@ import EditModes from './layers-dialogs/layers-prototyping-modes';
 import EditAttributes from './layers-dialogs/attributes/edit';
 
 export default {
-  'remove': RemoveDialog,
-  'edit': EditDialog,
-  'copy': CopyDialog,
-  'add': AddDialog,
-  'settings': SettingsDialogs,
+  remove: RemoveDialog,
+  edit: EditDialog,
+  copy: CopyDialog,
+  add: AddDialog,
+  settings: SettingsDialogs,
   'layers-prototyping-modes': EditModes,
-  'edit-attributes': EditAttributes
+  'edit-attributes': EditAttributes,
 };

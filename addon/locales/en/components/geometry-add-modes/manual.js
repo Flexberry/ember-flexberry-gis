@@ -1,7 +1,7 @@
 export default {
   'menu-button-tooltip-add': 'Add with coordinates',
   'menu-button-tooltip-edit': 'Edit with coordinates',
-  'apply': 'Apply',
+  apply: 'Apply',
   'dialog-approve-button-caption': 'Save',
   'dialog-deny-button-caption': 'Cancel',
   'crs-field-label': 'Coordinate reference system',
@@ -16,5 +16,5 @@ export default {
   'multilinestring-object-type': 'MultiLineString',
   'polygon-object-type': 'Polygon',
   'multipolygon-object-type': 'MultiPolygon',
-  'coordinates-type-geometry-error-label': 'For this type of geometry is required a minimum %count% of points'
+  'coordinates-type-geometry-error-label': 'For this type of geometry is required a minimum %count% of points',
 };

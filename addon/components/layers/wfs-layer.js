@@ -10,10 +10,10 @@ import { Promise, resolve, reject } from 'rsvp';
 import { get, set } from '@ember/object';
 import { assert } from '@ember/debug';
 import { A, isArray } from '@ember/array';
+import jsts from 'npm:jsts';
 import BaseVectorLayer from '../base-vector-layer';
 import { checkMapZoom } from '../../utils/check-zoom';
 import { intersectionArea } from '../../utils/feature-with-area-intersect';
-import jsts from 'npm:jsts';
 import state from '../../utils/state';
 
 /**
@@ -53,27 +53,28 @@ export default BaseVectorLayer.extend({
     @return {Object} Features read format.
   */
   getFeaturesReadFormat() {
-    let format = this.get('format');
+    const format = this.get('format');
     let availableFormats = A(Object.keys(L.Format) || []).filter((format) => {
       format = format.toLowerCase();
       return format !== 'base' && format !== 'scheme';
     });
     availableFormats = A(availableFormats);
     assert(
-      `Wrong value of \`format\` property: ${format}. ` +
-      `Allowed values are: [\`${availableFormats.join(`\`, \``)}\`].`,
-      availableFormats.contains(format));
+      `Wrong value of \`format\` property: ${format}. `
+      + `Allowed values are: [\`${availableFormats.join('`, `')}\`].`,
+      availableFormats.contains(format)
+    );
 
-    let options = this.get('options');
-    let crs = get(options, 'crs');
-    let geometryField = get(options, 'geometryField');
+    const options = this.get('options');
+    const crs = get(options, 'crs');
+    const geometryField = get(options, 'geometryField');
 
-    let readFormatOptions = {
+    const readFormatOptions = {
       crs,
-      geometryField
+      geometryField,
     };
 
-    let pane = this.get('_pane');
+    const pane = this.get('_pane');
     if (pane) {
       readFormatOptions.pane = pane;
       readFormatOptions.renderer = this.get('_renderer');
@@ -89,7 +90,7 @@ export default BaseVectorLayer.extend({
   */
   _getFeature(options) {
     return new Promise((resolve, reject) => {
-      options = $.extend(options || {}, { showExisting: true });
+      options = $.extend(options || {}, { showExisting: true, });
 
       let filter = get(options, 'filter');
       if (typeof filter === 'string') {
@@ -97,21 +98,21 @@ export default BaseVectorLayer.extend({
       }
 
       filter = this.addCustomFilter(filter);
-      let resultingFilter = filter ? filter.toGml() : null;
+      const resultingFilter = filter ? filter.toGml() : null;
 
-      let wfsLayer = this.get('_leafletObject');
+      const wfsLayer = this.get('_leafletObject');
 
       if (isNone(wfsLayer)) {
         resolve(A());
         return;
       }
 
-      let load = this.get('_loadFeatures').bind(wfsLayer);
+      const load = this.get('_loadFeatures').bind(wfsLayer);
       load(resultingFilter, false, wfsLayer).then((layers) => {
-        let features = A();
+        const features = A();
 
         layers.forEach((layer) => {
-          let feature = layer.feature;
+          const { feature, } = layer;
           feature.leafletLayer = layer;
           Ember.set(feature, 'arch', this.get('hasTime') || false);
           features.pushObject(feature);
@@ -162,8 +163,8 @@ export default BaseVectorLayer.extend({
       leafletObject = this.get('_leafletObject');
     }
 
-    let leafletMap = this.get('leafletMap');
-    let pane = this.get('_pane');
+    const leafletMap = this.get('leafletMap');
+    const pane = this.get('_pane');
 
     layers.forEach((layer) => {
       if (pane) {
@@ -180,7 +181,6 @@ export default BaseVectorLayer.extend({
       if (!isNone(leafletObject)) {
         leafletObject.baseAddLayer(layer);
       }
-
     });
 
     this._super(...arguments);
@@ -191,7 +191,7 @@ export default BaseVectorLayer.extend({
   },
 
   _removeLayer(layer) {
-    let leafletObject = this.get('_leafletObject');
+    const leafletObject = this.get('_leafletObject');
     leafletObject.baseRemoveLayer(layer);
 
     if (this.get('labelSettings.signMapObjects') && !isNone(this.get('_labelsLayer')) && !isNone(this.get('_leafletObject._labelsLayer'))) {
@@ -200,11 +200,11 @@ export default BaseVectorLayer.extend({
   },
 
   _editLayer(layer) {
-    let leafletObject = this.get('_leafletObject');
+    const leafletObject = this.get('_leafletObject');
     leafletObject.baseEditLayer(layer);
 
     if (layer.state = state.update) {
-      let coordinates = this._getGeometry(layer);
+      const coordinates = this._getGeometry(layer);
       set(layer, 'feature.geometry.coordinates', coordinates);
     }
 
@@ -216,7 +216,7 @@ export default BaseVectorLayer.extend({
     Update label's layer
   */
   updateLabel(layer) {
-    let leafletObject = this.get('_leafletObject');
+    const leafletObject = this.get('_leafletObject');
 
     if (this.get('labelSettings.signMapObjects') && !isNone(this.get('_labelsLayer')) && !isNone(this.get('_leafletObject._labelsLayer'))) {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
@@ -235,20 +235,20 @@ export default BaseVectorLayer.extend({
   */
   _loadFeatures(filter, fireLoad = true) {
     return new Promise((resolve, reject) => {
-      var that = this;
+      const that = this;
       filter = this.addCustomFilter(filter);
       L.Util.request({
         url: this.options.url,
         data: L.XmlUtil.serializeXmlDocumentString(that.getFeature(filter)),
         headers: this.options.headers || {},
         withCredentials: this.options.withCredentials,
-        success: function (responseText) {
+        success(responseText) {
           // If some exception occur, WFS-service can response successfully, but with ExceptionReport,
           // and such situation must be handled.
-          var exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
+          const exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
           if (exceptionReport) {
             that.fire('error', {
-              error: new Error(exceptionReport.message)
+              error: new Error(exceptionReport.message),
             });
 
             return that;
@@ -256,9 +256,9 @@ export default BaseVectorLayer.extend({
 
           // Request was truly successful (without exception report),
           // so convert response to layers.
-          var layers = that.readFormat.responseToLayers(responseText, {
+          const layers = that.readFormat.responseToLayers(responseText, {
             coordsToLatLng: that.options.coordsToLatLng,
-            pointToLayer: that.options.pointToLayer
+            pointToLayer: that.options.pointToLayer,
           });
 
           layers.forEach(function (element) {
@@ -289,8 +289,8 @@ export default BaseVectorLayer.extend({
 
           if (fireLoad) {
             that.fire('load', {
-              responseText: responseText,
-              layers: layers
+              responseText,
+              layers,
             });
           }
 
@@ -298,15 +298,15 @@ export default BaseVectorLayer.extend({
 
           return that;
         },
-        error: function (errorMessage) {
+        error(errorMessage) {
           that.fire('error', {
-            error: new Error(errorMessage)
+            error: new Error(errorMessage),
           });
 
           reject(errorMessage);
 
           return that;
-        }
+        },
       });
     });
   },
@@ -317,7 +317,7 @@ export default BaseVectorLayer.extend({
     @method _clearLayers
   */
   _clearLayers() {
-    let leafletObject = this.get('_leafletObject');
+    const leafletObject = this.get('_leafletObject');
     leafletObject.eachLayer((layer) => {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
     });
@@ -341,7 +341,7 @@ export default BaseVectorLayer.extend({
   createVectorLayer(options) {
     return new Promise((resolve, reject) => {
       // Retrieve possibly defined in layer's settings filter.
-      let initialOptions = this.get('options') || {};
+      const initialOptions = this.get('options') || {};
       let initialFilter = get(initialOptions, 'filter');
       if (typeof initialFilter === 'string') {
         initialFilter = getOwner(this).lookup('layer:wfs').parseFilter(initialFilter);
@@ -365,13 +365,13 @@ export default BaseVectorLayer.extend({
       }
 
       // Combine options defined in layer's settings with options defined in method, and with resulting filter option.
-      options = $.extend(true, {}, initialOptions, options, { filter: resultingFilter });
+      options = $.extend(true, {}, initialOptions, options, { filter: resultingFilter, });
 
-      let featuresReadFormat = this.getFeaturesReadFormat();
+      const featuresReadFormat = this.getFeaturesReadFormat();
       L.wfst(options, featuresReadFormat)
         .once('load', (e) => {
-          let wfsLayer = e.target;
-          let leafletMap = this.get('leafletMap');
+          const wfsLayer = e.target;
+          const leafletMap = this.get('leafletMap');
 
           wfsLayer.on('save:success', this._setLayerState, this);
           wfsLayer.on('save:success', this.saveSuccess, this);
@@ -391,8 +391,8 @@ export default BaseVectorLayer.extend({
           wfsLayer.addCustomFilter = this.get('addCustomFilter').bind(this);
 
           if (!isNone(leafletMap)) {
-            let thisPane = this.get('_pane');
-            let pane = leafletMap.getPane(thisPane);
+            const thisPane = this.get('_pane');
+            const pane = leafletMap.getPane(thisPane);
             if (!pane || isNone(pane)) {
               this._createPane(thisPane);
               wfsLayer.options.pane = thisPane;
@@ -411,7 +411,7 @@ export default BaseVectorLayer.extend({
 
           // this.get('_leafletObject') is null at this moment. _layers hasn't pane and renderer. For marker layer this is critical (ignore zoom), but for polygon layer doesn't.
           this._addLayersOnMap(Object.values(wfsLayer._layers));
-          let load = this.continueLoad(wfsLayer);
+          const load = this.continueLoad(wfsLayer);
           wfsLayer.promiseLoadLayer = load && load instanceof Promise ? load : resolve();
           wfsLayer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
 
@@ -427,14 +427,14 @@ export default BaseVectorLayer.extend({
   },
 
   saveSuccess() {
-    let leafletObject = this.get('_leafletObject');
+    const leafletObject = this.get('_leafletObject');
 
-    let changes = Object.values(leafletObject.changes);
+    const changes = Object.values(leafletObject.changes);
     changes.forEach((layer) => {
       if (layer.state === state.insert) {
         if (leafletObject.leafletMap.hasLayer(layer._label)) {
           leafletObject.leafletMap.removeLayer(layer._label);
-          let id = leafletObject.getLayerId(layer._label);
+          const id = leafletObject.getLayerId(layer._label);
           delete leafletObject._labelsLayer[id];
         }
       }
@@ -466,15 +466,15 @@ export default BaseVectorLayer.extend({
   */
   identify(e) {
     return new Promise((resolve, reject) => {
-      let filter = new L.Filter.Intersects(this.get('geometryField'), e.polygonLayer, this.get('crs'));
+      const filter = new L.Filter.Intersects(this.get('geometryField'), e.polygonLayer, this.get('crs'));
 
       this._getFeature({
-        filter
-      }).then(filteredFeatures => {
+        filter,
+      }).then((filteredFeatures) => {
         if (this.get('typeGeometry') === 'polygon') {
-          let projectedIdentifyPolygon = e.polygonLayer.toProjectedGeoJSON(this.get('crs'));
-          let scale = this.get('mapApi').getFromApi('precisionScale');
-          filteredFeatures.forEach(feature => {
+          const projectedIdentifyPolygon = e.polygonLayer.toProjectedGeoJSON(this.get('crs'));
+          const scale = this.get('mapApi').getFromApi('precisionScale');
+          filteredFeatures.forEach((feature) => {
             feature.properties = feature.properties || {};
             feature.properties.intersectionArea = intersectionArea(projectedIdentifyPolygon, feature.leafletLayer.toProjectedGeoJSON(this.get('crs')), scale);
           });
@@ -500,10 +500,10 @@ export default BaseVectorLayer.extend({
   */
   search(e) {
     let searchFields;
-    let searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
+    const searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
 
     // If exact field is specified in search options - use it only.
-    let propertyName = e.searchOptions.propertyName;
+    const { propertyName, } = e.searchOptions;
     if (!isBlank(propertyName)) {
       searchFields = propertyName;
     } else {
@@ -516,19 +516,19 @@ export default BaseVectorLayer.extend({
     }
 
     // Create filter for each search field.
-    let equals = A();
-    let leafletObject = this.get('_leafletObject');
+    const equals = A();
+    const leafletObject = this.get('_leafletObject');
     if (!isNone(leafletObject)) {
-      let fieldsType = get(leafletObject, 'readFormat.featureType.fieldTypes');
+      const fieldsType = get(leafletObject, 'readFormat.featureType.fieldTypes');
       if (!isBlank(fieldsType)) {
         searchFields.forEach((field) => {
-          let typeField = fieldsType[field];
+          const typeField = fieldsType[field];
           if (!isBlank(typeField)) {
             if (typeField !== 'string') {
               equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
             } else {
-              equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', {
-                matchCase: false
+              equals.push(new L.Filter.Like(field, `*${e.searchOptions.queryString}*`, {
+                matchCase: false,
               }));
             }
           }
@@ -543,14 +543,14 @@ export default BaseVectorLayer.extend({
       filter = new L.Filter.Or(...equals);
     }
 
-    let featuresPromise = this._getFeature({
+    const featuresPromise = this._getFeature({
       filter,
       maxFeatures: e.searchOptions.maxResultsCount,
       fillOpacity: 0.3,
       style: {
         color: 'yellow',
-        weight: 2
-      }
+        weight: 2,
+      },
     });
 
     return featuresPromise;
@@ -566,13 +566,13 @@ export default BaseVectorLayer.extend({
     or a promise returning such array.
   */
   query(layerLinks, e) {
-    let queryFilter = e.queryFilter;
-    let linkEquals = A();
+    const { queryFilter, } = e;
+    const linkEquals = A();
 
     layerLinks.forEach((link) => {
-      let parameters = link.get('parameters');
+      const parameters = link.get('parameters');
       if (isArray(parameters) && parameters.length > 0) {
-        let equals = this.getFilterParameters(parameters, queryFilter);
+        const equals = this.getFilterParameters(parameters, queryFilter);
 
         if (equals.length === 1) {
           linkEquals.pushObject(equals[0]);
@@ -582,10 +582,10 @@ export default BaseVectorLayer.extend({
       }
     });
 
-    let filter = linkEquals.length === 1 ? linkEquals[0] : new L.Filter.Or(...linkEquals);
+    const filter = linkEquals.length === 1 ? linkEquals[0] : new L.Filter.Or(...linkEquals);
 
-    let featuresPromise = this._getFeature({
-      filter
+    const featuresPromise = this._getFeature({
+      filter,
     });
 
     return featuresPromise;
@@ -599,13 +599,13 @@ export default BaseVectorLayer.extend({
     @returns Array of Constraints.
   */
   getFilterParameters(parameters, queryFilter) {
-    let equals = A();
+    const equals = A();
 
-    parameters.forEach(linkParam => {
-      let property = linkParam.get('layerField');
-      let propertyValue = queryFilter[linkParam.get('queryKey')];
+    parameters.forEach((linkParam) => {
+      const property = linkParam.get('layerField');
+      const propertyValue = queryFilter[linkParam.get('queryKey')];
       if (isArray(propertyValue)) {
-        let propertyEquals = A();
+        const propertyEquals = A();
         propertyValue.forEach((value) => {
           propertyEquals.pushObject(new L.Filter.EQ(property, value));
         });
@@ -628,11 +628,11 @@ export default BaseVectorLayer.extend({
   */
   loadLayerFeatures(e) {
     return new Promise((resolve, reject) => {
-      let leafletObject = this.get('_leafletObject');
-      let featureIds = e.featureIds;
+      const leafletObject = this.get('_leafletObject');
+      const { featureIds, } = e;
       if (!leafletObject.options.showExisting) {
-        let getLoadedFeatures = (featureIds) => {
-          let loadIds = [];
+        const getLoadedFeatures = (featureIds) => {
+          const loadIds = [];
           leafletObject.eachLayer((shape) => {
             const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), shape);
             if (!isNone(id) && ((isArray(featureIds) && !isNone(featureIds) && featureIds.indexOf(id) !== -1) || !loadIds.includes(id))) {
@@ -643,11 +643,11 @@ export default BaseVectorLayer.extend({
           return loadIds;
         };
 
-        let makeFilterEqOr = (loadedFeatures) => {
+        const makeFilterEqOr = (loadedFeatures) => {
           if (loadedFeatures.length > 0) {
-            let equals = A();
+            const equals = A();
             loadedFeatures.forEach((id) => {
-              let pkField = this.get('mapApi').getFromApi('mapModel')._getPkField(this.get('layerModel'));
+              const pkField = this.get('mapApi').getFromApi('mapModel')._getPkField(this.get('layerModel'));
               equals.pushObject(new L.Filter.EQ(pkField, id));
             });
 
@@ -658,21 +658,19 @@ export default BaseVectorLayer.extend({
         };
 
         let filter = null;
-        if (isArray(featureIds) && !isNone(featureIds)) {// load features by id
-          let loadIds = getLoadedFeatures(featureIds);
+        if (isArray(featureIds) && !isNone(featureIds)) { // load features by id
+          const loadIds = getLoadedFeatures(featureIds);
 
-          let remainingFeat = featureIds.filter((item) => {
-            return loadIds.indexOf(item) === -1;
-          });
+          const remainingFeat = featureIds.filter((item) => loadIds.indexOf(item) === -1);
           if (!isEmpty(remainingFeat)) {
             filter = makeFilterEqOr(remainingFeat);
           } else { // If objects is already loaded, return leafletObject
             resolve(leafletObject);
             return;
           }
-        } else {// load objects that don't exist yet
-          let alreadyLoaded = getLoadedFeatures(null);
-          let filterEqOr = makeFilterEqOr(alreadyLoaded);
+        } else { // load objects that don't exist yet
+          const alreadyLoaded = getLoadedFeatures(null);
+          const filterEqOr = makeFilterEqOr(alreadyLoaded);
           if (!isNone(filterEqOr)) {
             filter = new L.Filter.Not(makeFilterEqOr(alreadyLoaded));
           }
@@ -680,7 +678,7 @@ export default BaseVectorLayer.extend({
 
         leafletObject.loadFeatures(filter).then(() => {
           resolve(leafletObject);
-        }).catch(mes => reject(mes));
+        }).catch((mes) => reject(mes));
       } else {
         resolve(leafletObject);
       }
@@ -696,14 +694,14 @@ export default BaseVectorLayer.extend({
   */
   getLayerFeatures(e) {
     return new Promise((resolve, reject) => {
-      let leafletObject = this.get('_leafletObject');
-      let featureIds = e.featureIds;
+      const leafletObject = this.get('_leafletObject');
+      const { featureIds, } = e;
       if (!leafletObject.options.showExisting) {
         let filter = null;
         if (isArray(featureIds) && !isNone(featureIds)) {
-          let equals = A();
+          const equals = A();
           featureIds.forEach((id) => {
-            let pkField = this.get('mapApi').getFromApi('mapModel')._getPkField(this.get('layerModel'));
+            const pkField = this.get('mapApi').getFromApi('mapModel')._getPkField(this.get('layerModel'));
             equals.pushObject(new L.Filter.EQ(pkField, id));
           });
 
@@ -716,15 +714,15 @@ export default BaseVectorLayer.extend({
           data: L.XmlUtil.serializeXmlDocumentString(leafletObject.getFeature(filter)),
           headers: leafletObject.options.headers || {},
           withCredentials: leafletObject.options.withCredentials,
-          success: function (responseText) {
-            let exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
+          success(responseText) {
+            const exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
             if (exceptionReport) {
               reject(exceptionReport.message);
             }
 
-            let layers = leafletObject.readFormat.responseToLayers(responseText, {
+            const layers = leafletObject.readFormat.responseToLayers(responseText, {
               coordsToLatLng: leafletObject.options.coordsToLatLng,
-              pointToLayer: leafletObject.options.pointToLayer
+              pointToLayer: leafletObject.options.pointToLayer,
             });
 
             layers.forEach(function (element) {
@@ -735,26 +733,22 @@ export default BaseVectorLayer.extend({
 
             resolve(layers);
           },
-          error: function (errorMessage) {
+          error(errorMessage) {
             reject(errorMessage);
+          },
+        });
+      } else if (isArray(featureIds) && !isNone(featureIds)) {
+        const objects = [];
+        featureIds.forEach((id) => {
+          const features = leafletObject._layers;
+          const obj = Object.values(features).find((feature) => this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), feature) === id);
+          if (!isNone(obj)) {
+            objects.push(obj);
           }
         });
+        resolve(objects);
       } else {
-        if (isArray(featureIds) && !isNone(featureIds)) {
-          let objects = [];
-          featureIds.forEach((id) => {
-            let features = leafletObject._layers;
-            let obj = Object.values(features).find(feature => {
-              return this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), feature) === id;
-            });
-            if (!isNone(obj)) {
-              objects.push(obj);
-            }
-          });
-          resolve(objects);
-        } else {
-          resolve(Object.values(leafletObject._layers));
-        }
+        resolve(Object.values(leafletObject._layers));
       }
     });
   },
@@ -769,15 +763,15 @@ export default BaseVectorLayer.extend({
       leafletObject = this.get('_leafletObject');
     }
 
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletObject)) {
-      let show = this.get('visibility') || (!isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
-      let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
-      let showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading;
+      const show = this.get('visibility') || (!isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
+      const continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
+      const showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading;
 
       let needPromise = false;
       if (continueLoad && show && checkMapZoom(leafletObject)) {
-        let bounds = leafletMap.getBounds();
+        const bounds = leafletMap.getBounds();
         if (!isNone(leafletObject.showLayerObjects)) {
           leafletObject.showLayerObjects = false;
         }
@@ -788,9 +782,9 @@ export default BaseVectorLayer.extend({
             loadedBounds = L.rectangle(loadedBounds);
           }
 
-          let geojsonReader = new jsts.io.GeoJSONReader();
-          let loadedBoundsJsts = geojsonReader.read(loadedBounds.toGeoJSON().geometry);
-          let boundsJsts = geojsonReader.read(L.rectangle(bounds).toGeoJSON().geometry);
+          const geojsonReader = new jsts.io.GeoJSONReader();
+          const loadedBoundsJsts = geojsonReader.read(loadedBounds.toGeoJSON().geometry);
+          const boundsJsts = geojsonReader.read(L.rectangle(bounds).toGeoJSON().geometry);
 
           if (loadedBoundsJsts.contains(boundsJsts)) {
             if (leafletObject.statusLoadLayer) {
@@ -802,8 +796,8 @@ export default BaseVectorLayer.extend({
 
           oldPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs));
 
-          let unionJsts = loadedBoundsJsts.union(boundsJsts);
-          let geojsonWriter = new jsts.io.GeoJSONWriter();
+          const unionJsts = loadedBoundsJsts.union(boundsJsts);
+          const geojsonWriter = new jsts.io.GeoJSONWriter();
           loadedBounds = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
         } else {
           loadedBounds = bounds;
@@ -811,9 +805,9 @@ export default BaseVectorLayer.extend({
 
         this.set('loadedBounds', loadedBounds);
 
-        let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs);
+        const newPart = new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs);
         let filter = oldPart ? new L.Filter.And(newPart, oldPart) : newPart;
-        let layerFilter = this.get('filter');
+        const layerFilter = this.get('filter');
         filter = isEmpty(layerFilter) ? filter : new L.Filter.And(filter, layerFilter);
 
         leafletObject.loadFeatures(filter);
@@ -844,9 +838,9 @@ export default BaseVectorLayer.extend({
       }
 
       return promise;
-    } else {
-      return reject('leafletObject is none');
     }
+
+    return reject('leafletObject is none');
   },
 
   /**
@@ -858,7 +852,7 @@ export default BaseVectorLayer.extend({
   onLeafletMapEvent() {
     this._super(...arguments);
 
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
       leafletMap.on('moveend', this.continueLoad, this);
       leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
@@ -877,7 +871,7 @@ export default BaseVectorLayer.extend({
     Deinitializes DOM-related component's properties.
   */
   willDestroyElement() {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
       leafletMap.off('moveend', this.continueLoad, this);
       leafletMap.off('flexberry-map:moveend', this._continueLoad, this);
@@ -894,29 +888,29 @@ export default BaseVectorLayer.extend({
     @return {Array} Array contains primarykey features which need load.
   */
   clearChanges(ids) {
-    let leafletObject = this.get('_leafletObject');
-    let editTools = leafletObject.leafletMap.editTools;
+    const leafletObject = this.get('_leafletObject');
+    const { editTools, } = leafletObject.leafletMap;
 
-    let featuresIds = [];
+    const featuresIds = [];
     Object.values(leafletObject.changes)
-      .filter((layer) => { return isNone(ids) || ids.contains(leafletObject.getLayerId(layer)); }).forEach(layer => {
+      .filter((layer) => isNone(ids) || ids.contains(leafletObject.getLayerId(layer))).forEach((layer) => {
         if (layer.state === state.insert) {
           if (leafletObject.hasLayer(layer)) {
             leafletObject.removeLayer(layer);
           }
 
           if (editTools.featuresLayer.getLayers().length !== 0) {
-            let editorLayerId = editTools.featuresLayer.getLayerId(layer);
-            let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+            const editorLayerId = editTools.featuresLayer.getLayerId(layer);
+            const featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
             if (!isNone(editorLayerId) && !isNone(featureLayer) && !isNone(featureLayer.editor)) {
-              let editLayer = featureLayer.editor.editLayer;
+              const { editLayer, } = featureLayer.editor;
               editTools.editLayer.removeLayer(editLayer);
               editTools.featuresLayer.removeLayer(layer);
             }
           }
         } else if (layer.state === state.update || layer.state === state.remove) {
           if (!isNone(layer.editor)) {
-            let editLayer = layer.editor.editLayer;
+            const { editLayer, } = layer.editor;
             editTools.editLayer.removeLayer(editLayer);
           }
 
@@ -952,15 +946,15 @@ export default BaseVectorLayer.extend({
   */
   cancelEdit(ids) {
     return new Promise((resolve, reject) => {
-      let leafletObject = this.get('_leafletObject');
-      let featuresIds = this.clearChanges(ids);
+      const leafletObject = this.get('_leafletObject');
+      const featuresIds = this.clearChanges(ids);
       if (featuresIds.length === 0) {
         resolve();
       } else {
-        let e = {
+        const e = {
           featureIds: featuresIds,
           layer: leafletObject.layerId,
-          results: A()
+          results: A(),
         };
         this.loadLayerFeatures(e).then(() => { resolve(); }).catch((e) => reject(e));
       }
@@ -975,47 +969,47 @@ export default BaseVectorLayer.extend({
     @return {String} Xml for request gs:Nearest.
   */
   getWPSgsNearest(point) {
-    let leafletObject = this.get('_leafletObject');
-    let typeNS = leafletObject.options.typeNS;
-    let typeName = leafletObject.options.typeName;
-    let crsName = L.CRS.EPSG4326.code;
-    return '<?xml version="1.0" encoding="UTF-8"?>' +
-      '<wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
-        'xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" ' +
-        'xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" ' +
-        'xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" ' +
-        'xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">' +
-        '<ows:Identifier>gs:Nearest</ows:Identifier>' +
-        '<wps:DataInputs>' +
-          '<wps:Input>' +
-            '<ows:Identifier>features</ows:Identifier>' +
-            '<wps:Reference mimeType="text/xml; subtype=wfs-collection/1.0" xlink:href="http://geoserver/wfs" method="POST">' +
-              '<wps:Body>' +
-                '<wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2">' +
-                  '<wfs:Query typeName="' + typeNS + ':' + typeName + '"/>' +
-                '</wfs:GetFeature>' +
-              '</wps:Body>' +
-            '</wps:Reference>' +
-          '</wps:Input>' +
-          '<wps:Input>' +
-            '<ows:Identifier>point</ows:Identifier>' +
-            '<wps:Data>' +
-              '<wps:ComplexData mimeType="text/xml; subtype=gml/3.1.1"><![CDATA[' + point + ']]></wps:ComplexData>' +
-            '</wps:Data>' +
-          '</wps:Input>' +
-          '<wps:Input>' +
-            '<ows:Identifier>crs</ows:Identifier>' +
-            '<wps:Data>' +
-              '<wps:LiteralData>' + crsName + '</wps:LiteralData>' +
-            '</wps:Data>' +
-          '</wps:Input>' +
-        '</wps:DataInputs>' +
-        '<wps:ResponseForm>' +
-          '<wps:RawDataOutput mimeType="application/json">' +
-            '<ows:Identifier>result</ows:Identifier>' +
-          '</wps:RawDataOutput>' +
-        '</wps:ResponseForm>' +
-      '</wps:Execute>';
+    const leafletObject = this.get('_leafletObject');
+    const { typeNS, } = leafletObject.options;
+    const { typeName, } = leafletObject.options;
+    const crsName = L.CRS.EPSG4326.code;
+    return `${'<?xml version="1.0" encoding="UTF-8"?>'
+      + '<wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+        + 'xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" '
+        + 'xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" '
+        + 'xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" '
+        + 'xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">'
+        + '<ows:Identifier>gs:Nearest</ows:Identifier>'
+        + '<wps:DataInputs>'
+          + '<wps:Input>'
+            + '<ows:Identifier>features</ows:Identifier>'
+            + '<wps:Reference mimeType="text/xml; subtype=wfs-collection/1.0" xlink:href="http://geoserver/wfs" method="POST">'
+              + '<wps:Body>'
+                + '<wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2">'
+                  + '<wfs:Query typeName="'}${typeNS}:${typeName}"/>`
+                + '</wfs:GetFeature>'
+              + '</wps:Body>'
+            + '</wps:Reference>'
+          + '</wps:Input>'
+          + '<wps:Input>'
+            + '<ows:Identifier>point</ows:Identifier>'
+            + '<wps:Data>'
+              + `<wps:ComplexData mimeType="text/xml; subtype=gml/3.1.1"><![CDATA[${point}]]></wps:ComplexData>`
+            + '</wps:Data>'
+          + '</wps:Input>'
+          + '<wps:Input>'
+            + '<ows:Identifier>crs</ows:Identifier>'
+            + '<wps:Data>'
+              + `<wps:LiteralData>${crsName}</wps:LiteralData>`
+            + '</wps:Data>'
+          + '</wps:Input>'
+        + '</wps:DataInputs>'
+        + '<wps:ResponseForm>'
+          + '<wps:RawDataOutput mimeType="application/json">'
+            + '<ows:Identifier>result</ows:Identifier>'
+          + '</wps:RawDataOutput>'
+        + '</wps:ResponseForm>'
+      + '</wps:Execute>';
   },
 
   /**
@@ -1030,18 +1024,18 @@ export default BaseVectorLayer.extend({
   */
   dwithin(featureLayer, distance, exceptFeature) {
     return new Promise((resolve, reject) => {
-      let geometryField = this.get('geometryField');
-      let crs = this.get('crs');
+      const geometryField = this.get('geometryField');
+      const crs = this.get('crs');
       let filter = new L.Filter.DWithin(geometryField, featureLayer, crs, distance, 'meter');
       if (exceptFeature) {
-        let layerModel = this.get('layerModel');
-        let fieldName = this.getPkField(layerModel);
+        const layerModel = this.get('layerModel');
+        const fieldName = this.getPkField(layerModel);
         const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layerModel, featureLayer);
         filter = new L.Filter.And(filter, new L.Filter.NotEQ(fieldName, id));
       }
 
-      let filterPromise = this._getFeature({
-        filter
+      const filterPromise = this._getFeature({
+        filter,
       });
       resolve(filterPromise);
     });
@@ -1094,43 +1088,43 @@ export default BaseVectorLayer.extend({
   getNearObject(e) {
     return new Promise((resolve, reject) => {
       let result = null;
-      let mapApi = this.get('mapApi').getFromApi('mapModel');
-      let leafletObject = this.get('_leafletObject');
-      let layerModel = this.get('layerModel');
-      let wpsUrl = leafletObject.options.wpsUrl;
+      const mapApi = this.get('mapApi').getFromApi('mapModel');
+      const leafletObject = this.get('_leafletObject');
+      const layerModel = this.get('layerModel');
+      const { wpsUrl, } = leafletObject.options;
       if (!isNone(wpsUrl)) {
-        let point = L.marker(mapApi.getObjectCenter(e.featureLayer)).toEWKT(L.CRS.EPSG4326).replace('SRID=4326;', '');
-        let data = this.getWPSgsNearest(point);
-        let _this = this;
+        const point = L.marker(mapApi.getObjectCenter(e.featureLayer)).toEWKT(L.CRS.EPSG4326).replace('SRID=4326;', '');
+        const data = this.getWPSgsNearest(point);
+        const _this = this;
         $.ajax({
           url: `${wpsUrl}?`,
           type: 'POST',
           contentType: 'text/xml',
-          data: data,
+          data,
           headers: leafletObject.options.headers || {},
           withCredentials: leafletObject.options.withCredentials,
-          success: function (responseText) {
+          success(responseText) {
             // If some exception occur, WFS-service can response successfully, but with ExceptionReport,
             // and such situation must be handled.
-            let exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
+            const exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
             if (exceptionReport) {
               return reject(exceptionReport.message);
             }
 
-            let nearObject = leafletObject.readFormat.responseToLayers(responseText, {
+            const nearObject = leafletObject.readFormat.responseToLayers(responseText, {
               coordsToLatLng: leafletObject.options.coordsToLatLng,
-              pointToLayer: leafletObject.options.pointToLayer
+              pointToLayer: leafletObject.options.pointToLayer,
             });
             if (isArray(nearObject) && nearObject.length === 1) {
               const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, nearObject[0]);
-              const id = mapApi._getLayerFeatureId(layerModel, nearObject[0]).replace(leafletObject.options.typeName + '.', '');
-              let obj = {
-                featureIds: [id]
+              const id = mapApi._getLayerFeatureId(layerModel, nearObject[0]).replace(`${leafletObject.options.typeName}.`, '');
+              const obj = {
+                featureIds: [id],
               };
               _this.getLayerFeatures(obj).then((object) => {
                 if (isArray(object) && object.length === 1) {
                   result = {
-                    distance: distance,
+                    distance,
                     layer: layerModel,
                     object: object[0],
                   };
@@ -1143,14 +1137,14 @@ export default BaseVectorLayer.extend({
               resolve('Nearest object not found');
             }
           },
-          error: function (error) {
+          error(error) {
             reject(`Error for request getNearObject via WPS ${wpsUrl} for layer ${layerModel.get('name')}: ${error}`);
-          }
+          },
         });
       } else {
-        let distances = [1, 10, 100, 1000, 10000, 100000, 1000000];
-        let layerId = layerModel.get('id');
-        let exceptFeature = layerId === e.layerObjectId;
+        const distances = [1, 10, 100, 1000, 10000, 100000, 1000000];
+        const layerId = layerModel.get('id');
+        const exceptFeature = layerId === e.layerObjectId;
         this.upDistance(e.featureLayer, distances, 0, exceptFeature)
           .then((resultDwithin) => {
             if (!isNone(resultDwithin)) {
@@ -1164,5 +1158,5 @@ export default BaseVectorLayer.extend({
           });
       }
     });
-  }
+  },
 });

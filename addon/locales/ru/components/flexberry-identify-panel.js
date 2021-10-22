@@ -1,34 +1,34 @@
 export default {
   'identify-all': {
-    'caption': 'Все слои'
+    caption: 'Все слои',
   },
   'identify-all-visible': {
-    'caption': 'Все видимые слои'
+    caption: 'Все видимые слои',
   },
   'identify-top-visible': {
-    'caption': 'Верхний видимый слой'
+    caption: 'Верхний видимый слой',
   },
-  'rectangle': {
-    'caption': 'Прямоугольник'
+  rectangle: {
+    caption: 'Прямоугольник',
   },
-  'polygon': {
-    'caption': 'Многоугольник'
+  polygon: {
+    caption: 'Многоугольник',
   },
-  'marker': {
-    'caption': 'Точка'
+  marker: {
+    caption: 'Точка',
   },
-  'polyline': {
-    'caption': 'Ломаная'
+  polyline: {
+    caption: 'Ломаная',
   },
-  'clear': {
-    'caption': 'Очистить'
+  clear: {
+    caption: 'Очистить',
   },
-  'buffer': {
+  buffer: {
     'active-caption': 'Буфер',
     'radius-caption': 'Радиус',
-    'units': {
-      'meters': 'Метры',
-      'kilometers': 'Километры'
-    }
-  }
+    units: {
+      meters: 'Метры',
+      kilometers: 'Километры',
+    },
+  },
 };

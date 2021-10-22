@@ -9,8 +9,8 @@ import { isBlank, isNone } from '@ember/utils';
 import { isArray } from '@ember/array';
 import EmberObject, { computed, observer } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../../../templates/components/markers-styles/image/icon-editor';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../../templates/components/markers-styles/image/icon-editor';
 
 /**
   Component containing GUI for 'image' markers-style icon style settings.
@@ -126,11 +126,11 @@ export default Component.extend({
     @private
     @readOnly
   */
-  _iconSize: computed('iconSize.[]', function() {
-    let iconSize = this.get('iconSize');
-    return isArray(iconSize) ?
-      { width: iconSize[0], height: iconSize[1] } :
-      { width: 0, height: 0 };
+  _iconSize: computed('iconSize.[]', function () {
+    const iconSize = this.get('iconSize');
+    return isArray(iconSize)
+      ? { width: iconSize[0], height: iconSize[1], }
+      : { width: 0, height: 0, };
   }),
 
   /**
@@ -141,11 +141,11 @@ export default Component.extend({
     @private
     @readOnly
   */
-  _iconAnchor: computed('iconAnchor.[]', function() {
-    let iconAnchor = this.get('iconAnchor');
-    return isArray(iconAnchor) ?
-    { x: iconAnchor[0], y: iconAnchor[1] } :
-    { x: 0, y: 0 };
+  _iconAnchor: computed('iconAnchor.[]', function () {
+    const iconAnchor = this.get('iconAnchor');
+    return isArray(iconAnchor)
+      ? { x: iconAnchor[0], y: iconAnchor[1], }
+      : { x: 0, y: 0, };
   }),
 
   /**
@@ -156,11 +156,11 @@ export default Component.extend({
     @private
     @readOnly
   */
-  _iconZoomAnchor: computed('iconZoomAnchor.[]', function() {
-    let iconAnchor = this.get('iconZoomAnchor');
-    return isArray(iconAnchor) ?
-      { x: iconAnchor[0], y: iconAnchor[1] } :
-      { x: 0, y: 0 };
+  _iconZoomAnchor: computed('iconZoomAnchor.[]', function () {
+    const iconAnchor = this.get('iconZoomAnchor');
+    return isArray(iconAnchor)
+      ? { x: iconAnchor[0], y: iconAnchor[1], }
+      : { x: 0, y: 0, };
   }),
 
   /**
@@ -171,9 +171,9 @@ export default Component.extend({
     @private
     @readOnly
   */
-  _showIconImage: computed('iconUrl', '_iconSize', function() {
-    let iconUrl = this.get('iconUrl');
-    let iconSize = this.get('_iconSize');
+  _showIconImage: computed('iconUrl', '_iconSize', function () {
+    const iconUrl = this.get('iconUrl');
+    const iconSize = this.get('_iconSize');
 
     return !isBlank(iconUrl) && iconSize.width > 0 && iconSize.height > 0;
   }),
@@ -291,9 +291,9 @@ export default Component.extend({
     @private
     @readOnly
   */
-  _iconZoomSize: computed('iconZoomSize.[]', 'iconSize.[]', 'iconSizeNew', function() {
-    let iconZoomSize = this.get('iconZoomSize');
-    let iconSize = this.get('iconSize');
+  _iconZoomSize: computed('iconZoomSize.[]', 'iconSize.[]', 'iconSizeNew', function () {
+    const iconZoomSize = this.get('iconZoomSize');
+    const iconSize = this.get('iconSize');
 
     let w = iconZoomSize[0];
     let h = iconZoomSize[1];
@@ -307,9 +307,9 @@ export default Component.extend({
       this.set('_isZoom', true);
     }
 
-    return isArray(iconZoomSize) ?
-      { width: w, height: h } :
-      { width: 0, height: 0 };
+    return isArray(iconZoomSize)
+      ? { width: w, height: h, }
+      : { width: 0, height: 0, };
   }),
 
   /**
@@ -384,7 +384,7 @@ export default Component.extend({
   */
   _enabledDidChange: observer(
     '_enabled',
-    function() {
+    function () {
       if (!this.get('_enabled')) {
         this._clearIconFile();
       }
@@ -412,7 +412,7 @@ export default Component.extend({
 
       _iconFileLoadingFailed: false,
       _iconFileIsLoading: false,
-      _iconFileIsLoadingLongTime: false
+      _iconFileIsLoadingLongTime: false,
     });
 
     this.get('_iconImage').removeAttribute('src');
@@ -428,7 +428,7 @@ export default Component.extend({
     'iconKeepOrigAspectRatio',
     'iconSizeNew.0',
     'iconSizeNew.1',
-    function() {
+    function () {
       once(this, '_setNewSize');
     }
   ),
@@ -442,9 +442,9 @@ export default Component.extend({
   _setNewSize() {
     this.set('invalidWidth', false);
     this.set('invalidHeight', false);
-    let ratio = this.get('_iconOrigAspectRatio');
-    let iconAnchor = this.get('iconAnchor');
-    let [width, height] = this.get('iconSize');
+    const ratio = this.get('_iconOrigAspectRatio');
+    const iconAnchor = this.get('iconAnchor');
+    const [width, height] = this.get('iconSize');
     let [newWidth, newHeight] = this.get('iconSizeNew');
     newWidth = parseInt(newWidth);
     newHeight = parseInt(newHeight);
@@ -477,8 +477,8 @@ export default Component.extend({
       }
     }
 
-    let oldNewRatios = [newWidth / width, newHeight / height];
-    let newSize = [newWidth, newHeight];
+    const oldNewRatios = [newWidth / width, newHeight / height];
+    const newSize = [newWidth, newHeight];
     this.set('iconSize', newSize);
     this.set('iconAnchor', [iconAnchor[0] * oldNewRatios[0], iconAnchor[1] * oldNewRatios[1]]);
 
@@ -497,7 +497,7 @@ export default Component.extend({
     'iconAnchor',
     'iconZoomSize',
     'iconZoomAnchor',
-    function() {
+    function () {
       once(this, '_sendChangeAction');
     }
   ),
@@ -520,7 +520,7 @@ export default Component.extend({
     @private
   */
   _loadIconFile(iconFile) {
-    let iconFileReader = this.get('_iconFileReader');
+    const iconFileReader = this.get('_iconFileReader');
     if (isNone(iconFileReader)) {
       return;
     }
@@ -550,7 +550,7 @@ export default Component.extend({
     @private
   */
   _onLoadIconFileSuccess(e) {
-    let iconUrl = e.target.result;
+    const iconUrl = e.target.result;
 
     // Image will start loading new file and then '_onLoadIconImageSuccess' or '_onLoadIconImageError' will be called.
     this.get('_iconImage').setAttribute('src', iconUrl);
@@ -567,7 +567,7 @@ export default Component.extend({
     this.setProperties({
       _iconFileLoadingFailed: true,
       _iconFileIsLoading: false,
-      _iconFileIsLoadingLongTime: false
+      _iconFileIsLoadingLongTime: false,
     });
 
     this.get('_iconImage').removeAttribute('src');
@@ -581,22 +581,22 @@ export default Component.extend({
     @private
   */
   _onLoadIconImageSuccess(e) {
-    let iconImage = e.target;
-    let iconUrl = iconImage.src;
-    let iconSize = [iconImage.width, iconImage.height];
-    let iconOrigAspectRatio = iconImage.width / iconImage.height;
-    let iconAnchor = [Math.round(iconImage.width / 2), Math.round(iconImage.height / 2)];
-    let iconZoomSize = [iconImage.width, iconImage.height];
-    let iconZoomAnchor = [Math.round(iconImage.width / 2), Math.round(iconImage.height / 2)];
+    const iconImage = e.target;
+    const iconUrl = iconImage.src;
+    const iconSize = [iconImage.width, iconImage.height];
+    const iconOrigAspectRatio = iconImage.width / iconImage.height;
+    const iconAnchor = [Math.round(iconImage.width / 2), Math.round(iconImage.height / 2)];
+    const iconZoomSize = [iconImage.width, iconImage.height];
+    const iconZoomAnchor = [Math.round(iconImage.width / 2), Math.round(iconImage.height / 2)];
 
     // Remember loaded image original size, URL, and new anchor's coordanates.
     this.setProperties({
-      iconUrl: iconUrl,
-      iconSize: iconSize,
-      iconAnchor: iconAnchor,
+      iconUrl,
+      iconSize,
+      iconAnchor,
 
-      iconZoomSize: iconZoomSize,
-      iconZoomAnchor: iconZoomAnchor,
+      iconZoomSize,
+      iconZoomAnchor,
 
       iconSizeNew: iconSize.slice(),
       iconSizeOrig: iconSize.slice(),
@@ -605,7 +605,7 @@ export default Component.extend({
 
       _iconFileLoadingFailed: false,
       _iconFileIsLoading: false,
-      _iconFileIsLoadingLongTime: false
+      _iconFileIsLoadingLongTime: false,
     });
 
     iconImage.removeAttribute('src');
@@ -630,7 +630,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    let iconSize = this.get('iconSize');
+    const iconSize = this.get('iconSize');
     if (isNone(iconSize)) {
       this.set('iconSize', [0, 0]);
     }
@@ -639,36 +639,36 @@ export default Component.extend({
     this.set('iconSizeOrig', iconSize.slice());
     this.set('_iconOrigAspectRatio', iconSize[0] / iconSize[1]);
 
-    let iconAnchor = this.get('iconAnchor');
+    const iconAnchor = this.get('iconAnchor');
     if (isNone(iconAnchor)) {
       this.set('iconAnchor', [0, 0]);
     }
 
-    let iconZoomAnchor = this.get('iconZoomAnchor');
+    const iconZoomAnchor = this.get('iconZoomAnchor');
     if (isNone(iconZoomAnchor)) {
       this.set('iconZoomAnchor', [0, 0]);
     }
 
-    let iconZoomSize = this.get('iconZoomSize');
+    const iconZoomSize = this.get('iconZoomSize');
 
     if (isNone(iconZoomSize)) {
       this.set('iconZoomSize', [0, 0]);
     }
 
-    let iconFileReader = new FileReader();
+    const iconFileReader = new FileReader();
     iconFileReader.onload = this._onLoadIconFileSuccess.bind(this);
     iconFileReader.onerror = this._onLoadIconFileError.bind(this);
 
     this.set('_iconFileReader', iconFileReader);
 
-    let iconImage = new Image();
+    const iconImage = new Image();
     iconImage.onload = this._onLoadIconImageSuccess.bind(this);
     iconImage.onerror = this._onLoadIconFileError.bind(this);
 
     this.set('_iconImage', iconImage);
 
     // Evented stub for flexberry-file's 'relatedModel' property.
-    let relatedModelStub = EmberObject.extend(Evented, {}).create();
+    const relatedModelStub = EmberObject.extend(Evented, {}).create();
     this.set('_relatedModelStub', relatedModelStub);
 
     if (this.get('allowDisabling') && isNone(this.get('iconUrl'))) {
@@ -688,12 +688,12 @@ export default Component.extend({
     Deinitializes component.
   */
   willDestroy() {
-    let iconFileReader = this.get('_iconFileReader');
+    const iconFileReader = this.get('_iconFileReader');
     iconFileReader.onload = null;
     iconFileReader.onerror = null;
     this.set('_iconFileReader', null);
 
-    let iconImage = this.get('_iconImage');
+    const iconImage = this.get('_iconImage');
     iconImage.onload = null;
     iconImage.onerror = null;
     this.set('_iconImage', null);
@@ -711,18 +711,18 @@ export default Component.extend({
   */
   _onResizeIcon() {
     let iconZoomAnchor = this.get('_iconZoomAnchor');
-    let container = this.get('_containerSize');
+    const container = this.get('_containerSize');
     if (iconZoomAnchor.x === 0 && iconZoomAnchor.y === 0) {
       iconZoomAnchor = this.get('_iconAnchor');
     }
 
-    let step = this.get('_scalingStep');
+    const step = this.get('_scalingStep');
 
-    let iconZoomSize = this.get('_iconZoomSize');
+    const iconZoomSize = this.get('_iconZoomSize');
     let w = iconZoomSize.width;
     let h = iconZoomSize.height;
-    let coeff = w / h;
-    let oldW = w;
+    const coeff = w / h;
+    const oldW = w;
 
     if (w < container && h < container) {
       if (w > h) {
@@ -736,21 +736,19 @@ export default Component.extend({
           h += step;
         }
       }
+    } else if (w > h) {
+      while (w - step * coeff >= container) {
+        w -= step * coeff;
+        h -= step;
+      }
     } else {
-      if (w > h) {
-        while (w - step * coeff >= container) {
-          w -= step * coeff;
-          h -= step;
-        }
-      } else {
-        while (h - step >= container) {
-          w -= step * coeff;
-          h -= step;
-        }
+      while (h - step >= container) {
+        w -= step * coeff;
+        h -= step;
       }
     }
 
-    let ratio = w / oldW;
+    const ratio = w / oldW;
     this.set('iconZoomSize', [w, h]);
     this.set('iconZoomAnchor', [iconZoomAnchor.x * ratio, iconZoomAnchor.y * ratio]);
 
@@ -765,10 +763,10 @@ export default Component.extend({
       @param {Object} e Action's event object.
       @param {String} e.uploadData Data containing new icon file and it's description.
     */
-    onIconFileChange({ uploadData }) {
-      let iconFile = uploadData && uploadData.files && uploadData.files.length > 0 ?
-        uploadData.files[0] :
-        null;
+    onIconFileChange({ uploadData, }) {
+      const iconFile = uploadData && uploadData.files && uploadData.files.length > 0
+        ? uploadData.files[0]
+        : null;
       if (isNone(iconFile)) {
         this._clearIconFile();
       } else {
@@ -784,10 +782,10 @@ export default Component.extend({
       @param {Object} e Action's event object.
     */
     onIconAnchorClick(e) {
-      let isZoom = this.get('_isZoom');
-      let iconAnchor = this.get('iconAnchor');
-      let iconZoomSize = this.get('iconZoomSize');
-      let iconImage = this.get('iconSize');
+      const isZoom = this.get('_isZoom');
+      const iconAnchor = this.get('iconAnchor');
+      const iconZoomSize = this.get('iconZoomSize');
+      const iconImage = this.get('iconSize');
       if (isZoom === false) {
         this.set('iconAnchor', [e.layerX, e.layerY]);
       } else {
@@ -796,8 +794,8 @@ export default Component.extend({
         let x = iconAnchor[0];
         let y = iconAnchor[1];
 
-        let zoomX = iconZoomSize[0] / iconImage[0];
-        let zoomY =  iconZoomSize[1] / iconImage[1];
+        const zoomX = iconZoomSize[0] / iconImage[0];
+        const zoomY = iconZoomSize[1] / iconImage[1];
 
         x = Math.round(e.layerX / zoomX);
         y = Math.round(e.layerY / zoomY);
@@ -814,26 +812,26 @@ export default Component.extend({
       @param {Object} e Action's event object.
     */
     onZoomInClick(e) {
-      let iconZoomSize = this.get('_iconZoomSize');
+      const iconZoomSize = this.get('_iconZoomSize');
       let iconZoomAnchor = this.get('_iconZoomAnchor');
       if (iconZoomAnchor.x === 0 && iconZoomAnchor.y === 0) {
         iconZoomAnchor = this.get('_iconAnchor');
       }
 
-      let newZoomAncor = [0, 0];
-      let width = iconZoomSize.width;
-      let height = iconZoomSize.height;
-      let iconImage = this.get('_iconSize');
-      let step = this.get('_scalingStep');
-      let coeff = width / height;
+      const newZoomAncor = [0, 0];
+      let { width, } = iconZoomSize;
+      let { height, } = iconZoomSize;
+      const iconImage = this.get('_iconSize');
+      const step = this.get('_scalingStep');
+      const coeff = width / height;
       let ratio;
 
       if (iconZoomSize !== iconImage) {
         ratio = (height + step) / height;
         newZoomAncor[0] = Math.round(iconZoomAnchor.x * ratio);
         newZoomAncor[1] = Math.round(iconZoomAnchor.y * ratio);
-        width = width + step * coeff;
-        height = height + step;
+        width += step * coeff;
+        height += step;
         this.set('_isZoom', true);
         this.set('iconZoomAnchor', newZoomAncor);
         this.set('iconZoomSize', [width, height]);
@@ -855,21 +853,21 @@ export default Component.extend({
         iconZoomAnchor = this.get('_iconAnchor');
       }
 
-      let newZoomAncor = [0, 0];
-      let iconZoomSize = this.get('_iconZoomSize');
-      let width = iconZoomSize.width;
-      let height = iconZoomSize.height;
-      let iconImage = this.get('_iconSize');
-      let step = this.get('_scalingStep');
-      let coeff = width / height;
+      const newZoomAncor = [0, 0];
+      const iconZoomSize = this.get('_iconZoomSize');
+      let { width, } = iconZoomSize;
+      let { height, } = iconZoomSize;
+      const iconImage = this.get('_iconSize');
+      const step = this.get('_scalingStep');
+      const coeff = width / height;
       let ratio;
 
       if (iconZoomSize !== iconImage && width - step * coeff > 20 && height - step > 20) {
         ratio = (height - step) / height;
         newZoomAncor[0] = Math.round(iconZoomAnchor.x * ratio);
         newZoomAncor[1] = Math.round(iconZoomAnchor.y * ratio);
-        width = width - step * coeff;
-        height = height - step;
+        width -= step * coeff;
+        height -= step;
         this.set('_isZoom', true);
         this.set('iconZoomAnchor', newZoomAncor);
         this.set('iconZoomSize', [width, height]);
@@ -899,11 +897,10 @@ export default Component.extend({
       @method actions.setOrigIconSize
     */
     setOrigIconSize() {
-      let origSize = this.get('iconSizeOrig');
+      const origSize = this.get('iconSizeOrig');
       if (origSize !== null) {
         this.set('iconSizeNew', origSize.slice());
       }
-
-    }
-  }
+    },
+  },
 });

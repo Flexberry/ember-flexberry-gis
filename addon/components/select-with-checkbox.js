@@ -3,9 +3,9 @@ import EmberObject, { observer, get } from '@ember/object';
 import { A } from '@ember/array';
 import { on } from '@ember/object/evented';
 import $ from 'jquery';
-import layout from '../templates/components/select-with-checkbox';
 import FlexberryDropdown from 'ember-flexberry/components/flexberry-dropdown';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../templates/components/select-with-checkbox';
 
 export default FlexberryDropdown.extend({
   /**
@@ -28,9 +28,9 @@ export default FlexberryDropdown.extend({
 
   isSelectAllVisible: true,
 
-  noResults:  t('components.flexberry-layers-intersections-panel.notResult'),
+  noResults: t('components.flexberry-layers-intersections-panel.notResult'),
 
-  message: { noResults:  '' },
+  message: { noResults: '', },
 
   /**
    * Storage for the items state.
@@ -87,13 +87,13 @@ export default FlexberryDropdown.extend({
   init() {
     this._super(...arguments);
     this.set('state', new A());
-    let noRes = this.get('noResults').toString();
-    this.set('message', { noResults:  noRes });
+    const noRes = this.get('noResults').toString();
+    this.set('message', { noResults: noRes, });
   },
 
   stateObserver: observer('state.@each.isVisible', function () {
-    let filteredState = this.get('state').filterBy('isVisible');
-    const value = filteredState.map((item)=>item.key);
+    const filteredState = this.get('state').filterBy('isVisible');
+    const value = filteredState.map((item) => item.key);
     this.set('selectedItems', value);
     this.set('countChoose', value.length);
   }),
@@ -109,7 +109,7 @@ export default FlexberryDropdown.extend({
           key = val.id;
         }
 
-        return EmberObject.create({ key, value, isVisible: false });
+        return EmberObject.create({ key, value, isVisible: false, });
       });
 
     this.get('state').addObjects(state);
@@ -137,7 +137,7 @@ export default FlexberryDropdown.extend({
     },
 
     onHide() {
-      let $list = $('.fb-selector .menu');
+      const $list = $('.fb-selector .menu');
       if ($list.hasClass('visible')) {
         $list.removeClass('visible');
         $list.addClass('hidden');
@@ -145,6 +145,6 @@ export default FlexberryDropdown.extend({
         $list.removeClass('hidden');
         $list.addClass('visible');
       }
-    }
-  }
+    },
+  },
 });

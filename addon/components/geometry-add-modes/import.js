@@ -9,8 +9,8 @@ import $ from 'jquery';
 import { A } from '@ember/array';
 import { computed, get, set } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../../templates/components/geometry-add-modes/import';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../templates/components/geometry-add-modes/import';
 
 /**
   Component's CSS-classes names.
@@ -30,12 +30,12 @@ const flexberryClassNamesPrefix = 'flexberry-geometry-add-mode-import';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: undefined,
-  dialog: flexberryClassNamesPrefix + '-dialog',
-  form: flexberryClassNamesPrefix + '-form',
-  result: flexberryClassNamesPrefix + '-result',
+  dialog: `${flexberryClassNamesPrefix}-dialog`,
+  form: `${flexberryClassNamesPrefix}-form`,
+  result: `${flexberryClassNamesPrefix}-result`,
 };
 
-let FlexberryGeometryAddModeImportComponent = Component.extend({
+const FlexberryGeometryAddModeImportComponent = Component.extend({
   /**
     Reference to component's template.
   */
@@ -113,11 +113,11 @@ let FlexberryGeometryAddModeImportComponent = Component.extend({
   availableCRS: computed(function () {
     return [{
       crs: L.CRS.EPSG4326,
-      name: 'EPSG:4326'
+      name: 'EPSG:4326',
     },
     {
       crs: L.CRS.EPSG3857,
-      name: 'EPSG:3857'
+      name: 'EPSG:3857',
     }
     ];
   }),
@@ -295,16 +295,16 @@ let FlexberryGeometryAddModeImportComponent = Component.extend({
   init() {
     this._super(...arguments);
 
-    let factories = this.get('availableCRS');
-    let availableCRSNames = [];
+    const factories = this.get('availableCRS');
+    const availableCRSNames = [];
     factories.forEach((factory) => {
       availableCRSNames.push(factory.name);
     });
 
     let defaultCrsName = availableCRSNames[0];
-    let defaultCrsCode = this.get('settings.layerCRS.code');
+    const defaultCrsCode = this.get('settings.layerCRS.code');
 
-    let defaultCrs = factories.filter((crs) => crs.crs.code === defaultCrsCode);
+    const defaultCrs = factories.filter((crs) => crs.crs.code === defaultCrsCode);
     if (defaultCrs.length > 0) {
       defaultCrsName = get(defaultCrs, '0.name');
     }
@@ -321,13 +321,13 @@ let FlexberryGeometryAddModeImportComponent = Component.extend({
   */
   handleImportResponse(response) {
     this.set('responseJSON', response);
-    let importedProperties = get(response, 'features.0.properties');
+    const importedProperties = get(response, 'features.0.properties');
     if (importedProperties) {
       this.set('headersTable', Object.keys(importedProperties));
 
-      let layerProperties = A(Object.keys(this.get('settings.layerFields') || {}));
-      let propertiesConnection = {};
-      for (let property in importedProperties) {
+      const layerProperties = A(Object.keys(this.get('settings.layerFields') || {}));
+      const propertiesConnection = {};
+      for (const property in importedProperties) {
         if (layerProperties.contains(property)) {
           propertiesConnection[property] = property;
           layerProperties.removeObject(property);
@@ -351,20 +351,20 @@ let FlexberryGeometryAddModeImportComponent = Component.extend({
       this.set('_showError', false);
       this.set('responseJSON', undefined);
       this.set('_importInProcess', true);
-      let file = e.target.files[0];
+      const file = e.target.files[0];
       this.set('fileControl', $(e.target));
-      let _this = this;
-      let config = getOwner(this).resolveRegistration('config:environment');
-      let data = new FormData();
+      const _this = this;
+      const config = getOwner(this).resolveRegistration('config:environment');
+      const data = new FormData();
       data.append(file.name, file);
 
       $.ajax({
         url: `${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}`,
         type: 'POST',
-        data: data,
+        data,
         cache: false,
         contentType: false,
-        processData: false
+        processData: false,
       }).done((response) => {
         if (response && response.features) {
           _this.handleImportResponse(response);
@@ -400,34 +400,34 @@ let FlexberryGeometryAddModeImportComponent = Component.extend({
     */
     onApprove(e) {
       this.set('_showError', false);
-      let selectedJSON = this.get('selectedJSON') || { features: [] };
+      const selectedJSON = this.get('selectedJSON') || { features: [], };
 
-      let coordsToLatLng = function(coords) {
-        let selectedCRS = this.get('selectedCRS');
+      const coordsToLatLng = function (coords) {
+        const selectedCRS = this.get('selectedCRS');
         return selectedCRS.unproject(L.point(coords));
       };
 
-      let checkCoords = function(minLat, minLng, maxLat, maxLng) {
-        if (maxLat > this.get('maxLat') || minLat < this.get('minLat') ||
-        maxLng > this.get('maxLng') || minLng < this.get('minLng')) {
+      const checkCoords = function (minLat, minLng, maxLat, maxLng) {
+        if (maxLat > this.get('maxLat') || minLat < this.get('minLat')
+        || maxLng > this.get('maxLng') || minLng < this.get('minLng')) {
           this.set('_errorCaption', this.get('coordsValidateErrorCaption'));
           this.set('_errorMessage', this.get('coordsValidateErrorMessage'));
           this.set('_showError', true);
         }
       }.bind(this);
 
-      let newLayers = A();
+      const newLayers = A();
 
       selectedJSON.features.forEach((feature) => {
         if (!isNone(feature.geometry)) {
-          let newLayer = L.geoJSON(feature, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
+          const newLayer = L.geoJSON(feature, { coordsToLatLng: coordsToLatLng.bind(this), }).getLayers()[0];
           if (newLayer.getLatLng instanceof Function) {
-            let coords = newLayer.getLatLng();
+            const coords = newLayer.getLatLng();
             checkCoords(coords.lat, coords.lng, coords.lat, coords.lng);
           }
 
           if (newLayer.getBounds instanceof Function) {
-            let bounds = newLayer.getBounds();
+            const bounds = newLayer.getBounds();
             checkCoords(bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast());
           }
 
@@ -462,16 +462,16 @@ let FlexberryGeometryAddModeImportComponent = Component.extend({
        @method actions.onApproveImportDialog
     */
     onApproveImportDialog(e) {
-      let responseJSON = this.get('responseJSON') || { features: [] };
+      const responseJSON = this.get('responseJSON') || { features: [], };
 
       if (responseJSON.features.length > 0) {
-        this.set('selectedJSON', { type: 'FeatureCollection' });
+        this.set('selectedJSON', { type: 'FeatureCollection', });
 
-        let propertiesConnection = this.get('_propertiesConnection') || {};
-        let selectedFeatures = responseJSON.features.filter((feature) => feature.selected).map((feature) => {
+        const propertiesConnection = this.get('_propertiesConnection') || {};
+        const selectedFeatures = responseJSON.features.filter((feature) => feature.selected).map((feature) => {
           delete feature.selected;
           Object.keys(feature.properties).forEach((property) => {
-            let connectedProperty = get(propertiesConnection, `${property}`);
+            const connectedProperty = get(propertiesConnection, `${property}`);
             if (connectedProperty !== property) {
               if (connectedProperty) {
                 set(feature, `properties.${connectedProperty}`, get(feature, `properties.${property}`));
@@ -515,8 +515,8 @@ let FlexberryGeometryAddModeImportComponent = Component.extend({
       @method actions.onImportAllSelect
     */
     onImportAllSelect() {
-      let importedFeatures = this.get('responseJSON.features') || [];
-      let importAllSelect = this.get('importAllSelect');
+      const importedFeatures = this.get('responseJSON.features') || [];
+      const importAllSelect = this.get('importAllSelect');
 
       importedFeatures.forEach((feature) => {
         set(feature, 'selected', !importAllSelect);
@@ -538,7 +538,7 @@ let FlexberryGeometryAddModeImportComponent = Component.extend({
       }
 
       this.set(`_propertiesConnection.${property}`, newValue);
-    }
+    },
   },
 
   /**
@@ -552,7 +552,7 @@ let FlexberryGeometryAddModeImportComponent = Component.extend({
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryGeometryAddModeImportComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryGeometryAddModeImportComponent;

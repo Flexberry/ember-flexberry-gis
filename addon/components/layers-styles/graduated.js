@@ -6,9 +6,9 @@ import { A } from '@ember/array';
 
 import { getOwner } from '@ember/application';
 import { isBlank, isNone } from '@ember/utils';
+import { getGradientColors } from 'ember-flexberry-gis/utils/color-interpolation';
 import layout from '../../templates/components/layers-styles/graduated';
 import BaseCustomStyle from './categorized/base-categorized-layer-style';
-import { getGradientColors } from 'ember-flexberry-gis/utils/color-interpolation';
 
 /**
   Component containing GUI for 'graduated' layers-style
@@ -49,26 +49,26 @@ export default BaseCustomStyle.extend({
       @param {Object} e Event object.
     */
     onClassifyButtonClick() {
-      let layerType = this.get('layerType');
-      let leafletLayer = this.get('leafletLayer');
+      const layerType = this.get('layerType');
+      const leafletLayer = this.get('leafletLayer');
       if (isBlank(layerType) || isNone(leafletLayer)) {
         return;
       }
 
-      let layerClass = getOwner(this).lookup(`layer:${layerType}`);
-      let propertyName = this.get('styleSettings.style.propertyName');
+      const layerClass = getOwner(this).lookup(`layer:${layerType}`);
+      const propertyName = this.get('styleSettings.style.propertyName');
 
       // Get distinct array of asc. sorted values.
-      let propertyValues = [...new Set(layerClass.getLayerPropertyValues(leafletLayer, propertyName))].sort((a, b) => { return a - b; });
+      const propertyValues = [...new Set(layerClass.getLayerPropertyValues(leafletLayer, propertyName))].sort((a, b) => a - b);
       let categoriesCount = Number(this.get('_classificationCategoriesCount'));
       categoriesCount = isNaN(categoriesCount) ? 1 : categoriesCount;
       categoriesCount = categoriesCount <= 0 ? 1 : categoriesCount;
       categoriesCount = categoriesCount > propertyValues.length ? propertyValues.length : categoriesCount;
-      let categories = A();
-      let categoriesLength = (propertyValues.length - propertyValues.length % categoriesCount) / categoriesCount;
-      let layersStylesRenderer = this.get('_layersStylesRenderer');
-      let mainStyleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
-      let path = mainStyleSettings.style.path;
+      const categories = A();
+      const categoriesLength = (propertyValues.length - propertyValues.length % categoriesCount) / categoriesCount;
+      const layersStylesRenderer = this.get('_layersStylesRenderer');
+      const mainStyleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
+      const { path, } = mainStyleSettings.style;
 
       let fillGradientColors = A();
       if (this.get('_fillGradientEnable')) {
@@ -87,15 +87,15 @@ export default BaseCustomStyle.extend({
       }
 
       for (let i = 0; i < categoriesCount; i++) {
-        let intervalStartIndex = i * categoriesLength;
-        let intervalLastIndex = i === (categoriesCount - 1) ? propertyValues.length - 1 : (i + 1) * categoriesLength - 1;
-        let catStyleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
+        const intervalStartIndex = i * categoriesLength;
+        const intervalLastIndex = i === (categoriesCount - 1) ? propertyValues.length - 1 : (i + 1) * categoriesLength - 1;
+        const catStyleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
         catStyleSettings.style.path.fillColor = (fillGradientColors[i] != null) ? fillGradientColors[i] : catStyleSettings.style.path.fillColor;
         catStyleSettings.style.path.color = (strokeGradientColors[i] != null) ? strokeGradientColors[i] : catStyleSettings.style.path.color;
         categories.push({
           name: i,
-          value: propertyValues[intervalStartIndex] + ' - ' + propertyValues[intervalLastIndex],
-          styleSettings: catStyleSettings
+          value: `${propertyValues[intervalStartIndex]} - ${propertyValues[intervalLastIndex]}`,
+          styleSettings: catStyleSettings,
         });
       }
 
@@ -105,6 +105,6 @@ export default BaseCustomStyle.extend({
       this.set('_selectedCategoriesCount', 0);
       this.set('_allCategoriesAreSelected', false);
       this.set('_classificationCategoriesCount', categoriesCount);
-    }
-  }
+    },
+  },
 });

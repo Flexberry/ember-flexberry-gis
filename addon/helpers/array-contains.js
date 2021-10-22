@@ -25,5 +25,5 @@ export default Helper.extend({
   */
   compute([array, item]) {
     return A(array || []).contains(item);
-  }
+  },
 });

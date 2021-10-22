@@ -3,21 +3,22 @@
 */
 
 import { isNone } from '@ember/utils';
+
 export function initialize() {
-  let setStyle = {
-    setStyle: function (style) {
+  const setStyle = {
+    setStyle(style) {
       L.Path.prototype.setStyle.call(this, style);
       if (!isNone(this.layerModel) && isNone(this.layerModel.legendStyle)) {
         this.layerModel.legendStyle = {
           type: 'simple',
           style: {
-            path: style
-          }
+            path: style,
+          },
         };
       }
 
       return this;
-    }
+    },
   };
 
   L.Polygon.include(setStyle);
@@ -29,5 +30,5 @@ export function initialize() {
 
 export default {
   name: 'leaflet-path',
-  initialize
+  initialize,
 };

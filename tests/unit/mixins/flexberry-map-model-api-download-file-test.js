@@ -7,56 +7,56 @@ import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-
 import sinon from 'sinon';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
 
-module('Unit | Mixin | flexberry map model api download file', function() {
-  let mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
+module('Unit | Mixin | flexberry map model api download file', function () {
+  const mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
 
   test('test api method downloadFile', function (assert) {
     assert.expect(4);
-    var done = assert.async(1);
-    let ownerStub = sinon.stub(Ember, 'getOwner');
+    const done = assert.async(1);
+    const ownerStub = sinon.stub(Ember, 'getOwner');
     ownerStub.returns({
       knownForType() {
         return {
-          'epsg4326': crsFactory4326
+          epsg4326: crsFactory4326,
         };
       },
       resolveRegistration() {
         return {
           APP: {
             backendUrls: {
-              featureExportApi: 'featureExportApi'
-            }
-          }
+              featureExportApi: 'featureExportApi',
+            },
+          },
         };
-      }
+      },
     });
 
-    let layer = EmberObject.create({
+    const layer = EmberObject.create({
       id: '1',
       type: 'wfs',
       settingsAsObject: {
         url: 'geoserverUrl',
         typeNS: 'testTypeNS',
         typeName: 'layerWfs',
-        geometryField: 'geometryField'
+        geometryField: 'geometryField',
       },
       name: 'layerWfsName',
       headers: {},
       crs: {
-        code: 'EPSG:4326'
-      }
+        code: 'EPSG:4326',
+      },
     });
-    let maplayers = A(layer);
-    let subject = mapApiMixinObject.create({
-      mapLayer: maplayers
+    const maplayers = A(layer);
+    const subject = mapApiMixinObject.create({
+      mapLayer: maplayers,
     });
 
-    let findByStub = sinon.stub(subject.mapLayer, 'findBy');
+    const findByStub = sinon.stub(subject.mapLayer, 'findBy');
     findByStub.returns(layer);
-    let stubAjax = sinon.stub($, 'ajax');
+    const stubAjax = sinon.stub($, 'ajax');
     stubAjax.yieldsTo('success', 'blob');
 
-    let result = subject.downloadFile('1', ['111'], 'JSON', 'EPSG:4326', false);
+    const result = subject.downloadFile('1', ['111'], 'JSON', 'EPSG:4326', false);
     assert.ok(result instanceof Promise);
     result.then((res) => {
       assert.equal(res.fileName, 'layerWfsName.json');

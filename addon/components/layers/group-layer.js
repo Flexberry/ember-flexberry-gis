@@ -64,5 +64,5 @@ export default BaseLayer.extend({
   */
   search(e) {
     // Group-layers hasn't any search logic.
-  }
+  },
 });

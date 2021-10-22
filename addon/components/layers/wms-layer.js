@@ -32,7 +32,7 @@ export default TileLayer.extend({
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} latlng Identification point coordinates.
   */
   _getFeatureInfo(latlng) {
-    let layer = this.get('_leafletObject');
+    const layer = this.get('_leafletObject');
 
     if (isNone(layer)) {
       return new Promise((resolve, reject) => {
@@ -42,18 +42,18 @@ export default TileLayer.extend({
 
     return new Promise((resolve, reject) => {
       layer.getFeatureInfo({
-        latlng: latlng,
+        latlng,
         infoFormat: this.get('info_format'),
         map: this.get('leafletMap'),
         crs: this.get('crs'),
         featureCount: this.get('feature_count'),
         done(featuresCollection, xhr) {
-          let features = A(get(featuresCollection, 'features') || []);
+          const features = A(get(featuresCollection, 'features') || []);
           resolve(features);
         },
         fail(errorThrown, xhr) {
           reject(errorThrown);
-        }
+        },
       });
     });
   },
@@ -73,7 +73,7 @@ export default TileLayer.extend({
         },
         fail(errorThrown, xhr) {
           reject(errorThrown);
-        }
+        },
       });
     });
   },
@@ -100,7 +100,7 @@ export default TileLayer.extend({
       filter = L.XmlUtil.serializeXmlDocumentString(filter);
     }
 
-    options = $.extend(true, {}, options, { filter: filter });
+    options = $.extend(true, {}, options, { filter, });
 
     return L.tileLayer.wms(this.get('url'), options);
   },
@@ -120,7 +120,7 @@ export default TileLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let featuresPromise = this._getFeatureInfo(e.latlng);
+    const featuresPromise = this._getFeatureInfo(e.latlng);
 
     return featuresPromise;
   },
@@ -139,5 +139,5 @@ export default TileLayer.extend({
   */
   search(e) {
     // Wms-layers hasn't any search logic.
-  }
+  },
 });

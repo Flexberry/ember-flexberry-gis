@@ -1,101 +1,101 @@
 export default {
-  'drag': {
-    'caption': '',
-    'tooltip': 'Переместить'
+  drag: {
+    caption: '',
+    tooltip: 'Переместить',
   },
   'zoom-in': {
-    'caption': '',
-    'tooltip': 'Увеличить'
+    caption: '',
+    tooltip: 'Увеличить',
   },
   'zoom-out': {
-    'caption': '',
-    'tooltip': 'Уменьшить'
+    caption: '',
+    tooltip: 'Уменьшить',
   },
   'background-layers': {
-    'caption': '',
-    'tooltip': 'Подложки'
+    caption: '',
+    tooltip: 'Подложки',
   },
   'comapre-layers': {
-    'caption': '',
-    'tooltip': 'Сравнить слои'
+    caption: '',
+    tooltip: 'Сравнить слои',
   },
-  'identify': {
-    'caption': 'Идентифицировать',
-    'tooltip': 'Идентифицировать',
+  identify: {
+    caption: 'Идентифицировать',
+    tooltip: 'Идентифицировать',
     'identify-all': {
-      'caption': 'Все слои'
+      caption: 'Все слои',
     },
     'identify-all-visible': {
-      'caption': 'Все видимые слои'
+      caption: 'Все видимые слои',
     },
     'identify-top-visible': {
-      'caption': 'Верхний видимый слой'
+      caption: 'Верхний видимый слой',
     },
-    'rectangle': {
-      'caption': 'Прямоугольник'
+    rectangle: {
+      caption: 'Прямоугольник',
     },
-    'polygon': {
-      'caption': 'Полигон'
+    polygon: {
+      caption: 'Полигон',
     },
-    'clear': {
-      'caption': 'Очистить'
-    }
+    clear: {
+      caption: 'Очистить',
+    },
   },
-  'measure': {
-    'caption': 'Измерить',
-    'tooltip': 'Измерить',
-    'title': 'Измерение',
+  measure: {
+    caption: 'Измерить',
+    tooltip: 'Измерить',
+    title: 'Измерение',
     'measure-coordinates': {
-      'caption': 'Координаты'
+      caption: 'Координаты',
     },
     'measure-radius': {
-      'caption': 'Радиус'
+      caption: 'Радиус',
     },
     'measure-area-distance': {
-      'caption': 'Площадь/Расстояние'
+      caption: 'Площадь/Расстояние',
     },
     'measure-area': {
-      'caption': 'Площадь'
+      caption: 'Площадь',
     },
     'measure-show': {
-      'caption': 'Показать'
+      caption: 'Показать',
     },
     'measure-hide': {
-      'caption': 'Скрыть'
+      caption: 'Скрыть',
     },
     'measure-clear': {
-      'caption': 'Очистить'
+      caption: 'Очистить',
     },
     'measure-close': {
-      'caption': 'Закрыть'
-    }
+      caption: 'Закрыть',
+    },
   },
-  'draw': {
-    'caption': 'Нарисовать',
-    'tooltip': 'Нарисовать',
+  draw: {
+    caption: 'Нарисовать',
+    tooltip: 'Нарисовать',
     'draw-marker': {
-      'caption': 'Добавить маркер'
+      caption: 'Добавить маркер',
     },
     'draw-polyline': {
-      'caption': 'Добавить ломаную'
+      caption: 'Добавить ломаную',
     },
     'draw-circle': {
-      'caption': 'Добавить круг'
+      caption: 'Добавить круг',
     },
     'draw-rectangle': {
-      'caption': 'Добавить прямоугольник'
+      caption: 'Добавить прямоугольник',
     },
     'draw-polygon': {
-      'caption': 'Добавить полигон'
+      caption: 'Добавить полигон',
     },
     'draw-multy-polygon': {
-      'caption': 'Добавить часть'
+      caption: 'Добавить часть',
     },
     'draw-multy-line': {
-      'caption': 'Добавить часть'
+      caption: 'Добавить часть',
     },
     'draw-clear': {
-      'caption': 'Очистить'
-    }
-  }
+      caption: 'Очистить',
+    },
+  },
 };

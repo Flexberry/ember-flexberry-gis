@@ -53,10 +53,8 @@ export default Service.extend({
         currentPath += `.${pathPart}`;
         if (index === array.length - 1) {
           set(window, currentPath, value);
-        } else {
-          if (isNone(get(window, currentPath))) {
-            set(window, currentPath, {});
-          }
+        } else if (isNone(get(window, currentPath))) {
+          set(window, currentPath, {});
         }
       });
     }
@@ -72,5 +70,5 @@ export default Service.extend({
     if (this.get('isApiAvailable') && !isBlank(path)) {
       return get(window, `mapApi.${path}`);
     }
-  }
+  },
 });

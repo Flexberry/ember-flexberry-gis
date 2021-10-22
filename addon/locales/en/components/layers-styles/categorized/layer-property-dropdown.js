@@ -1,3 +1,3 @@
 export default {
-  'placeholder': 'Choose layer property'
+  placeholder: 'Choose layer property',
 };

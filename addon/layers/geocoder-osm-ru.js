@@ -38,7 +38,7 @@ export default BaseLayer.extend({
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = this._super(...arguments);
+    const settings = this._super(...arguments);
     $.extend(true, settings, {
       url: undefined,
       autocompleteUrl: undefined,
@@ -54,15 +54,15 @@ export default BaseLayer.extend({
     @returns {Object} New search settings object (with search settings related to layer-type).
   */
   createSearchSettings() {
-    let settings = this._super(...arguments);
+    const settings = this._super(...arguments);
     $.extend(true, settings, {
       queryString: '',
       searchType: 'all',
       maxResultsCount: 12,
       lat: null,
-      lon: null
+      lon: null,
     });
 
     return settings;
-  }
+  },
 });

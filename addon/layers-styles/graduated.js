@@ -23,7 +23,7 @@ export default CategorizedLayerStyle.extend({
     @param {Object} options.category Hash containing category settings.
     @return {Boolean} Flag indicating whether specified category is relevant to the specified property value.
   */
-  categoryIsRelevantToPropertyValue({ propertyValue, category }) {
+  categoryIsRelevantToPropertyValue({ propertyValue, category, }) {
     // Graduated categorization can be performed only by numeric properties.
     propertyValue = Number(propertyValue);
     if (isNaN(propertyValue)) {
@@ -41,8 +41,8 @@ export default CategorizedLayerStyle.extend({
 
     // Check if interval has format of '<= 10'.
     if (categoryInterval.indexOf('<=') >= 0) {
-      let interval = categoryInterval.split('<=');
-      let endIntervalValue = Number(interval[1]);
+      const interval = categoryInterval.split('<=');
+      const endIntervalValue = Number(interval[1]);
       if (isNaN(endIntervalValue)) {
         return false;
       }
@@ -52,8 +52,8 @@ export default CategorizedLayerStyle.extend({
 
     // Check if interval has format of '>= 1'.
     if (categoryInterval.indexOf('>=') >= 0) {
-      let interval = categoryInterval.split('>=');
-      let startIntervalValue = Number(interval[1]);
+      const interval = categoryInterval.split('>=');
+      const startIntervalValue = Number(interval[1]);
       if (isNaN(startIntervalValue)) {
         return false;
       }
@@ -63,8 +63,8 @@ export default CategorizedLayerStyle.extend({
 
     // Check if interval has format of '< 10'.
     if (categoryInterval.indexOf('<') >= 0) {
-      let interval = categoryInterval.split('<');
-      let endIntervalValue = Number(interval[1]);
+      const interval = categoryInterval.split('<');
+      const endIntervalValue = Number(interval[1]);
       if (isNaN(endIntervalValue)) {
         return false;
       }
@@ -74,8 +74,8 @@ export default CategorizedLayerStyle.extend({
 
     // Check if interval has format of '> 1'.
     if (categoryInterval.indexOf('>') >= 0) {
-      let interval = categoryInterval.split('>');
-      let startIntervalValue = Number(interval[1]);
+      const interval = categoryInterval.split('>');
+      const startIntervalValue = Number(interval[1]);
       if (isNaN(startIntervalValue)) {
         return false;
       }
@@ -85,14 +85,14 @@ export default CategorizedLayerStyle.extend({
 
     // Check if interval has format of '1 - 10'.
     if (categoryInterval.indexOf('-') >= 0) {
-      let interval = categoryInterval.split('-');
+      const interval = categoryInterval.split('-');
 
       let i = 0;
       let startIntervalValue = interval[i].trim();
       if (isBlank(startIntervalValue)) {
         // Blank string after split('-') means that there was negative number.
         i++;
-        startIntervalValue = '-' + interval[i];
+        startIntervalValue = `-${interval[i]}`;
       }
 
       startIntervalValue = Number(startIntervalValue);
@@ -105,7 +105,7 @@ export default CategorizedLayerStyle.extend({
       if (isBlank(endIntervalValue)) {
         // Blank string after split('-') means that there was negative number.
         i++;
-        endIntervalValue = '-' + interval[i];
+        endIntervalValue = `-${interval[i]}`;
       }
 
       endIntervalValue = Number(endIntervalValue);
@@ -115,5 +115,5 @@ export default CategorizedLayerStyle.extend({
 
       return propertyValue >= startIntervalValue && propertyValue <= endIntervalValue;
     }
-  }
+  },
 });

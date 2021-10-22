@@ -34,5 +34,5 @@ export default ListMapRoute.extend({
     @type Object
     @default { NewPlatformFlexberryGISMapL: {} }
   */
-  developerUserSettings: { NewPlatformFlexberryGISMapL: {} }
+  developerUserSettings: { NewPlatformFlexberryGISMapL: {}, },
 });

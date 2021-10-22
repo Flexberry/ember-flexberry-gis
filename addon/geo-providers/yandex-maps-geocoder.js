@@ -31,20 +31,20 @@ export default BaseGeoProvider.extend({
     @param {Object} options Query options.
   */
   _executeRequest(options) {
-    let geocode = options.query;
-    let format = 'json';
-    let top = options.top;
-    let skip = options.skip;
+    const geocode = options.query;
+    const format = 'json';
+    const { top, } = options;
+    const { skip, } = options;
 
-    let baseUrl = this.get('url');
-    let requestUrl = `${baseUrl}?geocode=${geocode}&` +
-      `format=${format}&` +
-      `results=${top}&` +
-      `skip=${skip}`;
+    const baseUrl = this.get('url');
+    const requestUrl = `${baseUrl}?geocode=${geocode}&`
+      + `format=${format}&`
+      + `results=${top}&`
+      + `skip=${skip}`;
 
     return new Promise((resolve, reject) => {
       run(() => {
-        $.ajax(requestUrl, { dataType: 'json' }).done((data, textStatus, jqXHR) => {
+        $.ajax(requestUrl, { dataType: 'json', }).done((data, textStatus, jqXHR) => {
           resolve(data);
         }).fail((jqXHR, textStatus, errorThrown) => {
           reject(errorThrown);
@@ -58,21 +58,21 @@ export default BaseGeoProvider.extend({
 
     @param {Object} response Response result.
   */
-  _parseRequestResult({ response }) {
+  _parseRequestResult({ response, }) {
     let result = null;
-    let geoObjectCollection = get(response, 'GeoObjectCollection');
+    const geoObjectCollection = get(response, 'GeoObjectCollection');
     if (!isNone(geoObjectCollection)) {
-      let total = get(geoObjectCollection, 'metaDataProperty.GeocoderResponseMetaData.found');
+      const total = get(geoObjectCollection, 'metaDataProperty.GeocoderResponseMetaData.found');
       if (!isNone(total) && total !== '0') {
-        result = { total, data: [] };
+        result = { total, data: [], };
 
-        let objects = get(geoObjectCollection, 'featureMember');
-        objects.forEach(element => {
-          let description = get(element, 'GeoObject.description');
-          let name = get(element, 'GeoObject.name');
-          let position = get(element, 'GeoObject.Point.pos');
+        const objects = get(geoObjectCollection, 'featureMember');
+        objects.forEach((element) => {
+          const description = get(element, 'GeoObject.description');
+          const name = get(element, 'GeoObject.name');
+          const position = get(element, 'GeoObject.Point.pos');
 
-          result.data.push({ name: `${description}, ${name}`, type: 'marker', position });
+          result.data.push({ name: `${description}, ${name}`, type: 'marker', position, });
         });
       }
     }

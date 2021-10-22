@@ -1,10 +1,10 @@
 import { get } from '@ember/object';
-import config from '../config/environment';
 import LeafletEditableMeasuresInitializer from 'ember-flexberry-gis/initializers/leaflet-editable-measures';
+import config from '../config/environment';
 
 // Override initializer to pass into it baseUrl from config/environment.js.
-let originalInitialize = LeafletEditableMeasuresInitializer.initialize;
-LeafletEditableMeasuresInitializer.initialize = function(application) {
+const originalInitialize = LeafletEditableMeasuresInitializer.initialize;
+LeafletEditableMeasuresInitializer.initialize = function (application) {
   originalInitialize.call(this, application, get(config, 'baseURL'));
 };
 

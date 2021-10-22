@@ -1,9 +1,9 @@
 export default {
-  'caption': 'Add map',
+  caption: 'Add map',
   'approve-button': {
-    'caption': 'Ok'
+    caption: 'Ok',
   },
   'deny-button': {
-    'caption': 'Cancel'
-  }
+    caption: 'Cancel',
+  },
 };

@@ -1,23 +1,23 @@
 export default {
   'info-format-dropdown': {
-    'caption': 'GetFeatureInfo-responses format'
+    caption: 'GetFeatureInfo-responses format',
   },
   'feature-count-textbox': {
-    'caption': 'GetFeatureInfo-responses feature count'
+    caption: 'GetFeatureInfo-responses feature count',
   },
   'url-textbox': {
-    'caption': 'Url'
+    caption: 'Url',
   },
   'version-textbox': {
-    'caption': 'WMS version'
+    caption: 'WMS version',
   },
   'layers-textbox': {
-    'caption': 'Layers'
+    caption: 'Layers',
   },
   'format-textbox': {
-    'caption': 'Image format'
+    caption: 'Image format',
   },
   'transparent-checkbox': {
-    'caption': 'Allow images transparency'
-  }
+    caption: 'Allow images transparency',
+  },
 };

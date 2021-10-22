@@ -3,8 +3,8 @@
 */
 
 import Component from '@ember/component';
-import layout from '../../templates/components/map-tools/draw';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../templates/components/map-tools/draw';
 
 /**
   Component's CSS-classes names.
@@ -30,7 +30,7 @@ const flexberryClassNames = {
   drawPolyline: 'flexberry-draw-polyline-map-tool',
   drawCircle: 'flexberry-draw-circle-map-tool',
   drawRectangle: 'flexberry-draw-rectangle-map-tool',
-  drawPolygon: 'flexberry-draw-polygon-map-tool'
+  drawPolygon: 'flexberry-draw-polygon-map-tool',
 };
 
 /**
@@ -50,7 +50,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let DrawMapToolComponent = Component.extend({
+const DrawMapToolComponent = Component.extend({
   /**
     Properties which will be passed to the map-tool when it will be instantiated.
 
@@ -341,7 +341,7 @@ let DrawMapToolComponent = Component.extend({
 
     this.set('_drawToolProperties', {
       editLayer: new L.LayerGroup(),
-      featuresLayer: new L.LayerGroup()
+      featuresLayer: new L.LayerGroup(),
     });
   },
 
@@ -352,13 +352,13 @@ let DrawMapToolComponent = Component.extend({
     this._super(...arguments);
 
     this.set('_drawToolProperties', null);
-  }
+  },
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 DrawMapToolComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default DrawMapToolComponent;

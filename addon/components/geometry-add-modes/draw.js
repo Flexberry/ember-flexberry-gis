@@ -8,8 +8,8 @@ import { isNone } from '@ember/utils';
 import { on } from '@ember/object/evented';
 import { observer, computed, set } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../../templates/components/geometry-add-modes/draw';
 import turfCombine from 'npm:@turf/combine';
+import layout from '../../templates/components/geometry-add-modes/draw';
 
 /**
   Component's CSS-classes names.
@@ -26,10 +26,10 @@ import turfCombine from 'npm:@turf/combine';
 const flexberryClassNamesPrefix = 'flexberry-geometry-add-mode-draw';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix
+  wrapper: flexberryClassNamesPrefix,
 };
 
-let FlexberryGeometryAddModeDrawComponent = Component.extend({
+const FlexberryGeometryAddModeDrawComponent = Component.extend({
   /**
     Reference to component's template.
   */
@@ -62,7 +62,7 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
   */
   _offsetInvalid: {
     x: false,
-    y: false
+    y: false,
   },
 
   /**
@@ -78,7 +78,7 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
   */
   _offset: {
     x: null,
-    y: null
+    y: null,
   },
 
   _moveEnabled: false,
@@ -94,14 +94,13 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
 
   activeChange: observer('active', function () {
     if (!this.get('active')) {
-
-      let tool = this.get('geometryType');
+      const tool = this.get('geometryType');
       if (tool) {
         this._dragAndDrop(false);
         this._disableDrawTool(true);
       }
     } else {
-      this.set('_offset', { x: null, y: null });
+      this.set('_offset', { x: null, y: null, });
     }
   }),
 
@@ -118,7 +117,7 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
   })),
 
   getLayer() {
-    let layer = this.get('layer');
+    const layer = this.get('layer');
 
     return [isNone(layer), layer];
   },
@@ -146,14 +145,14 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
     this.set('_moveEnabled', enable);
 
     // слой, для которого включено перемещение
-    let dragLayer = this.get('_dragLayer');
+    const dragLayer = this.get('_dragLayer');
     if (dragLayer) {
       this._stopDragging(dragLayer, false);
       dragLayer.off('mousedown', this._dragOnMouseDown, this);
       this.set('_dragLayer', null);
     }
 
-    let layer = this.get('layer');
+    const layer = this.get('layer');
     if (isNone(layer)) {
       return;
     }
@@ -174,23 +173,22 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
   },
 
   _setClickEnable(enable, layer) {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     let panes = [];
 
     try {
-      let curPane = layer.getPane();
+      const curPane = layer.getPane();
 
       if (isNone(curPane.style.zIndex)) {
         return;
       }
 
-      let curZIndex = parseInt(getComputedStyle(curPane).zIndex);
+      const curZIndex = parseInt(getComputedStyle(curPane).zIndex);
       panes = Object.values(leafletMap.getPanes()).filter((p) => {
-        let zIndex = parseInt(getComputedStyle(p).zIndex);
+        const zIndex = parseInt(getComputedStyle(p).zIndex);
         return p !== curPane && zIndex && curZIndex && zIndex >= curZIndex;
       });
-    }
-    catch (ex) {
+    } catch (ex) {
       console.error(ex);
 
       if (enable) {
@@ -211,7 +209,7 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
   },
 
   _stopDragging(dragLayer, editAfter) {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     leafletMap.dragging.enable();
 
     dragLayer.off('mouseup', this._dragOnMouseUp, this);
@@ -234,7 +232,7 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
       return;
     }
 
-    let nowDragging = this.get('_nowDragging');
+    const nowDragging = this.get('_nowDragging');
     if (nowDragging) {
       this._stopDragging(this.get('_dragLayer'), true);
       this.sendAction('updateLayer', this.get('_dragLayer'), true);
@@ -243,7 +241,7 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
 
       this.set('_tempCoords', e.latlng);
 
-      let dragLayer = this.get('_dragLayer');
+      const dragLayer = this.get('_dragLayer');
       dragLayer.disableEdit();
 
       if (dragLayer.bringToFront) {
@@ -252,14 +250,14 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
 
       dragLayer.on('mouseup', this._dragOnMouseUp, this);
 
-      let leafletMap = this.get('leafletMap');
+      const leafletMap = this.get('leafletMap');
       leafletMap.on('mousemove', this._dragOnMouseMove, this);
       leafletMap.dragging.disable();
     }
   },
 
   _dragOnMouseUp(e) {
-    let nowDragging = this.get('_nowDragging');
+    const nowDragging = this.get('_nowDragging');
     if (nowDragging) {
       this._stopDragging(this.get('_dragLayer'), true);
       this.sendAction('updateLayer', this.get('_dragLayer'), true);
@@ -268,23 +266,21 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
 
   _dragOnMouseMove(e) {
     // latLng of mouse event
-    let { latlng } = e;
+    const { latlng, } = e;
 
     // delta coords (how far was dragged)
-    let deltaLatLng = {
+    const deltaLatLng = {
       lat: latlng.lat - this.get('_tempCoords.lat'),
       lng: latlng.lng - this.get('_tempCoords.lng'),
     };
 
     // move the coordinates by the delta
-    let moveCoords = coords => {
+    const moveCoords = (coords) => {
       if (isArray(coords)) {
-        return coords.map((currentLatLng) => {
-          return moveCoords(currentLatLng);
-        });
+        return coords.map((currentLatLng) => moveCoords(currentLatLng));
       }
 
-      let res = {
+      const res = {
         lat: coords.lat + deltaLatLng.lat,
         lng: coords.lng + deltaLatLng.lng,
       };
@@ -294,9 +290,9 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
 
     // create the new coordinates array
     let newCoords;
-    let dragLayer = this.get('_dragLayer');
+    const dragLayer = this.get('_dragLayer');
 
-    let moveLayer = (layer) => {
+    const moveLayer = (layer) => {
       if (layer.getLatLngs) {
         newCoords = moveCoords(layer.getLatLngs());
       } else {
@@ -310,7 +306,7 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
         layer.setLatLng(newCoords);
       }
 
-      let label = this.get('_dragLayer._label');
+      const label = this.get('_dragLayer._label');
       if (label) {
         newCoords = moveCoords(label.getLatLng());
         label.setLatLng(newCoords);
@@ -338,18 +334,16 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
   */
   move(latlngs, x, y, crs) {
     if (isArray(latlngs)) {
-      return latlngs.map((currentLatLng) => {
-        return this.move(currentLatLng, x, y, crs);
-      });
+      return latlngs.map((currentLatLng) => this.move(currentLatLng, x, y, crs));
     }
 
-    let pointO = crs.unproject(L.point(0, 0));
-    let pointOX = crs.unproject(L.point(x, 0));
-    let pointOY = crs.unproject(L.point(0, y));
+    const pointO = crs.unproject(L.point(0, 0));
+    const pointOX = crs.unproject(L.point(x, 0));
+    const pointOY = crs.unproject(L.point(0, y));
 
-    let res = {
+    const res = {
       lat: latlngs.lat + (pointOY.lat - pointO.lat),
-      lng: latlngs.lng + (pointOX.lng - pointO.lng)
+      lng: latlngs.lng + (pointOX.lng - pointO.lng),
     };
 
     if (res.lat > 90 || res.lat < -90 || res.lng > 180 || res.lng < -180) {
@@ -364,14 +358,14 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
       Handles change start point.
     */
     validOffset(field) {
-      this.set('_offsetInvalid.' + field, !this._validOffset(this.get('_offset.' + field)));
+      this.set(`_offsetInvalid.${field}`, !this._validOffset(this.get(`_offset.${field}`)));
     },
 
     applyXY() {
-      let _moveX = parseFloat(this.get('_offset.x')) || 0;
-      let _moveY = parseFloat(this.get('_offset.y')) || 0;
+      const _moveX = parseFloat(this.get('_offset.x')) || 0;
+      const _moveY = parseFloat(this.get('_offset.y')) || 0;
 
-      let layer = this.get('layer');
+      const layer = this.get('layer');
 
       if (isNone(layer)) {
         return;
@@ -379,7 +373,7 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
 
       layer.disableEdit();
 
-      let crs = this.get('settings.layerCRS');
+      const crs = this.get('settings.layerCRS');
 
       this.set('_moveWithError', false);
 
@@ -390,7 +384,7 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
         coords = layer.getLatLng();
       }
 
-      let newLatLngs = this.move(coords, _moveX, _moveY, crs);
+      const newLatLngs = this.move(coords, _moveX, _moveY, crs);
       if (!this.get('_moveWithError')) {
         if (layer.setLatLngs) {
           layer.setLatLngs(newLatLngs).redraw();
@@ -411,7 +405,7 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
       @param {String} geometryType Selected geometry type.
     */
     onMoveSelect(geometryType) {
-      let curGeometryType = this.get('geometryType');
+      const curGeometryType = this.get('geometryType');
 
       this.set('_moveWithError', false);
 
@@ -423,7 +417,7 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
         this.set('geometryType', geometryType);
 
         if (geometryType === 'move') {
-          let leafletMap = this.get('leafletMap');
+          const leafletMap = this.get('leafletMap');
           if (!isNone(leafletMap)) {
             leafletMap.once('flexberry-map:tools:choose', this._disableDrawTool, this);
           }
@@ -440,12 +434,12 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
       @param {String} geometryType Selected geometry type.
     */
     onGeometryTypeSelect(geometryType) {
-      let curGeometryType = this.get('geometryType');
+      const curGeometryType = this.get('geometryType');
 
       this._disableDrawTool(false);
 
-      let editTools = this.get('_editTools');
-      let leafletMap = this.get('leafletMap');
+      const editTools = this.get('_editTools');
+      const leafletMap = this.get('leafletMap');
 
       // выключим инструмент, при повторном клике
       if (geometryType === curGeometryType) {
@@ -508,7 +502,7 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
     @private
   */
   _getEditTools() {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
 
     let editTools = this.get('_editTools');
     if (isNone(editTools)) {
@@ -524,18 +518,18 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
     @private
   */
   _disableDrawTool(e) {
-    let trigger = !isNone(e) && typeof (e) === 'object';
-    let defaultTool = !trigger && e;
+    const trigger = !isNone(e) && typeof (e) === 'object';
+    const defaultTool = !trigger && e;
 
     this._dragAndDrop(false);
 
-    let editTools = this.get('_editTools');
+    const editTools = this.get('_editTools');
     if (!isNone(editTools)) {
       editTools.off('editable:drawing:end', this._disableDraw, this);
       editTools.stopDrawing();
     }
 
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
       leafletMap.off('flexberry-map:tools:choose', this._disableDrawTool, this);
 
@@ -558,7 +552,7 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
     @private
   */
   _disableDraw(e) {
-    let editTools = this.get('_editTools');
+    const editTools = this.get('_editTools');
     editTools.off('editable:drawing:end', this._disableDraw, this);
 
     this.$().closest('body').off('keydown');
@@ -569,24 +563,24 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
     this.sendAction('block', false);
 
     if (!isNone(e)) {
-      let geometryType = this.get('geometryType');
+      const geometryType = this.get('geometryType');
 
       if (geometryType !== 'multyPolygon' && geometryType !== 'multyLine') {
         this.set('layer', e.layer);
         this.sendAction('updateLayer', e.layer, false);
       } else {
-        let layer = this.get('layer');
+        const layer = this.get('layer');
         if (isNone(layer)) {
           this.set('layer', e.layer);
           return;
         }
 
-        var featureCollection = {
+        const featureCollection = {
           type: 'FeatureCollection',
-          features: [layer.toGeoJSON(), e.layer.toGeoJSON()]
+          features: [layer.toGeoJSON(), e.layer.toGeoJSON()],
         };
 
-        let fcCombined = turfCombine.default(featureCollection);
+        const fcCombined = turfCombine.default(featureCollection);
         const featureCombined = L.geoJSON(fcCombined);
         const combinedLeaflet = featureCombined.getLayers()[0];
         layer.setLatLngs(combinedLeaflet.getLatLngs());
@@ -599,13 +593,13 @@ let FlexberryGeometryAddModeDrawComponent = Component.extend({
     }
 
     this.set('geometryType', null);
-  }
+  },
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryGeometryAddModeDrawComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryGeometryAddModeDrawComponent;

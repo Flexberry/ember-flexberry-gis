@@ -6,10 +6,10 @@ import {
 
 export function initialize(application) {
   // Add custom leaflet functions
-  let PointToEWKT = {
-    toEWKT: function (crs, precision) {
+  const PointToEWKT = {
+    toEWKT(crs, precision) {
       return latlngToPointEWKT(this.getLatLng(), crs, precision);
-    }
+    },
   };
 
   L.Marker.include(PointToEWKT);
@@ -17,19 +17,19 @@ export function initialize(application) {
   L.CircleMarker.include(PointToEWKT);
 
   L.Polyline.include({
-    toEWKT: function (crs, precision) {
+    toEWKT(crs, precision) {
       return latlngToPolylineEWKT(this._latlngs, crs, precision);
-    }
+    },
   });
 
   L.Polygon.include({
-    toEWKT: function (crs, precision) {
+    toEWKT(crs, precision) {
       return latlngToPolygonEWKT(this._latlngs, crs, precision);
-    }
+    },
   });
 }
 
 export default {
   name: 'leaflet-ewkt',
-  initialize
+  initialize,
 };

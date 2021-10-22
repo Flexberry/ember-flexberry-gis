@@ -9,8 +9,8 @@ import { isNone } from '@ember/utils';
 import { set, get } from '@ember/object';
 import $ from 'jquery';
 import VectorLayer from 'ember-flexberry-gis/layers/-private/vector';
-import OdataFilterParserMixin from '../mixins/odata-filter-parser';
 import { GeometryPredicate, NotPredicate } from 'ember-flexberry-data/query/predicate';
+import OdataFilterParserMixin from '../mixins/odata-filter-parser';
 
 /**
   Class describing odata vector layer metadata.
@@ -53,13 +53,13 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = this._super(...arguments);
+    const settings = this._super(...arguments);
     $.extend(true, settings, {
       readonly: false,
       modelName: undefined,
       projectionName: undefined,
       geometryField: 'geometry',
-      geometryType: 'PolygonPropertyType'
+      geometryType: 'PolygonPropertyType',
     });
     set(settings, 'searchSettings', this.createSearchSettings());
     return settings;
@@ -77,16 +77,16 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
       return A();
     }
 
-    let store = getOwner(this).lookup('service:store');
-    let modelConstructor = store.modelFor(leafletObject.modelName);
-    let projection = get(modelConstructor, `projections.${leafletObject.projectionName}`);
-    let props = Object.keys(projection.attributes);
-    let fields = A();
+    const store = getOwner(this).lookup('service:store');
+    const modelConstructor = store.modelFor(leafletObject.modelName);
+    const projection = get(modelConstructor, `projections.${leafletObject.projectionName}`);
+    const props = Object.keys(projection.attributes);
+    const fields = A();
     this.set('crs', leafletObject.options.crs);
 
     props.forEach((key) => {
-      let prop = projection.attributes[key];
-      const geometryField = leafletObject.geometryField;
+      const prop = projection.attributes[key];
+      const { geometryField, } = leafletObject;
       if (!prop.options.hidden && key !== geometryField) {
         fields.addObject(key);
       }
@@ -109,13 +109,13 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
       return A();
     }
 
-    let geojson = leafletObject.toGeoJSON() || {};
-    let features = geojson.features || [];
+    const geojson = leafletObject.toGeoJSON() || {};
+    const features = geojson.features || [];
 
-    let values = A();
+    const values = A();
 
     for (let i = 0; i < features.length; i++) {
-      let value = get(features, `${i}.properties.${selectedField}`);
+      const value = get(features, `${i}.properties.${selectedField}`);
       values.addObject(value);
 
       if (values.length === count) {
@@ -141,11 +141,11 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
     switch (condition) {
       case 'in':
       case 'not in':
-        let geomPredicate = new GeometryPredicate(geometryField);
-        let geom = L.geoJSON(geoJSON).getLayers()[0].toEWKT(this.get('crs'));
-        let filter = geomPredicate.intersects(geom);
+        const geomPredicate = new GeometryPredicate(geometryField);
+        const geom = L.geoJSON(geoJSON).getLayers()[0].toEWKT(this.get('crs'));
+        const filter = geomPredicate.intersects(geom);
 
         return condition === 'in' ? filter : new NotPredicate(filter);
     }
-  }
+  },
 });

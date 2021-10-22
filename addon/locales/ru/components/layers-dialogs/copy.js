@@ -1,10 +1,10 @@
 export default {
-  'caption': 'Создать копию слоя',
+  caption: 'Создать копию слоя',
   'approve-button': {
-    'caption': 'Ok'
+    caption: 'Ok',
   },
   'deny-button': {
-    'caption': 'Отмена'
+    caption: 'Отмена',
   },
-  'layer-name-postfix': '(Копия)'
+  'layer-name-postfix': '(Копия)',
 };

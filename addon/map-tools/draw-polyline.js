@@ -19,14 +19,14 @@ export default DrawMapTool.extend({
   */
   _enable() {
     this._super(...arguments);
-    let polyline = this.get('_editTools').startPolyline();
+    const polyline = this.get('_editTools').startPolyline();
     polyline.on('editable:vertex:click', (e) => {
       if (e.vertex.getIndex() === 0) {
         e.cancel();
 
-        let latlngs = e.layer._latlngs;
+        const latlngs = e.layer._latlngs;
         latlngs.push(latlngs[0]);
-        let polygone = new L.polygon(latlngs, { editOptions: { editTools: this.get('_editTools') } });
+        const polygone = new L.polygon(latlngs, { editOptions: { editTools: this.get('_editTools'), }, });
 
         this.get('_editTools').stopDrawing();
 
@@ -36,5 +36,5 @@ export default DrawMapTool.extend({
         polygone.enableEdit(this.leafletMap);
       }
     });
-  }
+  },
 });

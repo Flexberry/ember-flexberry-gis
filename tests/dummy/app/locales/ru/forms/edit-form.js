@@ -4,5 +4,5 @@ export default {
   'save-error-message-caption': 'Ошибка сохранения',
   'delete-success-message-caption': 'Удаление завершилось успешно',
   'delete-success-message': 'Объект удален',
-  'delete-error-message-caption': 'Ошибка удаления'
+  'delete-error-message-caption': 'Ошибка удаления',
 };

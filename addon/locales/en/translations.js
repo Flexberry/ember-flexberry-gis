@@ -8,12 +8,12 @@ import MapTools from './map-tools';
 import Gradients from './gradients';
 
 export default {
-  'models': Models,
-  'forms': Forms,
-  'components': Components,
+  models: Models,
+  forms: Forms,
+  components: Components,
   'layers-styles': LayersStyles,
   'markers-styles': MarkersStyles,
   'map-commands': MapCommands,
   'map-tools': MapTools,
-  'gradients': Gradients
+  gradients: Gradients,
 };

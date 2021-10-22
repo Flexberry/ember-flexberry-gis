@@ -9,7 +9,7 @@ import I18nService from 'ember-i18n/services/i18n';
 import I18nRuLocale from 'ember-flexberry-gis/locales/ru/translations';
 import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
 
-module('Integration | Component | layers dialogs/attributes/edit', function(hooks) {
+module('Integration | Component | layers dialogs/attributes/edit', function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -19,30 +19,30 @@ module('Integration | Component | layers dialogs/attributes/edit', function(hook
 
     this.i18n = this.owner.lookup('service:i18n');
     Component.reopen({
-      i18n: service('i18n')
+      i18n: service('i18n'),
     });
 
     // Set 'ru' as initial locale.
     this.set('i18n.locale', 'ru');
   });
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     assert.expect(1);
 
     this.set('fieldNames', {
-      field: 'field'
+      field: 'field',
     });
     this.set('fieldTypes', {
-      field: 'string'
+      field: 'string',
     });
     this.set('fieldParsers', {
-      field: function(text) { return text; }
+      field(text) { return text; },
     });
     this.set('fieldValidators', {
-      field: function(value) { return true; }
+      field(value) { return true; },
     });
     this.set('data', {
-      field: 'test field'
+      field: 'test field',
     });
 
     this.set('visible', true);
@@ -58,7 +58,7 @@ module('Integration | Component | layers dialogs/attributes/edit', function(hook
       }}`);
 
     // Component is rendered outside of the testing container.
-    let $dialog = this.$()
+    const $dialog = this.$()
       .closest('#ember-testing-container')
       .siblings('.ui.modals')
       .find('.flexberry-edit-layer-attributes-dialog');

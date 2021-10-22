@@ -20,7 +20,7 @@ export default VectorLayer.extend(WfsFilterParserMixin, {
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = this._super(...arguments);
+    const settings = this._super(...arguments);
     $.extend(true, settings, {
       crs: undefined,
       showExisting: undefined,
@@ -35,9 +35,9 @@ export default VectorLayer.extend(WfsFilterParserMixin, {
       namespaceUri: undefined,
       readonly: undefined,
       forceMulti: undefined,
-      withCredentials: false
+      withCredentials: false,
     });
 
     return settings;
-  }
+  },
 });

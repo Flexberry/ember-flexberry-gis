@@ -1,59 +1,59 @@
 export default {
   'format-dropdown': {
-    'caption': 'Format'
+    caption: 'Format',
   },
   'url-textbox': {
-    'caption': 'Url'
+    caption: 'Url',
   },
   'version-textbox': {
-    'caption': 'WFS version'
+    caption: 'WFS version',
   },
   'namespace-uri-textbox': {
-    'caption': 'Namespace URI'
+    caption: 'Namespace URI',
   },
   'type-ns-name-textbox': {
-    'caption': 'Type namespace name'
+    caption: 'Type namespace name',
   },
   'type-ns-textbox': {
-    'caption': 'Type namespace'
+    caption: 'Type namespace',
   },
   'type-name-textbox': {
-    'caption': 'Type name'
+    caption: 'Type name',
   },
   'geometry-field-textbox': {
-    'caption': 'Geometry field'
+    caption: 'Geometry field',
   },
   'max-features-textbox': {
-    'caption': 'Max features'
+    caption: 'Max features',
   },
   'show-existing-checkbox': {
-    'caption': 'Show existing'
+    caption: 'Show existing',
   },
-  'style': {
-    'caption': 'Style',
+  style: {
+    caption: 'Style',
     'color-textbox': {
-      'caption': 'Color'
+      caption: 'Color',
     },
     'weight-textbox': {
-      'caption': 'Weight'
-    }
+      caption: 'Weight',
+    },
   },
-  'clusterize': {
-    'caption': 'Clusterize'
+  clusterize: {
+    caption: 'Clusterize',
   },
-  'readonly': {
-    'caption': 'Read only'
+  readonly: {
+    caption: 'Read only',
   },
-  'forceMulti': {
-    'caption': 'Create multi geometries'
+  forceMulti: {
+    caption: 'Create multi geometries',
   },
   'min-zoom': {
-    'caption': 'Min zoom'
+    caption: 'Min zoom',
   },
   'max-zoom': {
-    'caption': 'Max zoom'
+    caption: 'Max zoom',
   },
-  'typeGeometry': {
-    'caption': 'Geometry type'
-  }
+  typeGeometry: {
+    caption: 'Geometry type',
+  },
 };

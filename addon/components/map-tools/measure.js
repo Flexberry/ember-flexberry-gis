@@ -6,10 +6,10 @@ import { isNone } from '@ember/utils';
 
 import { observer } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../../templates/components/map-tools/measure';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import layout from '../../templates/components/map-tools/measure';
 
 /**
   Component's CSS-classes names.
@@ -32,14 +32,14 @@ import {
 const flexberryClassNamesPrefix = 'flexberry-map-tool';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  icon: flexberryClassNamesPrefix + '-icon',
+  icon: `${flexberryClassNamesPrefix}-icon`,
   measure: 'flexberry-measure-map-tool',
   measureCoordinates: 'flexberry-measure-coordinates-map-tool',
   measureRadius: 'flexberry-measure-radius-map-tool',
   measureAreaDistance: 'flexberry-measure-distance-map-tool',
   measureShowHide: 'flexberry-measure-show-hide-map-tool',
   measureClear: 'flexberry-measure-clear-map-tool',
-  measureClose: 'flexberry-measure-close-map-tool'
+  measureClose: 'flexberry-measure-close-map-tool',
 };
 
 /**
@@ -59,7 +59,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let MeasureMapToolComponent = Component.extend({
+const MeasureMapToolComponent = Component.extend({
   /**
     Properties which will be passed to the map-tool when it will be instantiated.
 
@@ -483,16 +483,16 @@ let MeasureMapToolComponent = Component.extend({
   init() {
     this._super(...arguments);
 
-    let editLayer = new L.LayerGroup();
-    let featuresLayer = new L.LayerGroup();
+    const editLayer = new L.LayerGroup();
+    const featuresLayer = new L.LayerGroup();
 
     this.set('_measureToolProperties', {
-      editLayer: editLayer,
-      featuresLayer: featuresLayer,
+      editLayer,
+      featuresLayer,
       crs: this.get('crs'),
       precision: this.get('precision'),
       captions: this.get('coordinatesCaptions'),
-      displayCoordinates: this.get('displayCoordinates')
+      displayCoordinates: this.get('displayCoordinates'),
     });
   },
 
@@ -502,16 +502,16 @@ let MeasureMapToolComponent = Component.extend({
     @method initControl
   */
   initControl: observer('leafletMap', function () {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
-      let prop = this.get('_measureToolProperties');
+      const prop = this.get('_measureToolProperties');
       prop._measureTools = new L.MeasureBase(leafletMap, {
         editOptions: {
           editLayer: prop.editLayer,
-          featuresLayer: prop.featuresLayer
+          featuresLayer: prop.featuresLayer,
         },
 
-        addHaArea: this.get('addHaArea')
+        addHaArea: this.get('addHaArea'),
       });
 
       if (this.get('showMeasure')) {
@@ -535,7 +535,7 @@ let MeasureMapToolComponent = Component.extend({
 
   actions: {
     closePanel() {
-      let _measureTools = this.get('_measureToolProperties._measureTools');
+      const _measureTools = this.get('_measureToolProperties._measureTools');
       _measureTools.clearLayers();
 
       this.set('showPanel', false);
@@ -546,13 +546,13 @@ let MeasureMapToolComponent = Component.extend({
     },
 
     clear() {
-      let _measureTools = this.get('_measureToolProperties._measureTools');
+      const _measureTools = this.get('_measureToolProperties._measureTools');
       _measureTools.clearLayers();
     },
 
     showHide() {
-      let showMeasure = this.get('showMeasure');
-      let _measureTools = this.get('_measureToolProperties._measureTools');
+      const showMeasure = this.get('showMeasure');
+      const _measureTools = this.get('_measureToolProperties._measureTools');
       if (showMeasure) {
         _measureTools.hideMeasureResult();
       } else {
@@ -560,14 +560,14 @@ let MeasureMapToolComponent = Component.extend({
       }
 
       this.set('showMeasure', !showMeasure);
-    }
-  }
+    },
+  },
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 MeasureMapToolComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default MeasureMapToolComponent;

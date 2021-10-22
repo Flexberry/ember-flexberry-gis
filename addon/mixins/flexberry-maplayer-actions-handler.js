@@ -143,14 +143,14 @@ export default Mixin.create({
       ```
     */
     onMapLayerChangeVisibility(...args) {
-      let objectContainingActionHandler = EmberObject.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
-      let actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
+      const objectContainingActionHandler = EmberObject.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
+      const actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
 
       actionHandler.apply(this, args);
 
       // Save changes to local storage.
-      let mutablePropertyPath = args[0];
-      let e = args[args.length - 1];
+      const mutablePropertyPath = args[0];
+      const e = args[args.length - 1];
       this.mutateStorage('visibility', mutablePropertyPath, e.newValue);
     },
 
@@ -185,14 +185,14 @@ export default Mixin.create({
       ```
     */
     onMapLayerChangeOpacity(...args) {
-      let objectContainingActionHandler = EmberObject.extend(FlexberryDdauSliderActionsHandlerMixin).create();
-      let actionHandler = objectContainingActionHandler.get('actions.onSliderChange');
+      const objectContainingActionHandler = EmberObject.extend(FlexberryDdauSliderActionsHandlerMixin).create();
+      const actionHandler = objectContainingActionHandler.get('actions.onSliderChange');
 
       actionHandler.apply(this, args);
 
       // Save changes to local storage.
-      let mutablePropertyPath = args[0];
-      let e = args[args.length - 1];
+      const mutablePropertyPath = args[0];
+      const e = args[args.length - 1];
       this.mutateStorage('opacity', mutablePropertyPath, e.newValue);
     },
 
@@ -223,12 +223,12 @@ export default Mixin.create({
       ```
     */
     onMapLayerFitBounds(boundsPropertyPath) {
-      let leafletMap = this.get('leafletMap');
+      const leafletMap = this.get('leafletMap');
 
       if (leafletMap) {
         let bounds = getRecord(this, boundsPropertyPath);
 
-        let earthBounds = L.latLngBounds([
+        const earthBounds = L.latLngBounds([
           [-90, -180],
           [90, 180]
         ]);
@@ -255,10 +255,12 @@ export default Mixin.create({
       @param {String} attributesPanelSettingsPathes.selectedTabIndexPath path to property containing 'flexberry-layers-attributes-panel' selected tab index.
       @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
     */
-    onAttributesEdit(layerPath, { itemsPath, selectedTabIndexPath, foldedPath, loadingPath }) {
-      let layerModel = getRecord(this, layerPath);
-      let name = get(layerModel, 'name');
-      let getAttributesOptions = get(layerModel, '_attributesOptions');
+    onAttributesEdit(layerPath, {
+      itemsPath, selectedTabIndexPath, foldedPath, loadingPath,
+    }) {
+      const layerModel = getRecord(this, layerPath);
+      const name = get(layerModel, 'name');
+      const getAttributesOptions = get(layerModel, '_attributesOptions');
 
       if (isNone(getAttributesOptions)) {
         return;
@@ -269,13 +271,15 @@ export default Mixin.create({
         this.set(foldedPath, false);
       }
 
-      getAttributesOptions().then(({ object, settings }) => {
-        let items = this.get(itemsPath) || A();
-        let index = items.findIndex((item) => isEqual(item.name, name));
+      getAttributesOptions().then(({ object, settings, }) => {
+        const items = this.get(itemsPath) || A();
+        const index = items.findIndex((item) => isEqual(item.name, name));
         if (index >= 0) {
           this.set(selectedTabIndexPath, index);
         } else {
-          items.addObject({ name: name, leafletObject: object, settings, layerModel });
+          items.addObject({
+            name, leafletObject: object, settings, layerModel,
+          });
           this.set(itemsPath, items);
           this.set(selectedTabIndexPath, items.length - 1);
         }
@@ -297,37 +301,38 @@ export default Mixin.create({
       @param {String} attributesPanelSettingsPathes.selectedTabIndexPath path to property containing 'flexberry-layers-attributes-panel' selected tab index.
       @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
     */
-    onFeatureEdit(layerPath, { loadingPath, mapAction }) {
-      let layerModel = getRecord(this, layerPath);
-      let name = get(layerModel, 'name');
-      let getAttributesOptions = get(layerModel, '_attributesOptions');
+    onFeatureEdit(layerPath, { loadingPath, mapAction, }) {
+      const layerModel = getRecord(this, layerPath);
+      const name = get(layerModel, 'name');
+      const getAttributesOptions = get(layerModel, '_attributesOptions');
 
       if (isNone(getAttributesOptions)) {
         return;
       }
 
-      getAttributesOptions().then(({ object, settings }) => {
-        let fields = get(object, 'readFormat.featureType.fields');
-        let data = Object.keys(fields).reduce((result, item) => {
+      getAttributesOptions().then(({ object, settings, }) => {
+        const fields = get(object, 'readFormat.featureType.fields');
+        const data = Object.keys(fields).reduce((result, item) => {
           result[item] = null;
           return result;
         }, {});
 
-        let dataItems = {
+        const dataItems = {
           mode: 'Create',
           items: [{
-            data: data,
-            layer: null
-          }]
+            data,
+            layer: null,
+          }],
         };
 
         this.set(loadingPath, true);
 
         this.send(mapAction, {
-          dataItems: dataItems,
-          layerModel: { name: name, leafletObject: object, settings, layerModel }
+          dataItems,
+          layerModel: {
+            name, leafletObject: object, settings, layerModel,
+          },
         });
-
       }).catch((errorMessage) => {
         Ember.Logger.error(errorMessage);
       }).finally(() => {
@@ -364,34 +369,37 @@ export default Mixin.create({
       ```
     */
     onMapLayerAdd(...args) {
-      let rootPath = 'model.mapLayer';
+      const rootPath = 'model.mapLayer';
 
-      let primaryParentLayerPath = args[0];
+      const primaryParentLayerPath = args[0];
       assert(
-        `Wrong type of \`parentLayerPath\` argument: actual type is \`${typeOf(primaryParentLayerPath)}\`, ` +
-        `but \`string\` is expected`,
-        typeOf(primaryParentLayerPath) === 'string');
+        `Wrong type of \`parentLayerPath\` argument: actual type is \`${typeOf(primaryParentLayerPath)}\`, `
+        + 'but `string` is expected',
+        typeOf(primaryParentLayerPath) === 'string'
+      );
 
-      let secondaryParentLayerPath = primaryParentLayerPath.indexOf('hierarchy') !== -1 ? 'model.otherLayers' : 'model.hierarchy';
-      let backgroundLayerPath = 'model.backgroundLayers';
+      const secondaryParentLayerPath = primaryParentLayerPath.indexOf('hierarchy') !== -1 ? 'model.otherLayers' : 'model.hierarchy';
+      const backgroundLayerPath = 'model.backgroundLayers';
 
-      let {
+      const {
         layerProperties,
-        layer
+        layer,
       } = args[args.length - 1];
       assert(
-        `Wrong type of \`layerProperties\` property: actual type is \`${typeOf(layerProperties)}\`, ` +
-        `but \`object\` or  \`instance\` is expected`,
-        typeOf(layerProperties) === 'object' || typeOf(layerProperties) === 'instance');
+        `Wrong type of \`layerProperties\` property: actual type is \`${typeOf(layerProperties)}\`, `
+        + 'but `object` or  `instance` is expected',
+        typeOf(layerProperties) === 'object' || typeOf(layerProperties) === 'instance'
+      );
 
-      let primaryParentLayer = getRecord(this, primaryParentLayerPath);
+      const primaryParentLayer = getRecord(this, primaryParentLayerPath);
       assert(
-        `Wrong type of \`parentLayer\` property: actual type is \`${typeOf(primaryParentLayer)}\`, ` +
-        `but \`array\` or \`object\` or  \`instance\` is expected`,
-        isArray(primaryParentLayer) || typeOf(primaryParentLayer) === 'object' || typeOf(primaryParentLayer) === 'instance');
+        `Wrong type of \`parentLayer\` property: actual type is \`${typeOf(primaryParentLayer)}\`, `
+        + 'but `array` or `object` or  `instance` is expected',
+        isArray(primaryParentLayer) || typeOf(primaryParentLayer) === 'object' || typeOf(primaryParentLayer) === 'instance'
+      );
 
-      let secondaryParentLayer = getRecord(this, secondaryParentLayerPath);
-      let backgroundLayer = getRecord(this, backgroundLayerPath);
+      const secondaryParentLayer = getRecord(this, secondaryParentLayerPath);
+      const backgroundLayer = getRecord(this, backgroundLayerPath);
 
       let primaryChildLayers = isArray(primaryParentLayer) ? primaryParentLayer : get(primaryParentLayer, 'layers');
       if (isNone(primaryChildLayers)) {
@@ -400,13 +408,14 @@ export default Mixin.create({
       }
 
       assert(
-        `Wrong type of \`parentLayer.layers\` property: actual type is \`${typeOf(primaryChildLayers)}\`, ` +
-        `but \`Ember.NativeArray\` is expected`,
-        isArray(primaryChildLayers) && typeOf(primaryChildLayers.pushObject) === 'function');
+        `Wrong type of \`parentLayer.layers\` property: actual type is \`${typeOf(primaryChildLayers)}\`, `
+        + 'but `Ember.NativeArray` is expected',
+        isArray(primaryChildLayers) && typeOf(primaryChildLayers.pushObject) === 'function'
+      );
 
       let childLayer;
       if (isNone(layer)) {
-        childLayer = this.createLayer({ parentLayer: primaryParentLayer, layerProperties: layerProperties });
+        childLayer = this.createLayer({ parentLayer: primaryParentLayer, layerProperties, });
       } else {
         layer.setProperties(layerProperties);
         childLayer = layer;
@@ -416,7 +425,7 @@ export default Mixin.create({
         set(childLayer, 'layers', A());
       }
 
-      let canBeBackground = childLayer.get('settingsAsObject.backgroundSettings.canBeBackground');
+      const canBeBackground = childLayer.get('settingsAsObject.backgroundSettings.canBeBackground');
 
       if (canBeBackground) {
         if (primaryParentLayerPath.indexOf('hierarchy') !== -1) {
@@ -435,7 +444,7 @@ export default Mixin.create({
         }
       }
 
-      let rootArray = this.get(rootPath);
+      const rootArray = this.get(rootPath);
       rootArray.pushObject(childLayer);
 
       setIndexes(rootArray, this.get('model.hierarchy'));
@@ -501,29 +510,32 @@ export default Mixin.create({
       ```
     */
     onMapLayerEdit(...args) {
-      let layerPath = args[0];
+      const layerPath = args[0];
       assert(
-        `Wrong type of \`layerPath\` argument: actual type is \`${typeOf(layerPath)}\`, ` +
-        `but \`string\` is expected`,
-        typeOf(layerPath) === 'string');
+        `Wrong type of \`layerPath\` argument: actual type is \`${typeOf(layerPath)}\`, `
+        + 'but `string` is expected',
+        typeOf(layerPath) === 'string'
+      );
 
-      let {
-        layerProperties
+      const {
+        layerProperties,
       } = args[args.length - 1];
       assert(
-        `Wrong type of \`layerProperties\` property: actual type is \`${typeOf(layerProperties)}\`, ` +
-        `but \`object\` or  \`instance\` is expected`,
-        typeOf(layerProperties) === 'object' || typeOf(layerProperties) === 'instance');
+        `Wrong type of \`layerProperties\` property: actual type is \`${typeOf(layerProperties)}\`, `
+        + 'but `object` or  `instance` is expected',
+        typeOf(layerProperties) === 'object' || typeOf(layerProperties) === 'instance'
+      );
 
-      let layer = getRecord(this, layerPath);
+      const layer = getRecord(this, layerPath);
       assert(
-        `Wrong type of \`layer\` property: actual type is \`${typeOf(layer)}\`, ` +
-        `but \`object\` or  \`instance\` is expected`,
-        typeOf(layer) === 'object' || typeOf(layer) === 'instance');
+        `Wrong type of \`layer\` property: actual type is \`${typeOf(layer)}\`, `
+        + 'but `object` or  `instance` is expected',
+        typeOf(layer) === 'object' || typeOf(layer) === 'instance'
+      );
 
       this.editLayer({
-        layer: layer,
-        layerProperties: layerProperties
+        layer,
+        layerProperties,
       });
     },
 
@@ -554,27 +566,29 @@ export default Mixin.create({
       ```
     */
     onMapLayerRemove(...args) {
-      let rootPath = 'model.mapLayer';
-      let layerPath = args[0];
+      const rootPath = 'model.mapLayer';
+      const layerPath = args[0];
       assert(
-        `Wrong type of \`layerPath\` argument: actual type is \`${typeOf(layerPath)}\`, ` +
-        `but \`string\` is expected`,
-        typeOf(layerPath) === 'string');
+        `Wrong type of \`layerPath\` argument: actual type is \`${typeOf(layerPath)}\`, `
+        + 'but `string` is expected',
+        typeOf(layerPath) === 'string'
+      );
 
-      let layer = getRecord(this, layerPath);
+      const layer = getRecord(this, layerPath);
       assert(
-        `Wrong type of \`layer\` property: actual type is \`${typeOf(layer)}\`, ` +
-        `but \`object\` or  \`instance\` is expected`,
-        typeOf(layer) === 'object' || typeOf(layer) === 'instance');
+        `Wrong type of \`layer\` property: actual type is \`${typeOf(layer)}\`, `
+        + 'but `object` or  `instance` is expected',
+        typeOf(layer) === 'object' || typeOf(layer) === 'instance'
+      );
 
       this.removeLayer({
-        layer: layer
+        layer,
       });
 
-      let rootArray = this.get(rootPath);
+      const rootArray = this.get(rootPath);
 
       setIndexes(rootArray, this.get('model.hierarchy'));
-    }
+    },
   },
 
   /**
@@ -589,7 +603,7 @@ export default Mixin.create({
   */
   createLayer(options) {
     options = options || {};
-    let layerProperties = get(options, 'layerProperties');
+    const layerProperties = get(options, 'layerProperties');
 
     return layerProperties;
   },
@@ -606,8 +620,8 @@ export default Mixin.create({
   */
   editLayer(options) {
     options = options || {};
-    let layerProperties = get(options, 'layerProperties');
-    let layer = get(options, 'layer');
+    const layerProperties = get(options, 'layerProperties');
+    const layer = get(options, 'layer');
     layer.setProperties(layerProperties);
 
     return layer;
@@ -624,19 +638,19 @@ export default Mixin.create({
   */
   removeLayer(options) {
     options = options || {};
-    let layer = get(options, 'layer');
+    const layer = get(options, 'layer');
 
-    let childLayers = get(layer, 'layers');
+    const childLayers = get(layer, 'layers');
 
     if (isArray(childLayers)) {
       childLayers.forEach((item) => {
         this.removeLayer({
-          layer: item
+          layer: item,
         });
       }, this);
     }
 
     set(layer, 'isDeleted', true);
     return layer;
-  }
+  },
 });

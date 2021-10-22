@@ -8,8 +8,8 @@ import { get, set } from '@ember/object';
 import { isNone, typeOf } from '@ember/utils';
 import { A, isArray } from '@ember/array';
 import { assert } from '@ember/debug';
-import BaseNonclickableMapTool from './base-nonclickable';
 import * as buffer from 'npm:@turf/buffer';
+import BaseNonclickableMapTool from './base-nonclickable';
 
 /**
   Identify map-tool.
@@ -126,7 +126,7 @@ export default BaseNonclickableMapTool.extend({
     @returns {Object[]} Flat array of layers satisfying to current identification mode.
     @private
   */
-  _getLayersToIdentify({ excludedLayers }) {
+  _getLayersToIdentify({ excludedLayers, }) {
     assert('Method \'_getLayersToIdentify\' must be overridden in some extended identify map-tool.', false);
   },
 
@@ -144,19 +144,19 @@ export default BaseNonclickableMapTool.extend({
     polygonLayer,
     bufferedMainPolygonLayer,
     latlng,
-    excludedLayers
+    excludedLayers,
   }) {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
 
-    let e = {
-      latlng: latlng,
-      polygonLayer: polygonLayer,
-      bufferedMainPolygonLayer: bufferedMainPolygonLayer,
+    const e = {
+      latlng,
+      polygonLayer,
+      bufferedMainPolygonLayer,
       excludedLayers: A(excludedLayers || []),
       layers: this._getLayersToIdentify({
-        excludedLayers
+        excludedLayers,
       }),
-      results: A()
+      results: A(),
     };
 
     // Fire custom event on leaflet map (if there is layers to identify).
@@ -166,7 +166,7 @@ export default BaseNonclickableMapTool.extend({
 
     // Promises array could be totally changed in 'flexberry-map:identify' event handlers, we should prevent possible errors.
     e.results = isArray(e.results) ? e.results : A();
-    let promises = A();
+    const promises = A();
 
     // Handle each result.
     // Detach promises from already received features.
@@ -175,7 +175,7 @@ export default BaseNonclickableMapTool.extend({
         return;
       }
 
-      let features = get(result, 'features');
+      const features = get(result, 'features');
 
       if (!(features instanceof Promise)) {
         return;
@@ -212,30 +212,31 @@ export default BaseNonclickableMapTool.extend({
         (features) => {
           // Show new features.
           features.forEach((feature) => {
-            let leafletLayer = get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+            const leafletLayer = get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
             if (typeOf(leafletLayer.setStyle) === 'function') {
               leafletLayer.setStyle({
                 color: 'salmon',
                 weight: 2,
-                fillOpacity: 0.3
+                fillOpacity: 0.3,
               });
             }
 
             set(feature, 'leafletLayer', leafletLayer);
           });
-        });
+        }
+      );
     });
 
     // Hide map loader.
-    let leafletMap = this.get('leafletMap');
-    leafletMap.flexberryMap.loader.hide({ content: '' });
+    const leafletMap = this.get('leafletMap');
+    leafletMap.flexberryMap.loader.hide({ content: '', });
 
     // Assign current tool's boundingBoxLayer
-    let polygonLayer = get(e, 'polygonLayer');
+    const polygonLayer = get(e, 'polygonLayer');
     this.set('polygonLayer', polygonLayer);
 
     // Assign current tool's boundingBoxLayer
-    let bufferedLayer = get(e, 'bufferedMainPolygonLayer');
+    const bufferedLayer = get(e, 'bufferedMainPolygonLayer');
     this.set('bufferedMainPolygonLayer', bufferedLayer);
 
     // Fire custom event on leaflet map.
@@ -250,14 +251,14 @@ export default BaseNonclickableMapTool.extend({
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#polygon">L.Polygon</a>} e.layer Drawn polygon layer.
     @private
   */
-  _drawingDidEnd({ layer }) {
+  _drawingDidEnd({ layer, }) {
     let workingPolygon;
     let bufferedMainPolygon;
-    let isBufferActive = this.get('bufferActive');
-    let bufferRadius = this.get('bufferRadius');
+    const isBufferActive = this.get('bufferActive');
+    const bufferRadius = this.get('bufferRadius');
 
     if (isBufferActive && bufferRadius > 0) {
-      let buffer = this._drawBuffer(layer.toGeoJSON());
+      const buffer = this._drawBuffer(layer.toGeoJSON());
       workingPolygon = buffer.getLayers()[0];
       bufferedMainPolygon = layer;
     } else {
@@ -266,7 +267,7 @@ export default BaseNonclickableMapTool.extend({
 
     let latlng;
     let boundingBox;
-    let workingPolygonType = workingPolygon.toGeoJSON().geometry.type;
+    const workingPolygonType = workingPolygon.toGeoJSON().geometry.type;
 
     if (workingPolygonType !== 'Point') {
       latlng = workingPolygon.getCenter();
@@ -275,13 +276,13 @@ export default BaseNonclickableMapTool.extend({
         // Identification area is point.
         // Identification can be incorrect or even failed in such situation,
         // so extend identification area a little (around specified point).
-        let leafletMap = this.get('leafletMap');
-        let y = leafletMap.getSize().y / 2;
-        let a = leafletMap.containerPointToLatLng([0, y]);
-        let b = leafletMap.containerPointToLatLng([100, y]);
+        const leafletMap = this.get('leafletMap');
+        const y = leafletMap.getSize().y / 2;
+        const a = leafletMap.containerPointToLatLng([0, y]);
+        const b = leafletMap.containerPointToLatLng([100, y]);
 
         // Current scale (related to current zoom level).
-        let maxMeters = leafletMap.distance(a, b);
+        const maxMeters = leafletMap.distance(a, b);
 
         // Bounding box around specified point with radius of current scale * 0.05.
         boundingBox = boundingBox.getSouthWest().toBounds(maxMeters * 0.05);
@@ -297,14 +298,14 @@ export default BaseNonclickableMapTool.extend({
     }
 
     // Show map loader.
-    let leafletMap = this.get('leafletMap');
-    leafletMap.flexberryMap.loader.show({ content: this.get('i18n').t('map-tools.identify.loader-message') });
+    const leafletMap = this.get('leafletMap');
+    leafletMap.flexberryMap.loader.show({ content: this.get('i18n').t('map-tools.identify.loader-message'), });
 
     // Start identification.
     this._startIdentification({
       polygonLayer: workingPolygon,
       bufferedMainPolygonLayer: bufferedMainPolygon,
-      latlng: latlng
+      latlng,
     });
   },
 
@@ -316,12 +317,12 @@ export default BaseNonclickableMapTool.extend({
     @private
   */
   _drawBuffer(layer) {
-    let radius = this.get('bufferRadius');
-    let units = this.get('bufferUnits');
+    const radius = this.get('bufferRadius');
+    const units = this.get('bufferUnits');
 
-    let buf = buffer.default(layer, radius, { units: units });
-    let leafletMap = this.get('leafletMap');
-    let _bufferLayer = L.geoJSON(buf).addTo(leafletMap);
+    const buf = buffer.default(layer, radius, { units, });
+    const leafletMap = this.get('leafletMap');
+    const _bufferLayer = L.geoJSON(buf).addTo(leafletMap);
     return _bufferLayer;
   },
 
@@ -333,11 +334,11 @@ export default BaseNonclickableMapTool.extend({
   */
   _enable() {
     this._super(...arguments);
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     let editTools = this.get('_editTools');
     if (isNone(editTools)) {
       editTools = new L.Editable(leafletMap, {
-        drawingCursor: this.get('cursor')
+        drawingCursor: this.get('cursor'),
       });
       this.set('_editTools', editTools);
     }
@@ -355,7 +356,7 @@ export default BaseNonclickableMapTool.extend({
     this._clearPolygonLayer();
     this._super(...arguments);
 
-    let editTools = this.get('_editTools');
+    const editTools = this.get('_editTools');
     if (!isNone(editTools)) {
       editTools.off('editable:drawing:end', this._drawingDidEnd, this);
       editTools.stopDrawing();
@@ -368,13 +369,13 @@ export default BaseNonclickableMapTool.extend({
   willDestroy() {
     this._super(...arguments);
 
-    let editLayer = this.get('_editTools.editLayer');
+    const editLayer = this.get('_editTools.editLayer');
     if (!isNone(editLayer)) {
       editLayer.clearLayers();
       editLayer.remove();
     }
 
-    let featuresLayer = this.get('_editTools.featuresLayer');
+    const featuresLayer = this.get('_editTools.featuresLayer');
     if (!isNone(featuresLayer)) {
       featuresLayer.clearLayers();
       featuresLayer.remove();
@@ -391,16 +392,15 @@ export default BaseNonclickableMapTool.extend({
   */
   _clearPolygonLayer() {
     // Remove already drawn figure.
-    let polygonLayer = this.get('polygonLayer');
+    const polygonLayer = this.get('polygonLayer');
     if (polygonLayer) {
       polygonLayer.disableEdit();
       polygonLayer.remove();
     }
 
-    let bufferedMainPolygon = this.get('bufferedMainPolygonLayer');
+    const bufferedMainPolygon = this.get('bufferedMainPolygonLayer');
     if (bufferedMainPolygon) {
       bufferedMainPolygon.remove();
     }
-
-  }
+  },
 });

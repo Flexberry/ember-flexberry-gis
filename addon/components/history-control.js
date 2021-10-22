@@ -70,11 +70,11 @@ export default BaseControl.extend({
     @method localeDidChange
     @private
   */
-  _localeDidChange: observer('i18n.locale', function() {
-    let i18n = this.get('i18n');
-    let $historyControl = $(this.get('leafletMap._container')).find('.leaflet-control-container .history-control');
-    let $historyBackButton = $historyControl.find('.history-back-button');
-    let $historyForwardButton = $historyControl.find('.history-forward-button');
+  _localeDidChange: observer('i18n.locale', function () {
+    const i18n = this.get('i18n');
+    const $historyControl = $(this.get('leafletMap._container')).find('.leaflet-control-container .history-control');
+    const $historyBackButton = $historyControl.find('.history-back-button');
+    const $historyForwardButton = $historyControl.find('.history-forward-button');
 
     $historyBackButton.attr('title', i18n.t('components.history-control.back-button.title'));
     $historyForwardButton.attr('title', i18n.t('components.history-control.forward-button.title'));
@@ -90,5 +90,5 @@ export default BaseControl.extend({
     scheduleOnce('afterRender', this, '_localeDidChange');
 
     return new L.HistoryControl(this.get('options'));
-  }
+  },
 });

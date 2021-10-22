@@ -31,13 +31,13 @@ export default Component.extend({
     @private
   */
   _isWmsType: computed('type', function () {
-    let type = this.get('type');
+    const type = this.get('type');
 
     if (!isNone(type) && type.indexOf('wms') > -1) {
       return true;
-    } else {
-      return false;
     }
+
+    return false;
   }),
 
   /**
@@ -48,12 +48,12 @@ export default Component.extend({
     @default false
     @private
   */
-  _isVectorType: computed('type', function() {
-    let className = this.get('type');
-    let layerClass = isNone(className) ?
-      null :
-      getOwner(this).knownForType('layer', className);
+  _isVectorType: computed('type', function () {
+    const className = this.get('type');
+    const layerClass = isNone(className)
+      ? null
+      : getOwner(this).knownForType('layer', className);
 
     return !isNone(layerClass) && layerClass.isVectorType(this.get('layerModel'));
-  })
+  }),
 });

@@ -10,13 +10,13 @@ import ODataSearchSettings from './map-commands-dialogs/search-settings/odata-ve
 
 export default {
   'go-to': GoTo,
-  'export': ExportDialog,
-  'search': Search,
+  export: ExportDialog,
+  search: Search,
   'search-settings': {
     'geocoder-osm-ru': GeocoderOsmRuSearchSettings,
-    'wfs': WFSSearchSettings,
-    'geojson':GeoJSONSearchSettings,
-    'kml': KMLSearchSettings,
-    'odata-vector': ODataSearchSettings
-  }
+    wfs: WFSSearchSettings,
+    geojson: GeoJSONSearchSettings,
+    kml: KMLSearchSettings,
+    'odata-vector': ODataSearchSettings,
+  },
 };

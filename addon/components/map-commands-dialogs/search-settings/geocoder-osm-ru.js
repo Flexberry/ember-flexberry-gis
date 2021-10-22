@@ -34,21 +34,22 @@ export default Component.extend({
     @readOnly
     @private
   */
-  _autocompleteUrl: computed('layer.settingsAsObject.autocompleteUrl', '_leafletMapBoundingBox', function() {
+  _autocompleteUrl: computed('layer.settingsAsObject.autocompleteUrl', '_leafletMapBoundingBox', function () {
     let autocompleteUrl = '';
     let baseUrl = this.get('layer.settingsAsObject.autocompleteUrl');
     if (isBlank(baseUrl)) {
       return autocompleteUrl;
-    } else {
-      baseUrl = $('<a>', { href: baseUrl });
     }
 
-    let leafletMapBoundingBox = this.get('_leafletMapBoundingBox');
-    autocompleteUrl = `//${baseUrl.prop('hostname')}` +
-      `${baseUrl.prop('port') ? ':' + baseUrl.prop('port') : ''}` +
-      `${baseUrl.prop('pathname') ? baseUrl.prop('pathname') : ''}` +
-      `${baseUrl.prop('search') ? baseUrl.prop('search') : '?'}q={query}` +
-      `${leafletMapBoundingBox ? '&bbox' + leafletMapBoundingBox : ''}`;
+    baseUrl = $('<a>', { href: baseUrl, });
+
+
+    const leafletMapBoundingBox = this.get('_leafletMapBoundingBox');
+    autocompleteUrl = `//${baseUrl.prop('hostname')}`
+      + `${baseUrl.prop('port') ? `:${baseUrl.prop('port')}` : ''}`
+      + `${baseUrl.prop('pathname') ? baseUrl.prop('pathname') : ''}`
+      + `${baseUrl.prop('search') ? baseUrl.prop('search') : '?'}q={query}`
+      + `${leafletMapBoundingBox ? `&bbox${leafletMapBoundingBox}` : ''}`;
 
     return autocompleteUrl;
   }),
@@ -111,8 +112,8 @@ export default Component.extend({
     @method _leafletMapDidChange
     @private
   */
-  _leafletMapDidChange: on('init', observer('leafletMap', function() {
-    let leafletMap = this.get('leafletMap');
+  _leafletMapDidChange: on('init', observer('leafletMap', function () {
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
       leafletMap.on('moveend', this._onLeafletMapViewChanged, this);
       leafletMap.on('zoomend', this._onLeafletMapViewChanged, this);
@@ -137,12 +138,12 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
       leafletMap.off('moveend', this._onLeafletMapViewChanged, this);
       leafletMap.off('zoomend', this._onLeafletMapViewChanged, this);
 
       this.set('leafletMap', null);
     }
-  }
+  },
 });

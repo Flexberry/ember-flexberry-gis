@@ -16,15 +16,15 @@ import SlotsMixin from 'ember-block-slots';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DomActionsMixin from 'ember-flexberry/mixins/dom-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
-import DynamicPropertiesMixin from '../mixins/dynamic-properties';
-import { copyLayer } from '../utils/copy-layer';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
-
 import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
-import layout from '../templates/components/flexberry-maplayer';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import DynamicPropertiesMixin from '../mixins/dynamic-properties';
+import { copyLayer } from '../utils/copy-layer';
+
+import layout from '../templates/components/flexberry-maplayer';
 
 /**
   Component's CSS-classes names.
@@ -49,18 +49,18 @@ const flexberryClassNamesPrefix = 'flexberry-maplayer';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
-  visibilityCheckbox: flexberryClassNamesPrefix + '-visibility-checkbox',
-  opacitySlider: flexberryClassNamesPrefix + '-opacity-slider',
-  opacityLabel: flexberryClassNamesPrefix + '-opacity-label',
-  typeIcon: flexberryClassNamesPrefix + '-type-icon',
-  addButton: flexberryClassNamesPrefix + '-add-button',
-  copyButton: flexberryClassNamesPrefix + '-copy-button',
-  editButton: flexberryClassNamesPrefix + '-edit-button',
-  removeButton: flexberryClassNamesPrefix + '-remove-button',
-  boundsButton: flexberryClassNamesPrefix + '-bounds-button',
-  attributesButton: flexberryClassNamesPrefix + '-attributes-button',
-  caption: flexberryClassNamesPrefix + '-caption-label',
-  legendToggler: flexberryClassNamesPrefix + '-legend-toggler',
+  visibilityCheckbox: `${flexberryClassNamesPrefix}-visibility-checkbox`,
+  opacitySlider: `${flexberryClassNamesPrefix}-opacity-slider`,
+  opacityLabel: `${flexberryClassNamesPrefix}-opacity-label`,
+  typeIcon: `${flexberryClassNamesPrefix}-type-icon`,
+  addButton: `${flexberryClassNamesPrefix}-add-button`,
+  copyButton: `${flexberryClassNamesPrefix}-copy-button`,
+  editButton: `${flexberryClassNamesPrefix}-edit-button`,
+  removeButton: `${flexberryClassNamesPrefix}-remove-button`,
+  boundsButton: `${flexberryClassNamesPrefix}-bounds-button`,
+  attributesButton: `${flexberryClassNamesPrefix}-attributes-button`,
+  caption: `${flexberryClassNamesPrefix}-caption-label`,
+  legendToggler: `${flexberryClassNamesPrefix}-legend-toggler`,
   preventExpandCollapse: FlexberryTreenodeComponent.flexberryClassNames.preventExpandCollapse,
 };
 
@@ -143,7 +143,7 @@ const flexberryClassNames = {
   @uses DynamicActionsMixin
   @uses DynamicPropertiesMixin
 */
-let FlexberryMaplayerComponent = Component.extend(
+const FlexberryMaplayerComponent = Component.extend(
   SlotsMixin,
   RequiredActionsMixin,
   DomActionsMixin,
@@ -179,7 +179,7 @@ let FlexberryMaplayerComponent = Component.extend(
       @readonly
     */
     componentName: computed('elementId', function () {
-      return 'treenode' + this.get('elementId');
+      return `treenode${this.get('elementId')}`;
     }),
 
     /**
@@ -191,11 +191,9 @@ let FlexberryMaplayerComponent = Component.extend(
       @private
     */
     _hasLayers: computed('layer.layers.[]', 'layer.layers.@each.isDeleted', function () {
-      let layers = this.get('layer.layers');
+      const layers = this.get('layer.layers');
 
-      return isArray(layers) && layers.filter((layer) => {
-        return !isNone(layer) && get(layer, 'isDeleted') !== true;
-      }).length > 0;
+      return isArray(layers) && layers.filter((layer) => !isNone(layer) && get(layer, 'isDeleted') !== true).length > 0;
     }),
 
     /**
@@ -234,10 +232,10 @@ let FlexberryMaplayerComponent = Component.extend(
       @private
     */
     _opacityDisplayValue: computed('layer.settingsAsObject.opacity', function () {
-      let opacity = this.get('layer.settingsAsObject.opacity');
+      const opacity = this.get('layer.settingsAsObject.opacity');
 
-      let result = opacity !== 0 && opacity > 0.01 ? Math.round(opacity * 100) : 0;
-      return result.toString() + '%';
+      const result = opacity !== 0 && opacity > 0.01 ? Math.round(opacity * 100) : 0;
+      return `${result.toString()}%`;
     }),
 
     /**
@@ -261,7 +259,7 @@ let FlexberryMaplayerComponent = Component.extend(
       @private
     */
     _typeIconClass: computed('_layerClassFactory', function () {
-      let layerClassFactory = this.get('_layerClassFactory');
+      const layerClassFactory = this.get('_layerClassFactory');
 
       return get(layerClassFactory, 'iconClass');
     }),
@@ -275,7 +273,7 @@ let FlexberryMaplayerComponent = Component.extend(
       @private
     */
     _addOperationIsAvailable: computed('_layerClassFactory', function () {
-      let layerClassFactory = this.get('_layerClassFactory');
+      const layerClassFactory = this.get('_layerClassFactory');
 
       return A(get(layerClassFactory, 'operations') || []).contains('add');
     }),
@@ -301,7 +299,7 @@ let FlexberryMaplayerComponent = Component.extend(
       @private
     */
     _attributesOperationIsAvailable: computed('_layerClassFactory', 'layer.layerInitialized', function () {
-      let layerClassFactory = this.get('_layerClassFactory');
+      const layerClassFactory = this.get('_layerClassFactory');
 
       return A(get(layerClassFactory, 'operations') || []).includes('attributes') && this.get('layer.layerInitialized');
     }),
@@ -479,10 +477,10 @@ let FlexberryMaplayerComponent = Component.extend(
     */
     hasBeenExpanded: false,
 
-    //side to add layer to comapre
+    // side to add layer to comapre
     side: '',
 
-    //compare enabled
+    // compare enabled
     compareLayersEnabled: false,
 
     /**
@@ -528,24 +526,25 @@ let FlexberryMaplayerComponent = Component.extend(
       }
 
       if (!this.get('readonly')) {
-        let _this = this;
-        let $caption = $('.ui.tab.treeview label.flexberry-maplayer-caption-label');
+        const _this = this;
+        const $caption = $('.ui.tab.treeview label.flexberry-maplayer-caption-label');
         if ($caption.length > 0) {
           $caption.hover(
-            function() {
-              let $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
+            function () {
+              const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
               $toolbar.removeClass('hidden');
               $(this).addClass('blur');
             },
-            function() {
-              let $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
+            function () {
+              const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
               $toolbar.hover(
                 () => { },
                 () => {
                   $toolbar.addClass('hidden');
                   $(this).removeClass('blur');
                   _this.set('isSubmenu', false);
-                });
+                }
+              );
             }
           );
         }
@@ -557,16 +556,16 @@ let FlexberryMaplayerComponent = Component.extend(
 
       @method updateClip
     */
-    updateClip: function () {
-      let map = this.get('leafletMap');
-      let sbs = this.get('sideBySide');
-      var nw = map.containerPointToLayerPoint([0, 0]);
-      var se = map.containerPointToLayerPoint(map.getSize());
-      var clipX = nw.x + sbs.getPosition();
-      var dividerX = sbs.getPosition();
-      sbs._divider.style.left = dividerX + 'px';
-      var clipLeft = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)';
-      var clipRight = 'rect(' + [nw.y, se.x, se.y, clipX].join('px,') + 'px)';
+    updateClip() {
+      const map = this.get('leafletMap');
+      const sbs = this.get('sideBySide');
+      const nw = map.containerPointToLayerPoint([0, 0]);
+      const se = map.containerPointToLayerPoint(map.getSize());
+      const clipX = nw.x + sbs.getPosition();
+      const dividerX = sbs.getPosition();
+      sbs._divider.style.left = `${dividerX}px`;
+      const clipLeft = `rect(${[nw.y, clipX, se.y, nw.x].join('px,')}px)`;
+      const clipRight = `rect(${[nw.y, se.x, se.y, clipX].join('px,')}px)`;
       sbs._leftLayers.forEach(function (layer) {
         if (!isNone(layer) && !isNone(layer.getContainer)) {
           layer.getContainer().style.clip = clipLeft;
@@ -595,8 +594,8 @@ let FlexberryMaplayerComponent = Component.extend(
         @param {Object} e event args.
       */
       onChange(e) {
-        let layer = this.get('layer');
-        let sbs = this.get('sideBySide');
+        const layer = this.get('layer');
+        const sbs = this.get('sideBySide');
         set(sbs, 'baseUpdateClip', sbs._updateClip);
         if (e.newValue === false) {
           sbs.off('dividermove', this.updateClip, this);
@@ -623,7 +622,7 @@ let FlexberryMaplayerComponent = Component.extend(
           }
         } else {
           set(layer, 'visibility', true);
-          let map = this.get('leafletMap');
+          const map = this.get('leafletMap');
           sbs._updateClip = this.get('updateClip').bind(this);
           sbs.on('dividermove', this.updateClip, this);
 
@@ -635,8 +634,8 @@ let FlexberryMaplayerComponent = Component.extend(
               this.set('leftLayer.side', null);
             }
 
-            let leafletObject = get(layer, '_leafletObject').addTo(map);
-            let left = [];
+            const leafletObject = get(layer, '_leafletObject').addTo(map);
+            const left = [];
             left.push(leafletObject);
             if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
               left.push(leafletObject._labelsLayer.addTo(map));
@@ -655,8 +654,8 @@ let FlexberryMaplayerComponent = Component.extend(
               this.set('rightLayer.side', null);
             }
 
-            let leafletObject = get(layer, '_leafletObject').addTo(map);
-            let right = [];
+            const leafletObject = get(layer, '_leafletObject').addTo(map);
+            const right = [];
             right.push(leafletObject);
             if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
               right.push(leafletObject._labelsLayer.addTo(map));
@@ -677,14 +676,14 @@ let FlexberryMaplayerComponent = Component.extend(
         @method actions.onSubmenu
       */
       onSubmenu() {
-        let component = $('.' + this.get('componentName'));
-        let moreButton = $('.more.floated.button', component);
-        let elements = $('.more.submenu.hidden', component);
+        const component = $(`.${this.get('componentName')}`);
+        const moreButton = $('.more.floated.button', component);
+        const elements = $('.more.submenu.hidden', component);
         openCloseSubmenu(this, moreButton, elements, 2);
       },
 
       onAddCompare() {
-        //добавление в зависимости от стороны
+        // добавление в зависимости от стороны
       },
       /**
         Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
@@ -708,7 +707,7 @@ let FlexberryMaplayerComponent = Component.extend(
       */
       onBeforeExpand(...args) {
         // Set has been expanded flag once.
-        let hasBeenExpanded = this.set('hasBeenExpanded');
+        const hasBeenExpanded = this.set('hasBeenExpanded');
         if (!hasBeenExpanded) {
           this.set('hasBeenExpanded', true);
         }
@@ -795,8 +794,8 @@ let FlexberryMaplayerComponent = Component.extend(
       */
       onAddButtonClick(e) {
         // Create empty layer.
-        let store = this.get('store');
-        this.set('_addDialogLayer', store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId() }));
+        const store = this.get('store');
+        this.set('_addDialogLayer', store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId(), }));
 
         // Include dialog to markup.
         this.set('_addDialogHasBeenRequested', true);
@@ -847,12 +846,12 @@ let FlexberryMaplayerComponent = Component.extend(
         @param {Object} e.layerProperties Object containing properties of layer copy.
       */
       onCopyDialogApprove(...args) {
-        let { layerProperties } = args[args.length - 1];
-        let layer = this.get('_copyDialogLayer');
+        const { layerProperties, } = args[args.length - 1];
+        const layer = this.get('_copyDialogLayer');
         layer.setProperties(layerProperties);
 
         // Send outer 'copy' action.
-        this.sendAction('copy', { layerProperties, layer });
+        this.sendAction('copy', { layerProperties, layer, });
       },
 
       /**
@@ -915,7 +914,7 @@ let FlexberryMaplayerComponent = Component.extend(
       onRemoveDialogApprove(...args) {
         // Send outer 'remove' action.
         this.sendAction('remove', ...args);
-      }
+      },
     },
 
     /**
@@ -926,8 +925,8 @@ let FlexberryMaplayerComponent = Component.extend(
       @param {Boolean} ignoreLinks Indicates whether copying links.
     */
     createLayerCopy(resultPropertyName, ignoreLinks) {
-      let store = this.get('store');
-      let layer = this.get('layer');
+      const store = this.get('store');
+      const layer = this.get('layer');
 
       this.set(resultPropertyName, copyLayer(layer, store, ignoreLinks));
     },
@@ -1026,7 +1025,7 @@ let FlexberryMaplayerComponent = Component.extend(
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryMaplayerComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryMaplayerComponent;

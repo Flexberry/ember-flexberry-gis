@@ -1,122 +1,122 @@
 export default {
-  'caption': 'Edit',
+  caption: 'Edit',
   'approve-button': {
-    'caption': 'Ok'
+    caption: 'Ok',
   },
   'deny-button': {
-    'caption': 'Cancel'
+    caption: 'Cancel',
   },
   'mode-dropdown': {
-    'caption': 'Adding mode'
+    caption: 'Adding mode',
   },
   'type-dropdown': {
-    'caption': 'Layer type'
+    caption: 'Layer type',
   },
   'name-textbox': {
-    'caption': 'Layer name'
+    caption: 'Layer name',
   },
   'scale-textbox': {
-    'caption': 'Scale'
+    caption: 'Scale',
   },
   'description-textbox': {
-    'caption': 'Layer description'
+    caption: 'Layer description',
   },
   'keywords-textbox': {
-    'caption': 'Layer keywords'
+    caption: 'Layer keywords',
   },
   'error-message': {
-    'caption': 'Error'
+    caption: 'Error',
   },
   'get-capabilities-button': {
-    'caption': 'Get capabilities',
-    'error-caption': 'To get capabilities fill required fields: '
+    caption: 'Get capabilities',
+    'error-caption': 'To get capabilities fill required fields: ',
   },
   'bounds-segment': {
-    'caption': 'Bounding box',
+    caption: 'Bounding box',
     'error-caption': 'Wrong format, only numbers allowed',
     'min-x-textbox': {
-      'caption': 'Left border'
+      caption: 'Left border',
     },
     'min-y-textbox': {
-      'caption': 'Bottom border'
+      caption: 'Bottom border',
     },
     'max-x-textbox': {
-      'caption': 'Right border'
+      caption: 'Right border',
     },
     'max-y-textbox': {
-      'caption': 'Top border'
+      caption: 'Top border',
     },
-    'options': {
-      'wgs84bbox': {
-        'caption': 'Latitude ang longitude',
+    options: {
+      wgs84bbox: {
+        caption: 'Latitude ang longitude',
       },
-      'bbox': {
-        'caption': 'Layer coordinate reference system (CRS)'
-      }
-    }
+      bbox: {
+        caption: 'Layer coordinate reference system (CRS)',
+      },
+    },
   },
   'links-segment': {
     'add-button': {
-      'caption': 'Add',
-    }
+      caption: 'Add',
+    },
   },
   'tabular-menu': {
     'main-tab': {
-      'caption': 'Main settings'
+      caption: 'Main settings',
     },
     'crs-tab': {
-      'caption': 'Coordinate system'
+      caption: 'Coordinate system',
     },
     'settings-tab': {
-      'caption': 'Layer settings'
+      caption: 'Layer settings',
     },
     'style-settings-tab': {
-      'caption': 'Style settings'
+      caption: 'Style settings',
     },
     'identify-settings-tab': {
-      'caption': 'Identification settings'
+      caption: 'Identification settings',
     },
     'search-settings-tab': {
-      'caption': 'Search settings'
+      caption: 'Search settings',
     },
     'display-settings-tab': {
-      'caption': 'Display settings'
+      caption: 'Display settings',
     },
     'legend-settings-tab': {
-      'caption': 'Legend settings'
+      caption: 'Legend settings',
     },
     'wfs-filter-settings-tab': {
-      'caption': 'Filter settings'
+      caption: 'Filter settings',
     },
     'links-tab': {
-      'caption': 'Links settings'
+      caption: 'Links settings',
     },
     'bbox-tab': {
-      'caption': 'Bounds'
+      caption: 'Bounds',
     },
     'pmodes-tab': {
-      'caption': 'Creation by prototype'
+      caption: 'Creation by prototype',
     },
     'label-settings-tab': {
-      'caption': 'Labels settings'
+      caption: 'Labels settings',
     },
     'loadfile-tab': {
-      'caption': 'Load from file'
-    }
+      caption: 'Load from file',
+    },
   },
-  'groups': {
+  groups: {
     'main-group': {
-      'caption': 'Main'
+      caption: 'Main',
     },
     'display-group': {
-      'caption': 'Display'
+      caption: 'Display',
     },
     'links-group': {
-      'caption': 'Links'
-    }
+      caption: 'Links',
+    },
   },
-  'move': {
-    'moveX': 'Move by X',
-    'moveY': 'Move by Y',
-  }
+  move: {
+    moveX: 'Move by X',
+    moveY: 'Move by Y',
+  },
 };

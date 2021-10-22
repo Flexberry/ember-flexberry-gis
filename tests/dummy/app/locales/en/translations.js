@@ -9,7 +9,7 @@ $.extend(true, translations, EmberFlexberryTranslations, EmberFlexberryGisTransl
 
 $.extend(true, translations, {
   'application-name': 'Test stand for ember-flexberry-gis',
-  'forms': FormsTranslations
+  forms: FormsTranslations,
 });
 
 export default translations;

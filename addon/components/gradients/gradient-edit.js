@@ -76,10 +76,10 @@ export default Component.extend({
 
     @method gradientColorStartObserver
   */
-  gradientColorStartObserver: observer('gradientColorStart', function() {
-    let startPickerClass = this.get('gradientStartPickerClass');
-    let gradientColorStart = this.get('gradientColorStart');
-    this.$(`.${startPickerClass} input`).minicolors('value', { color: gradientColorStart });
+  gradientColorStartObserver: observer('gradientColorStart', function () {
+    const startPickerClass = this.get('gradientStartPickerClass');
+    const gradientColorStart = this.get('gradientColorStart');
+    this.$(`.${startPickerClass} input`).minicolors('value', { color: gradientColorStart, });
   }),
 
   /**
@@ -87,10 +87,10 @@ export default Component.extend({
 
     @method gradientColorEndObserver
   */
-  gradientColorEndObserver: observer('gradientColorEnd', function() {
-    let endPickerClass = this.get('gradientEndPickerClass');
-    let gradientColorEnd = this.get('gradientColorEnd');
-    this.$(`.${endPickerClass} input`).minicolors('value', { color: gradientColorEnd });
+  gradientColorEndObserver: observer('gradientColorEnd', function () {
+    const endPickerClass = this.get('gradientEndPickerClass');
+    const gradientColorEnd = this.get('gradientColorEnd');
+    this.$(`.${endPickerClass} input`).minicolors('value', { color: gradientColorEnd, });
   }),
 
   actions: {
@@ -112,8 +112,8 @@ export default Component.extend({
     onGradientColorEndChange(e) {
       this.set('gradientColorEnd', e.newValue);
       this.sendAction('onGradientEdited');
-    }
-  }
+    },
+  },
 
   /**
     Gradient-tool component's action invoking when gradient edit .

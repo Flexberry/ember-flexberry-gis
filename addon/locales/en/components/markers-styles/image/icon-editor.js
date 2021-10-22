@@ -10,5 +10,5 @@ export default {
   'height-caption': 'Height',
   'aspectratio-caption': 'Keep aspect ratio',
   'setorigsize-caption': 'Set original size',
-  'enter-number': 'Enter number'
+  'enter-number': 'Enter number',
 };

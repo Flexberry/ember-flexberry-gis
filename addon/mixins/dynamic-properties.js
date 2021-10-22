@@ -77,24 +77,23 @@ export default Mixin.create({
     @private
   */
   _addDynamicProperty(propertyName) {
-    let dynamicProperties = this.get('dynamicProperties');
+    const dynamicProperties = this.get('dynamicProperties');
     if (isNone(dynamicProperties)) {
       return;
     }
 
     let previousCustomClassNames = [];
-    let setDynamicClassProperty = (propertyValue) => {
+    const setDynamicClassProperty = (propertyValue) => {
       assert(
-          `Wrong type of \`class\` property: ` +
-          `actual type is \`${typeOf(propertyValue)}\`, but \`string\` is expected.`,
-          typeOf(propertyValue) === 'string');
+        'Wrong type of `class` property: '
+          + `actual type is \`${typeOf(propertyValue)}\`, but \`string\` is expected.`,
+        typeOf(propertyValue) === 'string'
+      );
 
-      let customClassNames = A(propertyValue.split(' ')).map((customClassName) => {
-        return $.trim(customClassName);
-      });
+      const customClassNames = A(propertyValue.split(' ')).map((customClassName) => $.trim(customClassName));
 
       let classNames = this.get('classNames');
-      let $component = this.get('_componentWrapperIsAvailable') ? this.$() : null;
+      const $component = this.get('_componentWrapperIsAvailable') ? this.$() : null;
 
       if (!isArray(classNames)) {
         classNames = [];
@@ -103,7 +102,7 @@ export default Mixin.create({
 
       // Remove previously added custom class names.
       A(previousCustomClassNames).forEach((previousCustomClassName) => {
-        let index = classNames.indexOf(previousCustomClassName);
+        const index = classNames.indexOf(previousCustomClassName);
 
         if (index >= 0) {
           classNames.splice(index, 1);
@@ -131,8 +130,8 @@ export default Mixin.create({
       previousCustomClassNames = customClassNames;
     };
 
-    let setDynamicProperty = () => {
-      let propertyValue = this.get(`dynamicProperties.${propertyName}`);
+    const setDynamicProperty = () => {
+      const propertyValue = this.get(`dynamicProperties.${propertyName}`);
       if (!this.get('isTagless') && propertyName === 'class') {
         setDynamicClassProperty(propertyValue);
       } else {
@@ -143,10 +142,10 @@ export default Mixin.create({
     setDynamicProperty();
     this.addObserver(`dynamicProperties.${propertyName}`, setDynamicProperty);
 
-    let dynamicPropertiesMetadata = this.get('_dynamicPropertiesMetadata');
+    const dynamicPropertiesMetadata = this.get('_dynamicPropertiesMetadata');
     dynamicPropertiesMetadata.pushObject({
-      propertyName: propertyName,
-      propertyObserverHandler: setDynamicProperty
+      propertyName,
+      propertyObserverHandler: setDynamicProperty,
     });
   },
 
@@ -159,10 +158,8 @@ export default Mixin.create({
     @private
   */
   _removeDynamicProperty(propertyName) {
-    let dynamicPropertiesMetadata = this.get('_dynamicPropertiesMetadata');
-    let dynamicPropertyMetadata = dynamicPropertiesMetadata.filter((metadata) => {
-      return metadata.propertyName === propertyName;
-    })[0];
+    const dynamicPropertiesMetadata = this.get('_dynamicPropertiesMetadata');
+    const dynamicPropertyMetadata = dynamicPropertiesMetadata.filter((metadata) => metadata.propertyName === propertyName)[0];
 
     if (isNone(dynamicPropertyMetadata)) {
       return;
@@ -189,10 +186,10 @@ export default Mixin.create({
     @private
   */
   _removeDynamicProperties() {
-    let dynamicPropertiesMetadata = this.get('_dynamicPropertiesMetadata');
-    var len = get(dynamicPropertiesMetadata, 'length');
+    const dynamicPropertiesMetadata = this.get('_dynamicPropertiesMetadata');
+    let len = get(dynamicPropertiesMetadata, 'length');
     while (--len >= 0) {
-      let dynamicPropertyMetadata = dynamicPropertiesMetadata[len];
+      const dynamicPropertyMetadata = dynamicPropertiesMetadata[len];
       this._removeDynamicProperty(get(dynamicPropertyMetadata, 'propertyName'));
     }
   },
@@ -206,13 +203,14 @@ export default Mixin.create({
     @private
   */
   _dynamicPropertiesDidChange: observer('dynamicProperties', function () {
-    let dynamicProperties = this.get('dynamicProperties');
+    const dynamicProperties = this.get('dynamicProperties');
     assert(
-      `Wrong type of \`dynamicProperties\` property: ` +
-      `actual type is \`${typeOf(dynamicProperties)}\`, but \`object\` or \`instance\` is expected.`,
-      isNone(dynamicProperties) ||
-      typeOf(dynamicProperties) === 'object' ||
-      typeOf(dynamicProperties) === 'instance');
+      'Wrong type of `dynamicProperties` property: '
+      + `actual type is \`${typeOf(dynamicProperties)}\`, but \`object\` or \`instance\` is expected.`,
+      isNone(dynamicProperties)
+      || typeOf(dynamicProperties) === 'object'
+      || typeOf(dynamicProperties) === 'instance'
+    );
 
     let dynamicPropertiesMetadata = this.get('_dynamicPropertiesMetadata');
     if (isNone(dynamicPropertiesMetadata)) {
@@ -229,7 +227,7 @@ export default Mixin.create({
     }
 
     // Perform new assignments if new dynamic properties are defined.
-    let dynamicPropertiesNames = Object.keys(dynamicProperties);
+    const dynamicPropertiesNames = Object.keys(dynamicProperties);
     for (let i = 0, len = dynamicPropertiesNames.length; i < len; i++) {
       this._addDynamicProperty(dynamicPropertiesNames[i]);
     }
@@ -269,5 +267,5 @@ export default Mixin.create({
 
     // This call is needed to remove dynamically added observers.
     this._removeDynamicProperties();
-  }
+  },
 });

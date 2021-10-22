@@ -1,4 +1,4 @@
 import NewPlatformFlexberryGISLayerMetadataEController from '../new-platform-flexberry-g-i-s-layer-metadata-e';
 
-var NewPlatformFlexberryGISLayerMetadataENewController = NewPlatformFlexberryGISLayerMetadataEController;
+const NewPlatformFlexberryGISLayerMetadataENewController = NewPlatformFlexberryGISLayerMetadataEController;
 export default NewPlatformFlexberryGISLayerMetadataENewController;

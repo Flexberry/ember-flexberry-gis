@@ -18,5 +18,5 @@ export default OdataSerializer.extend(LinkMetadataSerializer, {
   /**
   * Field name where object identifier is kept.
   */
-  primaryKey: '__PrimaryKey'
+  primaryKey: '__PrimaryKey',
 });

@@ -6,10 +6,10 @@ import { on } from '@ember/object/evented';
 import { once } from '@ember/runloop';
 import { observer } from '@ember/object';
 import { buildValidations } from 'ember-cp-validations';
-import LayerModelMixin from '../mixins/layer-model';
-import LeafletCrsMixin from '../mixins/leaflet-crs';
 import EmberFlexberryDataModel from 'ember-flexberry-data/models/model';
 import OfflineModelMixin from 'ember-flexberry-data/mixins/offline-model';
+import LayerModelMixin from '../mixins/layer-model';
+import LeafletCrsMixin from '../mixins/leaflet-crs';
 import {
   Model as MapLayerMixin,
   defineProjections,
@@ -30,7 +30,7 @@ const Validations = buildValidations(ValidationRules, {
   @uses LayerModelMixin
   @uses LeafletCrsMixin
 */
-let Model = EmberFlexberryDataModel.extend(OfflineModelMixin, MapLayerMixin, LayerModelMixin, LeafletCrsMixin, Validations, {
+const Model = EmberFlexberryDataModel.extend(OfflineModelMixin, MapLayerMixin, LayerModelMixin, LeafletCrsMixin, Validations, {
   /**
     Leaflet layer related to layer model.
 
@@ -40,7 +40,7 @@ let Model = EmberFlexberryDataModel.extend(OfflineModelMixin, MapLayerMixin, Lay
   */
   _leafletObject: null,
 
-  _anyTextChanged: on('init', observer('name', 'description', 'keyWords', function() {
+  _anyTextChanged: on('init', observer('name', 'description', 'keyWords', function () {
     once(this, '_anyTextCompute');
   })),
 
@@ -54,7 +54,7 @@ let Model = EmberFlexberryDataModel.extend(OfflineModelMixin, MapLayerMixin, Lay
    @property layerInitialized
    @type boolean
   */
-  layerInitialized: null
+  layerInitialized: null,
 });
 
 defineProjections(Model);

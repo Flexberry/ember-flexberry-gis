@@ -5,68 +5,68 @@ import { module, test } from 'qunit';
 import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api';
 import sinon from 'sinon';
 
-module('Unit | Mixin | method copyObjects', function() {
-  let mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
+module('Unit | Mixin | method copyObjects', function () {
+  const mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
 
-  let destinationLeafletLayer = L.featureGroup();
-  let smallPolygons = [];
+  const destinationLeafletLayer = L.featureGroup();
+  const smallPolygons = [];
   for (let i = 0; i < 5; i++) {
-    let testPolygon = L.polygon([[1, 1], [5, 1], [2, 2], [3, 5]]);
+    const testPolygon = L.polygon([[1, 1], [5, 1], [2, 2], [3, 5]]);
     testPolygon.id = '1';
-    testPolygon.feature = { properties: { hello: 'word' } };
+    testPolygon.feature = { properties: { hello: 'word', }, };
     smallPolygons.push(testPolygon);
   }
 
-  let bigPolygons = [];
+  const bigPolygons = [];
   for (let i = 0; i < 10000; i++) {
-    let polygon = L.polygon([[1, 1], [5, 1], [2, 2], [3, 5]]);
-    polygon.feature =  { properties: {} };
+    const polygon = L.polygon([[1, 1], [5, 1], [2, 2], [3, 5]]);
+    polygon.feature = { properties: {}, };
     polygon.id = '1';
     bigPolygons.push(polygon);
   }
 
-  let destinationLayerModel = A({
+  const destinationLayerModel = A({
     settingsAsObject: {
-      typeGeometry: 'polygon'
-    }
+      typeGeometry: 'polygon',
+    },
   });
 
-  test('test method copyObjects on small array (with properties and delete layer)', function(assert) {
-    //Arrange
+  test('test method copyObjects on small array (with properties and delete layer)', function (assert) {
+    // Arrange
     assert.expect(12);
-    let done = assert.async(1);
-    let sourceLeafletLayer = L.featureGroup();
-    smallPolygons.forEach(object => {
+    const done = assert.async(1);
+    const sourceLeafletLayer = L.featureGroup();
+    smallPolygons.forEach((object) => {
       sourceLeafletLayer.addLayer(object);
     });
-    let _loadingFeaturesByPackages = () => { return [resolve([{}, sourceLeafletLayer, []])]; };
+    const _loadingFeaturesByPackages = () => [resolve([{}, sourceLeafletLayer, []])];
 
-    let _getLayerFeatureId = (model, object) => { return object.id; };
+    const _getLayerFeatureId = (model, object) => object.id;
 
-    let subject = mapApiMixinObject.create({
+    const subject = mapApiMixinObject.create({
       loadingFeaturesByPackages() {},
       _getModelLeafletObject() {},
-      _getLayerFeatureId() {}
+      _getLayerFeatureId() {},
     });
-    let loadingFBP = sinon.stub(subject, 'loadingFeaturesByPackages', _loadingFeaturesByPackages);
-    let getMLObject = sinon.stub(subject, '_getModelLeafletObject');
+    const loadingFBP = sinon.stub(subject, 'loadingFeaturesByPackages', _loadingFeaturesByPackages);
+    const getMLObject = sinon.stub(subject, '_getModelLeafletObject');
     getMLObject.withArgs('1').returns([{}, sourceLeafletLayer]);
     getMLObject.withArgs('2').returns([destinationLayerModel, destinationLeafletLayer]);
-    let getLFid = sinon.stub(subject, '_getLayerFeatureId', _getLayerFeatureId);
+    const getLFid = sinon.stub(subject, '_getLayerFeatureId', _getLayerFeatureId);
 
-    //Act
-    let result = subject.copyObjectsBatch({
+    // Act
+    const result = subject.copyObjectsBatch({
       layerId: '1',
       objectIds: ['1'],
-      shouldRemove: true
+      shouldRemove: true,
     }, {
       layerId: '2',
-      withProperties: true
+      withProperties: true,
     });
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Check result instance of Promise');
-    result.then((data)=> {
+    result.then((data) => {
       assert.deepEqual(data[0].getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]], 'Check latLngs');
       assert.deepEqual(Object.values(sourceLeafletLayer._layers).length, 0, 'Check length ');
       assert.deepEqual(data[0].feature.properties.hello, 'word', 'Check properties');
@@ -85,39 +85,39 @@ module('Unit | Mixin | method copyObjects', function() {
     });
   });
 
-  test('test method copyObjects on small array (with properties)', function(assert) {
-    //Arrange
+  test('test method copyObjects on small array (with properties)', function (assert) {
+    // Arrange
     assert.expect(10);
-    let done = assert.async(1);
-    let sourceLeafletLayer = L.featureGroup();
-    smallPolygons.forEach(object => {
+    const done = assert.async(1);
+    const sourceLeafletLayer = L.featureGroup();
+    smallPolygons.forEach((object) => {
       sourceLeafletLayer.addLayer(object);
     });
-    let _loadingFeaturesByPackages = () => { return [resolve([{}, sourceLeafletLayer, smallPolygons])]; };
+    const _loadingFeaturesByPackages = () => [resolve([{}, sourceLeafletLayer, smallPolygons])];
 
-    let subject = mapApiMixinObject.create({
+    const subject = mapApiMixinObject.create({
       loadingFeaturesByPackages() {},
       _getModelLeafletObject() {},
-      _getLayerFeatureId() {}
+      _getLayerFeatureId() {},
     });
-    let loadingFBP = sinon.stub(subject, 'loadingFeaturesByPackages', _loadingFeaturesByPackages);
-    let getMLObject = sinon.stub(subject, '_getModelLeafletObject');
+    const loadingFBP = sinon.stub(subject, 'loadingFeaturesByPackages', _loadingFeaturesByPackages);
+    const getMLObject = sinon.stub(subject, '_getModelLeafletObject');
     getMLObject.withArgs('1').returns([{}, sourceLeafletLayer]);
     getMLObject.withArgs('2').returns([destinationLayerModel, destinationLeafletLayer]);
 
-    //Act
-    let result = subject.copyObjectsBatch({
+    // Act
+    const result = subject.copyObjectsBatch({
       layerId: '1',
       objectIds: ['1'],
-      shouldRemove: false
+      shouldRemove: false,
     }, {
       layerId: '2',
-      withProperties: true
+      withProperties: true,
     });
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Check result instance of Promise');
-    result.then((data)=> {
+    result.then((data) => {
       assert.deepEqual(data[0].getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]], 'Check latLngs');
       assert.deepEqual(Object.values(sourceLeafletLayer._layers).length, 5, 'Check length ');
       assert.deepEqual(data[0].feature.properties.hello, 'word', 'Check properties');
@@ -133,54 +133,53 @@ module('Unit | Mixin | method copyObjects', function() {
     });
   });
 
-  test('test method copyObjects on big array (without properties and delete layers)', function(assert) {
-    //Arrange
+  test('test method copyObjects on big array (without properties and delete layers)', function (assert) {
+    // Arrange
     assert.expect(12);
-    let done = assert.async(1);
-    let sourceLeafletLayer = L.featureGroup();
-    bigPolygons.forEach(object => {
+    const done = assert.async(1);
+    const sourceLeafletLayer = L.featureGroup();
+    bigPolygons.forEach((object) => {
       sourceLeafletLayer.addLayer(object);
     });
-    let _getLayerFeatureId = (model, object) => { return object.id; };
+    const _getLayerFeatureId = (model, object) => object.id;
 
-    let _loadingFeaturesByPackages = () => { return [
-        resolve([null, sourceLeafletLayer, bigPolygons.slice(0, 2000)]),
-        resolve([null, sourceLeafletLayer, bigPolygons.slice(2001, 4000)]),
-        resolve([null, sourceLeafletLayer, bigPolygons.slice(4001, 6000)]),
-        resolve([null, sourceLeafletLayer, bigPolygons.slice(6001, 8000)]),
-        resolve([null, sourceLeafletLayer, bigPolygons.slice(8001, 9999)])
-      ];
-    };
+    const _loadingFeaturesByPackages = () => [
+      resolve([null, sourceLeafletLayer, bigPolygons.slice(0, 2000)]),
+      resolve([null, sourceLeafletLayer, bigPolygons.slice(2001, 4000)]),
+      resolve([null, sourceLeafletLayer, bigPolygons.slice(4001, 6000)]),
+      resolve([null, sourceLeafletLayer, bigPolygons.slice(6001, 8000)]),
+      resolve([null, sourceLeafletLayer, bigPolygons.slice(8001, 9999)])
+    ];
 
-    let subject = mapApiMixinObject.create({
+    const subject = mapApiMixinObject.create({
       _getModelLeafletObject() {},
       loadingFeaturesByPackages() {},
-      _getLayerFeatureId() {}
+      _getLayerFeatureId() {},
     });
-    let getMLObject = sinon.stub(subject, '_getModelLeafletObject');
+    const getMLObject = sinon.stub(subject, '_getModelLeafletObject');
     getMLObject.withArgs('1').returns([{}, sourceLeafletLayer]);
     getMLObject.withArgs('2').returns([destinationLayerModel, destinationLeafletLayer]);
-    let getLFByPackage = sinon.stub(subject, 'loadingFeaturesByPackages', _loadingFeaturesByPackages);
-    let getLFid = sinon.stub(subject, '_getLayerFeatureId', _getLayerFeatureId);
+    const getLFByPackage = sinon.stub(subject, 'loadingFeaturesByPackages', _loadingFeaturesByPackages);
+    const getLFid = sinon.stub(subject, '_getLayerFeatureId', _getLayerFeatureId);
 
-    let objectIds = [];
+    const objectIds = [];
     for (let i = 1; i < 6; i++) {
       objectIds.push(String(i));
     }
 
-    //Act
-    let result = subject.copyObjectsBatch({
+    // Act
+    const result = subject.copyObjectsBatch({
       layerId: '1',
-      objectIds: objectIds,
-      shouldRemove: true
+      objectIds,
+      shouldRemove: true,
     }, {
       layerId: '2',
-      withProperties: false
+      withProperties: false,
     });
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Check result instance of Promise');
-    result.then((data)=> {
+    result.then((data) => {
       assert.deepEqual(data[0].getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]], 'Check latLngs');
       assert.deepEqual(data[0].feature.properties, {}, 'Check properties');
       assert.deepEqual(Object.values(sourceLeafletLayer._layers).length, 0, 'Check length ');
@@ -199,51 +198,50 @@ module('Unit | Mixin | method copyObjects', function() {
     });
   });
 
-  test('test method copyObjects on big array (without properties)', function(assert) {
-    //Arrange
+  test('test method copyObjects on big array (without properties)', function (assert) {
+    // Arrange
     assert.expect(10);
-    let done = assert.async(1);
-    let sourceLeafletLayer = L.featureGroup();
-    bigPolygons.forEach(object => {
+    const done = assert.async(1);
+    const sourceLeafletLayer = L.featureGroup();
+    bigPolygons.forEach((object) => {
       sourceLeafletLayer.addLayer(object);
     });
-    let _loadingFeaturesByPackages = () => { return [
-        resolve([null, sourceLeafletLayer, bigPolygons.slice(0, 2000)]),
-        resolve([null, sourceLeafletLayer, bigPolygons.slice(2001, 4000)]),
-        resolve([null, sourceLeafletLayer, bigPolygons.slice(4001, 6000)]),
-        resolve([null, sourceLeafletLayer, bigPolygons.slice(6001, 8000)]),
-        resolve([null, sourceLeafletLayer, bigPolygons.slice(8001, 9999)])
-      ];
-    };
+    const _loadingFeaturesByPackages = () => [
+      resolve([null, sourceLeafletLayer, bigPolygons.slice(0, 2000)]),
+      resolve([null, sourceLeafletLayer, bigPolygons.slice(2001, 4000)]),
+      resolve([null, sourceLeafletLayer, bigPolygons.slice(4001, 6000)]),
+      resolve([null, sourceLeafletLayer, bigPolygons.slice(6001, 8000)]),
+      resolve([null, sourceLeafletLayer, bigPolygons.slice(8001, 9999)])
+    ];
 
-    let subject = mapApiMixinObject.create({
+    const subject = mapApiMixinObject.create({
       _getModelLeafletObject() {},
       loadingFeaturesByPackages() {},
-      _getLayerFeatureId() {}
+      _getLayerFeatureId() {},
     });
-    let getMLObject = sinon.stub(subject, '_getModelLeafletObject');
+    const getMLObject = sinon.stub(subject, '_getModelLeafletObject');
     getMLObject.withArgs('1').returns([{}, sourceLeafletLayer]);
     getMLObject.withArgs('2').returns([destinationLayerModel, destinationLeafletLayer]);
-    let getLFByPackage = sinon.stub(subject, 'loadingFeaturesByPackages', _loadingFeaturesByPackages);
+    const getLFByPackage = sinon.stub(subject, 'loadingFeaturesByPackages', _loadingFeaturesByPackages);
 
-    let objectIds = [];
+    const objectIds = [];
     for (let i = 1; i < 6; i++) {
       objectIds.push(String(i));
     }
 
-    //Act
-    let result = subject.copyObjectsBatch({
+    // Act
+    const result = subject.copyObjectsBatch({
       layerId: '1',
-      objectIds: objectIds,
-      shouldRemove: false
+      objectIds,
+      shouldRemove: false,
     }, {
       layerId: '2',
-      withProperties: false
+      withProperties: false,
     });
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Check result instance of Promise');
-    result.then((data)=> {
+    result.then((data) => {
       assert.deepEqual(data[0].getLatLngs(), [[L.latLng(1, 1), L.latLng(5, 1), L.latLng(2, 2), L.latLng(3, 5)]], 'Check latLngs');
       assert.deepEqual(data[0].feature.properties, {}, 'Check properties');
       assert.deepEqual(Object.values(sourceLeafletLayer._layers).length, 10000, 'Check length ');
@@ -259,26 +257,26 @@ module('Unit | Mixin | method copyObjects', function() {
     });
   });
 
-  test('test method copyObjects on not correct parmeters', function(assert) {
-    //Arrange
+  test('test method copyObjects on not correct parmeters', function (assert) {
+    // Arrange
     assert.expect(2);
-    let done = assert.async(1);
+    const done = assert.async(1);
 
-    let subject = mapApiMixinObject.create({});
+    const subject = mapApiMixinObject.create({});
 
-    //Act
-    let result = subject.copyObjectsBatch({
+    // Act
+    const result = subject.copyObjectsBatch({
       layerIdx: '1',
       objectId: ['2'],
-      shouldRemove: true
+      shouldRemove: true,
     }, {
       layerIds: '2',
-      withProperties: true
+      withProperties: true,
     });
 
-    //Assert
+    // Assert
     assert.ok(result instanceof Promise, 'Check result instance of Promise');
-    result.then(()=> {}).catch((message) => {
+    result.then(() => {}).catch((message) => {
       assert.equal(message, 'Check the parameters you are passing', 'Check the error message');
       done();
     });

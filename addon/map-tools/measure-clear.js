@@ -21,11 +21,11 @@ export default MeasureMapTool.extend({
   _enable() {
     this._super(...arguments);
 
-    let _measureTools = this.get('_measureTools');
+    const _measureTools = this.get('_measureTools');
     if (!isNone(_measureTools)) {
       _measureTools.clearLayers();
     }
 
     this.disable();
-  }
+  },
 });

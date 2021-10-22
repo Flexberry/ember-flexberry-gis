@@ -27,9 +27,9 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
   willInitLeafletMap(leafletMap) {
     this._super(...arguments);
 
-    let owner = getOwner(this);
+    const owner = getOwner(this);
 
-    let _this = this;
+    const _this = this;
 
     // Default map-tool.
     let defaultMapTool = null;
@@ -38,20 +38,21 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
     let enabledMapTool = null;
 
     // Cache containing already lookuped map-tools.
-    let alreadyLookupedMapTools = {};
+    const alreadyLookupedMapTools = {};
 
     // lookups specified map-tool with given tool properties.
-    let lookupMapTool = (mapToolName, mapToolProperties) => {
+    const lookupMapTool = (mapToolName, mapToolProperties) => {
       let mapTool = alreadyLookupedMapTools[mapToolName];
       if (isNone(mapTool)) {
         mapTool = owner.lookup(`map-tool:${mapToolName}`);
         assert(
           `Can't lookup \`map-tool:${mapToolName}\` such map-tool doesn\`t exist.`,
-          !isNone(mapTool));
+          !isNone(mapTool)
+        );
 
         mapTool.setProperties({
           name: mapToolName,
-          leafletMap: leafletMap
+          leafletMap,
         });
 
         alreadyLookupedMapTools[mapToolName] = mapTool;
@@ -68,11 +69,11 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
     };
 
     // Define flexberryMap.tools namespace & related methods & properties.
-    let tools = leafletMap.flexberryMap.tools = {
+    const tools = leafletMap.flexberryMap.tools = {
 
       // Sets default map-tool.
       setDefault(mapToolName, mapToolProperties) {
-        let mapTool = lookupMapTool(mapToolName, mapToolProperties);
+        const mapTool = lookupMapTool(mapToolName, mapToolProperties);
         if (isNone(mapTool)) {
           return;
         }
@@ -89,23 +90,24 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
       // Enables default map-tool.
       enableDefault(mapToolProperties) {
         assert(
-          `Can't enable default map-tool because it isn't defined, ` +
-          `use \`leafletMap.flexberryMap.tools.setDefault\` method to define it.`,
-          !isNone(defaultMapTool));
-        let defaultMapToolName = get(defaultMapTool, 'name');
+          'Can\'t enable default map-tool because it isn\'t defined, '
+          + 'use `leafletMap.flexberryMap.tools.setDefault` method to define it.',
+          !isNone(defaultMapTool)
+        );
+        const defaultMapToolName = get(defaultMapTool, 'name');
 
         return tools.enable(defaultMapToolName, mapToolProperties);
       },
 
       // Enables specified map-tool.
       enable(mapToolName, mapToolProperties) {
-        let mapTool = lookupMapTool(mapToolName, mapToolProperties);
+        const mapTool = lookupMapTool(mapToolName, mapToolProperties);
         if (isNone(mapTool)) {
           return;
         }
 
         leafletMap.fire('flexberry-map:tools:choose', {
-          mapTool: mapTool
+          mapTool,
         });
 
         if (mapTool === enabledMapTool) {
@@ -138,10 +140,10 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
 
       // Hide map-tool.
       hide(mapCommandName) {
-        let result = _this.showHide(mapCommandName, _this.addClassHidden, leafletMap, true);
+        const result = _this.showHide(mapCommandName, _this.addClassHidden, leafletMap, true);
 
         if (!result) {
-          let mapCommand = lookupMapTool(mapCommandName, null);
+          const mapCommand = lookupMapTool(mapCommandName, null);
           if (isNone(mapCommand)) {
             return;
           }
@@ -152,10 +154,10 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
 
       // Show map-tool.
       show(mapCommandName) {
-        let result = _this.showHide(mapCommandName, _this.removeClassHidden, leafletMap, true);
+        const result = _this.showHide(mapCommandName, _this.removeClassHidden, leafletMap, true);
 
         if (!result) {
-          let mapCommand = lookupMapTool(mapCommandName, null);
+          const mapCommand = lookupMapTool(mapCommandName, null);
           if (isNone(mapCommand)) {
             return;
           }
@@ -172,7 +174,7 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
 
         // Disable enabled map-tool.
         // It will also trigger 'flexberry-map:tools:disable' event on leaflet map.
-        let disabledMapTool = enabledMapTool;
+        const disabledMapTool = enabledMapTool;
         enabledMapTool.disable();
 
         // Enable default map-tool.
@@ -185,20 +187,22 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
 
       // Destroys specified map-tool.
       destroy(mapToolName) {
-        let mapTool = alreadyLookupedMapTools[mapToolName];
+        const mapTool = alreadyLookupedMapTools[mapToolName];
         if (!isNone(mapTool)) {
           return;
         }
 
         assert(
-          `Can't destroy \`map-tool:${mapToolName}\` it is set as map's currently enabled map-tool, ` +
-          `use \`leafletMap.flexberryMap.tools.disable\` method to disable it.`,
-          isNone(enabledMapTool) || get(enabledMapTool, 'name') !== mapToolName);
+          `Can't destroy \`map-tool:${mapToolName}\` it is set as map's currently enabled map-tool, `
+          + 'use `leafletMap.flexberryMap.tools.disable` method to disable it.',
+          isNone(enabledMapTool) || get(enabledMapTool, 'name') !== mapToolName
+        );
 
         assert(
-          `Can't destroy \`map-tool:${mapToolName}\` it is set as map's default map-tool, ` +
-          `use \`leafletMap.flexberryMap.tools.setDefault\` method to set another map-tool as default.`,
-          isNone(defaultMapTool) || get(defaultMapTool, 'name') !== mapToolName);
+          `Can't destroy \`map-tool:${mapToolName}\` it is set as map's default map-tool, `
+          + 'use `leafletMap.flexberryMap.tools.setDefault` method to set another map-tool as default.',
+          isNone(defaultMapTool) || get(defaultMapTool, 'name') !== mapToolName
+        );
 
         mapTool.destroy();
 
@@ -212,14 +216,14 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
         enabledMapTool = null;
 
         A(Object.keys(alreadyLookupedMapTools)).forEach((mapToolName) => {
-          let mapTool = alreadyLookupedMapTools[mapToolName];
+          const mapTool = alreadyLookupedMapTools[mapToolName];
           mapTool.destroy();
 
           delete alreadyLookupedMapTools[mapToolName];
         });
 
         delete leafletMap.flexberryMap.tools;
-      }
+      },
     };
 
     // Set 'drag' map-tool as default & enable it.
@@ -238,5 +242,5 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
     this._super(...arguments);
 
     leafletMap.flexberryMap.tools._destroy();
-  }
+  },
 });

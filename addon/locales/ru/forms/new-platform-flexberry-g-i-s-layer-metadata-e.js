@@ -1,3 +1,3 @@
 export default {
-  'caption': 'Метаданные слоя'
+  caption: 'Метаданные слоя',
 };

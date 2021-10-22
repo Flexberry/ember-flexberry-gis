@@ -18,5 +18,5 @@ export default OdataSerializer.extend(LayerMetadataSerializer, {
   /**
   * Field name where object identifier is kept.
   */
-  primaryKey: '__PrimaryKey'
+  primaryKey: '__PrimaryKey',
 });

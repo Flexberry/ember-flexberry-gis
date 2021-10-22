@@ -123,7 +123,7 @@ export default Component.extend({
     this.get('_layersStylesRenderer').renderOnCanvas({
       canvas: this.get('_pathPreviewCanvas'),
       styleSettings: this.get('styleSettings'),
-      target: 'preview'
+      target: 'preview',
     });
   },
 
@@ -137,7 +137,7 @@ export default Component.extend({
     this.get('_markersStylesRenderer').renderOnCanvas({
       canvas: this.get('_markerPreviewCanvas'),
       styleSettings: this.get('styleSettings.style.marker'),
-      target: 'preview'
+      target: 'preview',
     });
   },
 
@@ -147,10 +147,10 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    let pathPreviewCanvas = this.$('.ui.tab.segment[data-tab=path-tab] canvas')[0];
+    const pathPreviewCanvas = this.$('.ui.tab.segment[data-tab=path-tab] canvas')[0];
     this.set('_pathPreviewCanvas', pathPreviewCanvas);
 
-    let markerPreviewCanvas = this.$('.ui.tab.segment[data-tab=marker-tab] canvas')[0];
+    const markerPreviewCanvas = this.$('.ui.tab.segment[data-tab=marker-tab] canvas')[0];
     this.set('_markerPreviewCanvas', markerPreviewCanvas);
 
     this._renderPathPreviewOnCanvas();
@@ -177,8 +177,8 @@ export default Component.extend({
     onTabClick(e) {
       e = $.event.fix(e);
 
-      let $clickedTab = $(e.currentTarget);
-      let clickedTabName = $clickedTab.attr('data-tab');
+      const $clickedTab = $(e.currentTarget);
+      const clickedTabName = $clickedTab.attr('data-tab');
 
       this.set('_activeTab', clickedTabName);
     },
@@ -199,6 +199,6 @@ export default Component.extend({
     */
     onMarkerStyleSettingsChange() {
       this._renderMarkerPreviewOnCanvas();
-    }
-  }
+    },
+  },
 });

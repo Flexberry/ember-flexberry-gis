@@ -1,8 +1,8 @@
 export default {
   'query-string-textbox': {
-    'caption': 'Строка для поиска'
+    caption: 'Строка для поиска',
   },
   'max-results-count-textbox': {
-    'caption': 'Максимальное количество результатов'
-  }
+    caption: 'Максимальное количество результатов',
+  },
 };

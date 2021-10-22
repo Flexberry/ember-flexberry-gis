@@ -10,10 +10,10 @@
   @param {<a href="http://emberjs.com/api/classes/Ember.Application.html">Ember.Application</a>} application Ember application.
 */
 export function initialize(application) {
-  application.registerOptionsForType('coordinate-reference-system', { instantiate: false });
+  application.registerOptionsForType('coordinate-reference-system', { instantiate: false, });
 }
 
 export default {
   name: 'coordinate-reference-systems',
-  initialize
+  initialize,
 };

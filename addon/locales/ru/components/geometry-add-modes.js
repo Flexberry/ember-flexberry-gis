@@ -5,9 +5,9 @@ import Rhumb from './geometry-add-modes/rhumb';
 import Draw from './geometry-add-modes/draw';
 
 export default {
-  'geoprovider': GeoProvider,
-  'manual': Manual,
-  'import': Import,
-  'rhumb': Rhumb,
-  'draw': Draw,
+  geoprovider: GeoProvider,
+  manual: Manual,
+  import: Import,
+  rhumb: Rhumb,
+  draw: Draw,
 };

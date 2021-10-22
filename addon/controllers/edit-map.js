@@ -8,13 +8,13 @@ import $ from 'jquery';
 import { isNone, isBlank } from '@ember/utils';
 import { computed, get } from '@ember/object';
 import EditFormController from 'ember-flexberry/controllers/edit-form';
+import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 import FlexberryMapActionsHandlerMixin from '../mixins/flexberry-map-actions-handler';
 import FlexberryMaplayerActionsHandlerMixin from '../mixins/flexberry-maplayer-actions-handler';
 import FlexberryLayersActionsHandlerMixin from '../mixins/flexberry-layers-action-handler';
 import LayerResultListActionsHandlerMixin from '../mixins/layer-result-list-actions-handler';
 import LocalStorageBindingMixin from '../mixins/local-storage-binding';
 import FavoritesListMixin from '../mixins/favorites-features';
-import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
 /**
   Edit map controller.
@@ -118,12 +118,12 @@ export default EditFormController.extend(
       @computed
      */
     queryFilter: computed('geofilter', function () {
-      let filter = this.get('geofilter');
+      const filter = this.get('geofilter');
       if (!isNone(filter)) {
         try {
           return JSON.parse(filter);
         } catch (e) {
-          console.error('Wrong JSON query filter string: ' + filter);
+          console.error(`Wrong JSON query filter string: ${filter}`);
         }
       }
 
@@ -163,7 +163,7 @@ export default EditFormController.extend(
     */
     binding: {
       visibility: 'visibility',
-      opacity: 'settingsAsObject.opacity'
+      opacity: 'settingsAsObject.opacity',
     },
 
     /**
@@ -180,8 +180,8 @@ export default EditFormController.extend(
     */
     onSaveActionStarted() {
       this._super(...arguments);
-      let model = this.get('model');
-      let urlParams = ['zoom', 'lat', 'lng'];
+      const model = this.get('model');
+      const urlParams = ['zoom', 'lat', 'lng'];
       let currentParam;
       urlParams.forEach((param) => {
         currentParam = this.get(param);
@@ -207,11 +207,11 @@ export default EditFormController.extend(
     */
     createLayer(options) {
       options = options || {};
-      let parentLayer = get(options, 'parentLayer');
-      let layerProperties = $.extend({ id: generateUniqueId() }, get(options, 'layerProperties'));
+      const parentLayer = get(options, 'parentLayer');
+      const layerProperties = $.extend({ id: generateUniqueId(), }, get(options, 'layerProperties'));
 
-      let store = this.get('store');
-      let layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', layerProperties);
+      const store = this.get('store');
+      const layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', layerProperties);
       layer.set('parent', parentLayer);
 
       return layer;
@@ -250,21 +250,22 @@ export default EditFormController.extend(
     */
     removeLayer(options) {
       options = options || {};
-      let layer = get(options, 'layer');
+      const layer = get(options, 'layer');
 
       if (!isNone(layer)) {
         layer.deleteRecord();
       }
 
-      let layers = get(layer, 'layers');
+      const layers = get(layer, 'layers');
       if (isArray(layers)) {
         layers.forEach((childLayer) => {
           this.removeLayer({
-            layer: childLayer
+            layer: childLayer,
           });
         });
       }
 
       return layer;
-    }
-  });
+    },
+  }
+);

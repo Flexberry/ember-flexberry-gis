@@ -37,12 +37,12 @@ export default BaseLayer.extend({
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = this._super(...arguments);
+    const settings = this._super(...arguments);
     $.extend(true, settings, {
       url: undefined,
-      noWrap: true
+      noWrap: true,
     });
 
     return settings;
-  }
+  },
 });

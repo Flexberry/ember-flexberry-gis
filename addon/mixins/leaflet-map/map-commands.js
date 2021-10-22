@@ -26,25 +26,26 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
   willInitLeafletMap(leafletMap) {
     this._super(...arguments);
 
-    let owner = getOwner(this);
+    const owner = getOwner(this);
 
-    let _this = this;
+    const _this = this;
 
     // Cache containing already lookuped map-commands.
-    let alreadyLookupedMapCommands = {};
+    const alreadyLookupedMapCommands = {};
 
     // lookups specified map-command with given command properties.
-    let lookupMapCommand = (mapCommandName, mapCommandProperties) => {
+    const lookupMapCommand = (mapCommandName, mapCommandProperties) => {
       let mapCommand = alreadyLookupedMapCommands[mapCommandName];
       if (isNone(mapCommand)) {
         mapCommand = owner.lookup(`map-command:${mapCommandName}`);
         assert(
           `Can't lookup \`map-command:${mapCommandName}\` such map-command doesn\`t exist.`,
-          !isNone(mapCommand));
+          !isNone(mapCommand)
+        );
 
         mapCommand.setProperties({
           name: mapCommandName,
-          leafletMap: leafletMap
+          leafletMap,
         });
 
         alreadyLookupedMapCommands[mapCommandName] = mapCommand;
@@ -64,7 +65,7 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
 
       // Executes specified map-command.
       execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions) {
-        let mapCommand = lookupMapCommand(mapCommandName, mapCommandProperties);
+        const mapCommand = lookupMapCommand(mapCommandName, mapCommandProperties);
         if (isNone(mapCommand)) {
           return;
         }
@@ -81,7 +82,7 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
 
       // Destroys specified map-command.
       destroy(mapCommandName) {
-        let mapCommand = alreadyLookupedMapCommands[mapCommandName];
+        const mapCommand = alreadyLookupedMapCommands[mapCommandName];
         if (!isNone(mapCommand)) {
           return;
         }
@@ -95,7 +96,7 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
       _destroy() {
         // Remove flexberryMap.commands namespace & related methods & properties.
         A(Object.keys(alreadyLookupedMapCommands)).forEach((mapCommandName) => {
-          let mapCommand = alreadyLookupedMapCommands[mapCommandName];
+          const mapCommand = alreadyLookupedMapCommands[mapCommandName];
           mapCommand.destroy();
 
           delete alreadyLookupedMapCommands[mapCommandName];
@@ -106,10 +107,10 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
 
       // Hide map-command.
       hide(mapCommandName) {
-        let result = _this.showHide(mapCommandName, _this.addClassHidden, leafletMap, false);
+        const result = _this.showHide(mapCommandName, _this.addClassHidden, leafletMap, false);
 
         if (!result) {
-          let mapCommand = lookupMapCommand(mapCommandName, null);
+          const mapCommand = lookupMapCommand(mapCommandName, null);
           if (isNone(mapCommand)) {
             return;
           }
@@ -120,17 +121,17 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
 
       // Show map-command.
       show(mapCommandName) {
-        let result = _this.showHide(mapCommandName, _this.removeClassHidden, leafletMap, false);
+        const result = _this.showHide(mapCommandName, _this.removeClassHidden, leafletMap, false);
 
         if (!result) {
-          let mapCommand = lookupMapCommand(mapCommandName, null);
+          const mapCommand = lookupMapCommand(mapCommandName, null);
           if (isNone(mapCommand)) {
             return;
           }
 
           mapCommand.showCommand();
         }
-      }
+      },
     };
   },
 
@@ -143,5 +144,5 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
     this._super(...arguments);
 
     leafletMap.flexberryMap.commands._destroy();
-  }
+  },
 });

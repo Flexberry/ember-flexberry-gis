@@ -28,7 +28,7 @@ export default EmberObject.extend({
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#marker">L.Marker</a>} options.marker Leaflet marker to which marker-style must be applied.
     @param {Object} options.style Hash containing style settings.
   */
-  renderOnLeafletMarker({ marker, style }) {
+  renderOnLeafletMarker({ marker, style, }) {
     throw `Method 'renderOnLeafletMarker' isn't implemented in 'base' marker-style`;
   },
 
@@ -41,7 +41,7 @@ export default EmberObject.extend({
     @param {Object} options.style Hash containing style settings.
     @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style, target }) {
+  renderOnCanvas({ canvas, style, target, }) {
     throw `Method 'renderOnCanvas' isn't implemented in 'base' marker-style`;
-  }
+  },
 });

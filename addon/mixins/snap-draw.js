@@ -43,9 +43,9 @@ export default Mixin.create({
     @readOnly
   */
   _snapLeafletLayers: computed('_snapLayers', function () {
-    let layers = [];
-    let featuresByLayer = this.get('_snapLayers');
-    for (var layer in featuresByLayer) {
+    const layers = [];
+    const featuresByLayer = this.get('_snapLayers');
+    for (const layer in featuresByLayer) {
       layers.push(...featuresByLayer[layer]);
     }
 
@@ -62,7 +62,7 @@ export default Mixin.create({
     this.set('_snapLayers', {});
     this.set('_snapOnlyVertex', true);
     this.set('_editedFeatureId', null);
-    let snapMarker = this.get('_snapMarker');
+    const snapMarker = this.get('_snapMarker');
     if (snapMarker) {
       snapMarker.remove();
     }
@@ -70,26 +70,26 @@ export default Mixin.create({
 
   _setSnappingFeatures(e) {
     if (e) {
-      let features = [];
+      const features = [];
       e.target.eachLayer((layer) => {
         features.pushObject(layer);
       });
-      let propId = e.target._leaflet_id;
+      const propId = e.target._leaflet_id;
       this.set(`_snapLayers.${propId}`, features);
     } else {
       this.set('_snapLayers', {});
-      let snapLayers = this.get('_snapLayersGroups');
+      const snapLayers = this.get('_snapLayersGroups');
 
       if (!Array.isArray(snapLayers) || snapLayers.length === 0) {
         return;
       }
 
       snapLayers.forEach((leafletObject, i) => {
-        let features = [];
+        const features = [];
         leafletObject.eachLayer((layer) => {
           features.pushObject(layer);
         });
-        let propId = leafletObject._leaflet_id;
+        const propId = leafletObject._leaflet_id;
         this.set(`_snapLayers.${propId}`, features);
       });
     }
@@ -102,32 +102,31 @@ export default Mixin.create({
     @private
   */
   _handleSnapping(e) {
-    let leafletMap = this.get('leafletMap') || this.get('mapApi').getFromApi('leafletMap');
+    const leafletMap = this.get('leafletMap') || this.get('mapApi').getFromApi('leafletMap');
 
-    let snapList = this.get('_snapLeafletLayers');
+    const snapList = this.get('_snapLeafletLayers');
     if (!Array.isArray(snapList) || snapList.length === 0) {
       return;
     }
 
-    let isDraw = isNone(e.vertex);
-    let snapMarker = e.vertex || this.get('_snapMarker');
+    const isDraw = isNone(e.vertex);
+    const snapMarker = e.vertex || this.get('_snapMarker');
 
-    let snapDistance = this.get('_snapDistance');
-    let snapOnlyVertex = this.get('_snapOnlyVertex');
+    const snapDistance = this.get('_snapDistance');
+    const snapOnlyVertex = this.get('_snapOnlyVertex');
 
-    let point = leafletMap.latLngToLayerPoint(e.latlng);
-    let topLeftPoint = leafletMap.layerPointToLatLng(L.point(point.x - snapDistance, point.y - snapDistance));
-    let bottomRightPoint = leafletMap.layerPointToLatLng(L.point(point.x + snapDistance, point.y + snapDistance));
-    let pointBounds = L.latLngBounds(topLeftPoint, bottomRightPoint);
+    const point = leafletMap.latLngToLayerPoint(e.latlng);
+    const topLeftPoint = leafletMap.layerPointToLatLng(L.point(point.x - snapDistance, point.y - snapDistance));
+    const bottomRightPoint = leafletMap.layerPointToLatLng(L.point(point.x + snapDistance, point.y + snapDistance));
+    const pointBounds = L.latLngBounds(topLeftPoint, bottomRightPoint);
 
-    let closestLayer = this._findClosestLayer(e.latlng, pointBounds, snapList);
+    const closestLayer = this._findClosestLayer(e.latlng, pointBounds, snapList);
 
-    let previousSnap = this.get('_snapLatLng') || {};
+    const previousSnap = this.get('_snapLatLng') || {};
 
     if (closestLayer && closestLayer.distance < snapDistance) {
-
-      let isMarker = closestLayer.layer instanceof L.Marker || closestLayer.layer instanceof L.CircleMarker;
-      let currentSnap = (isMarker || snapOnlyVertex ? closestLayer.latlng : this._checkSnapToVertex(closestLayer)) || {};
+      const isMarker = closestLayer.layer instanceof L.Marker || closestLayer.layer instanceof L.CircleMarker;
+      const currentSnap = (isMarker || snapOnlyVertex ? closestLayer.latlng : this._checkSnapToVertex(closestLayer)) || {};
 
       // snap the marker
       snapMarker.setLatLng(currentSnap);
@@ -153,10 +152,10 @@ export default Mixin.create({
   @private
   */
   _drawClick(e) {
-    let snapMarker = this.get('_snapMarker');
-    let isSnap = !isNone(get(snapMarker, '_map'));
+    const snapMarker = this.get('_snapMarker');
+    const isSnap = !isNone(get(snapMarker, '_map'));
     if (isSnap) {
-      var latlng = snapMarker.getLatLng();
+      const latlng = snapMarker.getLatLng();
       e.latlng.lat = latlng.lat;
       e.latlng.lng = latlng.lng;
     }
@@ -169,21 +168,21 @@ export default Mixin.create({
     @private
   */
   _checkSnapToVertex(closestLayer) {
-    let leafletMap = this.get('leafletMap') || this.get('mapApi').getFromApi('leafletMap');
-    let segmentPointA = closestLayer.segment[0];
-    let segmentPointB = closestLayer.segment[1];
+    const leafletMap = this.get('leafletMap') || this.get('mapApi').getFromApi('leafletMap');
+    const segmentPointA = closestLayer.segment[0];
+    const segmentPointB = closestLayer.segment[1];
 
-    let snapPoint = closestLayer.latlng;
-    let distanceA = this._getPixelDistance(leafletMap, segmentPointA, snapPoint);
-    let distanceB = this._getPixelDistance(leafletMap, segmentPointB, snapPoint);
+    const snapPoint = closestLayer.latlng;
+    const distanceA = this._getPixelDistance(leafletMap, segmentPointA, snapPoint);
+    const distanceB = this._getPixelDistance(leafletMap, segmentPointB, snapPoint);
 
-    let closestVertex = distanceA < distanceB ? segmentPointA : segmentPointB;
-    let shortestDistance = distanceA < distanceB ? distanceA : distanceB;
+    const closestVertex = distanceA < distanceB ? segmentPointA : segmentPointB;
+    const shortestDistance = distanceA < distanceB ? distanceA : distanceB;
 
-    let priorityDistance = this.get('_snapDistance');
+    const priorityDistance = this.get('_snapDistance');
 
     // The latlng we need to snap to.
-    let snapResult = shortestDistance < priorityDistance ? closestVertex : snapPoint;
+    const snapResult = shortestDistance < priorityDistance ? closestVertex : snapPoint;
 
     return Object.assign({}, snapResult);
   },
@@ -199,8 +198,8 @@ export default Mixin.create({
   _findClosestLayer(latlng, bounds, layers) {
     let closestLayer = {};
 
-    layers.filter(l => l._bounds.intersects(bounds)).forEach((layer, index) => {
-      let layerDistance = this._calculateDistance(latlng, layer);
+    layers.filter((l) => l._bounds.intersects(bounds)).forEach((layer, index) => {
+      const layerDistance = this._calculateDistance(latlng, layer);
 
       if (isNone(closestLayer.distance) || layerDistance.distance < closestLayer.distance) {
         closestLayer = layerDistance;
@@ -219,13 +218,13 @@ export default Mixin.create({
     @private
   */
   _calculateDistance(latlng, layer) {
-    let map = this.get('leafletMap') || this.get('mapApi').getFromApi('leafletMap');
-    let snapOnlyVertex = this.get('_snapOnlyVertex');
-    let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
-    let isPolygon = layer instanceof L.Polygon;
+    const map = this.get('leafletMap') || this.get('mapApi').getFromApi('leafletMap');
+    const snapOnlyVertex = this.get('_snapOnlyVertex');
+    const isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
+    const isPolygon = layer instanceof L.Polygon;
 
     // The coords of the layer.
-    let latlngs = isMarker ? layer.getLatLng() : layer.getLatLngs();
+    const latlngs = isMarker ? layer.getLatLng() : layer.getLatLngs();
 
     if (isMarker) {
       return {
@@ -238,20 +237,20 @@ export default Mixin.create({
     let closestPoint;
     let shortestDistance;
 
-    let loopThroughCoords = (coords) => {
+    const loopThroughCoords = (coords) => {
       coords.forEach((coord, index) => {
         if (coord instanceof Array) {
           loopThroughCoords(coord);
           return;
         }
 
-        let segmentPointA = coord;
+        const segmentPointA = coord;
         let segmentPointB;
         let distance;
         if (snapOnlyVertex) {
           distance = this._getPixelDistance(map, latlng, segmentPointA);
         } else {
-          let nextIndex = index + 1 === coords.length ? (isPolygon ? 0 : undefined) : index + 1;
+          const nextIndex = index + 1 === coords.length ? (isPolygon ? 0 : undefined) : index + 1;
           if (nextIndex) {
             segmentPointB = coords[nextIndex];
           }
@@ -274,7 +273,7 @@ export default Mixin.create({
 
     loopThroughCoords(latlngs);
 
-    let closestSegmentPoint = snapOnlyVertex ? closestPoint : this._getClosestPointOnSegment(map, latlng, closestSegment[0], closestSegment[1]);
+    const closestSegmentPoint = snapOnlyVertex ? closestPoint : this._getClosestPointOnSegment(map, latlng, closestSegment[0], closestSegment[1]);
 
     return {
       latlng: Object.assign({}, closestSegmentPoint),
@@ -298,10 +297,10 @@ export default Mixin.create({
       maxzoom = map.getZoom();
     }
 
-    let point = map.project(latlng, maxzoom);
-    let segmentPointA = map.project(firstlatlng, maxzoom);
-    let segmentPointB = map.project(secondlatlng, maxzoom);
-    let closest = L.LineUtil.closestPointOnSegment(point, segmentPointA, segmentPointB);
+    const point = map.project(latlng, maxzoom);
+    const segmentPointA = map.project(firstlatlng, maxzoom);
+    const segmentPointB = map.project(secondlatlng, maxzoom);
+    const closest = L.LineUtil.closestPointOnSegment(point, segmentPointA, segmentPointB);
     return map.unproject(closest, maxzoom);
   },
 
@@ -315,9 +314,9 @@ export default Mixin.create({
     @private
   */
   _getPixelDistanceToSegment(map, latlng, firstlatlng, secondlatlng) {
-    let point = map.latLngToLayerPoint(latlng);
-    let segmentPointA = map.latLngToLayerPoint(firstlatlng);
-    let segmentPointB = map.latLngToLayerPoint(secondlatlng);
+    const point = map.latLngToLayerPoint(latlng);
+    const segmentPointA = map.latLngToLayerPoint(firstlatlng);
+    const segmentPointB = map.latLngToLayerPoint(secondlatlng);
     return L.LineUtil.pointToSegmentDistance(point, segmentPointA, segmentPointB);
   },
 
@@ -331,5 +330,5 @@ export default Mixin.create({
   */
   _getPixelDistance(map, firstlatlng, secondlatlng) {
     return map.latLngToLayerPoint(firstlatlng).distanceTo(map.latLngToLayerPoint(secondlatlng));
-  }
+  },
 });

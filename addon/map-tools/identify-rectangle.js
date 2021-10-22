@@ -18,7 +18,7 @@ export default IdentifyMapTool.extend({
     @param {Object} e Event object.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.layer Drawn rectangle layer.
   */
-  _drawingDidEnd({ layer }) {
+  _drawingDidEnd({ layer, }) {
     this._super(...arguments);
 
     layer.disableEdit();
@@ -41,5 +41,5 @@ export default IdentifyMapTool.extend({
   _enable() {
     this._super(...arguments);
     this.get('_editTools').startRectangle();
-  }
+  },
 });

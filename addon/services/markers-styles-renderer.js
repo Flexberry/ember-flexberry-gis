@@ -45,7 +45,7 @@ export default Service.extend({
     @return {Object} Marker style.
   */
   _getMarkerStyle(type) {
-    let markerStyle = this.get(`_markersStyles.${type}`);
+    const markerStyle = this.get(`_markersStyles.${type}`);
     if (isNone(markerStyle)) {
       Ember.Logger.error(`Service 'markers-styles-renderer' can't find '${type}' markers-style, it doesn't exist.`);
     }
@@ -59,9 +59,9 @@ export default Service.extend({
   init() {
     this._super(...arguments);
 
-    let availableMarkersStyles = {};
-    let owner = getOwner(this);
-    let availableMarkersStylesTypes = owner.knownNamesForType(`markers-style`);
+    const availableMarkersStyles = {};
+    const owner = getOwner(this);
+    const availableMarkersStylesTypes = owner.knownNamesForType('markers-style');
     availableMarkersStylesTypes.forEach((type) => {
       availableMarkersStyles[type] = owner.lookup(`markers-style:${type}`);
     });
@@ -89,15 +89,15 @@ export default Service.extend({
     @return {Object} Hash containing style type and it's default style settings (for example { type: 'image', style: { iconUrl: ..., shadowUrl: ..., ... } }).
   */
   getDefaultStyleSettings(type) {
-    let markerStyle = this._getMarkerStyle(type);
+    const markerStyle = this._getMarkerStyle(type);
     if (isNone(markerStyle)) {
       Ember.Logger.error(`Service 'markers-styles-renderer' can't get default style settings for '${type}' markers-style.`);
       return null;
     }
 
     return {
-      type: type,
-      style: markerStyle.getDefaultStyleSettings()
+      type,
+      style: markerStyle.getDefaultStyleSettings(),
     };
   },
 
@@ -110,17 +110,17 @@ export default Service.extend({
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} options.leafletLayer Leaflet layer to which layer-style must be applied.
     @param {Object} options.styleSettings Hash containing style settings.
   */
-  renderOnLeafletMarker({ marker, styleSettings }) {
-    let type = get(styleSettings, 'type');
-    let style = get(styleSettings, 'style');
+  renderOnLeafletMarker({ marker, styleSettings, }) {
+    const type = get(styleSettings, 'type');
+    const style = get(styleSettings, 'style');
 
-    let markerStyle = this._getMarkerStyle(type);
+    const markerStyle = this._getMarkerStyle(type);
     if (isNone(markerStyle)) {
       Ember.Logger.error(`Service 'markers-styles-renderer' can't render '${type}' markers-style on leaflet marker.`);
       return;
     }
 
-    markerStyle.renderOnLeafletMarker({ marker, style });
+    markerStyle.renderOnLeafletMarker({ marker, style, });
   },
 
   /**
@@ -132,18 +132,18 @@ export default Service.extend({
     @param {Object} options.styleSettings Hash containing style settings.
     @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, styleSettings, target }) {
+  renderOnCanvas({ canvas, styleSettings, target, }) {
     target = target || 'preview';
 
-    let type = get(styleSettings, 'type');
-    let style = get(styleSettings, 'style');
+    const type = get(styleSettings, 'type');
+    const style = get(styleSettings, 'style');
 
-    let markerStyle = this._getMarkerStyle(type);
+    const markerStyle = this._getMarkerStyle(type);
     if (isNone(markerStyle)) {
       Ember.Logger.error(`Service 'markers-styles-renderer' can't render '${type}' markers-style on canvas.`);
       return;
     }
 
-    markerStyle.renderOnCanvas({ canvas, style, target });
-  }
+    markerStyle.renderOnCanvas({ canvas, style, target, });
+  },
 });

@@ -118,27 +118,27 @@ export default Component.extend({
     @default Object
   */
   value: {
-    'canBeSearched': undefined,
-    'canBeContextSearched': undefined,
-    'contextSearchFields': undefined,
-    'searchFields': undefined
+    canBeSearched: undefined,
+    canBeContextSearched: undefined,
+    contextSearchFields: undefined,
+    searchFields: undefined,
   },
 
   /**
     Initializes page's DOM-related properties.
   */
   didInsertElement() {
-    let _this = this;
-    let leafletObject = _this.get('_leafletObject');
+    const _this = this;
+    const leafletObject = _this.get('_leafletObject');
     if (isNone(leafletObject)) {
-      let type = _this.get('layerType');
-      let leafletObjectMethod = _this.get('_leafletObjectMethod');
+      const type = _this.get('layerType');
+      const leafletObjectMethod = _this.get('_leafletObjectMethod');
       if (!(isBlank(leafletObjectMethod) || isBlank(type))) {
         _this.set('_leafletObjectIsLoading', true);
-        leafletObjectMethod().then(leafletObject => {
+        leafletObjectMethod().then((leafletObject) => {
           _this.set('_leafletObject', leafletObject);
           _this.set('_leafletObjectIsLoading', false);
-          let layerClass = getOwner(_this).knownForType('layer', type);
+          const layerClass = getOwner(_this).knownForType('layer', type);
           if (!isBlank(layerClass)) {
             _this.set('fields', A(layerClass.getLayerProperties(leafletObject)));
           }
@@ -147,5 +147,5 @@ export default Component.extend({
         });
       }
     }
-  }
+  },
 });

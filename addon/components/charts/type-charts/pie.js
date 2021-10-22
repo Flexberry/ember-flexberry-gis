@@ -25,15 +25,15 @@ export default BaseChartType.extend({
     @method getJsonCharts
   */
   getJsonCharts() {
-    let isObject = this.get('isObject');
+    const isObject = this.get('isObject');
 
-    let propName = this.get('_selectedXAxisProperty');
-    let propVal = this.get('_selectedYAxisProperty');
+    const propName = this.get('_selectedXAxisProperty');
+    const propVal = this.get('_selectedYAxisProperty');
 
-    let bgcolor = A(['#F15C80', '#E4D354', '#2B908F', '#F45B5B', '#91E8E1', '#7CB5EC']);
-    let bgColorPie = A([]);
-    var j = 0;
-    for (var i = 0; i < isObject.length; i++) {
+    const bgcolor = A(['#F15C80', '#E4D354', '#2B908F', '#F45B5B', '#91E8E1', '#7CB5EC']);
+    const bgColorPie = A([]);
+    let j = 0;
+    for (let i = 0; i < isObject.length; i++) {
       bgColorPie[i] = bgcolor[j];
       j++;
       if (j === 6) {
@@ -41,47 +41,47 @@ export default BaseChartType.extend({
       }
     }
 
-    let dataLabels = A([]);
-    let datasetsLabel = A([]);
-    isObject.forEach(obj => {
-      let dlCopy = A([]);
-      let dslCopy = A([]);
+    const dataLabels = A([]);
+    const datasetsLabel = A([]);
+    isObject.forEach((obj) => {
+      const dlCopy = A([]);
+      const dslCopy = A([]);
       dlCopy.push(obj[propName]);
       dataLabels.push(dlCopy);
       dslCopy.push(obj[propVal]);
       datasetsLabel.push(dslCopy);
     });
-    let type = this.get('chartType');
-    let options = {
+    const type = this.get('chartType');
+    const options = {
       title: {
         display: true,
-        text: this.get('titleChart').toString()
+        text: this.get('titleChart').toString(),
       },
       tooltips: {
         backgroundColor: '#F8F8F8',
-        bodyFontColor: '#000'
+        bodyFontColor: '#000',
       },
-      legend:{
-        display: false
+      legend: {
+        display: false,
       },
       animation: {
-        duration: 0
-      }
+        duration: 0,
+      },
     };
 
-    let data = {
+    const data = {
       labels: dataLabels,
       datasets: [{
         label: this.get(`localizedProperties.${propVal}`) || propVal,
         data: datasetsLabel,
         backgroundColor: bgColorPie,
-      }]
+      }],
     };
 
     return {
       type,
       data,
-      options
+      options,
     };
-  }
+  },
 });

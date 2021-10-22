@@ -21,10 +21,10 @@ import layout from '../../templates/components/map-tools/compare';
 const flexberryClassNamesPrefix = 'flexberry-compare-map-tool';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix
+  wrapper: flexberryClassNamesPrefix,
 };
 
-let ComapreToolComponent =  Component.extend({
+const ComapreToolComponent = Component.extend({
   layout,
 
   /**
@@ -89,14 +89,14 @@ let ComapreToolComponent =  Component.extend({
     */
     showCompareSideBar(e) {
       this.sendAction('showCompareSideBar', e);
-    }
+    },
   },
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 ComapreToolComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default ComapreToolComponent;

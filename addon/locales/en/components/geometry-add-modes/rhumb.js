@@ -12,7 +12,7 @@ export default {
   'table-field-label': 'Table rhumb',
   'table-column-operation': 'Operation',
   'crs-code': 'Coordinate reference system',
-  'number': 'Number',
+  number: 'Number',
   'object-start': 'Start of object',
   'change-permission': 'Change the initial rhumb of an object?',
   'coordinates-field-placeholder': '(no value)',
@@ -20,9 +20,9 @@ export default {
   'object-types-line': 'Line',
   'cannot-change-permission': 'One rhumb must be selected as start of object.',
   'incorrect-permission': 'Incorrect start of object',
-  'placeholderNoValue': '(no value)',
-  'NE': 'NE',
-  'SE': 'SE',
-  'SW': 'SW',
-  'NW': 'NW'
+  placeholderNoValue: '(no value)',
+  NE: 'NE',
+  SE: 'SE',
+  SW: 'SW',
+  NW: 'NW',
 };

@@ -6,15 +6,15 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | flexberry layers', function(hooks) {
+module('Integration | Component | flexberry layers', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.actions = {};
     this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 
@@ -23,8 +23,8 @@ module('Integration | Component | flexberry layers', function(hooks) {
     assert.equal(this.element.textContent.trim(), '');
   });
 
-  test('layer component sends actions', async function(assert) {
-    let geoJsonData = `
+  test('layer component sends actions', async function (assert) {
+    const geoJsonData = `
       {
         "type": "FeatureCollection",
         "features": [{
@@ -39,20 +39,20 @@ module('Integration | Component | flexberry layers', function(hooks) {
         }
       ]
     }`;
-    let geoJson = L.geoJSON(JSON.parse(geoJsonData));
+    const geoJson = L.geoJSON(JSON.parse(geoJsonData));
     this.set('items', A([{
       name: 'test layer',
       type: 'geojson',
-      leafletObject: geoJson
+      leafletObject: geoJson,
     }]));
     this.set('leafletContainer', L.layerGroup());
 
-    this.actions.onLayerInit = ({ leafletObject, layerModel }) => {
+    this.actions.onLayerInit = ({ leafletObject, layerModel, }) => {
       assert.ok(!isNone(leafletObject), 'leafletObject should not be null');
       assert.equal(get(layerModel, 'name'), 'test layer');
     };
 
-    this.actions.onLayerDestroy = ({ leafletObject, layerModel }) => {
+    this.actions.onLayerDestroy = ({ leafletObject, layerModel, }) => {
       assert.ok(!isNone(leafletObject), 'leafletObject should not be null');
       assert.equal(get(layerModel, 'name'), 'test layer');
     };

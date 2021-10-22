@@ -134,13 +134,13 @@ export default Component.extend({
   */
   _getLeafletLayer() {
     return new Promise((resolve, reject) => {
-      let leafletLayer = this.get('_leafletLayer');
+      const leafletLayer = this.get('_leafletLayer');
       if (!isNone(leafletLayer)) {
         resolve(leafletLayer);
         return;
       }
 
-      let getLeafletLayer = this.get('getLeafletLayer');
+      const getLeafletLayer = this.get('getLeafletLayer');
       if (typeof getLeafletLayer !== 'function') {
         reject('Property \'getLeafletLayer\' isn\'t a function');
         return;
@@ -187,15 +187,13 @@ export default Component.extend({
     @type String[]
     @readonly
   */
-  _availableLayerStylesCaptions: computed('_availableLayerStyles', 'i18n.locale', function() {
-    let availableLayerStyles = this.get('_availableLayerStyles');
+  _availableLayerStylesCaptions: computed('_availableLayerStyles', 'i18n.locale', function () {
+    const availableLayerStyles = this.get('_availableLayerStyles');
 
-    let layerStylesCaptions = A();
+    const layerStylesCaptions = A();
     if (isArray(availableLayerStyles) && availableLayerStyles.length > 0) {
-      let i18n = this.get('i18n');
-      layerStylesCaptions.pushObjects(availableLayerStyles.map((layerStyle) => {
-        return i18n.t(`layers-styles.${layerStyle}.caption`);
-      }));
+      const i18n = this.get('i18n');
+      layerStylesCaptions.pushObjects(availableLayerStyles.map((layerStyle) => i18n.t(`layers-styles.${layerStyle}.caption`)));
     }
 
     return layerStylesCaptions;
@@ -220,15 +218,13 @@ export default Component.extend({
   _availableLayerStylesCaptionsOrSelectedLayerStyleDidChange: observer(
     '_availableLayerStylesCaptions.[]',
     'styleSettings.type',
-    function() {
-      let availableLayerStyles = this.get('_availableLayerStyles');
-      let selectedLayerStyle = this.get('styleSettings.type');
-      let selectedLayerStyleIndex = availableLayerStyles.findIndex((layerStyle) => {
-        return selectedLayerStyle === layerStyle;
-      });
+    function () {
+      const availableLayerStyles = this.get('_availableLayerStyles');
+      const selectedLayerStyle = this.get('styleSettings.type');
+      const selectedLayerStyleIndex = availableLayerStyles.findIndex((layerStyle) => selectedLayerStyle === layerStyle);
 
       if (selectedLayerStyleIndex >= 0) {
-        let layerStylesCaptions = this.get('_availableLayerStylesCaptions');
+        const layerStylesCaptions = this.get('_availableLayerStylesCaptions');
         this.set('_selectedLayerStyleCaption', layerStylesCaptions.objectAt(selectedLayerStyleIndex));
       }
     }
@@ -251,21 +247,19 @@ export default Component.extend({
     @private
   */
   _setSelectedLayerStyle() {
-    let availableLayerStyles = this.get('_availableLayerStyles');
-    let availableLayerStylesCaptions = this.get('_availableLayerStylesCaptions');
-    let selectedLayerStyleCaption = this.get('_selectedLayerStyleCaption');
+    const availableLayerStyles = this.get('_availableLayerStyles');
+    const availableLayerStylesCaptions = this.get('_availableLayerStylesCaptions');
+    const selectedLayerStyleCaption = this.get('_selectedLayerStyleCaption');
 
     if (!isArray(availableLayerStyles) || !isArray(availableLayerStylesCaptions) || isBlank(selectedLayerStyleCaption)) {
       return null;
     }
 
-    let selectedLayerStyleIndex = availableLayerStylesCaptions.findIndex((layerStylesCaption) => {
-      return layerStylesCaption.toString() === selectedLayerStyleCaption.toString();
-    });
+    const selectedLayerStyleIndex = availableLayerStylesCaptions.findIndex((layerStylesCaption) => layerStylesCaption.toString() === selectedLayerStyleCaption.toString());
 
-    let selectedLayerStyle = selectedLayerStyleIndex > -1 ?
-      availableLayerStyles.objectAt(selectedLayerStyleIndex) :
-      null;
+    const selectedLayerStyle = selectedLayerStyleIndex > -1
+      ? availableLayerStyles.objectAt(selectedLayerStyleIndex)
+      : null;
 
     this.set('styleSettings.type', selectedLayerStyle);
   },
@@ -276,7 +270,7 @@ export default Component.extend({
     @method _selectedLayerStyleDidChange
     @private
   */
-  _selectedLayerStyleDidChange: observer('styleSettings.type', function() {
+  _selectedLayerStyleDidChange: observer('styleSettings.type', function () {
     once(this, '_setSelectedLayerStyleDefaultSettings');
   }),
 
@@ -296,8 +290,8 @@ export default Component.extend({
     @private
   */
   _setSelectedLayerStyleDefaultSettings() {
-    let previouslySelectedLayerStyle = this.get('_previouslySelectedLayerStyle');
-    let selectedLayerStyle = this.get('styleSettings.type');
+    const previouslySelectedLayerStyle = this.get('_previouslySelectedLayerStyle');
+    const selectedLayerStyle = this.get('styleSettings.type');
     if (isBlank(selectedLayerStyle) || previouslySelectedLayerStyle === selectedLayerStyle) {
       return;
     }
@@ -325,5 +319,5 @@ export default Component.extend({
     this.set('_leafletLayer', null);
 
     this._super(...arguments);
-  }
+  },
 });

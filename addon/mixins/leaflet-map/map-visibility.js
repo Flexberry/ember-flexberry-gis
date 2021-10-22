@@ -19,8 +19,8 @@ export default Mixin.create({
     if ($commandControl.length === 1 && !$commandControl.hasClass('hidden')) {
       $commandControl.addClass('hidden');
     } else {
-      let $commandControlInner = $commandControl.children();
-      for (var command of $commandControlInner) {
+      const $commandControlInner = $commandControl.children();
+      for (const command of $commandControlInner) {
         if (!$(command).hasClass('hidden')) {
           $(command).addClass('hidden');
         }
@@ -33,8 +33,8 @@ export default Mixin.create({
     if ($commandControl.length === 1 && $commandControl.hasClass('hidden')) {
       $commandControl.removeClass('hidden');
     } else {
-      let $commandControlInner = $commandControl.children();
-      for (var command of $commandControlInner) {
+      const $commandControlInner = $commandControl.children();
+      for (const command of $commandControlInner) {
         if ($(command).hasClass('hidden')) {
           $(command).removeClass('hidden');
         }
@@ -51,7 +51,7 @@ export default Mixin.create({
     @param {boolean} isTool flag, which indicate that is tool, that hide/show tools zoom.
   */
   showHide(mapCommandName, funcClass, leafletMap, isTool) {
-    let $leafletContainer = $(leafletMap._container);
+    const $leafletContainer = $(leafletMap._container);
 
     if (isNone(mapCommandName)) {
       funcClass($('.flexberry-maptoolbar'));
@@ -63,7 +63,9 @@ export default Mixin.create({
     if (mapCommandName.includes('history-')) {
       funcClass($leafletContainer.find(`.leaflet-control-container .history-control .${mapCommandName}-button`));
       return true;
-    } else if (mapCommandName.includes('zoom-') && !isTool) {
+    }
+
+    if (mapCommandName.includes('zoom-') && !isTool) {
       funcClass($leafletContainer.find(`.leaflet-control-container .leaflet-control-zoom .leaflet-control-${mapCommandName}`));
       return true;
     }
@@ -77,8 +79,8 @@ export default Mixin.create({
       endClass = '-map-command';
     }
 
-    let mapToolClass = `.flexberry-${mapToolName}${endClass}.flexberry-map-tool`;
-    let $toolControl = $(`.flexberry-maptoolbar ${mapToolClass}`);
+    const mapToolClass = `.flexberry-${mapToolName}${endClass}.flexberry-map-tool`;
+    const $toolControl = $(`.flexberry-maptoolbar ${mapToolClass}`);
     funcClass($toolControl);
-  }
+  },
 });

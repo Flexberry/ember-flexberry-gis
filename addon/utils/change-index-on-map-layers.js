@@ -5,10 +5,9 @@ import { isArray } from '@ember/array';
     @method setIndexes
     @param {Array} rootArray Array of layers to set indexes.
   */
-let setIndexes = (rootArray, hierarchy) => {
-
+const setIndexes = (rootArray, hierarchy) => {
   // Filter root array to avoid gaps in indexes.
-  let index = rootArray.filter(layer => layer.get('isDeleted') === false).length;
+  const index = rootArray.filter((layer) => layer.get('isDeleted') === false).length;
 
   _setIndexes(hierarchy, index);
 };

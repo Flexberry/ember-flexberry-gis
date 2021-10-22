@@ -20,29 +20,29 @@ export default Service.extend({
   */
   gradientList: [
     {
-      'name': 'redYellowGradient',
-      'colorStart': '#ff0000',
-      'colorEnd': '#ffff00'
+      name: 'redYellowGradient',
+      colorStart: '#ff0000',
+      colorEnd: '#ffff00',
     },
     {
-      'name': 'blackWhiteGradient',
-      'colorStart': '#000000',
-      'colorEnd': '#ffffff'
+      name: 'blackWhiteGradient',
+      colorStart: '#000000',
+      colorEnd: '#ffffff',
     },
     {
-      'name': 'greenBlueGradient',
-      'colorStart': '#00ff00',
-      'colorEnd': '#0000ff'
+      name: 'greenBlueGradient',
+      colorStart: '#00ff00',
+      colorEnd: '#0000ff',
     },
     {
-      'name': 'violetOrangeGradient',
-      'colorStart': '#6464c8',
-      'colorEnd': '#ff9616'
+      name: 'violetOrangeGradient',
+      colorStart: '#6464c8',
+      colorEnd: '#ff9616',
     },
     {
-      'name': 'brownVioletGradient',
-      'colorStart': '#8e707d',
-      'colorEnd': '#b992e0'
+      name: 'brownVioletGradient',
+      colorStart: '#8e707d',
+      colorEnd: '#b992e0',
     }
   ],
 
@@ -54,5 +54,5 @@ export default Service.extend({
   */
   getGradientList() {
     return this.get('gradientList');
-  }
+  },
 });

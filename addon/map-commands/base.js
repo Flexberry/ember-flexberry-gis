@@ -29,101 +29,101 @@ export default EmberObject.extend(Evented,
     @default false
     @private
   */
-  _executing: false,
+    _executing: false,
 
-  /**
+    /**
     Reference to i18n service.
 
     @property i18n
     @type <a href="https://github.com/jamesarosen/ember-i18n">I18nService</a>
     @default Ember.inject.service('i18n')
   */
-  i18n: service('i18n'),
+    i18n: service('i18n'),
 
-  /**
+    /**
     Tool's name.
 
     @property name
     @type String
     @default null
   */
-  name: null,
+    name: null,
 
-  /**
+    /**
     Leaflet map related to command.
 
     @property leafletMap
     @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
     @default null
   */
-  leafletMap: null,
+    leafletMap: null,
 
-  /**
+    /**
     Executes map-command.
 
     @method _enable
     @private
   */
-  _execute() {
-  },
+    _execute() {
+    },
 
-  /**
+    /**
     Executes map-command.
 
     @method execute
   */
-  execute() {
-    if (this.get('_executing')) {
-      return;
-    }
+    execute() {
+      if (this.get('_executing')) {
+        return;
+      }
 
-    let leafletMap = this.get('leafletMap');
-    assert(
-      `Wrong type of map-command \`leafletMap\` property: ` +
-      `actual type is ${typeOf(this.get('leafletMap'))}, but \`L.Map\` is expected.`,
-      leafletMap instanceof L.Map);
+      const leafletMap = this.get('leafletMap');
+      assert(
+        'Wrong type of map-command `leafletMap` property: '
+      + `actual type is ${typeOf(this.get('leafletMap'))}, but \`L.Map\` is expected.`,
+        leafletMap instanceof L.Map
+      );
 
-    this.set('_executing', true);
-    let executionResult = this._execute(...arguments);
+      this.set('_executing', true);
+      const executionResult = this._execute(...arguments);
 
-    scheduleOnce('afterRender', this, function () {
+      scheduleOnce('afterRender', this, function () {
+        // Trigger common 'execute' event.
+        leafletMap.fire('flexberry-map:commands:execute', {
+          mapCommand: this,
+          executionResult,
+          arguments,
+        });
 
-      // Trigger common 'execute' event.
-      leafletMap.fire('flexberry-map:commands:execute', {
-        mapCommand: this,
-        executionResult: executionResult,
-        arguments: arguments
+        // Trigger command specific 'execute' event.
+        const mapCommandName = this.get('name');
+        leafletMap.fire(`flexberry-map:commands:${mapCommandName}:execute`, {
+          mapCommand: this,
+          executionResult,
+          arguments,
+        });
       });
 
-      // Trigger command specific 'execute' event.
-      let mapCommandName = this.get('name');
-      leafletMap.fire(`flexberry-map:commands:${mapCommandName}:execute`, {
-        mapCommand: this,
-        executionResult: executionResult,
-        arguments: arguments
-      });
-    });
-
-    if (executionResult instanceof Promise) {
+      if (executionResult instanceof Promise) {
       // Command is asynchronous & executing is in progress.
-      executionResult.finally(() => {
-        this.set('_executing', false);
-      });
-    } else {
+        executionResult.finally(() => {
+          this.set('_executing', false);
+        });
+      } else {
       // Command isn't asynchronous & already executed.
-      this.set('_executing', false);
-    }
+        this.set('_executing', false);
+      }
 
-    return executionResult;
-  },
+      return executionResult;
+    },
 
-  hideCommand() {
-    let mapCommandName = this.get('name');
-    this.showHideTool(mapCommandName, false, this.addClassHidden);
-  },
+    hideCommand() {
+      const mapCommandName = this.get('name');
+      this.showHideTool(mapCommandName, false, this.addClassHidden);
+    },
 
-  showCommand() {
-    let mapCommandName = this.get('name');
-    this.showHideTool(mapCommandName, false, this.removeClassHidden);
-  }
-});
+    showCommand() {
+      const mapCommandName = this.get('name');
+      this.showHideTool(mapCommandName, false, this.removeClassHidden);
+    },
+  });

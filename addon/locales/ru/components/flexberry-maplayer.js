@@ -1,26 +1,26 @@
 export default {
   'opacity-label': {
-    'tooltip': 'Видимость слоя'
+    tooltip: 'Видимость слоя',
   },
   'attributes-button': {
-    'tooltip': 'Показать панель атрибутов слоя'
+    tooltip: 'Показать панель атрибутов слоя',
   },
   'bounds-button': {
-    'tooltip': 'Приблизить к границам слоя'
+    tooltip: 'Приблизить к границам слоя',
   },
   'add-button': {
-    'tooltip': 'Добавить новый дочерний слой'
+    tooltip: 'Добавить новый дочерний слой',
   },
   'copy-button': {
-    'tooltip': 'Создать копию слоя'
+    tooltip: 'Создать копию слоя',
   },
   'edit-button': {
-    'tooltip': 'Редактировать настройки слоя'
+    tooltip: 'Редактировать настройки слоя',
   },
   'remove-button': {
-    'tooltip': 'Удалить слой'
+    tooltip: 'Удалить слой',
   },
   'plus-button': {
-    'tooltip': 'Создать объект'
-  }
+    tooltip: 'Создать объект',
+  },
 };

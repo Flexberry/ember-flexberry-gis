@@ -3,10 +3,10 @@
 */
 
 import DS from 'ember-data';
+import OfflineSerializer from 'ember-flexberry-data/serializers/offline';
 import {
   OfflineSerializer as LinkParameterSerializer
 } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-link-parameter-offline';
-import OfflineSerializer from 'ember-flexberry-data/serializers/offline';
 
 /**
   Link parameter offline serializer.

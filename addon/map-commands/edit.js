@@ -18,5 +18,5 @@ export default BaseMapCommand.extend({
   */
   _execute() {
     this._super(...arguments);
-  }
+  },
 });

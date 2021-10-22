@@ -20,13 +20,13 @@ export default VectorLayer.extend(GeoJsonFilterParserMixin, {
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = this._super(...arguments);
+    const settings = this._super(...arguments);
     $.extend(true, settings, {
       kmlUrl: undefined,
       kmlString: undefined,
-      filter: ''
+      filter: '',
     });
 
     return settings;
-  }
+  },
 });

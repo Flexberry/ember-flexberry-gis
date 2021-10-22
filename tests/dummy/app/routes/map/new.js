@@ -20,5 +20,5 @@ export default EditMapNewRoute.extend(EditFormRouteOperationsIndicationMixin, {
     @type String
     @default 'map'
   */
-  templateName: 'map'
+  templateName: 'map',
 });

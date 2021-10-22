@@ -114,10 +114,10 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let boundingBox = get(e, 'polygonLayer').getBounds();
+    const boundingBox = get(e, 'polygonLayer').getBounds();
 
     let reverseGeocodingResults = this.executeReverseGeocoding({
-      boundingBox: boundingBox
+      boundingBox,
     });
 
     if (!(reverseGeocodingResults instanceof Promise)) {
@@ -126,7 +126,7 @@ export default BaseLayer.extend({
       });
     }
 
-    let featuresPromise = reverseGeocodingResults.then((results) => {
+    const featuresPromise = reverseGeocodingResults.then((results) => {
       let features = this.parseReverseGeocodingResults(results);
       if (!isArray(features)) {
         features = A();
@@ -161,7 +161,7 @@ export default BaseLayer.extend({
       });
     }
 
-    let featuresPromise = geocodingResults.then((results) => {
+    const featuresPromise = geocodingResults.then((results) => {
       let features = this.parseGeocodingResults(results);
       if (!isArray(features)) {
         features = A();
@@ -173,5 +173,5 @@ export default BaseLayer.extend({
     });
 
     return featuresPromise;
-  }
+  },
 });

@@ -1,23 +1,23 @@
 export default {
   'geojson-tjarea': {
-    'caption': 'GeoJSON object'
+    caption: 'GeoJSON object',
   },
   'style-tjarea': {
-    'caption': 'Function for styling'
+    caption: 'Function for styling',
   },
   'oneachfeature-tjarea': {
-    'caption': 'Function onEachFeature'
+    caption: 'Function onEachFeature',
   },
   'coordstolatLng-tjarea': {
-    'caption': 'Function for converting coordinates to LatLngs.'
+    caption: 'Function for converting coordinates to LatLngs.',
   },
   'pointtolayer-tjarea': {
-    'caption': 'Function pointToLayer'
+    caption: 'Function pointToLayer',
   },
   'filter-tjarea': {
-    'caption': 'Function filter'
+    caption: 'Function filter',
   },
-  'clusterize':{
-    'caption': 'Marker Clustering functionality'
-  }
+  clusterize: {
+    caption: 'Marker Clustering functionality',
+  },
 };

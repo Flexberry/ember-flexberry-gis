@@ -2,9 +2,9 @@
   @module ember-flexberry-gis
 */
 
+import { translationMacro as t } from 'ember-i18n';
 import FlexberryEditLayerDialogComponent from './edit';
 import layout from '../../templates/components/layers-dialogs/edit';
-import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -21,7 +21,7 @@ import { translationMacro as t } from 'ember-i18n';
 const flexberryClassNamesPrefix = 'flexberry-copy-layer-dialog';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: null
+  wrapper: null,
 };
 
 /**
@@ -30,7 +30,7 @@ const flexberryClassNames = {
   @class FlexberryCopyLayerDialogComponent
   @extends FlexberryEditLayerDialogComponent
 */
-let FlexberryCopyLayerDialogComponent = FlexberryEditLayerDialogComponent.extend({
+const FlexberryCopyLayerDialogComponent = FlexberryEditLayerDialogComponent.extend({
   /**
     Reference to component's template.
   */
@@ -67,13 +67,13 @@ let FlexberryCopyLayerDialogComponent = FlexberryEditLayerDialogComponent.extend
     @type String
     @default t('components.layers-dialogs.copy.deny-button.caption')
   */
-  denyButtonCaption: t('components.layers-dialogs.copy.deny-button.caption')
+  denyButtonCaption: t('components.layers-dialogs.copy.deny-button.caption'),
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryCopyLayerDialogComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryCopyLayerDialogComponent;

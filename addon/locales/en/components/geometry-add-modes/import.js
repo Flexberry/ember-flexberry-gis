@@ -9,15 +9,15 @@ export default {
   'check-all-title': 'Check all',
   'uncheck-all-title': 'Uncheck all',
   'import-error': {
-    'caption': 'Import failed',
-    'message': 'Server unavailable or imported file is incorrrect'
+    caption: 'Import failed',
+    message: 'Server unavailable or imported file is incorrrect',
   },
   'empty-error': {
-    'caption': 'File isn\'t contain any geometry objects',
-    'message': ''
+    caption: 'File isn\'t contain any geometry objects',
+    message: '',
   },
   'coords-validate-error': {
-    'caption': 'Coordinates of imported object exceeds allowed bounds',
-    'message': 'Please check selected CRS'
-  }
+    caption: 'Coordinates of imported object exceeds allowed bounds',
+    message: 'Please check selected CRS',
+  },
 };

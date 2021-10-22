@@ -48,7 +48,7 @@ export default Component.extend({
     'styleSettings',
     'styleSettings.fill',
     'styleSettings.fillColor',
-    function() {
+    function () {
       once(this, '_sendChangeAction');
     }
   ),
@@ -75,6 +75,6 @@ export default Component.extend({
     */
     onFillColorChange(fillColorPath, e) {
       this.set(fillColorPath, e.newValue);
-    }
-  }
+    },
+  },
 });

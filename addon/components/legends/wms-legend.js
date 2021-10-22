@@ -30,11 +30,11 @@ export default BaseLegendComponent.extend({
     'layer.settingsAsObject.legendSettings.version',
     'layer.settingsAsObject.legendSettings.format',
     'layer.settingsAsObject.legendSettings.layers',
-    function() {
-      let legends = A();
-      let layerSettings = this.get('layer.settingsAsObject') || {};
+    function () {
+      const legends = A();
+      const layerSettings = this.get('layer.settingsAsObject') || {};
 
-      let url = get(layerSettings, 'legendSettings.url') || get(layerSettings, 'url');
+      const url = get(layerSettings, 'legendSettings.url') || get(layerSettings, 'url');
       if (isBlank(url)) {
         Ember.Logger.error(
           `Unable to compute legends for '${this.get('layer.name')}' layer, because both required settings 'url' and 'legendSettings.url' are blank`
@@ -44,22 +44,22 @@ export default BaseLegendComponent.extend({
       }
 
       A((get(layerSettings, 'legendSettings.layers') || get(layerSettings, 'layers') || '').split(',')).forEach((layerName) => {
-        let parameters = {
+        const parameters = {
           service: 'WMS',
           request: 'GetLegendGraphic',
           version: get(layerSettings, 'legendSettings.version') || get(layerSettings, 'version') || '1.1.0',
           format: get(layerSettings, 'legendSettings.format') || get(layerSettings, 'imageFormat') || 'image/png',
-          layer: layerName
+          layer: layerName,
         };
 
         legends.pushObject({
           src: `${url}${L.Util.getParamString(parameters)}`,
-          layerName: layerName,
-          useLayerName: true
+          layerName,
+          useLayerName: true,
         });
       });
 
       return legends;
     }
-  )
+  ),
 });

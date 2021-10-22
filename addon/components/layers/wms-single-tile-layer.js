@@ -47,7 +47,7 @@ export default TileLayerComponent.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let innerWmsLayer = this.get('_wmsLayer');
+    const innerWmsLayer = this.get('_wmsLayer');
     if (!isNone(innerWmsLayer)) {
       return innerWmsLayer.identify.apply(innerWmsLayer, arguments);
     }
@@ -59,7 +59,7 @@ export default TileLayerComponent.extend({
   init() {
     this._super(...arguments);
 
-    let innerWmsLayerProperties = {
+    const innerWmsLayerProperties = {
       leafletMap: this.get('leafletMap'),
       leafletContainer: this.get('leafletContainer'),
       layerModel: this.get('layerModel'),
@@ -69,11 +69,11 @@ export default TileLayerComponent.extend({
       url: this.get('url'),
       layers: this.get('layers'),
       info_format: this.get('info_format'),
-      feature_count: this.get('feature_count')
+      feature_count: this.get('feature_count'),
     };
 
     // Set creating component's owner to avoid possible lookup exceptions.
-    let owner = getOwner(this);
+    const owner = getOwner(this);
     let ownerKey = null;
     A(Object.keys(this) || []).forEach((key) => {
       if (this[key] === owner) {
@@ -95,7 +95,7 @@ export default TileLayerComponent.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    let innerWmsLayer = this.get('_wmsLayer');
+    const innerWmsLayer = this.get('_wmsLayer');
     if (!isNone(innerWmsLayer)) {
       innerWmsLayer.destroy();
       this.set('_wmsLayer', null);
@@ -111,5 +111,5 @@ export default TileLayerComponent.extend({
   */
   createLayer() {
     return L.WMS.overlayExtended(this.get('url'), this.get('options'));
-  }
+  },
 });

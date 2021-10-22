@@ -21,10 +21,10 @@ export default CategorizedLayerStyle.extend({
     @param {Object} options.category Hash containing category settings.
     @return {Boolean} Flag indicating whether specified category is relevant to the specified property value.
   */
-  categoryIsRelevantToPropertyValue({ propertyValue, category }) {
-    propertyValue = propertyValue + '';
-    let categoryValue = get(category, 'value') + '';
+  categoryIsRelevantToPropertyValue({ propertyValue, category, }) {
+    propertyValue += '';
+    const categoryValue = `${get(category, 'value')}`;
 
     return propertyValue === categoryValue;
-  }
+  },
 });

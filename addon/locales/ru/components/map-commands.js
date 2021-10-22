@@ -1,46 +1,46 @@
 export default {
   'go-to': {
-    'caption': '',
-    'tooltip': 'Перейти к координатам'
+    caption: '',
+    tooltip: 'Перейти к координатам',
   },
-  'locate': {
-    'caption': '',
-    'tooltip': 'Мое местоположение',
-    'lat': 'Широта: ',
-    'lng': 'Долгота: ',
-    'error': 'Местоположение не найдено'
+  locate: {
+    caption: '',
+    tooltip: 'Мое местоположение',
+    lat: 'Широта: ',
+    lng: 'Долгота: ',
+    error: 'Местоположение не найдено',
   },
   'full-extent': {
-    'caption': '',
-    'tooltip': 'Полный охват'
+    caption: '',
+    tooltip: 'Полный охват',
   },
-  'edit': {
-    'caption': 'Редактировать',
-    'tooltip': 'Редактировать'
+  edit: {
+    caption: 'Редактировать',
+    tooltip: 'Редактировать',
   },
-  'export': {
-    'caption': 'Экспортировать',
-    'tooltip': 'Экспортировать',
+  export: {
+    caption: 'Экспортировать',
+    tooltip: 'Экспортировать',
     'export-download': {
-      'caption': 'В изображение',
-      'tooltip': 'Сохранить карту в файл изображения'
+      caption: 'В изображение',
+      tooltip: 'Сохранить карту в файл изображения',
     },
     'export-print': {
-      'caption': 'Напечатать',
-      'tooltip': 'Вывести карту на печать'
-    }
+      caption: 'Напечатать',
+      tooltip: 'Вывести карту на печать',
+    },
   },
-  'search': {
-    'caption': 'Найти',
-    'tooltip': 'Найти',
+  search: {
+    caption: 'Найти',
+    tooltip: 'Найти',
     'search-attributes': {
-      'caption': 'По атрибутам слоев'
+      caption: 'По атрибутам слоев',
     },
     'search-show': {
-      'caption': 'Отобразить на карте'
+      caption: 'Отобразить на карте',
     },
     'search-clear': {
-      'caption': 'Очистить'
-    }
-  }
+      caption: 'Очистить',
+    },
+  },
 };

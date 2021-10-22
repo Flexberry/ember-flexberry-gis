@@ -1,8 +1,8 @@
 export default {
   'back-button': {
-    'title': 'Предыдущий экстент'
+    title: 'Предыдущий экстент',
   },
   'forward-button': {
-    'title': 'Следующий экстент'
-  }
+    title: 'Следующий экстент',
+  },
 };

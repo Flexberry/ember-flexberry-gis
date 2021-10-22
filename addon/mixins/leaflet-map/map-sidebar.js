@@ -26,7 +26,7 @@ export default Mixin.create({
 
       // Hide sidebar.
       hide() {
-        let $control = $('*[class$="sidebar-wrapper"],*[class*="sidebar-wrapper "]');
+        const $control = $('*[class$="sidebar-wrapper"],*[class*="sidebar-wrapper "]');
         if ($control.length === 1 && $control.hasClass('visible')) {
           leafletMap.fire('flexberry-map:toggleSidebar');
         }
@@ -34,11 +34,11 @@ export default Mixin.create({
 
       // Show sidebar.
       show() {
-        let $control = $('*[class$="sidebar-wrapper"],*[class*="sidebar-wrapper "]');
+        const $control = $('*[class$="sidebar-wrapper"],*[class*="sidebar-wrapper "]');
         if ($control.length === 1 && !$control.hasClass('visible')) {
           leafletMap.fire('flexberry-map:toggleSidebar');
         }
-      }
+      },
     };
   },
 
@@ -49,5 +49,5 @@ export default Mixin.create({
   */
   willDestroyLeafletMap(leafletMap) {
     this._super(...arguments);
-  }
+  },
 });

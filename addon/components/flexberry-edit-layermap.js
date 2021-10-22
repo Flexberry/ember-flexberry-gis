@@ -3,16 +3,18 @@ import $ from 'jquery';
 import { isBlank, isNone } from '@ember/utils';
 import { isArray, A } from '@ember/array';
 import { getOwner } from '@ember/application';
-import { computed, get, observer, set } from '@ember/object';
+import {
+  computed, get, observer, set
+} from '@ember/object';
 import Component from '@ember/component';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
-import DynamicPropertiesMixin from '../mixins/dynamic-properties';
-import layout from '../templates/components/flexberry-edit-layermap';
 import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import DynamicPropertiesMixin from '../mixins/dynamic-properties';
+import layout from '../templates/components/flexberry-edit-layermap';
 
 /**
   Component's CSS-classes names.
@@ -29,7 +31,7 @@ import {
 const flexberryClassNamesPrefix = 'flexberry-edit-layermap';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: null
+  wrapper: null,
 };
 
 export default Component.extend(
@@ -234,12 +236,12 @@ export default Component.extend(
       '_loadFileAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
-        return this.get('_mainSettingsAreAvailableForType') ||
-          this.get('_crsSettingsAreAvailableForType') ||
-          this.get('_layerSettingsAreAvailableForType') ||
-          this.get('_bboxSettingsAreAvailableForType') ||
-          this.get('_pmodesAreAvailableForType') ||
-          this.get('_loadFileAreAvailableForType');
+        return this.get('_mainSettingsAreAvailableForType')
+          || this.get('_crsSettingsAreAvailableForType')
+          || this.get('_layerSettingsAreAvailableForType')
+          || this.get('_bboxSettingsAreAvailableForType')
+          || this.get('_pmodesAreAvailableForType')
+          || this.get('_loadFileAreAvailableForType');
       }
     ),
 
@@ -263,7 +265,7 @@ export default Component.extend(
       @readonly
     */
     _crsSettingsAreAvailableForType: computed('_layer.type', function () {
-      let className = this.get('_layer.type');
+      const className = this.get('_layer.type');
 
       return getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
     }),
@@ -277,7 +279,7 @@ export default Component.extend(
       @readonly
     */
     _layerSettingsAreAvailableForType: computed('_layer.type', function () {
-      let className = this.get('_layer.type');
+      const className = this.get('_layer.type');
 
       return getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
     }),
@@ -290,8 +292,8 @@ export default Component.extend(
       @readonly
     */
     _pmodesAreAvailableForType: computed('_availableModes', '_typeIsReadonly', function () {
-      let newLayerIsExpectedToBeCreated = !this.get('_typeIsReadonly');
-      let _availableModes = this.get('_availableModes');
+      const newLayerIsExpectedToBeCreated = !this.get('_typeIsReadonly');
+      const _availableModes = this.get('_availableModes');
 
       return newLayerIsExpectedToBeCreated && isArray(_availableModes) && !isBlank(_availableModes);
     }),
@@ -304,8 +306,8 @@ export default Component.extend(
       @readonly
     */
     _loadFileAreAvailableForType: computed('_layer.type', '_typeIsReadonly', function () {
-      let className = this.get('_layer.type');
-      let newLayerIsExpectedToBeCreated = !this.get('_typeIsReadonly');
+      const className = this.get('_layer.type');
+      const newLayerIsExpectedToBeCreated = !this.get('_typeIsReadonly');
 
       return getOwner(this).isKnownNameForType('layer', className) && className === 'wms' && newLayerIsExpectedToBeCreated;
     }),
@@ -330,7 +332,7 @@ export default Component.extend(
       @private
       @readonly
     */
-    _displayGroupIsAvailableForType:computed(
+    _displayGroupIsAvailableForType: computed(
       '_displaySettingsAreAvailableForType',
       '_identifySettingsAreAvailableForType',
       '_searchSettingsAreAvailableForType',
@@ -340,13 +342,13 @@ export default Component.extend(
       '_labelsSettingsAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
-        return this.get('_displaySettingsAreAvailableForType') ||
-          this.get('_identifySettingsAreAvailableForType') ||
-          this.get('_searchSettingsAreAvailableForType') ||
-          this.get('_legendSettingsAreAvailableForType') ||
-          this.get('_filterSettingsAreAvailableForType') ||
-          this.get('_styleSettingsAreAvailableForType') ||
-          this.get('_labelsSettingsAreAvailableForType');
+        return this.get('_displaySettingsAreAvailableForType')
+          || this.get('_identifySettingsAreAvailableForType')
+          || this.get('_searchSettingsAreAvailableForType')
+          || this.get('_legendSettingsAreAvailableForType')
+          || this.get('_filterSettingsAreAvailableForType')
+          || this.get('_styleSettingsAreAvailableForType')
+          || this.get('_labelsSettingsAreAvailableForType');
       }
     ),
 
@@ -359,7 +361,7 @@ export default Component.extend(
       @readonly
     */
     _displaySettingsAreAvailableForType: computed('_layer.type', function () {
-      let className = this.get('_layer.type');
+      const className = this.get('_layer.type');
 
       return getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
     }),
@@ -373,10 +375,10 @@ export default Component.extend(
       @readonly
     */
     _identifySettingsAreAvailableForType: computed('_layer.type', function () {
-      let className = this.get('_layer.type');
-      let layerClass = isNone(className) ?
-        null :
-        getOwner(this).knownForType('layer', className);
+      const className = this.get('_layer.type');
+      const layerClass = isNone(className)
+        ? null
+        : getOwner(this).knownForType('layer', className);
 
       return !isNone(layerClass) && A(get(layerClass, 'operations') || []).contains('identify');
     }),
@@ -390,10 +392,10 @@ export default Component.extend(
       @readonly
     */
     _searchSettingsAreAvailableForType: computed('_layer.type', function () {
-      let className = this.get('_layer.type');
-      let layerClass = isNone(className) ?
-        null :
-        getOwner(this).knownForType('layer', className);
+      const className = this.get('_layer.type');
+      const layerClass = isNone(className)
+        ? null
+        : getOwner(this).knownForType('layer', className);
 
       return !isNone(layerClass) && A(get(layerClass, 'operations') || []).contains('search');
     }),
@@ -407,10 +409,10 @@ export default Component.extend(
       @readonly
     */
     _legendSettingsAreAvailableForType: computed('_layer.type', function () {
-      let className = this.get('_layer.type');
-      let layerClass = isNone(className) ?
-        null :
-        getOwner(this).knownForType('layer', className);
+      const className = this.get('_layer.type');
+      const layerClass = isNone(className)
+        ? null
+        : getOwner(this).knownForType('layer', className);
 
       return !isNone(layerClass) && A(get(layerClass, 'operations') || []).contains('legend');
     }),
@@ -424,10 +426,10 @@ export default Component.extend(
       @readonly
     */
     _filterSettingsAreAvailableForType: computed('_layer.type', function () {
-      let className = this.get('_layer.type');
-      let layerClass = isNone(className) ?
-        null :
-        getOwner(this).knownForType('layer', className);
+      const className = this.get('_layer.type');
+      const layerClass = isNone(className)
+        ? null
+        : getOwner(this).knownForType('layer', className);
 
       return !isNone(layerClass) && A(get(layerClass, 'operations') || []).contains('filter');
     }),
@@ -441,10 +443,10 @@ export default Component.extend(
       @readonly
     */
     _styleSettingsAreAvailableForType: computed('_layer.type', function () {
-      let className = this.get('_layer.type');
-      let layerClass = isNone(className) ?
-        null :
-        getOwner(this).knownForType('layer', className);
+      const className = this.get('_layer.type');
+      const layerClass = isNone(className)
+        ? null
+        : getOwner(this).knownForType('layer', className);
 
       // Style settings are available only for vector layers.
       return !isNone(layerClass) && layerClass.isVectorType(this.get('layer'));
@@ -459,7 +461,7 @@ export default Component.extend(
       @readonly
     */
     _labelsSettingsAreAvailableForType: computed('_layer.type', function () {
-      let className = this.get('_layer.type');
+      const className = this.get('_layer.type');
 
       return getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
     }),
@@ -489,7 +491,7 @@ export default Component.extend(
       @readonly
     */
     _linksSettingsAreAvailableForType: computed('_layer.type', function () {
-      let className = this.get('_layer.type');
+      const className = this.get('_layer.type');
 
       return getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
     }),
@@ -515,8 +517,8 @@ export default Component.extend(
       onGroupClick(e) {
         e = $.event.fix(e);
 
-        let $clickedGroup = $(e.currentTarget);
-        let clickedGroupName = $clickedGroup.attr('data-tab');
+        const $clickedGroup = $(e.currentTarget);
+        const clickedGroupName = $clickedGroup.attr('data-tab');
         this.set('_tabularMenuState.activeGroup', clickedGroupName);
       },
 
@@ -567,7 +569,7 @@ export default Component.extend(
       */
       onUploadFile(file) {
         this.sendAction('onUploadFile', file);
-      }
+      },
     },
 
     /**
@@ -577,9 +579,9 @@ export default Component.extend(
       @private
     */
     _createInnerSettings() {
-      let settings = {};
+      const settings = {};
       A(this.get('_availableTypes') || []).forEach((type) => {
-        let layerClassFactory = getOwner(this).knownForType('layer', type);
+        const layerClassFactory = getOwner(this).knownForType('layer', type);
         settings[type] = layerClassFactory.createSettings();
       });
 
@@ -603,20 +605,20 @@ export default Component.extend(
       @private
     */
     _createInnerLayer() {
-      let type = this.get('layer.type');
-      let name = this.get('layer.name');
-      let scale = this.get('layer.scale');
-      let description = this.get('layer.description');
-      let keyWords = this.get('layer.keyWords');
-      let boundingBox = this.get('layer.boundingBox');
-      let leafletObjectGetter = this.get('layer.leafletObjectGetter');
-      let bounds = getBounds(boundingBox);
+      const type = this.get('layer.type');
+      const name = this.get('layer.name');
+      const scale = this.get('layer.scale');
+      const description = this.get('layer.description');
+      const keyWords = this.get('layer.keyWords');
+      const boundingBox = this.get('layer.boundingBox');
+      const leafletObjectGetter = this.get('layer.leafletObjectGetter');
+      const bounds = getBounds(boundingBox);
 
       let crs = this.get('layer.coordinateReferenceSystem');
       crs = isNone(crs) ? {} : JSON.parse(crs);
 
       let settings = this.get('layer.settings');
-      let defaultSettings = isNone(type) ? {} : getOwner(this).knownForType('layer', type).createSettings();
+      const defaultSettings = isNone(type) ? {} : getOwner(this).knownForType('layer', type).createSettings();
       if (!isNone(settings)) {
         settings = $.extend(true, defaultSettings, JSON.parse(settings));
       } else if (!isNone(type)) {
@@ -629,21 +631,21 @@ export default Component.extend(
       }
 
       this.set('_layer', {
-        type: type,
-        name: name,
-        scale: scale,
-        description: description,
-        keyWords: keyWords,
+        type,
+        name,
+        scale,
+        description,
+        keyWords,
         coordinateReferenceSystem: crs,
-        settings: settings,
-        boundingBox: boundingBox,
+        settings,
+        boundingBox,
         bboxCoords: {
           minLat: bounds.minLat,
           minLng: bounds.minLng,
           maxLat: bounds.maxLat,
           maxLng: bounds.maxLng,
         },
-        leafletObjectGetter: leafletObjectGetter
+        leafletObjectGetter,
       });
     },
 
@@ -655,7 +657,7 @@ export default Component.extend(
     */
     _destroyInnerLayer() {
       this.set('_layer', null);
-      let i18n = this.get('i18n');
+      const i18n = this.get('i18n');
       this.set('_selectedModeCaption', i18n.t('components.layers-dialogs.layers-prototyping-modes.new'));
       this._destroyInnerSettings();
     },
@@ -687,7 +689,7 @@ export default Component.extend(
         return;
       }
 
-      let type = this.get('_layer.type');
+      const type = this.get('_layer.type');
       this.set('_layer.settings', this.get(`_settings.${type}`));
     }),
 
@@ -705,35 +707,35 @@ export default Component.extend(
         activeGroup: 'main-group',
         groups: {
           'main-group': {
-            activeTab: 'main-tab'
+            activeTab: 'main-tab',
           },
           'display-group': {
-            activeTab: 'display-tab'
+            activeTab: 'display-tab',
           },
           'links-group': {
-            activeTab: 'links-tab'
-          }
-        }
+            activeTab: 'links-tab',
+          },
+        },
       });
 
-      let owner = getOwner(this);
+      const owner = getOwner(this);
 
       // Initialize available layers types for related dropdown.
       this.set('_availableTypes', owner.knownNamesForType('layer'));
 
       // Initialize available edit modes.
-      let availableEditModes = A();
-      let editModesNames = owner.knownNamesForType('layers-prototyping-mode');
+      const availableEditModes = A();
+      const editModesNames = owner.knownNamesForType('layers-prototyping-mode');
       editModesNames.forEach((modeName) => {
-        let editMode = owner.knownForType('layers-prototyping-mode', modeName).create();
-        let isAvailable = editMode.componentCanBeInserted(this);
+        const editMode = owner.knownForType('layers-prototyping-mode', modeName).create();
+        const isAvailable = editMode.componentCanBeInserted(this);
         if (isAvailable) {
           availableEditModes.pushObject(editMode);
         }
       });
       this.set('_availableModes', availableEditModes);
 
-      let i18n = this.get('i18n');
+      const i18n = this.get('i18n');
       this.set('_selectedModeCaption', i18n.t('components.layers-dialogs.layers-prototyping-modes.new'));
 
       this.sendAction('onInit', this.getLayerProperties.bind(this));
@@ -746,10 +748,10 @@ export default Component.extend(
     */
     getLayerProperties() {
       // Inner layer hash.
-      let layer = this.get('_layer');
+      const layer = this.get('_layer');
 
       // Layer hash to send.
-      let _layerHash = $.extend(true, {}, layer);
+      const _layerHash = $.extend(true, {}, layer);
 
       let coordinateReferenceSystem = get(_layerHash, 'coordinateReferenceSystem');
       coordinateReferenceSystem = $.isEmptyObject(coordinateReferenceSystem) ? null : JSON.stringify(coordinateReferenceSystem);
@@ -766,7 +768,7 @@ export default Component.extend(
       set(_layerHash, 'settings', settings);
 
       return _layerHash;
-    }
+    },
 
     /**
       Component's action invoking init hook is finished.
@@ -788,8 +790,9 @@ export default Component.extend(
 
       @method sendingActions.addLayerLink
     */
-  });
+  }
+);
 
 Component.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });

@@ -6,9 +6,9 @@ import { getOwner } from '@ember/application';
 
 import { isNone } from '@ember/utils';
 import $ from 'jquery';
+import { translationMacro as t } from 'ember-i18n';
 import FlexberryEditLayerDialogComponent from './edit';
 import layout from '../../templates/components/layers-dialogs/edit';
-import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -25,7 +25,7 @@ import { translationMacro as t } from 'ember-i18n';
 const flexberryClassNamesPrefix = 'flexberry-add-layer-dialog';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: null
+  wrapper: null,
 };
 
 /**
@@ -34,7 +34,7 @@ const flexberryClassNames = {
   @class FlexberryAddLayerDialogComponent
   @extends FlexberryEditLayerDialogComponent
 */
-let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend({
+const FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend({
   /**
     Reference to component's template.
   */
@@ -165,18 +165,18 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
   */
   request(url, type, contentType, data, successF, errorF) {
     $.ajax({
-      url: url,
-      type: type,
-      data: data,
+      url,
+      type,
+      data,
       processData: false,
-      contentType: contentType,
+      contentType,
       async: false,
-      success: function(data) {
+      success(data) {
         successF(data);
       },
-      error: function(data) {
+      error(data) {
         errorF(data);
-      }
+      },
     });
   },
 
@@ -200,14 +200,14 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
       @method actions.onApprove
     */
     onApprove() {
-      let file = this.get('_fileControl');
+      const file = this.get('_fileControl');
       if (!isNone(file)) {
-        let layerProperties = this.get('getLayerProperties')();
-        let layerName = JSON.parse(layerProperties.settings).layers.split(':');
-        let url = JSON.parse(layerProperties.settings).url.split('/geoserver');
+        const layerProperties = this.get('getLayerProperties')();
+        const layerName = JSON.parse(layerProperties.settings).layers.split(':');
+        const url = JSON.parse(layerProperties.settings).url.split('/geoserver');
         if (!isNone(layerName)) {
-          let _this = this;
-          let config = getOwner(this).resolveRegistration('config:environment');
+          const _this = this;
+          const config = getOwner(this).resolveRegistration('config:environment');
 
           this.request(`${url[0]}/geoserver/rest/workspaces/${layerName[0]}`, 'GET', 'application/json', '',
             (data) => {
@@ -222,8 +222,8 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
                     'PUT', 'image/tiff', file,
                     (data) => {
                       this.sendAction('approve', {
-                        layerProperties: layerProperties,
-                        layer: this.get('layer')
+                        layerProperties,
+                        layer: this.get('layer'),
                       });
                       this.set('rastrMessageVisible', true);
                       this.set('message', this.get('createLayerMessage'));
@@ -233,14 +233,12 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
                       this.set('rastrMessageVisible', true);
                       this.set('message', this.get('createLayerErrorMessage'));
                       this.set('typeMessage', 'error');
-                    }
-                  );
-                }
-              );
+                    });
+                });
             },
             (data) => {
               this.set('rastrMessageVisible', true);
-              this.set('message', this.get('existWorkspaceErrorMessage') + ' ' + config.APP.geoserver.workspaceRastr);
+              this.set('message', `${this.get('existWorkspaceErrorMessage')} ${config.APP.geoserver.workspaceRastr}`);
               this.set('typeMessage', 'error');
             });
         }
@@ -258,14 +256,14 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
       if (!isNone(file)) {
         this.set('_fileControl', file);
       }
-    }
-  }
+    },
+  },
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryAddLayerDialogComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryAddLayerDialogComponent;

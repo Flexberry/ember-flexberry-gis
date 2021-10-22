@@ -37,5 +37,5 @@ export default {
   */
   create(code, definition, options) {
     return L.CRS.EPSG3857;
-  }
+  },
 };

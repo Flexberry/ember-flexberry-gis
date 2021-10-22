@@ -12,18 +12,18 @@ import $ from 'jquery';
   @param {<a href="http://emberjs.com/api/classes/Ember.ApplicationInstance.html">Ember.ApplicationInstance</a>} applicationInstance Ember application instance.
 */
 export function initialize(applicationInstance) {
-  let i18n = applicationInstance.lookup('service:i18n');
+  const i18n = applicationInstance.lookup('service:i18n');
 
   // Use i18n service with Semantic UI 'search' module.
-  let getOriginalMessageHtml = $.fn.search.settings.templates.message;
-  $.fn.search.settings.templates.message = function(message, type) {
-    let originalMessageHtml = getOriginalMessageHtml.call(this, message, type);
+  const getOriginalMessageHtml = $.fn.search.settings.templates.message;
+  $.fn.search.settings.templates.message = function (message, type) {
+    const originalMessageHtml = getOriginalMessageHtml.call(this, message, type);
 
     if (type !== 'empty') {
       return originalMessageHtml;
     }
 
-    let $originalMessage = $(originalMessageHtml);
+    const $originalMessage = $(originalMessageHtml);
     $('.header', $originalMessage).text(i18n.t('components.flexberry-search.no-results.caption'));
     $('.description', $originalMessage).text(i18n.t('components.flexberry-search.no-results.description'));
 
@@ -35,5 +35,5 @@ export function initialize(applicationInstance) {
 export default {
   after: 'i18n',
   name: 'flexberry-search',
-  initialize
+  initialize,
 };

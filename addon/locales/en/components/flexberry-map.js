@@ -1,11 +1,11 @@
 export default {
-  'queryText': 'Search objects',
+  queryText: 'Search objects',
   'zoom-control': {
     'zoom-in-button': {
-      'title': 'Zoom in'
+      title: 'Zoom in',
     },
     'zoom-out-button': {
-      'title': 'Zoom out'
-    }
-  }
+      title: 'Zoom out',
+    },
+  },
 };

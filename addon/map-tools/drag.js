@@ -29,7 +29,7 @@ export default BaseMapTool.extend({
   _enable() {
     this._super(...arguments);
 
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     leafletMap.dragging.enable();
   },
 
@@ -41,5 +41,5 @@ export default BaseMapTool.extend({
   */
   _disable() {
     this._super(...arguments);
-  }
+  },
 });

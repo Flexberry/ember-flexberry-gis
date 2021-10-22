@@ -7,7 +7,9 @@ import { later } from '@ember/runloop';
 import $ from 'jquery';
 import { A } from '@ember/array';
 import { isBlank, isNone } from '@ember/utils';
-import { computed, observer, get, set } from '@ember/object';
+import {
+  computed, observer, get, set
+} from '@ember/object';
 import EditMapController from 'ember-flexberry-gis/controllers/edit-map';
 import EditFormControllerOperationsIndicationMixin from 'ember-flexberry/mixins/edit-form-controller-operations-indication';
 import sideBySide from 'npm:leaflet-side-by-side';
@@ -100,8 +102,8 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   */
   identifyToolName: computed('identifyToolLayerMode', 'identifyToolToolMode', function () {
     let identifyToolName = 'identify';
-    let layerMode = this.get('identifyToolLayerMode');
-    let toolMode = this.get('identifyToolToolMode');
+    const layerMode = this.get('identifyToolLayerMode');
+    const toolMode = this.get('identifyToolToolMode');
 
     if (!(isBlank(layerMode) || isBlank(toolMode))) {
       identifyToolName = `identify-${layerMode}-${toolMode}`;
@@ -163,7 +165,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   switchScaleControlScales: [500, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 150000, 200000],
 
   _leafletMapDidChange: observer('leafletMap', function () {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (leafletMap) {
       leafletMap.on('flexberry-map:toggleSidebar', this.onToggleSidebar, this);
     }
@@ -183,61 +185,61 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   sidebar: A([{
     selector: 'treeview',
     captionPath: 'forms.map.treeviewbuttontooltip',
-    iconClass: 'list icon'
+    iconClass: 'list icon',
   }, {
     selector: 'search',
     captionPath: 'forms.map.searchbuttontooltip',
-    iconClass: 'search icon'
+    iconClass: 'search icon',
   }, {
     selector: 'identify',
     captionPath: 'forms.map.identifybuttontooltip',
     iconClass: 'info circle icon',
-    class: 'identify'
+    class: 'identify',
   }, {
     selector: 'bookmarks',
     captionPath: 'forms.map.bookmarksbuttontooltip',
-    iconClass: 'bookmark icon'
+    iconClass: 'bookmark icon',
   }, {
     selector: 'favorites',
     captionPath: 'forms.map.favoritesbuttontooltip',
     iconClass: 'favorites icon',
-    class: 'favorite'
+    class: 'favorite',
   }, {
     selector: 'createObject',
     captionPath: 'forms.map.createobjectbuttontooltip',
-    iconClass: 'createObject icon'
+    iconClass: 'createObject icon',
   }, {
     selector: 'createOrEditObject',
     captionPath: 'forms.map.createoreditobjectbuttontooltip',
     iconClass: 'createOrEditObject icon',
-    class: 'createOrEditObject'
+    class: 'createOrEditObject',
   }, {
     selector: 'compare',
     captionPath: 'forms.map.comparebuttontooltip',
     iconClass: 'compare icon',
-    class: 'compare'
+    class: 'compare',
   }, {
     selector: 'compareObjects',
     caption: 'Сравнение объектов',
     iconClass: 'compareObjects icon',
-    class: 'compareObjects'
+    class: 'compareObjects',
   }, {
     selector: 'intersectionObjects',
     caption: 'Сравнение объектов',
     iconClass: 'intersectionObjects icon',
-    class: 'intersectionObjects'
+    class: 'intersectionObjects',
   }]),
 
   _showFavorites: false,
 
   _sidebarFiltered: computed('sidebar', 'createObject', 'createOrEditObject', 'compareObjects', 'showIntersectionPanel', function () {
-    let result = A();
-    let sidebar = this.get('sidebar');
+    const result = A();
+    const sidebar = this.get('sidebar');
     sidebar.forEach((item) => {
-      if ((item.selector !== 'createObject' || this.get('createObject')) &&
-        (item.selector !== 'createOrEditObject' || this.get('createOrEditObject')) &&
-        (item.selector !== 'intersectionObjects' || this.get('showIntersectionPanel')) &&
-        (item.selector !== 'compareObjects' || this.get('compareObjects')))/* &&
+      if ((item.selector !== 'createObject' || this.get('createObject'))
+        && (item.selector !== 'createOrEditObject' || this.get('createOrEditObject'))
+        && (item.selector !== 'intersectionObjects' || this.get('showIntersectionPanel'))
+        && (item.selector !== 'compareObjects' || this.get('compareObjects')))/* &&
         (item.selector !== 'compare' || this.get('compare'))) */{
         result.push(item);
       }
@@ -253,13 +255,13 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @type Object[]
   */
   sidebarItems: computed('sidebar.[]', 'sidebar.@each.active', 'i18n', function () {
-    let i18n = this.get('i18n');
-    let sidebar = this.get('sidebar');
+    const i18n = this.get('i18n');
+    const sidebar = this.get('sidebar');
 
-    let result = A(sidebar);
+    const result = A(sidebar);
     result.forEach((item) => {
-      let caption = get(item, 'caption');
-      let captionPath = get(item, 'captionPath');
+      const caption = get(item, 'caption');
+      const captionPath = get(item, 'captionPath');
 
       if (!caption && captionPath) {
         set(item, 'caption', i18n.t(captionPath));
@@ -280,19 +282,19 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       crs: L.CRS.EPSG3395,
       name: 'EPSG:3395',
       xCaption: 'forms.map.xCaption',
-      yCaption: 'forms.map.yCaption'
+      yCaption: 'forms.map.yCaption',
     },
     {
       crs: L.CRS.EPSG4326,
       name: 'EPSG:4326',
       xCaption: 'forms.map.xCaption',
-      yCaption: 'forms.map.yCaption'
+      yCaption: 'forms.map.yCaption',
     },
     {
       crs: L.CRS.EPSG3857,
       name: 'EPSG:3857',
       xCaption: 'forms.map.xCaption',
-      yCaption: 'forms.map.yCaption'
+      yCaption: 'forms.map.yCaption',
     }
     ];
   }),
@@ -354,8 +356,8 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       editedLayersPanelFolded: true,
       editedLayersPanelSettings: {
         withToolbar: true,
-        sidebarOpened: false
-      }
+        sidebarOpened: false,
+      },
     });
   },
 
@@ -371,8 +373,8 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       editedLayersPanelFolded: true,
       editedLayersPanelSettings: {
         withToolbar: false,
-        sidebarOpened: false
-      }
+        sidebarOpened: false,
+      },
     });
   },
 
@@ -382,10 +384,10 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       $('.sidebar-wrapper .main-map-tab-bar > .item.tab.active').removeClass('active');
     } else {
       // поищем поcледнюю активную. у самих data-tab класс не сбрасывается
-      let activeTab = $('.sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
+      const activeTab = $('.sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
       if (activeTab.length > 0) {
-        let dataTab = activeTab.attr('data-tab');
-        $('.sidebar-wrapper .main-map-tab-bar > .item.tab[data-tab=' + dataTab + ']').addClass('active');
+        const dataTab = activeTab.attr('data-tab');
+        $(`.sidebar-wrapper .main-map-tab-bar > .item.tab[data-tab=${dataTab}]`).addClass('active');
         tab = dataTab;
       } else {
         this.set('sidebar.0.active', true);
@@ -395,7 +397,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
     this.send('toggleSidebar', {
       changed: false,
-      tabName: tab
+      tabName: tab,
     });
   },
 
@@ -418,7 +420,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @method onLeafletMapContainerResizeStart
   */
   onLeafletMapContainerResizeStart() {
-    let panelHeight = $('.mappanel').innerHeight();
+    const panelHeight = $('.mappanel').innerHeight();
     if (panelHeight < 630) {
       this.set('editedLayersPanelSettings.withToolbar', true);
     } else {
@@ -431,7 +433,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this.set('compareObjects', true);
       later(() => {
         let tab;
-        let activeTab = $('.sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
+        const activeTab = $('.sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
         if (activeTab.length > 0) {
           tab = activeTab.attr('data-tab');
         }
@@ -443,7 +445,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         this.send('toggleSidebar', {
           changed: this.get('sidebarOpened'),
           tabName: 'compareObjects',
-          prevTab: tab
+          prevTab: tab,
         });
       });
     },
@@ -457,7 +459,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this.set('sidebar.3.active', true);
       this.send('toggleSidebar', {
         changed: true,
-        tabName: 'bookmarks'
+        tabName: 'bookmarks',
       });
     },
 
@@ -479,7 +481,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
           if (!this.get('sidebarOpened')) {
             this.send('toggleSidebar', {
               changed: false,
-              tabName: 'createObject'
+              tabName: 'createObject',
             });
           }
         });
@@ -506,7 +508,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
           if (!this.get('sidebarOpened')) {
             this.send('toggleSidebar', {
               changed: false,
-              tabName: 'createOrEditObject'
+              tabName: 'createOrEditObject',
             });
           }
         });
@@ -534,7 +536,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       if (!this.get('sidebarOpened')) {
         this.send('toggleSidebar', {
           changed: false,
-          tabName: 'search'
+          tabName: 'search',
         });
       }
     },
@@ -550,7 +552,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         if (!this.get('sidebarOpened')) {
           this.send('toggleSidebar', {
             changed: false,
-            tabName: 'compare'
+            tabName: 'compare',
           });
         }
 
@@ -570,7 +572,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
           if (!this.get('sidebarOpened')) {
             this.send('toggleSidebar', {
               changed: false,
-              tabName: 'createObject'
+              tabName: 'createObject',
             });
           }
         });
@@ -599,7 +601,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this.destroyEditPanel();
       this.set('sidebarOpened', false);
       this.set('showTree', false);
-      let leafletMap = this.get('leafletMap');
+      const leafletMap = this.get('leafletMap');
       if (leafletMap) {
         leafletMap.off('flexberry-map:toggleSidebar', this.onToggleSidebar, this);
       }
@@ -614,7 +616,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     */
     toggleSidebar(e) {
       if (!e.changed) {
-        let sidebarOpened = !this.get('sidebarOpened');
+        const sidebarOpened = !this.get('sidebarOpened');
         this.set('sidebarOpened', sidebarOpened);
 
         // push left map controls to right for sidebar width
@@ -635,20 +637,20 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       }
 
       if (e.tabName === 'identify') {
-        let leafletMap = this.get('leafletMap');
+        const leafletMap = this.get('leafletMap');
         if (isNone(leafletMap)) {
           return;
         }
 
         // Enable identify tool when 'identify' tab is clicked.
-        let identifyToolName = this.get('identifyToolName');
-        let identifyToolProperties = {
+        const identifyToolName = this.get('identifyToolName');
+        const identifyToolProperties = {
           bufferActive: this.get('identifyToolBufferActive'),
           bufferUnits: this.get('identifyToolBufferUnits'),
           bufferRadius: this.get('identifyToolBufferRadius'),
           layerMode: this.get('identifyToolLayerMode'),
           toolMode: this.get('identifyToolToolMode'),
-          layers: this.get('model.hierarchy')
+          layers: this.get('model.hierarchy'),
         };
 
         leafletMap.flexberryMap.tools.enable(identifyToolName, identifyToolProperties);
@@ -698,7 +700,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       @method actions.querySearch
     */
     querySearch(e) {
-      let leafletMap = this.get('leafletMap');
+      const leafletMap = this.get('leafletMap');
 
       leafletMap.fire('flexberry-map:search', e);
 
@@ -709,7 +711,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         if (!this.get('sidebarOpened')) {
           this.send('toggleSidebar', {
             changed: false,
-            tabName: 'search'
+            tabName: 'search',
           });
         }
       }
@@ -734,7 +736,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this.set('showIntersectionPanel', true);
       later(() => {
         let tab;
-        let activeTab = $('.rgis-sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
+        const activeTab = $('.rgis-sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
         if (activeTab.length > 0) {
           tab = activeTab.attr('data-tab');
         }
@@ -746,7 +748,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         this.send('toggleSidebar', {
           changed: this.get('sidebarOpened'),
           tabName: 'intersectionObjects',
-          prevTab: tab
+          prevTab: tab,
         });
       });
     },
@@ -768,7 +770,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this.set('sidebar.0.active', true);
       this.send('toggleSidebar', {
         changed: true,
-        tabName: 'treeview'
+        tabName: 'treeview',
       });
     },
 
@@ -782,7 +784,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       or a promise returning such array.
     */
     onIdentificationFinished(e) {
-      let serviceLayer = this.get('serviceLayer');
+      const serviceLayer = this.get('serviceLayer');
       serviceLayer.clearLayers();
 
       this.set('identifyToolPolygonLayer', e.polygonLayer);
@@ -797,7 +799,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       if (!this.get('sidebarOpened')) {
         this.send('toggleSidebar', {
           changed: false,
-          tabName: 'identify'
+          tabName: 'identify',
         });
       }
     },
@@ -810,21 +812,21 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     onIdentificationClear() {
       this.set('identifyToolResults', null);
 
-      let serviceLayer = this.get('serviceLayer');
+      const serviceLayer = this.get('serviceLayer');
       if (serviceLayer) {
         serviceLayer.clearLayers();
       }
 
-      let identifyToolPolygonLayer = this.get('identifyToolPolygonLayer');
+      const identifyToolPolygonLayer = this.get('identifyToolPolygonLayer');
       if (identifyToolPolygonLayer) {
         identifyToolPolygonLayer.disableEdit();
         identifyToolPolygonLayer.remove();
       }
 
-      let identifyToolBufferedMainPolygonLayer = this.get('identifyToolBufferedMainPolygonLayer');
+      const identifyToolBufferedMainPolygonLayer = this.get('identifyToolBufferedMainPolygonLayer');
       if (identifyToolBufferedMainPolygonLayer) {
         identifyToolBufferedMainPolygonLayer.remove();
       }
-    }
-  }
+    },
+  },
 });

@@ -8,15 +8,15 @@
   @param {Function} coordinatesFunction Function for getting coordinates.
   @returns {Array} Array of coordinates.
 */
-let latLngToCoords = function(latlng, crs, precision, coordinatesFunction) {
-  var coord = crs.project(latlng);
+const latLngToCoords = function (latlng, crs, precision, coordinatesFunction) {
+  const coord = crs.project(latlng);
   if (typeof (coordinatesFunction) !== 'function') {
-    return latlng.alt !== undefined ?
-    [coord.x, coord.y, latlng.alt] :
-    [coord.x, coord.y];
-  } else {
-    return coordinatesFunction(coord, latlng.alt);
+    return latlng.alt !== undefined
+      ? [coord.x, coord.y, latlng.alt]
+      : [coord.x, coord.y];
   }
+
+  return coordinatesFunction(coord, latlng.alt);
 };
 
 /**
@@ -31,13 +31,13 @@ let latLngToCoords = function(latlng, crs, precision, coordinatesFunction) {
   @param {Function} coordinatesFunction Function for getting coordinates.
   @returns {Array} Array of coordinates.
 */
-let latLngsToCoords = function(latlngs, crs, levelsDeep, closed, precision, coordinatesFunction) {
-  var coords = [];
+const latLngsToCoords = function (latlngs, crs, levelsDeep, closed, precision, coordinatesFunction) {
+  const coords = [];
 
-  for (var i = 0, len = latlngs.length; i < len; i++) {
-    coords.push(levelsDeep ?
-      latLngsToCoords(latlngs[i], crs, levelsDeep - 1, closed, precision, coordinatesFunction) :
-      latLngToCoords(latlngs[i], crs, precision, coordinatesFunction));
+  for (let i = 0, len = latlngs.length; i < len; i++) {
+    coords.push(levelsDeep
+      ? latLngsToCoords(latlngs[i], crs, levelsDeep - 1, closed, precision, coordinatesFunction)
+      : latLngToCoords(latlngs[i], crs, precision, coordinatesFunction));
   }
 
   if (!levelsDeep && closed) {

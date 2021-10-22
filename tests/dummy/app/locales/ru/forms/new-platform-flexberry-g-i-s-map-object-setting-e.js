@@ -5,5 +5,5 @@ export default {
   'listForm-caption': 'Списковая форма',
   'editForm-caption': 'Форма редактирования',
   'multEditForm-caption': 'Форма группового создания',
-  'defaultMap-caption': 'Карта по умолчанию'
+  'defaultMap-caption': 'Карта по умолчанию',
 };

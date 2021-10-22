@@ -3,6 +3,7 @@ import { A } from '@ember/array';
 import Component from '@ember/component';
 import layout from '../templates/components/favorites-list';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
+
 export default Component.extend(LeafletZoomToFeatureMixin, {
 
   /**
@@ -36,7 +37,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
   */
   compareBtnDisabled: true,
 
-  onTwoObjectsChange: observer('features.[]', function() {
+  onTwoObjectsChange: observer('features.[]', function () {
     this.set('data', this.get('features'));
   }),
 
@@ -79,6 +80,6 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
     */
     showIntersectionPanel(feature) {
       this.sendAction('showIntersectionPanel', feature);
-    }
-  }
+    },
+  },
 });

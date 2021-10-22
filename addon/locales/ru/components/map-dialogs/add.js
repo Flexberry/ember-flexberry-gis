@@ -1,9 +1,9 @@
 export default {
-  'caption': 'Добавление карты',
+  caption: 'Добавление карты',
   'approve-button': {
-    'caption': 'Ok'
+    caption: 'Ok',
   },
   'deny-button': {
-    'caption': 'Отмена'
-  }
+    caption: 'Отмена',
+  },
 };

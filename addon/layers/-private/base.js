@@ -15,15 +15,15 @@ const createFeaturesPropertiesSettings = function () {
     excludedProperties: [],
     localizedProperties: {
       ru: {},
-      en: {}
-    }
+      en: {},
+    },
   };
 };
 
 const createDisplaySettings = function () {
   return {
     dateFormat: 'DD.MM.YYYY',
-    featuresPropertiesSettings: createFeaturesPropertiesSettings()
+    featuresPropertiesSettings: createFeaturesPropertiesSettings(),
   };
 };
 
@@ -38,13 +38,13 @@ const createCommonSearchSettings = function () {
 
 const createCommonIdentifySettings = function () {
   return {
-    canBeIdentified: true
+    canBeIdentified: true,
   };
 };
 
 const createCommonLegendSettings = function () {
   return {
-    legendCanBeDisplayed: true
+    legendCanBeDisplayed: true,
   };
 };
 
@@ -59,23 +59,23 @@ const createcommonLabelSettings = function () {
       captionFontStyle: 'normal',
       captionFontDecoration: 'none',
       captionFontColor: '#000000',
-      captionFontAlign: 'left'
+      captionFontAlign: 'left',
     },
     location: {
       locationPoint: 'overRight',
-      lineLocationSelect: 'Over the line'
+      lineLocationSelect: 'Over the line',
     },
     scaleRange: {
       minScaleRange: null,
-      maxScaleRange: null
-    }
+      maxScaleRange: null,
+    },
   };
 };
 
 const createCommonBackgroundLayerSettings = function () {
   return {
     canBeBackground: false,
-    picture: null
+    picture: null,
   };
 };
 
@@ -111,12 +111,12 @@ export default EmberObject.extend({
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = {
-      opacity: 1
+    const settings = {
+      opacity: 1,
     };
 
     // Inject search & identify settings.
-    let availableOperations = A(this.get('operations') || []);
+    const availableOperations = A(this.get('operations') || []);
 
     if (availableOperations.contains('search')) {
       set(settings, 'searchSettings', createCommonSearchSettings());
@@ -189,12 +189,12 @@ export default EmberObject.extend({
       assert('Method \'getLayerPropertyValues\' should be overridden, because layer hasn\'t toGeoJSON function.');
     }
 
-    let geojson = leafletObject.toGeoJSON() || {};
-    let features = geojson.features || [];
-    let values = A();
+    const geojson = leafletObject.toGeoJSON() || {};
+    const features = geojson.features || [];
+    const values = A();
 
     for (let i = 0; i < features.length; i++) {
-      let property = get(features, `${i}.properties.${selectedField}`);
+      const property = get(features, `${i}.properties.${selectedField}`);
       values.addObject(property);
 
       if (values.length === count) {
@@ -229,7 +229,7 @@ export default EmberObject.extend({
       exp = exp.slice(1, exp.length - 1);
     }
 
-    let conditionExpResult = conditionExp.exec(exp);
+    const conditionExpResult = conditionExp.exec(exp);
     if (conditionExpResult) {
       conditionExpResult[1] = conditionExpResult[1].slice(1, conditionExpResult[1].length - 1);
       if (conditionExpResult[3].toLowerCase() !== 'null') {
@@ -242,13 +242,12 @@ export default EmberObject.extend({
 
       if (field.startsWith('@') && !isNone(layerLinks) && layerLinks.length > 0) {
         layerLinks.forEach((link) => {
-          let linkParameters = link.get('parameters');
+          const linkParameters = link.get('parameters');
 
           if (isArray(linkParameters) && linkParameters.length > 0) {
-            let linkParam = linkParameters.filter(linkParam => linkParam.get('queryKey') === field.slice(1));
+            const linkParam = linkParameters.filter((linkParam) => linkParam.get('queryKey') === field.slice(1));
             if (!isNone(linkParam) && linkParam.length > 0) {
               field = linkParam[0].get('layerField');
-              return;
             }
           }
         });
@@ -257,9 +256,9 @@ export default EmberObject.extend({
       return this.parseFilterConditionExpression(field, conditionExpResult[2].toLowerCase(), conditionExpResult[3]);
     }
 
-    let logicalExpResult = logicalExp.exec(exp);
+    const logicalExpResult = logicalExp.exec(exp);
     if (logicalExpResult) {
-      let properties = A();
+      const properties = A();
       let propertiesString = logicalExpResult[2];
       let index = 0;
       while (propertiesString.length > 0) {
@@ -299,7 +298,7 @@ export default EmberObject.extend({
       }
     }
 
-    let geometryExpResult = geometryExp.exec(exp);
+    const geometryExpResult = geometryExp.exec(exp);
     if (geometryExpResult) {
       let geometry;
       try {
@@ -365,5 +364,5 @@ export default EmberObject.extend({
   */
   isVectorType(layer) {
     return false;
-  }
+  },
 });

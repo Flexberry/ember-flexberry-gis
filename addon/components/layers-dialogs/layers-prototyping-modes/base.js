@@ -30,23 +30,23 @@ export default Component.extend({
     @method bindProperties
   */
   bindProperties() {
-    let findEditLayerMapComponent = (component) => {
-      let result = component.get('parentView');
+    const findEditLayerMapComponent = (component) => {
+      const result = component.get('parentView');
       if (result instanceof FlexberryEditLayerMapComponent) {
         return result;
-      } else {
-        return findEditLayerMapComponent(result);
       }
+
+      return findEditLayerMapComponent(result);
     };
 
     // Instance of flexberry-edit-layermap component.
-    let parent = findEditLayerMapComponent(this);
-    let bindingProperties = this.get('bindingProperties');
+    const parent = findEditLayerMapComponent(this);
+    const bindingProperties = this.get('bindingProperties');
 
     bindingProperties.forEach((property) => {
       this.set(property, parent.get(property));
     }, this);
-  }
+  },
 
   /**
     Component's action invoking when inner editing process is finished.

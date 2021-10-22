@@ -1,14 +1,14 @@
 'use strict';
 
 module.exports = function (environment) {
-  var backendUrl = 'http://134.209.30.115:1818';
+  let backendUrl = 'http://134.209.30.115:1818';
 
   if (environment === 'development-loc') {
     // Use `ember server --environment=development-loc` command for local backend usage.
     backendUrl = 'http://localhost:6500';
   }
 
-  var ENV = {
+  const ENV = {
     repositoryName: 'ember-flexberry-gis',
     modulePrefix: 'dummy',
     environment,
@@ -21,14 +21,14 @@ module.exports = function (environment) {
       },
       EXTEND_PROTOTYPES: {
         // Prevent Ember Data from overriding Date.parse.
-        Date: false
-      }
+        Date: false,
+      },
     },
 
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
-      backendUrl: backendUrl,
+      backendUrl,
 
       intersectionArea: 'intersectionArea',
       keywordForCosmos: 'cosmos',
@@ -36,15 +36,15 @@ module.exports = function (environment) {
       // It's a custom property, used to prevent duplicate backend urls in sources.
       backendUrls: {
         root: backendUrl,
-        api: backendUrl + '/odata',
-        featureExportApi: backendUrl + '/api/featureexport',
-        getNearDistance: backendUrl + '/odata/GetNearDistance'
+        api: `${backendUrl}/odata`,
+        featureExportApi: `${backendUrl}/api/featureexport`,
+        getNearDistance: `${backendUrl}/odata/GetNearDistance`,
       },
 
       // Log service settings.
       log: {
         // Flag: indicates whether log service is enabled or not.
-        enabled: false
+        enabled: false,
       },
 
       // Flag: indicates whether to use user settings service or not.
@@ -72,21 +72,21 @@ module.exports = function (environment) {
     userSettings: {
       // Max opacity values for geometries
       maxGeometryOpacity: 0.65,
-      maxGeometryFillOpacity: 0.2
-    }
+      maxGeometryFillOpacity: 0.2,
+    },
   };
 
   // Read more about ember-i18n: https://github.com/jamesarosen/ember-i18n.
   ENV.i18n = {
     // Should be defined to avoid ember-i18n deprecations.
     // Locale will be changed then to navigator current locale (in instance initializer).
-    defaultLocale: 'en'
+    defaultLocale: 'en',
   };
 
   // Read more about ember-moment: https://github.com/stefanpenner/ember-moment.
   // Locale will be changed then to same as ember-i18n locale (and will be changed every time when i18n locale changes).
   ENV.moment = {
-    outputFormat: 'L'
+    outputFormat: 'L',
   };
 
   if (environment === 'development') {
@@ -119,30 +119,29 @@ module.exports = function (environment) {
   ENV.contentSecurityPolicy = {
     'style-src': "'self' 'unsafe-inline' https://fonts.googleapis.com",
     'font-src': "'self' data: https://fonts.gstatic.com",
-    'connect-src': "'self' " + ENV.APP.backendUrls.root
+    'connect-src': `'self' ${ENV.APP.backendUrls.root}`,
   };
 
   // Change paths to application assets if build has been started with the following parameters:
   // ember build --gh-pages --brunch=<brunch-to-publish-on-gh-pages>.
   if (process.argv.indexOf('--gh-pages') >= 0) {
-    var brunch;
-    var postfix = "";
+    let brunch;
+    let postfix = '';
 
     // Retrieve brunch name and postfix from process arguments.
-    process.argv.forEach(function(value, index) {
-      if (value.indexOf('--brunch=') >=0) {
-        brunch=value.split('=')[1];
+    process.argv.forEach(function (value, index) {
+      if (value.indexOf('--brunch=') >= 0) {
+        brunch = value.split('=')[1];
         return;
       }
 
-      if (value.indexOf('--postfix=') >=0) {
-        postfix=value.split('=')[1];
-        return;
+      if (value.indexOf('--postfix=') >= 0) {
+        postfix = value.split('=')[1];
       }
     });
 
     // Change base URL to force paths to application assets be relative.
-    ENV.baseURL = '/' + ENV.repositoryName + '/' + brunch + postfix + '/';
+    ENV.baseURL = `/${ENV.repositoryName}/${brunch}${postfix}/`;
     ENV.locationType = 'hash';
   }
 

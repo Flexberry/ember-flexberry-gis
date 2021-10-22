@@ -63,12 +63,12 @@ export default Component.extend({
   */
   selectedLabels: A(),
 
-  selectedItemsObserver: observer('selectedItems', function() {
+  selectedItemsObserver: observer('selectedItems', function () {
     this.$('.fb-selector>input').val('');
-    let selectedItems = this.get('selectedItems');
+    const selectedItems = this.get('selectedItems');
     if (selectedItems) {
-      let length = selectedItems.length;
-      let lastVal = selectedItems[length - 1];
+      const { length, } = selectedItems;
+      const lastVal = selectedItems[length - 1];
       if (length > 1) {
         this.$('.fb-selector>a').remove();
         this.$('.fb-selector').append(`<a class="ui label transition visible adition">и ещё ${length - 1}</a>`);
@@ -76,17 +76,17 @@ export default Component.extend({
 
       if (this.get('isRemove')) {
         this.set('isRemove', false);
-        let items = this.get('items');
-        let val = items.filter((item) => {
+        const items = this.get('items');
+        const val = items.filter((item) => {
           if (this.get('isObject')) {
             return item.id === lastVal;
-          } else {
-            return item === lastVal;
           }
+
+          return item === lastVal;
         });
 
-        this.$('.fb-selector>input.search').before(`<a class="ui label transition visible" data-value="${lastVal}" style="display: inline-block !important;">` +
-          `${this.get('isObject') ? get(val[0], 'name') : val[0]}<i class="delete icon"></i></a>`);
+        this.$('.fb-selector>input.search').before(`<a class="ui label transition visible" data-value="${lastVal}" style="display: inline-block !important;">`
+          + `${this.get('isObject') ? get(val[0], 'name') : val[0]}<i class="delete icon"></i></a>`);
         if (length > 1) {
           this.$('.fb-selector>a.adition').remove();
           this.$('.fb-selector').append(`<a class="ui label transition visible adition">и ещё ${length - 1}</a>`);
@@ -140,14 +140,14 @@ export default Component.extend({
     @type Object
     @readonly
   */
-  _usedItems: computed('items', 'selectedItems', function() {
-    let items = this.get('items');
-    let selectedItems = this.get('selectedItems');
+  _usedItems: computed('items', 'selectedItems', function () {
+    const items = this.get('items');
+    const selectedItems = this.get('selectedItems');
     if (isEmpty(items) || isEmpty(selectedItems)) {
       return items;
     }
 
-    let ret = A();
+    const ret = A();
     items.forEach((item, i, items) => {
       if (selectedItems.indexOf(item) === -1) {
         ret.push(item);
@@ -160,8 +160,8 @@ export default Component.extend({
     Hook, working after element insertion
   */
   didInsertElement() {
-    let selName = this.get('selectorName');
-    let allowAdditions = this.get('allowAdditions');
+    const selName = this.get('selectorName');
+    const allowAdditions = this.get('allowAdditions');
     let addResultCaption = '';
 
     if (this.get('i18n.locale') === 'ru') {
@@ -170,26 +170,26 @@ export default Component.extend({
       addResultCaption = 'Add <b>{term}</b>';
     }
 
-    this.$('.' + selName)
-    .dropdown({
-      message: {
-        addResult: addResultCaption,
-      },
-      allowAdditions: allowAdditions,
-      onChange: (value) => {
-        let itemArray = value.split(',');
-        if (value === '') {
-          itemArray = null;
-        }
+    this.$(`.${selName}`)
+      .dropdown({
+        message: {
+          addResult: addResultCaption,
+        },
+        allowAdditions,
+        onChange: (value) => {
+          let itemArray = value.split(',');
+          if (value === '') {
+            itemArray = null;
+          }
 
-        let selectedItems = this.get('selectedItems');
-        if (!isNone(selectedItems) && (isNone(itemArray) || selectedItems.length > itemArray.length)) {
-          this.set('isRemove', true);
-        }
+          const selectedItems = this.get('selectedItems');
+          if (!isNone(selectedItems) && (isNone(itemArray) || selectedItems.length > itemArray.length)) {
+            this.set('isRemove', true);
+          }
 
-        this.set('selectedItems', itemArray);
-      }
-    });
+          this.set('selectedItems', itemArray);
+        },
+      });
   },
 
   actions: {
@@ -197,6 +197,6 @@ export default Component.extend({
       this.set('selectedItems', A());
       this.$('.fb-selector>a').remove();
       this.$('.fb-selector>.menu>.item').attr('class', 'item');
-    }
-  }
+    },
+  },
 });

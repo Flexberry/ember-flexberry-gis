@@ -1,10 +1,10 @@
 export default {
-  'caption': 'Create layer copy',
+  caption: 'Create layer copy',
   'approve-button': {
-    'caption': 'Ok'
+    caption: 'Ok',
   },
   'deny-button': {
-    'caption': 'Cancel'
+    caption: 'Cancel',
   },
-  'layer-name-postfix': '(Copy)'
+  'layer-name-postfix': '(Copy)',
 };

@@ -45,5 +45,5 @@ export default BaseControl.extend({
 
   createControl() {
     return new L.Control.Div(this.element, this.get('options'));
-  }
+  },
 });

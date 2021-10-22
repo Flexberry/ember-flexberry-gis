@@ -29,7 +29,7 @@ export default TileLayer.extend(WfsFilterParserMixin, {
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = this._super(...arguments);
+    const settings = this._super(...arguments);
     $.extend(true, settings, {
       info_format: undefined,
       feature_count: 100,
@@ -43,8 +43,8 @@ export default TileLayer.extend(WfsFilterParserMixin, {
         url: '',
         version: '',
         format: '',
-        layers: ''
-      }
+        layers: '',
+      },
     });
 
     return settings;
@@ -58,7 +58,7 @@ export default TileLayer.extend(WfsFilterParserMixin, {
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSetingsFromCsw(record) {
-    let settings = this._super(...arguments);
+    const settings = this._super(...arguments);
 
     settings.info_format = 'application/json';
     settings.feature_count = 100;

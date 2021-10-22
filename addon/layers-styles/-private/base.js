@@ -26,7 +26,7 @@ export default EmberObject.extend({
     @method getVisibleLeafletLayers
     @return {Object[]} Array containing visible leaflet layers (those nested layers which 'layers-style' doesn't hide).
   */
-  getVisibleLeafletLayers({ leafletLayer, style }) {
+  getVisibleLeafletLayers({ leafletLayer, style, }) {
     return [leafletLayer];
   },
 
@@ -38,7 +38,7 @@ export default EmberObject.extend({
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} options.leafletLayer Leaflet layer to which layer-style must be applied.
     @param {Object} options.style Hash containing style settings.
   */
-  renderOnLeafletLayer({ leafletLayer, style }) {
+  renderOnLeafletLayer({ leafletLayer, style, }) {
     throw `Method 'renderOnLeafletLayer' isn't implemented in 'base' layer-style`;
   },
 
@@ -51,7 +51,7 @@ export default EmberObject.extend({
     @param {Object} options.style Hash containing style settings.
     @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style, target }) {
+  renderOnCanvas({ canvas, style, target, }) {
     throw `Method 'renderOnCanvas' isn't implemented in 'base' layer-style`;
-  }
+  },
 });

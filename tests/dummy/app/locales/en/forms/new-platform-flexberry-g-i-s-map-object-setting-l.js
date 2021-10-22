@@ -1,3 +1,3 @@
 export default {
-  caption: 'Map Object Setting'
+  caption: 'Map Object Setting',
 };

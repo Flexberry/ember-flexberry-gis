@@ -3,7 +3,9 @@ import { A } from '@ember/array';
 import { guidFor } from '@ember/object/internals';
 import { isNone, isEqual, isEmpty } from '@ember/utils';
 import { get, set } from '@ember/object';
-import { Promise, resolve, all, allSettled } from 'rsvp';
+import {
+  Promise, resolve, all, allSettled
+} from 'rsvp';
 import Mixin from '@ember/object/mixin';
 import turfCombine from 'npm:@turf/combine';
 import SnapDraw from './snap-draw';
@@ -47,19 +49,19 @@ export default Mixin.create(SnapDraw, {
   startChangeLayerObject(layerId, featureId, snap, snapLayers, snapDistance, snapOnlyVertex) {
     return new Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, [featureId]).then(([layerModel, leafletObject, featureLayer]) => {
-        let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+        const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         leafletObject.statusLoadLayer = true;
 
         let bounds;
         if (featureLayer[0] instanceof L.Marker) {
-          let featureGroup = L.featureGroup().addLayer(featureLayer[0]);
+          const featureGroup = L.featureGroup().addLayer(featureLayer[0]);
           bounds = featureGroup.getBounds();
         } else {
           bounds = featureLayer[0].getBounds();
         }
 
-        let minZoom = get(leafletObject, 'minZoom');
-        let maxZoom = get(leafletObject, 'maxZoom');
+        const minZoom = get(leafletObject, 'minZoom');
+        const maxZoom = get(leafletObject, 'maxZoom');
         zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
         if (isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Promise)) {
           leafletObject.promiseLoadLayer = resolve();
@@ -68,8 +70,8 @@ export default Mixin.create(SnapDraw, {
         leafletObject.promiseLoadLayer.then(() => {
           leafletObject.statusLoadLayer = false;
           leafletObject.promiseLoadLayer = null;
-          let layers = leafletObject._layers;
-          let featureLayerLoad = Object.values(layers).find(feature => {
+          const layers = leafletObject._layers;
+          const featureLayerLoad = Object.values(layers).find((feature) => {
             const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
             return layerFeatureId === featureId;
           });
@@ -78,7 +80,7 @@ export default Mixin.create(SnapDraw, {
             reject(`Object '${featureId}' not found`);
           }
 
-          let editTools = this._getEditTools();
+          const editTools = this._getEditTools();
 
           this.disableLayerEditing(leafletMap);
 
@@ -110,12 +112,12 @@ export default Mixin.create(SnapDraw, {
     @return {Ember.RSVP.Promise} Returns promise.
   */
   cancelLayerEdit(layerIds) {
-    let e = {
-      layerIds: layerIds,
-      results: A()
+    const e = {
+      layerIds,
+      results: A(),
     };
-    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-    let editTools = this._getEditTools();
+    const leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    const editTools = this._getEditTools();
     editTools.off('editable:drawing:end');
     editTools.off('editable:editing');
     editTools.stopDrawing();
@@ -131,21 +133,21 @@ export default Mixin.create(SnapDraw, {
     @return nothing
   */
   cancelEdit(layer) {
-    let editTools = this._getEditTools();
+    const editTools = this._getEditTools();
     editTools.off('editable:drawing:end');
     editTools.off('editable:editing');
     editTools.stopDrawing();
     this._stopSnap();
 
     if (!isNone(layer) && !isNone(layer.layerId)) {
-      let [, leafletObject] = this._getModelLeafletObject(layer.layerId);
-      let id = leafletObject.getLayerId(layer);
-      let e = {
+      const [, leafletObject] = this._getModelLeafletObject(layer.layerId);
+      const id = leafletObject.getLayerId(layer);
+      const e = {
         layerIds: [layer.layerId],
         ids: [id],
-        results: A()
+        results: A(),
       };
-      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+      const leafletMap = this.get('mapApi').getFromApi('leafletMap');
       leafletMap.fire('flexberry-map:cancelEdit', e);
       layer.layerId = null;
     }
@@ -166,18 +168,18 @@ export default Mixin.create(SnapDraw, {
   startNewObject(layerId, properties, snap, snapLayers, snapDistance, snapOnlyVertex) {
     return new Promise((resolve, reject) => {
       try {
-        let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
-        let editTools = this._getEditTools();
+        const [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
+        const editTools = this._getEditTools();
         let newLayer;
 
-        let finishDraw = () => {
+        const finishDraw = () => {
           editTools.off('editable:drawing:end', finishDraw, this);
           editTools.stopDrawing();
-          let defaultProperties = layerModel.get('settingsAsObject.defaultProperties') || {};
-          newLayer.feature = { type: 'Feature', properties: merge(defaultProperties, properties) };
+          const defaultProperties = layerModel.get('settingsAsObject.defaultProperties') || {};
+          newLayer.feature = { type: 'Feature', properties: merge(defaultProperties, properties), };
           newLayer.remove();
 
-          let e = { layers: [newLayer], results: A() };
+          const e = { layers: [newLayer], results: A(), };
           leafletObject.fire('load', e);
 
           allSettled(e.results).then(() => {
@@ -191,7 +193,7 @@ export default Mixin.create(SnapDraw, {
 
         editTools.on('editable:drawing:end', finishDraw, this);
 
-        let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+        const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         leafletMap.fire('flexberry-map:switchToDefaultMapTool');
         if (editTools.drawing()) {
           editTools.stopDrawing();
@@ -210,7 +212,7 @@ export default Mixin.create(SnapDraw, {
             newLayer = editTools.startMarker();
             break;
           default:
-            throw 'Unknown layer type: ' + layerModel.get('settingsAsObject.typeGeometry');
+            throw `Unknown layer type: ${layerModel.get('settingsAsObject.typeGeometry')}`;
         }
         this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, false);
         newLayer.layerId = layerId;
@@ -224,10 +226,10 @@ export default Mixin.create(SnapDraw, {
     this._stopSnap();
 
     if (snap) {
-      let layers = snapLayers.map((id) => {
-        let [, leafletObject] = this._getModelLeafletObject(id);
+      const layers = snapLayers.map((id) => {
+        const [, leafletObject] = this._getModelLeafletObject(id);
         return leafletObject;
-      }).filter(l => !!l);
+      }).filter((l) => !!l);
       layers.forEach((l, i) => {
         l.on('load', this._setSnappingFeatures, this);
       });
@@ -247,14 +249,14 @@ export default Mixin.create(SnapDraw, {
   },
 
   _stopSnap() {
-    let editTools = this._getEditTools();
+    const editTools = this._getEditTools();
     editTools.off('editable:drawing:move', this._handleSnapping, this);
     editTools.off('editable:drawing:click', this._drawClick, this);
 
-    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    const leafletMap = this.get('mapApi').getFromApi('leafletMap');
     leafletMap.off('editable:vertex:drag', this._handleSnapping, this);
 
-    let layers = this.get('_snapLayersGroups');
+    const layers = this.get('_snapLayersGroups');
     if (layers) {
       layers.forEach((l, i) => {
         if (l) {
@@ -267,17 +269,17 @@ export default Mixin.create(SnapDraw, {
   },
 
   _startSnap(edit) {
-    let editTools = this._getEditTools();
-    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    const editTools = this._getEditTools();
+    const leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
     if (edit) {
       leafletMap.on('editable:vertex:drag', this._handleSnapping, this);
     } else {
       // маркер, который будет показывать возможную точку прилипания
       this.set('_snapMarker', L.marker(leafletMap.getCenter(), {
-        icon: editTools.createVertexIcon({ className: 'leaflet-div-icon leaflet-drawing-icon' }),
+        icon: editTools.createVertexIcon({ className: 'leaflet-div-icon leaflet-drawing-icon', }),
         opacity: 1,
-        zIndexOffset: 1000
+        zIndexOffset: 1000,
       }));
 
       editTools.on('editable:drawing:move', this._handleSnapping, this);
@@ -293,7 +295,7 @@ export default Mixin.create(SnapDraw, {
     @private
   */
   _getEditTools() {
-    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    const leafletMap = this.get('mapApi').getFromApi('leafletMap');
     let editTools = get(leafletMap, 'editTools');
     if (isNone(editTools)) {
       editTools = new L.Editable(leafletMap);
@@ -330,13 +332,13 @@ export default Mixin.create(SnapDraw, {
   */
   _getModelLayerFeature(layerId, featureIds, load = false) {
     return new Promise((resolve, reject) => {
-      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+      const leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
-      let e = {
-        featureIds: featureIds,
+      const e = {
+        featureIds,
         layer: layerId,
-        load: load,
-        results: A()
+        load,
+        results: A(),
       };
 
       leafletMap.fire('flexberry-map:getOrLoadLayerFeatures', e);
@@ -345,7 +347,7 @@ export default Mixin.create(SnapDraw, {
         return;
       }
 
-      let features = get(e.results[0], 'features');
+      const features = get(e.results[0], 'features');
       if (features instanceof Promise) {
         features.then((layerObject) => {
           if (isEmpty(layerObject) || isNone(layerObject)) {
@@ -355,11 +357,11 @@ export default Mixin.create(SnapDraw, {
 
           let featureLayer = [];
           if (load) {
-            let layers = layerObject._layers;
+            const layers = layerObject._layers;
             if (!isNone(featureIds) && featureIds.length > 0) {
-              featureLayer = Object.values(layers).filter(feature => {
+              featureLayer = Object.values(layers).filter((feature) => {
                 const layerFeatureId = this._getLayerFeatureId(e.results[0].layerModel, feature);
-                return featureIds.some((f) => { return layerFeatureId === f; });
+                return featureIds.some((f) => layerFeatureId === f);
               });
             }
           } else {
@@ -384,12 +386,12 @@ export default Mixin.create(SnapDraw, {
     @private
   */
   _getModelLeafletObject(layerId) {
-    let layerModel = this.get('mapLayer').findBy('id', layerId);
+    const layerModel = this.get('mapLayer').findBy('id', layerId);
     if (isNone(layerModel)) {
       throw `Layer '${layerId}' not found`;
     }
 
-    let leafletObject = layerModel.get('_leafletObject');
+    const leafletObject = layerModel.get('_leafletObject');
     return [layerModel, leafletObject];
   },
 
@@ -406,9 +408,9 @@ export default Mixin.create(SnapDraw, {
     @return nothing
   */
   startChangeMultyLayerObject(layerId, featureLayer, snap, snapLayers, snapDistance, snapOnlyVertex) {
-    let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
+    const [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
 
-    let editTools = this._getEditTools();
+    const editTools = this._getEditTools();
     let newLayer;
     featureLayer.layerId = layerId;
 
@@ -417,13 +419,13 @@ export default Mixin.create(SnapDraw, {
       editTools.stopDrawing();
 
       this._stopSnap();
-      var featureCollection = {
+      const featureCollection = {
         type: 'FeatureCollection',
-        features: [featureLayer.toGeoJSON(), newLayer.toGeoJSON()]
+        features: [featureLayer.toGeoJSON(), newLayer.toGeoJSON()],
       };
 
       // Coordinate union.
-      let fcCombined = turfCombine.default(featureCollection);
+      const fcCombined = turfCombine.default(featureCollection);
       const featureCombined = L.geoJSON(fcCombined);
       const combinedLeaflet = featureCombined.getLayers()[0];
       featureLayer.setLatLngs(combinedLeaflet.getLatLngs());
@@ -439,7 +441,7 @@ export default Mixin.create(SnapDraw, {
       editTools.once('editable:disable', this._stopSnap, this);
     };
 
-    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    const leafletMap = this.get('mapApi').getFromApi('leafletMap');
     this.disableLayerEditing(leafletMap);
 
     editTools.on('editable:drawing:end', disableDraw, this);
@@ -455,9 +457,9 @@ export default Mixin.create(SnapDraw, {
         newLayer = editTools.startMarker();
         break;
       default:
-        throw 'Unknown layer type: ' + layerModel.get('settingsAsObject.typeGeometry');
+        throw `Unknown layer type: ${layerModel.get('settingsAsObject.typeGeometry')}`;
     }
 
     this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, false);
-  }
+  },
 });

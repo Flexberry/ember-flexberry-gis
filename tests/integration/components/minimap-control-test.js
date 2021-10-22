@@ -3,11 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | minimap control', function(hooks) {
+module('Integration | Component | minimap control', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('template return L.layerGroup', async function(assert) {
-
+  test('template return L.layerGroup', async function (assert) {
     assert.expect(1);
 
     this.set('layerGroupClass', L.LayerGroup);
@@ -19,6 +18,5 @@ module('Integration | Component | minimap control', function(hooks) {
     `);
 
     assert.ok(find('div.layerG-body').getAttribute('is-layergroup'));
-
   });
 });

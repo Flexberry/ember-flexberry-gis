@@ -40,6 +40,6 @@ export default Controller.extend({
   actions: {
     onBoundingBoxChange(e) {
       console.log('boundingBoxChange: ', e);
-    }
-  }
+    },
+  },
 });

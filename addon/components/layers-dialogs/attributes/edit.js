@@ -7,10 +7,10 @@ import $ from 'jquery';
 import { isNone, isBlank } from '@ember/utils';
 import { observer, get, set } from '@ember/object';
 import Component from '@ember/component';
-import layout from '../../../templates/components/layers-dialogs/attributes/edit';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import layout from '../../../templates/components/layers-dialogs/attributes/edit';
 
 /**
   Component's CSS-classes names.
@@ -29,10 +29,10 @@ const flexberryClassNamesPrefix = 'flexberry-edit-layer-attributes-dialog';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
-  form: 'flexberry-edit-layer-attributes'
+  form: 'flexberry-edit-layer-attributes',
 };
 
-let FlexberryEditLayerAttributesDialogComponent = Component.extend({
+const FlexberryEditLayerAttributesDialogComponent = Component.extend({
   /**
     If user apply or deny data his made decision.
 
@@ -206,9 +206,9 @@ let FlexberryEditLayerAttributesDialogComponent = Component.extend({
     @method choiceValueObserver
     @private
   */
-  choiceValueObserver: observer('choiceValue', function() {
-    let choiceValueData = this.get('choiceValueData');
-    let choiceValue = this.get('choiceValue');
+  choiceValueObserver: observer('choiceValue', function () {
+    const choiceValueData = this.get('choiceValueData');
+    const choiceValue = this.get('choiceValue');
     if (!isNone(choiceValue) && !isBlank(choiceValue)) {
       this.set('data', choiceValueData[`${choiceValue}` - 1]);
     } else {
@@ -223,12 +223,10 @@ let FlexberryEditLayerAttributesDialogComponent = Component.extend({
     @method choiceValueDataObserver
     @private
   */
-  choiceValueDataObserver: observer('choiceValueData', function() {
-    let choiceValueData = this.get('choiceValueData');
+  choiceValueDataObserver: observer('choiceValueData', function () {
+    const choiceValueData = this.get('choiceValueData');
     if (!isNone(choiceValueData)) {
-      let choice = Object.keys(choiceValueData).map((index) => {
-        return Number(index) + 1;
-      });
+      const choice = Object.keys(choiceValueData).map((index) => Number(index) + 1);
 
       // adds empty template
       choice.push('');
@@ -244,22 +242,22 @@ let FlexberryEditLayerAttributesDialogComponent = Component.extend({
     @return {Object} Parsed data if it is valid or null.
   */
   parseData() {
-    let fieldNames = this.get('fieldNames');
-    let fieldParsers = this.get('fieldParsers');
-    let fieldValidators = this.get('fieldValidators');
+    const fieldNames = this.get('fieldNames');
+    const fieldParsers = this.get('fieldParsers');
+    const fieldValidators = this.get('fieldValidators');
 
-    let data = $.extend(true, {}, this.get('data'));
-    let parsingErrors = {};
+    const data = $.extend(true, {}, this.get('data'));
+    const parsingErrors = {};
     let dataIsValid = true;
 
-    for (let fieldName in fieldNames) {
+    for (const fieldName in fieldNames) {
       if (!fieldNames.hasOwnProperty(fieldName)) {
         continue;
       }
 
-      let text = get(data, fieldName);
-      let value = fieldParsers[fieldName](text);
-      let valueIsValid = fieldValidators[fieldName](value);
+      const text = get(data, fieldName);
+      const value = fieldParsers[fieldName](text);
+      const valueIsValid = fieldValidators[fieldName](value);
 
       if (valueIsValid) {
         set(data, fieldName, value);
@@ -328,7 +326,7 @@ let FlexberryEditLayerAttributesDialogComponent = Component.extend({
       @method actions.onHide
     */
     onHide() {
-      let isDecisionMade = this.get('_isDecisionMade');
+      const isDecisionMade = this.get('_isDecisionMade');
 
       this.sendAction('hide');
 
@@ -344,7 +342,7 @@ let FlexberryEditLayerAttributesDialogComponent = Component.extend({
       @method actions.onApprove
     */
     onApprove(e) {
-      let parsedData = this.parseData();
+      const parsedData = this.parseData();
       if (isNone(parsedData)) {
         // Prevent dialog from being closed.
         e.closeDialog = false;
@@ -365,8 +363,8 @@ let FlexberryEditLayerAttributesDialogComponent = Component.extend({
     onDeny() {
       this.set('_isDecisionMade', true);
       this.sendAction('deny');
-    }
-  }
+    },
+  },
 
   /**
     Component's action invoking when dialog starts to show.
@@ -408,7 +406,7 @@ let FlexberryEditLayerAttributesDialogComponent = Component.extend({
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryEditLayerAttributesDialogComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryEditLayerAttributesDialogComponent;

@@ -50,20 +50,20 @@ export default BaseLayer.extend({
   createLayer() {
     return new Promise((resolve, reject) => {
       this.createAllLayer();
-      let promises = A();
+      const promises = A();
       promises.push(this.get('mainLayer._leafletLayerPromise'));
       this.get('mainLayer.innerLayers').forEach((layer) => {
         promises.push(layer.get('_leafletLayerPromise'));
       });
 
       allSettled(promises).then((layers) => {
-        const rejected = layers.filter((item) => { return item.state === 'rejected'; }).length > 0;
+        const rejected = layers.filter((item) => item.state === 'rejected').length > 0;
 
         if (rejected) {
           reject(`Failed to create leaflet layer for '${this.get('layerModel.name')}`);
         }
 
-        let layer = layers[0].value;
+        const layer = layers[0].value;
         set(this.get('layerModel'), '_attributesOptions', this._getAttributesOptions.bind(this));
         set(layer, 'mainLayer', this.get('mainLayer'));
         set(layer, 'baseShowAllLayerObjects', layer.showAllLayerObjects);
@@ -81,50 +81,50 @@ export default BaseLayer.extend({
     Initializes component.
   */
   createAllLayer() {
-    let settings = this.get('layerModel.settingsAsObject');
-    let leafletMap = this.get('leafletMap');
+    const settings = this.get('layerModel.settingsAsObject');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(settings) && !isNone(leafletMap)) {
-      let mainType = get(settings, 'type');
+      const mainType = get(settings, 'type');
 
-      let layerProperties = {
-        leafletMap: leafletMap,
+      const layerProperties = {
+        leafletMap,
         leafletContainer: this.get('leafletContainer'),
         layerModel: this.get('layerModel'),
         index: this.get('index'),
         visibility: false,
-        dynamicProperties: settings
+        dynamicProperties: settings,
       };
 
       // Set creating component's owner to avoid possible lookup exceptions.
       this.setOwner(layerProperties);
 
-      let mainLayer = getOwner(this).factoryFor(`component:layers/${mainType}-layer`).create(layerProperties);
+      const mainLayer = getOwner(this).factoryFor(`component:layers/${mainType}-layer`).create(layerProperties);
       if (!isNone(mainLayer)) {
         mainLayer.layerId = guidFor(mainLayer);
         this.set('mainLayer', mainLayer);
 
-        let innerLayers = A();
-        let innerLayersSettings = get(settings, 'innerLayers');
-        innerLayersSettings.forEach(innerSettings => {
-          let innerLayerProperties = {
-            leafletMap: leafletMap,
+        const innerLayers = A();
+        const innerLayersSettings = get(settings, 'innerLayers');
+        innerLayersSettings.forEach((innerSettings) => {
+          const innerLayerProperties = {
+            leafletMap,
             leafletContainer: this.get('leafletContainer'),
             layerModel: this.get('layerModel'),
             index: this.get('index'),
-            visibility:  false,
-            dynamicProperties: innerSettings
+            visibility: false,
+            dynamicProperties: innerSettings,
           };
 
           // Set creating component's owner to avoid possible lookup exceptions.
           this.setOwner(innerLayerProperties);
 
-          let type = innerSettings.type;
-          let layer = getOwner(this).factoryFor(`component:layers/${type}-layer`).create(innerLayerProperties);
+          const { type, } = innerSettings;
+          const layer = getOwner(this).factoryFor(`component:layers/${type}-layer`).create(innerLayerProperties);
           if (!isNone(layer)) {
             layer.layerId = guidFor(layer);
             innerLayers.addObject(layer);
           } else {
-            throw(`Invalid layer type ${type} for layer ${this.get('layerModel.name')}`);
+            throw (`Invalid layer type ${type} for layer ${this.get('layerModel.name')}`);
           }
         });
 
@@ -136,7 +136,7 @@ export default BaseLayer.extend({
           layer.onLeafletMapEvent();
         });
       } else {
-        throw(`Invalid layer type ${mainType} for layer ${this.get('layerModel.name')}`);
+        throw (`Invalid layer type ${mainType} for layer ${this.get('layerModel.name')}`);
       }
     }
   },
@@ -147,7 +147,7 @@ export default BaseLayer.extend({
     @method _searchPropertiesDidChange
     @private
   */
-  _settingsDidChange: observer('layerModel.settingsAsObject', function() {
+  _settingsDidChange: observer('layerModel.settingsAsObject', function () {
     once(this, '_resetLayer');
   }),
 
@@ -158,12 +158,12 @@ export default BaseLayer.extend({
     @private
   */
   destroyLayer() {
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
       leafletMap.off('zoomend', this._visibilityOfLayerByZoom, this);
     }
 
-    let mainLayer = this.get('mainLayer');
+    const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
       mainLayer.willDestroyElement();
       mainLayer.get('innerLayers').forEach((layer) => {
@@ -192,8 +192,8 @@ export default BaseLayer.extend({
     @private
   */
   _checkAndSetVisibility(layer) {
-    let layerVisibility = this.get('layerVisibility');
-    let visibility = this.get('visibility');
+    const layerVisibility = this.get('layerVisibility');
+    const visibility = this.get('visibility');
     if (visibility && checkMapZoom(layer._leafletObject)) {
       if (isNone(layerVisibility) || layerVisibility.layerId !== layer.layerId) {
         if (!isNone(layerVisibility)) {
@@ -218,7 +218,7 @@ export default BaseLayer.extend({
     @private
   */
   _setLayerVisibility() {
-    let layerVisibility = this.get('layerVisibility');
+    const layerVisibility = this.get('layerVisibility');
     if (this.get('visibility')) {
       this._visibilityOfLayerByZoom();
     } else if (!isNone(layerVisibility)) {
@@ -234,7 +234,7 @@ export default BaseLayer.extend({
     @private
   */
   _visibilityOfLayerByZoom() {
-    let mainLayer = this.get('mainLayer');
+    const mainLayer = this.get('mainLayer');
     if (isNone(mainLayer) || isNone(mainLayer._leafletObject)) {
       return;
     }
@@ -242,7 +242,7 @@ export default BaseLayer.extend({
     if (!this._checkAndSetVisibility(mainLayer)) {
       mainLayer.get('innerLayers').forEach((layer) => {
         if (this._checkAndSetVisibility(layer)) {
-          return;
+
         }
       });
     }
@@ -273,7 +273,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let mainLayer = this.get('mainLayer');
+    const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
       return mainLayer.identify.apply(mainLayer, arguments);
     }
@@ -292,7 +292,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    let mainLayer = this.get('mainLayer');
+    const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
       return mainLayer.search.apply(mainLayer, arguments);
     }
@@ -309,7 +309,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   query(layerLinks, e) {
-    let mainLayer = this.get('mainLayer');
+    const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
       return mainLayer.query.apply(mainLayer, arguments);
     }
@@ -326,7 +326,7 @@ export default BaseLayer.extend({
     @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
   */
   getNearObject(e) {
-    let mainLayer = this.get('mainLayer');
+    const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
       return mainLayer.getNearObject.apply(mainLayer, arguments);
     }
@@ -339,19 +339,19 @@ export default BaseLayer.extend({
   */
   showAllLayerObjects() {
     return new Promise((resolve, reject) => {
-      let mainLayer = this.get('mainLayer');
+      const mainLayer = this.get('mainLayer');
       if (isNone(mainLayer) || isNone(mainLayer._leafletObject)) {
         return;
       }
 
-      let promises = A();
+      const promises = A();
       promises.push(mainLayer._leafletObject.baseShowAllLayerObjects());
       mainLayer.get('innerLayers').forEach((layer) => {
         promises.push(layer._leafletObject.showAllLayerObjects());
       });
 
       allSettled(promises).then((result) => {
-        const rejected = result.filter((item) => { return item.state === 'rejected'; }).length > 0;
+        const rejected = result.filter((item) => item.state === 'rejected').length > 0;
 
         if (rejected) {
           reject(`Failed to showAllLayerObjects for '${this.get('layerModel.name')}`);
@@ -368,7 +368,7 @@ export default BaseLayer.extend({
     @return nothing
   */
   hideAllLayerObjects() {
-    let mainLayer = this.get('mainLayer');
+    const mainLayer = this.get('mainLayer');
     if (isNone(mainLayer) || isNone(mainLayer._leafletObject)) {
       return;
     }
@@ -377,5 +377,5 @@ export default BaseLayer.extend({
     mainLayer.get('innerLayers').forEach((layer) => {
       layer._leafletObject.hideAllLayerObjects();
     });
-  }
+  },
 });

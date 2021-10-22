@@ -47,13 +47,13 @@ export default BaseVectorLayer.extend({
     @param {String} options.serializedCallback Serialized callback.
     @return {Function} Deserialized callback function.
   */
-  parseLeafletOptionsCallback({ callbackName, serializedCallback }) {
+  parseLeafletOptionsCallback({ callbackName, serializedCallback, }) {
     // First filter must be converted into serialized function from temporary filter language.
     if (callbackName === 'filter' && typeof serializedCallback === 'string') {
       serializedCallback = getOwner(this).lookup('layer:kml').parseFilter(serializedCallback);
     }
 
-    return this._super({ callbackName, serializedCallback });
+    return this._super({ callbackName, serializedCallback, });
   },
 
   /**
@@ -66,18 +66,18 @@ export default BaseVectorLayer.extend({
   createVectorLayer(options) {
     options = $.extend({}, this.get('options'), options);
 
-    let pane = this.get('_pane');
+    const pane = this.get('_pane');
     if (pane) {
       options.pane = pane;
       options.renderer = this.get('_renderer');
     }
 
-    let layerWithOptions = L.geoJSON([], options);
+    const layerWithOptions = L.geoJSON([], options);
     assert('The option \'kmlUrl\' or \'kmlString\' should be defined!', isPresent(options.kmlUrl) || isPresent(options.kmlString));
 
     if (options.kmlUrl) {
       return new Promise((resolve, reject) => {
-        let layer = omnivore.kml(options.kmlUrl, {}, layerWithOptions)
+        const layer = omnivore.kml(options.kmlUrl, {}, layerWithOptions)
           .on('ready', (e) => {
             resolve(layer);
           })
@@ -88,5 +88,5 @@ export default BaseVectorLayer.extend({
     }
 
     return omnivore.kml.parse(options.kmlString, {}, layerWithOptions);
-  }
+  },
 });

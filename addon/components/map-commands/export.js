@@ -5,8 +5,8 @@
 import { get } from '@ember/object';
 
 import Component from '@ember/component';
-import layout from '../../templates/components/map-commands/export';
 import { translationMacro as t } from 'ember-i18n';
+import layout from '../../templates/components/map-commands/export';
 
 /**
   Component's CSS-classes names.
@@ -26,7 +26,7 @@ const flexberryClassNames = {
   wrapper: flexberryClassNamesPrefix,
   exportDownload: 'flexberry-export-download-map-command',
   exportPrint: 'flexberry-export-print-map-command',
-  exportDialog: 'flexberry-export-map-command-dialog'
+  exportDialog: 'flexberry-export-map-command-dialog',
 };
 
 /**
@@ -46,7 +46,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let ExportMapCommandComponent = Component.extend({
+const ExportMapCommandComponent = Component.extend({
 
   /**
     Flag: indicates whether export dialog has been already requested by user or not.
@@ -210,14 +210,14 @@ let ExportMapCommandComponent = Component.extend({
     onExportDialogApprove(e) {
       this.set('_exportIsInProgress', true);
       e.closeDialog = false;
-      let leafletMap = this.get('leafletMap');
-      let mapCommandExecutionOptions = get(e, 'exportOptions');
+      const leafletMap = this.get('leafletMap');
+      const mapCommandExecutionOptions = get(e, 'exportOptions');
       leafletMap.flexberryMap.commands.execute('export', null, mapCommandExecutionOptions).then(() => {
         this.set('_exportIsInProgress', false);
         e.closeDialog = true;
         this._hideExportDialog();
       });
-    }
+    },
   },
 
   /**
@@ -245,7 +245,7 @@ let ExportMapCommandComponent = Component.extend({
   */
   willDestroy() {
     this._super(...arguments);
-  }
+  },
 
   /**
     Component's action invoking when map-command must be executed.
@@ -254,13 +254,12 @@ let ExportMapCommandComponent = Component.extend({
     @param {Object} e Action's event object from
     {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
   */
-}
-);
+});
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 ExportMapCommandComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default ExportMapCommandComponent;

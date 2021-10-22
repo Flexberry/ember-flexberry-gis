@@ -3,14 +3,14 @@ import { setupTest } from 'ember-qunit';
 
 import { run } from '@ember/runloop';
 
-module('Unit | Serializer | new-platform-flexberry-g-i-s-link-parameter', function(hooks) {
+module('Unit | Serializer | new-platform-flexberry-g-i-s-link-parameter', function (hooks) {
   setupTest(hooks);
 
   // Replace this with your real tests.
-  test('it serializes records', function(assert) {
-    let record = run(() => this.owner.lookup('service:store').createRecord('new-platform-flexberry-g-i-s-link-parameter'));
+  test('it serializes records', function (assert) {
+    const record = run(() => this.owner.lookup('service:store').createRecord('new-platform-flexberry-g-i-s-link-parameter'));
 
-    let serializedRecord = record.serialize();
+    const serializedRecord = record.serialize();
 
     assert.ok(serializedRecord);
   });

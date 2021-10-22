@@ -63,6 +63,6 @@ export default Component.extend({
       this.set('styleSettings.style.shadowAnchor', newShadowStyleSettings.iconAnchor);
 
       this._sendChangeAction();
-    }
-  }
+    },
+  },
 });

@@ -4,12 +4,12 @@ import FillEditor from './simple/fill-editor';
 
 export default {
   'path-tab': {
-    'caption': 'Стиль линейных и полигональных объектов'
+    caption: 'Стиль линейных и полигональных объектов',
   },
   'marker-tab': {
-    'caption': 'Стиль точечных объектов'
+    caption: 'Стиль точечных объектов',
   },
   'path-editor': PathEditor,
   'stroke-editor': StrokeEditor,
-  'fill-editor': FillEditor
+  'fill-editor': FillEditor,
 };
