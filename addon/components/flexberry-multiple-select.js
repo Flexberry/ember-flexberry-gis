@@ -1,4 +1,7 @@
-import Ember from 'ember';
+import { isEmpty, isNone } from '@ember/utils';
+import { observer, get, computed } from '@ember/object';
+import { A } from '@ember/array';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-multiple-select';
 
 /**
@@ -18,7 +21,7 @@ import layout from '../templates/components/flexberry-multiple-select';
   @class FlexberryMultipleSelectComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -31,7 +34,7 @@ export default Ember.Component.extend({
     @type Object
     @default Ember.A()
   */
-  items: Ember.A(),
+  items: A(),
 
   /**
     Flag, indicate that selection was remove.
@@ -49,7 +52,7 @@ export default Ember.Component.extend({
     @type Object
     @default Ember.A()
   */
-  selectedItems: Ember.A(),
+  selectedItems: A(),
 
   /**
     Array with selected dropdown items.
@@ -58,9 +61,9 @@ export default Ember.Component.extend({
     @type Object
     @default Ember.A()
   */
-  selectedLabels: Ember.A(),
+  selectedLabels: A(),
 
-  selectedItemsObserver: Ember.observer('selectedItems', function() {
+  selectedItemsObserver: observer('selectedItems', function() {
     this.$('.fb-selector>input').val('');
     let selectedItems = this.get('selectedItems');
     if (selectedItems) {
@@ -83,7 +86,7 @@ export default Ember.Component.extend({
         });
 
         this.$('.fb-selector>input.search').before(`<a class="ui label transition visible" data-value="${lastVal}" style="display: inline-block !important;">` +
-          `${this.get('isObject') ? Ember.get(val[0], 'name') : val[0]}<i class="delete icon"></i></a>`);
+          `${this.get('isObject') ? get(val[0], 'name') : val[0]}<i class="delete icon"></i></a>`);
         if (length > 1) {
           this.$('.fb-selector>a.adition').remove();
           this.$('.fb-selector').append(`<a class="ui label transition visible adition">и ещё ${length - 1}</a>`);
@@ -137,14 +140,14 @@ export default Ember.Component.extend({
     @type Object
     @readonly
   */
-  _usedItems: Ember.computed('items', 'selectedItems', function() {
+  _usedItems: computed('items', 'selectedItems', function() {
     let items = this.get('items');
     let selectedItems = this.get('selectedItems');
-    if (Ember.isEmpty(items) || Ember.isEmpty(selectedItems)) {
+    if (isEmpty(items) || isEmpty(selectedItems)) {
       return items;
     }
 
-    let ret = Ember.A();
+    let ret = A();
     items.forEach((item, i, items) => {
       if (selectedItems.indexOf(item) === -1) {
         ret.push(item);
@@ -180,7 +183,7 @@ export default Ember.Component.extend({
         }
 
         let selectedItems = this.get('selectedItems');
-        if (!Ember.isNone(selectedItems) && (Ember.isNone(itemArray) || selectedItems.length > itemArray.length)) {
+        if (!isNone(selectedItems) && (isNone(itemArray) || selectedItems.length > itemArray.length)) {
           this.set('isRemove', true);
         }
 
@@ -191,7 +194,7 @@ export default Ember.Component.extend({
 
   actions: {
     clear() {
-      this.set('selectedItems', Ember.A());
+      this.set('selectedItems', A());
       this.$('.fb-selector>a').remove();
       this.$('.fb-selector>.menu>.item').attr('class', 'item');
     }

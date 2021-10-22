@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { once } from '@ember/runloop';
+
+import { observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-styles/simple/fill-editor';
 
 /**
@@ -11,7 +14,7 @@ import layout from '../../../templates/components/layers-styles/simple/fill-edit
   @class SimpleLayersStyleFillEditorComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -41,12 +44,12 @@ export default Ember.Component.extend({
     @method _styleSettingsDidChange
     @private
   */
-  _styleSettingsDidChange: Ember.observer(
+  _styleSettingsDidChange: observer(
     'styleSettings',
     'styleSettings.fill',
     'styleSettings.fillColor',
     function() {
-      Ember.run.once(this, '_sendChangeAction');
+      once(this, '_sendChangeAction');
     }
   ),
 

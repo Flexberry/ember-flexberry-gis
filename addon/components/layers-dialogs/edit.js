@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { computed } from '@ember/object';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
@@ -156,7 +156,7 @@ let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
       @type Object
       @readonly
     */
-    store: Ember.computed('currentController', function () {
+    store: computed('currentController', function () {
       let controller = this.get('currentController');
       return controller.get('store');
     }),

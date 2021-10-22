@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-maptoolbar';
 
 /**
@@ -38,7 +38,7 @@ const flexberryClassNames = {
   @class FlexberryMaptoolbarComponet
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let FlexberryMaptoolbarComponent = Ember.Component.extend({
+let FlexberryMaptoolbarComponent = Component.extend({
   /**
     Component's template reference.
   */

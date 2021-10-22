@@ -2,8 +2,14 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
-import { Model as MapLayerMixin, defineProjections } from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map-layer';
+import { once } from '@ember/runloop';
+
+import { observer } from '@ember/object';
+import { on } from '@ember/object/evented';
+import {
+  Model as MapLayerMixin,
+  defineProjections
+} from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map-layer';
 import { Projection } from 'ember-flexberry-data';
 import { Offline } from 'ember-flexberry-data';
 import LayerModelMixin from '../mixins/layer-model';
@@ -29,8 +35,8 @@ let Model = Projection.Model.extend(Offline.ModelMixin, MapLayerMixin, LayerMode
   */
   _leafletObject: null,
 
-  _anyTextChanged: Ember.on('init', Ember.observer('name', 'description', 'keyWords', function() {
-    Ember.run.once(this, '_anyTextCompute');
+  _anyTextChanged: on('init', observer('name', 'description', 'keyWords', function() {
+    once(this, '_anyTextCompute');
   })),
 
   anyTextCompute() {

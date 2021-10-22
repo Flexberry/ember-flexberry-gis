@@ -1,4 +1,7 @@
-import Ember from 'ember';
+import { isNone, isBlank } from '@ember/utils';
+import { observer, set, get } from '@ember/object';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 import layout from '../templates/components/compare-object-geometries-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import distance from 'npm:@turf/distance';
@@ -6,7 +9,7 @@ import helpers from 'npm:@turf/helpers';
 import jsts from 'npm:jsts';
 import { coordinatesToString } from '../utils/coordinates-to';
 
-export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
+export default Component.extend(LeafletZoomToFeatureMixin, {
   layout,
 
   /**
@@ -14,7 +17,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @property mapApi
     @type MapApiService
     */
-  mapApi: Ember.inject.service(),
+  mapApi: service(),
 
   /**
     Objects to compare.
@@ -55,7 +58,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @private
     @readonly
   */
-  _onTwoObjectsChange: Ember.observer('twoObjects.[]', function() {
+  _onTwoObjectsChange: observer('twoObjects.[]', function() {
     let two = this.get('twoObjects');
     if (two.length === 2) {
       let mapModel = this.get('mapApi').getFromApi('mapModel');
@@ -73,8 +76,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let geojsonReader = new jsts.io.GeoJSONReader();
       let firstObjectJstsGeom = geojsonReader.read(firstObject.geometry);
       let secondObjectJstsGeom = geojsonReader.read(secondObject.geometry);
-      Ember.set(firstObject, 'area', firstObjectJstsGeom.getArea().toFixed(3));
-      Ember.set(secondObject, 'area', secondObjectJstsGeom.getArea().toFixed(3));
+      set(firstObject, 'area', firstObjectJstsGeom.getArea().toFixed(3));
+      set(secondObject, 'area', secondObjectJstsGeom.getArea().toFixed(3));
 
       this.set('firstObject', firstObject);
       this.set('secondObject', secondObject);
@@ -148,7 +151,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @private
     @readonly
   */
-  _OnMapChanged: Ember.observer('leafletMap', function () {
+  _OnMapChanged: observer('leafletMap', function () {
     let map = this.get('leafletMap');
     let group = L.featureGroup().addTo(map);
     this.set('featuresLayer', group);
@@ -164,7 +167,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let group = this.get('featuresLayer');
       group.clearLayers();
       let serviceLayer = this.get('serviceLayer');
-      if (!Ember.isNone(serviceLayer)) {
+      if (!isNone(serviceLayer)) {
         serviceLayer.clearLayers();
       }
 
@@ -198,7 +201,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         featureLayer = this._convertGeometryToFeatureLayer(geometry);
       }
 
-      if (!Ember.isNone(featureLayer)) {
+      if (!isNone(featureLayer)) {
         let center = featureLayer.getBounds().getCenter();
         let leafletMap = this.get('leafletMap');
         leafletMap.panTo(center);
@@ -228,7 +231,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         });
       }
 
-      if (!Ember.isNone(featureLayer)) {
+      if (!isNone(featureLayer)) {
         featureLayer.addTo(group);
         let map = this.get('leafletMap');
         map.fitBounds(featureLayer.getBounds());
@@ -245,7 +248,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @returns {Object} geoJSON layer
     */
   _convertGeometryToFeatureLayer(geometry, style) {
-    if (!Ember.isBlank(geometry.coordinates[0])) {
+    if (!isBlank(geometry.coordinates[0])) {
       let copyGeometry = Object.assign({}, geometry);
       let mapModel = this.get('mapApi').getFromApi('mapModel');
       let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
@@ -256,13 +259,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   getDistance(firstObject, secondObject) {
     let firstCenter;
     let secondCenter;
-    if (Ember.get(firstObject, 'leafletLayer.getLayers')) {
+    if (get(firstObject, 'leafletLayer.getLayers')) {
       firstCenter = firstObject.leafletLayer.getLayers()[0].getBounds().getCenter();
     } else {
       firstCenter = firstObject.leafletLayer.getBounds().getCenter();
     }
 
-    if (Ember.get(secondObject, 'leafletLayer.getLayers')) {
+    if (get(secondObject, 'leafletLayer.getLayers')) {
       secondCenter = secondObject.leafletLayer.getLayers()[0].getBounds().getCenter();
     } else {
       secondCenter = secondObject.leafletLayer.getBounds().getCenter();
@@ -274,10 +277,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   },
 
   convertCoordinates(feature) {
-    if (Ember.get(feature, 'leafletLayer.options.crs.code')) {
+    if (get(feature, 'leafletLayer.options.crs.code')) {
       let mapModel = this.get('mapApi').getFromApi('mapModel');
       return feature.leafletLayer.options.crs.code === 'EPSG:4326' ?
-        feature : mapModel._convertObjectCoordinates(Ember.get(feature, 'leafletLayer.options.crs.code'), feature);
+        feature : mapModel._convertObjectCoordinates(get(feature, 'leafletLayer.options.crs.code'), feature);
     }
 
     return feature;

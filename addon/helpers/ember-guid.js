@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { guidFor } from '@ember/object/internals';
+
+import Helper from '@ember/component/helper';
 
 /**
   Ember guidFor helper.
@@ -11,7 +13,7 @@ import Ember from 'ember';
   @class EmberGuidHelper
   @extends <a href="http://emberjs.com/api/classes/Ember.Helper.html">Ember.Helper</a>
 */
-export default Ember.Helper.extend({
+export default Helper.extend({
   /**
     Overridden [Ember.Helper compute method](http://emberjs.com/api/classes/Ember.Helper.html#method_compute).
     Executes helper's logic, returns arguments wrapped into array.
@@ -21,6 +23,6 @@ export default Ember.Helper.extend({
     @return {String} Ember guid for the passed object.
   */
   compute([obj]) {
-    return Ember.guidFor(obj);
+    return guidFor(obj);
   }
 });

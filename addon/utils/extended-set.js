@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
+
+import { set, get } from '@ember/object';
+import { assign } from '@ember/polyfills';
+import { isArray } from '@ember/array';
 
 /**
   Used for setting objects properties by path containing Ember.RecordArray
@@ -36,12 +40,12 @@ let setRecord = function (source, keyName, value) {
 
       if (i === (len - 1)) {
         // if previous object is array and key is index
-        if (Ember.isArray(result) && !isNaN(keyValue)) {
-          return Ember.assign(result.objectAt(keys[i]), value);
+        if (isArray(result) && !isNaN(keyValue)) {
+          return assign(result.objectAt(keys[i]), value);
         } else {
-          return Ember.set(result, keys[i], value);
+          return set(result, keys[i], value);
         }
-      } else if (Ember.isArray(result) && !isNaN(keyValue)) {
+      } else if (isArray(result) && !isNaN(keyValue)) {
         result = result.objectAt(keys[i]);
       } else {
         result = result.get(keys[i]);
@@ -50,7 +54,7 @@ let setRecord = function (source, keyName, value) {
   }
 
   // if key is lonely - directly set value for this property
-  return Ember.set(source, keys[0] || keyName, value);
+  return set(source, keys[0] || keyName, value);
 };
 
 /**
@@ -77,15 +81,15 @@ let setAndAssign = function (source, keyName, value) {
 
   // Create empty object if object in path could not be found or was destroyed.
   for (let i = 1; i < keys.length; i++) {
-    if (Ember.isBlank(Ember.get(source, keyPath))) {
-      Ember.set(source, keyPath, {});
+    if (isBlank(get(source, keyPath))) {
+      set(source, keyPath, {});
     }
 
     keyPath += '.' + keys[i];
   }
 
   // Directly set value for this property.
-  Ember.set(source, keyName, value);
+  set(source, keyName, value);
 };
 
 export {

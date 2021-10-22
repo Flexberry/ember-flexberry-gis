@@ -1,5 +1,5 @@
+import { isNone } from '@ember/utils';
 import jsts from 'npm:jsts';
-import Ember from 'ember';
 import { latLngToCoords, latLngsToCoords } from './lat-lng-to-coord';
 
 let geometryFactory = new jsts.geom.GeometryFactory();
@@ -16,7 +16,7 @@ let coordinatesFunction = function(coord, altitude) {
 let latlngToPointJsts = function(latlng, crs, precision, scale) {
   let coord = latLngToCoords(latlng, crs, precision, coordinatesFunction);
   let point = geometryFactory.createPoint(coord);
-  if (!Ember.isNone(scale)) {
+  if (!isNone(scale)) {
     point = geometryPrecisionReducer(scale).reduce(point);
   }
 
@@ -44,7 +44,7 @@ let latlngToPolylineJsts = function (latlngs, crs, precision, scale) {
     polyline = geometryFactory.createMultiLineString(geometries);
   }
 
-  if (!Ember.isNone(scale)) {
+  if (!isNone(scale)) {
     polyline = geometryPrecisionReducer(scale).reduce(polyline);
   }
 
@@ -86,7 +86,7 @@ let latlngToPolygonJsts = function(latlngs, crs, precision, scale) {
     polygon = geometryFactory.createMultiPolygon(geometries);
   }
 
-  if (!Ember.isNone(scale)) {
+  if (!isNone(scale)) {
     polygon = geometryPrecisionReducer(scale).reduce(polygon);
   }
 
@@ -121,12 +121,12 @@ let geometryToJsts = function(geometry, scale) {
     case 'Point':
       coords = coordToJsts(geometry.coordinates);
       let point = geometryFactory.createPoint(coords);
-      return Ember.isNone(scale) ? point : geometryPrecisionReducer(scale).reduce(point);
+      return isNone(scale) ? point : geometryPrecisionReducer(scale).reduce(point);
     case 'LineString':
       let coordsAsArray = geometry.coordinates instanceof Array ? geometry.coordinates : Array.from(geometry.coordinates);
       coords = coordsAsArray.map(coordToJsts);
       let line = coordinatesToLineString(coords);
-      return Ember.isNone(scale) ? line : geometryPrecisionReducer(scale).reduce(line);
+      return isNone(scale) ? line : geometryPrecisionReducer(scale).reduce(line);
     case 'MultiLineString':
       for (let i = 0; i < geometry.coordinates.length; i++) {
         let coordsAsArray = geometry.coordinates[i] instanceof Array ? geometry.coordinates[i] : Array.from(geometry.coordinates[i]);
@@ -135,7 +135,7 @@ let geometryToJsts = function(geometry, scale) {
 
       let geometries = coords.map(coordinatesToLineString);
       let multiLine = geometryFactory.createMultiLineString(geometries);
-      return Ember.isNone(scale) ? multiLine : geometryPrecisionReducer(scale).reduce(multiLine);
+      return isNone(scale) ? multiLine : geometryPrecisionReducer(scale).reduce(multiLine);
     case 'Polygon':
       for (let i = 0; i < geometry.coordinates.length; i++) {
         let coordsAsArray = geometry.coordinates[i] instanceof Array ? geometry.coordinates[i] : Array.from(geometry.coordinates[i]);
@@ -143,7 +143,7 @@ let geometryToJsts = function(geometry, scale) {
       }
 
       let polygon = coordinatesToPolygon(coords);
-      return Ember.isNone(scale) ? polygon : geometryPrecisionReducer(scale).reduce(polygon);
+      return isNone(scale) ? polygon : geometryPrecisionReducer(scale).reduce(polygon);
     case 'MultiPolygon':
       for (let i = 0; i < geometry.coordinates.length; i++) {
         let coordinates = [];
@@ -157,7 +157,7 @@ let geometryToJsts = function(geometry, scale) {
 
       let geom = coords.map(coordinatesToPolygon);
       let multiPolygon = geometryFactory.createMultiPolygon(geom);
-      return Ember.isNone(scale) ? multiPolygon : geometryPrecisionReducer(scale).reduce(multiPolygon);
+      return isNone(scale) ? multiPolygon : geometryPrecisionReducer(scale).reduce(multiPolygon);
   }
 };
 

@@ -1,13 +1,14 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
-moduleForComponent('layers/tile-layer', 'Unit | Component | layers/tile layer', {
-  unit: true
-});
+module('Unit | Component | layers/tile layer', function(hooks) {
+  setupTest(hooks);
 
-test('it return L.TileLayer on createLayer', function(assert) {
-  let component = this.subject({
-    requiredOptions: ['']
+  test('it return L.TileLayer on createLayer', function(assert) {
+    let component = this.owner.factoryFor('component:layers/tile-layer').create({
+      requiredOptions: ['']
+    });
+    let layer = component.createLayer();
+    assert.ok(layer instanceof L.TileLayer, 'Expected L.TileLayer instance');
   });
-  let layer = component.createLayer();
-  assert.ok(layer instanceof L.TileLayer, 'Expected L.TileLayer instance');
 });

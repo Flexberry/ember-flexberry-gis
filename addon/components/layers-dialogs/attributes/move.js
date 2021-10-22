@@ -2,13 +2,15 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/attributes/move';
 import {
   translationMacro as t
 } from 'ember-i18n';
 
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -107,7 +109,7 @@ export default Ember.Component.extend({
       @method actions.onApprove
     */
     onApprove(e) {
-      if (Ember.isNone(this.get('moveX')) && Ember.isNone(this.get('moveY'))) {
+      if (isNone(this.get('moveX')) && isNone(this.get('moveY'))) {
         // Prevent dialog from being closed.
         e.closeDialog = false;
 

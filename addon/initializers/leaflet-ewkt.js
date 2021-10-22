@@ -1,4 +1,8 @@
-import { latlngToPointEWKT, latlngToPolylineEWKT, latlngToPolygonEWKT } from '../utils/layer-to-ewkt';
+import {
+  latlngToPointEWKT,
+  latlngToPolylineEWKT,
+  latlngToPolygonEWKT
+} from '../utils/layer-to-ewkt';
 
 export function initialize(application) {
   // Add custom leaflet functions

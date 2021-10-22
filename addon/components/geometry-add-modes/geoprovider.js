@@ -2,7 +2,15 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isArray } from '@ember/array';
+
+import { getOwner } from '@ember/application';
+import $ from 'jquery';
+import { observer } from '@ember/object';
+import { on } from '@ember/object/evented';
+import { guidFor } from '@ember/object/internals';
+import { isNone, isEqual, isBlank } from '@ember/utils';
+import Component from '@ember/component';
 import layout from '../../templates/components/geometry-add-modes/geoprovider';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -28,7 +36,7 @@ const flexberryClassNames = {
   form: flexberryClassNamesPrefix + '-form'
 };
 
-let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
+let FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
   /**
     Reference to component's template.
   */
@@ -181,7 +189,7 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
     apply() {
       let _selectedRow = this.get('_selectedRow');
 
-      if (Ember.isNone(_selectedRow)) {
+      if (isNone(_selectedRow)) {
         let errors = this.get('_parsingErrors');
         errors.results = true;
         this.set('_parsingErrors', errors);
@@ -189,9 +197,9 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
         return;
       }
 
-      let geoObject = this.get('_queryResults').find((row) => { return Ember.isEqual(_selectedRow, Ember.guidFor(row)); });
+      let geoObject = this.get('_queryResults').find((row) => { return isEqual(_selectedRow, guidFor(row)); });
 
-      if (Ember.isNone(geoObject)) {
+      if (isNone(geoObject)) {
         let errors = this.get('_parsingErrors');
         errors.results = true;
         this.set('_parsingErrors', errors);
@@ -200,12 +208,12 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
       }
 
       let addedLayer = this.getLayer(geoObject);
-      if (Ember.isNone(addedLayer)) {
+      if (isNone(addedLayer)) {
         return;
       }
 
       let layer = this.get('layer');
-      if (!Ember.isNone(layer)) {
+      if (!isNone(layer)) {
         layer.setLatLng(addedLayer.getLatLng());
 
         layer.disableEdit();
@@ -229,7 +237,7 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
     this.initProviders();
   },
 
-  initialSettings: Ember.on('init', Ember.observer('settings', function () {
+  initialSettings: on('init', observer('settings', function () {
     this._cleanUpForm();
   })),
 
@@ -242,23 +250,23 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
     this.set('_selectedRow', null);
 
     let parsedData = this.parseData();
-    if (Ember.isNone(parsedData)) {
+    if (isNone(parsedData)) {
       this.set('_queryResults', null);
       this.set('_queryResultsTotalCount', 0);
       return;
     }
 
     let providerName = parsedData.provider;
-    if (Ember.isNone(this.get(`_availableProviders.${providerName}`))) {
+    if (isNone(this.get(`_availableProviders.${providerName}`))) {
       return;
     }
 
     this.set('_loading', true);
     let provider = this.get(`_availableProviders.${providerName}`);
 
-    let searchOptions = Ember.$.extend(options, { query: parsedData.address });
+    let searchOptions = $.extend(options, { query: parsedData.address });
     provider.executeGeocoding(searchOptions).then((result) => {
-      if (Ember.isBlank(result)) {
+      if (isBlank(result)) {
         this.set('_parsingErrors', { address: true });
         return;
       }
@@ -287,13 +295,13 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
     Initialize available geoproviders.
   */
   initProviders() {
-    let availableProviderNames = Ember.getOwner(this).knownNamesForType('geo-provider');
-    if (Ember.isArray(availableProviderNames)) {
+    let availableProviderNames = getOwner(this).knownNamesForType('geo-provider');
+    if (isArray(availableProviderNames)) {
       let providers = {};
       let providerNames = [];
       availableProviderNames.forEach((name) => {
-        if (!Ember.isEqual(name, 'base')) {
-          providers[name] = Ember.getOwner(this).lookup(`geo-provider:${name}`);
+        if (!isEqual(name, 'base')) {
+          providers[name] = getOwner(this).lookup(`geo-provider:${name}`);
           providerNames.push(name);
         }
       });
@@ -314,12 +322,12 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
     let dataIsValid = true;
     let errors = {};
 
-    if (Ember.isBlank(address)) {
+    if (isBlank(address)) {
       errors.address = true;
       dataIsValid = false;
     }
 
-    if (Ember.isBlank(provider)) {
+    if (isBlank(provider)) {
       errors.provider = true;
       dataIsValid = false;
     }

@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
+
+import Mixin from '@ember/object/mixin';
 import { Query } from 'ember-flexberry-data';
 
 /**
@@ -12,7 +14,7 @@ import { Query } from 'ember-flexberry-data';
   @class OdataFilterParserMixin
   @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Parse filter condition expression ('=', '!=', '<', '<=', '>', '>=', 'LIKE', 'ILIKE').
 
@@ -25,13 +27,13 @@ export default Ember.Mixin.create({
   parseFilterConditionExpression(field, condition, value) {
     switch (condition) {
       case '=':
-        if (Ember.isBlank(value)) {
+        if (isBlank(value)) {
           return new Query.SimplePredicate(field, Query.FilterOperator.Eq, null);
         }
 
         return new Query.SimplePredicate(field, Query.FilterOperator.Eq, value);
       case '!=':
-        if (Ember.isBlank(value)) {
+        if (isBlank(value)) {
           return new Query.SimplePredicate(field, Query.FilterOperator.Neq, null);
         }
 

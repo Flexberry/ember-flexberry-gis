@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { getOwner } from '@ember/application';
+
+import { isNone } from '@ember/utils';
+import $ from 'jquery';
 import FlexberryEditLayerDialogComponent from './edit';
 import layout from '../../templates/components/layers-dialogs/edit';
 import { translationMacro as t } from 'ember-i18n';
@@ -161,7 +164,7 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
     @param {string} errorF Error function.
   */
   request(url, type, contentType, data, successF, errorF) {
-    Ember.$.ajax({
+    $.ajax({
       url: url,
       type: type,
       data: data,
@@ -198,13 +201,13 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
     */
     onApprove() {
       let file = this.get('_fileControl');
-      if (!Ember.isNone(file)) {
+      if (!isNone(file)) {
         let layerProperties = this.get('getLayerProperties')();
         let layerName = JSON.parse(layerProperties.settings).layers.split(':');
         let url = JSON.parse(layerProperties.settings).url.split('/geoserver');
-        if (!Ember.isNone(layerName)) {
+        if (!isNone(layerName)) {
           let _this = this;
-          let config = Ember.getOwner(this).resolveRegistration('config:environment');
+          let config = getOwner(this).resolveRegistration('config:environment');
 
           this.request(`${url[0]}/geoserver/rest/workspaces/${layerName[0]}`, 'GET', 'application/json', '',
             (data) => {
@@ -252,7 +255,7 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
       @method actions.onUploadFile
     */
     onUploadFile(file) {
-      if (!Ember.isNone(file)) {
+      if (!isNone(file)) {
         this.set('_fileControl', file);
       }
     }

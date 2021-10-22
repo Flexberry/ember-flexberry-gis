@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-styles/simple/path-editor';
 
 /**
@@ -11,7 +11,7 @@ import layout from '../../../templates/components/layers-styles/simple/path-edit
   @class SimpleLayersStylePathEditorComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */

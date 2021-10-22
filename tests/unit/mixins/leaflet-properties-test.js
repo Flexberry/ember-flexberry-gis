@@ -1,72 +1,73 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
+import EmberObject from '@ember/object';
 import LeafletPropertiesMixin from 'ember-flexberry-gis/mixins/leaflet-properties';
 import { module, test } from 'qunit';
 import sinon from 'sinon';
 
-module('Unit | Mixin | leaflet properties');
+module('Unit | Mixin | leaflet properties', function() {
+  let MixinImplementation = EmberObject.extend(LeafletPropertiesMixin);
 
-let MixinImplementation = Ember.Object.extend(LeafletPropertiesMixin);
-
-// Replace this with your real tests.
-test('it works', function (assert) {
-  let subject = MixinImplementation.create();
-  assert.ok(subject);
-});
-
-test('_addObservers should call this.addObserver for specified properties', function (assert) {
-  let property = 'testProperty';
-  let subject = MixinImplementation.create({
-    leafletProperties: [property]
+  // Replace this with your real tests.
+  test('it works', function (assert) {
+    let subject = MixinImplementation.create();
+    assert.ok(subject);
   });
 
-  let addObserver = sinon.spy(subject, 'addObserver');
+  test('_addObservers should call this.addObserver for specified properties', function (assert) {
+    let property = 'testProperty';
+    let subject = MixinImplementation.create({
+      leafletProperties: [property]
+    });
 
-  subject._addObservers();
+    let addObserver = sinon.spy(subject, 'addObserver');
 
-  assert.ok(addObserver.calledWith(property));
-});
+    subject._addObservers();
 
-test('after addObserver property changed should fire specified layer function', function (assert) {
-  let callTestProperty = sinon.spy();
-
-  let subject = MixinImplementation.create({
-    leafletProperties: ['testProperty:callTestProperty'],
-    _leafletObject: { callTestProperty }
+    assert.ok(addObserver.calledWith(property));
   });
 
-  subject._addObservers();
-  Ember.run(() => {
-    subject.set('testProperty', 'property');
+  test('after addObserver property changed should fire specified layer function', function (assert) {
+    let callTestProperty = sinon.spy();
+
+    let subject = MixinImplementation.create({
+      leafletProperties: ['testProperty:callTestProperty'],
+      _leafletObject: { callTestProperty }
+    });
+
+    subject._addObservers();
+    run(() => {
+      subject.set('testProperty', 'property');
+    });
+
+    assert.ok(callTestProperty.called);
   });
 
-  assert.ok(callTestProperty.called);
-});
+  test('after addObserver property changed should fire default setter for property of layer', function (assert) {
+    let setTestProperty = sinon.spy();
 
-test('after addObserver property changed should fire default setter for property of layer', function (assert) {
-  let setTestProperty = sinon.spy();
+    let subject = MixinImplementation.create({
+      leafletProperties: ['testProperty'],
+      _leafletObject: { setTestProperty }
+    });
 
-  let subject = MixinImplementation.create({
-    leafletProperties: ['testProperty'],
-    _leafletObject: { setTestProperty }
+    subject._addObservers();
+    run(() => {
+      subject.set('testProperty', 'property');
+    });
+
+    assert.ok(setTestProperty.called);
   });
 
-  subject._addObservers();
-  Ember.run(() => {
-    subject.set('testProperty', 'property');
-  });
+  test('after addObserver property changed should throws if layer property setter is missing', function (assert) {
+    let subject = MixinImplementation.create({
+      leafletProperties: ['testProperty'],
+      _leafletObject: {}
+    });
 
-  assert.ok(setTestProperty.called);
-});
+    subject._addObservers();
 
-test('after addObserver property changed should throws if layer property setter is missing', function (assert) {
-  let subject = MixinImplementation.create({
-    leafletProperties: ['testProperty'],
-    _leafletObject: {}
-  });
-
-  subject._addObservers();
-
-  assert.throws(() => {
-    subject.set('testProperty', 'property');
+    assert.throws(() => {
+      subject.set('testProperty', 'property');
+    });
   });
 });

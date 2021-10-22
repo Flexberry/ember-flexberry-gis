@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A, isArray } from '@ember/array';
+
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-layerslegends';
 
 /**
@@ -11,7 +14,7 @@ import layout from '../templates/components/flexberry-layerslegends';
   @class FlexberryLayerslegendsComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -42,8 +45,8 @@ export default Ember.Component.extend({
     @property visibleLayers
     @type Object[]
   */
-  visibleLayers: Ember.computed('layers.[]', function() {
-    let result = Ember.A();
+  visibleLayers: computed('layers.[]', function() {
+    let result = A();
     let getLayers = function(layers) {
       layers.forEach(function(layer) {
         if (layer.get('visibility') && !layer.get('isDeleted')) {
@@ -57,7 +60,7 @@ export default Ember.Component.extend({
     };
 
     let layers = this.get('layers');
-    if (Ember.isArray(layers)) {
+    if (isArray(layers)) {
       getLayers(layers);
     }
 

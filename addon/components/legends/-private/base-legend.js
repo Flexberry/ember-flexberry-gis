@@ -1,4 +1,9 @@
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
+import { Promise } from 'rsvp';
+import { on } from '@ember/object/evented';
+import { A } from '@ember/array';
+import { computed, observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../../templates/components/legends/-private/base-legend';
 
 /**
@@ -33,7 +38,7 @@ const flexberryClassNames = {
   @class BaseLegendComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -102,8 +107,8 @@ export default Ember.Component.extend({
     @private
     @readOnly
   */
-  _legends: Ember.computed('layer.settingsAsObject.legendSettings', function () {
-    return Ember.A();
+  _legends: computed('layer.settingsAsObject.legendSettings', function () {
+    return A();
   }),
 
   /**
@@ -112,9 +117,9 @@ export default Ember.Component.extend({
     @method _legendsDidChange
     @private
   */
-  _legendsDidChange: Ember.on('init', Ember.observer('_legends', function() {
+  _legendsDidChange: on('init', observer('_legends', function() {
     let legends = this.get('_legends');
-    if (legends instanceof Ember.RSVP.Promise) {
+    if (legends instanceof Promise) {
       legends.then((result) => {
         this.sendAction('legendsLoaded', this.get('layer.name'), result);
       });
@@ -129,9 +134,9 @@ export default Ember.Component.extend({
     @method _legendsDidChange
     @private
   */
-  _rightPaddingDidChange: Ember.observer('rightPadding', function() {
+  _rightPaddingDidChange: observer('rightPadding', function() {
     let rightPadding = this.get('rightPadding');
-    if (!Ember.isBlank(rightPadding)) {
+    if (!isBlank(rightPadding)) {
       this.$(`.${this.flexberryClassNames.imageWrapper}`).css('padding-right', rightPadding + 'px');
     }
   }),
@@ -143,7 +148,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     let height = this.get('height');
-    if (!Ember.isBlank(height)) {
+    if (!isBlank(height)) {
       this.$(`.${this.flexberryClassNames.imageWrapper}`).css('height', height + 'px');
     }
   }

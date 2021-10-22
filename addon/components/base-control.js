@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
  */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+
+import { observer } from '@ember/object';
+import Component from '@ember/component';
 
 import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
 
@@ -12,7 +15,7 @@ import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses LeafletOptionsMixin
 */
-export default Ember.Component.extend(LeafletOptionsMixin, {
+export default Component.extend(LeafletOptionsMixin, {
   /**
     Leaflet map for this control.
 
@@ -85,9 +88,9 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
 
     @method initControl
   */
-  initControl: Ember.observer('leafletMap', function () {
+  initControl: observer('leafletMap', function () {
     let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
+    if (!isNone(leafletMap)) {
       let control = this.createControl();
       this.set('control', control);
 
@@ -104,7 +107,7 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
   destroyControl() {
     let leafletMap = this.get('leafletMap');
     let control = this.get('control');
-    if (!Ember.isNone(leafletMap) && !Ember.isNone(control)) {
+    if (!isNone(leafletMap) && !isNone(control)) {
       leafletMap.removeControl(control);
     }
 

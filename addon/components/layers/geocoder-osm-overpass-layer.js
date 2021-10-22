@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
+
+import { run } from '@ember/runloop';
+import { Promise } from 'rsvp';
+import { get } from '@ember/object';
 import GeocoderBaseLayer from './geocoder-base-layer';
 
 /**
@@ -44,7 +48,7 @@ export default GeocoderBaseLayer.extend({
   */
   parseReverseGeocodingResults(results) {
     let featuresCollection = window.osmtogeojson(results, { flatProperties: true });
-    return Ember.get(featuresCollection, 'features');
+    return get(featuresCollection, 'features');
   },
 
   /**
@@ -71,7 +75,7 @@ export default GeocoderBaseLayer.extend({
   */
   executeReverseGeocoding(options) {
     options = options || {};
-    let boundingBox = Ember.get(options, 'boundingBox');
+    let boundingBox = get(options, 'boundingBox');
     let sw = boundingBox.getSouthWest();
     let ne = boundingBox.getNorthEast();
 
@@ -82,9 +86,9 @@ export default GeocoderBaseLayer.extend({
     // Url to get all nodes within specified bounding box.
     let overpassRequestUrl = `${overpassBaseUrl}?data=[out:json];(${overpassNode};<;);out;`;
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.run(() => {
-        Ember.$.ajax(overpassRequestUrl).done((data, textStatus, jqXHR) => {
+    return new Promise((resolve, reject) => {
+      run(() => {
+        $.ajax(overpassRequestUrl).done((data, textStatus, jqXHR) => {
           resolve(data);
         }).fail((jqXHR, textStatus, errorThrown) => {
           reject(errorThrown);

@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
 import MeasureMapTool from './measure';
 
 /**
@@ -22,7 +22,7 @@ export default MeasureMapTool.extend({
     this._super(...arguments);
 
     let _measureTools = this.get('_measureTools');
-    if (!Ember.isNone(_measureTools)) {
+    if (!isNone(_measureTools)) {
       _measureTools.clearLayers();
     }
 

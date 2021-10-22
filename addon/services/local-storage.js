@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
+
+import { A } from '@ember/array';
+import Service from '@ember/service';
 
 /**
   Local storage service.
@@ -11,7 +14,7 @@ import Ember from 'ember';
   @class LocalStorageService
   @extends Ember.Service
 */
-export default Ember.Service.extend({
+export default Service.extend({
   /**
     Flag: indicates whether service is available.
 
@@ -53,13 +56,13 @@ export default Ember.Service.extend({
     @returns Object[] collection
   */
   getFromStorage(className, key) {
-    let collection = Ember.A();
+    let collection = A();
 
     if (this.get('available')) {
       try {
-        let inStore = Ember.A(JSON.parse(localStorage.getItem(`${className}_${key}`)));
+        let inStore = A(JSON.parse(localStorage.getItem(`${className}_${key}`)));
 
-        if (!Ember.isBlank(inStore)) {
+        if (!isBlank(inStore)) {
           inStore.forEach((element) => {
             collection.pushObject(element);
           });

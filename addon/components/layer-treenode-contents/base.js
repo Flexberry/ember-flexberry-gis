@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 
 /**
@@ -13,7 +13,7 @@ import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses DynamicActionsMixin
  */
-export default Ember.Component.extend(DynamicActionsMixin, {
+export default Component.extend(DynamicActionsMixin, {
   /**
     Map layer model.
 

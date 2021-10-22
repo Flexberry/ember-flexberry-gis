@@ -2,7 +2,7 @@
   @module ember-flexberry
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
 
 /**
   Replaces layers factories with already created instances in owner.knownForType utility.
@@ -15,7 +15,7 @@ export function initialize(applicationInstance) {
   // Retrieve known layers & replace factories with already created instances.
   // It is needed for a while to keep backward compatibility.
   let knownLayers = applicationInstance.knownForType('layer');
-  Ember.A(Object.keys(knownLayers) || []).forEach((layerName) => {
+  A(Object.keys(knownLayers) || []).forEach((layerName) => {
     knownLayers[layerName] = applicationInstance.lookup(`layer:${layerName}`);
   });
 }

@@ -2,7 +2,7 @@
   @module ember-flexberry-gis-dummy
 */
 
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
 import MapController from './map';
 
 /**
@@ -19,7 +19,7 @@ export default MapController.extend({
     @property mapApi
     @type MapApiService
   */
-  mapApi: Ember.inject.service(),
+  mapApi: service(),
 
   actions: {
     /**

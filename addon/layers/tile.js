@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
 import BaseLayer from './-private/base';
 
 /**
@@ -38,7 +38,7 @@ export default BaseLayer.extend({
   */
   createSettings() {
     let settings = this._super(...arguments);
-    Ember.$.extend(true, settings, {
+    $.extend(true, settings, {
       url: undefined,
       noWrap: true
     });

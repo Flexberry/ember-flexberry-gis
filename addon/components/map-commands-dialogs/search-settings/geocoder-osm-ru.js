@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { on } from '@ember/object/evented';
+
+import $ from 'jquery';
+import { isBlank, isNone } from '@ember/utils';
+import { computed, observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../../templates/components/map-commands-dialogs/search-settings/geocoder-osm-ru';
 
 /**
@@ -11,7 +16,7 @@ import layout from '../../../templates/components/map-commands-dialogs/search-se
   @class GeocoderOsmRuSearchSettingsComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Serialized bounding box of leaflet map's current view.
 
@@ -29,13 +34,13 @@ export default Ember.Component.extend({
     @readOnly
     @private
   */
-  _autocompleteUrl: Ember.computed('layer.settingsAsObject.autocompleteUrl', '_leafletMapBoundingBox', function() {
+  _autocompleteUrl: computed('layer.settingsAsObject.autocompleteUrl', '_leafletMapBoundingBox', function() {
     let autocompleteUrl = '';
     let baseUrl = this.get('layer.settingsAsObject.autocompleteUrl');
-    if (Ember.isBlank(baseUrl)) {
+    if (isBlank(baseUrl)) {
       return autocompleteUrl;
     } else {
-      baseUrl = Ember.$('<a>', { href: baseUrl });
+      baseUrl = $('<a>', { href: baseUrl });
     }
 
     let leafletMapBoundingBox = this.get('_leafletMapBoundingBox');
@@ -106,9 +111,9 @@ export default Ember.Component.extend({
     @method _leafletMapDidChange
     @private
   */
-  _leafletMapDidChange: Ember.on('init', Ember.observer('leafletMap', function() {
+  _leafletMapDidChange: on('init', observer('leafletMap', function() {
     let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
+    if (!isNone(leafletMap)) {
       leafletMap.on('moveend', this._onLeafletMapViewChanged, this);
       leafletMap.on('zoomend', this._onLeafletMapViewChanged, this);
 
@@ -133,7 +138,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
+    if (!isNone(leafletMap)) {
       leafletMap.off('moveend', this._onLeafletMapViewChanged, this);
       leafletMap.off('zoomend', this._onLeafletMapViewChanged, this);
 

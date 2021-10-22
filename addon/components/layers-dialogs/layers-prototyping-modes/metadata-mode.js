@@ -2,10 +2,14 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isArray } from '@ember/array';
+
+import { inject as service } from '@ember/service';
 import BaseModeComponent from 'ember-flexberry-gis/components/layers-dialogs/layers-prototyping-modes/base';
 import layout from '../../../templates/components/layers-dialogs/layers-prototyping-modes/metadata-mode';
-import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
+import {
+  createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-laye
+} from-metadata';
 import { Query } from 'ember-flexberry-data';
 
 /**
@@ -106,7 +110,7 @@ let MetadataModeComponent = BaseModeComponent.extend({
     @type <a href="https://emberjs.com/api/ember-data/2.4/classes/DS.Store">DS.Store</a>
     @private
   */
-  store: Ember.inject.service('store'),
+  store: service('store'),
 
   /**
     Initializes component.
@@ -155,7 +159,7 @@ let MetadataModeComponent = BaseModeComponent.extend({
     */
     onSelectedMetadataRecordChanged() {
       let metadataRecords = this.get('_metadataRecords');
-      if (!Ember.isArray(metadataRecords)) {
+      if (!isArray(metadataRecords)) {
         return;
       }
 

@@ -1,8 +1,13 @@
-import Ember from 'ember';
+import { A } from '@ember/array';
+import $ from 'jquery';
+import { get } from '@ember/object';
+import { isNone } from '@ember/utils';
+import { getOwner } from '@ember/application';
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/settings/combine';
 import { translationMacro as t } from 'ember-i18n';
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
 
   /**
@@ -57,7 +62,7 @@ export default Ember.Component.extend({
   */
   init() {
     this._super(...arguments);
-    this.set('_availableTypes', Ember.getOwner(this).knownNamesForType('layer'));
+    this.set('_availableTypes', getOwner(this).knownNamesForType('layer'));
   },
 
   /**
@@ -76,18 +81,18 @@ export default Ember.Component.extend({
     */
     addTypeSettings() {
       let type = this.get('_type');
-      if (!Ember.isNone(type)) {
-        let defaultSettings = Ember.getOwner(this).knownForType('layer', type).createSettings();
+      if (!isNone(type)) {
+        let defaultSettings = getOwner(this).knownForType('layer', type).createSettings();
         let settings = this.get('settings');
-        if (Ember.isNone(settings) || Ember.isNone(Ember.get(settings, 'type'))) {
-          let mainSettings = Ember.$.extend(true, defaultSettings, { 'type': type });
+        if (isNone(settings) || isNone(get(settings, 'type'))) {
+          let mainSettings = $.extend(true, defaultSettings, { 'type': type });
           this.set('settings', mainSettings);
         } else {
           let innerLayerSettings = defaultSettings;
-          Ember.$.extend(true, innerLayerSettings, { 'type': type });
+          $.extend(true, innerLayerSettings, { 'type': type });
           let innerLayers = this.get('settings.innerLayers');
-          if (Ember.isNone(innerLayers)) {
-            innerLayers = Ember.A();
+          if (isNone(innerLayers)) {
+            innerLayers = A();
           }
 
           innerLayers.push(innerLayerSettings);

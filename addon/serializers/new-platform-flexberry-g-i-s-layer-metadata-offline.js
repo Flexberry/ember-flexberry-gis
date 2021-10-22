@@ -4,7 +4,9 @@
 
 import DS from 'ember-data';
 import { Serializer } from 'ember-flexberry-data';
-import { OfflineSerializer as LayerMetadataSerializer } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-layer-metadata-offline';
+import {
+  OfflineSerializer as LayerMetadataSerializer
+} from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-layer-metadata-offline';
 
 /**
   Layer metadata offline serializer.

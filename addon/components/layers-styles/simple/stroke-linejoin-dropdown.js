@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
+
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-styles/simple/stroke-linejoin-dropdown';
 
 /**
@@ -11,7 +13,7 @@ import layout from '../../../templates/components/layers-styles/simple/stroke-li
   @class SimpleLayersStyleStrokeLineJoinDropdownComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Available 'stroke-linejoin' attribute values.
 
@@ -68,7 +70,7 @@ export default Ember.Component.extend({
     });
 
     let initialValue = this.get('value');
-    if (!Ember.isBlank(initialValue)) {
+    if (!isBlank(initialValue)) {
       $dropdown.dropdown('set selected', initialValue);
     }
   },

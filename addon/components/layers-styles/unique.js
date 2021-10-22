@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
+
+import { getOwner } from '@ember/application';
+import { isBlank, isNone } from '@ember/utils';
 import layout from '../../templates/components/layers-styles/unique';
 import BaseCustomStyle from './categorized/base-categorized-layer-style';
 import { getGradientColors } from 'ember-flexberry-gis/utils/color-interpolation';
@@ -38,19 +41,19 @@ export default BaseCustomStyle.extend({
     onClassifyButtonClick() {
       let layerType = this.get('layerType');
       let leafletLayer = this.get('leafletLayer');
-      if (Ember.isBlank(layerType) || Ember.isNone(leafletLayer)) {
+      if (isBlank(layerType) || isNone(leafletLayer)) {
         return;
       }
 
-      let layerClass = Ember.getOwner(this).lookup(`layer:${layerType}`);
+      let layerClass = getOwner(this).lookup(`layer:${layerType}`);
       let propertyName = this.get('styleSettings.style.propertyName');
       let propertyValues = layerClass.getLayerPropertyValues(leafletLayer, propertyName);
-      let categories = Ember.A();
+      let categories = A();
       let layersStylesRenderer = this.get('_layersStylesRenderer');
       let mainStyleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
       let path = mainStyleSettings.style.path;
 
-      let fillGradientColors = Ember.A();
+      let fillGradientColors = A();
       if (this.get('_fillGradientEnable')) {
         fillGradientColors = getGradientColors(this.get('_fillGradientColorStart'), this.get('_fillGradientColorEnd'), propertyValues.length);
         path.fillGradientEnable = true;
@@ -58,7 +61,7 @@ export default BaseCustomStyle.extend({
         path.fillGradientEnable = false;
       }
 
-      let strokeGradientColors = Ember.A();
+      let strokeGradientColors = A();
       if (this.get('_strokeGradientEnable')) {
         strokeGradientColors = getGradientColors(this.get('_strokeGradientColorStart'), this.get('_strokeGradientColorEnd'), propertyValues.length);
         path.strokeGradientEnable = true;

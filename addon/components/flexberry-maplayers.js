@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+
+import { isNone } from '@ember/utils';
+import { isArray } from '@ember/array';
+import { computed, get, observer, set } from '@ember/object';
+import Component from '@ember/component';
 import FlexberryTreenodeComponent from 'ember-flexberry/components/flexberry-treenode';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 import SlotsMixin from 'ember-block-slots';
@@ -109,7 +114,7 @@ const flexberryClassNames = {
   @uses DynamicActionsMixin
   @uses DynamicPropertiesMixin
 */
-let FlexberryMaplayersComponent = Ember.Component.extend(
+let FlexberryMaplayersComponent = Component.extend(
   SlotsMixin,
   RequiredActionsMixin,
   DomActionsMixin,
@@ -135,7 +140,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       @readonly
       @private
     */
-    _isRoot: Ember.computed('parentViewExcludingSlots', function() {
+    _isRoot: computed('parentViewExcludingSlots', function() {
       let parentView = this.get('parentViewExcludingSlots');
 
       return !(parentView instanceof FlexberryTreenodeComponent);
@@ -149,11 +154,11 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasLayers: Ember.computed('layers.[]', 'layers.@each.isDeleted', function() {
+    _hasLayers: computed('layers.[]', 'layers.@each.isDeleted', function() {
       let layers = this.get('layers');
 
-      return Ember.isArray(layers) && layers.filter((layer) => {
-        return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
+      return isArray(layers) && layers.filter((layer) => {
+        return !isNone(layer) && get(layer, 'isDeleted') !== true;
       }).length > 0;
     }),
 
@@ -166,7 +171,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasHeader: Ember.computed('_slots.[]', '_isRoot', 'readonly', 'showHeader', function() {
+    _hasHeader: computed('_slots.[]', '_isRoot', 'readonly', 'showHeader', function() {
       // Yielded {{block-slot "header"}} is defined and current tree is root.
       return (this._isRegistered('header') || !this.get('readonly')) && this.get('_isRoot') && this.get('showHeader');
     }),
@@ -180,7 +185,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasContent: Ember.computed('_slots.[]', '_hasLayers', function() {
+    _hasContent: computed('_slots.[]', '_hasLayers', function() {
       // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
       return this._isRegistered('content') || this.get('_hasLayers');
     }),
@@ -194,7 +199,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasFooter: Ember.computed('_slots.[]', '_isRoot', 'showFooter', function() {
+    _hasFooter: computed('_slots.[]', '_isRoot', 'showFooter', function() {
       // Yielded {{block-slot "header"}} is defined and current tree is root.
       return this._isRegistered('footer') && this.get('_isRoot') && this.get('showFooter');
     }),
@@ -206,7 +211,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       @type <a href="https://emberjs.com/api/ember-data/2.4/classes/DS.Store">DS.Store</a>
       @private
     */
-    store: Ember.inject.service('store'),
+    store: service('store'),
 
     /**
       Flag: indicates whether add dialog has been already requested by user or not.
@@ -453,7 +458,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
 
       @method onCompareLayersEnabled
     */
-    onCompareLayersEnabled: Ember.observer('compareLayersEnabled', function() {
+    onCompareLayersEnabled: observer('compareLayersEnabled', function() {
       let map = this.get('leafletMap');
       if (this.get('compareLayersEnabled')) {
         let layers = this.get('layers');
@@ -470,32 +475,32 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
         this.get('sideBySide').addTo(map);
       } else {
         let sbs = this.get('sideBySide');
-        if (!Ember.isNone(sbs.baseUpdateClip)) {
+        if (!isNone(sbs.baseUpdateClip)) {
           sbs.off('dividermove', this.updateClip, this);
-          sbs._updateClip = Ember.get(sbs, 'baseUpdateClip').bind(this);
+          sbs._updateClip = get(sbs, 'baseUpdateClip').bind(this);
           map.off('move', this._updateClip, this);
         }
 
         sbs._leftLayers.forEach(function (layer) {
-          if (!Ember.isNone(layer)) {
+          if (!isNone(layer)) {
             layer.getContainer().style.clip = '';
           }
         });
         sbs._rightLayers.forEach(function (layer) {
-          if (!Ember.isNone(layer)) {
+          if (!isNone(layer)) {
             layer.getContainer().style.clip = '';
           }
         });
         sbs.remove();
         let rightLayer = this.get('rightLayer');
-        if (!Ember.isNone(rightLayer)) {
+        if (!isNone(rightLayer)) {
           rightLayer.set('visibility', false);
           rightLayer.set('side', null);
           this.set('rightLayer', null);
         }
 
         let leftLayer = this.get('leftLayer');
-        if (!Ember.isNone(leftLayer)) {
+        if (!isNone(leftLayer)) {
           leftLayer.set('visibility', false);
           leftLayer.set('side', null);
           this.set('leftLayer', null);
@@ -503,7 +508,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
 
         let layersToAdd = this.get('currentLayers');
         layersToAdd.forEach(layer => {
-          Ember.set(layer, 'visibility', true);
+          set(layer, 'visibility', true);
         });
       }
     }),

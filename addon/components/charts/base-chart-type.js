@@ -2,11 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { computed } from '@ember/object';
 
-const {
-  assert
-} = Ember;
+import Component from '@ember/component';
+import { assert } from '@ember/debug';
 
 /**
   Component for base chart type.
@@ -15,7 +14,7 @@ const {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Inner hash string chart title.
 
@@ -76,7 +75,7 @@ export default Ember.Component.extend({
     @property _propertiesForXAxis
     @type Object
   */
-  _propertiesForXAxis: Ember.computed('localizedProperties', function() {
+  _propertiesForXAxis: computed('localizedProperties', function() {
     let allProperties = {};
     let isObject = this.get('isObject');
     let properties = Object.keys(isObject[0] || {});
@@ -96,7 +95,7 @@ export default Ember.Component.extend({
     @property _propertiesForYAxis
     @type Object
   */
-  _propertiesForYAxis: Ember.computed('localizedProperties', function() {
+  _propertiesForYAxis: computed('localizedProperties', function() {
     let numberProperties = {};
     let isObject = this.get('isObject');
     let properties = Object.keys(isObject[0] || {});

@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
+
+import { getOwner } from '@ember/application';
+import { isNone } from '@ember/utils';
 
 /**
   Create object by rhumb for [LineString, Polygon]. Start point coordinates convert in crs of layer.
@@ -27,12 +30,12 @@ import Ember from 'ember';
   @returns {Object} New featureLayer.
 */
 const createObjectRhumb = (data, layerCrs, that) => {
-  if (Ember.isNone(data.points) || data.points.length === 0) {
+  if (isNone(data.points) || data.points.length === 0) {
     throw new Error('Not data.');
   }
 
   const type = data.type;
-  if (Ember.isNone(type)) {
+  if (isNone(type)) {
     throw new Error('Specify type.');
   } else {
     const polygonTypeSet = new Set(['LineString', 'Polygon']);
@@ -75,10 +78,10 @@ const createObjectRhumb = (data, layerCrs, that) => {
   let startPointInCrs = data.startPoint;
 
   // startPoint transformed in crs of layer.
-  if ((!Ember.isNone(data.crs) && data.crs !== layerCrs.code) || (Ember.isNone(data.crs))) {
-    let knownCrs = Ember.getOwner(that).knownForType('coordinate-reference-system');
-    let knownCrsArray = Ember.A(Object.values(knownCrs));
-    if (!Ember.isNone(data.crs)) {
+  if ((!isNone(data.crs) && data.crs !== layerCrs.code) || (isNone(data.crs))) {
+    let knownCrs = getOwner(that).knownForType('coordinate-reference-system');
+    let knownCrsArray = A(Object.values(knownCrs));
+    if (!isNone(data.crs)) {
       let crs = knownCrsArray.findBy('code', data.crs).create();
       startPointInCrs = crs.unproject(L.point(data.startPoint[0], data.startPoint[1]));
     } else {
@@ -91,14 +94,14 @@ const createObjectRhumb = (data, layerCrs, that) => {
 
   let startPoint;
   let coordinates = [];
-  let skip = !Ember.isNone(data.skip) ? data.skip : 0;
+  let skip = !isNone(data.skip) ? data.skip : 0;
   const vertexCount = data.points;
 
   for (let i = 0; i < vertexCount.length; i++) {
     const vertex = vertexCount[i];
     const bearing = getBearing(vertex.rhumb, vertex.angle);
 
-    if (Ember.isNone(startPoint)) {
+    if (isNone(startPoint)) {
       startPoint = rhumbToPoint(startPointInCrs, vertex.distance, bearing);
       if (skip === 0) {
         if (type === 'Polygon') {

@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { computed } from '@ember/object';
 import layout from '../templates/components/flexberry-links-editor';
 import FlexberryLookupCompatibleComponentMixin from 'ember-flexberry/mixins/flexberry-lookup-compatible-component';
 import FlexberryBaseComponent from 'ember-flexberry/components/flexberry-base-component';
@@ -207,7 +207,7 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
     @type String
     @readonly
   */
-  groupEditComponentName: Ember.computed('elementId', function () {
+  groupEditComponentName: computed('elementId', function () {
     return 'parametersGroupedit' + this.get('elementId');
   }),
 
@@ -217,7 +217,7 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
     @type String
     @readonly
   */
-  lookupComponentName: Ember.computed('elementId', function () {
+  lookupComponentName: computed('elementId', function () {
     return 'mosLookup' + this.get('elementId');
   }),
 

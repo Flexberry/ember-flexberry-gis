@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { getOwner } from '@ember/application';
+
+import { A } from '@ember/array';
+import { isNone } from '@ember/utils';
+import { set, get } from '@ember/object';
+import $ from 'jquery';
 import VectorLayer from 'ember-flexberry-gis/layers/-private/vector';
 import OdataFilterParserMixin from '../mixins/odata-filter-parser';
 import { Query } from 'ember-flexberry-data';
@@ -49,14 +54,14 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
   */
   createSettings() {
     let settings = this._super(...arguments);
-    Ember.$.extend(true, settings, {
+    $.extend(true, settings, {
       readonly: false,
       modelName: undefined,
       projectionName: undefined,
       geometryField: 'geometry',
       geometryType: 'PolygonPropertyType'
     });
-    Ember.set(settings, 'searchSettings', this.createSearchSettings());
+    set(settings, 'searchSettings', this.createSearchSettings());
     return settings;
   },
 
@@ -68,15 +73,15 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
     @returns {Array} Array with properties names
   */
   getLayerProperties(leafletObject) {
-    if (Ember.isNone(leafletObject)) {
-      return Ember.A();
+    if (isNone(leafletObject)) {
+      return A();
     }
 
-    let store = Ember.getOwner(this).lookup('service:store');
+    let store = getOwner(this).lookup('service:store');
     let modelConstructor = store.modelFor(leafletObject.modelName);
-    let projection = Ember.get(modelConstructor, `projections.${leafletObject.projectionName}`);
+    let projection = get(modelConstructor, `projections.${leafletObject.projectionName}`);
     let props = Object.keys(projection.attributes);
-    let fields = Ember.A();
+    let fields = A();
     this.set('crs', leafletObject.options.crs);
 
     props.forEach((key) => {
@@ -100,17 +105,17 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
     @returns {Array} Array with selected property values
   */
   getLayerPropertyValues(leafletObject, selectedField, count) {
-    if (Ember.isNone(leafletObject)) {
-      return Ember.A();
+    if (isNone(leafletObject)) {
+      return A();
     }
 
     let geojson = leafletObject.toGeoJSON() || {};
     let features = geojson.features || [];
 
-    let values = Ember.A();
+    let values = A();
 
     for (let i = 0; i < features.length; i++) {
-      let value = Ember.get(features, `${i}.properties.${selectedField}`);
+      let value = get(features, `${i}.properties.${selectedField}`);
       values.addObject(value);
 
       if (values.length === count) {

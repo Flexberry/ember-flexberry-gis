@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
+
+import { getOwner } from '@ember/application';
+import { A } from '@ember/array';
+import { computed, observer, get } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-edit-crs';
 import {
   translationMacro as t
@@ -15,7 +20,7 @@ let proj4CrsCode = null;
 /**
  * Component for editing Coordinate reference system fields.
  */
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
 
   /**
@@ -47,7 +52,7 @@ export default Ember.Component.extend({
     @type Boolean
     @readonly
   */
-  _showCoordinateReferenceSystemFields: Ember.computed('_coordinateReferenceSystemCode', function () {
+  _showCoordinateReferenceSystemFields: computed('_coordinateReferenceSystemCode', function () {
     return this.get('_coordinateReferenceSystemCode') === proj4CrsCode;
   }),
 
@@ -59,7 +64,7 @@ export default Ember.Component.extend({
   */
   _createInnerCoordinateReferenceSystems() {
     let coordinateReferenceSystems = {};
-    Ember.A(this.get('_availableCoordinateReferenceSystemsCodes') || []).forEach((code) => {
+    A(this.get('_availableCoordinateReferenceSystemsCodes') || []).forEach((code) => {
       coordinateReferenceSystems[code] = {
         code: code === proj4CrsCode ? null : code,
         definition: null
@@ -75,7 +80,7 @@ export default Ember.Component.extend({
     @method _coordinateReferenceSystemCodeDidChange
     @private
   */
-  _coordinateReferenceSystemCodeDidChange: Ember.observer('_coordinateReferenceSystemCode', function () {
+  _coordinateReferenceSystemCodeDidChange: observer('_coordinateReferenceSystemCode', function () {
     let code = this.get('_coordinateReferenceSystemCode');
     this.set('coordinateReferenceSystem', this.get(`_coordinateReferenceSystems.${code}`));
   }),
@@ -125,22 +130,22 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     // Retrieve & remember constant (proj4 CRS code).
-    let proj4CrsFactory = Ember.getOwner(this).knownForType('coordinate-reference-system', 'proj4');
-    proj4CrsCode = Ember.get(proj4CrsFactory, 'code');
+    let proj4CrsFactory = getOwner(this).knownForType('coordinate-reference-system', 'proj4');
+    proj4CrsCode = get(proj4CrsFactory, 'code');
 
-    let owner = Ember.getOwner(this);
+    let owner = getOwner(this);
 
     // Available CRS codes for related dropdown.
     let crsFactories = owner.knownForType('coordinate-reference-system');
     let crsFactoriesNames = owner.knownNamesForType('coordinate-reference-system');
-    this.set('_availableCoordinateReferenceSystemsCodes', Ember.A(crsFactoriesNames.map((crsFactoryName) => {
-      let crsFactory = Ember.get(crsFactories, crsFactoryName);
-      return Ember.get(crsFactory, 'code');
+    this.set('_availableCoordinateReferenceSystemsCodes', A(crsFactoriesNames.map((crsFactoryName) => {
+      let crsFactory = get(crsFactories, crsFactoryName);
+      return get(crsFactory, 'code');
     })));
 
     let crs = this.get('coordinateReferenceSystem');
-    let crsCode = Ember.get(crs, 'code');
-    if (!Ember.isBlank(crsCode) && !this.get('_availableCoordinateReferenceSystemsCodes').contains(crsCode)) {
+    let crsCode = get(crs, 'code');
+    if (!isBlank(crsCode) && !this.get('_availableCoordinateReferenceSystemsCodes').contains(crsCode)) {
       // Unknown CRS code means that proj4 is used.
       crsCode = proj4CrsCode;
     }

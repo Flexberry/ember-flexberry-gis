@@ -1,14 +1,11 @@
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+import EmberObject, { observer, get } from '@ember/object';
+import { A } from '@ember/array';
+import { on } from '@ember/object/evented';
+import $ from 'jquery';
 import layout from '../templates/components/select-with-checkbox';
 import FlexberryDropdown from 'ember-flexberry/components/flexberry-dropdown';
 import { translationMacro as t } from 'ember-i18n';
-
-const {
-  observer,
-  A,
-  on,
-  $
-} = Ember;
 
 export default FlexberryDropdown.extend({
   /**
@@ -67,7 +64,7 @@ export default FlexberryDropdown.extend({
     @type Object
     @default Ember.A()
   */
-  selectedItems: Ember.A(),
+  selectedItems: A(),
 
   /**
     Count selected items.
@@ -103,16 +100,16 @@ export default FlexberryDropdown.extend({
 
   itemsObserver: on('init', observer('items', function () {
     const state = Object.entries(this.get('items'))
-      .filter(([key, value]) => !Ember.isNone(value))
+      .filter(([key, value]) => !isNone(value))
       .map(([i, val]) => {
         let value = val;
         let key = i;
         if (this.get('isObject')) {
-          value = Ember.get(val, 'name');
+          value = get(val, 'name');
           key = val.id;
         }
 
-        return Ember.Object.create({ key, value, isVisible: false });
+        return EmberObject.create({ key, value, isVisible: false });
       });
 
     this.get('state').addObjects(state);
@@ -140,7 +137,7 @@ export default FlexberryDropdown.extend({
     },
 
     onHide() {
-      let $list = Ember.$('.fb-selector .menu');
+      let $list = $('.fb-selector .menu');
       if ($list.hasClass('visible')) {
         $list.removeClass('visible');
         $list.addClass('hidden');

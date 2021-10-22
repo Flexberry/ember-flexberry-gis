@@ -2,7 +2,14 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { scheduleOnce } from '@ember/runloop';
+
+import { isNone, isBlank, typeOf } from '@ember/utils';
+import { A, isArray } from '@ember/array';
+import { Promise, allSettled } from 'rsvp';
+import { inject as service } from '@ember/service';
+import { computed, get, set, observer } from '@ember/object';
+import Component from '@ember/component';
 import LeafletOptionsMixin from '../mixins/leaflet-options';
 import LeafletPropertiesMixin from '../mixins/leaflet-properties';
 import LeafletMapInteractionMixin from '../mixins/leaflet-map/map-interaction';
@@ -41,7 +48,7 @@ const flexberryClassNames = {
   @uses LeafletPropertiesMixin
   @uses LeafletEventsMixin
  */
-let FlexberryMapComponent = Ember.Component.extend(
+let FlexberryMapComponent = Component.extend(
   LeafletOptionsMixin,
   LeafletPropertiesMixin,
 
@@ -160,7 +167,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     @default [0, 0]
     @readOnly
   */
-  center: Ember.computed('lat', 'lng', function () {
+  center: computed('lat', 'lng', function () {
     return L.latLng(this.get('lat') || 0, this.get('lng') || 0);
   }),
 
@@ -232,7 +239,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     @property mapApi
     @type MapApiService
   */
-  mapApi: Ember.inject.service(),
+  mapApi: service(),
 
   /**
     Flag: indicates this is main map.
@@ -324,12 +331,12 @@ let FlexberryMapComponent = Ember.Component.extend(
     @private
   */
   _queryToMap(queryFilter, mapObjectSetting) {
-    return new Ember.RSVP.Promise((resolve) => {
+    return new Promise((resolve) => {
       let serviceLayer = this.get('serviceLayer');
       let leafletMap = this.get('_leafletObject');
 
       let e = {
-        results: Ember.A(),
+        results: A(),
         queryFilter: queryFilter,
         mapObjectSetting: mapObjectSetting,
         serviceLayer: serviceLayer
@@ -338,37 +345,37 @@ let FlexberryMapComponent = Ember.Component.extend(
       leafletMap.fire('flexberry-map:query', e);
 
       // Promises array could be totally changed in 'flexberry-map:query' event handlers, we should prevent possible errors.
-      e.results = Ember.isArray(e.results) ? e.results : Ember.A();
-      let promises = Ember.A();
+      e.results = isArray(e.results) ? e.results : A();
+      let promises = A();
 
       // Handle each result.
       // Detach promises from already received features.
       e.results.forEach((result) => {
-        if (Ember.isNone(result)) {
+        if (isNone(result)) {
           return;
         }
 
-        let features = Ember.get(result, 'features');
-        if (!(features instanceof Ember.RSVP.Promise)) {
+        let features = get(result, 'features');
+        if (!(features instanceof Promise)) {
           return;
         }
 
         promises.pushObject(features);
       });
 
-      Ember.RSVP.allSettled(promises).then(() => {
+      allSettled(promises).then(() => {
         resolve(e);
       });
     });
   },
 
   _createObject(queryFilter, mapObjectSetting) {
-    if (!Ember.isBlank(queryFilter) && !Ember.isBlank(mapObjectSetting)) {
+    if (!isBlank(queryFilter) && !isBlank(mapObjectSetting)) {
 
       let e = {
         queryFilter: queryFilter,
         mapObjectSetting: mapObjectSetting,
-        results: Ember.A()
+        results: A()
       };
 
       let leafletMap = this.get('_leafletObject');
@@ -400,8 +407,8 @@ let FlexberryMapComponent = Ember.Component.extend(
         (features) => {
           // Show new features.
           features.forEach((feature) => {
-            let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
-            if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+            let leafletLayer = get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+            if (typeOf(leafletLayer.setStyle) === 'function') {
               leafletLayer.setStyle({
                 color: 'salmon',
                 weight: 2,
@@ -409,7 +416,7 @@ let FlexberryMapComponent = Ember.Component.extend(
               });
             }
 
-            Ember.set(feature, 'leafletLayer', leafletLayer);
+            set(feature, 'leafletLayer', leafletLayer);
           });
         });
     });
@@ -450,7 +457,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     @method localeDidChange
     @private
   */
-  _localeDidChange: Ember.observer('i18n.locale', function () {
+  _localeDidChange: observer('i18n.locale', function () {
     let i18n = this.get('i18n');
     let $leafletContainer = this.get('_$leafletContainer');
 
@@ -504,7 +511,7 @@ let FlexberryMapComponent = Ember.Component.extend(
             leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
             this.set('prevEnabledTools', null);
           }
-        } else if (!Ember.isNone(this.get('prevEnabledTools'))) {
+        } else if (!isNone(this.get('prevEnabledTools'))) {
           leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
           this.set('prevEnabledTools', null);
         }
@@ -527,39 +534,39 @@ let FlexberryMapComponent = Ember.Component.extend(
       // Run search query if 'queryFilter' is defined.
       let queryFilter = this.get('queryFilter');
       let mapObjectSetting = this.get('mapObjectSetting');
-      if (!Ember.isBlank(queryFilter)) {
-        Ember.run.scheduleOnce('afterRender', this, function () {
+      if (!isBlank(queryFilter)) {
+        scheduleOnce('afterRender', this, function () {
           this._runQuery(queryFilter, mapObjectSetting);
         });
       }
 
       const mapApi = this.get('mapApi');
-      if (Ember.isNone(mapApi.getFromApi('runQuery'))) {
+      if (isNone(mapApi.getFromApi('runQuery'))) {
         mapApi.addToApi('runQuery', this._runQuery.bind(this));
         this.set('_hasQueryApi', true);
       }
 
-      if (Ember.isNone(mapApi.getFromApi('queryToMap'))) {
+      if (isNone(mapApi.getFromApi('queryToMap'))) {
         mapApi.addToApi('queryToMap', this._queryToMap.bind(this));
         this.set('_hasQueryToMap', true);
       }
 
-      if (Ember.isNone(mapApi.getFromApi('createObject'))) {
+      if (isNone(mapApi.getFromApi('createObject'))) {
         mapApi.addToApi('createObject', this._createObject.bind(this));
         this.set('_hasCreateObjectApi', true);
       }
 
-      if (Ember.isNone(mapApi.getFromApi('leafletMap'))) {
+      if (isNone(mapApi.getFromApi('leafletMap'))) {
         mapApi.addToApi('leafletMap', leafletMap);
         this.set('_hasLeafletMap', true);
       }
 
-      if (Ember.isNone(mapApi.getFromApi('serviceLayer'))) {
+      if (isNone(mapApi.getFromApi('serviceLayer'))) {
         mapApi.addToApi('serviceLayer', this.get('serviceLayer'));
         this.set('_hasServiceLayer', true);
       }
 
-      Ember.run.scheduleOnce('afterRender', this, function () {
+      scheduleOnce('afterRender', this, function () {
         this.load(leafletMap, mapApi);
       });
     }
@@ -578,16 +585,16 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     leafletMap.fire('flexberry-map:load', e);
 
-    Ember.RSVP.allSettled(e.results).then(function (array) {
+    allSettled(e.results).then(function (array) {
       leafletMap.fire('flexberry-map:allLayersLoaded');
       const readyMapLayers = mapApi.getFromApi('readyMapLayers');
       const errorMapLayers = mapApi.getFromApi('errorMapLayers');
 
       const rejected = array.filter((item) => { return item.state === 'rejected'; }).length > 0;
 
-      if (!Ember.isNone(readyMapLayers) && !rejected) {
+      if (!isNone(readyMapLayers) && !rejected) {
         readyMapLayers();
-      } else if (!Ember.isNone(errorMapLayers) && rejected) {
+      } else if (!isNone(errorMapLayers) && rejected) {
         errorMapLayers();
       }
 
@@ -606,7 +613,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     this._super(...arguments);
 
     let leafletMap = this.get('_leafletObject');
-    if (!Ember.isNone(leafletMap)) {
+    if (!isNone(leafletMap)) {
       if (this.get('mainMap')) {
         this.destroyServiceLayer(leafletMap);
         this.willDestroyLeafletMap(leafletMap);
@@ -673,7 +680,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     $leafletContainer.resize(onLeafletContainerResize);
 
     // Update text resources on the map and it's tools to math the current locale.
-    Ember.run.scheduleOnce('afterRender', this, '_localeDidChange');
+    scheduleOnce('afterRender', this, '_localeDidChange');
 
     this.sendAction('leafletInit', {
       map: leafletMap
@@ -758,12 +765,12 @@ let FlexberryMapComponent = Ember.Component.extend(
     // Unbind map container's resize event handler.
     let $leafletContainer = this.get('_$leafletContainer');
     let onLeafletContainerResize = this.get('_onLeafletContainerResize');
-    if (!Ember.isNone($leafletContainer) && !Ember.isNone(onLeafletContainerResize)) {
+    if (!isNone($leafletContainer) && !isNone(onLeafletContainerResize)) {
       $leafletContainer.removeResize(onLeafletContainerResize);
       this.set('_onLeafletContainerResize', null);
     }
 
-    Ember.run.scheduleOnce('afterRender', this, '_localeDidChange');
+    scheduleOnce('afterRender', this, '_localeDidChange');
     leafletMap.remove();
     this.set('_leafletObject', null);
     this.set('_$leafletContainer', null);
@@ -813,7 +820,7 @@ let FlexberryMapComponent = Ember.Component.extend(
   */
   destroyServiceLayer(leafletMap) {
     let serviceLayer = this.get('serviceLayer');
-    if (!Ember.isNone(serviceLayer) && leafletMap.hasLayer(serviceLayer)) {
+    if (!isNone(serviceLayer) && leafletMap.hasLayer(serviceLayer)) {
       leafletMap.removeLayer(serviceLayer);
     }
 

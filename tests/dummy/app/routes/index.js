@@ -2,7 +2,7 @@
   @module ember-flexberry-gis-dummy
 */
 
-import Ember from 'ember';
+import Route from '@ember/routing/route';
 
 /**
   Index route.
@@ -10,5 +10,5 @@ import Ember from 'ember';
   @class IndexRoute
   @extends <a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Route</a>
 */
-export default Ember.Route.extend({
+export default Route.extend({
 });

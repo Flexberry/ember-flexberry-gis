@@ -1,4 +1,8 @@
-import Ember from 'ember';
+import { A } from '@ember/array';
+import { getOwner } from '@ember/application';
+import { isNone, isBlank } from '@ember/utils';
+import { computed, get, set } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/tabs/display-settings';
 
 /**
@@ -7,7 +11,7 @@ import layout from '../../../templates/components/layers-dialogs/tabs/display-se
   @class FlexberryDisplaySettingsComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -257,7 +261,7 @@ export default Ember.Component.extend({
     @type String
     @default 'en'
   */
-  _defaultLocale: Ember.computed(function() {
+  _defaultLocale: computed(function() {
     return this.get('i18n.locale');
   }),
 
@@ -278,17 +282,17 @@ export default Ember.Component.extend({
   getAllProperties() {
     let _this = this;
     let leafletObject = _this.get('_leafletObject');
-    if (Ember.isNone(leafletObject)) {
+    if (isNone(leafletObject)) {
       let type = _this.get('layerType');
       let leafletObjectMethod = _this.get('leafletObjectMethod');
-      if (!(Ember.isBlank(leafletObjectMethod) || Ember.isBlank(type))) {
+      if (!(isBlank(leafletObjectMethod) || isBlank(type))) {
         _this.set('_leafletObjectIsLoading', true);
         leafletObjectMethod().then(leafletObject => {
           _this.set('_leafletObject', leafletObject);
           _this.set('_leafletObjectIsLoading', false);
-          let layerClass = Ember.getOwner(_this).knownForType('layer', type);
-          if (!Ember.isBlank(layerClass)) {
-            let allProperties = Ember.A(layerClass.getLayerProperties(leafletObject));
+          let layerClass = getOwner(_this).knownForType('layer', type);
+          if (!isBlank(layerClass)) {
+            let allProperties = A(layerClass.getLayerProperties(leafletObject));
             _this.set('allProperties', allProperties);
 
             let value = _this.get('value');
@@ -322,7 +326,7 @@ export default Ember.Component.extend({
     this.getAllProperties();
 
     let localesObj = {};
-    let allLocales = Ember.get(this, 'i18n.locales');
+    let allLocales = get(this, 'i18n.locales');
 
     for (let i = 0; i < allLocales.length; i++) {
       var key = allLocales[i];
@@ -335,14 +339,14 @@ export default Ember.Component.extend({
     if (allLocalesObj.length > 1) {
       for (var i = 0; i < allLocales.length; i++) {
         if (allLocales[i] !== this.get('_defaultLocale')) {
-          Ember.set(this, '_selectedLocale', allLocales[i]);
+          set(this, '_selectedLocale', allLocales[i]);
           break;
         }
       }
 
       this.set('isMoreThanOne', true);
     } else {
-      Ember.set(this, '_selectedLocale', allLocales[0]);
+      set(this, '_selectedLocale', allLocales[0]);
       this.set('isMoreThanOne', false);
     }
   },
@@ -363,7 +367,7 @@ export default Ember.Component.extend({
     */
     showCheckboxDidChange(property, e) {
       let _showableItems = this.get('_showableItems');
-      Ember.set(this, `_showableItems.${property}`, e.checked);
+      set(this, `_showableItems.${property}`, e.checked);
 
       let excluded = [];
       for (var prop in _showableItems) {

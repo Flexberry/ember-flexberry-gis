@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { isArray } from '@ember/array';
 /**
     Sets indexes for layers hierarchy.
 
@@ -23,12 +23,12 @@ let setIndexes = (rootArray, hierarchy) => {
   @private
 */
 let _setIndexes = (layers, index) => {
-  if (Ember.isArray(layers) && index > 0) {
+  if (isArray(layers) && index > 0) {
     layers.forEach((layer) => {
       if (!layer.get('isDeleted')) {
         layer.set('index', index);
         index--;
-        if (Ember.isArray(layer.get('layers'))) {
+        if (isArray(layer.get('layers'))) {
           index = _setIndexes(layer.get('layers'), index);
         }
       }

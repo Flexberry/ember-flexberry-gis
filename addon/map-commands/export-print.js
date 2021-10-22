@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { run } from '@ember/runloop';
+
+import { Promise } from 'rsvp';
 import ExportMapCommand from './export';
 
 /**
@@ -22,8 +24,8 @@ export default ExportMapCommand.extend({
     this._super(...arguments);
 
     // Return RSVP.Promise to make base map-command wait.
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.run(() => {
+    return new Promise((resolve, reject) => {
+      run(() => {
         this.get('leafletMap').printExport(options).then((value) => {
           resolve(value);
         }).catch((reason) => {

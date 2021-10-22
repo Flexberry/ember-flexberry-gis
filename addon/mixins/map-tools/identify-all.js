@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { get } from '@ember/object';
+
+import { A, isArray } from '@ember/array';
+import Mixin from '@ember/object/mixin';
 
 /**
   Mixin for identify-all map tools.
@@ -10,7 +13,7 @@ import Ember from 'ember';
   @class IdentifyAllMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Returns flat array of layers satisfying to current identification mode.
 
@@ -21,18 +24,18 @@ export default Ember.Mixin.create({
     @private
   */
   _getLayersToIdentify({ excludedLayers }) {
-    excludedLayers = Ember.A(excludedLayers || []);
+    excludedLayers = A(excludedLayers || []);
 
     let getLayersToIdentify = (layers) => {
-      let result = Ember.A();
+      let result = A();
 
-      if (Ember.isArray(layers)) {
+      if (isArray(layers)) {
         layers.forEach((layer) => {
-          if (Ember.get(layer, 'canBeIdentified') && !excludedLayers.contains(layer)) {
+          if (get(layer, 'canBeIdentified') && !excludedLayers.contains(layer)) {
             result.pushObject(layer);
           }
 
-          let childLayers = Ember.get(layer, 'layers');
+          let childLayers = get(layer, 'layers');
           result.pushObjects(getLayersToIdentify(childLayers));
         });
       }

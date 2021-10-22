@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { computed } from '@ember/object';
+
+import Component from '@ember/component';
 import layout from '../../templates/components/map-commands/full-extent';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -41,7 +43,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let FullExtentMapCommandComponent = Ember.Component.extend({
+let FullExtentMapCommandComponent = Component.extend({
   /**
     Options which will be passed to the map-command's 'execute' method.
 
@@ -50,7 +52,7 @@ let FullExtentMapCommandComponent = Ember.Component.extend({
     @private
     @readOnly
   */
-  _mapCommandExecutionOptions: Ember.computed('lat', 'lng', 'zoom', function() {
+  _mapCommandExecutionOptions: computed('lat', 'lng', 'zoom', function() {
     return {
       latLng: L.latLng(this.get('lat'), this.get('lng')),
       zoom: this.get('zoom')

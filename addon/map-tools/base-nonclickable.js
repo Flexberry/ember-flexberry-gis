@@ -2,8 +2,8 @@
   @module ember-flexberry-gis
 */
 
+import { later } from '@ember/runloop';
 import BaseMapTool from './base';
-import Ember from 'ember';
 
 /**
   BaseNonclickable map-tool.
@@ -54,7 +54,7 @@ export default BaseMapTool.extend({
         delayed activation because editable:drawing:end response is too late
         so doubleClick enables before drawing finished
       */
-      Ember.run.later(() => leafletMap.doubleClickZoom.enable(), 200);
+      later(() => leafletMap.doubleClickZoom.enable(), 200);
     }
   }
 });

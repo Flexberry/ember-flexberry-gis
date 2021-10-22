@@ -1,7 +1,8 @@
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+import Mixin from '@ember/object/mixin';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
 
   /**
     Leaflet.Editable drawing tools instance.
@@ -20,7 +21,7 @@ export default Ember.Mixin.create({
     let leafletMap = this.get('leafletMap');
 
     let editTools = this.get('_editTools');
-    if (Ember.isNone(editTools)) {
+    if (isNone(editTools)) {
       editTools = new L.Editable(leafletMap);
       this.set('_editTools', editTools);
     }
@@ -39,7 +40,7 @@ export default Ember.Mixin.create({
   _prepareLayer: function _prepareLayer(layer) {
     let leafletMap = this.get('leafletMap');
     let pane = leafletMap.getPane('zoomto');
-    if (!pane || Ember.isNone(pane)) {
+    if (!pane || isNone(pane)) {
       pane = leafletMap.createPane('zoomto');
       pane.style.pointerEvents = 'none';
     }

@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isArray } from '@ember/array';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 /**
   Creates map layer from metadata.
@@ -41,7 +41,7 @@ let createLayerFromMetadata = function(metadata, store) {
   @private
 */
 let addLinkMetadata = function(layerModel, linkMetadata, store) {
-  if (!Ember.isArray(linkMetadata)) {
+  if (!isArray(linkMetadata)) {
     return;
   }
 
@@ -66,7 +66,7 @@ let addLinkMetadata = function(layerModel, linkMetadata, store) {
   @private
 */
 let addLinkParametersMetadata = function(layerLinkModel, parameters, store) {
-  if (!Ember.isArray(parameters)) {
+  if (!isArray(parameters)) {
     return;
   }
 

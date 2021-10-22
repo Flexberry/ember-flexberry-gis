@@ -1,11 +1,17 @@
-import Ember from 'ember';
+import { Promise } from 'rsvp';
+import { A } from '@ember/array';
+import { merge } from '@ember/polyfills';
+import { isNone } from '@ember/utils';
+import { computed, get, set } from '@ember/object';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-create-object-geometry';
 import crsFactoryESPG3857 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-3857';
 import {
   translationMacro as t
 } from 'ember-i18n';
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
 
   /**
@@ -13,7 +19,7 @@ export default Ember.Component.extend({
   @property mapApi
   @type MapApiService
   */
-  mapApi: Ember.inject.service(),
+  mapApi: service(),
 
   /**
     'draw' caption.
@@ -91,17 +97,17 @@ export default Ember.Component.extend({
 
   _coordinates: null,
 
-  _editTools: Ember.computed('leafletMap', function () {
+  _editTools: computed('leafletMap', function () {
     let leafletMap = this.get('leafletMap');
-    let editTools = Ember.get(leafletMap, 'drawTools');
+    let editTools = get(leafletMap, 'drawTools');
 
-    if (Ember.isNone(editTools)) {
+    if (isNone(editTools)) {
       editTools = new L.Editable(leafletMap);
       editTools.on('editable:vertex:dragend', this._updateCoordinates, this);
       editTools.on('editable:vertex:deleted', this._updateCoordinates, this);
       editTools.on('editable:drawing:end', this._updateCoordinates, this);
 
-      Ember.set(this.get('leafletMap'), 'drawTools', editTools);
+      set(this.get('leafletMap'), 'drawTools', editTools);
     }
 
     return editTools;
@@ -109,19 +115,19 @@ export default Ember.Component.extend({
 
   createItem: null,
 
-  layerModel: Ember.computed('createItem', function () {
+  layerModel: computed('createItem', function () {
     return this.get('createItem.layerModel');
   }),
 
   leafletMap: null,
 
-  linkParameters: Ember.computed('createItem', function () {
+  linkParameters: computed('createItem', function () {
     return this.get('createItem.linkParameters');
   }),
 
   geometryCreated: false,
 
-  queryFilter: Ember.computed('createItem', function () {
+  queryFilter: computed('createItem', function () {
     return this.get('createItem.queryFilter');
   }),
 
@@ -161,11 +167,11 @@ export default Ember.Component.extend({
 
       let defaultProperties = this.get('layerModel.settingsAsObject.defaultProperties') || {};
 
-      layer.feature = { properties: Ember.merge(defaultProperties, properties) };
+      layer.feature = { properties: merge(defaultProperties, properties) };
 
       let wfs = this.get('layerModel');
       let leafletObject = this.get('layerModel._leafletObject');
-      let e = { layers: [layer], results: Ember.A() };
+      let e = { layers: [layer], results: A() };
       leafletObject.fire('load', e);
 
       const saveObjectFunc = this.get('mapApi').getFromApi('saveObject');
@@ -183,7 +189,7 @@ export default Ember.Component.extend({
 
   saveObject() {
     let leafletObject = this.get('layerModel._leafletObject');
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const saveSuccess = (data) => {
         leafletObject.off('save:failed', saveSuccess);
         this._clearCurrentGeometry();

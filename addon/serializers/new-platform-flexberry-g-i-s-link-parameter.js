@@ -3,7 +3,9 @@
 */
 
 import FlexberryData from 'ember-flexberry-data';
-import { Serializer as LinkParameterSerializer } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-link-parameter';
+import {
+  Serializer as LinkParameterSerializer
+} from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-link-parameter';
 
 /**
   Link parameter serializer.

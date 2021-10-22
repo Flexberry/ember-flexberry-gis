@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
 import DrawMapTool from './draw';
 
 /**
@@ -22,12 +22,12 @@ export default DrawMapTool.extend({
     this._super(...arguments);
 
     let editLayer = this.get('_editTools.editLayer');
-    if (!Ember.isNone(editLayer)) {
+    if (!isNone(editLayer)) {
       editLayer.clearLayers();
     }
 
     let featuresLayer = this.get('_editTools.featuresLayer');
-    if (!Ember.isNone(featuresLayer)) {
+    if (!isNone(featuresLayer)) {
       featuresLayer.clearLayers();
     }
 

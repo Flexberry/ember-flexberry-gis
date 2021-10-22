@@ -2,15 +2,21 @@
   @module ember-flexberry-gis
 */
 
+import { A, isArray } from '@ember/array';
+
+import { getOwner } from '@ember/application';
+import { hash, Promise, resolve } from 'rsvp';
+import { computed, set, observer, get } from '@ember/object';
+import { isNone, isPresent, typeOf } from '@ember/utils';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
+import { assert } from '@ember/debug';
+
 import Ember from 'ember';
 import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
 import { checkMapZoomLayer } from '../utils/check-zoom';
-
-const {
-  assert
-} = Ember;
 
 /**
   BaseLayer component for other flexberry-gis layers.
@@ -20,7 +26,7 @@ const {
   @uses DynamicPropertiesMixin
   @uses LeafletOptionsMixin
  */
-export default Ember.Component.extend(
+export default Component.extend(
   DynamicPropertiesMixin,
   DynamicActionsMixin,
   LeafletOptionsMixin, {
@@ -51,7 +57,7 @@ export default Ember.Component.extend(
       @type LayersStylesRendererService
       @private
     */
-    _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
+    _layersStylesRenderer: service('layers-styles-renderer'),
 
     /**
       Service for managing map API.
@@ -59,7 +65,7 @@ export default Ember.Component.extend(
       @property mapApi
       @type MapApiService
     */
-    mapApi: Ember.inject.service(),
+    mapApi: service(),
 
     /**
       Overload wrapper tag name for disabling wrapper.
@@ -146,7 +152,7 @@ export default Ember.Component.extend(
         let crs = this.get('crs');
         let point = new L.Point(coords[0], coords[1]);
         let latlng = crs.projection.unproject(point);
-        if (!Ember.isNone(coords[2])) {
+        if (!isNone(coords[2])) {
           latlng.alt = coords[2];
         }
 
@@ -224,9 +230,9 @@ export default Ember.Component.extend(
       @type <a href="http://leafletjs.com/reference-1.0.0.html#crs">L.CRS</a>
       @readOnly
     */
-    crs: Ember.computed('layerModel.crs', 'leafletMap.options.crs', function () {
+    crs: computed('layerModel.crs', 'leafletMap.options.crs', function () {
       let crs = this.get('layerModel.crs');
-      if (Ember.isNone(crs)) {
+      if (isNone(crs)) {
         crs = this.get('leafletMap.options.crs');
       }
 
@@ -327,24 +333,24 @@ export default Ember.Component.extend(
     _createLayer() {
       // Call to 'createLayer' could potentially return a promise,
       // wraping this call into Ember.RSVP.hash helps us to handle straight/promise results universally.
-      this.set('_leafletLayerPromise', Ember.RSVP.hash({
+      this.set('_leafletLayerPromise', hash({
         leafletLayer: this.createLayer()
       }).then(({
         leafletLayer
       }) => {
-        Ember.set(leafletLayer, 'leafletMap', this.get('leafletMap'));
+        set(leafletLayer, 'leafletMap', this.get('leafletMap'));
         this.set('_leafletObject', leafletLayer);
 
-        if (Ember.isPresent(this.get('layerModel'))) {
-          Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
+        if (isPresent(this.get('layerModel'))) {
+          set(this.get('layerModel'), '_leafletObject', leafletLayer);
 
-          if (Ember.isNone(this.get('layerModel.leafletObjectGetter'))) {
-            Ember.set(this.get('layerModel'), 'leafletObjectGetter', this.getLeafletObject.bind(this));
+          if (isNone(this.get('layerModel.leafletObjectGetter'))) {
+            set(this.get('layerModel'), 'leafletObjectGetter', this.getLeafletObject.bind(this));
           }
 
           // Save the reference to the instance method for getting attributes options.
-          if (Ember.isNone(this.get('layerModel._attributesOptions'))) {
-            Ember.set(this.get('layerModel'), '_attributesOptions', this._getAttributesOptions.bind(this));
+          if (isNone(this.get('layerModel._attributesOptions'))) {
+            set(this.get('layerModel'), '_attributesOptions', this._getAttributesOptions.bind(this));
           }
         }
 
@@ -361,7 +367,7 @@ export default Ember.Component.extend(
       }));
     },
 
-    _setFilter: Ember.observer('layerModel.filter', function () {
+    _setFilter: observer('layerModel.filter', function () {
 
       let filter = this.get('layerModel.filter');
       if (typeof filter === 'string') {
@@ -370,8 +376,8 @@ export default Ember.Component.extend(
           let layerModel = this.get('layerModel');
 
           // this.get('type') to get type for layers in combine-layer
-          let type = !Ember.isNone(this.get('type')) ? this.get('type') : layerModel.get('type');
-          filter = Ember.getOwner(this).lookup(`layer:${type}`).parseFilter(filter, (this.get('geometryField') || 'geometry'), null, layerLinks);
+          let type = !isNone(this.get('type')) ? this.get('type') : layerModel.get('type');
+          filter = getOwner(this).lookup(`layer:${type}`).parseFilter(filter, (this.get('geometryField') || 'geometry'), null, layerLinks);
         }
         catch (ex) {
           console.error(ex);
@@ -400,9 +406,9 @@ export default Ember.Component.extend(
 
       this.set('_leafletObject', null);
       this.set('_leafletLayerPromise', null);
-      if (Ember.isPresent(this.get('layerModel'))) {
-        Ember.set(this.get('layerModel'), '_leafletObject', null);
-        Ember.set(this.get('layerModel'), '_attributesOptions', null);
+      if (isPresent(this.get('layerModel'))) {
+        set(this.get('layerModel'), '_leafletObject', null);
+        set(this.get('layerModel'), '_attributesOptions', null);
       }
     },
 
@@ -413,7 +419,7 @@ export default Ember.Component.extend(
       @private
     */
     _getAttributesOptions() {
-      return new Ember.RSVP.Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         resolve({
           object: this.get('_leafletObject'),
           settings: {
@@ -470,12 +476,12 @@ export default Ember.Component.extend(
         leafletLayer = this.get('_leafletObject');
       }
 
-      if (Ember.isNone(leafletLayer)) {
+      if (isNone(leafletLayer)) {
         return;
       }
 
-      const setZIndexFunc = Ember.get(leafletLayer, 'setZIndex');
-      if (Ember.typeOf(setZIndexFunc) !== 'function') {
+      const setZIndexFunc = get(leafletLayer, 'setZIndex');
+      if (typeOf(setZIndexFunc) !== 'function') {
         return;
       }
 
@@ -505,7 +511,7 @@ export default Ember.Component.extend(
     */
     _setLayerOpacity() {
       let leafletLayer = this.get('_leafletObject');
-      if (Ember.isNone(leafletLayer) || Ember.typeOf(leafletLayer.setOpacity) !== 'function') {
+      if (isNone(leafletLayer) || typeOf(leafletLayer.setOpacity) !== 'function') {
         return;
       }
 
@@ -521,12 +527,12 @@ export default Ember.Component.extend(
     _setLayerStyle() {
       let leafletLayer = this.get('_leafletObject');
 
-      if (Ember.isNone(leafletLayer)) {
+      if (isNone(leafletLayer)) {
         return;
       }
 
       let styleSettings = this.get('styleSettings');
-      if (Ember.isNone(styleSettings)) {
+      if (isNone(styleSettings)) {
         return;
       }
 
@@ -544,16 +550,16 @@ export default Ember.Component.extend(
       let leafletContainer = this.get('leafletContainer');
       let leafletLayer = this.get('_leafletObject');
 
-      if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) || leafletContainer.hasLayer(leafletLayer)) {
+      if (isNone(leafletContainer) || isNone(leafletLayer) || leafletContainer.hasLayer(leafletLayer)) {
         return;
       }
 
       let thisPane = this.get('_pane');
       if (thisPane) {
         let leafletMap = this.get('leafletMap');
-        if (thisPane && !Ember.isNone(leafletMap)) {
+        if (thisPane && !isNone(leafletMap)) {
           let pane = leafletMap.getPane(thisPane);
-          if (!pane || Ember.isNone(pane)) {
+          if (!pane || isNone(pane)) {
             this._createPane(thisPane);
             this._setLayerZIndex();
           }
@@ -562,10 +568,10 @@ export default Ember.Component.extend(
 
       leafletContainer.addLayer(leafletLayer);
       let leafletMap = this.get('leafletMap');
-      if (!Ember.isNone(leafletMap) && leafletLayer.options.continueLoading) {
+      if (!isNone(leafletMap) && leafletLayer.options.continueLoading) {
         let e = {
           layers: [this.get('layerModel')],
-          results: Ember.A()
+          results: A()
         };
 
         leafletMap.fire('flexberry-map:moveend', e);
@@ -582,7 +588,7 @@ export default Ember.Component.extend(
       let leafletContainer = this.get('leafletContainer');
       let leafletLayer = this.get('_leafletObject');
 
-      if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) || !leafletContainer.hasLayer(leafletLayer)) {
+      if (isNone(leafletContainer) || isNone(leafletLayer) || !leafletContainer.hasLayer(leafletLayer)) {
         return;
       }
 
@@ -596,7 +602,7 @@ export default Ember.Component.extend(
       @method visibilityDidChange
       @private
     */
-    _indexDidChange: Ember.observer('index', function () {
+    _indexDidChange: observer('index', function () {
       this._setLayerZIndex();
     }),
 
@@ -607,7 +613,7 @@ export default Ember.Component.extend(
       @method visibilityDidChange
       @private
     */
-    _visibilityDidChange: Ember.observer('visibility', function () {
+    _visibilityDidChange: observer('visibility', function () {
       this._setLayerVisibility();
     }),
 
@@ -618,7 +624,7 @@ export default Ember.Component.extend(
       @method _opacityDidChange
       @private
     */
-    _opacityDidChange: Ember.observer('opacity', function () {
+    _opacityDidChange: observer('opacity', function () {
       this._setLayerOpacity();
     }),
 
@@ -629,7 +635,7 @@ export default Ember.Component.extend(
       @method _styleSettingsDidChange
       @private
     */
-    _styleSettingsDidChange: Ember.observer('styleSettings', function () {
+    _styleSettingsDidChange: observer('styleSettings', function () {
       this._setLayerStyle();
 
       // When we set new style it can change layer's opacity to style's default value,
@@ -654,7 +660,7 @@ export default Ember.Component.extend(
       @private
     */
     _identify(e) {
-      let shouldIdentify = Ember.A(e.layers || []).contains(this.get('layerModel'));
+      let shouldIdentify = A(e.layers || []).contains(this.get('layerModel'));
       if (!shouldIdentify) {
         return;
       }
@@ -684,8 +690,8 @@ export default Ember.Component.extend(
     */
     _getNearObject(e) {
       let layerModel = this.get('layerModel');
-      let isVectorLayer = Ember.getOwner(this).lookup('layer:' + layerModel.get('type')).isVectorType(layerModel);
-      let shouldGetNearObject = Ember.A(e.layers || []).contains(layerModel) && isVectorLayer;
+      let isVectorLayer = getOwner(this).lookup('layer:' + layerModel.get('type')).isVectorType(layerModel);
+      let shouldGetNearObject = A(e.layers || []).contains(layerModel) && isVectorLayer;
       if (!shouldGetNearObject) {
         return;
       }
@@ -741,7 +747,7 @@ export default Ember.Component.extend(
         this.get('layerModel.layerLink')
           .filter(link => link.get('mapObjectSetting.id') === e.mapObjectSetting);
 
-      if (!Ember.isArray(layerLinks) || layerLinks.length === 0) {
+      if (!isArray(layerLinks) || layerLinks.length === 0) {
         return;
       }
 
@@ -777,7 +783,7 @@ export default Ember.Component.extend(
         this.get('layerModel.layerLink')
           .filter(link => link.get('mapObjectSetting.id').toLowerCase() === e.mapObjectSetting.toLowerCase());
 
-      if (!Ember.isArray(layerLinks) || layerLinks.length === 0) {
+      if (!isArray(layerLinks) || layerLinks.length === 0) {
         return;
       }
 
@@ -809,7 +815,7 @@ export default Ember.Component.extend(
       @return {Ember.RSVP.Promise} Returns promise.
     */
     cancelEdit() {
-      return new Ember.RSVP.resolve();
+      return new resolve();
     },
 
     /**
@@ -846,7 +852,7 @@ export default Ember.Component.extend(
       });
 
       let leafletMap = this.get('leafletMap');
-      if (!Ember.isNone(leafletMap)) {
+      if (!isNone(leafletMap)) {
 
         // Attach custom event-handler.
         leafletMap.on('flexberry-map:identify', this._identify, this);
@@ -869,7 +875,7 @@ export default Ember.Component.extend(
       this._super(...arguments);
 
       let leafletMap = this.get('leafletMap');
-      if (!Ember.isNone(leafletMap)) {
+      if (!isNone(leafletMap)) {
         // Detach custom event-handler.
         leafletMap.off('flexberry-map:identify', this._identify, this);
         leafletMap.off('flexberry-map:search', this._search, this);
@@ -891,7 +897,7 @@ export default Ember.Component.extend(
       Leaflet layer or promise returning such layer.
     */
     getLeafletObject() {
-      return new Ember.RSVP.Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         resolve(this.get('_leafletObject'));
       });
     },
@@ -997,8 +1003,8 @@ export default Ember.Component.extend(
     getBoundingBox() {
       let layer = this.get('_leafletObject');
 
-      if (Ember.isNone(layer)) {
-        return new Ember.RSVP.Promise((resolve, reject) => {
+      if (isNone(layer)) {
+        return new Promise((resolve, reject) => {
           reject(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`);
         });
       }
@@ -1052,24 +1058,24 @@ export default Ember.Component.extend(
         features: []
       };
 
-      if (Ember.isArray(geojson)) {
-        Ember.set(featureCollection, 'features', geojson);
-      } else if (Ember.get(geojson, 'type') === 'Feature') {
-        Ember.set(featureCollection, 'features', [geojson]);
-      } else if (Ember.get(geojson, 'type') === 'FeatureCollection') {
+      if (isArray(geojson)) {
+        set(featureCollection, 'features', geojson);
+      } else if (get(geojson, 'type') === 'Feature') {
+        set(featureCollection, 'features', [geojson]);
+      } else if (get(geojson, 'type') === 'FeatureCollection') {
         featureCollection = geojson;
       }
 
-      let features = Ember.A(Ember.get(featureCollection, 'features') || []);
-      if (Ember.get(features, 'length') === 0) {
+      let features = A(get(featureCollection, 'features') || []);
+      if (get(features, 'length') === 0) {
         return null;
       }
 
       let crs = this.get('crs');
-      Ember.set(options, 'coordsToLatLng', function (coords) {
+      set(options, 'coordsToLatLng', function (coords) {
         let point = new L.Point(coords[0], coords[1]);
         let latlng = crs.projection.unproject(point);
-        if (!Ember.isNone(coords[2])) {
+        if (!isNone(coords[2])) {
           latlng.alt = coords[2];
         }
 
@@ -1077,13 +1083,13 @@ export default Ember.Component.extend(
       });
 
       // Define callback method on each feature.
-      let originalOnEachFeature = Ember.get(options, 'onEachFeature');
-      Ember.set(options, 'onEachFeature', function (feature, leafletLayer) {
+      let originalOnEachFeature = get(options, 'onEachFeature');
+      set(options, 'onEachFeature', function (feature, leafletLayer) {
         // Remember layer inside feature object.
-        Ember.set(feature, 'leafletLayer', leafletLayer);
+        set(feature, 'leafletLayer', leafletLayer);
 
         // Call user-defined 'onEachFeature' callback.
-        if (Ember.typeOf(originalOnEachFeature) === 'function') {
+        if (typeOf(originalOnEachFeature) === 'function') {
           originalOnEachFeature(feature, leafletLayer);
         }
       });

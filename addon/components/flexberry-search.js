@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
  */
 
-import Ember from 'ember';
+import { addObserver, removeObserver } from '@ember/object/observers';
+
+import { isArray } from '@ember/array';
+import { typeOf, isNone } from '@ember/utils';
+import { computed, observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-search';
 import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
 
@@ -45,7 +50,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses DynamicPropertiesMixin
 */
-let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
+let FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
   /**
     Flag: indicates whether search type is 'category' or not.
 
@@ -54,9 +59,9 @@ let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
     @readOnly
     @private
   */
-  _isCategory: Ember.computed('type', function () {
+  _isCategory: computed('type', function () {
     let type = this.get('type');
-    return Ember.typeOf(type) === 'string' && type.toLowerCase() === 'category';
+    return typeOf(type) === 'string' && type.toLowerCase() === 'category';
   }),
 
   actions: {
@@ -73,11 +78,11 @@ let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
       }
 
       let $component = this.$();
-      if (Ember.isNone($component)) {
+      if (isNone($component)) {
         return;
       }
 
-      if (Ember.isNone(this.get('apiSettings'))) {
+      if (isNone(this.get('apiSettings'))) {
         return;
       }
 
@@ -234,7 +239,7 @@ let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
 
     @method _valueChange
   */
-  _valueChange:  Ember.observer('value',  function () {
+  _valueChange:  observer('value',  function () {
     this.set('_lastAction', null);
     this.set('_valueWasSelected', false);
     }),
@@ -247,11 +252,11 @@ let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
   */
   _initializeSearchModule() {
     let $component = this.$();
-    if (Ember.isNone($component)) {
+    if (isNone($component)) {
       return;
     }
 
-    if (Ember.isNone(this.get('apiSettings'))) {
+    if (isNone(this.get('apiSettings'))) {
       return;
     }
 
@@ -259,7 +264,7 @@ let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
 
     this.get('semanticProperties').forEach((propertyName) => {
       var propertyValue = this.get(propertyName);
-      if (!Ember.isNone(propertyValue)) {
+      if (!isNone(propertyValue)) {
         semanticProperties[propertyName] = propertyValue;
       }
     });
@@ -294,7 +299,7 @@ let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
   */
   _destroySearchModule() {
     let $component = this.$();
-    if (Ember.isNone($component)) {
+    if (isNone($component)) {
       return;
     }
 
@@ -323,9 +328,9 @@ let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
 
     // Add observers to search-related properties.
     let observableProperties = this.get('observableProperties');
-    if (Ember.isArray(observableProperties)) {
+    if (isArray(observableProperties)) {
       observableProperties.forEach((propertyName) => {
-        Ember.addObserver(this, propertyName, this._searchPropertiesDidChange);
+        addObserver(this, propertyName, this._searchPropertiesDidChange);
       });
     }
   },
@@ -341,9 +346,9 @@ let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
 
     // Remove observers from search-related properties.
     let observableProperties = this.get('observableProperties');
-    if (Ember.isArray(observableProperties)) {
+    if (isArray(observableProperties)) {
       observableProperties.forEach((propertyName) => {
-        Ember.removeObserver(this, propertyName, this._searchPropertiesDidChange);
+        removeObserver(this, propertyName, this._searchPropertiesDidChange);
       });
     }
   }

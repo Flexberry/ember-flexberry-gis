@@ -1,9 +1,15 @@
-import Ember from 'ember';
+import { merge } from '@ember/polyfills';
+import { A } from '@ember/array';
+import { guidFor } from '@ember/object/internals';
+import { isNone, isEqual, isEmpty } from '@ember/utils';
+import { get, set } from '@ember/object';
+import { Promise, resolve, all, allSettled } from 'rsvp';
+import Mixin from '@ember/object/mixin';
 import turfCombine from 'npm:@turf/combine';
 import SnapDraw from './snap-draw';
 import { zoomToBounds } from '../utils/zoom-to-bounds';
 
-export default Ember.Mixin.create(SnapDraw, {
+export default Mixin.create(SnapDraw, {
 
   /**
     Change layer object properties.
@@ -15,7 +21,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Layer object.
   */
   changeLayerObjectProperties(layerId, featureId, properties) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, [featureId], true).then(([, leafletObject, featureLayer]) => {
         Object.assign(featureLayer[0].feature.properties, properties);
         leafletObject.editLayer(featureLayer[0]);
@@ -39,7 +45,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @return {Promise} Feature layer.
   */
   startChangeLayerObject(layerId, featureId, snap, snapLayers, snapDistance, snapOnlyVertex) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, [featureId]).then(([layerModel, leafletObject, featureLayer]) => {
         let leafletMap = this.get('mapApi').getFromApi('leafletMap');
         leafletObject.statusLoadLayer = true;
@@ -52,11 +58,11 @@ export default Ember.Mixin.create(SnapDraw, {
           bounds = featureLayer[0].getBounds();
         }
 
-        let minZoom = Ember.get(leafletObject, 'minZoom');
-        let maxZoom = Ember.get(leafletObject, 'maxZoom');
+        let minZoom = get(leafletObject, 'minZoom');
+        let maxZoom = get(leafletObject, 'maxZoom');
         zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
-        if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
-          leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+        if (isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Promise)) {
+          leafletObject.promiseLoadLayer = resolve();
         }
 
         leafletObject.promiseLoadLayer.then(() => {
@@ -81,7 +87,7 @@ export default Ember.Mixin.create(SnapDraw, {
 
           this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, true);
           editTools.on('editable:editing', (e) => {
-            if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayerLoad))) {
+            if (isEqual(guidFor(e.layer), guidFor(featureLayerLoad))) {
               leafletObject.editLayer(e.layer);
             }
           });
@@ -106,7 +112,7 @@ export default Ember.Mixin.create(SnapDraw, {
   cancelLayerEdit(layerIds) {
     let e = {
       layerIds: layerIds,
-      results: Ember.A()
+      results: A()
     };
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     let editTools = this._getEditTools();
@@ -114,7 +120,7 @@ export default Ember.Mixin.create(SnapDraw, {
     editTools.off('editable:editing');
     editTools.stopDrawing();
     leafletMap.fire('flexberry-map:cancelEdit', e);
-    return Ember.RSVP.all(e.results);
+    return all(e.results);
   },
 
   /**
@@ -131,13 +137,13 @@ export default Ember.Mixin.create(SnapDraw, {
     editTools.stopDrawing();
     this._stopSnap();
 
-    if (!Ember.isNone(layer) && !Ember.isNone(layer.layerId)) {
+    if (!isNone(layer) && !isNone(layer.layerId)) {
       let [, leafletObject] = this._getModelLeafletObject(layer.layerId);
       let id = leafletObject.getLayerId(layer);
       let e = {
         layerIds: [layer.layerId],
         ids: [id],
-        results: Ember.A()
+        results: A()
       };
       let leafletMap = this.get('mapApi').getFromApi('leafletMap');
       leafletMap.fire('flexberry-map:cancelEdit', e);
@@ -158,7 +164,7 @@ export default Ember.Mixin.create(SnapDraw, {
     @returns {Object} Layer object
   */
   startNewObject(layerId, properties, snap, snapLayers, snapDistance, snapOnlyVertex) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       try {
         let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
         let editTools = this._getEditTools();
@@ -168,13 +174,13 @@ export default Ember.Mixin.create(SnapDraw, {
           editTools.off('editable:drawing:end', finishDraw, this);
           editTools.stopDrawing();
           let defaultProperties = layerModel.get('settingsAsObject.defaultProperties') || {};
-          newLayer.feature = { type: 'Feature', properties: Ember.merge(defaultProperties, properties) };
+          newLayer.feature = { type: 'Feature', properties: merge(defaultProperties, properties) };
           newLayer.remove();
 
-          let e = { layers: [newLayer], results: Ember.A() };
+          let e = { layers: [newLayer], results: A() };
           leafletObject.fire('load', e);
 
-          Ember.RSVP.allSettled(e.results).then(() => {
+          allSettled(e.results).then(() => {
             this._stopSnap();
 
             this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, true);
@@ -232,7 +238,7 @@ export default Ember.Mixin.create(SnapDraw, {
         this.set('_snapDistance', snapDistance);
       }
 
-      if (!Ember.isNone(snapOnlyVertex)) {
+      if (!isNone(snapOnlyVertex)) {
         this.set('_snapOnlyVertex', snapOnlyVertex);
       }
 
@@ -288,10 +294,10 @@ export default Ember.Mixin.create(SnapDraw, {
   */
   _getEditTools() {
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-    let editTools = Ember.get(leafletMap, 'editTools');
-    if (Ember.isNone(editTools)) {
+    let editTools = get(leafletMap, 'editTools');
+    if (isNone(editTools)) {
       editTools = new L.Editable(leafletMap);
-      Ember.set(leafletMap, 'editTools', editTools);
+      set(leafletMap, 'editTools', editTools);
     }
 
     return editTools;
@@ -306,7 +312,7 @@ export default Ember.Mixin.create(SnapDraw, {
   */
   getLayerModel(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
-    if (Ember.isNone(layer)) {
+    if (isNone(layer)) {
       throw `Layer '${layerId}' not found`;
     }
 
@@ -323,26 +329,26 @@ export default Ember.Mixin.create(SnapDraw, {
     @private
   */
   _getModelLayerFeature(layerId, featureIds, load = false) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
       let e = {
         featureIds: featureIds,
         layer: layerId,
         load: load,
-        results: Ember.A()
+        results: A()
       };
 
       leafletMap.fire('flexberry-map:getOrLoadLayerFeatures', e);
-      if (Ember.isEmpty(e.results)) {
+      if (isEmpty(e.results)) {
         reject(`Layer '${layerId}' not found`);
         return;
       }
 
-      let features = Ember.get(e.results[0], 'features');
-      if (features instanceof Ember.RSVP.Promise) {
+      let features = get(e.results[0], 'features');
+      if (features instanceof Promise) {
         features.then((layerObject) => {
-          if (Ember.isEmpty(layerObject) || Ember.isNone(layerObject)) {
+          if (isEmpty(layerObject) || isNone(layerObject)) {
             reject(`Object '${featureIds}' not found`);
             return;
           }
@@ -350,7 +356,7 @@ export default Ember.Mixin.create(SnapDraw, {
           let featureLayer = [];
           if (load) {
             let layers = layerObject._layers;
-            if (!Ember.isNone(featureIds) && featureIds.length > 0) {
+            if (!isNone(featureIds) && featureIds.length > 0) {
               featureLayer = Object.values(layers).filter(feature => {
                 const layerFeatureId = this._getLayerFeatureId(e.results[0].layerModel, feature);
                 return featureIds.some((f) => { return layerFeatureId === f; });
@@ -379,7 +385,7 @@ export default Ember.Mixin.create(SnapDraw, {
   */
   _getModelLeafletObject(layerId) {
     let layerModel = this.get('mapLayer').findBy('id', layerId);
-    if (Ember.isNone(layerModel)) {
+    if (isNone(layerModel)) {
       throw `Layer '${layerId}' not found`;
     }
 

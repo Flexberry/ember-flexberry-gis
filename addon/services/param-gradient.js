@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import Service from '@ember/service';
 
 /**
   Gradient styles load and renderer service.
@@ -10,7 +10,7 @@ import Ember from 'ember';
   @class GradientStylesLoadRendererService
   @extends Ember.Service
 */
-export default Ember.Service.extend({
+export default Service.extend({
   /**
     Inner hash containing settings gradient object.
 

@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+
+import { get } from '@ember/object';
 
 /**
   Used for getting bounds from boundingBox polygon.
@@ -18,21 +20,21 @@ let getBounds = function (polygon) {
   let maxLat;
   let maxLng;
   let boundingBox = polygon || {};
-  let boundingBoxCoords = Ember.get(boundingBox, 'coordinates.0') || [];
+  let boundingBoxCoords = get(boundingBox, 'coordinates.0') || [];
   boundingBoxCoords.forEach(coordinate => {
-    if (coordinate[0] > maxLng || Ember.isNone(maxLng)) {
+    if (coordinate[0] > maxLng || isNone(maxLng)) {
       maxLng = coordinate[0];
     }
 
-    if (coordinate[0] < minLng || Ember.isNone(minLng)) {
+    if (coordinate[0] < minLng || isNone(minLng)) {
       minLng = coordinate[0];
     }
 
-    if (coordinate[1] > maxLat || Ember.isNone(maxLat)) {
+    if (coordinate[1] > maxLat || isNone(maxLat)) {
       maxLat = coordinate[1];
     }
 
-    if (coordinate[1] < minLat || Ember.isNone(minLat)) {
+    if (coordinate[1] < minLat || isNone(minLat)) {
       minLat = coordinate[1];
     }
   });

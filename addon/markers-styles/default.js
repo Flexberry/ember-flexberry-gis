@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+
+import { inject as service } from '@ember/service';
 import BaseMarkerStyle from './-private/base';
 
 /**
@@ -19,7 +21,7 @@ export default BaseMarkerStyle.extend({
     @type MarkersStylesRendererService
     @private
   */
-  _markersStylesRenderer: Ember.inject.service('markers-styles-renderer'),
+  _markersStylesRenderer: service('markers-styles-renderer'),
 
   /**
     Gets default style settings.
@@ -40,7 +42,7 @@ export default BaseMarkerStyle.extend({
     @param {Object} options.style Hash containing style settings.
   */
   renderOnLeafletMarker({ marker, style }) {
-    if (Ember.isNone(marker.styleIsSet) || !marker.styleIsSet) {
+    if (isNone(marker.styleIsSet) || !marker.styleIsSet) {
       marker.setIcon(new L.Icon.Default());
     }
   },

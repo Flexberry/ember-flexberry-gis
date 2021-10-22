@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
 import GeoJsonFilterParserMixin from '../mixins/geojson-filter-parser';
 import VectorLayer from './-private/vector';
 
@@ -21,7 +21,7 @@ export default VectorLayer.extend(GeoJsonFilterParserMixin, {
   */
   createSettings() {
     let settings = this._super(...arguments);
-    return Ember.$.extend(settings, {
+    return $.extend(settings, {
       pointToLayer: undefined,
       onEachFeature: null,
       filter: '',

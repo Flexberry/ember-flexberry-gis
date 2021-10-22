@@ -2,13 +2,20 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+
+import { get, set } from '@ember/object';
+import $ from 'jquery';
+import { A } from '@ember/array';
+import Component from '@ember/component';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
 import FlexberryBoundingboxMapLoaderMixin from '../../mixins/flexberry-boundingbox-map-loader';
 import layout from '../../templates/components/map-dialogs/edit';
-import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
+import {
+  getBounds } from 'ember-flexberry-gis/utils/get-bound
+} from-polygon';
 import {
   translationMacro as t
 } from 'ember-i18n';
@@ -42,7 +49,7 @@ const flexberryClassNames = {
   @uses DynamicActionsMixin
   @uses DynamicPropertiesMixin
 */
-let FlexberryEditMapDialogComponent = Ember.Component.extend(
+let FlexberryEditMapDialogComponent = Component.extend(
   RequiredActionsMixin,
   DynamicActionsMixin,
   DynamicPropertiesMixin,
@@ -228,7 +235,7 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
       @type Array
       @default [500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]
     */
-    scales: Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),
+    scales: A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),
 
     /**
       Flag: indicates whether dialog is visible or not.
@@ -302,9 +309,9 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
        * @param {Object} e Click event object.
        */
       onTabClick(e) {
-        e = Ember.$.event.fix(e);
+        e = $.event.fix(e);
 
-        let $clickedTab = Ember.$(e.currentTarget);
+        let $clickedTab = $(e.currentTarget);
         let clickedTabName = $clickedTab.attr('data-tab');
 
         this.set('_activeTab', clickedTabName);
@@ -317,10 +324,10 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
         @method actions.onApprove
       */
       onApprove() {
-        let mapModel = Ember.$.extend(true, {}, this.get('_mapModel'));
-        let crs = Ember.get(mapModel, 'coordinateReferenceSystem');
-        crs = Ember.$.isEmptyObject(crs) ? null : JSON.stringify(crs);
-        Ember.set(mapModel, 'coordinateReferenceSystem', crs);
+        let mapModel = $.extend(true, {}, this.get('_mapModel'));
+        let crs = get(mapModel, 'coordinateReferenceSystem');
+        crs = $.isEmptyObject(crs) ? null : JSON.stringify(crs);
+        set(mapModel, 'coordinateReferenceSystem', crs);
 
         this.sendAction('approve', {
           mapProperties: mapModel
@@ -408,7 +415,7 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
       let boundingBox = this.get('mapModel.boundingBox');
       let bounds = getBounds(boundingBox);
 
-      crs = Ember.isNone(crs) ? {} : JSON.parse(crs);
+      crs = isNone(crs) ? {} : JSON.parse(crs);
 
       this.set('_mapModel', {
         name: name,

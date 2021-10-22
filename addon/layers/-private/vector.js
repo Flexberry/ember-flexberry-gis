@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
+
+import { inject as service } from '@ember/service';
 import BaseLayer from './base';
 
 /**
@@ -18,7 +20,7 @@ export default BaseLayer.extend({
     @property layersStylesRenderer
     @type LayersStylesRendererService
   */
-  layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
+  layersStylesRenderer: service('layers-styles-renderer'),
 
   /**
     Permitted operations related to layer type.
@@ -39,7 +41,7 @@ export default BaseLayer.extend({
     let settings = this._super(...arguments);
     let layersStylesRenderer = this.get('layersStylesRenderer');
 
-    Ember.$.extend(true, settings, {
+    $.extend(true, settings, {
       clusterize: false,
       clusterOptions: undefined,
       filter: '',
@@ -66,7 +68,7 @@ export default BaseLayer.extend({
   */
   createSearchSettings() {
     let settings = this._super(...arguments);
-    Ember.$.extend(true, settings, {
+    $.extend(true, settings, {
       queryString: '',
       maxResultsCount: 10
     });

@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { once } from '@ember/runloop';
+
+import { on } from '@ember/object/evented';
+import $ from 'jquery';
+import { isBlank, isNone, typeOf, isEmpty } from '@ember/utils';
+import { computed, observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-identify-panel';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -66,7 +72,7 @@ const flexberryClassNames = {
   @class FlexberryIdentifyPanelComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let FlexberryIdentifyPanelComponent = Ember.Component.extend({
+let FlexberryIdentifyPanelComponent = Component.extend({
   /**
     Identify tool name computed by the specified tool settings.
 
@@ -74,12 +80,12 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @type String
     @readOnly
   */
-  _identifyToolName: Ember.computed('layerMode', 'toolMode', function() {
+  _identifyToolName: computed('layerMode', 'toolMode', function() {
     let identifyToolName = 'identify';
     let layerMode = this.get('layerMode');
     let toolMode = this.get('toolMode');
 
-    if (!(Ember.isBlank(layerMode) || Ember.isBlank(toolMode))) {
+    if (!(isBlank(layerMode) || isBlank(toolMode))) {
       identifyToolName = `identify-${layerMode}-${toolMode}`;
     }
 
@@ -94,7 +100,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @readOnly
     @private
   */
-  _identifyToolProperties: Ember.computed(
+  _identifyToolProperties: computed(
     'bufferUnits',
     'bufferRadius',
     'layerMode',
@@ -103,7 +109,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     function() {
       let radius = typeof this.get('bufferRadius') === 'string' ? this.get('bufferRadius').replace(',', '.') : this.get('bufferRadius');
       return {
-        bufferActive: !Ember.isNone(this.get('bufferRadius')) || !Ember.isBlank(this.get('bufferRadius')),
+        bufferActive: !isNone(this.get('bufferRadius')) || !isBlank(this.get('bufferRadius')),
         bufferUnits: this.get('bufferUnits'),
         bufferRadius: radius,
         layerMode: this.get('layerMode'),
@@ -394,7 +400,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     */
     onIdentificationFinished(e) {
       let identificationFinished = this.get('identificationFinished');
-      if (Ember.typeOf(identificationFinished) === 'function') {
+      if (typeOf(identificationFinished) === 'function') {
         identificationFinished(e);
       }
     },
@@ -407,7 +413,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     */
     onIdentificationClear(e) {
       let identificationClear = this.get('identificationClear');
-      if (Ember.typeOf(identificationClear) === 'function') {
+      if (typeOf(identificationClear) === 'function') {
         identificationClear();
       }
     },
@@ -418,8 +424,8 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     */
     onInputLimit(str, e) {
       const regex = /^\.|^,|\.,|,\.|[^\d\.,]|\.(?=.*\.)|,(?=.*,)|\.(?=.*,)|,(?=.*\.)|^0+(?=\d)/g;
-      if (!Ember.isEmpty(str) && regex.test(str)) {
-        Ember.$(e.target).val(str.replace(regex, ''));
+      if (!isEmpty(str) && regex.test(str)) {
+        $(e.target).val(str.replace(regex, ''));
       }
     }
   },
@@ -429,7 +435,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   */
   willDestroyElement() {
     let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
+    if (!isNone(leafletMap)) {
       leafletMap.off('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
     }
 
@@ -443,9 +449,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @type Observer
     @private
   */
-  _leafletMapDidChange: Ember.on('didInsertElement', Ember.observer('leafletMap', function () {
+  _leafletMapDidChange: on('didInsertElement', observer('leafletMap', function () {
     let leafletMap = this.get('leafletMap');
-    if (Ember.isNone(leafletMap)) {
+    if (isNone(leafletMap)) {
       return;
     }
 
@@ -457,8 +463,8 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     @method _bufferSettingsDidChange
   */
-  _bufferSettingsDidChange: Ember.observer('bufferUnits', 'bufferRadius', function() {
-    Ember.run.once(this, '_enableActualIdentifyTool');
+  _bufferSettingsDidChange: observer('bufferUnits', 'bufferRadius', function() {
+    once(this, '_enableActualIdentifyTool');
   }),
 
   /**
@@ -469,7 +475,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   */
   _enableActualIdentifyTool() {
     let leafletMap = this.get('leafletMap');
-    if (Ember.isNone(leafletMap)) {
+    if (isNone(leafletMap)) {
       return;
     }
 

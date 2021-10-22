@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
+
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../templates/components/map-tools/identify';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -41,7 +44,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let IdentifyMapToolComponent = Ember.Component.extend({
+let IdentifyMapToolComponent = Component.extend({
   /**
     Identify tool name computed by the specified tool settings.
 
@@ -49,12 +52,12 @@ let IdentifyMapToolComponent = Ember.Component.extend({
     @type String
     @readOnly
   */
-  _identifyToolName: Ember.computed('layerMode', 'toolMode', function() {
+  _identifyToolName: computed('layerMode', 'toolMode', function() {
     let identifyToolName = 'identify';
     let layerMode = this.get('layerMode');
     let toolMode = this.get('toolMode');
 
-    if (!(Ember.isBlank(layerMode) || Ember.isBlank(toolMode))) {
+    if (!(isBlank(layerMode) || isBlank(toolMode))) {
       identifyToolName = `identify-${layerMode}-${toolMode}`;
     }
 

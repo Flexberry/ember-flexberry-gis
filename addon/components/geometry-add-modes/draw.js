@@ -2,7 +2,12 @@
    @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isArray } from '@ember/array';
+
+import { isNone } from '@ember/utils';
+import { on } from '@ember/object/evented';
+import { observer, computed, set } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../templates/components/geometry-add-modes/draw';
 import turfCombine from 'npm:@turf/combine';
 
@@ -24,7 +29,7 @@ const flexberryClassNames = {
   wrapper: flexberryClassNamesPrefix
 };
 
-let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
+let FlexberryGeometryAddModeDrawComponent = Component.extend({
   /**
     Reference to component's template.
   */
@@ -87,7 +92,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
   active: false,
 
-  activeChange: Ember.observer('active', function () {
+  activeChange: observer('active', function () {
     if (!this.get('active')) {
 
       let tool = this.get('geometryType');
@@ -100,7 +105,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     }
   }),
 
-  edit: Ember.computed('layer', function () {
+  edit: computed('layer', function () {
     if (this.get('layer')) {
       return true;
     }
@@ -108,14 +113,14 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     return false;
   }),
 
-  initialSettings: Ember.on('init', Ember.observer('settings', function () {
+  initialSettings: on('init', observer('settings', function () {
     this._dragAndDrop(false);
   })),
 
   getLayer() {
     let layer = this.get('layer');
 
-    return [Ember.isNone(layer), layer];
+    return [isNone(layer), layer];
   },
 
   /**
@@ -149,7 +154,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     }
 
     let layer = this.get('layer');
-    if (Ember.isNone(layer)) {
+    if (isNone(layer)) {
       return;
     }
 
@@ -175,7 +180,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     try {
       let curPane = layer.getPane();
 
-      if (Ember.isNone(curPane.style.zIndex)) {
+      if (isNone(curPane.style.zIndex)) {
         return;
       }
 
@@ -199,7 +204,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         p.style.pointerEvents = 'none';
       }
 
-      if (enable && !Ember.isNone(p.style.pointerEventsOld)) {
+      if (enable && !isNone(p.style.pointerEventsOld)) {
         p.style.pointerEvents = p.style.pointerEventsOld;
       }
     });
@@ -273,7 +278,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
     // move the coordinates by the delta
     let moveCoords = coords => {
-      if (Ember.isArray(coords)) {
+      if (isArray(coords)) {
         return coords.map((currentLatLng) => {
           return moveCoords(currentLatLng);
         });
@@ -332,7 +337,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     @param {Object} crs A hash containing layer's crs.
   */
   move(latlngs, x, y, crs) {
-    if (Ember.isArray(latlngs)) {
+    if (isArray(latlngs)) {
       return latlngs.map((currentLatLng) => {
         return this.move(currentLatLng, x, y, crs);
       });
@@ -368,7 +373,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
       let layer = this.get('layer');
 
-      if (Ember.isNone(layer)) {
+      if (isNone(layer)) {
         return;
       }
 
@@ -419,7 +424,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
         if (geometryType === 'move') {
           let leafletMap = this.get('leafletMap');
-          if (!Ember.isNone(leafletMap)) {
+          if (!isNone(leafletMap)) {
             leafletMap.once('flexberry-map:tools:choose', this._disableDrawTool, this);
           }
 
@@ -447,12 +452,12 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         this.set('geometryType', null);
         this.sendAction('block', false);
       } else {
-        if (!Ember.isNone(editTools)) {
+        if (!isNone(editTools)) {
           editTools.on('editable:drawing:end', this._disableDraw, this);
         }
 
-        if (!Ember.isNone(leafletMap)) {
-          Ember.set(leafletMap, 'drawTools', editTools);
+        if (!isNone(leafletMap)) {
+          set(leafletMap, 'drawTools', editTools);
           leafletMap.once('flexberry-map:tools:choose', this._disableDrawTool, this);
         }
 
@@ -506,7 +511,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     let leafletMap = this.get('leafletMap');
 
     let editTools = this.get('_editTools');
-    if (Ember.isNone(editTools)) {
+    if (isNone(editTools)) {
       editTools = new L.Editable(leafletMap);
       this.set('_editTools', editTools);
     }
@@ -519,19 +524,19 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     @private
   */
   _disableDrawTool(e) {
-    let trigger = !Ember.isNone(e) && typeof (e) === 'object';
+    let trigger = !isNone(e) && typeof (e) === 'object';
     let defaultTool = !trigger && e;
 
     this._dragAndDrop(false);
 
     let editTools = this.get('_editTools');
-    if (!Ember.isNone(editTools)) {
+    if (!isNone(editTools)) {
       editTools.off('editable:drawing:end', this._disableDraw, this);
       editTools.stopDrawing();
     }
 
     let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
+    if (!isNone(leafletMap)) {
       leafletMap.off('flexberry-map:tools:choose', this._disableDrawTool, this);
 
       if (defaultTool) {
@@ -557,13 +562,13 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     editTools.off('editable:drawing:end', this._disableDraw, this);
 
     this.$().closest('body').off('keydown');
-    if (!Ember.isNone(editTools)) {
+    if (!isNone(editTools)) {
       editTools.stopDrawing();
     }
 
     this.sendAction('block', false);
 
-    if (!Ember.isNone(e)) {
+    if (!isNone(e)) {
       let geometryType = this.get('geometryType');
 
       if (geometryType !== 'multyPolygon' && geometryType !== 'multyLine') {
@@ -571,7 +576,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         this.sendAction('updateLayer', e.layer, false);
       } else {
         let layer = this.get('layer');
-        if (Ember.isNone(layer)) {
+        if (isNone(layer)) {
           this.set('layer', e.layer);
           return;
         }

@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import { observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/tabs/identification-settings';
 
 /**
@@ -7,7 +8,7 @@ import layout from '../../../templates/components/layers-dialogs/tabs/identifica
   @class FlexberryIdentificationSettingsComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
 
   /**
     Reference to component's template.
@@ -56,7 +57,7 @@ export default Ember.Component.extend({
 
     @method _checkboxDidChange
   */
-  _checkboxDidChange: Ember.observer('_checkboxValue', function() {
+  _checkboxDidChange: observer('_checkboxValue', function() {
     let obj = {
       canBeIdentified: this.get('_checkboxValue')
     };

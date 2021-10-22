@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
+
+import Component from '@ember/component';
 import layout from '../templates/components/spatial-bookmark';
 import Mixin from 'ember-validations';
 
@@ -12,7 +14,7 @@ import Mixin from 'ember-validations';
   @class SpatialBookmarkComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let SpatialBookmarkComponent = Ember.Component.extend(Mixin, {
+let SpatialBookmarkComponent = Component.extend(Mixin, {
   /**
     Validation settings
   */
@@ -48,7 +50,7 @@ let SpatialBookmarkComponent = Ember.Component.extend(Mixin, {
     @type array
     @private
   */
-  bookmarks: Ember.A(),
+  bookmarks: A(),
 
   /**
     Flag: indicates whether "add bookmark" block is visible

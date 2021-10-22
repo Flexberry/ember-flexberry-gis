@@ -1,30 +1,17 @@
-import { moduleForModel, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
-moduleForModel('new-platform-flexberry-g-i-s-map-layer', 'Unit | Serializer | new-platform-flexberry-g-i-s-map-layer', {
-  // Specify the other units that are required for this test.
-  needs: [
-    'serializer:new-platform-flexberry-g-i-s-map-layer',
-    'transform:file',
-    'transform:decimal',
-    'transform:json',
+import { run } from '@ember/runloop';
 
-    'model:custom-inflector-rules',
-    'model:new-platform-flexberry-g-i-s-layer-link',
-    'model:new-platform-flexberry-g-i-s-layer-metadata',
-    'model:new-platform-flexberry-g-i-s-link-metadata',
-    'model:new-platform-flexberry-g-i-s-link-parameter',
-    'model:new-platform-flexberry-g-i-s-map-layer',
-    'model:new-platform-flexberry-g-i-s-map-object-setting',
-    'model:new-platform-flexberry-g-i-s-map',
-    'model:new-platform-flexberry-g-i-s-parameter-metadata'
-  ]
-});
+module('Unit | Serializer | new-platform-flexberry-g-i-s-map-layer', function(hooks) {
+  setupTest(hooks);
 
-// Replace this with your real tests.
-test('it serializes records', function(assert) {
-  let record = this.subject();
+  // Replace this with your real tests.
+  test('it serializes records', function(assert) {
+    let record = run(() => this.owner.lookup('service:store').createRecord('new-platform-flexberry-g-i-s-map-layer'));
 
-  let serializedRecord = record.serialize();
+    let serializedRecord = record.serialize();
 
-  assert.ok(serializedRecord);
+    assert.ok(serializedRecord);
+  });
 });

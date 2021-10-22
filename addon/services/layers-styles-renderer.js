@@ -2,6 +2,12 @@
   @module ember-flexberry-gis
 */
 
+import { get } from '@ember/object';
+
+import { getOwner } from '@ember/application';
+import { isNone } from '@ember/utils';
+import Service from '@ember/service';
+
 import Ember from 'ember';
 
 /**
@@ -10,7 +16,7 @@ import Ember from 'ember';
   @class LayersStylesRendererService
   @extends Ember.Service
 */
-export default Ember.Service.extend({
+export default Service.extend({
   /**
     Hash containing cached instances of available layers styles.
 
@@ -40,7 +46,7 @@ export default Ember.Service.extend({
   */
   _getLayerStyle(type) {
     let layerStyle = this.get(`_layersStyles.${type}`);
-    if (Ember.isNone(layerStyle)) {
+    if (isNone(layerStyle)) {
       Ember.Logger.error(`Service 'layers-styles-renderer' can't find '${type}' layers-style, it doesn't exist.`);
     }
 
@@ -54,7 +60,7 @@ export default Ember.Service.extend({
     this._super(...arguments);
 
     let availableLayersStyles = {};
-    let owner = Ember.getOwner(this);
+    let owner = getOwner(this);
     let availableLayerStylesTypes = owner.knownNamesForType(`layers-style`);
     availableLayerStylesTypes.forEach((type) => {
       availableLayersStyles[type] = owner.lookup(`layers-style:${type}`);
@@ -84,7 +90,7 @@ export default Ember.Service.extend({
   */
   getDefaultStyleSettings(type) {
     let layerStyle = this._getLayerStyle(type);
-    if (Ember.isNone(layerStyle)) {
+    if (isNone(layerStyle)) {
       Ember.Logger.error(`Service 'layers-styles-renderer' can't get default style settings for '${type}' layers-style.`);
       return null;
     }
@@ -102,11 +108,11 @@ export default Ember.Service.extend({
     @return {Object[]} Array containing visible leaflet layers (those nested layers which 'layers-style' doesn't hide).
   */
   getVisibleLeafletLayers({ leafletLayer, styleSettings }) {
-    let type = Ember.get(styleSettings, 'type');
-    let style = Ember.get(styleSettings, 'style');
+    let type = get(styleSettings, 'type');
+    let style = get(styleSettings, 'style');
 
     let layerStyle = this._getLayerStyle(type);
-    if (Ember.isNone(layerStyle)) {
+    if (isNone(layerStyle)) {
       Ember.Logger.error(`Service 'layers-styles-renderer' can't get visible leaflet layers for  '${type}' layers-style.`);
       return [];
     }
@@ -124,11 +130,11 @@ export default Ember.Service.extend({
     @param {Object} options.styleSettings Hash containing style settings.
   */
   renderOnLeafletLayer({ leafletLayer, styleSettings }) {
-    let type = Ember.get(styleSettings, 'type');
-    let style = Ember.get(styleSettings, 'style');
+    let type = get(styleSettings, 'type');
+    let style = get(styleSettings, 'style');
 
     let layerStyle = this._getLayerStyle(type);
-    if (Ember.isNone(layerStyle)) {
+    if (isNone(layerStyle)) {
       Ember.Logger.error(`Service 'layers-styles-renderer' can't render '${type}' layers-style on leaflet layer.`);
       return;
     }
@@ -148,11 +154,11 @@ export default Ember.Service.extend({
   renderOnCanvas({ canvas, styleSettings, target }) {
     target = target || 'preview';
 
-    let type = Ember.get(styleSettings, 'type');
-    let style = Ember.get(styleSettings, 'style');
+    let type = get(styleSettings, 'type');
+    let style = get(styleSettings, 'style');
 
     let layerStyle = this._getLayerStyle(type);
-    if (Ember.isNone(layerStyle)) {
+    if (isNone(layerStyle)) {
       Ember.Logger.error(`Service 'layers-styles-renderer' can't render '${type}' layers-style on canvas.`);
       return;
     }

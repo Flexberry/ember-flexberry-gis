@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
+
+import { typeOf, isNone } from '@ember/utils';
+import { assert } from '@ember/debug';
+import { get } from '@ember/object';
+import { Promise } from 'rsvp';
 import SearchMapCommand from './search';
 
 /**
@@ -21,20 +26,20 @@ export default SearchMapCommand.extend({
   _execute(options) {
     this._super(...arguments);
     options = options || {};
-    return new Ember.RSVP.Promise(resolve => {
+    return new Promise(resolve => {
       // Layer that must be searched.
-      let layer = Ember.get(options, 'layer');
-      Ember.assert(
+      let layer = get(options, 'layer');
+      assert(
         `Wrong type of \`options.layer\` property: ` +
-        `actual type is \`${Ember.typeOf(layer)}\`, but \`object\` or \`instance\` is expected.`,
-        !Ember.isNone(layer));
+        `actual type is \`${typeOf(layer)}\`, but \`object\` or \`instance\` is expected.`,
+        !isNone(layer));
 
       // Search options related to layer type.
-      let searchOptions = Ember.get(options, 'searchOptions');
-      Ember.assert(
+      let searchOptions = get(options, 'searchOptions');
+      assert(
         `Wrong type of \`options.searchOptions\` property: ` +
-        `actual type is \`${Ember.typeOf(searchOptions)}\`, but \`object\` or \`instance\` is expected.`,
-        !Ember.isNone(searchOptions));
+        `actual type is \`${typeOf(searchOptions)}\`, but \`object\` or \`instance\` is expected.`,
+        !isNone(searchOptions));
 
       let leafletMap = this.get('leafletMap');
       let e = {
@@ -44,7 +49,7 @@ export default SearchMapCommand.extend({
         filter(layerModel) {
           return layerModel === layer;
         },
-        results: Ember.A()
+        results: A()
       };
 
       // Fire custom event on leaflet map.

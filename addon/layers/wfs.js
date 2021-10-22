@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
 import WfsFilterParserMixin from '../mixins/wfs-filter-parser';
 import VectorLayer from './-private/vector';
 
@@ -21,7 +21,7 @@ export default VectorLayer.extend(WfsFilterParserMixin, {
   */
   createSettings() {
     let settings = this._super(...arguments);
-    Ember.$.extend(true, settings, {
+    $.extend(true, settings, {
       crs: undefined,
       showExisting: undefined,
       geometryField: undefined,

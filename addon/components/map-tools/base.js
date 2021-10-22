@@ -2,6 +2,13 @@
   @module ember-flexberry-gis
 */
 
+import { isHTMLSafe } from '@ember/template';
+
+import $ from 'jquery';
+import { typeOf, isNone, isBlank } from '@ember/utils';
+import { computed, get, observer } from '@ember/object';
+import Component from '@ember/component';
+
 import Ember from 'ember';
 import SlotsMixin from 'ember-block-slots';
 import layout from '../../templates/components/map-tools/base';
@@ -48,7 +55,7 @@ const flexberryClassNames = {
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
   @uses DomActionsMixin
 */
-let BaseMapToolComponent = Ember.Component.extend(SlotsMixin, {
+let BaseMapToolComponent = Component.extend(SlotsMixin, {
   /**
     Mutation observer that observes changes in component's 'class' attribute.
 
@@ -68,7 +75,7 @@ let BaseMapToolComponent = Ember.Component.extend(SlotsMixin, {
     @readOnly
     @private
   */
-  _hasSubmenu: Ember.computed('_slots.[]', function () {
+  _hasSubmenu: computed('_slots.[]', function () {
     // Yielded {{block-slot "submenu"}} is defined or 'nodes' are defined.
     return this._isRegistered('submenu');
   }),
@@ -81,11 +88,11 @@ let BaseMapToolComponent = Ember.Component.extend(SlotsMixin, {
     @readOnly
     @private
   */
-  _hasCaption: Ember.computed('caption', function () {
+  _hasCaption: computed('caption', function () {
     let caption = this.get('caption');
-    return Ember.typeOf(caption) === 'string' && Ember.$.trim(caption) !== '' ||
-      Ember.typeOf(Ember.String.isHTMLSafe) === 'function' && Ember.String.isHTMLSafe(caption) && Ember.$.trim(Ember.get(caption, 'string')) !== '' ||
-      caption instanceof Ember.Handlebars.SafeString && Ember.$.trim(Ember.get(caption, 'string')) !== '';
+    return typeOf(caption) === 'string' && $.trim(caption) !== '' ||
+      typeOf(isHTMLSafe) === 'function' && isHTMLSafe(caption) && $.trim(get(caption, 'string')) !== '' ||
+      caption instanceof Ember.Handlebars.SafeString && $.trim(get(caption, 'string')) !== '';
   }),
 
   /**
@@ -96,9 +103,9 @@ let BaseMapToolComponent = Ember.Component.extend(SlotsMixin, {
     @readOnly
     @private
   */
-  _hasIcon: Ember.computed('iconClass', function () {
+  _hasIcon: computed('iconClass', function () {
     let iconClass = this.get('iconClass');
-    return Ember.typeOf(iconClass) === 'string' && Ember.$.trim(iconClass) !== '';
+    return typeOf(iconClass) === 'string' && $.trim(iconClass) !== '';
   }),
 
   /**
@@ -109,7 +116,7 @@ let BaseMapToolComponent = Ember.Component.extend(SlotsMixin, {
     @readOnly
     @private
   */
-  _hasIconOnly: Ember.computed('_hasIcon', '_hasCaption', function () {
+  _hasIconOnly: computed('_hasIcon', '_hasCaption', function () {
     return this.get('_hasIcon') && !this.get('_hasCaption');
   }),
 
@@ -310,7 +317,7 @@ let BaseMapToolComponent = Ember.Component.extend(SlotsMixin, {
   */
   attachLeafletMapEventHandlers(leafletMap) {
     let mapToolName = this.get('name');
-    if (!Ember.isNone(leafletMap) && !Ember.isBlank(mapToolName)) {
+    if (!isNone(leafletMap) && !isBlank(mapToolName)) {
       leafletMap.off(`flexberry-map:tools:${mapToolName}:enable`, this.onMapToolEnable, this);
       leafletMap.off(`flexberry-map:tools:${mapToolName}:disable`, this.onMapToolDisable, this);
     }
@@ -323,13 +330,13 @@ let BaseMapToolComponent = Ember.Component.extend(SlotsMixin, {
   */
   detachLeafletMapEventHandlers(leafletMap) {
     let mapToolPreviousName = this.get('_previousName');
-    if (!Ember.isNone(leafletMap) && !Ember.isBlank(mapToolPreviousName)) {
+    if (!isNone(leafletMap) && !isBlank(mapToolPreviousName)) {
       leafletMap.off(`flexberry-map:tools:${mapToolPreviousName}:enable`, this.onMapToolEnable, this);
       leafletMap.off(`flexberry-map:tools:${mapToolPreviousName}:disable`, this.onMapToolDisable, this);
     }
 
     let mapToolName = this.get('name');
-    if (!Ember.isNone(leafletMap) && !Ember.isBlank(mapToolName)) {
+    if (!isNone(leafletMap) && !isBlank(mapToolName)) {
       leafletMap.off(`flexberry-map:tools:${mapToolName}:enable`, this.onMapToolEnable, this);
       leafletMap.off(`flexberry-map:tools:${mapToolName}:disable`, this.onMapToolDisable, this);
     }
@@ -357,7 +364,7 @@ let BaseMapToolComponent = Ember.Component.extend(SlotsMixin, {
 
       // Initialize Semantic UI dropdown module.
       $item.dropdown();
-    } else if (!Ember.isNone(MutationObserver)) {
+    } else if (!isNone(MutationObserver)) {
 
       // Sometimes Semantic UI adds/removes classes too late what breaks results of component's class name bindings.
       // So to fix it, we need to observe changes in 'class' attribute through mutation observer.
@@ -395,7 +402,7 @@ let BaseMapToolComponent = Ember.Component.extend(SlotsMixin, {
 
     // Disconnect mutation observer.
     let classObserver = this.get('_classObserver');
-    if (!Ember.isNone(classObserver)) {
+    if (!isNone(classObserver)) {
       classObserver.disconnect();
       this.set('_classObserver', null);
     }
@@ -413,20 +420,20 @@ let BaseMapToolComponent = Ember.Component.extend(SlotsMixin, {
     @method _leafletMapOrNameDidChange
     @private
   */
-  _leafletMapOrNameDidChange: Ember.observer('leafletMap', 'name', function () {
+  _leafletMapOrNameDidChange: observer('leafletMap', 'name', function () {
     let leafletMap = this.get('leafletMap');
-    if (Ember.isNone(leafletMap)) {
+    if (isNone(leafletMap)) {
       return;
     }
 
     let mapToolPreviousName = this.get('_previousName');
     let mapToolName = this.get('name');
-    if (!Ember.isBlank(mapToolPreviousName) && mapToolPreviousName !== mapToolName) {
+    if (!isBlank(mapToolPreviousName) && mapToolPreviousName !== mapToolName) {
       // Detach previously attached leaflet map event handlers.
       this.detachLeafletMapEventHandlers(leafletMap);
     }
 
-    if (!Ember.isBlank(mapToolName)) {
+    if (!isBlank(mapToolName)) {
       // Attach new leaflet map event handlers.
       this.attachLeafletMapEventHandlers(leafletMap);
     }

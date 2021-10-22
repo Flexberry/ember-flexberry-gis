@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+
+import { getOwner } from '@ember/application';
+import { A } from '@ember/array';
+import { isNone } from '@ember/utils';
+import { computed, observer, get } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../templates/components/charts/index-chart';
 import {
   translationMacro as t
@@ -15,7 +21,7 @@ import {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -63,8 +69,8 @@ export default Ember.Component.extend({
     @property _isObjPropertiesComputed
     @type Object[]
   */
-  _isObjPropertiesComputed: Ember.computed('_chosenClassifyPropertyObjProperties', function() {
-    if (!Ember.isNone(this.get('_chosenClassifyPropertyObjProperties'))) {
+  _isObjPropertiesComputed: computed('_chosenClassifyPropertyObjProperties', function() {
+    if (!isNone(this.get('_chosenClassifyPropertyObjProperties'))) {
       return this.get('_chosenClassifyPropertyObjProperties');
     }
 
@@ -132,7 +138,7 @@ export default Ember.Component.extend({
     @method _classifyPropertyObserver
     @private
   */
-  _classifyPropertyObserver: Ember.observer('_classifyProperty', function() {
+  _classifyPropertyObserver: observer('_classifyProperty', function() {
     if (!this.get('_classifyProperty')) {
       this.set('_propertyForClassifyValue', null);
       this.set('_uniqueSymbolClassifyPropertyValue', null);
@@ -147,7 +153,7 @@ export default Ember.Component.extend({
     @method _propertyForClassifyValueObserver
     @private
   */
-  _propertyForClassifyValueObserver: Ember.observer('_propertyForClassifyValue', function() {
+  _propertyForClassifyValueObserver: observer('_propertyForClassifyValue', function() {
     this.set('_uniqueSymbolClassifyPropertyValue', null);
     this.set('_chosenClassifyPropertyObjProperties', null);
 
@@ -161,10 +167,10 @@ export default Ember.Component.extend({
     }
 
     let propertyValues = this.get('_isObjProperties');
-    let values = Ember.A();
+    let values = A();
     propertyValues.forEach((prop) => {
-      let property = Ember.get(prop, `${propertyName}`);
-      if (Ember.isNone(property)) {
+      let property = get(prop, `${propertyName}`);
+      if (isNone(property)) {
         property = 'undefined';
       }
 
@@ -181,15 +187,15 @@ export default Ember.Component.extend({
     @method _uniqueSymbolClassifyPropertyObserver
     @private
   */
-  _uniqueSymbolClassifyPropertyObserver: Ember.observer('_uniqueSymbolClassifyPropertyValue', function() {
+  _uniqueSymbolClassifyPropertyObserver: observer('_uniqueSymbolClassifyPropertyValue', function() {
     let uniqueSymbolClassifyPropertyValue = this.get('_uniqueSymbolClassifyPropertyValue');
     let propertyName = this.get('_keyChosenClassifyProperty');
     let propertyValues = this.get('_isObjProperties');
-    let chosenClassifyPropertyObjProperties = Ember.A();
+    let chosenClassifyPropertyObjProperties = A();
 
     propertyValues.forEach((prop) => {
-      let property = Ember.get(prop, `${propertyName}`);
-      if (Ember.isNone(property)) {
+      let property = get(prop, `${propertyName}`);
+      if (isNone(property)) {
         property = 'undefined';
       }
 
@@ -201,7 +207,7 @@ export default Ember.Component.extend({
     this.set('_chosenClassifyPropertyObjProperties', chosenClassifyPropertyObjProperties);
   }),
 
-  selectedModeType: Ember.computed('i18n.locale', '_selectedModeType', function() {
+  selectedModeType: computed('i18n.locale', '_selectedModeType', function() {
     let type = this.get('_selectedModeType');
     return this.get('i18n').t(`components.charts.type-charts.${type}.name`).toString();
   }),
@@ -212,9 +218,9 @@ export default Ember.Component.extend({
     @property _availableTypes
     @type Object[]
   */
-  _availableTypes: Ember.computed('i18n.locale', function() {
+  _availableTypes: computed('i18n.locale', function() {
     let result = {};
-    let owner = Ember.getOwner(this) || {};
+    let owner = getOwner(this) || {};
     if (owner.knownNamesForType) {
       let types = owner.knownNamesForType('components/charts/type-chart');
       types.forEach(type => {
@@ -232,7 +238,7 @@ export default Ember.Component.extend({
     @type LayersStylesRendererService
     @private
   */
-  _chartsRenderer: Ember.inject.service('charts-render'),
+  _chartsRenderer: service('charts-render'),
 
   /**
     Canvas charts.

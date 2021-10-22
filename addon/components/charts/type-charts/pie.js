@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
 import layout from '../../../templates/components/charts/type-charts/pie';
 import BaseChartType from '../base-chart-type';
 
@@ -30,8 +30,8 @@ export default BaseChartType.extend({
     let propName = this.get('_selectedXAxisProperty');
     let propVal = this.get('_selectedYAxisProperty');
 
-    let bgcolor = Ember.A(['#F15C80', '#E4D354', '#2B908F', '#F45B5B', '#91E8E1', '#7CB5EC']);
-    let bgColorPie = Ember.A([]);
+    let bgcolor = A(['#F15C80', '#E4D354', '#2B908F', '#F45B5B', '#91E8E1', '#7CB5EC']);
+    let bgColorPie = A([]);
     var j = 0;
     for (var i = 0; i < isObject.length; i++) {
       bgColorPie[i] = bgcolor[j];
@@ -41,11 +41,11 @@ export default BaseChartType.extend({
       }
     }
 
-    let dataLabels = Ember.A([]);
-    let datasetsLabel = Ember.A([]);
+    let dataLabels = A([]);
+    let datasetsLabel = A([]);
     isObject.forEach(obj => {
-      let dlCopy = Ember.A([]);
-      let dslCopy = Ember.A([]);
+      let dlCopy = A([]);
+      let dslCopy = A([]);
       dlCopy.push(obj[propName]);
       dataLabels.push(dlCopy);
       dslCopy.push(obj[propVal]);

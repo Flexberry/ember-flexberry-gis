@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { Promise, allSettled } from 'rsvp';
+
+import { get, set } from '@ember/object';
+import { isNone, typeOf } from '@ember/utils';
+import { A, isArray } from '@ember/array';
+import { assert } from '@ember/debug';
 import BaseNonclickableMapTool from './base-nonclickable';
 import * as buffer from 'npm:@turf/buffer';
 
@@ -122,7 +127,7 @@ export default BaseNonclickableMapTool.extend({
     @private
   */
   _getLayersToIdentify({ excludedLayers }) {
-    Ember.assert('Method \'_getLayersToIdentify\' must be overridden in some extended identify map-tool.', false);
+    assert('Method \'_getLayersToIdentify\' must be overridden in some extended identify map-tool.', false);
   },
 
   /**
@@ -147,11 +152,11 @@ export default BaseNonclickableMapTool.extend({
       latlng: latlng,
       polygonLayer: polygonLayer,
       bufferedMainPolygonLayer: bufferedMainPolygonLayer,
-      excludedLayers: Ember.A(excludedLayers || []),
+      excludedLayers: A(excludedLayers || []),
       layers: this._getLayersToIdentify({
         excludedLayers
       }),
-      results: Ember.A()
+      results: A()
     };
 
     // Fire custom event on leaflet map (if there is layers to identify).
@@ -160,19 +165,19 @@ export default BaseNonclickableMapTool.extend({
     }
 
     // Promises array could be totally changed in 'flexberry-map:identify' event handlers, we should prevent possible errors.
-    e.results = Ember.isArray(e.results) ? e.results : Ember.A();
-    let promises = Ember.A();
+    e.results = isArray(e.results) ? e.results : A();
+    let promises = A();
 
     // Handle each result.
     // Detach promises from already received features.
     e.results.forEach((result) => {
-      if (Ember.isNone(result)) {
+      if (isNone(result)) {
         return;
       }
 
-      let features = Ember.get(result, 'features');
+      let features = get(result, 'features');
 
-      if (!(features instanceof Ember.RSVP.Promise)) {
+      if (!(features instanceof Promise)) {
         return;
       }
 
@@ -180,7 +185,7 @@ export default BaseNonclickableMapTool.extend({
     });
 
     // Wait for all promises to be settled & call '_finishIdentification' hook.
-    Ember.RSVP.allSettled(promises).then(() => {
+    allSettled(promises).then(() => {
       this._finishIdentification(e);
     });
   },
@@ -207,8 +212,8 @@ export default BaseNonclickableMapTool.extend({
         (features) => {
           // Show new features.
           features.forEach((feature) => {
-            let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
-            if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+            let leafletLayer = get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+            if (typeOf(leafletLayer.setStyle) === 'function') {
               leafletLayer.setStyle({
                 color: 'salmon',
                 weight: 2,
@@ -216,7 +221,7 @@ export default BaseNonclickableMapTool.extend({
               });
             }
 
-            Ember.set(feature, 'leafletLayer', leafletLayer);
+            set(feature, 'leafletLayer', leafletLayer);
           });
         });
     });
@@ -226,11 +231,11 @@ export default BaseNonclickableMapTool.extend({
     leafletMap.flexberryMap.loader.hide({ content: '' });
 
     // Assign current tool's boundingBoxLayer
-    let polygonLayer = Ember.get(e, 'polygonLayer');
+    let polygonLayer = get(e, 'polygonLayer');
     this.set('polygonLayer', polygonLayer);
 
     // Assign current tool's boundingBoxLayer
-    let bufferedLayer = Ember.get(e, 'bufferedMainPolygonLayer');
+    let bufferedLayer = get(e, 'bufferedMainPolygonLayer');
     this.set('bufferedMainPolygonLayer', bufferedLayer);
 
     // Fire custom event on leaflet map.
@@ -330,7 +335,7 @@ export default BaseNonclickableMapTool.extend({
     this._super(...arguments);
     let leafletMap = this.get('leafletMap');
     let editTools = this.get('_editTools');
-    if (Ember.isNone(editTools)) {
+    if (isNone(editTools)) {
       editTools = new L.Editable(leafletMap, {
         drawingCursor: this.get('cursor')
       });
@@ -351,7 +356,7 @@ export default BaseNonclickableMapTool.extend({
     this._super(...arguments);
 
     let editTools = this.get('_editTools');
-    if (!Ember.isNone(editTools)) {
+    if (!isNone(editTools)) {
       editTools.off('editable:drawing:end', this._drawingDidEnd, this);
       editTools.stopDrawing();
     }
@@ -364,13 +369,13 @@ export default BaseNonclickableMapTool.extend({
     this._super(...arguments);
 
     let editLayer = this.get('_editTools.editLayer');
-    if (!Ember.isNone(editLayer)) {
+    if (!isNone(editLayer)) {
       editLayer.clearLayers();
       editLayer.remove();
     }
 
     let featuresLayer = this.get('_editTools.featuresLayer');
-    if (!Ember.isNone(featuresLayer)) {
+    if (!isNone(featuresLayer)) {
       featuresLayer.clearLayers();
       featuresLayer.remove();
     }

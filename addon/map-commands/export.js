@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { run } from '@ember/runloop';
+
+import { Promise } from 'rsvp';
 import BaseMapCommand from './base';
 
 /**
@@ -21,8 +23,8 @@ export default BaseMapCommand.extend({
     this._super(...arguments);
 
     if (options.type === 'export') {
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        Ember.run(() => {
+      return new Promise((resolve, reject) => {
+        run(() => {
           this.get('leafletMap').downloadExport(options.data).then((value) => {
             resolve(value);
           }).catch((reason) => {
@@ -31,8 +33,8 @@ export default BaseMapCommand.extend({
         });
       });
     } else {
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        Ember.run(() => {
+      return new Promise((resolve, reject) => {
+        run(() => {
           this.get('leafletMap').printExport(options.data).then((value) => {
             resolve(value);
           }).catch((reason) => {

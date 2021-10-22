@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
+
+import { computed, get } from '@ember/object';
+import { inject as service } from '@ember/service';
+import Mixin from '@ember/object/mixin';
 import {
   setAndAssign
 } from '../utils/extended-set';
@@ -13,7 +17,7 @@ import {
   @class LocalStorageBindingMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Injected local-storage-service.
 
@@ -21,7 +25,7 @@ export default Ember.Mixin.create({
     @type <a href="http://emberjs.com/api/classes/Ember.Service.html">Ember.Service</a>
     @default service:local-storage
   */
-  service: Ember.inject.service('local-storage'),
+  service: service('local-storage'),
 
   /**
     Class name used which will be used to save data in local storage.
@@ -73,10 +77,10 @@ export default Ember.Mixin.create({
     @type String
     @readonly
   */
-  bindingKey: Ember.computed('keyProperty', 'keyValue', function () {
+  bindingKey: computed('keyProperty', 'keyValue', function () {
     let value = this.get('keyValue');
 
-    if (Ember.isBlank(value)) {
+    if (isBlank(value)) {
       let propertyPath = this.get('keyProperty');
       value = this.get(propertyPath);
     }
@@ -97,10 +101,10 @@ export default Ember.Mixin.create({
     let propertyPath = this.get('binding.' + bindingName);
 
     // Get direct owner of property.
-    let objectPath = Ember.isBlank(propertyPath) ? mutablePropertyPath : mutablePropertyPath.slice(0, mutablePropertyPath.indexOf(propertyPath) - 1);
+    let objectPath = isBlank(propertyPath) ? mutablePropertyPath : mutablePropertyPath.slice(0, mutablePropertyPath.indexOf(propertyPath) - 1);
     let bindingObject = this.get(objectPath);
 
-    if (Ember.isBlank(bindingObject)) {
+    if (isBlank(bindingObject)) {
       return;
     }
 
@@ -109,11 +113,11 @@ export default Ember.Mixin.create({
     let key = this.get('bindingKey');
 
     // Get object from local storage.
-    let objectId = Ember.get(bindingObject, 'id');
+    let objectId = get(bindingObject, 'id');
     let collection = service.getFromStorage(className, key);
     let storedObject = collection.findBy('id', objectId);
 
-    if (!Ember.isBlank(storedObject)) {
+    if (!isBlank(storedObject)) {
       // Remove object from local storage.
       collection.removeObject(storedObject);
     }

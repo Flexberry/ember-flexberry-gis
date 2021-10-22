@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
+
+import { once } from '@ember/runloop';
+import { A, isArray } from '@ember/array';
+import { computed, observer } from '@ember/object';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 import layout from '../templates/components/markers-styles-editor';
 
 /**
@@ -11,7 +17,7 @@ import layout from '../templates/components/markers-styles-editor';
   @class MarkersStylesEditorComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -42,7 +48,7 @@ export default Ember.Component.extend({
     @type MarkersStylesRendererService
     @private
   */
-  _markersStylesRenderer: Ember.inject.service('markers-styles-renderer'),
+  _markersStylesRenderer: service('markers-styles-renderer'),
 
   /**
     Available marlers-styles.
@@ -62,11 +68,11 @@ export default Ember.Component.extend({
     @type String[]
     @readonly
   */
-  _availableMarkerStylesCaptions: Ember.computed('_availableMarkerStyles', 'i18n.locale', function() {
+  _availableMarkerStylesCaptions: computed('_availableMarkerStyles', 'i18n.locale', function() {
     let availableMarkerStyles = this.get('_availableMarkerStyles');
 
-    let markerStylesCaptions = Ember.A();
-    if (Ember.isArray(availableMarkerStyles) && availableMarkerStyles.length > 0) {
+    let markerStylesCaptions = A();
+    if (isArray(availableMarkerStyles) && availableMarkerStyles.length > 0) {
       let i18n = this.get('i18n');
       markerStylesCaptions.pushObjects(availableMarkerStyles.map((markerStyle) => {
         return i18n.t(`markers-styles.${markerStyle}.caption`);
@@ -92,7 +98,7 @@ export default Ember.Component.extend({
     @method _availableMarkerStylesCaptionsOrSelectedMarkerStyleDidChange
     @private
   */
-  _availableMarkerStylesCaptionsOrSelectedMarkerStyleDidChange: Ember.observer(
+  _availableMarkerStylesCaptionsOrSelectedMarkerStyleDidChange: observer(
     '_availableMarkerStylesCaptions.[]',
     'styleSettings.type',
     function() {
@@ -115,8 +121,8 @@ export default Ember.Component.extend({
     @method _selectedMarkerStyleCaptionDidChange
     @private
   */
-  _selectedMarkerStyleCaptionDidChange: Ember.observer('_selectedMarkerStyleCaption', function () {
-    Ember.run.once(this, '_setSelectedMarkerStyle');
+  _selectedMarkerStyleCaptionDidChange: observer('_selectedMarkerStyleCaption', function () {
+    once(this, '_setSelectedMarkerStyle');
   }),
 
   /**
@@ -130,7 +136,7 @@ export default Ember.Component.extend({
     let availableMarkerStylesCaptions = this.get('_availableMarkerStylesCaptions');
     let selectedMarkerStyleCaption = this.get('_selectedMarkerStyleCaption');
 
-    if (!Ember.isArray(availableMarkerStyles) || !Ember.isArray(availableMarkerStylesCaptions) || Ember.isBlank(selectedMarkerStyleCaption)) {
+    if (!isArray(availableMarkerStyles) || !isArray(availableMarkerStylesCaptions) || isBlank(selectedMarkerStyleCaption)) {
       return null;
     }
 
@@ -151,8 +157,8 @@ export default Ember.Component.extend({
     @method _selectedMarkerStyleDidChange
     @private
   */
-  _selectedMarkerStyleDidChange: Ember.observer('styleSettings.type', function() {
-    Ember.run.once(this, '_setSelectedMarkerStyleDefaultSettings');
+  _selectedMarkerStyleDidChange: observer('styleSettings.type', function() {
+    once(this, '_setSelectedMarkerStyleDefaultSettings');
   }),
 
   /**
@@ -173,7 +179,7 @@ export default Ember.Component.extend({
   _setSelectedMarkerStyleDefaultSettings() {
     let previouslySelectedMarkerStyle = this.get('_previouslySelectedMarkerStyle');
     let selectedMarkerStyle = this.get('styleSettings.type');
-    if (Ember.isBlank(selectedMarkerStyle) || previouslySelectedMarkerStyle === selectedMarkerStyle) {
+    if (isBlank(selectedMarkerStyle) || previouslySelectedMarkerStyle === selectedMarkerStyle) {
       return;
     }
 

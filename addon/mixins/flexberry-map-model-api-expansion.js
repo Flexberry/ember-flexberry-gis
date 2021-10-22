@@ -1,10 +1,13 @@
-import Ember from 'ember';
+import { Promise, allSettled } from 'rsvp';
+import { A } from '@ember/array';
+import { isNone } from '@ember/utils';
+import Mixin from '@ember/object/mixin';
 import rhumbOperations from '../utils/rhumb-operations';
 import { getLeafletCrs } from '../utils/leaflet-crs';
 import { geometryToJsts } from '../utils/layer-to-jsts';
 import jsts from 'npm:jsts';
 
-export default Ember.Mixin.create(rhumbOperations, {
+export default Mixin.create(rhumbOperations, {
 
   /**
     Add object to layer.
@@ -27,18 +30,18 @@ export default Ember.Mixin.create(rhumbOperations, {
     @returns {Object} New featureLayer.
   */
   addObjectToLayer(layerId, object, crsName) {
-    if (Ember.isNone(object)) {
+    if (isNone(object)) {
       throw new Error('Passed object is null.');
     }
 
     let [layer, leafletObject] = this._getModelLeafletObject(layerId);
 
-    if (Ember.isNone(layer)) {
+    if (isNone(layer)) {
       throw new Error('No layer with such id.');
     }
 
     let crs = leafletObject.options.crs;
-    if (!Ember.isNone(crsName)) {
+    if (!isNone(crsName)) {
       crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
     }
 
@@ -55,11 +58,11 @@ export default Ember.Mixin.create(rhumbOperations, {
 
     let newObj = geoJSON.getLayers()[0];
 
-    let e = { layers: [newObj], results: Ember.A() };
+    let e = { layers: [newObj], results: A() };
     leafletObject.fire('load', e);
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.RSVP.allSettled(e.results).then(() => {
+    return new Promise((resolve, reject) => {
+      allSettled(e.results).then(() => {
         newObj.layerId = layerId;
         resolve(newObj);
       });
@@ -206,7 +209,7 @@ export default Ember.Mixin.create(rhumbOperations, {
 
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let unionres = geojsonWriter.write(resultObject);
-    let crsResult = 'EPSG:' + (Ember.isNone(geometries) ? '' :  geometries[0].getSRID());
+    let crsResult = 'EPSG:' + (isNone(geometries) ? '' :  geometries[0].getSRID());
 
     let type = unionres.type;
     let coordinates = unionres.coordinates;
@@ -337,7 +340,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     @returns {Promise} New polyline from intersecr two objects in GeoJSON format.
   */
   trimLineToPolygon(polygonGeoJson, lineGeoJson) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let resultObject = null;
 
       let polygonGeom = geometryToJsts(polygonGeoJson.geometry);

@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isArray, A } from '@ember/array';
+
+import { Promise } from 'rsvp';
+import { get } from '@ember/object';
+import { assert } from '@ember/debug';
 import BaseLayer from '../base-layer';
 
 /**
@@ -53,7 +57,7 @@ export default BaseLayer.extend({
     @returns {Object[]} Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
   */
   parseGeocodingResults(results) {
-    Ember.assert('GeocoderBaseLayer\'s \'parseGeocodingResults\' method should be overridden.');
+    assert('GeocoderBaseLayer\'s \'parseGeocodingResults\' method should be overridden.');
   },
 
   /**
@@ -65,7 +69,7 @@ export default BaseLayer.extend({
     @returns {Object[]} Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
   */
   parseReverseGeocodingResults(results) {
-    Ember.assert('GeocoderBaseLayer\'s \'parseReverseGeocodingResults\' method should be overridden.');
+    assert('GeocoderBaseLayer\'s \'parseReverseGeocodingResults\' method should be overridden.');
   },
 
   /**
@@ -78,7 +82,7 @@ export default BaseLayer.extend({
     @returns {String|Object} Received geocoding results.
   */
   executeGeocoding(options) {
-    Ember.assert('GeocoderBaseLayer\'s \'executeGeocoding\' method should be overridden.');
+    assert('GeocoderBaseLayer\'s \'executeGeocoding\' method should be overridden.');
   },
 
   /**
@@ -91,7 +95,7 @@ export default BaseLayer.extend({
     @returns {String|Object} Received reverse geocoding results.
   */
   executeReverseGeocoding(options) {
-    Ember.assert('GeocoderBaseLayer\'s \'executeReverseGeocoding\' method should be overridden.');
+    assert('GeocoderBaseLayer\'s \'executeReverseGeocoding\' method should be overridden.');
   },
 
   /**
@@ -110,22 +114,22 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let boundingBox = Ember.get(e, 'polygonLayer').getBounds();
+    let boundingBox = get(e, 'polygonLayer').getBounds();
 
     let reverseGeocodingResults = this.executeReverseGeocoding({
       boundingBox: boundingBox
     });
 
-    if (!(reverseGeocodingResults instanceof Ember.RSVP.Promise)) {
-      reverseGeocodingResults = new Ember.RSVP.Promise((resolve, reject) => {
+    if (!(reverseGeocodingResults instanceof Promise)) {
+      reverseGeocodingResults = new Promise((resolve, reject) => {
         resolve(reverseGeocodingResults);
       });
     }
 
     let featuresPromise = reverseGeocodingResults.then((results) => {
       let features = this.parseReverseGeocodingResults(results);
-      if (!Ember.isArray(features)) {
-        features = Ember.A();
+      if (!isArray(features)) {
+        features = A();
       }
 
       this.injectLeafletLayersIntoGeoJSON(features);
@@ -151,16 +155,16 @@ export default BaseLayer.extend({
   search(e) {
     let geocodingResults = this.executeGeocoding(e);
 
-    if (!(geocodingResults instanceof Ember.RSVP.Promise)) {
-      geocodingResults = new Ember.RSVP.Promise((resolve, reject) => {
+    if (!(geocodingResults instanceof Promise)) {
+      geocodingResults = new Promise((resolve, reject) => {
         resolve(geocodingResults);
       });
     }
 
     let featuresPromise = geocodingResults.then((results) => {
       let features = this.parseGeocodingResults(results);
-      if (!Ember.isArray(features)) {
-        features = Ember.A();
+      if (!isArray(features)) {
+        features = A();
       }
 
       this.injectLeafletLayersIntoGeoJSON(features);

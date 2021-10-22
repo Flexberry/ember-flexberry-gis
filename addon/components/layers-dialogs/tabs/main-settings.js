@@ -1,10 +1,13 @@
-import Ember from 'ember';
+import { getOwner } from '@ember/application';
+import { computed } from '@ember/object';
+import { A } from '@ember/array';
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/tabs/main-settings';
 import {
   translationMacro as t
 } from 'ember-i18n';
 
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -62,7 +65,7 @@ export default Ember.Component.extend({
     @type Array
     @default [500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]
   */
-  scales: Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),
+  scales: A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),
 
   /**
     Flag: indicates whether scale settings are available for the selected layer type.
@@ -72,10 +75,10 @@ export default Ember.Component.extend({
     @private
     @readonly
   */
-  _scaleSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+  _scaleSettingsAreAvailableForType: computed('_layer.type', function () {
     let className = this.get('_layer.type');
 
-    return Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
+    return getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
   }),
 
   actions: {

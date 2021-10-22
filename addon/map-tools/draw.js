@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { set } from '@ember/object';
+
+import { isNone } from '@ember/utils';
 import BaseNonclickableMapTool from './base-nonclickable';
 
 /**
@@ -51,23 +53,23 @@ export default BaseNonclickableMapTool.extend({
 
     let leafletMap = this.get('leafletMap');
     let editLayer = this.get('editLayer');
-    if (!Ember.isNone(editLayer) && !leafletMap.hasLayer(editLayer)) {
+    if (!isNone(editLayer) && !leafletMap.hasLayer(editLayer)) {
       editLayer.addTo(leafletMap);
     }
 
     let featuresLayer = this.get('featuresLayer');
-    if (!Ember.isNone(featuresLayer) && !leafletMap.hasLayer(featuresLayer)) {
+    if (!isNone(featuresLayer) && !leafletMap.hasLayer(featuresLayer)) {
       featuresLayer.addTo(leafletMap);
     }
 
     let editTools = this.get('_editTools');
-    if (Ember.isNone(editTools)) {
+    if (isNone(editTools)) {
       editTools = new L.Editable(leafletMap, {
         editLayer: editLayer,
         featuresLayer: featuresLayer
       });
       this.set('_editTools', editTools);
-      Ember.set(leafletMap, 'drawTools', editTools);
+      set(leafletMap, 'drawTools', editTools);
     }
 
     editTools.on('editable:drawing:end', this._onDrawingEnd, this);
@@ -83,7 +85,7 @@ export default BaseNonclickableMapTool.extend({
     this._super(...arguments);
 
     let editTools = this.get('_editTools');
-    if (!Ember.isNone(editTools)) {
+    if (!isNone(editTools)) {
       editTools.off('editable:drawing:end', this._onDrawingEnd, this);
       editTools.stopDrawing();
     }
@@ -97,7 +99,7 @@ export default BaseNonclickableMapTool.extend({
   */
   _onDrawingEnd() {
     let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
+    if (!isNone(leafletMap)) {
       // Disable current draw tool in favor of default map tool.
       leafletMap.flexberryMap.tools.disable();
     }
@@ -110,13 +112,13 @@ export default BaseNonclickableMapTool.extend({
     this._super(...arguments);
 
     let editLayer = this.get('_editTools.editLayer');
-    if (!Ember.isNone(editLayer)) {
+    if (!isNone(editLayer)) {
       editLayer.clearLayers();
       editLayer.remove();
     }
 
     let featuresLayer = this.get('_editTools.featuresLayer');
-    if (!Ember.isNone(featuresLayer)) {
+    if (!isNone(featuresLayer)) {
       featuresLayer.clearLayers();
       featuresLayer.remove();
     }

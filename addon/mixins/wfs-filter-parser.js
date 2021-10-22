@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { get } from '@ember/object';
+
+import { A } from '@ember/array';
+import { isNone, isBlank } from '@ember/utils';
+import Mixin from '@ember/object/mixin';
 
 /**
   WFS filter parser mixin.
@@ -11,7 +15,7 @@ import Ember from 'ember';
   @class WfsFilterParserMixin
   @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Get properties names from leaflet layer object.
 
@@ -20,12 +24,12 @@ export default Ember.Mixin.create({
     @returns {Array} Array with properties names
   */
   getLayerProperties(leafletObject) {
-    if (Ember.isNone(leafletObject)) {
-      return Ember.A();
+    if (isNone(leafletObject)) {
+      return A();
     }
 
-    let fields = Ember.A();
-    let fieldsDescription = Ember.get(leafletObject, 'readFormat.featureType.fields') || {};
+    let fields = A();
+    let fieldsDescription = get(leafletObject, 'readFormat.featureType.fields') || {};
     for (let field in fieldsDescription) {
       fields.addObject(field);
     }
@@ -43,16 +47,16 @@ export default Ember.Mixin.create({
     @returns {Object} Filter object
   */
   parseFilterConditionExpression(field, condition, value) {
-    let properties = Ember.A([field, value]);
+    let properties = A([field, value]);
     switch (condition) {
       case '=':
-        if (Ember.isBlank(value)) {
+        if (isBlank(value)) {
           return new L.Filter.IsNull(field);
         }
 
         return new L.Filter.EQ(...properties, true);
       case '!=':
-        if (Ember.isBlank(value)) {
+        if (isBlank(value)) {
           return new L.Filter.Not(new L.Filter.IsNull(field));
         }
 

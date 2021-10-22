@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+
+import Service from '@ember/service';
 
 /**
   Charts renderer service.
@@ -10,7 +12,7 @@ import Ember from 'ember';
   @class ChartsRendererService
   @extends Ember.Service
 */
-export default Ember.Service.extend({
+export default Service.extend({
 
   /**
     Hash containing chartjs object
@@ -33,7 +35,7 @@ export default Ember.Service.extend({
   renderOnChartsCanvas({ canvas, json }) {
 
     let chart = this.get('_chart');
-    if (!Ember.isNone(chart)) {
+    if (!isNone(chart)) {
       chart.destroy();
     }
 
@@ -44,7 +46,7 @@ export default Ember.Service.extend({
 
   clearcharts() {
     let chart = this.get('_chart');
-    if (!Ember.isNone(chart)) {
+    if (!isNone(chart)) {
       chart.destroy();
     }
   }

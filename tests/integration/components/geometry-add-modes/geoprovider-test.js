@@ -1,27 +1,30 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+
+import '@ember/test-helpers';
 
 // import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('geometry-add-modes/geoprovider', 'Integration | Component | geometry add modes/geoprovider', {
-  integration: true
-});
+module('Integration | Component | geometry add modes/geoprovider', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('empty test', function(assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  test('empty test', function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
 
-  // this.render(hbs`{{geometry-add-modes/geoprovider}}`);
+    // this.render(hbs`{{geometry-add-modes/geoprovider}}`);
 
-  // assert.equal(this.$().text().trim(), '');
+    // assert.equal(this.$().text().trim(), '');
 
-  assert.equal('', '');
+    assert.equal('', '');
 
-  // Template block usage:
-  // this.render(hbs`
-  //   {{#geometry-add-modes/geoprovider}}
-  //     template block text
-  //   {{/geometry-add-modes/geoprovider}}
-  // `);
+    // Template block usage:
+    // this.render(hbs`
+    //   {{#geometry-add-modes/geoprovider}}
+    //     template block text
+    //   {{/geometry-add-modes/geoprovider}}
+    // `);
 
-  // assert.equal(this.$().text().trim(), 'template block text');
+    // assert.equal(this.$().text().trim(), 'template block text');
+  });
 });

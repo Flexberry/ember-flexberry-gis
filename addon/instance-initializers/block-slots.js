@@ -2,7 +2,9 @@
   @module ember-flexberry
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+
+import { computed, get } from '@ember/object';
 import BlockSlotComponent from 'ember-block-slots/components/block-slot';
 import YieldSlotComponent from 'ember-block-slots/components/yield-slot';
 import SlotsMixin from 'ember-block-slots';
@@ -17,13 +19,13 @@ import SlotsMixin from 'ember-block-slots';
 */
 export function initialize(applicationInstance) {
   SlotsMixin.reopen({
-    parentViewExcludingSlots: Ember.computed('parentView', 'targetObject', function() {
+    parentViewExcludingSlots: computed('parentView', 'targetObject', function() {
       let getParent = function(context) {
-        return Ember.get(context, 'parentView') || Ember.get(context, 'targetObject');
+        return get(context, 'parentView') || get(context, 'targetObject');
       };
 
       let parent = getParent(this);
-      while (!Ember.isNone(parent) && (parent instanceof BlockSlotComponent || parent instanceof YieldSlotComponent)) {
+      while (!isNone(parent) && (parent instanceof BlockSlotComponent || parent instanceof YieldSlotComponent)) {
         parent = getParent(parent);
       }
 

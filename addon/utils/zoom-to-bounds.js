@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+import $ from 'jquery';
 
 /**
   Zoom map to bounds
@@ -9,7 +10,7 @@ import Ember from 'ember';
 */
 let zoomToBounds = function(bounds, leafletMap, minZoom, maxZoom) {
 
-  let sidebarElement = Ember.$('div[class*="sidebar-wrapper"].visible .sidebar');
+  let sidebarElement = $('div[class*="sidebar-wrapper"].visible .sidebar');
   const widthPadding = sidebarElement.width() || 0;
 
   let bboxZoom = leafletMap.getBoundsZoom(bounds);
@@ -29,7 +30,7 @@ let zoomToBounds = function(bounds, leafletMap, minZoom, maxZoom) {
 
 // Overwrites, because L.Map._getBoundsCenterZoom return min zoom from zoom of bounds and maxZoom from options.
 let fitBounds = function(leafletMap, bounds, options) {
-  if (!(bounds instanceof L.LatLngBounds) || Ember.isNone(leafletMap)) {
+  if (!(bounds instanceof L.LatLngBounds) || isNone(leafletMap)) {
     return;
   }
 

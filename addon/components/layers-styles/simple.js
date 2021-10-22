@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
+
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 import layout from '../../templates/components/layers-styles/simple';
 
 /**
@@ -11,7 +14,7 @@ import layout from '../../templates/components/layers-styles/simple';
   @class SimpleLayersStyleComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Currently active tab name.
 
@@ -29,7 +32,7 @@ export default Ember.Component.extend({
     @type LayersStylesRendererService
     @private
   */
-  _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
+  _layersStylesRenderer: service('layers-styles-renderer'),
 
   /**
     Reference to 'markers-styles-renderer' service.
@@ -38,7 +41,7 @@ export default Ember.Component.extend({
     @type MarkersStylesRendererService
     @private
   */
-  _markersStylesRenderer: Ember.inject.service('markers-styles-renderer'),
+  _markersStylesRenderer: service('markers-styles-renderer'),
 
   /**
     Path stytle settings preview canvas.
@@ -172,9 +175,9 @@ export default Ember.Component.extend({
       @param {Object} e Click event object.
     */
     onTabClick(e) {
-      e = Ember.$.event.fix(e);
+      e = $.event.fix(e);
 
-      let $clickedTab = Ember.$(e.currentTarget);
+      let $clickedTab = $(e.currentTarget);
       let clickedTabName = $clickedTab.attr('data-tab');
 
       this.set('_activeTab', clickedTabName);

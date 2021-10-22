@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
+
+import { get } from '@ember/object';
 import CategorizedLayerStyle from './-private/categorized';
 
 /**
@@ -29,8 +31,8 @@ export default CategorizedLayerStyle.extend({
     }
 
     // Category value is serialized interval in format '< 10' or '> 1' or '<= 10' or '<= 10' or '1 - 10'.
-    let categoryInterval = Ember.get(category, 'value');
-    if (Ember.isBlank(categoryInterval)) {
+    let categoryInterval = get(category, 'value');
+    if (isBlank(categoryInterval)) {
       return false;
     }
 
@@ -87,7 +89,7 @@ export default CategorizedLayerStyle.extend({
 
       let i = 0;
       let startIntervalValue = interval[i].trim();
-      if (Ember.isBlank(startIntervalValue)) {
+      if (isBlank(startIntervalValue)) {
         // Blank string after split('-') means that there was negative number.
         i++;
         startIntervalValue = '-' + interval[i];
@@ -100,7 +102,7 @@ export default CategorizedLayerStyle.extend({
 
       i++;
       let endIntervalValue = interval[i].trim();
-      if (Ember.isBlank(endIntervalValue)) {
+      if (isBlank(endIntervalValue)) {
         // Blank string after split('-') means that there was negative number.
         i++;
         endIntervalValue = '-' + interval[i];

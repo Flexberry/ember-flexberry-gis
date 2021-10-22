@@ -1,14 +1,19 @@
-import Ember from 'ember';
+import { A, isArray } from '@ember/array';
+import { Promise } from 'rsvp';
+import { isNone } from '@ember/utils';
+import Mixin from '@ember/object/mixin';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
 import { Query } from 'ember-flexberry-data';
 import { getCrsByName } from '../utils/get-crs-by-name';
 import { geometryToJsts } from '../utils/layer-to-jsts';
-import { createLayerFromMetadata } from '../utils/create-layer-from-metadata';
+import {
+  createLayerFromMetadata } from '../utils/create-laye
+} from-metadata';
 import {
   setIndexes
 } from '../utils/change-index-on-map-layers';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Keyword for cosmos images.
 
@@ -57,7 +62,7 @@ export default Ember.Mixin.create({
     @return {Promise} models
   */
   _getMetadataModels(queryBuilder) {
-    if (Ember.isNone(queryBuilder)) {
+    if (isNone(queryBuilder)) {
       return null;
     }
 
@@ -77,11 +82,11 @@ export default Ember.Mixin.create({
     and layers have desired attributes, and 'areaIntersections' is area of intersections.
   */
   findLayerMetadata(geometryIntersectsBbox, attributes) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      let filter = Ember.A();
+    return new Promise((resolve, reject) => {
+      let filter = A();
       let crsName;
       let crsLayer;
-      if (!Ember.isNone(geometryIntersectsBbox)) {
+      if (!isNone(geometryIntersectsBbox)) {
         if (!geometryIntersectsBbox.hasOwnProperty('crs')) {
           reject("Error: geometryIntersectsBbox must have 'crs' attribute");
         }
@@ -99,8 +104,8 @@ export default Ember.Mixin.create({
         filter.push(predicateBBox.intersects(geoJSON.getLayers()[0].toEWKT(crsFactory4326.create())));
       }
 
-      if (!Ember.isNone(attributes) && Ember.isArray(attributes)) {
-        let equals = Ember.A();
+      if (!isNone(attributes) && isArray(attributes)) {
+        let equals = A();
         attributes.forEach((strSearch) => {
           equals.push(new Query.StringPredicate('anyText').contains(strSearch));
         });
@@ -136,7 +141,7 @@ export default Ember.Mixin.create({
           let resObject = {
             layerMatadata: model
           };
-          if (!Ember.isNone(geometryIntersectsBbox)) {
+          if (!isNone(geometryIntersectsBbox)) {
             let bbox = model.get('boundingBox');
             let bboxLayer = L.geoJSON(bbox).getLayers()[0];
             let bboxJsts = bboxLayer.toJsts(crsLayer);
@@ -165,7 +170,7 @@ export default Ember.Mixin.create({
     @return {Promise} layer model.
   */
   addLayerFromLayerMetadata(layerId, index) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let queryBuilder = this._getQueryBuilderLayerMetadata().byId(layerId);
       this._getMetadataModels(queryBuilder).then((meta) => {
         if (meta.content.length === 0) {
@@ -185,18 +190,18 @@ export default Ember.Mixin.create({
           const layerBackground = this.get('backgroundLayers');
           layers.addObject(mapLayer);
           if (canBeBackground) {
-            if (!Ember.isNone(layerBackground)) {
+            if (!isNone(layerBackground)) {
               layerBackground.addObject(mapLayer);
             }
           } else {
-            if (!Ember.isNone(layersInTree)) {
+            if (!isNone(layersInTree)) {
               layersInTree.addObject(mapLayer);
             }
           }
 
           let rootArray = this.get('mapLayer');
           rootArray.pushObject(mapLayer);
-          if (Ember.isNone(index)) {
+          if (isNone(index)) {
             setIndexes(rootArray, layers);
           }
 

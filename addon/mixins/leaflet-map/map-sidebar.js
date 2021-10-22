@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
+
+import Mixin from '@ember/object/mixin';
 
 /**
   Mixin which injects map-commands methods & properties into leaflet map.
@@ -10,7 +12,7 @@ import Ember from 'ember';
   @class LeafletMapCommandsMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Performs some initialization before leaflet map will be initialized.
 
@@ -24,7 +26,7 @@ export default Ember.Mixin.create({
 
       // Hide sidebar.
       hide() {
-        let $control = Ember.$('*[class$="sidebar-wrapper"],*[class*="sidebar-wrapper "]');
+        let $control = $('*[class$="sidebar-wrapper"],*[class*="sidebar-wrapper "]');
         if ($control.length === 1 && $control.hasClass('visible')) {
           leafletMap.fire('flexberry-map:toggleSidebar');
         }
@@ -32,7 +34,7 @@ export default Ember.Mixin.create({
 
       // Show sidebar.
       show() {
-        let $control = Ember.$('*[class$="sidebar-wrapper"],*[class*="sidebar-wrapper "]');
+        let $control = $('*[class$="sidebar-wrapper"],*[class*="sidebar-wrapper "]');
         if ($control.length === 1 && !$control.hasClass('visible')) {
           leafletMap.fire('flexberry-map:toggleSidebar');
         }

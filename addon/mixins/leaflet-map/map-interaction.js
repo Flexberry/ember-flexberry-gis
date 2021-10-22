@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
+
+import Mixin from '@ember/object/mixin';
 
 /**
   Mixin which injects interaction methods & properties into leaflet map.
@@ -10,7 +12,7 @@ import Ember from 'ember';
   @class LeafletMapInteractionMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Performs some initialization before leaflet map will be initialized.
 
@@ -23,15 +25,15 @@ export default Ember.Mixin.create({
     let interactionIsEnabled = true;
 
     // Retrieve & remember all map interaction handlers.
-    let handlers = Ember.A(leafletMap._handlers);
+    let handlers = A(leafletMap._handlers);
 
     // Retrieved 'enable' methods related to handlers.
-    let handlersOriginalEnableMethods = Ember.A(handlers.map((handler) => {
+    let handlersOriginalEnableMethods = A(handlers.map((handler) => {
       return handler.enable;
     }));
 
     // Array containing disabled handlers.
-    let disabledHandlers = Ember.A();
+    let disabledHandlers = A();
 
     // Override handlers 'enable' method to prevent their enabling if interaction is disabled.
     handlers.forEach((handler) => {

@@ -1,8 +1,8 @@
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/tabs/load-file';
 import { translationMacro as t } from 'ember-i18n';
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
 
   loadButtonCaption: t('components.layers-dialogs.add.loadFile.load-button-caption'),

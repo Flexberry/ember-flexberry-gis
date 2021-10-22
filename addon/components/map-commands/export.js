@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { get } from '@ember/object';
+
+import Component from '@ember/component';
 import layout from '../../templates/components/map-commands/export';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -44,7 +46,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let ExportMapCommandComponent = Ember.Component.extend({
+let ExportMapCommandComponent = Component.extend({
 
   /**
     Flag: indicates whether export dialog has been already requested by user or not.
@@ -209,7 +211,7 @@ let ExportMapCommandComponent = Ember.Component.extend({
       this.set('_exportIsInProgress', true);
       e.closeDialog = false;
       let leafletMap = this.get('leafletMap');
-      let mapCommandExecutionOptions = Ember.get(e, 'exportOptions');
+      let mapCommandExecutionOptions = get(e, 'exportOptions');
       leafletMap.flexberryMap.commands.execute('export', null, mapCommandExecutionOptions).then(() => {
         this.set('_exportIsInProgress', false);
         e.closeDialog = true;

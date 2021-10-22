@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone, typeOf } from '@ember/utils';
+
+import $ from 'jquery';
+import Mixin from '@ember/object/mixin';
 
 /**
   Component's CSS-classes names.
@@ -27,7 +30,7 @@ const flexberryClassNames = {
   @class LeafletMapLoaderMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
     Performs some initialization before leaflet map will be initialized.
 
@@ -41,11 +44,11 @@ export default Ember.Mixin.create({
 
     // Inject DOM-elements for loader & it's dimmer into map's container markup.
     let $leafletMapContainer = this.get('_$leafletContainer');
-    let $dimmer = Ember.$('<div />')
+    let $dimmer = $('<div />')
       .addClass(flexberryClassNames.loaderDimmer)
       .addClass('ui dimmer')
       .appendTo($leafletMapContainer);
-    let $loader = Ember.$('<div />')
+    let $loader = $('<div />')
       .addClass(flexberryClassNames.loader)
       .addClass('ui text loader')
       .appendTo($leafletMapContainer);
@@ -69,8 +72,8 @@ export default Ember.Mixin.create({
 
       // Sets loader's content.
       setContent(content) {
-        content = Ember.isNone(content) ? '' : content;
-        content = Ember.typeOf(content) === 'string' ? content : '' + content;
+        content = isNone(content) ? '' : content;
+        content = typeOf(content) === 'string' ? content : '' + content;
 
         $loader.html(content);
       },
@@ -79,7 +82,7 @@ export default Ember.Mixin.create({
       show(options) {
         // Set possibly defined loader's content.
         options = options || {};
-        if (!Ember.isNone(options.content)) {
+        if (!isNone(options.content)) {
           loader.setContent(options.content);
         }
 
@@ -101,7 +104,7 @@ export default Ember.Mixin.create({
       hide(options) {
         // Set possibly defined loader's content.
         options = options || {};
-        if (!Ember.isNone(options.content)) {
+        if (!isNone(options.content)) {
           loader.setContent(options.content);
         }
 

@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import Helper from '@ember/component/helper';
 
 /**
   Object contains helper.
@@ -11,7 +11,7 @@ import Ember from 'ember';
   @class ObjectContainsHelper
   @extends <a href="http://emberjs.com/api/classes/Ember.Helper.html">Ember.Helper</a>
 */
-export default Ember.Helper.extend({
+export default Helper.extend({
   /**
     Overridden [Ember.Helper compute method](http://emberjs.com/api/classes/Ember.Helper.html#method_compute).
     Executes helper's logic.

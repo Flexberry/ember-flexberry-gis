@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
 import BaseNonclickableMapTool from './base-nonclickable';
 
 /**
@@ -51,17 +51,17 @@ export default BaseNonclickableMapTool.extend({
 
     let leafletMap = this.get('leafletMap');
     let editLayer = this.get('editLayer');
-    if (!Ember.isNone(editLayer) && !leafletMap.hasLayer(editLayer)) {
+    if (!isNone(editLayer) && !leafletMap.hasLayer(editLayer)) {
       editLayer.addTo(leafletMap);
     }
 
     let featuresLayer = this.get('featuresLayer');
-    if (!Ember.isNone(featuresLayer) && !leafletMap.hasLayer(featuresLayer)) {
+    if (!isNone(featuresLayer) && !leafletMap.hasLayer(featuresLayer)) {
       featuresLayer.addTo(leafletMap);
     }
 
     let measureTools = this.get('_measureTools');
-    if (Ember.isNone(measureTools)) {
+    if (isNone(measureTools)) {
       measureTools = new L.MeasureBase(leafletMap, {
         editOptions: {
           editLayer: editLayer,
@@ -85,12 +85,12 @@ export default BaseNonclickableMapTool.extend({
     this._super(...arguments);
 
     let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
+    if (!isNone(leafletMap)) {
       leafletMap.off('measure:created', this._onMeasurCreated, this);
     }
 
     let measureTools = this.get('_measureTools');
-    if (!Ember.isNone(measureTools)) {
+    if (!isNone(measureTools)) {
       measureTools.stopMeasuring();
     }
   },
@@ -103,7 +103,7 @@ export default BaseNonclickableMapTool.extend({
   */
   _onMeasurCreated() {
     let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
+    if (!isNone(leafletMap)) {
       // Disable current measure tool in favor of default map tool.
       leafletMap.flexberryMap.tools.disable();
     }
@@ -116,13 +116,13 @@ export default BaseNonclickableMapTool.extend({
     this._super(...arguments);
 
     let editLayer = this.get('_measureTools.options.editOptions.editLayer');
-    if (!Ember.isNone(editLayer)) {
+    if (!isNone(editLayer)) {
       editLayer.clearLayers();
       editLayer.remove();
     }
 
     let featuresLayer = this.get('_measureTools.options.editOptions.featuresLayer');
-    if (!Ember.isNone(featuresLayer)) {
+    if (!isNone(featuresLayer)) {
       featuresLayer.clearLayers();
       featuresLayer.remove();
     }

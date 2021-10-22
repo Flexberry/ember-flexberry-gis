@@ -1,4 +1,8 @@
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+import $ from 'jquery';
+import { observer, get, set } from '@ember/object';
+import { A } from '@ember/array';
+import Component from '@ember/component';
 import layout from '../../templates/components/map-tools/background-layers';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -9,7 +13,7 @@ const flexberryClassNames = {
   div: flexberryClassNamesPrefix + '-div'
 };
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
 
   /**
@@ -71,7 +75,7 @@ export default Ember.Component.extend({
     @type Object
     @default Ember.A()
   */
-  items: Ember.A(),
+  items: A(),
 
   /**
     Selected layer.
@@ -82,7 +86,7 @@ export default Ember.Component.extend({
   */
   selectedLayer: null,
 
-  _backgroundLayersChange: Ember.observer('layers.[]', function() {
+  _backgroundLayersChange: observer('layers.[]', function() {
     this._updateItems();
   }),
 
@@ -106,18 +110,18 @@ export default Ember.Component.extend({
       }
 
       let classActive = '';
-      if (Ember.get(layer, 'visibility')) {
+      if (get(layer, 'visibility')) {
         classActive = 'active';
         this.set('selectedLayer', layer);
       }
 
       items.push({
-        name: Ember.get(layer, 'name'),
+        name: get(layer, 'name'),
         pic: layer.get('settingsAsObject.backgroundSettings.picture'),
         class: classChild,
         layer: layer,
         classActive: classActive,
-        id: Ember.get(layer, 'id')
+        id: get(layer, 'id')
       });
       i++;
     });
@@ -132,7 +136,7 @@ export default Ember.Component.extend({
       @method actions.showBackgroundLayers
     */
     showBackgroundLayers() {
-      let $tool = Ember.$('.flexberry-background-map-tool');
+      let $tool = $('.flexberry-background-map-tool');
       if (!this.get('isVisible') && this.get('layers').length !== 0) {
         this.set('isVisible', true);
         $tool.addClass('visible');
@@ -149,31 +153,31 @@ export default Ember.Component.extend({
     */
     onLayerClick(layer) {
       let selectedLayer = this.get('selectedLayer');
-      if (Ember.isNone(selectedLayer)) {
-        Ember.set(layer, 'visibility', true);
+      if (isNone(selectedLayer)) {
+        set(layer, 'visibility', true);
         this.set('selectedLayer', layer);
       } else {
-        Ember.set(selectedLayer, 'visibility', false);
-        if (Ember.get(selectedLayer, 'id') === Ember.get(layer, 'id')) {
+        set(selectedLayer, 'visibility', false);
+        if (get(selectedLayer, 'id') === get(layer, 'id')) {
           this.set('selectedLayer', null);
         } else {
-          Ember.set(layer, 'visibility', true);
+          set(layer, 'visibility', true);
           this.set('selectedLayer', layer);
         }
       }
 
       let items = this.get('items');
       items.forEach(item => {
-        if (item.id === Ember.get(layer, 'id')) {
-          if (Ember.get(item, 'classActive') !== 'active') {
-            Ember.set(item, 'classActive', 'active');
+        if (item.id === get(layer, 'id')) {
+          if (get(item, 'classActive') !== 'active') {
+            set(item, 'classActive', 'active');
           } else {
-            Ember.set(item, 'classActive', '');
+            set(item, 'classActive', '');
           }
         }
 
-        if (item.id !== Ember.get(layer, 'id') && Ember.get(item, 'classActive') === 'active') {
-          Ember.set(item, 'classActive', '');
+        if (item.id !== get(layer, 'id') && get(item, 'classActive') === 'active') {
+          set(item, 'classActive', '');
         }
       });
 

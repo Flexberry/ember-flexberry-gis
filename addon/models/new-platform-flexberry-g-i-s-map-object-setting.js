@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import { Model as MapObjectSettingMixin, defineProjections } from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map-object-setting';
+import {
+  Model as MapObjectSettingMixin,
+  defineProjections
+} from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map-object-setting';
 import { Projection } from 'ember-flexberry-data';
 import { Offline } from 'ember-flexberry-data';
 

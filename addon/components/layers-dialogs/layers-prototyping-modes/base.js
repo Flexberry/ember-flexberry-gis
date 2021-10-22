@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import FlexberryEditLayerMapComponent from '../../flexberry-edit-layermap';
 
 /**
@@ -11,7 +11,7 @@ import FlexberryEditLayerMapComponent from '../../flexberry-edit-layermap';
   @class BaseModeComponent
   @extends Ember.Component
 */
-export default Ember.Component.extend({
+export default Component.extend({
   bindingProperties: [],
 
   /**

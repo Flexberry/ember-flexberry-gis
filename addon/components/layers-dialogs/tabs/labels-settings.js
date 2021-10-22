@@ -1,7 +1,12 @@
-import Ember from 'ember';
+import { scheduleOnce } from '@ember/runloop';
+import { getOwner } from '@ember/application';
+import { isNone, isBlank } from '@ember/utils';
+import { A, isArray } from '@ember/array';
+import { computed, get } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/tabs/labels-settings';
 
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -167,13 +172,13 @@ export default Ember.Component.extend({
     @default null
     @private
   */
-  _availableLineLocation: Ember.computed('i18n.locale', function() {
+  _availableLineLocation: computed('i18n.locale', function() {
     let result = [];
     let i18n = this.get('i18n');
     let over = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.over`).toString();
     let along = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.along`).toString();
     let under = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.under`).toString();
-    result = Ember.A([over, along, under]);
+    result = A([over, along, under]);
     let itemLineLocation = {
       over: over,
       along: along,
@@ -191,12 +196,12 @@ export default Ember.Component.extend({
     @default null
     @private
   */
-  _lineLocationSelect: Ember.computed('value.location.lineLocationSelect', '_itemsLineLocation', function() {
+  _lineLocationSelect: computed('value.location.lineLocationSelect', '_itemsLineLocation', function() {
     let location = this.get('value.location.lineLocationSelect');
     let items = this.get('_itemsLineLocation');
     let result = items.over;
     let setting = 'over';
-    if (!Ember.isNone(items)) {
+    if (!isNone(items)) {
       for (var key in items) {
         if (key === location) {
           result = items[key];
@@ -206,7 +211,7 @@ export default Ember.Component.extend({
       }
     }
 
-    if (Ember.isNone(location)) {
+    if (isNone(location)) {
       this.set('value.location.lineLocationSelect', setting);
     }
 
@@ -223,7 +228,7 @@ export default Ember.Component.extend({
   */
   _arrLabelString: null,
 
-  _error: Ember.computed('_leafletObject', 'leafletMap', function() {
+  _error: computed('_leafletObject', 'leafletMap', function() {
     let leafletObject = this.get('_leafletObject');
     let leafletMap = this.get('leafletMap');
     return leafletMap && !leafletMap.hasLayer(leafletObject);
@@ -237,7 +242,7 @@ export default Ember.Component.extend({
 
     // There is no easy way to programmatically get list of all available system fonts (in JavaScript),
     // so we can only list some web-safe fonts statically (see https://www.w3schools.com/csSref/css_websafe_fonts.asp).
-    this.set('_availableFontFamilies', Ember.A([
+    this.set('_availableFontFamilies', A([
       'Georgia',
       'Palatino Linotype',
       'Times New Roman',
@@ -254,7 +259,7 @@ export default Ember.Component.extend({
     ]));
 
     // Same situation with available font sizes.
-    this.set('_availableFontSizes', Ember.A(['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '26', '28', '36', '48', '72']));
+    this.set('_availableFontSizes', A(['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '26', '28', '36', '48', '72']));
   },
 
   /**
@@ -265,29 +270,29 @@ export default Ember.Component.extend({
   getAllProperties() {
     let _this = this;
     let leafletObject = _this.get('_leafletObject');
-    if (Ember.isNone(leafletObject)) {
+    if (isNone(leafletObject)) {
       let type = _this.get('layerType');
       let leafletObjectMethod = _this.get('leafletObjectMethod');
-      if (!(Ember.isBlank(leafletObjectMethod) || Ember.isBlank(type))) {
+      if (!(isBlank(leafletObjectMethod) || isBlank(type))) {
         _this.set('_leafletObjectIsLoading', true);
         leafletObjectMethod().then(leafletObject => {
           _this.set('_leafletObject', leafletObject);
           _this.set('_leafletObjectIsLoading', false);
-          let layerClass = Ember.getOwner(_this).knownForType('layer', type);
-          if (!Ember.isBlank(layerClass)) {
-            let allProperties = Ember.A(layerClass.getLayerProperties(leafletObject));
+          let layerClass = getOwner(_this).knownForType('layer', type);
+          if (!isBlank(layerClass)) {
+            let allProperties = A(layerClass.getLayerProperties(leafletObject));
 
             let localizedProperties = this.get(`value.featuresPropertiesSettings.localizedProperties.${this.get('i18n.locale')}`) || {};
             let excludedProperties = this.get(`value.featuresPropertiesSettings.excludedProperties`);
-            excludedProperties = Ember.isArray(excludedProperties) ? Ember.A(excludedProperties) : Ember.A();
+            excludedProperties = isArray(excludedProperties) ? A(excludedProperties) : A();
             let availableLayerProperties = {};
             for (var propertyName of allProperties) {
               if (excludedProperties.contains(propertyName)) {
                 continue;
               }
 
-              let propertyCaption = Ember.get(localizedProperties, propertyName);
-              availableLayerProperties[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;
+              let propertyCaption = get(localizedProperties, propertyName);
+              availableLayerProperties[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
             }
 
             _this.set('_availableLayerProperties', availableLayerProperties);
@@ -322,7 +327,7 @@ export default Ember.Component.extend({
 
     caretPosition = caretPosition + (caretShift || 0);
     this.set('value.labelSettingsString', newLabelString);
-    Ember.run.scheduleOnce('afterRender', this, function () {
+    scheduleOnce('afterRender', this, function () {
       textarea.focus();
       textarea.setSelectionRange(caretPosition, caretPosition);
     });
@@ -350,7 +355,7 @@ export default Ember.Component.extend({
     onLineLocationSelect(location) {
       let items = this.get('_itemsLineLocation');
       let result = 'over';
-      if (!Ember.isNone(items)) {
+      if (!isNone(items)) {
         for (var key in items) {
           if (items[key] === location) {
             result = key;
@@ -382,7 +387,7 @@ export default Ember.Component.extend({
     */
     fieldClick(text) {
       if (this.get('_selectedField') !== text && this.get('value.signMapObjects')) {
-        this.set('values', Ember.A());
+        this.set('values', A());
         this.set('_selectedField', text);
       }
     },
@@ -395,7 +400,7 @@ export default Ember.Component.extend({
     */
     pasteFieldValue(value) {
       if (this.get('value.signMapObjects')) {
-        if (Ember.isNone(value)) {
+        if (isNone(value)) {
           this._pasteIntoLabelString('NULL');
           return;
         }

@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+
+import { get } from '@ember/object';
+import $ from 'jquery';
+import { run } from '@ember/runloop';
+import { Promise } from 'rsvp';
 import BaseGeoProvider from './base';
 
 /**
@@ -37,9 +42,9 @@ export default BaseGeoProvider.extend({
       `results=${top}&` +
       `skip=${skip}`;
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.run(() => {
-        Ember.$.ajax(requestUrl, { dataType: 'json' }).done((data, textStatus, jqXHR) => {
+    return new Promise((resolve, reject) => {
+      run(() => {
+        $.ajax(requestUrl, { dataType: 'json' }).done((data, textStatus, jqXHR) => {
           resolve(data);
         }).fail((jqXHR, textStatus, errorThrown) => {
           reject(errorThrown);
@@ -55,17 +60,17 @@ export default BaseGeoProvider.extend({
   */
   _parseRequestResult({ response }) {
     let result = null;
-    let geoObjectCollection = Ember.get(response, 'GeoObjectCollection');
-    if (!Ember.isNone(geoObjectCollection)) {
-      let total = Ember.get(geoObjectCollection, 'metaDataProperty.GeocoderResponseMetaData.found');
-      if (!Ember.isNone(total) && total !== '0') {
+    let geoObjectCollection = get(response, 'GeoObjectCollection');
+    if (!isNone(geoObjectCollection)) {
+      let total = get(geoObjectCollection, 'metaDataProperty.GeocoderResponseMetaData.found');
+      if (!isNone(total) && total !== '0') {
         result = { total, data: [] };
 
-        let objects = Ember.get(geoObjectCollection, 'featureMember');
+        let objects = get(geoObjectCollection, 'featureMember');
         objects.forEach(element => {
-          let description = Ember.get(element, 'GeoObject.description');
-          let name = Ember.get(element, 'GeoObject.name');
-          let position = Ember.get(element, 'GeoObject.Point.pos');
+          let description = get(element, 'GeoObject.description');
+          let name = get(element, 'GeoObject.name');
+          let position = get(element, 'GeoObject.Point.pos');
 
           result.data.push({ name: `${description}, ${name}`, type: 'marker', position });
         });

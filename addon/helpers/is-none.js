@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+
+import Helper from '@ember/component/helper';
 
 /**
   Is none helper.
@@ -11,7 +13,7 @@ import Ember from 'ember';
   @class IsNoneHelper
   @extends <a href="http://emberjs.com/api/classes/Ember.Helper.html">Ember.Helper</a>
 */
-export default Ember.Helper.extend({
+export default Helper.extend({
   /**
     Overridden [Ember.Helper compute method](http://emberjs.com/api/classes/Ember.Helper.html#method_compute).
     Executes helper's logic, returns arguments wrapped into array.
@@ -21,6 +23,6 @@ export default Ember.Helper.extend({
     @return {Boolen} Flag: indicates whether the specified item contains in the given array or not.
   */
   compute([value]) {
-    return Ember.isNone(value);
+    return isNone(value);
   }
 });

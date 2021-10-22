@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+import { next } from '@ember/runloop';
 
 export default function openCloseSubmenu(context, moreButton, elements, incTop, decLeft) {
   const isHidden = context.get('isSubmenu');
@@ -7,7 +8,7 @@ export default function openCloseSubmenu(context, moreButton, elements, incTop, 
   if (!isHidden) {
     const element = elements[0];
     const topMainButtons = window.document.getElementsByClassName('main-map-tab-bar')[0].getBoundingClientRect().top;
-    Ember.run.next(() => {
+    next(() => {
       // Устанавливаем фиксированное позиционирование для подменю, чтобы не зависеть от внешнего контенера.
       let { top, left } = moreButton[0].getBoundingClientRect();
       if (topMainButtons <= (top + 1 + element.getBoundingClientRect().height)) {
@@ -18,7 +19,7 @@ export default function openCloseSubmenu(context, moreButton, elements, incTop, 
       }
 
       element.style.position = 'fixed';
-      element.style.left = `${left - (Ember.isNone(decLeft) ? 0 : decLeft)}px`;
+      element.style.left = `${left - (isNone(decLeft) ? 0 : decLeft)}px`;
       element.style.top = `${top + incTop}px`;
     });
   }

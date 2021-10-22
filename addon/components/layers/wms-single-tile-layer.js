@@ -2,7 +2,10 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
+
+import { getOwner } from '@ember/application';
+import { isNone, isBlank } from '@ember/utils';
 import WmsLayerComponent from './wms-layer';
 import TileLayerComponent from './tile-layer';
 
@@ -45,7 +48,7 @@ export default TileLayerComponent.extend({
   */
   identify(e) {
     let innerWmsLayer = this.get('_wmsLayer');
-    if (!Ember.isNone(innerWmsLayer)) {
+    if (!isNone(innerWmsLayer)) {
       return innerWmsLayer.identify.apply(innerWmsLayer, arguments);
     }
   },
@@ -70,15 +73,15 @@ export default TileLayerComponent.extend({
     };
 
     // Set creating component's owner to avoid possible lookup exceptions.
-    let owner = Ember.getOwner(this);
+    let owner = getOwner(this);
     let ownerKey = null;
-    Ember.A(Object.keys(this) || []).forEach((key) => {
+    A(Object.keys(this) || []).forEach((key) => {
       if (this[key] === owner) {
         ownerKey = key;
         return false;
       }
     });
-    if (!Ember.isBlank(ownerKey)) {
+    if (!isBlank(ownerKey)) {
       innerWmsLayerProperties[ownerKey] = owner;
     }
 
@@ -93,7 +96,7 @@ export default TileLayerComponent.extend({
     this._super(...arguments);
 
     let innerWmsLayer = this.get('_wmsLayer');
-    if (!Ember.isNone(innerWmsLayer)) {
+    if (!isNone(innerWmsLayer)) {
       innerWmsLayer.destroy();
       this.set('_wmsLayer', null);
     }

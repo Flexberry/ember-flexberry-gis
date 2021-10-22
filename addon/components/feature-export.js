@@ -1,4 +1,9 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import { isNone } from '@ember/utils';
+import { A } from '@ember/array';
+import { getOwner } from '@ember/application';
+import { computed, observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../templates/components/feature-export';
 import { downloadFile, downloadBlob } from '../utils/download-file';
 import { getCrsByName } from '../utils/get-crs-by-name';
@@ -18,7 +23,7 @@ const defaultOptions = {
 /**
  * Export dialog of map feaure to file.
  */
-let FeatureExportDialogComponent = Ember.Component.extend({
+let FeatureExportDialogComponent = Component.extend({
   /**
    * Current settings.
    */
@@ -69,7 +74,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
   /**
    * Current crs.
    */
-  _crs: Ember.computed('_options.coordSystem', function() {
+  _crs: computed('_options.coordSystem', function() {
     let _options = this.get('_options');
     let factories = this.get('availableCRS');
 
@@ -99,7 +104,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
   /**
    * GPX format only polyline and marker
    */
-  _GPXFormat: Ember.observer('result', function() {
+  _GPXFormat: observer('result', function() {
     let result = this.get('result');
     let layer = result.layerModel;
     let type = layer.get('settingsAsObject.typeGeometry');
@@ -119,7 +124,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
   /**
    * Filter crs for difference formats
    */
-  _filterCRS: Ember.observer('_options.format', function() {
+  _filterCRS: observer('_options.format', function() {
     let selectedFormat = this.get('_options.format');
     if (selectedFormat === 'KML') {
       let crs4326Names = [];
@@ -153,7 +158,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
         }
       });
 
-      let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      let config = getOwner(this).resolveRegistration('config:environment');
       let url = config.APP.backendUrls.featureExportApi;
       let headers = {};
 
@@ -179,7 +184,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     this._super(...arguments);
 
     // Formats.
-    this.set('_availableFormats', Ember.A([
+    this.set('_availableFormats', A([
       'JSON',
       'CSV',
       'GML2',
@@ -193,7 +198,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     let factories = this.get('availableCRS');
     let availableCRSNames = [];
 
-    if (!Ember.isNone(factories)) {
+    if (!isNone(factories)) {
       factories.forEach((factory) => {
         availableCRSNames.push(factory.name);
       });
@@ -203,17 +208,17 @@ let FeatureExportDialogComponent = Ember.Component.extend({
 
     this.set('availableCRSNames', availableCRSNames);
     this.set('_allCRSNames', availableCRSNames);
-    this.set('_options', Ember.$.extend(true, {}, defaultOptions));
+    this.set('_options', $.extend(true, {}, defaultOptions));
   },
 
   /**
    * When the first time show window, then his need to show.
    */
-  visibleObserver: Ember.observer('visible', function() {
+  visibleObserver: observer('visible', function() {
     let visible = this.get('visible');
 
     if (visible) {
-      this.set('_options', Ember.$.extend(true, {}, defaultOptions));
+      this.set('_options', $.extend(true, {}, defaultOptions));
       this.set('_dialogRequested', true);
     }
   })

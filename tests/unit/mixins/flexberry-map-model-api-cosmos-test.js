@@ -1,6 +1,12 @@
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+import { resolve } from 'rsvp';
+import { A } from '@ember/array';
+import EmberObject from '@ember/object';
+import { run } from '@ember/runloop';
 import FlexberryMapModelApiCosmosMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api-cosmos';
-import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
+import {
+  createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-laye
+} from-metadata';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
 import startApp from 'dummy/tests/helpers/start-app';
 import { Query } from 'ember-flexberry-data';
@@ -17,18 +23,18 @@ module('Unit | Mixin | flexberry map model api cosmos', {
     'model:new-platform-flexberry-g-i-s-layer-metadata'
   ],
   beforeEach: function () {
-    Ember.run(function() {
+    run(function() {
       app = startApp();
       app.deferReadiness();
       store = app.__container__.lookup('service:store');
     });
   },
   afterEach: function () {
-    Ember.run(app, 'destroy');
+    run(app, 'destroy');
   }
 });
 
-let mapApiMixinObject = Ember.Object.extend(FlexberryMapModelApiCosmosMixin);
+let mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiCosmosMixin);
 let metadataProjection = 'LayerMetadataE';
 let metadataModelName = 'new-platform-flexberry-g-i-s-layer-metadata';
 let crsFactory32640 = {
@@ -58,18 +64,18 @@ let bbox = {
     }
   }
 };
-let testModel = Ember.Object.create({
+let testModel = EmberObject.create({
   anyText: 'test',
   boundingBox: bbox,
   id: '123',
   type: 'wms',
   settings: '{}',
   linkMetadata: [
-    Ember.A({
+    A({
       allowShow: true,
       mapObjectSetting: null,
       parameters: [
-        Ember.A({
+        A({
           objectField: 'testObjectField'
         })
       ]
@@ -116,7 +122,7 @@ test('test method findCosmos for only with parameter feature', function(assert) 
       .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
-      return Ember.RSVP.resolve([testModel]);
+      return resolve([testModel]);
     }
   });
   let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
@@ -165,7 +171,7 @@ test('test method findCosmos for only with parameter attributes one', function(a
       .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
-      return Ember.RSVP.resolve([testModel]);
+      return resolve([testModel]);
     }
   });
   let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
@@ -213,7 +219,7 @@ test('test method findCosmos for only with parameter attributes two', function(a
       .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
-      return Ember.RSVP.resolve([testModel]);
+      return resolve([testModel]);
     }
   });
   let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
@@ -282,7 +288,7 @@ test('test method findCosmos for with feature and attributes', function(assert) 
       .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
-      return Ember.RSVP.resolve([testModel]);
+      return resolve([testModel]);
     }
   });
   let spyGetMetadataModels = sinon.spy(subject, '_getMetadataModels');
@@ -317,8 +323,8 @@ test('test method addLayerFromLayerMetadata', function(assert) {
   //Arrange
   assert.expect(9);
   let done = assert.async(1);
-  let hierarchy = Ember.A();
-  let mapLayer = Ember.A();
+  let hierarchy = A();
+  let mapLayer = A();
   let subject = mapApiMixinObject.create({
     mapLayer: mapLayer,
     _getQueryBuilderLayerMetadata() {
@@ -327,7 +333,7 @@ test('test method addLayerFromLayerMetadata', function(assert) {
       .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
-      return Ember.RSVP.resolve({ content: [testModel] });
+      return resolve({ content: [testModel] });
     },
     store: store,
     hierarchy: hierarchy
@@ -343,7 +349,7 @@ test('test method addLayerFromLayerMetadata', function(assert) {
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._id, '123');
     assert.ok(layer);
     assert.equal(layer.get('index'), '10');
-    assert.ok(!Ember.isNone(layer.get('id')));
+    assert.ok(!isNone(layer.get('id')));
     assert.equal(hierarchy.length, 1);
     assert.equal(mapLayer.length, 1);
     assert.equal(layer.get('type'), 'wms');
@@ -357,7 +363,7 @@ test('test method addLayerFromLayerMetadata not found layer', function(assert) {
   //Arrange
   assert.expect(4);
   let done = assert.async(1);
-  let hierarchy = Ember.A();
+  let hierarchy = A();
   let subject = mapApiMixinObject.create({
     _getQueryBuilderLayerMetadata() {
       return new Query.Builder(store, metadataModelName)
@@ -365,7 +371,7 @@ test('test method addLayerFromLayerMetadata not found layer', function(assert) {
       .selectByProjection(metadataProjection);
     },
     _getMetadataModels() {
-      return Ember.RSVP.resolve({ content: [] });
+      return resolve({ content: [] });
     },
     store: store,
     hierarchy: hierarchy
@@ -395,12 +401,12 @@ test('test method createLayerFromMetadata', function(assert) {
   });
 
   //Act
-  Ember.run(() => {
+  run(() => {
     let layerModel = createLayerFromMetadata(testModel, subject.get('store'));
 
     //Assert
     assert.ok(layerModel);
-    assert.ok(!Ember.isNone(layerModel.get('id')));
+    assert.ok(!isNone(layerModel.get('id')));
     assert.equal(layerModel.get('type'), 'wms');
     assert.equal(layerModel.get('layerLink').length, 1);
     assert.equal(layerModel.get('layerLink.firstObject.parameters.firstObject.objectField'), 'testObjectField');

@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { helper as buildHelper } from '@ember/component/helper';
 
 export function flexberrySearchPropertiesOsmRu([url]) {
   return {
@@ -18,4 +18,4 @@ export function flexberrySearchPropertiesOsmRu([url]) {
   };
 }
 
-export default Ember.Helper.helper(flexberrySearchPropertiesOsmRu);
+export default buildHelper(flexberrySearchPropertiesOsmRu);

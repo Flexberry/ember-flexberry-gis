@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
 import BaseMapTool from './base';
 
 /**
@@ -61,7 +61,7 @@ export default BaseMapTool.extend({
 
     let leafletMap = this.get('leafletMap');
     let editTools = this.get('_editTools');
-    if (Ember.isNone(editTools)) {
+    if (isNone(editTools)) {
       editTools = new L.Editable(leafletMap, {
         drawingCursor: this.get('cursor')
       });
@@ -82,7 +82,7 @@ export default BaseMapTool.extend({
     this._super(...arguments);
 
     let editTools = this.get('_editTools');
-    if (!Ember.isNone(editTools)) {
+    if (!isNone(editTools)) {
       editTools.off('editable:drawing:end', this._rectangleDrawingDidEnd, this);
       editTools.stopDrawing();
     }
@@ -95,13 +95,13 @@ export default BaseMapTool.extend({
     this._super(...arguments);
 
     let editLayer = this.get('_editTools.editLayer');
-    if (!Ember.isNone(editLayer)) {
+    if (!isNone(editLayer)) {
       editLayer.clearLayers();
       editLayer.remove();
     }
 
     let featuresLayer = this.get('_editTools.featuresLayer');
-    if (!Ember.isNone(featuresLayer)) {
+    if (!isNone(featuresLayer)) {
       featuresLayer.clearLayers();
       featuresLayer.remove();
     }

@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { A } from '@ember/array';
+
+import { isNone } from '@ember/utils';
 import VectorLayer from 'ember-flexberry-gis/layers/-private/vector';
 
 /**
@@ -40,11 +42,11 @@ export default VectorLayer.extend({
     @returns {Array} Array with properties names
   */
   getLayerProperties(leafletObject) {
-    if (Ember.isNone(leafletObject)) {
-      return Ember.A();
+    if (isNone(leafletObject)) {
+      return A();
     }
 
-    return Ember.A();
+    return A();
   },
 
   /**
@@ -57,10 +59,10 @@ export default VectorLayer.extend({
     @returns {Array} Array with selected property values
   */
   getLayerPropertyValues(leafletObject, selectedField, count) {
-    if (Ember.isNone(leafletObject)) {
-      return Ember.A();
+    if (isNone(leafletObject)) {
+      return A();
     }
 
-    return Ember.A();
+    return A();
   }
 });

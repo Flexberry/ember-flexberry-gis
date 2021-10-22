@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
+
+import Helper from '@ember/component/helper';
 
 /**
   Regex tester helper.
@@ -11,7 +13,7 @@ import Ember from 'ember';
   @class RegexTestHelper
   @extends <a href="http://emberjs.com/api/classes/Ember.Helper.html">Ember.Helper</a>
 */
-export default Ember.Helper.extend({
+export default Helper.extend({
   /**
     Overridden [Ember.Helper compute method](http://emberjs.com/api/classes/Ember.Helper.html#method_compute).
     Executes helper's logic, returns arguments wrapped into array.
@@ -25,7 +27,7 @@ export default Ember.Helper.extend({
     if (item) {
       let regEx = new RegExp(expression);
 
-      return !Ember.isBlank(item.toString().match(regEx));
+      return !isBlank(item.toString().match(regEx));
     }
 
     return false;

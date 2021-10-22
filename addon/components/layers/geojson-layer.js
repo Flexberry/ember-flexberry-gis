@@ -2,7 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { set, get } from '@ember/object';
+
+import { isArray, A } from '@ember/array';
+import { Promise } from 'rsvp';
+import { isNone } from '@ember/utils';
+import $ from 'jquery';
+import { getOwner } from '@ember/application';
 import BaseVectorLayer from '../base-vector-layer';
 
 /**
@@ -57,7 +63,7 @@ export default BaseVectorLayer.extend({
   parseLeafletOptionsCallback({ callbackName, serializedCallback }) {
     // First filter must be converted into serialized function from temporary filter language.
     if (callbackName === 'filter' && typeof serializedCallback === 'string') {
-      serializedCallback = Ember.getOwner(this).lookup('layer:geojson').parseFilter(serializedCallback);
+      serializedCallback = getOwner(this).lookup('layer:geojson').parseFilter(serializedCallback);
     }
 
     return this._super({ callbackName, serializedCallback });
@@ -70,7 +76,7 @@ export default BaseVectorLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer(options) {
-    options = Ember.$.extend(true, {}, this.get('options'), options);
+    options = $.extend(true, {}, this.get('options'), options);
 
     let pane = this.get('_pane');
     if (pane) {
@@ -79,9 +85,9 @@ export default BaseVectorLayer.extend({
     }
 
     let url = this.get('url');
-    if (!Ember.isNone(url)) {
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        Ember.$.ajax({
+    if (!isNone(url)) {
+      return new Promise((resolve, reject) => {
+        $.ajax({
           type: 'get',
           url: url,
           dataType: 'json',
@@ -105,16 +111,16 @@ export default BaseVectorLayer.extend({
       features: []
     };
 
-    if (Ember.isArray(geojson)) {
-      Ember.set(featureCollection, 'features', geojson);
-    } else if (Ember.get(geojson, 'type') === 'Feature') {
-      Ember.set(featureCollection, 'features', [geojson]);
-    } else if (Ember.get(geojson, 'type') === 'FeatureCollection') {
+    if (isArray(geojson)) {
+      set(featureCollection, 'features', geojson);
+    } else if (get(geojson, 'type') === 'Feature') {
+      set(featureCollection, 'features', [geojson]);
+    } else if (get(geojson, 'type') === 'FeatureCollection') {
       featureCollection = geojson;
     }
 
-    let features = Ember.A(Ember.get(featureCollection, 'features') || []);
-    if (Ember.get(features, 'length') === 0) {
+    let features = A(get(featureCollection, 'features') || []);
+    if (get(features, 'length') === 0) {
       return L.geoJSON();
     }
 

@@ -1,19 +1,21 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('flexberry-map', 'Integration | Component | flexberry map', {
-  integration: true
-});
+module('Integration | Component | flexberry map', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function(assert) {
-  assert.expect(0);
+  test('it renders', async function(assert) {
+    assert.expect(0);
 
-  this.render(hbs`{{flexberry-map}}`);
+    await render(hbs`{{flexberry-map}}`);
 
-  // Template block usage:
-  this.render(hbs`
-    {{#flexberry-map model=model}}
-      template block text
-    {{/flexberry-map}}
-  `);
+    // Template block usage:
+    await render(hbs`
+      {{#flexberry-map model=model}}
+        template block text
+      {{/flexberry-map}}
+    `);
+  });
 });

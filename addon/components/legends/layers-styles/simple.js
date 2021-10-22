@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+import { computed } from '@ember/object';
 import BaseLayerStyleLegendComponent from './-private/base';
 import layout from '../../../templates/components/legends/layers-styles/simple';
 
@@ -17,7 +18,7 @@ export default BaseLayerStyleLegendComponent.extend({
     @private
     @readOnly
   */
-  _geometriesCanBeDisplayed: Ember.computed('legendSettings.geometriesCanBeDisplayed', function() {
+  _geometriesCanBeDisplayed: computed('legendSettings.geometriesCanBeDisplayed', function() {
     return this.get('legendSettings.geometriesCanBeDisplayed') !== false;
   }),
 
@@ -29,7 +30,7 @@ export default BaseLayerStyleLegendComponent.extend({
     @private
     @readOnly
   */
-  _markersCanBeDisplayed: Ember.computed('legendSettings.markersCanBeDisplayed', function() {
+  _markersCanBeDisplayed: computed('legendSettings.markersCanBeDisplayed', function() {
     return this.get('legendSettings.markersCanBeDisplayed') !== false;
   }),
 
@@ -70,7 +71,7 @@ export default BaseLayerStyleLegendComponent.extend({
 
       let layersStylesRenderer = this.get('_layersStylesRenderer');
       let legendStyle = this.parentView.layer.legendStyle;
-      if (!Ember.isNone(legendStyle)) {
+      if (!isNone(legendStyle)) {
         styleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
         for (let opt in legendStyle.style.path) {
           styleSettings.style.path[opt] = legendStyle.style.path[opt];
@@ -85,7 +86,7 @@ export default BaseLayerStyleLegendComponent.extend({
     }
 
     if (this.get('_markersCanBeDisplayed')) {
-      let styleSettings = Ember.isNone(this.parentView.layer.legendStyle) ? this.get('styleSettings.style.marker') : this.parentView.layer.legendStyle;
+      let styleSettings = isNone(this.parentView.layer.legendStyle) ? this.get('styleSettings.style.marker') : this.parentView.layer.legendStyle;
       let canvas = this.$('canvas.markers')[0];
 
       let markersStylesRenderer = this.get('_markersStylesRenderer');

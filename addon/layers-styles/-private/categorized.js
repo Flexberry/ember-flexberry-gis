@@ -2,7 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isArray } from '@ember/array';
+
+import { get } from '@ember/object';
+import { isNone, isBlank } from '@ember/utils';
+import { inject as service } from '@ember/service';
 import BaseLayerStyle from './base';
 
 /**
@@ -18,7 +22,7 @@ export default BaseLayerStyle.extend({
     @property laysersStylesRenderer
     @type LayersStylesRendererService
   */
-  layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
+  layersStylesRenderer: service('layers-styles-renderer'),
 
   /**
     Applies layer-style to the specified leaflet layer.
@@ -41,7 +45,7 @@ export default BaseLayerStyle.extend({
       let layersStylesRenderer = this.get('layersStylesRenderer');
       let relevantCategory = this._getCategoryRelevantToLeafletLayer({ leafletLayer, style });
 
-      if (Ember.isNone(relevantCategory)) {
+      if (isNone(relevantCategory)) {
         // There is no relevant category for the specified laeflet layer, so empty style will be applied to it.
         layersStylesRenderer.renderOnLeafletLayer({ leafletLayer, styleSettings: layersStylesRenderer.getDefaultStyleSettings('empty') });
       } else {
@@ -63,9 +67,9 @@ export default BaseLayerStyle.extend({
   */
   _getCategoryRelevantToLeafletLayer({ leafletLayer, style }) {
     style = style || {};
-    let propertyName = Ember.get(style, 'propertyName');
-    let categories = Ember.get(style, 'categories');
-    if (!Ember.isArray(categories) || Ember.isBlank(propertyName)) {
+    let propertyName = get(style, 'propertyName');
+    let categories = get(style, 'categories');
+    if (!isArray(categories) || isBlank(propertyName)) {
       return null;
     }
 
@@ -92,13 +96,13 @@ export default BaseLayerStyle.extend({
     @return {Boolean} Flag indicating whether specified category is relevant to the specified laeflet layer.
   */
   _categoryIsRelevantToLeafletLayer({ leafletLayer, propertyName, category }) {
-    let featureProperties = Ember.get(leafletLayer, 'feature.properties');
-    if (Ember.isNone(featureProperties)) {
+    let featureProperties = get(leafletLayer, 'feature.properties');
+    if (isNone(featureProperties)) {
       return false;
     }
 
     // Get property value.
-    let propertyValue = Ember.get(featureProperties, propertyName);
+    let propertyValue = get(featureProperties, propertyName);
 
     return this.categoryIsRelevantToPropertyValue({ propertyValue, category });
   },
@@ -147,7 +151,7 @@ export default BaseLayerStyle.extend({
       });
     } else {
       let relevantCategory = this._getCategoryRelevantToLeafletLayer({ leafletLayer, style });
-      if (!Ember.isNone(relevantCategory)) {
+      if (!isNone(relevantCategory)) {
         visibleLeafletLayers.push(leafletLayer);
       }
     }

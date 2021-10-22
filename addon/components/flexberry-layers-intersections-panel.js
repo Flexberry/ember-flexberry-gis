@@ -1,4 +1,11 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import { Promise, allSettled } from 'rsvp';
+import { A, isArray } from '@ember/array';
+import { getOwner } from '@ember/application';
+import { isNone, isEmpty, typeOf } from '@ember/utils';
+import { inject as service } from '@ember/service';
+import { observer, get, set } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-layers-intersections-panel';
 import * as buffer from 'npm:@turf/buffer';
 import * as jsts from 'npm:jsts';
@@ -11,7 +18,7 @@ import { coordinatesToArray } from '../utils/coordinates-to';
   @uses LeafletZoomToFeatureMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
-export default Ember.Component.extend({
+export default Component.extend({
   /**
     Reference to component's template.
   */
@@ -59,7 +66,7 @@ export default Ember.Component.extend({
     @private
     @readonly
   */
-  _OnMapChanged: Ember.observer('leafletMap', function () {
+  _OnMapChanged: observer('leafletMap', function () {
     let map = this.get('leafletMap');
     let group = L.featureGroup().addTo(map);
     this.set('resultsLayer', group);
@@ -134,7 +141,7 @@ export default Ember.Component.extend({
     @property store
     @type Ember.store
   */
-  store: Ember.inject.service(),
+  store: service(),
 
   /**
     Injected map Api.
@@ -142,7 +149,7 @@ export default Ember.Component.extend({
     @property mapApi
     @type Servie
   */
-  mapApi: Ember.inject.service(),
+  mapApi: service(),
 
   /**
     Observer for feature. If changed=> clear form.
@@ -151,17 +158,17 @@ export default Ember.Component.extend({
     @private
     @readonly
   */
-  _OnFeatureChange: Ember.observer('feature', function () {
+  _OnFeatureChange: observer('feature', function () {
     this.clearPanel();
   }),
 
   _checkTypeLayer(layer) {
-    let className = Ember.get(layer, 'type');
-    let layerClass = Ember.isNone(className) ?
+    let className = get(layer, 'type');
+    let layerClass = isNone(className) ?
       null :
-      Ember.getOwner(this).knownForType('layer', className);
+      getOwner(this).knownForType('layer', className);
 
-    return !Ember.isNone(layerClass) && layerClass.isVectorType(layer, true);
+    return !isNone(layerClass) && layerClass.isVectorType(layer, true);
   },
 
   /**
@@ -171,7 +178,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
     let vlayers = [];
     this.get('layers').forEach(item => {
-      let layers = Ember.get(item, 'layers');
+      let layers = get(item, 'layers');
       if (layers.length > 0) {
         layers.forEach(layer => {
           if (this._checkTypeLayer(layer)) {
@@ -204,11 +211,11 @@ export default Ember.Component.extend({
       let polygonLayer = null;
 
       let bufferedMainPolygonLayer;
-      let bufferR = Ember.isNone(this.get('bufferR')) ? 0 : this.get('bufferR');
+      let bufferR = isNone(this.get('bufferR')) ? 0 : this.get('bufferR');
 
       let latlng;
       let workingPolygon;
-      let selected = Ember.A();
+      let selected = A();
 
       selectedLayers.forEach(function (item) {
         let result = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', item);
@@ -287,7 +294,7 @@ export default Ember.Component.extend({
     */
     inputLimit(str, e) {
       const regex = /^\.|[^\d\.]|\.(?=.*\.)|^0+(?=\d)/g;
-      if (!Ember.isEmpty(str) && regex.test(str)) {
+      if (!isEmpty(str) && regex.test(str)) {
         this.$(e.target).val(str.replace(regex, ''));
       }
     }
@@ -316,9 +323,9 @@ export default Ember.Component.extend({
       latlng: latlng,
       polygonLayer: polygonLayer,
       bufferedMainPolygonLayer: bufferedMainPolygonLayer,
-      excludedLayers: Ember.A(excludedLayers || []),
+      excludedLayers: A(excludedLayers || []),
       layers: selectedLayers,
-      results: Ember.A()
+      results: A()
     };
 
     // Fire custom event on leaflet map (if there is layers to identify).
@@ -327,19 +334,19 @@ export default Ember.Component.extend({
     }
 
     // Promises array could be totally changed in 'flexberry-map:identify' event handlers, we should prevent possible errors.
-    e.results = Ember.isArray(e.results) ? e.results : Ember.A();
-    let promises = Ember.A();
+    e.results = isArray(e.results) ? e.results : A();
+    let promises = A();
 
     // Handle each result.
     // Detach promises from already received features.
     e.results.forEach((result) => {
-      if (Ember.isNone(result)) {
+      if (isNone(result)) {
         return;
       }
 
-      let features = Ember.get(result, 'features');
+      let features = get(result, 'features');
 
-      if (!(features instanceof Ember.RSVP.Promise)) {
+      if (!(features instanceof Promise)) {
         return;
       }
 
@@ -347,7 +354,7 @@ export default Ember.Component.extend({
     });
 
     // Wait for all promises to be settled & call '_finishIdentification' hook.
-    Ember.RSVP.allSettled(promises).then(() => {
+    allSettled(promises).then(() => {
       this._finishIdentification(e);
     });
     this.set('results', e.results);
@@ -383,8 +390,8 @@ export default Ember.Component.extend({
           //Show new features.
           features.forEach((feature) => {
             if (feature.intersection) {
-              let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
-              if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+              let leafletLayer = get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+              if (typeOf(leafletLayer.setStyle) === 'function') {
                 leafletLayer.setStyle({
                   color: 'salmon',
                   weight: 2,
@@ -392,10 +399,10 @@ export default Ember.Component.extend({
                 });
               }
 
-              Ember.set(feature, 'leafletLayer', leafletLayer);
+              set(feature, 'leafletLayer', leafletLayer);
             } else {
-              let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
-              if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+              let leafletLayer = get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+              if (typeOf(leafletLayer.setStyle) === 'function') {
                 leafletLayer.setStyle({
                   color: 'salmon',
                   weight: 0,
@@ -403,7 +410,7 @@ export default Ember.Component.extend({
                 });
               }
 
-              Ember.set(feature, 'leafletLayer', leafletLayer);
+              set(feature, 'leafletLayer', leafletLayer);
             }
           });
         });
@@ -414,11 +421,11 @@ export default Ember.Component.extend({
     leafletMap.flexberryMap.loader.hide({ content: '' });
 
     //Assign current tool's boundingBoxLayer
-    let polygonLayer = Ember.get(e, 'polygonLayer');
+    let polygonLayer = get(e, 'polygonLayer');
     this.set('polygonLayer', polygonLayer);
 
     // Assign current tool's boundingBoxLayer
-    let bufferedLayer = Ember.get(e, 'bufferedMainPolygonLayer');
+    let bufferedLayer = get(e, 'bufferedMainPolygonLayer');
     this.set('bufferedMainPolygonLayer', bufferedLayer);
 
   },
@@ -439,13 +446,13 @@ export default Ember.Component.extend({
     this.set('noIntersectionResults', true);
     this.set('folded', false);
 
-    if (!Ember.isNone(this.childViews[0].get('state'))) {
+    if (!isNone(this.childViews[0].get('state'))) {
       this.childViews[0].get('state').setEach('isVisible', false);
     }
 
-    Ember.$('.search-field').val('');
-    Ember.$('.fb-selector .item.filtered').each((i, item) => {
-      Ember.$(item).removeClass('filtered');
+    $('.search-field').val('');
+    $('.fb-selector .item.filtered').each((i, item) => {
+      $(item).removeClass('filtered');
     });
   },
 
@@ -460,7 +467,7 @@ export default Ember.Component.extend({
       identificationResult.features.then(
         (features) => {
           features.forEach((feature) => {
-            Ember.get(feature, 'leafletLayer').remove();
+            get(feature, 'leafletLayer').remove();
           });
         });
     });
@@ -475,13 +482,13 @@ export default Ember.Component.extend({
     @private
   */
   _findIntersections(e) {
-    let $listLayer = Ember.$('.fb-selector .menu');
+    let $listLayer = $('.fb-selector .menu');
     if ($listLayer.hasClass('visible')) {
       $listLayer.removeClass('visible');
       $listLayer.addClass('hidden');
     }
 
-    let square = Ember.isNone(this.get('square')) ? 0 : this.get('square');
+    let square = isNone(this.get('square')) ? 0 : this.get('square');
     e.results.forEach((layer) => {
       layer.features.then((features) => {
         features.forEach((item) => {

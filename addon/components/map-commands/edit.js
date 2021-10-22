@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { scheduleOnce } from '@ember/runloop';
+
+import Component from '@ember/component';
 import layout from '../../templates/components/map-commands/edit';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -42,7 +44,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let EditMapCommandComponent = Ember.Component.extend({
+let EditMapCommandComponent = Component.extend({
   /**
     Flag: indicates whether edit dialog has been already requested by user or not.
 
@@ -187,7 +189,7 @@ let EditMapCommandComponent = Ember.Component.extend({
 
     // Automatically show map edit dialog for new maps, to allow user immediately define it's properties.
     if (this.get('mapModel.isNew')) {
-      Ember.run.scheduleOnce('afterRender', this, function () {
+      scheduleOnce('afterRender', this, function () {
         // Include dialog to markup.
         this.set('_editDialogHasBeenRequested', true);
 

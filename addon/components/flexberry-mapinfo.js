@@ -2,7 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { observer } from '@ember/object';
+
+import { on } from '@ember/object/evented';
+import { isNone } from '@ember/utils';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 import layout from '../templates/components/flexberry-mapinfo';
 import {
   translationMacro as t
@@ -44,7 +49,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
-let MapInfoComponent = Ember.Component.extend({
+let MapInfoComponent = Component.extend({
   /**
     Injected local-storage-service.
 
@@ -52,7 +57,7 @@ let MapInfoComponent = Ember.Component.extend({
     @type <a href="http://emberjs.com/api/classes/Ember.Service.html">Ember.Service</a>
     @default service:local-storage
   */
-  service: Ember.inject.service('local-storage'),
+  service: service('local-storage'),
 
   /**
     Flag: indicates whether info dialog has been already requested by user or not.
@@ -217,7 +222,7 @@ let MapInfoComponent = Ember.Component.extend({
     let service = this.get('service');
     let storageClass = this.get('_storageClassName');
     let mapId = this.get('mapId');
-    let dialogVisibility = !Ember.isNone(mapId) && service.getFromStorageSingle(storageClass, mapId) !== false;
+    let dialogVisibility = !isNone(mapId) && service.getFromStorageSingle(storageClass, mapId) !== false;
 
     this.set('visible', dialogVisibility);
     this.set('showOnOpen', dialogVisibility);
@@ -229,7 +234,7 @@ let MapInfoComponent = Ember.Component.extend({
     @method _visibleDidChange
     @private
   */
-  _visibleDidChange: Ember.on('init', Ember.observer('visible', function () {
+  _visibleDidChange: on('init', observer('visible', function () {
     if (this.get('visible')) {
       // Include dialog to markup.
       this.set('_infoDialogHasBeenRequested', true);
