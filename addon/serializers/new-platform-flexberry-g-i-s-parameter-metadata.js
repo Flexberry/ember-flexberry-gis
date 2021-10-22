@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import FlexberryData from 'ember-flexberry-data';
+import OdataSerializer from 'ember-flexberry-data/serializers/odata';
 import {
   Serializer as ParameterMetadataSerializer
 } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-parameter-metadata';
@@ -14,7 +14,7 @@ import {
   @extends OdataSerializer
   @uses NewPlatformFlexberryGISParameterMetadataSerializerMixin
 */
-export default FlexberryData.Serializer.Odata.extend(ParameterMetadataSerializer, {
+export default OdataSerializer.extend(ParameterMetadataSerializer, {
   /**
   * Field name where object identifier is kept.
   */

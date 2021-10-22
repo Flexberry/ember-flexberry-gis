@@ -2,10 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import $ from 'jquery';
-
 import Mixin from '@ember/object/mixin';
 import DS from 'ember-data';
+import { validator } from 'ember-cp-validations';
 import { attr, belongsTo, hasMany } from 'ember-flexberry-data/utils/attributes';
 
 /**
@@ -19,21 +18,19 @@ export let Model = Mixin.create({
   mapObjectSetting: DS.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', { inverse: null, async: false }),
   layer: DS.belongsTo('new-platform-flexberry-g-i-s-map-layer', { inverse: 'layerLink', async: false }),
   parameters: DS.hasMany('new-platform-flexberry-g-i-s-link-parameter', { inverse: 'layerLink', async: false }),
-
-  getValidations: function () {
-    let parentValidations = this._super();
-    let thisValidations = {
-      mapObjectSetting: { presence: true },
-      layer: { presence: true }
-    };
-    return $.extend(true, {}, parentValidations, thisValidations);
-  },
-
-  init: function () {
-    this.set('validations', this.getValidations());
-    this._super.apply(this, arguments);
-  }
 });
+
+export let ValidationRules = {
+  mapObjectSetting: validator('presence', {
+    presence: true,
+    message: 'MapObjectSetting is required',
+  }),
+  layer: validator('presence', {
+    presence: true,
+    message: 'Layer is required',
+  }),
+};
+
 export let defineProjections = function (modelClass) {
   modelClass.defineProjection('LayerLinkD', 'new-platform-flexberry-g-i-s-layer-link', {
     mapObjectSetting: belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Тип', {

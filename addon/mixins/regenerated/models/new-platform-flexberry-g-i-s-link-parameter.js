@@ -2,10 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import $ from 'jquery';
-
 import Mixin from '@ember/object/mixin';
 import DS from 'ember-data';
+import { validator } from 'ember-cp-validations';
 import { attr, belongsTo } from 'ember-flexberry-data/utils/attributes';
 
 /**
@@ -21,19 +20,14 @@ export let Model = Mixin.create({
   queryKey: DS.attr('string'),
   linkField: DS.attr('boolean'),
   layerLink: DS.belongsTo('new-platform-flexberry-g-i-s-layer-link', { inverse: 'parameters', async: false }),
-
-  getValidations: function () {
-    let parentValidations = this._super();
-    let thisValidations = {
-      layerLink: { presence: true }
-    };
-    return $.extend(true, {}, parentValidations, thisValidations);
-  },
-  init: function () {
-    this.set('validations', this.getValidations());
-    this._super.apply(this, arguments);
-  }
 });
+
+export let ValidationRules = {
+  layerLink: validator('presence', {
+    presence: true,
+    message: 'LayerLink is required',
+  })
+};
 
 export let defineProjections = function (modelClass) {
   modelClass.defineProjection('LinkParameterD', 'new-platform-flexberry-g-i-s-link-parameter', {
