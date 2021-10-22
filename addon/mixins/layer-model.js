@@ -13,9 +13,7 @@ import { inject as service } from '@ember/service';
 import Mixin from '@ember/object/mixin';
 
 import Ember from 'ember';
-import {
-  getBounds } from 'ember-flexberry-gis/utils/get-bound
-} from-polygon';
+import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
 
 /**
   Mixin containing additional logic for layer and layer-like models.

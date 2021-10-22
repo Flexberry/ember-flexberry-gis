@@ -10,10 +10,10 @@ import {
   Model as LayerMetadataMixin,
   defineProjections
 } from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-layer-metadata';
-import { Projection } from 'ember-flexberry-data';
-import { Offline } from 'ember-flexberry-data';
 import LayerModelMixin from '../mixins/layer-model';
 import LeafletCrsMixin from '../mixins/leaflet-crs';
+import EmberFlexberryDataModel from 'ember-flexberry-data/models/model';
+import OfflineModelMixin from 'ember-flexberry-data/mixins/offline-model';
 
 /**
   Layer metadata model.
@@ -25,7 +25,7 @@ import LeafletCrsMixin from '../mixins/leaflet-crs';
   @uses LayerModelMixin
   @uses LeafletCrsMixin
 */
-let Model = Projection.Model.extend(Offline.ModelMixin, LayerMetadataMixin, LayerModelMixin, LeafletCrsMixin, {
+let Model = EmberFlexberryDataModel.extend(OfflineModelMixin, LayerMetadataMixin, LayerModelMixin, LeafletCrsMixin, {
   _anyTextChanged: on('init', observer('name', 'description', 'keyWords', function() {
     once(this, '_anyTextCompute');
   })),

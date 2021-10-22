@@ -16,9 +16,9 @@ import MapModelApiSaveLayerMixin from '../mixins/flexberry-map-model-api-savelay
 import MapModelApiReloadLayerMixin from '../mixins/flexberry-map-model-api-reloadlayer';
 import MapModelApiExpansionMixin from '../mixins/flexberry-map-model-api-expansion';
 import MapModelApiCosmosMixin from '../mixins/flexberry-map-model-api-cosmos';
-import { Projection } from 'ember-flexberry-data';
-import { Offline } from 'ember-flexberry-data';
 import LeafletCrsMixin from '../mixins/leaflet-crs';
+import EmberFlexberryDataModel from 'ember-flexberry-data/models/model';
+import OfflineModelMixin from 'ember-flexberry-data/mixins/offline-model';
 
 /**
   Map model.
@@ -29,8 +29,8 @@ import LeafletCrsMixin from '../mixins/leaflet-crs';
   @uses NewPlatformFlexberryGISMapModelMixin
   @uses LeafletCrsMixin
 */
-let Model = Projection.Model.extend(
-  Offline.ModelMixin,
+let Model = EmberFlexberryDataModel.extend(
+  OfflineModelMixin,
   MapMixin,
   LeafletCrsMixin,
   MapModelApiMixin,

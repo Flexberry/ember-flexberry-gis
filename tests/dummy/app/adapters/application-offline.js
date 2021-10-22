@@ -1,9 +1,5 @@
-/**
-  @module ember-flexberry-gis-dummy
-*/
-
-import { Adapter } from 'ember-flexberry-data';
 import config from '../config/environment';
+import OfflineAdapter from 'ember-flexberry-data/adapters/offline';
 
 /**
   Application offline adapter.
@@ -12,7 +8,7 @@ import config from '../config/environment';
   @extends OfflineAdapter
   @uses AdapterMixin
 */
-export default Adapter.Offline.extend({
+export default OfflineAdapter.extend({
   /**
     Offline dadabase name.
 

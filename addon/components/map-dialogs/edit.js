@@ -13,9 +13,7 @@ import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
 import FlexberryBoundingboxMapLoaderMixin from '../../mixins/flexberry-boundingbox-map-loader';
 import layout from '../../templates/components/map-dialogs/edit';
-import {
-  getBounds } from 'ember-flexberry-gis/utils/get-bound
-} from-polygon';
+import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
 import {
   translationMacro as t
 } from 'ember-i18n';

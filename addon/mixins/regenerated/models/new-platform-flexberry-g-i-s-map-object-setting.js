@@ -6,7 +6,7 @@ import $ from 'jquery';
 
 import Mixin from '@ember/object/mixin';
 import DS from 'ember-data';
-import { Projection } from 'ember-flexberry-data';
+import { attr, belongsTo } from 'ember-flexberry-data/utils/attributes';
 
 /**
   Mixin containing map object setting model attributes, relations & projections.
@@ -36,28 +36,28 @@ export let Model = Mixin.create({
 
 export let defineProjections = function (modelClass) {
   modelClass.defineProjection('MapObjectSetting', 'new-platform-flexberry-g-i-s-map-object-setting', {
-    typeName: Projection.attr('TypeName', { hidden: true }),
-    listForm: Projection.attr('ListForm', { hidden: true }),
-    editForm: Projection.attr('EditForm', { hidden: true }),
-    title: Projection.attr('Title', { hidden: true }),
-    defaultMap: Projection.belongsTo('new-platform-flexberry-g-i-s-map', '', {
+    typeName: attr('TypeName', { hidden: true }),
+    listForm: attr('ListForm', { hidden: true }),
+    editForm: attr('EditForm', { hidden: true }),
+    title: attr('Title', { hidden: true }),
+    defaultMap: belongsTo('new-platform-flexberry-g-i-s-map', '', {
 
     })
   });
 
   modelClass.defineProjection('MapObjectSettingE', 'new-platform-flexberry-g-i-s-map-object-setting', {
-    typeName: Projection.attr('Тип'),
-    title: Projection.attr('Отображаемое имя'),
-    listForm: Projection.attr('Списковая форма'),
-    editForm: Projection.attr('Форма редактирования'),
-    defaultMap: Projection.belongsTo('new-platform-flexberry-g-i-s-map', 'Карта по умолчанию', {
-      name: Projection.attr('', { hidden: true })
+    typeName: attr('Тип'),
+    title: attr('Отображаемое имя'),
+    listForm: attr('Списковая форма'),
+    editForm: attr('Форма редактирования'),
+    defaultMap: belongsTo('new-platform-flexberry-g-i-s-map', 'Карта по умолчанию', {
+      name: attr('', { hidden: true })
     }, { displayMemberPath: 'name' })
   });
 
   modelClass.defineProjection('MapObjectSettingL', 'new-platform-flexberry-g-i-s-map-object-setting', {
-    typeName: Projection.attr('Тип'),
-    listForm: Projection.attr('Списковая форма'),
-    editForm: Projection.attr('Форма редактирования')
+    typeName: attr('Тип'),
+    listForm: attr('Списковая форма'),
+    editForm: attr('Форма редактирования')
   });
 };
