@@ -10,16 +10,16 @@
     {{content-for "head"}}
 
     <link rel="icon" type="image/png" href="assets/images/favicon.ico" />
-    <link rel="stylesheet" href="assets/vendor.css" />
-    <link rel="stylesheet" href="assets/dummy.css" />
+    <link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css">
+    <link integrity="" rel="stylesheet" href="{{rootURL}}assets/dummy.css">
 
     {{content-for "head-footer"}}
   </head>
   <body>
     {{content-for "body"}}
 
-    <script src="assets/vendor.js"></script>
-    <script src="assets/dummy.js"></script>
+    <script src="{{rootURL}}assets/vendor.js"></script>
+    <script src="{{rootURL}}assets/dummy.js"></script>
     <script src="//cdn.polyfill.io/v1/polyfill.js?features=es6"></script>
 
     {{content-for "body-footer"}}
