@@ -36038,6 +36038,17 @@
         {
             "file": "addon/components/flexberry-maplayers.js",
             "line": 426,
+            "description": "Flag for checkAll visibility",
+            "itemtype": "property",
+            "name": "allLayerVisible",
+            "type": "Boolean",
+            "default": "false",
+            "class": "FlexberryMaplayersComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-maplayers.js",
+            "line": 435,
             "description": "Proprty containing raster layers to compare.",
             "itemtype": "property",
             "name": "rasterLayers",
@@ -36048,7 +36059,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 435,
+            "line": 444,
             "description": "Adds side by side control to map and removes current visible layers.",
             "itemtype": "method",
             "name": "onCompareLayersEnabled",
@@ -36057,7 +36068,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 506,
+            "line": 531,
             "description": "Handles add button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddButtonClick",
@@ -36073,7 +36084,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 527,
+            "line": 552,
             "description": "Handles add dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddDialogApprove",
@@ -36096,7 +36107,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 540,
+            "line": 565,
             "description": "Handles clicks on left side button.",
             "itemtype": "method",
             "name": "actions.onLeftClick",
@@ -36105,7 +36116,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 549,
+            "line": 574,
             "description": "Handles clicks on right side button.",
             "itemtype": "method",
             "name": "actions.onLeftClick",
@@ -36114,7 +36125,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 559,
+            "line": 584,
             "description": "Component's action invoking when user wants to add child layer into layers tree root.",
             "itemtype": "method",
             "name": "sendingActions.add",

@@ -839,6 +839,15 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     compareLayersEnabled: false,
 
     /**
+      Flag for checkAll visibility
+
+      @property allLayerVisible
+      @type Boolean
+      @default false
+    */
+    allLayerVisible: false,
+
+    /**
       Proprty containing raster layers to compare.
 
       @property rasterLayers
@@ -912,6 +921,22 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     actions: {
       external(actionName, layer) {
         this.sendAction(actionName, layer);
+      },
+
+      onAllLayerVisibilityChanged(e) {
+        this.set(&#x27;allLayerVisible&#x27;, !this.get(&#x27;allLayerVisible&#x27;));
+        let visibility = this.get(&#x27;allLayerVisible&#x27;);
+        let layers = this.get(&#x27;layers&#x27;);
+        let setVisibility = function(layers) {
+          layers.forEach(layer =&gt; {
+            layer.set(&#x27;visibility&#x27;, visibility);
+            if (layer.get(&#x27;layers&#x27;)) {
+              setVisibility(layer.get(&#x27;layers&#x27;));
+            }
+          });
+        };
+
+        setVisibility(layers);
       },
 
       onChangeLayer(leftLayer, rightLayer) {
