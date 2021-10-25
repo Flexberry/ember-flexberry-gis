@@ -46502,7 +46502,7 @@ img.item-minus {
 .ui.right.sidebar.treeview .flexberry-maplayers {
   overflow-y: auto;
   overflow-x: hidden;
-  margin-top: -30px;
+  margin-top: 5px;
   margin-left: -13px;
   height: calc(100% - 30px) !important;
 }
