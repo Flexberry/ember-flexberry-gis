@@ -69,9 +69,11 @@ export default Ember.Component.extend(
     archTime: null,
     hasTime: null,
 
+    timeObserverDelay: 1500,
+
     timeObserver: Ember.observer('layerModel.archTime', function () {
       if (this.reload && typeof (this.reload) === 'function') {
-        Ember.run.debounce(this, this.reload, 1500);
+        Ember.run.debounce(this, this.reload, this.get('timeObserverDelay'));
       }
     }),
 
@@ -799,14 +801,8 @@ export default Ember.Component.extend(
     */
     init() {
       this._super(...arguments);
-
-      // Не будем задавать дату. Пустая дата - это то же самое, что текущая.
-      // А чтобы везде ставить одинаковую текущую - нужен какой-то сервис
-      /*if (this.get('layerModel.settingsAsObject.hasTime')){
-        let today = new Date();
-        let layerModel = this.get('layerModel');
-        layerModel.set('archTime', today);
-      }*/
+      // Здесь можно задать layerModel.archTime. Но мы не будем, т.к. пустая дата - это то же самое, что текущая.
+      // Если все таки захотят чтобы дата отображалась, то нужно будет делать сервис, который отдаст одинаковую текущую дату все слои
 
       // Create leaflet layer.
       this._createLayer();
