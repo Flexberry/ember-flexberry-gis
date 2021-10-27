@@ -943,6 +943,11 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
         this.set(&#x27;leftLayer&#x27;, leftLayer);
         this.set(&#x27;rightLayer&#x27;, rightLayer);
       },
+
+      onLayerTimeChanged(layer, time) {
+        this.sendAction(&#x27;layerTimeChanged&#x27;, layer, time);
+      },
+
       /**
         Handles add button&#x27;s &#x27;click&#x27; event.
         Invokes component&#x27;s {{#crossLink &quot;FlexberryMaplayersComponent/sendingActions.add:method&quot;}}&#x27;add&#x27;{{/crossLink}} action.

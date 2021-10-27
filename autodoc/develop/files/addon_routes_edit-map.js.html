@@ -549,23 +549,7 @@ export default EditFormRoute.extend({
     this._super(...arguments);
     let layers = model.get(&#x27;mapLayer&#x27;);
 
-    if (layers) {
-      let rootLayers = layers.filter(layer =&gt; Ember.isEmpty(layer.get(&#x27;parent&#x27;)));
-
-      let hierarchy = this.sortLayersByIndex(rootLayers);
-      model.set(&#x27;hierarchy&#x27;, hierarchy);
-
-      let backgroundLayers = Ember.A();
-      backgroundLayers.addObjects(hierarchy.filterBy(&#x27;settingsAsObject.backgroundSettings.canBeBackground&#x27;, true));
-      model.set(&#x27;backgroundLayers&#x27;, backgroundLayers);
-
-      let other = hierarchy.filter((layer) =&gt; {
-        return Ember.isNone(layer.get(&#x27;settingsAsObject&#x27;)) || !layer.get(&#x27;settingsAsObject.backgroundSettings.canBeBackground&#x27;);
-      });
-      let otherLayers = Ember.A();
-      otherLayers.addObjects(other);
-      model.set(&#x27;otherLayers&#x27;, otherLayers);
-    }
+    this.setLayerCategories(model, layers);
 
     let urlParams = [&#x27;zoom&#x27;, &#x27;lat&#x27;, &#x27;lng&#x27;];
     let currentParams = {};
@@ -583,6 +567,26 @@ export default EditFormRoute.extend({
     this.transitionTo({
       queryParams: currentParams
     });
+  },
+
+  setLayerCategories(model, layers) {
+    if (layers) {
+      let rootLayers = layers.filter(layer =&gt; Ember.isEmpty(layer.get(&#x27;parent&#x27;)));
+
+      let hierarchy = this.sortLayersByIndex(rootLayers);
+      model.set(&#x27;hierarchy&#x27;, hierarchy);
+
+      let backgroundLayers = Ember.A();
+      backgroundLayers.addObjects(hierarchy.filterBy(&#x27;settingsAsObject.backgroundSettings.canBeBackground&#x27;, true));
+      model.set(&#x27;backgroundLayers&#x27;, backgroundLayers);
+
+      let other = hierarchy.filter((layer) =&gt; {
+        return Ember.isNone(layer.get(&#x27;settingsAsObject&#x27;)) || !layer.get(&#x27;settingsAsObject.backgroundSettings.canBeBackground&#x27;);
+      });
+      let otherLayers = Ember.A();
+      otherLayers.addObjects(other);
+      model.set(&#x27;otherLayers&#x27;, otherLayers);
+    }
   },
 
   /**
@@ -616,8 +620,8 @@ export default EditFormRoute.extend({
     }
 
     let queryBuilder = new Query.Builder(this.get(&#x27;store&#x27;))
-    .from(this.get(&#x27;metadataModelName&#x27;))
-    .selectByProjection(this.get(&#x27;metadataProjection&#x27;));
+      .from(this.get(&#x27;metadataModelName&#x27;))
+      .selectByProjection(this.get(&#x27;metadataProjection&#x27;));
 
     let conditions = metadata.split(&#x27;,&#x27;).map((item) =&gt; {
       let id = item.trim().toLowerCase();

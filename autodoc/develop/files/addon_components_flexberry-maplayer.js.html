@@ -913,6 +913,12 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     */
     disabled: &#x27;&#x27;,
 
+    maxDate: Ember.computed(function () {
+      let date = new Date(new Date().toDateString());
+      date.setDate(date.getDate() + 1);
+      return date;
+    }),
+
     /**
       Initializes DOM-related component&#x27;s properties.
     */
@@ -927,15 +933,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         let $caption = Ember.$(&#x27;.ui.tab.treeview label.flexberry-maplayer-caption-label&#x27;);
         if ($caption.length &gt; 0) {
           $caption.hover(
-            function() {
+            function () {
               let $toolbar = Ember.$(this).parent().children(&#x27;.flexberry-treenode-buttons-block&#x27;);
               $toolbar.removeClass(&#x27;hidden&#x27;);
               Ember.$(this).addClass(&#x27;blur&#x27;);
             },
-            function() {
+            function () {
               let $toolbar = Ember.$(this).parent().children(&#x27;.flexberry-treenode-buttons-block&#x27;);
               $toolbar.hover(
-                () =&gt; {},
+                () =&gt; { },
                 () =&gt; {
                   $toolbar.addClass(&#x27;hidden&#x27;);
                   Ember.$(this).removeClass(&#x27;blur&#x27;);
@@ -975,6 +981,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     },
 
     actions: {
+      onLayerTimeChange() {
+        this.sendAction(&#x27;layerTimeChanged&#x27;, this.get(&#x27;layer&#x27;), this.get(&#x27;layer.archTime&#x27;));
+      },
+
       external(actionName) {
         this.set(&#x27;isSubmenu&#x27;, false);
         this.sendAction(&#x27;external&#x27;, actionName, this.get(&#x27;layer&#x27;));
@@ -1038,7 +1048,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
             sbs.setLeftLayers(left);
           }
 
-          if (this.get(&#x27;side&#x27;) === &#x27;Right&#x27;)  {
+          if (this.get(&#x27;side&#x27;) === &#x27;Right&#x27;) {
             if (this.get(&#x27;rightLayer&#x27;) !== null) {
               sbs.setRightLayers(null);
               this.get(&#x27;rightLayer._leafletObject&#x27;).remove();
@@ -1071,7 +1081,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         let component = Ember.$(&#x27;.&#x27; + this.get(&#x27;componentName&#x27;));
         let moreButton = Ember.$(&#x27;.more.floated.button&#x27;, component);
         let elements = Ember.$(&#x27;.more.submenu.hidden&#x27;, component);
-        openCloseSubmenu(this, moreButton, elements,  2);
+        openCloseSubmenu(this, moreButton, elements, 2);
       },
 
       onAddCompare() {

@@ -446,7 +446,7 @@ export default Ember.Component.extend(
       @type &lt;a href=&quot;http://leafletjs.com/reference-1.2.0.html#layer&quot;&gt;L.Layer&lt;/a&gt;
       @default null
       @private
-     */
+    */
     _leafletObject: null,
 
     /**
@@ -481,11 +481,48 @@ export default Ember.Component.extend(
     */
     tagName: &#x27;&#x27;,
 
+    archTime: null,
+    hasTime: null,
+
+    timeObserverDelay: 1500,
+
+    timeObserver: Ember.observer(&#x27;layerModel.archTime&#x27;, function () {
+      if (this.reload &amp;&amp; typeof (this.reload) === &#x27;function&#x27;) {
+        Ember.run.debounce(this, this.reload, this.get(&#x27;timeObserverDelay&#x27;));
+      }
+    }),
+
+    customFilter: Ember.computed(&#x27;layerModel.archTime&#x27;, function () {
+      if (this.get(&#x27;layerModel.settingsAsObject.hasTime&#x27;)) {
+        let time = this.get(&#x27;layerModel.archTime&#x27;);
+        let formattedTime;
+        if (Ember.isBlank(time) || time === &#x27;present&#x27; || Ember.isNone(time)) {
+          formattedTime = moment().toISOString();
+        } else {
+          formattedTime = moment(time).toISOString();
+        }
+
+        return new L.Filter.And(
+          new L.Filter.LEQ(&#x27;archivestart&#x27;, formattedTime),
+          new L.Filter.GEQ(&#x27;archiveend&#x27;, formattedTime));
+      }
+    }),
+
+    addCustomFilter(filter) {
+      let customFilter = this.get(&#x27;customFilter&#x27;);
+
+      if (!Ember.isNone(customFilter) &amp;&amp; !Ember.isNone(filter)) {
+        return new L.Filter.And(filter, customFilter);
+      }
+
+      return customFilter || filter;
+    },
+
     /**
       Array containing component&#x27;s properties which are also leaflet layer options (see leaflet-options mixin).
 
       @property leafletOptions
-      @type Stirng[]
+      @type String[]
     */
     leafletOptions: null,
 
@@ -1087,16 +1124,16 @@ export default Ember.Component.extend(
     /**
       Handles &#x27;flexberry-map:query&#x27; event of leaflet map.
 
-     @method query
-     @param {Object} e Event object.
-     @param {Object} queryFilter Object with query filter parameters
-     @param {Object} mapObjectSetting Object describing current query setting
-     @param {Object[]} results Objects describing query results.
-     Every result-object has the following structure: { layer: ..., features: [...] },
-     where &#x27;layer&#x27; is metadata of layer related to query result, features is array
-     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
-     or a promise returning such array.
-   */
+      @method query
+      @param {Object} e Event object.
+      @param {Object} queryFilter Object with query filter parameters
+      @param {Object} mapObjectSetting Object describing current query setting
+      @param {Object[]} results Objects describing query results.
+      Every result-object has the following structure: { layer: ..., features: [...] },
+      where &#x27;layer&#x27; is metadata of layer related to query result, features is array
+      containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+      or a promise returning such array.
+    */
     _query(e) {
       // Filter current layer links by setting.
       let layerLinks =
@@ -1179,6 +1216,9 @@ export default Ember.Component.extend(
     */
     init() {
       this._super(...arguments);
+
+      // Здесь можно задать layerModel.archTime. Но мы не будем, т.к. пустая дата - это то же самое, что текущая.
+      // Если все таки захотят чтобы дата отображалась, то нужно будет делать сервис, который отдаст одинаковую текущую дату все слои
 
       // Create leaflet layer.
       this._createLayer();
@@ -1459,15 +1499,15 @@ export default Ember.Component.extend(
     @param {Object} eventObject Action param
     @param {Object} eventObject.leafletObject Created (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
     @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
-   */
+  */
 
   /**
    Component&#x27;s action invoking before the layer destroying.
 
-   @method sendingActions.layerDestroy
-   @param {Object} eventObject Action param
-   @param {Object} eventObject.leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
-   @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
+  @method sendingActions.layerDestroy
+  @param {Object} eventObject Action param
+  @param {Object} eventObject.leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
+  @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
   */
 );
 

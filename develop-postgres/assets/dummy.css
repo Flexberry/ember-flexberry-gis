@@ -46736,7 +46736,9 @@ img.item-minus {
 .sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar .tab.item.compare,
 .rgis-sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar .tab.item.compare,
 .sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar .tab.item.timelapse,
-.rgis-sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar .tab.item.timelapse {
+.rgis-sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar .tab.item.timelapse,
+.sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar .tab.item.history,
+.rgis-sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar .tab.item.history {
   display: none;
   position: absolute;
 }
