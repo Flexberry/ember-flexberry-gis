@@ -35,6 +35,14 @@
         }}
         <label class={{flexberryClassNames.caption}}>
           {{layer.name}}
+          {{#if layer.settingsAsObject.hasTime}}
+           от {{flexberry-simpledatetime
+                value=layer.archTime
+                type="datetime"
+                max=maxDate
+                change=(action "onLayerTimeChange")
+              }}
+          {{/if}}
         </label>
         {{#if (not compareLayersEnabled)}}
           <div class="flexberry-treenode-buttons-block hidden">

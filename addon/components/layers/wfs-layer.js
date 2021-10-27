@@ -89,6 +89,7 @@ export default BaseVectorLayer.extend({
         filter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(filter);
       }
 
+      filter = this.addCustomFilter(filter);
       let resultingFilter = filter ? filter.toGml() : null;
 
       let wfsLayer = this.get('_leafletObject');
@@ -227,7 +228,7 @@ export default BaseVectorLayer.extend({
   _loadFeatures(filter, fireLoad = true) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       var that = this;
-
+      filter = this.addCustomFilter(filter);
       L.Util.request({
         url: this.options.url,
         data: L.XmlUtil.serializeXmlDocumentString(that.getFeature(filter)),
@@ -379,6 +380,7 @@ export default BaseVectorLayer.extend({
           wfsLayer.reload = this.get('reload').bind(this);
           wfsLayer.cancelEdit = this.get('cancelEdit').bind(this);
           wfsLayer.updateLabel = this.get('updateLabel').bind(this);
+          wfsLayer.addCustomFilter = this.get('addCustomFilter').bind(this);
 
           if (!Ember.isNone(leafletMap)) {
             let thisPane = this.get('_pane');
@@ -698,6 +700,7 @@ export default BaseVectorLayer.extend({
           });
 
           filter = new L.Filter.Or(...equals);
+          filter = this.addCustomFilter(filter);
         }
 
         L.Util.request({
