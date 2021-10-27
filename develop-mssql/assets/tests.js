@@ -5773,7 +5773,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       assert.equal(spyRegister.callCount, 4);
       assert.equal(spyRegister.thirdCall.args[0], 'model:test-model');
       assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
-      assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
+      assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'nm');
       assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
       assert.equal(spyRegister.lastCall.args[0], 'mixin:test-model');
       assert.equal(Object.values(spyRegister.lastCall.args[1].mixins[0].properties).length, 2);
@@ -5860,7 +5860,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       assert.equal(spyRegister.callCount, 4);
       assert.equal(spyRegister.thirdCall.args[0], 'model:test-model');
       assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
-      assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
+      assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS1');
       assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
       assert.equal(spyRegister.lastCall.args[0], 'mixin:test-model');
       assert.equal(Object.values(spyRegister.lastCall.args[1].mixins[0].properties).length, 2);
