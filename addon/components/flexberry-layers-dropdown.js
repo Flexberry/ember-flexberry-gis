@@ -292,7 +292,7 @@ const FlexberryLayersDropdownComponent = Component.extend({
     this.sendAction('availableLayersChange', availableLayers);
 
     const layer = this.get('value');
-    if (!isNone(layer) && isArray(availableLayers) && !availableLayers.contains(layer)) {
+    if (!isNone(layer) && isArray(availableLayers) && !availableLayers.includes(layer)) {
       // Previously selected layer isn't available anymore, so selected layer must be null now.
       this.sendAction('layerChange', null);
     }

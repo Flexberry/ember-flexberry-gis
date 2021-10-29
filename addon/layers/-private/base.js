@@ -118,17 +118,17 @@ export default EmberObject.extend({
     // Inject search & identify settings.
     const availableOperations = A(this.get('operations') || []);
 
-    if (availableOperations.contains('search')) {
+    if (availableOperations.includes('search')) {
       set(settings, 'searchSettings', createCommonSearchSettings());
     }
 
-    if (availableOperations.contains('identify')) {
+    if (availableOperations.includes('identify')) {
       set(settings, 'identifySettings', createCommonIdentifySettings());
     }
 
     set(settings, 'displaySettings', createDisplaySettings());
 
-    if (availableOperations.contains('legend')) {
+    if (availableOperations.includes('legend')) {
       set(settings, 'legendSettings', createCommonLegendSettings());
     }
 

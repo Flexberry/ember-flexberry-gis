@@ -51,7 +51,7 @@ export default Component.extend({
 
     for (let i = 0, len = layerProperties.length; i < len; i++) {
       const propertyName = layerProperties[i];
-      if (excludedProperties.contains(propertyName) || (!isBlank(propertyType) && layerFieldTypes[propertyName] !== propertyType)) {
+      if (excludedProperties.includes(propertyName) || (!isBlank(propertyType) && layerFieldTypes[propertyName] !== propertyType)) {
         continue;
       }
 

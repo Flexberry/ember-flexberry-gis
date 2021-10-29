@@ -92,7 +92,7 @@ export default EmberObject.extend(Evented,
         leafletMap.fire('flexberry-map:commands:execute', {
           mapCommand: this,
           executionResult,
-          arguments,
+          arguments: arguments,
         });
 
         // Trigger command specific 'execute' event.
@@ -100,7 +100,7 @@ export default EmberObject.extend(Evented,
         leafletMap.fire(`flexberry-map:commands:${mapCommandName}:execute`, {
           mapCommand: this,
           executionResult,
-          arguments,
+          arguments: arguments,
         });
       });
 

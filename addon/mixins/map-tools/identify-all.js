@@ -31,7 +31,7 @@ export default Mixin.create({
 
       if (isArray(layers)) {
         layers.forEach((layer) => {
-          if (get(layer, 'canBeIdentified') && !excludedLayers.contains(layer)) {
+          if (get(layer, 'canBeIdentified') && !excludedLayers.includes(layer)) {
             result.pushObject(layer);
           }
 

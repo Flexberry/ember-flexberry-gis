@@ -145,7 +145,7 @@ export default Component.extend({
 
     const crs = this.get('coordinateReferenceSystem');
     let crsCode = get(crs, 'code');
-    if (!isBlank(crsCode) && !this.get('_availableCoordinateReferenceSystemsCodes').contains(crsCode)) {
+    if (!isBlank(crsCode) && !this.get('_availableCoordinateReferenceSystemsCodes').includes(crsCode)) {
       // Unknown CRS code means that proj4 is used.
       crsCode = proj4CrsCode;
     }

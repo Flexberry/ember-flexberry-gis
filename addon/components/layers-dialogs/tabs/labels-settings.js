@@ -287,7 +287,7 @@ export default Component.extend({
             excludedProperties = isArray(excludedProperties) ? A(excludedProperties) : A();
             const availableLayerProperties = {};
             for (const propertyName of allProperties) {
-              if (excludedProperties.contains(propertyName)) {
+              if (excludedProperties.includes(propertyName)) {
                 continue;
               }
 

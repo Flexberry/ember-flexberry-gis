@@ -370,7 +370,7 @@ const FlexberryGoToMapCommandDialogComponent = Component.extend({
     }
 
     const latLng = isLatlng ? new L.LatLng(x, y) : usedCrs.unproject(new L.Point(x, y));
-    if (!maxBounds.contains(latLng)) {
+    if (!maxBounds.includes(latLng)) {
       this.set('errorMessageContent', t('components.map-commands-dialogs.go-to.error-message.large-coords'));
       return null;
     }

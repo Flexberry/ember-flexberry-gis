@@ -606,7 +606,7 @@ export default Component.extend(
       @private
     */
     _identify(e) {
-      const shouldIdentify = A(e.layers || []).contains(this.get('layerModel'));
+      const shouldIdentify = A(e.layers || []).includes(this.get('layerModel'));
       if (!shouldIdentify) {
         return;
       }
@@ -637,7 +637,7 @@ export default Component.extend(
     _getNearObject(e) {
       const layerModel = this.get('layerModel');
       const isVectorLayer = getOwner(this).lookup(`layer:${layerModel.get('type')}`).isVectorType(layerModel);
-      const shouldGetNearObject = A(e.layers || []).contains(layerModel) && isVectorLayer;
+      const shouldGetNearObject = A(e.layers || []).includes(layerModel) && isVectorLayer;
       if (!shouldGetNearObject) {
         return;
       }
@@ -971,7 +971,7 @@ export default Component.extend(
         return;
       }
 
-      const onlyOpacityDidChange = changedOptions.length === 1 && changedOptions.contains('opacity');
+      const onlyOpacityDidChange = changedOptions.length === 1 && changedOptions.includes('opacity');
       if (onlyOpacityDidChange) {
         // Prevent unnecessary leaflet layer's recreation.
         return;

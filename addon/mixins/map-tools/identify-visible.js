@@ -32,7 +32,7 @@ export default Mixin.create({
       if (isArray(layers)) {
         layers.forEach((layer) => {
           const layerIsVisible = get(layer, 'visibility') === true;
-          if (get(layer, 'canBeIdentified') && layerIsVisible && !excludedLayers.contains(layer)) {
+          if (get(layer, 'canBeIdentified') && layerIsVisible && !excludedLayers.includes(layer)) {
             result.pushObject(layer);
           }
 

@@ -328,7 +328,7 @@ const FlexberryGeometryAddModeImportComponent = Component.extend({
       const layerProperties = A(Object.keys(this.get('settings.layerFields') || {}));
       const propertiesConnection = {};
       for (const property in importedProperties) {
-        if (layerProperties.contains(property)) {
+        if (layerProperties.includes(property)) {
           propertiesConnection[property] = property;
           layerProperties.removeObject(property);
         }

@@ -301,7 +301,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
       excludedProperties = isArray(excludedProperties) ? A(excludedProperties) : A();
 
       for (const propertyName in get(leafletObject, 'readFormat.featureType.fields')) {
-        if (excludedProperties.contains(propertyName)) {
+        if (excludedProperties.includes(propertyName)) {
           continue;
         }
 
@@ -952,7 +952,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
           const properties = Object.keys(this.get('leafletObject.readFormat.featureType.fields'));
 
           for (const key in data) {
-            if (!properties.contains(key)) {
+            if (!properties.includes(key)) {
               delete layer.feature.properties[key];
               continue;
             }

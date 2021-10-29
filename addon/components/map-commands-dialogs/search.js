@@ -86,7 +86,7 @@ const FlexberrySearchMapCommandDialogComponent = Component.extend({
       return false;
     }
 
-    return availableLayersTypes.contains(this.get('_selectedLayer.type'));
+    return availableLayersTypes.includes(this.get('_selectedLayer.type'));
   }),
 
   /**
