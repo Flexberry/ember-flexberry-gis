@@ -26,6 +26,8 @@ import { copyLayer } from '../utils/copy-layer';
 
 import layout from '../templates/components/flexberry-maplayer';
 
+import { next } from '@ember/runloop';
+
 /**
   Component's CSS-classes names.
   JSON-object containing string constants with CSS-classes names related to component's hbs-markup elements.
@@ -275,7 +277,7 @@ const FlexberryMaplayerComponent = Component.extend(
     _addOperationIsAvailable: computed('_layerClassFactory', function () {
       const layerClassFactory = this.get('_layerClassFactory');
 
-      return A(get(layerClassFactory, 'operations') || []).contains('add');
+      return A(get(layerClassFactory, 'operations') || []).includes('add');
     }),
 
     /**
@@ -525,30 +527,32 @@ const FlexberryMaplayerComponent = Component.extend(
         this.set('disabled', 'disabled');
       }
 
-      if (!this.get('readonly')) {
-        const _this = this;
-        const $caption = $('.ui.tab.treeview label.flexberry-maplayer-caption-label');
-        if ($caption.length > 0) {
-          $caption.hover(
-            function () {
-              const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
-              $toolbar.removeClass('hidden');
-              $(this).addClass('blur');
-            },
-            function () {
-              const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
-              $toolbar.hover(
-                () => { },
-                () => {
-                  $toolbar.addClass('hidden');
-                  $(this).removeClass('blur');
-                  _this.set('isSubmenu', false);
-                }
-              );
-            }
-          );
+      next(this, function() {
+        if (!this.get('readonly')) {
+          const _this = this;
+          const $caption = $('.ui.tab.treeview label.flexberry-maplayer-caption-label');
+          if ($caption.length > 0) {
+            $caption.hover(
+              function () {
+                const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
+                $toolbar.removeClass('hidden');
+                $(this).addClass('blur');
+              },
+              function () {
+                const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
+                $toolbar.hover(
+                  () => {},
+                  () => {
+                    $toolbar.addClass('hidden');
+                    $(this).removeClass('blur');
+                    _this.set('isSubmenu', false);
+                  }
+                );
+              }
+            );
+          }
         }
-      }
+      });
     },
 
     /**

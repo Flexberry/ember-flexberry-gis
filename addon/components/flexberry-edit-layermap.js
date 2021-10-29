@@ -380,7 +380,7 @@ export default Component.extend(
         ? null
         : getOwner(this).knownForType('layer', className);
 
-      return !isNone(layerClass) && A(get(layerClass, 'operations') || []).contains('identify');
+      return !isNone(layerClass) && A(get(layerClass, 'operations') || []).includes('identify');
     }),
 
     /**
@@ -397,7 +397,7 @@ export default Component.extend(
         ? null
         : getOwner(this).knownForType('layer', className);
 
-      return !isNone(layerClass) && A(get(layerClass, 'operations') || []).contains('search');
+      return !isNone(layerClass) && A(get(layerClass, 'operations') || []).includes('search');
     }),
 
     /**
@@ -414,7 +414,7 @@ export default Component.extend(
         ? null
         : getOwner(this).knownForType('layer', className);
 
-      return !isNone(layerClass) && A(get(layerClass, 'operations') || []).contains('legend');
+      return !isNone(layerClass) && A(get(layerClass, 'operations') || []).includes('legend');
     }),
 
     /**
@@ -431,7 +431,7 @@ export default Component.extend(
         ? null
         : getOwner(this).knownForType('layer', className);
 
-      return !isNone(layerClass) && A(get(layerClass, 'operations') || []).contains('filter');
+      return !isNone(layerClass) && A(get(layerClass, 'operations') || []).includes('filter');
     }),
 
     /**

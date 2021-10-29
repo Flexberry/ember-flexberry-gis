@@ -5,7 +5,7 @@
 import { A } from '@ember/array';
 
 import Component from '@ember/component';
-import Mixin from 'ember-validations';
+import Mixin from 'ember-cp-validations';
 import layout from '../templates/components/spatial-bookmark';
 
 /**

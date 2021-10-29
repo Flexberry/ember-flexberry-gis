@@ -110,7 +110,7 @@ export default Mixin.create({
     }
 
     const layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
-    const identifyOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('identify');
+    const identifyOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).includes('identify');
     const identifyOperationIsAvailableForLayerInstance = this.get('settingsAsObject.identifySettings.canBeIdentified') !== false;
 
     return identifyOperationIsAvailableForLayerClass && identifyOperationIsAvailableForLayerInstance;
@@ -128,7 +128,7 @@ export default Mixin.create({
     }
 
     const layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
-    const searchOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('search');
+    const searchOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).includes('search');
     const searchOperationIsAvailableForLayerInstance = this.get('settingsAsObject.searchSettings.canBeSearched') !== false;
 
     return searchOperationIsAvailableForLayerClass && searchOperationIsAvailableForLayerInstance;
@@ -146,7 +146,7 @@ export default Mixin.create({
     }
 
     const layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
-    const searchOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('search');
+    const searchOperationIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).includes('search');
     const searchOperationIsAvailableForLayerInstance = this.get('settingsAsObject.searchSettings.canBeContextSearched') !== false;
 
     return searchOperationIsAvailableForLayerClass && searchOperationIsAvailableForLayerInstance;
@@ -174,7 +174,7 @@ export default Mixin.create({
     }
 
     const layerClassFactory = getOwner(this).knownForType('layer', this.get('type'));
-    const legendIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).contains('legend');
+    const legendIsAvailableForLayerClass = A(get(layerClassFactory, 'operations') || []).includes('legend');
     const legendIsAvailableForLayerInstance = this.get('settingsAsObject.legendSettings.legendCanBeDisplayed') !== false;
 
     return legendIsAvailableForLayerClass && legendIsAvailableForLayerInstance;

@@ -62,7 +62,7 @@ export default BaseVectorLayer.extend({
     assert(
       `Wrong value of \`format\` property: ${format}. `
       + `Allowed values are: [\`${availableFormats.join('`, `')}\`].`,
-      availableFormats.contains(format)
+      availableFormats.includes(format)
     );
 
     const options = this.get('options');
@@ -786,7 +786,7 @@ export default BaseVectorLayer.extend({
           const loadedBoundsJsts = geojsonReader.read(loadedBounds.toGeoJSON().geometry);
           const boundsJsts = geojsonReader.read(L.rectangle(bounds).toGeoJSON().geometry);
 
-          if (loadedBoundsJsts.contains(boundsJsts)) {
+          if (loadedBoundsJsts.includes(boundsJsts)) {
             if (leafletObject.statusLoadLayer) {
               leafletObject.promiseLoadLayer = resolve();
             }
@@ -893,7 +893,7 @@ export default BaseVectorLayer.extend({
 
     const featuresIds = [];
     Object.values(leafletObject.changes)
-      .filter((layer) => isNone(ids) || ids.contains(leafletObject.getLayerId(layer))).forEach((layer) => {
+      .filter((layer) => isNone(ids) || ids.includes(leafletObject.getLayerId(layer))).forEach((layer) => {
         if (layer.state === state.insert) {
           if (leafletObject.hasLayer(layer)) {
             leafletObject.removeLayer(layer);

@@ -890,7 +890,7 @@ export default BaseLayer.extend({
     @param {Object} results Hash containing promise.
   */
   _continueLoad(e) {
-    const shouldContinueLoad = A(e.layers || []).contains(this.get('layerModel'));
+    const shouldContinueLoad = A(e.layers || []).includes(this.get('layerModel'));
     if (!shouldContinueLoad) {
       return;
     }
@@ -1175,7 +1175,7 @@ export default BaseLayer.extend({
     if (layers) {
       layers.forEach((layer) => {
         const showExisting = this.get('showExisting');
-        const intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
+        const intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.includes(layer.getLatLng());
         const staticLoad = showExisting !== false && intersectBBox;
         if (!layer._label && (showExisting === false || staticLoad)) {
           const label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));

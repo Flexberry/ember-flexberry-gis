@@ -24,6 +24,6 @@ export default Helper.extend({
     @return {Boolen} Flag: indicates whether the specified item contains in the given array or not.
   */
   compute([array, item]) {
-    return A(array || []).contains(item);
+    return A(array || []).includes(item);
   },
 });

@@ -47,7 +47,7 @@ export function initialize(applicationInstance) {
       const { resolver, } = applicationInstance.application.__registry__;
       A(Object.keys(resolver.knownForType(type))).forEach((knownClass) => {
         const className = knownClass.split(':')[1];
-        const classFactory = applicationInstance._lookupFactory(knownClass);
+        const classFactory = applicationInstance.factoryFor(knownClass).class;
 
         knownClasses[className] = classFactory;
       });
@@ -80,7 +80,7 @@ export function initialize(applicationInstance) {
     @returns {String[]} Flag indicating whether class with given name is known for the specified type or not.
   */
   let isKnownNameForType = applicationInstance.isKnownNameForType = function (type, className) {
-    return knownNamesForType(type).contains(className);
+    return knownNamesForType(type).includes(className);
   };
 }
 

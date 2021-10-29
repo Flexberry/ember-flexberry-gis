@@ -148,7 +148,7 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
     const getOrSeparatedCondition = (searchObject, key) => {
       const conditions = searchObject.split(',').map((item) => {
         const str = item.trim();
-        return new StringPredicate(key).contains(str);
+        return new StringPredicate(key).includes(str);
       });
       if (isArray(conditions)) {
         return conditions.length > 1 ? new ComplexPredicate(Condition.Or, ...conditions) : conditions[0];

@@ -52,7 +52,7 @@ export default Mixin.create({
       case '<=':
         return new SimplePredicate(field, FilterOperator.Leq, value);
       case 'like':
-        return new StringPredicate(field).contains(value);
+        return new StringPredicate(field).includes(value);
     }
   },
 

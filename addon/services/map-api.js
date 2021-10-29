@@ -28,7 +28,7 @@ export default Service.extend({
 
   init() {
     this._super(...arguments);
-    const appConfig = getOwner(this)._lookupFactory('config:environment');
+    const appConfig = getOwner(this).factoryFor('config:environment').class;
     if (!isNone(appConfig) && !isNone(appConfig.APP.mapApiService)) {
       this.set('isApiAvailable', appConfig.APP.mapApiService);
     }

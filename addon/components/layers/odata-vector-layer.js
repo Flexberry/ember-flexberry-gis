@@ -496,7 +496,7 @@ export default BaseVectorLayer.extend({
             if (layerPropertyType !== 'string' || (layerPropertyType === 'object' && layerPropertyValue instanceof Date)) {
               equals.push(new SimplePredicate(field, FilterOperator.Eq, e.searchOptions.queryString));
             } else {
-              equals.push(new StringPredicate(field).contains(e.searchOptions.queryString));
+              equals.push(new StringPredicate(field).includes(e.searchOptions.queryString));
             }
           }
         });
@@ -1368,7 +1368,7 @@ export default BaseVectorLayer.extend({
           const loadedBoundsJsts = loadedBounds.toJsts(L.CRS.EPSG4326);
           const boundsJsts = bounds.toJsts(L.CRS.EPSG4326);
 
-          if (loadedBoundsJsts.contains(boundsJsts)) {
+          if (loadedBoundsJsts.includes(boundsJsts)) {
             if (leafletObject.statusLoadLayer) {
               leafletObject.promiseLoadLayer = resolve();
             }
@@ -1503,7 +1503,7 @@ export default BaseVectorLayer.extend({
 
     const featuresIds = [];
     leafletObject.models
-      .filter((layer) => isNone(ids) || ids.contains(leafletObject.getLayerId(layer))).forEach((model, layerId) => {
+      .filter((layer) => isNone(ids) || ids.includes(leafletObject.getLayerId(layer))).forEach((model, layerId) => {
         const layer = leafletObject.getLayer(layerId);
         const dirtyType = model.get('dirtyType');
         if (dirtyType === 'created') {

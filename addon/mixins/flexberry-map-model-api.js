@@ -1646,7 +1646,7 @@ export default Mixin.create(SnapDraw, {
               if (jstsFeat.geometry.isValid()) {
                 switch (condition) {
                   case cond[0]:
-                    if (jstsFeat.geometry.contains(diff.jstsGeometry)) {
+                    if (jstsFeat.geometry.includes(diff.jstsGeometry)) {
                       object.id = jstsFeat.properties.primarykey;
                       return false;
                     }
@@ -1656,7 +1656,7 @@ export default Mixin.create(SnapDraw, {
 
                     break;
                   case cond[1]:
-                    if (jstsFeat.geometry.intersects(diff.jstsGeometry) && !jstsFeat.geometry.contains(diff.jstsGeometry)) {
+                    if (jstsFeat.geometry.intersects(diff.jstsGeometry) && !jstsFeat.geometry.includes(diff.jstsGeometry)) {
                       object.id = jstsFeat.properties.primarykey;
                       return false;
                     }
