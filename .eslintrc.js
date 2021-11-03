@@ -18,11 +18,13 @@ module.exports = {
   globals: {
     Inputmask: 'writable',
     Base64: 'writable',
+    L: 'writable',
   },
   rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true, }],
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
+    'import/core-modules': [ 'sinon' ],
     'ember/no-observers': 'off',
     'ember/new-module-imports': 'off',
     'ember/closure-actions': 'off',

@@ -48,11 +48,11 @@ let addLinkMetadata = function (layerModel, linkMetadata, store) {
   linkMetadata.forEach((item) => {
     const newLayerLink = store.createRecord('new-platform-flexberry-g-i-s-layer-link', {
       id: generateUniqueId(),
-      allowShow: item.get('allowShow'),
-      mapObjectSetting: item.get('mapObjectSetting'),
+      allowShow: item.allowShow,
+      mapObjectSetting: item.mapObjectSetting,
     });
 
-    addLinkParametersMetadata(newLayerLink, item.get('parameters'), store);
+    addLinkParametersMetadata(newLayerLink, item.parameters, store);
     layerModel.get('layerLink').pushObject(newLayerLink);
   });
 };
@@ -73,11 +73,11 @@ let addLinkParametersMetadata = function (layerLinkModel, parameters, store) {
   parameters.forEach((item) => {
     const newLinkParameter = store.createRecord('new-platform-flexberry-g-i-s-link-parameter', {
       id: generateUniqueId(),
-      objectField: item.get('objectField'),
-      layerField: item.get('layerField'),
-      expression: item.get('expression'),
-      queryKey: item.get('queryKey'),
-      linkField: item.get('linkField'),
+      objectField: item.objectField,
+      layerField: item.layerField,
+      expression: item.expression,
+      queryKey: item.queryKey,
+      linkField: item.linkField,
     });
 
     layerLinkModel.get('parameters').pushObject(newLinkParameter);

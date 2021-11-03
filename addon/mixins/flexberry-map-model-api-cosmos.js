@@ -108,7 +108,7 @@ export default Mixin.create({
       if (!isNone(attributes) && isArray(attributes)) {
         const equals = A();
         attributes.forEach((strSearch) => {
-          equals.push(new StringPredicate('anyText').includes(strSearch));
+          equals.push(new StringPredicate('anyText').contains(strSearch));
         });
 
         if (equals.length === 1) {

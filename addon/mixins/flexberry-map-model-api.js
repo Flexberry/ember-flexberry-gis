@@ -593,7 +593,7 @@ export default Mixin.create(SnapDraw, {
         const sourceFeature = obj[0];
         const [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
         let destFeature;
-        switch (destLayerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
+        switch (destLayerModel.settingsAsObject.typeGeometry.toLowerCase()) {
           case 'polygon':
             destFeature = L.polygon(sourceFeature.getLatLngs());
             break;
@@ -680,7 +680,7 @@ export default Mixin.create(SnapDraw, {
 
           objects.forEach((sourceFeature) => {
             let destFeature;
-            switch (destLayerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
+            switch (destLayerModel.settingsAsObject.typeGeometry.toLowerCase()) {
               case 'polygon':
                 destFeature = L.polygon(sourceFeature.getLatLngs());
                 break;
@@ -1646,7 +1646,7 @@ export default Mixin.create(SnapDraw, {
               if (jstsFeat.geometry.isValid()) {
                 switch (condition) {
                   case cond[0]:
-                    if (jstsFeat.geometry.includes(diff.jstsGeometry)) {
+                    if (jstsFeat.geometry.contains(diff.jstsGeometry)) {
                       object.id = jstsFeat.properties.primarykey;
                       return false;
                     }
@@ -1656,7 +1656,7 @@ export default Mixin.create(SnapDraw, {
 
                     break;
                   case cond[1]:
-                    if (jstsFeat.geometry.intersects(diff.jstsGeometry) && !jstsFeat.geometry.includes(diff.jstsGeometry)) {
+                    if (jstsFeat.geometry.intersects(diff.jstsGeometry) && !jstsFeat.geometry.contains(diff.jstsGeometry)) {
                       object.id = jstsFeat.properties.primarykey;
                       return false;
                     }

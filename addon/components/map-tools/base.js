@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import { isHTMLSafe } from '@ember/template';
+import { htmlSafe, isHTMLSafe } from '@ember/template';
 
 import $ from 'jquery';
 import { typeOf, isNone, isBlank } from '@ember/utils';
@@ -92,7 +92,7 @@ const BaseMapToolComponent = Component.extend(SlotsMixin, {
     const caption = this.get('caption');
     return typeOf(caption) === 'string' && $.trim(caption) !== ''
       || typeOf(isHTMLSafe) === 'function' && isHTMLSafe(caption) && $.trim(get(caption, 'string')) !== ''
-      || caption instanceof Ember.Handlebars.SafeString && $.trim(get(caption, 'string')) !== '';
+      || caption instanceof htmlSafe && $.trim(get(caption, 'string')) !== '';
   }),
 
   /**

@@ -3,21 +3,21 @@
 *******************************/
 
 @theme : @@element;
-@flexberry-theme: 'blue-sky';
+@associate-name: "@{element}-associate";
+@associate: @@associate-name;
 
 /*--------------------
    Site Variables
 ---------------------*/
 
 /* Default */
-@import "@{themesFolder}/default/globals/site.variables";
-/* Ember-flexberry theme */
-@import "@{themesFolder}/@{flexberry-theme}/globals/site.variables";
+@import "@{semanticUiThemesFolder}/default/globals/site.variables";
 
-/* Packaged Theme */
-@import (optional) "@{themesFolder}/@{site}/globals/site.variables";
+/* Ember-flexberry theme */
+@import (optional) "@{emberFlexberryThemesFolder}/@{theme}/globals/site.variables";
+
 /* Ember-flexberry-gis theme */
-@import (optional) "@{gisThemesFolder}/@{site}/globals/site.variables";
+@import (optional) "@{gisThemesFolder}/@{theme}/globals/site.variables";
 
 /* Site Theme */
 @import (optional) "@{siteFolder}/globals/site.variables";
@@ -28,12 +28,12 @@
 ---------------------*/
 
 /* Default */
-@import "@{themesFolder}/default/@{type}s/@{element}.variables";
-/* Ember-flexberry theme */
-@import (optional) "@{themesFolder}/@{flexberry-theme}/@{type}s/@{element}.variables";
+@import (optional) "@{semanticUiThemesFolder}/default/@{type}s/@{element}.variables";
 
-/* Packaged Theme */
-@import (optional) "@{themesFolder}/@{theme}/@{type}s/@{element}.variables";
+/* Ember-flexberry theme */
+@import (optional) "@{emberFlexberryThemesFolder}/@{theme}/@{associate}.variables";
+@import (optional) "@{emberFlexberryThemesFolder}/@{theme}/@{type}s/@{element}.variables";
+
 /* Ember-flexberry-gis theme */
 @import (optional) "@{gisThemesFolder}/@{theme}/@{type}s/@{element}.variables";
 
@@ -58,7 +58,8 @@
 -------------------*/
 
 .loadUIOverrides() {
-  @import (optional) "@{themesFolder}/@{theme}/@{type}s/@{element}.overrides";
+  @import (optional) "@{semanticUiThemesFolder}/default/@{type}s/@{element}.overrides";
+  @import (optional) "@{emberFlexberryThemesFolder}/@{theme}/@{type}s/@{element}.overrides";
   @import (optional) "@{gisThemesFolder}/default/@{type}s/@{element}.overrides";
   @import (optional) "@{gisThemesFolder}/@{theme}/@{type}s/@{element}.overrides";
   @import (optional) "@{siteFolder}/@{type}s/@{element}.overrides";

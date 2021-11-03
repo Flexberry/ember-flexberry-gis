@@ -3,7 +3,7 @@
     <div class="column">
       {{flexberry-checkbox
         value=value.canBeSearched
-        label=('t' _canBeSearchedCheckBoxLabel)
+        label=(t _canBeSearchedCheckBoxLabel)
         readonly=readonly
         class=checkboxClass
       }}
@@ -13,7 +13,7 @@
     <div class="column">
       {{flexberry-checkbox
         value=value.canBeContextSearched
-        label=('t' _canBeContextSearchedCheckBoxLabel)
+        label=(t _canBeContextSearchedCheckBoxLabel)
         readonly=readonly
         class=checkboxClass
       }}
@@ -24,7 +24,7 @@
       {{flexberry-multiple-select
         items=fields
         selectedItems=value.searchFields
-        title=('t' _searchFieldsSelectorLabel)
+        title=(t _searchFieldsSelectorLabel)
         allowAdditions=true
       }}
     </div>
@@ -34,7 +34,7 @@
       {{flexberry-multiple-select
         items=fields
         selectedItems=value.contextSearchFields
-        title=('t' _contextSearchFieldsSelectorLabel)
+        title=(t _contextSearchFieldsSelectorLabel)
         allowAdditions=true
       }}
     </div>

@@ -59,14 +59,20 @@ export const Model = Mixin.create({
 });
 
 export const ValidationRules = {
-  name: validator('presence', {
-    presence: true,
-    message: 'Name is required',
-  }),
-  type: validator('presence', {
-    presence: true,
-    message: 'Type is required',
-  }),
+  name: {
+    descriptionKey: 'models.new-platform-flexberry-g-i-s-layer-metadata.validations.name.__caption__',
+    validators: [
+      validator('ds-error'),
+      validator('presence', true)
+    ],
+  },
+  type: {
+    descriptionKey: 'models.new-platform-flexberry-g-i-s-layer-metadata.validations.type.__caption__',
+    validators: [
+      validator('ds-error'),
+      validator('presence', true)
+    ],
+  }
 };
 
 export const defineProjections = function (modelClass) {
@@ -80,7 +86,7 @@ export const defineProjections = function (modelClass) {
       allowShow: attr('Показывать'),
       layer: belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
       }),
-      mapObjectSetting: belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
+      name: belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
       }),
       parameters: hasMany('new-platform-flexberry-g-i-s-parameter-metadata', 'Параметры связи', {
         objectField: attr('Поле объекта'),
@@ -107,7 +113,7 @@ export const defineProjections = function (modelClass) {
       layer: belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
         name: attr('', { hidden: true, }),
       }, { displayMemberPath: 'name', }),
-      mapObjectSetting: belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
+      name: belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
         typeName: attr('', { hidden: true, }),
       }, { displayMemberPath: 'typeName', }),
       allowShow: attr('Показывать'),
