@@ -2,36 +2,40 @@
   @module ember-flexberry-gis
 */
 import Ember from 'ember';
-import { checkMapZoom } from '../../utils/check-zoom';
 import BaseLayer from '../base-layer';
 
 /**
-  Combine layer component for leaflet map.
+  WithHistory layer component for leaflet map.
 
-  @class CombineLayerComponent
+  @class WithHistoryLayerComponent
   @extends BaseLayerComponent
  */
 export default BaseLayer.extend({
   /**
-    Inner layers.
+    History layer
 
-    @property innerLayers
+    @property historyLayer
   */
-  innerLayers: null,
+  historyLayer: null,
 
   /**
-    Main layer.
+    Main layer
 
     @property mainLayer
   */
   mainLayer: null,
 
   /**
-    Дayer whose visibility is enabled.
+    history mode enabled
 
-    @property layerVisibility
+    @property historyModeEnabled
   */
-  layerVisibility: null,
+  historyModeEnabled: false,
+
+  historyModeEnabledObserver: Ember.observer('layerModel.historyModeEnabled', function () {
+    this.set('historyModeEnabled', this.get('layerModel.historyModeEnabled'));
+    this._setLayerVisibility();
+  }),
 
   /**
     Creates leaflet layer related to layer type.
@@ -45,9 +49,7 @@ export default BaseLayer.extend({
       this.createAllLayer();
       let promises = Ember.A();
       promises.push(this.get('mainLayer._leafletLayerPromise'));
-      this.get('mainLayer.innerLayers').forEach((layer) => {
-        promises.push(layer.get('_leafletLayerPromise'));
-      });
+      promises.push(this.get('mainLayer.historyLayer').get('_leafletLayerPromise'));
 
       Ember.RSVP.allSettled(promises).then((layers) => {
         const rejected = layers.filter((item) => { return item.state === 'rejected'; }).length > 0;
@@ -96,42 +98,69 @@ export default BaseLayer.extend({
         mainLayer.layerId = Ember.guidFor(mainLayer);
         this.set('mainLayer', mainLayer);
 
-        let innerLayers = Ember.A();
-        let innerLayersSettings = Ember.get(settings, 'innerLayers');
-        innerLayersSettings.forEach(innerSettings => {
-          let innerLayerProperties = {
-            leafletMap: leafletMap,
-            leafletContainer: this.get('leafletContainer'),
-            layerModel: this.get('layerModel'),
-            index: this.get('index'),
-            visibility:  false,
-            dynamicProperties: innerSettings
-          };
-
-          // Set creating component's owner to avoid possible lookup exceptions.
-          this.setOwner(innerLayerProperties);
-
-          let type = innerSettings.type;
-          let layer = Ember.getOwner(this).factoryFor(`component:layers/${type}-layer`).create(innerLayerProperties);
-          if (!Ember.isNone(layer)) {
-            layer.layerId = Ember.guidFor(layer);
-            innerLayers.addObject(layer);
-          } else {
-            throw(`Invalid layer type ${type} for layer ${this.get('layerModel.name')}`);
+        let historyLayersSettings = Ember.get(settings, 'historyLayer');
+        Ember.A(Object.keys(settings) || []).forEach((key) => {
+          if (!historyLayersSettings.hasOwnProperty(key)) {
+            Ember.set(historyLayersSettings, key, settings[key]);
           }
         });
 
-        this.set('innerLayers', innerLayers);
-        Ember.set(mainLayer, 'innerLayers', innerLayers);
-        leafletMap.on('zoomend', this._visibilityOfLayerByZoom, this);
+        let historyLayerProperties = {
+          leafletMap: leafletMap,
+          leafletContainer: this.get('leafletContainer'),
+          layerModel: this.get('layerModel'),
+          index: this.get('index'),
+          visibility: false,
+          dynamicProperties: historyLayersSettings
+        };
+
+        this.setOwner(historyLayerProperties);
+
+        let type = historyLayersSettings.type;
+        let historyLayer = Ember.getOwner(this).factoryFor(`component:layers/${type}-layer`).create(historyLayerProperties);
+        if (!Ember.isNone(historyLayer)) {
+          historyLayer.layerId = Ember.guidFor(historyLayer);
+        } else {
+          throw (`Invalid layer type ${type} for layer ${this.get('layerModel.name')}`);
+        }
+
+        this.set('historyLayer', historyLayer);
+        Ember.set(mainLayer, 'historyLayer', historyLayer);
+
         mainLayer.onLeafletMapEvent();
-        mainLayer.get('innerLayers').forEach((layer) => {
-          layer.onLeafletMapEvent();
-        });
+        historyLayer.onLeafletMapEvent();
+
+        leafletMap.on('flexberry-map:create-feature:end', this.updateHistory, this);
+        leafletMap.on('flexberry-map:edit-feature:end', this.updateHistory, this);
       } else {
-        throw(`Invalid layer type ${mainType} for layer ${this.get('layerModel.name')}`);
+        throw (`Invalid layer type ${mainType} for layer ${this.get('layerModel.name')}`);
       }
     }
+  },
+
+  updateHistory(e) {
+    let id = Ember.get(e.layerModel, 'layerModel.id');
+    if (this.get('layerModel.id') === id) {
+      let historyLayer = this.get('historyLayer');
+      if (!Ember.isNone(historyLayer)) {
+        historyLayer.reload();
+      }
+    }
+  },
+
+  destroyLayer() {
+    let mainLayer = this.get('mainLayer');
+    if (!Ember.isNone(mainLayer)) {
+      mainLayer.willDestroyElement();
+    }
+
+    let historyLayer = this.get('historyLayer');
+    if (!Ember.isNone(historyLayer)) {
+      historyLayer.willDestroyElement();
+    }
+
+    this.set('mainLayer', null);
+    this.set('historyLayer', null);
   },
 
   /**
@@ -140,33 +169,9 @@ export default BaseLayer.extend({
     @method _searchPropertiesDidChange
     @private
   */
-  _settingsDidChange: Ember.observer('layerModel.settingsAsObject', function() {
+  _settingsDidChange: Ember.observer('layerModel.settingsAsObject', function () {
     Ember.run.once(this, '_resetLayer');
   }),
-
-  /**
-    Destroys leaflet layer related to layer type.
-
-    @method _destroyLayer
-    @private
-  */
-  destroyLayer() {
-    let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
-      leafletMap.off('zoomend', this._visibilityOfLayerByZoom, this);
-    }
-
-    let mainLayer = this.get('mainLayer');
-    if (!Ember.isNone(mainLayer)) {
-      mainLayer.willDestroyElement();
-      mainLayer.get('innerLayers').forEach((layer) => {
-        layer.willDestroyElement();
-      });
-    }
-
-    this.set('mainLayer', null);
-    this.set('layerVisibility', null);
-  },
 
   /**
     Deinitializes DOM-related component's properties.
@@ -177,68 +182,26 @@ export default BaseLayer.extend({
   },
 
   /**
-    Checks zoom and sets layer visibility.
-
-    @method _checkAndSetVisibility
-    @param {Object} layer
-    @returns {Boolean}
-    @private
-  */
-  _checkAndSetVisibility(layer) {
-    let layerVisibility = this.get('layerVisibility');
-    let visibility = this.get('visibility');
-    if (visibility && checkMapZoom(layer._leafletObject)) {
-      if (Ember.isNone(layerVisibility) || layerVisibility.layerId !== layer.layerId) {
-        if (!Ember.isNone(layerVisibility)) {
-          layerVisibility.set('visibility', false);
-        }
-
-        this.set('layerVisibility', layer);
-        layer.set('visibility', true);
-        this._setLayerZIndex(layer._leafletObject);
-      }
-
-      return true;
-    }
-
-    return false;
-  },
-
-  /**
     Sets leaflet layer's visibility.
 
     @method _setLayerVisibility
     @private
   */
   _setLayerVisibility() {
-    let layerVisibility = this.get('layerVisibility');
     if (this.get('visibility')) {
-      this._visibilityOfLayerByZoom();
-    } else if (!Ember.isNone(layerVisibility)) {
-      layerVisibility.set('visibility', false);
-      this.set('layerVisibility', null);
+      let historyModeEnabled = this.get('historyModeEnabled');
+      this.get('historyLayer').set('visibility', historyModeEnabled);
+      this.get('mainLayer').set('visibility', !historyModeEnabled);
+    } else {
+      this.get('mainLayer').set('visibility', false);
+      this.get('historyLayer').set('visibility', false);
     }
   },
 
-  /**
-    Sets leaflet layer's visibility.
-
-    @method _visibilityOfLayerByZoom
-    @private
-  */
-  _visibilityOfLayerByZoom() {
-    let mainLayer = this.get('mainLayer');
-    if (Ember.isNone(mainLayer) || Ember.isNone(mainLayer._leafletObject)) {
-      return;
-    }
-
-    if (!this._checkAndSetVisibility(mainLayer)) {
-      mainLayer.get('innerLayers').forEach((layer) => {
-        if (this._checkAndSetVisibility(layer)) {
-          return;
-        }
-      });
-    }
+  _setLayerOpacity() {
+    let opacity = this.get('opacity');
+    this.get('historyLayer').set('opacity', opacity);
+    this.get('mainLayer').set('opacity', opacity);
   },
 
   /**
@@ -266,7 +229,8 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let mainLayer = this.get('mainLayer');
+    let historyModeEnabled = this.get('historyModeEnabled');
+    let mainLayer = historyModeEnabled ? this.get('historyLayer') : this.get('mainLayer');
     if (!Ember.isNone(mainLayer)) {
       return mainLayer.identify.apply(mainLayer, arguments);
     }
@@ -285,7 +249,8 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    let mainLayer = this.get('mainLayer');
+    let historyModeEnabled = this.get('historyModeEnabled');
+    let mainLayer = historyModeEnabled ? this.get('historyLayer') : this.get('mainLayer');
     if (!Ember.isNone(mainLayer)) {
       return mainLayer.search.apply(mainLayer, arguments);
     }
@@ -302,7 +267,8 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   query(layerLinks, e) {
-    let mainLayer = this.get('mainLayer');
+    let historyModeEnabled = this.get('historyModeEnabled');
+    let mainLayer = historyModeEnabled ? this.get('historyLayer') : this.get('mainLayer');
     if (!Ember.isNone(mainLayer)) {
       return mainLayer.query.apply(mainLayer, arguments);
     }
@@ -319,7 +285,8 @@ export default BaseLayer.extend({
     @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
   */
   getNearObject(e) {
-    let mainLayer = this.get('mainLayer');
+    let historyModeEnabled = this.get('historyModeEnabled');
+    let mainLayer = historyModeEnabled ? this.get('historyLayer') : this.get('mainLayer');
     if (!Ember.isNone(mainLayer)) {
       return mainLayer.getNearObject.apply(mainLayer, arguments);
     }
@@ -337,20 +304,10 @@ export default BaseLayer.extend({
         return;
       }
 
-      let promises = Ember.A();
-      promises.push(mainLayer._leafletObject.baseShowAllLayerObjects());
-      mainLayer.get('innerLayers').forEach((layer) => {
-        promises.push(layer._leafletObject.showAllLayerObjects());
-      });
-
-      Ember.RSVP.allSettled(promises).then((result) => {
-        const rejected = result.filter((item) => { return item.state === 'rejected'; }).length > 0;
-
-        if (rejected) {
-          reject(`Failed to showAllLayerObjects for '${this.get('layerModel.name')}`);
-        }
-
-        resolve(result[0].value);
+      mainLayer._leafletObject.baseShowAllLayerObjects().then((result) => {
+        resolve(result.value);
+      }).catch(() => {
+        reject(`Failed to showAllLayerObjects for '${this.get('layerModel.name')}`);
       });
     });
   },
@@ -367,8 +324,5 @@ export default BaseLayer.extend({
     }
 
     mainLayer._leafletObject.baseHideAllLayerObjects();
-    mainLayer.get('innerLayers').forEach((layer) => {
-      layer._leafletObject.hideAllLayerObjects();
-    });
   }
 });

@@ -33,9 +33,9 @@
         {{flexberry-icon
           class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
         }}
-        <label class={{flexberryClassNames.caption}}>
+        <div class={{flexberryClassNames.caption}}>
           {{layer.name}}
-          {{#if layer.settingsAsObject.hasTime}}
+          {{#if (and histEnabled (eq layer.type "with-history"))}}
            от {{flexberry-simpledatetime
                 value=layer.archTime
                 type="datetime"
@@ -44,7 +44,7 @@
                 change=(action "onLayerTimeChange")
               }}
           {{/if}}
-        </label>
+        </div>
         {{#if (not compareLayersEnabled)}}
           <div class="flexberry-treenode-buttons-block hidden">
             {{#if (not readonly)}}
