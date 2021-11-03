@@ -18,7 +18,7 @@ module('Unit | Component | layers/group layer', function (hooks) {
 
     const component = this.owner.factoryFor('component:layers/group-layer').create();
     const leafletLayerPromiseResolved = assert.async();
-    component.get('_leafletLayerPromise').then((leafletLayer) => {
+    component.get('_leafletLayerPromise').then(() => {
       const layer = component.get('_leafletObject');
       const spy = sinon.spy(layer, 'setZIndex');
 

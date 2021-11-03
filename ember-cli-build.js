@@ -12,16 +12,16 @@ module.exports = function(defaults) {
 
     lessOptions: {
       paths: [
-        'bower_components/semantic-ui'
+        'bower_components/semantic-ui',
+        'node_modules/ember-flexberry-themes',
       ]
     },
-
-    SemanticUI: {
-      import: {
-        css: false,
-        javascript: true,
-        images: false,
-        fonts: true
+    postcssOptions: {
+      compile: {
+        enabled: false,
+        browsers: ['last 3 versions'],
+      },
+      filter: {
       }
     },
 

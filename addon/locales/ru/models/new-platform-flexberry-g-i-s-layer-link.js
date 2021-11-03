@@ -126,4 +126,12 @@ export default {
       },
     },
   },
+  validations: {
+    mapObjectSetting: {
+      __caption__: 'MapObjectSetting is required',
+    },
+    layer: {
+      __caption__: 'Layer is required',
+    },
+  }
 };

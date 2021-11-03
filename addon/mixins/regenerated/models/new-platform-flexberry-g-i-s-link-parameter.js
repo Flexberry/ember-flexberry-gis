@@ -23,10 +23,13 @@ export const Model = Mixin.create({
 });
 
 export const ValidationRules = {
-  layerLink: validator('presence', {
-    presence: true,
-    message: 'LayerLink is required',
-  }),
+  layerLink: {
+    descriptionKey: 'models.new-platform-flexberry-g-i-s-link-parameter.validations.layerLink.__caption__',
+    validators: [
+      validator('ds-error'),
+      validator('presence', true)
+    ],
+  }
 };
 
 export const defineProjections = function (modelClass) {

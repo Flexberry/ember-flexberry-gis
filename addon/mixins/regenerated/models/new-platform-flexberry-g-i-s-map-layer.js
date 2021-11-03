@@ -63,14 +63,20 @@ export const Model = Mixin.create({
 });
 
 export const ValidationRules = {
-  type: validator('presence', {
-    presence: true,
-    message: 'Type is required',
-  }),
-  map: validator('presence', {
-    presence: true,
-    message: 'Map is required',
-  }),
+  map: {
+    descriptionKey: 'models.new-platform-flexberry-g-i-s-map-layer.validations.map.__caption__',
+    validators: [
+      validator('ds-error'),
+      validator('presence', true)
+    ],
+  },
+  type: {
+    descriptionKey: 'models.new-platform-flexberry-g-i-s-map-layer.validations.type.__caption__',
+    validators: [
+      validator('ds-error'),
+      validator('presence', true)
+    ],
+  }
 };
 
 export const defineProjections = function (modelClass) {

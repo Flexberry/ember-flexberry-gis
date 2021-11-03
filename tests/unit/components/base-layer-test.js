@@ -28,7 +28,7 @@ module('Unit | Component | base layer', function (hooks) {
     });
 
     const leafletLayerPromiseResolved = assert.async();
-    component.get('_leafletLayerPromise').then((leafletLayer) => {
+    component.get('_leafletLayerPromise').then(() => {
       component._setLayerZIndex();
       assert.ok(setZIndex.called);
     }).finally(() => {
@@ -49,7 +49,7 @@ module('Unit | Component | base layer', function (hooks) {
     this.render();
 
     const leafletLayerPromiseResolved = assert.async();
-    component.get('_leafletLayerPromise').then((leafletLayer) => {
+    component.get('_leafletLayerPromise').then(() => {
       assert.ok(setLayerVisibility.called, 'should call visibilityDidChange');
     }).finally(() => {
       leafletLayerPromiseResolved();
@@ -78,7 +78,7 @@ module('Unit | Component | base layer', function (hooks) {
     });
 
     const leafletLayerPromiseResolved = assert.async();
-    component.get('_leafletLayerPromise').then((leafletLayer) => {
+    component.get('_leafletLayerPromise').then(() => {
       component.set('visibility', true);
 
       assert.ok(addLayer.calledOnce, 'addLayer should be called once');

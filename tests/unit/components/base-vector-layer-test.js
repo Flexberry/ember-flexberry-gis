@@ -206,8 +206,8 @@ module('Unit | Component | base-vector-layer', function (hooks) {
         createReadFormat() {
           return null;
         },
-        loadLayerFeatures(e) {
-          return new Promise((resolve, reject) => {
+        loadLayerFeatures() {
+          return new Promise((resolve) => {
             resolve(this.get('_leafletObject').addLayer(L.geoJson(
               {
                 type: 'Feature',

@@ -1,4 +1,3 @@
-import { getOwner } from '@ember/application';
 import { resolve, Promise } from 'rsvp';
 import { A } from '@ember/array';
 import { run } from '@ember/runloop';

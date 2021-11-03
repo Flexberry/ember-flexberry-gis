@@ -1,15 +1,24 @@
-import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { test } from 'ember-qunit';
+import moduleForModel from '../../helpers/unit/models/setup-module';
 
-import { run } from '@ember/runloop';
+moduleForModel('new-platform-flexberry-g-i-s-link-parameter', 'Unit | Model | new-platform-flexberry-g-i-s-link-parameter', {
+  // Specify the other units that are required for this test.
+  needs: [
+    'model:custom-inflector-rules',
+    'model:new-platform-flexberry-g-i-s-layer-link',
+    'model:new-platform-flexberry-g-i-s-layer-metadata',
+    'model:new-platform-flexberry-g-i-s-link-metadata',
+    'model:new-platform-flexberry-g-i-s-link-parameter',
+    'model:new-platform-flexberry-g-i-s-map-layer',
+    'model:new-platform-flexberry-g-i-s-map-object-setting',
+    'model:new-platform-flexberry-g-i-s-map',
+    'model:new-platform-flexberry-g-i-s-parameter-metadata'
+  ],
+});
 
-module('Unit | Model | new-platform-flexberry-g-i-s-link-parameter', function (hooks) {
-  setupTest(hooks);
+test('it exists', function (assert) {
+  const model = this.subject();
 
-  test('it exists', function (assert) {
-    const model = run(() => this.owner.lookup('service:store').createRecord('new-platform-flexberry-g-i-s-link-parameter'));
-
-    // let store = this.store();
-    assert.ok(!!model);
-  });
+  // let store = this.store();
+  assert.ok(!!model);
 });

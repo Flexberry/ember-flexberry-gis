@@ -21,14 +21,20 @@ export const Model = Mixin.create({
 });
 
 export const ValidationRules = {
-  mapObjectSetting: validator('presence', {
-    presence: true,
-    message: 'MapObjectSetting is required',
-  }),
-  layer: validator('presence', {
-    presence: true,
-    message: 'Layer is required',
-  }),
+  mapObjectSetting: {
+    descriptionKey: 'models.new-platform-flexberry-g-i-s-layer-link.validations.mapObjectSetting.__caption__',
+    validators: [
+      validator('ds-error'),
+      validator('presence', true)
+    ],
+  },
+  layer: {
+    descriptionKey: 'models.new-platform-flexberry-g-i-s-layer-link.validations.layer.__caption__',
+    validators: [
+      validator('ds-error'),
+      validator('presence', true)
+    ],
+  }
 };
 
 export const defineProjections = function (modelClass) {

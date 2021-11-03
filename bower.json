@@ -2,12 +2,8 @@
   "name": "ember-flexberry-gis",
   "version": "0.8.0",
   "dependencies": {
-    "ember": "~2.4.3",
-    "ember-cli-shims": "0.1.1",
-    "ember-cli-test-loader": "0.2.2",
-    "ember-qunit-notifications": "0.1.0",
-    "jquery-mockjax": "2.2.0",
-    "semantic-ui": "git://github.com/Flexberry/Semantic-UI.git#fixed-abort",
+    "jquery-mockjax": "~2.2.1",
+    "semantic-ui": "2.4.1",
     "daterangepicker": "git://github.com/dangrossman/daterangepicker.git#3.0.5",
     "moment": "2.24.0",
     "blob-polyfill": "~1.0.20150320",
@@ -40,9 +36,6 @@
     "javascript-detect-element-resize": "0.5.3"
   },
   "resolutions": {
-    "ember": "2.4.3",
-    "semantic-ui": "fixed-abort",
-    "leaflet": "1.7.1",
-    "moment": "2.24.0"
+    "leaflet": "1.7.1"
   }
 }

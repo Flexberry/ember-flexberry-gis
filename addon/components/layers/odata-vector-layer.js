@@ -1368,7 +1368,7 @@ export default BaseVectorLayer.extend({
           const loadedBoundsJsts = loadedBounds.toJsts(L.CRS.EPSG4326);
           const boundsJsts = bounds.toJsts(L.CRS.EPSG4326);
 
-          if (loadedBoundsJsts.includes(boundsJsts)) {
+          if (loadedBoundsJsts.contains(boundsJsts)) {
             if (leafletObject.statusLoadLayer) {
               leafletObject.promiseLoadLayer = resolve();
             }
