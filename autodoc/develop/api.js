@@ -304,6 +304,8 @@ YUI.add("yuidoc-meta", function(Y) {
         "WfsLayerComponent",
         "WfsLayerSettingsComponent",
         "WfsLegendComponent",
+        "WithHistoryLayer",
+        "WithHistoryLayerComponent",
         "WmsLayer",
         "WmsLayerSettingsComponent",
         "WmsLegendComponent",
