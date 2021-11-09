@@ -31,8 +31,8 @@ module('Unit | Mixin | method copyObject', function () {
       _getModelLayerFeature() {},
       _getModelLeafletObject() {},
     });
-    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
-    const getMLObject = sinon.stub(subject, '_getModelLeafletObject', getModelLeafletObject);
+    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature').callsFake(getModelLayerFeature);
+    const getMLObject = sinon.stub(subject, '_getModelLeafletObject').callsFake(getModelLeafletObject);
 
     // Act
     const result = subject.copyObject({

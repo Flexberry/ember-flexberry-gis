@@ -121,7 +121,7 @@ module('Unit | Mixin | test method setVisibility ', function () {
       },
       mapLayer: A([]),
     });
-    const mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
+    const mapFireSpy = sinon.stub(map, 'fire').callsFake((name, e) => {
       e.results = A([{ promise: resolve(), }]);
     });
     const mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
@@ -160,7 +160,7 @@ module('Unit | Mixin | test method setVisibility ', function () {
       },
       mapLayer: A([]),
     });
-    const mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
+    const mapFireSpy = sinon.stub(map, 'fire').callsFake((name, e) => {
       e.results = A([{ promise: resolve(), }]);
     });
     const mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');

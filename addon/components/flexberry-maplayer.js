@@ -674,16 +674,28 @@ const FlexberryMaplayerComponent = Component.extend(
         this.sendAction('onChangeLayer', this.get('leftLayer'), this.get('rightLayer'));
       },
 
+      nodeClick(e) {
+        let $target = $(e.target);
+        let targetAction = $target.data('action');
+
+        targetAction = targetAction ? targetAction : $target.parent().data('action');
+
+        if (targetAction) {
+          this.send(targetAction);
+          e.stopPropagation();
+        }
+      },
+
       /**
         Show\hide submenu
 
         @method actions.onSubmenu
       */
       onSubmenu() {
-        const component = $(`.${this.get('componentName')}`);
-        const moreButton = $('.more.floated.button', component);
-        const elements = $('.more.submenu.hidden', component);
-        openCloseSubmenu(this, moreButton, elements, 2);
+        const $component = $(`.${this.get('componentName')}`);
+        const $moreButton = $('.more.floated.button', $component);
+        const $elements = $('.more.submenu.hidden', $component);
+        openCloseSubmenu(this, $moreButton, $elements, 2);
       },
 
       onAddCompare() {

@@ -1,9 +1,11 @@
+/* eslint-disable strict */
+/* eslint-disable camelcase */
+
 module.exports = {
   framework: 'qunit',
-  'test_page': 'tests/index.html?hidepassed',
-  'disable_watching': true,
   test_page: 'tests/index.html?hidepassed',
   disable_watching: true,
+  browser_start_timeout: 900,
   launch_in_ci: [
     'Chrome'
   ],
@@ -14,9 +16,6 @@ module.exports = {
     Chrome: {
       mode: 'ci',
       args: [
-        // --no-sandbox is needed when running Chrome inside a container
-        process.env.TRAVIS ? '--no-sandbox' : null,
-
         '--headless',
         '--disable-gpu',
         '--no-sandbox',

@@ -1,11 +1,11 @@
-import { A } from '@ember/array';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import EmberObject from '@ember/object';
 
 module('Unit | Component | flexberry layers attributes panel', function (hooks) {
   setupTest(hooks);
 
-  const tabModel = A({
+  const tabModel = EmberObject.create({
     selectAll: false,
     propertyLink: {
       ember0: { id: 0, },

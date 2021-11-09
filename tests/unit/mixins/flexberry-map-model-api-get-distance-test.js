@@ -20,7 +20,7 @@ module('Unit | Mixin | test method _getDistanceBetweenObjects', function () {
     const subject = mapApiMixinObject.create({
       _getModelLayerFeature() {},
     });
-    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature').callsFake(getModelLayerFeature);
 
     // Act
     const result = subject.getDistanceBetweenObjects('1', '4', '2', '3');
@@ -52,7 +52,7 @@ module('Unit | Mixin | test method _getDistanceBetweenObjects', function () {
     const subject = mapApiMixinObject.create({
       _getModelLayerFeature() {},
     });
-    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature').callsFake(getModelLayerFeature);
 
     // Act
     const result = subject.getDistanceBetweenObjects('1', '4', '2', '3');
@@ -84,7 +84,7 @@ module('Unit | Mixin | test method _getDistanceBetweenObjects', function () {
     const subject = mapApiMixinObject.create({
       _getModelLayerFeature() {},
     });
-    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature').callsFake(getModelLayerFeature);
 
     // Act
     const result = subject.getDistanceBetweenObjects('1', '4', '2', '3');

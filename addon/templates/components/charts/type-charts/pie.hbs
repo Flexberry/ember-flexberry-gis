@@ -2,7 +2,7 @@
   <label>
     {{t "components.charts.type-charts.pie.caption"}}
   </label>
-  {{#ui-dropdown class="compact selection" onChange=(action "onXAxisPropertyChange") action="hide"}}
+  {{!-- {{#ui-dropdown class="compact selection" onChange=(action "onXAxisPropertyChange") action="hide"}}
     <i class="dropdown icon"></i>
     <div class="text">
       {{get localizedProperties _selectedXAxisProperty}}
@@ -12,13 +12,13 @@
         <div class="item" data-value="{{key}}">{{value}}</div>
       {{/each-in}}
     </div>
-  {{/ui-dropdown}}
+  {{/ui-dropdown}} --}}
 </div>
 <div class="field">
   <label>
     {{t "components.charts.type-charts.pie.value"}}
   </label>
-  {{#ui-dropdown class="compact selection" onChange=(action "onYAxisPropertyChange") action="hide"}}
+  {{!-- {{#ui-dropdown class="compact selection" onChange=(action "onYAxisPropertyChange") action="hide"}}
     <i class="dropdown icon"></i>
     <div class="text">
       {{get localizedProperties _selectedYAxisProperty}}
@@ -28,5 +28,5 @@
         <div class="item" data-value="{{key}}">{{value}}</div>
       {{/each-in}}
     </div>
-  {{/ui-dropdown}}
+  {{/ui-dropdown}} --}}
 </div>

@@ -310,10 +310,13 @@ const FlexberryIdentifyPanelComponent = Component.extend({
     @property bufferUnitsList
     @type Object
   */
-  bufferUnitsList: {
-    meters: 'components.flexberry-identify-panel.buffer.units.meters',
-    kilometers: 'components.flexberry-identify-panel.buffer.units.kilometers',
-  },
+  bufferUnitsList: computed('i18n.locale', function() {
+    let i18n = this.get('i18n');
+    return {
+      meters: i18n.t('components.flexberry-identify-panel.buffer.units.meters'),
+      kilometers: i18n.t('components.flexberry-identify-panel.buffer.units.kilometers')
+    };
+  }),
 
   /**
     Idenify tool layers mode (which layers to identify).
@@ -340,7 +343,13 @@ const FlexberryIdentifyPanelComponent = Component.extend({
     @type String
     @default 'kilometers'
   */
-  bufferUnits: 'kilometers',
+  bufferUnits: computed('bufferUnitsValue', function() {
+    return bufferUnitsValue;
+  }),
+
+  bufferUnitsValue: computed(function() {
+    return this.get('bufferUnitsList.kilometers');
+  }),
 
   /**
     Idenify tool buffer radius in selected units.
@@ -381,17 +390,6 @@ const FlexberryIdentifyPanelComponent = Component.extend({
       this.set('toolMode', toolMode);
 
       this._enableActualIdentifyTool();
-    },
-
-    /**
-      Handles buffer units dropdown value change.
-
-      @method actions.onBufferUnitsChange
-      @param {String} unitsLocalizedCaption Selected units localized caption.
-      @param {String} unitsValue Selected units value.
-    */
-    onBufferUnitsChange(unitsLocalizedCaption, unitsValue) {
-      this.set('bufferUnits', unitsValue);
     },
 
     /**

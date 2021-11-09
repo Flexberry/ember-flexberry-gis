@@ -65,17 +65,10 @@
       }}
     </div>
     <div class="field">
-      {{#ui-dropdown class="item fluid selection" onChange=(action "onBufferUnitsChange")}}
-        <i class="dropdown icon"></i>
-        <div class="text">
-          {{t (get bufferUnitsList bufferUnits)}}
-        </div>
-        <div class="menu">
-          {{#each-in bufferUnitsList as |unitsValue unitsLocalizedCaptionPath|}}
-            <div class="item" data-value="{{unitsValue}}">{{t unitsLocalizedCaptionPath}}</div>
-          {{/each-in}}
-        </div>
-      {{/ui-dropdown}}
+      {{flexberry-dropdown
+        items=bufferUnitsList
+        value=bufferUnitsValue
+      }}
     </div>
   </div>
 </div>

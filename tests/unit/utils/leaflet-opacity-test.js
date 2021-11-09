@@ -53,7 +53,7 @@ module('Unit | Util | Leaflet-opacity', function () {
     };
 
     const geojson = L.geoJSON(data, {
-      style(feature) {
+      style() {
         return { color, };
       },
     });
