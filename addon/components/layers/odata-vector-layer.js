@@ -399,6 +399,7 @@ export default BaseVectorLayer.extend({
 
         models.forEach(model => {
           let feat = this.addLayerObject(layer, model, false);
+          Ember.set(feat.feature, 'arch', this.get('hasTime') || false);
           features.push(feat.feature);
         });
 
@@ -1148,9 +1149,9 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  customFilter: Ember.computed('layerModel.archTime', 'layerModel.settingsAsObject.hasTime', 'modelName', function () {
+  customFilter: Ember.computed('layerModel.archTime', 'hasTime', 'modelName', function () {
     let predicates = [];
-    if (this.get('layerModel.settingsAsObject.hasTime')) {
+    if (this.get('hasTime')) {
       let time = this.get('layerModel.archTime');
       let formattedTime;
       if (Ember.isBlank(time) || time === 'present' || Ember.isNone(time)) {
@@ -1321,7 +1322,7 @@ export default BaseVectorLayer.extend({
     if (!Ember.isNone(leafletObject)) {
       // it's from api showAllLayerObjects, to load objects if layer is not visibility
       let showLayerObjects = (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
-      let show = this.get('layerModel.visibility');
+      let show = this.get('visibility');
       let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
       let showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading && Ember.isEmpty(Object.values(leafletObject._layers));
 

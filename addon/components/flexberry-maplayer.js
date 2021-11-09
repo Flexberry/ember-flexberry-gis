@@ -447,6 +447,13 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     leafletMap: null,
 
     /**
+      History enabled mode
+
+      @default false
+    */
+    histEnabled: false,
+
+    /**
       Flag: indicates whether layer node is in readonly mode.
       If true, layer node's data-related UI will be in readonly mode.
 

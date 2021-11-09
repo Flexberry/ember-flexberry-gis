@@ -72,13 +72,14 @@ export default Ember.Component.extend(
     timeObserverDelay: 1500,
 
     timeObserver: Ember.observer('layerModel.archTime', function () {
-      if (this.reload && typeof (this.reload) === 'function') {
+      // Из комбинированого исторического слоя это изменение пробросится и для основного тоже. Проконтролируем
+      if (this.get('hasTime') && this.reload && typeof (this.reload) === 'function') {
         Ember.run.debounce(this, this.reload, this.get('timeObserverDelay'));
       }
     }),
 
     customFilter: Ember.computed('layerModel.archTime', function () {
-      if (this.get('layerModel.settingsAsObject.hasTime')) {
+      if (this.get('hasTime')) {
         let time = this.get('layerModel.archTime');
         let formattedTime;
         if (Ember.isBlank(time) || time === 'present' || Ember.isNone(time)) {
@@ -101,6 +102,21 @@ export default Ember.Component.extend(
       }
 
       return customFilter || filter;
+    },
+
+    setOwner(properties) {
+      let owner = Ember.getOwner(this);
+      let ownerKey = null;
+      Ember.A(Object.keys(this) || []).forEach((key) => {
+        if (this[key] === owner) {
+          ownerKey = key;
+          return false;
+        }
+      });
+
+      if (!Ember.isBlank(ownerKey)) {
+        properties[ownerKey] = owner;
+      }
     },
 
     /**

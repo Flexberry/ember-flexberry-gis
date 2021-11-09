@@ -112,7 +112,6 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     store = app.__container__.lookup('service:store');
     let layerModel = store.createRecord('test-model');
     layerModel.type = 'odata-vector';
-    layerModel.visibility = true;
     Ember.$.extend(param, {
       'geometryType': 'MultiPolygonPropertyType',
       'modelName': 'test-model',
@@ -123,7 +122,8 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
       'continueLoading': true,
       'store': store,
       'layerModel': layerModel,
-      'leafletMap': leafletMap
+      'leafletMap': leafletMap,
+      'visibility': true
     });
 
     odataServerFake = sinon.fakeServer.create();
@@ -805,7 +805,7 @@ test('test method createDynamicModel() already registered', function(assert) {
 
 test('test method _createVectorLayer()', function(assert) {
   assert.expect(3);
-  param.layerModel.visibility = false;
+  param.visibility = false;
   let component = this.subject(param);
   let spyContinueLoad = sinon.spy(component, 'continueLoad');
 
@@ -821,7 +821,7 @@ test('test method _createVectorLayer()', function(assert) {
 test('test method createVectorLayer() without dynamicModel', function(assert) {
   assert.expect(7);
   var done = assert.async(1);
-  param.layerModel.visibility = false;
+  param.visibility = false;
   let component = this.subject(param);
   let spyContinueLoad = sinon.spy(component, 'continueLoad');
   let _createVectorLayerSpy = sinon.spy(component, '_createVectorLayer');
@@ -859,7 +859,7 @@ test('test method createVectorLayer() without dynamicModel', function(assert) {
 test('test method createVectorLayer() with dynamicModel=true', function(assert) {
   assert.expect(8);
   var done = assert.async(1);
-  param.layerModel.visibility = false;
+  param.visibility = false;
   param.dynamicModel = true;
   param.metadataUrl = 'assert/felxberry/models/';
   param.odataUrl = 'http://localhost:6500/odata/';

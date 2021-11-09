@@ -106,6 +106,7 @@ export default BaseVectorLayer.extend({
         layers.forEach((layer) => {
           let feature = layer.feature;
           feature.leafletLayer = layer;
+          Ember.set(feature, 'arch', this.get('hasTime') || false);
           features.pushObject(feature);
         });
 
@@ -763,7 +764,7 @@ export default BaseVectorLayer.extend({
 
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletObject)) {
-      let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
+      let show = this.get('visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
       let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
       let showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading;
 
