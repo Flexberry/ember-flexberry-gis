@@ -1,61 +1,44 @@
 <label>{{title}}</label>
-{{#ui-dropdown
-  class=(concat "flexberry-dropdown multi-dropdown " class " selection" (if readonly " disabled" ""))
-  onHide=(action 'onHide')
-  onShow=(action 'onShowHide')
-  on=on
-  allowReselection=allowReselection
-  allowAdditions=allowAdditions
-  hideAdditions=hideAdditions
-  minCharacters=minCharacters
-  match=match
-  selectOnKeydown=selectOnKeydown
-  forceSelection=forceSelection
-  allowCategorySelection=allowCategorySelection
-  direction=direction
-  keepOnScreen=keepOnScreen
-  context=context
-  fullTextSearch=fullTextSearch
-  preserveHTML=preserveHTML
-  sortSelect=sortSelect
-  showOnFocus=showOnFocus
-  allowTab=allowTab
-  transition=transition
-  duration=duration
-  action='nothing'
-  message=message
-}}
-  <i class="dropdown icon"></i>
-  {{#if isClearAllVisible}}
-    <i class="close icon" {{action 'clearAll'}}></i>
+
+{{#if isSearch}}
+  {{#if isSearchReadOnly}}
+    <input class="search" autocomplete="off">
+  {{else}}
+    <input class="search" autocomplete="off" readonly>
   {{/if}}
-  <div class="text">{{t 'components.flexberry-layers-intersections-panel.chooseCaption'}}: {{countChoose}}</div>
-  <div class="menu">
-    {{#if state.length}}
-      {{yield}}
-      {{#if isSearchVisible}}
-        <div class="ui search input">
-          <input class="search-field" type="text" placeholder={{t "components.flexberry-layers-intersections-panel.search-placeholder"}}>
-        </div>
-      {{/if}}
-      {{#if isSelectAllVisible}}
-        <div class="item select-all">
-          {{flexberry-checkbox
-            label=selectAllText
-            onChange=(action "selectAll")
-          }}
-        </div>
-      {{/if}}
-      {{#each state as |item|}}
-        <div class="item" data-value="{{item.key}}">
-          {{flexberry-checkbox
-            label=item.value
-            value=item.isVisible
-          }}
-        </div>
-      {{/each}}
-    {{else}}
-      <div class="item ui text loader"></div>
+{{/if}}
+
+<i class="dropdown icon"></i>
+{{#if isClearAllVisible}}
+  <i class="close icon" {{action 'clearAll'}}></i>
+{{/if}}
+<div class="text">{{t 'components.flexberry-layers-intersections-panel.chooseCaption'}}: {{countChoose}}</div>
+
+<div class="menu {{if canFixElement fixedElementClass}}">
+  {{#if state.length}}
+    {{yield}}
+    {{#if isSearchVisible}}
+      <div class="ui search input">
+        <input class="search-field" type="text" placeholder={{t "components.flexberry-layers-intersections-panel.search-placeholder"}}>
+      </div>
     {{/if}}
-  </div>
-{{/ui-dropdown}}
+    {{#if isSelectAllVisible}}
+      <div class="item select-all">
+        {{flexberry-checkbox
+          label=selectAllText
+          onChange=(action "selectAll")
+        }}
+      </div>
+    {{/if}}
+    {{#each state as |item|}}
+      <div class="item" data-value="{{item.key}}">
+        {{flexberry-checkbox
+          label=item.value
+          value=item.isVisible
+        }}
+      </div>
+    {{/each}}
+  {{else}}
+    <div class="item ui text loader"></div>
+  {{/if}}
+</div>

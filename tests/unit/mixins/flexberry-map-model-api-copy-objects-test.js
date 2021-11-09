@@ -48,11 +48,11 @@ module('Unit | Mixin | method copyObjects', function () {
       _getModelLeafletObject() {},
       _getLayerFeatureId() {},
     });
-    const loadingFBP = sinon.stub(subject, 'loadingFeaturesByPackages', _loadingFeaturesByPackages);
+    const loadingFBP = sinon.stub(subject, 'loadingFeaturesByPackages').callsFake(_loadingFeaturesByPackages);
     const getMLObject = sinon.stub(subject, '_getModelLeafletObject');
     getMLObject.withArgs('1').returns([{}, sourceLeafletLayer]);
     getMLObject.withArgs('2').returns([destinationLayerModel, destinationLeafletLayer]);
-    const getLFid = sinon.stub(subject, '_getLayerFeatureId', _getLayerFeatureId);
+    const getLFid = sinon.stub(subject, '_getLayerFeatureId').callsFake(_getLayerFeatureId);
 
     // Act
     const result = subject.copyObjectsBatch({
@@ -100,7 +100,7 @@ module('Unit | Mixin | method copyObjects', function () {
       _getModelLeafletObject() {},
       _getLayerFeatureId() {},
     });
-    const loadingFBP = sinon.stub(subject, 'loadingFeaturesByPackages', _loadingFeaturesByPackages);
+    const loadingFBP = sinon.stub(subject, 'loadingFeaturesByPackages').callsFake(_loadingFeaturesByPackages);
     const getMLObject = sinon.stub(subject, '_getModelLeafletObject');
     getMLObject.withArgs('1').returns([{}, sourceLeafletLayer]);
     getMLObject.withArgs('2').returns([destinationLayerModel, destinationLeafletLayer]);
@@ -159,8 +159,8 @@ module('Unit | Mixin | method copyObjects', function () {
     const getMLObject = sinon.stub(subject, '_getModelLeafletObject');
     getMLObject.withArgs('1').returns([{}, sourceLeafletLayer]);
     getMLObject.withArgs('2').returns([destinationLayerModel, destinationLeafletLayer]);
-    const getLFByPackage = sinon.stub(subject, 'loadingFeaturesByPackages', _loadingFeaturesByPackages);
-    const getLFid = sinon.stub(subject, '_getLayerFeatureId', _getLayerFeatureId);
+    const getLFByPackage = sinon.stub(subject, 'loadingFeaturesByPackages').callsFake(_loadingFeaturesByPackages);
+    const getLFid = sinon.stub(subject, '_getLayerFeatureId').callsFake(_getLayerFeatureId);
 
     const objectIds = [];
     for (let i = 1; i < 6; i++) {
@@ -222,7 +222,7 @@ module('Unit | Mixin | method copyObjects', function () {
     const getMLObject = sinon.stub(subject, '_getModelLeafletObject');
     getMLObject.withArgs('1').returns([{}, sourceLeafletLayer]);
     getMLObject.withArgs('2').returns([destinationLayerModel, destinationLeafletLayer]);
-    const getLFByPackage = sinon.stub(subject, 'loadingFeaturesByPackages', _loadingFeaturesByPackages);
+    const getLFByPackage = sinon.stub(subject, 'loadingFeaturesByPackages').callsFake(_loadingFeaturesByPackages);
 
     const objectIds = [];
     for (let i = 1; i < 6; i++) {

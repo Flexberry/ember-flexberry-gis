@@ -1,7 +1,6 @@
 import { isNone } from '@ember/utils';
 import EmberObject, { observer, get } from '@ember/object';
 import { A } from '@ember/array';
-import { on } from '@ember/object/evented';
 import $ from 'jquery';
 import FlexberryDropdown from 'ember-flexberry/components/flexberry-dropdown';
 import { translationMacro as t } from 'ember-i18n';
@@ -84,36 +83,41 @@ export default FlexberryDropdown.extend({
   */
   class: 'fb-selector',
 
+  /**
+    See [EmberJS API](https://emberjs.com/api/).
+    @property classNames
+  */
+  classNames: ['multi-dropdown', 'fb-selector'],
+
   init() {
     this._super(...arguments);
     this.set('state', new A());
     const noRes = this.get('noResults').toString();
     this.set('message', { noResults: noRes, });
+
+    const state = Object.entries(this.get('items'))
+    .filter(([key, value]) => !isNone(value))
+    .map(([i, val]) => {
+      let value = val;
+      let key = i;
+      if (this.get('isObject')) {
+        value = get(val, 'name');
+        key = val.id;
+      }
+
+      return EmberObject.create({ key, value, isVisible: false });
+    });
+
+    this.get('state').addObjects(state);
   },
 
   stateObserver: observer('state.@each.isVisible', function () {
     const filteredState = this.get('state').filterBy('isVisible');
-    const value = filteredState.map((item) => item.key);
+    const value = filteredState.map((item)=>item.key);
+    // TODO: fix
     this.set('selectedItems', value);
     this.set('countChoose', value.length);
   }),
-
-  itemsObserver: on('init', observer('items', function () {
-    const state = Object.entries(this.get('items'))
-      .filter(([key, value]) => !isNone(value))
-      .map(([i, val]) => {
-        let value = val;
-        let key = i;
-        if (this.get('isObject')) {
-          value = get(val, 'name');
-          key = val.id;
-        }
-
-        return EmberObject.create({ key, value, isVisible: false, });
-      });
-
-    this.get('state').addObjects(state);
-  })),
 
   actions: {
     selectAll() {

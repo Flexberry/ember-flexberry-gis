@@ -10,6 +10,7 @@
   headerClick=(action "onHeaderClick")
   beforeExpand=(action "onBeforeExpand")
   beforeCollapse=(action "onBeforeCollapse")
+  click=(action "nodeClick")
 }}
   {{#block-slot "header"}}
     <div class="flexberry-treenode-header-block">
@@ -41,10 +42,10 @@
             {{#if (not readonly)}}
               {{#if (not isGroup)}}
                 {{flexberry-button
-                  class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
+                  class=(concat flexberryClassNames.attributesButton " floated")
                   iconClass="plus icon"
                   tooltip=(t "components.flexberry-maplayer.plus-button.tooltip")
-                  click=(action "onFeatureCreateButtonClick")
+                  data-action="onFeatureCreateButtonClick"
                 }}
               {{/if}}
               {{#if _attributesOperationIsAvailable}}
@@ -55,11 +56,11 @@
                   click=(action "onAttributesButtonClick")
                 }}
               {{/if}}
-              <div class="allmore floated flexberry-button ui button icon {{flexberryClassNames.preventExpandCollapse}}">
+              <div class="allmore floated flexberry-button ui button icon">
                 {{flexberry-button
-                  class=(concat "more floated " flexberryClassNames.preventExpandCollapse)
+                  class="more floated "
                   iconClass="more icon"
-                  click=(action "onSubmenu")
+                  data-action="onSubmenu"
                 }}
                 <div class="more submenu {{if isSubmenu '' 'hidden'}}">
                   <div class="button-more-submenu">

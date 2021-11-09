@@ -61,7 +61,7 @@
               <tr><th class='checkbox'></th>
                 {{#each headersTable as | head |}}
                   <th class="import-column">
-                    {{#ui-dropdown class="item fluid selection" onChange=(action "onPropertyConnectionChange" head)}}
+                    {{!-- {{#ui-dropdown class="item fluid selection" onChange=(action "onPropertyConnectionChange" head)}}
                       <i class="dropdown icon"></i>
                       <div class="text">
                         {{get _propertiesConnection head}}
@@ -73,7 +73,7 @@
                           {{/if}}
                         {{/each}}
                       </div>
-                    {{/ui-dropdown}}
+                    {{/ui-dropdown}} --}}
                   </th>
                 {{/each}}
               </tr>

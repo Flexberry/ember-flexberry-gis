@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api';

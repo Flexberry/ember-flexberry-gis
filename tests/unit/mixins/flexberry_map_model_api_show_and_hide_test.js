@@ -80,7 +80,7 @@ module('Unit | Mixin | test api show and hide layers', function () {
     leafletObject.options.continueLoading = false;
     const leafletMapFireStub = sinon.stub(map, 'fire');
     leafletMapFireStub.returns(resolve());
-    const findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+    const findByStub = sinon.stub(subject.mapLayer, 'findBy').callsFake(arrayFindBy);
 
     // Act
     const result = subject.showLayers(['1']);
@@ -120,7 +120,7 @@ module('Unit | Mixin | test api show and hide layers', function () {
     leafletObject.options.continueLoading = true;
     const leafletMapFireStub = sinon.stub(map, 'fire');
     leafletMapFireStub.returns(resolve());
-    const findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+    const findByStub = sinon.stub(subject.mapLayer, 'findBy').callsFake(arrayFindBy);
 
     // Act
     const result = subject.showLayers(['1']);
@@ -164,7 +164,7 @@ module('Unit | Mixin | test api show and hide layers', function () {
     });
     leafletObject.options.showExisting = false;
     leafletObject.options.continueLoading = false;
-    const findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+    const findByStub = sinon.stub(subject.mapLayer, 'findBy').callsFake(arrayFindBy);
 
     // Act
     const result = subject.showAllLayerObjects('1');
@@ -199,7 +199,7 @@ module('Unit | Mixin | test api show and hide layers', function () {
       mapLayer: maplayers,
     });
 
-    const findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+    const findByStub = sinon.stub(subject.mapLayer, 'findBy').callsFake(arrayFindBy);
 
     // Act
     assert.throws(
@@ -237,7 +237,7 @@ module('Unit | Mixin | test api show and hide layers', function () {
     const getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
     const leafletMapFireStub = sinon.stub(map, 'fire');
     leafletMapFireStub.returns(resolve());
-    const findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+    const findByStub = sinon.stub(subject.mapLayer, 'findBy').callsFake(arrayFindBy);
 
     // Act
     subject.hideLayers(['1']);
@@ -275,7 +275,7 @@ module('Unit | Mixin | test api show and hide layers', function () {
     const getModelLayerFeatureSpy = sinon.spy(subject, '_getModelLayerFeature');
     const leafletMapFireStub = sinon.stub(map, 'fire');
     leafletMapFireStub.returns(resolve());
-    const findByStub = sinon.stub(subject.mapLayer, 'findBy', arrayFindBy);
+    const findByStub = sinon.stub(subject.mapLayer, 'findBy').callsFake(arrayFindBy);
 
     // Act
     subject.hideLayers(['1']);

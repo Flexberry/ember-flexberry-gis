@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import { resolve, Promise } from 'rsvp';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
@@ -41,7 +42,7 @@ module('Unit | Mixin | test method editLayerObject', function () {
       _getModelLayerFeature() {},
     });
     const spyEditLayer = sinon.spy(leafletLayer, 'editLayer');
-    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature').callsFake(getModelLayerFeature);
 
     // Act
     const result = subject.editLayerObject('1', '1', geoJsonObject, 'EPSG:4326');
@@ -92,7 +93,7 @@ module('Unit | Mixin | test method editLayerObject', function () {
     });
     const spyEditLayer = sinon.spy(leafletLayer, 'editLayer');
     const spyUnProject = sinon.spy(L.CRS.EPSG3395, 'unproject');
-    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature').callsFake(getModelLayerFeature);
 
     // Act
     const result = subject.editLayerObject('1', '1', geoJsonObject, 'EPSG:3395');

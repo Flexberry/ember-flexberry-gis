@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import { Promise } from 'rsvp';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
@@ -29,7 +30,7 @@ module('Unit | Mixin | test method addObjectToLayer', function () {
     const subject = mapApiMixinObject.create({
       _getModelLeafletObject() {},
     });
-    const getMLObject = sinon.stub(subject, '_getModelLeafletObject', getModelLeafletObject);
+    const getMLObject = sinon.stub(subject, '_getModelLeafletObject').callsFake(getModelLeafletObject);
 
     // Act
     const promise = subject.addObjectToLayer('1', geoJsonObject);
@@ -70,7 +71,7 @@ module('Unit | Mixin | test method addObjectToLayer', function () {
     const subject = mapApiMixinObject.create({
       _getModelLeafletObject() {},
     });
-    const getMLObject = sinon.stub(subject, '_getModelLeafletObject', getModelLeafletObject);
+    const getMLObject = sinon.stub(subject, '_getModelLeafletObject').callsFake(getModelLeafletObject);
 
     // Act
     subject.addObjectToLayer('1', geoJsonObject, 'EPSG:3395').then((result) => {

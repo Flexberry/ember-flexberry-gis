@@ -427,7 +427,7 @@ module('Unit | Component | layers/wfs layer', function (hooks) {
 
         component._leafletObject = res.target;
 
-        component.getLayerFeatures(e).then((layers) => {
+        component.getLayerFeatures(e).then(() => {
           const leafletObject = component.get('_leafletObject');
           const leafletMap = component.get('leafletMap');
           leafletObject.leafletMap = leafletMap;
@@ -475,7 +475,7 @@ module('Unit | Component | layers/wfs layer', function (hooks) {
 
         component._leafletObject = res.target;
 
-        component.getLayerFeatures(e).then((layers) => {
+        component.getLayerFeatures(e).then(() => {
           const leafletObject = component.get('_leafletObject');
           const leafletMap = component.get('leafletMap');
           leafletObject.leafletMap = leafletMap;
@@ -536,7 +536,7 @@ module('Unit | Component | layers/wfs layer', function (hooks) {
 
         component._leafletObject = res.target;
 
-        component.getLayerFeatures(e).then((layers) => {
+        component.getLayerFeatures(e).then(() => {
           const leafletObject = component.get('_leafletObject');
           const leafletMap = component.get('leafletMap');
           leafletObject.leafletMap = leafletMap;
@@ -587,7 +587,7 @@ module('Unit | Component | layers/wfs layer', function (hooks) {
 
         component._leafletObject = res.target;
 
-        component.getLayerFeatures(e).then((layers) => {
+        component.getLayerFeatures(e).then(() => {
           const leafletObject = component.get('_leafletObject');
           const leafletMap = component.get('leafletMap');
           leafletObject.leafletMap = leafletMap;
@@ -680,7 +680,7 @@ module('Unit | Component | layers/wfs layer', function (hooks) {
 
         done();
 
-        component.getLayerFeatures(e).then((layers) => {
+        component.getLayerFeatures(e).then(() => {
           const layerUpdate = leafletObject.getLayers()[0];
           layerUpdate.feature.properties.name = 'test';
 

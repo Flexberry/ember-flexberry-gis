@@ -1,96 +1,100 @@
-import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { moduleForComponent, test } from 'ember-qunit';
 import sinon from 'sinon';
 
-module('Unit | Component | base layer', function (hooks) {
-  setupTest(hooks);
+moduleForComponent('base-layer', 'Unit | Component | base layer', {
+  unit: true,
+  needs: [
+    'service:map-api',
+    'config:environment',
+    'service:layers-styles-renderer'
+  ],
+});
 
-  // stubs for createLayer method
-  const layer = {};
-  const createLayer = () => layer;
+// stubs for createLayer method
+const layer = {};
+const createLayer = () => layer;
 
-  test('it should throw at init', function (assert) {
-    assert.throws(() => {
-      this.owner.factoryFor('component:base-layer').create();
-    });
+test('it should throw at init', function (assert) {
+  assert.throws(() => {
+    this.subject();
+  });
+});
+
+test('it should call layer.setZIndex on _setLayerZIndex', function (assert) {
+  assert.expect(1);
+
+  const setZIndex = sinon.spy();
+  const component = this.subject({
+    createLayer() {
+      return {
+        setZIndex,
+      };
+    },
   });
 
-  test('it should call layer.setZIndex on _setLayerZIndex', function (assert) {
-    assert.expect(1);
+  const leafletLayerPromiseResolved = assert.async();
+  component.get('_leafletLayerPromise').then(() => {
+    component._setLayerZIndex();
+    assert.ok(setZIndex.called);
+  }).finally(() => {
+    leafletLayerPromiseResolved();
+  });
+});
 
-    const setZIndex = sinon.spy();
-    const component = this.owner.factoryFor('component:base-layer').create({
-      createLayer() {
-        return {
-          setZIndex,
-        };
-      },
-    });
+test('should call _setLayerVisibility and _setLayerZIndex on render', function (assert) {
+  assert.expect(1);
 
-    const leafletLayerPromiseResolved = assert.async();
-    component.get('_leafletLayerPromise').then(() => {
-      component._setLayerZIndex();
-      assert.ok(setZIndex.called);
-    }).finally(() => {
-      leafletLayerPromiseResolved();
-    });
+  const setLayerVisibility = sinon.spy();
+
+  const component = this.subject({
+    createLayer,
+    _setLayerVisibility: setLayerVisibility,
   });
 
-  test('should call _setLayerVisibility and _setLayerZIndex on render', function (assert) {
-    assert.expect(1);
+  this.render();
 
-    const setLayerVisibility = sinon.spy();
+  const leafletLayerPromiseResolved = assert.async();
+  component.get('_leafletLayerPromise').then(() => {
+    assert.ok(setLayerVisibility.called, 'should call visibilityDidChange');
+  }).finally(() => {
+    leafletLayerPromiseResolved();
+  });
+});
 
-    const component = this.owner.factoryFor('component:base-layer').create({
-      createLayer,
-      _setLayerVisibility: setLayerVisibility,
-    });
+test('should call container addLayer/removeLayer based on visibility property', function (assert) {
+  assert.expect(4);
 
-    this.render();
+  const addLayer = sinon.spy();
+  const removeLayer = sinon.spy();
 
-    const leafletLayerPromiseResolved = assert.async();
-    component.get('_leafletLayerPromise').then(() => {
-      assert.ok(setLayerVisibility.called, 'should call visibilityDidChange');
-    }).finally(() => {
-      leafletLayerPromiseResolved();
-    });
+  let leafletContainerHasLayer = false;
+  const hasLayer = function () {
+    return leafletContainerHasLayer;
+  };
+
+  const component = this.subject({
+    createLayer,
+
+    leafletContainer: {
+      addLayer,
+      removeLayer,
+      hasLayer,
+    },
   });
 
-  test('should call container addLayer/removeLayer based on visibility property', function (assert) {
-    assert.expect(4);
+  const leafletLayerPromiseResolved = assert.async();
+  component.get('_leafletLayerPromise').then(() => {
+    component.set('visibility', true);
 
-    const addLayer = sinon.spy();
-    const removeLayer = sinon.spy();
+    assert.ok(addLayer.calledOnce, 'addLayer should be called once');
+    assert.ok(addLayer.calledWith(layer), 'addLayer should be called with layer instance');
 
-    let leafletContainerHasLayer = false;
-    const hasLayer = function () {
-      return leafletContainerHasLayer;
-    };
+    leafletContainerHasLayer = true;
+    component.set('visibility', false);
 
-    const component = this.owner.factoryFor('component:base-layer').create({
-      createLayer,
-
-      leafletContainer: {
-        addLayer,
-        removeLayer,
-        hasLayer,
-      },
-    });
-
-    const leafletLayerPromiseResolved = assert.async();
-    component.get('_leafletLayerPromise').then(() => {
-      component.set('visibility', true);
-
-      assert.ok(addLayer.calledOnce, 'addLayer should be called once');
-      assert.ok(addLayer.calledWith(layer), 'addLayer should be called with layer instance');
-
-      leafletContainerHasLayer = true;
-      component.set('visibility', false);
-
-      assert.ok(removeLayer.calledOnce, 'removeLayer should be called once');
-      assert.ok(removeLayer.calledWith(layer), 'removeLayer should be called with layer instance');
-    }).finally(() => {
-      leafletLayerPromiseResolved();
-    });
+    assert.ok(removeLayer.calledOnce, 'removeLayer should be called once');
+    assert.ok(removeLayer.calledWith(layer), 'removeLayer should be called with layer instance');
+  }).finally(() => {
+    leafletLayerPromiseResolved();
   });
 });

@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import { resolve, Promise } from 'rsvp';
 import Service from '@ember/service';
 import Application from '@ember/application';

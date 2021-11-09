@@ -22,7 +22,7 @@ module('Unit | Mixin | method deleteLayerObjects', function () {
       mapApi: { getFromApi() { return obj._deleteLayerFromAttrPanel; }, },
       _getLayerFeatureId(layer, shape) { return shape.id; },
     });
-    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature', getModelLayerFeature);
+    const getMLFeature = sinon.stub(subject, '_getModelLayerFeature').callsFake(getModelLayerFeature);
     const spyDeleteLayerFromAttrPanelFunc = sinon.spy(obj, '_deleteLayerFromAttrPanel');
     const spyRemoveLayer = sinon.spy(testLeafletObject, 'removeLayer');
 
