@@ -5441,7 +5441,6 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       store = app.__container__.lookup('service:store');
       var layerModel = store.createRecord('test-model');
       layerModel.type = 'odata-vector';
-      layerModel.visibility = true;
       _ember['default'].$.extend(param, {
         'geometryType': 'MultiPolygonPropertyType',
         'modelName': 'test-model',
@@ -5452,7 +5451,8 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
         'continueLoading': true,
         'store': store,
         'layerModel': layerModel,
-        'leafletMap': leafletMap
+        'leafletMap': leafletMap,
+        'visibility': true
       });
 
       odataServerFake = _sinon['default'].fakeServer.create();
@@ -5921,7 +5921,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
 
   (0, _emberQunit.test)('test method _createVectorLayer()', function (assert) {
     assert.expect(3);
-    param.layerModel.visibility = false;
+    param.visibility = false;
     var component = this.subject(param);
     var spyContinueLoad = _sinon['default'].spy(component, 'continueLoad');
 
@@ -5937,7 +5937,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
   (0, _emberQunit.test)('test method createVectorLayer() without dynamicModel', function (assert) {
     assert.expect(7);
     var done = assert.async(1);
-    param.layerModel.visibility = false;
+    param.visibility = false;
     var component = this.subject(param);
     var spyContinueLoad = _sinon['default'].spy(component, 'continueLoad');
     var _createVectorLayerSpy = _sinon['default'].spy(component, '_createVectorLayer');
@@ -5975,7 +5975,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
   (0, _emberQunit.test)('test method createVectorLayer() with dynamicModel=true', function (assert) {
     assert.expect(8);
     var done = assert.async(1);
-    param.layerModel.visibility = false;
+    param.visibility = false;
     param.dynamicModel = true;
     param.metadataUrl = 'assert/felxberry/models/';
     param.odataUrl = 'http://localhost:6500/odata/';
