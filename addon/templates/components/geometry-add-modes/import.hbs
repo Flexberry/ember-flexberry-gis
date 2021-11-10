@@ -61,19 +61,13 @@
               <tr><th class='checkbox'></th>
                 {{#each headersTable as | head |}}
                   <th class="import-column">
-                    {{!-- {{#ui-dropdown class="item fluid selection" onChange=(action "onPropertyConnectionChange" head)}}
-                      <i class="dropdown icon"></i>
-                      <div class="text">
-                        {{get _propertiesConnection head}}
-                      </div>
-                      <div class="menu">
-                        {{#each _notConnectedProperties as | property |}}
-                          {{#if (get settings.layersFieldsCaptions property)}}
-                            <div class="item" data-value="{{property}}">{{get settings.layersFieldsCaptions property}}</div>
-                          {{/if}}
-                        {{/each}}
-                      </div>
-                    {{/ui-dropdown}} --}}
+                    {{flexberry-dropdown
+                      class="item fluid selection"
+                      items=_notConnectedProperties
+                      value=property
+                      displayCaptions=(get _propertiesConnection head)
+                      onChange=(action "onPropertyConnectionChange" head)
+                    }}
                   </th>
                 {{/each}}
               </tr>

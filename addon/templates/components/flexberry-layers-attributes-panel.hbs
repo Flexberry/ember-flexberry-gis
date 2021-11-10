@@ -132,17 +132,13 @@
                             type="number"
                             class="small input"
                           }}
-                          {{!-- {{#ui-dropdown class="item compact selection" onChange=(action "onUnitSelected")}}
-                            <i class="dropdown icon"></i>
-                            <div class="text">
-                              {{t (get bufferUnits _selectedUnit)}}
-                            </div>
-                            <div class="menu">
-                              {{#each-in bufferUnits as |key value|}}
-                                <div class="item" data-value="{{key}}">{{t value}}</div>
-                              {{/each-in}}
-                            </div>
-                          {{/ui-dropdown}} --}}
+                          {{flexberry-dropdown
+                            class="item compact selection"
+                            items=bufferUnits
+                            value=key
+                            displayCaptions=(t (get bufferUnits _selectedUnit))
+                            onChange=(action "onUnitSelected")
+                          }}
                         </div>
                       </div>
                     </div>
