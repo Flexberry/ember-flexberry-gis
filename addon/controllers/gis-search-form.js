@@ -8,6 +8,7 @@ import { isNone } from '@ember/utils';
 import { computed, get, observer } from '@ember/object';
 import { A, isArray } from '@ember/array';
 import Controller from '@ember/controller';
+import { next } from '@ember/runloop';
 
 /**
   GIS search form controller.
@@ -151,6 +152,20 @@ export default Controller.extend({
   */
   _selectedMap: null,
 
+  init() {
+    this._super(...arguments);
+    next(this, function() {
+
+      // Initialize Semantic UI tabs.
+      $('.gis-search-form .tabular.menu .item').tab();
+  
+      // Initialize Semantic UI dropdown.
+      $('.gis-search-form .mapItems').dropdown();
+  
+      // Initialize Semantic UI accordion.
+      $('.gis-search-form .ui.accordion').accordion();
+    })
+  },
   /**
     Observes selected rows count and selected map and changes a flag that enables 'Open in a map' button.
 
