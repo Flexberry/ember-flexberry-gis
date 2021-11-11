@@ -12,17 +12,13 @@
       <label>
         {{t "components.charts.index-chart.typr-charts.caption"}}
       </label>
-      {{!-- {{#ui-dropdown class="compact selection" onChange=(action "onModeTypeChange")}}
-        <i class="dropdown icon"></i>
-        <div class="text">
-          {{selectedModeType}}
-        </div>
-        <div class="menu">
-          {{#each-in _availableTypes as |key value|}}
-            <div class="item" data-value="{{key}}">{{value}}</div>
-          {{/each-in}}
-        </div>
-      {{/ui-dropdown}} --}}
+      {{flexberry-dropdown
+        class="compact selection"
+        items=_availableTypes
+        value=key
+        displayCaptions=selectedModeType
+        onChange=(action "onModeTypeChange")
+      }}
     </div>
     <div class="field">
       <label>

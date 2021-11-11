@@ -129,6 +129,33 @@ export default Component.extend({
   */
   classNames: ['gradient-edit', 'flexberry-colorpicker'],
 
+  /**
+    Initializes component's DOM-related properties.
+  */
+    didInsertElement() {
+      this._super(...arguments);
+  
+      const $dropdown = this.$().dropdown({
+        onChange: (newValue) => {
+          this.set('value', newValue);
+          this.sendAction('change', newValue);
+        },
+      });
+  
+      const initialValue = this.get('value');
+      if (!isBlank(initialValue)) {
+        $dropdown.dropdown('set selected', initialValue);
+      }
+    },
+  
+    /**
+      Deinitializes component's DOM-related properties.
+    */
+    willDestroyElement() {
+      this._super(...arguments);
+      this.$().dropdown('destroy');
+    },
+
   actions: {
     /**
       The handler for the selected value in dropdown.

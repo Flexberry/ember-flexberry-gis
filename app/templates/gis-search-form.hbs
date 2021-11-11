@@ -43,17 +43,14 @@
           <div class="scale-filters">
             {{#each searchConditions.scaleFilters as |filter index|}}
               <div class="scale-filter">
-              {{!-- {{#ui-dropdown class="compact selection" onChange=(action "onScaleConditionChange" index)}}
-                <i class="dropdown icon"></i>
-                <div class="text">
+                <label>
                   {{filter.condition}}
-                </div>
-                <div class="menu">
-                  {{#each-in scaleFilterConditions as |key value|}}
-                    <div class="item" data-value="{{value}}">{{value}}</div>
-                  {{/each-in}}
-                </div>
-              {{/ui-dropdown}} --}}
+                </label>
+                {{flexberry-dropdown
+                  class="compact selection"
+                  items=scaleFilterConditions
+                  value=index
+                }}
               {{t "forms.gis-search-form.scale-prefix"}}
               {{flexberry-dropdown-input
                 items=scales
