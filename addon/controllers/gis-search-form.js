@@ -281,18 +281,6 @@ export default Controller.extend({
     },
 
     /**
-      Handles scale condition changing.
-
-      @method actions.onScaleConditionChange
-      @param {String} index Index of selected element.
-      @param {Object} element Selected element.
-      @param {String} value Selected value.
-    */
-    onScaleConditionChange(index, element, value) {
-      this.set(`searchConditions.scaleFilters.${index}.condition`, value);
-    },
-
-    /**
       Handles click on row select checkbox.
 
       @method actions.onRowSelect
