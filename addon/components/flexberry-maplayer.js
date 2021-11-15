@@ -674,18 +674,6 @@ const FlexberryMaplayerComponent = Component.extend(
         this.sendAction('onChangeLayer', this.get('leftLayer'), this.get('rightLayer'));
       },
 
-      nodeClick(e) {
-        let $target = $(e.target);
-        let targetAction = $target.data('action');
-
-        targetAction = targetAction ? targetAction : $target.parent().data('action');
-
-        if (targetAction) {
-          this.send(targetAction);
-          e.stopPropagation();
-        }
-      },
-
       /**
         Show\hide submenu
 
