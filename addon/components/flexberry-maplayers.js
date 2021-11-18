@@ -124,6 +124,15 @@ const FlexberryMaplayersComponent = Component.extend(
   DynamicPropertiesMixin, {
 
     /**
+      Flag used to display embedded records.
+      @property _expanded
+      @type Boolean
+      @default true
+      @private
+    */
+    _expanded: true,
+
+    /**
       Component's required actions names.
       For actions enumerated in this array an assertion exceptions will be thrown,
       if actions handlers are not defined for them.

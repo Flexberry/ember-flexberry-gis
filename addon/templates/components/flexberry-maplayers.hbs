@@ -50,28 +50,30 @@
   {{/block-slot}}
 
   {{#block-slot "content"}}
-    {{#each layers as |layer|}}
-      {{#if (not layer.isDeleted)}}
-        {{#flexberry-maplayer
-          readonly=readonly
-          leafletMap=leafletMap
-          histEnabled=histEnabled
-          layer=layer
-          dynamicProperties=layer.dynamicProperties
-          dynamicActions=layer.dynamicActions
-          compareLayersEnabled=compareLayersEnabled
-          side=side
-          sideBySide=sideBySide
-          leftLayer=leftLayer
-          rightLayer=rightLayer
-          onChangeLayer = (action "onChangeLayer")
-          layerTimeChanged=(action "onLayerTimeChanged")
-          dynamicButtons=dynamicButtons
-          external=(action 'external')
-        }}
-        {{/flexberry-maplayer}}
-      {{/if}}
-    {{/each}}
+    {{#if _expanded}}
+      {{#each layers key="key" as |layer|}}
+        {{#if (not layer.isDeleted)}}
+          {{#flexberry-maplayer
+            readonly=readonly
+            leafletMap=leafletMap
+            histEnabled=histEnabled
+            layer=layer
+            dynamicProperties=layer.dynamicProperties
+            dynamicActions=layer.dynamicActions
+            compareLayersEnabled=compareLayersEnabled
+            side=side
+            sideBySide=sideBySide
+            leftLayer=leftLayer
+            rightLayer=rightLayer
+            onChangeLayer = (action "onChangeLayer")
+            layerTimeChanged=(action "onLayerTimeChanged")
+            dynamicButtons=dynamicButtons
+            external=(action 'external')
+          }}
+          {{/flexberry-maplayer}}
+        {{/if}}
+      {{/each}}
+    {{/if}}
     {{#yield-slot "content" (block-params this)}}
       {{yield}}
     {{/yield-slot}}

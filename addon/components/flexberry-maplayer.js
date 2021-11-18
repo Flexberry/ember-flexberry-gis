@@ -164,6 +164,15 @@ const FlexberryMaplayerComponent = Component.extend(
     copyPostfix: t('components.layers-dialogs.copy.layer-name-postfix'),
 
     /**
+      Flag used to display embedded records.
+      @property _expanded
+      @type Boolean
+      @default false
+      @private
+    */
+    _expanded: false,
+
+    /**
       Component's required actions names.
       For actions enumerated in this array an assertion exceptions will be thrown,
       if actions handlers are not defined for them.
@@ -716,6 +725,7 @@ const FlexberryMaplayerComponent = Component.extend(
           this.set('hasBeenExpanded', true);
         }
 
+        this.toggleProperty('_expanded');
         this.sendAction('beforeExpand', ...args);
       },
 
@@ -728,6 +738,7 @@ const FlexberryMaplayerComponent = Component.extend(
         {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.
       */
       onBeforeCollapse(...args) {
+        this.toggleProperty('_expanded');
         this.sendAction('beforeCollapse', ...args);
       },
 
