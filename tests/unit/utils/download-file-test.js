@@ -50,10 +50,10 @@ module('Unit | Utility | download file', function () {
       assert.equal(res.blob, 'blob');
       assert.equal(stubAjax.callCount, 1);
       assert.equal(stubAjax.getCall(0).args[0].url, '/api/featureexport');
-      const data = '<wfs:GetFeature xmlns:wfs="http://www.opengis.net/wfs" service="WFS" version="1.1.0" outputFormat="application/json">'
-        + '<wfs:Query typeName="testTypeNS:layerWfs" srsName="EPSG:32640"><ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><Or>'
-        + '<ogc:GmlObjectId xmlns:gml="http://www.opengis.net/gml" gml:id="1"/>'
-        + '</Or></ogc:Filter></wfs:Query><geoserver url="geoserverUrl"/></wfs:GetFeature>';
+      const data = '<wfs:GetFeature xmlns:wfs=\"http://www.opengis.net/wfs\" service=\"WFS\" version=\"1.1.0\" outputFormat=\"application/json\">'
+        + '<wfs:Query typeName=\"testTypeNS:layerWfs\" srsName=\"EPSG:32640\"><ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><Or>'
+        + '<ogc:GmlObjectId gml:id=\"1\" xmlns:gml=\"http://www.opengis.net/gml\"/>'
+        + '</Or></ogc:Filter></wfs:Query><geoserver url=\"geoserverUrl\"/></wfs:GetFeature>';
       assert.equal(stubAjax.getCall(0).args[0].data, data);
       done();
       stubAjax.restore();
