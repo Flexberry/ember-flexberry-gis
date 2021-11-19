@@ -5,8 +5,21 @@
 import { A } from '@ember/array';
 
 import Component from '@ember/component';
-import Mixin from 'ember-cp-validations';
+import { validator, buildValidations } from 'ember-cp-validations';
 import layout from '../templates/components/spatial-bookmark';
+
+/**
+  Validation rules
+*/
+const Validations = buildValidations({
+  _addBookmarkName: [
+    validator('presence', true),
+    validator('length', {
+      min: 1,
+      max: 200
+    })
+  ],
+});
 
 /**
   Flexberry component for display and add/remove spatial bookmarks
@@ -14,20 +27,7 @@ import layout from '../templates/components/spatial-bookmark';
   @class SpatialBookmarkComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-const SpatialBookmarkComponent = Component.extend(Mixin, {
-  /**
-    Validation settings
-  */
-  validations: {
-    _addBookmarkName: {
-      presence: true,
-      length: {
-        minimum: 1,
-        maximum: 200,
-      },
-    },
-  },
-
+const SpatialBookmarkComponent = Component.extend(Validations, {
   /**
     Reference to component's template.
   */
@@ -111,9 +111,9 @@ const SpatialBookmarkComponent = Component.extend(Mixin, {
       @private
     */
     addBookmark() {
-      if (!this.get('isValid')) {
+      if (!this.get('validations.isValid')) {
         return;
-      }
+      };
 
       const map = this.get('leafletMap');
       const service = this.get('local-storage-service');

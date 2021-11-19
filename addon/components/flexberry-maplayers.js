@@ -124,6 +124,15 @@ const FlexberryMaplayersComponent = Component.extend(
   DynamicPropertiesMixin, {
 
     /**
+      Flag used to display embedded records.
+      @property _expanded
+      @type Boolean
+      @default true
+      @private
+    */
+    _expanded: true,
+
+    /**
       Component's required actions names.
       For actions enumerated in this array an assertion exceptions will be thrown,
       if actions handlers are not defined for them.
@@ -347,6 +356,13 @@ const FlexberryMaplayersComponent = Component.extend(
     leafletMap: null,
 
     /**
+      History enabled mode
+
+      @default false
+    */
+    histEnabled: false,
+
+    /**
       Flag: indicates whether layers tree is in readonly mode.
       If true, layers nodes data-related UI will be in readonly mode.
 
@@ -429,6 +445,15 @@ const FlexberryMaplayersComponent = Component.extend(
     compareLayersEnabled: false,
 
     /**
+      Flag for checkAll visibility
+
+      @property allLayerVisible
+      @type Boolean
+      @default false
+    */
+    allLayerVisible: false,
+
+    /**
       Proprty containing raster layers to compare.
 
       @property rasterLayers
@@ -504,10 +529,31 @@ const FlexberryMaplayersComponent = Component.extend(
         this.sendAction(actionName, layer);
       },
 
+      onAllLayerVisibilityChanged(e) {
+        this.set('allLayerVisible', !this.get('allLayerVisible'));
+        let visibility = this.get('allLayerVisible');
+        let layers = this.get('layers');
+        let setVisibility = function(layers) {
+          layers.forEach(layer => {
+            layer.set('visibility', visibility);
+            if (layer.get('layers')) {
+              setVisibility(layer.get('layers'));
+            }
+          });
+        };
+
+        setVisibility(layers);
+      },
+
       onChangeLayer(leftLayer, rightLayer) {
         this.set('leftLayer', leftLayer);
         this.set('rightLayer', rightLayer);
       },
+
+      onLayerTimeChanged(layer, time) {
+        this.sendAction('layerTimeChanged', layer, time);
+      },
+
       /**
         Handles add button's 'click' event.
         Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.

@@ -119,6 +119,23 @@ export default FlexberryDropdown.extend({
     this.set('countChoose', value.length);
   }),
 
+  itemsObserver: observer('items', function () {
+    const state = Object.entries(this.get('items'))
+      .filter(([key, value]) => !Ember.isNone(value))
+      .map(([i, val]) => {
+        let value = val;
+        let key = i;
+        if (this.get('isObject')) {
+          value = Ember.get(val, 'name');
+          key = val.id;
+        }
+
+        return Ember.Object.create({ key, value, isVisible: false });
+      });
+
+    this.get('state').addObjects(state);
+  }),
+
   actions: {
     selectAll() {
       const state = this.get('state');

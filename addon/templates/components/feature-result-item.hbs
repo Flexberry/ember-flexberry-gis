@@ -107,7 +107,7 @@
           </a>
         </div>
         <div>
-          {{#if availableEdit}}
+          {{#if (and availableEdit (not feature.arch))}}
             <a class="icon item" {{action "onRowEdit" on="click"}}>
               <i class="edit icon"></i>
               {{t "components.feature-result-item.edit-caption"}}

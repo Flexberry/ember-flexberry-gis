@@ -96,17 +96,7 @@ export default BaseLayer.extend({
       };
 
       // Set creating component's owner to avoid possible lookup exceptions.
-      const owner = getOwner(this);
-      let ownerKey = null;
-      A(Object.keys(this) || []).forEach((key) => {
-        if (this[key] === owner) {
-          ownerKey = key;
-          return false;
-        }
-      });
-      if (!isBlank(ownerKey)) {
-        layerProperties[ownerKey] = owner;
-      }
+      this.setOwner(layerProperties);
 
       const mainLayer = getOwner(this).factoryFor(`component:layers/${mainType}-layer`).create(layerProperties);
       if (!isNone(mainLayer)) {
@@ -126,17 +116,7 @@ export default BaseLayer.extend({
           };
 
           // Set creating component's owner to avoid possible lookup exceptions.
-          const owner = getOwner(this);
-          let ownerKey = null;
-          A(Object.keys(this) || []).forEach((key) => {
-            if (this[key] === owner) {
-              ownerKey = key;
-              return false;
-            }
-          });
-          if (!isBlank(ownerKey)) {
-            innerLayerProperties[ownerKey] = owner;
-          }
+          this.setOwner(innerLayerProperties);
 
           const { type, } = innerSettings;
           const layer = getOwner(this).factoryFor(`component:layers/${type}-layer`).create(innerLayerProperties);

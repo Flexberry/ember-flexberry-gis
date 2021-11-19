@@ -382,10 +382,13 @@
     padding: 6px 0;
   }
 
+  &.treeview .flexberry-check-all {
+  }
+
   &.treeview .flexberry-maplayers {
     overflow-y: auto;
     overflow-x: hidden;
-    margin-top: -30px;
+    margin-top: 5px;
     margin-left: -13px;
     height: ~"calc(100% - 30px)" !important;
     .flexberry-treenode-expand-collapse-icon.dropdown.icon:before {
@@ -625,7 +628,7 @@
         padding: 10px 12px;
       }
       &.create-edit-object-tab, &.compareObjects, &.intersectionObjects,
-      &.compare, &.timelapse {
+      &.compare, &.timelapse, &.history {
         display: none;
         position: absolute;
       }

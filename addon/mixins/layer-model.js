@@ -29,6 +29,8 @@ export default Mixin.create({
   */
   localStorageService: service('local-storage'),
 
+  archTime: null,
+
   /**
     Object with layer's settings.
     @property settingsAsObject

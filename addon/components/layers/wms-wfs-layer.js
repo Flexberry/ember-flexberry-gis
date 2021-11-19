@@ -4,7 +4,7 @@
 
 import { A } from '@ember/array';
 
-import { getOwner } from '@ember/application';
+import { getOwner, setOwner } from '@ember/application';
 import { isNone, isBlank } from '@ember/utils';
 import { on } from '@ember/object/evented';
 import { set, observer } from '@ember/object';
@@ -143,20 +143,12 @@ export default WmsLayerComponent.extend({
       index: this.get('index'),
       visibility: false,
       dynamicProperties: this.get('wfs'),
+      renderer: {},
     };
 
     // Set creating component's owner to avoid possible lookup exceptions.
     const owner = getOwner(this);
-    let ownerKey = null;
-    A(Object.keys(this) || []).forEach((key) => {
-      if (this[key] === owner) {
-        ownerKey = key;
-        return false;
-      }
-    });
-    if (!isBlank(ownerKey)) {
-      innerWfsLayerProperties[ownerKey] = owner;
-    }
+    setOwner(innerWfsLayerProperties, owner);
 
     // Create inner WFS-layer which is needed for identification (always invisible, won't be added to map).
     this.set('_wfsLayer', WfsLayerComponent.create(innerWfsLayerProperties));

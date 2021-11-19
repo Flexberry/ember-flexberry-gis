@@ -146,21 +146,7 @@ export default EditFormRoute.extend({
     this._super(...arguments);
     const layers = model.get('mapLayer');
 
-    if (layers) {
-      const rootLayers = layers.filter((layer) => isEmpty(layer.get('parent')));
-
-      const hierarchy = this.sortLayersByIndex(rootLayers);
-      model.set('hierarchy', hierarchy);
-
-      const backgroundLayers = A();
-      backgroundLayers.addObjects(hierarchy.filterBy('settingsAsObject.backgroundSettings.canBeBackground', true));
-      model.set('backgroundLayers', backgroundLayers);
-
-      const other = hierarchy.filter((layer) => isNone(layer.get('settingsAsObject')) || !layer.get('settingsAsObject.backgroundSettings.canBeBackground'));
-      const otherLayers = A();
-      otherLayers.addObjects(other);
-      model.set('otherLayers', otherLayers);
-    }
+    this.setLayerCategories(model, layers);
 
     const urlParams = ['zoom', 'lat', 'lng'];
     const currentParams = {};
@@ -178,6 +164,24 @@ export default EditFormRoute.extend({
     this.transitionTo({
       queryParams: currentParams,
     });
+  },
+
+  setLayerCategories(model, layers) {
+    if (layers) {
+      const rootLayers = layers.filter((layer) => isEmpty(layer.get('parent')));
+
+      const hierarchy = this.sortLayersByIndex(rootLayers);
+      model.set('hierarchy', hierarchy);
+
+      const backgroundLayers = A();
+      backgroundLayers.addObjects(hierarchy.filterBy('settingsAsObject.backgroundSettings.canBeBackground', true));
+      model.set('backgroundLayers', backgroundLayers);
+
+      const other = hierarchy.filter((layer) => isNone(layer.get('settingsAsObject')) || !layer.get('settingsAsObject.backgroundSettings.canBeBackground'));
+      const otherLayers = A();
+      otherLayers.addObjects(other);
+      model.set('otherLayers', otherLayers);
+    }
   },
 
   /**
