@@ -97,6 +97,7 @@ export default BaseVectorLayer.extend({
         filter = getOwner(this).lookup('layer:wfs').parseFilter(filter);
       }
 
+      filter = this.addCustomFilter(filter);
       const resultingFilter = filter ? filter.toGml() : null;
 
       const wfsLayer = this.get('_leafletObject');
@@ -113,6 +114,7 @@ export default BaseVectorLayer.extend({
         layers.forEach((layer) => {
           const { feature, } = layer;
           feature.leafletLayer = layer;
+          Ember.set(feature, 'arch', this.get('hasTime') || false);
           features.pushObject(feature);
         });
 
@@ -234,7 +236,7 @@ export default BaseVectorLayer.extend({
   _loadFeatures(filter, fireLoad = true) {
     return new Promise((resolve, reject) => {
       const that = this;
-
+      filter = this.addCustomFilter(filter);
       L.Util.request({
         url: this.options.url,
         data: L.XmlUtil.serializeXmlDocumentString(that.getFeature(filter)),
@@ -386,6 +388,7 @@ export default BaseVectorLayer.extend({
           wfsLayer.reload = this.get('reload').bind(this);
           wfsLayer.cancelEdit = this.get('cancelEdit').bind(this);
           wfsLayer.updateLabel = this.get('updateLabel').bind(this);
+          wfsLayer.addCustomFilter = this.get('addCustomFilter').bind(this);
 
           if (!isNone(leafletMap)) {
             const thisPane = this.get('_pane');
@@ -703,6 +706,7 @@ export default BaseVectorLayer.extend({
           });
 
           filter = new L.Filter.Or(...equals);
+          filter = this.addCustomFilter(filter);
         }
 
         L.Util.request({
@@ -761,7 +765,7 @@ export default BaseVectorLayer.extend({
 
     const leafletMap = this.get('leafletMap');
     if (!isNone(leafletObject)) {
-      const show = this.get('layerModel.visibility') || (!isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
+      const show = this.get('visibility') || (!isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
       const continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
       const showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading;
 

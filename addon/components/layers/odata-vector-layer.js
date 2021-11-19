@@ -402,7 +402,11 @@ export default BaseVectorLayer.extend({
         queryBuilder.top(maxFeatures);
       }
 
-      queryBuilder.where(filter);
+      filter = this.addCustomFilter(filter);
+      if (!isNone(filter)) {
+        queryBuilder.where(filter);
+      }
+
       const build = queryBuilder.build();
       const config = getOwner(this).resolveRegistration('config:environment');
       const { intersectionArea, } = config.APP;
@@ -807,6 +811,7 @@ export default BaseVectorLayer.extend({
             if (!isNone(dataModel)) {
               const { parentModelName, } = dataModel;
               if (isNone(parentModelName)) {
+                _this.set('namespace', dataModel.nameSpace);
                 const modelMixin = _this.createMixin(dataModel);
                 const model = _this.createModel(modelMixin);
                 resolve({ model, dataModel, modelMixin, });
@@ -1098,7 +1103,7 @@ export default BaseVectorLayer.extend({
             const remainingFeat = featureIds.filter((item) => loadIds.indexOf(item) === -1);
 
             if (!isEmpty(remainingFeat)) {
-              queryBuilder.where(makeFilterEqOr(remainingFeat));
+              queryBuilder.where(this.addCustomFilter(makeFilterEqOr(remainingFeat)));
             } else { // If objects is already loaded, return leafletObject
               resolve(leafletObject);
               return;
@@ -1107,7 +1112,7 @@ export default BaseVectorLayer.extend({
             const alreadyLoaded = getLoadedFeatures(null);
             const filterEqOr = makeFilterEqOr(alreadyLoaded);
             if (!isNone(filterEqOr)) {
-              queryBuilder.where(new NotPredicate(makeFilterEqOr(alreadyLoaded)));
+              queryBuilder.where(this.addCustomFilter(new NotPredicate(makeFilterEqOr(alreadyLoaded))));
             }
           }
 
@@ -1159,10 +1164,52 @@ export default BaseVectorLayer.extend({
         .top(1)
         .count();
 
+      let filter = this.addCustomFilter(null);
+      if (!Ember.isNone(filter)) {
+        queryBuilder.where(filter);
+      }
+
       store.query(modelName, queryBuilder.build()).then((result) => {
         resolve(result.meta.count);
       });
     });
+  },
+
+  customFilter: Ember.computed('layerModel.archTime', 'hasTime', 'modelName', function () {
+    let predicates = [];
+    if (this.get('hasTime')) {
+      let time = this.get('layerModel.archTime');
+      let formattedTime;
+      if (Ember.isBlank(time) || time === 'present' || Ember.isNone(time)) {
+        formattedTime = moment().toISOString();
+      } else {
+        formattedTime = moment(time).toISOString();
+      }
+
+      predicates.push(new Query.DatePredicate('archiveStart', Query.FilterOperator.Leq, formattedTime));
+    }
+
+    predicates.push(new Query.IsOfPredicate(this.get('modelName')));
+
+    if (predicates.length > 0) {
+      if (predicates.length === 1) {
+        return predicates[0];
+      } else {
+        return new Query.ComplexPredicate(Query.Condition.And, ...predicates);
+      }
+    }
+
+    return null;
+  }),
+
+  addCustomFilter(filter) {
+    let customFilter = this.get('customFilter');
+
+    if (!Ember.isNone(customFilter) && !Ember.isNone(filter)) {
+      return new Query.ComplexPredicate(Query.Condition.And, filter, customFilter);
+    }
+
+    return customFilter || filter;
   },
 
   /**
@@ -1205,9 +1252,9 @@ export default BaseVectorLayer.extend({
               .selectByProjection(obj.projectionName);
 
             if (equals.length === 1) {
-              queryBuilder.where(equals[0]);
+              queryBuilder.where(this.addCustomFilter(equals[0]));
             } else {
-              queryBuilder.where(new ComplexPredicate(Condition.Or, ...equals));
+              queryBuilder.where(this.addCustomFilter(new ComplexPredicate(Condition.Or, ...equals)));
             }
 
             const objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
@@ -1230,6 +1277,11 @@ export default BaseVectorLayer.extend({
                   .skip(skip)
                   .orderBy('id');
 
+                let customFilter = this.addCustomFilter(null);
+                if (!Ember.isNone(customFilter)) {
+                  queryBuilder.where(customFilter);
+                }
+
                 promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
                 count -= maxBatchFeatures;
                 skip += maxBatchFeatures;
@@ -1242,6 +1294,11 @@ export default BaseVectorLayer.extend({
                   .top(count)
                   .skip(skip)
                   .orderBy('id');
+
+                let customFilter = this.addCustomFilter(null);
+                if (!Ember.isNone(customFilter)) {
+                  queryBuilder.where(customFilter);
+                }
 
                 promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
               }
@@ -1287,7 +1344,7 @@ export default BaseVectorLayer.extend({
     if (!isNone(leafletObject)) {
       // it's from api showAllLayerObjects, to load objects if layer is not visibility
       const showLayerObjects = (!isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
-      const show = this.get('layerModel.visibility');
+      const show = this.get('visibility');
       const continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
       const showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading && isEmpty(Object.values(leafletObject._layers));
 
@@ -1359,6 +1416,7 @@ export default BaseVectorLayer.extend({
       .from(obj.modelName)
       .selectByProjection(obj.projectionName);
 
+    filter = this.addCustomFilter(filter);
     if (!isNone(filter)) {
       queryBuilder.where(filter);
     }

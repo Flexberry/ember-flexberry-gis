@@ -164,6 +164,15 @@ const FlexberryMaplayerComponent = Component.extend(
     copyPostfix: t('components.layers-dialogs.copy.layer-name-postfix'),
 
     /**
+      Flag used to display embedded records.
+      @property _expanded
+      @type Boolean
+      @default false
+      @private
+    */
+    _expanded: false,
+
+    /**
       Component's required actions names.
       For actions enumerated in this array an assertion exceptions will be thrown,
       if actions handlers are not defined for them.
@@ -454,6 +463,13 @@ const FlexberryMaplayerComponent = Component.extend(
     leafletMap: null,
 
     /**
+      History enabled mode
+
+      @default false
+    */
+    histEnabled: false,
+
+    /**
       Flag: indicates whether layer node is in readonly mode.
       If true, layer node's data-related UI will be in readonly mode.
 
@@ -505,6 +521,12 @@ const FlexberryMaplayerComponent = Component.extend(
     */
     disabled: '',
 
+    maxDate: Ember.computed(function () {
+      let date = new Date(new Date().toDateString());
+      date.setDate(date.getDate() + 1);
+      return date;
+    }),
+
     /**
       Initializes DOM-related component's properties.
     */
@@ -517,15 +539,15 @@ const FlexberryMaplayerComponent = Component.extend(
       next(this, function() {
         if (!this.get('readonly')) {
           const _this = this;
-          const $caption = $('.ui.tab.treeview label.flexberry-maplayer-caption-label');
+          const $caption = $('.ui.tab.treeview .flexberry-maplayer-caption-label');
           if ($caption.length > 0) {
             $caption.hover(
-              function () {
+              function() {
                 const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
                 $toolbar.removeClass('hidden');
                 $(this).addClass('blur');
               },
-              function () {
+              function() {
                 const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
                 $toolbar.hover(
                   () => {},
@@ -570,6 +592,10 @@ const FlexberryMaplayerComponent = Component.extend(
     },
 
     actions: {
+      onLayerTimeChange() {
+        this.sendAction('layerTimeChanged', this.get('layer'), this.get('layer.archTime'));
+      },
+
       external(actionName) {
         this.set('isSubmenu', false);
         this.sendAction('external', actionName, this.get('layer'));
@@ -711,6 +737,7 @@ const FlexberryMaplayerComponent = Component.extend(
           this.set('hasBeenExpanded', true);
         }
 
+        this.toggleProperty('_expanded');
         this.sendAction('beforeExpand', ...args);
       },
 
@@ -723,6 +750,7 @@ const FlexberryMaplayerComponent = Component.extend(
         {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.
       */
       onBeforeCollapse(...args) {
+        this.toggleProperty('_expanded');
         this.sendAction('beforeCollapse', ...args);
       },
 
@@ -780,7 +808,7 @@ const FlexberryMaplayerComponent = Component.extend(
         which describes button's 'click' event.
       */
       onFeatureCreateButtonClick(...args) {
-        this.sendAction('featureEdit', ...args);
+        this.sendDynamicAction('featureEdit', ...args);
       },
 
       /**

@@ -7,6 +7,7 @@ import { htmlSafe, isHTMLSafe } from '@ember/template';
 import $ from 'jquery';
 import { typeOf, isNone, isBlank } from '@ember/utils';
 import { computed, get, observer } from '@ember/object';
+import { next } from '@ember/runloop';
 import Component from '@ember/component';
 
 import Ember from 'ember';
@@ -362,7 +363,7 @@ const BaseMapToolComponent = Component.extend(SlotsMixin, {
     const $item = this.$();
     if (this.get('_hasSubmenu')) {
       // Initialize Semantic UI dropdown module.
-      $item.dropdown();
+      next(() => $item.dropdown());
     } else if (!isNone(MutationObserver)) {
       // Sometimes Semantic UI adds/removes classes too late what breaks results of component's class name bindings.
       // So to fix it, we need to observe changes in 'class' attribute through mutation observer.

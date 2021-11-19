@@ -344,7 +344,7 @@ const FlexberryIdentifyPanelComponent = Component.extend({
     @default 'kilometers'
   */
   bufferUnits: computed('bufferUnitsValue', function() {
-    return bufferUnitsValue;
+    return this.get('bufferUnitsValue');
   }),
 
   bufferUnitsValue: computed(function() {

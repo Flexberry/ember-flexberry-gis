@@ -497,6 +497,15 @@ const MeasureMapToolComponent = Component.extend({
   },
 
   /**
+    Initializes component's DOM-related properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+
+    this.initControl();
+  },
+
+  /**
     Adds created control to map if it's present or change.
 
     @method initControl

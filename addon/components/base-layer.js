@@ -39,7 +39,7 @@ export default Component.extend(
       @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
       @default null
       @private
-     */
+    */
     _leafletObject: null,
 
     /**
@@ -74,11 +74,64 @@ export default Component.extend(
     */
     tagName: '',
 
+    archTime: null,
+    hasTime: null,
+
+    timeObserverDelay: 1500,
+
+    timeObserver: Ember.observer('layerModel.archTime', function () {
+      // Из комбинированого исторического слоя это изменение пробросится и для основного тоже. Проконтролируем
+      if (this.get('hasTime') && this.reload && typeof (this.reload) === 'function') {
+        Ember.run.debounce(this, this.reload, this.get('timeObserverDelay'));
+      }
+    }),
+
+    customFilter: Ember.computed('layerModel.archTime', function () {
+      if (this.get('hasTime')) {
+        let time = this.get('layerModel.archTime');
+        let formattedTime;
+        if (Ember.isBlank(time) || time === 'present' || Ember.isNone(time)) {
+          formattedTime = moment().toISOString();
+        } else {
+          formattedTime = moment(time).toISOString();
+        }
+
+        return new L.Filter.And(
+          new L.Filter.LEQ('archivestart', formattedTime),
+          new L.Filter.GEQ('archiveend', formattedTime));
+      }
+    }),
+
+    addCustomFilter(filter) {
+      let customFilter = this.get('customFilter');
+
+      if (!Ember.isNone(customFilter) && !Ember.isNone(filter)) {
+        return new L.Filter.And(filter, customFilter);
+      }
+
+      return customFilter || filter;
+    },
+
+    setOwner(properties) {
+      let owner = Ember.getOwner(this);
+      let ownerKey = null;
+      Ember.A(Object.keys(this) || []).forEach((key) => {
+        if (this[key] === owner) {
+          ownerKey = key;
+          return false;
+        }
+      });
+
+      if (!Ember.isBlank(ownerKey)) {
+        properties[ownerKey] = owner;
+      }
+    },
+
     /**
       Array containing component's properties which are also leaflet layer options (see leaflet-options mixin).
 
       @property leafletOptions
-      @type Stirng[]
+      @type String[]
     */
     leafletOptions: null,
 
@@ -303,7 +356,7 @@ export default Component.extend(
           }
         }
 
-        this.sendAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel'), });
+        this.sendDynamicAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel'), });
 
         const layerInitCallback = this.get('mapApi').getFromApi('layerInitCallback');
         if (typeof layerInitCallback === 'function') {
@@ -677,16 +730,16 @@ export default Component.extend(
     /**
       Handles 'flexberry-map:query' event of leaflet map.
 
-     @method query
-     @param {Object} e Event object.
-     @param {Object} queryFilter Object with query filter parameters
-     @param {Object} mapObjectSetting Object describing current query setting
-     @param {Object[]} results Objects describing query results.
-     Every result-object has the following structure: { layer: ..., features: [...] },
-     where 'layer' is metadata of layer related to query result, features is array
-     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
-     or a promise returning such array.
-   */
+      @method query
+      @param {Object} e Event object.
+      @param {Object} queryFilter Object with query filter parameters
+      @param {Object} mapObjectSetting Object describing current query setting
+      @param {Object[]} results Objects describing query results.
+      Every result-object has the following structure: { layer: ..., features: [...] },
+      where 'layer' is metadata of layer related to query result, features is array
+      containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+      or a promise returning such array.
+    */
     _query(e) {
       // Filter current layer links by setting.
       const layerLinks = this.get('layerModel.layerLink')
@@ -767,6 +820,9 @@ export default Component.extend(
     */
     init() {
       this._super(...arguments);
+
+      // Здесь можно задать layerModel.archTime. Но мы не будем, т.к. пустая дата - это то же самое, что текущая.
+      // Если все таки захотят чтобы дата отображалась, то нужно будет делать сервис, который отдаст одинаковую текущую дату все слои
 
       // Create leaflet layer.
       this._createLayer();
@@ -1046,14 +1102,14 @@ export default Component.extend(
     @param {Object} eventObject Action param
     @param {Object} eventObject.leafletObject Created (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
     @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
-   */
+  */
 
   /**
    Component's action invoking before the layer destroying.
 
-   @method sendingActions.layerDestroy
-   @param {Object} eventObject Action param
-   @param {Object} eventObject.leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
-   @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
+  @method sendingActions.layerDestroy
+  @param {Object} eventObject Action param
+  @param {Object} eventObject.leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
+  @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
   */
 );

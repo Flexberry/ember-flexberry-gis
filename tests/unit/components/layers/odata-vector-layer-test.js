@@ -122,7 +122,6 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     store = app.__container__.lookup('service:store');
     const layerModel = store.createRecord('test-model');
     layerModel.type = 'odata-vector';
-    layerModel.visibility = true;
     $.extend(param, {
       geometryType: 'MultiPolygonPropertyType',
       modelName: 'test-model',

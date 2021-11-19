@@ -34,19 +34,29 @@
         {{flexberry-icon
           class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
         }}
-        <label class={{flexberryClassNames.caption}}>
+        <div class={{flexberryClassNames.caption}}>
           {{layer.name}}
-        </label>
+          {{#if (and histEnabled (eq layer.type "with-history"))}}
+           от {{flexberry-simpledatetime
+                value=layer.archTime
+                type="datetime"
+                max=maxDate
+                placeholder=""
+                change=(action "onLayerTimeChange")
+              }}
+          {{/if}}
+        </div>
         {{#if (not compareLayersEnabled)}}
           <div class="flexberry-treenode-buttons-block hidden">
             {{#if (not readonly)}}
               {{#if (not isGroup)}}
-                {{flexberry-button
-                  class=(concat flexberryClassNames.attributesButton " floated")
-                  iconClass="plus icon"
-                  tooltip=(t "components.flexberry-maplayer.plus-button.tooltip")
-                  data-action="onFeatureCreateButtonClick"
-                }}
+                <button
+                  type="button"
+                  title={{t "components.flexberry-maplayer.plus-button.tooltip"}}
+                  class="ui button {{flexberryClassNames.attributesButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
+                  onclick={{action "onFeatureCreateButtonClick"}}>
+                    <i class="plus icon"></i>
+                </button>
               {{/if}}
               {{#if _attributesOperationIsAvailable}}
                 {{flexberry-button
@@ -55,13 +65,15 @@
                   tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
                   click=(action "onAttributesButtonClick")
                 }}
+
               {{/if}}
               <div class="allmore floated flexberry-button ui button icon">
-                {{flexberry-button
-                  class="more floated "
-                  iconClass="more icon"
-                  data-action="onSubmenu"
-                }}
+                <button
+                  type="button"
+                  class="ui button more floated {{flexberryClassNames.preventExpandCollapse}}"
+                  onclick={{action "onSubmenu"}}>
+                    <i class="more icon"></i>
+                </button>
                 <div class="more submenu {{if isSubmenu '' 'hidden'}}">
                   <div class="button-more-submenu">
                   {{flexberry-button
@@ -182,6 +194,7 @@
         leftLayer=leftLayer
         rightLayer=rightLayer
         isGroup=isGroup
+        _expanded=_expanded
       }}
     {{/if}}
     {{#yield-slot "content"}}
