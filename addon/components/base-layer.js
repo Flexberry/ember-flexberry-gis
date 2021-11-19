@@ -356,7 +356,7 @@ export default Component.extend(
           }
         }
 
-        this.sendAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel'), });
+        this.sendDynamicAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel'), });
 
         const layerInitCallback = this.get('mapApi').getFromApi('layerInitCallback');
         if (typeof layerInitCallback === 'function') {

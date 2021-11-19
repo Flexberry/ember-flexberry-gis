@@ -539,15 +539,15 @@ const FlexberryMaplayerComponent = Component.extend(
       next(this, function() {
         if (!this.get('readonly')) {
           const _this = this;
-          const $caption = $('.ui.tab.treeview label.flexberry-maplayer-caption-label');
+          const $caption = $('.ui.tab.treeview .flexberry-maplayer-caption-label');
           if ($caption.length > 0) {
             $caption.hover(
-              function () {
+              function() {
                 const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
                 $toolbar.removeClass('hidden');
                 $(this).addClass('blur');
               },
-              function () {
+              function() {
                 const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
                 $toolbar.hover(
                   () => {},
@@ -796,7 +796,7 @@ const FlexberryMaplayerComponent = Component.extend(
         which describes button's 'click' event.
       */
       onFeatureCreateButtonClick(...args) {
-        this.sendAction('featureEdit', ...args);
+        this.sendDynamicAction('featureEdit', ...args);
       },
 
       /**

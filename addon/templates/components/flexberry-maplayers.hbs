@@ -51,7 +51,7 @@
 
   {{#block-slot "content"}}
     {{#if _expanded}}
-      {{#each layers key="key" as |layer|}}
+      {{#each layers as |layer|}}
         {{#if (not layer.isDeleted)}}
           {{#flexberry-maplayer
             readonly=readonly
