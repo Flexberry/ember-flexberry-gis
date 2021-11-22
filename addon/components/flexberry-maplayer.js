@@ -784,7 +784,7 @@ const FlexberryMaplayerComponent = Component.extend(
         which describes button's 'click' event.
       */
       onAttributesButtonClick(...args) {
-        this.sendAction('attributesEdit', ...args);
+        this.sendDynamicAction('attributesEdit', ...args);
       },
 
       /**
