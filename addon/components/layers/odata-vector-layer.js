@@ -736,8 +736,8 @@ export default BaseVectorLayer.extend({
     const projJson = jsonModel.projections.filter((proj) => proj.name === projectionName);
     const modelProjection = {};
     if (projJson.length > 0) {
-      projJson[0].attrs.forEach((attr) => {
-        modelProjection[attr.name] = attr('');
+      projJson[0].attrs.forEach((attribute) => {
+        modelProjection[attribute.name] = attr('');
       });
     }
 
