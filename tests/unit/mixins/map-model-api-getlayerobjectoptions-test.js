@@ -92,15 +92,15 @@ module('Unit | Mixin | flexberry-map-model-api getLayerObjectOptions', function 
 
   test('getLayerObjectOptions return projected geometry if specified crsName', function (assert) {
     assert.expect(2);
-    let done = assert.async(1);
-    let ownerStub = sinon.stub(Ember, 'getOwner');
+    const done = assert.async(1);
+    const ownerStub = sinon.stub(Ember, 'getOwner');
     ownerStub.returns({
       knownForType() {
         return {
-          'epsg4326': crsFactory4326,
-          'epsg32640': crsFactory32640
+          epsg4326: crsFactory4326,
+          epsg32640: crsFactory32640,
         };
-      }
+      },
     });
 
     const toProjectedGeoJSONStub = sinon.stub(featureLayer, 'toProjectedGeoJSON');

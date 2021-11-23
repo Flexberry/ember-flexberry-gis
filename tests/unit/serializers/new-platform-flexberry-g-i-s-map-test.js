@@ -22,14 +22,14 @@ moduleForModel('new-platform-flexberry-g-i-s-map', 'Unit | Serializer | new-plat
     'model:new-platform-flexberry-g-i-s-map-object-setting',
     'model:new-platform-flexberry-g-i-s-map',
     'model:new-platform-flexberry-g-i-s-parameter-metadata'
-  ]
+  ],
 });
 
 // Replace this with your real tests.
-test('it serializes records', function(assert) {
-  let record = this.subject();
+test('it serializes records', function (assert) {
+  const record = this.subject();
 
-  let serializedRecord = record.serialize();
+  const serializedRecord = record.serialize();
 
   assert.ok(serializedRecord);
-})
+});
