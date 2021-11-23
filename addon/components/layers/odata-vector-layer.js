@@ -38,7 +38,9 @@ import {
   ComplexPredicate,
   StringPredicate,
   GeometryPredicate,
-  NotPredicate
+  NotPredicate,
+  DatePredicate,
+  IsOfPredicate,
 } from 'ember-flexberry-data/query/predicate';
 
 import QueryBuilder from 'ember-flexberry-data/query/builder';
@@ -1165,7 +1167,7 @@ export default BaseVectorLayer.extend({
         .count();
 
       let filter = this.addCustomFilter(null);
-      if (!Ember.isNone(filter)) {
+      if (!isNone(filter)) {
         queryBuilder.where(filter);
       }
 
@@ -1175,27 +1177,27 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  customFilter: Ember.computed('layerModel.archTime', 'hasTime', 'modelName', function () {
+  customFilter: computed('layerModel.archTime', 'hasTime', 'modelName', function () {
     let predicates = [];
     if (this.get('hasTime')) {
       let time = this.get('layerModel.archTime');
       let formattedTime;
-      if (Ember.isBlank(time) || time === 'present' || Ember.isNone(time)) {
+      if (isBlank(time) || time === 'present' || isNone(time)) {
         formattedTime = moment().toISOString();
       } else {
         formattedTime = moment(time).toISOString();
       }
 
-      predicates.push(new Query.DatePredicate('archiveStart', Query.FilterOperator.Leq, formattedTime));
+      predicates.push(new DatePredicate('archiveStart', FilterOperator.Leq, formattedTime));
     }
 
-    predicates.push(new Query.IsOfPredicate(this.get('modelName')));
+    predicates.push(new IsOfPredicate(this.get('modelName')));
 
     if (predicates.length > 0) {
       if (predicates.length === 1) {
         return predicates[0];
       } else {
-        return new Query.ComplexPredicate(Query.Condition.And, ...predicates);
+        return new ComplexPredicate(Condition.And, ...predicates);
       }
     }
 
@@ -1205,8 +1207,8 @@ export default BaseVectorLayer.extend({
   addCustomFilter(filter) {
     let customFilter = this.get('customFilter');
 
-    if (!Ember.isNone(customFilter) && !Ember.isNone(filter)) {
-      return new Query.ComplexPredicate(Query.Condition.And, filter, customFilter);
+    if (!isNone(customFilter) && !isNone(filter)) {
+      return new ComplexPredicate(Condition.And, filter, customFilter);
     }
 
     return customFilter || filter;
@@ -1278,7 +1280,7 @@ export default BaseVectorLayer.extend({
                   .orderBy('id');
 
                 let customFilter = this.addCustomFilter(null);
-                if (!Ember.isNone(customFilter)) {
+                if (!isNone(customFilter)) {
                   queryBuilder.where(customFilter);
                 }
 
@@ -1296,7 +1298,7 @@ export default BaseVectorLayer.extend({
                   .orderBy('id');
 
                 let customFilter = this.addCustomFilter(null);
-                if (!Ember.isNone(customFilter)) {
+                if (!isNone(customFilter)) {
                   queryBuilder.where(customFilter);
                 }
 

@@ -521,7 +521,7 @@ const FlexberryMaplayerComponent = Component.extend(
     */
     disabled: '',
 
-    maxDate: Ember.computed(function () {
+    maxDate: computed(function () {
       let date = new Date(new Date().toDateString());
       date.setDate(date.getDate() + 1);
       return date;

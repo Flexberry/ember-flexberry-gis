@@ -168,19 +168,19 @@ export default EditFormRoute.extend({
 
   setLayerCategories(model, layers) {
     if (layers) {
-      let rootLayers = layers.filter(layer => Ember.isEmpty(layer.get('parent')));
+      let rootLayers = layers.filter(layer => isEmpty(layer.get('parent')));
 
       let hierarchy = this.sortLayersByIndex(rootLayers);
       model.set('hierarchy', hierarchy);
 
-      let backgroundLayers = Ember.A();
+      let backgroundLayers = A();
       backgroundLayers.addObjects(hierarchy.filterBy('settingsAsObject.backgroundSettings.canBeBackground', true));
       model.set('backgroundLayers', backgroundLayers);
 
       let other = hierarchy.filter((layer) => {
-        return Ember.isNone(layer.get('settingsAsObject')) || !layer.get('settingsAsObject.backgroundSettings.canBeBackground');
+        return isNone(layer.get('settingsAsObject')) || !layer.get('settingsAsObject.backgroundSettings.canBeBackground');
       });
-      let otherLayers = Ember.A();
+      let otherLayers = A();
       otherLayers.addObjects(other);
       model.set('otherLayers', otherLayers);
     }
