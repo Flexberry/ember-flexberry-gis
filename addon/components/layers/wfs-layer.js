@@ -786,7 +786,7 @@ export default BaseVectorLayer.extend({
           const loadedBoundsJsts = geojsonReader.read(loadedBounds.toGeoJSON().geometry);
           const boundsJsts = geojsonReader.read(L.rectangle(bounds).toGeoJSON().geometry);
 
-          if (loadedBoundsJsts.includes(boundsJsts)) {
+          if (loadedBoundsJsts.contains(boundsJsts)) {
             if (leafletObject.statusLoadLayer) {
               leafletObject.promiseLoadLayer = resolve();
             }
