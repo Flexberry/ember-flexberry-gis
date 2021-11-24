@@ -6,7 +6,8 @@ moduleForComponent('base-layer', 'Unit | Component | base layer', {
   needs: [
     'service:map-api',
     'config:environment',
-    'service:layers-styles-renderer'
+    'service:layers-styles-renderer',
+    'service:i18n'
   ],
 });
 
