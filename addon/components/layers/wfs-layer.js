@@ -114,7 +114,7 @@ export default BaseVectorLayer.extend({
         layers.forEach((layer) => {
           const { feature, } = layer;
           feature.leafletLayer = layer;
-          Ember.set(feature, 'arch', this.get('hasTime') || false);
+          set(feature, 'arch', this.get('hasTime') || false);
           features.pushObject(feature);
         });
 

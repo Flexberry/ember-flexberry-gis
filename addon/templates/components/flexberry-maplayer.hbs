@@ -53,19 +53,19 @@
                 <button
                   type="button"
                   title={{t "components.flexberry-maplayer.plus-button.tooltip"}}
-                  class="ui button {{flexberryClassNames.attributesButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
+                  class="ui button {{flexberryClassNames.attributesButton}} floated"
                   onclick={{action "onFeatureCreateButtonClick"}}>
                     <i class="plus icon"></i>
                 </button>
               {{/if}}
               {{#if _attributesOperationIsAvailable}}
-                {{flexberry-button
-                  class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
-                  iconClass="browser icon"
-                  tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
-                  click=(action "onAttributesButtonClick")
-                }}
-
+                <button
+                  type="button"
+                  title={{t "components.flexberry-maplayer.attributes-button.tooltip"}}
+                  class="ui button {{flexberryClassNames.attributesButton}} floated"
+                  onclick={{action "onAttributesButtonClick"}}>
+                    <i class="browser icon"></i>
+                </button>
               {{/if}}
               <div class="allmore floated flexberry-button ui button icon">
                 <button

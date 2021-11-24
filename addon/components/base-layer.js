@@ -2,6 +2,8 @@
   @module ember-flexberry-gis
 */
 
+import { debounce } from '@ember/runloop';
+
 import { A, isArray } from '@ember/array';
 
 import { getOwner } from '@ember/application';
@@ -9,7 +11,7 @@ import { hash, Promise, resolve } from 'rsvp';
 import {
   computed, set, observer, get
 } from '@ember/object';
-import { isNone, isPresent, typeOf } from '@ember/utils';
+import { isNone, isPresent, typeOf, isBlank } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import { assert } from '@ember/debug';
@@ -79,18 +81,18 @@ export default Component.extend(
 
     timeObserverDelay: 1500,
 
-    timeObserver: Ember.observer('layerModel.archTime', function () {
+    timeObserver: observer('layerModel.archTime', function () {
       // Из комбинированого исторического слоя это изменение пробросится и для основного тоже. Проконтролируем
       if (this.get('hasTime') && this.reload && typeof (this.reload) === 'function') {
-        Ember.run.debounce(this, this.reload, this.get('timeObserverDelay'));
+        debounce(this, this.reload, this.get('timeObserverDelay'));
       }
     }),
 
-    customFilter: Ember.computed('layerModel.archTime', function () {
+    customFilter: computed('layerModel.archTime', function () {
       if (this.get('hasTime')) {
         let time = this.get('layerModel.archTime');
         let formattedTime;
-        if (Ember.isBlank(time) || time === 'present' || Ember.isNone(time)) {
+        if (isBlank(time) || time === 'present' || isNone(time)) {
           formattedTime = moment().toISOString();
         } else {
           formattedTime = moment(time).toISOString();
@@ -105,7 +107,7 @@ export default Component.extend(
     addCustomFilter(filter) {
       let customFilter = this.get('customFilter');
 
-      if (!Ember.isNone(customFilter) && !Ember.isNone(filter)) {
+      if (!isNone(customFilter) && !isNone(filter)) {
         return new L.Filter.And(filter, customFilter);
       }
 
@@ -113,16 +115,16 @@ export default Component.extend(
     },
 
     setOwner(properties) {
-      let owner = Ember.getOwner(this);
+      let owner = getOwner(this);
       let ownerKey = null;
-      Ember.A(Object.keys(this) || []).forEach((key) => {
+      A(Object.keys(this) || []).forEach((key) => {
         if (this[key] === owner) {
           ownerKey = key;
           return false;
         }
       });
 
-      if (!Ember.isBlank(ownerKey)) {
+      if (!isBlank(ownerKey)) {
         properties[ownerKey] = owner;
       }
     },

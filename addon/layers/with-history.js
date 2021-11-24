@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import $ from 'jquery';
 import CombineLayer from './combine';
 
 /**
@@ -21,7 +21,7 @@ export default CombineLayer.extend({
   */
   createSettings() {
     let settings = this._super(...arguments);
-    Ember.$.extend(true, settings, {
+    $.extend(true, settings, {
       type: undefined,
       historyLayer: undefined,
     });
