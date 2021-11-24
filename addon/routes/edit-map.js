@@ -168,19 +168,17 @@ export default EditFormRoute.extend({
 
   setLayerCategories(model, layers) {
     if (layers) {
-      let rootLayers = layers.filter(layer => isEmpty(layer.get('parent')));
+      const rootLayers = layers.filter((layer) => isEmpty(layer.get('parent')));
 
-      let hierarchy = this.sortLayersByIndex(rootLayers);
+      const hierarchy = this.sortLayersByIndex(rootLayers);
       model.set('hierarchy', hierarchy);
 
-      let backgroundLayers = A();
+      const backgroundLayers = A();
       backgroundLayers.addObjects(hierarchy.filterBy('settingsAsObject.backgroundSettings.canBeBackground', true));
       model.set('backgroundLayers', backgroundLayers);
 
-      let other = hierarchy.filter((layer) => {
-        return isNone(layer.get('settingsAsObject')) || !layer.get('settingsAsObject.backgroundSettings.canBeBackground');
-      });
-      let otherLayers = A();
+      const other = hierarchy.filter((layer) => isNone(layer.get('settingsAsObject')) || !layer.get('settingsAsObject.backgroundSettings.canBeBackground'));
+      const otherLayers = A();
       otherLayers.addObjects(other);
       model.set('otherLayers', otherLayers);
     }
