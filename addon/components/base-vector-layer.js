@@ -5,7 +5,7 @@
 import { htmlSafe } from '@ember/template';
 
 import { getOwner } from '@ember/application';
-import { Promise, resolve, hash } from 'rsvp';
+import RSVP, { Promise, resolve, hash } from 'rsvp';
 import { isArray, A } from '@ember/array';
 import { isNone, isEqual } from '@ember/utils';
 import $ from 'jquery';
@@ -179,7 +179,7 @@ export default BaseLayer.extend({
         });
       }
 
-      const p = typeof featuresProcessCallback === 'function' ? featuresProcessCallback(layers) : resolve();
+      const p = typeof featuresProcessCallback === 'function' ? featuresProcessCallback(layers) : RSVP.resolve();
       p.then(() => {
         this._addLayersOnMap(layers, leafletObject);
 

@@ -133,6 +133,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
       store,
       layerModel,
       leafletMap,
+      'visibility': true,
     });
 
     odataServerFake = sinon.fakeServer.create();
@@ -663,7 +664,7 @@ test('test method createDynamicModel() with json', function (assert) {
     assert.equal(spyRegister.callCount, 4);
     assert.equal(spyRegister.thirdCall.args[0], 'model:test-model');
     assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
-    assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
+    assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'nm');
     assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
     assert.equal(spyRegister.lastCall.args[0], 'mixin:test-model');
     assert.equal(Object.values(spyRegister.lastCall.args[1].mixins[0].properties).length, 2);
@@ -753,7 +754,7 @@ test('test method createDynamicModel() with json with parent', function (assert)
     assert.equal(spyRegister.callCount, 4);
     assert.equal(spyRegister.thirdCall.args[0], 'model:test-model');
     assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
-    assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS');
+    assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS1');
     assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
     assert.equal(spyRegister.lastCall.args[0], 'mixin:test-model');
     assert.equal(Object.values(spyRegister.lastCall.args[1].mixins[0].properties).length, 2);
@@ -814,7 +815,7 @@ test('test method createDynamicModel() already registered', function (assert) {
 
 test('test method _createVectorLayer()', function (assert) {
   assert.expect(3);
-  param.layerModel.visibility = false;
+  param.visibility = false;
   const component = this.subject(param);
   const spyContinueLoad = sinon.spy(component, 'continueLoad');
 
@@ -830,7 +831,7 @@ test('test method _createVectorLayer()', function (assert) {
 test('test method createVectorLayer() without dynamicModel', function (assert) {
   assert.expect(7);
   const done = assert.async(1);
-  param.layerModel.visibility = false;
+  param.visibility = false;
   const component = this.subject(param);
   const spyContinueLoad = sinon.spy(component, 'continueLoad');
   const _createVectorLayerSpy = sinon.spy(component, '_createVectorLayer');
@@ -868,7 +869,7 @@ test('test method createVectorLayer() without dynamicModel', function (assert) {
 test('test method createVectorLayer() with dynamicModel=true', function (assert) {
   assert.expect(8);
   const done = assert.async(1);
-  param.layerModel.visibility = false;
+  param.visibility = false;
   param.dynamicModel = true;
   param.metadataUrl = 'assert/felxberry/models/';
   param.odataUrl = 'http://localhost:6500/odata/';

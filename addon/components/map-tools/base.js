@@ -10,7 +10,6 @@ import { computed, get, observer } from '@ember/object';
 import { next } from '@ember/runloop';
 import Component from '@ember/component';
 
-import Ember from 'ember';
 import SlotsMixin from 'ember-block-slots';
 import layout from '../../templates/components/map-tools/base';
 
