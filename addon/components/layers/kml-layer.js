@@ -45,11 +45,7 @@ export default BaseVectorLayer.extend({
   parseLeafletOptionsCallback({ callbackName, serializedCallback }) {
     // First filter must be converted into serialized function from temporary filter language.
     if (callbackName === 'filter' && typeof serializedCallback === 'string') {
-      let serializedCallbackFilter = Ember.getOwner(this).lookup('layer:kml').parseFilter(serializedCallback);
-
-      if (!Ember.isNone(serializedCallbackFilter)) {
-        serializedCallback = serializedCallbackFilter;
-      }
+      serializedCallback  = Ember.getOwner(this).lookup('layer:kml').parseFilter(serializedCallback);
     }
 
     return this._super({ callbackName, serializedCallback });
