@@ -57,7 +57,11 @@ export default BaseVectorLayer.extend({
   parseLeafletOptionsCallback({ callbackName, serializedCallback }) {
     // First filter must be converted into serialized function from temporary filter language.
     if (callbackName === 'filter' && typeof serializedCallback === 'string') {
-      serializedCallback = Ember.getOwner(this).lookup('layer:geojson').parseFilter(serializedCallback);
+      let serializedCallbackFilter = Ember.getOwner(this).lookup('layer:geojson').parseFilter(serializedCallback);
+
+      if (!Ember.isNone(serializedCallbackFilter)) {
+        serializedCallback = serializedCallbackFilter;
+      }
     }
 
     return this._super({ callbackName, serializedCallback });
