@@ -8,7 +8,10 @@ moduleForModel('new-platform-flexberry-g-i-s-map', 'Unit | Serializer | new-plat
     'transform:file',
     'transform:decimal',
     'transform:json',
+    'service:syncer',
     'service:mapApi',
+    'validator:ds-error',
+    'validator:presence',
 
     'model:custom-inflector-rules',
     'model:new-platform-flexberry-g-i-s-layer-link',

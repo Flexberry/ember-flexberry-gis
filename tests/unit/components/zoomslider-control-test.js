@@ -1,15 +1,14 @@
-import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { moduleForComponent, test } from 'ember-qunit';
 
-module('Unit | Component | zoomslider control', function (hooks) {
-  setupTest(hooks);
+moduleForComponent('zoomslider-control', 'Unit | Component | zoomslider control', {
+  unit: true
+});
 
-  test('it should return L.Control.Zoomslider from createControl', function (assert) {
-    const component = this.owner.factoryFor('component:zoomslider-control').create();
+test('it should return L.Control.Zoomslider from createControl', function(assert) {
+  let component = this.subject();
 
-    // Renders the component to the page.
-    const control = component.createControl();
+  // Renders the component to the page.
+  let control = component.createControl();
 
-    assert.ok(control instanceof L.Control.Zoomslider);
-  });
+  assert.ok(control instanceof L.Control.Zoomslider);
 });

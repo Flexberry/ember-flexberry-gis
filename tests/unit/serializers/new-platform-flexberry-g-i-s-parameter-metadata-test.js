@@ -1,5 +1,4 @@
-import { test } from 'ember-qunit';
-import moduleForModel from '../../helpers/unit/serializers/setup-module';
+import { moduleForModel, test } from 'ember-qunit';
 
 moduleForModel('new-platform-flexberry-g-i-s-parameter-metadata', 'Unit | Serializer | new-platform-flexberry-g-i-s-parameter-metadata', {
   // Specify the other units that are required for this test.
@@ -8,6 +7,9 @@ moduleForModel('new-platform-flexberry-g-i-s-parameter-metadata', 'Unit | Serial
     'transform:file',
     'transform:decimal',
     'transform:json',
+    'service:syncer',
+    'validator:ds-error',
+    'validator:presence',
 
     'model:custom-inflector-rules',
     'model:new-platform-flexberry-g-i-s-layer-link',
@@ -25,7 +27,7 @@ moduleForModel('new-platform-flexberry-g-i-s-parameter-metadata', 'Unit | Serial
 test('it serializes records', function (assert) {
   const record = this.subject();
 
-  const serializedRecord = record.serialize();
+  let serializedRecord = record.serialize();
 
   assert.ok(serializedRecord);
 });

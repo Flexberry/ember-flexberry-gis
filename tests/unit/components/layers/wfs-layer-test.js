@@ -697,7 +697,7 @@ module('Unit | Component | layers/wfs layer', function (hooks) {
 
           assert.equal(layerUpdate.feature.geometry.coordinates[0].length, 4);
           const coordinates = '6282035.717038031,7998313.982057768,6281996.30993829,'
-            + '7998208.303352221,6282204.143427601,7998205.77214398,6282035.717038031,7998313.982057768';
+          +'7998208.303352221,6282204.143427601,7998205.772143982,6282035.717038031,7998313.982057768';
           assert.equal(layerUpdate.feature.geometry.coordinates.toString(), coordinates);
 
           done();
