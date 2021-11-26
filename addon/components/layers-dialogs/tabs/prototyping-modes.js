@@ -11,9 +11,9 @@ export default Component.extend(
   RequiredActionsMixin,
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
-  /**
-    Reference to component's template.
-  */
+    /**
+      Reference to component's template.
+    */
     layout,
 
     /**
@@ -22,7 +22,7 @@ export default Component.extend(
     @property _availableModesCaptions
     @type String[]
     @readonly
-  */
+    */
     _availableModesCaptions: computed('availableModes', 'i18n.locale', function () {
       const availableModes = this.get('availableModes');
       const modes = A();
@@ -41,7 +41,7 @@ export default Component.extend(
     @property _selectedMode
     @type Object
     @readonly
-  */
+    */
     _selectedMode: computed('selectedModeCaption', function () {
       const availableModes = this.get('availableModes');
       const _availableModesCaptions = this.get('_availableModesCaptions');
@@ -54,6 +54,16 @@ export default Component.extend(
       const modeIndex = _availableModesCaptions.findIndex((item) => item.string === selectedModeCaption) - 1;
 
       return modeIndex > -1 ? availableModes.objectAt(modeIndex) : null;
+    }),
+
+    _selectedModeValue: computed('selectedModeCaption', function () {
+      const _availableModesCaptions = this.get('_availableModesCaptions');
+      const selectedModeCaption = this.get('selectedModeCaption');
+      if (!isArray(_availableModesCaptions) || isBlank(selectedModeCaption)) {
+        return null;
+      }
+
+      return _availableModesCaptions.find((item) => item.string === selectedModeCaption.string);
     }),
   }
 );
