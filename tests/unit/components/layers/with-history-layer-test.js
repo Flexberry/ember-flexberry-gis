@@ -3,10 +3,9 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import { moduleForComponent, test } from 'ember-qunit';
 import startApp from 'dummy/tests/helpers/start-app';
-import { Query, Projection } from 'ember-flexberry-data';
+import { Projection } from 'ember-flexberry-data';
 import sinon from 'sinon';
 import { Serializer } from 'ember-flexberry-data';
-import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
 
 let app;
 let geoserverFake;
@@ -14,10 +13,8 @@ let optionsWFS;
 let paramWFS;
 let optionsOdata;
 let paramOdata;
-let odataServerFake;
-let bounds;
 let store;
-let responseBatchUpdate;
+
 moduleForComponent('layers/with-history-layer', 'Unit | Component | layers/with history layer', {
   unit: true,
   needs: [
@@ -61,16 +58,12 @@ moduleForComponent('layers/with-history-layer', 'Unit | Component | layers/with 
     this.register('model:test-model', testModel);
     this.register('model:time-test-model', timetestModel);
     this.register('mixin:test-model', testModelMixin);
-    this.register('mixin:time-test-model', testModelMixin);
     this.register('serializer:test-model', testSerializer);
-    this.register('serializer:time-test-model', testSerializer);
 
     app.register('model:test-model', testModel);
     app.register('model:time-test-model', timetestModel);
     app.register('mixin:test-model', testModelMixin);
-    app.register('mixin:time-test-model', testModelMixin);
     app.register('serializer:test-model', testSerializer);
-    app.register('serializer:time-test-model', testSerializer);
     let layerModelWfs = store.createRecord('test-model');
     layerModelWfs.type = 'wfs';
     optionsWFS = {
@@ -87,51 +80,51 @@ moduleForComponent('layers/with-history-layer', 'Unit | Component | layers/with 
       continueLoading: true,
       typeNS: 'les',
       typeName: 'kvartalutverzhdenopolygon32640',
-      "historyLayer": {
-        "hasTime": true,
-        "url": "http://geoserverFake/geoserver/les_history/ows",
-        "typeNS": "les_history",
-        "typeName": "timekvartalutverzhdenopolygon32640",
-        "forceMulti": true,
+      'historyLayer': {
+        'hasTime': true,
+        'url': 'http://geoserverFake/geoserver/les_history/ows',
+        'typeNS': 'les_history',
+        'typeName': 'timekvartalutverzhdenopolygon32640',
+        'forceMulti': true,
 
-        "styleSettings": {
-          "type": "simple",
-          "style": {
-            "path": {
-              "fill": false,
-              "color": "#FF0000",
-              "stroke": true,
-              "weight": 2,
-              "lineCap": "round",
-              "lineJoin": "round",
-              "dashArray": "",
-              "fillColor": "#3388ff",
-              "dashOffset": 0,
-              "fillGradientEnable": false,
-              "strokeGradientEnable": false
+        'styleSettings': {
+          'type': 'simple',
+          'style': {
+            'path': {
+              'fill': false,
+              'color': '#FF0000',
+              'stroke': true,
+              'weight': 2,
+              'lineCap': 'round',
+              'lineJoin': 'round',
+              'dashArray': '',
+              'fillColor': '#3388ff',
+              'dashOffset': 0,
+              'fillGradientEnable': false,
+              'strokeGradientEnable': false
             }
           }
         },
-        "labelSettings": {
-          "options": {
-            "captionFontSize": "18",
-            "captionFontAlign": "left",
-            "captionFontColor": "#FF0000",
-            "captionFontStyle": "normal",
-            "captionFontFamily": "Liberation Sans Bold",
-            "captionFontWeight": "bold",
-            "captionFontDecoration": "none"
+        'labelSettings': {
+          'options': {
+            'captionFontSize': '18',
+            'captionFontAlign': 'left',
+            'captionFontColor': '#FF0000',
+            'captionFontStyle': 'normal',
+            'captionFontFamily': 'Liberation Sans Bold',
+            'captionFontWeight': 'bold',
+            'captionFontDecoration': 'none'
           },
-          "location": {
-            "locationPoint": "overRight",
-            "lineLocationSelect": null
+          'location': {
+            'locationPoint': 'overRight',
+            'lineLocationSelect': null
           },
-          "scaleRange": {
-            "maxScaleRange": 25,
-            "minScaleRange": 10
+          'scaleRange': {
+            'maxScaleRange': 25,
+            'minScaleRange': 10
           },
-          "signMapObjects": true,
-          "labelSettingsString": "<propertyname>nomer</propertyname>"
+          'signMapObjects': true,
+          'labelSettingsString': '<propertyname>nomer</propertyname>'
         }
       }
     };
@@ -144,7 +137,6 @@ moduleForComponent('layers/with-history-layer', 'Unit | Component | layers/with 
       'geometryField',
       'typeName',
       'typeNSName',
-      'geometryField',
       'crs',
       'maxFeatures',
       'showExisting',
@@ -347,17 +339,16 @@ moduleForComponent('layers/with-history-layer', 'Unit | Component | layers/with 
       'geometryType': 'MultiPolygonPropertyType',
       'modelName': 'test-model',
       'projectionName':'TestModelL',
-      'geometryField': 'shape',
       'typeName': 'test-model',
       'odataClass': 'TestModel',
       'continueLoading': true,
-      "historyLayer": {
-        "hasTime": true,
-        "typeName": "time-test-model",
-        "modelName": "time-test-model",
-        "forceMulti": true,
-        "odataClass": "TimeTestModel",
-        "projectionName": "TimeTestModelL"
+      'historyLayer': {
+        'hasTime': true,
+        'typeName': 'time-test-model',
+        'modelName': 'time-test-model',
+        'forceMulti': true,
+        'odataClass': 'TimeTestModel',
+        'projectionName': 'TimeTestModelL'
       }
     };
     paramOdata = {
@@ -380,227 +371,7 @@ moduleForComponent('layers/with-history-layer', 'Unit | Component | layers/with 
       'layerModel': layerModelOdata,
       'leafletMap': leafletMap,
       'visibility': true,
-
     });
-
-    const responseText = `--batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f
-    Content-Type: application/http
-    Content-Transfer-Encoding: binary
-
-    HTTP/1.1 200 OK
-    Content-Type: application/json; charset=utf-8; odata.metadata=minimal
-    OData-Version: 4.0
-
-    {
-      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel(__PrimaryKey,ID,Name,Shape)","value":[
-        {
-          "__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a79b", "Name":null,"Shape":{
-            "type":"MultiPolygon","coordinates":[
-              [
-                [
-                  [468709.463318981,6478884.81118851],
-            [468578.508624007,6478880.73565037],
-            [468541.567377907,6478925.23599015],
-            [468533.564191116,6478946.2331571],
-            [468614.492922407,6478979.21144234],
-            [468657.52589005,6478981.2057549],
-            [468672.503518996,6478963.71619159],
-            [468717.482394432,6478946.21010284],
-            [468709.463318981,6478884.81118851]
-                ]
-              ]
-            ],"crs":{
-              "type":"name","properties":{
-                "name":"EPSG:32640"
-              }
-            }
-          }
-      },
-
-      {
-          "__PrimaryKey":"5b969764-acc2-4b48-8d6a-33b395c811ce", "Name":null,"Shape":{
-            "type":"MultiPolygon","coordinates":[
-              [
-                [
-                  [468709.463318981,6478884.81118851],
-            [468578.508624007,6478880.73565037],
-            [468541.567377907,6478925.23599015],
-            [468533.564191116,6478946.2331571],
-            [468614.492922407,6478979.21144234],
-            [468657.52589005,6478981.2057549],
-            [468672.503518996,6478963.71619159],
-            [468717.482394432,6478946.21010284],
-            [468709.463318981,6478884.81118851]
-                ]
-              ]
-            ],"crs":{
-              "type":"name","properties":{
-                "name":"EPSG:32640"
-              }
-            }
-          }
-      }
-      ]
-    }
-    --batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f--`;
-
-    responseBatchUpdate = `--batchresponse_36948c8f-1a0a-46f7-b66d-6692dc185197
-    Content-Type: multipart/mixed; boundary=changesetresponse_80ff11bf-cdeb-4dd0-9654-e316dc4bd7a0
-
-    --changesetresponse_80ff11bf-cdeb-4dd0-9654-e316dc4bd7a0
-    Content-Type: application/http
-    Content-Transfer-Encoding: binary
-    Content-ID: 1
-
-    HTTP/1.1 204 No Content
-
-
-    --changesetresponse_80ff11bf-cdeb-4dd0-9654-e316dc4bd7a0
-    Content-Type: application/http
-    Content-Transfer-Encoding: binary
-    Content-ID: 2
-
-    HTTP/1.1 200 OK
-    Preference-Applied: return=representation
-    Content-Type: application/json; charset=utf-8; odata.metadata=minimal
-    OData-Version: 4.0
-
-    {
-      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel/$entity","Shape":{
-        "type":"MultiPolygon","coordinates":[
-          [
-            [
-              [
-                436033.67676677159,6495840.3180785989
-              ],[
-                436363.34399267368,6496168.5915842094
-              ],[
-                436698.1414727,6495894.2219982184
-              ],[
-                436423.43417282181,6495569.9820099371
-              ],[
-                436033.67676677159,6495840.3180785989
-              ]
-            ]
-          ]
-        ],"crs":{
-          "type":"name","properties":{
-            "name":"EPSG:32640"
-          }
-        }
-      },"Name":"test","__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a79b"
-    }
-    --changesetresponse_80ff11bf-cdeb-4dd0-9654-e316dc4bd7a0
-    Content-Type: application/http
-    Content-Transfer-Encoding: binary
-    Content-ID: 3
-
-    HTTP/1.1 201 Created
-    Preference-Applied: return=representation
-    Content-Type: application/json; charset=utf-8; odata.metadata=minimal
-    OData-Version: 4.0
-
-    {
-      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel/$entity","Shape":{
-        "type":"MultiPolygon","coordinates":[
-          [
-            [
-              [
-                437417.96742371243,6495668.4535367191
-              ],[
-                437838.01481024339,6495726.4829143463
-              ],[
-                437685.16544237174,6495215.9105252894
-              ],[
-                437417.96742371243,6495668.4535367191
-              ]
-            ]
-          ]
-        ],"crs":{
-          "type":"name","properties":{
-            "name":"EPSG:32640"
-          }
-        }
-      },"Name":null,"__PrimaryKey":"a5532858-dbdc-4d3c-9eaf-3d71d097ceb0"
-    }
-    --changesetresponse_80ff11bf-cdeb-4dd0-9654-e316dc4bd7a0--
-    --batchresponse_36948c8f-1a0a-46f7-b66d-6692dc185197
-    Content-Type: application/http
-    Content-Transfer-Encoding: binary
-
-    HTTP/1.1 200 OK
-    Content-Type: application/json; charset=utf-8; odata.metadata=minimal
-    OData-Version: 4.0
-
-    {
-      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel/$entity","Shape":{
-        "type":"MultiPolygon","coordinates":[
-          [
-            [
-              [
-                436033.676766772,6495840.3180786
-              ],[
-                436363.343992674,6496168.59158421
-              ],[
-                436698.1414727,6495894.22199822
-              ],[
-                436423.434172822,6495569.98200994
-              ],[
-                436033.676766772,6495840.3180786
-              ]
-            ]
-          ]
-        ],"crs":{
-          "type":"name","properties":{
-            "name":"EPSG:32640"
-          }
-        }
-      },"Name":"test","__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a79b"
-    }
-    --batchresponse_36948c8f-1a0a-46f7-b66d-6692dc185197
-    Content-Type: application/http
-    Content-Transfer-Encoding: binary
-
-    HTTP/1.1 200 OK
-    Content-Type: application/json; charset=utf-8; odata.metadata=minimal
-    OData-Version: 4.0
-
-    {
-      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel/$entity","Shape":{
-        "type":"MultiPolygon","coordinates":[
-          [
-            [
-              [
-                437417.967423712,6495668.45353672
-              ],[
-                437838.014810243,6495726.48291435
-              ],[
-                437685.165442372,6495215.91052529
-              ],[
-                437417.967423712,6495668.45353672
-              ]
-            ]
-          ]
-        ],"crs":{
-          "type":"name","properties":{
-            "name":"EPSG:32640"
-          }
-        }
-      },"Name":null,"__PrimaryKey":"a5532858-dbdc-4d3c-9eaf-3d71d097ceb0"
-    }
-    --batchresponse_36948c8f-1a0a-46f7-b66d-6692dc185197--`;
-
-    geoserverFake.respondWith('POST', 'http://134.209.30.115:1818/odata/$batch',
-      function (request) {
-        if (request.requestBody.indexOf('POST') !== -1) {
-          request.respond(200, { 'content-type': 'multipart/mixed; boundary=batchresponse_36948c8f-1a0a-46f7-b66d-6692dc185197' },
-          responseBatchUpdate);
-        } else {
-          request.respond(200, { 'content-type': 'multipart/mixed; boundary=batchresponse_97a87974-3baf-4a2d-a8d4-bc7af540b74f' },
-          responseText);
-        }
-      }
-    );
   },
   afterEach: function () {
     Ember.run(app, 'destroy');
