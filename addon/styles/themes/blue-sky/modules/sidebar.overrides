@@ -343,6 +343,7 @@
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .flexberry-maplayer-caption-label {
   font-size: 14px;
   margin-top: 2px;
+  width: 100%;
 }
 
 .ui.right.sidebar {
