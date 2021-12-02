@@ -447,13 +447,21 @@ export default SimpleDatetime.extend({
     this._super(...arguments);
 
     this.$(&#x27;.custom-flatpickr&#x27;).on(&#x27;click&#x27;, (e) =&gt; { this.inputClick(this, e); });
+    this.$(&#x27;.button&#x27;).on(&#x27;click&#x27;, (e) =&gt; { this.actions.remove(this, e); });
   },
 
   actions: {
-    remove(e) {
+    remove(_this, e) {
       e.stopPropagation();
+      if (!_this.get(&#x27;readonly&#x27;)) {
+        const flatpickr = _this.get(&#x27;_flatpickr&#x27;);
+        const value = _this.get(&#x27;value&#x27;) || new Date();
 
-      this._super(...arguments);
+        value.setHours(_this.get(&#x27;defaultHour&#x27;), _this.get(&#x27;defaultMinute&#x27;));
+        _this.set(&#x27;value&#x27;, value);
+        flatpickr.setDate(value, false);
+        flatpickr.clear();
+      }
     }
   }
 });
