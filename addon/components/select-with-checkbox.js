@@ -6,6 +6,8 @@ import FlexberryDropdown from 'ember-flexberry/components/flexberry-dropdown';
 import { translationMacro as t } from 'ember-i18n';
 import layout from '../templates/components/select-with-checkbox';
 
+import { run } from '@ember/runloop';
+
 export default FlexberryDropdown.extend({
   /**
     Reference to component's template.
@@ -119,22 +121,54 @@ export default FlexberryDropdown.extend({
     this.set('countChoose', value.length);
   }),
 
-  itemsObserver: observer('items', function () {
-    const state = Object.entries(this.get('items'))
-      .filter(([key, value]) => !Ember.isNone(value))
-      .map(([i, val]) => {
-        let value = val;
-        let key = i;
-        if (this.get('isObject')) {
-          value = Ember.get(val, 'name');
-          key = val.id;
-        }
+  onHide() {
+    const $list = $('.fb-selector .menu');
+    if ($list.hasClass('visible')) {
+      $list.removeClass('visible');
+      $list.addClass('hidden');
+    } else {
+      $list.removeClass('hidden');
+      $list.addClass('visible');
+    }
+  },
 
-        return Ember.Object.create({ key, value, isVisible: false });
-      });
+    /**
+    See [EmberJS API](https://emberjs.com/api/).
+    @method didInsertElement
+  */
+  didInsertElement() {
+    this._super(...arguments);
 
-    this.get('state').addObjects(state);
-  }),
+    let settings = $.extend({
+      action: 'nothing',
+      onChange: (newValue) => {
+        run.schedule('afterRender', () => {
+          const currentValue = this.get('_value');
+          if (currentValue !== newValue) {
+            const oldValue = this.get('displayCaptions') ? currentValue : this.get('value');
+
+            this.set('_value', newValue);
+
+            const onChange = this.get('onChange');
+            if (typeof onChange === 'function') {
+              onChange(this.get('value'), oldValue);
+            }
+          }
+        });
+      },
+      onShow: () => {
+        run.next(() => {
+          this.onShowHide();
+        });
+      },
+      onHide: () => {
+        this.onHide();
+      },
+    }, this.get('settings'));
+
+    this.$().dropdown(settings);
+    this.set('_initialized', true);
+  },
 
   actions: {
     selectAll() {
@@ -155,17 +189,6 @@ export default FlexberryDropdown.extend({
       $('.fb-selector .item.filtered').each((i, item) => {
         $(item).removeClass('filtered');
       });
-    },
-
-    onHide() {
-      const $list = $('.fb-selector .menu');
-      if ($list.hasClass('visible')) {
-        $list.removeClass('visible');
-        $list.addClass('hidden');
-      } else {
-        $list.removeClass('hidden');
-        $list.addClass('visible');
-      }
     },
   },
 });
