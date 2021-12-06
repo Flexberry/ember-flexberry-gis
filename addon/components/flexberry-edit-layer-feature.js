@@ -632,7 +632,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
     const initialDatas = this.get('initialData');
 
     if (!isNone(layers) && mode !== 'Saved') {
-      keys(layers).forEach((index) => {
+      Object.keys(layers).forEach((index) => {
         const layer = layers[index];
 
         if (mode === 'Edit') {

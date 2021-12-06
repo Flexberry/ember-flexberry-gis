@@ -750,7 +750,7 @@ const FlexberryMaplayerComponent = Component.extend(
         @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
       */
       onVisibilityCheckboxChange(...args) {
-        this.sendAction('changeVisibility', ...args);
+        this.sendDynamicAction('changeVisibility', ...args);
       },
 
       /**
@@ -761,7 +761,7 @@ const FlexberryMaplayerComponent = Component.extend(
         @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauSlider/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
       */
       onOpacitySliderChange(...args) {
-        this.sendAction('changeOpacity', ...args);
+        this.sendDynamicAction('changeOpacity', ...args);
       },
 
       /**
@@ -772,7 +772,7 @@ const FlexberryMaplayerComponent = Component.extend(
         which describes button's 'click' event.
       */
       onBoundsButtonClick(...args) {
-        this.sendAction('fitBounds', ...args);
+        this.sendDynamicAction('fitBounds', ...args);
       },
 
       /**
