@@ -7,7 +7,8 @@ moduleForComponent('base-layer', 'Unit | Component | base layer', {
     'service:map-api',
     'config:environment',
     'service:layers-styles-renderer',
-    'service:i18n'
+    'service:i18n',
+    'service:local-storage'
   ],
 });
 

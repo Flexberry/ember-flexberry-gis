@@ -39,7 +39,7 @@ module('Unit | Instance Initializer | open map', function (hooks) {
     // Arrange
     const configStub = sinon.stub(Ember, 'getOwner');
     configStub.returns({
-      _lookupFactory() {
+      factoryFor() {
         return {
           APP: {
             mapApiService: true,
@@ -63,7 +63,7 @@ module('Unit | Instance Initializer | open map', function (hooks) {
     const done = assert.async(1);
     const configStub = sinon.stub(Ember, 'getOwner');
     configStub.returns({
-      _lookupFactory() {
+      factoryFor() {
         return {
           APP: {
             mapApiService: true,

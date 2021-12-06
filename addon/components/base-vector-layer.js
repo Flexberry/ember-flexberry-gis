@@ -495,7 +495,7 @@ export default BaseLayer.extend({
           reject('Not working to layer with continueLoading');
         }
       } else {
-        leafletObject.promiseLoadLayer = resolve();
+        leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
       }
 
       leafletObject.promiseLoadLayer.then(() => {

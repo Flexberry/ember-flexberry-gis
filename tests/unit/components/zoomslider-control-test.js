@@ -1,7 +1,11 @@
 import { moduleForComponent, test } from 'ember-qunit';
 
 moduleForComponent('zoomslider-control', 'Unit | Component | zoomslider control', {
-  unit: true
+  unit: true,
+  needs: [
+    'service:i18n',
+    'service:local-storage'
+  ],
 });
 
 test('it should return L.Control.Zoomslider from createControl', function(assert) {
