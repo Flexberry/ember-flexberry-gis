@@ -522,29 +522,23 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
       if (!this.get('readonly')) {
         let _this = this;
-        let $caption = Ember.$('.ui.tab.treeview label.flexberry-maplayer-caption-label');
-        if ($caption.length > 0) {
-          $caption.hover(
+        let $captionBlock = Ember.$('.ui.tab.treeview .flexberry-treenode-caption-block')
+        if ($captionBlock.length > 0) {
+          $captionBlock.hover(
             function () {
-              let $toolbar = Ember.$(this).parent().children('.flexberry-treenode-buttons-block');
+              let $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
               $toolbar.removeClass('hidden');
-              Ember.$(this).addClass('blur');
+              Ember.$(this).children('.flexberry-maplayer-caption-label').addClass('blur');
             },
             function () {
-              let $toolbar = Ember.$(this).parent().children('.flexberry-treenode-buttons-block');
-              $toolbar.hover(
-                () => { },
-                () => {
-                  $toolbar.addClass('hidden');
-                  Ember.$(this).removeClass('blur');
-                  _this.set('isSubmenu', false);
-                });
-            }
-          );
-        }
+              let $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
+              $toolbar.addClass('hidden');
+              Ember.$(this).children('.flexberry-maplayer-caption-label').removeClass('blur');
+              _this.set('isSubmenu', false);
+        })
       }
-    },
-
+    }
+  },
     /**
       Redefine L.Control.SideBySide._updateClip for work with layer and label layer.
 
