@@ -1,0 +1,240 @@
+.flexberry-map,
+.flexberry-maplayers,
+.flexberry-tab-bar,
+.tabular.menu,
+.sidebar-wrapper {
+    i.icon:before { opacity: 1; }
+}
+i.icon.angle.right:before {
+    font-size: 1em;
+}
+
+.sidebar-wrapper {
+  .ui.tabular.menu.flexberry-tab-bar {
+    i.icon:before {
+      font-family: Crimean;
+      font-size: 20px;
+    }
+    /* Identify layers */
+    i.icon.info.circle {
+      margin-left: -4px;
+      margin-right: 4px;
+      &:before {
+        content: "\e827";
+      }
+    }
+    /* All layers, layers tree */
+    i.icon.square.outline,
+    i.icon.list {
+      &:before {
+        content: "\e825";
+      }
+    }
+    /* Search */
+    i.icon.search:before {
+      content: "\e803";
+      font-weight: bold;
+    }
+    /* Bookmarks */
+    i.icon.bookmark:before {
+      font-family: icons;
+    }
+    /* Favorites*/
+    i.icon.favorites {
+        &:before {
+        font-family: Icons;
+        content: "\f005";
+      }
+    }
+    /* Поиск пересеченйи*/
+    i.icon.intersections:before {
+      content: "\f24d";
+    }
+    /* CreateObject */
+    i.icon.createObject:before {
+      content: "\f067";
+      font-family: Icons;
+      font-weight: 500;
+      font-size: 22px;
+    }
+  }
+}
+
+.sidebar-wrapper .bookmark-block {
+    .bookmark-item,
+    .bmrk-add-block {
+        .bmrk-add-block-buttons,
+        &-buttons {
+            .ui.icon.button .icon {
+                &:before {
+                  font-family: Crimean;
+                  opacity: 1;
+                }
+                &.minus:before,
+                &.remove:before {
+                  content: '\e806';
+                  font-size: 13px;
+                }
+                &.zoom.in:before {
+                  content: "\e812";
+                }
+                &.checkmark:before {
+                  font-family: Icons;
+                }
+            }
+        }
+    }
+}
+
+.ui.right.sidebar .ui.styled.accordion {
+    .flexberry-treenode-header {
+        &.title,
+        &.active.title {
+            i.icon {
+                /* изображение */
+                &.image {
+                    display: none;
+                }
+                &.folder:before {
+                    font-size: 20px;
+                    content: '\f114';
+                }
+            }
+        }
+    }
+}
+
+.flexberry-gis-edit-panel i.icon.polygon:before {
+  font-family: Crimean;
+  content: "\e802";
+}
+
+
+/*********************************************
+        Flexberry Rdit Layermap Segment
+*********************************************/
+i.icon.cloud.download:before {
+  font-family: Icons;
+}
+
+
+/*********************************************
+        Flexberry lists
+*********************************************/
+i.icon.prev-page:before {
+    content: "\e81a";
+    font-family: 'Crimean';
+    font-size: 14px;
+    opacity: 1;
+}
+
+i.icon.next-page:before {
+  content: "\e81b";
+  font-family: 'Crimean';
+  font-size: 14px;
+  opacity: 1;
+}
+
+/*********************************************
+        Flexberry layers attributes panel
+*********************************************/
+
+i.icon.pie:before {
+  font-family: 'Crimean';
+  content: "\e80b";
+}
+
+i.icon.datalist:before {
+  font-family: 'Crimean';
+  content: "\e821";
+}
+
+i.icon.intersections:before {
+  content: "\f24d";
+}
+
+/*********************************************
+        Flexberry edit layer feature
+*********************************************/
+
+i.icon.keyboard:before {
+  font-family: Arial;
+  content: "XY";
+}
+
+i.icon.compass:before {
+  font-family: Icons;
+  content: "\f14e";
+}
+
+i.icon.draw-area:before {
+  font-family: 'Crimean';
+  content: "\e802";
+}
+
+i.icon.poly:before {
+  font-family: 'Crimean';
+  content: "\e802";
+}
+
+i.icon.multi-poly:before {
+  font-family: 'Crimean';
+  content: "\e802";
+}
+
+i.icon.multi-poly:after {
+  font-family: 'Icons';
+  content: "\f067";
+  font-size: 12px;
+  margin-left: -2px;
+  vertical-align: sub;
+}
+
+i.icon.line:before {
+  font-family: 'Crimean';
+  content: "\e802";
+}
+
+i.icon.multi-line:before {
+  font-family: 'Crimean';
+  content: "\e802";
+}
+
+i.icon.multi-line:after {
+  font-family: 'Icons';
+  content: "\f067";
+  font-size: 12px;
+  margin-left: -2px;
+  vertical-align: sub;
+}
+
+i.icon.world:before {
+  font-family: Icons;
+  content: "\f0ac";
+}
+
+i.icon.move:before {
+  font-family: Icons;
+  content: "\f047";
+}
+
+i.icon.movexy:before {
+  font-family: Icons;
+  content: "\f047";
+}
+
+i.icon.movexy:after {
+  content: "xy";
+  font-size: 12px;
+  margin-left: -2px;
+  vertical-align: sub;
+}
+
+i.icon.checkall:before {
+  content: "\e815";
+  font-family: 'Crimean';
+}
+
+i.icon.intersection-panel-exit-icon:hover::before {
+  color: @buttonHoverColor;
+}

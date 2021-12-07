@@ -1,0 +1,125 @@
+.ui.styled.accordion .title, .ui.styled.accordion .accordion .title {
+    & > .flexberry-checkbox {
+        line-height: 17px;
+    }
+}
+
+.background-logo .ui.top.attached {
+    margin: 20px 5px;
+    width: 250px;
+}
+.intersection-panel {
+    .close {
+        margin-left: auto;
+        margin-right: 14px;
+    }
+    .intersections-panel-results-row {
+      overflow-y: scroll;
+      height: 250px;
+      .flexberry-dropdown.multi-dropdown.selection {
+        margin-top: -4px;
+      }
+      .feature-result-item-select {
+        display: none;
+      }
+      .feature-result-item-list {
+        display: none;
+      }
+      .title span{
+        margin-left: 0px !important;
+      }
+      table tr td {
+        vertical-align:top;
+      }
+      .intersections-panel-input-params-row.row {
+        .ui.right.labeled.input {
+            width: 100%;
+        }
+      }
+   }
+  .multiple.search.selection.dropdown {
+      cursor: pointer;
+  }
+  .row {
+      padding-left: 15px;
+      padding-right: 15px;
+  }
+  .button.intersect {
+      margin-top: 20px;
+  }
+  .feature-result-item-content.content {
+      .layer-result-list-toggler {
+          width:50%;
+      }
+      .cords {
+          width:50%;
+      }
+  }
+}
+
+.compare-geometries-panel {
+    .close {
+        margin-left: auto;
+        margin-right: 14px;
+    }
+    .main-panel {
+        overflow-y: auto;
+        height:90%;
+        font-size: 16px;
+    }
+    .text-line {
+        padding-top: 10px;
+    }
+    .intersection-row {
+        padding-top: 20px;
+    }
+    .row {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .ui.compact.celled.table {
+        width:50%;
+    }
+}
+.compare-layer-tree {
+    height: 52px;
+    padding: 8px 6px;
+    border-bottom: 1px solid gray;
+    cursor:pointer;
+    padding-top: 20px;
+}
+.flexberry-dropdown.multi-dropdown.selection {
+    & > i.close.icon {
+        margin-right: 0px;
+        right: 6px;
+        position: absolute;
+        font-size: 12px;
+    }
+    & > i.dropdown.icon {
+        margin-right: 10px;
+        font-size: 20px;
+        top: 2px;
+        &::before {
+          content: "\f107";
+          font-family: 'Icons';
+        }
+    }
+    .item .flexberry-checkbox.ui.checkbox {
+        width: 100%;
+    }
+}
+.intersections-panel-form-row {
+    .flexberry-dropdown.multi-dropdown.selection {
+        margin-top: -4px;
+    }
+}
+form.flexberry-geometry-add-mode-manual-form {
+     .flexberry-textarea textarea {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
+
+.text-center {
+  text-align: center;
+}
