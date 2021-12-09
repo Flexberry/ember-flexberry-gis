@@ -939,29 +939,23 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
       if (!this.get(&#x27;readonly&#x27;)) {
         let _this = this;
-        let $caption = Ember.$(&#x27;.ui.tab.treeview label.flexberry-maplayer-caption-label&#x27;);
-        if ($caption.length &gt; 0) {
-          $caption.hover(
+        let $captionBlock = Ember.$(&#x27;.ui.tab.treeview .flexberry-treenode-caption-block&#x27;);
+        if ($captionBlock.length &gt; 0) {
+          $captionBlock.hover(
             function () {
-              let $toolbar = Ember.$(this).parent().children(&#x27;.flexberry-treenode-buttons-block&#x27;);
+              let $toolbar = Ember.$(this).children(&#x27;.flexberry-treenode-buttons-block&#x27;);
               $toolbar.removeClass(&#x27;hidden&#x27;);
-              Ember.$(this).addClass(&#x27;blur&#x27;);
+              Ember.$(this).children(&#x27;.flexberry-maplayer-caption-label&#x27;).addClass(&#x27;blur&#x27;);
             },
             function () {
-              let $toolbar = Ember.$(this).parent().children(&#x27;.flexberry-treenode-buttons-block&#x27;);
-              $toolbar.hover(
-                () =&gt; { },
-                () =&gt; {
-                  $toolbar.addClass(&#x27;hidden&#x27;);
-                  Ember.$(this).removeClass(&#x27;blur&#x27;);
-                  _this.set(&#x27;isSubmenu&#x27;, false);
-                });
-            }
-          );
+              let $toolbar = Ember.$(this).children(&#x27;.flexberry-treenode-buttons-block&#x27;);
+              $toolbar.addClass(&#x27;hidden&#x27;);
+              Ember.$(this).children(&#x27;.flexberry-maplayer-caption-label&#x27;).removeClass(&#x27;blur&#x27;);
+              _this.set(&#x27;isSubmenu&#x27;, false);
+            });
         }
       }
     },
-
     /**
       Redefine L.Control.SideBySide._updateClip for work with layer and label layer.
 
