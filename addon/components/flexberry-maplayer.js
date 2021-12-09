@@ -1,6 +1,6 @@
 /**
- * @module ember-flexberry-gis
- */
+  @module ember-flexberry-gis
+*/
 
 import Ember from 'ember';
 import FlexberryTreenodeComponent from 'ember-flexberry/components/flexberry-treenode';
@@ -16,7 +16,7 @@ import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
 import layout from '../templates/components/flexberry-maplayer';
 import {
-    translationMacro as t
+  translationMacro as t
 } from 'ember-i18n';
 
 /**
@@ -40,21 +40,21 @@ import {
 */
 const flexberryClassNamesPrefix = 'flexberry-maplayer';
 const flexberryClassNames = {
-    prefix: flexberryClassNamesPrefix,
-    wrapper: null,
-    visibilityCheckbox: flexberryClassNamesPrefix + '-visibility-checkbox',
-    opacitySlider: flexberryClassNamesPrefix + '-opacity-slider',
-    opacityLabel: flexberryClassNamesPrefix + '-opacity-label',
-    typeIcon: flexberryClassNamesPrefix + '-type-icon',
-    addButton: flexberryClassNamesPrefix + '-add-button',
-    copyButton: flexberryClassNamesPrefix + '-copy-button',
-    editButton: flexberryClassNamesPrefix + '-edit-button',
-    removeButton: flexberryClassNamesPrefix + '-remove-button',
-    boundsButton: flexberryClassNamesPrefix + '-bounds-button',
-    attributesButton: flexberryClassNamesPrefix + '-attributes-button',
-    caption: flexberryClassNamesPrefix + '-caption-label',
-    legendToggler: flexberryClassNamesPrefix + '-legend-toggler',
-    preventExpandCollapse: FlexberryTreenodeComponent.flexberryClassNames.preventExpandCollapse,
+  prefix: flexberryClassNamesPrefix,
+  wrapper: null,
+  visibilityCheckbox: flexberryClassNamesPrefix + '-visibility-checkbox',
+  opacitySlider: flexberryClassNamesPrefix + '-opacity-slider',
+  opacityLabel: flexberryClassNamesPrefix + '-opacity-label',
+  typeIcon: flexberryClassNamesPrefix + '-type-icon',
+  addButton: flexberryClassNamesPrefix + '-add-button',
+  copyButton: flexberryClassNamesPrefix + '-copy-button',
+  editButton: flexberryClassNamesPrefix + '-edit-button',
+  removeButton: flexberryClassNamesPrefix + '-remove-button',
+  boundsButton: flexberryClassNamesPrefix + '-bounds-button',
+  attributesButton: flexberryClassNamesPrefix + '-attributes-button',
+  caption: flexberryClassNamesPrefix + '-caption-label',
+  legendToggler: flexberryClassNamesPrefix + '-legend-toggler',
+  preventExpandCollapse: FlexberryTreenodeComponent.flexberryClassNames.preventExpandCollapse,
 };
 
 /**
@@ -137,883 +137,883 @@ const flexberryClassNames = {
   @uses DynamicPropertiesMixin
 */
 let FlexberryMaplayerComponent = Ember.Component.extend(
-    SlotsMixin,
-    RequiredActionsMixin,
-    DomActionsMixin,
-    DynamicActionsMixin,
-    DynamicPropertiesMixin, {
-
-        dynamicButtons: [],
-
-        /**
-          Layer copy's name postfix
-
-          @property copyPostfix
-          @type String
-          @default t('components.layers-dialogs.copy.layer-name-postfix')
-        */
-        copyPostfix: t('components.layers-dialogs.copy.layer-name-postfix'),
-
-        /**
-          Component's required actions names.
-          For actions enumerated in this array an assertion exceptions will be thrown,
-          if actions handlers are not defined for them.
-
-          @property _requiredActions
-          @type String[]
-          @default ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds']
-        */
-        _requiredActionNames: ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds'],
-
-        /**
-          Used to identify this component on the page by component name.
-          @property componentName
-          @type String
-          @readonly
-        */
-        componentName: Ember.computed('elementId', function() {
-            return 'treenode' + this.get('elementId');
-        }),
-
-        /**
-          Flag: indicates whether some {{#crossLink "FlexberryMaplayerComponent/layers:property"}}'layers'{{/childNodes}} are defined.
-
-          @property _hasLayers
-          @type boolean
-          @readOnly
-          @private
-        */
-        _hasLayers: Ember.computed('layer.layers.[]', 'layer.layers.@each.isDeleted', function() {
-            let layers = this.get('layer.layers');
-
-            return Ember.isArray(layers) && layers.filter((layer) => {
-                return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
-            }).length > 0;
-        }),
-
-        /**
-          Flag: indicates whether some nested content is defined.
-          (some yield markup or {{#crossLink "FlexberryMaplayersComponent/layers:property"}}'layers'{{/crossLink}} are defined).
-
-          @property _hasContent
-          @type boolean
-          @readOnly
-          @private
-        */
-
-        _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'layer.legendCanBeDisplayed', '_canChangeOpacity', function() {
-            // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
-            return this._isRegistered('content') || this.get('_hasLayers') || this.get('layer.legendCanBeDisplayed') || this.get('_canChangeOpacity');
-        }),
-
-        /**
-          Flag: displays whether layer's opacity can be changed
-
-          @property _canChangeOpacity
-          @type bool
-          @readOnly
-          @private
-        */
-        _canChangeOpacity: Ember.computed('_hasLayers', 'layer.type', function() {
-            return this.get('_hasLayers') !== true && this.get('layer.type') !== 'group';
-        }),
-
-        /**
-          Formatted layer's opacity display value.
-
-          @property _opacityDisplayValue
-          @type string
-          @readOnly
-          @private
-        */
-        _opacityDisplayValue: Ember.computed('layer.settingsAsObject.opacity', function() {
-            let opacity = this.get('layer.settingsAsObject.opacity');
-
-            let result = opacity !== 0 && opacity > 0.01 ? Math.round(opacity * 100) : 0;
-            return result.toString() + '%';
-        }),
-
-        /**
-          Layer class factory related to current layer type.
-
-          @property _layerClassFactory
-          @type Object
-          @readOnly
-          @private
-        */
-        _layerClassFactory: Ember.computed('layer.type', function() {
-            return Ember.getOwner(this).knownForType('layer', this.get('layer.type'));
-        }),
-
-        /**
-          CSS-class name for layer type related icon.
-
-          @property _typeIconClass
-          @type String
-          @readOnly
-          @private
-        */
-        _typeIconClass: Ember.computed('_layerClassFactory', function() {
-            let layerClassFactory = this.get('_layerClassFactory');
-
-            return Ember.get(layerClassFactory, 'iconClass');
-        }),
-
-        /**
-          Flag: indicates whether add operation is allowed for layer.
-
-          @property _addOperationIsAvailable
-          @type boolean
-          @readOnly
-          @private
-        */
-        _addOperationIsAvailable: Ember.computed('_layerClassFactory', function() {
-            let layerClassFactory = this.get('_layerClassFactory');
-
-            return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('add');
-        }),
-
-        /**
-          Flag: indicates whether fir bounds operation is allowed for layer.
-
-          @property _fitBoundsOperationIsAvailable
-          @type boolean
-          @readOnly
-          @private
-        */
-        _fitBoundsOperationIsAvailable: Ember.computed('_hasLayers', 'layer.type', function() {
-            return this.get('_hasLayers') || this.get('layer.type') !== 'group';
-        }),
-
-        /**
-          Flag: indicates whether attributes operation is allowed for layer.
-
-          @property _attributesOperationIsAvailable
-          @type boolean
-          @readOnly
-          @private
-        */
-        _attributesOperationIsAvailable: Ember.computed('_layerClassFactory', 'layer.layerInitialized', function() {
-            let layerClassFactory = this.get('_layerClassFactory');
-
-            return Ember.A(Ember.get(layerClassFactory, 'operations') || []).includes('attributes') && this.get('layer.layerInitialized');
-        }),
-
-        /**
-          Reference to 'store' service.
-
-          @property store
-          @type <a href="https://emberjs.com/api/ember-data/2.4/classes/DS.Store">DS.Store</a>
-          @private
-        */
-        store: Ember.inject.service('store'),
-
-        /**
-          Flag: indicates whether add dialog has been already requested by user or not.
-
-          @property _addDialogHasBeenRequested
-          @type boolean
-          @private
-        */
-        _addDialogHasBeenRequested: false,
-
-        /**
-          Flag: indicates whether edit dialog has been already requested by user or not.
-
-          @property _editDialogHasBeenRequested
-          @type boolean
-          @private
-        */
-        _editDialogHasBeenRequested: false,
-
-        /**
-          Flag: indicates whether copy dialog has been already requested by user or not.
-
-          @property _copyDialogHasBeenRequested
-          @type boolean
-          @private
-        */
-        _copyDialogHasBeenRequested: false,
-
-        /**
-          Flag: indicates whether remove dialog has been already requested by user or not.
-
-          @property _removeDialogHasBeenRequested
-          @type boolean
-          @private
-        */
-        _removeDialogHasBeenRequested: false,
-
-        /**
-          Flag: indicates whether add dialog is visible or not.
-
-          @property _addDialogIsVisible
-          @type boolean
-          @private
-        */
-        _addDialogIsVisible: false,
-
-        /**
-          Flag: indicates whether edit dialog is visible or not.
-
-          @property _editDialogIsVisible
-          @type boolean
-          @private
-        */
-        _editDialogIsVisible: false,
-
-        /**
-          Flag: indicates whether copy dialog is visible or not.
-
-          @property _copyDialogIsVisible
-          @type boolean
-          @private
-        */
-        _copyDialogIsVisible: false,
-
-        /**
-          Flag: indicates whether remove dialog is visible or not.
-
-          @property _removeDialogIsVisible
-          @type boolean
-          @private
-        */
-        _removeDialogIsVisible: false,
-
-        /**
-          Layer model for 'add' dialog.
-
-          @property _addDialogLayer
-          @type NewPlatformFlexberryGISMapLayerModel
-          @default null
-        */
-        _addDialogLayer: null,
-
-        /**
-          Layer model for 'copy' dialog.
-
-          @property _copyDialogLayer
-          @type NewPlatformFlexberryGISMapLayerModel
-          @default null
-        */
-        _copyDialogLayer: null,
-
-        /**
-          Layer model for 'edit' dialog.
-
-          @property _editDialogLayer
-          @type NewPlatformFlexberryGISMapLayerModel
-          @default null
-        */
-        _editDialogLayer: null,
-
-        /**
-          Layer model for 'remove' dialog.
-
-          @property _removeDialogLayer
-          @type NewPlatformFlexberryGISMapLayerModel
-          @default null
-        */
-        _removeDialogLayer: null,
-
-        /**
-          Reference to component's template.
-        */
-        layout,
-
-        /**
-          Reference to component's CSS-classes names.
-          Must be also a component's instance property to be available from component's hbs-markup.
-        */
-        flexberryClassNames,
-
-        /**
-          Overridden ['tagName' property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).
-          Is blank to disable component's wrapping <div>.
-
-          @property tagName
-          @type String
-          @default ''
-        */
-        tagName: '',
-
-        /**
-          Leaflet map.
-
-          @property leafletMap
-          @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
-          @default null
-        */
-        leafletMap: null,
-
-        /**
-          History enabled mode
-
-          @default false
-        */
-        histEnabled: false,
-
-        /**
-          Flag: indicates whether layer node is in readonly mode.
-          If true, layer node's data-related UI will be in readonly mode.
-
-          @property readonly
-          @type Boolean
-          @default false
-        */
-        readonly: false,
-
-        /**
-          Flag: indicates whether layer node has been expanded once.
-
-          @property hasBeenExpanded
-          @type Boolean
-          @default false
-        */
-        hasBeenExpanded: false,
-
-        //side to add layer to comapre
-        side: '',
-
-        //compare enabled
-        compareLayersEnabled: false,
-
-        /**
-          Flag: indicates whether submenu is visible.
-
-          @property isSubmenu
-          @type boolean
-          @default false
-        */
-        isSubmenu: false,
-
-        /**
-          Flag: indicates whether layer is group.
-
-          @property isSubmenu
-          @type boolean
-          @default false
-        */
-        isGroup: false,
-
-        /**
-          CSS class 'disabled' if layer is group.
-
-          @property disabled
-          @type String
-          @default ''
-        */
-        disabled: '',
-
-        maxDate: Ember.computed(function() {
-            let date = new Date(new Date().toDateString());
-            date.setDate(date.getDate() + 1);
-            return date;
-        }),
-
-        /**
-          Initializes DOM-related component's properties.
-        */
-        didInsertElement() {
-            if (this.get('layer.type') === 'group') {
-                this.set('isGroup', true);
-                this.set('disabled', 'disabled');
-            }
-
-            if (!this.get('readonly')) {
-                let _this = this;
-                let $captionBlock = Ember.$('.ui.tab.treeview .flexberry-treenode-caption-block');
-                if ($captionBlock.length > 0) {
-                    $captionBlock.hover(
-                        function() {
-                            let $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
-                            $toolbar.removeClass('hidden');
-                            Ember.$(this).children('.flexberry-maplayer-caption-label').addClass('blur');
-                        },
-                        function() {
-                            let $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
-                            $toolbar.addClass('hidden');
-                            Ember.$(this).children('.flexberry-maplayer-caption-label').removeClass('blur');
-                            _this.set('isSubmenu', false);
-                        });
-                }
-            }
-        },
-        /**
-          Redefine L.Control.SideBySide._updateClip for work with layer and label layer.
-
-          @method updateClip
-        */
-        updateClip: function() {
-            let map = this.get('leafletMap');
-            let sbs = this.get('sideBySide');
-            var nw = map.containerPointToLayerPoint([0, 0]);
-            var se = map.containerPointToLayerPoint(map.getSize());
-            var clipX = nw.x + sbs.getPosition();
-            var dividerX = sbs.getPosition();
-            sbs._divider.style.left = dividerX + 'px';
-            var clipLeft = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)';
-            var clipRight = 'rect(' + [nw.y, se.x, se.y, clipX].join('px,') + 'px)';
-            sbs._leftLayers.forEach(function(layer) {
-                if (!Ember.isNone(layer) && !Ember.isNone(layer.getContainer)) {
-                    layer.getContainer().style.clip = clipLeft;
-                }
-            });
-            sbs._rightLayers.forEach(function(layer) {
-                if (!Ember.isNone(layer) && !Ember.isNone(layer.getContainer)) {
-                    layer.getContainer().style.clip = clipRight;
-                }
-            });
-        },
-
-        actions: {
-            onLayerTimeChange() {
-                this.sendAction('layerTimeChanged', this.get('layer'), this.get('layer.archTime'));
+  SlotsMixin,
+  RequiredActionsMixin,
+  DomActionsMixin,
+  DynamicActionsMixin,
+  DynamicPropertiesMixin, {
+
+    dynamicButtons: [],
+
+    /**
+      Layer copy's name postfix
+
+      @property copyPostfix
+      @type String
+      @default t('components.layers-dialogs.copy.layer-name-postfix')
+    */
+    copyPostfix: t('components.layers-dialogs.copy.layer-name-postfix'),
+
+    /**
+      Component's required actions names.
+      For actions enumerated in this array an assertion exceptions will be thrown,
+      if actions handlers are not defined for them.
+
+      @property _requiredActions
+      @type String[]
+      @default ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds']
+    */
+    _requiredActionNames: ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds'],
+
+    /**
+      Used to identify this component on the page by component name.
+      @property componentName
+      @type String
+      @readonly
+    */
+    componentName: Ember.computed('elementId', function () {
+      return 'treenode' + this.get('elementId');
+    }),
+
+    /**
+      Flag: indicates whether some {{#crossLink "FlexberryMaplayerComponent/layers:property"}}'layers'{{/childNodes}} are defined.
+
+      @property _hasLayers
+      @type boolean
+      @readOnly
+      @private
+    */
+    _hasLayers: Ember.computed('layer.layers.[]', 'layer.layers.@each.isDeleted', function () {
+      let layers = this.get('layer.layers');
+
+      return Ember.isArray(layers) && layers.filter((layer) => {
+        return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
+      }).length > 0;
+    }),
+
+    /**
+      Flag: indicates whether some nested content is defined.
+      (some yield markup or {{#crossLink "FlexberryMaplayersComponent/layers:property"}}'layers'{{/crossLink}} are defined).
+
+      @property _hasContent
+      @type boolean
+      @readOnly
+      @private
+    */
+
+    _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'layer.legendCanBeDisplayed', '_canChangeOpacity', function () {
+      // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
+      return this._isRegistered('content') || this.get('_hasLayers') || this.get('layer.legendCanBeDisplayed') || this.get('_canChangeOpacity');
+    }),
+
+    /**
+      Flag: displays whether layer's opacity can be changed
+
+      @property _canChangeOpacity
+      @type bool
+      @readOnly
+      @private
+    */
+    _canChangeOpacity: Ember.computed('_hasLayers', 'layer.type', function () {
+      return this.get('_hasLayers') !== true && this.get('layer.type') !== 'group';
+    }),
+
+    /**
+      Formatted layer's opacity display value.
+
+      @property _opacityDisplayValue
+      @type string
+      @readOnly
+      @private
+    */
+    _opacityDisplayValue: Ember.computed('layer.settingsAsObject.opacity', function () {
+      let opacity = this.get('layer.settingsAsObject.opacity');
+
+      let result = opacity !== 0 && opacity > 0.01 ? Math.round(opacity * 100) : 0;
+      return result.toString() + '%';
+    }),
+
+    /**
+      Layer class factory related to current layer type.
+
+      @property _layerClassFactory
+      @type Object
+      @readOnly
+      @private
+    */
+    _layerClassFactory: Ember.computed('layer.type', function () {
+      return Ember.getOwner(this).knownForType('layer', this.get('layer.type'));
+    }),
+
+    /**
+      CSS-class name for layer type related icon.
+
+      @property _typeIconClass
+      @type String
+      @readOnly
+      @private
+    */
+    _typeIconClass: Ember.computed('_layerClassFactory', function () {
+      let layerClassFactory = this.get('_layerClassFactory');
+
+      return Ember.get(layerClassFactory, 'iconClass');
+    }),
+
+    /**
+      Flag: indicates whether add operation is allowed for layer.
+
+      @property _addOperationIsAvailable
+      @type boolean
+      @readOnly
+      @private
+    */
+    _addOperationIsAvailable: Ember.computed('_layerClassFactory', function () {
+      let layerClassFactory = this.get('_layerClassFactory');
+
+      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('add');
+    }),
+
+    /**
+      Flag: indicates whether fir bounds operation is allowed for layer.
+
+      @property _fitBoundsOperationIsAvailable
+      @type boolean
+      @readOnly
+      @private
+    */
+    _fitBoundsOperationIsAvailable: Ember.computed('_hasLayers', 'layer.type', function () {
+      return this.get('_hasLayers') || this.get('layer.type') !== 'group';
+    }),
+
+    /**
+      Flag: indicates whether attributes operation is allowed for layer.
+
+      @property _attributesOperationIsAvailable
+      @type boolean
+      @readOnly
+      @private
+    */
+    _attributesOperationIsAvailable: Ember.computed('_layerClassFactory', 'layer.layerInitialized', function () {
+      let layerClassFactory = this.get('_layerClassFactory');
+
+      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).includes('attributes') && this.get('layer.layerInitialized');
+    }),
+
+    /**
+      Reference to 'store' service.
+
+      @property store
+      @type <a href="https://emberjs.com/api/ember-data/2.4/classes/DS.Store">DS.Store</a>
+      @private
+    */
+    store: Ember.inject.service('store'),
+
+    /**
+      Flag: indicates whether add dialog has been already requested by user or not.
+
+      @property _addDialogHasBeenRequested
+      @type boolean
+      @private
+    */
+    _addDialogHasBeenRequested: false,
+
+    /**
+      Flag: indicates whether edit dialog has been already requested by user or not.
+
+      @property _editDialogHasBeenRequested
+      @type boolean
+      @private
+    */
+    _editDialogHasBeenRequested: false,
+
+    /**
+      Flag: indicates whether copy dialog has been already requested by user or not.
+
+      @property _copyDialogHasBeenRequested
+      @type boolean
+      @private
+    */
+    _copyDialogHasBeenRequested: false,
+
+    /**
+      Flag: indicates whether remove dialog has been already requested by user or not.
+
+      @property _removeDialogHasBeenRequested
+      @type boolean
+      @private
+    */
+    _removeDialogHasBeenRequested: false,
+
+    /**
+      Flag: indicates whether add dialog is visible or not.
+
+      @property _addDialogIsVisible
+      @type boolean
+      @private
+    */
+    _addDialogIsVisible: false,
+
+    /**
+      Flag: indicates whether edit dialog is visible or not.
+
+      @property _editDialogIsVisible
+      @type boolean
+      @private
+    */
+    _editDialogIsVisible: false,
+
+    /**
+      Flag: indicates whether copy dialog is visible or not.
+
+      @property _copyDialogIsVisible
+      @type boolean
+      @private
+    */
+    _copyDialogIsVisible: false,
+
+    /**
+      Flag: indicates whether remove dialog is visible or not.
+
+      @property _removeDialogIsVisible
+      @type boolean
+      @private
+    */
+    _removeDialogIsVisible: false,
+
+    /**
+      Layer model for 'add' dialog.
+
+      @property _addDialogLayer
+      @type NewPlatformFlexberryGISMapLayerModel
+      @default null
+    */
+    _addDialogLayer: null,
+
+    /**
+      Layer model for 'copy' dialog.
+
+      @property _copyDialogLayer
+      @type NewPlatformFlexberryGISMapLayerModel
+      @default null
+    */
+    _copyDialogLayer: null,
+
+    /**
+      Layer model for 'edit' dialog.
+
+      @property _editDialogLayer
+      @type NewPlatformFlexberryGISMapLayerModel
+      @default null
+    */
+    _editDialogLayer: null,
+
+    /**
+      Layer model for 'remove' dialog.
+
+      @property _removeDialogLayer
+      @type NewPlatformFlexberryGISMapLayerModel
+      @default null
+    */
+    _removeDialogLayer: null,
+
+    /**
+      Reference to component's template.
+    */
+    layout,
+
+    /**
+      Reference to component's CSS-classes names.
+      Must be also a component's instance property to be available from component's hbs-markup.
+    */
+    flexberryClassNames,
+
+    /**
+      Overridden ['tagName' property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).
+      Is blank to disable component's wrapping <div>.
+
+      @property tagName
+      @type String
+      @default ''
+    */
+    tagName: '',
+
+    /**
+      Leaflet map.
+
+      @property leafletMap
+      @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+      @default null
+    */
+    leafletMap: null,
+
+    /**
+      History enabled mode
+
+      @default false
+    */
+    histEnabled: false,
+
+    /**
+      Flag: indicates whether layer node is in readonly mode.
+      If true, layer node's data-related UI will be in readonly mode.
+
+      @property readonly
+      @type Boolean
+      @default false
+    */
+    readonly: false,
+
+    /**
+      Flag: indicates whether layer node has been expanded once.
+
+      @property hasBeenExpanded
+      @type Boolean
+      @default false
+    */
+    hasBeenExpanded: false,
+
+    //side to add layer to comapre
+    side: '',
+
+    //compare enabled
+    compareLayersEnabled: false,
+
+    /**
+      Flag: indicates whether submenu is visible.
+
+      @property isSubmenu
+      @type boolean
+      @default false
+    */
+    isSubmenu: false,
+
+    /**
+      Flag: indicates whether layer is group.
+
+      @property isSubmenu
+      @type boolean
+      @default false
+    */
+    isGroup: false,
+
+    /**
+      CSS class 'disabled' if layer is group.
+
+      @property disabled
+      @type String
+      @default ''
+    */
+    disabled: '',
+
+    maxDate: Ember.computed(function () {
+      let date = new Date(new Date().toDateString());
+      date.setDate(date.getDate() + 1);
+      return date;
+    }),
+
+    /**
+      Initializes DOM-related component's properties.
+    */
+    didInsertElement() {
+      if (this.get('layer.type') === 'group') {
+        this.set('isGroup', true);
+        this.set('disabled', 'disabled');
+      }
+
+      if (!this.get('readonly')) {
+        let _this = this;
+        let $captionBlock = Ember.$('.ui.tab.treeview .flexberry-treenode-caption-block')
+        if ($captionBlock.length > 0) {
+          $captionBlock.hover(
+            function () {
+              let $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
+              $toolbar.removeClass('hidden');
+              Ember.$(this).children('.flexberry-maplayer-caption-label').addClass('blur');
             },
-
-            external(actionName) {
-                this.set('isSubmenu', false);
-                this.sendAction('external', actionName, this.get('layer'));
-            },
-
-            /**
-              Handles click on checkbox.
-              @method action.onChange
-              @param {Object} e event args.
-            */
-            onChange(e) {
-                let layer = this.get('layer');
-                let sbs = this.get('sideBySide');
-                Ember.set(sbs, 'baseUpdateClip', sbs._updateClip);
-                if (e.newValue === false) {
-                    sbs.off('dividermove', this.updateClip, this);
-                    if (this.get('side') === 'Left') {
-                        sbs.setLeftLayers(null);
-                        this.get('leftLayer._leafletObject').remove();
-                        if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
-                            this.get('leftLayer._leafletObject._labelsLayer').remove();
-                        }
-
-                        this.set('leftLayer.side', null);
-                        this.set('leftLayer.visibility', false);
-                        this.set('leftLayer', null);
-                    } else {
-                        sbs.setRightLayers(null);
-                        this.get('rightLayer._leafletObject').remove();
-                        if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
-                            this.get('rightLayer._leafletObject._labelsLayer').remove();
-                        }
-
-                        this.set('rightLayer.side', null);
-                        this.set('rightLayer.visibility', false);
-                        this.set('rightLayer', null);
-                    }
-                } else {
-                    Ember.set(layer, 'visibility', true);
-                    let map = this.get('leafletMap');
-                    sbs._updateClip = this.get('updateClip').bind(this);
-                    sbs.on('dividermove', this.updateClip, this);
-
-                    if (this.get('side') === 'Left') {
-                        if (this.get('leftLayer') !== null) {
-                            sbs.setLeftLayers(null);
-                            this.get('leftLayer._leafletObject').remove();
-                            this.set('leftLayer.visibility', false);
-                            this.set('leftLayer.side', null);
-                        }
-
-                        let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
-                        let left = [];
-                        left.push(leafletObject);
-                        if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
-                            left.push(leafletObject._labelsLayer.addTo(map));
-                        }
-
-                        Ember.set(layer, 'side', 'Left');
-                        this.set('leftLayer', layer);
-                        sbs.setLeftLayers(left);
-                    }
-
-                    if (this.get('side') === 'Right') {
-                        if (this.get('rightLayer') !== null) {
-                            sbs.setRightLayers(null);
-                            this.get('rightLayer._leafletObject').remove();
-                            this.set('rightLayer.visibility', false);
-                            this.set('rightLayer.side', null);
-                        }
-
-                        let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
-                        let right = [];
-                        right.push(leafletObject);
-                        if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
-                            right.push(leafletObject._labelsLayer.addTo(map));
-                        }
-
-                        Ember.set(layer, 'side', 'Right');
-                        this.set('rightLayer', layer);
-                        sbs.setRightLayers(right);
-                    }
-                }
-
-                this.sendAction('onChangeLayer', this.get('leftLayer'), this.get('rightLayer'));
-            },
-
-            /**
-              Show\hide submenu
-
-              @method actions.onSubmenu
-            */
-            onSubmenu() {
-                let component = Ember.$('.' + this.get('componentName'));
-                let moreButton = Ember.$('.more.floated.button', component);
-                let elements = Ember.$('.more.submenu.hidden', component);
-                openCloseSubmenu(this, moreButton, elements, 2);
-            },
-
-            onAddCompare() {
-                //добавление в зависимости от стороны
-            },
-            /**
-              Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
-              Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.headerClick:method"}}'headerClick' action{{/crossLink}}.
-
-              @method actions.onHeaderClick
-              @param {Object} e Event object from
-              {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
-            */
-            onHeaderClick(...args) {
-                this.sendAction('headerClick', ...args);
-            },
-
-            /**
-              Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.
-              Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}'beforeExpand' action{{/crossLink}}.
-
-              @method actions.onHeaderClick
-              @param {Object} e Event object from
-              {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.
-            */
-            onBeforeExpand(...args) {
-                // Set has been expanded flag once.
-                let hasBeenExpanded = this.set('hasBeenExpanded');
-                if (!hasBeenExpanded) {
-                    this.set('hasBeenExpanded', true);
-                }
-
-                this.sendAction('beforeExpand', ...args);
-            },
-
-            /**
-              Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.
-              Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeCollapse:method"}}'beforeCollapse' action{{/crossLink}}.
-
-              @method actions.onHeaderClick
-              @param {Object} e Event object from
-              {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.
-            */
-            onBeforeCollapse(...args) {
-                this.sendAction('beforeCollapse', ...args);
-            },
-
-            /**
-              Handles {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
-              Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.changeVisibility:method"}}'changeVisibility'action{{/crossLink}}.
-
-              @method actions.onVisibilityCheckboxChange
-              @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
-            */
-            onVisibilityCheckboxChange(...args) {
-                this.sendAction('changeVisibility', ...args);
-            },
-
-            /**
-              Handles {{#crossLink "FlexberryDdauSliderComponent/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
-              Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.changeVisibility:method"}}'changeOpacity'action{{/crossLink}}.
-
-              @method actions.onOpacitySliderChange
-              @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauSlider/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
-            */
-            onOpacitySliderChange(...args) {
-                this.sendAction('changeOpacity', ...args);
-            },
-
-            /**
-              Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.fitBounds:method"}}'fitBounds' action{{/crossLink}}.
-
-              @method actions.onBoundsButtonClick
-              @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
-              which describes button's 'click' event.
-            */
-            onBoundsButtonClick(...args) {
-                this.sendAction('fitBounds', ...args);
-            },
-
-            /**
-              Handles attributes button's 'click' event.
-              Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.attributes:method"}}'attributes'{{/crossLink}} action.
-
-              @method actions.onAttributesButtonClick
-              @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
-              which describes button's 'click' event.
-            */
-            onAttributesButtonClick(...args) {
-                this.sendAction('attributesEdit', ...args);
-            },
-
-            /**
-              Handles create feature button's 'click' event.
-              Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.attributes:method"}}'attributes'{{/crossLink}} action.
-
-              @method actions.onFeatureCreateButtonClick
-              @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
-              which describes button's 'click' event.
-            */
-            onFeatureCreateButtonClick(...args) {
-                this.sendAction('featureEdit', ...args);
-            },
-
-            /**
-              Handles add button's 'click' event.
-              Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
-
-              @method actions.onAddButtonClick
-              @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
-              which describes button's 'click' event.
-            */
-            onAddButtonClick(e) {
-                // Create empty layer.
-                let store = this.get('store');
-                this.set('_addDialogLayer', store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId() }));
-
-                // Include dialog to markup.
-                this.set('_addDialogHasBeenRequested', true);
-
-                // Show dialog.
-                this.set('_addDialogIsVisible', true);
-            },
-
-            /**
-              Handles add dialog's 'approve' action.
-              Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
-
-              @method actions.onAddDialogApprove
-              @param {Object} e Action's event object.
-              @param {Object} e.layerProperties Object containing properties of new child layer.
-            */
-            onAddDialogApprove(...args) {
-                // Send outer 'add' action.
-                this.sendAction('add', ...args);
-            },
-
-            /**
-              Handles copy button's 'click' event.
-              Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.copy:method"}}'copy'{{/crossLink}} action.
-
-              @method actions.onCopyButtonClick
-              @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
-              which describes button's 'click' event.
-            */
-            onCopyButtonClick(e) {
-                // Create layer copy.
-                this.createLayerCopy('_copyDialogLayer');
-                this.set('_copyDialogLayer.name', `${this.get('_copyDialogLayer.name')} ${this.get('copyPostfix')}`);
-
-                // Include dialog to markup.
-                this.set('_copyDialogHasBeenRequested', true);
-
-                // Show dialog.
-                this.set('_copyDialogIsVisible', true);
-            },
-
-            /**
-              Handles copy dialog's 'approve' action.
-              Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.copy:method"}}'copy'{{/crossLink}} action.
-
-              @method actions.onCopyDialogApprove
-              @param {Object} e Action's event object.
-              @param {Object} e.layerProperties Object containing properties of layer copy.
-            */
-            onCopyDialogApprove(...args) {
-                let { layerProperties } = args[args.length - 1];
-                let layer = this.get('_copyDialogLayer');
-                layer.setProperties(layerProperties);
-
-                // Send outer 'copy' action.
-                this.sendAction('copy', { layerProperties, layer });
-            },
-
-            /**
-              Handles edit button's 'click' event.
-              Shows component's edit dialog.
-
-              @method actions.onEditButtonClick
-              @param {Object} [jQuery event object](http://api.jquery.com/category/events/event-object/)
-              which describes button's 'click' event.
-            */
-            onEditButtonClick() {
-                // Create layer copy.
-                this.createLayerCopy('_editDialogLayer', true);
-
-                // Include dialog to markup.
-                this.set('_editDialogHasBeenRequested', true);
-
-                // Show dialog.
-                this.set('_editDialogIsVisible', true);
-            },
-
-            /**
-              Handles edit dialog's 'approve' action.
-              Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.add:method"}}'edit'{{/crossLink}} action.
-
-              @method actions.onEditDialogApprove
-              @param {Object} e Action's event object.
-              @param {Object} e.layerProperties Object containing edited layer properties, which must be merged to layer on action.
-            */
-            onEditDialogApprove(...args) {
-                // Send outer 'edit' action.
-                this.sendAction('edit', ...args);
-            },
-
-            /**
-              Handles remove button's 'click' event.
-              Shows component's remove dialog.
-
-              @method actions.onRemoveButtonClick
-              @param {Object} [jQuery event object](http://api.jquery.com/category/events/event-object/)
-              which describes button's 'click' event.
-            */
-            onRemoveButtonClick() {
-                // Create layer copy.
-                this.createLayerCopy('_removeDialogLayer', true);
-
-                // Include dialog to markup.
-                this.set('_removeDialogHasBeenRequested', true);
-
-                // Show dialog.
-                this.set('_removeDialogIsVisible', true);
-            },
-
-            /**
-              Handles remove dialog's 'approve' action.
-              Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.remove:method"}}'remove'{{/crossLink}} action.
-
-              @method actions.onRemoveDialogApprove
-            */
-            onRemoveDialogApprove(...args) {
-                // Send outer 'remove' action.
-                this.sendAction('remove', ...args);
-            }
-        },
-
-        /**
-          Creates layer's copy.
-
-          @method createLayerCopy
-          @param {String} resultPropertyName Property name for layer's copy.
-          @param {Boolean} ignoreLinks Indicates whether copying links.
-        */
-        createLayerCopy(resultPropertyName, ignoreLinks) {
-            let store = this.get('store');
-            let layer = this.get('layer');
-
-            this.set(resultPropertyName, copyLayer(layer, store, ignoreLinks));
-        },
-
-        /**
-          Component's action invoking when layer node's header has been clicked.
-
-          @method sendingActions.headerClick
-          @param {Object} e Event object from
-          {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
-        */
-
-        /**
-          Component's action invoking before layer node will be expanded.
-          Layer node can be prevented from being expanded with call to action event object's 'originalEvent.stopPropagation()'.
-
-          @method sendingActions.beforeExpand
-          @param {Object} e Event object from
-          {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.
-        */
-
-        /**
-          Component's action invoking before layer node will be collapsed.
-          Layer node can be prevented from being collapsed with call to action event object's 'originalEvent.stopPropagation()'.
-
-          @method sendingActions.beforeCollapse
-          @param {Object} e Event object from
-          {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollpse:method"}}'flexberry-treenode' component's 'beforeCollpse' action{{/crossLink}}.
-        */
-
-        /**
-          Component's action invoking when layer node's 'visibility' state changed.
-
-          @method sendingActions.changeVisibility
-          @param {Object} e Event object from
-          {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
-        */
-
-        /**
-          Component's action invoking when layer node's 'opacity' value changed.
-
-          @method sendingActions.changeOpacity
-          @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauSlider/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
-          {{#crossLink "FlexberryDdauSliderComponent/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
-        */
-
-        /**
-          Component's action invoking when layer node's 'extent' button clicked.
-
-          @method sendingActions.fitBounds
-          @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
-          which describes button's 'click' event.
-        */
-
-        /**
-          Component's action invoking when user wants to add child layer into current.
-
-          @method sendingActions.add
-          @param {Object} e Action's event object.
-          @param {Object} e.layerProperties Object containing properties of new child layer.
-        */
-
-        /**
-          Component's action invoking when user wants to copy current layer.
-
-          @method sendingActions.copy
-          @param {Object} e Action's event object.
-          @param {Object} e.layerProperties Object containing copied layer properties.
-          @param {Object} e.layer Object containing copied layer model.
-        */
-
-        /**
-          Component's action invoking when user wants to edit current layer.
-
-          @method sendingActions.edit
-          @param {Object} e Action's event object.
-          @param {Object} e.layerProperties Object containing edited layer properties, which must be merged to layer on action.
-        */
-
-        /**
-          Component's action invoking when user wants to remove current layer.
-
-          @method sendingActions.remove
-          @param {Object} e Action's event object.
-        */
-
-        /**
-          Component's action invoking when user wants to look at attributes of current layer.
-
-          @method sendingActions.attributesEdit
-          @param {Object} e Action's event object.
-        */
+            function () {
+              let $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
+              $toolbar.addClass('hidden');
+              Ember.$(this).children('.flexberry-maplayer-caption-label').removeClass('blur');
+              _this.set('isSubmenu', false);
+        })
+      }
     }
+  },
+    /**
+      Redefine L.Control.SideBySide._updateClip for work with layer and label layer.
+
+      @method updateClip
+    */
+    updateClip: function () {
+      let map = this.get('leafletMap');
+      let sbs = this.get('sideBySide');
+      var nw = map.containerPointToLayerPoint([0, 0]);
+      var se = map.containerPointToLayerPoint(map.getSize());
+      var clipX = nw.x + sbs.getPosition();
+      var dividerX = sbs.getPosition();
+      sbs._divider.style.left = dividerX + 'px';
+      var clipLeft = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)';
+      var clipRight = 'rect(' + [nw.y, se.x, se.y, clipX].join('px,') + 'px)';
+      sbs._leftLayers.forEach(function (layer) {
+        if (!Ember.isNone(layer) && !Ember.isNone(layer.getContainer)) {
+          layer.getContainer().style.clip = clipLeft;
+        }
+      });
+      sbs._rightLayers.forEach(function (layer) {
+        if (!Ember.isNone(layer) && !Ember.isNone(layer.getContainer)) {
+          layer.getContainer().style.clip = clipRight;
+        }
+      });
+    },
+
+    actions: {
+      onLayerTimeChange() {
+        this.sendAction('layerTimeChanged', this.get('layer'), this.get('layer.archTime'));
+      },
+
+      external(actionName) {
+        this.set('isSubmenu', false);
+        this.sendAction('external', actionName, this.get('layer'));
+      },
+
+      /**
+        Handles click on checkbox.
+        @method action.onChange
+        @param {Object} e event args.
+      */
+      onChange(e) {
+        let layer = this.get('layer');
+        let sbs = this.get('sideBySide');
+        Ember.set(sbs, 'baseUpdateClip', sbs._updateClip);
+        if (e.newValue === false) {
+          sbs.off('dividermove', this.updateClip, this);
+          if (this.get('side') === 'Left') {
+            sbs.setLeftLayers(null);
+            this.get('leftLayer._leafletObject').remove();
+            if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
+              this.get('leftLayer._leafletObject._labelsLayer').remove();
+            }
+
+            this.set('leftLayer.side', null);
+            this.set('leftLayer.visibility', false);
+            this.set('leftLayer', null);
+          } else {
+            sbs.setRightLayers(null);
+            this.get('rightLayer._leafletObject').remove();
+            if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
+              this.get('rightLayer._leafletObject._labelsLayer').remove();
+            }
+
+            this.set('rightLayer.side', null);
+            this.set('rightLayer.visibility', false);
+            this.set('rightLayer', null);
+          }
+        } else {
+          Ember.set(layer, 'visibility', true);
+          let map = this.get('leafletMap');
+          sbs._updateClip = this.get('updateClip').bind(this);
+          sbs.on('dividermove', this.updateClip, this);
+
+          if (this.get('side') === 'Left') {
+            if (this.get('leftLayer') !== null) {
+              sbs.setLeftLayers(null);
+              this.get('leftLayer._leafletObject').remove();
+              this.set('leftLayer.visibility', false);
+              this.set('leftLayer.side', null);
+            }
+
+            let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
+            let left = [];
+            left.push(leafletObject);
+            if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
+              left.push(leafletObject._labelsLayer.addTo(map));
+            }
+
+            Ember.set(layer, 'side', 'Left');
+            this.set('leftLayer', layer);
+            sbs.setLeftLayers(left);
+          }
+
+          if (this.get('side') === 'Right') {
+            if (this.get('rightLayer') !== null) {
+              sbs.setRightLayers(null);
+              this.get('rightLayer._leafletObject').remove();
+              this.set('rightLayer.visibility', false);
+              this.set('rightLayer.side', null);
+            }
+
+            let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
+            let right = [];
+            right.push(leafletObject);
+            if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
+              right.push(leafletObject._labelsLayer.addTo(map));
+            }
+
+            Ember.set(layer, 'side', 'Right');
+            this.set('rightLayer', layer);
+            sbs.setRightLayers(right);
+          }
+        }
+
+        this.sendAction('onChangeLayer', this.get('leftLayer'), this.get('rightLayer'));
+      },
+
+      /**
+        Show\hide submenu
+
+        @method actions.onSubmenu
+      */
+      onSubmenu() {
+        let component = Ember.$('.' + this.get('componentName'));
+        let moreButton = Ember.$('.more.floated.button', component);
+        let elements = Ember.$('.more.submenu.hidden', component);
+        openCloseSubmenu(this, moreButton, elements, 2);
+      },
+
+      onAddCompare() {
+        //добавление в зависимости от стороны
+      },
+      /**
+        Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.headerClick:method"}}'headerClick' action{{/crossLink}}.
+
+        @method actions.onHeaderClick
+        @param {Object} e Event object from
+        {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
+      */
+      onHeaderClick(...args) {
+        this.sendAction('headerClick', ...args);
+      },
+
+      /**
+        Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}'beforeExpand' action{{/crossLink}}.
+
+        @method actions.onHeaderClick
+        @param {Object} e Event object from
+        {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.
+      */
+      onBeforeExpand(...args) {
+        // Set has been expanded flag once.
+        let hasBeenExpanded = this.set('hasBeenExpanded');
+        if (!hasBeenExpanded) {
+          this.set('hasBeenExpanded', true);
+        }
+
+        this.sendAction('beforeExpand', ...args);
+      },
+
+      /**
+        Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeCollapse:method"}}'beforeCollapse' action{{/crossLink}}.
+
+        @method actions.onHeaderClick
+        @param {Object} e Event object from
+        {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.
+      */
+      onBeforeCollapse(...args) {
+        this.sendAction('beforeCollapse', ...args);
+      },
+
+      /**
+        Handles {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.changeVisibility:method"}}'changeVisibility'action{{/crossLink}}.
+
+        @method actions.onVisibilityCheckboxChange
+        @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
+      */
+      onVisibilityCheckboxChange(...args) {
+        this.sendAction('changeVisibility', ...args);
+      },
+
+      /**
+        Handles {{#crossLink "FlexberryDdauSliderComponent/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.changeVisibility:method"}}'changeOpacity'action{{/crossLink}}.
+
+        @method actions.onOpacitySliderChange
+        @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauSlider/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
+      */
+      onOpacitySliderChange(...args) {
+        this.sendAction('changeOpacity', ...args);
+      },
+
+      /**
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.fitBounds:method"}}'fitBounds' action{{/crossLink}}.
+
+        @method actions.onBoundsButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onBoundsButtonClick(...args) {
+        this.sendAction('fitBounds', ...args);
+      },
+
+      /**
+        Handles attributes button's 'click' event.
+        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.attributes:method"}}'attributes'{{/crossLink}} action.
+
+        @method actions.onAttributesButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onAttributesButtonClick(...args) {
+        this.sendAction('attributesEdit', ...args);
+      },
+
+      /**
+        Handles create feature button's 'click' event.
+        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.attributes:method"}}'attributes'{{/crossLink}} action.
+
+        @method actions.onFeatureCreateButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onFeatureCreateButtonClick(...args) {
+        this.sendAction('featureEdit', ...args);
+      },
+
+      /**
+        Handles add button's 'click' event.
+        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
+
+        @method actions.onAddButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onAddButtonClick(e) {
+        // Create empty layer.
+        let store = this.get('store');
+        this.set('_addDialogLayer', store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId() }));
+
+        // Include dialog to markup.
+        this.set('_addDialogHasBeenRequested', true);
+
+        // Show dialog.
+        this.set('_addDialogIsVisible', true);
+      },
+
+      /**
+        Handles add dialog's 'approve' action.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
+
+        @method actions.onAddDialogApprove
+        @param {Object} e Action's event object.
+        @param {Object} e.layerProperties Object containing properties of new child layer.
+      */
+      onAddDialogApprove(...args) {
+        // Send outer 'add' action.
+        this.sendAction('add', ...args);
+      },
+
+      /**
+        Handles copy button's 'click' event.
+        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.copy:method"}}'copy'{{/crossLink}} action.
+
+        @method actions.onCopyButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onCopyButtonClick(e) {
+        // Create layer copy.
+        this.createLayerCopy('_copyDialogLayer');
+        this.set('_copyDialogLayer.name', `${this.get('_copyDialogLayer.name')} ${this.get('copyPostfix')}`);
+
+        // Include dialog to markup.
+        this.set('_copyDialogHasBeenRequested', true);
+
+        // Show dialog.
+        this.set('_copyDialogIsVisible', true);
+      },
+
+      /**
+        Handles copy dialog's 'approve' action.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.copy:method"}}'copy'{{/crossLink}} action.
+
+        @method actions.onCopyDialogApprove
+        @param {Object} e Action's event object.
+        @param {Object} e.layerProperties Object containing properties of layer copy.
+      */
+      onCopyDialogApprove(...args) {
+        let { layerProperties } = args[args.length - 1];
+        let layer = this.get('_copyDialogLayer');
+        layer.setProperties(layerProperties);
+
+        // Send outer 'copy' action.
+        this.sendAction('copy', { layerProperties, layer });
+      },
+
+      /**
+        Handles edit button's 'click' event.
+        Shows component's edit dialog.
+
+        @method actions.onEditButtonClick
+        @param {Object} [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onEditButtonClick() {
+        // Create layer copy.
+        this.createLayerCopy('_editDialogLayer', true);
+
+        // Include dialog to markup.
+        this.set('_editDialogHasBeenRequested', true);
+
+        // Show dialog.
+        this.set('_editDialogIsVisible', true);
+      },
+
+      /**
+        Handles edit dialog's 'approve' action.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.add:method"}}'edit'{{/crossLink}} action.
+
+        @method actions.onEditDialogApprove
+        @param {Object} e Action's event object.
+        @param {Object} e.layerProperties Object containing edited layer properties, which must be merged to layer on action.
+      */
+      onEditDialogApprove(...args) {
+        // Send outer 'edit' action.
+        this.sendAction('edit', ...args);
+      },
+
+      /**
+        Handles remove button's 'click' event.
+        Shows component's remove dialog.
+
+        @method actions.onRemoveButtonClick
+        @param {Object} [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onRemoveButtonClick() {
+        // Create layer copy.
+        this.createLayerCopy('_removeDialogLayer', true);
+
+        // Include dialog to markup.
+        this.set('_removeDialogHasBeenRequested', true);
+
+        // Show dialog.
+        this.set('_removeDialogIsVisible', true);
+      },
+
+      /**
+        Handles remove dialog's 'approve' action.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.remove:method"}}'remove'{{/crossLink}} action.
+
+        @method actions.onRemoveDialogApprove
+      */
+      onRemoveDialogApprove(...args) {
+        // Send outer 'remove' action.
+        this.sendAction('remove', ...args);
+      }
+    },
+
+    /**
+      Creates layer's copy.
+
+      @method createLayerCopy
+      @param {String} resultPropertyName Property name for layer's copy.
+      @param {Boolean} ignoreLinks Indicates whether copying links.
+    */
+    createLayerCopy(resultPropertyName, ignoreLinks) {
+      let store = this.get('store');
+      let layer = this.get('layer');
+
+      this.set(resultPropertyName, copyLayer(layer, store, ignoreLinks));
+    },
+
+    /**
+      Component's action invoking when layer node's header has been clicked.
+
+      @method sendingActions.headerClick
+      @param {Object} e Event object from
+      {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
+    */
+
+    /**
+      Component's action invoking before layer node will be expanded.
+      Layer node can be prevented from being expanded with call to action event object's 'originalEvent.stopPropagation()'.
+
+      @method sendingActions.beforeExpand
+      @param {Object} e Event object from
+      {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.
+    */
+
+    /**
+      Component's action invoking before layer node will be collapsed.
+      Layer node can be prevented from being collapsed with call to action event object's 'originalEvent.stopPropagation()'.
+
+      @method sendingActions.beforeCollapse
+      @param {Object} e Event object from
+      {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollpse:method"}}'flexberry-treenode' component's 'beforeCollpse' action{{/crossLink}}.
+    */
+
+    /**
+      Component's action invoking when layer node's 'visibility' state changed.
+
+      @method sendingActions.changeVisibility
+      @param {Object} e Event object from
+      {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
+    */
+
+    /**
+      Component's action invoking when layer node's 'opacity' value changed.
+
+      @method sendingActions.changeOpacity
+      @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauSlider/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
+      {{#crossLink "FlexberryDdauSliderComponent/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
+    */
+
+    /**
+      Component's action invoking when layer node's 'extent' button clicked.
+
+      @method sendingActions.fitBounds
+      @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+      which describes button's 'click' event.
+    */
+
+    /**
+      Component's action invoking when user wants to add child layer into current.
+
+      @method sendingActions.add
+      @param {Object} e Action's event object.
+      @param {Object} e.layerProperties Object containing properties of new child layer.
+    */
+
+    /**
+      Component's action invoking when user wants to copy current layer.
+
+      @method sendingActions.copy
+      @param {Object} e Action's event object.
+      @param {Object} e.layerProperties Object containing copied layer properties.
+      @param {Object} e.layer Object containing copied layer model.
+    */
+
+    /**
+      Component's action invoking when user wants to edit current layer.
+
+      @method sendingActions.edit
+      @param {Object} e Action's event object.
+      @param {Object} e.layerProperties Object containing edited layer properties, which must be merged to layer on action.
+    */
+
+    /**
+      Component's action invoking when user wants to remove current layer.
+
+      @method sendingActions.remove
+      @param {Object} e Action's event object.
+    */
+
+    /**
+      Component's action invoking when user wants to look at attributes of current layer.
+
+      @method sendingActions.attributesEdit
+      @param {Object} e Action's event object.
+    */
+  }
 );
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryMaplayerComponent.reopenClass({
-    flexberryClassNames
+  flexberryClassNames
 });
 
 export default FlexberryMaplayerComponent;
