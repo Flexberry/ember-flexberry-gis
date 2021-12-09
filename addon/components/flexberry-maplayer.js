@@ -522,7 +522,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
       if (!this.get('readonly')) {
         let _this = this;
-        let $captionBlock = Ember.$('.ui.tab.treeview .flexberry-treenode-caption-block')
+        let $captionBlock = Ember.$('.ui.tab.treeview .flexberry-treenode-caption-block');
         if ($captionBlock.length > 0) {
           $captionBlock.hover(
             function () {
@@ -535,10 +535,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
               $toolbar.addClass('hidden');
               Ember.$(this).children('.flexberry-maplayer-caption-label').removeClass('blur');
               _this.set('isSubmenu', false);
-        })
+            });
+        }
       }
-    }
-  },
+    },
     /**
       Redefine L.Control.SideBySide._updateClip for work with layer and label layer.
 
