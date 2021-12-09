@@ -350,7 +350,8 @@
   .treeview {
     overflow-x: hidden;
     overflow-y: hidden !important;
-    .ui.styled.accordion {
+	.ui.styled.accordion {
+      height: ~"calc(100% - 50px)" !important;
       width: 1000px;
       .accordion:first-child .title {
         border-top: none;
