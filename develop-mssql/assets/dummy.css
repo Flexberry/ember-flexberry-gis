@@ -46474,7 +46474,7 @@ img.item-minus {
   overflow-y: hidden !important;
 }
 .ui.right.sidebar .treeview .ui.styled.accordion {
-  height: calc(100% - 50px) !important;
+  height: calc(100% - 60px) !important;
   width: 1000px;
 }
 .ui.right.sidebar .treeview .ui.styled.accordion .accordion:first-child .title {
