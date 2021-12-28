@@ -28,15 +28,6 @@
           {{_options.caption}}
         </p>
         <div class="{{flexberryClassNames.sheetOfPaperMap}}" style={{_mapPreviewStyle}}>
-          {{#if _mapCanBeShown}}
-            {{#if _options.scaleControl}}
-              {{scale-control
-                map=leafletMap
-                imperial=false
-                position="bottomright"
-              }}
-            {{/if}}
-          {{/if}}
         </div>
         <div class="{{flexberryClassNames.legendControlMap}} {{if _options.legendUnderMap "" "hidden"}}" style={{_mapCaptionPreviewStyle}}>
           {{#if _mapCanBeShown}}
