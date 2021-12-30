@@ -446,6 +446,7 @@ export default SimpleDatetime.extend({
   _flatpickrCreate() {
     this._super(...arguments);
 
+    this.get(&#x27;_flatpickr&#x27;).set(&#x27;ignoredFocusElements&#x27;, [window.document.body]);
     this.$(&#x27;.custom-flatpickr&#x27;).on(&#x27;click&#x27;, (e) =&gt; { this.inputClick(this, e); });
     this.$(&#x27;.button&#x27;).on(&#x27;click&#x27;, (e) =&gt; { this.actions.remove(this, e); });
   },
