@@ -1087,6 +1087,15 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     }
   },
 
+  /**
+    Flag: whether to recalc scale on map zoom change.
+
+    @property recalcOnZoomChange
+    @type Boolean
+    @default null
+  */
+  recalcOnZoomChange: null,
+
   actions: {
     /**
       Handler for settings tabs 'click' action.
@@ -1243,6 +1252,14 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     */
     onBeforeShow(e) {
       this.sendAction('beforeShow', e);
+
+      // Switch scale control
+      let leafletMap = this.get('leafletMap');
+      if (leafletMap.switchScaleControl.options.recalcOnZoomChange) {
+        this.set('recalcOnZoomChange', true);
+        leafletMap.switchScaleControl.options.recalcOnZoomChange = false;
+        leafletMap.switchScaleControl._restore();
+      }
     },
 
     /**
@@ -1253,6 +1270,14 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     */
     onBeforeHide(e) {
       this.set('_isDialogShown', false);
+
+      // Switch scale control
+      if (this.get('recalcOnZoomChange')) {
+        this.set('recalcOnZoomChange', null);
+        let leafletMap = this.get('leafletMap');
+        leafletMap.switchScaleControl.options.recalcOnZoomChange = true;
+        leafletMap.switchScaleControl._restore();
+      }
 
       this.sendAction('beforeHide', e);
     },
