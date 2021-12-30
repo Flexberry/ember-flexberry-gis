@@ -8028,7 +8028,7 @@ define('dummy/tests/unit/components/scale-control-test.jshint', ['exports'], fun
     assert.ok(true, 'unit/components/scale-control-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/components/switch-scale-control-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+define('dummy/tests/unit/components/switch-scale-control-test', ['exports', 'ember-qunit', 'sinon'], function (exports, _emberQunit, _sinon) {
 
   (0, _emberQunit.moduleForComponent)('switch-scale-control', 'Unit | Component | switch scale control', {
     unit: true
@@ -8041,6 +8041,68 @@ define('dummy/tests/unit/components/switch-scale-control-test', ['exports', 'emb
     var control = component.createControl();
 
     assert.ok(control instanceof L.Control.SwitchScaleControl);
+  });
+
+  (0, _emberQunit.test)('it should set switchScaleControl on leafletMap', function (assert) {
+    assert.expect(6);
+    var leafletMap = L.map(document.createElement('div'));
+    var component = this.subject({ leafletMap: leafletMap });
+
+    var createControlSpy = _sinon['default'].spy(component, 'createControl');
+    var afterCreateControlSpy = _sinon['default'].spy(component, 'afterCreateControl');
+    var addControlSpy = _sinon['default'].spy(leafletMap, 'addControl');
+
+    // Renders the component to the page.
+    component.initControl();
+
+    assert.ok(component.get('control') instanceof L.Control.SwitchScaleControl);
+    assert.ok(createControlSpy.calledOnce);
+    assert.ok(afterCreateControlSpy.calledOnce);
+    assert.ok(addControlSpy.calledOnce);
+    assert.ok(leafletMap.switchScaleControl);
+    assert.deepEqual(leafletMap.switchScaleControl, component.get('control'));
+
+    createControlSpy.restore();
+    afterCreateControlSpy.restore();
+    addControlSpy.restore();
+  });
+
+  (0, _emberQunit.test)('it should call _restore switchScaleControl', function (assert) {
+    assert.expect(9);
+    var leafletMap = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    var component = this.subject({ leafletMap: leafletMap });
+
+    // Renders the component to the page.
+    component.initControl();
+
+    var control = component.get('control');
+    var onRemoveSpy = _sinon['default'].spy(control, 'onRemove');
+    var _updateRoundSpy = _sinon['default'].spy(control, '_updateRound');
+    var _updateSpy = _sinon['default'].spy(control, '_update');
+    var onSpy = _sinon['default'].spy(leafletMap, 'on');
+
+    control._restore();
+
+    assert.ok(component.get('control') instanceof L.Control.SwitchScaleControl);
+    assert.ok(onRemoveSpy.calledOnce);
+    assert.ok(onSpy.calledOnce);
+    assert.ok(_updateRoundSpy.calledOnce);
+    assert.notOk(_updateSpy.calledOnce);
+
+    control.options.recalcOnZoomChange = true;
+    control._restore();
+    assert.ok(onRemoveSpy.calledTwice);
+    assert.ok(onSpy.calledTwice);
+    assert.ok(_updateRoundSpy.calledOnce);
+    assert.ok(_updateSpy.calledOnce);
+
+    onRemoveSpy.restore();
+    _updateRoundSpy.restore();
+    _updateSpy.restore();
+    onSpy.restore();
   });
 });
 define('dummy/tests/unit/components/switch-scale-control-test.jscs-test', ['exports'], function (exports) {

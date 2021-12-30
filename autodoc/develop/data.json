@@ -22371,7 +22371,18 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1091,
+            "line": 1090,
+            "description": "Flag: whether to recalc scale on map zoom change.",
+            "itemtype": "property",
+            "name": "recalcOnZoomChange",
+            "type": "Boolean",
+            "default": "null",
+            "class": "FlexberryExportMapCommandDialogComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/map-commands-dialogs/export.js",
+            "line": 1100,
             "description": "Handler for settings tabs 'click' action.",
             "itemtype": "method",
             "name": "actions.onSettingsTabClick",
@@ -22387,7 +22398,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1110,
+            "line": 1119,
             "description": "Handler for bold font button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onBoldFontButtonClick",
@@ -22396,7 +22407,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1120,
+            "line": 1129,
             "description": "Handler for italic font button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onItalicFontButtonClick",
@@ -22405,7 +22416,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1130,
+            "line": 1139,
             "description": "Handler for underline font button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onUnderlineFontButtonClick",
@@ -22414,7 +22425,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1140,
+            "line": 1149,
             "description": "Handler for line-through font button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onLinethroughFontButtonClick",
@@ -22423,7 +22434,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1150,
+            "line": 1159,
             "description": "Handler for font colorpicker's 'change' action.",
             "itemtype": "method",
             "name": "actions.onCaptionFontColorChange",
@@ -22432,7 +22443,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1159,
+            "line": 1168,
             "description": "Handler for display mode change.",
             "itemtype": "method",
             "name": "actions.onDisplayModeChange",
@@ -22448,7 +22459,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1169,
+            "line": 1178,
             "description": "Handler for legend position change.",
             "itemtype": "method",
             "name": "actions.onLegendPositionChange",
@@ -22464,7 +22475,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1179,
+            "line": 1188,
             "description": "Handler for page number change.",
             "itemtype": "method",
             "name": "actions.onPageChange",
@@ -22480,7 +22491,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1189,
+            "line": 1198,
             "description": "Handler for paper orientation change.",
             "itemtype": "method",
             "name": "actions.onPaperOrientationChange",
@@ -22496,7 +22507,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1199,
+            "line": 1208,
             "description": "Handler for map control change.",
             "itemtype": "method",
             "name": "actions.onMapControlChange",
@@ -22512,7 +22523,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1210,
+            "line": 1219,
             "description": "Handler for error 'ui-message' component 'onShow' action.",
             "itemtype": "method",
             "name": "actions.onErrorMessageShow",
@@ -22521,7 +22532,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1217,
+            "line": 1226,
             "description": "Handler for error 'ui-message' component 'onHide' action.",
             "itemtype": "method",
             "name": "actions.onErrorMessageHide",
@@ -22530,7 +22541,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1238,
+            "line": 1247,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.beforeShow:method\"}}'flexberry-dialog' component's 'beforeShow' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryExportMapCommandDialogComponent/sendingActions.beforeShow:method\"}}'beforeShow' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onBeforeShow",
@@ -22539,7 +22550,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1248,
+            "line": 1265,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.beforeHide:method\"}}'flexberry-dialog' component's 'beforeHide' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryExportMapCommandDialogComponent/sendingActions.beforeHide:method\"}}'beforeHide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onBeforeHide",
@@ -22548,7 +22559,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1260,
+            "line": 1285,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.show:method\"}}'flexberry-dialog' component's 'show' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryExportMapCommandDialogComponent/sendingActions.show:method\"}}'show' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onShow",
@@ -22557,7 +22568,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1272,
+            "line": 1297,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.hide:method\"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryExportMapCommandDialogComponent/sendingActions.hide:method\"}}'hide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHide",
@@ -22566,7 +22577,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1282,
+            "line": 1307,
             "description": "Called when legends for one of the layers is loaded.",
             "itemtype": "method",
             "name": "actions.legendsLoaded",
@@ -22575,7 +22586,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1293,
+            "line": 1318,
             "description": "Observers changes in properties that affect the ability to show leaflet map.",
             "itemtype": "method",
             "name": "_mapCanBeShownDidChange",
@@ -22586,7 +22597,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1316,
+            "line": 1341,
             "description": "Observers changes in properties that affect the ability to show legend map.",
             "itemtype": "method",
             "name": "_legendControlDidChange",
@@ -22597,7 +22608,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1334,
+            "line": 1359,
             "description": "Observers changes in properties that affect the ability to show scale map.",
             "itemtype": "method",
             "name": "_scaleControlDidChange",
@@ -22608,7 +22619,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1353,
+            "line": 1378,
             "description": "Observers changes in properties that affect the ability to show pages.",
             "itemtype": "method",
             "name": "_pageNumberDidChange",
@@ -22619,7 +22630,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1365,
+            "line": 1390,
             "description": "Invalidates leaflet map's size.",
             "itemtype": "method",
             "name": "_invalidateSizeOfLeafletMap",
@@ -22631,7 +22642,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1384,
+            "line": 1409,
             "description": "Fits specified leaflet map's bounds.",
             "itemtype": "method",
             "name": "_fitBoundsOfLeafletMap",
@@ -22650,7 +22661,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1407,
+            "line": 1432,
             "description": "Waits for leaflet map tile layers to be ready.",
             "itemtype": "method",
             "name": "_waitForLeafletMapTileLayersToBeReady",
@@ -22662,7 +22673,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1459,
+            "line": 1484,
             "description": "Waits for leaflet map overlay layers to be ready.",
             "itemtype": "method",
             "name": "_waitForLeafletMapOverlayLayersToBeReady",
@@ -22674,7 +22685,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1498,
+            "line": 1523,
             "description": "Waits for leaflet map layers to be ready.",
             "itemtype": "method",
             "name": "_waitForLeafletMapLayersToBeReady",
@@ -22686,7 +22697,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1512,
+            "line": 1537,
             "description": "Shows leaflet map.",
             "itemtype": "method",
             "name": "_showLeafletMap",
@@ -22697,7 +22708,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1554,
+            "line": 1579,
             "description": "Hides leaflet map.",
             "itemtype": "method",
             "name": "_hideLeafletMap",
@@ -22708,7 +22719,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1590,
+            "line": 1615,
             "description": "Computes current scren approximate DPI.",
             "return": {
                 "description": "Current scren approximate DPI.",
@@ -22719,7 +22730,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1614,
+            "line": 1639,
             "description": "Returns inner options transformed into Leaflet.Export options.",
             "itemtype": "method",
             "name": "_getLeafletExportOptions",
@@ -22732,7 +22743,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1652,
+            "line": 1677,
             "description": "Export's map with respect to selected export options.",
             "itemtype": "method",
             "name": "_export",
@@ -22743,7 +22754,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1668,
+            "line": 1693,
             "description": "Prepares map for export with respect to selected export options.",
             "itemtype": "method",
             "name": "beforeExport",
@@ -22752,7 +22763,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1729,
+            "line": 1754,
             "description": "Export's map with respect to selected export options.",
             "itemtype": "method",
             "name": "export",
@@ -22761,7 +22772,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1849,
+            "line": 1874,
             "description": "Performs after export clean up.",
             "itemtype": "method",
             "name": "afterExport",
@@ -22770,35 +22781,35 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1901,
+            "line": 1926,
             "description": "Initializes component.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1945,
+            "line": 1970,
             "description": "Initializes component's DOM-related properties.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1981,
+            "line": 2006,
             "description": "Called after a component has been rendered, both on initial render and in subsequent rerenders.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1997,
+            "line": 2022,
             "description": "Destroys component.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2020,
+            "line": 2045,
             "description": "Component's action invoking when dialog starts to show.",
             "itemtype": "method",
             "name": "sendingActions.beforeShow",
@@ -22807,7 +22818,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2026,
+            "line": 2051,
             "description": "Component's action invoking when dialog starts to hide.",
             "itemtype": "method",
             "name": "sendingActions.beforeHide",
@@ -22816,7 +22827,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2032,
+            "line": 2057,
             "description": "Component's action invoking when dialog is shown.",
             "itemtype": "method",
             "name": "sendingActions.show",
@@ -22825,7 +22836,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2038,
+            "line": 2063,
             "description": "Component's action invoking when dialog is hidden.",
             "itemtype": "method",
             "name": "sendingActions.hide",
@@ -22834,7 +22845,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2044,
+            "line": 2069,
             "description": "Component's action invoking when dialog is approved.",
             "itemtype": "method",
             "name": "sendingActions.approve",
@@ -22843,7 +22854,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2050,
+            "line": 2075,
             "description": "Component's action invoking when dialog is denied.",
             "itemtype": "method",
             "name": "sendingActions.deny",
@@ -34378,6 +34389,17 @@
         {
             "file": "addon/components/flexberry-map.js",
             "line": 185,
+            "description": "How many scroll pixels (as reported by L.DomEvent.getWheelDelta) mean a change of one full zoom level.\nSmaller values will make wheel-zooming faster (and vice versa).",
+            "itemtype": "property",
+            "name": "wheelPxPerZoomLevel",
+            "type": "Number",
+            "default": "60",
+            "class": "FlexberryMapComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-map.js",
+            "line": 195,
             "description": "Forces the map's zoom level to always be a multiple of this.",
             "itemtype": "property",
             "name": "zoomSnap",
@@ -34388,7 +34410,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 194,
+            "line": 204,
             "description": "Controls how much the map's zoom level will change after a zoomIn(), zoomOut(),\npressing + or - on the keyboard, or using the zoom controls.",
             "itemtype": "property",
             "name": "zoomDelta",
@@ -34399,7 +34421,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 204,
+            "line": 214,
             "description": "Flag: indicates whether all paths should be rendered on a 'Canvas' renderer instead of 'SVG'.",
             "itemtype": "property",
             "name": "preferCanvas",
@@ -34410,7 +34432,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 213,
+            "line": 223,
             "description": "Array of map layers.",
             "itemtype": "property",
             "name": "layers",
@@ -34420,7 +34442,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 221,
+            "line": 231,
             "description": "JSON object with query parameters",
             "itemtype": "property",
             "name": "queryFilter",
@@ -34431,7 +34453,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 230,
+            "line": 240,
             "description": "Service for managing map API.",
             "itemtype": "property",
             "name": "mapApi",
@@ -34441,7 +34463,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 237,
+            "line": 247,
             "description": "Flag: indicates this is main map.",
             "itemtype": "property",
             "name": "mainMap",
@@ -34452,7 +34474,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 246,
+            "line": 256,
             "description": "Injects additional methods into initialized leaflet map.",
             "itemtype": "method",
             "name": "_injectMapLoaderMethods",
@@ -34470,7 +34492,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 299,
+            "line": 309,
             "description": "Removes injected additional methods from initialized leaflet map.\nRuns search query related to the specified URL params: 'queryFilter' and 'mapObjectSetting'.\nShows map loader, triggeres leaflet map event 'flexberry-map:query', then starts query and waits for all query requests to be finished,\nand finally calls to '_finishQuery' hook.",
             "itemtype": "method",
             "name": "_runQuery",
@@ -34481,7 +34503,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 319,
+            "line": 329,
             "description": "Runs search query related to the specified URL params: 'queryFilter' and 'mapObjectSetting'.",
             "itemtype": "method",
             "name": "_queryToMap",
@@ -34496,7 +34518,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 383,
+            "line": 393,
             "description": "Handles search query finish.\nShows query results on map, hides map loader, triggers 'queryFinished' action and related leaflet map event 'flexberry-map:queryFinished'.",
             "itemtype": "method",
             "name": "_finishQuery",
@@ -34519,7 +34541,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 425,
+            "line": 435,
             "description": "Handles leaflet map's moveend event.",
             "itemtype": "method",
             "name": "_moveend",
@@ -34537,7 +34559,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 436,
+            "line": 446,
             "description": "Handles leaflet map's zoomend event.",
             "itemtype": "method",
             "name": "_zoomend",
@@ -34555,7 +34577,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 447,
+            "line": 457,
             "description": "Observes changhes in application's current locale, and refreshes some GUI related to it.",
             "itemtype": "method",
             "name": "localeDidChange",
@@ -34566,7 +34588,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 467,
+            "line": 477,
             "description": "Handles leaflet map container's resize.\nInitializes in 'initLeafletMap' hook.",
             "itemtype": "property",
             "name": "_onLeafletContainerResize",
@@ -34579,14 +34601,14 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 478,
+            "line": 488,
             "description": "Initializes DOM-related component's properties.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 568,
+            "line": 578,
             "description": "Run an array of prommis.",
             "params": [
                 {
@@ -34600,14 +34622,14 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 602,
+            "line": 612,
             "description": "Destroys DOM-related component's properties.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 619,
+            "line": 629,
             "description": "Performs some initialization before leaflet map will be initialized.",
             "params": [
                 {
@@ -34621,7 +34643,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 632,
+            "line": 642,
             "description": "Performs some clean up before leaflet map will be destroyed.",
             "params": [
                 {
@@ -34635,7 +34657,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 645,
+            "line": 655,
             "description": "Initializes leaflet map related properties.",
             "params": [
                 {
@@ -34649,7 +34671,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 746,
+            "line": 756,
             "description": "Destroys leaflet map.",
             "params": [
                 {
@@ -34663,7 +34685,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 796,
+            "line": 806,
             "description": "Initializes map's service layer.",
             "params": [
                 {
@@ -34677,7 +34699,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 809,
+            "line": 819,
             "description": "Destroys map's service layer.",
             "params": [
                 {
@@ -34691,7 +34713,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 824,
+            "line": 834,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) initialized.",
             "itemtype": "method",
             "name": "sendingActions.leafletInit",
@@ -34714,7 +34736,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 832,
+            "line": 842,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) destroyed.",
             "itemtype": "method",
             "name": "sendingActions.leafletDestroy",
@@ -34723,7 +34745,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 838,
+            "line": 848,
             "description": "Component's action invoking when map's service layer initialized.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerInit",
@@ -34739,7 +34761,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 845,
+            "line": 855,
             "description": "Component's action invoking when maps's service layer destroyed.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerDestroy",
@@ -34748,7 +34770,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 851,
+            "line": 861,
             "description": "Component's action invoking when query on map load finished.",
             "itemtype": "method",
             "name": "sendingActions.queryFinished",
@@ -34764,7 +34786,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 859,
+            "line": 869,
             "description": "Handles edit dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.edit:method\"}}'edit'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onEditDialogApprove",
@@ -50811,27 +50833,27 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1365"
+            "line": " addon/components/map-commands-dialogs/export.js:1390"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1384"
+            "line": " addon/components/map-commands-dialogs/export.js:1409"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1407"
+            "line": " addon/components/map-commands-dialogs/export.js:1432"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1459"
+            "line": " addon/components/map-commands-dialogs/export.js:1484"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1498"
+            "line": " addon/components/map-commands-dialogs/export.js:1523"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1590"
+            "line": " addon/components/map-commands-dialogs/export.js:1615"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -50879,11 +50901,11 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/flexberry-map.js:319"
+            "line": " addon/components/flexberry-map.js:329"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/components/flexberry-map.js:568"
+            "line": " addon/components/flexberry-map.js:578"
         },
         {
             "message": "unknown tag: computed",
@@ -52027,23 +52049,23 @@
         },
         {
             "message": "Missing item type\nComputes current scren approximate DPI.",
-            "line": " addon/components/map-commands-dialogs/export.js:1590"
+            "line": " addon/components/map-commands-dialogs/export.js:1615"
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/map-commands-dialogs/export.js:1901"
+            "line": " addon/components/map-commands-dialogs/export.js:1926"
         },
         {
             "message": "Missing item type\nInitializes component's DOM-related properties.",
-            "line": " addon/components/map-commands-dialogs/export.js:1945"
+            "line": " addon/components/map-commands-dialogs/export.js:1970"
         },
         {
             "message": "Missing item type\nCalled after a component has been rendered, both on initial render and in subsequent rerenders.",
-            "line": " addon/components/map-commands-dialogs/export.js:1981"
+            "line": " addon/components/map-commands-dialogs/export.js:2006"
         },
         {
             "message": "Missing item type\nDestroys component.",
-            "line": " addon/components/map-commands-dialogs/export.js:1997"
+            "line": " addon/components/map-commands-dialogs/export.js:2022"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -52575,39 +52597,39 @@
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/flexberry-map.js:478"
+            "line": " addon/components/flexberry-map.js:488"
         },
         {
             "message": "Missing item type\nRun an array of prommis.",
-            "line": " addon/components/flexberry-map.js:568"
+            "line": " addon/components/flexberry-map.js:578"
         },
         {
             "message": "Missing item type\nDestroys DOM-related component's properties.",
-            "line": " addon/components/flexberry-map.js:602"
+            "line": " addon/components/flexberry-map.js:612"
         },
         {
             "message": "Missing item type\nPerforms some initialization before leaflet map will be initialized.",
-            "line": " addon/components/flexberry-map.js:619"
+            "line": " addon/components/flexberry-map.js:629"
         },
         {
             "message": "Missing item type\nPerforms some clean up before leaflet map will be destroyed.",
-            "line": " addon/components/flexberry-map.js:632"
+            "line": " addon/components/flexberry-map.js:642"
         },
         {
             "message": "Missing item type\nInitializes leaflet map related properties.",
-            "line": " addon/components/flexberry-map.js:645"
+            "line": " addon/components/flexberry-map.js:655"
         },
         {
             "message": "Missing item type\nDestroys leaflet map.",
-            "line": " addon/components/flexberry-map.js:746"
+            "line": " addon/components/flexberry-map.js:756"
         },
         {
             "message": "Missing item type\nInitializes map's service layer.",
-            "line": " addon/components/flexberry-map.js:796"
+            "line": " addon/components/flexberry-map.js:806"
         },
         {
             "message": "Missing item type\nDestroys map's service layer.",
-            "line": " addon/components/flexberry-map.js:809"
+            "line": " addon/components/flexberry-map.js:819"
         },
         {
             "message": "Missing item type\nReference to component's template.",

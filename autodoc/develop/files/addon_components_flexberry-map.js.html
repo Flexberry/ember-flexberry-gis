@@ -526,7 +526,7 @@ let FlexberryMapComponent = Ember.Component.extend(
   leafletOptions: [
 
     // Map state options.
-    &#x27;center&#x27;, &#x27;zoom&#x27;, &#x27;minZoom&#x27;, &#x27;maxZoom&#x27;, &#x27;maxBounds&#x27;, &#x27;maxBoundsViscosity&#x27;, &#x27;crs&#x27;, &#x27;preferCanvas&#x27;, &#x27;editable&#x27;,
+    &#x27;center&#x27;, &#x27;zoom&#x27;, &#x27;minZoom&#x27;, &#x27;maxZoom&#x27;, &#x27;maxBounds&#x27;, &#x27;maxBoundsViscosity&#x27;, &#x27;crs&#x27;, &#x27;preferCanvas&#x27;, &#x27;editable&#x27;, &#x27;wheelPxPerZoomLevel&#x27;,
 
     // Interaction options.
     &#x27;dragging&#x27;, &#x27;touchZoom&#x27;, &#x27;scrollWheelZoom&#x27;, &#x27;doubleClickZoom&#x27;, &#x27;boxZoom&#x27;,
@@ -598,6 +598,16 @@ let FlexberryMapComponent = Ember.Component.extend(
     @default true
   */
   editable: true,
+
+  /**
+    How many scroll pixels (as reported by L.DomEvent.getWheelDelta) mean a change of one full zoom level.
+    Smaller values will make wheel-zooming faster (and vice versa).
+
+    @property wheelPxPerZoomLevel
+    @type Number
+    @default 60
+  */
+  wheelPxPerZoomLevel: 60,
 
   /**
     Forces the map&#x27;s zoom level to always be a multiple of this.

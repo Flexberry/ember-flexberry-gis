@@ -418,7 +418,7 @@
 /**
   @module ember-flexberry-gis
  */
-
+import Ember from &#x27;ember&#x27;;
 import BaseControl from &#x27;ember-flexberry-gis/components/base-control&#x27;;
 
 /**
@@ -461,6 +461,32 @@ export default BaseControl.extend({
   */
   createControl() {
     return new L.Control.SwitchScaleControl(this.get(&#x27;options&#x27;));
+  },
+
+  afterCreateControl() {
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    let control = this.get(&#x27;control&#x27;);
+    control._restore = this.get(&#x27;_restore&#x27;).bind(this);
+    Ember.set(leafletMap, &#x27;switchScaleControl&#x27;, control);
+  },
+
+  _restore() {
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    let control = this.get(&#x27;control&#x27;);
+    control.onRemove(leafletMap);
+    let options = control.options;
+    if (options.recalcOnZoomChange) {
+      if (control.options.recalcOnPositionChange) {
+        leafletMap.on(options.updateWhenIdle ? &#x27;moveend&#x27; : &#x27;move&#x27;, control._update, control);
+      } else {
+        leafletMap.on(options.updateWhenIdle ? &#x27;zoomend&#x27; : &#x27;zoom&#x27;, control._update, control);
+      }
+
+      control._update();
+    } else {
+      leafletMap.on(options.updateWhenIdle ? &#x27;zoomend&#x27; : &#x27;zoom&#x27;, control._updateRound, control);
+      control._updateRound();
+    }
   }
 });
 
