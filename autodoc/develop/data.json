@@ -35811,7 +35811,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 908,
+            "line": 912,
             "description": "Creates layer's copy.",
             "itemtype": "method",
             "name": "createLayerCopy",
@@ -35832,7 +35832,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 922,
+            "line": 926,
             "description": "Component's action invoking when layer node's header has been clicked.",
             "itemtype": "method",
             "name": "sendingActions.headerClick",
@@ -35848,7 +35848,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 930,
+            "line": 934,
             "description": "Component's action invoking before layer node will be expanded.\nLayer node can be prevented from being expanded with call to action event object's 'originalEvent.stopPropagation()'.",
             "itemtype": "method",
             "name": "sendingActions.beforeExpand",
@@ -35864,7 +35864,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 939,
+            "line": 943,
             "description": "Component's action invoking before layer node will be collapsed.\nLayer node can be prevented from being collapsed with call to action event object's 'originalEvent.stopPropagation()'.",
             "itemtype": "method",
             "name": "sendingActions.beforeCollapse",
@@ -35880,7 +35880,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 948,
+            "line": 952,
             "description": "Component's action invoking when layer node's 'visibility' state changed.",
             "itemtype": "method",
             "name": "sendingActions.changeVisibility",
@@ -35896,7 +35896,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 956,
+            "line": 960,
             "description": "Component's action invoking when layer node's 'opacity' value changed.",
             "itemtype": "method",
             "name": "sendingActions.changeOpacity",
@@ -35912,7 +35912,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 964,
+            "line": 968,
             "description": "Component's action invoking when layer node's 'extent' button clicked.",
             "itemtype": "method",
             "name": "sendingActions.fitBounds",
@@ -35928,7 +35928,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 972,
+            "line": 976,
             "description": "Component's action invoking when user wants to add child layer into current.",
             "itemtype": "method",
             "name": "sendingActions.add",
@@ -35951,7 +35951,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 980,
+            "line": 984,
             "description": "Component's action invoking when user wants to copy current layer.",
             "itemtype": "method",
             "name": "sendingActions.copy",
@@ -35979,7 +35979,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 989,
+            "line": 993,
             "description": "Component's action invoking when user wants to edit current layer.",
             "itemtype": "method",
             "name": "sendingActions.edit",
@@ -36002,7 +36002,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 997,
+            "line": 1001,
             "description": "Component's action invoking when user wants to remove current layer.",
             "itemtype": "method",
             "name": "sendingActions.remove",
@@ -36018,7 +36018,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1004,
+            "line": 1008,
             "description": "Component's action invoking when user wants to look at attributes of current layer.",
             "itemtype": "method",
             "name": "sendingActions.attributesEdit",
@@ -36437,7 +36437,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 543,
+            "line": 547,
             "description": "Handles add button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddButtonClick",
@@ -36453,7 +36453,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 564,
+            "line": 568,
             "description": "Handles add dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddDialogApprove",
@@ -36476,7 +36476,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 577,
+            "line": 581,
             "description": "Handles clicks on left side button.",
             "itemtype": "method",
             "name": "actions.onLeftClick",
@@ -36485,7 +36485,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 586,
+            "line": 590,
             "description": "Handles clicks on right side button.",
             "itemtype": "method",
             "name": "actions.onLeftClick",
@@ -36494,7 +36494,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 596,
+            "line": 600,
             "description": "Component's action invoking when user wants to add child layer into layers tree root.",
             "itemtype": "method",
             "name": "sendingActions.add",

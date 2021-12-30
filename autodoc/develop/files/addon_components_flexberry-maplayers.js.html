@@ -928,6 +928,10 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     dynamicButtons: [],
 
     actions: {
+      closeOtherCalendar(layerId) {
+        this.sendAction(&#x27;closeOtherCalendar&#x27;, layerId);
+      },
+
       external(actionName, layer) {
         this.sendAction(actionName, layer);
       },

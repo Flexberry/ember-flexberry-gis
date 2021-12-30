@@ -429,10 +429,11 @@ import layout from &#x27;../templates/components/flexberry-simpledatetime&#x27;;
  */
 export default SimpleDatetime.extend({
   layout,
+  _flatpickr: null,
 
   inputClick(_this, e) {
     e.stopPropagation();
-
+    _this.sendAction(&#x27;closeOtherCalendar&#x27;);
     if (_this.get(&#x27;canClick&#x27;) &amp;&amp; !(_this.get(&#x27;useBrowserInput&#x27;) &amp;&amp; _this.get(&#x27;currentTypeSupported&#x27;)) &amp;&amp; !_this.get(&#x27;readonly&#x27;)) {
       _this.set(&#x27;canClick&#x27;, false);
       _this.get(&#x27;_flatpickr&#x27;).open();
@@ -446,7 +447,6 @@ export default SimpleDatetime.extend({
   _flatpickrCreate() {
     this._super(...arguments);
 
-    this.get(&#x27;_flatpickr&#x27;).set(&#x27;ignoredFocusElements&#x27;, [window.document.body]);
     this.$(&#x27;.custom-flatpickr&#x27;).on(&#x27;click&#x27;, (e) =&gt; { this.inputClick(this, e); });
     this.$(&#x27;.button&#x27;).on(&#x27;click&#x27;, (e) =&gt; { this.actions.remove(this, e); });
   },
