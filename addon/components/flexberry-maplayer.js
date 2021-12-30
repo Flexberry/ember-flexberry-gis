@@ -902,6 +902,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onRemoveDialogApprove(...args) {
         // Send outer 'remove' action.
         this.sendAction('remove', ...args);
+      },
+
+      closeOtherCalendar() {
+        this.sendAction('closeOtherCalendar', this.get('layer.id'));
       }
     },
 

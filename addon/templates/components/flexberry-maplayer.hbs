@@ -37,11 +37,13 @@
           {{layer.name}}
           {{#if (and histEnabled (eq layer.type "with-history"))}}
            от {{flexberry-simpledatetime
+                _flatpickr=layer._flatpickr
                 value=layer.archTime
                 type="datetime"
                 max=maxDate
                 placeholder=""
                 change=(action "onLayerTimeChange")
+                closeOtherCalendar = (action "closeOtherCalendar")
               }}
           {{/if}}
         </div>
