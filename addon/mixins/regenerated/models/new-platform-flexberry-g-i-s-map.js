@@ -53,6 +53,7 @@ export let Model = Ember.Mixin.create({
   creator: DS.attr('string'),
   editTime: DS.attr('date'),
   editor: DS.attr('string'),
+  picture: DS.attr('string'),
   mapLayer: DS.hasMany('new-platform-flexberry-g-i-s-map-layer', { inverse: 'map', async: false }),
 
   getValidations: function () {
@@ -97,6 +98,7 @@ export let defineProjections = function (modelClass) {
     zoom: Projection.attr('Зум'),
     public: Projection.attr('Общая'),
     scale: Projection.attr('Масштаб'),
+    picture: Projection.attr('Изображение'),
     coordinateReferenceSystem: Projection.attr('Система координат'),
     boundingBox: Projection.attr('Граница'),
     mapLayer: Projection.hasMany('new-platform-flexberry-g-i-s-map-layer', '', {
@@ -142,7 +144,8 @@ export let defineProjections = function (modelClass) {
     lat: Projection.attr('Широта'),
     lng: Projection.attr('Долгота'),
     zoom: Projection.attr('Зум'),
-    public: Projection.attr('Общая')
+    public: Projection.attr('Общая'),
+    picture: Projection.attr('Изображение')
   });
 
   modelClass.defineProjection('MapGisSearchFormL', 'new-platform-flexberry-g-i-s-map', {
