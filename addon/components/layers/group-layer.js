@@ -52,13 +52,12 @@ export default BaseLayer.extend({
   */
   createLayer() {
     let leafletMap = this.get('leafletMap');
-    let layer;
+    let layer = L.layerGroup();
 
     let thisPane = this.get('_pane');
     let pane = leafletMap.getPane(thisPane);
     if (!pane || Ember.isNone(pane)) {
       leafletMap.createPane(thisPane);
-      layer = L.layerGroup();
       layer.options.pane = thisPane;
       layer.options.renderer = this.get('_renderer');
     }
