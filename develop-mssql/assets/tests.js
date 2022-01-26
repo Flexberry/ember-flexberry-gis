@@ -2249,6 +2249,11 @@ define('dummy/tests/integration/components/layers/group-layer-test', ['exports',
   (0, _emberQunit.test)('it renders', function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
+    var leafletMap = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    this.set('leafletMap', leafletMap);
     this.set('leafletContainer', L.layerGroup());
 
     this.render(Ember.HTMLBars.template((function () {
@@ -2267,7 +2272,7 @@ define('dummy/tests/integration/components/layers/group-layer-test', ['exports',
             },
             'end': {
               'line': 1,
-              'column': 56
+              'column': 78
             }
           }
         },
@@ -2288,7 +2293,7 @@ define('dummy/tests/integration/components/layers/group-layer-test', ['exports',
           dom.insertBoundary(fragment, null);
           return morphs;
         },
-        statements: [['inline', 'layers/group-layer', [], ['leafletContainer', ['subexpr', '@mut', [['get', 'leafletContainer', ['loc', [null, [1, 38], [1, 54]]]]], [], []]], ['loc', [null, [1, 0], [1, 56]]]]],
+        statements: [['inline', 'layers/group-layer', [], ['leafletContainer', ['subexpr', '@mut', [['get', 'leafletContainer', ['loc', [null, [1, 38], [1, 54]]]]], [], []], 'leafletMap', ['subexpr', '@mut', [['get', 'leafletMap', ['loc', [null, [1, 66], [1, 76]]]]], [], []]], ['loc', [null, [1, 0], [1, 78]]]]],
         locals: [],
         templates: []
       };
@@ -5307,14 +5312,21 @@ define('dummy/tests/unit/components/layers/combine-layer-test.jshint', ['exports
 });
 define('dummy/tests/unit/components/layers/group-layer-test', ['exports', 'ember-qunit', 'sinon'], function (exports, _emberQunit, _sinon) {
 
+  var leafletMap = undefined;
   (0, _emberQunit.moduleForComponent)('layers/group-layer', 'Unit | Component | layers/group layer', {
-    unit: true
+    unit: true,
+    beforeEach: function beforeEach() {
+      leafletMap = L.map(document.createElement('div'), {
+        center: [51.505, -0.09],
+        zoom: 13
+      });
+    }
   });
 
   (0, _emberQunit.test)('it return L.LayerGroup on createLayer', function (assert) {
     assert.expect(1);
 
-    var component = this.subject();
+    var component = this.subject({ leafletMap: leafletMap });
     var layer = component.createLayer();
     assert.ok(layer instanceof L.LayerGroup, 'Expected L.LayerGroup instance');
   });
@@ -5322,7 +5334,7 @@ define('dummy/tests/unit/components/layers/group-layer-test', ['exports', 'ember
   (0, _emberQunit.test)('it not call _leafletObject.setZIndex on setZIndex', function (assert) {
     assert.expect(1);
 
-    var component = this.subject();
+    var component = this.subject({ leafletMap: leafletMap });
     var leafletLayerPromiseResolved = assert.async();
     component.get('_leafletLayerPromise').then(function (leafletLayer) {
       var layer = component.get('_leafletObject');
