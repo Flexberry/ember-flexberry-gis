@@ -77,7 +77,8 @@ export let defineProjections = function (modelClass) {
     creator: Projection.attr('Создатель'),
     createTime: Projection.attr('Время создания'),
     editor: Projection.attr('Редактор'),
-    editTime: Projection.attr('Время редактирования')
+    editTime: Projection.attr('Время редактирования'),
+	picture: Projection.attr('Изображение')
   });
 
   modelClass.defineProjection('Map', 'new-platform-flexberry-g-i-s-map', {
