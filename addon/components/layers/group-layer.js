@@ -2,6 +2,7 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
 import BaseLayer from '../base-layer';
 import layout from '../../templates/components/layers/group-layer';
 
@@ -42,7 +43,6 @@ export default BaseLayer.extend({
     return L.canvas({ pane: pane });
   }),
 
-
   /**
     Creates leaflet layer related to layer type.
 
@@ -63,7 +63,7 @@ export default BaseLayer.extend({
       layer.options.renderer = this.get('_renderer');
     }
 
-    return layer
+    return layer;
   },
 
   /**
