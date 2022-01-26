@@ -1482,7 +1482,12 @@ export default BaseVectorLayer.extend({
     let featuresIds = [];
     leafletObject.models
       .filter((layer) => { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(layer)); }).forEach((model, layerId) => {
-        let layer = leafletObject.getLayer(layerId);
+        let layer = Object.values(leafletObject._layers).find((layer) => {
+          if (layer.model.get('id') === model.get('id')) {
+            return layer;
+          }
+        });
+
         let dirtyType = model.get('dirtyType');
         if (dirtyType === 'created') {
           if (leafletObject.hasLayer(layer)) {
