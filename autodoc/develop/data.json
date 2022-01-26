@@ -4137,7 +4137,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/layers/group-layer.js",
-            "line": 8,
+            "line": 9,
             "description": "Group layer component for leaflet map.",
             "extends": "BaseLayerComponent"
         },
@@ -11885,14 +11885,34 @@
         },
         {
             "file": "addon/components/layers/group-layer.js",
-            "line": 17,
+            "line": 18,
             "description": "Sets z-index for layer.",
             "class": "GroupLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/group-layer.js",
-            "line": 24,
+            "line": 25,
+            "itemtype": "property",
+            "name": "_pane",
+            "type": "String",
+            "readonly": "",
+            "class": "GroupLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers/group-layer.js",
+            "line": 36,
+            "itemtype": "property",
+            "name": "_renderer",
+            "type": "Object",
+            "readonly": "",
+            "class": "GroupLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers/group-layer.js",
+            "line": 46,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -11904,7 +11924,7 @@
         },
         {
             "file": "addon/components/layers/group-layer.js",
-            "line": 35,
+            "line": 68,
             "description": "Handles 'flexberry-map:identify' event of leaflet map.",
             "itemtype": "method",
             "name": "identify",
@@ -11942,7 +11962,7 @@
         },
         {
             "file": "addon/components/layers/group-layer.js",
-            "line": 53,
+            "line": 86,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -50753,7 +50773,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/group-layer.js:24"
+            "line": " addon/components/layers/group-layer.js:46"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -51453,7 +51473,7 @@
         },
         {
             "message": "Missing item type\nSets z-index for layer.",
-            "line": " addon/components/layers/group-layer.js:17"
+            "line": " addon/components/layers/group-layer.js:18"
         },
         {
             "message": "Missing item type\nFor batch reading",

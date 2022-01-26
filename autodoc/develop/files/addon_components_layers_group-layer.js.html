@@ -419,6 +419,7 @@
   @module ember-flexberry-gis
 */
 
+import Ember from &#x27;ember&#x27;;
 import BaseLayer from &#x27;../base-layer&#x27;;
 import layout from &#x27;../../templates/components/layers/group-layer&#x27;;
 
@@ -439,6 +440,27 @@ export default BaseLayer.extend({
   },
 
   /**
+    @property _pane
+    @type String
+    @readOnly
+  */
+  _pane: Ember.computed(&#x27;layerModel.id&#x27;, function () {
+    // to switch combine-layer
+    let layerId = !Ember.isNone(this.get(&#x27;layerId&#x27;)) ? this.get(&#x27;layerId&#x27;) : &#x27;&#x27;;
+    return &#x27;groupLayer&#x27; + this.get(&#x27;layerModel.id&#x27;) + layerId;
+  }),
+
+  /**
+    @property _renderer
+    @type Object
+    @readOnly
+  */
+  _renderer: Ember.computed(&#x27;_pane&#x27;, function () {
+    let pane = this.get(&#x27;_pane&#x27;);
+    return L.canvas({ pane: pane });
+  }),
+
+  /**
     Creates leaflet layer related to layer type.
 
     @method createLayer
@@ -446,7 +468,18 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
-    return L.layerGroup();
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    let layer = L.layerGroup();
+
+    let thisPane = this.get(&#x27;_pane&#x27;);
+    let pane = leafletMap.getPane(thisPane);
+    if (!pane || Ember.isNone(pane)) {
+      leafletMap.createPane(thisPane);
+      layer.options.pane = thisPane;
+      layer.options.renderer = this.get(&#x27;_renderer&#x27;);
+    }
+
+    return layer;
   },
 
   /**
