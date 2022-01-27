@@ -1183,7 +1183,7 @@ test('test method clearChanges() with no changes', function(assert) {
 });
 
 test('test method clearChanges() with create', function(assert) {
-  assert.expect(7);
+  assert.expect(9);
   var done = assert.async(1);
   let component = this.subject(param);
 
@@ -1212,13 +1212,16 @@ test('test method clearChanges() with create', function(assert) {
         1000: {}
       };
       layerAdd.enableEdit(leafletMap);
+      leafletMap.editTools.featuresLayer.addLayer(layerAdd);
 
       assert.equal(realCountArr(leafletObject.models), 1);
       assert.equal(leafletObject.getLayers().length, 3);
       assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+      assert.equal(leafletMap.editTools.featuresLayer.getLayers().length, 1);
 
       component.clearChanges();
       assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+      assert.equal(leafletMap.editTools.featuresLayer.getLayers().length, 0);
       done();
     });
   });
