@@ -24,6 +24,7 @@ export default Ember.Mixin.create({
     return new Ember.RSVP.Promise((resolve, reject) => {
       const saveSuccess = (data) => {
         Ember.set(leafletObject, '_wasChanged', false);
+        this._getEditTools().featuresLayer.clearLayers();
         const map = this.get('mapApi').getFromApi('leafletMap');
 
         if (!Ember.isNone(map)) {
