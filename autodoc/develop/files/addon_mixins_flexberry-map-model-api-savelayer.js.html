@@ -441,6 +441,7 @@ export default Ember.Mixin.create({
     return new Ember.RSVP.Promise((resolve, reject) =&gt; {
       const saveSuccess = (data) =&gt; {
         Ember.set(leafletObject, &#x27;_wasChanged&#x27;, false);
+        this._getEditTools().featuresLayer.clearLayers();
         const map = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
 
         if (!Ember.isNone(map)) {

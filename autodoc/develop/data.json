@@ -45694,7 +45694,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-savelayer.js",
-            "line": 52,
+            "line": 53,
             "description": "Remove layer editing.",
             "itemtype": "method",
             "name": "_removeLayerEditing",
