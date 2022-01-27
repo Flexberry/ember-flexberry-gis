@@ -1898,15 +1898,20 @@ export default BaseVectorLayer.extend({
 
     let featuresIds = [];
     leafletObject.models
-      .filter((layer) =&gt; { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(layer)); }).forEach((model, layerId) =&gt; {
-        let layer = leafletObject.getLayer(layerId);
+      .filter((layer) =&gt; { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(layer)); }).forEach((model, index) =&gt; {
+        let layer = Object.values(leafletObject._layers).find((layer) =&gt; {
+          if (layer.model.get(&#x27;id&#x27;) === model.get(&#x27;id&#x27;)) {
+            return layer;
+          }
+        });
+
         let dirtyType = model.get(&#x27;dirtyType&#x27;);
         if (dirtyType === &#x27;created&#x27;) {
           if (leafletObject.hasLayer(layer)) {
             leafletObject.removeLayer(layer);
           }
 
-          delete leafletObject.models[layerId];
+          delete leafletObject.models[index];
           if (editTools.featuresLayer.getLayers().length !== 0) {
             let editorLayerId = editTools.featuresLayer.getLayerId(layer);
             let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
@@ -1929,7 +1934,7 @@ export default BaseVectorLayer.extend({
           }
 
           model.rollbackAttributes();
-          delete leafletObject.models[layerId];
+          delete leafletObject.models[index];
           featuresIds.push(model.get(&#x27;id&#x27;));
         }
       });
