@@ -1,0 +1,16 @@
+@flexberryTabBarItemColor: @darkbluecolor;
+@flexberryTabBarBorderRadius: @defaultBorderRadius;
+@flexberryTabBarBoxShadow: none !important;
+@visibleRightSidebarBorderRadius: @defaultBorderRadius !important;
+@visibleRightSidebarBoxShadow: none !important;
+@flexberryTabBarItemBoxShadow: none !important;
+@flexberryTabBarBackgroundColor: transparent;
+@flexberryTabBarActiveItemBackground: @buttonMenuActiveBackground;
+@flexberryTreeHeaderTitleHoveredColor: @textColor;
+@flexberryMaplayerOpacitiLabelColor: @primaryColor;
+@sliderHandlerBackground: @primaryColor;
+@flexberryTreenodeHeaderColor: @textColor;
+@sidebarWrapperTabColor: @textColor;
+@sidebarWrapperTabHoveredColor: @primaryColor;
+@flexberryMaplayerOpacitiLabelHoveredBackground: @buttonMenuHoveredBackground;
+@flexberryMaplayerOpacitiLabelHoveredBorder: @buttonMenuHoveredBorder;

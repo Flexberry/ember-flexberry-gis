@@ -90,12 +90,7 @@
             color: @leafletBarButtonColor;
             background: @leafletBarButtonBackground;
             font-size: @leafletBarButtonFontSize;
-            .icon {
-                padding: 3px;
-                &:before {
-                    font-size: 1em;
-                }
-            }
+
             &.active,
             &:hover {
                 color: @leafletBarButtonColor;
@@ -405,14 +400,9 @@
     }
     /* иконки */
     i.icon {
-        width: 20px;
-        height: 20px;
-        &:before {
-            font-family: Crimean;
-        }
-        &.dropdown:before {
-            font-family: Icons;
-        }
+      &.dropdown:before {
+          font-family: Icons;
+      }
     }
     /* отступ в кнопках с иконками */
     .ui.icon.button {
@@ -461,10 +451,6 @@
     /* перейти к точке */
     i.icon.location.arrow:before {
         content: "\e812";
-    }
-    /* отдалить на полную */
-    i.icon.globe:before {
-        content: "\e830";
     }
     i.icon.resize:before {
         font-family: Icons;
@@ -549,14 +535,6 @@
         &:before {
             content: "\e822";
         }
-    }
-    /* еще */
-    i.icon.more {
-      margin: 0px 0px 0px 2px;
-      &:before {
-        content: "\f141";
-        font-family: Icons;
-      }
     }
     i.icon.minimap {
       &:before {
@@ -844,16 +822,7 @@ div.measure-drag-panel {
 .layer-result-list {
   padding-top: 15px;
   text-align: center;
-  .icon.caret {
-    font-size: 20px;
-    margin: 0;
-  }
-  i.icon.caret.down:before {
-    content: '\f107';
-  }
-  i.icon.caret.right:before {
-    content: '\f105';
-  }
+
   .ui.active.inline.loader {
     margin-top: 10px;
     left: 45%;
@@ -895,7 +864,7 @@ div.measure-drag-panel {
       width: 250px;
       z-index: 100;
       background: @whitecolor;
-      border: 1px solid #E5E5E5;
+      border: none;
       box-sizing: border-box;
       border-radius: 3.5px;
       p {
@@ -969,16 +938,8 @@ div.measure-drag-panel {
     display: block;
     float: left;
     transform-origin: 50% 60%;
-    &:before {
-      font-size: 20px;
-      content: '\f105';
-    }
   }
-  .ui.accordion .title.active .dropdown.icon {
-    &:before {
-      content: '\f105';
-    }
-  }
+
   .layer-result-list-toggler {
     .title {
       display: flex;

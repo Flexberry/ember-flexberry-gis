@@ -53,7 +53,7 @@
               {{#if (not isGroup)}}
                 {{flexberry-button
                   class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
-                  iconClass="plus icon"
+                  iconClass="icon-guideline-plus-r"
                   tooltip=(t "components.flexberry-maplayer.plus-button.tooltip")
                   click=(action "onFeatureCreateButtonClick")
                 }}
@@ -61,7 +61,7 @@
               {{#if _attributesOperationIsAvailable}}
                 {{flexberry-button
                   class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
-                  iconClass="browser icon"
+                  iconClass="icon-guideline-table"
                   tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
                   click=(action "onAttributesButtonClick")
                 }}
@@ -69,28 +69,28 @@
               <div class="allmore floated flexberry-button ui button icon {{flexberryClassNames.preventExpandCollapse}}">
                 {{flexberry-button
                   class=(concat "more floated " flexberryClassNames.preventExpandCollapse)
-                  iconClass="more icon"
+                  iconClass="icon-guideline-points"
                   click=(action "onSubmenu")
                 }}
                 <div class="more submenu {{if isSubmenu '' 'hidden'}}">
                   <div class="button-more-submenu">
                   {{flexberry-button
                     class=(concat "more submenu floated " flexberryClassNames.preventExpandCollapse)
-                    iconClass="more icon"
+                    iconClass="icon-guideline-points"
                     click=(action "onSubmenu")
                   }}
                   </div>
                   {{#if _fitBoundsOperationIsAvailable}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.boundsButton " floated " flexberryClassNames.preventExpandCollapse)
-                      iconClass="maximize icon"
+                      iconClass="icon-guideline-resize-plus"
                       caption=(t "components.flexberry-maplayer.bounds-button.tooltip")
                       click=(action "onBoundsButtonClick")
                     }}
                   {{/if}}
                   {{flexberry-button
                     class=(concat flexberryClassNames.editButton " floated " flexberryClassNames.preventExpandCollapse)
-                    iconClass="edit icon"
+                    iconClass="icon-guideline-edit-r"
                     caption=(t "components.flexberry-maplayer.edit-button.tooltip")
                     click=(action "onEditButtonClick")
                   }}
@@ -110,7 +110,7 @@
                   {{/if}}
                   {{flexberry-button
                     class=(concat flexberryClassNames.removeButton " floated " flexberryClassNames.preventExpandCollapse)
-                    iconClass="trash icon"
+                    iconClass="icon-guideline-delete-r"
                     caption=(t "components.flexberry-maplayer.remove-button.tooltip")
                     click=(action "onRemoveButtonClick")
                   }}
