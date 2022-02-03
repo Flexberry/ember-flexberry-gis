@@ -99,6 +99,7 @@ let BaseMapCommandComponent = BaseMapToolComponent.extend({
       leafletMap.fire('flexberry-map:commands:choose', {
         mapCommand: this
       });
+
       // Command with submenu is just a wrapper, it shouldn't really execute map-command.
       return;
     }
