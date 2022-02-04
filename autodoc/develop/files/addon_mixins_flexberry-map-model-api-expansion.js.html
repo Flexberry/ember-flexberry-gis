@@ -470,17 +470,21 @@ export default Ember.Mixin.create(rhumbOperations, {
       geoJSON = L.geoJSON(object);
     }
 
-    let newObj = geoJSON.getLayers()[0];
+    let newObjs = geoJSON.getLayers();
 
-    let e = { layers: [newObj], results: Ember.A() };
-    leafletObject.fire(&#x27;load&#x27;, e);
+    if (newObjs.length &gt; 0) {
+      let e = { layers: newObjs, results: Ember.A() };
+      leafletObject.fire(&#x27;load&#x27;, e);
 
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      Ember.RSVP.allSettled(e.results).then(() =&gt; {
-        newObj.layerId = layerId;
-        resolve(newObj);
+      return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+        Ember.RSVP.allSettled(e.results).then(() =&gt; {
+          newObjs.forEach((layer) =&gt; { layer.layerId = layerId; });
+          resolve(newObjs);
+        });
       });
-    });
+    } else {
+      throw new Error(&#x27;Can not create object from geojson&#x27;);
+    }
   },
 
   /**

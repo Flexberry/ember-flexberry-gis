@@ -45583,7 +45583,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 69,
+            "line": 73,
             "description": "Create multi-circuit object. Transforms geometries into JSTS objects. Checks whether types and crs are same.\nIf geometries intersects, it unions or differents geometries depending on the parameter isUnion.\nAfter that, it merges all geometries that don't intersects. Using GeoJSONWriter converts jsts object to geoJSON.\n\nExample of method call:\n```javascript\nlet objects = [\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.18425, 58.07197],\n            [56.21068, 58.07197],\n            [56.21068, 58.07987],\n            [56.18425, 58.07987],\n            [56.18425, 58.07197]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    },\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.19712, 58.06770],\n            [56.22322, 58.06770],\n            [56.22322, 58.07551],\n            [56.19712, 58.07551],\n            [56.19712, 58.06770]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    },\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[56.21644, 58.07864],\n            [56.23197, 58.07864],\n            [56.23197, 58.08608],\n            [56.21644, 58.08608],\n            [56.21644, 58.07864]]\n        ]\n      },\n      \"crs\": {\n        \"type\": \"name\",\n        \"properties\": {\n          \"name\": \"EPSG:4326\"\n        }\n      }\n    }];\nvar result = mapApi.mapModel.createMulti(objects, true);\n```",
             "itemtype": "method",
             "name": "createMulti",
@@ -45618,7 +45618,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 235,
+            "line": 239,
             "description": "Get geometry kind by geometry",
             "params": [
                 {
@@ -45636,7 +45636,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 257,
+            "line": 261,
             "description": "Create object by rhumb for [LineString, Polygon]. Start point coordinates convert in crs of layer.\nAccepts angles in degrees, converting them to radians. Accepts names of direction is [NE, SE, NW, SW].\nAccepts distance in units accepted for CRS of layer. Calculation rhumb by point, distance and angle.\nReturns coordinates skipping 'skip' from the first rhumb in crs of layer.",
             "itemtype": "method",
             "name": "createPolygonObjectRhumb",
@@ -45661,7 +45661,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 288,
+            "line": 292,
             "description": "Create polyline object to interserct polyline to polygon. Transforms geometries into JSTS objects. Checks whether types and crs are same.\nIntersects of two objects is the desired line. Using GeoJSONWriter converts jsts object to geoJSON.\n\nExample of method call:\n```javascript\nlet aGeoJson = {\n  \"type\": \"Feature\",\n  \"properties\": {},\n  \"geometry\": {\n    \"type\": \"Polygon\",\n    \"coordinates\": [\n      [[56.184253, 58.071975],\n        [56.210689,58.071975],\n        [56.2106895, 58.079873],\n        [56.184253, 58.079873],\n        [56.184253,58.071975]]\n    ]\n  },\n  \"crs\": {\n    \"type\": \"name\",\n    \"properties\": {\n      \"name\": \"EPSG:4326\"\n    }\n  }\n};\nlet bGeoJson = {\n  \"type\": \"Feature\",\n  \"properties\": {},\n  \"geometry\": {\n    \"type\": \"Polygon\",\n    \"coordinates\": [\n      [56.17, 58.071975],\n      [56.22, 58.071975]\n    ]\n  },\n  \"crs\": {\n    \"type\": \"name\",\n    \"properties\": {\n      \"name\": \"EPSG:4326\"\n    }\n  }\n};\nlet result = mapApi.mapModel.trimLineToPolygon(aGeoJson, bGeoJson);\n```",
             "itemtype": "method",
             "name": "trimLineToPolygon",
@@ -51201,19 +51201,19 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:69"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:73"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:235"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:239"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:257"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:261"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:288"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:292"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -52977,7 +52977,7 @@
         },
         {
             "message": "Missing item type\nGet geometry kind by geometry",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:235"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:239"
         },
         {
             "message": "Missing item type\nGet [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.",
