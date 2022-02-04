@@ -136,6 +136,7 @@ export default Ember.Component.extend({
       if (!this.get('isVisible') && this.get('layers').length !== 0) {
         this.set('isVisible', true);
         $tool.addClass('visible');
+        this.get('leafletMap').flexberryMap.tools.enable('background-layers', null);
       } else {
         this.set('isVisible', false);
         $tool.removeClass('visible');
