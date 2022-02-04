@@ -110,6 +110,7 @@ test('test method addObjectToLayer with 2 feature', function(assert) {
   let leafletObject = L.featureGroup();
   leafletObject.options = { crs: { code: 'EPSG:4326' } };
   let getModelLeafletObject = () => { return [{ id: 1 }, leafletObject]; };
+
   let obj =
   {
     'type': 'FeatureCollection',
