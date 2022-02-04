@@ -10079,8 +10079,8 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-expansion-add-object-to-
 
     promise.then(function (result) {
       assert.equal(leafletObject.getLayers().length, 0, 'Layers count');
-      assert.equal(result.layerId, '1', 'Layer id');
-      assert.deepEqual(result._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]]);
+      assert.equal(result[0].layerId, '1', 'Layer id');
+      assert.deepEqual(result[0]._latlngs, [[L.latLng(0, 100), L.latLng(0, 101), L.latLng(1, 101), L.latLng(1, 100)]]);
       assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
       assert.equal(getMLObject.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
       ownerStub.restore();
@@ -10119,8 +10119,75 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-expansion-add-object-to-
     subject.addObjectToLayer('1', geoJsonObject, 'EPSG:3395').then(function (result) {
       //Assert
       assert.equal(leafletObject.getLayers().length, 0);
-      assert.equal(result.layerId, '1');
-      assert.deepEqual(result._latlngs, [[L.latLng(0, 0.0008983152841195215), L.latLng(0, 0.0009072984369607167), L.latLng(0.00000904328947124462, 0.0009072984369607167), L.latLng(0.00000904328947124462, 0.0008983152841195215)]]);
+      assert.equal(result[0].layerId, '1');
+      assert.deepEqual(result[0]._latlngs, [[L.latLng(0, 0.0008983152841195215), L.latLng(0, 0.0009072984369607167), L.latLng(0.00000904328947124462, 0.0009072984369607167), L.latLng(0.00000904328947124462, 0.0008983152841195215)]]);
+      assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
+      assert.equal(getMLObject.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
+      ownerStub.restore();
+      getMLObject.restore();
+      done();
+    });
+  });
+
+  (0, _qunit.test)('test method addObjectToLayer with 2 feature', function (assert) {
+    //Arrange
+    assert.expect(9);
+    var done = assert.async(1);
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      knownForType: function knownForType() {
+        return {
+          'epsg4326': _emberFlexberryGisCoordinateReferenceSystemsEpsg4326['default'],
+          'epsg3395': _emberFlexberryGisCoordinateReferenceSystemsEpsg3395['default']
+        };
+      }
+    });
+    var leafletObject = L.featureGroup();
+    leafletObject.options = { crs: { code: 'EPSG:4326' } };
+    var getModelLeafletObject = function getModelLeafletObject() {
+      return [{ id: 1 }, leafletObject];
+    };
+
+    var obj = {
+      'type': 'FeatureCollection',
+      'features': [{
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [59.1, 56.1]
+        },
+        'properties': {
+          'prop0': 'value0'
+        }
+      }, {
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [59.2, 56.2]
+        },
+        'properties': {
+          'prop0': 'value1'
+        }
+      }]
+    };
+
+    var subject = mapApiMixinObject.create({
+      _getModelLeafletObject: function _getModelLeafletObject() {}
+    });
+    var getMLObject = _sinon['default'].stub(subject, '_getModelLeafletObject', getModelLeafletObject);
+
+    //Act
+    var promise = subject.addObjectToLayer('1', obj);
+
+    assert.ok(promise instanceof _ember['default'].RSVP.Promise);
+
+    promise.then(function (result) {
+      assert.equal(leafletObject.getLayers().length, 0, 'Layers count');
+      assert.equal(result.length, '2', 'Count feature');
+      assert.equal(result[0].layerId, '1', 'Layer id');
+      assert.deepEqual(result[0]._latlng, L.latLng(56.1, 59.1));
+      assert.equal(result[1].layerId, '1', 'Layer id');
+      assert.deepEqual(result[1]._latlng, L.latLng(56.2, 59.2));
       assert.equal(getMLObject.callCount, 1, 'Check call count to method _getModelLeafletObject');
       assert.equal(getMLObject.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
       ownerStub.restore();
