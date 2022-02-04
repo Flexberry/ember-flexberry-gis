@@ -9074,6 +9074,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/map-commands
     assert.ok(true, 'modules/ember-flexberry-gis/map-commands/search.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/map-tools/background-layers.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/map-tools');
+  test('modules/ember-flexberry-gis/map-tools/background-layers.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/map-tools/background-layers.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/map-tools/background-layers.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/map-tools/background-layers.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/map-tools/background-layers.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/map-tools/base-nonclickable.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/map-tools');
   test('modules/ember-flexberry-gis/map-tools/base-nonclickable.js should pass jscs', function () {
@@ -13135,6 +13148,14 @@ define('dummy/map-commands/search', ['exports', 'ember-flexberry-gis/map-command
     enumerable: true,
     get: function get() {
       return _emberFlexberryGisMapCommandsSearch['default'];
+    }
+  });
+});
+define('dummy/map-tools/background-layers', ['exports', 'ember-flexberry-gis/map-tools/background-layers'], function (exports, _emberFlexberryGisMapToolsBackgroundLayers) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisMapToolsBackgroundLayers['default'];
     }
   });
 });
@@ -36010,7 +36031,7 @@ define("dummy/templates/map", ["exports"], function (exports) {
           morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
           return morphs;
         },
-        statements: [["inline", "map-tools/background-layers", [], ["layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [331, 41], [331, 56]]]]], [], []]], ["loc", [null, [331, 4], [331, 58]]]]],
+        statements: [["inline", "map-tools/background-layers", [], ["layers", ["subexpr", "@mut", [["get", "model.hierarchy", ["loc", [null, [331, 41], [331, 56]]]]], [], []], "leafletMap", ["subexpr", "@mut", [["get", "leafletMap", ["loc", [null, [331, 68], [331, 78]]]]], [], []]], ["loc", [null, [331, 4], [331, 80]]]]],
         locals: [],
         templates: []
       };
@@ -41655,7 +41676,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","keywordForCosmos":"cosmos","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0+85d8387f"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","keywordForCosmos":"cosmos","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0+fd00990f"});
 }
 
 /* jshint ignore:end */
