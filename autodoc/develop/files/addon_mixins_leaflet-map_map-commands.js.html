@@ -480,6 +480,10 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
           return;
         }
 
+        leafletMap.fire(&#x27;flexberry-map:commands:choose&#x27;, {
+          mapCommand: mapCommand
+        });
+
         // Execute specified map-command.
         // It will also trigger &#x27;flexberry-map:commands:execute&#x27; event on leaflet map.
         return mapCommand.execute(mapCommandExecutionOptions);

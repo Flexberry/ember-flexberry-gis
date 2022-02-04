@@ -618,6 +618,7 @@ export default Ember.Component.extend({
       } else {
         // Сontext search and coordinate search
         let filter;
+        let selectedLayerId;
         let searchOptions = {
           queryString: queryString,
           maxResultsCount: this.get(&#x27;maxResultsCount&#x27;)
@@ -629,6 +630,7 @@ export default Ember.Component.extend({
         } else {
           searchOptions.propertyName = this.get(&#x27;propertyName&#x27;);
           let selectedLayer = this.get(&#x27;_selectedLayer&#x27;);
+          selectedLayerId = selectedLayer.get(&#x27;id&#x27;);
           filter = function(layerModel) {
             return layerModel === selectedLayer;
           };
@@ -639,7 +641,8 @@ export default Ember.Component.extend({
           searchOptions: searchOptions,
           context: !this.get(&#x27;attrVisible&#x27;),
           filter: filter,
-          results: Ember.A()
+          results: Ember.A(),
+          selectedLayer: selectedLayerId
         };
         this.sendAction(&#x27;querySearch&#x27;, e);
       }
