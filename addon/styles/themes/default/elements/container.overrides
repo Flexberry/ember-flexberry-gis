@@ -258,6 +258,7 @@
         color: @darkbluecolor;
         font-size: 0px;
         background: @whitecolor;
+        box-shadow: @defaultBoxShadow;
     }
     /* элементы меню */
     .item {

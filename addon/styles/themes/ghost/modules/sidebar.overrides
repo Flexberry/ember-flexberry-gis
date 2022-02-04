@@ -14,6 +14,7 @@
       .create-edit-block-attributes {
         padding-top: 20px;
         .flexberry-simpledatetime .ui.fluid.action.input {
+          background-color: @inputBackground;
           border: @defaultGrayBorder;
           border-radius: @defaultBorderRadius;
           box-shadow: @defaultFieldBoxShadow;
@@ -30,7 +31,6 @@
       .create-edit-block-title {
         h3 {
           position: initial;
-          text-transform: uppercase;
           font-size: 18px;
           margin: 10px 0 20px 0;
         }

@@ -436,6 +436,7 @@ div.bottompanel-wrapper {
           font-size: 0;
           .ui.button.flexberry-button,
           .flexberry-geometry-buffer {
+            border: @defaultGrayBorder;
             box-shadow: @defaultBoxShadow;
             border-radius: @defaultBorderRadius !important;
             font-size: 1rem;
@@ -537,7 +538,7 @@ div.bottompanel-wrapper {
             }
 
           .flexberry-geometry-buffer {
-            border: none;
+            border: @defaultGrayBorder;
 
             i.icon.erase {
               margin-left: -3px;
@@ -551,12 +552,12 @@ div.bottompanel-wrapper {
                 height: 4px;
                 position: absolute;
                 bottom: 0px;
-                background-color: #f4f7fb;
+                background-color: @inputBackground;
                 z-index: 100;
                 left: 0;
               }
               & > .menu {
-                background-color: #f4f7fb;
+                background-color: @inputBackground;
                 border-radius: @defaultBorderRadius;
                 border-top-left-radius: 0px;
                 border: @defaultGrayBorder;
@@ -605,7 +606,7 @@ div.bottompanel-wrapper {
             }
 
             & > div {
-              background-color: #f4f7fb;
+              background-color: @inputBackground;
               line-height: 40px;
               margin: 0;
               width: 100%;
