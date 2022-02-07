@@ -20,13 +20,13 @@
 
         <a class="editfeature tab item manual {{if (eq activeGeoTool "manual") "curtab active"}}" data-tab="manual"
           {{action "setGeometryTool" "manual"}}>
-          <i class="keyboard icon"></i>
+          <i class="icon-guideline-coordinates"></i>
         </a>
 
         {{#if drawMode }}
         <a class="editfeature tab item {{if (eq activeGeoTool "draw") "curtab active"}}" data-tab="draw"
           {{action "setGeometryTool" "draw"}}>
-          <i class="draw-area icon"></i>
+          <i class="icon-guideline-polygone"></i>
         </a>
         {{/if}}
 
@@ -34,7 +34,7 @@
           {{#if (and rhumbMode (not (eq _model.typeGeometry "marker"))) }}
           <a class="editfeature tab item {{if (eq activeGeoTool "rhumb") "curtab active"}}" data-tab="rhumb"
             {{action "setGeometryTool" "rhumb"}}>
-            <i class="compass icon"></i>
+            <i class="icon-guideline-compass"></i>
           </a>
           {{/if}}
           {{#if (and geoproviderMode (eq _model.typeGeometry "marker")) }}
@@ -128,7 +128,7 @@
   {{#each-in data as |index dataValue|}}
   <div class="create-edit-block-data {{if (eq (concat "" curIndex) index) "visible" "hidden"}}">
     <a class="icon item" {{action "toggleAttributes" on="click"}}>
-      <i class="caret {{if _attributesExpanded 'down' 'right'}} icon"></i>
+      <i class="icon-guideline-navigate-arrow{{if _attributesExpanded '-down'}}"></i>
       {{t "components.flexberry-edit-layer-feature.attributes"}}
     </a>
 

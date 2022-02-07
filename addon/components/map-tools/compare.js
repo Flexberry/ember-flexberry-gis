@@ -77,7 +77,7 @@ let ComapreToolComponent =  Ember.Component.extend({
     @type String
     @default 'compare icon'
   */
-  iconClass: 'compare icon',
+  iconClass: 'icon-guideline-compare',
 
   actions: {
     /**
