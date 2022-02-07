@@ -6609,12 +6609,6 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
   background: #fff;
   font-size: 28px;
 }
-.mappanel .leaflet-bar a .icon {
-  padding: 3px;
-}
-.mappanel .leaflet-bar a .icon:before {
-  font-size: 1em;
-}
 .mappanel .leaflet-bar a.active,
 .mappanel .leaflet-bar a:hover {
   color: #7ba7d9;
@@ -6789,7 +6783,6 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
   /* + */
   /* - */
   /* перейти к точке */
-  /* отдалить на полную */
   /* геолокация */
   /* поиск по адресу */
   /* идентифицировать слои */
@@ -6805,7 +6798,6 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
   /* нарисовать */
   /* линейка */
   /* экспортировать */
-  /* еще */
   /* изображение */
   /* напечатать */
   /* + в сайдбаре */
@@ -6819,6 +6811,7 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
   color: #3C4F76;
   font-size: 0px;
   background: #fff;
+  box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.15);
 }
 .ui.menu.flexberry-maptoolbar .item {
   border-radius: 5px;
@@ -6969,13 +6962,6 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
 .ui.menu.flexberry-maptoolbar .flexberry-maplayers-show i.icon.list:before {
   font-size: 20px;
 }
-.ui.menu.flexberry-maptoolbar i.icon {
-  width: 20px;
-  height: 20px;
-}
-.ui.menu.flexberry-maptoolbar i.icon:before {
-  font-family: Crimean;
-}
 .ui.menu.flexberry-maptoolbar i.icon.dropdown:before {
   font-family: Icons;
 }
@@ -7018,9 +7004,6 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
 }
 .ui.menu.flexberry-maptoolbar i.icon.location.arrow:before {
   content: "\e812";
-}
-.ui.menu.flexberry-maptoolbar i.icon.globe:before {
-  content: "\e830";
 }
 .ui.menu.flexberry-maptoolbar i.icon.resize:before {
   font-family: Icons;
@@ -7090,13 +7073,6 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
 }
 .ui.menu.flexberry-maptoolbar i.icon.external:before {
   content: "\e822";
-}
-.ui.menu.flexberry-maptoolbar i.icon.more {
-  margin: 0px 0px 0px 2px;
-}
-.ui.menu.flexberry-maptoolbar i.icon.more:before {
-  content: "\f141";
-  font-family: Icons;
 }
 .ui.menu.flexberry-maptoolbar i.icon.minimap:before {
   content: '\f278';
@@ -7360,16 +7336,6 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   padding-top: 15px;
   text-align: center;
 }
-.layer-result-list .icon.caret {
-  font-size: 20px;
-  margin: 0;
-}
-.layer-result-list i.icon.caret.down:before {
-  content: '\f107';
-}
-.layer-result-list i.icon.caret.right:before {
-  content: '\f105';
-}
 .layer-result-list .ui.active.inline.loader {
   margin-top: 10px;
   left: 45%;
@@ -7410,7 +7376,7 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   width: 250px;
   z-index: 100;
   background: #fff;
-  border: 1px solid #E5E5E5;
+  border: none;
   box-sizing: border-box;
   border-radius: 3.5px;
 }
@@ -7483,13 +7449,6 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   display: block;
   float: left;
   transform-origin: 50% 60%;
-}
-.layer-result-list .ui.accordion .title .dropdown.icon:before {
-  font-size: 20px;
-  content: '\f105';
-}
-.layer-result-list .ui.accordion .title.active .dropdown.icon:before {
-  content: '\f105';
 }
 .layer-result-list .layer-result-list-toggler .title {
   display: flex;
@@ -26958,6 +26917,9 @@ div.ui.secondary.menu.no-margin.nav-bar .right.menu {
   content: "\F0AC";
   font-family: Icons;
 }
+.ui.menu.flexberry-maptoolbar i.icon:before {
+  font-family: 'Crimean';
+}
 .ui.menu.flexberry-maptoolbar .flexberry-full-extent-map-command,
 .ui.menu.flexberry-maptoolbar .flexberry-go-to-map-command,
 .ui.menu.flexberry-maptoolbar .flexberry-locate-map-command,
@@ -38768,9 +38730,6 @@ select.ui.dropdown {
 .flexberry-export-map-command-dialog .flexberry-dropdown.dropdown {
   padding: .8em .2em .4em .5em;
 }
-.flexberry-export-map-command-dialog .flexberry-dropdown.dropdown .dropdown.icon:before {
-  font-size: 13px;
-}
 .leaflet-legend-control {
   max-width: 33%;
   font-size: 8px;
@@ -38792,7 +38751,6 @@ select.ui.dropdown {
 .modals.dimmer .ui.scrolling.modal.flexberry-export-map-command-dialog,
 .ui.modal.flexberry-export-map-command-dialog {
   width: calc(100vw - 60px) !important;
-  margin-left: calc(-50% + 30px) !important;
   top: 0;
   margin-top: 14px!important;
   position: fixed!important;
@@ -38829,10 +38787,6 @@ select.ui.dropdown {
   width: 100%;
   margin: 0;
   border: none;
-}
-.ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-settings-column .ui.segment .ui.button.active,
-.ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-settings-column .ui.segment .ui.button:hover {
-  background: #DDEBFF !important;
 }
 .ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-settings-column .ui.segment .flexberry-dropdown.ui.selection.dropdown .menu {
   max-height: 110px;
@@ -43881,10 +43835,9 @@ a.ui.nag {
 }
 .flexberry-search-panel .flexberry-search.ui.search .ui.search-button {
   position: absolute;
-  right: 37px;
+  right: 32px;
   border: none;
   height: 40px;
-  top: 2px !important;
 }
 .flexberry-search-panel .flexberry-search.ui.search .ui.clear-search-button {
   position: absolute;
@@ -43923,18 +43876,13 @@ a.ui.nag {
 }
 .flexberry-search-panel .flexberry-search-attr .ui.icon.close-attr-search {
   background: transparent;
+  color: #7ba7d9;
   position: absolute;
-  width: 14px;
-  height: 14px;
   border: 0px;
-  right: 9px;
-  top: 7px;
+  right: 0px;
+  top: 0px;
   padding: 0;
   line-height: 1;
-}
-.flexberry-search-panel .flexberry-search-attr .ui.icon.close-attr-search i.icon.remove:before {
-  font-size: 14px;
-  top: 0;
 }
 /* Sidebar search */
 div.sidebar.search div.item.expanded {
@@ -43967,10 +43915,9 @@ div.detail {
 }
 .flexberry-search-panel .flexberry-search.ui.search .ui.search-button {
   position: absolute;
-  right: 37px;
+  right: 32px;
   border: none;
   height: 40px;
-  top: 2px !important;
 }
 .flexberry-search-panel .flexberry-search.ui.search .ui.clear-search-button {
   position: absolute;
@@ -44009,18 +43956,13 @@ div.detail {
 }
 .flexberry-search-panel .flexberry-search-attr .ui.icon.close-attr-search {
   background: transparent;
+  color: #7ba7d9;
   position: absolute;
-  width: 14px;
-  height: 14px;
   border: 0px;
-  right: 9px;
-  top: 7px;
+  right: 0px;
+  top: 0px;
   padding: 0;
   line-height: 1;
-}
-.flexberry-search-panel .flexberry-search-attr .ui.icon.close-attr-search i.icon.remove:before {
-  font-size: 14px;
-  top: 0;
 }
 /* Sidebar search */
 div.sidebar.search div.item.expanded {
@@ -45643,10 +45585,6 @@ img.item-minus {
   max-width: 80%;
   width: 80%;
 }
-.flexberry-maplayers .flexberry-treenode-expand-collapse-icon.dropdown.icon:before {
-  content: '\f105';
-  font-family: Icons;
-}
 .flexberry-maplayers .flexberry-treenode .flexberry-treenode-header.title {
   border: none;
 }
@@ -45718,8 +45656,6 @@ img.item-minus {
   top: -25px;
   right: 10px;
   background-color: rgba(255, 255, 255, 0);
-  height: 30px;
-  width: 30px;
   border: none;
   margin: 0;
 }
@@ -45821,7 +45757,7 @@ img.item-minus {
 .right-sidebar-wrapper .ui.right.sidebar .ui.tab.createOrEditObject .create-edit-block .editfeature-tab-nav-panel .editfeature-tab-nav-panel-tabs .editfeature.tab {
   border: 1px solid #b1cae8;
   border-radius: 3.5px;
-  padding: 10px;
+  padding: 8px;
   margin-right: 10px;
   height: 40px;
 }
@@ -45835,7 +45771,7 @@ img.item-minus {
   border-bottom-left-radius: 0px !important;
   border-bottom: 1px solid #FFFFFF;
   height: 51px;
-  padding-bottom: 21px;
+  padding-bottom: 19px;
   z-index: 1;
 }
 .right-sidebar-wrapper .ui.right.sidebar .ui.tab.createOrEditObject .create-edit-block .field {
@@ -45846,9 +45782,6 @@ img.item-minus {
 .right-sidebar-wrapper .ui.right.sidebar .ui.tab.createOrEditObject .create-edit-block .field .ember-text-field {
   margin: 0;
   min-width: 0px;
-}
-.right-sidebar-wrapper .ui.right.sidebar .ui.tab.createOrEditObject .create-edit-block .field label {
-  color: #8F928F;
 }
 .right-sidebar-wrapper .ui.right.sidebar .ui.tab.createOrEditObject .flex-buttons {
   display: flex;
@@ -45983,8 +45916,10 @@ img.item-minus {
   background: #fff;
 }
 .bottompanel-wrapper .ui.tabular.menu .item .icon {
-  font-size: 0.7em;
   padding-left: 10px;
+  height: auto;
+  width: auto;
+  margin: 0;
 }
 .bottompanel-wrapper .bottompanel-tab-data-panel .ui.tabular.menu .item {
   line-height: 0px;
@@ -46005,7 +45940,6 @@ img.item-minus {
   height: 40px;
   line-height: 40px;
   top: 0;
-  color: #7ba7d9;
   cursor: pointer;
   text-align: center;
   border: 1px solid #e9e9e9;
@@ -46065,7 +45999,6 @@ img.item-minus {
 .bottompanel-wrapper .bottompanel-tab-head-panel .flexberry-geometry-tools,
 .bottompanel-wrapper .bottompanel-tab-head-panel .flexberry-geometry-move {
   height: 35px;
-  color: #7ba7d9;
   background: #fff;
   border-radius: 5px;
   border: 1px solid #7ba7d9;
