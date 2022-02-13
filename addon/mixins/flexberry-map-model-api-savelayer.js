@@ -54,10 +54,6 @@ export default Ember.Mixin.create({
         reject(data);
       };
 
-      const loadCompleted = () => {
-
-      };
-
       leafletObject.once('save:success', saveSuccess);
       leafletObject.once('save:failed', saveFailed);
       leafletObject.save();
