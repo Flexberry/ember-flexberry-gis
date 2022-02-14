@@ -4,6 +4,7 @@
     value=queryString
     enter=(action "querySearch" false)
     select=(action "querySearch" false)
+    focusIn=(action "focus")
 }}
   {{#if queryStringEmpty }}
     <button class="ui icon clear-search-button" {{action "clearSearch"}}>
