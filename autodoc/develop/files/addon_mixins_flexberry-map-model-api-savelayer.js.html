@@ -450,9 +450,19 @@ export default Ember.Mixin.create({
         }
 
         leafletObject.off(&#x27;save:failed&#x27;, saveFailed);
-        resolve({
-          layerModel,
-          newFeatures: data.layers
+        let promise = new Ember.RSVP.Promise((resolve, reject) =&gt; {
+          leafletObject.once(&#x27;loadCompleted&#x27;, () =&gt; {
+            resolve();
+          }).once(&#x27;error&#x27;, (e) =&gt; {
+            leafletObject.existingFeaturesLoaded = false;
+            reject();
+          });
+        });
+        promise.then(() =&gt; {
+          resolve({
+            layerModel,
+            newFeatures: data.layers
+          });
         });
       };
 
