@@ -700,6 +700,16 @@ export default Ember.Component.extend({
     onErrorMessageHide() {
       this.set(&#x27;showErrorMessage&#x27;, false);
     },
+
+    /**
+      Action called when search input has received focus
+      Invokes {{#crossLink &quot;FlexberrySearchComponent/sendingActions.focus:method&quot;}}&#x27;focus&#x27; action{{/crossLink}}.
+      @method actions.focus
+    */
+    focus() {
+      let leafletMap = this.get(&#x27;leafletMap&#x27;);
+      leafletMap.fire(&#x27;flexberry-map:focusSearch&#x27;, { focusSearch: &#x27;focusSearch&#x27; });
+    }
   }
 });
 

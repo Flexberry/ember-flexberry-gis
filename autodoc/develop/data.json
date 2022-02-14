@@ -36908,6 +36908,15 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/components/flexberry-search-panel.js",
+            "line": 287,
+            "description": "Action called when search input has received focus\nInvokes {{#crossLink \"FlexberrySearchComponent/sendingActions.focus:method\"}}'focus' action{{/crossLink}}.",
+            "itemtype": "method",
+            "name": "actions.focus",
+            "class": "FlexberrySearchComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/components/flexberry-search.js",
             "line": 9,
             "description": "Component's CSS-classes names.\nJSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.",
@@ -36965,21 +36974,30 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 95,
-            "description": "Reference to component's template.",
-            "class": "FlexberrySearchComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/flexberry-search.js",
-            "line": 100,
-            "description": "Reference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
+            "line": 94,
+            "description": "Action called when search input has received focus\nInvokes {{#crossLink \"FlexberrySearchComponent/sendingActions.focus:method\"}}'focus' action{{/crossLink}}.",
+            "itemtype": "method",
+            "name": "actions.focus",
             "class": "FlexberrySearchComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-search.js",
             "line": 106,
+            "description": "Reference to component's template.",
+            "class": "FlexberrySearchComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-search.js",
+            "line": 111,
+            "description": "Reference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
+            "class": "FlexberrySearchComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-search.js",
+            "line": 117,
             "description": "Names of observable component's properties.\nChanges in these properties must trigger Semantic UI module's reinitialization.",
             "itemtype": "property",
             "name": "observableProperties",
@@ -36990,7 +37008,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 116,
+            "line": 127,
             "description": "Names of component's properties used for init semantic search module",
             "itemtype": "property",
             "name": "semanticProperties",
@@ -37000,7 +37018,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 131,
+            "line": 142,
             "description": "Component's wrapping <div> CSS-classes names.\n\nAny other CSS-classes can be added through component's 'class' property.\n```handlebars\n{{flexberry-icon\n  class=\"map icon\"\n}}\n```",
             "itemtype": "property",
             "name": "classNames",
@@ -37011,7 +37029,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 147,
+            "line": 158,
             "description": "Components class names bindings.",
             "itemtype": "property",
             "name": "classNameBindings",
@@ -37022,7 +37040,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 156,
+            "line": 167,
             "description": "Search type.",
             "itemtype": "property",
             "name": "type",
@@ -37033,7 +37051,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 165,
+            "line": 176,
             "description": "Minimum characters count to query for results.",
             "itemtype": "property",
             "name": "minCharacters",
@@ -37044,7 +37062,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 174,
+            "line": 185,
             "description": "Maximum results to display when using local and simple search, maximum category count for category search",
             "itemtype": "property",
             "name": "maxResults",
@@ -37055,7 +37073,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 183,
+            "line": 194,
             "description": "Search API settings.\nSee [Semantic UI examples](http://semantic-ui.com/modules/search.html#using-api-settings).",
             "itemtype": "property",
             "name": "apiSettings",
@@ -37066,7 +37084,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 193,
+            "line": 204,
             "description": "Hash describing rules how to map response into display content.",
             "itemtype": "property",
             "name": "fields",
@@ -37077,7 +37095,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 202,
+            "line": 213,
             "description": "Value typed into input.",
             "itemtype": "property",
             "name": "value",
@@ -37088,7 +37106,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 213,
+            "line": 224,
             "description": "\"Select\" or something else\nNeed to prevent \"enter\" action after \"onSelect\" event",
             "itemtype": "property",
             "name": "_lastAction",
@@ -37099,7 +37117,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 223,
+            "line": 234,
             "description": "Flag: is value typed or selected",
             "itemtype": "property",
             "name": "_valueWasSelected",
@@ -37110,7 +37128,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 232,
+            "line": 243,
             "description": "Clean _lastAction if user change value",
             "itemtype": "method",
             "name": "_valueChange",
@@ -37119,7 +37137,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 242,
+            "line": 253,
             "description": "Initializes Semantic UI search module.",
             "itemtype": "method",
             "name": "_initializeSearchModule",
@@ -37130,7 +37148,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 289,
+            "line": 300,
             "description": "Destroys Semantic UI search module.",
             "itemtype": "method",
             "name": "_initializeSearchModule",
@@ -37141,7 +37159,7 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 304,
+            "line": 315,
             "description": "Handles changes in properties related to Semantic UI search module.",
             "itemtype": "method",
             "name": "_searchPropertiesDidChange",
@@ -37152,21 +37170,21 @@
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 315,
+            "line": 326,
             "description": "Initializes DOM-related component's properties.",
             "class": "FlexberrySearchComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 333,
+            "line": 344,
             "description": "Destroys DOM-related component's properties.",
             "class": "FlexberrySearchComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-search.js",
-            "line": 351,
+            "line": 362,
             "description": "Component's action invoking when user press enter in search box",
             "itemtype": "method",
             "name": "sendingActions.enter",
@@ -52745,19 +52763,19 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/flexberry-search.js:95"
+            "line": " addon/components/flexberry-search.js:106"
         },
         {
             "message": "Missing item type\nReference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
-            "line": " addon/components/flexberry-search.js:100"
+            "line": " addon/components/flexberry-search.js:111"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/flexberry-search.js:315"
+            "line": " addon/components/flexberry-search.js:326"
         },
         {
             "message": "Missing item type\nDestroys DOM-related component's properties.",
-            "line": " addon/components/flexberry-search.js:333"
+            "line": " addon/components/flexberry-search.js:344"
         },
         {
             "message": "Missing item type\nПри встраивании компонента в Flexberry-treenode появилась проблема:\n   клик на инпут каледаря, помимо открытия календаря, вызывал сворачивание/разворачивание самой ноды\nРешение с добавлением календарю класса preventExpandCollapse не помогало, так как в этом случае переставала работать логика самого календаря\nЭто происходило из-за того, что клик на inpur срабатывал ПОСЛЕ обработчика клика по самому treenode,\nт.к. обработчик в treenode был задан через DOM (onClick={{action ...}}) - а они ВСЕГДА срабатывают раньше, чем обработчики ember\nПолучается, что нам необходимо задать обработчики на Input и на кнопку также через DOM, чтобы они вызвались раньше, чем click на treenode\nОбработчик на кнопку очистки переопределим в шаблоне (добавим onClick=...), а для Input зададим при создании",

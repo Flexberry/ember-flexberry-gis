@@ -506,6 +506,17 @@ let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
       } else {
         this.sendAction(&#x27;enter&#x27;);
       }
+    },
+
+    /**
+      Action called when search input has received focus
+      Invokes {{#crossLink &quot;FlexberrySearchComponent/sendingActions.focus:method&quot;}}&#x27;focus&#x27; action{{/crossLink}}.
+      @method actions.focus
+    */
+    focusIn() {
+      if (Ember.$(&#x27;.flexberry-search.ui.search&#x27;).hasClass(&#x27;focus&#x27;)) {
+        this.sendAction(&#x27;focusIn&#x27;);
+      }
     }
   },
 
