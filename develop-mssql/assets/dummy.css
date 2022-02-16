@@ -6751,6 +6751,10 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
 .flexberry-maptoolbar.ui.menu {
   flex-wrap: wrap;
 }
+.mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar a,
+.mappanel .leaflet-right.leaflet-top .history-control.leaflet-bar a {
+  box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.15);
+}
 .ui.menu.flexberry-maptoolbar {
   z-index: 1000 !important;
   margin: 10px 10px 0px 10px;
@@ -45474,7 +45478,7 @@ img.item-minus {
   padding: 8px 6px;
   line-height: 16px;
   display: flex;
-  align-items: baseline;
+  align-items: start;
 }
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).title:hover,
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title:hover {
