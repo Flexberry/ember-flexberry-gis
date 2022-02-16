@@ -243,6 +243,11 @@
 .flexberry-maptoolbar.ui.menu {
   flex-wrap: wrap;
 }
+.mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar a,
+.mappanel .leaflet-right.leaflet-top .history-control.leaflet-bar a {
+  box-shadow: @defaultBoxShadow;
+}
+
 .ui.menu.flexberry-maptoolbar {
     z-index: 1000 !important;
     margin: 10px 10px 0px 10px;

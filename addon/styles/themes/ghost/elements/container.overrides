@@ -18,7 +18,7 @@
       border: @buttonMenuBorder;
       height: 40px;
       width: 40px;
-      border: 1px solid @light-grey-color;
+      border: 1px solid @defaultBorderColor;
       line-height: 35px;
 
       &:not(.leaflet-disabled).active,
