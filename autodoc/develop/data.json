@@ -36891,7 +36891,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 270,
+            "line": 274,
             "description": "Handler for error 'ui-message. component 'onShow' action.",
             "itemtype": "method",
             "name": "actions.onErrorMessageShow",
@@ -36900,7 +36900,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 278,
+            "line": 282,
             "description": "Handler for error 'ui-message' component 'onHide' action.",
             "itemtype": "method",
             "name": "actions.onErrorMessageHide",
@@ -36909,7 +36909,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 287,
+            "line": 291,
             "description": "Action called when search input has received focus\nInvokes {{#crossLink \"FlexberrySearchComponent/sendingActions.focus:method\"}}'focus' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.focus",
