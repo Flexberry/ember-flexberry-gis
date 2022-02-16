@@ -439,6 +439,14 @@ export default Ember.Mixin.create({
     }
 
     return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+      let promise = new Ember.RSVP.Promise((resolve, reject) =&gt; {
+        leafletObject.once(&#x27;loadCompleted&#x27;, () =&gt; {
+          resolve();
+        }).once(&#x27;error&#x27;, (e) =&gt; {
+          leafletObject.existingFeaturesLoaded = false;
+          reject();
+        });
+      });
       const saveSuccess = (data) =&gt; {
         Ember.set(leafletObject, &#x27;_wasChanged&#x27;, false);
         this._getEditTools().featuresLayer.clearLayers();
@@ -450,14 +458,6 @@ export default Ember.Mixin.create({
         }
 
         leafletObject.off(&#x27;save:failed&#x27;, saveFailed);
-        let promise = new Ember.RSVP.Promise((resolve, reject) =&gt; {
-          leafletObject.once(&#x27;loadCompleted&#x27;, () =&gt; {
-            resolve();
-          }).once(&#x27;error&#x27;, (e) =&gt; {
-            leafletObject.existingFeaturesLoaded = false;
-            reject();
-          });
-        });
         promise.then(() =&gt; {
           resolve({
             layerModel,
