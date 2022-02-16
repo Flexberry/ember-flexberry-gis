@@ -24,6 +24,9 @@
     height: @maplayersCheckboxSize;
     position: absolute;
   }
+  &.group.checked:before {
+    border-color: @primaryColor;
+  }
 }
 
 .bottom-attributes-panel .ui.table .ui.checkbox {

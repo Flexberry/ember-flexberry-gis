@@ -478,7 +478,7 @@
             margin: 0;
             padding: 0;
             position: relative;
-            bottom: 2px;
+            bottom: 4px;
           }
 
           .button {

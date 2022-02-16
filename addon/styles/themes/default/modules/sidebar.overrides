@@ -191,7 +191,7 @@
                 padding: @flexberryTreeHeaderTitlePadding;
                 line-height: @flexberryTreeHeaderTitleLineHeight;
                 display: flex;
-                align-items: baseline;
+                align-items: start;
                 &:hover {
                     color: @flexberryTreeHeaderTitleHoveredColor;
                 }
