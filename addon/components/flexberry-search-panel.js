@@ -236,6 +236,10 @@ export default Ember.Component.extend({
       this.set('_selectedLayer', null);
       this.set('_localizedValue', null);
       this.sendAction('clearSearch');
+      let $clearSearch = Ember.$('.clear-search-button');
+      if (!$clearSearch.hasClass('hidden')) {
+        $clearSearch.addClass('hidden');
+      }
     },
 
     attrSearch() {
