@@ -236,6 +236,10 @@ export default Ember.Component.extend({
       this.set('_selectedLayer', null);
       this.set('_localizedValue', null);
       this.sendAction('clearSearch');
+      let $clearSearch = Ember.$('.clear-search-button');
+      if (!$clearSearch.hasClass('hidden')) {
+        $clearSearch.addClass('hidden');
+      }
     },
 
     attrSearch() {
@@ -283,5 +287,15 @@ export default Ember.Component.extend({
     onErrorMessageHide() {
       this.set('showErrorMessage', false);
     },
+
+    /**
+      Action called when search input has received focus
+      Invokes {{#crossLink "FlexberrySearchComponent/sendingActions.focus:method"}}'focus' action{{/crossLink}}.
+      @method actions.focus
+    */
+    focus() {
+      let leafletMap = this.get('leafletMap');
+      leafletMap.fire('flexberry-map:focusSearch', { focusSearch: 'focusSearch' });
+    }
   }
 });

@@ -191,7 +191,7 @@
                 padding: @flexberryTreeHeaderTitlePadding;
                 line-height: @flexberryTreeHeaderTitleLineHeight;
                 display: flex;
-                align-items: baseline;
+                align-items: start;
                 &:hover {
                     color: @flexberryTreeHeaderTitleHoveredColor;
                 }
@@ -290,10 +290,6 @@
     }
 }
 .flexberry-maplayers {
-  .flexberry-treenode-expand-collapse-icon.dropdown.icon:before {
-    content: '\f105';
-    font-family: Icons;
-  }
   .flexberry-treenode {
     .flexberry-treenode-header.title {
       border: none;
@@ -365,8 +361,6 @@
               top: -25px;
               right: 10px;
               background-color: rgba(255,255,255,0);
-              height: 30px;
-              width: 30px;
               border: none;
               margin: 0;
             }
@@ -492,7 +486,7 @@
             .editfeature.tab {
               border: 1px solid #b1cae8;
               border-radius: @defaultBorderRadius;
-              padding: 10px;
+              padding: 8px;
               margin-right: 10px;
               height: 40px;
 
@@ -507,7 +501,7 @@
                 border-bottom-left-radius: 0px !important;
                 border-bottom: 1px solid @white;
                 height: 51px;
-                padding-bottom: 21px;
+                padding-bottom: 19px;
                 z-index: 1;
               }
             }
@@ -522,10 +516,6 @@
           .ember-text-field {
             margin: 0;
             min-width: 0px;
-          }
-
-          label {
-            color: #8F928F;
           }
         }
       }
@@ -683,8 +673,10 @@
     }
 
     .icon {
-      font-size: 0.7em;
       padding-left: 10px;
+      height: auto;
+      width: auto;
+      margin: 0;
     }
   }
 
@@ -711,7 +703,6 @@
       height: 40px;
       line-height: 40px;
       top: 0;
-      color: @bluesky;
       cursor: pointer;
       text-align: center;
       border: 1px solid @lightgraycolor;
@@ -782,7 +773,6 @@
       .flexberry-geometry-add-mode-draw, .flexberry-geometry-buffer,
       .flexberry-geometry-tools, .flexberry-geometry-move {
         height: 35px;
-        color: #7ba7d9;
         background: #fff;
         border-radius: 5px;
         border: 1px solid #7ba7d9;

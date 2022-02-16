@@ -12,10 +12,9 @@
     }
     .ui.search-button {
       position: absolute;
-      right: 37px;
+      right: 32px;
       border: none;
       height: 40px;
-      top: 2px !important;
     }
     .ui.clear-search-button {
       position: absolute;
@@ -54,18 +53,13 @@
     }
     .ui.icon.close-attr-search {
       background: transparent;
+      color: @primaryColor;
       position: absolute;
-      width: 14px;
-      height: 14px;
       border: 0px;
-      right: 9px;
-      top: 7px;
+      right: 0px;
+      top: 0px;
       padding: 0;
       line-height: 1;
-      i.icon.remove:before {
-        font-size: 14px;
-        top: 0;
-      }
     }
   }
 }

@@ -151,13 +151,12 @@
               <label>{{t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.caption"}}</label>
               <div class="ui fluid buttons">
                 {{flexberry-button
-                  class=(if (eq _options.displayMode "standard-mode") "active" "")
+                  class=(if (eq _options.displayMode "standard-mode") "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.standard-mode.caption")
                   click=(action "onDisplayModeChange" "standard-mode")
                 }}
-
                 {{flexberry-button
-                  class=(if (eq _options.displayMode "map-only-mode") "active" "")
+                  class=(if (eq _options.displayMode "map-only-mode") "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.map-only-mode.caption")
                   click=(action "onDisplayModeChange" "map-only-mode")
                 }}
@@ -168,12 +167,12 @@
               <label>{{t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.caption"}}</label>
               <div class="ui fluid buttons">
                 {{flexberry-button
-                  class=(if _options.legendControl "active" "")
+                  class=(if _options.legendControl "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.legend-control.caption")
                   click=(action "onMapControlChange" "legendControl")
                 }}
                 {{flexberry-button
-                  class=(if _options.scaleControl "active" "")
+                  class=(if _options.scaleControl "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.scale-control.caption")
                   click=(action "onMapControlChange" "scaleControl")
                 }}
@@ -184,12 +183,12 @@
               <label>{{t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.caption"}}</label>
               <div class="ui fluid buttons">
                 {{flexberry-button
-                  class=(if (eq _options.legendPosition "under-map") "active" "")
+                  class=(if (eq _options.legendPosition "under-map") "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.under-map.caption")
                   click=(action "onLegendPositionChange" "under-map")
                 }}
                 {{flexberry-button
-                  class=(if (eq _options.legendPosition "second-page") "active" "")
+                  class=(if (eq _options.legendPosition "second-page") "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.second-page.caption")
                   click=(action "onLegendPositionChange" "second-page")
                 }}
@@ -200,13 +199,13 @@
               <label>{{t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.caption"}}</label>
               <div class="ui fluid buttons">
                 {{flexberry-button
-                  class=(if (eq _options.paperOrientation "landscape") "active" "")
+                  class=(if (eq _options.paperOrientation "landscape") "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.landscape-orientation.caption")
                   click=(action "onPaperOrientationChange" "landscape")
                 }}
 
                 {{flexberry-button
-                  class=(if (eq _options.paperOrientation "portrait") "active" "")
+                  class=(if (eq _options.paperOrientation "portrait") "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.portrait-orientation.caption")
                   click=(action "onPaperOrientationChange" "portrait")
                 }}
