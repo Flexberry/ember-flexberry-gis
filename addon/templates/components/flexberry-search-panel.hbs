@@ -6,11 +6,9 @@
     select=(action "querySearch" false)
     focusIn=(action "focus")
 }}
-  {{#if queryStringEmpty }}
-    <button class="ui icon clear-search-button" {{action "clearSearch"}}>
-      <i class="icon-guideline-cross-r"></i>
-    </button>
-  {{/if}}
+  <button class="ui icon clear-search-button {{if queryStringEmpty "" "hidden"}}" {{action "clearSearch"}}>
+    <i class="icon-guideline-cross-r"></i>
+  </button>
   <button class="ui icon search-button" {{action "querySearch" false}}>
     <i class="icon-guideline-search-r"></i>
   </button>
