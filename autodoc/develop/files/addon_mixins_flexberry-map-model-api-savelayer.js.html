@@ -458,12 +458,17 @@ export default Ember.Mixin.create({
         }
 
         leafletObject.off(&#x27;save:failed&#x27;, saveFailed);
-        promise.then(() =&gt; {
-          resolve({
-            layerModel,
-            newFeatures: data.layers
-          });
+        let result = resolve({
+          layerModel,
+          newFeatures: data.layers
         });
+        if (data.layers.length === 0) {
+          return result;
+        } else {
+          promise.then(() =&gt; {
+            return result;
+          });
+        }
       };
 
       const saveFailed = (data) =&gt; {
