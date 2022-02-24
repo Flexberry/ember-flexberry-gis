@@ -560,6 +560,27 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         }
       });
 
+      displayResults = displayResults.sort((a, b) => {
+        // If displayValue is empty, it should be on the bottom.
+        if (Ember.isBlank(a.name)) {
+          return 1;
+        }
+
+        if (Ember.isBlank(b.name)) {
+          return -1;
+        }
+
+        if (a.name > b.name) {
+          return 1;
+        }
+
+        if (a.name < b.name) {
+          return -1;
+        }
+
+        return 0;
+      });
+
       this.set('_displayResults', displayResults);
       this.set('_noData', displayResults.length === 0);
       this.set('_showLoader', false);
