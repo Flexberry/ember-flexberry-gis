@@ -562,11 +562,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       displayResults = displayResults.sort((a, b) => {
         // If displayValue is empty, it should be on the bottom.
-        if (Ember.isBlank(a.name)) {
+        if (!a.name) {
           return 1;
         }
 
-        if (Ember.isBlank(b.name)) {
+        if (!b.name) {
           return -1;
         }
 
