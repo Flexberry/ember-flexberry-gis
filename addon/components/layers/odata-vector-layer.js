@@ -1374,7 +1374,8 @@ export default BaseVectorLayer.extend({
 
         promise = this._downloadFeaturesWithOrNotFilter(leafletObject, obj, filter);
       } else if (showExisting || (showExisting && showLayerObjects)) {
-        promise = this._downloadFeaturesWithOrNotFilter(leafletObject, this.get('_adapterStoreModelProjectionGeom'));
+        let layerFilter = !Ember.isNone(this.get('filter')) ? this.get('filter') : null;
+        promise = this._downloadFeaturesWithOrNotFilter(leafletObject, this.get('_adapterStoreModelProjectionGeom'), layerFilter);
       } else {
         promise = Ember.RSVP.resolve('The layer does not require loading');
       }
@@ -1480,8 +1481,10 @@ export default BaseVectorLayer.extend({
     let editTools = leafletObject.leafletMap.editTools;
 
     let featuresIds = [];
-    leafletObject.models
-      .filter((layer) => { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(layer)); }).forEach((model, index) => {
+    Object.entries(leafletObject.models)
+      .filter((item) =>  { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))); })
+      .map((item)=> item[1])
+      .forEach((model, index) => {
         let layer = Object.values(leafletObject._layers).find((layer) => {
           if (layer.model.get('id') === model.get('id')) {
             return layer;
@@ -1521,7 +1524,12 @@ export default BaseVectorLayer.extend({
           featuresIds.push(model.get('id'));
         }
       });
-    if (Ember.isNone(ids) || ids.length === 0) {
+
+    if (!Ember.isNone(ids)) {
+      ids.forEach((id) => {
+        delete leafletObject.models[id];
+      });
+    } else  {
       editTools.editLayer.clearLayers();
     }
 

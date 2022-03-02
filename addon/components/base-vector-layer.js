@@ -175,7 +175,7 @@ export default BaseLayer.extend({
         this._addLayersOnMap(layers, leafletObject);
 
         if (this.get('labelSettings.signMapObjects')) {
-          this._addLabelsToLeafletContainer(layers);
+          this._addLabelsToLeafletContainer(layers, leafletObject);
         }
 
         leafletObject.fire('loadCompleted');
@@ -1554,12 +1554,16 @@ export default BaseLayer.extend({
 
     @method _showLabels
     @param {Array} layers new layers for add labels
+    @param {Object} leafletObject leaflet layer
   */
-  _showLabels(layers) {
+  _showLabels(layers, leafletObject) {
     let labelSettingsString = this.get('labelSettings.labelSettingsString');
     if (!Ember.isNone(labelSettingsString)) {
       let leafletMap = this.get('leafletMap');
-      let leafletObject = this.get('_leafletObject');
+      if (!leafletObject) {
+        leafletObject = this.get('_leafletObject');
+      }
+
       let labelsLayer = this.get('_labelsLayer');
       if (!Ember.isNone(labelsLayer) && Ember.isNone(leafletObject._labelsLayer)) {
         labelsLayer.clearLayers();
@@ -1599,11 +1603,15 @@ export default BaseLayer.extend({
 
     @method _addLabelsToLeafletContainer
     @param {Array} layers new layers for add labels
+    @param {Object} leafletObject leaflet layer
     @private
   */
-  _addLabelsToLeafletContainer(layers) {
+  _addLabelsToLeafletContainer(layers, leafletObject) {
     let labelsLayer = this.get('_labelsLayer');
     let leafletMap = this.get('leafletMap');
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
 
     let thisPane = this.get('_paneLabel');
     if (thisPane) {
@@ -1618,13 +1626,13 @@ export default BaseLayer.extend({
     }
 
     if (Ember.isNone(labelsLayer)) {
-      this._showLabels(layers);
+      this._showLabels(layers, leafletObject);
       labelsLayer = this.get('_labelsLayer');
       leafletMap.addLayer(labelsLayer);
     } else if (!leafletMap.hasLayer(labelsLayer)) {
       leafletMap.addLayer(labelsLayer);
     } else {
-      this._showLabels(layers);
+      this._showLabels(layers, leafletObject);
     }
   },
 
