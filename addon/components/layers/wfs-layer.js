@@ -409,7 +409,7 @@ export default BaseVectorLayer.extend({
           if (options.showExisting) {
             let loaded = {
               layers: featureLayers
-            }
+            };
             let promise = this._featuresProcessCallback(loaded.layers, wfsLayer);
             if (loaded.results && Ember.isArray(loaded.results)) {
               loaded.results.push(promise);

@@ -399,7 +399,7 @@ export default Ember.Component.extend(
       this._removeLayerFromLeafletContainer();
 
       if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer'))) {
-        this.set('_labelsLayer',null);
+        this.set('_labelsLayer', null);
       }
 
       this.set('_leafletObject', null);

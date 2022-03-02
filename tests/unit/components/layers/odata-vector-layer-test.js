@@ -1176,7 +1176,7 @@ test('test method clearChanges() with no changes', function(assert) {
       assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
       component.clearChanges();
-      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
       done();
     });
   });
