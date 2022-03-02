@@ -1513,6 +1513,12 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   */
   recalcOnZoomChange: null,
 
+  zoomDelta: null,
+
+  zoomSnap: null,
+
+  wheelPxPerZoomLevel: null,
+
   actions: {
     /**
       Handler for settings tabs &#x27;click&#x27; action.
@@ -1674,6 +1680,12 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
       if (leafletMap.switchScaleControl.options.recalcOnZoomChange) {
         this.set(&#x27;recalcOnZoomChange&#x27;, true);
+        this.set(&#x27;zoomDelta&#x27;, leafletMap.options.zoomDelta);
+        this.set(&#x27;zoomSnap&#x27;, leafletMap.options.zoomSnap);
+        this.set(&#x27;wheelPxPerZoomLevel&#x27;, leafletMap.options.wheelPxPerZoomLevel);
+        leafletMap.options.zoomDelta = 1;
+        leafletMap.options.zoomSnap = 1;
+        leafletMap.options.wheelPxPerZoomLevel = 60;
         leafletMap.switchScaleControl.options.recalcOnZoomChange = false;
         leafletMap.switchScaleControl._restore();
       }
@@ -1690,8 +1702,14 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
       // Switch scale control
       if (this.get(&#x27;recalcOnZoomChange&#x27;)) {
-        this.set(&#x27;recalcOnZoomChange&#x27;, null);
         let leafletMap = this.get(&#x27;leafletMap&#x27;);
+        this.set(&#x27;recalcOnZoomChange&#x27;, null);
+        leafletMap.options.zoomDelta = this.get(&#x27;zoomDelta&#x27;);
+        leafletMap.options.zoomSnap = this.get(&#x27;zoomSnap&#x27;);
+        leafletMap.options.wheelPxPerZoomLevel = this.get(&#x27;wheelPxPerZoomLevel&#x27;);
+        this.set(&#x27;zoomDelta&#x27;, null);
+        this.set(&#x27;zoomSnap&#x27;, null);
+        this.set(&#x27;wheelPxPerZoomLevel&#x27;, null);
         leafletMap.switchScaleControl.options.recalcOnZoomChange = true;
         leafletMap.switchScaleControl._restore();
       }

@@ -592,7 +592,7 @@ export default BaseLayer.extend({
         this._addLayersOnMap(layers, leafletObject);
 
         if (this.get(&#x27;labelSettings.signMapObjects&#x27;)) {
-          this._addLabelsToLeafletContainer(layers);
+          this._addLabelsToLeafletContainer(layers, leafletObject);
         }
 
         leafletObject.fire(&#x27;loadCompleted&#x27;);
@@ -1971,12 +1971,16 @@ export default BaseLayer.extend({
 
     @method _showLabels
     @param {Array} layers new layers for add labels
+    @param {Object} leafletObject leaflet layer
   */
-  _showLabels(layers) {
+  _showLabels(layers, leafletObject) {
     let labelSettingsString = this.get(&#x27;labelSettings.labelSettingsString&#x27;);
     if (!Ember.isNone(labelSettingsString)) {
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
-      let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+      if (!leafletObject) {
+        leafletObject = this.get(&#x27;_leafletObject&#x27;);
+      }
+
       let labelsLayer = this.get(&#x27;_labelsLayer&#x27;);
       if (!Ember.isNone(labelsLayer) &amp;&amp; Ember.isNone(leafletObject._labelsLayer)) {
         labelsLayer.clearLayers();
@@ -2016,11 +2020,15 @@ export default BaseLayer.extend({
 
     @method _addLabelsToLeafletContainer
     @param {Array} layers new layers for add labels
+    @param {Object} leafletObject leaflet layer
     @private
   */
-  _addLabelsToLeafletContainer(layers) {
+  _addLabelsToLeafletContainer(layers, leafletObject) {
     let labelsLayer = this.get(&#x27;_labelsLayer&#x27;);
     let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    if (!leafletObject) {
+      leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    }
 
     let thisPane = this.get(&#x27;_paneLabel&#x27;);
     if (thisPane) {
@@ -2035,13 +2043,13 @@ export default BaseLayer.extend({
     }
 
     if (Ember.isNone(labelsLayer)) {
-      this._showLabels(layers);
+      this._showLabels(layers, leafletObject);
       labelsLayer = this.get(&#x27;_labelsLayer&#x27;);
       leafletMap.addLayer(labelsLayer);
     } else if (!leafletMap.hasLayer(labelsLayer)) {
       leafletMap.addLayer(labelsLayer);
     } else {
-      this._showLabels(layers);
+      this._showLabels(layers, leafletObject);
     }
   },
 

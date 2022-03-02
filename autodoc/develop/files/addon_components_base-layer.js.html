@@ -815,6 +815,10 @@ export default Ember.Component.extend(
       // Now execute base destroy logic.
       this._removeLayerFromLeafletContainer();
 
+      if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;))) {
+        this.set(&#x27;_labelsLayer&#x27;, null);
+      }
+
       this.set(&#x27;_leafletObject&#x27;, null);
       this.set(&#x27;_leafletLayerPromise&#x27;, null);
       if (Ember.isPresent(this.get(&#x27;layerModel&#x27;))) {
@@ -1004,6 +1008,10 @@ export default Ember.Component.extend(
       }
 
       leafletContainer.removeLayer(leafletLayer);
+
+      if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;)) &amp;&amp; leafletContainer.hasLayer(this.get(&#x27;_labelsLayer&#x27;))) {
+        leafletContainer.removeLayer(this.get(&#x27;_labelsLayer&#x27;));
+      }
     },
 
     /**
