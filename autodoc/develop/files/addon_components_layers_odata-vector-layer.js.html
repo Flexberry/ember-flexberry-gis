@@ -1898,49 +1898,51 @@ export default BaseVectorLayer.extend({
     let editTools = leafletObject.leafletMap.editTools;
 
     let featuresIds = [];
-    let changes = leafletObject.models.filter((item) =&gt; true); // for test
+    let changes = leafletObject.models.filter((item) =&gt; true); // for check empty
     if (!Ember.isEmpty(changes)) {
-      Object.entries(changes)
+      Object.entries(leafletObject.models)
         .filter((item) =&gt;  { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))); })
         .map((item)=&gt; item[1])
         .forEach((model, index) =&gt; {
-          let layer = Object.values(leafletObject._layers).find((layer) =&gt; {
-            if (layer.model.get(&#x27;id&#x27;) === model.get(&#x27;id&#x27;)) {
-              return layer;
-            }
-          });
-
-          let dirtyType = model.get(&#x27;dirtyType&#x27;);
-          if (dirtyType === &#x27;created&#x27;) {
-            if (leafletObject.hasLayer(layer)) {
-              leafletObject.removeLayer(layer);
-            }
-
-            delete leafletObject.models[index];
-            if (editTools.featuresLayer.getLayers().length !== 0) {
-              let editorLayerId = editTools.featuresLayer.getLayerId(layer);
-              let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
-              if (!Ember.isNone(editorLayerId) &amp;&amp; !Ember.isNone(featureLayer) &amp;&amp; !Ember.isNone(featureLayer.editor)) {
-                let editLayer = featureLayer.editor.editLayer;
-                editTools.editLayer.removeLayer(editLayer);
-                editTools.featuresLayer.removeLayer(layer);
+          if (model instanceof Ember.Object) {
+            let layer = Object.values(leafletObject._layers).find((layer) =&gt; {
+              if (layer.model.get(&#x27;id&#x27;) === model.get(&#x27;id&#x27;)) {
+                return layer;
               }
-            }
-          } else if (dirtyType === &#x27;updated&#x27; || dirtyType === &#x27;deleted&#x27;) {
-            if (!Ember.isNone(layer)) {
-              if (!Ember.isNone(layer.editor)) {
-                let editLayer = layer.editor.editLayer;
-                editTools.editLayer.removeLayer(editLayer);
-              }
+            });
 
+            let dirtyType = model.get(&#x27;dirtyType&#x27;);
+            if (dirtyType === &#x27;created&#x27;) {
               if (leafletObject.hasLayer(layer)) {
                 leafletObject.removeLayer(layer);
               }
-            }
 
-            model.rollbackAttributes();
-            delete leafletObject.models[index];
-            featuresIds.push(model.get(&#x27;id&#x27;));
+              delete leafletObject.models[index];
+              if (editTools.featuresLayer.getLayers().length !== 0) {
+                let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+                let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+                if (!Ember.isNone(editorLayerId) &amp;&amp; !Ember.isNone(featureLayer) &amp;&amp; !Ember.isNone(featureLayer.editor)) {
+                  let editLayer = featureLayer.editor.editLayer;
+                  editTools.editLayer.removeLayer(editLayer);
+                  editTools.featuresLayer.removeLayer(layer);
+                }
+              }
+            } else if (dirtyType === &#x27;updated&#x27; || dirtyType === &#x27;deleted&#x27;) {
+              if (!Ember.isNone(layer)) {
+                if (!Ember.isNone(layer.editor)) {
+                  let editLayer = layer.editor.editLayer;
+                  editTools.editLayer.removeLayer(editLayer);
+                }
+
+                if (leafletObject.hasLayer(layer)) {
+                  leafletObject.removeLayer(layer);
+                }
+              }
+
+              model.rollbackAttributes();
+              delete leafletObject.models[index];
+              featuresIds.push(model.get(&#x27;id&#x27;));
+            }
           }
         });
 

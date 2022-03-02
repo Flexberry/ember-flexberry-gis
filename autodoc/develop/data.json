@@ -12677,7 +12677,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1542,
+            "line": 1544,
             "description": "Handles 'flexberry-map:cancelEdit' event of leaflet map.",
             "itemtype": "method",
             "name": "cancelEdit",
@@ -12697,7 +12697,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1566,
+            "line": 1568,
             "description": "Get nearest object.\nGets all leaflet layer objects and processes them _calcNearestObject().",
             "itemtype": "method",
             "name": "getNearObject",
@@ -50865,7 +50865,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:1542"
+            "line": " addon/components/layers/odata-vector-layer.js:1544"
         },
         {
             "message": "replacing incorrect tag: returns with return",
