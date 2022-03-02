@@ -1481,7 +1481,7 @@ export default BaseVectorLayer.extend({
     let editTools = leafletObject.leafletMap.editTools;
 
     let featuresIds = [];
-    let changes = leafletObject.models.filter((item) => true );
+    let changes = leafletObject.models.filter((item) => true); // for test
     if (!Ember.isEmpty(changes)) {
       Object.entries(changes)
         .filter((item) =>  { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))); })
