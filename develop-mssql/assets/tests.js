@@ -6296,7 +6296,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
         component.clearChanges();
-        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
         done();
       });
     });
