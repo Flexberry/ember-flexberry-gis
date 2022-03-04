@@ -30,7 +30,7 @@ test('it should set switchScaleControl on leafletMap', function(assert) {
   assert.ok(createControlSpy.calledOnce);
   assert.ok(afterCreateControlSpy.calledOnce);
   assert.ok(addControlSpy.calledOnce);
-  assert.ok(leafletMap.switchScaleControl);
+  assert.ok(leafletMap['switchScaleControlmap-control-scalebar']);
   assert.deepEqual(leafletMap['switchScaleControlmap-control-scalebar'], component.get('control'));
 
   createControlSpy.restore();
