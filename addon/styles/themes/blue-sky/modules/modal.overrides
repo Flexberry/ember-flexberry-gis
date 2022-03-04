@@ -806,6 +806,9 @@
 .ui.modal.flexberry-geometry-add-mode-import-dialog textarea {
 
 }
+.ui.modal.flexberry-export-map-command-dialog {
+  //
+}
 
 .flexberry-export-map-command-dialog-settings-column {
   .ui.buttons.flexberry-font-buttons {

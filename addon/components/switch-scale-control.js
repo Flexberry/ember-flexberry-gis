@@ -50,7 +50,7 @@ export default BaseControl.extend({
     let leafletMap = this.get('leafletMap');
     let control = this.get('control');
     control._restore = this.get('_restore').bind(this);
-    Ember.set(leafletMap, 'switchScaleControl', control);
+    Ember.set(leafletMap, 'switchScaleControl' + control.options.className, control);
   },
 
   _restore() {
