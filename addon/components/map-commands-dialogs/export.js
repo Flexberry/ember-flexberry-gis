@@ -1316,7 +1316,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         let $leafletMap = Ember.$(leafletMap._container);
         let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
         let $scaleCotrol = Ember.$('.leaflet-control-scale-line', $leafletMapControls);
-        if ($scaleCotrol.length == 1) {
+        if ($scaleCotrol.length === 1) {
           Ember.$($scaleCotrol[0]).parent().hide();
         } else {
           Ember.$($scaleCotrol[1]).parent().hide();
@@ -1496,7 +1496,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let $chooseScale = Ember.$('.map-control-scalebar-ratiomenu text', $leafletMapControls).text();
     let $scaleItems = Ember.$('.map-control-scalebar-ratiomenu .map-control-scalebar-ratiomenu-item.item', $leafletMapControls);
     Ember.$.each($scaleItems, (i, item) => {
-      if (Ember.$(item).text().replaceAll('\'','') === $chooseScale) {
+      if (Ember.$(item).text().replaceAll('\'', '') === $chooseScale) {
         Ember.$(item).addClass('active selected');
       }
     });
