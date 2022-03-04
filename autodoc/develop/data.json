@@ -22453,7 +22453,18 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1136,
+            "line": 1135,
+            "description": "Saves the value scales for map.",
+            "itemtype": "property",
+            "name": "scales",
+            "type": "Array",
+            "default": "null",
+            "class": "FlexberryExportMapCommandDialogComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/map-commands-dialogs/export.js",
+            "line": 1145,
             "description": "Handler for settings tabs 'click' action.",
             "itemtype": "method",
             "name": "actions.onSettingsTabClick",
@@ -22469,7 +22480,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1155,
+            "line": 1164,
             "description": "Handler for bold font button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onBoldFontButtonClick",
@@ -22478,7 +22489,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1165,
+            "line": 1174,
             "description": "Handler for italic font button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onItalicFontButtonClick",
@@ -22487,7 +22498,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1175,
+            "line": 1184,
             "description": "Handler for underline font button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onUnderlineFontButtonClick",
@@ -22496,7 +22507,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1185,
+            "line": 1194,
             "description": "Handler for line-through font button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onLinethroughFontButtonClick",
@@ -22505,7 +22516,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1195,
+            "line": 1204,
             "description": "Handler for font colorpicker's 'change' action.",
             "itemtype": "method",
             "name": "actions.onCaptionFontColorChange",
@@ -22514,7 +22525,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1204,
+            "line": 1213,
             "description": "Handler for display mode change.",
             "itemtype": "method",
             "name": "actions.onDisplayModeChange",
@@ -22530,7 +22541,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1214,
+            "line": 1223,
             "description": "Handler for legend position change.",
             "itemtype": "method",
             "name": "actions.onLegendPositionChange",
@@ -22546,7 +22557,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1224,
+            "line": 1233,
             "description": "Handler for page number change.",
             "itemtype": "method",
             "name": "actions.onPageChange",
@@ -22562,7 +22573,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1234,
+            "line": 1243,
             "description": "Handler for paper orientation change.",
             "itemtype": "method",
             "name": "actions.onPaperOrientationChange",
@@ -22578,7 +22589,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1244,
+            "line": 1253,
             "description": "Handler for map control change.",
             "itemtype": "method",
             "name": "actions.onMapControlChange",
@@ -22594,7 +22605,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1255,
+            "line": 1264,
             "description": "Handler for error 'ui-message' component 'onShow' action.",
             "itemtype": "method",
             "name": "actions.onErrorMessageShow",
@@ -22603,7 +22614,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1262,
+            "line": 1271,
             "description": "Handler for error 'ui-message' component 'onHide' action.",
             "itemtype": "method",
             "name": "actions.onErrorMessageHide",
@@ -22612,7 +22623,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1283,
+            "line": 1292,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.beforeShow:method\"}}'flexberry-dialog' component's 'beforeShow' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryExportMapCommandDialogComponent/sendingActions.beforeShow:method\"}}'beforeShow' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onBeforeShow",
@@ -22621,7 +22632,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1308,
+            "line": 1327,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.beforeHide:method\"}}'flexberry-dialog' component's 'beforeHide' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryExportMapCommandDialogComponent/sendingActions.beforeHide:method\"}}'beforeHide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onBeforeHide",
@@ -22630,7 +22641,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1336,
+            "line": 1353,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.show:method\"}}'flexberry-dialog' component's 'show' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryExportMapCommandDialogComponent/sendingActions.show:method\"}}'show' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onShow",
@@ -22639,7 +22650,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1348,
+            "line": 1365,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.hide:method\"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryExportMapCommandDialogComponent/sendingActions.hide:method\"}}'hide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHide",
@@ -22648,7 +22659,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1358,
+            "line": 1375,
             "description": "Called when legends for one of the layers is loaded.",
             "itemtype": "method",
             "name": "actions.legendsLoaded",
@@ -22657,7 +22668,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1369,
+            "line": 1386,
             "description": "Observers changes in properties that affect the ability to show leaflet map.",
             "itemtype": "method",
             "name": "_mapCanBeShownDidChange",
@@ -22668,7 +22679,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1392,
+            "line": 1424,
             "description": "Observers changes in properties that affect the ability to show legend map.",
             "itemtype": "method",
             "name": "_legendControlDidChange",
@@ -22679,7 +22690,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1410,
+            "line": 1442,
             "description": "Observers changes in properties that affect the ability to show scale map.",
             "itemtype": "method",
             "name": "_scaleControlDidChange",
@@ -22690,7 +22701,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1429,
+            "line": 1456,
             "description": "Observers changes in properties that affect the ability to show pages.",
             "itemtype": "method",
             "name": "_pageNumberDidChange",
@@ -22701,7 +22712,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1441,
+            "line": 1468,
             "description": "Invalidates leaflet map's size.",
             "itemtype": "method",
             "name": "_invalidateSizeOfLeafletMap",
@@ -22713,7 +22724,16 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1460,
+            "line": 1487,
+            "description": "Sets active dropdown item.",
+            "itemtype": "method",
+            "name": "_activeItemDropdownScale",
+            "class": "FlexberryExportMapCommandDialogComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/map-commands-dialogs/export.js",
+            "line": 1505,
             "description": "Fits specified leaflet map's bounds.",
             "itemtype": "method",
             "name": "_fitBoundsOfLeafletMap",
@@ -22732,7 +22752,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1483,
+            "line": 1529,
             "description": "Waits for leaflet map tile layers to be ready.",
             "itemtype": "method",
             "name": "_waitForLeafletMapTileLayersToBeReady",
@@ -22744,7 +22764,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1535,
+            "line": 1581,
             "description": "Waits for leaflet map overlay layers to be ready.",
             "itemtype": "method",
             "name": "_waitForLeafletMapOverlayLayersToBeReady",
@@ -22756,7 +22776,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1574,
+            "line": 1620,
             "description": "Waits for leaflet map layers to be ready.",
             "itemtype": "method",
             "name": "_waitForLeafletMapLayersToBeReady",
@@ -22768,7 +22788,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1588,
+            "line": 1634,
             "description": "Shows leaflet map.",
             "itemtype": "method",
             "name": "_showLeafletMap",
@@ -22779,7 +22799,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1630,
+            "line": 1676,
             "description": "Hides leaflet map.",
             "itemtype": "method",
             "name": "_hideLeafletMap",
@@ -22790,7 +22810,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1666,
+            "line": 1712,
             "description": "Computes current scren approximate DPI.",
             "return": {
                 "description": "Current scren approximate DPI.",
@@ -22801,7 +22821,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1690,
+            "line": 1736,
             "description": "Returns inner options transformed into Leaflet.Export options.",
             "itemtype": "method",
             "name": "_getLeafletExportOptions",
@@ -22814,7 +22834,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1728,
+            "line": 1774,
             "description": "Export's map with respect to selected export options.",
             "itemtype": "method",
             "name": "_export",
@@ -22825,7 +22845,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1744,
+            "line": 1790,
             "description": "Prepares map for export with respect to selected export options.",
             "itemtype": "method",
             "name": "beforeExport",
@@ -22834,7 +22854,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1805,
+            "line": 1851,
             "description": "Export's map with respect to selected export options.",
             "itemtype": "method",
             "name": "export",
@@ -22843,7 +22863,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1925,
+            "line": 1971,
             "description": "Performs after export clean up.",
             "itemtype": "method",
             "name": "afterExport",
@@ -22852,35 +22872,35 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1977,
+            "line": 2023,
             "description": "Initializes component.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2021,
+            "line": 2067,
             "description": "Initializes component's DOM-related properties.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2057,
+            "line": 2103,
             "description": "Called after a component has been rendered, both on initial render and in subsequent rerenders.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2073,
+            "line": 2119,
             "description": "Destroys component.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2096,
+            "line": 2142,
             "description": "Component's action invoking when dialog starts to show.",
             "itemtype": "method",
             "name": "sendingActions.beforeShow",
@@ -22889,7 +22909,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2102,
+            "line": 2148,
             "description": "Component's action invoking when dialog starts to hide.",
             "itemtype": "method",
             "name": "sendingActions.beforeHide",
@@ -22898,7 +22918,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2108,
+            "line": 2154,
             "description": "Component's action invoking when dialog is shown.",
             "itemtype": "method",
             "name": "sendingActions.show",
@@ -22907,7 +22927,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2114,
+            "line": 2160,
             "description": "Component's action invoking when dialog is hidden.",
             "itemtype": "method",
             "name": "sendingActions.hide",
@@ -22916,7 +22936,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2120,
+            "line": 2166,
             "description": "Component's action invoking when dialog is approved.",
             "itemtype": "method",
             "name": "sendingActions.approve",
@@ -22925,7 +22945,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2126,
+            "line": 2172,
             "description": "Component's action invoking when dialog is denied.",
             "itemtype": "method",
             "name": "sendingActions.deny",
@@ -50965,27 +50985,27 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1441"
+            "line": " addon/components/map-commands-dialogs/export.js:1468"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1460"
+            "line": " addon/components/map-commands-dialogs/export.js:1505"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1483"
+            "line": " addon/components/map-commands-dialogs/export.js:1529"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1535"
+            "line": " addon/components/map-commands-dialogs/export.js:1581"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1574"
+            "line": " addon/components/map-commands-dialogs/export.js:1620"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1666"
+            "line": " addon/components/map-commands-dialogs/export.js:1712"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -52181,23 +52201,23 @@
         },
         {
             "message": "Missing item type\nComputes current scren approximate DPI.",
-            "line": " addon/components/map-commands-dialogs/export.js:1666"
+            "line": " addon/components/map-commands-dialogs/export.js:1712"
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/map-commands-dialogs/export.js:1977"
+            "line": " addon/components/map-commands-dialogs/export.js:2023"
         },
         {
             "message": "Missing item type\nInitializes component's DOM-related properties.",
-            "line": " addon/components/map-commands-dialogs/export.js:2021"
+            "line": " addon/components/map-commands-dialogs/export.js:2067"
         },
         {
             "message": "Missing item type\nCalled after a component has been rendered, both on initial render and in subsequent rerenders.",
-            "line": " addon/components/map-commands-dialogs/export.js:2057"
+            "line": " addon/components/map-commands-dialogs/export.js:2103"
         },
         {
             "message": "Missing item type\nDestroys component.",
-            "line": " addon/components/map-commands-dialogs/export.js:2073"
+            "line": " addon/components/map-commands-dialogs/export.js:2119"
         },
         {
             "message": "Missing item type\nReference to component's template.",
