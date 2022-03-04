@@ -7973,11 +7973,15 @@ form.flexberry-edit-layermap .simple-layers-style .ui.tab.segment .ui.grid.style
   margin-bottom: 8px;
   margin-left: 0px;
 }
-.mappanel .leaflet-bottom.leaflet-left .leaflet-control-scale.map-control-scalebar {
+.mappanel .leaflet-bottom.leaflet-left .leaflet-control-scale.map-control-scalebar,
+.mappanel .leaflet-bottom.leaflet-left .leaflet-control-scale.main,
+.mappanel .leaflet-bottom.leaflet-left .leaflet-control-scale.export {
   margin-bottom: 0px;
 }
 .mappanel .leaflet-bottom.leaflet-left .leaflet-control-scale-line,
-.mappanel .leaflet-bottom.leaflet-left .map-control-scalebar-ratiomenu {
+.mappanel .leaflet-bottom.leaflet-left .map-control-scalebar-ratiomenu,
+.mappanel .leaflet-bottom.leaflet-left .main-ratiomenu,
+.mappanel .leaflet-bottom.leaflet-left .export-rationmenu {
   width: 90px !important;
   height: 16px;
   background: #ffffff;
@@ -7986,13 +7990,17 @@ form.flexberry-edit-layermap .simple-layers-style .ui.tab.segment .ui.grid.style
   padding: 1px 5px 1px 5px;
 }
 .mappanel .leaflet-bottom.leaflet-left .leaflet-control-scale-line text,
-.mappanel .leaflet-bottom.leaflet-left .map-control-scalebar-ratiomenu text {
+.mappanel .leaflet-bottom.leaflet-left .map-control-scalebar-ratiomenu text,
+.mappanel .leaflet-bottom.leaflet-left .main-ratiomenu text,
+.mappanel .leaflet-bottom.leaflet-left .export-rationmenu text {
   height: 12px;
   line-height: 12px;
   display: block;
 }
 .mappanel .leaflet-bottom.leaflet-left .leaflet-control-scale-line .menu.transition.visible,
-.mappanel .leaflet-bottom.leaflet-left .map-control-scalebar-ratiomenu .menu.transition.visible {
+.mappanel .leaflet-bottom.leaflet-left .map-control-scalebar-ratiomenu .menu.transition.visible,
+.mappanel .leaflet-bottom.leaflet-left .main-ratiomenu .menu.transition.visible,
+.mappanel .leaflet-bottom.leaflet-left .export-rationmenu .menu.transition.visible {
   border-radius: 3.5px;
 }
 .mappanel .leaflet-left {
