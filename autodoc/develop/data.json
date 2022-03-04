@@ -29859,7 +29859,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 153,
+            "line": 158,
             "description": "Flag: indicates whether component is active.",
             "itemtype": "property",
             "name": "isActive",
@@ -29870,14 +29870,14 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 164,
+            "line": 169,
             "description": "Reference to component's template.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 169,
+            "line": 174,
             "description": "Settings for display feature info.",
             "itemtype": "property",
             "name": "displaySettings",
@@ -29888,7 +29888,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 178,
+            "line": 183,
             "description": "Feature's metadata.",
             "itemtype": "property",
             "name": "feature",
@@ -29898,7 +29898,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 186,
+            "line": 191,
             "description": "Current selected feature.",
             "itemtype": "property",
             "name": "feature",
@@ -29908,7 +29908,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 194,
+            "line": 199,
             "description": "Action button hasEditForm display.",
             "itemtype": "property",
             "name": "hasEditForm",
@@ -29919,7 +29919,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 203,
+            "line": 208,
             "description": "Flag: indicates whether submenu is visible.",
             "itemtype": "property",
             "name": "isSubmenu",
@@ -29930,14 +29930,14 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 212,
+            "line": 217,
             "description": "Initializes DOM-related component's properties.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 263,
+            "line": 268,
             "description": "Show\\hide submenu",
             "itemtype": "method",
             "name": "actions.onSubmenu",
@@ -29946,7 +29946,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 274,
+            "line": 279,
             "description": "Performs row editing.",
             "itemtype": "method",
             "name": "actions.onRowEdit",
@@ -29955,7 +29955,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 351,
+            "line": 356,
             "description": "Handles click on show/hide all intersection coordinates.",
             "itemtype": "method",
             "name": "actions.toggleShowAllCords",
@@ -29964,7 +29964,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 365,
+            "line": 370,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.selectFeature:method\"}}'selectFeature' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.selectFeature",
@@ -29973,7 +29973,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 373,
+            "line": 378,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.panTo:method\"}}'panTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.panTo",
@@ -29982,7 +29982,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 381,
+            "line": 386,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.zoomTo:method\"}}'zoomTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.zoomTo",
@@ -29991,7 +29991,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 389,
+            "line": 394,
             "description": "Show\\hide detailed feature info",
             "itemtype": "method",
             "name": "actions.showInfo",
@@ -30000,7 +30000,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 398,
+            "line": 403,
             "description": "Show\\hide links list (if present).",
             "itemtype": "method",
             "name": "actions.toggleLinks",
@@ -30009,7 +30009,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 406,
+            "line": 411,
             "description": "Process the specified method.",
             "itemtype": "method",
             "name": "actions.goToEditForm",
@@ -30030,7 +30030,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 419,
+            "line": 424,
             "description": "Show\\hide panel for seraching intersections.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.findIntersection",
@@ -30039,7 +30039,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 429,
+            "line": 434,
             "description": "Add feature to favorites list\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToFavorite",
@@ -30048,7 +30048,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 438,
+            "line": 443,
             "description": "Handles click on checkbox.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToCompareGeometries",
@@ -30057,7 +30057,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 447,
+            "line": 452,
             "description": "Pans and zooms to intersection object.",
             "itemtype": "method",
             "name": "actions.panToIntersection",
@@ -30066,7 +30066,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 456,
+            "line": 461,
             "description": "Zooms to intersection and add intersection object on map.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -30075,7 +30075,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 466,
+            "line": 471,
             "description": "Component's action invoking for select feature",
             "itemtype": "method",
             "name": "sendingActions.selectFeature",
@@ -30091,7 +30091,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 472,
+            "line": 477,
             "description": "Component's action invoking for feature zooming",
             "itemtype": "method",
             "name": "sendingActions.zoomTo",
@@ -30107,7 +30107,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 478,
+            "line": 483,
             "description": "Component's action invoking for feature pan",
             "itemtype": "method",
             "name": "sendingActions.panTo",
@@ -38402,7 +38402,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 574,
+            "line": 599,
             "description": "Get an array of layer shapes id.",
             "itemtype": "method",
             "name": "_getFeatureShapeIds",
@@ -52529,11 +52529,11 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/feature-result-item.js:164"
+            "line": " addon/components/feature-result-item.js:169"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/feature-result-item.js:212"
+            "line": " addon/components/feature-result-item.js:217"
         },
         {
             "message": "Missing item type\nReference to component's template.",

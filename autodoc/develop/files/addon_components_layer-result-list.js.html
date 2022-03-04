@@ -977,12 +977,37 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         }
       });
 
+      displayResults = displayResults.sort((a, b) =&gt; {
+        // If displayValue is empty, it should be on the bottom.
+        if (!a.name) {
+          return 1;
+        }
+
+        if (!b.name) {
+          return -1;
+        }
+
+        if (a.name &gt; b.name) {
+          return 1;
+        }
+
+        if (a.name &lt; b.name) {
+          return -1;
+        }
+
+        return 0;
+      });
+
       this.set(&#x27;_displayResults&#x27;, displayResults);
       this.set(&#x27;_noData&#x27;, displayResults.length === 0);
       this.set(&#x27;_showLoader&#x27;, false);
-      if (this.get(&#x27;favoriteMode&#x27;) !== true) {
+      if (this.get(&#x27;favoriteMode&#x27;) !== true &amp;&amp; Ember.isNone(this.get(&#x27;share&#x27;))) {
         if (displayResults.length === 1) {
           this.send(&#x27;zoomTo&#x27;, displayResults.objectAt(0).features);
+        }
+      } else if (!Ember.isNone(this.get(&#x27;share&#x27;))) {
+        if (displayResults.length === 1) {
+          this.send(&#x27;selectFeature&#x27;, displayResults.objectAt(0).features);
         }
       }
     });

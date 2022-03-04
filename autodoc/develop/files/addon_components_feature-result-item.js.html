@@ -564,7 +564,12 @@ export default Ember.Component.extend({
     @readonly
    */
   expanded: Ember.computed(&#x27;infoExpanded&#x27;, &#x27;_infoExpanded&#x27;, function () {
-    return this.get(&#x27;infoExpanded&#x27;) || this.get(&#x27;_infoExpanded&#x27;);
+    if (this.get(&#x27;infoExpanded&#x27;)) {
+      this.set(&#x27;infoExpanded&#x27;, false);
+      this.set(&#x27;_infoExpanded&#x27;, true);
+    }
+
+    return this.get(&#x27;_infoExpanded&#x27;);
   }),
 
   /**
