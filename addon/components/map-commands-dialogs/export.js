@@ -1315,11 +1315,11 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
         let $leafletMap = Ember.$(leafletMap._container);
         let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
-        let $scaleCotrol = Ember.$('.leaflet-control-scale-line', $leafletMapControls);
-        if ($scaleCotrol.length === 1) {
-          Ember.$($scaleCotrol[0]).parent().hide();
+        let $scaleControl = Ember.$('.leaflet-control-scale-line', $leafletMapControls);
+        if ($scaleControl.length === 1) {
+          Ember.$($scaleControl[0]).parent().hide();
         } else {
-          Ember.$($scaleCotrol[1]).parent().hide();
+          Ember.$($scaleControl[1]).parent().hide();
         }
       }
     },
