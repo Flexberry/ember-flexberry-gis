@@ -51,6 +51,10 @@
     font-size: 16px;
   }
 
+  .feature-result-item-toolbar .icon-guideline-points {
+    font-size: 20px;
+  }
+
   .item.active {
     border: none;
   }

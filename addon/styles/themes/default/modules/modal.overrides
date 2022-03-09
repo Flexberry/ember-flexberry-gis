@@ -195,9 +195,6 @@
     }
 
     .flexberry-export-map-command-dialog-paging-column {
-      .ui.button.active{
-        border: 1px solid @mediumbluecolor;
-      }
 
       display: block;
 

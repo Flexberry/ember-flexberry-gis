@@ -334,14 +334,9 @@
           margin: 0;
           width: 40px;
           font-size: 20px;
-          line-height: 0.5;
-          padding-left: 0;
-          padding-right: 0;
-        }
-        .ui.button:hover,
-        .ui.button.active {
-          border: 1px solid @primaryColor;
-          background: @white;
+          padding: 0;
+          line-height: 40px;
+          color: @white;
         }
       }
     }
@@ -390,7 +385,7 @@
         height: 32px;
         min-height: 32px;
         min-width: 200px;
-        padding: 7px 0;
+        padding: 8px 0;
         margin: 0 15px;
       }
     }

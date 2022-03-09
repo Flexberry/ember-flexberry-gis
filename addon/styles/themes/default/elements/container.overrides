@@ -672,18 +672,14 @@ div.minimap-drag-panel {
   border-radius: 5px;
   padding: 15px 10px 5px 10px;
 
-  i.icon {
-    font-size: 12px;
-  }
-
   .leaflet-control-minimap {
    box-shadow: none;
   }
 
   .flexberry-minimap-close {
     position: absolute;
-    top: 1px;
-    right: 1px;
+    top: 0;
+    right: 0;
     z-index: 1000;
     cursor: pointer;
   }
@@ -892,6 +888,12 @@ div.measure-drag-panel {
   }
   .feature-result-item-title {
     position: relative;
+    .ui.checkbox {
+      margin: auto 0;
+    }
+    .ui.checkbox label {
+      padding-left: 26px;
+    }
   }
   .feature-result-item-caption {
     max-width: 68%;
@@ -899,6 +901,7 @@ div.measure-drag-panel {
     word-wrap: break-word;
     font-size: 14px;
     color: @darkbluecolor;
+    align-self: center;
   }
   .feature-result-item-select.icon.item, .feature-result-item-upload.icon.item {
     font-size: 1.4em;
@@ -943,12 +946,12 @@ div.measure-drag-panel {
     padding: 0 !important;
     display: block;
     float: left;
-    transform-origin: 50% 60%;
   }
 
   .layer-result-list-toggler {
     .title {
       display: flex;
+      align-items: end;
       .flexberry-toggler-caption {
         margin-left: 6px;
         display: block;
