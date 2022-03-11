@@ -139,7 +139,7 @@ export let defineProjections = function (modelClass) {
     scale: Projection.attr('Масштаб'),
     coordinateReferenceSystem: Projection.attr('Система координат'),
     boundingBox: Projection.attr('Граница'),
-    securityKey: Projection.attr('', {hidden: true }),
+    securityKey: Projection.attr('', { hidden: true }),
     parent: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
 
     }, { displayMemberPath: 'name' }),

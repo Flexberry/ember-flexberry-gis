@@ -269,6 +269,7 @@ export default Ember.Mixin.create({
           // разрешать не будем
           Ember.set(settings, 'readonly', readonly);
         }
+
         let items = this.get(itemsPath) || Ember.A();
         let index = items.findIndex((item) => Ember.isEqual(item.name, name));
         if (index >= 0) {
