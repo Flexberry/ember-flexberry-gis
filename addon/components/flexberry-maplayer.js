@@ -286,6 +286,20 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether edit/add operation is allowed for layer.
+
+      @property _editOperationIsAvailable
+      @type boolean
+      @readOnly
+      @private
+    */
+    _editOperationIsAvailable: Ember.computed('_layerClassFactory', 'layer.layerInitialized', function () {
+      let layerClassFactory = this.get('_layerClassFactory');
+
+      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).includes('editFeatures') && this.get('layer.layerInitialized');
+    }),
+
+    /**
       Flag: indicates whether attributes operation is allowed for layer.
 
       @property _attributesOperationIsAvailable
@@ -454,14 +468,22 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     histEnabled: false,
 
     /**
-      Flag: indicates whether layer node is in readonly mode.
-      If true, layer node's data-related UI will be in readonly mode.
+      Flag: indicates whether layer model is in readonly mode.
 
       @property readonly
       @type Boolean
       @default false
     */
-    readonly: false,
+    readonlyModel: false,
+
+    /**
+      Flag: indicates whether layer's objects is in readonly mode.
+
+      @property readonly
+      @type Boolean
+      @default false
+    */
+    readonlyData: false,
 
     /**
       Flag: indicates whether layer node has been expanded once.

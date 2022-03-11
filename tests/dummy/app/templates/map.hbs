@@ -52,6 +52,8 @@
         {{#if showTree}}
           {{flexberry-maplayers
             class="styled"
+            accessibleModel=access.mapLayerModel
+            accessibleData=access.mapLayerData
             leafletMap=leafletMap
             sideBySide=sideBySide
             layers=(get-with-dynamic-actions this "model.otherLayers"
@@ -138,6 +140,7 @@
           addToFavorite=(action "addToFavorite")
           editFeature=(action 'onCreateOrEditFeature')
           availableEdit=true
+          accessibleData=access.mapLayerData
         }}
       </div>
       <div data-tab="identify" class="ui tab identify">
@@ -163,6 +166,7 @@
           availableCRS=availableCRS
           editFeature=(action 'onCreateOrEditFeature')
           availableEdit=true
+          accessibleData=access.mapLayerData
         }}
       </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
