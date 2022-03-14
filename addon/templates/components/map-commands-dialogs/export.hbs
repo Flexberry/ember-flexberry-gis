@@ -70,7 +70,7 @@
       <div class="{{flexberryClassNames.pagingColumn}}">
         <div class="field">
           {{flexberry-button
-            class=(if (eq _options.pageNumber "1") "active" "")
+            class=(concat "primary" (unless (eq _options.pageNumber "1") " basic"))
             caption="1"
             click=(action "onPageChange" "1")
           }}
@@ -78,7 +78,7 @@
         {{#if _options.legendSecondPage}}
           <div class="field">
             {{flexberry-button
-              class=(if (eq _options.pageNumber "2") "active" "")
+              class=(concat "primary" (unless (eq _options.pageNumber "2") " basic"))
               caption="2"
               click=(action "onPageChange" "2")
             }}
