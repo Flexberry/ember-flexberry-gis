@@ -7194,16 +7194,13 @@ div.minimap-drag-panel {
   border-radius: 5px;
   padding: 15px 10px 5px 10px;
 }
-div.minimap-drag-panel i.icon {
-  font-size: 12px;
-}
 div.minimap-drag-panel .leaflet-control-minimap {
   box-shadow: none;
 }
 div.minimap-drag-panel .flexberry-minimap-close {
   position: absolute;
-  top: 1px;
-  right: 1px;
+  top: 0;
+  right: 0;
   z-index: 1000;
   cursor: pointer;
 }
@@ -7402,12 +7399,19 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
 .layer-result-list .feature-result-item-title {
   position: relative;
 }
+.layer-result-list .feature-result-item-title .ui.checkbox {
+  margin: auto 0;
+}
+.layer-result-list .feature-result-item-title .ui.checkbox label {
+  padding-left: 26px;
+}
 .layer-result-list .feature-result-item-caption {
   max-width: 68%;
   word-break: break-word;
   word-wrap: break-word;
   font-size: 14px;
   color: #3C4F76;
+  align-self: center;
 }
 .layer-result-list .feature-result-item-select.icon.item,
 .layer-result-list .feature-result-item-upload.icon.item {
@@ -7452,10 +7456,10 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   padding: 0 !important;
   display: block;
   float: left;
-  transform-origin: 50% 60%;
 }
 .layer-result-list .layer-result-list-toggler .title {
   display: flex;
+  align-items: end;
 }
 .layer-result-list .layer-result-list-toggler .title .flexberry-toggler-caption {
   margin-left: 6px;
@@ -38834,9 +38838,6 @@ select.ui.dropdown {
 .ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-paging-column {
   display: block;
 }
-.ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-paging-column .ui.button.active {
-  border: 1px solid #DDEBFF;
-}
 .ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-paging-column .field label {
   margin: 0;
 }
@@ -45677,12 +45678,6 @@ img.item-minus {
   width: 200px;
   text-align: left;
 }
-.flexberry-maplayers .flexberry-treenode .flexberry-treenode-buttons-block .allmore.floated.flexberry-button.ui.button.icon .more.submenu .flexberry-maplayer-add-button {
-  padding-left: 1px;
-}
-.flexberry-maplayers .flexberry-treenode .flexberry-treenode-buttons-block .allmore.floated.flexberry-button.ui.button.icon .more.submenu .flexberry-maplayer-add-button i.plus.icon {
-  margin-right: 13px;
-}
 .flexberry-maplayers .flexberry-treenode .flexberry-maplayer-type-icon.folder ~ .flexberry-treenode-buttons-block {
   left: 48px;
 }
@@ -45769,7 +45764,7 @@ img.item-minus {
 .right-sidebar-wrapper .ui.right.sidebar .ui.tab.createOrEditObject .create-edit-block .editfeature-tab-nav-panel .editfeature-tab-nav-panel-tabs .editfeature.tab {
   border: 1px solid #b1cae8;
   border-radius: 3.5px;
-  padding: 8px;
+  padding: 7px;
   margin-right: 10px;
   height: 40px;
 }
@@ -45782,7 +45777,7 @@ img.item-minus {
   border-bottom-right-radius: 0px !important;
   border-bottom-left-radius: 0px !important;
   border-bottom: 1px solid #FFFFFF;
-  height: 51px;
+  height: 50px;
   padding-bottom: 19px;
   z-index: 1;
 }
@@ -45806,7 +45801,7 @@ img.item-minus {
   position: absolute;
   bottom: 0px;
   width: calc(100% - 50px) !important;
-  padding: 10px 0;
+  padding: 10px 10px;
 }
 .right-sidebar-wrapper .ui.right.sidebar .ui.tab.createOrEditObject .create-edit-block-attributes {
   padding-top: 10px;
