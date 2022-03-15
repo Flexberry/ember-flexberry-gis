@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import DS from 'ember-data';
-import { attr, belongsTo, hasMany } from 'ember-flexberry-data/utils/attributes';
+import { attr } from 'ember-flexberry-data/utils/attributes';
 
 export let Model = Ember.Mixin.create({
   name: DS.attr('string'),
@@ -64,7 +64,6 @@ export let defineNamespace = function (modelClass) {
 
 export let defineProjections = function (modelClass) {
   modelClass.defineProjection('BackgroundLayerE', 'new-platform-flexberry-g-i-s-background-layer', {
-    
   });
 
   modelClass.defineProjection('BackgroundLayerL', 'new-platform-flexberry-g-i-s-background-layer', {
