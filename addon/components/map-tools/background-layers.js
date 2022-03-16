@@ -86,14 +86,6 @@ export default Ember.Component.extend({
     this._updateItems();
   }),
 
-  /**
-    Initializes DOM-related component's properties  & logic.
-  */
-  didInsertElement() {
-    this._super(...arguments);
-    // this._updateItems();
-  },
-
   _updateItems() {
     let layers = this.get('layers');
     let items = [];
