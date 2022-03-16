@@ -82,7 +82,7 @@ export default Ember.Component.extend({
   */
   selectedLayer: null,
 
-  _backgroundLayersChange: Ember.observer('layers.[]', function() {
+  _backgroundLayersChange: Ember.observer('layers', function() {
     this._updateItems();
   }),
 
@@ -91,7 +91,7 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this._super(...arguments);
-    this._updateItems();
+    // this._updateItems();
   },
 
   _updateItems() {
@@ -111,9 +111,10 @@ export default Ember.Component.extend({
         this.set('selectedLayer', layer);
       }
 
+      let layerSettings = JSON.parse(layer.get('settings'));
       items.push({
         name: Ember.get(layer, 'name'),
-        pic: layer.get('settingsAsObject.backgroundSettings.picture'),
+        pic: layerSettings.backgroundSettings.picture,
         class: classChild,
         layer: layer,
         classActive: classActive,
