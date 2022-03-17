@@ -73,18 +73,18 @@ test('isVisible true', function(assert) {
   assert.equal(this.$().find('.flexberry-background-map-tool').length, 1);
   assert.equal(this.$('.flexberry-background-map-tool').attr('title'), 'Background layers');
 
-  // assert.equal(this.$('.main-background-layers').length, 1);
-  // assert.equal(this.$('.child-background-layers').length, 2);
-  // assert.ok(this.$(this.$('.main-background-layers').children()[0]).hasClass('first-item'));
-  // assert.ok(this.$(this.$('.main-background-layers').children()[1]).hasClass('last-item'));
-  // assert.equal(this.$(this.$('.child-background-layers').children()[0]).attr('src'), 'pic1');
-  // assert.equal(this.$(this.$('.child-background-layers').children()[0]).attr('class'), 'picture active');
-  // assert.equal(this.$(this.$('.child-background-layers').children()[1]).text(), 'test layer1');
-  // assert.equal(this.$(this.$('.child-background-layers').children()[2]).attr('src'), 'pic2');
-  // assert.equal(this.$(this.$('.child-background-layers').children()[2]).attr('class'), 'picture ');
-  // assert.equal(this.$(this.$('.child-background-layers').children()[3]).text(), 'test layer2');
+  assert.equal(this.$('.main-background-layers').length, 1);
+  assert.equal(this.$('.child-background-layers').length, 2);
+  assert.ok(this.$(this.$('.main-background-layers').children()[0]).hasClass('first-item'));
+  assert.ok(this.$(this.$('.main-background-layers').children()[1]).hasClass('last-item'));
+  assert.equal(this.$(this.$('.child-background-layers').children()[0]).attr('src'), 'pic1');
+  assert.equal(this.$(this.$('.child-background-layers').children()[0]).attr('class'), 'picture active');
+  assert.equal(this.$(this.$('.child-background-layers').children()[1]).text(), 'test layer1');
+  assert.equal(this.$(this.$('.child-background-layers').children()[2]).attr('src'), 'pic2');
+  assert.equal(this.$(this.$('.child-background-layers').children()[2]).attr('class'), 'picture ');
+  assert.equal(this.$(this.$('.child-background-layers').children()[3]).text(), 'test layer2');
 
-  // this.$('.child-background-layers')[1].click();
-  // assert.equal(this.$(this.$('.child-background-layers').children()[0]).attr('class'), 'picture ');
-  // assert.equal(this.$(this.$('.child-background-layers').children()[2]).attr('class'), 'picture active');
+  this.$('.child-background-layers')[1].click();
+  assert.equal(this.$(this.$('.child-background-layers').children()[0]).attr('class'), 'picture ');
+  assert.equal(this.$(this.$('.child-background-layers').children()[2]).attr('class'), 'picture active');
 });

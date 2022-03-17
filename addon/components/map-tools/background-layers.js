@@ -82,9 +82,17 @@ export default Ember.Component.extend({
   */
   selectedLayer: null,
 
-  _backgroundLayersChange: Ember.observer('layers', function() {
+  _backgroundLayersChange: Ember.observer('layers.[]', function() {
     this._updateItems();
   }),
+
+  /**
+    Initializes DOM-related component's properties  & logic.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+    this._updateItems();
+  },
 
   _updateItems() {
     let layers = this.get('layers');
