@@ -111,10 +111,9 @@ export default Ember.Component.extend({
         this.set('selectedLayer', layer);
       }
 
-      let layerSettings = JSON.parse(layer.get('settings'));
       items.push({
         name: Ember.get(layer, 'name'),
-        pic: layerSettings.backgroundSettings.picture,
+        pic: layer.get('settingsAsObject.backgroundSettings.picture'),
         class: classChild,
         layer: layer,
         classActive: classActive,
