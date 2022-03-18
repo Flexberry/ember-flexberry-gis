@@ -40,7 +40,9 @@ export default BaseLayer.extend({
     let settings = this._super(...arguments);
     Ember.$.extend(true, settings, {
       url: undefined,
-      noWrap: true
+      noWrap: true,
+      minZoom: 0,
+      maxZoom: 25,
     });
 
     return settings;
