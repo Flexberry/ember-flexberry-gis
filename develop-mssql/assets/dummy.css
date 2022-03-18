@@ -38794,7 +38794,7 @@ select.ui.dropdown {
   box-shadow: none;
 }
 .ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-settings-column .export-buttons {
-  padding-top: 50px;
+  padding-top: 20px;
   display: flex;
   justify-content: center;
 }
