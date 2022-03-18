@@ -36806,7 +36806,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 41,
+            "line": 51,
             "description": "Filter method for available layers.",
             "itemtype": "method",
             "name": "_layerCanBeSearched",
@@ -36828,7 +36828,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 53,
+            "line": 63,
             "description": "Object with properties for which user can do search",
             "itemtype": "property",
             "name": "searchProperties",
@@ -36839,7 +36839,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 62,
+            "line": 72,
             "description": "String with property for which user do search",
             "itemtype": "property",
             "name": "propertyName",
@@ -36850,7 +36850,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 71,
+            "line": 81,
             "description": "Localized value with property for which user do search",
             "itemtype": "property",
             "name": "_localizedValue",
@@ -36861,7 +36861,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 83,
+            "line": 93,
             "description": "Object with search seettings",
             "itemtype": "property",
             "name": "_searchSettings",
@@ -36872,7 +36872,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 92,
+            "line": 102,
             "description": "Flag: indicates whether to show error message or not.",
             "itemtype": "property",
             "name": "showErrorMessage",
@@ -36883,7 +36883,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 101,
+            "line": 111,
             "description": "Dialog's 'error-message' caption.",
             "itemtype": "property",
             "name": "errorMessageCaption",
@@ -36894,7 +36894,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 110,
+            "line": 120,
             "description": "Error message.",
             "itemtype": "property",
             "name": "errorMessage",
@@ -36905,7 +36905,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 119,
+            "line": 129,
             "description": "Flag: indicates whether to show clear button or not.",
             "itemtype": "property",
             "name": "queryStringEmpty",
@@ -36916,7 +36916,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 132,
+            "line": 142,
             "description": "Transforms string of coordinate in degrees, minutes, seconds in coordinate in degrees.",
             "itemtype": "method",
             "name": "degreeMinSecToDegree",
@@ -36938,7 +36938,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 148,
+            "line": 158,
             "description": "Transforms string of coordinate in degrees, minutes, seconds in coordinate in degrees.",
             "itemtype": "method",
             "name": "goTo",
@@ -36965,7 +36965,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 274,
+            "line": 284,
             "description": "Handler for error 'ui-message. component 'onShow' action.",
             "itemtype": "method",
             "name": "actions.onErrorMessageShow",
@@ -36974,7 +36974,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 282,
+            "line": 292,
             "description": "Handler for error 'ui-message' component 'onHide' action.",
             "itemtype": "method",
             "name": "actions.onErrorMessageHide",
@@ -36983,7 +36983,7 @@
         },
         {
             "file": "addon/components/flexberry-search-panel.js",
-            "line": 291,
+            "line": 301,
             "description": "Action called when search input has received focus\nInvokes {{#crossLink \"FlexberrySearchComponent/sendingActions.focus:method\"}}'focus' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.focus",
