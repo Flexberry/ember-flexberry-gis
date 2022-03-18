@@ -115,6 +115,10 @@
   }
 }
 
+.leaflet-bottom.leaflet-left .main-ratiomenu.dropdown .menu .item {
+  color: @textColor;
+}
+
 /* minimap-drag-panel*/
 div.minimap-drag-panel {
   border: @defaultGrayBorder;
