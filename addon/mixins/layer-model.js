@@ -38,7 +38,7 @@ export default Ember.Mixin.create({
     @method _settingsDidChange
     @private
   */
-  _settingsDidChange: Ember.on('init', Ember.observer('settings', function() {
+  _settingsDidChange: Ember.on('init', Ember.observer('settings', 'map', 'map.mapLayer', function() {
     let stringToDeserialize = this.get('settings');
     let settingsAsObject = {};
 
