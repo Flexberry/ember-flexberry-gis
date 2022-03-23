@@ -67,7 +67,7 @@ export default Ember.Mixin.create({
   _applyLayerPropertiesFromLocalStorage() {
     let mapId = this.get('map.id');
     let layerId = this.get('id');
-    let localStorageLayer = Ember.isBlank(mapId) || Ember.isBlank(layerId) ?
+    let localStorageLayer = Ember.isBlank(mapId) || Ember.isBlank(layerId) || Ember.isNone(this.get('localStorageService')) ?
       null :
       this.get('localStorageService').getFromStorage('layers', mapId).findBy('id', layerId);
     if (!Ember.isNone(localStorageLayer)) {
