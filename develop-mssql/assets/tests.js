@@ -12241,7 +12241,7 @@ define('dummy/tests/unit/mixins/map-model-api-getlayerobjectoptions-test', ['exp
   featureLayer.toProjectedGeoJSON = function () {};
 
   (0, _qunit.test)('getLayerObjectOptions should return properties of feature, projected geometry, and correct area', function (assert) {
-    assert.expect(4);
+    assert.expect(5);
     var done = assert.async(1);
 
     var subject = mapApiMixinObject.create({
@@ -12268,6 +12268,11 @@ define('dummy/tests/unit/mixins/map-model-api-getlayerobjectoptions-test', ['exp
       assert.equal(options.foo, 'bar');
       assert.equal(options.area.toFixed(2), 61177.16);
       assert.deepEqual(options.geometry, coordinates32640);
+      assert.deepEqual(options.shape, {
+        type: 'MultiPolygon',
+        coordinates: coordinates32640,
+        crs: { type: 'name', properties: { name: 'EPSG:32640' } }
+      });
       assert.ok(toProjectedGeoJSONStub.calledWith(crs32640));
       toProjectedGeoJSONStub.restore();
       done();
@@ -12275,7 +12280,7 @@ define('dummy/tests/unit/mixins/map-model-api-getlayerobjectoptions-test', ['exp
   });
 
   (0, _qunit.test)('getLayerObjectOptions return projected geometry if specified crsName', function (assert) {
-    assert.expect(2);
+    assert.expect(3);
     var done = assert.async(1);
     var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
     ownerStub.returns({
@@ -12309,6 +12314,12 @@ define('dummy/tests/unit/mixins/map-model-api-getlayerobjectoptions-test', ['exp
     result.then(function (options) {
       assert.equal(options.area.toFixed(2), 61177.16);
       assert.deepEqual(options.geometry, coordinates4326);
+      assert.deepEqual(options.shape, {
+        type: 'MultiPolygon',
+        coordinates: coordinates4326,
+        geometry: coordinates4326,
+        crs: { type: 'name', properties: { name: 'EPSG:4326' } }
+      });
       done();
       ownerStub.restore();
       toProjectedGeoJSONStub.restore();
