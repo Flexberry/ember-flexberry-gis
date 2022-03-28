@@ -364,19 +364,13 @@ export default Ember.Mixin.create(SnapDraw, {
         let featureLayer = features[0];
         if (leafletLayer && featureLayer) {
           result = Object.assign({}, featureLayer.feature.properties);
-          let geoJSON = featureLayer.feature.geometry;
-          geoJSON.crs = { type: 'name', properties: { name: '' } };
           if (crsName) {
             let NewObjCrs = this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer.feature, crsName);
             result.geometry = NewObjCrs.geometry.coordinates;
-            geoJSON.geometry = NewObjCrs.geometry.coordinates;
-            geoJSON.crs.properties.name = crsName;
           } else {
             result.geometry = featureLayer.feature.geometry.coordinates;
-            geoJSON.crs.properties.name = leafletLayer.options.crs.code;
           }
 
-          result.shape = geoJSON;
           let jstsGeoJSONReader = new jsts.io.GeoJSONReader();
           let featureLayerGeoJSON = featureLayer.toProjectedGeoJSON(leafletLayer.options.crs);
           let jstsGeoJSON = jstsGeoJSONReader.read(featureLayerGeoJSON);
