@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import DS from 'ember-data';
-import { attr } from 'ember-flexberry-data/utils/attributes';
+import { attr, belongsTo, hasMany } from 'ember-flexberry-data/utils/attributes';
 
 export let Model = Ember.Mixin.create({
   name: DS.attr('string'),
@@ -63,23 +63,48 @@ export let defineNamespace = function (modelClass) {
 };
 
 export let defineProjections = function (modelClass) {
-  modelClass.defineProjection('BackgroundLayerE', 'new-platform-flexberry-g-i-s-background-layer', {
+  modelClass.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-background-layer', {
+    name: attr('Наименование', { index: 0 }),
+    creator: attr('Создатель', { index: 1 }),
+    createTime: attr('Время создания', { index: 2 }),
+    editor: attr('Редактор', { index: 3 }),
+    editTime: attr('Время редактирования', { index: 4 })
   });
 
-  modelClass.defineProjection('BackgroundLayerL', 'new-platform-flexberry-g-i-s-background-layer', {
-    name: attr('', { index: 0 }),
-    description: attr('', { index: 1 }),
-    keyWords: attr('', { index: 2 }),
+  modelClass.defineProjection('BackgroundLayerD', 'new-platform-flexberry-g-i-s-background-layer', {
+    name: attr('Наименование', { index: 0 }),
+    description: attr('Описание', { index: 1 }),
+    keyWords: attr('Ключевые слова', { index: 2 }),
     anyText: attr('', { index: 3 }),
-    index: attr('', { index: 4 }),
-    visibility: attr('', { index: 5 }),
-    type: attr('', { index: 6 }),
-    settings: attr('', { index: 7 }),
-    scale: attr('', { index: 8 }),
-    coordinateReferenceSystem: attr('', { index: 9 }),
-    boundingBox: attr('', { index: 10 }),
+    index: attr('Индекс', { index: 4 }),
+    visibility: attr('Видимость', { index: 5 }),
+    type: attr('Тип', { index: 6 }),
+    settings: attr('Настройки', { index: 7 }),
+    scale: attr('Масштаб', { index: 8 }),
+    coordinateReferenceSystem: attr('Система координат', { index: 9 }),
+    boundingBox: attr('Граница', { index: 10 }),
     public: attr('', { index: 11 }),
     owner: attr('', { index: 12 }),
     securityKey: attr('', { index: 13 })
+  });
+
+  modelClass.defineProjection('BackgroundLayerE', 'new-platform-flexberry-g-i-s-background-layer', {
+    name: attr('Наименование', { index: 0 }),
+    description: attr('Описание', { index: 1 }),
+    keyWords: attr('Ключевые слова', { index: 2 }),
+    index: attr('Индекс', { index: 3 }),
+    visibility: attr('Видимость', { index: 4 }),
+    type: attr('Тип', { index: 5 }),
+    settings: attr('Настройки', { index: 6 }),
+    scale: attr('Масштаб', { index: 7 }),
+    coordinateReferenceSystem: attr('Система координат', { index: 8 }),
+    boundingBox: attr('Граница', { index: 9 }),
+    securityKey: attr('', { index: 10 })
+  });
+
+  modelClass.defineProjection('BackgroundLayerL', 'new-platform-flexberry-g-i-s-background-layer', {
+    name: attr('Наименование', { index: 0 }),
+    description: attr('Описание', { index: 1 }),
+    type: attr('Тип', { index: 2 })
   });
 };

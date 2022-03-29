@@ -173,31 +173,62 @@
   "hasMany": [],
   "projections": [
     {
-      "name": "BackgroundLayerE",
-      "modelName": "new-platform-flexberry-g-i-s-background-layer",
-      "attrs": [],
-      "belongsTo": [],
-      "hasMany": []
-    },
-    {
-      "name": "BackgroundLayerL",
+      "name": "AuditView",
       "modelName": "new-platform-flexberry-g-i-s-background-layer",
       "attrs": [
         {
           "name": "name",
-          "caption": "",
+          "caption": "Наименование",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "creator",
+          "caption": "Создатель",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "createTime",
+          "caption": "Время создания",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "editor",
+          "caption": "Редактор",
+          "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "editTime",
+          "caption": "Время редактирования",
+          "hidden": false,
+          "index": 4
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": []
+    },
+    {
+      "name": "BackgroundLayerD",
+      "modelName": "new-platform-flexberry-g-i-s-background-layer",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Наименование",
           "hidden": false,
           "index": 0
         },
         {
           "name": "description",
-          "caption": "",
+          "caption": "Описание",
           "hidden": false,
           "index": 1
         },
         {
           "name": "keyWords",
-          "caption": "",
+          "caption": "Ключевые слова",
           "hidden": false,
           "index": 2
         },
@@ -209,43 +240,43 @@
         },
         {
           "name": "index",
-          "caption": "",
+          "caption": "Индекс",
           "hidden": false,
           "index": 4
         },
         {
           "name": "visibility",
-          "caption": "",
+          "caption": "Видимость",
           "hidden": false,
           "index": 5
         },
         {
           "name": "type",
-          "caption": "",
+          "caption": "Тип",
           "hidden": false,
           "index": 6
         },
         {
           "name": "settings",
-          "caption": "",
+          "caption": "Настройки",
           "hidden": false,
           "index": 7
         },
         {
           "name": "scale",
-          "caption": "",
+          "caption": "Масштаб",
           "hidden": false,
           "index": 8
         },
         {
           "name": "coordinateReferenceSystem",
-          "caption": "",
+          "caption": "Система координат",
           "hidden": false,
           "index": 9
         },
         {
           "name": "boundingBox",
-          "caption": "",
+          "caption": "Граница",
           "hidden": false,
           "index": 10
         },
@@ -266,6 +297,106 @@
           "caption": "",
           "hidden": false,
           "index": 13
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": []
+    },
+    {
+      "name": "BackgroundLayerE",
+      "modelName": "new-platform-flexberry-g-i-s-background-layer",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Наименование",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "description",
+          "caption": "Описание",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "keyWords",
+          "caption": "Ключевые слова",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "index",
+          "caption": "Индекс",
+          "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "visibility",
+          "caption": "Видимость",
+          "hidden": false,
+          "index": 4
+        },
+        {
+          "name": "type",
+          "caption": "Тип",
+          "hidden": false,
+          "index": 5
+        },
+        {
+          "name": "settings",
+          "caption": "Настройки",
+          "hidden": false,
+          "index": 6
+        },
+        {
+          "name": "scale",
+          "caption": "Масштаб",
+          "hidden": false,
+          "index": 7
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Система координат",
+          "hidden": false,
+          "index": 8
+        },
+        {
+          "name": "boundingBox",
+          "caption": "Граница",
+          "hidden": false,
+          "index": 9
+        },
+        {
+          "name": "securityKey",
+          "caption": "",
+          "hidden": false,
+          "index": 10
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": []
+    },
+    {
+      "name": "BackgroundLayerL",
+      "modelName": "new-platform-flexberry-g-i-s-background-layer",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Наименование",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "description",
+          "caption": "Описание",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "type",
+          "caption": "Тип",
+          "hidden": false,
+          "index": 2
         }
       ],
       "belongsTo": [],
