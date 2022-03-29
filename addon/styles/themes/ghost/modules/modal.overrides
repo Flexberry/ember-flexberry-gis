@@ -318,7 +318,6 @@
     &.content {
       // Same as dialog content's max-height in Semantic UI.
       min-height: 400px;
-      height: auto;
       overflow: auto !important;
 
       .flexberry-export-map-command-dialog-sheet-of-paper {
@@ -369,7 +368,7 @@
   }
 
   .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-settings-column {
-    padding: 1em 0 60px 0;
+    padding: 1em 0;
     border: none;
     box-shadow: none;
 
@@ -756,6 +755,15 @@
 
 .flexberry-export-map-command-dialog-settings-column-inner {
   max-width: 454px;
+  height: calc(~'100vh - 6em');
+}
+
+.ui.form .flexberry-export-map-command-dialog-settings-column-inner .field {
+  margin-bottom: 1em;
+}
+
+.flexberry-export-map-command-dialog-settings-column-inner .ui.grid > .row:first-child {
+  padding-bottom: 0;
 }
 
 .ui.modal.flexberry-geometry-add-mode-import-dialog textarea {

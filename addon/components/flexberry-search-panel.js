@@ -27,14 +27,24 @@ export default Ember.Component.extend({
   */
   _selectedLayerFeaturesLocalizedProperties: Ember.computed(
     '_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.localizedProperties',
+    '_selectedLayer.settingsAsObject.searchSettings.searchFields',
     'i18n.locale',
     function () {
       let currentLocale = this.get('i18n.locale');
+      let searchFields = this.get('_selectedLayer.settingsAsObject.searchSettings.searchFields') || [];
       let localizedProperties = this.get(
         `_selectedLayer.settingsAsObject.displaySettings.` +
         `featuresPropertiesSettings.localizedProperties.${currentLocale}`) || {};
+
+      let searchProperties = {};
+      Ember.keys(localizedProperties).forEach((prop) => {
+        if (searchFields.indexOf(prop) > -1) {
+          Ember.set(searchProperties, prop, localizedProperties[prop]);
+        }
+      });
+
       this.set('_localizedValue', null);
-      return localizedProperties;
+      return searchProperties;
     }
   ),
 
@@ -125,7 +135,7 @@ export default Ember.Component.extend({
   */
   queryStringEmpty: '',
 
-  queryStringObserver: Ember.observer('queryString', function() {
+  queryStringObserver: Ember.observer('queryString', function () {
     this.set('queryStringEmpty', !Ember.isBlank(this.get('queryString')));
   }),
 
@@ -184,7 +194,7 @@ export default Ember.Component.extend({
       }
 
       this.set('showErrorMessage', false);
-      let queryString =  this.get('queryString');
+      let queryString = this.get('queryString');
       let leafletMap = this.get('leafletMap');
       const regexDegree = /^([-]?[0-9]+[.]?[0-9]*) ([-]?[0-9]+[.]?[0-9]*)/;
       const regexDegreeMinSec = /^([-]?[0-9]+[°][0-9]+['][0-9]+[.]?[0-9]*["]) ([-]?[0-9]+[°][0-9]+['][0-9]+[.]?[0-9]*["])/;
@@ -207,14 +217,14 @@ export default Ember.Component.extend({
           maxResultsCount: this.get('maxResultsCount')
         };
         if (!this.get('attrVisible')) {
-          filter = function(layerModel) {
+          filter = function (layerModel) {
             return layerModel.get('canBeContextSearched') && layerModel.get('visibility');
           };
         } else {
           searchOptions.propertyName = this.get('propertyName');
           let selectedLayer = this.get('_selectedLayer');
           selectedLayerId = selectedLayer.get('id');
-          filter = function(layerModel) {
+          filter = function (layerModel) {
             return layerModel === selectedLayer;
           };
         }
