@@ -132,9 +132,15 @@ export default EditFormRoute.extend({
   */
   setupController(controller, model) {
     this._super(...arguments);
-    let layers = model.get('mapLayer');
 
-    this.setLayerCategories(model, layers);
+    let layers = model.get('mapLayer');
+    if (layers) {
+      let rootLayers = layers.filter(layer => Ember.isEmpty(layer.get('parent')));
+      let maplayers = this.sortLayersByIndex(rootLayers);
+      model.set('hierarchy', maplayers);
+    }
+
+    this.getBackgroundLayers().then(backgroundLayers => controller.set('backgroundLayers', backgroundLayers));
 
     let urlParams = ['zoom', 'lat', 'lng'];
     let currentParams = {};
@@ -154,20 +160,24 @@ export default EditFormRoute.extend({
     });
   },
 
-  setLayerCategories(model, layers) {
-    if (layers) {
-      let rootLayers = layers.filter(layer => Ember.isEmpty(layer.get('parent')));
+  /**
+    Requests a list of background layers.
 
-      let hierarchy = this.sortLayersByIndex(rootLayers);
-      model.set('hierarchy', hierarchy);
+    @method resetController
+  */
+  getBackgroundLayers() {
+    let store = this.get('store');
+    let modelName = 'new-platform-flexberry-g-i-s-background-layer';
+    let queryBuilder = new Query.Builder(this.get('store'))
+        .from(modelName)
+        .selectByProjection('BackgroundLayerL');
 
-      let other = hierarchy.filter((layer) => {
-        return Ember.isNone(layer.get('settingsAsObject')) || !layer.get('settingsAsObject.backgroundSettings.canBeBackground');
-      });
-      let otherLayers = Ember.A();
-      otherLayers.addObjects(other);
-      model.set('otherLayers', otherLayers);
-    }
+    return store.findAll(modelName, queryBuilder.build()).then(response => response.content.map(responseArray => {
+      let backgroundLayer = responseArray.record;
+      let settingsAsObject = JSON.parse(Ember.get(backgroundLayer, 'settings'));
+      backgroundLayer.set('settingsAsObject', settingsAsObject);
+      return backgroundLayer;
+    }));
   },
 
   /**
