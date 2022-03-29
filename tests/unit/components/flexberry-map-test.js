@@ -11,7 +11,8 @@ moduleForComponent('flexberry-map', 'Unit | Component | flexberry map', {
     'service:map-api',
     'service:i18n',
     'map-tool:drag',
-    'config:environment'
+    'config:environment',
+    'service:i18n'
   ]
 });
 
