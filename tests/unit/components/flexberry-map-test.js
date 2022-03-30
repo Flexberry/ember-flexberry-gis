@@ -13,7 +13,7 @@ moduleForComponent('flexberry-map', 'Unit | Component | flexberry map', {
     'map-tool:drag',
     'config:environment',
     'service:i18n'
-  ]
+  ],
 });
 
 test('it should create leaflet map on didInsertElement', function (assert) {

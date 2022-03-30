@@ -5,10 +5,10 @@ moduleFor('route:gis-search-form', 'Unit | Route | gis search form', {
   // needs: ['controller:foo']
   needs: [
     'service:mapStore'
-  ]
+  ],
 });
 
-test('it exists', function(assert) {
-  let route = this.subject();
+test('it exists', function (assert) {
+  const route = this.subject();
   assert.ok(route);
 });

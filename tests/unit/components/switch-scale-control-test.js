@@ -1,15 +1,14 @@
-import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { moduleForComponent, test } from 'ember-qunit';
 
-module('Unit | Component | switch scale control', function (hooks) {
-  setupTest(hooks);
+moduleForComponent('switch-scale-control', 'Unit | Component | switch scale control', {
+  unit: true
+});
 
-  test('it should return L.Control.SwitchScaleControl from createControl', function (assert) {
-    const component = this.owner.factoryFor('component:switch-scale-control').create();
+test('it should return L.Control.SwitchScaleControl from createControl', function (assert) {
+  const component = this.subject();
 
-    // Renders the component to the page.
-    const control = component.createControl();
+  // Renders the component to the page.
+  const control = component.createControl();
 
-    assert.ok(control instanceof L.Control.SwitchScaleControl);
-  });
+  assert.ok(control instanceof L.Control.SwitchScaleControl);
 });

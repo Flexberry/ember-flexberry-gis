@@ -39,7 +39,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     'layer:odata-vector',
     'service:i18n'
   ],
-  beforeEach: function () {
+  beforeEach() {
     app = startApp();
     const testModelMixin = Mixin.create({
       name: DS.attr('string', { defaultValue: '', }),
@@ -134,7 +134,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
       store,
       layerModel,
       leafletMap,
-      'visibility': true,
+      visibility: true,
     });
 
     odataServerFake = sinon.fakeServer.create();
@@ -359,10 +359,10 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
       });
   },
 
-  afterEach: function () {
+  afterEach() {
     run(app, 'destroy');
     odataServerFake.restore();
-  }
+  },
 });
 
 const jsonModel = {

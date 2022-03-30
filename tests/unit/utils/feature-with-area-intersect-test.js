@@ -97,7 +97,7 @@ module('Unit | Utility | intersectionArea', function () {
       _convertObjectCoordinates() { },
     };
     const stubConvertCoordinates = sinon.stub(mapModel, '_convertObjectCoordinates').callsFake(_convertObjectCoordinates);
-  
+
     const leafletLayer = L.polygon([[[1, 2], [3, 4], [4, 5], [1, 2]]]);
     leafletLayer.options = {
       crs: {

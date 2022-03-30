@@ -1,14 +1,17 @@
-import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { moduleForComponent, test } from 'ember-qunit';
 
-module('Unit | Component | layers/tile layer', function (hooks) {
-  setupTest(hooks);
+moduleForComponent('layers/tile-layer', 'Unit | Component | layers/tile layer', {
+  unit: true,
+  needs: [
+    'service:map-api',
+    'service:layers-styles-renderer',
+  ],
+});
 
-  test('it return L.TileLayer on createLayer', function (assert) {
-    const component = this.owner.factoryFor('component:layers/tile-layer').create({
-      requiredOptions: [''],
-    });
-    const layer = component.createLayer();
-    assert.ok(layer instanceof L.TileLayer, 'Expected L.TileLayer instance');
+test('it return L.TileLayer on createLayer', function (assert) {
+  const component = this.subject({
+    requiredOptions: ['']
   });
+  const layer = component.createLayer();
+  assert.ok(layer instanceof L.TileLayer, 'Expected L.TileLayer instance');
 });

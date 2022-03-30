@@ -27,7 +27,7 @@ moduleForModel('new-platform-flexberry-g-i-s-parameter-metadata', 'Unit | Serial
 test('it serializes records', function (assert) {
   const record = this.subject();
 
-  let serializedRecord = record.serialize();
+  const serializedRecord = record.serialize();
 
   assert.ok(serializedRecord);
 });

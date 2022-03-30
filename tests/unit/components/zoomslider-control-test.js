@@ -8,11 +8,11 @@ moduleForComponent('zoomslider-control', 'Unit | Component | zoomslider control'
   ],
 });
 
-test('it should return L.Control.Zoomslider from createControl', function(assert) {
-  let component = this.subject();
+test('it should return L.Control.Zoomslider from createControl', function (assert) {
+  const component = this.subject();
 
   // Renders the component to the page.
-  let control = component.createControl();
+  const control = component.createControl();
 
   assert.ok(control instanceof L.Control.Zoomslider);
 });

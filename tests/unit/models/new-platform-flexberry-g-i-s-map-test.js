@@ -17,6 +17,7 @@ moduleForModel('new-platform-flexberry-g-i-s-map', 'Unit | Model | new-platform-
     'model:new-platform-flexberry-g-i-s-map',
     'model:new-platform-flexberry-g-i-s-parameter-metadata',
     'service:map-api',
+    'service:syncer',
     'config:environment',
     'component:flexberry-map'
   ],

@@ -1,7 +1,6 @@
 import { run } from '@ember/runloop';
 import EmberObject, { set } from '@ember/object';
-import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { moduleForComponent, test } from 'ember-qunit';
 import startApp from 'dummy/tests/helpers/start-app';
 import wfsComponentLayer from 'ember-flexberry-gis/components/layers/wfs-layer';
 import wmsComponentLayer from 'ember-flexberry-gis/components/layers/wms-layer';
@@ -13,15 +12,21 @@ let leafletMap;
 let app;
 let geoserverFake;
 
-module('Unit | Component | layers/combine layer', function (hooks) {
-  setupTest(hooks);
-
-  hooks.beforeEach(function () {
+moduleForComponent('layers/combine-layer', 'Unit | Component | layers/combine layer', {
+  unit: true,
+  needs: [
+    'service:map-api',
+    'service:layers-styles-renderer',
+    'config:environment',
+    'component:base-vector-layer',
+    'model:new-platform-flexberry-g-i-s-map'
+  ],
+  beforeEach: function () {
     app = startApp();
 
-    this.owner.register('component:layers/wfs-layer', wfsComponentLayer);
-    this.owner.register('component:layers/wms-layer', wmsComponentLayer);
-    this.owner.register('layer:wfs', wfsLayer);
+    this.register('component:layers/wfs-layer', wfsComponentLayer);
+    this.register('component:layers/wms-layer', wmsComponentLayer);
+    this.register('layer:wfs', wfsLayer);
     app.register('component:layers/wfs-layer', wfsComponentLayer);
     app.register('component:layers/wms-layer', wmsComponentLayer);
     app.register('layer:wfs', wfsLayer);
@@ -143,224 +148,224 @@ module('Unit | Component | layers/combine layer', function (hooks) {
           + '</xsd:schema>');
         }
       });
-  });
+  },
 
-  hooks.afterEach(function () {
+  afterEach: function () {
     run(app, 'destroy');
     geoserverFake.restore();
+  }
+});
+
+test('Create combine component and check visibility', function (assert) {
+  assert.expect(15);
+  const done = assert.async(4);
+  const component = this.subject(options);
+  let getmapApiStub;
+  run(() => {
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
   });
 
-  test('Create combine component and check visibility', function (assert) {
-    assert.expect(15);
-    const done = assert.async(4);
-    const component = this.owner.factoryFor('component:layers/combine-layer').create(options);
-    let getmapApiStub;
-    run(() => {
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
+  const _checkAndSetVisibilitySpy = sinon.spy(component, '_checkAndSetVisibility');
+  const _visibilityOfLayerByZoomSpy = sinon.spy(component, '_visibilityOfLayerByZoom');
+  const _setLayerVisibilitySpy = sinon.spy(component, '_setLayerVisibility');
+
+  component.get('_leafletLayerPromise').then((leafletObject) => {
+    assert.ok(leafletObject instanceof L.FeatureGroup);
+    assert.ok(leafletObject.mainLayer.innerLayers[0]._leafletObject instanceof L.TileLayer.WMS);
+    assert.ok(component);
+    done(1);
+
+    set(leafletMap, '_zoom', 10);
+    component.set('visibility', true);
+    assert.equal(_checkAndSetVisibilitySpy.callCount, 2);
+    assert.equal(_visibilityOfLayerByZoomSpy.callCount, 1);
+    assert.equal(_setLayerVisibilitySpy.callCount, 1);
+    assert.equal(component.get('layerVisibility.layerId'), component.get('mainLayer.innerLayers')[0].layerId);
+    done(1);
+
+    set(leafletMap, '_zoom', 11);
+    component._setLayerVisibility();
+    assert.equal(_checkAndSetVisibilitySpy.callCount, 3);
+    assert.equal(_visibilityOfLayerByZoomSpy.callCount, 2);
+    assert.equal(_setLayerVisibilitySpy.callCount, 2);
+    assert.equal(component.get('layerVisibility.layerId'), component.get('mainLayer.layerId'));
+    done(1);
+
+    component.set('visibility', false);
+    assert.equal(_checkAndSetVisibilitySpy.callCount, 3);
+    assert.equal(_visibilityOfLayerByZoomSpy.callCount, 2);
+    assert.equal(_setLayerVisibilitySpy.callCount, 3);
+    assert.notOk(component.get('layerVisibility'));
+
+    getmapApiStub.restore();
+    _checkAndSetVisibilitySpy.restore();
+    _visibilityOfLayerByZoomSpy.restore();
+    _setLayerVisibilitySpy.restore();
+    done(1);
+  });
+});
+
+test('test method createLayer()', function (assert) {
+  assert.expect(4);
+  const done = assert.async(1);
+  run(() => {
+    const component = this.subject(options);
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    const createAllLayerSpy = sinon.spy(component, 'createAllLayer');
+    const createLayerSpy = sinon.spy(component, 'createLayer');
+
+    component.createLayer(0).then((leafletObject) => {
+      assert.ok(leafletObject instanceof L.FeatureGroup);
+      assert.ok(leafletObject.mainLayer.innerLayers[0]._leafletObject instanceof L.TileLayer.WMS);
+      assert.equal(createAllLayerSpy.callCount, 1);
+      assert.equal(createLayerSpy.callCount, 1);
+      getmapApiStub.restore();
+      createAllLayerSpy.restore();
+      createLayerSpy.restore();
+      done(1);
+    });
+  });
+});
+
+test('test method showAllLayerObjects() and hideAllLayerObjects()', function (assert) {
+  assert.expect(16);
+  const done = assert.async(2);
+  run(() => {
+    const settingsAsObject = {
+      type: 'wfs',
+      url: 'http://geoserverFake/geoserver/ows',
+      style: { color: 'red', weight: '4', },
+      filter: null,
+      format: 'GeoJSON',
+      typeNS: 'les',
+      maxZoom: '13',
+      minZoom: '11',
+      opacity: null,
+      pkField: 'primarykey',
+      version: '1.1.0',
+      typeName: 'test',
+      clusterize: false,
+      forceMulti: true,
+      typeNSName: '',
+      showExisting: false,
+      continueLoading: false,
+      typeGeometry: 'polygon',
+      geometryField: 'shape',
+      innerLayers: [
+        {
+          type: 'wfs',
+          url: 'http://geoserverFake/geoserver/ows',
+          style: { color: 'red', weight: '4', },
+          filter: null,
+          format: 'GeoJSON',
+          typeNS: 'les',
+          maxZoom: '10',
+          minZoom: '7',
+          opacity: null,
+          pkField: 'primarykey',
+          version: '1.1.0',
+          typeName: 'test',
+          clusterize: false,
+          forceMulti: true,
+          typeNSName: '',
+          showExisting: false,
+          continueLoading: false,
+          typeGeometry: 'polygon',
+          geometryField: 'shape',
+        }
+      ],
+    };
+
+    const layerModel = EmberObject.create({
+      type: 'combine',
+      visibility: false,
+      settingsAsObject,
     });
 
-    const _checkAndSetVisibilitySpy = sinon.spy(component, '_checkAndSetVisibility');
-    const _visibilityOfLayerByZoomSpy = sinon.spy(component, '_visibilityOfLayerByZoom');
-    const _setLayerVisibilitySpy = sinon.spy(component, '_setLayerVisibility');
+    const options = {
+      layerModel,
+      leafletMap,
+      visibility: false,
+    };
+
+    const component = this.subject(options);
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
 
     component.get('_leafletLayerPromise').then((leafletObject) => {
       assert.ok(leafletObject instanceof L.FeatureGroup);
-      assert.ok(leafletObject.mainLayer.innerLayers[0]._leafletObject instanceof L.TileLayer.WMS);
-      assert.ok(component);
-      done(1);
+      const innerLeafletObject = leafletObject.mainLayer.innerLayers[0]._leafletObject;
+      assert.ok(innerLeafletObject instanceof L.FeatureGroup);
 
-      set(leafletMap, '_zoom', 10);
-      component.set('visibility', true);
-      assert.equal(_checkAndSetVisibilitySpy.callCount, 2);
-      assert.equal(_visibilityOfLayerByZoomSpy.callCount, 1);
-      assert.equal(_setLayerVisibilitySpy.callCount, 1);
-      assert.equal(component.get('layerVisibility.layerId'), component.get('mainLayer.innerLayers')[0].layerId);
-      done(1);
+      // spy for mainLeafletObject
+      const baseShowAllLayerObjectsSpy = sinon.spy(leafletObject, 'baseShowAllLayerObjects');
+      const showAllLayerObjectsSpy = sinon.spy(leafletObject, 'showAllLayerObjects');
+      const clearLayersSpy = sinon.spy(leafletObject, 'clearLayers');
+      const loadLayerFeaturesSpy = sinon.spy(leafletObject, 'loadLayerFeatures');
+      const baseHideAllLayerObjectsSpy = sinon.spy(leafletObject, 'baseHideAllLayerObjects');
+      const hideAllLayerObjectsSpy = sinon.spy(leafletObject, 'hideAllLayerObjects');
 
-      set(leafletMap, '_zoom', 11);
-      component._setLayerVisibility();
-      assert.equal(_checkAndSetVisibilitySpy.callCount, 3);
-      assert.equal(_visibilityOfLayerByZoomSpy.callCount, 2);
-      assert.equal(_setLayerVisibilitySpy.callCount, 2);
-      assert.equal(component.get('layerVisibility.layerId'), component.get('mainLayer.layerId'));
-      done(1);
+      // spy for innerLeafletObject
+      const showAllLayerObjectsInnerSpy = sinon.spy(innerLeafletObject, 'showAllLayerObjects');
+      const clearLayersInnerSpy = sinon.spy(innerLeafletObject, 'clearLayers');
+      const loadLayerFeaturesInnerSpy = sinon.spy(innerLeafletObject, 'loadLayerFeatures');
+      const hideAllLayerObjectsInnerSpy = sinon.spy(innerLeafletObject, 'hideAllLayerObjects');
 
-      component.set('visibility', false);
-      assert.equal(_checkAndSetVisibilitySpy.callCount, 3);
-      assert.equal(_visibilityOfLayerByZoomSpy.callCount, 2);
-      assert.equal(_setLayerVisibilitySpy.callCount, 3);
-      assert.notOk(component.get('layerVisibility'));
+      // spy for map
+      const removeLayerSpy = sinon.spy(leafletMap, 'removeLayer');
+      const addLayerSpy = sinon.spy(leafletMap, 'addLayer');
+
+      component.showAllLayerObjects().then((result) => {
+        assert.equal(result, 'success');
+
+        assert.equal(baseShowAllLayerObjectsSpy.callCount, 1);
+        assert.equal(showAllLayerObjectsSpy.callCount, 0);
+        assert.equal(clearLayersSpy.callCount, 1);
+        assert.equal(loadLayerFeaturesSpy.callCount, 1);
+
+        assert.equal(showAllLayerObjectsInnerSpy.callCount, 1);
+        assert.equal(clearLayersInnerSpy.callCount, 1);
+        assert.equal(loadLayerFeaturesInnerSpy.callCount, 1);
+
+        assert.equal(removeLayerSpy.callCount, 0);
+        assert.equal(addLayerSpy.callCount, 4);
+
+        component.hideAllLayerObjects();
+
+        assert.equal(baseHideAllLayerObjectsSpy.callCount, 1);
+        assert.equal(hideAllLayerObjectsSpy.callCount, 0);
+
+        assert.equal(hideAllLayerObjectsInnerSpy.callCount, 1);
+        assert.equal(removeLayerSpy.callCount, 2);
+
+        baseShowAllLayerObjectsSpy.restore();
+        showAllLayerObjectsSpy.restore();
+        clearLayersSpy.restore();
+        loadLayerFeaturesSpy.restore();
+        baseHideAllLayerObjectsSpy.restore();
+        hideAllLayerObjectsSpy.restore();
+
+        showAllLayerObjectsInnerSpy.restore();
+        clearLayersInnerSpy.restore();
+        loadLayerFeaturesInnerSpy.restore();
+        hideAllLayerObjectsInnerSpy.restore();
+
+        removeLayerSpy.restore();
+        addLayerSpy.restore();
+        done(1);
+      });
 
       getmapApiStub.restore();
-      _checkAndSetVisibilitySpy.restore();
-      _visibilityOfLayerByZoomSpy.restore();
-      _setLayerVisibilitySpy.restore();
       done(1);
-    });
-  });
-
-  test('test method createLayer()', function (assert) {
-    assert.expect(4);
-    const done = assert.async(1);
-    run(() => {
-      const component = this.owner.factoryFor('component:layers/combine-layer').create(options);
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      const createAllLayerSpy = sinon.spy(component, 'createAllLayer');
-      const createLayerSpy = sinon.spy(component, 'createLayer');
-
-      component.createLayer(0).then((leafletObject) => {
-        assert.ok(leafletObject instanceof L.FeatureGroup);
-        assert.ok(leafletObject.mainLayer.innerLayers[0]._leafletObject instanceof L.TileLayer.WMS);
-        assert.equal(createAllLayerSpy.callCount, 1);
-        assert.equal(createLayerSpy.callCount, 1);
-        getmapApiStub.restore();
-        createAllLayerSpy.restore();
-        createLayerSpy.restore();
-        done(1);
-      });
-    });
-  });
-
-  test('test method showAllLayerObjects() and hideAllLayerObjects()', function (assert) {
-    assert.expect(16);
-    const done = assert.async(2);
-    run(() => {
-      const settingsAsObject = {
-        type: 'wfs',
-        url: 'http://geoserverFake/geoserver/ows',
-        style: { color: 'red', weight: '4', },
-        filter: null,
-        format: 'GeoJSON',
-        typeNS: 'les',
-        maxZoom: '13',
-        minZoom: '11',
-        opacity: null,
-        pkField: 'primarykey',
-        version: '1.1.0',
-        typeName: 'test',
-        clusterize: false,
-        forceMulti: true,
-        typeNSName: '',
-        showExisting: false,
-        continueLoading: false,
-        typeGeometry: 'polygon',
-        geometryField: 'shape',
-        innerLayers: [
-          {
-            type: 'wfs',
-            url: 'http://geoserverFake/geoserver/ows',
-            style: { color: 'red', weight: '4', },
-            filter: null,
-            format: 'GeoJSON',
-            typeNS: 'les',
-            maxZoom: '10',
-            minZoom: '7',
-            opacity: null,
-            pkField: 'primarykey',
-            version: '1.1.0',
-            typeName: 'test',
-            clusterize: false,
-            forceMulti: true,
-            typeNSName: '',
-            showExisting: false,
-            continueLoading: false,
-            typeGeometry: 'polygon',
-            geometryField: 'shape',
-          }
-        ],
-      };
-
-      const layerModel = EmberObject.create({
-        type: 'combine',
-        visibility: false,
-        settingsAsObject,
-      });
-
-      const options = {
-        layerModel,
-        leafletMap,
-        visibility: false,
-      };
-
-      const component = this.owner.factoryFor('component:layers/combine-layer').create(options);
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      component.get('_leafletLayerPromise').then((leafletObject) => {
-        assert.ok(leafletObject instanceof L.FeatureGroup);
-        const innerLeafletObject = leafletObject.mainLayer.innerLayers[0]._leafletObject;
-        assert.ok(innerLeafletObject instanceof L.FeatureGroup);
-
-        // spy for mainLeafletObject
-        const baseShowAllLayerObjectsSpy = sinon.spy(leafletObject, 'baseShowAllLayerObjects');
-        const showAllLayerObjectsSpy = sinon.spy(leafletObject, 'showAllLayerObjects');
-        const clearLayersSpy = sinon.spy(leafletObject, 'clearLayers');
-        const loadLayerFeaturesSpy = sinon.spy(leafletObject, 'loadLayerFeatures');
-        const baseHideAllLayerObjectsSpy = sinon.spy(leafletObject, 'baseHideAllLayerObjects');
-        const hideAllLayerObjectsSpy = sinon.spy(leafletObject, 'hideAllLayerObjects');
-
-        // spy for innerLeafletObject
-        const showAllLayerObjectsInnerSpy = sinon.spy(innerLeafletObject, 'showAllLayerObjects');
-        const clearLayersInnerSpy = sinon.spy(innerLeafletObject, 'clearLayers');
-        const loadLayerFeaturesInnerSpy = sinon.spy(innerLeafletObject, 'loadLayerFeatures');
-        const hideAllLayerObjectsInnerSpy = sinon.spy(innerLeafletObject, 'hideAllLayerObjects');
-
-        // spy for map
-        const removeLayerSpy = sinon.spy(leafletMap, 'removeLayer');
-        const addLayerSpy = sinon.spy(leafletMap, 'addLayer');
-
-        component.showAllLayerObjects().then((result) => {
-          assert.equal(result, 'success');
-
-          assert.equal(baseShowAllLayerObjectsSpy.callCount, 1);
-          assert.equal(showAllLayerObjectsSpy.callCount, 0);
-          assert.equal(clearLayersSpy.callCount, 1);
-          assert.equal(loadLayerFeaturesSpy.callCount, 1);
-
-          assert.equal(showAllLayerObjectsInnerSpy.callCount, 1);
-          assert.equal(clearLayersInnerSpy.callCount, 1);
-          assert.equal(loadLayerFeaturesInnerSpy.callCount, 1);
-
-          assert.equal(removeLayerSpy.callCount, 0);
-          assert.equal(addLayerSpy.callCount, 4);
-
-          component.hideAllLayerObjects();
-
-          assert.equal(baseHideAllLayerObjectsSpy.callCount, 1);
-          assert.equal(hideAllLayerObjectsSpy.callCount, 0);
-
-          assert.equal(hideAllLayerObjectsInnerSpy.callCount, 1);
-          assert.equal(removeLayerSpy.callCount, 2);
-
-          baseShowAllLayerObjectsSpy.restore();
-          showAllLayerObjectsSpy.restore();
-          clearLayersSpy.restore();
-          loadLayerFeaturesSpy.restore();
-          baseHideAllLayerObjectsSpy.restore();
-          hideAllLayerObjectsSpy.restore();
-
-          showAllLayerObjectsInnerSpy.restore();
-          clearLayersInnerSpy.restore();
-          loadLayerFeaturesInnerSpy.restore();
-          hideAllLayerObjectsInnerSpy.restore();
-
-          removeLayerSpy.restore();
-          addLayerSpy.restore();
-          done(1);
-        });
-
-        getmapApiStub.restore();
-        done(1);
-      });
     });
   });
 });
