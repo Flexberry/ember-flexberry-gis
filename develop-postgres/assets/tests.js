@@ -4278,9 +4278,11 @@ define('dummy/tests/unit/components/base-vector-layer-test', ['exports', 'ember'
           var layer = L.featureGroup([feature]);
           layer.options = options;
           feature.addTo(leafletMap);
-          var _labelsLayer = L.featureGroup();
+          var label = L.marker([50.5, 30.5]);
+          var _labelsLayer = L.featureGroup([label]);
           layer._labelsLayer = _labelsLayer;
           _labelsLayer.addTo(leafletMap);
+          label.addTo(leafletMap);
           return layer;
         },
         createReadFormat: function createReadFormat() {
@@ -4298,7 +4300,7 @@ define('dummy/tests/unit/components/base-vector-layer-test', ['exports', 'ember'
 
         assert.equal(eachLayerSpy.callCount, 1);
         assert.equal(removeLayerSpy.callCount, 2);
-        assert.equal(hasLayerSpy.callCount, 2);
+        assert.equal(hasLayerSpy.callCount, 3);
         eachLayerSpy.restore();
         removeLayerSpy.restore();
         hasLayerSpy.restore();
