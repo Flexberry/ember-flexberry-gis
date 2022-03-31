@@ -449,9 +449,13 @@ export default BaseLayer.extend({
         map.removeLayer(layerShape);
       }
     });
-    let labelLayer = leafletObject._labelsLayer;
-    if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer) && map.hasLayer(labelLayer)) {
-      map.removeLayer(labelLayer);
+    let labelsLayer = leafletObject._labelsLayer;
+    if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelsLayer) && map.hasLayer(labelsLayer)) {
+      labelsLayer.eachLayer(function (labelLayer) {
+        if (map.hasLayer(labelLayer)) {
+          map.removeLayer(labelLayer);
+        }
+      });
     }
   },
 
