@@ -753,7 +753,7 @@ export default Ember.Component.extend(
 
       Object.keys(settings).map(function(key) {
         if (key === 'minZoom' || key  === 'maxZoom') {
-          let value = Ember.get(settings, key)
+          let value = Ember.get(settings, key);
           let parsedValue = parseInt(value);
           if (!isNaN(parsedValue)) {
             Ember.set(settings, key, parsedValue);
