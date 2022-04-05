@@ -56,9 +56,6 @@ export default {
       },
       owner: {
         __caption__: ''
-      },
-      securityKey: {
-        __caption__: ''
       }
     },
     BackgroundLayerE: {
@@ -91,9 +88,6 @@ export default {
       },
       boundingBox: {
         __caption__: 'Граница'
-      },
-      securityKey: {
-        __caption__: ''
       }
     },
     BackgroundLayerL: {

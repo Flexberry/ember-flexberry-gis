@@ -124,15 +124,6 @@
       "ordered": false
     },
     {
-      "name": "securityKey",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true,
-      "ordered": false
-    },
-    {
       "name": "createTime",
       "type": "date",
       "flexberryType": "AuditNullableDateTime",
@@ -291,12 +282,6 @@
           "caption": "",
           "hidden": false,
           "index": 12
-        },
-        {
-          "name": "securityKey",
-          "caption": "",
-          "hidden": false,
-          "index": 13
         }
       ],
       "belongsTo": [],
@@ -365,12 +350,6 @@
           "caption": "Граница",
           "hidden": false,
           "index": 9
-        },
-        {
-          "name": "securityKey",
-          "caption": "",
-          "hidden": false,
-          "index": 10
         }
       ],
       "belongsTo": [],

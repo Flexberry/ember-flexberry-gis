@@ -39,7 +39,6 @@ export let Model = Ember.Mixin.create({
   boundingBox: DS.attr('string'),
   public: DS.attr('boolean'),
   owner: DS.attr('string'),
-  securityKey: DS.attr('string'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),
   editTime: DS.attr('date'),
@@ -84,8 +83,7 @@ export let defineProjections = function (modelClass) {
     coordinateReferenceSystem: attr('Система координат', { index: 9 }),
     boundingBox: attr('Граница', { index: 10 }),
     public: attr('', { index: 11 }),
-    owner: attr('', { index: 12 }),
-    securityKey: attr('', { index: 13 })
+    owner: attr('', { index: 12 })
   });
 
   modelClass.defineProjection('BackgroundLayerE', 'new-platform-flexberry-g-i-s-background-layer', {
@@ -98,8 +96,7 @@ export let defineProjections = function (modelClass) {
     settings: attr('Настройки', { index: 6 }),
     scale: attr('Масштаб', { index: 7 }),
     coordinateReferenceSystem: attr('Система координат', { index: 8 }),
-    boundingBox: attr('Граница', { index: 9 }),
-    securityKey: attr('', { index: 10 })
+    boundingBox: attr('Граница', { index: 9 })
   });
 
   modelClass.defineProjection('BackgroundLayerL', 'new-platform-flexberry-g-i-s-background-layer', {
