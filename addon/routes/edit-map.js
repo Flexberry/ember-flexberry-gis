@@ -116,7 +116,7 @@ export default EditFormRoute.extend({
       Ember.RSVP.all([modelQuery, metadataQuery, backgroundQuery]).then((data) => {
         let [model, metadata, backgroundLayers] = data;
         this._addMetadata(model, metadata);
-        Ember.set(model, 'backgroundLayers', backgroundLayers)
+        Ember.set(model, 'backgroundLayers', backgroundLayers);
         resolve(model);
       }).catch((error) => {
         reject(error);
@@ -142,8 +142,6 @@ export default EditFormRoute.extend({
       model.set('hierarchy', maplayers);
     }
 
-    //this.getBackgroundLayers().then(backgroundLayers => controller.set('backgroundLayers', backgroundLayers));
-
     let urlParams = ['zoom', 'lat', 'lng'];
     let currentParams = {};
     urlParams.forEach((param) => {
@@ -165,7 +163,7 @@ export default EditFormRoute.extend({
   /**
     Requests a list of background layers.
 
-    @method resetController
+    @method getBackgroundLayers
   */
   getBackgroundLayers() {
     let store = this.get('store');
