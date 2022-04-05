@@ -110,11 +110,13 @@ export default EditFormRoute.extend({
     let mapId = params.id;
     let modelQuery = this.get('mapStore').getMapById(mapId);
     let metadataQuery = this._getMetadata(params.metadata);
+    let backgroundQuery = this.getBackgroundLayers();
 
     return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.RSVP.all([modelQuery, metadataQuery]).then((data) => {
-        let [model, metadata] = data;
+      Ember.RSVP.all([modelQuery, metadataQuery, backgroundQuery]).then((data) => {
+        let [model, metadata, backgroundLayers] = data;
         this._addMetadata(model, metadata);
+        Ember.set(model, 'backgroundLayers', backgroundLayers)
         resolve(model);
       }).catch((error) => {
         reject(error);
@@ -140,7 +142,7 @@ export default EditFormRoute.extend({
       model.set('hierarchy', maplayers);
     }
 
-    this.getBackgroundLayers().then(backgroundLayers => controller.set('backgroundLayers', backgroundLayers));
+    //this.getBackgroundLayers().then(backgroundLayers => controller.set('backgroundLayers', backgroundLayers));
 
     let urlParams = ['zoom', 'lat', 'lng'];
     let currentParams = {};
