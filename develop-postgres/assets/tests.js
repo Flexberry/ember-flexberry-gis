@@ -6058,7 +6058,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
   });
 
   (0, _emberQunit.test)('test method save() with objects', function (assert) {
-    assert.expect(17);
+    assert.expect(18);
     var done = assert.async(1);
     var component = this.subject(param);
 
@@ -6101,14 +6101,10 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
           type: 'Polygon',
           coordinates: [[[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]]
         };
+        leafletObject._labelsLayer = L.featureGroup();
         var layerAdd = L.geoJSON(feature).getLayers()[0];
-        layerAdd._label = {
-          _leaflet_id: 1000
-        };
+        layerAdd._label = L.marker([1, 2]).addTo(leafletObject._labelsLayer);
         leafletObject.addLayer(layerAdd);
-        leafletObject._labelsLayer = {
-          1000: {}
-        };
         var pk = layerAdd.feature.properties.primarykey;
         responseBatchUpdate.replace('a5532858-dbdc-4d3c-9eaf-3d71d097ceb0', pk);
 
@@ -6128,6 +6124,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
           assert.equal(data.layers.length, 1);
           assert.equal(realCountArr(leafletObject.models), 0);
           assert.equal(leafletObject.getLayers().length, 1);
+          assert.equal(leafletObject._labelsLayer.getLayers().length, 0);
           assert.equal(leafletObject.getLayers()[0].state, 'exist');
           done();
 
