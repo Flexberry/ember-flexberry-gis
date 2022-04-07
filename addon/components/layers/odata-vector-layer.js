@@ -104,8 +104,6 @@ export default BaseVectorLayer.extend({
           L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
           if (leafletMap.hasLayer(layer._label)) {
             L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
-            let id = leafletObject.getLayerId(layer._label);
-            delete leafletObject._labelsLayer[id];
           }
         });
 
