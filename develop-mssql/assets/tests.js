@@ -2536,10 +2536,10 @@ define('dummy/tests/integration/components/legends/wms-legend-test', ['exports',
     })()));
 
     var $images = this.$('img');
-    var expectedSrc = 'http://212.192.76.235:8080/geoserver/wms?service=WMS&request=GetLegendGraphic&version=1.1.0&format=image%2Fpng&layer=lesonas1969%3Agoszem';
+    var src = 'http://212.192.76.235:8080/geoserver/wms?service=WMS&request=GetLegendGraphic&version=1.1.0&format=image%2Fpng&layer=lesonas1969%3Agoszem&style=';
 
     assert.equal($images.size(), 3, 'Images for all defined layers are rendered');
-    assert.equal($images.first().attr('src'), expectedSrc, 'Image\'s \'src\' attribute computed as expected');
+    assert.equal($images.first().attr('src'), src, 'Image\'s \'src\' attribute computed as expected');
   });
 });
 define('dummy/tests/integration/components/legends/wms-legend-test.jscs-test', ['exports'], function (exports) {
