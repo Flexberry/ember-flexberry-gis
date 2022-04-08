@@ -444,6 +444,7 @@ export default BaseLegendComponent.extend({
     &#x27;layer.settingsAsObject.legendSettings.version&#x27;,
     &#x27;layer.settingsAsObject.legendSettings.format&#x27;,
     &#x27;layer.settingsAsObject.legendSettings.layers&#x27;,
+    &#x27;layer.settingsAsObject.styles&#x27;,
     function() {
       let legends = Ember.A();
       let layerSettings = this.get(&#x27;layer.settingsAsObject&#x27;) || {};
@@ -463,7 +464,8 @@ export default BaseLegendComponent.extend({
           request: &#x27;GetLegendGraphic&#x27;,
           version: Ember.get(layerSettings, &#x27;legendSettings.version&#x27;) || Ember.get(layerSettings, &#x27;version&#x27;) || &#x27;1.1.0&#x27;,
           format: Ember.get(layerSettings, &#x27;legendSettings.format&#x27;) || Ember.get(layerSettings, &#x27;imageFormat&#x27;) || &#x27;image/png&#x27;,
-          layer: layerName
+          layer: layerName,
+          style: Ember.get(layerSettings, &#x27;styles&#x27;) || &#x27;&#x27;
         };
 
         legends.pushObject({
