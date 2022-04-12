@@ -41,12 +41,12 @@
   {{/if}}
   {{#if measureShowHide}}
     <a title={{if showMeasure measureHideCaption measureShowCaption}} class="{{flexberryClassNames.prefix}} {{flexberryClassNames.measureShowHide}} item" {{action "showHide"}}>
-      <i class="{{if showMeasure measureHideIconClass measureShowIconClass}} {{flexberryClassNames.icon}} icon"></i>
+      <i class="{{if showMeasure measureHideIconClass measureShowIconClass}} {{flexberryClassNames.icon}}"></i>
     </a>
   {{/if}}
   {{#if measureClear}}
     <a title={{measureClearCaption}} class="{{flexberryClassNames.prefix}} {{flexberryClassNames.measureClear}} item" {{action "clear"}}>
-      <i class="{{measureClearIconClass}} {{flexberryClassNames.icon}} icon"></i>
+      <i class="{{measureClearIconClass}} {{flexberryClassNames.icon}}"></i>
     </a>
   {{/if}}
   </div>

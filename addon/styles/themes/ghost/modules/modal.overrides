@@ -66,17 +66,16 @@
       padding: 0px 1.5rem !important;
   }
   .ui.form .field {
-      .button.flexberry-button {
+    .button.flexberry-button {
+      &>i.icon:before {
         color: @darkbluecolor;
+      }
+      &:hover {
           &>i.icon:before {
             color: @darkbluecolor;
           }
-          &:hover {
-              &>i.icon:before {
-                color: @darkbluecolor;
-              }
-          }
       }
+    }
   }
   .ui.icon.button.switch {
       display: inline-block;
@@ -286,7 +285,6 @@
 
   .ui.form .field {
     .button.flexberry-button {
-      color: @primaryColor;
       &>i.icon:before {
         color: @primaryColor;
       }
@@ -320,7 +318,6 @@
     &.content {
       // Same as dialog content's max-height in Semantic UI.
       min-height: 400px;
-      height: auto;
       overflow: auto !important;
 
       .flexberry-export-map-command-dialog-sheet-of-paper {
@@ -336,14 +333,9 @@
           margin: 0;
           width: 40px;
           font-size: 20px;
-          line-height: 0.5;
-          padding-left: 0;
-          padding-right: 0;
-        }
-        .ui.button:hover,
-        .ui.button.active {
-          border: 1px solid @primaryColor;
-          background: @white;
+          padding: 0;
+          line-height: 40px;
+          color: @white;
         }
       }
     }
@@ -351,29 +343,6 @@
 
   .ui.attached.tab.segment,
   .ui.attached.segment {
-    .flexberry-button:not(.success) {
-      &.filter-operator-button {
-        width: auto;
-      }
-
-      &:hover {
-        color: @primaryColor;
-
-        & > i.icon:before {
-          color: @primaryColor;
-        }
-      }
-
-      &:not(.disabled) {
-        border: @buttonMenuBorder;
-        box-shadow: @buttonMenuBoxShadow;
-
-        &:hover {
-          border: @buttonMenuHoveredBorder;
-          background: @modalSegmentButtonsHoveredColor;
-        }
-      }
-    }
     .flexberry-button:not(.icon) {
       width: 50%;
     }
@@ -399,7 +368,7 @@
   }
 
   .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-settings-column {
-    padding: 1em 0 60px 0;
+    padding: 1em 0;
     border: none;
     box-shadow: none;
 
@@ -414,29 +383,14 @@
         background: @primaryColor;
         height: 32px;
         min-height: 32px;
-        min-width: 179px;
-        padding: 7px 0;
+        min-width: 200px;
+        padding: 8px 0;
         margin: 0 15px;
       }
     }
 
     .ui.segment {
       border: none;
-
-      .ui.button {
-        &:hover {
-          background: @white !important;
-
-        }
-        &.active {
-          background: @buttonMenuActiveBackground !important;
-          color: @white;
-        }
-      }
-
-      &.attached .flexberry-button:not(.success):not(.disabled) {
-        box-shadow: @defaultBoxShadow;
-      }
 
       .ui.grid .row .ui.buttons {
         .ui.icon.button {
@@ -801,6 +755,15 @@
 
 .flexberry-export-map-command-dialog-settings-column-inner {
   max-width: 454px;
+  height: calc(~'100vh - 6em');
+}
+
+.ui.form .flexberry-export-map-command-dialog-settings-column-inner .field {
+  margin-bottom: 1em;
+}
+
+.flexberry-export-map-command-dialog-settings-column-inner .ui.grid > .row:first-child {
+  padding-bottom: 0;
 }
 
 .ui.modal.flexberry-geometry-add-mode-import-dialog textarea {
@@ -825,7 +788,7 @@
     margin-right: -1rem;
     .ui.button.flexberry-button {
       height: 32px;
-      padding: 7px 0 !important;
+      padding: 8px 0 !important;
     }
     > .field {
       padding: 0 1rem;

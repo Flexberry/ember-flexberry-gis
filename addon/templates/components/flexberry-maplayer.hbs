@@ -37,11 +37,13 @@
           {{layer.name}}
           {{#if (and histEnabled (eq layer.type "with-history"))}}
            от {{flexberry-simpledatetime
+                _flatpickr=layer._flatpickr
                 value=layer.archTime
                 type="datetime"
                 max=maxDate
                 placeholder=""
                 change=(action "onLayerTimeChange")
+                closeOtherCalendar = (action "closeOtherCalendar")
               }}
           {{/if}}
         </div>
@@ -54,7 +56,7 @@
                   title={{t "components.flexberry-maplayer.plus-button.tooltip"}}
                   class="ui button flexberry-button {{flexberryClassNames.attributesButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
                   onclick={{action "onFeatureCreateButtonClick"}}>
-                    <i class="plus icon"></i>
+                    <i class="icon-guideline-plus-r"></i>
                 </button>
               {{/if}}
               {{#if _attributesOperationIsAvailable}}
@@ -63,7 +65,7 @@
                   title={{t "components.flexberry-maplayer.attributes-button.tooltip"}}
                   class="ui button flexberry-button {{flexberryClassNames.attributesButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
                   onclick={{action "onAttributesButtonClick"}}>
-                    <i class="browser icon"></i>
+                    <i class="icon-guideline-table"></i>
                 </button>
               {{/if}}
               <div class="allmore floated flexberry-button ui button icon">
@@ -71,7 +73,7 @@
                   type="button"
                   class="ui button more floated {{flexberryClassNames.preventExpandCollapse}}"
                   onclick={{action "onSubmenu"}}>
-                    <i class="more icon"></i>
+                    <i class="icon-guideline-points"></i>
                 </button>
                 <div class="more submenu {{if isSubmenu '' 'hidden'}}">
                   <div class="button-more-submenu">
@@ -79,7 +81,7 @@
                       type="button"
                       class="ui button more floated {{flexberryClassNames.preventExpandCollapse}}"
                       onclick={{action "onSubmenu"}}>
-                        <i class="more icon"></i>
+                        <i class="icon-guideline-points"></i>
                     </button>
                   </div>
                   {{#if _fitBoundsOperationIsAvailable}}
@@ -88,15 +90,15 @@
                       title={{t "components.flexberry-maplayer.bounds-button.tooltip"}}
                       class="ui button flexberry-button {{flexberryClassNames.boundsButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
                       onclick={{action "onBoundsButtonClick"}}>
-                        <i class="maximize icon"></i> {{t "components.flexberry-maplayer.bounds-button.tooltip"}}
+                        <i class="icon-guideline-resize-plus"></i> {{t "components.flexberry-maplayer.bounds-button.tooltip"}}
                     </label>
                   {{/if}}
                   <label
                     type="button"
-                    title={{t "components.flexberry-maplayer.attributes-button.tooltip"}}
+                    title={{t "components.flexberry-maplayer.edit-button.tooltip"}}
                     class="ui button flexberry-button {{flexberryClassNames.editButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
                     onclick={{action "onEditButtonClick"}}>
-                      <i class="edit icon"></i> {{t "components.flexberry-maplayer.edit-button.tooltip"}}
+                      <i class="icon-guideline-edit-r"></i> {{t "components.flexberry-maplayer.edit-button.tooltip"}}
                   </label>
                   {{flexberry-button
                     class=(concat flexberryClassNames.copyButton " floated " flexberryClassNames.preventExpandCollapse)
@@ -107,7 +109,7 @@
                   {{#if _addOperationIsAvailable}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.addButton " floated " flexberryClassNames.preventExpandCollapse)
-                      iconClass="plus icon"
+                      iconClass="icon-guideline-plus-r"
                       caption=(t "components.flexberry-maplayer.add-button.tooltip")
                       click=(action "onAddButtonClick")
                     }}
@@ -117,7 +119,7 @@
                     title={{t "components.flexberry-maplayer.remove-button.tooltip"}}
                     class="ui button flexberry-button {{flexberryClassNames.removeButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
                     onclick={{action "onRemoveButtonClick"}}>
-                      <i class="trash icon"></i> {{t "components.flexberry-maplayer.remove-button.tooltip"}}
+                      <i class="icon-guideline-delete-r"></i> {{t "components.flexberry-maplayer.remove-button.tooltip"}}
                   </label>
 
                   {{#each dynamicButtons as |dynamicButton|}}

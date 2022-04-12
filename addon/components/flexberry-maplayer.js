@@ -538,32 +538,25 @@ const FlexberryMaplayerComponent = Component.extend(
 
       next(this, function() {
         if (!this.get('readonly')) {
-          const _this = this;
-          const $caption = $('.ui.tab.treeview .flexberry-maplayer-caption-label');
-          if ($caption.length > 0) {
-            $caption.hover(
-              function() {
-                const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
+          let _this = this;
+          let $captionBlock = Ember.$('.ui.tab.treeview .flexberry-treenode-caption-block');
+          if ($captionBlock.length > 0) {
+            $captionBlock.hover(
+              function () {
+                let $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
                 $toolbar.removeClass('hidden');
-                $(this).addClass('blur');
+                Ember.$(this).children('.flexberry-maplayer-caption-label').addClass('blur');
               },
-              function() {
-                const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
-                $toolbar.hover(
-                  () => {},
-                  () => {
-                    $toolbar.addClass('hidden');
-                    $(this).removeClass('blur');
-                    _this.set('isSubmenu', false);
-                  }
-                );
-              }
-            );
+              function () {
+                let $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
+                $toolbar.addClass('hidden');
+                Ember.$(this).children('.flexberry-maplayer-caption-label').removeClass('blur');
+                _this.set('isSubmenu', false);
+              });
           }
         }
       });
     },
-
     /**
       Redefine L.Control.SideBySide._updateClip for work with layer and label layer.
 
@@ -930,6 +923,10 @@ const FlexberryMaplayerComponent = Component.extend(
         // Send outer 'remove' action.
         this.sendAction('remove', ...args);
       },
+
+      closeOtherCalendar() {
+        this.sendAction('closeOtherCalendar', this.get('layer.id'));
+      }
     },
 
     /**

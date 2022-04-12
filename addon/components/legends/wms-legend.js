@@ -30,7 +30,8 @@ export default BaseLegendComponent.extend({
     'layer.settingsAsObject.legendSettings.version',
     'layer.settingsAsObject.legendSettings.format',
     'layer.settingsAsObject.legendSettings.layers',
-    function () {
+    'layer.settingsAsObject.styles',
+    function() {
       const legends = A();
       const layerSettings = this.get('layer.settingsAsObject') || {};
 
@@ -50,6 +51,7 @@ export default BaseLegendComponent.extend({
           version: get(layerSettings, 'legendSettings.version') || get(layerSettings, 'version') || '1.1.0',
           format: get(layerSettings, 'legendSettings.format') || get(layerSettings, 'imageFormat') || 'image/png',
           layer: layerName,
+          style: get(layerSettings, 'styles') || '',
         };
 
         legends.pushObject({

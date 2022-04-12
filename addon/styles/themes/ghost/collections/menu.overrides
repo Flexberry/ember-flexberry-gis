@@ -25,7 +25,7 @@
     position: relative;
     border-radius: @defaultBorderRadius;
     background: @whitecolor;
-    padding: 4px 10px;
+    padding: 7px;
     font-weight: normal;
     height: 40px;
     width: 40px;
@@ -98,8 +98,7 @@
   .ui.dropdown.flexberry-more-map-command {
     position: absolute;
     top: 250px;
-
-    padding: 0px 10px 10px 10px;
+    padding: 7px;
 
     .flexberry-map-command-submenu.menu {
       border-top-left-radius: 3.5px;
@@ -119,17 +118,9 @@
           opacity: 1;
         }
 
-        i.icon {
+        [class*=" icon-guideline-"] {
+          font-size: 16px;
           margin-right: 4px;
-          &:before {
-            color: @textColor;
-            font-size: 16px;
-          }
-        }
-
-        i.icon.minimap:before {
-          content: "\F0AC";
-          font-family: Icons;
         }
       }
     }

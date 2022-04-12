@@ -525,6 +525,10 @@ const FlexberryMaplayersComponent = Component.extend(
     dynamicButtons: [],
 
     actions: {
+      closeOtherCalendar(layerId) {
+        this.sendAction('closeOtherCalendar', layerId);
+      },
+
       external(actionName, layer) {
         this.sendAction(actionName, layer);
       },

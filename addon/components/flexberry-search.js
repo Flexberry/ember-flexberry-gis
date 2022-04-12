@@ -95,6 +95,17 @@ const FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
         this.sendAction('enter');
       }
     },
+
+    /**
+      Action called when search input has received focus
+      Invokes {{#crossLink "FlexberrySearchComponent/sendingActions.focus:method"}}'focus' action{{/crossLink}}.
+      @method actions.focus
+    */
+    focusIn() {
+      if (Ember.$('.flexberry-search.ui.search').hasClass('focus')) {
+        this.sendAction('focusIn');
+      }
+    }
   },
 
   /**

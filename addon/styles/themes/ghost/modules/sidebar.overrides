@@ -9,11 +9,12 @@
 
   .ui.right.sidebar.tabbar {
     .ui.tab.createOrEditObject {
-      padding: 10px 10px;
+      padding: 10px 0px;
 
       .create-edit-block-attributes {
         padding-top: 20px;
         .flexberry-simpledatetime .ui.fluid.action.input {
+          background-color: @inputBackground;
           border: @defaultGrayBorder;
           border-radius: @defaultBorderRadius;
           box-shadow: @defaultFieldBoxShadow;
@@ -30,8 +31,6 @@
       .create-edit-block-title {
         h3 {
           position: initial;
-          text-transform: uppercase;
-          font-size: 18px;
           margin: 10px 0 20px 0;
         }
       }
@@ -42,6 +41,7 @@
         position: relative;
         overflow-y: scroll;
         margin-top: 0px;
+        padding: 0 10px;
 
         .ui.button {
           &.positive:hover {
@@ -70,34 +70,14 @@
           }
 
           .draw-tools {
-
             margin-top: 1px;
             margin-bottom: 3px;
+
             .flexberry-button.ui.button {
               width: 40px;
               height: 40px;
-              i.icon {
-                padding-top: 2px;
-                &:before {
-                  font-size: 18px;
-                }
-
-                &.multi-poly,
-                &.multi-line {
-                  margin-left: -5px;
-                }
-
-                &.move {
-                  margin-left: -2px;
-                }
-
-                &.movexy {
-                  margin-left: -2px;
-                  &:after {
-                    margin-left: -6px;
-                  }
-                }
-              }
+              padding: 0;
+              line-height: 36px;
             }
           }
 
@@ -138,6 +118,8 @@
                 min-width: 77px;
                 line-height: 1;
                 * {
+                  font-size: 16px;
+                  color: @primaryColor;
                   vertical-align: middle;
                 }
 
@@ -219,8 +201,10 @@
         .editfeature-tab-nav-panel {
           .editfeature-tab-nav-panel-tabs {
             margin-bottom: 0px;
+            min-height: 0;
             .editfeature.tab {
               border-color: @defaultBorderColor;
+              color: @primaryColor;
               width: 40px;
               margin-right: 30px;
               box-shadow: @defaultBoxShadow;
@@ -240,9 +224,10 @@
                   background-color: @white;
                   display: block;
                   height: 7px;
-                  width: 100%;
+                  width: calc(~'100% + 7px');
                   bottom: -7px;
                   top: auto;
+                  left: 0;
                 }
               }
             }
@@ -260,23 +245,12 @@
           .flexberry-dropdown.selection.dropdown > .dropdown.icon {
             right: 10px;
             top: 6px;
-
-            &:before {
-              content: '\f107';
-              color: #8F928F;
-              font-family: 'Icons';
-              font-size: 20px;
-            }
-          }
-
-          label {
-            color: @labelColor;
           }
         }
 
         .create-edit-block-data > a {
           color: @textColor;
-          font-size: 18px;
+          font-size: 24px;
 
           i.icon.caret:before {
             color: @textColor;
@@ -322,14 +296,6 @@
           }
         }
       }
-
-      .flex-buttons {
-        .button {
-          height: 32px;
-          width: 145px;
-          box-shadow: @defaultBoxShadow;
-        }
-      }
     }
   }
 }
@@ -343,21 +309,23 @@
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .flexberry-maplayer-caption-label {
   font-size: 14px;
   margin-top: 2px;
+  width: 100%;
 }
 
 .ui.right.sidebar {
   .treeview {
     overflow-x: hidden;
     overflow-y: hidden !important;
-    .ui.styled.accordion {
+	.ui.styled.accordion {
+      height: ~"calc(100% - 60px)" !important;
       width: 1000px;
       .accordion:first-child .title {
         border-top: none;
       }
     }
     &.root.header {
-      bottom: 37px;
-      left: 247px;
+      bottom: 50px;
+      left: 250px;
       position: relative;
       .button {
         &:hover {
@@ -391,11 +359,6 @@
     margin-top: 5px;
     margin-left: -13px;
     height: ~"calc(100% - 30px)" !important;
-    .flexberry-treenode-expand-collapse-icon.dropdown.icon:before {
-      content: '\f105';
-      font-family: Icons;
-      color: @textColor;
-    }
     .ui.icon.button:not(.fluid) {
       padding: 6px 0;
     }
@@ -431,17 +394,13 @@
       }
     }
     .flexberry-treenode-buttons-block {
-      padding-top: 2px;
       left: 40px;
-      top: -6px;
       width: 100%;
       font-size: 0;
-      i.icon:before {
+      
+      [class^="icon-guideline-"] {
+        font-size: 20px;
         color: @textColor;
-        font-size: 18px;
-      }
-      i.icon.plus:before {
-        font-size: 14px;
       }
       a.icon.item.more {
         color: @textColor;
@@ -476,22 +435,14 @@
           top: -12px !important;
           margin-left: 2px;
           padding-top: 5px;
-          i.more.icon:before {
-            font-size: 26px;
+          [class^="icon-guideline-"] {
+            font-size: 20px;
           }
         }
-        i.icon:not(.more) {
-          margin-right: 10px;
-          margin-left: 0;
-        }
-        i.icon:before {
-          font-size: 12px;
-        }
-        .flexberry-maplayer-add-button {
-          margin-right: 17px;
-          margin-left: -5px !important;
-        }
 
+        [class^="icon-guideline-"] {
+          font-size: 16px;
+        }
       }
     }
   }
@@ -508,7 +459,7 @@
       }
       .flexberry-treenode-prevent-expand-collapse {
         margin: 0 15px;
-        width: 17px !important;
+        width: 17px;
       }
       &:not(.flexberry-checkbox) {
         &.title,
@@ -520,7 +471,7 @@
             margin: 0;
             padding: 0;
             position: relative;
-            bottom: 2px;
+            bottom: 4px;
           }
 
           .button {
@@ -624,9 +575,6 @@
         border: 1px solid @white;
         box-shadow: none;
       }
-      &.isogd-treeview-tab {
-        padding: 10px 12px;
-      }
       &.create-edit-object-tab, &.compareObjects, &.intersectionObjects,
       &.compare, &.timelapse, &.history {
         display: none;
@@ -635,7 +583,7 @@
     }
     &.main-map-tab-bar {
       position: absolute;
-      bottom: 17px;
+      bottom: 9px;
       margin: 0;
       padding: 0 0 10px 0;
       z-index: 899;
@@ -657,56 +605,15 @@
       a.tab {
         border-radius: @defaultBorderRadius;
         box-shadow: @defaultBoxShadow;
+        color: @primaryColor;
         width: 40px;
         height: 40px;
-
-        display: flex;
+        padding: 0;
         justify-content: center;
-        padding: 10px;
         margin: 0 15px;
-
-        &.item > i.icon {
-          margin: 0px;
-          margin-top: -4px;
-        }
 
         &.active {
           border-radius: @defaultBorderRadius !important;
-        }
-
-        &.isogd-treeview-tab > i.icon {
-          margin-left: -4px;
-        }
-
-        &.isogd-identify-tab > i.icon {
-          margin-left: -6px;
-        }
-
-        &.analytics > i.icon {
-          margin-left: -3px;
-        }
-
-        // i.icon:before {
-        //   font-family: 'Crimean';
-        //   font-size: 18px;
-        // }
-
-        i.icon.list:before {
-          content: "\e825";
-        }
-
-        i.icon.info.circle:before {
-          content: "\e827";
-        }
-
-        i.icon.analytics:before {
-          font-family: 'Icons';
-          content: "\f080";
-        }
-
-        i.icon.bookmark:before {
-          font-family: 'Icons';
-          content: "\f02e";
         }
       }
     }
@@ -772,6 +679,7 @@
   .compare-main-panel {
     height: ~"calc(100% - 30px)";
     overflow: auto;
+    font-size: 14px;
   }
 }
 
@@ -785,8 +693,6 @@
   bottom: 67px;
   .flexberry-background-map-tool-div {
     .flexberry-background-map-tool {
-      padding-left: 9px;
-      padding-top: 2px;
       border-radius: 3.5px;
       right: 0;
       i.icon:before {
@@ -848,22 +754,6 @@
         margin-bottom: 20px;
 
         .ui.button.create-bookmark {
-          border-color: @primaryColor;
-          box-shadow: @defaultBoxShadow;
-          margin: 0px;
-          text-align: center;
-          width: auto;
-          color: @white;
-          background: @primaryColor;
-          width: 175px;
-          height: 32px;
-          padding: 7px 0;
-          &:hover {
-            background-color: @buttonHoverColor;
-            border-color: @buttonHoverColor;
-            box-shadow: none;
-          }
-
           i.icon.add {
             display:none
           }
@@ -888,25 +778,6 @@
           height: 33px;
           min-width: 30px;
         }
-        i.icon.checkmark:before {
-          font-size: 24px;
-        }
-
-        i.icon.remove:before {
-          font-family: Crimean;
-          font-size: 20px;
-          content: '\e814'
-        }
-
-        i.icon.zoom:before {
-          font-family: Crimean;
-          font-size: 20px;
-          content:'\e812';
-        }
-      }
-      .bmrk-add-block-buttons .remove.icon,
-      .bmrk-add-block-buttons .checkmark.icon {
-        margin-top: 2px;
       }
       .bookmark-item,
       .bmrk-add-block {
@@ -941,21 +812,6 @@
             }
           }
         }
-      }
-    }
-
-    /** Избранное Кнопка Сравнить объекты*/
-    .ui.tab.favorites .ui.button.compare {
-      color: @white;
-      background: @primaryColor;
-      border-color: @primaryColor;
-      margin: 0 0 20px 0;
-      padding: 7px 18px;
-      height: 30px;
-      width: 175px;
-      &:hover {
-        box-shadow: none;
-        background-color: @buttonHoverColor;
       }
     }
   }
@@ -997,7 +853,6 @@
     button.ui.icon {
       border: none;
       color: @darkbluecolor;
-      margin-right: 2px;
       padding: 0;
       outline: none;
       top: 0;
@@ -1005,12 +860,18 @@
         position: absolute;
         top: 8px;
         right: 28px;
-        border-left: @defaultGrayBorder;
+        border-left: 1px solid #DDE1E6;
         i.icon {
           width: auto;
           margin: 0;
         }
       }
+
+      .icon-guideline-cross-r {
+        font-size: 18px;
+        color: #848E99;
+      }
+
       .icon {
         &.remove:before {
           content: '\e806';

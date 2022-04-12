@@ -93,16 +93,11 @@
         margin-right: 0px;
         right: 6px;
         position: absolute;
-        font-size: 12px;
+        top: 6px;
     }
     & > i.dropdown.icon {
-        margin-right: 10px;
+        margin-right: 16px;
         font-size: 20px;
-        top: 2px;
-        &::before {
-          content: "\f107";
-          font-family: 'Icons';
-        }
     }
     .item .flexberry-checkbox.ui.checkbox {
         width: 100%;

@@ -4,7 +4,7 @@
 
 import { Promise, hash } from 'rsvp';
 
-import { scheduleOnce } from '@ember/runloop';
+import { scheduleOnce, later } from '@ember/runloop';
 import $ from 'jquery';
 import { A, isArray } from '@ember/array';
 import { isNone, isBlank, typeOf } from '@ember/utils';
@@ -1100,6 +1100,60 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     }
   },
 
+  /**
+    Flag: whether to recalc scale on map zoom change.
+
+    @property recalcOnZoomChange
+    @type Boolean
+    @default null
+  */
+  recalcOnZoomChange: null,
+
+  /**
+    Saves the value zoomDelta for map.
+
+    @property zoomDelta
+    @type Numer
+    @default null
+  */
+  zoomDelta: null,
+
+  /**
+    Saves the value zoomSnap for map.
+
+    @property zoomSnap
+    @type Numer
+    @default null
+  */
+  zoomSnap: null,
+
+  /**
+    Saves the value wheelPxPerZoomLevel for map.
+
+    @property wheelPxPerZoomLevel
+    @type Numer
+    @default null
+  */
+  wheelPxPerZoomLevel: null,
+
+  /**
+    Saves the value zoom for map.
+
+    @property zoom
+    @type Numer
+    @default null
+  */
+  zoom: null,
+
+  /**
+    Saves the value scales for map.
+
+    @property scales
+    @type Array
+    @default null
+  */
+  scales: null,
+
   actions: {
     /**
       Handler for settings tabs 'click' action.
@@ -1256,6 +1310,31 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     */
     onBeforeShow(e) {
       this.sendAction('beforeShow', e);
+
+      // Switch scale control
+      let leafletMap = this.get('leafletMap');
+      let switchScaleControlMapName = this.get('switchScaleControlMapName');
+      if (!Ember.isNone(switchScaleControlMapName) &&
+        leafletMap.hasOwnProperty('switchScaleControl' + switchScaleControlMapName) &&
+        leafletMap['switchScaleControl' + switchScaleControlMapName].options.recalcOnZoomChange) {
+        this.set('recalcOnZoomChange', true);
+        this.set('zoomDelta', leafletMap.options.zoomDelta);
+        this.set('zoomSnap', leafletMap.options.zoomSnap);
+        this.set('wheelPxPerZoomLevel', leafletMap.options.wheelPxPerZoomLevel);
+        this.set('zoom', leafletMap.getZoom());
+        leafletMap.options.zoomDelta = 1;
+        leafletMap.options.zoomSnap = 1;
+        leafletMap.options.wheelPxPerZoomLevel = 60;
+
+        let $leafletMap = Ember.$(leafletMap._container);
+        let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
+        let $scaleControl = Ember.$('.leaflet-control-scale-line', $leafletMapControls);
+        if ($scaleControl.length === 1) {
+          Ember.$($scaleControl[0]).parent().hide();
+        } else {
+          Ember.$($scaleControl[1]).parent().hide();
+        }
+      }
     },
 
     /**
@@ -1266,6 +1345,20 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     */
     onBeforeHide(e) {
       this.set('_isDialogShown', false);
+
+      // Switch scale control
+      if (this.get('recalcOnZoomChange')) {
+        let leafletMap = this.get('leafletMap');
+        this.set('recalcOnZoomChange', null);
+        leafletMap.options.zoomDelta = this.get('zoomDelta');
+        leafletMap.options.zoomSnap = this.get('zoomSnap');
+        leafletMap.options.wheelPxPerZoomLevel = this.get('wheelPxPerZoomLevel');
+        leafletMap.setZoom(this.get('zoom'));
+        this.set('zoomDelta', null);
+        this.set('zoomSnap', null);
+        this.set('wheelPxPerZoomLevel', null);
+        this.set('zoom', null);
+      }
 
       this.sendAction('beforeHide', e);
     },
@@ -1318,11 +1411,26 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     }
 
     this.set('_mapCanBeShown', newMapCanBeShown);
+    let $leafletMap = Ember.$(leafletMap._container);
+    let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
+    let $exportScaleControl = Ember.$('.leaflet-control-scale.export', $leafletMapControls);
+    let $mainScaleControl = Ember.$('.leaflet-control-scale.main', $leafletMapControls);
+    let $scaleCotrol = Ember.$('.leaflet-control-scale-line', $leafletMapControls);
 
     if (newMapCanBeShown) {
       this._showLeafletMap();
+      $exportScaleControl.show();
+      $mainScaleControl.hide();
+      if ($scaleCotrol.length > 1) {
+        Ember.$($scaleCotrol[1]).parent().hide();
+      }
     } else {
       this._hideLeafletMap();
+      $exportScaleControl.hide();
+      $mainScaleControl.show();
+      if ($scaleCotrol.length > 1) {
+        Ember.$($scaleCotrol[1]).parent().show();
+      }
     }
   }),
 
@@ -1351,15 +1459,10 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @private
   */
   _scaleControlDidChange: observer('_options.scaleControl', function () {
-    const scaleVisible = this.get('_options.scaleControl');
-    const leafletMap = this.get('leafletMap');
-    const $leafletMap = $(leafletMap._container);
-    const $leafletMapControls = $('.leaflet-control-container', $leafletMap);
-
-    if (scaleVisible) {
-      $('.leaflet-bottom.leaflet-left', $leafletMapControls).children().show();
-    } else {
-      $('.leaflet-bottom.leaflet-left', $leafletMapControls).children().hide();
+    if (this.get('_options.scaleControl')) {
+      later(() => {
+        this._activeItemDropdownScale();
+      }, 500);
     }
   }),
 
@@ -1395,6 +1498,24 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
   },
 
   /**
+    Sets active dropdown item.
+
+    @method _activeItemDropdownScale
+  */
+  _activeItemDropdownScale() {
+    let leafletMap = this.get('leafletMap');
+    let $leafletMap = Ember.$(leafletMap._container);
+    let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
+    let $chooseScale = Ember.$('.map-control-scalebar-ratiomenu text', $leafletMapControls).text();
+    let $scaleItems = Ember.$('.map-control-scalebar-ratiomenu .map-control-scalebar-ratiomenu-item.item', $leafletMapControls);
+    Ember.$.each($scaleItems, (i, item) => {
+      if (Ember.$(item).text().replaceAll('\'', '') === $chooseScale) {
+        Ember.$(item).addClass('active selected');
+      }
+    });
+  },
+
+  /**
     Fits specified leaflet map's bounds.
 
     @method _fitBoundsOfLeafletMap
@@ -1410,6 +1531,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
       }
 
       leafletMap.once('moveend', () => {
+        this._activeItemDropdownScale();
         resolve();
       });
 

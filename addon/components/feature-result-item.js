@@ -152,7 +152,12 @@ export default Component.extend({
     @readonly
    */
   expanded: computed('infoExpanded', '_infoExpanded', function () {
-    return this.get('infoExpanded') || this.get('_infoExpanded');
+    if (this.get('infoExpanded')) {
+      this.set('infoExpanded', false);
+      this.set('_infoExpanded', true);
+    }
+
+    return this.get('_infoExpanded');
   }),
 
   /**
@@ -275,7 +280,7 @@ export default Component.extend({
       const component = this.get('element');
       const moreButton = component.getElementsByClassName('icon item more');
       const elements = component.getElementsByClassName('more submenu hidden');
-      openCloseSubmenu(this, moreButton, elements, false, 1, 8);
+      openCloseSubmenu(this, moreButton, elements, 4, 0);
     },
     /**
       Performs row editing.

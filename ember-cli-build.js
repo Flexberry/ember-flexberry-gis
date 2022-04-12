@@ -67,6 +67,14 @@ module.exports = function(defaults) {
   app.import('vendor/api-tests/api-test-map.html', { destDir: 'assets/api-tests' });
   app.import('vendor/api-tests/api-test-odata-layer.html', { destDir: 'assets/api-tests' });
 
+  // guideline-icons
+  const ghostThemeAssetsDir = 'vendor';
+  app.import(`${ghostThemeAssetsDir}/guideline-icons.css`);
+  app.import(`${ghostThemeAssetsDir}/fonts/guideline-icons/guideline-icons.eot`, { destDir: 'assets/fonts/guideline-icons' });
+  app.import(`${ghostThemeAssetsDir}/fonts/guideline-icons/guideline-icons.ttf`, { destDir: 'assets/fonts/guideline-icons' });
+  app.import(`${ghostThemeAssetsDir}/fonts/guideline-icons/guideline-icons.woff`, { destDir: 'assets/fonts/guideline-icons' });
+  app.import(`${ghostThemeAssetsDir}/fonts/guideline-icons/guideline-icons.woff2`, { destDir: 'assets/fonts/guideline-icons' });
+  app.import(`${ghostThemeAssetsDir}/fonts/guideline-icons/guideline-icons.svg`, { destDir: 'assets/fonts/guideline-icons' });
   /*
     This build file specifies the options for the dummy test app of this
     addon, located in `/tests/dummy`

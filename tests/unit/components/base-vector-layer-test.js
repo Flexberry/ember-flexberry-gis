@@ -385,9 +385,11 @@ test('test hideAllLayerObjects', function (assert) {
         const layer = L.featureGroup([feature]);
         layer.options = options;
         feature.addTo(leafletMap);
-        const _labelsLayer = L.featureGroup();
+        const label = L.marker([50.5, 30.5]);
+        const _labelsLayer = L.featureGroup([label]);
         layer._labelsLayer = _labelsLayer;
         _labelsLayer.addTo(leafletMap);
+        label.addTo(leafletMap);
         return layer;
       },
       createReadFormat() {
@@ -405,7 +407,7 @@ test('test hideAllLayerObjects', function (assert) {
 
       assert.equal(eachLayerSpy.callCount, 1);
       assert.equal(removeLayerSpy.callCount, 2);
-      assert.equal(hasLayerSpy.callCount, 2);
+      assert.equal(hasLayerSpy.callCount, 3);
       eachLayerSpy.restore();
       removeLayerSpy.restore();
       hasLayerSpy.restore();

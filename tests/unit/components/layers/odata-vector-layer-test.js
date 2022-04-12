@@ -957,8 +957,8 @@ test('test method save() no modified objects', function (assert) {
   });
 });
 
-test('test method save() with objects', function (assert) {
-  assert.expect(17);
+test('test method save() with objects', function(assert) {
+  assert.expect(18);
   const done = assert.async(1);
   const component = this.subject(param);
 
@@ -1004,14 +1004,10 @@ test('test method save() with objects', function (assert) {
           [[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]
         ],
       };
+      leafletObject._labelsLayer = L.featureGroup();
       const layerAdd = L.geoJSON(feature).getLayers()[0];
-      layerAdd._label = {
-        _leaflet_id: 1000,
-      };
+      layerAdd._label = L.marker([1, 2]).addTo(leafletObject._labelsLayer);
       leafletObject.addLayer(layerAdd);
-      leafletObject._labelsLayer = {
-        1000: {},
-      };
       const pk = layerAdd.feature.properties.primarykey;
       responseBatchUpdate.replace('a5532858-dbdc-4d3c-9eaf-3d71d097ceb0', pk);
 
@@ -1031,6 +1027,7 @@ test('test method save() with objects', function (assert) {
         assert.equal(data.layers.length, 1);
         assert.equal(realCountArr(leafletObject.models), 0);
         assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletObject._labelsLayer.getLayers().length, 0);
         assert.equal(leafletObject.getLayers()[0].state, 'exist');
         done();
 
@@ -1208,14 +1205,14 @@ test('test method clearChanges() with no changes', function (assert) {
       assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
       component.clearChanges();
-      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
       done();
     });
   });
 });
 
-test('test method clearChanges() with create', function (assert) {
-  assert.expect(7);
+test('test method clearChanges() with create', function(assert) {
+  assert.expect(9);
   const done = assert.async(1);
   const component = this.subject(param);
 
@@ -1244,13 +1241,16 @@ test('test method clearChanges() with create', function (assert) {
         1000: {},
       };
       layerAdd.enableEdit(leafletMap);
+      leafletMap.editTools.featuresLayer.addLayer(layerAdd);
 
       assert.equal(realCountArr(leafletObject.models), 1);
       assert.equal(leafletObject.getLayers().length, 3);
       assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+      assert.equal(leafletMap.editTools.featuresLayer.getLayers().length, 1);
 
       component.clearChanges();
       assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+      assert.equal(leafletMap.editTools.featuresLayer.getLayers().length, 0);
       done();
     });
   });

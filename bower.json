@@ -4,7 +4,7 @@
   "dependencies": {
     "jquery-mockjax": "~2.2.1",
     "semantic-ui": "2.4.1",
-    "daterangepicker": "git://github.com/dangrossman/daterangepicker.git#3.0.5",
+    "daterangepicker": "https://github.com/dangrossman/daterangepicker.git#3.0.5",
     "moment": "2.24.0",
     "blob-polyfill": "~1.0.20150320",
     "devicejs": "0.2.7",

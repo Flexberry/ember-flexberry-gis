@@ -192,7 +192,6 @@
   }
   label {
     font-size: @labelFontSize;
-    color: @labelColor;
   }
   .flexberry-dropdown {
     min-height: 32px;
@@ -210,13 +209,6 @@
     }
     i.dropdown.icon {
       right: 9px;
-    }
-    i.dropdown.icon:before {
-      content: '\f107';
-      font-family: 'FontAwesome';
-      font-size: 15px;
-      color: @greyIconColor;
-      opacity: 1;
     }
   }
 }

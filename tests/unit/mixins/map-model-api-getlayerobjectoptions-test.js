@@ -55,7 +55,7 @@ module('Unit | Mixin | flexberry-map-model-api getLayerObjectOptions', function 
   featureLayer.toProjectedGeoJSON = function () { };
 
   test('getLayerObjectOptions should return properties of feature, projected geometry, and correct area', function (assert) {
-    assert.expect(4);
+    assert.expect(5);
     const done = assert.async(1);
 
     const subject = mapApiMixinObject.create({
@@ -85,6 +85,11 @@ module('Unit | Mixin | flexberry-map-model-api getLayerObjectOptions', function 
       assert.equal(options.foo, 'bar');
       assert.equal(options.area.toFixed(2), 61177.16);
       assert.deepEqual(options.geometry, coordinates32640);
+      assert.deepEqual(options.shape, {
+        type: 'MultiPolygon',
+        coordinates: coordinates32640,
+        crs: { type: 'name', properties: { name: 'EPSG:32640' } }
+      });
       assert.ok(toProjectedGeoJSONStub.calledWith(crs32640));
       toProjectedGeoJSONStub.restore();
       done();
@@ -92,7 +97,7 @@ module('Unit | Mixin | flexberry-map-model-api getLayerObjectOptions', function 
   });
 
   test('getLayerObjectOptions return projected geometry if specified crsName', function (assert) {
-    assert.expect(2);
+    assert.expect(3);
     const done = assert.async(1);
     const ownerStub = sinon.stub(Ember, 'getOwner');
     ownerStub.returns({
@@ -129,6 +134,12 @@ module('Unit | Mixin | flexberry-map-model-api getLayerObjectOptions', function 
     result.then((options) => {
       assert.equal(options.area.toFixed(2), 61177.16);
       assert.deepEqual(options.geometry, coordinates4326);
+      assert.deepEqual(options.shape, {
+        type: 'MultiPolygon',
+        coordinates: coordinates4326,
+        geometry: coordinates4326,
+        crs: { type: 'name', properties: { name: 'EPSG:4326' } }
+      });
       done();
       ownerStub.restore();
       toProjectedGeoJSONStub.restore();

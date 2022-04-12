@@ -13,7 +13,7 @@
           title="{{t "components.feature-result-item.select-all-caption"}}"
           {{action "zoomTo" result.features}}>
           {{#if (eq intersection false)}}
-          <i class="marker icon"></i>
+          <i class="icon-guideline-marker"></i>
           {{/if}}
         </a>
         {{#if (gt result.listForms.length 0)}}
@@ -77,11 +77,11 @@
           <a class="feature-result-item-upload icon item"
           title="{{t "components.layer-result-list.flexberry-export-caption"}}"
           {{action "upload" result}}>
-          <i class="upload icon"></i>
+          <i class="icon-guideline-file-download"></i>
           </a>
         {{/if}}
       </div>
-      {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
+      {{#flexberry-toggler caption=result.name expanded=(and (eq result.features.length 1) result.first) class='layer-result-list-toggler'}}
         <div class="ui list transition">
           {{#if intersection}}
             {{#each result.features as |feature|}}
@@ -135,7 +135,7 @@
           title="{{t "components.feature-result-item.select-all-caption"}}"
           {{action "zoomTo" result.features}}>
           {{#if (eq intersection false)}}
-          <i class="marker icon"></i>
+          <i class="icon-guideline-marker"></i>
           {{/if}}
         </a>
         {{#if (gt result.listForms.length 0)}}
@@ -199,11 +199,11 @@
           <a class="feature-result-item-upload icon item"
           title="{{t "components.layer-result-list.flexberry-export-caption"}}"
           {{action "upload" result}}>
-          <i class="upload icon"></i>
+          <i class="icon-guideline-file-download"></i>
           </a>
         {{/if}}
       </div>
-      {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
+      {{#flexberry-toggler caption=result.name expanded=(and (eq result.features.length 1) result.first) class='layer-result-list-toggler'}}
         <div class="ui list transition">
           {{#each result.features as |feature|}}
             {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}

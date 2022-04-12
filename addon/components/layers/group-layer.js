@@ -2,6 +2,7 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
 import BaseLayer from '../base-layer';
 import layout from '../../templates/components/layers/group-layer';
 
@@ -22,6 +23,27 @@ export default BaseLayer.extend({
   },
 
   /**
+    @property _pane
+    @type String
+    @readOnly
+  */
+  _pane: Ember.computed('layerModel.id', function () {
+    // to switch combine-layer
+    let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
+    return 'groupLayer' + this.get('layerModel.id') + layerId;
+  }),
+
+  /**
+    @property _renderer
+    @type Object
+    @readOnly
+  */
+  _renderer: Ember.computed('_pane', function () {
+    let pane = this.get('_pane');
+    return L.canvas({ pane: pane });
+  }),
+
+  /**
     Creates leaflet layer related to layer type.
 
     @method createLayer
@@ -29,7 +51,18 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
-    return L.layerGroup();
+    let leafletMap = this.get('leafletMap');
+    let layer = L.layerGroup();
+
+    let thisPane = this.get('_pane');
+    let pane = leafletMap.getPane(thisPane);
+    if (!pane || Ember.isNone(pane)) {
+      leafletMap.createPane(thisPane);
+      layer.options.pane = thisPane;
+      layer.options.renderer = this.get('_renderer');
+    }
+
+    return layer;
   },
 
   /**

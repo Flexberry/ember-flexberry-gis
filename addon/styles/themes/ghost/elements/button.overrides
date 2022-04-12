@@ -17,22 +17,13 @@
     }
 }
 
-.ui.form .field {
-    .button.flexberry-button {
-        color: @fieldButtonColor;
-        &:hover {
-            color: @fieldButtonHoveredColor;
-        }
-    }
-}
-
 .ui.menu.flexberry-maptoolbar {
     .ui.icon.button {
-        font-size: 0px;
+      font-size: 0px;
     }
 
     i.icon:before {
-        opacity: 1;
+      opacity: 1;
     }
 
     /* сохранить */
@@ -99,18 +90,6 @@
 
 
 // ====== RGIS ========
-.ui.button:not(.icon) {
-  border-radius: @defaultBorderRadius;
-  .ui.active.button {
-    box-shadow: @defaultBoxShadow;
-  }
-  &:hover {
-    background: @buttonMenuHoveredBackground;
-    color: @buttonHoverColor;
-    box-shadow: none;
-  }
-}
-
 .ui.icon.button,
 .ui.icon.tiny.button.no-margin {
   &.active,
@@ -152,9 +131,9 @@
   .ui.icon.button:not(.fluid) {
     border: @buttonMenuBorder;
     box-shadow: @defaultBoxShadow;
-    width: 39px;
+    width: 40px;
     height: 40px;
-    padding: 12px 0;
+    padding: 7px 0;
     margin: 0;
 
     &.active,
@@ -180,12 +159,8 @@
     box-shadow: none;
     width: 30px;
     height: 30px;
-    padding: 7px 0;
+    padding: 0;
     margin: 0 0 0 .25em;
-  }
-
-  .ui.button {
-    border: @buttonMenuBorder;
   }
 
   .bookmark-item-buttons,
@@ -295,19 +270,8 @@
     .flexberry-geometry-move,
     .flexberry-geometry-tools,
     .flexberry-geometry-buffer {
-      border-radius: 0 !important;
-      border: 1px solid @uiBorderColor !important;
-
       i.icon:before {
         opacity: 0.8;
-      }
-
-      &:hover {
-        border: 1px solid @uiIconButtonHoveredColor !important;
-
-        i.icon:before {
-          opacity: 1;
-        }
       }
     }
     .buttons {

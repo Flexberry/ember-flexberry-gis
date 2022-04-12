@@ -16,20 +16,16 @@
 
     .history-control.leaflet-bar a {
       border: @buttonMenuBorder;
+      height: 40px;
+      width: 40px;
+      border: 1px solid @defaultBorderColor;
+      line-height: 35px;
 
       &:not(.leaflet-disabled).active,
       &:not(.leaflet-disabled):hover {
         background: @buttonMenuHoveredBackground;
         border: @buttonMenuHoveredBorder;
       }
-
-      i {
-        margin: 0 !important;
-      }
-
-      height: 40px;
-      width: 40px;
-      border: 1px solid @light-grey-color;
 
       &:first-child{
         border-radius: @defaultBorderRadius 0 0 @defaultBorderRadius;
@@ -63,13 +59,13 @@
     .leaflet-control-scale {
       margin-bottom: 8px;
       margin-left: 0px;
-      &.map-control-scalebar {
+      &.map-control-scalebar, &.main, &.export {
         margin-bottom: 0px;
       }
     }
 
     .leaflet-control-scale-line,
-    .map-control-scalebar-ratiomenu {
+    .map-control-scalebar-ratiomenu, .main-ratiomenu, .export-ratiomenu {
       width: 90px !important;
       height: 16px;
       background: #ffffff;
@@ -119,6 +115,10 @@
   }
 }
 
+.leaflet-bottom.leaflet-left .main-ratiomenu.dropdown .menu .item {
+  color: @textColor;
+}
+
 /* minimap-drag-panel*/
 div.minimap-drag-panel {
   border: @defaultGrayBorder;
@@ -127,9 +127,6 @@ div.minimap-drag-panel {
   width: 201px;
   height: 179px;
   padding: 25px 11px 10px 11px;
-  .flexberry-minimap-close i.icon.close:before {
-    font-size: 13px;
-  }
 
   .leaflet-control-minimap {
     border: @defaultGrayBorder;
@@ -146,8 +143,7 @@ div.measure-drag-panel {
   height: 90px;
 
   .measure-map-tool-panel-title {
-    font-size: 18px;
-    text-transform: uppercase;
+    font-size: 24px;
     padding: 4px 15px;
   }
 
@@ -162,7 +158,7 @@ div.measure-drag-panel {
       box-shadow: @defaultBoxShadow;
       width: 40px;
       height: 40px;
-      padding: 9px 7px;
+      padding: 7px;
 
       i.circle.icon:before {
         content: "\E82B";
@@ -193,15 +189,6 @@ div.measure-drag-panel {
 
   .flexberry-identify-panel-tools-options {
     margin-right: 8px;
-    i.icon.rectangle:before {
-      content: "\f096";
-      font-family: FontAwesome;
-    }
-
-    i.icon.star:before {
-      content: "\e802";
-      font-family: Crimean;
-    }
   }
 
   .flexberry-identify-panel-polyline-tools-option .ui.button.icon i.minus.icon {
@@ -237,16 +224,6 @@ div.measure-drag-panel {
         }
       }
       &:last-child {
-        i.icon.dropdown {
-          margin-right: 4px;
-            &:before {
-            font-family: Crimean;
-            content: "\e82f";
-            font-size: 6px;
-            color: @greyIconColor;
-            opacity: 1;
-          }
-        }
         .text {
           padding-left: 10px;
           color: @textColor;
@@ -265,67 +242,60 @@ div.measure-drag-panel {
 }
 
 .ui.menu.flexberry-maptoolbar {
-  i.icon.more {
-    &:before {
-      content: "...";
-      font-family: Crimean;
-    }
-  }
-
   .flexberry-compare-map-tool {
     border-radius: 0px 5px 5px 0px;
   }
 
->.item:hover,
-> a.item:hover,
-.dropdown.item:hover {
-  background-color: @buttonMenuHoveredBackground;
-  border: @buttonMenuHoveredBorder;
-}
+  >.item:hover,
+  > a.item:hover,
+  .dropdown.item:hover {
+    background-color: @buttonMenuHoveredBackground;
+    border: @buttonMenuHoveredBorder;
+  }
 
-a.item:active,
-.active.item:hover {
-  background: @buttonMenuActiveBackground;
-  box-shadow: none;
-}
+  a.item:active,
+  .active.item:hover {
+    background: @buttonMenuActiveBackground;
+    box-shadow: none;
+  }
 
 
-.flexberry-search-map-command,
-.flexberry-measure-map-tool,
-.flexberry-draw-map-tool,
-.flexberry-go-to-map-command,
-.flexberry-export-map-command {
-    width: auto;
+  .flexberry-search-map-command,
+  .flexberry-measure-map-tool,
+  .flexberry-draw-map-tool,
+  .flexberry-go-to-map-command,
+  .flexberry-export-map-command {
+      width: auto;
 
-    i.flexberry-map-tool-submenu-icon.dropdown.icon,
-    i.flexberry-map-command-submenu-icon.dropdown.icon {
-        font-size: 12px;
-        display: block;
-        margin: 0 0 0 1em;
-    }
-    &.active {
-        i.flexberry-map-tool-submenu-icon.dropdown.icon,
-        i.flexberry-map-command-submenu-icon.dropdown.icon {
-            margin-left: 1em;
-            transform: none;
-            display: block;
-            &:before {
-                font-size: 20px;
-            }
-        }
-    }
-    /* IE10+ фиксы */
-    @media screen and (-ms-high-contrast: active),
-    (-ms-high-contrast: none) {
-        &.active {
-            i.flexberry-map-tool-submenu-icon.dropdown.icon,
-            i.flexberry-map-command-submenu-icon.dropdown.icon {
-                margin-left: 50px;
-                margin-top: -20px;
-            }
-        }
-    }
-}
+      i.flexberry-map-tool-submenu-icon.dropdown.icon,
+      i.flexberry-map-command-submenu-icon.dropdown.icon {
+          font-size: 12px;
+          display: block;
+          margin: 0 0 0 1em;
+      }
+      &.active {
+          i.flexberry-map-tool-submenu-icon.dropdown.icon,
+          i.flexberry-map-command-submenu-icon.dropdown.icon {
+              margin-left: 1em;
+              transform: none;
+              display: block;
+              &:before {
+                  font-size: 20px;
+              }
+          }
+      }
+      /* IE10+ фиксы */
+      @media screen and (-ms-high-contrast: active),
+      (-ms-high-contrast: none) {
+          &.active {
+              i.flexberry-map-tool-submenu-icon.dropdown.icon,
+              i.flexberry-map-command-submenu-icon.dropdown.icon {
+                  margin-left: 50px;
+                  margin-top: -20px;
+              }
+          }
+      }
+  }
 }
 
 /*********************************************
@@ -378,12 +348,6 @@ a.item:active,
 div.bottompanel-wrapper {
   height: 100%;
 
-  i.icon.checkall:before {
-    content: "\e815";
-    font-family: 'Crimean';
-    color: #8F928F;
-  }
-
   .ui.bottom.bottompanel {
 
     &.bottom-attributes-panel {
@@ -423,17 +387,15 @@ div.bottompanel-wrapper {
         padding-right: 60px;
 
         .bottompanel-tab-nav-panel-tabs .item {
-          font-size: 18px;
-          text-transform: uppercase;
+          font-size: 24px;
           height: 44px;
-          padding: 8px 15px 8px 10px;
+          padding: 8px 11px 8px 12px;
           margin-top: 8px;
           border: none;
           color: #8F928F;
           background: @white;
-          border-left: @defaultGrayBorder;
-          border-top-left-radius: 0 !important;
-          border-bottom-left-radius: 0 !important;
+          border-left: 2px solid #E5E5E5;
+          border-radius: 0;
 
           &:first-child {
             padding-left: 0px;
@@ -473,6 +435,7 @@ div.bottompanel-wrapper {
           font-size: 0;
           .ui.button.flexberry-button,
           .flexberry-geometry-buffer {
+            border: @defaultGrayBorder;
             box-shadow: @defaultBoxShadow;
             border-radius: @defaultBorderRadius !important;
             font-size: 1rem;
@@ -480,9 +443,6 @@ div.bottompanel-wrapper {
             height: 40px;
             margin: 0 20px 0 0;
             vertical-align: bottom;
-            &:hover {
-              background: @white;
-            }
           }
 
           & > label {
@@ -575,58 +535,54 @@ div.bottompanel-wrapper {
 
           .flexberry-geometry-buffer {
             border: @defaultGrayBorder;
+            background-color: @inputBackground;
 
             i.icon.erase {
               margin-left: -3px;
               margin-right: 14px;
             }
 
-            &:hover {
-              border: @defaultGrayBorder !important;
-              border-bottom-left-radius: 0px;
-              border-bottom-right-radius: 0px;
-            }
-
             .ui.dropdown.item {
               &:hover::after {
                 content: '';
                 width: 100%;
-                height: 1px;
+                height: 4px;
                 position: absolute;
-                bottom: 1px;
-                background-color: @white;
+                bottom: 0px;
+                background-color: @inputBackground;
                 z-index: 100;
                 left: 0;
               }
               & > .menu {
-                margin-top: -2px;
-                margin-left: -1px;
+                background-color: @inputBackground;
                 border-radius: @defaultBorderRadius;
                 border-top-left-radius: 0px;
                 border: @defaultGrayBorder;
-                box-shadow: none;
+                box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
                 .item, label {
                   font-size: 11px;
                 }
 
-                a.item {
+                > .item {
                   padding: 10px 12px !important;
                 }
 
-                i.icon:before {
-                  font-size: 15px;
+                [class^="icon-guideline-"] {
+                  font-size: 16px;
                   color: @textColor;
                 }
 
                 .flexberry-field {
                   margin: 0px 12px;
                   padding-left: 0;
+                  align-items: center;
 
                   .flexberry-textbox {
                     border: @defaultGrayBorder;
                     border-radius: @defaultBorderRadius;
                     height: 30px;
                     input {
+                      background-color: #fff;
                       border: none;
                       font-size: 11px;
                       padding: 2px 3px;
@@ -647,9 +603,10 @@ div.bottompanel-wrapper {
             }
 
             & > div {
-              line-height: 38px;
               margin: 0;
               width: 100%;
+              text-align: center;
+              line-height: 38px;
               > i.icon {
                 margin: 0;
                 width: 100%;
@@ -666,11 +623,12 @@ div.bottompanel-wrapper {
       }
 
       .flexberry-table-wrapper {
-          height: ~"calc(100% - 85px)";
+          height: ~"calc(100% - 120px)";
           padding: 0 10px 10px 0;
 
           tbody {
             box-shadow: @defaultBoxShadow;
+            border: 1px solid #e5e5e5;
           }
       }
 
@@ -678,6 +636,36 @@ div.bottompanel-wrapper {
       .tab.layers-attributes-segment,
       .tab.layers-attributes-segment > div {
           height: 100%;
+      }
+
+      .layers-attributes-tab-container {
+        .ui.basic.buttons {
+          border: none;
+          .button {
+            font-size: 18px;
+            color: #848E99!important;
+            border: none;
+            &:first-child {
+              padding-left: 0.3125em!important;
+            }
+          }
+          .active.button {
+            background: none!important;
+            color: @primaryColor!important;
+          }
+        }
+        .next-page-button:before {
+          content: "\e81b";
+          font-family: 'Crimean';
+          font-size: 14px;
+          opacity: 1;
+        }
+        .prev-page-button:before {
+          content: "\e81a";
+          font-family: 'Crimean';
+          font-size: 14px;
+          opacity: 1;
+        }
       }
 
       .layers-attributes-segment {
@@ -699,22 +687,11 @@ div.bottompanel-wrapper {
         border: none;
         border-collapse: collapse;
 
-        .ui.checkbox label:before {
-          width: 18px;
-          height: 18px;
-        }
-
-        .ui.checkbox input:checked ~ .box:before,
-        .ui.checkbox input:checked ~ label:before {
-          background: @primaryColor;
-          border-color: @primaryColor;
-        }
-
         td, th {
           height: 44px;
           border-radius: 0px;
           color: #000000;
-          border: @defaultGrayBorder;
+          // border: @defaultGrayBorder;
           font-weight: 400;
         }
 
@@ -724,22 +701,10 @@ div.bottompanel-wrapper {
 
         th {
           border: none;
-          word-break: normal;
-          white-space: normal;
-          color: #8F928F;
-          vertical-align: bottom;
-          background-color: white;
-          padding: 0 10px 3px 10px;
-          height: 30px;
 
           &:first-child {
             text-align: center;
           }
-        }
-
-        .ui.checkbox {
-          min-height: 25px;
-          height: 25px;
         }
 
         .ui.button.flexberry-button {
@@ -749,18 +714,9 @@ div.bottompanel-wrapper {
           padding-right: 0;
           min-width: 0px;
           padding: 0;
-          height: 25px;
 
-          &.find {
-            padding-top: 3px;
-            i.icon {
-              font-size: 18px;
-            }
-          }
-
-          i.icon {
-            font-size: 16px;
-            vertical-align: text-top
+          [class^="icon-guideline-"] {
+            font-size: 20px;
           }
         }
 
@@ -770,20 +726,6 @@ div.bottompanel-wrapper {
     .intersections-panel-form-row {
       .intersections-panel-input-params-row {
         padding-left: 27px;
-      }
-      .button.intersect {
-        height: 39px;
-        color: @primaryColor;
-        border: 1px solid @lightGreyColor;
-        margin-right: 24px;
-        &:hover {
-          border-color: @primaryColor;
-          background-color: @white;
-        }
-        &:active {
-          color: @primaryColor;
-          background-color: @white;
-        }
       }
       button:last-of-type {
         display: none;

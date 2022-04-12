@@ -48,7 +48,7 @@ export default Mixin.create({
     @method _settingsDidChange
     @private
   */
-  _settingsDidChange: on('init', observer('settings', function () {
+  _settingsDidChange: on('init', observer('settings', 'map', 'map.mapLayer', function() {
     const stringToDeserialize = this.get('settings');
     let settingsAsObject = {};
 
@@ -77,7 +77,7 @@ export default Mixin.create({
   _applyLayerPropertiesFromLocalStorage() {
     const mapId = this.get('map.id');
     const layerId = this.get('id');
-    const localStorageLayer = isBlank(mapId) || isBlank(layerId)
+    const localStorageLayer = isBlank(mapId) || isBlank(layerId) || isNone(this.get('localStorageService'))
       ? null
       : this.get('localStorageService').getFromStorage('layers', mapId).findBy('id', layerId);
     if (!isNone(localStorageLayer)) {

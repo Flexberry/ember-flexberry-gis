@@ -1,0 +1,4 @@
+.flexberry-tree.ui.accordion .active.title .dropdown.icon,
+.flexberry-tree.ui.accordion .accordion .active.title .dropdown.icon {
+  transform: rotate(90deg);
+}

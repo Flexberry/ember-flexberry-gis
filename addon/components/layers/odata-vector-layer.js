@@ -130,9 +130,7 @@ export default BaseVectorLayer.extend({
         insertedLayer.forEach(function (layer) {
           L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
           if (leafletMap.hasLayer(layer._label)) {
-            leafletMap.removeLayer(layer._label);
-            const id = leafletObject.getLayerId(layer._label);
-            delete leafletObject._labelsLayer[id];
+            L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
           }
         });
 
@@ -1398,7 +1396,8 @@ export default BaseVectorLayer.extend({
 
         promise = this._downloadFeaturesWithOrNotFilter(leafletObject, obj, filter);
       } else if (showExisting || (showExisting && showLayerObjects)) {
-        promise = this._downloadFeaturesWithOrNotFilter(leafletObject, this.get('_adapterStoreModelProjectionGeom'));
+        let layerFilter = !Ember.isNone(this.get('filter')) ? this.get('filter') : null;
+        promise = this._downloadFeaturesWithOrNotFilter(leafletObject, this.get('_adapterStoreModelProjectionGeom'), layerFilter);
       } else {
         promise = resolve('The layer does not require loading');
       }
@@ -1503,45 +1502,62 @@ export default BaseVectorLayer.extend({
     const leafletObject = this.get('_leafletObject');
     const { editTools, } = leafletObject.leafletMap;
 
-    const featuresIds = [];
-    leafletObject.models
-      .filter((layer) => isNone(ids) || ids.includes(leafletObject.getLayerId(layer))).forEach((model, layerId) => {
-        const layer = leafletObject.getLayer(layerId);
-        const dirtyType = model.get('dirtyType');
-        if (dirtyType === 'created') {
-          if (leafletObject.hasLayer(layer)) {
-            leafletObject.removeLayer(layer);
-          }
+    let featuresIds = [];
+    let changes = leafletObject.models.filter((item) => true); // for check empty
+    if (!Ember.isEmpty(changes)) {
+      Object.entries(leafletObject.models)
+        .filter((item) =>  { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))); })
+        .map((item)=> item[1])
+        .forEach((model, index) => {
+          if (model instanceof Ember.Object) {
+            let layer = Object.values(leafletObject._layers).find((layer) => {
+              if (layer.model.get('id') === model.get('id')) {
+                return layer;
+              }
+            });
 
-          delete leafletObject.models[layerId];
-          if (editTools.featuresLayer.getLayers().length !== 0) {
-            const editorLayerId = editTools.featuresLayer.getLayerId(layer);
-            const featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
-            if (!isNone(editorLayerId) && !isNone(featureLayer) && !isNone(featureLayer.editor)) {
-              const { editLayer, } = featureLayer.editor;
-              editTools.editLayer.removeLayer(editLayer);
-              editTools.featuresLayer.removeLayer(layer);
+            let dirtyType = model.get('dirtyType');
+            if (dirtyType === 'created') {
+              if (leafletObject.hasLayer(layer)) {
+                leafletObject.removeLayer(layer);
+              }
+
+              delete leafletObject.models[index];
+              if (editTools.featuresLayer.getLayers().length !== 0) {
+                let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+                let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+                if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
+                  let editLayer = featureLayer.editor.editLayer;
+                  editTools.editLayer.removeLayer(editLayer);
+                  editTools.featuresLayer.removeLayer(layer);
+                }
+              }
+            } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
+              if (!Ember.isNone(layer)) {
+                if (!Ember.isNone(layer.editor)) {
+                  let editLayer = layer.editor.editLayer;
+                  editTools.editLayer.removeLayer(editLayer);
+                }
+
+                if (leafletObject.hasLayer(layer)) {
+                  leafletObject.removeLayer(layer);
+                }
+              }
+
+              model.rollbackAttributes();
+              delete leafletObject.models[index];
+              featuresIds.push(model.get('id'));
             }
           }
-        } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
-          if (!isNone(layer)) {
-            if (!isNone(layer.editor)) {
-              const { editLayer, } = layer.editor;
-              editTools.editLayer.removeLayer(editLayer);
-            }
+        });
 
-            if (leafletObject.hasLayer(layer)) {
-              leafletObject.removeLayer(layer);
-            }
-          }
-
-          model.rollbackAttributes();
-          delete leafletObject.models[layerId];
-          featuresIds.push(model.get('id'));
-        }
-      });
-    if (isNone(ids) || ids.length === 0) {
-      editTools.editLayer.clearLayers();
+      if (!isNone(ids)) {
+        ids.forEach((id) => {
+          delete leafletObject.models[id];
+        });
+      } else {
+        editTools.editLayer.clearLayers();
+      }
     }
 
     return featuresIds;

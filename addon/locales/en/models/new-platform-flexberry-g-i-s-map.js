@@ -68,6 +68,9 @@ export default {
       boundingBox: {
         __caption__: 'Bounding box',
       },
+      picture: {
+        __caption__: 'picture'
+      },
       mapLayer: {
         __caption__: 'Map layer',
         name: {
@@ -127,10 +130,10 @@ export default {
             },
           },
           allowShow: {
-            __caption__: 'Allow show',
-          },
-        },
-      },
+            __caption__: 'Allow show'
+          }
+        }
+      }
     },
     MapL: {
       name: {
@@ -146,8 +149,11 @@ export default {
         __caption__: 'Zoom',
       },
       public: {
-        __caption__: 'Public',
+        __caption__: 'Public'
       },
+      picture: {
+        __caption__: 'picture'
+      }
     },
     MapGisSearchFormL: {
       name: {

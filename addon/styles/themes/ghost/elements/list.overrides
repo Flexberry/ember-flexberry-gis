@@ -46,8 +46,13 @@
   .layer-result-list-toggler.flexberry-toggler.accordion.fluid {
     border: none;
   }
-  .icon {
-    font-size: 18px;
+  .feature-result-item-toolbar [class^="icon-guideline-"],
+  .feature-result-item-buttons [class^="icon-guideline-"]{
+    font-size: 16px;
+  }
+
+  .feature-result-item-toolbar .icon-guideline-points {
+    font-size: 20px;
   }
 
   .item.active {
@@ -100,23 +105,21 @@
           height: 100%;
           top: 7px;
           left: 22px;
-          i.icon:before {
-            font-size: 16px;
+          [class^="icon-guideline-"] {
+            margin-right: 4px;
           }
-          a.icon.item {
-            position: relative;
-            top: 5px;
+          > a.icon.item {
+            padding: 5px;
           }
           a.icon.item.more {
             color: @textColor;
-            position: relative;
-            top: 5px;
           }
           .more.submenu {
             top: 7px;
             left: 41px;
             height: auto;
             width: 158px;
+            background-color: @inputBackground;
             a.icon.item {
               position: static;
               font-size: 11px;
@@ -140,7 +143,6 @@
               }
               &:first-child {
                 margin-left: 4px;
-                margin-bottom: 18px;
               }
               i.icon:before {
                 font-size: 12px
@@ -177,6 +179,7 @@
         .feature-result-item-caption {
           min-width: 0;
           width: 300px;
+          min-height: 1em;
         }
 
       }

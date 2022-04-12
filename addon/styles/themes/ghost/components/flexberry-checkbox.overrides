@@ -1,0 +1,65 @@
+.sidebar .ui.checkbox {
+  min-width: @maplayersCheckboxSize;
+  min-height: @maplayersCheckboxSize;
+
+  label {
+    line-height: @maplayersCheckboxSize;
+    &:before,
+    &:after {
+      width: @maplayersCheckboxSize;
+      height: @maplayersCheckboxSize;
+    }
+  }
+
+  input:checked ~ label:after {
+    font-size: @maplayersCheckboxSize/2;
+    line-height: @maplayersCheckboxSize;
+  }
+
+  &.group:before {
+    content: "";
+    border: @checkboxBorder;
+    border-radius: @checkboxBorderRadius;
+    margin: 2px 0px 0px 2px;
+    width: @maplayersCheckboxSize;
+    height: @maplayersCheckboxSize;
+    position: absolute;
+  }
+  &.group.checked:before {
+    border-color: @primaryColor;
+  }
+}
+
+.ui.disabled.checkbox label {
+  opacity: 1;
+  pointer-events: painted;
+}
+
+.ui.disabled.checkbox label::before,
+.ui.disabled.checkbox.group:before {
+  border-color: fade(@solidBorderColor, 50%);
+}
+
+
+.bottom-attributes-panel .ui.table .ui.checkbox {
+  vertical-align: middle;
+  min-height: 18px;
+
+  &,
+  label:before,
+  label:after {
+    width: 18px;
+    height: 18px;
+  }
+
+  input:checked ~ label:after {
+    font-size: 9px;
+    line-height: 18px;
+  }
+
+  input:checked ~ .box:before,
+  input:checked ~ label:before {
+    background: @primaryColor;
+    border-color: @primaryColor;
+  }
+}

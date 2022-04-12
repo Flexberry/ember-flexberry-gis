@@ -94,12 +94,16 @@ const BaseMapCommandComponent = BaseMapToolComponent.extend({
     @method executeMapCommand
   */
   executeMapCommand() {
+    let leafletMap = this.get('leafletMap');
     if (this.get('_hasSubmenu')) {
+      leafletMap.fire('flexberry-map:commands:choose', {
+        mapCommand: this
+      });
+
       // Command with submenu is just a wrapper, it shouldn't really execute map-command.
       return;
     }
 
-    const leafletMap = this.get('leafletMap');
     const mapCommandName = this.get('name');
     const mapCommandProperties = this.get('mapCommandProperties');
     const mapCommandExecutionOptions = this.get('mapCommandExecutionOptions');
