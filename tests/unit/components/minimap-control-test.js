@@ -1,7 +1,8 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { moduleForComponent, test } from 'ember-qunit';
 
 moduleForComponent('minimap-control', 'Unit | Component | minimap control', {
-  unit: true
+  unit: true,
 });
 
 test('it should return L.Control.MiniMap from createControl', function (assert) {

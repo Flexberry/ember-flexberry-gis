@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import { resolve } from 'rsvp';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
@@ -14,7 +15,7 @@ module('Unit | Mixin | flexberry-map-model-api getLayerObjectOptions', function 
     create() {
       const crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
         scale(zoom) {
-          return 256 * Math.pow(2, zoom);
+          return 256 * (2 ** zoom);
         },
         zoom(scale) {
           return Math.log(scale / 256) / Math.LN2;

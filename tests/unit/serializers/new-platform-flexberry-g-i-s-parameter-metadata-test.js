@@ -1,4 +1,5 @@
-import { moduleForModel, test } from 'ember-qunit';
+import { test } from 'ember-qunit';
+import moduleForModel from '../../helpers/unit/serializers/setup-module';
 
 moduleForModel('new-platform-flexberry-g-i-s-parameter-metadata', 'Unit | Serializer | new-platform-flexberry-g-i-s-parameter-metadata', {
   // Specify the other units that are required for this test.

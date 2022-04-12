@@ -1,8 +1,10 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { run } from '@ember/runloop';
 import EmberObject, { set } from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
 import startApp from 'dummy/tests/helpers/start-app';
 import wfsComponentLayer from 'ember-flexberry-gis/components/layers/wfs-layer';
+/* eslint-disable-next-line no-duplicate-imports */
 import wmsComponentLayer from 'ember-flexberry-gis/components/layers/wms-layer';
 import wfsLayer from 'ember-flexberry-gis/components/layers/wms-layer';
 import sinon from 'sinon';
@@ -21,7 +23,7 @@ moduleForComponent('layers/combine-layer', 'Unit | Component | layers/combine la
     'component:base-vector-layer',
     'model:new-platform-flexberry-g-i-s-map'
   ],
-  beforeEach: function () {
+  beforeEach() {
     app = startApp();
 
     this.register('component:layers/wfs-layer', wfsComponentLayer);
@@ -150,10 +152,10 @@ moduleForComponent('layers/combine-layer', 'Unit | Component | layers/combine la
       });
   },
 
-  afterEach: function () {
+  afterEach() {
     run(app, 'destroy');
     geoserverFake.restore();
-  }
+  },
 });
 
 test('Create combine component and check visibility', function (assert) {
@@ -289,13 +291,13 @@ test('test method showAllLayerObjects() and hideAllLayerObjects()', function (as
       settingsAsObject,
     });
 
-    const options = {
+    const currentOptions = {
       layerModel,
       leafletMap,
       visibility: false,
     };
 
-    const component = this.subject(options);
+    const component = this.subject(currentOptions);
     const store = app.__container__.lookup('service:store');
     const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
     const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');

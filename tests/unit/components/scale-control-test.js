@@ -1,9 +1,10 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { moduleForComponent, test } from 'ember-qunit';
 
 moduleForComponent('scale-control', 'Unit | Component | scale control', {
   // Specify the other units that are required for this test
   // needs: ['component:foo', 'helper:bar'],
-  unit: true
+  unit: true,
 });
 
 test('it should return L.Control.Scale from createControl', function (assert) {

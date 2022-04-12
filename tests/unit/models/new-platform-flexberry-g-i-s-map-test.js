@@ -146,12 +146,12 @@ test('isContainsObject', function (assert) {
   const map = this.subject();
   const _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, objWithCrs, objA]);
     })
   );
   _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, objWithCrs, objB]);
     })
   );
@@ -171,22 +171,22 @@ test('getAreaExtends', function (assert) {
   const map = this.subject();
   const _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, objWithCrs, objA]);
     })
   );
   _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, objWithCrs, objB]);
     })
   );
   _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['d633ea1d-eb32-423f-8663-a38abc7ba094']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, objWithCrs, objC]);
     })
   );
   _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['79fd98d0-52ae-44ae-b616-971768196ad8']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, objWithCrs, objD]);
     })
   );
@@ -211,18 +211,18 @@ test('getIntersectionArea', function (assert) {
   const map = this.subject();
   const _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, objWithCrs, objA]);
     })
   );
 
   _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, objWithCrs, objB]);
     })
   );
   _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['d633ea1d-eb32-423f-8663-a38abc7ba094']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, objWithCrs, objC]);
     })
   );
@@ -244,12 +244,12 @@ test('getDistanceBetweenObjects', function (assert) {
   const map = this.subject();
   const _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, objWithCrs, L.geoJSON(objA[0].feature).getLayers()]);
     })
   );
   _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, objWithCrs, L.geoJSON(objB[0].feature).getLayers()]);
     })
   );
@@ -262,7 +262,7 @@ test('getDistanceBetweenObjects', function (assert) {
 
 test('getmulticircuitobject with difference', function (assert) {
   const map = this.subject();
-  const objA = {
+  const testObjA = {
     type: 'Feature',
     properties: {},
     geometry: {
@@ -276,7 +276,7 @@ test('getmulticircuitobject with difference', function (assert) {
       },
     },
   };
-  const objB = {
+  const testObjB = {
     type: 'Feature',
     properties: {},
     geometry: {
@@ -290,7 +290,7 @@ test('getmulticircuitobject with difference', function (assert) {
       },
     },
   };
-  const objC = {
+  const testObjC = {
     type: 'Feature',
     properties: {},
     geometry: {
@@ -323,14 +323,14 @@ test('getmulticircuitobject with difference', function (assert) {
     },
   };
 
-  const resultObj = map.createMulti([objA, objB, objC], false);
+  const resultObj = map.createMulti([testObjA, testObjB, testObjC], false);
 
   assert.deepEqual(resultObj, multiObject, 'multi object');
 });
 
 test('getmulticircuitobject with union', function (assert) {
   const map = this.subject();
-  const objA = {
+  const testObjA = {
     type: 'Feature',
     properties: {},
     geometry: {
@@ -344,7 +344,7 @@ test('getmulticircuitobject with union', function (assert) {
       },
     },
   };
-  const objB = {
+  const testObjB = {
     type: 'Feature',
     properties: {},
     geometry: {
@@ -358,7 +358,7 @@ test('getmulticircuitobject with union', function (assert) {
       },
     },
   };
-  const objC = {
+  const testObjC = {
     type: 'Feature',
     properties: {},
     geometry: {
@@ -388,7 +388,7 @@ test('getmulticircuitobject with union', function (assert) {
     },
   };
 
-  const resultObj = map.createMulti([objA, objB, objC], true);
+  const resultObj = map.createMulti([testObjA, testObjB, testObjC], true);
 
   assert.deepEqual(resultObj, multiObject, 'multi object');
 });
@@ -493,13 +493,13 @@ test('getMergedGeometry with difference should return geoJson feature in EPSG:43
   const map = this.subject();
   const _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('1', ['1', '2']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, null, [feature1Layer1, feature2Layer1]]);
     })
   );
 
   _getModelLayerFeatureStub.withArgs('2', ['1', '2']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, null, [feature1Layer2, feature2Layer2]]);
     })
   );
@@ -612,13 +612,13 @@ test('getMergedGeometry with union should return geoJson feature in EPSG:4326', 
   const map = this.subject();
   const _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('1', ['1', '2']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, null, [feature1Layer1, feature2Layer1]]);
     })
   );
 
   _getModelLayerFeatureStub.withArgs('2', ['1', '2']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, null, [feature1Layer2, feature2Layer2]]);
     })
   );
@@ -739,13 +739,13 @@ test('getMergedGeometry with geometry reducer and difference should return geoJs
   const map = this.subject();
   const _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('1', ['1', '2']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, null, [feature1Layer1, feature2Layer1]]);
     })
   );
 
   _getModelLayerFeatureStub.withArgs('2', ['1', '2']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, null, [feature1Layer2, feature2Layer2]]);
     })
   );
@@ -858,13 +858,13 @@ test('getMergedGeometry with geometry reducer and union should return geoJson fe
   const map = this.subject();
   const _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('1', ['1', '2']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, null, [feature1Layer1, feature2Layer1]]);
     })
   );
 
   _getModelLayerFeatureStub.withArgs('2', ['1', '2']).returns(
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       resolve([null, null, [feature1Layer2, feature2Layer2]]);
     })
   );

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { moduleForComponent, test } from 'ember-qunit';
 
 moduleForComponent('zoomslider-control', 'Unit | Component | zoomslider control', {

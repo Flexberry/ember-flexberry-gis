@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { resolve, Promise } from 'rsvp';
 import { run } from '@ember/runloop';
 import EmberObject, { set } from '@ember/object';
@@ -22,7 +23,7 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
     'model:new-platform-flexberry-g-i-s-map'
   ],
 
-  beforeEach: function () {
+  beforeEach() {
     app = startApp();
 
     options = {
@@ -169,10 +170,10 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
       });
   },
 
-  afterEach: function () {
+  afterEach() {
     run(app, 'destroy');
     geoserverFake.restore();
-  }
+  },
 });
 
 const realCountArr = function (arr) {
@@ -300,6 +301,7 @@ test('loadLayerFeatures() with options showExisting = false', function (assert) 
       };
       component._leafletObject = res.target;
 
+      /* eslint-disable-next-line new-cap */
       component._leafletObject.loadFeatures = () => new resolve();
       component.loadLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Load feature of layers with showExisting = false');
@@ -338,6 +340,7 @@ test('loadLayerFeatures() with options showExisting = true', function (assert) {
 
       component._leafletObject = res.target;
 
+      /* eslint-disable-next-line new-cap */
       component._leafletObject.loadFeatures = () => new resolve();
       component.loadLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Load feature of layers with showExisting = true');
@@ -374,7 +377,7 @@ test('loadLayerFeatures() with options showExisting = false, call 2 times', func
       };
       component._leafletObject = res.target;
       component._leafletObject.loadFeatures = function (filter) {
-        return new Promise((resolve) => {
+        return new Promise((testResolve) => {
           const that = this;
 
           L.Util.request({
@@ -389,7 +392,7 @@ test('loadLayerFeatures() with options showExisting = false, call 2 times', func
                 element.state = that.state.exist;
                 that.addLayer(element);
               });
-              resolve(that);
+              testResolve(that);
             },
           });
         });
@@ -398,8 +401,8 @@ test('loadLayerFeatures() with options showExisting = false, call 2 times', func
       component.loadLayerFeatures(e).then((layers) => {
         assert.equal(layers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 1 times');
         done();
-        component.loadLayerFeatures(e).then((layers) => {
-          assert.equal(layers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 2 times');
+        component.loadLayerFeatures(e).then((twoTimesLayers) => {
+          assert.equal(twoTimesLayers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 2 times');
           done();
         });
       });

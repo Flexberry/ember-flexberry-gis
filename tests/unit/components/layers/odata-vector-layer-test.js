@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { resolve, Promise } from 'rsvp';
 import { A } from '@ember/array';
 import { run } from '@ember/runloop';
@@ -446,10 +447,12 @@ const realCountArr = function (arr) {
     if (item) {
       return item;
     }
+
+    return false;
   }).length;
 };
 
-skip('getFilterParameters return SimplePredicate on single value in array', function (assert) {
+test('getFilterParameters return SimplePredicate on single value in array', function (assert) {
   assert.expect(2);
   const done = assert.async(1);
   run(() => {
@@ -471,7 +474,7 @@ skip('getFilterParameters return SimplePredicate on single value in array', func
   });
 });
 
-skip('loadLayerFeatures() with featureIds=null', function (assert) {
+test('loadLayerFeatures() with featureIds=null', function (assert) {
   assert.expect(2);
   const done = assert.async(3);
   run(() => {
@@ -508,7 +511,7 @@ skip('loadLayerFeatures() with featureIds=null', function (assert) {
   });
 });
 
-skip('getLayerFeatures() with featureIds=null', function (assert) {
+test('getLayerFeatures() with featureIds=null', function (assert) {
   assert.expect(2);
   const done = assert.async(3);
   run(() => {
@@ -540,7 +543,7 @@ skip('getLayerFeatures() with featureIds=null', function (assert) {
   });
 });
 
-skip('continueLoad()', function (assert) {
+test('continueLoad()', function (assert) {
   assert.expect(7);
   const done = assert.async(3);
 
@@ -578,9 +581,9 @@ skip('continueLoad()', function (assert) {
   });
 });
 
-skip('test methos identify()', function (assert) {
+test('test methos identify()', function (assert) {
   assert.expect(3);
-  const done = assert.async(1);
+  const done = assert.async(2);
   run(() => {
     const latlngs = [
       [L.latLng(30, 10), L.latLng(40, 40), L.latLng(20, 40), L.latLng(10, 20)]
@@ -599,41 +602,51 @@ skip('test methos identify()', function (assert) {
       },
     });
     const component = this.subject(param);
-    const spyGetFeature = sinon.spy(component, '_getFeature');
+    run.next(() => {
+      const spyGetFeature = sinon.spy(component, '_getFeature');
 
-    component.identify(e);
+      component.identify(e);
 
-    assert.ok(spyGetFeature.getCall(0).args[0] instanceof GeometryPredicate);
-    assert.equal(spyGetFeature.getCall(0).args[0]._attributePath, 'shape');
-    assert.equal(spyGetFeature.getCall(0).args[0]._intersectsValue,
-      'SRID=4326;POLYGON((10 30, 40 40, 40 20, 20 10, 10 30))');
+      assert.ok(spyGetFeature.getCall(0).args[0] instanceof GeometryPredicate);
+      assert.equal(spyGetFeature.getCall(0).args[0]._attributePath, 'shape');
+      assert.equal(spyGetFeature.getCall(0).args[0]._intersectsValue,
+        'SRID=4326;POLYGON((10 30, 40 40, 40 20, 20 10, 10 30))');
+      done();
+      spyGetFeature.restore();
+    });
     done();
-    spyGetFeature.restore();
   });
 });
 
-skip('test method createAdapterForModel() with odataUrl', function (assert) {
+test('test method createAdapterForModel() with odataUrl', function (assert) {
   assert.expect(1);
+  const done = assert.async(1);
   $.extend(param, {
     odataUrl: 'http://localhost:6500/odata/',
   });
   const component = this.subject(param);
+  run.next(() => {
+    const adapterModel = component.createAdapterForModel();
 
-  const adapterModel = component.createAdapterForModel();
-
-  assert.ok(adapterModel);
+    assert.ok(adapterModel);
+    done();
+  });
 });
 
-skip('test method createAdapterForModel() without odataUrl', function (assert) {
+test('test method createAdapterForModel() without odataUrl', function (assert) {
   assert.expect(1);
+  const done = assert.async(1);
   const component = this.subject(param);
+  run.next(() => {
+    const adapterModel = component.createAdapterForModel();
 
-  const adapterModel = component.createAdapterForModel();
-
-  assert.notOk(adapterModel);
+    assert.notOk(adapterModel);
+    done();
+  });
 });
 
-skip('test method createDynamicModel() with json', function (assert) {
+
+test('test method createDynamicModel() with json', function (assert) {
   assert.expect(19);
   const done = assert.async(1);
   $.extend(param, {
@@ -664,16 +677,16 @@ skip('test method createDynamicModel() with json', function (assert) {
 
     assert.equal(spyRegister.callCount, 4);
     assert.equal(spyRegister.thirdCall.args[0], 'model:test-model');
-    assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
+    assert.ok(Object.prototype.hasOwnProperty.call(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties, 'namespace'));
     assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'nm');
-    assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
+    assert.ok(Object.prototype.hasOwnProperty.call(spyRegister.thirdCall.args[1].ClassMixin.mixins[2].properties.projections, 'TestModelL'));
     assert.equal(spyRegister.lastCall.args[0], 'mixin:test-model');
     assert.equal(Object.values(spyRegister.lastCall.args[1].mixins[0].properties).length, 2);
-    assert.ok(spyRegister.lastCall.args[1].mixins[0].properties.hasOwnProperty('nomer'));
-    assert.ok(spyRegister.lastCall.args[1].mixins[0].properties.hasOwnProperty('shape'));
+    assert.ok(Object.prototype.hasOwnProperty.call(spyRegister.lastCall.args[1].mixins[0].properties, 'nomer'));
+    assert.ok(Object.prototype.hasOwnProperty.call(spyRegister.lastCall.args[1].mixins[0].properties, 'shape'));
     assert.equal(spyRegister.firstCall.args[0], 'serializer:test-model');
     assert.equal(spyRegister.secondCall.args[0], 'adapter:test-model');
-    assert.ok(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
+    assert.ok(Object.prototype.hasOwnProperty.call(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties, 'host'));
     assert.equal(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
 
     assert.equal(spyCreateModelHierarchy.callCount, 1);
@@ -691,7 +704,7 @@ skip('test method createDynamicModel() with json', function (assert) {
   });
 });
 
-skip('test method createDynamicModel() with json with parent', function (assert) {
+test('test method createDynamicModel() with json with parent', function (assert) {
   assert.expect(22);
   const done = assert.async(1);
   $.extend(param, {
@@ -754,16 +767,16 @@ skip('test method createDynamicModel() with json with parent', function (assert)
 
     assert.equal(spyRegister.callCount, 4);
     assert.equal(spyRegister.thirdCall.args[0], 'model:test-model');
-    assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.hasOwnProperty('namespace'));
+    assert.ok(Object.prototype.hasOwnProperty.call(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties, 'namespace'));
     assert.equal(spyRegister.thirdCall.args[1].ClassMixin.mixins[1].properties.namespace, 'NS1');
-    assert.ok(spyRegister.thirdCall.args[1].ClassMixin.mixins[2].properties.projections.hasOwnProperty('TestModelL'));
+    assert.ok(Object.prototype.hasOwnProperty.call(spyRegister.thirdCall.args[1].ClassMixin.mixins[2].properties.projections, 'TestModelL'));
     assert.equal(spyRegister.lastCall.args[0], 'mixin:test-model');
     assert.equal(Object.values(spyRegister.lastCall.args[1].mixins[0].properties).length, 2);
-    assert.ok(spyRegister.lastCall.args[1].mixins[0].properties.hasOwnProperty('nomer'));
-    assert.ok(spyRegister.lastCall.args[1].mixins[0].properties.hasOwnProperty('shape'));
+    assert.ok(Object.prototype.hasOwnProperty.call(spyRegister.lastCall.args[1].mixins[0].properties, 'nomer'));
+    assert.ok(Object.prototype.hasOwnProperty.call(spyRegister.lastCall.args[1].mixins[0].properties, 'shape'));
     assert.equal(spyRegister.firstCall.args[0], 'serializer:test-model');
     assert.equal(spyRegister.secondCall.args[0], 'adapter:test-model');
-    assert.ok(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.hasOwnProperty('host'));
+    assert.ok(Object.prototype.hasOwnProperty.call(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties, 'host'));
     assert.equal(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
 
     assert.equal(spyCreateModelHierarchy.callCount, 2);
@@ -781,40 +794,46 @@ skip('test method createDynamicModel() with json with parent', function (assert)
   });
 });
 
-skip('test method createDynamicModel() without json', function (assert) {
+test('test method createDynamicModel() without json', function (assert) {
   assert.expect(1);
-  const done = assert.async(1);
+  const done = assert.async(2);
   const component = this.subject(param);
-  const _lookupFactoryStub = sinon.stub(getOwner(this), 'lookup');
-  _lookupFactoryStub.withArgs('model:test-model').returns(null);
-  _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
-  _lookupFactoryStub.withArgs('serializer:test-model').returns({});
+  run.next(() => {
+    const _lookupFactoryStub = sinon.stub(getOwner(this), 'lookup');
+    _lookupFactoryStub.withArgs('model:test-model').returns(null);
+    _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
+    _lookupFactoryStub.withArgs('serializer:test-model').returns({});
 
-  const registerStub = sinon.stub(getOwner(this), 'register');
-  registerStub.returns({});
+    const registerStub = sinon.stub(getOwner(this), 'register');
+    registerStub.returns({});
 
-  component.createDynamicModel().catch((error) => {
-    assert.equal(error, 'Can\'t create dynamic model: test-model. Error: ModelName and metadataUrl is empty');
+    component.createDynamicModel().catch((error) => {
+      assert.equal(error, 'Can\'t create dynamic model: test-model. Error: ModelName and metadataUrl is empty');
+      done();
+      _lookupFactoryStub.restore();
+    });
     done();
-    _lookupFactoryStub.restore();
   });
 });
 
-skip('test method createDynamicModel() already registered', function (assert) {
+test('test method createDynamicModel() already registered', function (assert) {
   assert.expect(1);
-  const done = assert.async(1);
+  const done = assert.async(2);
   const component = this.subject(param);
-  const _lookupFactoryStub = sinon.stub(getOwner(this), 'lookup');
-  _lookupFactoryStub.returns(1);
+  run.next(() => {
+    const _lookupFactoryStub = sinon.stub(getOwner(this), 'lookup');
+    _lookupFactoryStub.returns(1);
 
-  component.createDynamicModel().then((msg) => {
-    assert.equal(msg, 'Model already registered: test-model');
+    component.createDynamicModel().then((msg) => {
+      assert.equal(msg, 'Model already registered: test-model');
+      done();
+      _lookupFactoryStub.restore();
+    });
     done();
-    _lookupFactoryStub.restore();
   });
 });
 
-skip('test method _createVectorLayer()', function (assert) {
+test('test method _createVectorLayer()', function (assert) {
   assert.expect(3);
   param.visibility = false;
   const component = this.subject(param);
@@ -829,7 +848,7 @@ skip('test method _createVectorLayer()', function (assert) {
   spyContinueLoad.restore();
 });
 
-skip('test method createVectorLayer() without dynamicModel', function (assert) {
+test('test method createVectorLayer() without dynamicModel', function (assert) {
   assert.expect(7);
   const done = assert.async(1);
   param.visibility = false;
@@ -911,7 +930,7 @@ skip('test method createVectorLayer() with dynamicModel=true', function (assert)
   });
 });
 
-skip('test method save() no modified objects', function (assert) {
+test('test method save() no modified objects', function (assert) {
   assert.expect(5);
   const done = assert.async(1);
   const component = this.subject(param);
@@ -938,7 +957,7 @@ skip('test method save() no modified objects', function (assert) {
   });
 });
 
-skip('test method save() with objects', function (assert) {
+test('test method save() with objects', function (assert) {
   assert.expect(17);
   const done = assert.async(1);
   const component = this.subject(param);
@@ -967,7 +986,7 @@ skip('test method save() with objects', function (assert) {
 
       assert.equal(layerUpdate.feature.geometry.coordinates[0].length, 4);
       const coordinates = '6282035.717038031,7998313.982057768,6281996.30993829,'
-          + '7998208.303352221,6282204.143427601,7998205.772143982,6282035.717038031,7998313.982057768';
+          + '7998208.303352221,6282204.143427601,7998205.77214398,6282035.717038031,7998313.982057768';
       assert.equal(layerUpdate.feature.geometry.coordinates.toString(), coordinates);
 
       assert.equal(realCountArr(leafletObject.models), 1);
@@ -1028,7 +1047,7 @@ skip('test method save() with objects', function (assert) {
   });
 });
 
-skip('test method createModelHierarchy() with 3 parent', function (assert) {
+test('test method createModelHierarchy() with 3 parent', function (assert) {
   assert.expect(11);
   const done = assert.async(1);
   $.extend(param, {
@@ -1146,7 +1165,7 @@ skip('test method createModelHierarchy() with 3 parent', function (assert) {
   });
 });
 
-skip('test method clearLayers()', function (assert) {
+test('test method clearLayers()', function (assert) {
   assert.expect(4);
   const done = assert.async(1);
   const component = this.subject(param);
@@ -1166,7 +1185,7 @@ skip('test method clearLayers()', function (assert) {
   });
 });
 
-skip('test method clearChanges() with no changes', function (assert) {
+test('test method clearChanges() with no changes', function (assert) {
   assert.expect(7);
   const done = assert.async(1);
   const component = this.subject(param);
@@ -1195,7 +1214,7 @@ skip('test method clearChanges() with no changes', function (assert) {
   });
 });
 
-skip('test method clearChanges() with create', function (assert) {
+test('test method clearChanges() with create', function (assert) {
   assert.expect(7);
   const done = assert.async(1);
   const component = this.subject(param);
@@ -1237,7 +1256,7 @@ skip('test method clearChanges() with create', function (assert) {
   });
 });
 
-skip('test method clearChanges() with update and delete', function (assert) {
+test('test method clearChanges() with update and delete', function (assert) {
   assert.expect(10);
   const done = assert.async(1);
   const component = this.subject(param);
@@ -1276,15 +1295,15 @@ skip('test method clearChanges() with update and delete', function (assert) {
   });
 });
 
-skip('test method getNearObject()', function (assert) {
+test('test method getNearObject()', function (assert) {
   assert.expect(6);
   const done = assert.async(2);
   param = $.extend(param, { pkField: 'primarykey', });
   param.continueLoading = false;
   const component = this.subject(param);
 
-  const store = app.__container__.lookup('service:store');
-  const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+  const currentStore = app.__container__.lookup('service:store');
+  const mapModel = currentStore.createRecord('new-platform-flexberry-g-i-s-map');
   const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
   getmapApiStub.returns(mapModel);
   const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');

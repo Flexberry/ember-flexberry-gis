@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import { Promise } from 'rsvp';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';

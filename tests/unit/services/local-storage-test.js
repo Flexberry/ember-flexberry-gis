@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { moduleFor, test } from 'ember-qunit';
 
 moduleFor('service:local-storage', 'Unit | Service | local storage', {

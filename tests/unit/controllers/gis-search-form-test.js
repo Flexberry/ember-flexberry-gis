@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { moduleFor, test } from 'ember-qunit';
 
 moduleFor('controller:gis-search-form', 'Unit | Controller | gis search form', {

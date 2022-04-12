@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { moduleForComponent, test } from 'ember-qunit';
 import EmberObject from '@ember/object';
 
@@ -6,7 +7,7 @@ moduleForComponent('flexberry-layers-attributes-panel', 'Unit | Component | flex
   needs: [
     'service:map-api',
     'service:layers-styles-renderer'
-  ]
+  ],
 });
 
 const tabModel = EmberObject.create({

@@ -1,10 +1,11 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { moduleForComponent, test } from 'ember-qunit';
 
 moduleForComponent('layers/wms-layer', 'Unit | Component | layers/wms layer', {
   unit: true,
   needs: [
     'service:map-api',
-    'service:layers-styles-renderer',
+    'service:layers-styles-renderer'
   ],
 });
 

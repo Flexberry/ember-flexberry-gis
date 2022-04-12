@@ -9,10 +9,12 @@ import sinon from 'sinon';
 module('Unit | Mixin | test method setVisibility ', function () {
   const mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
 
-  const layerModel = Component.extend({
+  const layerModelComponent = {
     visibility: false,
     renderer: {},
-  });
+  };
+
+  const layerModel = Component.extend(layerModelComponent);
 
   test('Test visibility = true', function (assert) {
     // Arrange

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { run } from '@ember/runloop';
 import { resolve, Promise } from 'rsvp';
 import Ember from 'ember';
@@ -89,9 +90,10 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
 
   // After update to leaflet-1.0.0 panTo not directly change center,
   // it will changed after animation will trigger 'moveend' event.
-  const promise = new Ember.Test.promise((resolve) => {
+  /* eslint-disable-next-line new-cap */
+  const promise = new Ember.Test.promise((testResolve) => {
     leafletMap.on('moveend', () => {
-      setTimeout(resolve, 1000);
+      setTimeout(testResolve, 1000);
     });
   });
 

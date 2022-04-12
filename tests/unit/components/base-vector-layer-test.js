@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { Promise } from 'rsvp';
 import EmberObject from '@ember/object';
 import { run } from '@ember/runloop';
@@ -18,14 +19,14 @@ moduleForComponent('base-vector-layer', 'Unit | Component | base-vector-layer', 
     'model:new-platform-flexberry-g-i-s-map'
   ],
 
-  beforeEach: function() {
+  beforeEach() {
     app = startApp();
     leafletMap = L.map(document.createElement('div'));
   },
 
-  afterEach: function() {
+  afterEach() {
     run(app, 'destroy');
-  }
+  },
 });
 
 test('it identify on \'geojson\' layer', function (assert) {

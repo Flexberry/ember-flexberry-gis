@@ -37,7 +37,7 @@ module('Unit | Mixin | map model api comparelayers', function () {
     create() {
       const crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
         scale(zoom) {
-          return 256 * Math.pow(2, zoom);
+          return 256 * (2 ** zoom);
         },
         zoom(scale) {
           return Math.log(scale / 256) / Math.LN2;
@@ -96,6 +96,7 @@ module('Unit | Mixin | map model api comparelayers', function () {
     const subject = mapApiMixinObject.create({
       _getModelLayerFeature() {
         return resolve(
+          /* eslint-disable-next-line new-cap */
           new resolve([
             null,
             { options: { crs: crs32640, }, },
@@ -128,6 +129,7 @@ module('Unit | Mixin | map model api comparelayers', function () {
       _getModelLayerFeature(layer) {
         if (layer === '1') {
           return resolve(
+            /* eslint-disable-next-line new-cap */
             new resolve([
               null,
               { options: { crs: crs32640, }, },
@@ -136,6 +138,7 @@ module('Unit | Mixin | map model api comparelayers', function () {
         }
 
         return resolve(
+          /* eslint-disable-next-line new-cap */
           new resolve([
             null,
             { options: { crs: crs32640, }, },
@@ -178,6 +181,7 @@ module('Unit | Mixin | map model api comparelayers', function () {
       _getModelLayerFeature(layer) {
         if (layer === '1') {
           return resolve(
+            /* eslint-disable-next-line new-cap */
             new resolve([
               null,
               { options: { crs: crs32640, }, },
@@ -186,6 +190,7 @@ module('Unit | Mixin | map model api comparelayers', function () {
         }
 
         return resolve(
+          /* eslint-disable-next-line new-cap */
           new resolve([
             null,
             { options: { crs: crs32640, }, },
@@ -230,6 +235,7 @@ module('Unit | Mixin | map model api comparelayers', function () {
       _getModelLayerFeature(layer) {
         if (layer === '1') {
           return resolve(
+            /* eslint-disable-next-line new-cap */
             new resolve([
               null,
               { options: { crs: crs32640, }, },
@@ -237,8 +243,9 @@ module('Unit | Mixin | map model api comparelayers', function () {
           );
         }
 
-        if ('2') {
+        if (layer === '2') {
           return resolve(
+            /* eslint-disable-next-line new-cap */
             new resolve([
               null,
               { options: { crs: crs32640, }, },
@@ -281,7 +288,7 @@ module('Unit | Mixin | map model api comparelayers', function () {
           },
         });
       assert.equal(result[1].areaDifference.toFixed(2), 1.00);
-      assert.equal(result[1].hasOwnProperty('id'), false);
+      assert.equal(Object.prototype.hasOwnProperty.call(result[1], 'id'), false);
       done();
     });
 
@@ -296,7 +303,7 @@ module('Unit | Mixin | map model api comparelayers', function () {
           },
         });
       assert.equal(result[0].areaDifference.toFixed(2), 16.00);
-      assert.equal(result[0].hasOwnProperty('id'), false);
+      assert.equal(Object.prototype.hasOwnProperty.call(result[0], 'id'), false);
 
       assert.deepEqual(result[1].objectDifference.feature,
         {

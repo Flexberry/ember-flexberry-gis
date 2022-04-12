@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { moduleForComponent, test } from 'ember-qunit';
 
 moduleForComponent('flexberry-layers-intersections-panel', 'Unit | Component | flexberry layers intersections panel', {
