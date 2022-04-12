@@ -32,6 +32,7 @@ module.exports = {
     'prefer-arrow-callback': 'off',
     'func-names': ['error', 'never'],
     'no-continue': 'off',
+    'no-plusplus': [2, { allowForLoopAfterthoughts: true }],
     'no-underscore-dangle': 'off',
     'max-len': [
       'error',
