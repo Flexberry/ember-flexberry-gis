@@ -38,5 +38,5 @@ export default BaseMapTool.extend({
   */
   _disable() {
     this._super(...arguments);
-  }
+  },
 });

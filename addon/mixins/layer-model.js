@@ -48,7 +48,7 @@ export default Mixin.create({
     @method _settingsDidChange
     @private
   */
-  _settingsDidChange: on('init', observer('settings', 'map', 'map.mapLayer', function() {
+  _settingsDidChange: on('init', observer('settings', 'map', 'map.mapLayer', function () {
     const stringToDeserialize = this.get('settings');
     let settingsAsObject = {};
 

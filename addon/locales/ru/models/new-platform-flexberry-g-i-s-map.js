@@ -69,7 +69,7 @@ export default {
         __caption__: 'Граница',
       },
       picture: {
-        __caption__: 'Изображение'
+        __caption__: 'Изображение',
       },
       mapLayer: {
         __caption__: '',
@@ -130,10 +130,10 @@ export default {
             },
           },
           allowShow: {
-            __caption__: 'Показывать'
-          }
-        }
-      }
+            __caption__: 'Показывать',
+          },
+        },
+      },
     },
     MapL: {
       name: {
@@ -149,11 +149,11 @@ export default {
         __caption__: 'Зум',
       },
       public: {
-        __caption__: 'Общая'
+        __caption__: 'Общая',
       },
       picture: {
-        __caption__: 'Изображение'
-      }
+        __caption__: 'Изображение',
+      },
     },
     MapGisSearchFormL: {
       name: {

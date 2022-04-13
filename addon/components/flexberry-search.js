@@ -105,7 +105,7 @@ const FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
       if (Ember.$('.flexberry-search.ui.search').hasClass('focus')) {
         this.sendAction('focusIn');
       }
-    }
+    },
   },
 
   /**

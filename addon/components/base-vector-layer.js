@@ -1566,9 +1566,9 @@ export default BaseLayer.extend({
     @param {Object} leafletObject leaflet layer
   */
   _showLabels(layers, leafletObject) {
-    let labelSettingsString = this.get('labelSettings.labelSettingsString');
+    const labelSettingsString = this.get('labelSettings.labelSettingsString');
     if (!isNone(labelSettingsString)) {
-      let leafletMap = this.get('leafletMap');
+      const leafletMap = this.get('leafletMap');
       if (!leafletObject) {
         leafletObject = this.get('_leafletObject');
       }
@@ -1617,7 +1617,7 @@ export default BaseLayer.extend({
   */
   _addLabelsToLeafletContainer(layers, leafletObject) {
     let labelsLayer = this.get('_labelsLayer');
-    let leafletMap = this.get('leafletMap');
+    const leafletMap = this.get('leafletMap');
     if (!leafletObject) {
       leafletObject = this.get('_leafletObject');
     }

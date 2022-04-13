@@ -372,8 +372,8 @@ export default Mixin.create(SnapDraw, {
         const featureLayer = features[0];
         if (leafletLayer && featureLayer) {
           result = Object.assign({}, featureLayer.feature.properties);
-          let geoJSON = featureLayer.feature.geometry;
-          geoJSON.crs = { type: 'name', properties: { name: '' } };
+          const geoJSON = featureLayer.feature.geometry;
+          geoJSON.crs = { type: 'name', properties: { name: '', }, };
           if (crsName) {
             const NewObjCrs = this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer.feature, crsName);
             result.geometry = NewObjCrs.geometry.coordinates;

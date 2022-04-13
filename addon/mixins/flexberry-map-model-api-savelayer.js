@@ -25,7 +25,7 @@ export default Mixin.create({
     }
 
     return new Promise((resolve, reject) => {
-      let promise = new Promise((resolve, reject) => {
+      const promise = new Promise((resolve, reject) => {
         leafletObject.once('loadCompleted', () => {
           resolve();
         }).once('error', (e) => {
@@ -44,9 +44,9 @@ export default Mixin.create({
         }
 
         leafletObject.off('save:failed', saveFailed);
-        let result = {
+        const result = {
           layerModel,
-          newFeatures: data.layers
+          newFeatures: data.layers,
         };
         if (data.layers.length === 0) {
           resolve(result);

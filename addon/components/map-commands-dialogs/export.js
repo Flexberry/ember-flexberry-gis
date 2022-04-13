@@ -1312,11 +1312,11 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
       this.sendAction('beforeShow', e);
 
       // Switch scale control
-      let leafletMap = this.get('leafletMap');
-      let switchScaleControlMapName = this.get('switchScaleControlMapName');
-      if (!Ember.isNone(switchScaleControlMapName) &&
-        leafletMap.hasOwnProperty('switchScaleControl' + switchScaleControlMapName) &&
-        leafletMap['switchScaleControl' + switchScaleControlMapName].options.recalcOnZoomChange) {
+      const leafletMap = this.get('leafletMap');
+      const switchScaleControlMapName = this.get('switchScaleControlMapName');
+      if (!Ember.isNone(switchScaleControlMapName)
+        && leafletMap.hasOwnProperty(`switchScaleControl${switchScaleControlMapName}`)
+        && leafletMap[`switchScaleControl${switchScaleControlMapName}`].options.recalcOnZoomChange) {
         this.set('recalcOnZoomChange', true);
         this.set('zoomDelta', leafletMap.options.zoomDelta);
         this.set('zoomSnap', leafletMap.options.zoomSnap);
@@ -1326,9 +1326,9 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
         leafletMap.options.zoomSnap = 1;
         leafletMap.options.wheelPxPerZoomLevel = 60;
 
-        let $leafletMap = Ember.$(leafletMap._container);
-        let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
-        let $scaleControl = Ember.$('.leaflet-control-scale-line', $leafletMapControls);
+        const $leafletMap = Ember.$(leafletMap._container);
+        const $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
+        const $scaleControl = Ember.$('.leaflet-control-scale-line', $leafletMapControls);
         if ($scaleControl.length === 1) {
           Ember.$($scaleControl[0]).parent().hide();
         } else {
@@ -1348,7 +1348,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
 
       // Switch scale control
       if (this.get('recalcOnZoomChange')) {
-        let leafletMap = this.get('leafletMap');
+        const leafletMap = this.get('leafletMap');
         this.set('recalcOnZoomChange', null);
         leafletMap.options.zoomDelta = this.get('zoomDelta');
         leafletMap.options.zoomSnap = this.get('zoomSnap');
@@ -1411,11 +1411,11 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     }
 
     this.set('_mapCanBeShown', newMapCanBeShown);
-    let $leafletMap = Ember.$(leafletMap._container);
-    let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
-    let $exportScaleControl = Ember.$('.leaflet-control-scale.export', $leafletMapControls);
-    let $mainScaleControl = Ember.$('.leaflet-control-scale.main', $leafletMapControls);
-    let $scaleCotrol = Ember.$('.leaflet-control-scale-line', $leafletMapControls);
+    const $leafletMap = Ember.$(leafletMap._container);
+    const $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
+    const $exportScaleControl = Ember.$('.leaflet-control-scale.export', $leafletMapControls);
+    const $mainScaleControl = Ember.$('.leaflet-control-scale.main', $leafletMapControls);
+    const $scaleCotrol = Ember.$('.leaflet-control-scale-line', $leafletMapControls);
 
     if (newMapCanBeShown) {
       this._showLeafletMap();
@@ -1503,11 +1503,11 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @method _activeItemDropdownScale
   */
   _activeItemDropdownScale() {
-    let leafletMap = this.get('leafletMap');
-    let $leafletMap = Ember.$(leafletMap._container);
-    let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
-    let $chooseScale = Ember.$('.map-control-scalebar-ratiomenu text', $leafletMapControls).text();
-    let $scaleItems = Ember.$('.map-control-scalebar-ratiomenu .map-control-scalebar-ratiomenu-item.item', $leafletMapControls);
+    const leafletMap = this.get('leafletMap');
+    const $leafletMap = Ember.$(leafletMap._container);
+    const $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
+    const $chooseScale = Ember.$('.map-control-scalebar-ratiomenu text', $leafletMapControls).text();
+    const $scaleItems = Ember.$('.map-control-scalebar-ratiomenu .map-control-scalebar-ratiomenu-item.item', $leafletMapControls);
     Ember.$.each($scaleItems, (i, item) => {
       if (Ember.$(item).text().replaceAll('\'', '') === $chooseScale) {
         Ember.$(item).addClass('active selected');

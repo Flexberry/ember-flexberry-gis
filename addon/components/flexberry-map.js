@@ -201,7 +201,7 @@ const FlexberryMapComponent = Component.extend(
   */
     wheelPxPerZoomLevel: 60,
 
-  /**
+    /**
     Forces the map's zoom level to always be a multiple of this.
 
     @property zoomSnap

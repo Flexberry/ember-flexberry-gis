@@ -535,10 +535,10 @@ const FlexberryMaplayersComponent = Component.extend(
 
       onAllLayerVisibilityChanged(e) {
         this.set('allLayerVisible', !this.get('allLayerVisible'));
-        let visibility = this.get('allLayerVisible');
-        let layers = this.get('layers');
-        let setVisibility = function(layers) {
-          layers.forEach(layer => {
+        const visibility = this.get('allLayerVisible');
+        const layers = this.get('layers');
+        const setVisibility = function (layers) {
+          layers.forEach((layer) => {
             layer.set('visibility', visibility);
             if (layer.get('layers')) {
               setVisibility(layer.get('layers'));

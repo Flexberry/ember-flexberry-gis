@@ -88,7 +88,7 @@ module('Unit | Mixin | flexberry-map-model-api getLayerObjectOptions', function 
       assert.deepEqual(options.shape, {
         type: 'MultiPolygon',
         coordinates: coordinates32640,
-        crs: { type: 'name', properties: { name: 'EPSG:32640' } }
+        crs: { type: 'name', properties: { name: 'EPSG:32640', }, },
       });
       assert.ok(toProjectedGeoJSONStub.calledWith(crs32640));
       toProjectedGeoJSONStub.restore();
@@ -138,7 +138,7 @@ module('Unit | Mixin | flexberry-map-model-api getLayerObjectOptions', function 
         type: 'MultiPolygon',
         coordinates: coordinates4326,
         geometry: coordinates4326,
-        crs: { type: 'name', properties: { name: 'EPSG:4326' } }
+        crs: { type: 'name', properties: { name: 'EPSG:4326', }, },
       });
       done();
       ownerStub.restore();

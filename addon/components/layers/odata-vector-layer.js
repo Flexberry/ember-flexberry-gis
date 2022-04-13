@@ -40,7 +40,7 @@ import {
   GeometryPredicate,
   NotPredicate,
   DatePredicate,
-  IsOfPredicate,
+  IsOfPredicate
 } from 'ember-flexberry-data/query/predicate';
 
 import QueryBuilder from 'ember-flexberry-data/query/builder';
@@ -1164,7 +1164,7 @@ export default BaseVectorLayer.extend({
         .top(1)
         .count();
 
-      let filter = this.addCustomFilter(null);
+      const filter = this.addCustomFilter(null);
       if (!isNone(filter)) {
         queryBuilder.where(filter);
       }
@@ -1176,9 +1176,9 @@ export default BaseVectorLayer.extend({
   },
 
   customFilter: computed('layerModel.archTime', 'hasTime', 'modelName', function () {
-    let predicates = [];
+    const predicates = [];
     if (this.get('hasTime')) {
-      let time = this.get('layerModel.archTime');
+      const time = this.get('layerModel.archTime');
       let formattedTime;
       if (isBlank(time) || time === 'present' || isNone(time)) {
         formattedTime = moment().toISOString();
@@ -1194,16 +1194,16 @@ export default BaseVectorLayer.extend({
     if (predicates.length > 0) {
       if (predicates.length === 1) {
         return predicates[0];
-      } else {
-        return new ComplexPredicate(Condition.And, ...predicates);
       }
+
+      return new ComplexPredicate(Condition.And, ...predicates);
     }
 
     return null;
   }),
 
   addCustomFilter(filter) {
-    let customFilter = this.get('customFilter');
+    const customFilter = this.get('customFilter');
 
     if (!isNone(customFilter) && !isNone(filter)) {
       return new ComplexPredicate(Condition.And, filter, customFilter);
@@ -1277,7 +1277,7 @@ export default BaseVectorLayer.extend({
                   .skip(skip)
                   .orderBy('id');
 
-                let customFilter = this.addCustomFilter(null);
+                const customFilter = this.addCustomFilter(null);
                 if (!isNone(customFilter)) {
                   queryBuilder.where(customFilter);
                 }
@@ -1295,7 +1295,7 @@ export default BaseVectorLayer.extend({
                   .skip(skip)
                   .orderBy('id');
 
-                let customFilter = this.addCustomFilter(null);
+                const customFilter = this.addCustomFilter(null);
                 if (!isNone(customFilter)) {
                   queryBuilder.where(customFilter);
                 }
@@ -1396,7 +1396,7 @@ export default BaseVectorLayer.extend({
 
         promise = this._downloadFeaturesWithOrNotFilter(leafletObject, obj, filter);
       } else if (showExisting || (showExisting && showLayerObjects)) {
-        let layerFilter = !Ember.isNone(this.get('filter')) ? this.get('filter') : null;
+        const layerFilter = !Ember.isNone(this.get('filter')) ? this.get('filter') : null;
         promise = this._downloadFeaturesWithOrNotFilter(leafletObject, this.get('_adapterStoreModelProjectionGeom'), layerFilter);
       } else {
         promise = resolve('The layer does not require loading');
@@ -1502,21 +1502,21 @@ export default BaseVectorLayer.extend({
     const leafletObject = this.get('_leafletObject');
     const { editTools, } = leafletObject.leafletMap;
 
-    let featuresIds = [];
-    let changes = leafletObject.models.filter((item) => true); // for check empty
+    const featuresIds = [];
+    const changes = leafletObject.models.filter((item) => true); // for check empty
     if (!Ember.isEmpty(changes)) {
       Object.entries(leafletObject.models)
-        .filter((item) =>  { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))); })
-        .map((item)=> item[1])
+        .filter((item) => Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))))
+        .map((item) => item[1])
         .forEach((model, index) => {
           if (model instanceof Ember.Object) {
-            let layer = Object.values(leafletObject._layers).find((layer) => {
+            const layer = Object.values(leafletObject._layers).find((layer) => {
               if (layer.model.get('id') === model.get('id')) {
                 return layer;
               }
             });
 
-            let dirtyType = model.get('dirtyType');
+            const dirtyType = model.get('dirtyType');
             if (dirtyType === 'created') {
               if (leafletObject.hasLayer(layer)) {
                 leafletObject.removeLayer(layer);
@@ -1524,10 +1524,10 @@ export default BaseVectorLayer.extend({
 
               delete leafletObject.models[index];
               if (editTools.featuresLayer.getLayers().length !== 0) {
-                let editorLayerId = editTools.featuresLayer.getLayerId(layer);
-                let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+                const editorLayerId = editTools.featuresLayer.getLayerId(layer);
+                const featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
                 if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
-                  let editLayer = featureLayer.editor.editLayer;
+                  const { editLayer, } = featureLayer.editor;
                   editTools.editLayer.removeLayer(editLayer);
                   editTools.featuresLayer.removeLayer(layer);
                 }
@@ -1535,7 +1535,7 @@ export default BaseVectorLayer.extend({
             } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
               if (!Ember.isNone(layer)) {
                 if (!Ember.isNone(layer.editor)) {
-                  let editLayer = layer.editor.editLayer;
+                  const { editLayer, } = layer.editor;
                   editTools.editLayer.removeLayer(editLayer);
                 }
 

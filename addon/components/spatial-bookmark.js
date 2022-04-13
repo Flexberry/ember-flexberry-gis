@@ -16,7 +16,7 @@ const Validations = buildValidations({
     validator('presence', true),
     validator('length', {
       min: 1,
-      max: 200
+      max: 200,
     })
   ],
 });
@@ -113,7 +113,7 @@ const SpatialBookmarkComponent = Component.extend(Validations, {
     addBookmark() {
       if (!this.get('validations.isValid')) {
         return;
-      };
+      }
 
       const map = this.get('leafletMap');
       const service = this.get('local-storage-service');

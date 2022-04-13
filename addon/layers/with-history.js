@@ -20,11 +20,11 @@ export default CombineLayer.extend({
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = this._super(...arguments);
+    const settings = this._super(...arguments);
     $.extend(true, settings, {
       type: undefined,
       historyLayer: undefined,
     });
     return settings;
-  }
+  },
 });

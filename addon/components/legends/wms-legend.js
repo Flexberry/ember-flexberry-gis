@@ -31,7 +31,7 @@ export default BaseLegendComponent.extend({
     'layer.settingsAsObject.legendSettings.format',
     'layer.settingsAsObject.legendSettings.layers',
     'layer.settingsAsObject.styles',
-    function() {
+    function () {
       const legends = A();
       const layerSettings = this.get('layer.settingsAsObject') || {};
 

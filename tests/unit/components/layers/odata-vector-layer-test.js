@@ -957,7 +957,7 @@ test('test method save() no modified objects', function (assert) {
   });
 });
 
-test('test method save() with objects', function(assert) {
+test('test method save() with objects', function (assert) {
   assert.expect(18);
   const done = assert.async(1);
   const component = this.subject(param);
@@ -1211,7 +1211,7 @@ test('test method clearChanges() with no changes', function (assert) {
   });
 });
 
-test('test method clearChanges() with create', function(assert) {
+test('test method clearChanges() with create', function (assert) {
   assert.expect(9);
   const done = assert.async(1);
   const component = this.subject(param);

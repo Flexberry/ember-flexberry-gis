@@ -71,7 +71,7 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
         }
 
         leafletMap.fire('flexberry-map:commands:choose', {
-          mapCommand: mapCommand
+          mapCommand,
         });
 
         // Execute specified map-command.

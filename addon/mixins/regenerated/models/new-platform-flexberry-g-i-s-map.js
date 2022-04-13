@@ -55,7 +55,7 @@ export const Model = Mixin.create({
   editTime: DS.attr('date'),
   editor: DS.attr('string'),
   picture: DS.attr('string'),
-  mapLayer: DS.hasMany('new-platform-flexberry-g-i-s-map-layer', { inverse: 'map', async: false }),
+  mapLayer: DS.hasMany('new-platform-flexberry-g-i-s-map-layer', { inverse: 'map', async: false, }),
 });
 
 export const ValidationRules = {
@@ -72,7 +72,7 @@ export const ValidationRules = {
       validator('ds-error'),
       validator('presence', true)
     ],
-  }
+  },
 };
 
 export const defineProjections = function (modelClass) {
@@ -118,14 +118,14 @@ export const defineProjections = function (modelClass) {
       coordinateReferenceSystem: attr('Система координат'),
       boundingBox: attr('Граница'),
       parent: belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
-      }, { hidden: true }),
+      }, { hidden: true, }),
       map: belongsTo('new-platform-flexberry-g-i-s-map', 'Карта', {
-      }, { hidden: true }),
+      }, { hidden: true, }),
       layerLink: hasMany('new-platform-flexberry-g-i-s-layer-link', '', {
         mapObjectSetting: belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Тип', {
-          typeName: attr('Тип объекта', { hidden: true }),
-          listForm: attr('Списковая форма', { hidden: true }),
-          editForm: attr('Форма редактирования', { hidden: true })
+          typeName: attr('Тип объекта', { hidden: true, }),
+          listForm: attr('Списковая форма', { hidden: true, }),
+          editForm: attr('Форма редактирования', { hidden: true, }),
         }),
       }),
     }),

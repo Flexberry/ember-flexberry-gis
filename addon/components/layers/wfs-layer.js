@@ -410,14 +410,14 @@ export default BaseVectorLayer.extend({
           wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);
 
           // this.get('_leafletObject') is null at this moment. _layers hasn't pane and renderer. For marker layer this is critical (ignore zoom), but for polygon layer doesn't.
-          let featureLayers = Object.values(wfsLayer._layers);
+          const featureLayers = Object.values(wfsLayer._layers);
           this._addLayersOnMap(featureLayers);
-          let load = this.continueLoad(wfsLayer);
+          const load = this.continueLoad(wfsLayer);
           if (options.showExisting) {
-            let loaded = {
-              layers: featureLayers
+            const loaded = {
+              layers: featureLayers,
             };
-            let promise = this._featuresProcessCallback(loaded.layers, wfsLayer);
+            const promise = this._featuresProcessCallback(loaded.layers, wfsLayer);
             if (loaded.results && Ember.isArray(loaded.results)) {
               loaded.results.push(promise);
             }
@@ -824,7 +824,7 @@ export default BaseVectorLayer.extend({
         leafletObject.loadFeatures(filter);
         needPromise = true;
       } else if (showExisting && isEmpty(Object.values(leafletObject._layers))) {
-        let layerFilter = !isNone(this.get('filter')) ? this.get('filter') : null;
+        const layerFilter = !isNone(this.get('filter')) ? this.get('filter') : null;
         leafletObject.loadFeatures(layerFilter);
         needPromise = true;
       } else if (leafletObject.statusLoadLayer) {

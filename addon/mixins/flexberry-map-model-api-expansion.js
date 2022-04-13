@@ -59,7 +59,7 @@ export default Mixin.create(rhumbOperations, {
     const newObjs = geoJSON.getLayers();
 
     if (newObjs.length > 0) {
-      const e = { layers: newObjs, results: A() };
+      const e = { layers: newObjs, results: A(), };
       leafletObject.fire('load', e);
 
       return new Promise((resolve, reject) => {
@@ -68,9 +68,9 @@ export default Mixin.create(rhumbOperations, {
           resolve(newObjs);
         });
       });
-    } else {
-      throw new Error('Can not create object from geojson');
     }
+
+    throw new Error('Can not create object from geojson');
   },
 
   /**

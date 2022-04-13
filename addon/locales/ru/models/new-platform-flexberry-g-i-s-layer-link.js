@@ -133,5 +133,5 @@ export default {
     layer: {
       __caption__: 'Layer is required',
     },
-  }
+  },
 };

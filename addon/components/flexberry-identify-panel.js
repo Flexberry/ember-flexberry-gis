@@ -310,11 +310,11 @@ const FlexberryIdentifyPanelComponent = Component.extend({
     @property bufferUnitsList
     @type Object
   */
-  bufferUnitsList: computed('i18n.locale', function() {
-    let i18n = this.get('i18n');
+  bufferUnitsList: computed('i18n.locale', function () {
+    const i18n = this.get('i18n');
     return {
       meters: i18n.t('components.flexberry-identify-panel.buffer.units.meters'),
-      kilometers: i18n.t('components.flexberry-identify-panel.buffer.units.kilometers')
+      kilometers: i18n.t('components.flexberry-identify-panel.buffer.units.kilometers'),
     };
   }),
 
@@ -343,11 +343,11 @@ const FlexberryIdentifyPanelComponent = Component.extend({
     @type String
     @default 'kilometers'
   */
-  bufferUnits: computed('bufferUnitsValue', function() {
+  bufferUnits: computed('bufferUnitsValue', function () {
     return this.get('bufferUnitsValue');
   }),
 
-  bufferUnitsValue: computed(function() {
+  bufferUnitsValue: computed(function () {
     return this.get('bufferUnitsList.kilometers');
   }),
 

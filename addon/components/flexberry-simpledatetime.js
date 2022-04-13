@@ -46,6 +46,6 @@ export default SimpleDatetime.extend({
         flatpickr.setDate(value, false);
         flatpickr.clear();
       }
-    }
-  }
+    },
+  },
 });

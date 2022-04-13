@@ -29,8 +29,8 @@ export default BaseLayer.extend({
   */
   _pane: Ember.computed('layerModel.id', function () {
     // to switch combine-layer
-    let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
-    return 'groupLayer' + this.get('layerModel.id') + layerId;
+    const layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
+    return `groupLayer${this.get('layerModel.id')}${layerId}`;
   }),
 
   /**
@@ -39,8 +39,8 @@ export default BaseLayer.extend({
     @readOnly
   */
   _renderer: Ember.computed('_pane', function () {
-    let pane = this.get('_pane');
-    return L.canvas({ pane: pane });
+    const pane = this.get('_pane');
+    return L.canvas({ pane, });
   }),
 
   /**
@@ -51,11 +51,11 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
-    let leafletMap = this.get('leafletMap');
-    let layer = L.layerGroup();
+    const leafletMap = this.get('leafletMap');
+    const layer = L.layerGroup();
 
-    let thisPane = this.get('_pane');
-    let pane = leafletMap.getPane(thisPane);
+    const thisPane = this.get('_pane');
+    const pane = leafletMap.getPane(thisPane);
     if (!pane || Ember.isNone(pane)) {
       leafletMap.createPane(thisPane);
       layer.options.pane = thisPane;

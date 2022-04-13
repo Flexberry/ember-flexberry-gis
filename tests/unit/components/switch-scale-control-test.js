@@ -15,14 +15,14 @@ test('it should return L.Control.SwitchScaleControl from createControl', functio
   assert.ok(control instanceof L.Control.SwitchScaleControl);
 });
 
-test('it should set switchScaleControl on leafletMap', function(assert) {
+test('it should set switchScaleControl on leafletMap', function (assert) {
   assert.expect(6);
-  let leafletMap = L.map(document.createElement('div'));
-  let component = this.subject({ leafletMap: leafletMap });
+  const leafletMap = L.map(document.createElement('div'));
+  const component = this.subject({ leafletMap, });
 
-  let createControlSpy = sinon.spy(component, 'createControl');
-  let afterCreateControlSpy = sinon.spy(component, 'afterCreateControl');
-  let addControlSpy = sinon.spy(leafletMap, 'addControl');
+  const createControlSpy = sinon.spy(component, 'createControl');
+  const afterCreateControlSpy = sinon.spy(component, 'afterCreateControl');
+  const addControlSpy = sinon.spy(leafletMap, 'addControl');
 
   // Renders the component to the page.
   component.initControl();
@@ -39,22 +39,22 @@ test('it should set switchScaleControl on leafletMap', function(assert) {
   addControlSpy.restore();
 });
 
-test('it should call _restore switchScaleControl', function(assert) {
+test('it should call _restore switchScaleControl', function (assert) {
   assert.expect(9);
-  let leafletMap = L.map(document.createElement('div'), {
+  const leafletMap = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
-    zoom: 13
+    zoom: 13,
   });
-  let component = this.subject({ leafletMap: leafletMap });
+  const component = this.subject({ leafletMap, });
 
   // Renders the component to the page.
   component.initControl();
 
-  let control = component.get('control');
-  let onRemoveSpy = sinon.spy(control, 'onRemove');
-  let _updateRoundSpy = sinon.spy(control, '_updateRound');
-  let _updateSpy = sinon.spy(control, '_update');
-  let onSpy = sinon.spy(leafletMap, 'on');
+  const control = component.get('control');
+  const onRemoveSpy = sinon.spy(control, 'onRemove');
+  const _updateRoundSpy = sinon.spy(control, '_updateRound');
+  const _updateSpy = sinon.spy(control, '_update');
+  const onSpy = sinon.spy(leafletMap, 'on');
 
   control._restore();
 

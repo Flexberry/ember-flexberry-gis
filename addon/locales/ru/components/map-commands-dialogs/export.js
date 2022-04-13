@@ -17,7 +17,7 @@ export default {
     caption: 'Отмена',
   },
   'caption-settings-tab': {
-    'caption': 'Настройка печати',
+    caption: 'Настройка печати',
     'caption-textbox': {
       caption: 'Заголовок карты',
     },

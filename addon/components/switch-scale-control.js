@@ -47,17 +47,17 @@ export default BaseControl.extend({
   },
 
   afterCreateControl() {
-    let leafletMap = this.get('leafletMap');
-    let control = this.get('control');
+    const leafletMap = this.get('leafletMap');
+    const control = this.get('control');
     control._restore = this.get('_restore').bind(this);
-    Ember.set(leafletMap, 'switchScaleControl' + control.options.className, control);
+    Ember.set(leafletMap, `switchScaleControl${control.options.className}`, control);
   },
 
   _restore() {
-    let leafletMap = this.get('leafletMap');
-    let control = this.get('control');
+    const leafletMap = this.get('leafletMap');
+    const control = this.get('control');
     control.onRemove(leafletMap);
-    let options = control.options;
+    const { options, } = control;
     if (options.recalcOnZoomChange) {
       if (control.options.recalcOnPositionChange) {
         leafletMap.on(options.updateWhenIdle ? 'moveend' : 'move', control._update, control);
@@ -70,5 +70,5 @@ export default BaseControl.extend({
       leafletMap.on(options.updateWhenIdle ? 'zoomend' : 'zoom', control._updateRound, control);
       control._updateRound();
     }
-  }
+  },
 });
