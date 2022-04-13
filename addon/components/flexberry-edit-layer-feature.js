@@ -63,6 +63,16 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   geoproviderMode: true,
 
   /**
+    Indicator for adding a layer to the map for edit mode.
+    When a layer is not activated in the layer tree
+
+    @property isLayerCopy
+    @type boolean
+    @default false
+  */
+  isLayerCopy: false,
+
+  /**
     Edit|Create|Union|Split|Diff|Import
   */
   mode: null,
@@ -203,7 +213,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
           let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
 
+          // Когда слой не активирован в дереве слоев, его необходимо добавить на leafletMap,
+          // далее включить режим редактирования слоя
           if (!leafletMap.hasLayer(layer)) {
+            this.set('isLayerCopy', true);
             leafletMap.addLayer(layer);
           }
 
@@ -670,6 +683,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             leafletObject.editLayer(layer);
           }
 
+          //Удаление слоя с карты, который был добавлен для режима редактирования
+          if (this.get('isLayerCopy') && leafletMap.hasLayer(layer)) {
+            leafletMap.removeLayer(layer);
+          }
+
           delete latlngs[index];
           delete layers[index];
           delete datas[index];
@@ -708,6 +726,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
     this.set('latlngs', null);
     this.set('layers', null);
+    this.set('isLayerCopy', false);
 
     this.set('data', null);
     this.set('initialData', null);
