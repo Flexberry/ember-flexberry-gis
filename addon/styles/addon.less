@@ -71,3 +71,31 @@
 .hidden {
   display: none !important;
 }
+
+.leaflet-marker-icon.label.point  {
+  display: flex;
+
+  &.over {
+    align-items: end;
+  }
+
+  &.along {
+    align-items: center;
+  }
+
+  &.under {
+    align-items: start;
+  }
+
+  &.left {
+    justify-content: end;
+  }
+
+  &.right {
+    justify-content: start;
+  }
+
+  &.middle {
+    justify-content: center;
+  }
+}
