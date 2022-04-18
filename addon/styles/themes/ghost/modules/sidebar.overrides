@@ -9,7 +9,7 @@
 
   .ui.right.sidebar.tabbar {
     .ui.tab.createOrEditObject {
-      padding: 10px 10px;
+      padding: 10px 0px;
 
       .create-edit-block-attributes {
         padding-top: 20px;
@@ -31,7 +31,6 @@
       .create-edit-block-title {
         h3 {
           position: initial;
-          font-size: 18px;
           margin: 10px 0 20px 0;
         }
       }
@@ -42,6 +41,7 @@
         position: relative;
         overflow-y: scroll;
         margin-top: 0px;
+        padding: 0 10px;
 
         .ui.button {
           &.positive:hover {
@@ -77,7 +77,7 @@
               width: 40px;
               height: 40px;
               padding: 0;
-              line-height: 40px;
+              line-height: 36px;
             }
           }
 
@@ -201,6 +201,7 @@
         .editfeature-tab-nav-panel {
           .editfeature-tab-nav-panel-tabs {
             margin-bottom: 0px;
+            min-height: 0;
             .editfeature.tab {
               border-color: @defaultBorderColor;
               color: @primaryColor;
@@ -223,9 +224,10 @@
                   background-color: @white;
                   display: block;
                   height: 7px;
-                  width: 100%;
+                  width: calc(~'100% + 7px');
                   bottom: -7px;
                   top: auto;
+                  left: 0;
                 }
               }
             }
@@ -248,7 +250,7 @@
 
         .create-edit-block-data > a {
           color: @textColor;
-          font-size: 18px;
+          font-size: 24px;
 
           i.icon.caret:before {
             color: @textColor;
@@ -438,18 +440,10 @@
             font-size: 20px;
           }
         }
-        // i:not(.more) {
-        //   margin-right: 10px;
-        //   margin-left: 0;
-        // }
+
         [class^="icon-guideline-"] {
           font-size: 16px;
         }
-        .flexberry-maplayer-add-button {
-          margin-right: 17px;
-          margin-left: -5px !important;
-        }
-
       }
     }
   }
@@ -687,6 +681,7 @@
   .compare-main-panel {
     height: ~"calc(100% - 30px)";
     overflow: auto;
+    font-size: 14px;
   }
 }
 
@@ -873,6 +868,12 @@
           margin: 0;
         }
       }
+
+      .icon-guideline-cross-r {
+        font-size: 18px;
+        color: #848E99;
+      }
+
       .icon {
         &.remove:before {
           content: '\e806';

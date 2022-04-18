@@ -147,7 +147,12 @@ export default Ember.Component.extend({
     @readonly
    */
   expanded: Ember.computed('infoExpanded', '_infoExpanded', function () {
-    return this.get('infoExpanded') || this.get('_infoExpanded');
+    if (this.get('infoExpanded')) {
+      this.set('infoExpanded', false);
+      this.set('_infoExpanded', true);
+    }
+
+    return this.get('_infoExpanded');
   }),
 
   /**
@@ -269,7 +274,7 @@ export default Ember.Component.extend({
       let component = this.get('element');
       let moreButton = component.getElementsByClassName('icon item more');
       let elements = component.getElementsByClassName('more submenu hidden');
-      openCloseSubmenu(this, moreButton, elements, false, 1, 8);
+      openCloseSubmenu(this, moreButton, elements, 4, 0);
     },
     /**
       Performs row editing.

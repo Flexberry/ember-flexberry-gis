@@ -131,7 +131,7 @@
   .ui.icon.button:not(.fluid) {
     border: @buttonMenuBorder;
     box-shadow: @defaultBoxShadow;
-    width: 39px;
+    width: 40px;
     height: 40px;
     padding: 7px 0;
     margin: 0;
@@ -159,7 +159,7 @@
     box-shadow: none;
     width: 30px;
     height: 30px;
-    padding: 7px 0;
+    padding: 0;
     margin: 0 0 0 .25em;
   }
 

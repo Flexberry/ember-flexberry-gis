@@ -3,7 +3,7 @@
     <div class="ui small active loader"></div>
   {{/if}}
   <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo" on="click"}}>
-    <i class="icon-guideline-navigate-arrow"></i>
+    <i class="icon-guideline-navigate-arrow{{if expanded '-down'}}"></i>
   </a>
   {{#if favoriteMode}}
     {{flexberry-ddau-checkbox

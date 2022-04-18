@@ -218,16 +218,19 @@ i.icon.move:before {
   content: "\f047";
 }
 
-i.icon.movexy:before {
-  font-family: Icons;
-  content: "\f047";
+i.movexy {
+  position: relative;
 }
 
-i.icon.movexy:after {
+i.movexy::after {
   content: "xy";
-  font-size: 12px;
-  margin-left: -2px;
-  vertical-align: sub;
+  font-size: 10px;
+  font-family: 'GOSTUI2';
+  text-transform: uppercase;
+  text-shadow: 1px 0 0px #fff, 0 1px 0px #fff, -1px 0 0px #fff, 0 -1px 0px #fff;
+  position: absolute;
+  bottom: -0.5px;
+  right: -1px;
 }
 
 i.icon.checkall:before {

@@ -3,6 +3,7 @@
   min-height: @maplayersCheckboxSize;
 
   label {
+    line-height: @maplayersCheckboxSize;
     &:before,
     &:after {
       width: @maplayersCheckboxSize;
@@ -28,6 +29,17 @@
     border-color: @primaryColor;
   }
 }
+
+.ui.disabled.checkbox label {
+  opacity: 1;
+  pointer-events: painted;
+}
+
+.ui.disabled.checkbox label::before,
+.ui.disabled.checkbox.group:before {
+  border-color: fade(@solidBorderColor, 50%);
+}
+
 
 .bottom-attributes-panel .ui.table .ui.checkbox {
   vertical-align: middle;

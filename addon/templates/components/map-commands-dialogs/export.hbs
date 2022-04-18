@@ -28,6 +28,17 @@
           {{_options.caption}}
         </p>
         <div class="{{flexberryClassNames.sheetOfPaperMap}}" style={{_mapPreviewStyle}}>
+          {{#if _mapCanBeShown}}
+            {{#if _options.scaleControl}}
+              {{switch-scale-control
+                leafletMap=leafletMap
+                updateWhenIdle=false
+                scales=scalesForExport
+                recalcOnZoomChange=false
+              }}
+              {{scale-control leafletMap=leafletMap imperial=false}}
+            {{/if}}
+          {{/if}}
         </div>
         <div class="{{flexberryClassNames.legendControlMap}} {{if _options.legendUnderMap "" "hidden"}}" style={{_mapCaptionPreviewStyle}}>
           {{#if _mapCanBeShown}}
@@ -59,7 +70,7 @@
       <div class="{{flexberryClassNames.pagingColumn}}">
         <div class="field">
           {{flexberry-button
-            class=(if (eq _options.pageNumber "1") "active" "")
+            class=(concat "primary" (unless (eq _options.pageNumber "1") " basic"))
             caption="1"
             click=(action "onPageChange" "1")
           }}
@@ -67,7 +78,7 @@
         {{#if _options.legendSecondPage}}
           <div class="field">
             {{flexberry-button
-              class=(if (eq _options.pageNumber "2") "active" "")
+              class=(concat "primary" (unless (eq _options.pageNumber "2") " basic"))
               caption="2"
               click=(action "onPageChange" "2")
             }}

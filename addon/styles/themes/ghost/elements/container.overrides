@@ -59,13 +59,13 @@
     .leaflet-control-scale {
       margin-bottom: 8px;
       margin-left: 0px;
-      &.map-control-scalebar {
+      &.map-control-scalebar, &.main, &.export {
         margin-bottom: 0px;
       }
     }
 
     .leaflet-control-scale-line,
-    .map-control-scalebar-ratiomenu {
+    .map-control-scalebar-ratiomenu, .main-ratiomenu, .export-ratiomenu {
       width: 90px !important;
       height: 16px;
       background: #ffffff;
@@ -115,6 +115,10 @@
   }
 }
 
+.leaflet-bottom.leaflet-left .main-ratiomenu.dropdown .menu .item {
+  color: @textColor;
+}
+
 /* minimap-drag-panel*/
 div.minimap-drag-panel {
   border: @defaultGrayBorder;
@@ -123,9 +127,6 @@ div.minimap-drag-panel {
   width: 201px;
   height: 179px;
   padding: 25px 11px 10px 11px;
-  .flexberry-minimap-close i.icon.close:before {
-    font-size: 13px;
-  }
 
   .leaflet-control-minimap {
     border: @defaultGrayBorder;
@@ -142,8 +143,7 @@ div.measure-drag-panel {
   height: 90px;
 
   .measure-map-tool-panel-title {
-    font-size: 18px;
-    text-transform: uppercase;
+    font-size: 24px;
     padding: 4px 15px;
   }
 
@@ -158,7 +158,7 @@ div.measure-drag-panel {
       box-shadow: @defaultBoxShadow;
       width: 40px;
       height: 40px;
-      padding: 8px;
+      padding: 7px;
 
       i.circle.icon:before {
         content: "\E82B";
@@ -387,8 +387,7 @@ div.bottompanel-wrapper {
         padding-right: 60px;
 
         .bottompanel-tab-nav-panel-tabs .item {
-          font-size: 18px;
-          text-transform: uppercase;
+          font-size: 24px;
           height: 44px;
           padding: 8px 11px 8px 12px;
           margin-top: 8px;
@@ -444,9 +443,6 @@ div.bottompanel-wrapper {
             height: 40px;
             margin: 0 20px 0 0;
             vertical-align: bottom;
-            &:hover {
-              background: @white;
-            }
           }
 
           & > label {
@@ -539,6 +535,7 @@ div.bottompanel-wrapper {
 
           .flexberry-geometry-buffer {
             border: @defaultGrayBorder;
+            background-color: @inputBackground;
 
             i.icon.erase {
               margin-left: -3px;
@@ -606,12 +603,10 @@ div.bottompanel-wrapper {
             }
 
             & > div {
-              background-color: @inputBackground;
-              line-height: 40px;
               margin: 0;
               width: 100%;
               text-align: center;
-              line-height: 40px;
+              line-height: 38px;
               > i.icon {
                 margin: 0;
                 width: 100%;
@@ -628,7 +623,7 @@ div.bottompanel-wrapper {
       }
 
       .flexberry-table-wrapper {
-          height: ~"calc(100% - 85px)";
+          height: ~"calc(100% - 120px)";
           padding: 0 10px 10px 0;
 
           tbody {
@@ -641,6 +636,36 @@ div.bottompanel-wrapper {
       .tab.layers-attributes-segment,
       .tab.layers-attributes-segment > div {
           height: 100%;
+      }
+
+      .layers-attributes-tab-container {
+        .ui.basic.buttons {
+          border: none;
+          .button {
+            font-size: 18px;
+            color: #848E99!important;
+            border: none;
+            &:first-child {
+              padding-left: 0.3125em!important;
+            }
+          }
+          .active.button {
+            background: none!important;
+            color: @primaryColor!important;
+          }
+        }
+        .next-page-button:before {
+          content: "\e81b";
+          font-family: 'Crimean';
+          font-size: 14px;
+          opacity: 1;
+        }
+        .prev-page-button:before {
+          content: "\e81a";
+          font-family: 'Crimean';
+          font-size: 14px;
+          opacity: 1;
+        }
       }
 
       .layers-attributes-segment {

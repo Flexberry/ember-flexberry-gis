@@ -135,7 +135,7 @@
       box-shadow: none;
 
       .export-buttons {
-        padding-top: 50px;
+        padding-top: 20px;
         display: flex;
         justify-content: center;
       }
@@ -195,9 +195,6 @@
     }
 
     .flexberry-export-map-command-dialog-paging-column {
-      .ui.button.active{
-        border: 1px solid @mediumbluecolor;
-      }
 
       display: block;
 

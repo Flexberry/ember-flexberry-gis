@@ -371,12 +371,6 @@
             width: 200px;
             text-align: left;
           }
-          .flexberry-maplayer-add-button {
-            padding-left: 1px;
-            i.plus.icon {
-              margin-right: 13px;
-            }
-          }
         }
       }
 
@@ -486,7 +480,7 @@
             .editfeature.tab {
               border: 1px solid #b1cae8;
               border-radius: @defaultBorderRadius;
-              padding: 8px;
+              padding: 7px;
               margin-right: 10px;
               height: 40px;
 
@@ -500,7 +494,7 @@
                 border-bottom-right-radius: 0px !important;
                 border-bottom-left-radius: 0px !important;
                 border-bottom: 1px solid @white;
-                height: 51px;
+                height: 50px;
                 padding-bottom: 19px;
                 z-index: 1;
               }
@@ -533,7 +527,7 @@
         position: absolute;
         bottom: 0px;
         width: @visibleCreateEditBlockWidth;
-        padding: 10px 0;
+        padding: 10px 10px;
       }
 
       .create-edit-block-attributes {
