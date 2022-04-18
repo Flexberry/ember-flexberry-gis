@@ -12,6 +12,8 @@ let leafletMap;
 moduleForComponent('base-vector-layer', 'Unit | Component | base-vector-layer', {
   unit: true,
   needs: [
+    'service:i18n',
+    'service:local-storage',
     'service:map-api',
     'service:layers-styles-renderer',
     'config:environment',

@@ -4,6 +4,10 @@ import sinon from 'sinon';
 
 moduleForComponent('base-control', 'Unit | Component | base control', {
   unit: true,
+  needs: [
+    'service:i18n',
+    'service:local-storage'
+  ],
 });
 
 test('it should call leafletMap.addControl method on initControl', function (assert) {

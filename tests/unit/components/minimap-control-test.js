@@ -3,6 +3,10 @@ import { moduleForComponent, test } from 'ember-qunit';
 
 moduleForComponent('minimap-control', 'Unit | Component | minimap control', {
   unit: true,
+  needs: [
+    'service:i18n',
+    'service:local-storage'
+  ],
 });
 
 test('it should return L.Control.MiniMap from createControl', function (assert) {

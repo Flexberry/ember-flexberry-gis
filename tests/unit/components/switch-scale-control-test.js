@@ -4,6 +4,10 @@ import sinon from 'sinon';
 
 moduleForComponent('switch-scale-control', 'Unit | Component | switch scale control', {
   unit: true,
+  needs: [
+    'service:i18n',
+    'service:local-storage'
+  ],
 });
 
 test('it should return L.Control.SwitchScaleControl from createControl', function (assert) {

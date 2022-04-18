@@ -23,19 +23,19 @@ const getBounds = function (polygon) {
   const boundingBoxCoords = get(boundingBox, 'coordinates.0') || [];
   boundingBoxCoords.forEach((coordinate) => {
     if (coordinate[0] > maxLng || isNone(maxLng)) {
-      maxLng = coordinate[0];
+      [maxLng] = coordinate;
     }
 
     if (coordinate[0] < minLng || isNone(minLng)) {
-      minLng = coordinate[0];
+      [minLng] = coordinate;
     }
 
     if (coordinate[1] > maxLat || isNone(maxLat)) {
-      maxLat = coordinate[1];
+      [, maxLat] = coordinate;
     }
 
     if (coordinate[1] < minLat || isNone(minLat)) {
-      minLat = coordinate[1];
+      [, minLat] = coordinate;
     }
   });
 

@@ -5,6 +5,8 @@ import sinon from 'sinon';
 moduleForComponent('compare-object-geometries-panel', 'Unit | Component | compare object geometries panel', {
   unit: true,
   needs: [
+    'service:i18n',
+    'service:local-storage',
     'service:map-api',
     'service:layers-styles-renderer'
   ],

@@ -136,7 +136,7 @@ export default Controller.extend({
     @type String[]
     @default ['ru', 'en']
   */
-  locales: ['ru', 'en'],
+  locales: null,
 
   /**
     Handles changes in userSettingsService.isUserSettingsServiceEnabled.
@@ -153,6 +153,7 @@ export default Controller.extend({
   */
   init() {
     this._super(...arguments);
+    this.locales = this.locales || ['ru', 'en'];
 
     const i18n = this.get('i18n');
     if (isNone(i18n)) {

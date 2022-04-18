@@ -5,7 +5,9 @@ moduleForComponent('layers/tile-layer', 'Unit | Component | layers/tile layer', 
   unit: true,
   needs: [
     'service:map-api',
-    'service:layers-styles-renderer'
+    'service:layers-styles-renderer',
+    'service:i18n',
+    'service:local-storage'
   ],
 });
 

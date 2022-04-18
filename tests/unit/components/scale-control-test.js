@@ -5,6 +5,10 @@ moduleForComponent('scale-control', 'Unit | Component | scale control', {
   // Specify the other units that are required for this test
   // needs: ['component:foo', 'helper:bar'],
   unit: true,
+  needs: [
+    'service:i18n',
+    'service:local-storage'
+  ],
 });
 
 test('it should return L.Control.Scale from createControl', function (assert) {

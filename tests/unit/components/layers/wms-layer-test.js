@@ -5,7 +5,9 @@ moduleForComponent('layers/wms-layer', 'Unit | Component | layers/wms layer', {
   unit: true,
   needs: [
     'service:map-api',
-    'service:layers-styles-renderer'
+    'service:local-storage',
+    'service:layers-styles-renderer',
+    'service:i18n'
   ],
 });
 

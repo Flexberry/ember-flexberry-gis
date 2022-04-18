@@ -70,7 +70,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
         secondObject = Object.assign({}, two[1]);
         mapModel._convertObjectCoordinates(crs.code, secondObject);
       } else {
-        secondObject = two[1];
+        [, secondObject] = two;
       }
 
       const geojsonReader = new jsts.io.GeoJSONReader();

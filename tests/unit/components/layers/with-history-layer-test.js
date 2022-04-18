@@ -21,6 +21,8 @@ let store;
 moduleForComponent('layers/with-history-layer', 'Unit | Component | layers/with history layer', {
   unit: true,
   needs: [
+    'service:i18n',
+    'service:local-storage',
     'service:map-api',
     'config:environment',
     'component:base-vector-layer',

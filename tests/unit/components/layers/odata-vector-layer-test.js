@@ -38,7 +38,8 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     'model:new-platform-flexberry-g-i-s-map-layer',
     'adapter:application',
     'layer:odata-vector',
-    'service:i18n'
+    'service:i18n',
+    'service:local-storage'
   ],
   beforeEach() {
     app = startApp();

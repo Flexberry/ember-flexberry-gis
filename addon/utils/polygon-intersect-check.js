@@ -5,6 +5,27 @@ import { isNone } from '@ember/utils';
 import kinks from 'npm:@turf/kinks';
 
 /**
+  Convert polygon to GeoJson
+
+  @method polygonConvert
+  @param {Polygon} polygon
+  @return {GeoJson} convertedPolygon
+*/
+function polygonConvert(polygon) {
+  let convertedPolygon;
+  let currentPolygon = polygon;
+  if (currentPolygon instanceof Array) {
+    currentPolygon = L.polygon(currentPolygon);
+  }
+
+  if (currentPolygon instanceof L.Polygon) {
+    convertedPolygon = currentPolygon.toGeoJSON();
+  }
+
+  return convertedPolygon;
+}
+
+/**
   Check polygons on intersection.
 
   @for Utils.CheckIntersect
@@ -28,25 +49,4 @@ export default function checkIntersect(polygon) {
   }
 
   return isIntersect;
-}
-
-/**
-  Convert polygon to GeoJson
-
-  @method polygonConvert
-  @param {Polygon} polygon
-  @return {GeoJson} convertedPolygon
-*/
-function polygonConvert(polygon) {
-  let convertedPolygon;
-  let currentPolygon = polygon;
-  if (currentPolygon instanceof Array) {
-    currentPolygon = L.polygon(currentPolygon);
-  }
-
-  if (currentPolygon instanceof L.Polygon) {
-    convertedPolygon = currentPolygon.toGeoJSON();
-  }
-
-  return convertedPolygon;
 }

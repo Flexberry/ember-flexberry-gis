@@ -12,27 +12,27 @@ import sinon from 'sinon';
 let ownerStub;
 
 moduleForComponent('layers-dialogs/settings/combine', 'Integration | Component | layers dialogs/settings/combine', {
-  beforeEach: function () {
+  beforeEach() {
     this.register('locale:ru/translations', I18nRuLocale);
     this.register('locale:en/translations', I18nEnLocale);
     this.register('service:i18n', I18nService);
 
-    this.inject.service('i18n', { as: 'i18n' });
+    this.inject.service('i18n', { as: 'i18n', });
     Ember.Component.reopen({
-      i18n: Ember.inject.service('i18n')
+      i18n: Ember.inject.service('i18n'),
     });
 
     this.set('i18n.locale', 'ru');
   },
 
-  afterEach: function () {
+  afterEach() {
     ownerStub.restore();
   },
 
   integration: true,
 });
 
-test('it renders without settings and test action addTypeSettings', function(assert) {
+test('it renders without settings and test action addTypeSettings', function (assert) {
   assert.expect(7);
   ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
@@ -77,7 +77,7 @@ test('it renders without settings and test action addTypeSettings', function(ass
   assert.equal(this.$('.ui.segment:last .field').length, 10);
 });
 
-test('it renders with settings', function(assert) {
+test('it renders with settings', function (assert) {
   assert.expect(4);
   ownerStub = sinon.stub(Ember, 'getOwner');
   ownerStub.returns({
@@ -97,13 +97,13 @@ test('it renders with settings', function(assert) {
   });
 
   this.set('settings', A([{
-      type: 'wfs',
-      innerLayers: [
-        {
-          type: 'wms',
-        }
-      ],
-    }]));
+    type: 'wfs',
+    innerLayers: [
+      {
+        type: 'wms',
+      }
+    ],
+  }]));
 
   this.render(hbs`{{layers-dialogs/settings/combine settings=settings}}`);
 

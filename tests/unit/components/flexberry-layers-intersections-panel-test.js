@@ -6,7 +6,8 @@ moduleForComponent('flexberry-layers-intersections-panel', 'Unit | Component | f
 
   needs: [
     'service:mapApi',
-    'service:i18n'
+    'service:i18n',
+    'service:local-storage'
   ],
 
 });

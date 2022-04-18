@@ -6,6 +6,8 @@ let leafletMap;
 moduleForComponent('layers/group-layer', 'Unit | Component | layers/group layer', {
   unit: true,
   needs: [
+    'service:i18n',
+    'service:local-storage',
     'service:map-api',
     'service:layers-styles-renderer'
   ],

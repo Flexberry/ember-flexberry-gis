@@ -35,7 +35,7 @@ export default BaseChartType.extend({
     let j = 0;
     for (let i = 0; i < isObject.length; i++) {
       bgColorPie[i] = bgcolor[j];
-      j++;
+      j += 1;
       if (j === 6) {
         j = 0;
       }

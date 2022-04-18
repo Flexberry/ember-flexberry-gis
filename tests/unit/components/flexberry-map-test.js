@@ -13,7 +13,8 @@ moduleForComponent('flexberry-map', 'Unit | Component | flexberry map', {
     'service:i18n',
     'map-tool:drag',
     'config:environment',
-    'service:i18n'
+    'service:i18n',
+    'service:local-storage'
   ],
 });
 

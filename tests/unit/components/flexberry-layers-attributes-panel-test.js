@@ -5,6 +5,8 @@ import EmberObject from '@ember/object';
 moduleForComponent('flexberry-layers-attributes-panel', 'Unit | Component | flexberry layers attributes panel', {
   unit: true,
   needs: [
+    'service:i18n',
+    'service:local-storage',
     'service:map-api',
     'service:layers-styles-renderer'
   ],

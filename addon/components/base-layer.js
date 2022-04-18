@@ -105,6 +105,8 @@ export default Component.extend(
           new L.Filter.GEQ('archiveend', formattedTime)
         );
       }
+
+      return;
     }),
 
     addCustomFilter(filter) {

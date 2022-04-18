@@ -17,6 +17,8 @@ let geoserverFake;
 moduleForComponent('layers/combine-layer', 'Unit | Component | layers/combine layer', {
   unit: true,
   needs: [
+    'service:i18n',
+    'service:local-storage',
     'service:map-api',
     'service:layers-styles-renderer',
     'config:environment',
