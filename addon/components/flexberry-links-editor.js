@@ -322,7 +322,8 @@ const FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLoo
       Handles {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
 
       @method actions.onVisibilityCheckboxChange
-      @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
+      @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'flexberry-ddau-checkbox'
+      component's 'change' action{{/crossLink}}.
     */
     onVisibilityCheckboxChange(...args) {
       this.sendAction('changeVisibility', ...args);

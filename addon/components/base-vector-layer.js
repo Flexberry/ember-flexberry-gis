@@ -184,7 +184,7 @@ export default BaseLayer.extend({
         this._addLayersOnMap(layers, leafletObject);
 
         if (this.get('labelSettings.signMapObjects')) {
-          this._addLabelsToLeafletContainer(layers);
+          this._addLabelsToLeafletContainer(layers, leafletObject);
         }
 
         leafletObject.fire('loadCompleted');
@@ -460,9 +460,13 @@ export default BaseLayer.extend({
         map.removeLayer(layerShape);
       }
     });
-    const labelLayer = leafletObject._labelsLayer;
-    if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !isNone(labelLayer) && map.hasLayer(labelLayer)) {
-      map.removeLayer(labelLayer);
+    const labelsLayer = leafletObject._labelsLayer;
+    if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !isNone(labelsLayer) && map.hasLayer(labelsLayer)) {
+      labelsLayer.eachLayer(function (labelLayer) {
+        if (map.hasLayer(labelLayer)) {
+          map.removeLayer(labelLayer);
+        }
+      });
     }
   },
 
@@ -495,7 +499,7 @@ export default BaseLayer.extend({
           reject('Not working to layer with continueLoading');
         }
       } else {
-        leafletObject.promiseLoadLayer = resolve();
+        leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
       }
 
       leafletObject.promiseLoadLayer.then(() => {
@@ -1559,12 +1563,16 @@ export default BaseLayer.extend({
 
     @method _showLabels
     @param {Array} layers new layers for add labels
+    @param {Object} leafletObject leaflet layer
   */
-  _showLabels(layers) {
+  _showLabels(layers, leafletObject) {
     const labelSettingsString = this.get('labelSettings.labelSettingsString');
     if (!isNone(labelSettingsString)) {
       const leafletMap = this.get('leafletMap');
-      const leafletObject = this.get('_leafletObject');
+      if (!leafletObject) {
+        leafletObject = this.get('_leafletObject');
+      }
+
       let labelsLayer = this.get('_labelsLayer');
       if (!isNone(labelsLayer) && isNone(leafletObject._labelsLayer)) {
         labelsLayer.clearLayers();
@@ -1604,11 +1612,15 @@ export default BaseLayer.extend({
 
     @method _addLabelsToLeafletContainer
     @param {Array} layers new layers for add labels
+    @param {Object} leafletObject leaflet layer
     @private
   */
-  _addLabelsToLeafletContainer(layers) {
+  _addLabelsToLeafletContainer(layers, leafletObject) {
     let labelsLayer = this.get('_labelsLayer');
     const leafletMap = this.get('leafletMap');
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
 
     const thisPane = this.get('_paneLabel');
     if (thisPane) {
@@ -1623,13 +1635,13 @@ export default BaseLayer.extend({
     }
 
     if (isNone(labelsLayer)) {
-      this._showLabels(layers);
+      this._showLabels(layers, leafletObject);
       labelsLayer = this.get('_labelsLayer');
       leafletMap.addLayer(labelsLayer);
     } else if (!leafletMap.hasLayer(labelsLayer)) {
       leafletMap.addLayer(labelsLayer);
     } else {
-      this._showLabels(layers);
+      this._showLabels(layers, leafletObject);
     }
   },
 

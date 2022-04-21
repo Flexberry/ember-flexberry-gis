@@ -7,11 +7,12 @@ import hbs from 'htmlbars-inline-precompile';
 import I18nService from 'ember-i18n/services/i18n';
 import I18nRuLocale from 'ember-flexberry-gis/locales/ru/translations';
 import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
+import $ from 'jquery';
 
 module('Integration | Component | flexberry search panel', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function (assert) {
+  hooks.beforeEach(function () {
     this.owner.register('locale:ru/translations', I18nRuLocale);
     this.owner.register('locale:en/translations', I18nEnLocale);
     this.owner.register('service:i18n', I18nService);

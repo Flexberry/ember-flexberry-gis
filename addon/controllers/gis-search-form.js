@@ -154,17 +154,16 @@ export default Controller.extend({
 
   init() {
     this._super(...arguments);
-    next(this, function() {
-
+    next(this, function () {
       // Initialize Semantic UI tabs.
       $('.gis-search-form .tabular.menu .item').tab();
-  
+
       // Initialize Semantic UI dropdown.
       $('.gis-search-form .mapItems').dropdown();
-  
+
       // Initialize Semantic UI accordion.
       $('.gis-search-form .ui.accordion').accordion();
-    })
+    });
   },
   /**
     Observes selected rows count and selected map and changes a flag that enables 'Open in a map' button.

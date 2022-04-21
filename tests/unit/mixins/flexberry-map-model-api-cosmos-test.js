@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import { isNone } from '@ember/utils';
 import { resolve } from 'rsvp';
 import { A } from '@ember/array';
@@ -43,7 +44,7 @@ const crsFactory32640 = {
   create() {
     const crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
       scale(zoom) {
-        return 256 * Math.pow(2, zoom);
+        return 256 * (2 ** zoom);
       },
       zoom(scale) {
         return Math.log(scale / 256) / Math.LN2;
@@ -186,7 +187,7 @@ test('test method findCosmos for only with parameter attributes one', function (
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._attributePath, 'anyText');
     assert.equal(spyGetMetadataModels.getCall(0).args[0]._predicate._containsValue, 'test');
     assert.equal(layers.length, 1);
-    assert.ok(!layers[0].hasOwnProperty('areaIntersections'));
+    assert.ok(!Object.prototype.hasOwnProperty.call(layers[0], 'areaIntersections'));
     done();
     ownerStub.restore();
     spyGetMetadataModels.restore();

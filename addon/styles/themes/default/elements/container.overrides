@@ -90,12 +90,7 @@
             color: @leafletBarButtonColor;
             background: @leafletBarButtonBackground;
             font-size: @leafletBarButtonFontSize;
-            .icon {
-                padding: 3px;
-                &:before {
-                    font-size: 1em;
-                }
-            }
+
             &.active,
             &:hover {
                 color: @leafletBarButtonColor;
@@ -248,6 +243,11 @@
 .flexberry-maptoolbar.ui.menu {
   flex-wrap: wrap;
 }
+.mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar a,
+.mappanel .leaflet-right.leaflet-top .history-control.leaflet-bar a {
+  box-shadow: @defaultBoxShadow;
+}
+
 .ui.menu.flexberry-maptoolbar {
     z-index: 1000 !important;
     margin: 10px 10px 0px 10px;
@@ -263,6 +263,7 @@
         color: @darkbluecolor;
         font-size: 0px;
         background: @whitecolor;
+        box-shadow: @defaultBoxShadow;
     }
     /* элементы меню */
     .item {
@@ -405,14 +406,9 @@
     }
     /* иконки */
     i.icon {
-        width: 20px;
-        height: 20px;
-        &:before {
-            font-family: Crimean;
-        }
-        &.dropdown:before {
-            font-family: Icons;
-        }
+      &.dropdown:before {
+          font-family: Icons;
+      }
     }
     /* отступ в кнопках с иконками */
     .ui.icon.button {
@@ -461,10 +457,6 @@
     /* перейти к точке */
     i.icon.location.arrow:before {
         content: "\e812";
-    }
-    /* отдалить на полную */
-    i.icon.globe:before {
-        content: "\e830";
     }
     i.icon.resize:before {
         font-family: Icons;
@@ -549,14 +541,6 @@
         &:before {
             content: "\e822";
         }
-    }
-    /* еще */
-    i.icon.more {
-      margin: 0px 0px 0px 2px;
-      &:before {
-        content: "\f141";
-        font-family: Icons;
-      }
     }
     i.icon.minimap {
       &:before {
@@ -688,18 +672,14 @@ div.minimap-drag-panel {
   border-radius: 5px;
   padding: 15px 10px 5px 10px;
 
-  i.icon {
-    font-size: 12px;
-  }
-
   .leaflet-control-minimap {
    box-shadow: none;
   }
 
   .flexberry-minimap-close {
     position: absolute;
-    top: 1px;
-    right: 1px;
+    top: 0;
+    right: 0;
     z-index: 1000;
     cursor: pointer;
   }
@@ -844,16 +824,7 @@ div.measure-drag-panel {
 .layer-result-list {
   padding-top: 15px;
   text-align: center;
-  .icon.caret {
-    font-size: 20px;
-    margin: 0;
-  }
-  i.icon.caret.down:before {
-    content: '\f107';
-  }
-  i.icon.caret.right:before {
-    content: '\f105';
-  }
+
   .ui.active.inline.loader {
     margin-top: 10px;
     left: 45%;
@@ -895,7 +866,7 @@ div.measure-drag-panel {
       width: 250px;
       z-index: 100;
       background: @whitecolor;
-      border: 1px solid #E5E5E5;
+      border: none;
       box-sizing: border-box;
       border-radius: 3.5px;
       p {
@@ -917,6 +888,12 @@ div.measure-drag-panel {
   }
   .feature-result-item-title {
     position: relative;
+    .ui.checkbox {
+      margin: auto 0;
+    }
+    .ui.checkbox label {
+      padding-left: 26px;
+    }
   }
   .feature-result-item-caption {
     max-width: 68%;
@@ -924,6 +901,7 @@ div.measure-drag-panel {
     word-wrap: break-word;
     font-size: 14px;
     color: @darkbluecolor;
+    align-self: center;
   }
   .feature-result-item-select.icon.item, .feature-result-item-upload.icon.item {
     font-size: 1.4em;
@@ -968,20 +946,12 @@ div.measure-drag-panel {
     padding: 0 !important;
     display: block;
     float: left;
-    transform-origin: 50% 60%;
-    &:before {
-      font-size: 20px;
-      content: '\f105';
-    }
   }
-  .ui.accordion .title.active .dropdown.icon {
-    &:before {
-      content: '\f105';
-    }
-  }
+
   .layer-result-list-toggler {
     .title {
       display: flex;
+      align-items: end;
       .flexberry-toggler-caption {
         margin-left: 6px;
         display: block;

@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import { Promise } from 'rsvp';
 import $ from 'jquery';
-import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api';

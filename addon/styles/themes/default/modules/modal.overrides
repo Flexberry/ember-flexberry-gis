@@ -75,11 +75,6 @@
 .flexberry-export-map-command-dialog {
     .flexberry-dropdown.dropdown {
         padding: .8em .2em .4em .5em;
-        .dropdown.icon {
-            &:before {
-                font-size: 13px;
-            }
-        }
     }
 }
 
@@ -141,7 +136,7 @@
       box-shadow: none;
 
       .export-buttons {
-        padding-top: 50px;
+        padding-top: 20px;
         display: flex;
         justify-content: center;
       }
@@ -151,11 +146,6 @@
         width:100%;
         margin: 0;
         border: none;
-
-        .ui.button.active,
-          .ui.button:hover {
-            background: @mediumbluecolor !important;
-          }
 
         .flexberry-dropdown.ui.selection.dropdown .menu {
           // About 4 items is enough.
@@ -206,9 +196,6 @@
     }
 
     .flexberry-export-map-command-dialog-paging-column {
-      .ui.button.active{
-        border: 1px solid @mediumbluecolor;
-      }
 
       display: block;
 

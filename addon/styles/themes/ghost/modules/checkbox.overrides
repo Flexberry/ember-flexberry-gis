@@ -1,0 +1,44 @@
+.flexberry-checkbox.ui.checkbox {
+  label {
+    &:before, &:after {
+      margin: 0;
+      box-shadow: 2px 4px 5px 0 rgba(0, 0, 0, 0.1);
+      width: 17px;
+      height: 17px;
+      background: @white !important;
+      transition: none;
+    }
+  }
+
+  input:checked ~ label:after {
+    content: '\e805';
+    border: none;
+    border-bottom: 1px solid @primaryColor;
+  }
+
+  &.group {
+    label {
+      &:before {
+        content: "";
+        margin: 1.5px 0px 0px 1.5px;
+        opacity: 1;
+        border: 1px solid @primaryColor;
+        border-radius: 4px;
+      }
+
+      &:after {
+        content: "";
+        margin: -1.5px 0px 0px -1.5px;
+        opacity: 1;
+        border: 1px solid @primaryColor;
+        border-radius: 4px;
+      }
+    }
+
+    input:checked ~ label:after {
+      content: '\e805';
+      border: none;
+      border-bottom: 1px solid @primaryColor;
+    }
+  }
+}

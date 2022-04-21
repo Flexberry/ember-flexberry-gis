@@ -1,10 +1,10 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { resolve, Promise } from 'rsvp';
 import { run } from '@ember/runloop';
 import EmberObject, { set } from '@ember/object';
 import $ from 'jquery';
 import { A } from '@ember/array';
-import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+import { moduleForComponent, test } from 'ember-qunit';
 import sinon from 'sinon';
 import startApp from 'dummy/tests/helpers/start-app';
 
@@ -13,10 +13,19 @@ let geoserverFake;
 let options;
 let param;
 
-module('Unit | Component | layers/wfs layer', function (hooks) {
-  setupTest(hooks);
+moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
+  unit: true,
+  needs: [
+    'service:i18n',
+    'service:local-storage',
+    'service:map-api',
+    'service:layers-styles-renderer',
+    'config:environment',
+    'component:base-vector-layer',
+    'model:new-platform-flexberry-g-i-s-map'
+  ],
 
-  hooks.beforeEach(function () {
+  beforeEach() {
     app = startApp();
 
     options = {
@@ -161,1058 +170,1060 @@ module('Unit | Component | layers/wfs layer', function (hooks) {
             + '</xsd:schema>');
         }
       });
-  });
+  },
 
-  hooks.afterEach(function () {
+  afterEach() {
     run(app, 'destroy');
     geoserverFake.restore();
-  });
+  },
+});
 
-  const realCountArr = function (arr) {
-    return Object.values(arr).length;
-  };
+const realCountArr = function (arr) {
+  return Object.values(arr).length;
+};
 
-  test('getLayerFeatures() with options showExisting = false and continueLoading = true', function (assert) {
-    assert.expect(2);
-    const done = assert.async(2);
-    run(() => {
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+test('getLayerFeatures() with options showExisting = false and continueLoading = true', function (assert) {
+  assert.expect(2);
+  const done = assert.async(2);
+  run(() => {
+    const component = this.subject(param);
 
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
 
-      const getPkFieldStub = sinon.stub(mapModel, '_getPkField');
-      getPkFieldStub.returns('primarykey');
+    const getPkFieldStub = sinon.stub(mapModel, '_getPkField');
+    getPkFieldStub.returns('primarykey');
 
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        const e = {
-          featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
-          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A(),
-        };
-        component._leafletObject = res.target;
-        component.getLayerFeatures(e).then((layers) => {
-          assert.ok(layers, 'Get feature of layers with showExisting = false and continueLoading = true');
-          done();
-        });
-      });
-
-      assert.ok(component, 'Create wfs-layer with showExisting = false');
-      done();
-    });
-  });
-
-  test('_addLayersOnMap() with options showExisting = true and continueLoading = false', function (assert) {
-    assert.expect(3);
-    const done = assert.async(2);
-    run(() => {
-      param.showExisting = true;
-
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
-
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-
-      options.showExisting = true;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        const layers = Object.values(res.target._layers);
-        component._addLayersOnMap(layers);
-        assert.equal(layers[0].options.pane, component.get('_pane'), 'Pane on object eqals pane on layer');
-        assert.equal(layers[0].options.renderer, component.get('_renderer'), 'Renderer on object eqals renderer on layer');
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      const e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: A(),
+      };
+      component._leafletObject = res.target;
+      component.getLayerFeatures(e).then((layers) => {
+        assert.ok(layers, 'Get feature of layers with showExisting = false and continueLoading = true');
         done();
       });
+    });
 
-      assert.ok(component, 'Create wfs-layer with showExisting = true');
+    assert.ok(component, 'Create wfs-layer with showExisting = false');
+    done();
+  });
+});
+
+test('_addLayersOnMap() with options showExisting = true and continueLoading = false', function (assert) {
+  assert.expect(3);
+  const done = assert.async(2);
+  run(() => {
+    param.showExisting = true;
+
+    const component = this.subject(param);
+
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+
+    options.showExisting = true;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      const layers = Object.values(res.target._layers);
+      component._addLayersOnMap(layers);
+      assert.equal(layers[0].options.pane, component.get('_pane'), 'Pane on object eqals pane on layer');
+      assert.equal(layers[0].options.renderer, component.get('_renderer'), 'Renderer on object eqals renderer on layer');
       done();
     });
+
+    assert.ok(component, 'Create wfs-layer with showExisting = true');
+    done();
   });
+});
 
-  test('getLayerFeatures() with options showExisting = true', function (assert) {
-    assert.expect(2);
-    const done = assert.async(2);
-    run(() => {
-      param.showExisting = true;
+test('getLayerFeatures() with options showExisting = true', function (assert) {
+  assert.expect(2);
+  const done = assert.async(2);
+  run(() => {
+    param.showExisting = true;
 
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+    const component = this.subject(param);
 
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
 
-      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+    const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
 
-      options.showExisting = true;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        const e = {
-          featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
-          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A(),
-        };
+    options.showExisting = true;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      const e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: A(),
+      };
 
-        component._leafletObject = res.target;
+      component._leafletObject = res.target;
 
-        component.getLayerFeatures(e).then((layers) => {
-          assert.ok(layers, 'Get feature of layers with showExisting = true');
-          done();
-        });
+      component.getLayerFeatures(e).then((layers) => {
+        assert.ok(layers, 'Get feature of layers with showExisting = true');
+        done();
       });
-
-      assert.ok(component, 'Create wfs-layer with showExisting = true');
-      done();
     });
+
+    assert.ok(component, 'Create wfs-layer with showExisting = true');
+    done();
   });
+});
 
-  test('loadLayerFeatures() with options showExisting = false', function (assert) {
-    assert.expect(2);
-    const done = assert.async(2);
-    run(() => {
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+test('loadLayerFeatures() with options showExisting = false', function (assert) {
+  assert.expect(2);
+  const done = assert.async(2);
+  run(() => {
+    const component = this.subject(param);
 
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
 
-      const getPkFieldStub = sinon.stub(mapModel, '_getPkField');
-      getPkFieldStub.returns('primarykey');
+    const getPkFieldStub = sinon.stub(mapModel, '_getPkField');
+    getPkFieldStub.returns('primarykey');
 
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        const e = {
-          featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
-          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A(),
-        };
-        component._leafletObject = res.target;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      const e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: A(),
+      };
+      component._leafletObject = res.target;
 
-        component._leafletObject.loadFeatures = () => new resolve();
-        component.loadLayerFeatures(e).then((layers) => {
-          assert.ok(layers, 'Load feature of layers with showExisting = false');
-          done();
-        });
+      /* eslint-disable-next-line new-cap */
+      component._leafletObject.loadFeatures = () => new resolve();
+      component.loadLayerFeatures(e).then((layers) => {
+        assert.ok(layers, 'Load feature of layers with showExisting = false');
+        done();
       });
-
-      assert.ok(component, 'Create wfs-layer with showExisting = false');
-      done();
     });
+
+    assert.ok(component, 'Create wfs-layer with showExisting = false');
+    done();
   });
+});
 
-  test('loadLayerFeatures() with options showExisting = true', function (assert) {
-    assert.expect(2);
-    const done = assert.async(2);
-    run(() => {
-      param.showExisting = true;
+test('loadLayerFeatures() with options showExisting = true', function (assert) {
+  assert.expect(2);
+  const done = assert.async(2);
+  run(() => {
+    param.showExisting = true;
 
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+    const component = this.subject(param);
 
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
 
-      const getPkFieldStub = sinon.stub(mapModel, '_getPkField');
-      getPkFieldStub.returns('primarykey');
+    const getPkFieldStub = sinon.stub(mapModel, '_getPkField');
+    getPkFieldStub.returns('primarykey');
 
-      options.showExisting = true;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        const e = {
-          featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
-          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A(),
-        };
+    options.showExisting = true;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      const e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: A(),
+      };
 
-        component._leafletObject = res.target;
+      component._leafletObject = res.target;
 
-        component._leafletObject.loadFeatures = () => new resolve();
-        component.loadLayerFeatures(e).then((layers) => {
-          assert.ok(layers, 'Load feature of layers with showExisting = true');
-          done();
-        });
+      /* eslint-disable-next-line new-cap */
+      component._leafletObject.loadFeatures = () => new resolve();
+      component.loadLayerFeatures(e).then((layers) => {
+        assert.ok(layers, 'Load feature of layers with showExisting = true');
+        done();
       });
-
-      assert.ok(component, 'Create wfs-layer with showExisting = true');
-      done();
     });
+
+    assert.ok(component, 'Create wfs-layer with showExisting = true');
+    done();
   });
+});
 
-  test('loadLayerFeatures() with options showExisting = false, call 2 times', function (assert) {
-    assert.expect(3);
-    const done = assert.async(3);
-    run(() => {
-      param.continueLoading = false;
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+test('loadLayerFeatures() with options showExisting = false, call 2 times', function (assert) {
+  assert.expect(3);
+  const done = assert.async(3);
+  run(() => {
+    param.continueLoading = false;
+    const component = this.subject(param);
 
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
 
-      const getPkFieldStub = sinon.stub(mapModel, '_getPkField');
-      getPkFieldStub.returns('primarykey');
+    const getPkFieldStub = sinon.stub(mapModel, '_getPkField');
+    getPkFieldStub.returns('primarykey');
 
-      options.continueLoading = false;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        const e = {
-          featureIds: null,
-          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A(),
-        };
-        component._leafletObject = res.target;
-        component._leafletObject.loadFeatures = function (filter) {
-          return new Promise((resolve) => {
-            const that = this;
+    options.continueLoading = false;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      const e = {
+        featureIds: null,
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: A(),
+      };
+      component._leafletObject = res.target;
+      component._leafletObject.loadFeatures = function (filter) {
+        return new Promise((testResolve) => {
+          const that = this;
 
-            L.Util.request({
-              url: this.options.url,
-              data: L.XmlUtil.serializeXmlDocumentString(that.getFeature(filter)),
-              success(responseText) {
-                const layers = that.readFormat.responseToLayers(responseText, {
-                  coordsToLatLng: that.options.coordsToLatLng,
-                  pointToLayer: that.options.pointToLayer,
-                });
-                layers.forEach(function (element) {
-                  element.state = that.state.exist;
-                  that.addLayer(element);
-                });
-                resolve(that);
-              },
-            });
+          L.Util.request({
+            url: this.options.url,
+            data: L.XmlUtil.serializeXmlDocumentString(that.getFeature(filter)),
+            success(responseText) {
+              const layers = that.readFormat.responseToLayers(responseText, {
+                coordsToLatLng: that.options.coordsToLatLng,
+                pointToLayer: that.options.pointToLayer,
+              });
+              layers.forEach(function (element) {
+                element.state = that.state.exist;
+                that.addLayer(element);
+              });
+              testResolve(that);
+            },
           });
-        }.bind(component._leafletObject);
-
-        component.loadLayerFeatures(e).then((layers) => {
-          assert.equal(layers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 1 times');
-          done();
-          component.loadLayerFeatures(e).then((layers) => {
-            assert.equal(layers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 2 times');
-            done();
-          });
         });
-      });
+      }.bind(component._leafletObject);
 
-      assert.ok(component, 'Create wfs-layer with showExisting = false');
-      done();
-    });
-  });
-
-  test('test method clearChanges() with no changes', function (assert) {
-    assert.expect(7);
-    const done = assert.async(1);
-    run(() => {
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
-
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-
-      options.showExisting = true;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        const e = {
-          featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
-          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A(),
-        };
-
-        component._leafletObject = res.target;
-
-        component.getLayerFeatures(e).then(() => {
-          const leafletObject = component.get('_leafletObject');
-          const leafletMap = component.get('leafletMap');
-          leafletObject.leafletMap = leafletMap;
-
-          assert.equal(realCountArr(leafletObject.changes), 0);
-          assert.equal(leafletObject.getLayers().length, 1);
-          assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
-
-          const layerUpdate = leafletObject.getLayers()[0];
-          layerUpdate.enableEdit(leafletMap);
-
-          assert.equal(realCountArr(leafletObject.changes), 0);
-          assert.equal(leafletObject.getLayers().length, 1);
-          assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
-
-          component.clearChanges();
-          assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+      component.loadLayerFeatures(e).then((layers) => {
+        assert.equal(layers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 1 times');
+        done();
+        component.loadLayerFeatures(e).then((twoTimesLayers) => {
+          assert.equal(twoTimesLayers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 2 times');
           done();
         });
       });
     });
+
+    assert.ok(component, 'Create wfs-layer with showExisting = false');
+    done();
   });
+});
 
-  test('test method clearChanges() with create', function (assert) {
-    assert.expect(7);
-    const done = assert.async(1);
-    run(() => {
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+test('test method clearChanges() with no changes', function (assert) {
+  assert.expect(7);
+  const done = assert.async(1);
+  run(() => {
+    const component = this.subject(param);
 
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
 
-      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+    const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
 
-      options.showExisting = true;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        const e = {
-          featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
-          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A(),
-        };
+    options.showExisting = true;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      const e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: A(),
+      };
 
-        component._leafletObject = res.target;
+      component._leafletObject = res.target;
 
-        component.getLayerFeatures(e).then(() => {
-          const leafletObject = component.get('_leafletObject');
-          const leafletMap = component.get('leafletMap');
-          leafletObject.leafletMap = leafletMap;
-
-          assert.equal(realCountArr(leafletObject.changes), 0);
-          assert.equal(leafletObject.getLayers().length, 1);
-          assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
-
-          const feature = {
-            type: 'Polygon',
-            coordinates: [
-              [[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]
-            ],
-          };
-          const layerAdd = L.geoJSON(feature).getLayers()[0];
-          layerAdd._label = {
-            _leaflet_id: 1000,
-          };
-          leafletObject.addLayer(layerAdd);
-          leafletObject._labelsLayer = {
-            1000: {},
-          };
-          layerAdd.enableEdit(leafletMap);
-
-          assert.equal(realCountArr(leafletObject.changes), 1);
-          assert.equal(leafletObject.getLayers().length, 2);
-          assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
-
-          component.clearChanges();
-          assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
-          done();
-        });
-      });
-    });
-  });
-
-  test('test method clearChanges() with update', function (assert) {
-    assert.expect(7);
-    const done = assert.async(1);
-    run(() => {
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
-
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-
-      options.showExisting = true;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        const e = {
-          featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
-          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A(),
-        };
-
-        component._leafletObject = res.target;
-
-        component.getLayerFeatures(e).then(() => {
-          const leafletObject = component.get('_leafletObject');
-          const leafletMap = component.get('leafletMap');
-          leafletObject.leafletMap = leafletMap;
-
-          assert.equal(realCountArr(leafletObject.changes), 0);
-          assert.equal(leafletObject.getLayers().length, 1);
-          assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
-
-          const layerUpdate = leafletObject.getLayers()[0];
-          layerUpdate.feature.properties.name = 'test';
-
-          layerUpdate.enableEdit(leafletMap);
-          leafletObject.editLayer(layerUpdate);
-
-          assert.equal(realCountArr(leafletObject.changes), 1);
-          assert.equal(leafletObject.getLayers().length, 1);
-          assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
-
-          component.clearChanges();
-          assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
-          done();
-        });
-      });
-    });
-  });
-
-  test('test method clearChanges() with delete', function (assert) {
-    assert.expect(7);
-    const done = assert.async(1);
-    run(() => {
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
-
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-
-      options.showExisting = true;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
-        const e = {
-          featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
-          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A(),
-        };
-
-        component._leafletObject = res.target;
-
-        component.getLayerFeatures(e).then(() => {
-          const leafletObject = component.get('_leafletObject');
-          const leafletMap = component.get('leafletMap');
-          leafletObject.leafletMap = leafletMap;
-
-          assert.equal(realCountArr(leafletObject.changes), 0);
-          assert.equal(leafletObject.getLayers().length, 1);
-          assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
-
-          const layerRemove = leafletObject.getLayers()[0];
-          layerRemove.enableEdit(leafletMap);
-          leafletObject.removeLayer(layerRemove);
-
-          assert.equal(realCountArr(leafletObject.changes), 1);
-          assert.equal(leafletObject.getLayers().length, 0);
-          assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
-
-          component.clearChanges();
-          assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
-          done();
-        });
-      });
-    });
-  });
-  test('test getPkField without pkField', function (assert) {
-    assert.expect(1);
-    const done = assert.async(1);
-    run(() => {
-      const layerModel = EmberObject.create({
-        type: 'wfs',
-        visibility: false,
-        settingsAsObject: options,
-      });
-      param = $.extend(param, { layerModel, });
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
-
-      component.get('_leafletLayerPromise').then((leafletObject) => {
-        const fieldName = leafletObject.getPkField(component.get('layerModel'));
-        assert.equal(fieldName, 'primarykey');
-        done(1);
-      });
-    });
-  });
-  test('test getPkField with pkField', function (assert) {
-    assert.expect(1);
-    const done = assert.async(1);
-    run(() => {
-      options = $.extend(options, { pkField: 'pk', });
-      const layerModel = EmberObject.create({
-        type: 'wfs',
-        visibility: false,
-        settingsAsObject: options,
-      });
-      param = $.extend(param, { layerModel, });
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
-
-      component.get('_leafletLayerPromise').then((leafletObject) => {
-        const fieldName = leafletObject.getPkField(component.get('layerModel'));
-        assert.equal(fieldName, 'pk');
-        done(1);
-      });
-    });
-  });
-  test('test editLayer', function (assert) {
-    assert.expect(2);
-    const done = assert.async(2);
-    run(() => {
-      param = $.extend(param, { showExisting: true, });
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
-
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-
-      options.showExisting = true;
-
-      component.get('_leafletLayerPromise').then((leafletObject) => {
-        component.set('_leafletObject', leafletObject);
+      component.getLayerFeatures(e).then(() => {
+        const leafletObject = component.get('_leafletObject');
         const leafletMap = component.get('leafletMap');
         leafletObject.leafletMap = leafletMap;
 
-        const e = {
-          featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
-          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
-          results: A(),
+        assert.equal(realCountArr(leafletObject.changes), 0);
+        assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+        const layerUpdate = leafletObject.getLayers()[0];
+        layerUpdate.enableEdit(leafletMap);
+
+        assert.equal(realCountArr(leafletObject.changes), 0);
+        assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+
+        component.clearChanges();
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+        done();
+      });
+    });
+  });
+});
+
+test('test method clearChanges() with create', function (assert) {
+  assert.expect(7);
+  const done = assert.async(1);
+  run(() => {
+    const component = this.subject(param);
+
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+
+    options.showExisting = true;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      const e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: A(),
+      };
+
+      component._leafletObject = res.target;
+
+      component.getLayerFeatures(e).then(() => {
+        const leafletObject = component.get('_leafletObject');
+        const leafletMap = component.get('leafletMap');
+        leafletObject.leafletMap = leafletMap;
+
+        assert.equal(realCountArr(leafletObject.changes), 0);
+        assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+        const feature = {
+          type: 'Polygon',
+          coordinates: [
+            [[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]
+          ],
         };
+        const layerAdd = L.geoJSON(feature).getLayers()[0];
+        layerAdd._label = {
+          _leaflet_id: 1000,
+        };
+        leafletObject.addLayer(layerAdd);
+        leafletObject._labelsLayer = {
+          1000: {},
+        };
+        layerAdd.enableEdit(leafletMap);
+
+        assert.equal(realCountArr(leafletObject.changes), 1);
+        assert.equal(leafletObject.getLayers().length, 2);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+
+        component.clearChanges();
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+        done();
+      });
+    });
+  });
+});
+
+test('test method clearChanges() with update', function (assert) {
+  assert.expect(7);
+  const done = assert.async(1);
+  run(() => {
+    const component = this.subject(param);
+
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+
+    options.showExisting = true;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      const e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: A(),
+      };
+
+      component._leafletObject = res.target;
+
+      component.getLayerFeatures(e).then(() => {
+        const leafletObject = component.get('_leafletObject');
+        const leafletMap = component.get('leafletMap');
+        leafletObject.leafletMap = leafletMap;
+
+        assert.equal(realCountArr(leafletObject.changes), 0);
+        assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+        const layerUpdate = leafletObject.getLayers()[0];
+        layerUpdate.feature.properties.name = 'test';
+
+        layerUpdate.enableEdit(leafletMap);
+        leafletObject.editLayer(layerUpdate);
+
+        assert.equal(realCountArr(leafletObject.changes), 1);
+        assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+
+        component.clearChanges();
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+        done();
+      });
+    });
+  });
+});
+
+test('test method clearChanges() with delete', function (assert) {
+  assert.expect(7);
+  const done = assert.async(1);
+  run(() => {
+    const component = this.subject(param);
+
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+
+    options.showExisting = true;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      const e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: A(),
+      };
+
+      component._leafletObject = res.target;
+
+      component.getLayerFeatures(e).then(() => {
+        const leafletObject = component.get('_leafletObject');
+        const leafletMap = component.get('leafletMap');
+        leafletObject.leafletMap = leafletMap;
+
+        assert.equal(realCountArr(leafletObject.changes), 0);
+        assert.equal(leafletObject.getLayers().length, 1);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+        const layerRemove = leafletObject.getLayers()[0];
+        layerRemove.enableEdit(leafletMap);
+        leafletObject.removeLayer(layerRemove);
+
+        assert.equal(realCountArr(leafletObject.changes), 1);
+        assert.equal(leafletObject.getLayers().length, 0);
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+
+        component.clearChanges();
+        assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+        done();
+      });
+    });
+  });
+});
+test('test getPkField without pkField', function (assert) {
+  assert.expect(1);
+  const done = assert.async(1);
+  run(() => {
+    const layerModel = EmberObject.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject: options,
+    });
+    param = $.extend(param, { layerModel, });
+    const component = this.subject(param);
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      const fieldName = leafletObject.getPkField(component.get('layerModel'));
+      assert.equal(fieldName, 'primarykey');
+      done(1);
+    });
+  });
+});
+test('test getPkField with pkField', function (assert) {
+  assert.expect(1);
+  const done = assert.async(1);
+  run(() => {
+    options = $.extend(options, { pkField: 'pk', });
+    const layerModel = EmberObject.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject: options,
+    });
+    param = $.extend(param, { layerModel, });
+    const component = this.subject(param);
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      const fieldName = leafletObject.getPkField(component.get('layerModel'));
+      assert.equal(fieldName, 'pk');
+      done(1);
+    });
+  });
+});
+test('test editLayer', function (assert) {
+  assert.expect(2);
+  const done = assert.async(2);
+  run(() => {
+    param = $.extend(param, { showExisting: true, });
+    const component = this.subject(param);
+
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    const getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+
+    options.showExisting = true;
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      const leafletMap = component.get('leafletMap');
+      leafletObject.leafletMap = leafletMap;
+
+      const e = {
+        featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: A(),
+      };
+
+      done();
+
+      component.getLayerFeatures(e).then(() => {
+        const layerUpdate = leafletObject.getLayers()[0];
+        layerUpdate.feature.properties.name = 'test';
+
+        layerUpdate.enableEdit(leafletMap);
+
+        const newFeature = L.geoJSON({
+          type: 'Polygon',
+          coordinates: [[[56.432487, 58.14725], [56.432133, 58.146749], [56.434, 58.146737]]],
+        }).getLayers()[0];
+
+        layerUpdate.setLatLngs(newFeature.getLatLngs());
+
+        leafletObject.editLayer(layerUpdate);
+
+        assert.equal(layerUpdate.feature.geometry.coordinates[0].length, 4);
+        const coordinates = '6282035.717038031,7998313.982057768,6281996.30993829,'
+        + '7998208.303352221,6282204.143427601,7998205.77214398,6282035.717038031,7998313.982057768';
+        assert.equal(layerUpdate.feature.geometry.coordinates.toString(), coordinates);
 
         done();
-
-        component.getLayerFeatures(e).then(() => {
-          const layerUpdate = leafletObject.getLayers()[0];
-          layerUpdate.feature.properties.name = 'test';
-
-          layerUpdate.enableEdit(leafletMap);
-
-          const newFeature = L.geoJSON({
-            type: 'Polygon',
-            coordinates: [[[56.432487, 58.14725], [56.432133, 58.146749], [56.434, 58.146737]]],
-          }).getLayers()[0];
-
-          layerUpdate.setLatLngs(newFeature.getLatLngs());
-
-          leafletObject.editLayer(layerUpdate);
-
-          assert.equal(layerUpdate.feature.geometry.coordinates[0].length, 4);
-          const coordinates = '6282035.717038031,7998313.982057768,6281996.30993829,'
-          +'7998208.303352221,6282204.143427601,7998205.772143982,6282035.717038031,7998313.982057768';
-          assert.equal(layerUpdate.feature.geometry.coordinates.toString(), coordinates);
-
-          done();
-        });
       });
     });
   });
-  test('test getNearObject with wpsUrl', function (assert) {
-    assert.expect(9);
-    const done = assert.async(2);
-    run(() => {
-      options = $.extend(options, { pkField: 'primarykey', wpsUrl: 'http://localhost:8080/geoserver/wps', });
-      const layerModel = EmberObject.create({
-        type: 'wfs',
-        visibility: false,
-        settingsAsObject: options,
-      });
-      param = $.extend(param, { layerModel, });
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+});
+test('test getNearObject with wpsUrl', function (assert) {
+  assert.expect(9);
+  const done = assert.async(2);
+  run(() => {
+    options = $.extend(options, { pkField: 'primarykey', wpsUrl: 'http://localhost:8080/geoserver/wps', });
+    const layerModel = EmberObject.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject: options,
+    });
+    param = $.extend(param, { layerModel, });
+    const component = this.subject(param);
 
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-      const stubAjax = sinon.stub($, 'ajax');
-      const responseText = '{'
-        + '"type": "FeatureCollection",'
-        + '"crs": {'
-          + '"type": "name",'
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+    const stubAjax = sinon.stub($, 'ajax');
+    const responseText = '{'
+      + '"type": "FeatureCollection",'
+      + '"crs": {'
+        + '"type": "name",'
+        + '"properties": {'
+          + '"name": "EPSG:32640"'
+        + '}'
+      + '},'
+      + '"features": ['
+        + '{'
+          + '"type": "Feature",'
+          + '"geometry": {'
+            + '"type": "MultiPolygon",'
+            + '"coordinates": ['
+              + '[[[465991.9001, 6445952.6774], [466300.6857, 6446025.6799],'
+                + '[466192.0721, 6445729.0941], [465991.9001, 6445952.6774]]]'
+            + ']'
+          + '},'
           + '"properties": {'
-            + '"name": "EPSG:32640"'
-          + '}'
-        + '},'
-        + '"features": ['
-          + '{'
-            + '"type": "Feature",'
-            + '"geometry": {'
-              + '"type": "MultiPolygon",'
-              + '"coordinates": ['
-                + '[[[465991.9001, 6445952.6774], [466300.6857, 6446025.6799],'
-                  + '[466192.0721, 6445729.0941], [465991.9001, 6445952.6774]]]'
-              + ']'
-            + '},'
-            + '"properties": {'
-              + '"nearest_distance": 123,'
-              + '"nearest_bearing": 73.58555983346304'
-            + '},'
-            + '"id": "kvartalutverzhdenopolygon32640.84b823eb-00f2-48eb-9fdf-a1b47dbe185d"'
-          + '}'
-        + ']'
-      + '}';
-      stubAjax.yieldsTo('success', responseText);
-      const getLayerFeaturesStub = sinon.stub(component, 'getLayerFeatures');
-      getLayerFeaturesStub.returns(resolve([{
-        feature: {
-          properties: {
-            primarykey: '84b823eb-00f2-48eb-9fdf-a1b47dbe185d',
-          },
+            + '"nearest_distance": 123,'
+            + '"nearest_bearing": 73.58555983346304'
+          + '},'
+          + '"id": "kvartalutverzhdenopolygon32640.84b823eb-00f2-48eb-9fdf-a1b47dbe185d"'
+        + '}'
+      + ']'
+    + '}';
+    stubAjax.yieldsTo('success', responseText);
+    const getLayerFeaturesStub = sinon.stub(component, 'getLayerFeatures');
+    getLayerFeaturesStub.returns(resolve([{
+      feature: {
+        properties: {
+          primarykey: '84b823eb-00f2-48eb-9fdf-a1b47dbe185d',
         },
-      }]));
-      const getWPSgsNearestSpy = sinon.spy(component, 'getWPSgsNearest');
-      const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
-      const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
-      const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+      },
+    }]));
+    const getWPSgsNearestSpy = sinon.spy(component, 'getWPSgsNearest');
+    const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+    const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+    const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
 
-      component.get('_leafletLayerPromise').then((leafletObject) => {
-        component.set('_leafletObject', leafletObject);
-        leafletObject.options = options;
-        const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
-        const e = {
-          featureLayer,
-        };
-        const promise = component.getNearObject(e).then((result) => {
-          assert.equal(result.distance, 12168517.065042155);
-          assert.ok(result.layer);
-          assert.equal(result.object.feature.properties.primarykey, '84b823eb-00f2-48eb-9fdf-a1b47dbe185d');
-          assert.equal(getWPSgsNearestSpy.callCount, 1);
-          assert.equal(getObjectCenterSpy.callCount, 3);
-          assert.equal(_getDistanceBetweenObjectsSpy.callCount, 1);
-          assert.equal(_getLayerFeatureIdSpy.callCount, 1);
-          assert.equal(getLayerFeaturesStub.callCount, 1);
-        }).finally(() => {
-          done(1);
-          getmapApiStub.restore();
-          stubAjax.restore();
-          getLayerFeaturesStub.restore();
-          getWPSgsNearestSpy.restore();
-          getObjectCenterSpy.restore();
-          _getDistanceBetweenObjectsSpy.restore();
-          _getLayerFeatureIdSpy.restore();
-        });
-        assert.ok(promise instanceof Promise);
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      leafletObject.options = options;
+      const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+      const e = {
+        featureLayer,
+      };
+      const promise = component.getNearObject(e).then((result) => {
+        assert.equal(result.distance, 12168517.065042155);
+        assert.ok(result.layer);
+        assert.equal(result.object.feature.properties.primarykey, '84b823eb-00f2-48eb-9fdf-a1b47dbe185d');
+        assert.equal(getWPSgsNearestSpy.callCount, 1);
+        assert.equal(getObjectCenterSpy.callCount, 3);
+        assert.equal(_getDistanceBetweenObjectsSpy.callCount, 1);
+        assert.equal(_getLayerFeatureIdSpy.callCount, 1);
+        assert.equal(getLayerFeaturesStub.callCount, 1);
+      }).finally(() => {
         done(1);
+        getmapApiStub.restore();
+        stubAjax.restore();
+        getLayerFeaturesStub.restore();
+        getWPSgsNearestSpy.restore();
+        getObjectCenterSpy.restore();
+        _getDistanceBetweenObjectsSpy.restore();
+        _getLayerFeatureIdSpy.restore();
       });
+      assert.ok(promise instanceof Promise);
+      done(1);
     });
   });
-  test('test getNearObject with wpsUrl, Nearest object not found', function (assert) {
-    assert.expect(7);
-    const done = assert.async(2);
-    run(() => {
-      options = $.extend(options, { pkField: 'primarykey', wpsUrl: 'http://localhost:8080/geoserver/wps', });
-      const layerModel = EmberObject.create({
-        type: 'wfs',
-        visibility: false,
-        settingsAsObject: options,
-      });
-      param = $.extend(param, { layerModel, });
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+});
+test('test getNearObject with wpsUrl, Nearest object not found', function (assert) {
+  assert.expect(7);
+  const done = assert.async(2);
+  run(() => {
+    options = $.extend(options, { pkField: 'primarykey', wpsUrl: 'http://localhost:8080/geoserver/wps', });
+    const layerModel = EmberObject.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject: options,
+    });
+    param = $.extend(param, { layerModel, });
+    const component = this.subject(param);
 
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-      const stubAjax = sinon.stub($, 'ajax');
-      const responseText = '{'
-        + '"type": "FeatureCollection",'
-        + '"crs": {'
-          + '"type": "name",'
-          + '"properties": {'
-            + '"name": "EPSG:32640"'
-          + '}'
-        + '},'
-        + '"features": []'
-      + '}';
-      stubAjax.yieldsTo('success', responseText);
-      const getLayerFeaturesStub = sinon.stub(component, 'getLayerFeatures');
-      getLayerFeaturesStub.returns(resolve([]));
-      const getWPSgsNearestSpy = sinon.spy(component, 'getWPSgsNearest');
-      const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
-      const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
-      const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+    const stubAjax = sinon.stub($, 'ajax');
+    const responseText = '{'
+      + '"type": "FeatureCollection",'
+      + '"crs": {'
+        + '"type": "name",'
+        + '"properties": {'
+          + '"name": "EPSG:32640"'
+        + '}'
+      + '},'
+      + '"features": []'
+    + '}';
+    stubAjax.yieldsTo('success', responseText);
+    const getLayerFeaturesStub = sinon.stub(component, 'getLayerFeatures');
+    getLayerFeaturesStub.returns(resolve([]));
+    const getWPSgsNearestSpy = sinon.spy(component, 'getWPSgsNearest');
+    const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+    const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+    const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
 
-      component.get('_leafletLayerPromise').then((leafletObject) => {
-        component.set('_leafletObject', leafletObject);
-        leafletObject.options = options;
-        const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
-        const e = {
-          featureLayer,
-        };
-        const promise = component.getNearObject(e).then((result) => {
-          assert.equal(result, 'Nearest object not found');
-          assert.equal(getWPSgsNearestSpy.callCount, 1);
-          assert.equal(getObjectCenterSpy.callCount, 1);
-          assert.equal(_getDistanceBetweenObjectsSpy.callCount, 0);
-          assert.equal(_getLayerFeatureIdSpy.callCount, 0);
-          assert.equal(getLayerFeaturesStub.callCount, 0);
-        }).finally(() => {
-          done(1);
-          getmapApiStub.restore();
-          stubAjax.restore();
-          getLayerFeaturesStub.restore();
-          getWPSgsNearestSpy.restore();
-          getObjectCenterSpy.restore();
-          _getDistanceBetweenObjectsSpy.restore();
-          _getLayerFeatureIdSpy.restore();
-        });
-        assert.ok(promise instanceof Promise);
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      leafletObject.options = options;
+      const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+      const e = {
+        featureLayer,
+      };
+      const promise = component.getNearObject(e).then((result) => {
+        assert.equal(result, 'Nearest object not found');
+        assert.equal(getWPSgsNearestSpy.callCount, 1);
+        assert.equal(getObjectCenterSpy.callCount, 1);
+        assert.equal(_getDistanceBetweenObjectsSpy.callCount, 0);
+        assert.equal(_getLayerFeatureIdSpy.callCount, 0);
+        assert.equal(getLayerFeaturesStub.callCount, 0);
+      }).finally(() => {
         done(1);
+        getmapApiStub.restore();
+        stubAjax.restore();
+        getLayerFeaturesStub.restore();
+        getWPSgsNearestSpy.restore();
+        getObjectCenterSpy.restore();
+        _getDistanceBetweenObjectsSpy.restore();
+        _getLayerFeatureIdSpy.restore();
       });
+      assert.ok(promise instanceof Promise);
+      done(1);
     });
   });
+});
 
-  test('test getNearObject without wpsUrl, same layer', function (assert) {
-    assert.expect(10);
-    const done = assert.async(2);
-    run(() => {
-      options = $.extend(options, { pkField: 'primarykey', });
-      const layerModel = EmberObject.create({
-        type: 'wfs',
-        visibility: false,
-        settingsAsObject: options,
-        id: '123',
-      });
-      param = $.extend(param, { layerModel, });
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+test('test getNearObject without wpsUrl, same layer', function (assert) {
+  assert.expect(10);
+  const done = assert.async(2);
+  run(() => {
+    options = $.extend(options, { pkField: 'primarykey', });
+    const layerModel = EmberObject.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject: options,
+      id: '123',
+    });
+    param = $.extend(param, { layerModel, });
+    const component = this.subject(param);
 
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-      const dwithinStub = sinon.stub(component, 'dwithin');
-      dwithinStub.onCall(0).returns(resolve(null));
-      dwithinStub.onCall(1).returns(resolve(null));
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+    const dwithinStub = sinon.stub(component, 'dwithin');
+    dwithinStub.onCall(0).returns(resolve(null));
+    dwithinStub.onCall(1).returns(resolve(null));
 
-      // feature1
-      const feature1 = {
-        type: 'Feature',
-        id: 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb6',
-        geometry: {
-          type: 'MultiPolygon',
-          coordinates: [[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]],
-        },
-        geometry_name: 'shape',
-        properties: {
-          primarykey: 'df5178d8-aa47-4b92-ba08-2404ea26fdb6',
-          nomer: null,
-          lesnichestvo: null,
-          uchastkovoelesnichestvo: null,
-          urochishe: null,
-          area: null,
-          length: null,
-          id: null,
-          createtime: null,
-          creator: null,
-          edittime: null,
-          editor: null,
-        },
+    // feature1
+    const feature1 = {
+      type: 'Feature',
+      id: 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb6',
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]],
+      },
+      geometry_name: 'shape',
+      properties: {
+        primarykey: 'df5178d8-aa47-4b92-ba08-2404ea26fdb6',
+        nomer: null,
+        lesnichestvo: null,
+        uchastkovoelesnichestvo: null,
+        urochishe: null,
+        area: null,
+        length: null,
+        id: null,
+        createtime: null,
+        creator: null,
+        edittime: null,
+        editor: null,
+      },
+    };
+    const polygon1 = L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
+    polygon1.feature = feature1;
+    feature1.leafletLayer = polygon1;
+
+    // feature 2
+    const feature2 = {
+      type: 'Feature',
+      id: 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb7',
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]],
+      },
+      geometry_name: 'shape',
+      properties: {
+        primarykey: 'df5178d8-aa47-4b92-ba08-2404ea26fdb7',
+        nomer: null,
+        lesnichestvo: null,
+        uchastkovoelesnichestvo: null,
+        urochishe: null,
+        area: null,
+        length: null,
+        id: null,
+        createtime: null,
+        creator: null,
+        edittime: null,
+        editor: null,
+      },
+    };
+    const polygon2 = L.polygon([[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]);
+    polygon2.feature = feature2;
+    feature2.leafletLayer = polygon2;
+
+    // feature3 - same object
+    const feature3 = {
+      type: 'Feature',
+      id: 'kvartalutverzhdenopolygon32640.234',
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]],
+      },
+      geometry_name: 'shape',
+      properties: {
+        primarykey: '234',
+        nomer: null,
+        lesnichestvo: null,
+        uchastkovoelesnichestvo: null,
+        urochishe: null,
+        area: null,
+        length: null,
+        id: null,
+        createtime: null,
+        creator: null,
+        edittime: null,
+        editor: null,
+      },
+    };
+    const polygon3 = L.polygon([[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]);
+    polygon3.feature = feature3;
+    feature3.leafletLayer = polygon3;
+
+    dwithinStub.onCall(2).returns(resolve([feature1, feature2, feature3]));
+
+    const upDistanceSpy = sinon.spy(component, 'upDistance');
+    const _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
+    const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+    const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+    const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      leafletObject.options = options;
+      const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+      const e = {
+        featureLayer,
+        featureId: '234',
+        layerObjectId: '123',
       };
-      const polygon1 = L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
-      polygon1.feature = feature1;
-      feature1.leafletLayer = polygon1;
-
-      // feature 2
-      const feature2 = {
-        type: 'Feature',
-        id: 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb7',
-        geometry: {
-          type: 'MultiPolygon',
-          coordinates: [[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]],
-        },
-        geometry_name: 'shape',
-        properties: {
-          primarykey: 'df5178d8-aa47-4b92-ba08-2404ea26fdb7',
-          nomer: null,
-          lesnichestvo: null,
-          uchastkovoelesnichestvo: null,
-          urochishe: null,
-          area: null,
-          length: null,
-          id: null,
-          createtime: null,
-          creator: null,
-          edittime: null,
-          editor: null,
-        },
-      };
-      const polygon2 = L.polygon([[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]);
-      polygon2.feature = feature2;
-      feature2.leafletLayer = polygon2;
-
-      // feature3 - same object
-      const feature3 = {
-        type: 'Feature',
-        id: 'kvartalutverzhdenopolygon32640.234',
-        geometry: {
-          type: 'MultiPolygon',
-          coordinates: [[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]],
-        },
-        geometry_name: 'shape',
-        properties: {
-          primarykey: '234',
-          nomer: null,
-          lesnichestvo: null,
-          uchastkovoelesnichestvo: null,
-          urochishe: null,
-          area: null,
-          length: null,
-          id: null,
-          createtime: null,
-          creator: null,
-          edittime: null,
-          editor: null,
-        },
-      };
-      const polygon3 = L.polygon([[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]);
-      polygon3.feature = feature3;
-      feature3.leafletLayer = polygon3;
-
-      dwithinStub.onCall(2).returns(resolve([feature1, feature2, feature3]));
-
-      const upDistanceSpy = sinon.spy(component, 'upDistance');
-      const _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
-      const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
-      const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
-      const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
-
-      component.get('_leafletLayerPromise').then((leafletObject) => {
-        component.set('_leafletObject', leafletObject);
-        leafletObject.options = options;
-        const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
-        const e = {
-          featureLayer,
-          featureId: '234',
-          layerObjectId: '123',
-        };
-        const promise = component.getNearObject(e).then((result) => {
-          assert.equal(result.distance, 18060435.745686203);
-          assert.ok(result.layer);
-          assert.equal(result.object.feature.properties.primarykey, 'df5178d8-aa47-4b92-ba08-2404ea26fdb6');
-          assert.equal(getObjectCenterSpy.callCount, 4);
-          assert.equal(_getDistanceBetweenObjectsSpy.callCount, 2);
-          assert.equal(_getLayerFeatureIdSpy.callCount, 3);
-          assert.equal(upDistanceSpy.callCount, 3);
-          assert.equal(_calcNearestObjectSpy.callCount, 1);
-          assert.equal(dwithinStub.callCount, 3);
-        }).finally(() => {
-          done(1);
-          getmapApiStub.restore();
-          _calcNearestObjectSpy.restore();
-          upDistanceSpy.restore();
-          getObjectCenterSpy.restore();
-          _getDistanceBetweenObjectsSpy.restore();
-          _getLayerFeatureIdSpy.restore();
-          dwithinStub.restore();
-        });
-        assert.ok(promise instanceof Promise);
+      const promise = component.getNearObject(e).then((result) => {
+        assert.equal(result.distance, 18060435.745686203);
+        assert.ok(result.layer);
+        assert.equal(result.object.feature.properties.primarykey, 'df5178d8-aa47-4b92-ba08-2404ea26fdb6');
+        assert.equal(getObjectCenterSpy.callCount, 4);
+        assert.equal(_getDistanceBetweenObjectsSpy.callCount, 2);
+        assert.equal(_getLayerFeatureIdSpy.callCount, 3);
+        assert.equal(upDistanceSpy.callCount, 3);
+        assert.equal(_calcNearestObjectSpy.callCount, 1);
+        assert.equal(dwithinStub.callCount, 3);
+      }).finally(() => {
         done(1);
+        getmapApiStub.restore();
+        _calcNearestObjectSpy.restore();
+        upDistanceSpy.restore();
+        getObjectCenterSpy.restore();
+        _getDistanceBetweenObjectsSpy.restore();
+        _getLayerFeatureIdSpy.restore();
+        dwithinStub.restore();
       });
+      assert.ok(promise instanceof Promise);
+      done(1);
     });
   });
-  test('test getNearObject without wpsUrl, other layer', function (assert) {
-    assert.expect(10);
-    const done = assert.async(2);
-    run(() => {
-      options = $.extend(options, { pkField: 'primarykey', });
-      const layerModel = EmberObject.create({
-        type: 'wfs',
-        visibility: false,
-        settingsAsObject: options,
-        id: '123',
-      });
-      param = $.extend(param, { layerModel, });
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+});
+test('test getNearObject without wpsUrl, other layer', function (assert) {
+  assert.expect(10);
+  const done = assert.async(2);
+  run(() => {
+    options = $.extend(options, { pkField: 'primarykey', });
+    const layerModel = EmberObject.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject: options,
+      id: '123',
+    });
+    param = $.extend(param, { layerModel, });
+    const component = this.subject(param);
 
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-      const dwithinStub = sinon.stub(component, 'dwithin');
-      dwithinStub.onCall(0).returns(resolve(null));
-      dwithinStub.onCall(1).returns(resolve(null));
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+    const dwithinStub = sinon.stub(component, 'dwithin');
+    dwithinStub.onCall(0).returns(resolve(null));
+    dwithinStub.onCall(1).returns(resolve(null));
 
-      // feature1
-      const feature1 = {
-        type: 'Feature',
-        id: 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb6',
-        geometry: {
-          type: 'MultiPolygon',
-          coordinates: [[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]],
-        },
-        geometry_name: 'shape',
-        properties: {
-          primarykey: 'df5178d8-aa47-4b92-ba08-2404ea26fdb6',
-          nomer: null,
-          lesnichestvo: null,
-          uchastkovoelesnichestvo: null,
-          urochishe: null,
-          area: null,
-          length: null,
-          id: null,
-          createtime: null,
-          creator: null,
-          edittime: null,
-          editor: null,
-        },
+    // feature1
+    const feature1 = {
+      type: 'Feature',
+      id: 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb6',
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]],
+      },
+      geometry_name: 'shape',
+      properties: {
+        primarykey: 'df5178d8-aa47-4b92-ba08-2404ea26fdb6',
+        nomer: null,
+        lesnichestvo: null,
+        uchastkovoelesnichestvo: null,
+        urochishe: null,
+        area: null,
+        length: null,
+        id: null,
+        createtime: null,
+        creator: null,
+        edittime: null,
+        editor: null,
+      },
+    };
+    const polygon1 = L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
+    polygon1.feature = feature1;
+    feature1.leafletLayer = polygon1;
+
+    // feature 2
+    const feature2 = {
+      type: 'Feature',
+      id: 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb7',
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]],
+      },
+      geometry_name: 'shape',
+      properties: {
+        primarykey: 'df5178d8-aa47-4b92-ba08-2404ea26fdb7',
+        nomer: null,
+        lesnichestvo: null,
+        uchastkovoelesnichestvo: null,
+        urochishe: null,
+        area: null,
+        length: null,
+        id: null,
+        createtime: null,
+        creator: null,
+        edittime: null,
+        editor: null,
+      },
+    };
+    const polygon2 = L.polygon([[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]);
+    polygon2.feature = feature2;
+    feature2.leafletLayer = polygon2;
+
+    // feature3 - same object
+    const feature3 = {
+      type: 'Feature',
+      id: 'kvartalutverzhdenopolygon32640.234',
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]],
+      },
+      geometry_name: 'shape',
+      properties: {
+        primarykey: '234',
+        nomer: null,
+        lesnichestvo: null,
+        uchastkovoelesnichestvo: null,
+        urochishe: null,
+        area: null,
+        length: null,
+        id: null,
+        createtime: null,
+        creator: null,
+        edittime: null,
+        editor: null,
+      },
+    };
+    const polygon3 = L.polygon([[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]);
+    polygon3.feature = feature3;
+    feature3.leafletLayer = polygon3;
+
+    dwithinStub.onCall(2).returns(resolve([feature1, feature2, feature3]));
+
+    const upDistanceSpy = sinon.spy(component, 'upDistance');
+    const _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
+    const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+    const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+    const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      leafletObject.options = options;
+      const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+      const e = {
+        featureLayer,
+        featureId: '234',
+        layerObjectId: '234',
       };
-      const polygon1 = L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
-      polygon1.feature = feature1;
-      feature1.leafletLayer = polygon1;
-
-      // feature 2
-      const feature2 = {
-        type: 'Feature',
-        id: 'kvartalutverzhdenopolygon32640.df5178d8-aa47-4b92-ba08-2404ea26fdb7',
-        geometry: {
-          type: 'MultiPolygon',
-          coordinates: [[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]],
-        },
-        geometry_name: 'shape',
-        properties: {
-          primarykey: 'df5178d8-aa47-4b92-ba08-2404ea26fdb7',
-          nomer: null,
-          lesnichestvo: null,
-          uchastkovoelesnichestvo: null,
-          urochishe: null,
-          area: null,
-          length: null,
-          id: null,
-          createtime: null,
-          creator: null,
-          edittime: null,
-          editor: null,
-        },
-      };
-      const polygon2 = L.polygon([[[[56.43419266, 59.15478571], [56.44148827, 59.155465], [56.44148827, 59.15274775], [56.43419266, 59.15478571]]]]);
-      polygon2.feature = feature2;
-      feature2.leafletLayer = polygon2;
-
-      // feature3 - same object
-      const feature3 = {
-        type: 'Feature',
-        id: 'kvartalutverzhdenopolygon32640.234',
-        geometry: {
-          type: 'MultiPolygon',
-          coordinates: [[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]],
-        },
-        geometry_name: 'shape',
-        properties: {
-          primarykey: '234',
-          nomer: null,
-          lesnichestvo: null,
-          uchastkovoelesnichestvo: null,
-          urochishe: null,
-          area: null,
-          length: null,
-          id: null,
-          createtime: null,
-          creator: null,
-          edittime: null,
-          editor: null,
-        },
-      };
-      const polygon3 = L.polygon([[[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]]);
-      polygon3.feature = feature3;
-      feature3.leafletLayer = polygon3;
-
-      dwithinStub.onCall(2).returns(resolve([feature1, feature2, feature3]));
-
-      const upDistanceSpy = sinon.spy(component, 'upDistance');
-      const _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
-      const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
-      const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
-      const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
-
-      component.get('_leafletLayerPromise').then((leafletObject) => {
-        component.set('_leafletObject', leafletObject);
-        leafletObject.options = options;
-        const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
-        const e = {
-          featureLayer,
-          featureId: '234',
-          layerObjectId: '234',
-        };
-        const promise = component.getNearObject(e).then((result) => {
-          assert.equal(result.distance, 0);
-          assert.ok(result.layer);
-          assert.equal(result.object.feature.properties.primarykey, '234');
-          assert.equal(getObjectCenterSpy.callCount, 6);
-          assert.equal(_getDistanceBetweenObjectsSpy.callCount, 3);
-          assert.equal(_getLayerFeatureIdSpy.callCount, 3);
-          assert.equal(upDistanceSpy.callCount, 3);
-          assert.equal(_calcNearestObjectSpy.callCount, 1);
-          assert.equal(dwithinStub.callCount, 3);
-        }).finally(() => {
-          done(1);
-          getmapApiStub.restore();
-          _calcNearestObjectSpy.restore();
-          upDistanceSpy.restore();
-          getObjectCenterSpy.restore();
-          _getDistanceBetweenObjectsSpy.restore();
-          _getLayerFeatureIdSpy.restore();
-          dwithinStub.restore();
-        });
-        assert.ok(promise instanceof Promise);
+      const promise = component.getNearObject(e).then((result) => {
+        assert.equal(result.distance, 0);
+        assert.ok(result.layer);
+        assert.equal(result.object.feature.properties.primarykey, '234');
+        assert.equal(getObjectCenterSpy.callCount, 6);
+        assert.equal(_getDistanceBetweenObjectsSpy.callCount, 3);
+        assert.equal(_getLayerFeatureIdSpy.callCount, 3);
+        assert.equal(upDistanceSpy.callCount, 3);
+        assert.equal(_calcNearestObjectSpy.callCount, 1);
+        assert.equal(dwithinStub.callCount, 3);
+      }).finally(() => {
         done(1);
+        getmapApiStub.restore();
+        _calcNearestObjectSpy.restore();
+        upDistanceSpy.restore();
+        getObjectCenterSpy.restore();
+        _getDistanceBetweenObjectsSpy.restore();
+        _getLayerFeatureIdSpy.restore();
+        dwithinStub.restore();
       });
+      assert.ok(promise instanceof Promise);
+      done(1);
     });
   });
-  test('test getNearObject without wpsUrl, Nearest object not found', function (assert) {
-    assert.expect(8);
-    const done = assert.async(2);
-    run(() => {
-      options = $.extend(options, { pkField: 'primarykey', });
-      const layerModel = EmberObject.create({
-        type: 'wfs',
-        visibility: false,
-        settingsAsObject: options,
-        id: '123',
-      });
-      param = $.extend(param, { layerModel, });
-      const component = this.owner.factoryFor('component:layers/wfs-layer').create(param);
+});
+test('test getNearObject without wpsUrl, Nearest object not found', function (assert) {
+  assert.expect(8);
+  const done = assert.async(2);
+  run(() => {
+    options = $.extend(options, { pkField: 'primarykey', });
+    const layerModel = EmberObject.create({
+      type: 'wfs',
+      visibility: false,
+      settingsAsObject: options,
+      id: '123',
+    });
+    param = $.extend(param, { layerModel, });
+    const component = this.subject(param);
 
-      const store = app.__container__.lookup('service:store');
-      const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-      const dwithinStub = sinon.stub(component, 'dwithin');
-      dwithinStub.returns(resolve(null));
+    const store = app.__container__.lookup('service:store');
+    const mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    const getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+    const dwithinStub = sinon.stub(component, 'dwithin');
+    dwithinStub.returns(resolve(null));
 
-      const upDistanceSpy = sinon.spy(component, 'upDistance');
-      const _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
-      const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
-      const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
-      const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
+    const upDistanceSpy = sinon.spy(component, 'upDistance');
+    const _calcNearestObjectSpy = sinon.spy(component, '_calcNearestObject');
+    const getObjectCenterSpy = sinon.spy(mapModel, 'getObjectCenter');
+    const _getDistanceBetweenObjectsSpy = sinon.spy(mapModel, '_getDistanceBetweenObjects');
+    const _getLayerFeatureIdSpy = sinon.spy(mapModel, '_getLayerFeatureId');
 
-      component.get('_leafletLayerPromise').then((leafletObject) => {
-        component.set('_leafletObject', leafletObject);
-        leafletObject.options = options;
-        const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
-        const e = {
-          featureLayer,
-          featureId: '234',
-          layerObjectId: '234',
-        };
-        const promise = component.getNearObject(e).then((result) => {
-          assert.equal(result, 'Nearest object not found');
-          assert.equal(getObjectCenterSpy.callCount, 0);
-          assert.equal(_getDistanceBetweenObjectsSpy.callCount, 0);
-          assert.equal(_getLayerFeatureIdSpy.callCount, 0);
-          assert.equal(upDistanceSpy.callCount, 8);
-          assert.equal(_calcNearestObjectSpy.callCount, 0);
-          assert.equal(dwithinStub.callCount, 8);
-        }).finally(() => {
-          done(1);
-          getmapApiStub.restore();
-          _calcNearestObjectSpy.restore();
-          upDistanceSpy.restore();
-          getObjectCenterSpy.restore();
-          _getDistanceBetweenObjectsSpy.restore();
-          _getLayerFeatureIdSpy.restore();
-          dwithinStub.restore();
-        });
-        assert.ok(promise instanceof Promise);
+    component.get('_leafletLayerPromise').then((leafletObject) => {
+      component.set('_leafletObject', leafletObject);
+      leafletObject.options = options;
+      const featureLayer = L.polygon([[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]]);
+      const e = {
+        featureLayer,
+        featureId: '234',
+        layerObjectId: '234',
+      };
+      const promise = component.getNearObject(e).then((result) => {
+        assert.equal(result, 'Nearest object not found');
+        assert.equal(getObjectCenterSpy.callCount, 0);
+        assert.equal(_getDistanceBetweenObjectsSpy.callCount, 0);
+        assert.equal(_getLayerFeatureIdSpy.callCount, 0);
+        assert.equal(upDistanceSpy.callCount, 8);
+        assert.equal(_calcNearestObjectSpy.callCount, 0);
+        assert.equal(dwithinStub.callCount, 8);
+      }).finally(() => {
         done(1);
+        getmapApiStub.restore();
+        _calcNearestObjectSpy.restore();
+        upDistanceSpy.restore();
+        getObjectCenterSpy.restore();
+        _getDistanceBetweenObjectsSpy.restore();
+        _getLayerFeatureIdSpy.restore();
+        dwithinStub.restore();
       });
+      assert.ok(promise instanceof Promise);
+      done(1);
     });
   });
 });

@@ -38,7 +38,7 @@ export const ValidationRules = {
       validator('ds-error'),
       validator('presence', true)
     ],
-  }
+  },
 };
 
 export const defineProjections = function (modelClass) {

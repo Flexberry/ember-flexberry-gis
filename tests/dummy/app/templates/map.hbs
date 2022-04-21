@@ -328,7 +328,7 @@
     </div>
   </div>
   {{#flexberry-maptoolbar class="background-layers"}}
-    {{map-tools/background-layers layers=model.hierarchy}}
+    {{map-tools/background-layers layers=model.hierarchy leafletMap=leafletMap}}
   {{/flexberry-maptoolbar}}
   <div class="mappanel">
     <div class="pusher">
@@ -369,7 +369,6 @@
           updateWhenIdle=true
           scales=switchScaleControlScales
         }}
-
       {{/flexberry-map}}
     </div>
   </div>

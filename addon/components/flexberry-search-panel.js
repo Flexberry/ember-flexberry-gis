@@ -30,15 +30,25 @@ export default Component.extend({
   */
   _selectedLayerFeaturesLocalizedProperties: computed(
     '_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.localizedProperties',
+    '_selectedLayer.settingsAsObject.searchSettings.searchFields',
     'i18n.locale',
     function () {
       const currentLocale = this.get('i18n.locale');
+      const searchFields = this.get('_selectedLayer.settingsAsObject.searchSettings.searchFields') || [];
       const localizedProperties = this.get(
         '_selectedLayer.settingsAsObject.displaySettings.'
         + `featuresPropertiesSettings.localizedProperties.${currentLocale}`
       ) || {};
+
+      const searchProperties = {};
+      Ember.keys(localizedProperties).forEach((prop) => {
+        if (searchFields.indexOf(prop) > -1) {
+          Ember.set(searchProperties, prop, localizedProperties[prop]);
+        }
+      });
+
       this.set('_localizedValue', null);
-      return localizedProperties;
+      return searchProperties;
     }
   ),
 
@@ -206,6 +216,7 @@ export default Component.extend({
       } else {
         // Сontext search and coordinate search
         let filter;
+        let selectedLayerId;
         const searchOptions = {
           queryString,
           maxResultsCount: this.get('maxResultsCount'),
@@ -217,6 +228,7 @@ export default Component.extend({
         } else {
           searchOptions.propertyName = this.get('propertyName');
           const selectedLayer = this.get('_selectedLayer');
+          selectedLayerId = selectedLayer.get('id');
           filter = function (layerModel) {
             return layerModel === selectedLayer;
           };
@@ -228,6 +240,7 @@ export default Component.extend({
           context: !this.get('attrVisible'),
           filter,
           results: A(),
+          selectedLayer: selectedLayerId,
         };
         this.sendAction('querySearch', e);
       }
@@ -238,6 +251,10 @@ export default Component.extend({
       this.set('_selectedLayer', null);
       this.set('_localizedValue', null);
       this.sendAction('clearSearch');
+      const $clearSearch = Ember.$('.clear-search-button');
+      if (!$clearSearch.hasClass('hidden')) {
+        $clearSearch.addClass('hidden');
+      }
     },
 
     attrSearch() {
@@ -284,6 +301,16 @@ export default Component.extend({
     */
     onErrorMessageHide() {
       this.set('showErrorMessage', false);
+    },
+
+    /**
+      Action called when search input has received focus
+      Invokes {{#crossLink "FlexberrySearchComponent/sendingActions.focus:method"}}'focus' action{{/crossLink}}.
+      @method actions.focus
+    */
+    focus() {
+      const leafletMap = this.get('leafletMap');
+      leafletMap.fire('flexberry-map:focusSearch', { focusSearch: 'focusSearch', });
     },
   },
 });

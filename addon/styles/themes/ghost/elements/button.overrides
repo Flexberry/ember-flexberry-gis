@@ -1,0 +1,326 @@
+.ui.button.flexberry-button:hover i.icon:before {
+    color: @flexberryButtonIconHoveredColor;
+}
+
+.ui.buttons .or {
+  display: block;
+}
+
+.ui.icon.button {
+    color: @uiIconButtonColor;
+    background: @uiIconButtonBackground;
+    border-radius: @uiIconButtonBorderRadius;
+    &.active,
+    &:hover {
+        color: @uiIconButtonHoveredColor;
+        background: @uiIconButtonHoveredBackground;
+    }
+}
+
+.ui.menu.flexberry-maptoolbar {
+    .ui.icon.button {
+      font-size: 0px;
+    }
+
+    i.icon:before {
+      opacity: 1;
+    }
+
+    /* сохранить */
+    .flexberry-save-map-button {
+        left: 286px;
+        width: 76px;
+        box-shadow: @uiIconButtonBoxShadow;
+        color: @uiIconButtonColor;
+        background: @whitecolor;
+        border-style: none;
+        &:hover {
+          background: @uiIconButtonHoveredBackground;
+          color: @uiIconButtonHoveredColor;
+        }
+        &:focus {
+          outline: none;
+        }
+    }
+}
+
+.sidebar-wrapper .ui.button {
+    border: none;
+}
+
+.mappanel,
+.sidebar-wrapper,
+.flexberry-export-map-command-dialog,
+.flexberry-search-map-command-dialog,
+.flexberry-go-to-map-command-dialog {
+    .ui.icon.button:not(.fluid) {
+        border-radius: 5px;
+        font-weight: normal;
+        display: inline-block;
+        height: @uiIconButtonHeight;
+        width: @uiIconButtonWidth;
+        box-shadow: @uiIconButtonBoxShadow;
+        font-size: 16px;
+        margin-left: 0px;
+        &.active,
+        &:hover {
+          opacity: 1;
+        }
+    }
+}
+
+
+/* Flexberry Rdit Layermap Segment */
+.flexberry-edit-layermap {
+    .ui.small.fluid.buttons:not(.basic):not(.inverted) {
+      &>.button.flexberry-button {
+          background: @uiIconButtonBackground;
+          color: @uiIconButtonColor;
+          border: 1px solid @uiIconButtonBorderColor;
+          &.active {
+              background: @fluidButtonsActiveBackground;
+          }
+          &:hover {
+              opacity: 0.8;
+              color: @uiIconButtonColor;
+          }
+      }
+    }
+}
+
+
+// ====== RGIS ========
+.ui.icon.button,
+.ui.icon.tiny.button.no-margin {
+  &.active,
+  &:hover {
+    border: @buttonMenuHoveredBorder;
+  }
+}
+
+/* flexberry-identify-panel*/
+.flexberry-identify-panel {
+  .ui.icon.button {
+
+    &.flexberry-identify-panel-all-layers-option,
+    &.flexberry-identify-panel-rectangle-tools-option,
+    &.flexberry-identify-panel-top-visible-layers-option,
+    &.flexberry-identify-panel-polygon-tools-option,
+    &.flexberry-identify-panel-all-visible-layers-option {
+      border-radius: @defaultBorderRadius;
+    }
+    &:hover {
+        background: @whitecolor !important;
+        color: @primaryColor;
+    }
+    &.flexberry-identify-panel-rectangle-tools-option,
+    &.flexberry-identify-panel-polygon-tools-option {
+        // font-size: 22px !important;
+        padding: 10px 4px;
+    }
+    &.active {
+        background: @lightbluecolor;
+        color: @primaryColor;
+    }
+  }
+
+  &.ui.celled.grid {
+    margin: 0;
+  }
+
+  .ui.icon.button:not(.fluid) {
+    border: @buttonMenuBorder;
+    box-shadow: @defaultBoxShadow;
+    width: 40px;
+    height: 40px;
+    padding: 7px 0;
+    margin: 0;
+
+    &.active,
+    &:hover {
+      box-shadow: @defaultBoxShadow;
+      border: @buttonMenuHoveredBorder;
+      background: @white;
+      i.icon:before {
+        color: @buttonMenuColor;
+      }
+    }
+  }
+}
+
+// Кнопки Сохранить и добавить новый слой на дереве слоев
+.sidebar-wrapper,
+.rgis-sidebar-wrapper {
+  .ui.icon.button.flexberry-map-layers-add-button,
+  .ui.icon.button.flexberry-button.save,
+  .bmrk-add-block-buttons .ui.icon.button,
+  .bookmark-item-buttons .ui.icon.button {
+    border: none;
+    box-shadow: none;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    margin: 0 0 0 .25em;
+  }
+
+  .bookmark-item-buttons,
+  .bmrk-add-block {
+    .ui.button {
+      border: none;
+    }
+  }
+
+  .treeview.root.header {
+    i.icon:before {
+      font-size: 16px;
+      text-transform: uppercase;
+    }
+  }
+
+  .stk-create-object-geometry {
+    .ui.icon.button:not(.fluid) {
+      width: 40px;
+      height: 40px;
+      padding: 12px 0;
+      box-shadow: @buttonMenuBoxShadow;
+      border: @buttonMenuBorder;
+      margin: 0;
+
+      &:hover {
+        background: @buttonMenuHoveredBackground;
+        border: @buttonMenuHoveredBorder;
+      }
+
+      &.active,
+      &.active:hover {
+        background: @buttonMenuActiveBackground;
+        border: @buttonMenuHoveredBorder;
+        i.icon:before {
+          color: @white;
+        }
+      }
+    }
+  }
+}
+
+.ui.positive.buttons .button,
+.ui.positive.button {
+  border: 1px solid @darkbluecolor;
+
+  &:hover {
+    border: 1px solid @darkbluecolor;
+  }
+}
+
+.ui.negative.buttons .button,
+.ui.negative.button {
+  border: 1px solid @darkbluecolor;
+  color: @darkbluecolor;
+  background: @white !important;
+
+  &:hover {
+    color: @darkbluecolor;
+    border: 1px solid @darkbluecolor;
+  }
+}
+
+.ui.buttons > .ui.button:not(.basic):not(.inverted),
+.ui.buttons:not(.basic):not(.inverted) > .button {
+  padding: 0.7em !important;
+}
+
+.ui.icon.tiny.button:hover i.icon.chevron.down:before {
+  color: @uiIconButtonHoveredColor;
+}
+
+.ui.icon.tiny.button:hover i.icon.chevron.up:before {
+  color: @uiIconButtonHoveredColor;
+}
+
+.ui.button.icon.hierarchical-button {
+  i.icon {
+    font-size: 1.5rem;
+  }
+
+  &.active {
+    border: none;
+    background: @olvToolvarButtonActiveBackgroundColor;
+    border-radius: @olvToolvarButtonActiveBorderRadius;
+    box-shadow: none;
+  }
+
+  &:hover {
+    border: none;
+  }
+}
+
+.flexberry-file-download-button.ui.icon.button {
+  &:hover {
+      border: @buttonMenuHoveredBorder;
+      color: @buttonMenuColor;
+  }
+}
+
+// Панель атрибутов
+.bottompanel-wrapper {
+  .ui.bottom.bottompanel.folded.sidebarOpened {
+    height: 50px;
+  }
+  .bottompanel-tab-head-panel {
+    .flexberry-geometry-move,
+    .flexberry-geometry-tools,
+    .flexberry-geometry-buffer {
+      i.icon:before {
+        opacity: 0.8;
+      }
+    }
+    .buttons {
+      .flexberry-geometry-move.active {
+        background: @yellowGreenColor;
+      }
+      .flexberry-geometry-buffer {
+        .flexberry-textbox {
+          margin-left: 10px;
+          width: 110px;
+          input {
+            border-bottom-color: @controlBorderColor;
+            &:hover,
+            &:active,
+            &:focus {
+              border-bottom-color: @controlBorderColor;
+            }
+          }
+        }
+        .flexberry-field {
+          margin: 16px 5px;
+          padding-left: 16px;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  button.bottompanel-tab-nav-button {
+    height: 50px;
+    border-color: @controlBorderColor;
+    border-top: none;
+    &:focus {
+      outline-color: @lightgrassGreenColor;
+    }
+  }
+  .flexberry-table .ui.button.flexberry-button.small-button.active {
+    background: @yellowGreenColor;
+  }
+  .ui.tabular.menu.bottompanel-tab-nav-panel-tabs .item {
+    background-color: @yellowGreenColor;
+  }
+}
+
+.ui.modal.flexberry-geometry-add-mode-import-dialog {
+  .button.flexberry-import-from-file-button {
+    padding-top: 10px;
+    margin: 0;
+    &:hover {
+      background-color: @white;
+    }
+  }
+}

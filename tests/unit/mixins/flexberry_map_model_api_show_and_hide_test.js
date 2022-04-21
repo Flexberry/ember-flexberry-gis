@@ -9,9 +9,11 @@ import VectorLayer from 'ember-flexberry-gis/layers/-private/vector';
 module('Unit | Mixin | test api show and hide layers', function () {
   const arrayFindBy = function (prop, value) {
     return this.filter((elem) => {
-      if (elem.hasOwnProperty(prop)) {
+      if (Object.prototype.hasOwnProperty.call(elem, prop)) {
         return elem[prop] === value;
       }
+
+      return false;
     })[0];
   };
 

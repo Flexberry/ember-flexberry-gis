@@ -68,7 +68,9 @@ module('Unit | Utility | intersectionArea', function () {
     const mapModel = {
       _convertObjectCoordinates() { },
     };
-    const stubConvertCoordinates = sinon.stub(mapModel, '_convertObjectCoordinates', _convertObjectCoordinates);
+
+    const stubConvertCoordinates = sinon.stub(mapModel, '_convertObjectCoordinates').callsFake(_convertObjectCoordinates);
+
     const leafletLayer = L.polygon([[[1, 2], [3, 4], [4, 5], [1, 2]]]);
     leafletLayer.options = {
       crs: {
@@ -82,6 +84,7 @@ module('Unit | Utility | intersectionArea', function () {
     // Assert
     assert.equal(res.properties.intersectionArea, 43.97863930247094, 'Assert intersectArea');
     assert.equal(stubConvertCoordinates.callCount, 0, 'Assert call count for method _convertObjectCoordinates');
+    stubConvertCoordinates.restore();
   });
 
   test('test method featureWithAreaIntersect for two polygon not intersect', function (assert) {
@@ -93,7 +96,8 @@ module('Unit | Utility | intersectionArea', function () {
     const mapModel = {
       _convertObjectCoordinates() { },
     };
-    const stubConvertCoordinates = sinon.stub(mapModel, '_convertObjectCoordinates', _convertObjectCoordinates);
+    const stubConvertCoordinates = sinon.stub(mapModel, '_convertObjectCoordinates').callsFake(_convertObjectCoordinates);
+
     const leafletLayer = L.polygon([[[1, 2], [3, 4], [4, 5], [1, 2]]]);
     leafletLayer.options = {
       crs: {
@@ -108,5 +112,6 @@ module('Unit | Utility | intersectionArea', function () {
     assert.equal(res.properties.intersectionArea, 0, 'Assert intersectArea');
     assert.equal(stubConvertCoordinates.callCount, 1, 'Assert call count for method _convertObjectCoordinates');
     assert.equal(stubConvertCoordinates.args[0][0], 'EPSG:32640', 'Assert first argument on method _convertObjectCoordinates');
+    stubConvertCoordinates.restore();
   });
 });

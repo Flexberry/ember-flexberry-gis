@@ -118,7 +118,7 @@ const FlexberryMapComponent = Component.extend(
     leafletOptions: [
 
       // Map state options.
-      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs', 'preferCanvas', 'editable',
+      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs', 'preferCanvas', 'editable', 'wheelPxPerZoomLevel',
 
       // Interaction options.
       'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
@@ -190,6 +190,16 @@ const FlexberryMapComponent = Component.extend(
     @default true
   */
     editable: true,
+
+    /**
+    How many scroll pixels (as reported by L.DomEvent.getWheelDelta) mean a change of one full zoom level.
+    Smaller values will make wheel-zooming faster (and vice versa).
+
+    @property wheelPxPerZoomLevel
+    @type Number
+    @default 60
+  */
+    wheelPxPerZoomLevel: 60,
 
     /**
     Forces the map's zoom level to always be a multiple of this.

@@ -21,12 +21,12 @@ import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import { next } from '@ember/runloop';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import { copyLayer } from '../utils/copy-layer';
 
 import layout from '../templates/components/flexberry-maplayer';
 
-import { next } from '@ember/runloop';
 
 /**
   Component's CSS-classes names.
@@ -522,7 +522,7 @@ const FlexberryMaplayerComponent = Component.extend(
     disabled: '',
 
     maxDate: computed(function () {
-      let date = new Date(new Date().toDateString());
+      const date = new Date(new Date().toDateString());
       date.setDate(date.getDate() + 1);
       return date;
     }),
@@ -536,34 +536,28 @@ const FlexberryMaplayerComponent = Component.extend(
         this.set('disabled', 'disabled');
       }
 
-      next(this, function() {
+      next(this, function () {
         if (!this.get('readonly')) {
           const _this = this;
-          const $caption = $('.ui.tab.treeview .flexberry-maplayer-caption-label');
-          if ($caption.length > 0) {
-            $caption.hover(
-              function() {
-                const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
+          const $captionBlock = Ember.$('.ui.tab.treeview .flexberry-treenode-caption-block');
+          if ($captionBlock.length > 0) {
+            $captionBlock.hover(
+              function () {
+                const $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
                 $toolbar.removeClass('hidden');
-                $(this).addClass('blur');
+                Ember.$(this).children('.flexberry-maplayer-caption-label').addClass('blur');
               },
-              function() {
-                const $toolbar = $(this).parent().children('.flexberry-treenode-buttons-block');
-                $toolbar.hover(
-                  () => {},
-                  () => {
-                    $toolbar.addClass('hidden');
-                    $(this).removeClass('blur');
-                    _this.set('isSubmenu', false);
-                  }
-                );
+              function () {
+                const $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
+                $toolbar.addClass('hidden');
+                Ember.$(this).children('.flexberry-maplayer-caption-label').removeClass('blur');
+                _this.set('isSubmenu', false);
               }
             );
           }
         }
       });
     },
-
     /**
       Redefine L.Control.SideBySide._updateClip for work with layer and label layer.
 
@@ -941,6 +935,10 @@ const FlexberryMaplayerComponent = Component.extend(
       onRemoveDialogApprove(...args) {
         // Send outer 'remove' action.
         this.sendAction('remove', ...args);
+      },
+
+      closeOtherCalendar() {
+        this.sendAction('closeOtherCalendar', this.get('layer.id'));
       },
     },
 

@@ -63,13 +63,13 @@
     .leaflet-control-scale {
       margin-bottom: 8px;
       margin-left: 0px;
-      &.map-control-scalebar {
+      &.map-control-scalebar, &.main, &.export {
         margin-bottom: 0px;
       }
     }
 
     .leaflet-control-scale-line,
-    .map-control-scalebar-ratiomenu {
+    .map-control-scalebar-ratiomenu, .main-ratiomenu, .export-rationmenu {
       width: 90px !important;
       height: 16px;
       background: #ffffff;

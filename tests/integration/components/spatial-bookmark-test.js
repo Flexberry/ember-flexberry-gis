@@ -13,7 +13,7 @@ import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
 module('Integration | Component | spatial bookmark', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function (assert) {
+  hooks.beforeEach(function () {
     this.owner.register('locale:ru/translations', I18nRuLocale);
     this.owner.register('locale:en/translations', I18nEnLocale);
     this.owner.register('service:i18n', I18nService);

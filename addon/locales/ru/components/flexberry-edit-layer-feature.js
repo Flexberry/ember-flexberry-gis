@@ -9,7 +9,7 @@ export default {
       tooltip: 'Отмена',
     },
   },
-  attributes: 'АТРИБУТЫ',
+  attributes: 'Атрибуты',
   validation: {
     'no-layer': 'Необходимо создать геометрию объекта',
     'data-errors': 'Некорректные данные',

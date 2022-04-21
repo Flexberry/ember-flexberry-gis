@@ -24,12 +24,17 @@ import layout from '../templates/components/flexberry-identify-panel';
   @property {String} flexberryClassNames.layersOptions Component's layers-options menu CSS-class name ('flexberry-identify-panel-layers-options').
   @property {String} flexberryClassNames.toolsOptions Component's tools-options menu CSS-class name ('flexberry-identify-panel-tools-options').
   @property {String} flexberryClassNames.identifyAll Component's identify-all mode's CSS-class name ('flexberry-identify-panel-all-layers-option').
-  @property {String} flexberryClassNames.identifyAllVisible Component's identify-all-visible mode's CSS-class name ('flexberry-identify-panel-all-visible-layers-option').
-  @property {String} flexberryClassNames.identifyTopVisible Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-top-visible-layers-option').
-  @property {String} flexberryClassNames.identifyRectangle Component's identify-all-visible mode's CSS-class name ('flexberry-identify-panel-rectangle-tools-option').
-  @property {String} flexberryClassNames.identifyPolygon Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-polygon-tools-option').
+  @property {String} flexberryClassNames.identifyAllVisible 
+    Component's identify-all-visible mode's CSS-class name('flexberry-identify-panel-all-visible-layers-option').
+  @property {String} flexberryClassNames.identifyTopVisible
+    Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-top-visible-layers-option').
+  @property {String} flexberryClassNames.identifyRectangle
+    Component's identify-all-visible mode's CSS-class name ('flexberry-identify-panel-rectangle-tools-option').
+  @property {String} flexberryClassNames.identifyPolygon
+    Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-polygon-tools-option').
   @property {String} flexberryClassNames.identifyMarke Component's identify-all-visible mode's CSS-class name ('flexberry-identify-panel-marker-tools-option').
-  @property {String} flexberryClassNames.identifyPolyline Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-polyline-tools-option').
+  @property {String} flexberryClassNames.identifyPolyline
+    Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-polyline-tools-option').
   @property {String} flexberryClassNames.otherOptions Component's options div CSS-class name ('flexberry-identify-panel-options').
   @readonly
   @static
@@ -310,11 +315,11 @@ const FlexberryIdentifyPanelComponent = Component.extend({
     @property bufferUnitsList
     @type Object
   */
-  bufferUnitsList: computed('i18n.locale', function() {
-    let i18n = this.get('i18n');
+  bufferUnitsList: computed('i18n.locale', function () {
+    const i18n = this.get('i18n');
     return {
       meters: i18n.t('components.flexberry-identify-panel.buffer.units.meters'),
-      kilometers: i18n.t('components.flexberry-identify-panel.buffer.units.kilometers')
+      kilometers: i18n.t('components.flexberry-identify-panel.buffer.units.kilometers'),
     };
   }),
 
@@ -343,11 +348,11 @@ const FlexberryIdentifyPanelComponent = Component.extend({
     @type String
     @default 'kilometers'
   */
-  bufferUnits: computed('bufferUnitsValue', function() {
+  bufferUnits: computed('bufferUnitsValue', function () {
     return this.get('bufferUnitsValue');
   }),
 
-  bufferUnitsValue: computed(function() {
+  bufferUnitsValue: computed(function () {
     return this.get('bufferUnitsList.kilometers');
   }),
 
@@ -411,7 +416,7 @@ const FlexberryIdentifyPanelComponent = Component.extend({
       @method actions.onIdentificationClear
       @param {Object} e Click event-object.
     */
-    onIdentificationClear(e) {
+    onIdentificationClear() {
       const identificationClear = this.get('identificationClear');
       if (typeOf(identificationClear) === 'function') {
         identificationClear();

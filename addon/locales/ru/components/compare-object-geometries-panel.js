@@ -9,7 +9,7 @@ export default {
   'distance-between': 'Расстояние между объектами:',
   intersection: 'Пересекающиеся области',
   'non-intersection': 'Непересекающиеся области',
-  cords: 'Координаты:',
+  cords: 'Координаты',
   x: 'X',
   y: 'Y',
   select2: 'Выберите 2 объекта',

@@ -4,9 +4,9 @@ import { A } from '@ember/array';
 import $ from 'jquery';
 import FlexberryDropdown from 'ember-flexberry/components/flexberry-dropdown';
 import { translationMacro as t } from 'ember-i18n';
+import { run } from '@ember/runloop';
 import layout from '../templates/components/select-with-checkbox';
 
-import { run } from '@ember/runloop';
 
 export default FlexberryDropdown.extend({
   /**
@@ -98,24 +98,24 @@ export default FlexberryDropdown.extend({
     this.set('message', { noResults: noRes, });
 
     const state = Object.entries(this.get('items'))
-    .filter(([key, value]) => !isNone(value))
-    .map(([i, val]) => {
-      let value = val;
-      let key = i;
-      if (this.get('isObject')) {
-        value = get(val, 'name');
-        key = val.id;
-      }
+      .filter(([key, value]) => !isNone(value))
+      .map(([i, val]) => {
+        let value = val;
+        let key = i;
+        if (this.get('isObject')) {
+          value = get(val, 'name');
+          key = val.id;
+        }
 
-      return EmberObject.create({ key, value, isVisible: false });
-    });
+        return EmberObject.create({ key, value, isVisible: false, });
+      });
 
     this.get('state').addObjects(state);
   },
 
   stateObserver: observer('state.@each.isVisible', function () {
     const filteredState = this.get('state').filterBy('isVisible');
-    const value = filteredState.map((item)=>item.key);
+    const value = filteredState.map((item) => item.key);
     // TODO: fix
     this.set('selectedItems', value);
     this.set('countChoose', value.length);
@@ -132,14 +132,14 @@ export default FlexberryDropdown.extend({
     }
   },
 
-    /**
+  /**
     See [EmberJS API](https://emberjs.com/api/).
     @method didInsertElement
   */
   didInsertElement() {
     this._super(...arguments);
 
-    let settings = $.extend({
+    const settings = $.extend({
       action: 'nothing',
       onChange: (newValue) => {
         run.schedule('afterRender', () => {

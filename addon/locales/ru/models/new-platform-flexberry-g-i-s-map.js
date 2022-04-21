@@ -68,6 +68,9 @@ export default {
       boundingBox: {
         __caption__: 'Граница',
       },
+      picture: {
+        __caption__: 'Изображение',
+      },
       mapLayer: {
         __caption__: '',
         name: {
@@ -147,6 +150,9 @@ export default {
       },
       public: {
         __caption__: 'Общая',
+      },
+      picture: {
+        __caption__: 'Изображение',
       },
     },
     MapGisSearchFormL: {

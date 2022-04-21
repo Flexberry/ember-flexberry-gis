@@ -1,14 +1,20 @@
-import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
+/* eslint-disable ember/no-restricted-resolver-tests */
+import { moduleForComponent, test } from 'ember-qunit';
 
-module('Unit | Component | layers/wms layer', function (hooks) {
-  setupTest(hooks);
+moduleForComponent('layers/wms-layer', 'Unit | Component | layers/wms layer', {
+  unit: true,
+  needs: [
+    'service:map-api',
+    'service:local-storage',
+    'service:layers-styles-renderer',
+    'service:i18n'
+  ],
+});
 
-  test('it return L.TileLayer.wms on createLayer', function (assert) {
-    const component = this.owner.factoryFor('component:layers/wms-layer').create({
-      requiredOptions: [''],
-    });
-    const layer = component.createLayer();
-    assert.ok(layer instanceof L.TileLayer.WMS, 'Expected L.TileLayer.wms instance');
+test('it return L.TileLayer.wms on createLayer', function (assert) {
+  const component = this.subject({
+    requiredOptions: [''],
   });
+  const layer = component.createLayer();
+  assert.ok(layer instanceof L.TileLayer.WMS, 'Expected L.TileLayer.wms instance');
 });

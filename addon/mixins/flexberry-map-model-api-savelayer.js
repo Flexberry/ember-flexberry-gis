@@ -25,8 +25,17 @@ export default Mixin.create({
     }
 
     return new Promise((resolve, reject) => {
+      const promise = new Promise((resolve, reject) => {
+        leafletObject.once('loadCompleted', () => {
+          resolve();
+        }).once('error', (e) => {
+          leafletObject.existingFeaturesLoaded = false;
+          reject();
+        });
+      });
       const saveSuccess = (data) => {
         set(leafletObject, '_wasChanged', false);
+        this._getEditTools().featuresLayer.clearLayers();
         const map = this.get('mapApi').getFromApi('leafletMap');
 
         if (!isNone(map)) {
@@ -35,10 +44,17 @@ export default Mixin.create({
         }
 
         leafletObject.off('save:failed', saveFailed);
-        resolve({
+        const result = {
           layerModel,
           newFeatures: data.layers,
-        });
+        };
+        if (data.layers.length === 0) {
+          resolve(result);
+        } else {
+          promise.then(() => {
+            resolve(result);
+          });
+        }
       };
 
       const saveFailed = (data) => {

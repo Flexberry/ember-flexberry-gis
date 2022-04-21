@@ -3,7 +3,7 @@
     <div class="ui small active loader"></div>
   {{/if}}
   <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo" on="click"}}>
-    <i class="caret {{if expanded 'down' 'right'}} icon"></i>
+    <i class="icon-guideline-navigate-arrow{{if expanded '-down'}}"></i>
   </a>
   {{#if favoriteMode}}
     {{flexberry-ddau-checkbox
@@ -14,17 +14,17 @@
   <div class="feature-result-item-toolbar {{if favoriteMode "favorite"}} {{if (gt feature.editForms.length 1) "links" ""}} hidden">
     {{#if intersection}}
       <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" on="click"}}>
-        <i class="marker icon"></i>
+        <i class="icon-guideline-marker"></i>
       </a>
       <a class="icon item" title="{{t 'components.flexberry-layers-intersections-panel.show-on-map'}}" {{action "zoomToIntersection" on="click"}}>
-        <i class="intersections icon"></i>
+        <i class="icon-guideline-intersection"></i>
       </a>
     {{else}}
       <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
-        <i class="marker icon"></i>
+        <i class="icon-guideline-marker"></i>
       </a>
       <a class="icon item" title="{{t "components.compare-object-geometries.add-to-fav-caption"}}" {{action "addToFavorite" on="click"}}>
-        <i class="fvicon favorites {{if feature.properties.isFavorite "filled" "unfilled"}} icon"></i>
+        <i class="icon-guideline-bookmark{{if feature.properties.isFavorite "-filled"}}"></i>
       </a>
       {{#if (gt feature.editForms.length 0)}}
         {{#if (eq feature.editForms.length 1)}}
@@ -92,31 +92,31 @@
         {{/if}}
       {{/if}}
       <a class="icon item more" {{action "onSubmenu" on="click"}}>
-        <i class="icon">...</i>
+        <i class="icon-guideline-points"></i>
       </a>
       <div class="more submenu {{if isSubmenu '' 'hidden'}}">
         <div>
           <a class="more-button" {{action "onSubmenu" on="click"}}>
-            <p>...</p>
+            <i class="icon-guideline-points"></i>
           </a>
         </div>
         <div>
           <a class="icon item" {{action "panTo" on="click"}}>
-            <i class="hand paper icon"></i>
+            <i class="icon-guideline-hand"></i>
             {{t "components.feature-result-item.pan-to-caption"}}
           </a>
         </div>
         <div>
           {{#if (and availableEdit (not feature.arch))}}
             <a class="icon item" {{action "onRowEdit" on="click"}}>
-              <i class="edit icon"></i>
+              <i class="icon-guideline-edit-r"></i>
               {{t "components.feature-result-item.edit-caption"}}
             </a>
           {{/if}}
         </div>
         <div>
           <a class="icon item"  {{action "findIntersection" on="click"}}>
-            <i class="intersections icon"></i>
+            <i class="icon-guideline-intersection"></i>
             {{t "components.feature-result-item.find-intersection-caption"}}
           </a>
         </div>

@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import { getCrsByName } from 'ember-flexberry-gis/utils/get-crs-by-name';
 import { module, test } from 'qunit';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
@@ -10,7 +11,7 @@ module('Unit | Utility | get crs by name', function () {
     create() {
       const crs = L.extend({}, new L.Proj.CRS(this.code, this.definition), {
         scale(zoom) {
-          return 256 * Math.pow(2, zoom);
+          return 256 * (2 ** zoom);
         },
         zoom(scale) {
           return Math.log(scale / 256) / Math.LN2;

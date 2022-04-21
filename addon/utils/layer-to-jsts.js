@@ -70,9 +70,10 @@ const coordinatesToPolygon = function (coordinates) {
 };
 
 const latlngToPolygonJsts = function (latlngs, crs, precision, scale) {
-  const holes = !L.LineUtil.isFlat(latlngs);
+  const holes = !L.LineUtil.isFlat(latlngs) ? 1 : 0;
   const multi = holes && !L.LineUtil.isFlat(latlngs[0]);
-  let coords = latLngsToCoords(latlngs, crs, multi ? 2 : holes ? 1 : 0, true, precision, coordinatesFunction);
+  const levelsDeep = multi ? 2 : holes;
+  let coords = latLngsToCoords(latlngs, crs, levelsDeep, true, precision, coordinatesFunction);
 
   if (!holes) {
     coords = [coords];

@@ -41,6 +41,8 @@ export default BaseLayer.extend({
     $.extend(true, settings, {
       url: undefined,
       noWrap: true,
+      minZoom: 0,
+      maxZoom: 25,
     });
 
     return settings;

@@ -54,6 +54,7 @@ export const Model = Mixin.create({
   creator: DS.attr('string'),
   editTime: DS.attr('date'),
   editor: DS.attr('string'),
+  picture: DS.attr('string'),
   mapLayer: DS.hasMany('new-platform-flexberry-g-i-s-map-layer', { inverse: 'map', async: false, }),
 });
 
@@ -71,7 +72,7 @@ export const ValidationRules = {
       validator('ds-error'),
       validator('presence', true)
     ],
-  }
+  },
 };
 
 export const defineProjections = function (modelClass) {
@@ -81,6 +82,7 @@ export const defineProjections = function (modelClass) {
     createTime: attr('Время создания'),
     editor: attr('Редактор'),
     editTime: attr('Время редактирования'),
+    picture: attr('Изображение'),
   });
 
   modelClass.defineProjection('Map', 'new-platform-flexberry-g-i-s-map', {
@@ -101,6 +103,7 @@ export const defineProjections = function (modelClass) {
     zoom: attr('Зум'),
     public: attr('Общая'),
     scale: attr('Масштаб'),
+    picture: attr('Изображение'),
     coordinateReferenceSystem: attr('Система координат'),
     boundingBox: attr('Граница'),
     mapLayer: hasMany('new-platform-flexberry-g-i-s-map-layer', '', {
@@ -124,19 +127,6 @@ export const defineProjections = function (modelClass) {
           listForm: attr('Списковая форма', { hidden: true, }),
           editForm: attr('Форма редактирования', { hidden: true, }),
         }),
-        layer: belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
-          name: attr('Слой', { hidden: true, }),
-        }, { hidden: true, }),
-        allowShow: attr('Показывать'),
-        parameters: hasMany('new-platform-flexberry-g-i-s-link-parameter', 'Параметры связи', {
-          objectField: attr('Поле объекта'),
-          layerField: attr('Поле слоя'),
-          expression: attr('Выражение', { hidden: true, }),
-          queryKey: attr('Ключ запроса', { hidden: true, }),
-          linkField: attr('Ключ связи', { hidden: true, }),
-          layerLink: belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
-          }),
-        }),
       }),
     }),
   });
@@ -147,6 +137,7 @@ export const defineProjections = function (modelClass) {
     lng: attr('Долгота'),
     zoom: attr('Зум'),
     public: attr('Общая'),
+    picture: attr('Изображение'),
   });
 
   modelClass.defineProjection('MapGisSearchFormL', 'new-platform-flexberry-g-i-s-map', {

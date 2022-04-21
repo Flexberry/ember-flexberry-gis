@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { moduleFor, test } from 'ember-qunit';
 
 moduleFor('controller:gis-search-form', 'Unit | Controller | gis search form', {
@@ -6,7 +7,7 @@ moduleFor('controller:gis-search-form', 'Unit | Controller | gis search form', {
 });
 
 // Replace this with your real tests.
-test('it exists', function(assert) {
-  let controller = this.subject();
+test('it exists', function (assert) {
+  const controller = this.subject();
   assert.ok(controller);
 });

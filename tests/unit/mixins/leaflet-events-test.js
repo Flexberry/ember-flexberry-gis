@@ -32,8 +32,8 @@ module('Unit | Mixin | leaflet events', function () {
     subject._addEventListeners();
 
     assert.ok(addEventListener.calledTwice);
-    assert.ok(subject.get('_eventHandlers').hasOwnProperty('testEvent1'));
-    assert.ok(subject.get('_eventHandlers').hasOwnProperty('testEvent2'));
+    assert.ok(Object.prototype.hasOwnProperty.call(subject.get('_eventHandlers'), 'testEvent1'));
+    assert.ok(Object.prototype.hasOwnProperty.call(subject.get('_eventHandlers'), 'testEvent2'));
   });
 
   test('_removeEventListener shoud remove all used eventHandles', function (assert) {
@@ -51,8 +51,8 @@ module('Unit | Mixin | leaflet events', function () {
     subject._removeEventListeners();
 
     assert.ok(removeEventListener.calledTwice);
-    assert.notOk(subject.get('_eventHandlers').hasOwnProperty('testEvent1'));
-    assert.notOk(subject.get('_eventHandlers').hasOwnProperty('testEvent2'));
+    assert.notOk(Object.prototype.hasOwnProperty.call(subject.get('_eventHandlers'), 'testEvent1'));
+    assert.notOk(Object.prototype.hasOwnProperty.call(subject.get('_eventHandlers'), 'testEvent2'));
     assert.deepEqual(subject.get('_eventHandlers'), {});
   });
 });

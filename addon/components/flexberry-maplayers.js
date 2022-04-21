@@ -141,7 +141,7 @@ const FlexberryMaplayersComponent = Component.extend(
       @type String[]
       @default ['add']
     */
-    _requiredActionNames: ['add'],
+    _requiredActionNames: null,
 
     /**
       Flag: indicates whether map layers tree is placed on root level (hasn't parent layers).
@@ -165,7 +165,7 @@ const FlexberryMaplayersComponent = Component.extend(
       @readOnly
       @private
     */
-    _hasLayers: computed('layers.[]', 'layers.@each.isDeleted', function () {
+    _hasLayers: computed('layers.{[], @each.isDeleted}', function () {
       const layers = this.get('layers');
 
       return isArray(layers) && layers.filter((layer) => !isNone(layer) && get(layer, 'isDeleted') !== true).length > 0;
@@ -433,7 +433,7 @@ const FlexberryMaplayersComponent = Component.extend(
       @type Array
       @default []
     */
-    currentLayers: [],
+    currentLayers: null,
 
     /**
       Flag indicates if compare layers mode enabled.
@@ -460,7 +460,7 @@ const FlexberryMaplayersComponent = Component.extend(
       @type Array
       @default []
     */
-    rasterLayers: [],
+    rasterLayers: null,
 
     /**
       Adds side by side control to map and removes current visible layers.
@@ -522,19 +522,32 @@ const FlexberryMaplayersComponent = Component.extend(
       }
     }),
 
-    dynamicButtons: [],
+    dynamicButtons: null,
+
+    init() {
+      this._super(...arguments);
+
+      this._requiredActionNames = this._requiredActionNames || ['add'];
+      this.currentLayers = this.currentLayers || [];
+      this.rasterLayers = this.rasterLayers || [];
+      this.dynamicButtons = this.dynamicButtons || [];
+    },
 
     actions: {
+      closeOtherCalendar(layerId) {
+        this.sendAction('closeOtherCalendar', layerId);
+      },
+
       external(actionName, layer) {
         this.sendAction(actionName, layer);
       },
 
-      onAllLayerVisibilityChanged(e) {
+      onAllLayerVisibilityChanged() {
         this.set('allLayerVisible', !this.get('allLayerVisible'));
-        let visibility = this.get('allLayerVisible');
-        let layers = this.get('layers');
-        let setVisibility = function(layers) {
-          layers.forEach(layer => {
+        const visibility = this.get('allLayerVisible');
+        const layersForSetVisibility = this.get('layers');
+        const setVisibility = function (layers) {
+          layers.forEach((layer) => {
             layer.set('visibility', visibility);
             if (layer.get('layers')) {
               setVisibility(layer.get('layers'));
@@ -542,7 +555,7 @@ const FlexberryMaplayersComponent = Component.extend(
           });
         };
 
-        setVisibility(layers);
+        setVisibility(layersForSetVisibility);
       },
 
       onChangeLayer(leftLayer, rightLayer) {
@@ -562,7 +575,7 @@ const FlexberryMaplayersComponent = Component.extend(
         @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
         which describes button's 'click' event.
       */
-      onAddButtonClick(e) {
+      onAddButtonClick() {
         // Create empty layer model.
         const store = this.get('store');
         const addDialogLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId(), });

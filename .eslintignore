@@ -1,1 +1,4 @@
 /blueprints/*/files/**/*.js
+
+app/browserify.js
+app/gis-browserify.js

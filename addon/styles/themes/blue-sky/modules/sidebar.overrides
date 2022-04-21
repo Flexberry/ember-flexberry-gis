@@ -343,13 +343,15 @@
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .flexberry-maplayer-caption-label {
   font-size: 14px;
   margin-top: 2px;
+  width: 100%;
 }
 
 .ui.right.sidebar {
   .treeview {
     overflow-x: hidden;
     overflow-y: hidden !important;
-    .ui.styled.accordion {
+	.ui.styled.accordion {
+      height: ~"calc(100% - 60px)" !important;
       width: 1000px;
       .accordion:first-child .title {
         border-top: none;

@@ -12,10 +12,11 @@ import layout from '../templates/components/flexberry-simpledatetime';
  */
 export default SimpleDatetime.extend({
   layout,
+  _flatpickr: null,
 
   inputClick(_this, e) {
     e.stopPropagation();
-
+    _this.sendAction('closeOtherCalendar');
     if (_this.get('canClick') && !(_this.get('useBrowserInput') && _this.get('currentTypeSupported')) && !_this.get('readonly')) {
       _this.set('canClick', false);
       _this.get('_flatpickr').open();
@@ -30,13 +31,21 @@ export default SimpleDatetime.extend({
     this._super(...arguments);
 
     this.$('.custom-flatpickr').on('click', (e) => { this.inputClick(this, e); });
+    this.$('.button').on('click', (e) => { this.actions.remove(this, e); });
   },
 
   actions: {
-    remove(e) {
+    remove(_this, e) {
       e.stopPropagation();
+      if (!_this.get('readonly')) {
+        const flatpickr = _this.get('_flatpickr');
+        const value = _this.get('value') || new Date();
 
-      this._super(...arguments);
-    }
-  }
+        value.setHours(_this.get('defaultHour'), _this.get('defaultMinute'));
+        _this.set('value', value);
+        flatpickr.setDate(value, false);
+        flatpickr.clear();
+      }
+    },
+  },
 });

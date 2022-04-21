@@ -56,17 +56,21 @@ export default Mixin.create(rhumbOperations, {
       geoJSON = L.geoJSON(object);
     }
 
-    const newObj = geoJSON.getLayers()[0];
+    const newObjs = geoJSON.getLayers();
 
-    const e = { layers: [newObj], results: A(), };
-    leafletObject.fire('load', e);
+    if (newObjs.length > 0) {
+      const e = { layers: newObjs, results: A(), };
+      leafletObject.fire('load', e);
 
-    return new Promise((resolve, reject) => {
-      allSettled(e.results).then(() => {
-        newObj.layerId = layerId;
-        resolve(newObj);
+      return new Promise((resolve, reject) => {
+        allSettled(e.results).then(() => {
+          newObjs.forEach((layer) => { layer.layerId = layerId; });
+          resolve(newObjs);
+        });
       });
-    });
+    }
+
+    throw new Error('Can not create object from geojson');
   },
 
   /**

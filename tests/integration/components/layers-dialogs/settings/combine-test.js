@@ -1,16 +1,19 @@
+import Ember from 'ember';
 import { inject as service } from '@ember/service';
+import { run, next } from '@ember/runloop';
 import Component from '@ember/component';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import {
-  render, click, findAll, find
-} from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
+
 import hbs from 'htmlbars-inline-precompile';
 
 import I18nService from 'ember-i18n/services/i18n';
 import I18nRuLocale from 'ember-flexberry-gis/locales/ru/translations';
 import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
 import sinon from 'sinon';
+
+let ownerStub;
 
 module('Integration | Component | layers dialogs/settings/combine', function (hooks) {
   setupRenderingTest(hooks);
@@ -28,9 +31,13 @@ module('Integration | Component | layers dialogs/settings/combine', function (ho
     this.set('i18n.locale', 'ru');
   });
 
+  hooks.afterEach(function () {
+    ownerStub.restore();
+  });
+
   test('it renders without settings and test action addTypeSettings', async function (assert) {
     assert.expect(7);
-    const ownerStub = sinon.stub(Ember, 'getOwner');
+    ownerStub = sinon.stub(Ember, 'getOwner');
     ownerStub.returns({
       knownNamesForType() {
         return ['wfs', 'wms'];
@@ -38,10 +45,12 @@ module('Integration | Component | layers dialogs/settings/combine', function (ho
       lookup() {
         return null;
       },
-      _lookupFactory() {
+      factoryFor() {
         return {
-          APP: {
-            mapApiService: true,
+          class: {
+            APP: {
+              mapApiService: true,
+            },
           },
         };
       },
@@ -56,28 +65,38 @@ module('Integration | Component | layers dialogs/settings/combine', function (ho
         };
       },
     });
+
     await render(hbs`{{layers-dialogs/settings/combine}}`);
 
     assert.equal(this.$('label:first').text().trim(), 'Тип слоя');
-    assert.equal(find('label.button').textContent.trim(), 'Добавить');
-    assert.equal(findAll('.flexberry-dropdown .menu .item').length, 2);
+    assert.equal(this.$('label.button').text().trim(), 'Добавить');
+    assert.equal(this.$('.flexberry-dropdown .menu .item').length, 2);
 
-    this.$('.combineAdd .dropdown').dropdown('set value', 'wfs');
-    await click('.combineAdd .flexberry-button');
-    assert.equal(this.$('.ui.segment:first h5:first').text().trim(), 'Настройки основного слоя wfs');
-    assert.equal(this.$('.ui.segment:first .field').length, 17);
-
-    this.$('.combineAdd .dropdown').dropdown('set value', 'wms');
-    await click('.combineAdd .flexberry-button');
-    assert.equal(this.$('.ui.segment:last h5:last').text().trim(), 'Настройки wms');
-    assert.equal(this.$('.ui.segment:last .field').length, 10);
-
-    ownerStub.restore();
+    run(() => {
+      this.$('.combineAdd .ui.dropdown').dropdown('set value', '0');
+      next(() => {
+        this.$('.combineAdd .flexberry-button').click();
+        next(() => {
+          assert.equal(this.$('.ui.segment:first h5:first').text().trim(), 'Настройки основного слоя wfs');
+          assert.equal(this.$('.ui.segment:first .field').length, 17);
+          next(() => {
+            this.$('.combineAdd .dropdown').dropdown('set value', '1');
+            next(() => {
+              this.$('.combineAdd .flexberry-button').click();
+              next(() => {
+                assert.equal(this.$('.ui.segment:last h5:last').text().trim(), 'Настройки wms');
+                assert.equal(this.$('.ui.segment:last .field').length, 10);
+              });
+            });
+          });
+        });
+      });
+    });
   });
 
   test('it renders with settings', async function (assert) {
     assert.expect(4);
-    const ownerStub = sinon.stub(Ember, 'getOwner');
+    ownerStub = sinon.stub(Ember, 'getOwner');
     ownerStub.returns({
       knownNamesForType() {
         return ['wfs', 'wms'];
@@ -85,24 +104,25 @@ module('Integration | Component | layers dialogs/settings/combine', function (ho
       lookup() {
         return null;
       },
-      _lookupFactory() {
+      factoryFor() {
         return {
-          APP: {
-            mapApiService: true,
+          class: {
+            APP: {
+              mapApiService: true,
+            },
           },
         };
       },
     });
 
-    this.set('settings',
-      {
-        type: 'wfs',
-        innerLayers: [
-          {
-            type: 'wms',
-          }
-        ],
-      });
+    this.set('settings', {
+      type: 'wfs',
+      innerLayers: [
+        {
+          type: 'wms',
+        }
+      ],
+    });
 
     await render(hbs`{{layers-dialogs/settings/combine settings=settings}}`);
 
@@ -110,7 +130,5 @@ module('Integration | Component | layers dialogs/settings/combine', function (ho
     assert.equal(this.$('.ui.segment:first .field').length, 17);
     assert.equal(this.$('.ui.segment:last h5:last').text().trim(), 'Настройки wms');
     assert.equal(this.$('.ui.segment:last .field').length, 10);
-
-    ownerStub.restore();
   });
 });

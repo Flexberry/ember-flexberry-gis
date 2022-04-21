@@ -11,7 +11,9 @@ import { hash, Promise, resolve } from 'rsvp';
 import {
   computed, set, observer, get
 } from '@ember/object';
-import { isNone, isPresent, typeOf, isBlank } from '@ember/utils';
+import {
+  isNone, isPresent, typeOf, isBlank
+} from '@ember/utils';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import { assert } from '@ember/debug';
@@ -90,7 +92,7 @@ export default Component.extend(
 
     customFilter: computed('layerModel.archTime', function () {
       if (this.get('hasTime')) {
-        let time = this.get('layerModel.archTime');
+        const time = this.get('layerModel.archTime');
         let formattedTime;
         if (isBlank(time) || time === 'present' || isNone(time)) {
           formattedTime = moment().toISOString();
@@ -100,12 +102,15 @@ export default Component.extend(
 
         return new L.Filter.And(
           new L.Filter.LEQ('archivestart', formattedTime),
-          new L.Filter.GEQ('archiveend', formattedTime));
+          new L.Filter.GEQ('archiveend', formattedTime)
+        );
       }
+
+      return;
     }),
 
     addCustomFilter(filter) {
-      let customFilter = this.get('customFilter');
+      const customFilter = this.get('customFilter');
 
       if (!isNone(customFilter) && !isNone(filter)) {
         return new L.Filter.And(filter, customFilter);
@@ -115,7 +120,7 @@ export default Component.extend(
     },
 
     setOwner(properties) {
-      let owner = getOwner(this);
+      const owner = getOwner(this);
       let ownerKey = null;
       A(Object.keys(this) || []).forEach((key) => {
         if (this[key] === owner) {
@@ -406,6 +411,10 @@ export default Component.extend(
       // Now execute base destroy logic.
       this._removeLayerFromLeafletContainer();
 
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer'))) {
+        this.set('_labelsLayer', null);
+      }
+
       this.set('_leafletObject', null);
       this.set('_leafletLayerPromise', null);
       if (isPresent(this.get('layerModel'))) {
@@ -594,6 +603,10 @@ export default Component.extend(
       }
 
       leafletContainer.removeLayer(leafletLayer);
+
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && leafletContainer.hasLayer(this.get('_labelsLayer'))) {
+        leafletContainer.removeLayer(this.get('_labelsLayer'));
+      }
     },
 
     /**

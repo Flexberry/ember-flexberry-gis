@@ -36,7 +36,7 @@ export default EditMapRoute.extend({
     @param {Object} transition
     @return {*} Model of map project for current route.
   */
-  model(params, transition) {
+  model(params) {
     return new Promise((resolve, reject) => {
       const mapProject = this.store.createRecord(this.get('modelName'), { id: generateUniqueId(), });
       mapProject.set('mapLayer', A());

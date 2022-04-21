@@ -7,7 +7,7 @@ export default Route.extend({
     Returns model related to current route.
     @method model
   */
-  model(params) {
+  model() {
     const store = this.get('store');
 
     // Create map model.

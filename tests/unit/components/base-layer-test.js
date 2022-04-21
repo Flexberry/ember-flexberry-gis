@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-restricted-resolver-tests */
 import { moduleForComponent, test } from 'ember-qunit';
 import sinon from 'sinon';
 
@@ -7,7 +8,8 @@ moduleForComponent('base-layer', 'Unit | Component | base layer', {
     'service:map-api',
     'config:environment',
     'service:layers-styles-renderer',
-    'service:i18n'
+    'service:i18n',
+    'service:local-storage'
   ],
 });
 

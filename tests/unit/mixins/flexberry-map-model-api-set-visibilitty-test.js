@@ -9,9 +9,12 @@ import sinon from 'sinon';
 module('Unit | Mixin | test method setVisibility ', function () {
   const mapApiMixinObject = EmberObject.extend(FlexberryMapModelApiMixin);
 
-  const layerModel = Component.extend({
+  const layerModelComponent = {
     visibility: false,
-  });
+    renderer: {},
+  };
+
+  const layerModel = Component.extend(layerModelComponent);
 
   test('Test visibility = true', function (assert) {
     // Arrange
@@ -34,7 +37,8 @@ module('Unit | Mixin | test method setVisibility ', function () {
       },
       mapLayer: A([firstLayer, secondLayer]),
     });
-    const mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
+    const mapFireSpy = sinon.stub(map, 'fire');
+    mapFireSpy.returns((e) => {
       e.results = A([{ promise: resolve(), }]);
     });
     const mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');
@@ -80,7 +84,8 @@ module('Unit | Mixin | test method setVisibility ', function () {
       },
       mapLayer: A([firstLayer, secondLayer]),
     });
-    const mapFireSpy = sinon.stub(map, 'fire', (name, e) => {
+    const mapFireSpy = sinon.stub(map, 'fire');
+    mapFireSpy.returns((e) => {
       e.results = A([{ promise: resolve(), }]);
     });
     const mapLayerFindSpy = sinon.spy(subject.mapLayer, 'findBy');

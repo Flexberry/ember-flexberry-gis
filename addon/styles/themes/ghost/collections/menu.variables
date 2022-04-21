@@ -1,0 +1,61 @@
+@dropdownItemBackground: @white;
+@dropdownSelectedItemBackground: @white;
+@dropdownActiveItemBackground: @white;
+
+
+/*******************************
+      Gis Theme Overrides
+*******************************/
+
+/*******************************
+      RGis Theme Overrides
+*******************************/
+@iconOpacity: 1;
+@dropdownHoveredItemBackground: @lightgrassGreenColor;
+
+/* Menu Item */
+@itemVerticalPadding: @relativeBig;
+
+
+/*-------------------
+      Collection
+--------------------*/
+
+/* Menu */
+@background: @white;
+
+/* Sub Menu */
+@subMenuIndent: @white;
+
+/* Tabular */
+@tabularBackgroundColor: @white;
+
+/* Pagination */
+@paginationActiveBackground: @white;
+
+
+/*--------------
+    Couplings
+---------------*/
+
+/* Dropdown in Menu */
+@dropdownHoveredItemBackground: @white;
+@dropdownActiveItemBackground: @white;
+
+
+/*--------------
+   Variations
+---------------*/
+/* Inverted */
+@invertedBackground: @white;
+@invertedHeaderBackground: @primaryColor !important;
+
+/* Inverted Sub Menu */
+@invertedSubMenuColor: @primaryColor;
+
+/* Inverted Hover */
+@invertedHoverColor: @primaryColor;
+@invertedSubMenuHoverColor: @primaryColor;
+
+/* Inverted Active Hover  */
+@invertedActiveHoverColor: @primaryColor;

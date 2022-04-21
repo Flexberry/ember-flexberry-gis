@@ -17,7 +17,7 @@ export default BaseControl.extend({
 
   classNames: ['ui'],
 
-  leafletOptions: ['position', 'disableClickPropagation', 'disableScrollPropagation'],
+  leafletOptions: null,
 
   /**
     The position of the control (one of the map corners). Possible values are 'topleft', 'topright', 'bottomleft' or 'bottomright'
@@ -45,5 +45,11 @@ export default BaseControl.extend({
 
   createControl() {
     return new L.Control.Div(this.element, this.get('options'));
+  },
+
+  init() {
+    this._super(...arguments);
+
+    this.leafletOptions = this.leafletOptions || ['position', 'disableClickPropagation', 'disableScrollPropagation'];
   },
 });
