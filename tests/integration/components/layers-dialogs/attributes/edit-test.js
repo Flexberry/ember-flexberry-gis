@@ -39,6 +39,7 @@ module('Integration | Component | layers dialogs/attributes/edit', function (hoo
       field(text) { return text; },
     });
     this.set('fieldValidators', {
+      /* eslint-disable-next-line no-unused-vars */
       field(value) { return true; },
     });
     this.set('data', {

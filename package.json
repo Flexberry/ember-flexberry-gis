@@ -100,6 +100,7 @@
     "ember-local-storage": "1.7.2",
     "ember-maybe-import-regenerator": "^0.1.6",
     "ember-moment": "7.6.0",
+    "ember-promise-helpers": "2.0.0",
     "ember-prop-types": "4.0.0",
     "ember-qunit": "^3.5.3",
     "ember-resolver": "^4.0.0",

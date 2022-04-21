@@ -542,17 +542,21 @@ export default Component.extend(
       },
 
       /**
-        Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
+        Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor'
+        component's 'changeVisibility' action{{/crossLink}}.
 
         @method actions.allowShowCheckboxChange
-        @param {Object} e eventObject Event object from {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
+        @param {Object} e eventObject Event object from
+        {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor'
+        component's 'changeVisibility' action{{/crossLink}}.
       */
       allowShowCheckboxChange(...args) {
         this.sendAction('allowShowLayerLinkCheckboxChange', ...args);
       },
 
       /**
-        Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-layers-prototyping-mode' components 'editingFinished' action {{/crossLink}}.
+        Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-layers-prototyping-mode'
+        components 'editingFinished' action {{/crossLink}}.
 
         @method actions.onEditingFinished
         @param {Object} layer Prototype layer model.
@@ -772,7 +776,8 @@ export default Component.extend(
 
     /**
       Component's action invoking init hook is finished.
-      Provides binding for {{#crossLink "FlexberryEditLayerComponent/sendingActions.onInit:method"}}'flexberry-edit-layer' component's 'getLayerProperties' method{{/crossLink}}.
+      Provides binding for {{#crossLink "FlexberryEditLayerComponent/sendingActions.onInit:method"}}'flexberry-edit-layer'
+      component's 'getLayerProperties' method{{/crossLink}}.
 
       @method sendingActions.onInit
     */

@@ -148,7 +148,7 @@ export default Component.extend({
     }
 
     const ret = A();
-    items.forEach((item, i, items) => {
+    items.forEach((item) => {
       if (selectedItems.indexOf(item) === -1) {
         ret.push(item);
       }

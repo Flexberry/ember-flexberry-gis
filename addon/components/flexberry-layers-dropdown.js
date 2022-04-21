@@ -258,8 +258,9 @@ const FlexberryLayersDropdownComponent = Component.extend({
     // Remove all previously added observers.
     this._removeHierarchyObservers();
 
-    const layers = A(this.get('layers') || []);
-    const filter = this.get('filter') || function (layer) { return true; };
+    const layersForFiltering = A(this.get('layers') || []);
+    /* eslint-disable-next-line no-unused-vars */
+    const filterForFiltering = this.get('filter') || function (layer) { return true; };
 
     const getFilteredLayers = (layers, filter, path) => {
       const result = A();
@@ -286,7 +287,7 @@ const FlexberryLayersDropdownComponent = Component.extend({
       return result;
     };
 
-    const availableLayers = getFilteredLayers(layers, filter, 'layers');
+    const availableLayers = getFilteredLayers(layersForFiltering, filterForFiltering, 'layers');
     this.set('_layers', availableLayers);
 
     this.sendAction('availableLayersChange', availableLayers);
