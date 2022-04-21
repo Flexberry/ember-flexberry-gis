@@ -986,6 +986,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
           layer.disableEdit();
           leafletObject.editLayer(layer);
+
+          // Удаление копии редактированного слоя с карты
+          if (this.get('isLayerCopy') && this.get('leafletMap').hasLayer(layer)) {
+            this.get('leafletMap').removeLayer(layer);
+            this.set('isLayerCopy', false);
+          }
         });
 
         event = 'flexberry-map:edit-feature';
