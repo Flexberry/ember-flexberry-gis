@@ -1168,6 +1168,16 @@ export default Ember.Component.extend(
 
       let settings = Ember.get(_layerHash, &#x27;settings&#x27;);
 
+      Object.keys(settings).map(function(key) {
+        if (key === &#x27;minZoom&#x27; || key  === &#x27;maxZoom&#x27;) {
+          let value = Ember.get(settings, key);
+          let parsedValue = parseInt(value);
+          if (!isNaN(parsedValue)) {
+            Ember.set(settings, key, parsedValue);
+          }
+        }
+      });
+
       if (Ember.get(settings, &#x27;filter&#x27;) instanceof Element) {
         Ember.set(settings, &#x27;filter&#x27;, L.XmlUtil.serializeXmlToString(Ember.get(settings, &#x27;filter&#x27;)));
       }

@@ -31841,7 +31841,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layermap.js",
-            "line": 765,
+            "line": 775,
             "description": "Component's action invoking init hook is finished.\nProvides binding for {{#crossLink \"FlexberryEditLayerComponent/sendingActions.onInit:method\"}}'flexberry-edit-layer' component's 'getLayerProperties' method{{/crossLink}}.",
             "itemtype": "method",
             "name": "sendingActions.onInit",
@@ -31850,7 +31850,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layermap.js",
-            "line": 772,
+            "line": 782,
             "description": "Component's action invoking to remove model from store.",
             "itemtype": "method",
             "name": "sendingActions.removeLayerLink",
@@ -31866,7 +31866,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layermap.js",
-            "line": 780,
+            "line": 790,
             "description": "Component's action invoking to add model to store.",
             "itemtype": "method",
             "name": "sendingActions.addLayerLink",
