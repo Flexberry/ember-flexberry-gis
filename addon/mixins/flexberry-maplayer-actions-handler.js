@@ -366,7 +366,7 @@ export default Ember.Mixin.create({
         Ember.typeOf(primaryParentLayerPath) === 'string');
 
       let secondaryParentLayerPath = 'model.hierarchy';
-      let backgroundLayerPath = 'backgroundLayers';
+      let backgroundLayerPath = 'model.backgroundLayers';
 
       let {
         layerProperties,
