@@ -37,6 +37,8 @@ export default Ember.Component.extend({
         `featuresPropertiesSettings.localizedProperties.${currentLocale}`) || {};
 
       let searchProperties = {};
+      // when Ember.isArray check this object (searchProperties), length is not null.
+      // and ember thinks the object is an array. This is bad.
       searchFields.forEach((prop) => {
         Ember.set(searchProperties, prop === 'length' ? prop + '1' : prop,
           Ember.keys(localizedProperties).indexOf(prop) > -1 ?
