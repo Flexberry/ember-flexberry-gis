@@ -1281,7 +1281,7 @@ export default BaseLayer.extend({
 
     let iconSize = this.get('styleSettings.style.marker.style.iconSize');
     let iconAnchor = this.get('styleSettings.style.marker.style.iconAnchor');
-    if (!Ember.isNone(iconAnchor) && iconAnchor.length == 2 && !Ember.isNone(iconSize) && iconSize.length == 2) {
+    if (!Ember.isNone(iconAnchor) && iconAnchor.length === 2 && !Ember.isNone(iconSize) && iconSize.length === 2) {
       left = iconAnchor[0] || 0;
       right = (iconSize[0] || 0) - (iconAnchor[0] || 0);
       top = iconAnchor[1] || 0;
@@ -1295,53 +1295,53 @@ export default BaseLayer.extend({
     switch (this.get('labelSettings.location.locationPoint')) {
       case 'overLeft':
         style = 'text-align: right;';
-        anchor = [ left + width, top + height ];
-        cssClass = "over left";
+        anchor = [left + width, top + height];
+        cssClass = 'over left';
         break;
       case 'overMiddle':
         style = 'text-align: center;';
-        anchor = [ Math.round((width - (right - left))/2), top + height ];
-        cssClass = "over middle";
+        anchor = [Math.round((width - (right - left)) / 2), top + height];
+        cssClass = 'over middle';
         break;
       case 'overRight':
         style = 'text-align: left;';
-        anchor = [-1 * right, top + height  ];
-        cssClass = "over right";
+        anchor = [-1 * right, top + height];
+        cssClass = 'over right';
         break;
       case 'alongLeft':
         style = 'text-align: right;';
-        anchor = [left + width, Math.round((height - (bottom - top))/2) ];
-        cssClass = "along left";
+        anchor = [left + width, Math.round((height - (bottom - top)) / 2)];
+        cssClass = 'along left';
         break;
       case 'alongMidle':
         style = 'text-align: center;';
-        anchor = [ Math.round((width - (right - left))/2), Math.round((height - (bottom - top))/2) ];
-        cssClass = "along middle";
+        anchor = [Math.round((width - (right - left)) / 2), Math.round((height - (bottom - top)) / 2)];
+        cssClass = 'along middle';
         break;
       case 'alongRight':
         style = 'text-align: left;';
-        anchor = [-1 * right, Math.round((height - (bottom - top))/2)  ];
-        cssClass = "along right";
+        anchor = [-1 * right, Math.round((height - (bottom - top)) / 2)];
+        cssClass = 'along right';
         break;
       case 'underLeft':
         style = 'text-align: right;';
-        anchor = [left + width, -1 * bottom ];
-        cssClass = "under left";
+        anchor = [left + width, -1 * bottom];
+        cssClass = 'under left';
         break;
       case 'underMiddle':
         style = 'text-align: center;';
-        anchor = [ Math.round((width - (right - left))/2), -1 * bottom ];
-        cssClass = "under middle";
+        anchor = [Math.round((width - (right - left)) / 2), -1 * bottom];
+        cssClass = 'under middle';
         break;
       case 'underRight':
         style = 'text-align: left;';
-        anchor = [ -1 * right, -1 * bottom ];
-        cssClass = "under right";
+        anchor = [-1 * right, -1 * bottom];
+        cssClass = 'under right';
         break;
       default:
         style = 'text-align: center;';
-        anchor = [ Math.round((width - (right - left))/2), top + height ];
-        cssClass = "over middle";
+        anchor = [Math.round((width - (right - left)) / 2), top + height];
+        cssClass = 'over middle';
         break;
     }
 
