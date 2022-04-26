@@ -457,6 +457,7 @@
       align-items: flex-start;
       .flexberry-treenode-caption-block {
         align-items: flex-start;
+        width: 100%;
       }
       .flexberry-treenode-prevent-expand-collapse {
         margin: 0 15px;

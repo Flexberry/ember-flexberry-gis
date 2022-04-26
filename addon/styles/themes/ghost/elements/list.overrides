@@ -71,10 +71,11 @@
     z-index: 100;
     .icon.item {
       bottom: 2px;
-      &.feature-result-item-select {
+      &.feature-result-item-select,
+      &.feature-result-item-upload.icon.item {
         left: 0px;
       }
-      &.feature-result-item-upload.icon.item {
+      &.feature-result-item-select + .feature-result-item-upload.icon.item {
         left: 30px;
       }
     }
