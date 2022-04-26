@@ -22,7 +22,7 @@ export default Component.extend({
     @default ['miter', 'round', 'bevel']
     @private
   */
-  _availableLineJoins: ['miter', 'round', 'bevel'],
+  _availableLineJoins: Object.freeze(['miter', 'round', 'bevel']),
 
   /**
     Reference to component's template.

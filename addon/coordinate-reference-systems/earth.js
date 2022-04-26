@@ -35,7 +35,7 @@ export default {
     @param {Object} options CRS options.
     @returns {<a href="http://leafletjs.com/reference-1.0.0.html#crs">L.CRS</a>} CRS instance.
   */
-  create(code, definition, options) {
+  create() {
     return L.CRS.Earth;
   },
 };

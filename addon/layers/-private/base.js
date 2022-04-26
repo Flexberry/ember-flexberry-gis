@@ -143,10 +143,9 @@ export default EmberObject.extend({
     Creates new settings object (with settings related to layer-type) from the specified CSW record.
 
     @method createSetingsFromCsw
-    @param {Object} Specified CSW record.
     @returns {Object} New settings object (with settings related to layer-type).
   */
-  createSetingsFromCsw(record) {
+  createSetingsFromCsw() {
     return this.createSettings();
   },
 
@@ -164,10 +163,9 @@ export default EmberObject.extend({
     Get properties names from leaflet layer object.
 
     @method getLayerProperties
-    @param {Object} leafletObject Leaflet layer object
     @returns {Array} Array with properties names
   */
-  getLayerProperties(leafletObject) {
+  getLayerProperties() {
     assert('BaseLayer\'s \'getLayerProperties\' should be overridden.');
   },
 
@@ -245,7 +243,7 @@ export default EmberObject.extend({
           const linkParameters = link.get('parameters');
 
           if (isArray(linkParameters) && linkParameters.length > 0) {
-            const linkParam = linkParameters.filter((linkParam) => linkParam.get('queryKey') === field.slice(1));
+            const linkParam = linkParameters.filter((param) => param.get('queryKey') === field.slice(1));
             if (!isNone(linkParam) && linkParam.length > 0) {
               field = linkParam[0].get('layerField');
             }
@@ -278,7 +276,7 @@ export default EmberObject.extend({
           propertiesString = propertiesString.trim();
           if (propertiesString[0] === '(' && propertiesString.slice(-1) === ')') {
             propertiesString = propertiesString.slice(1, propertiesString.length - 1);
-            index--;
+            index -= 1;
           }
 
           if (logicalExp.test(propertiesString) || conditionExp.test(propertiesString) || geometryExp.test(propertiesString)) {
@@ -290,7 +288,7 @@ export default EmberObject.extend({
           propertiesString = '';
         }
 
-        index++;
+        index += 1;
       }
 
       if (properties.length > 0) {
@@ -318,12 +316,9 @@ export default EmberObject.extend({
     ('=', '!=', '<', '<=', '>', '>=', 'LIKE', 'ILIKE').
 
     @method parseFilterConditionExpression
-    @param {String} field Field name
-    @param {String} condition Condition name
-    @param {String} value Field value
     @returns {Object} Filter object
   */
-  parseFilterConditionExpression(field, condition, value) {
+  parseFilterConditionExpression() {
     assert('BaseLayer\'s \'parseFilterConditionExpression\' should be overridden.');
   },
 
@@ -332,11 +327,9 @@ export default EmberObject.extend({
     ('AND', 'OR', 'NOT').
 
     @method parseFilterLogicalExpression
-    @param {String} condition Filter condition
-    @param {String} properties Filter properties
     @returns {Object} Filter object
   */
-  parseFilterLogicalExpression(condition, properties) {
+  parseFilterLogicalExpression() {
     assert('BaseLayer\'s \'parseFilterLogicalExpression\' should be overridden.');
   },
 
@@ -345,12 +338,9 @@ export default EmberObject.extend({
     ('IN', 'NOT IN').
 
     @method parseFilterGeometryExpression
-    @param {String} condition Filter condition
-    @param {Object} geoJSON Geometry
-    @param {String} geometryField Layer's geometry field
     @returns {Object} Filter object
   */
-  parseFilterGeometryExpression(condition, geoJSON, geometryField) {
+  parseFilterGeometryExpression() {
     assert('BaseLayer\'s \'parseFilterBboxExpression\' should be overridden.');
   },
 
@@ -358,11 +348,10 @@ export default EmberObject.extend({
     Indicates whether related layer is vector layer.
 
     @method isVectorType
-    @param {Object} layer Layer model.
     @param {Boolean} howVector.
     @returns {Boolean}
   */
-  isVectorType(layer) {
+  isVectorType() {
     return false;
   },
 });

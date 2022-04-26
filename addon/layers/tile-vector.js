@@ -21,7 +21,7 @@ export default VectorLayer.extend({
     @type String[]
     @default ['edit', 'remove', 'identify', 'search']
   */
-  operations: ['edit', 'remove'],
+  operations: Object.freeze(['edit', 'remove']),
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -54,11 +54,9 @@ export default VectorLayer.extend({
 
     @method getLayerPropertyValues
     @param {Object} leafletObject Leaflet layer object
-    @param {String} selectedField Selected field name
-    @param {Integer} count Amount of values to return (for all values must be 0)
     @returns {Array} Array with selected property values
   */
-  getLayerPropertyValues(leafletObject, selectedField, count) {
+  getLayerPropertyValues(leafletObject) {
     if (isNone(leafletObject)) {
       return A();
     }

@@ -22,7 +22,7 @@ export default Component.extend({
     @default ['', '5,5', '5,10', '10,5', '5,1', '1,5', '1,1', '15,10,5,10', '5,5,1,5', '5,5,1,5,1,5']
     @private
   */
-  _availableDashArrays: ['', '5,5', '5,10', '10,5', '5,1', '1,5', '1,1', '15,10,5,10', '5,5,1,5', '5,5,1,5,1,5'],
+  _availableDashArrays: Object.freeze(['', '5,5', '5,10', '10,5', '5,1', '1,5', '1,1', '15,10,5,10', '5,5,1,5', '5,5,1,5,1,5']),
 
   /**
     Reference to component's template.

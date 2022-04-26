@@ -29,7 +29,7 @@ export default BaseLayer.extend({
     @type String[]
     @default ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'legend']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'legend'],
+  operations: Object.freeze(['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'legend']),
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -40,6 +40,10 @@ export default BaseLayer.extend({
   createSettings() {
     const settings = this._super(...arguments);
     const layersStylesRenderer = this.get('layersStylesRenderer');
+    const legendSettings = {
+      geometriesCanBeDisplayed: true,
+      markersCanBeDisplayed: true,
+    };
 
     $.extend(true, settings, {
       clusterize: false,
@@ -51,10 +55,7 @@ export default BaseLayer.extend({
       // Layer style 'simple' is default for vector layers (see ember-flexberry-gis/layers-styles/simple).
       styleSettings: layersStylesRenderer.getDefaultStyleSettings('simple'),
 
-      legendSettings: {
-        geometriesCanBeDisplayed: true,
-        markersCanBeDisplayed: true,
-      },
+      legendSettings,
     });
 
     return settings;
@@ -80,11 +81,10 @@ export default BaseLayer.extend({
     Indicates whether related layer is vector layer.
 
     @method isVectorType
-    @param {Object} layer Layer model.
     @param {Boolean} howVector.
     @returns {Boolean}
   */
-  isVectorType(layer) {
+  isVectorType() {
     return true;
   },
 });

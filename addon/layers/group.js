@@ -27,7 +27,7 @@ export default BaseLayer.extend({
     @type String[]
     @default ['add', 'edit', 'remove']
   */
-  operations: ['add', 'edit', 'remove'],
+  operations: Object.freeze(['add', 'edit', 'remove']),
 
   /**
     Creates new settings object (with settings related to layer-type).

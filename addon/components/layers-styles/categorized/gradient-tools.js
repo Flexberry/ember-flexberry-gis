@@ -136,7 +136,7 @@ export default Component.extend({
     @default []
     @public
   */
-  gradientList: [],
+  gradientList: Object.freeze([]),
 
   actions: {
     /**

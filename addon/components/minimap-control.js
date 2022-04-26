@@ -25,7 +25,7 @@ export default BaseControl.extend({
   */
   layerGroup: null,
 
-  leafletOptions: [
+  leafletOptions: Object.freeze([
     'position',
     'width',
     'height',
@@ -39,7 +39,7 @@ export default BaseControl.extend({
     'autoToggleDisplay',
     'minimized',
     'strings'
-  ],
+  ]),
 
   /**
     The standard Leaflet.Control position parameter, used like all the other controls.
@@ -194,10 +194,10 @@ export default BaseControl.extend({
     @type Object
     @default {hideText:'', showText:''}
   */
-  strings: {
+  strings: Object.freeze({
     hideText: '',
     showText: '',
-  },
+  }),
 
   init() {
     this._super(...arguments);
