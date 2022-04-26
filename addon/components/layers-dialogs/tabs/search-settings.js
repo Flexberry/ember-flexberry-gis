@@ -117,12 +117,12 @@ export default Component.extend({
     @type Object
     @default Object
   */
-  value: {
+  value: Object.freeze({
     canBeSearched: undefined,
     canBeContextSearched: undefined,
     contextSearchFields: undefined,
     searchFields: undefined,
-  },
+  }),
 
   /**
     Initializes page's DOM-related properties.
@@ -135,7 +135,7 @@ export default Component.extend({
       const leafletObjectMethod = _this.get('_leafletObjectMethod');
       if (!(isBlank(leafletObjectMethod) || isBlank(type))) {
         _this.set('_leafletObjectIsLoading', true);
-        leafletObjectMethod().then((leafletObject) => {
+        leafletObjectMethod().then(() => {
           _this.set('_leafletObject', leafletObject);
           _this.set('_leafletObjectIsLoading', false);
           const layerClass = getOwner(_this).knownForType('layer', type);

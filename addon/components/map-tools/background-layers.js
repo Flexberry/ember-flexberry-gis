@@ -123,7 +123,7 @@ export default Component.extend({
         classActive,
         id: get(layer, 'id'),
       });
-      i++;
+      i += 1;
     });
 
     this.set('items', items);

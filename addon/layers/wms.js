@@ -20,7 +20,7 @@ export default TileLayer.extend(WfsFilterParserMixin, {
     @type String[]
     @default ['edit', 'remove', 'identify', 'legend', 'filter']
   */
-  operations: ['edit', 'remove', 'identify', 'legend', 'filter'],
+  operations: Object.freeze(['edit', 'remove', 'identify', 'legend', 'filter']),
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -30,6 +30,13 @@ export default TileLayer.extend(WfsFilterParserMixin, {
   */
   createSettings() {
     const settings = this._super(...arguments);
+    const legendSettings = {
+      url: '',
+      version: '',
+      format: '',
+      layers: '',
+    };
+
     $.extend(true, settings, {
       info_format: undefined,
       feature_count: 100,
@@ -39,12 +46,7 @@ export default TileLayer.extend(WfsFilterParserMixin, {
       format: undefined,
       transparent: undefined,
       filter: '',
-      legendSettings: {
-        url: '',
-        version: '',
-        format: '',
-        layers: '',
-      },
+      legendSettings,
     });
 
     return settings;
@@ -59,10 +61,11 @@ export default TileLayer.extend(WfsFilterParserMixin, {
   */
   createSetingsFromCsw(record) {
     const settings = this._super(...arguments);
+    const url = record.url.split('?')[0];
 
     settings.info_format = 'application/json';
     settings.feature_count = 100;
-    settings.url = record.url.split('?')[0];
+    settings.url = url;
     settings.version = '1.3.0';
     settings.layers = record.id;
     settings.format = 'image/png';

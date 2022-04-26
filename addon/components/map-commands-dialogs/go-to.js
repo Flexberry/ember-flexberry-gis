@@ -351,7 +351,7 @@ const FlexberryGoToMapCommandDialogComponent = Component.extend({
 
     let x = get(innerOptions, 'x').replace(',', '.');
     let y = get(innerOptions, 'y').replace(',', '.');
-    const regEx = /^(\-|\+)?([0-9]+(\.[0-9]+)?)$/;
+    const regEx = /^(-|\+)?([0-9]+(\.[0-9]+)?)$/;
     if (!(regEx.test(x) && regEx.test(y))) {
       this.set('errorMessageContent', t('components.map-commands-dialogs.go-to.error-message.content'));
       return null;

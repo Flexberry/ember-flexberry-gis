@@ -18,11 +18,12 @@ export default Component.extend({
   _searchPropertiesArray: computed('searchProperties', function () {
     const props = [];
     const searchProperties = this.get('searchProperties');
-    for (const property in searchProperties) {
-      if (searchProperties.hasOwnProperty(property)) {
+
+    Object.keys(searchProperties).forEach(function (property) {
+      if (searchProperties.prototype.hasOwnProperty.call(property)) {
         props.push(searchProperties[property]);
       }
-    }
+    });
 
     return props;
   }),
@@ -30,11 +31,11 @@ export default Component.extend({
   actions: {
     onChange(selectedText) {
       const searchProperties = this.get('searchProperties');
-      for (const property in searchProperties) {
+      Object.keys(searchProperties).forEach(function (property) {
         if (searchProperties[property] === selectedText) {
           this.set('settings.propertyName', property);
         }
-      }
+      });
     },
   },
 

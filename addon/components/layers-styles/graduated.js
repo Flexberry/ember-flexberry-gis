@@ -61,11 +61,11 @@ export default BaseCustomStyle.extend({
       // Get distinct array of asc. sorted values.
       const propertyValues = [...new Set(layerClass.getLayerPropertyValues(leafletLayer, propertyName))].sort((a, b) => a - b);
       let categoriesCount = Number(this.get('_classificationCategoriesCount'));
-      categoriesCount = isNaN(categoriesCount) ? 1 : categoriesCount;
+      categoriesCount = Number.isNaN(Number(categoriesCount)) ? 1 : categoriesCount;
       categoriesCount = categoriesCount <= 0 ? 1 : categoriesCount;
       categoriesCount = categoriesCount > propertyValues.length ? propertyValues.length : categoriesCount;
       const categories = A();
-      const categoriesLength = (propertyValues.length - propertyValues.length % categoriesCount) / categoriesCount;
+      const categoriesLength = (propertyValues.length - (propertyValues.length % categoriesCount)) / categoriesCount;
       const layersStylesRenderer = this.get('_layersStylesRenderer');
       const mainStyleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
       const { path, } = mainStyleSettings.style;

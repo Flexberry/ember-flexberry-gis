@@ -1,6 +1,6 @@
 import { scheduleOnce } from '@ember/runloop';
 import { getOwner } from '@ember/application';
-import { isNone, isBlank } from '@ember/utils';
+import { isNone, isBlank, isEqual } from '@ember/utils';
 import { A, isArray } from '@ember/array';
 import { computed, get } from '@ember/object';
 import Component from '@ember/component';
@@ -173,8 +173,12 @@ export default Component.extend({
     @private
   */
   _availableLineLocation: computed('i18n.locale', function () {
-    let result = [];
     const i18n = this.get('i18n');
+    return this.availableLineLocation(i18n);
+  }),
+
+  availableLineLocation(i18n) {
+    let result = [];
     const over = i18n.t('components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.over').toString();
     const along = i18n.t('components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.along').toString();
     const under = i18n.t('components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.under').toString();
@@ -186,7 +190,7 @@ export default Component.extend({
     };
     this.set('_itemsLineLocation', itemLineLocation);
     return result;
-  }),
+  },
 
   /**
     Location of the line layer.
@@ -199,15 +203,18 @@ export default Component.extend({
   _lineLocationSelect: computed('value.location.lineLocationSelect', '_itemsLineLocation', function () {
     const location = this.get('value.location.lineLocationSelect');
     const items = this.get('_itemsLineLocation');
+
+    return this.lineLocationSelect(location, items);
+  }),
+
+  lineLocationSelect(location, items) {
     let result = items.over;
     let setting = 'over';
     if (!isNone(items)) {
-      for (const key in items) {
-        if (key === location) {
-          result = items[key];
-          setting = key;
-          break;
-        }
+      const item = items.find((key) => isEqual(location, key));
+      if (!isNone(item)) {
+        result = items[location];
+        setting = location;
       }
     }
 
@@ -216,7 +223,7 @@ export default Component.extend({
     }
 
     return result;
-  }),
+  },
 
   /**
     Containing array of strings and feature properies.
@@ -275,25 +282,23 @@ export default Component.extend({
       const leafletObjectMethod = _this.get('leafletObjectMethod');
       if (!(isBlank(leafletObjectMethod) || isBlank(type))) {
         _this.set('_leafletObjectIsLoading', true);
-        leafletObjectMethod().then((leafletObject) => {
-          _this.set('_leafletObject', leafletObject);
+        leafletObjectMethod().then((_leafletObject) => {
+          _this.set('_leafletObject', _leafletObject);
           _this.set('_leafletObjectIsLoading', false);
           const layerClass = getOwner(_this).knownForType('layer', type);
           if (!isBlank(layerClass)) {
-            const allProperties = A(layerClass.getLayerProperties(leafletObject));
+            const allProperties = A(layerClass.getLayerProperties(_leafletObject));
 
             const localizedProperties = this.get(`value.featuresPropertiesSettings.localizedProperties.${this.get('i18n.locale')}`) || {};
             let excludedProperties = this.get('value.featuresPropertiesSettings.excludedProperties');
             excludedProperties = isArray(excludedProperties) ? A(excludedProperties) : A();
             const availableLayerProperties = {};
-            for (const propertyName of allProperties) {
-              if (excludedProperties.includes(propertyName)) {
-                continue;
+            allProperties.forEach((propertyName) => {
+              if (!excludedProperties.includes(propertyName)) {
+                const propertyCaption = get(localizedProperties, propertyName);
+                availableLayerProperties[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
               }
-
-              const propertyCaption = get(localizedProperties, propertyName);
-              availableLayerProperties[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
-            }
+            });
 
             _this.set('_availableLayerProperties', availableLayerProperties);
           }
@@ -327,10 +332,12 @@ export default Component.extend({
 
     caretPosition += (caretShift || 0);
     this.set('value.labelSettingsString', newLabelString);
-    scheduleOnce('afterRender', this, function () {
-      textarea.focus();
-      textarea.setSelectionRange(caretPosition, caretPosition);
-    });
+    scheduleOnce('afterRender', this, this.textAreaFunc(textarea, caretPosition));
+  },
+
+  textAreaFunc(textarea, caretPosition) {
+    textarea.focus();
+    textarea.setSelectionRange(caretPosition, caretPosition);
   },
 
   /**
@@ -356,11 +363,9 @@ export default Component.extend({
       const items = this.get('_itemsLineLocation');
       let result = 'over';
       if (!isNone(items)) {
-        for (const key in items) {
-          if (items[key] === location) {
-            result = key;
-            break;
-          }
+        const item = items.find((key) => isEqual(location, key));
+        if (!isNone(item)) {
+          result = location;
         }
       }
 

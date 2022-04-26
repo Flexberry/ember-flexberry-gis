@@ -22,7 +22,7 @@ export default Component.extend({
     @default ['butt', 'round', 'square']
     @private
   */
-  _availableLineCaps: ['butt', 'round', 'square'],
+  _availableLineCaps: Object.freeze(['butt', 'round', 'square']),
 
   /**
     Reference to component's template.

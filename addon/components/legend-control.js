@@ -51,7 +51,7 @@ export default BaseControl.extend({
     @type String[]
     @default ['position', 'disableClickPropagation', 'disableScrollPropagation']
   */
-  leafletOptions: ['position', 'disableClickPropagation', 'disableScrollPropagation'],
+  leafletOptions: Object.freeze(['position', 'disableClickPropagation', 'disableScrollPropagation']),
 
   /**
     Creates control instance, should be overridden in child classes.

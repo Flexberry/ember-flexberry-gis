@@ -2,8 +2,6 @@
   @module ember-flexberry-gis
 */
 
-import { on } from '@ember/object/evented';
-
 import $ from 'jquery';
 import { isBlank, isNone } from '@ember/utils';
 import { computed, observer } from '@ember/object';
@@ -112,7 +110,7 @@ export default Component.extend({
     @method _leafletMapDidChange
     @private
   */
-  _leafletMapDidChange: on('init', observer('leafletMap', function () {
+  _leafletMapDidChange: observer('leafletMap', function () {
     const leafletMap = this.get('leafletMap');
     if (!isNone(leafletMap)) {
       leafletMap.on('moveend', this._onLeafletMapViewChanged, this);
@@ -120,7 +118,7 @@ export default Component.extend({
 
       this._onLeafletMapViewChanged();
     }
-  })),
+  }),
 
   /**
     Handles changes in leaflet map's current view.
