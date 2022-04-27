@@ -3,8 +3,6 @@
 */
 
 import { once } from '@ember/runloop';
-
-import { on } from '@ember/object/evented';
 import $ from 'jquery';
 import {
   isBlank, isNone, typeOf, isEmpty
@@ -24,7 +22,7 @@ import layout from '../templates/components/flexberry-identify-panel';
   @property {String} flexberryClassNames.layersOptions Component's layers-options menu CSS-class name ('flexberry-identify-panel-layers-options').
   @property {String} flexberryClassNames.toolsOptions Component's tools-options menu CSS-class name ('flexberry-identify-panel-tools-options').
   @property {String} flexberryClassNames.identifyAll Component's identify-all mode's CSS-class name ('flexberry-identify-panel-all-layers-option').
-  @property {String} flexberryClassNames.identifyAllVisible 
+  @property {String} flexberryClassNames.identifyAllVisible
     Component's identify-all-visible mode's CSS-class name('flexberry-identify-panel-all-visible-layers-option').
   @property {String} flexberryClassNames.identifyTopVisible
     Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-top-visible-layers-option').
@@ -428,7 +426,7 @@ const FlexberryIdentifyPanelComponent = Component.extend({
       @method actions.inputLimit
     */
     onInputLimit(str, e) {
-      const regex = /^\.|^,|\.,|,\.|[^\d\.,]|\.(?=.*\.)|,(?=.*,)|\.(?=.*,)|,(?=.*\.)|^0+(?=\d)/g;
+      const regex = /^\.|^,|\.,|,\.|[^\d.,]|\.(?=.*\.)|,(?=.*,)|\.(?=.*,)|,(?=.*\.)|^0+(?=\d)/g;
       if (!isEmpty(str) && regex.test(str)) {
         $(e.target).val(str.replace(regex, ''));
       }
@@ -454,14 +452,14 @@ const FlexberryIdentifyPanelComponent = Component.extend({
     @type Observer
     @private
   */
-  _leafletMapDidChange: on('didInsertElement', observer('leafletMap', function () {
+  _leafletMapDidChange: observer('leafletMap', function () {
     const leafletMap = this.get('leafletMap');
     if (isNone(leafletMap)) {
       return;
     }
 
     leafletMap.on('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
-  })),
+  }),
 
   /**
     Handles changes in buffer settings.

@@ -37,7 +37,7 @@ export default Component.extend(PaginatedControllerMixin, SlotsMixin, {
     let result = 0;
     slots.forEach((item) => {
       if (this._isRegistered(item)) {
-        result++;
+        result += 1;
       }
     });
     return result;
@@ -161,10 +161,12 @@ export default Component.extend(PaginatedControllerMixin, SlotsMixin, {
       e = $.event.fix(e);
 
       // Wait while input will be embeded into clicked cell (after render), and focus on it.
-      scheduleOnce('afterRender', this, function () {
-        const $cellInput = $(e.target).find('input').first();
-        $cellInput.focus();
-      });
+      scheduleOnce('afterRender', this, this.cellInput(e));
+    },
+
+    cellInput(e) {
+      const $cellInput = $(e.target).find('input').first();
+      $cellInput.focus();
     },
 
     /**
@@ -177,8 +179,7 @@ export default Component.extend(PaginatedControllerMixin, SlotsMixin, {
       @param {String} inputText Actual input text.
       @param {Object} e Event object.
     */
-    onCellInputFocusOut({ row, fieldName, }, inputText, e) {
-      inputText = inputText;
+    onCellInputFocusOut({ row, fieldName, }, inputText) {
       const fieldParsers = this.get('fieldParsers');
       const fieldValidators = this.get('fieldValidators');
 
@@ -198,7 +199,7 @@ export default Component.extend(PaginatedControllerMixin, SlotsMixin, {
       @param {Object} row Row containing changed cell.
       @param {Object} e Event object.
      */
-    onCellCheckboxChange(row, e) {
+    onCellCheckboxChange(row) {
       this.sendAction('rowEdited', guidFor(row));
     },
 

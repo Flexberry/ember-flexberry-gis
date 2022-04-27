@@ -20,6 +20,8 @@ module.exports = {
     Base64: 'writable',
     L: 'writable',
     moment: 'writable',
+    Terraformer: 'writable',
+    proj4: 'writable',
   },
   rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true, }],
@@ -34,6 +36,8 @@ module.exports = {
     'prefer-arrow-callback': 'off',
     'func-names': ['error', 'never'],
     'no-continue': 'off',
+    "no-console": "off",
+    "no-alert": "off",
     'no-plusplus': [2, { allowForLoopAfterthoughts: true }],
     'no-underscore-dangle': 'off',
     'max-len': [

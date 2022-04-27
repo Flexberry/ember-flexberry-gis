@@ -81,9 +81,9 @@ export default Component.extend({
     const properties = Object.keys(isObject[0] || {});
     const localizedProperties = this.get('localizedProperties');
 
-    for (const i in properties) {
+    properties.forEach((i) => {
       allProperties[properties[i]] = localizedProperties[properties[i]] || properties[i];
-    }
+    });
 
     return allProperties;
   }),
@@ -100,11 +100,11 @@ export default Component.extend({
     const properties = Object.keys(isObject[0] || {});
     const localizedProperties = this.get('localizedProperties');
 
-    for (const i in properties) {
-      if (isFinite(isObject[0][properties[i]])) {
+    properties.forEach((i) => {
+      if (Number.isFinite(isObject[0][properties[i]])) {
         numberProperties[properties[i]] = localizedProperties[properties[i]] || properties[i];
       }
-    }
+    });
 
     return numberProperties;
   }),

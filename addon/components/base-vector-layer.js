@@ -161,7 +161,7 @@ export default BaseLayer.extend({
   },
 
   _featuresProcessCallback(layers, leafletObject) {
-    return new Promise((resolve) => {
+    return new Promise(() => {
       if (!leafletObject) {
         leafletObject = this.get('_leafletObject');
       }
@@ -199,7 +199,7 @@ export default BaseLayer.extend({
     @method _addLayersOnMap
     @private
   */
-  _addLayersOnMap(layers) {
+  _addLayersOnMap() {
     this._setLayerState();
   },
 
@@ -264,10 +264,11 @@ export default BaseLayer.extend({
 
     @method createVectorLayer
     @param {Object} options Layer options.
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
-  createVectorLayer(options) {
+  createVectorLayer() {
     assert('BaseVectorLayer\'s \'createVectorLayer\' should be overridden.');
   },
 
@@ -341,7 +342,8 @@ export default BaseLayer.extend({
 
     @method createClusterLayer
     @param {<a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>} vectorLayer Vector layer which must be clusterized.
-    @return {<a href="https://github.com/Leaflet/Leaflet.markercluster/blob/master/src/MarkerClusterGroup.js">L.MarkerClusterGroup</a>} Clusterized vector layer.
+    @return {<a href="https://github.com/Leaflet/Leaflet.markercluster/blob/master/src/MarkerClusterGroup.js">L.MarkerClusterGroup</a>}
+      Clusterized vector layer.
   */
   createClusterLayer(vectorLayer) {
     const clusterLayer = L.markerClusterGroup(this.get('clusterOptions'));
@@ -388,7 +390,7 @@ export default BaseLayer.extend({
     @return {Promise}
   */
   showAllLayerObjects() {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const leafletObject = this.get('_leafletObject');
       const map = this.get('leafletMap');
       const layer = this.get('layerModel');
@@ -406,7 +408,7 @@ export default BaseLayer.extend({
           }
         }
 
-        leafletObject.promiseLoadLayer = new Promise((resolve) => {
+        leafletObject.promiseLoadLayer = new Promise(() => {
           const e = {
             featureIds: null,
           };
@@ -478,7 +480,7 @@ export default BaseLayer.extend({
     @return {Ember.RSVP.Promise}
   */
   _setVisibilityObjects(objectIds, visibility = false) {
-    return new Promise((resolve, reject) => {
+    return new Promise((reject) => {
       const leafletObject = this.get('_leafletObject');
       const map = this.get('leafletMap');
       const layer = this.get('layerModel');
@@ -486,7 +488,7 @@ export default BaseLayer.extend({
       if (visibility) {
         const { continueLoading, } = leafletObject.options;
         if (!continueLoading) {
-          leafletObject.promiseLoadLayer = new Promise((resolve) => {
+          leafletObject.promiseLoadLayer = new Promise(() => {
             const e = {
               featureIds: objectIds,
             };
@@ -496,17 +498,19 @@ export default BaseLayer.extend({
             });
           });
         } else {
-          reject('Not working to layer with continueLoading');
+          reject(new Error('Not working to layer with continueLoading'));
         }
       } else {
-        leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+        leafletObject.promiseLoadLayer = RSVP.resolve();
       }
 
       leafletObject.promiseLoadLayer.then(() => {
         leafletObject.statusLoadLayer = false;
         leafletObject.promiseLoadLayer = null;
         objectIds.forEach((objectId) => {
-          const objects = Object.values(leafletObject._layers).filter((shape) => this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layer, shape) === objectId);
+          const objects = Object.values(leafletObject._layers).filter((shape) => this.get('mapApi')
+            .getFromApi('mapModel')
+            ._getLayerFeatureId(layer, shape) === objectId);
           if (objects.length > 0) {
             objects.forEach((obj) => {
               if (visibility) {
@@ -520,7 +524,9 @@ export default BaseLayer.extend({
         const labelLayer = leafletObject._labelsLayer;
         if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !isNone(labelLayer)) {
           objectIds.forEach((objectId) => {
-            const objects = Object.values(labelLayer._layers).filter((shape) => this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layer, shape) === objectId);
+            const objects = Object.values(labelLayer._layers).filter((shape) => this.get('mapApi')
+              .getFromApi('mapModel')
+              ._getLayerFeatureId(layer, shape) === objectId);
             if (objects.length > 0) {
               objects.forEach((obj) => {
                 if (visibility) {
@@ -550,7 +556,7 @@ export default BaseLayer.extend({
     @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
   */
   getNearObject(e) {
-    return new Promise((resolve, reject) => {
+    return new Promise((reject) => {
       const features = {
         featureIds: null,
       };
@@ -608,11 +614,12 @@ export default BaseLayer.extend({
     Creates leaflet layer related to layer type.
 
     @method createLayer
-    @return {<a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>}
+    @return {<a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>}
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
-    return new Promise((resolve, reject) => {
+    return new Promise((reject) => {
       hash({
         vectorLayer: this.createVectorLayer(),
       }).then(({ vectorLayer, }) => {
@@ -697,7 +704,7 @@ export default BaseLayer.extend({
       return satisfiesBounds;
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((reject) => {
       try {
         const features = A();
         const bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
@@ -721,7 +728,7 @@ export default BaseLayer.extend({
         });
 
         resolve(features);
-      } catch (e) {
+      } catch (error) {
         reject(e.error || e);
       }
     });
@@ -740,7 +747,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
       const leafletLayer = this.get('_leafletObject');
       const features = A();
@@ -785,7 +792,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   query(layerLinks, e) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const { queryFilter, } = e;
       const features = A();
       const equals = [];
@@ -827,8 +834,8 @@ export default BaseLayer.extend({
     @param {Object} e Event object.
     @returns {Ember.RSVP.Promise} Returns promise.
   */
-  loadLayerFeatures(e) {
-    return new Promise((resolve, reject) => {
+  loadLayerFeatures() {
+    return new Promise(() => {
       resolve(this.get('_leafletObject'));
     });
   },
@@ -841,14 +848,16 @@ export default BaseLayer.extend({
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   getLayerFeatures(e) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const leafletObject = this.get('_leafletObject');
       const { featureIds, } = e;
       if (isArray(featureIds) && !isNone(featureIds)) {
         const objects = [];
         featureIds.forEach((id) => {
           const features = leafletObject._layers;
-          const obj = Object.values(features).find((feature) => this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), feature) === id);
+          const obj = Object.values(features).find((feature) => this.get('mapApi')
+            .getFromApi('mapModel')
+            ._getLayerFeatureId(this.get('layerModel'), feature) === id);
           if (!isNone(obj)) {
             objects.push(obj);
           }
@@ -1020,7 +1029,7 @@ export default BaseLayer.extend({
   _createLayer() {
     this._super(...arguments);
 
-    this.get('_leafletLayerPromise').then((leafletLayer) => {
+    this.get('_leafletLayerPromise').then(() => {
       this._checkZoomPane();
     });
   },
@@ -1079,13 +1088,13 @@ export default BaseLayer.extend({
     }
 
     if (propName.length > 0) {
-      for (const prop of propName) {
+      propName.forEach((prop) => {
         let property = prop.innerHTML;
         if (prop.localName !== 'propertyname') {
           property = prop.innerText;
         }
 
-        if (property && layer.feature.properties && layer.feature.properties.hasOwnProperty(property)) {
+        if (property && layer.feature.properties && layer.feature.properties.prototype.hasOwnProperty.call(property)) {
           let label = layer.feature.properties[property];
           if (isNone(label)) {
             label = '';
@@ -1093,7 +1102,7 @@ export default BaseLayer.extend({
 
           str = str.replace(prop.outerHTML, label);
         }
-      }
+      });
     }
 
     if (hasReplace) {
@@ -1126,12 +1135,12 @@ export default BaseLayer.extend({
     }
 
     if (func.length > 0) {
-      for (const item of func) {
+      func.forEach((item) => {
         let nameFunc = $(item).attr('name');
         if (!isNone(nameFunc)) {
           nameFunc = $(item).attr('name').replaceAll('\\"', '');
           switch (nameFunc) {
-            case 'toFixed':
+            case 'toFixed': {
               const attr = $(item).attr('attr').replaceAll('\\"', '');
               const property = item.innerHTML;
               const numProp = Number.parseFloat(property);
@@ -1142,9 +1151,11 @@ export default BaseLayer.extend({
               }
 
               break;
+            }
+            default:
           }
         }
-      }
+      });
     }
 
     if (hasReplace) {
@@ -1486,7 +1497,7 @@ export default BaseLayer.extend({
     const textNode = L.SVG.create('text');
     const textPath = L.SVG.create('textPath');
     let dy = 0;
-    const sizeFont = parseInt(this.get('labelSettings.options.captionFontSize'));
+    const sizeFont = parseInt(this.get('labelSettings.options.captionFontSize'), 10);
     const _lineLocationSelect = this.get('labelSettings.location.lineLocationSelect');
 
     if (_lineLocationSelect === 'along') {
@@ -1617,14 +1628,14 @@ export default BaseLayer.extend({
   */
   _addLabelsToLeafletContainer(layers, leafletObject) {
     let labelsLayer = this.get('_labelsLayer');
-    const leafletMap = this.get('leafletMap');
+    let leafletMap = this.get('leafletMap');
     if (!leafletObject) {
       leafletObject = this.get('_leafletObject');
     }
 
     const thisPane = this.get('_paneLabel');
     if (thisPane) {
-      const leafletMap = this.get('leafletMap');
+      leafletMap = this.get('leafletMap');
       if (thisPane && !isNone(leafletMap)) {
         const pane = leafletMap.getPane(thisPane);
         if (!pane || isNone(pane)) {

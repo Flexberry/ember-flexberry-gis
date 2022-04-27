@@ -72,10 +72,10 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
     @property bufferUnits
     @type Object
   */
-  bufferUnits: {
+  bufferUnits: Object.freeze({
     meters: 'components.flexberry-layers-attributes-panel.buffer.units.meters',
     kilometers: 'components.flexberry-layers-attributes-panel.buffer.units.kilometers',
-  },
+  }),
 
   /**
     Selected mesure unit.
@@ -107,7 +107,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
   */
   _bufferLayer: null,
 
-  _activeTabs: {},
+  _activeTabs: Object.freeze({}),
 
   /**
     Cache for tab models.
@@ -216,8 +216,8 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         const tabModel = EmberObject.extend({
           _top: this.get('pageSize'),
           _skip: 0,
-          _selectedRows: {},
-          _editedRows: {},
+          _selectedRows: Object.freeze({}),
+          _editedRows: Object.freeze({}),
           _selectedRowsCount: computed('_selectedRows', function () {
             const selectedRows = get(this, '_selectedRows');
             return Object.keys(selectedRows).filter((item) => get(selectedRows, item)).length;
@@ -238,20 +238,21 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
                 const layer = feature.leafletLayer.toGeoJSON();
                 switch (layer.geometry.type) {
                   case 'Point':
-                    typeElements.point++;
+                    typeElements.point += 1;
                     break;
                   case 'LineString':
-                    typeElements.line++;
+                    typeElements.line += 1
                     break;
                   case 'MultiLineString':
-                    typeElements.multiLine++;
+                    typeElements.multiLine += 1
                     break;
                   case 'Polygon':
-                    typeElements.polygon++;
+                    typeElements.polygon += 1
                     break;
                   case 'MultiPolygon':
-                    typeElements.multiPolygon++;
+                    typeElements.multiPolygon += 1
                     break;
+                  default:
                 }
               });
             return typeElements;
@@ -342,6 +343,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
           },
 
           init() {
+            this._super(...arguments);
             this.get('i18n.locale');
             this._reload();
           },
@@ -380,6 +382,8 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
 
       return tabModels;
     }
+
+    return undefined;
   }),
 
   /**
@@ -515,7 +519,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
       return null;
     }
 
-    const tab = _tabModels.find((tab) => get(tab, 'layerModel.id') === id);
+    const tab = _tabModels.find(() => get(tab, 'layerModel.id') === id);
 
     return tab;
   },
@@ -577,7 +581,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
     this.send('onClearFoundItemClick');
   },
 
-  _onEdit(e) {
+  _onEdit() {
 
   },
 
@@ -830,7 +834,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
       const selectedFeaturesKeys = Object.keys(selectedRows).filter((item) => get(selectedRows, item));
       const intersectPolygonFeatures = A();
       const intersectPolygonFeaturesKeys = A();
-      selectedFeaturesKeys.forEach((item, index) => {
+      selectedFeaturesKeys.forEach((item) => {
         const currentFeature = tabModel.featureLink[item].feature;
         const currentFeatureGeoJson = currentFeature.leafletLayer.toGeoJSON();
         const currentFeatureGeometry = currentFeatureGeoJson.geometry;
@@ -846,7 +850,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         set(tabModel, '_selectedRows', {});
         set(tabModel, 'selectAll', false);
         const selectedInterctItemsRows = get(tabModel, '_selectedRows');
-        intersectPolygonFeaturesKeys.forEach((item, index) => {
+        intersectPolygonFeaturesKeys.forEach((item) => {
           set(selectedInterctItemsRows, item, true);
         });
         set(tabModel, '_selectedRows', selectedInterctItemsRows);
@@ -895,9 +899,16 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         $('.bottompanel-tab-nav-panel-tabs').children().each((index, item) => {
           itemsWidth += $(item).outerWidth();
         });
-        const offsetDelta = Math.min(25, (panelWidth >= itemsWidth ? 0
-          : (offset >= itemsWidth - panelWidth + navButtonWidth ? 0
-            : itemsWidth - panelWidth + navButtonWidth - offset)));
+        let width;
+        if (panelWidth >= itemsWidth) {
+          width = 0;
+        } else if (offset >= itemsWidth - panelWidth + navButtonWidth) {
+          width = 0;
+        } else {
+          width = itemsWidth - panelWidth + navButtonWidth - offset;
+        }
+
+        const offsetDelta = Math.min(25, width);
         offset += offsetDelta;
       }
 
@@ -944,10 +955,10 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         // тут бы восстановить слои
         this.set('loading', false);
         this.set('error', data);
-        leafletObject.off('save:success', saveSuccess);
+        leafletObject.off('save:success', this.saveSuccess);
       };
 
-      let saveSuccess = (data) => {
+      const saveSuccess = () => {
         this.set('loading', false);
         tabModel._reload();
         leafletObject.off('save:failed', saveFailed);
@@ -1055,6 +1066,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
           }
 
           delete selectedRows[key];
+          return undefined;
         }).filter((item) => !isNone(item));
 
       if (selectedFeatures.length < 1) {
@@ -1103,6 +1115,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
             }
 
             delete dataForDifference[key];
+            return undefined;
           }).filter((item) => !isNone(item));
 
         const items = [];
@@ -1186,6 +1199,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
           }
 
           delete selectedRows[key];
+          return undefined;
         }).filter((item) => !isNone(item));
 
       const selectedLayers = Object.keys(selectedRows).filter((item) => get(selectedRows, item)).map((key) => {
@@ -1194,6 +1208,8 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         if ((layer.geometry.type === 'Polygon') || (layer.geometry.type === 'MultiPolygon')) {
           return tabModel.featureLink[key];
         }
+
+        return undefined;
       }).filter((item) => !isNone(item));
 
       // если подходящих действительно несколько, то собираем в один новый мультиполигон
@@ -1288,7 +1304,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
     @param {String} featureId Layer feature id.
     @param {String} layer Layer to delete from.
   */
-  _deleteLayerById(featureId, layer) {
+  _deleteLayerById(featureId) {
     const tabModels = this.get('_tabModels');
 
     if (!isNone(tabModels)) {
@@ -1296,7 +1312,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         const tabModel = tabModels[i];
 
         const treatmentSelectedEditedRows = function (selectedRows, editedRows) {
-          for (const key in tabModel.featureLink) {
+          tabModel.featureLink.forEach((key) => {
             let id;
             const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
             if (typeof getLayerFeatureIdFunc === 'function') {
@@ -1309,7 +1325,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
             if (id === featureId) {
               this._deleteLayerByKey(tabModel, key, selectedRows, editedRows);
             }
-          }
+          });
         }.bind(this);
 
         this._treatmentSelectedEditedRows(tabModel, treatmentSelectedEditedRows);
@@ -1367,7 +1383,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         case 'LineString':
           split = lineSplit.default(layer, splitLine);
           break;
-        case 'MultiLineString': // TODO Need TEST!!!!!
+        case 'MultiLineString': { // TODO Need TEST!!!!!
           const arrayLineString = layer.geometry.coordinates;
           let resultLineString = [];
           arrayLineString.forEach((line) => {
@@ -1377,14 +1393,16 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
 
           split = helper.default.featureCollection(resultLineString);
           break;
-        case 'Polygon':
+        }
+        case 'Polygon': {
           const resultSplit = _this._polygonSplit(layer, splitLine);
           if (resultSplit.length > 1) {
             split = helper.default.featureCollection(resultSplit);
           }
 
           break;
-        case 'MultiPolygon':
+        }
+        case 'MultiPolygon': {
           const arrayPolygons = layer.geometry.coordinates;
           let resultPolygonSplit = [];
           arrayPolygons.forEach((polygon) => {
@@ -1396,10 +1414,12 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
           }
 
           break;
+        }
+        default:
       }
 
       if (split.features.length === 0) {
-        const selectedRows = get(tabModel, '_selectedRows');
+        selectedRows = get(tabModel, '_selectedRows');
         const key = guidFor(layer.properties);
         delete selectedRows[key];
       }
@@ -1418,7 +1438,10 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
     }
 
     selectedRows = get(tabModel, '_selectedRows');
-    const selectedLayers = Object.keys(selectedRows).filter((item) => get(selectedRows, item)).map((key) => tabModel.featureLink[key]).filter((item) => !isNone(item));
+    const selectedLayers = Object.keys(selectedRows)
+      .filter((item) => get(selectedRows, item))
+      .map((key) => tabModel.featureLink[key])
+      .filter((item) => !isNone(item));
 
     const dataItems = {
       mode: 'Split',
@@ -1488,7 +1511,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         waitEndPoint = false;
       }
 
-      i++;
+      i += 1;
     }
 
     let arrayPolygon = [layer];

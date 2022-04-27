@@ -102,16 +102,22 @@ export default Component.extend({
     let editTools = get(leafletMap, 'drawTools');
 
     if (isNone(editTools)) {
-      editTools = new L.Editable(leafletMap);
-      editTools.on('editable:vertex:dragend', this._updateCoordinates, this);
-      editTools.on('editable:vertex:deleted', this._updateCoordinates, this);
-      editTools.on('editable:drawing:end', this._updateCoordinates, this);
-
-      set(this.get('leafletMap'), 'drawTools', editTools);
+      editTools = this.setEditTools(editTools, leafletMap);
     }
 
     return editTools;
   }),
+
+  setEditTools: (editTools, leafletMap) => {
+    editTools = new L.Editable(leafletMap);
+    editTools.on('editable:vertex:dragend', this._updateCoordinates, this);
+    editTools.on('editable:vertex:deleted', this._updateCoordinates, this);
+    editTools.on('editable:drawing:end', this._updateCoordinates, this);
+
+    set(this.get('leafletMap'), 'drawTools', editTools);
+
+    return editTools;
+  },
 
   createItem: null,
 
@@ -178,7 +184,7 @@ export default Component.extend({
       if (typeof saveObjectFunc === 'function') {
         saveObjectFunc(this, wfs.id);
       } else {
-        leafletObject.on('save:success', (obj) => {
+        leafletObject.on('save:success', () => {
           this._clearCurrentGeometry();
         });
 

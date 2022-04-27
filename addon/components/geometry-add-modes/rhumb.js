@@ -4,7 +4,6 @@
 
 import $ from 'jquery';
 
-import { on } from '@ember/object/evented';
 import {
   computed, get, set, observer
 } from '@ember/object';
@@ -87,10 +86,10 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
   }
     @private
   */
-  _formValid: {
+  _formValid: Object.freeze({
     startPointValid: false,
     tableValid: false,
-  },
+  }),
 
   /**
     Availble direction.
@@ -145,9 +144,9 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
   }
     @private
   */
-  _dataForm: {
+  _dataForm: Object.freeze({
     startPoint: '',
-  },
+  }),
 
   /**
     Error message.
@@ -221,7 +220,7 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
     @property directionItems
     @type Object[]
   */
-  directionItems: computed('_objectDirections.[]', '_objectDirections.@each.active', 'i18n', function () {
+  directionItems: computed('_objectDirections.{[], .@each.active}', 'i18n', function () {
     const i18n = this.get('i18n');
     const _objectDirections = this.get('_objectDirections');
 
@@ -231,18 +230,22 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
       const captionPath = get(item, 'captionPath');
 
       if (!caption && captionPath) {
-        set(item, 'caption', i18n.t(captionPath));
+        this.setCaprion(item, i18n, captionPath);
       }
     });
 
     return result;
   }),
 
-  initialSettings: on('init', observer('settings', function () {
+  setCaprion(item, i18n, captionPath) {
+    set(item, 'caption', i18n.t(captionPath));
+  },
+
+  initialSettings: observer('settings', function () {
     this.set('isError', false);
     this.set('_crs', this.get('settings.layerCRS'));
     this._dropForm();
-  })),
+  }),
 
   getLayer() {
     let error = false;
@@ -250,7 +253,7 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
     this.set('message', null);
 
     this.set('_formValid.startPointValid', !this._validStartPoint(this._dataForm.startPoint));
-    error |= !this._validStartPoint(this._dataForm.startPoint);
+    error = error || !this._validStartPoint(this._dataForm.startPoint);
 
     const skipNum = this._countSkip();
     if (isNone(skipNum)) {
@@ -274,7 +277,7 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
       set(item, 'directionValid', isNone(item.direction));
       set(item, 'rhumbValid', !this._validFloatNumber(item.rhumb));
       set(item, 'distanceValid', !this._validFloatNumber(item.distance));
-      error |= isNone(item.direction) || !this._validFloatNumber(item.rhumb) || !this._validFloatNumber(item.distance);
+      error = error || isNone(item.direction) || !this._validFloatNumber(item.rhumb) || !this._validFloatNumber(item.distance);
     }
 
     if (error) {
@@ -289,6 +292,7 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
       case 'polyline':
         objectType = 'LineString';
         break;
+      default:
     }
 
     const startPoints = this._dataForm.startPoint.split(' ').map((p) => parseFloat(p));
@@ -350,7 +354,8 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
   actions: {
 
     apply() {
-      let [error, addedLayer] = this.getLayer();
+      let [addedLayer] = this.getLayer();
+      const [error] = this.getLayer();
 
       if (error) {
         return;
@@ -391,7 +396,7 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
     OnAddRow(rowId) {
       const getGuid = () => {
         const templ = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
-        const result = templ.replace(/[xy]/g, (c, r) => (c === 'x' ? Math.random() * 16 | 0 : r & 0x3 | 0x8));
+        const result = templ.replace(/[xy]/g, (c, r) => (c === 'x' ? Math.random() * 16 || 0 : (r && 0x3) || 0x8));
 
         return result.toString(16);
       };

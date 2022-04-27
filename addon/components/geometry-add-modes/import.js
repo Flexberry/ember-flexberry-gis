@@ -327,12 +327,12 @@ const FlexberryGeometryAddModeImportComponent = Component.extend({
 
       const layerProperties = A(Object.keys(this.get('settings.layerFields') || {}));
       const propertiesConnection = {};
-      for (const property in importedProperties) {
+      importedProperties.forEach((property) => {
         if (layerProperties.includes(property)) {
           propertiesConnection[property] = property;
           layerProperties.removeObject(property);
         }
-      }
+      });
 
       this.set('_propertiesConnection', propertiesConnection);
       this.set('_notConnectedProperties', layerProperties);
@@ -461,7 +461,7 @@ const FlexberryGeometryAddModeImportComponent = Component.extend({
 
        @method actions.onApproveImportDialog
     */
-    onApproveImportDialog(e) {
+    onApproveImportDialog() {
       const responseJSON = this.get('responseJSON') || { features: [], };
 
       if (responseJSON.features.length > 0) {
@@ -495,7 +495,7 @@ const FlexberryGeometryAddModeImportComponent = Component.extend({
 
       @method actions.onHideImportDialog
     */
-    onHideImportDialog(e) {
+    onHideImportDialog() {
       this.set('_dialogHasBeenRequested', true);
       this.set('_dialogVisible', true);
 

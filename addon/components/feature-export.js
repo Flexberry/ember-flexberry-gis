@@ -142,7 +142,7 @@ const FeatureExportDialogComponent = Component.extend({
      * Approve and start of export.
      * @param {object} e Event parameter.
      */
-    onApprove(e) {
+    onApprove() {
       // Objects for unloading.
       const result = this.get('result');
       const layer = result.layerModel;

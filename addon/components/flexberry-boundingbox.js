@@ -548,7 +548,7 @@ export default Component.extend(FlexberryMapActionsHandlerMixin, {
     return new Promise((resolve, reject) => {
       const leafletMap = this.get('_leafletMap');
       if (isNone(leafletMap)) {
-        reject('Leaflet map is not defined');
+        reject(new Error('Leaflet map is not defined'));
       }
 
       leafletMap.once('moveend', () => {

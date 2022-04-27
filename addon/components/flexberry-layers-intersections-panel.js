@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import Ember from 'ember';
 import { Promise, allSettled } from 'rsvp';
 import { A, isArray } from '@ember/array';
 import { getOwner } from '@ember/application';
@@ -48,7 +49,7 @@ export default Component.extend({
     @type Array
     @default []
   */
-  vectorLayers: [],
+  vectorLayers: Object.freeze([]),
 
   /**
     Leaflet map object for zoom and pan.
@@ -106,7 +107,7 @@ export default Component.extend({
     @type Array
     @default []
   */
-  selectedLayers: [],
+  selectedLayers: Object.freeze([]),
 
   /**
     List of intersection results.
@@ -115,7 +116,7 @@ export default Component.extend({
     @type Array
     @default []
   */
-  results: [],
+  results: Object.freeze([]),
 
   /**
     Selected feature.
@@ -211,7 +212,6 @@ export default Component.extend({
       let bufferedMainPolygonLayer;
       const bufferR = isNone(this.get('bufferR')) ? 0 : this.get('bufferR');
 
-      let latlng;
       let workingPolygon;
       const selected = A();
 
@@ -221,21 +221,23 @@ export default Component.extend({
       });
 
       // If current feature is L.FeatureGroup
-      if (currentFeature.leafletLayer.hasOwnProperty('_layers')) {
+      if (currentFeature.leafletLayer.prototype.hasOwnProperty.call('_layers')) {
         if (currentFeature.leafletLayer.getLayers().length === 1) {
-          polygonLayer = currentFeature.leafletLayer.getLayers()[0];
+          const [layer] = currentFeature.leafletLayer.getLayers()[0];
+          polygonLayer = layer;
         } else {
-          throw (' L.FeatureGroup с несколькими дочерними слоями пока не поддерживается.');
+          throw new Error(' L.FeatureGroup с несколькими дочерними слоями пока не поддерживается.');
         }
       } else {
         polygonLayer = currentFeature.leafletLayer;
       }
 
-      latlng = polygonLayer instanceof L.Marker ? polygonLayer.getLatLng() : polygonLayer.getBounds().getCenter();
+      const latlng = polygonLayer instanceof L.Marker ? polygonLayer.getLatLng() : polygonLayer.getBounds().getCenter();
 
       if (bufferR > 0) {
         const feat = buffer.default(polygonLayer.toGeoJSON(), bufferR, { units: 'meters', });
-        workingPolygon = L.geoJSON(feat).getLayers()[0];
+        const [polygon] = L.geoJSON(feat).getLayers()[0];
+        workingPolygon = polygon;
       } else {
         workingPolygon = polygonLayer;
       }
@@ -291,7 +293,7 @@ export default Component.extend({
       @method actions.inputLimit
     */
     inputLimit(str, e) {
-      const regex = /^\.|[^\d\.]|\.(?=.*\.)|^0+(?=\d)/g;
+      const regex = /^\.|[^\d.]|\.(?=.*\.)|^0+(?=\d)/g;
       if (!isEmpty(str) && regex.test(str)) {
         this.$(e.target).val(str.replace(regex, ''));
       }
@@ -450,7 +452,7 @@ export default Component.extend({
 
     $('.search-field').val('');
     $('.fb-selector .item.filtered').each((i, item) => {
-      $(item).removeClass('filtered');
+      Ember.run.bind(this, $(item).removeClass('filtered'));
     });
   },
 
