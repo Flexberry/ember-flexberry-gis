@@ -7,7 +7,6 @@ import { A } from '@ember/array';
 import { getOwner } from '@ember/application';
 import { isNone, isEmpty } from '@ember/utils';
 import { observer, get } from '@ember/object';
-import { on } from '@ember/object/evented';
 import Component from '@ember/component';
 import { translationMacro as t } from 'ember-i18n';
 import layout from '../../templates/components/geometry-add-modes/manual';
@@ -141,7 +140,7 @@ const FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFe
     this.clear();
   },
 
-  initialSettings: on('init', observer('settings', 'layer', function () {
+  initialSettings: observer('settings', 'layer', function () {
     this.clear();
 
     const settings = this.get('settings');
@@ -170,7 +169,7 @@ const FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFe
     } else {
       this.set('_coordinates', '');
     }
-  })),
+  }),
 
   _updateCoordinates() {
     const layer = this.get('layer');
@@ -253,7 +252,7 @@ const FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFe
           return coordinatesWithError();
         }
 
-        addedLayer = new L.marker(parsedCoordinates[0][0]);
+        addedLayer = L.marker(parsedCoordinates[0][0]);
         break;
 
       case 'polyline':
@@ -271,6 +270,8 @@ const FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFe
 
         addedLayer = L.polygon(parsedCoordinates);
         break;
+
+      default:
     }
 
     this.set('_coordinatesWithError', null);
@@ -280,7 +281,8 @@ const FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFe
 
   actions: {
     apply() {
-      let [error, addedLayer] = this.getLayer();
+      let [addedLayer] = this.getLayer();
+      const [error] = this.getLayer();
 
       if (error) {
         return;
@@ -361,9 +363,9 @@ const FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFe
           const str = items[j];
 
           let m;
-          while ((m = regex.exec(str)) !== null) {
+          while (m !== null) {
             if (m.index === regex.lastIndex) {
-              regex.lastIndex++;
+              regex.lastIndex += 1;
             }
 
             let x = parseFloat(m[1]);
@@ -371,11 +373,14 @@ const FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFe
 
             if (crs !== 'EPSG:4326') {
               const projected = this._projectCoordinates(crs, 'EPSG:4326', [x, y]);
-              x = projected[0];
-              y = projected[1];
+              const [p0] = projected[0];
+              const [p1] = projected[1];
+              x = p0;
+              y = p1;
             }
 
             mas.push([y, x]);
+            m = regex.exec(str);
           }
         }
 

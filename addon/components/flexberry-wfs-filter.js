@@ -246,12 +246,12 @@ export default Component.extend({
           const leafletObjectMethod = _this.get('_leafletObjectMethod');
           if (!(isBlank(leafletObjectMethod) || isBlank(type))) {
             _this.set('_leafletObjectIsLoading', true);
-            leafletObjectMethod().then((leafletObject) => {
-              _this.set('_leafletObject', leafletObject);
+            leafletObjectMethod().then((leaflet) => {
+              _this.set('_leafletObject', leaflet);
               _this.set('_leafletObjectIsLoading', false);
               const layerClass = getOwner(_this).knownForType('layer', type);
               if (!isBlank(layerClass)) {
-                _this.set('fields', A(layerClass.getLayerProperties(leafletObject)));
+                _this.set('fields', A(layerClass.getLayerProperties(leaflet)));
               }
             }).catch(() => {
               _this.set('_leafletObjectIsLoading', false);
@@ -310,10 +310,12 @@ export default Component.extend({
 
     caretPosition += (caretShift || 0);
     this.set('filterStringValue', newFilterString);
-    scheduleOnce('afterRender', this, function () {
-      textarea.focus();
-      textarea.setSelectionRange(caretPosition, caretPosition);
-    });
+    scheduleOnce('afterRender', this, this.setTextArea(textarea, caretPosition));
+  },
+
+  setTextArea(textarea, caretPosition) {
+    textarea.focus();
+    textarea.setSelectionRange(caretPosition, caretPosition);
   },
 
   actions: {

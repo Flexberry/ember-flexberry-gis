@@ -41,7 +41,8 @@ import layout from '../templates/components/flexberry-maplayer';
   @property {String} flexberryClassNames.editButton Component's 'edit' button CSS-class name ('flexberry-maplayer-edit-button').
   @property {String} flexberryClassNames.removeButton Component's 'remove' button CSS-class name ('flexberry-maplayer-remove-button').
   @property {String} flexberryClassNames.caption Component's 'name' label CSS-class name ('flexberry-maplayer-caption-label').
-  @property {String} flexberryClassNames.preventExpandCollapse Component's CSS-class name to prevent nodes expand/collapse animation ('flexberry-treenode-prevent-expand-collapse').
+  @property {String} flexberryClassNames.preventExpandCollapse
+    Component's CSS-class name to prevent nodes expand/collapse animation ('flexberry-treenode-prevent-expand-collapse').
   @readonly
   @static
 
@@ -152,7 +153,7 @@ const FlexberryMaplayerComponent = Component.extend(
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
 
-    dynamicButtons: [],
+    dynamicButtons: Object.freeze([]),
 
     /**
       Layer copy's name postfix
@@ -181,7 +182,7 @@ const FlexberryMaplayerComponent = Component.extend(
       @type String[]
       @default ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds']
     */
-    _requiredActionNames: ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds'],
+    _requiredActionNames: Object.freeze(['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds']),
 
     /**
       Used to identify this component on the page by component name.
@@ -201,7 +202,7 @@ const FlexberryMaplayerComponent = Component.extend(
       @readOnly
       @private
     */
-    _hasLayers: computed('layer.layers.[]', 'layer.layers.@each.isDeleted', function () {
+    _hasLayers: computed('layer.layers.{[], @each.isDeleted}', function () {
       const layers = this.get('layer.layers');
 
       return isArray(layers) && layers.filter((layer) => !isNone(layer) && get(layer, 'isDeleted') !== true).length > 0;
@@ -539,18 +540,18 @@ const FlexberryMaplayerComponent = Component.extend(
       next(this, function () {
         if (!this.get('readonly')) {
           const _this = this;
-          const $captionBlock = Ember.$('.ui.tab.treeview .flexberry-treenode-caption-block');
+          const $captionBlock = $('.ui.tab.treeview .flexberry-treenode-caption-block');
           if ($captionBlock.length > 0) {
             $captionBlock.hover(
               function () {
-                const $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
+                const $toolbar = $(this).children('.flexberry-treenode-buttons-block');
                 $toolbar.removeClass('hidden');
-                Ember.$(this).children('.flexberry-maplayer-caption-label').addClass('blur');
+                $(this).children('.flexberry-maplayer-caption-label').addClass('blur');
               },
               function () {
-                const $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
+                const $toolbar = $(this).children('.flexberry-treenode-buttons-block');
                 $toolbar.addClass('hidden');
-                Ember.$(this).children('.flexberry-maplayer-caption-label').removeClass('blur');
+                $(this).children('.flexberry-maplayer-caption-label').removeClass('blur');
                 _this.set('isSubmenu', false);
               }
             );
@@ -678,10 +679,12 @@ const FlexberryMaplayerComponent = Component.extend(
       },
 
       nodeClick(e) {
-        let $target = $(e.target);
+        const $target = $(e.target);
         let targetAction = $target.data('action');
 
-        targetAction = targetAction ? targetAction : $target.parent().data('action');
+        if (!targetAction) {
+          targetAction = $target.parent().data('action');
+        }
 
         if (targetAction) {
           this.send(targetAction);
@@ -705,7 +708,8 @@ const FlexberryMaplayerComponent = Component.extend(
         // добавление в зависимости от стороны
       },
       /**
-        Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
+        Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}
+          'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
         Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.headerClick:method"}}'headerClick' action{{/crossLink}}.
 
         @method actions.onHeaderClick
@@ -717,7 +721,8 @@ const FlexberryMaplayerComponent = Component.extend(
       },
 
       /**
-        Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.
+        Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}
+          'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.
         Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}'beforeExpand' action{{/crossLink}}.
 
         @method actions.onHeaderClick
@@ -736,7 +741,8 @@ const FlexberryMaplayerComponent = Component.extend(
       },
 
       /**
-        Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.
+        Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}
+          'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.
         Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeCollapse:method"}}'beforeCollapse' action{{/crossLink}}.
 
         @method actions.onHeaderClick
@@ -753,7 +759,8 @@ const FlexberryMaplayerComponent = Component.extend(
         Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.changeVisibility:method"}}'changeVisibility'action{{/crossLink}}.
 
         @method actions.onVisibilityCheckboxChange
-        @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
+        @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}
+          'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
       */
       onVisibilityCheckboxChange(...args) {
         this.sendDynamicAction('changeVisibility', ...args);
@@ -764,7 +771,8 @@ const FlexberryMaplayerComponent = Component.extend(
         Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.changeVisibility:method"}}'changeOpacity'action{{/crossLink}}.
 
         @method actions.onOpacitySliderChange
-        @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauSlider/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
+        @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauSlider/sendingActions.change:method"}}
+          'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
       */
       onOpacitySliderChange(...args) {
         this.sendDynamicAction('changeOpacity', ...args);
@@ -813,7 +821,7 @@ const FlexberryMaplayerComponent = Component.extend(
         @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
         which describes button's 'click' event.
       */
-      onAddButtonClick(e) {
+      onAddButtonClick() {
         // Create empty layer.
         const store = this.get('store');
         this.set('_addDialogLayer', store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId(), }));
@@ -846,7 +854,7 @@ const FlexberryMaplayerComponent = Component.extend(
         @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
         which describes button's 'click' event.
       */
-      onCopyButtonClick(e) {
+      onCopyButtonClick() {
         // Create layer copy.
         this.createLayerCopy('_copyDialogLayer');
         this.set('_copyDialogLayer.name', `${this.get('_copyDialogLayer.name')} ${this.get('copyPostfix')}`);
@@ -994,7 +1002,8 @@ const FlexberryMaplayerComponent = Component.extend(
       Component's action invoking when layer node's 'opacity' value changed.
 
       @method sendingActions.changeOpacity
-      @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauSlider/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
+      @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauSlider/sendingActions.change:method"}}
+        'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
       {{#crossLink "FlexberryDdauSliderComponent/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
     */
 

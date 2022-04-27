@@ -3,7 +3,7 @@
  */
 
 import { addObserver, removeObserver } from '@ember/object/observers';
-
+import Ember from 'ember';
 import { isArray } from '@ember/array';
 import { typeOf, isNone } from '@ember/utils';
 import { computed, observer } from '@ember/object';
@@ -127,14 +127,14 @@ const FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
     @type String[]
     @default ['apiSettings', 'apiSettings.url']
   */
-  observableProperties: ['apiSettings', 'apiSettings.url'],
+  observableProperties: Object.freeze(['apiSettings', 'apiSettings.url']),
 
   /**
     Names of component's properties used for init semantic search module
     @property semanticProperties
     @type String[]
    */
-  semanticProperties: [
+  semanticProperties: Object.freeze([
     'apiSettings',
     'type',
     'minCharacters',
@@ -142,7 +142,7 @@ const FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
     'showNoResults',
     'onResults',
     'maxResults'
-  ],
+  ]),
 
   /**
     Component's wrapping <div> CSS-classes names.
@@ -250,7 +250,7 @@ const FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
 
     @method _valueChange
   */
-  _valueChange: observer('value',  function () {
+  _valueChange: observer('value', function () {
     this.set('_lastAction', null);
     this.set('_valueWasSelected', false);
   }),
@@ -293,7 +293,7 @@ const FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
 
     semanticProperties.onSelect = onSelect;
 
-    const onSearchQuery = function (query) {
+    const onSearchQuery = function () {
       _this.set('_lastAction', null);
     };
 

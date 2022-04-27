@@ -1,4 +1,5 @@
 import { A } from '@ember/array';
+import Ember from 'ember';
 import { isBlank, isNone } from '@ember/utils';
 import { computed, get, observer } from '@ember/object';
 import Component from '@ember/component';
@@ -29,8 +30,7 @@ export default Component.extend({
     @private
   */
   _selectedLayerFeaturesLocalizedProperties: computed(
-    '_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.localizedProperties',
-    '_selectedLayer.settingsAsObject.searchSettings.searchFields',
+    '_selectedLayer.settingsAsObject.{displaySettings.featuresPropertiesSettings.localizedProperties, searchSettings.searchFields}',
     'i18n.locale',
     function () {
       const currentLocale = this.get('i18n.locale');
@@ -40,17 +40,22 @@ export default Component.extend({
         + `featuresPropertiesSettings.localizedProperties.${currentLocale}`
       ) || {};
 
-      const searchProperties = {};
-      Ember.keys(localizedProperties).forEach((prop) => {
-        if (searchFields.indexOf(prop) > -1) {
-          Ember.set(searchProperties, prop, localizedProperties[prop]);
-        }
-      });
-
-      this.set('_localizedValue', null);
-      return searchProperties;
+      return this.setSearchProperties(localizedProperties, searchFields);
     }
   ),
+
+  setSearchProperties(localizedProperties, searchFields) {
+    const searchProperties = {};
+    Ember.keys(localizedProperties).forEach((prop) => {
+      if (searchFields.indexOf(prop) > -1) {
+        Ember.set(searchProperties, prop, localizedProperties[prop]);
+      }
+    });
+
+    this.set('_localizedValue', null);
+
+    return searchProperties;
+  },
 
   /**
     Filter method for available layers.
@@ -279,11 +284,11 @@ export default Component.extend({
 
     onChange(selectedText) {
       const searchProperties = this.get('_selectedLayerFeaturesLocalizedProperties');
-      for (const property in searchProperties) {
+      searchProperties.forEach((property) => {
         if (searchProperties[property] === selectedText) {
           this.set('propertyName', property);
         }
-      }
+      });
     },
 
     /**

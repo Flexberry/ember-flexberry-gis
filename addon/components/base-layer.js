@@ -106,7 +106,7 @@ export default Component.extend(
         );
       }
 
-      return;
+      return undefined;
     }),
 
     addCustomFilter(filter) {
@@ -156,18 +156,19 @@ export default Component.extend(
       @property defaultLeafletOptionsCallbacks
       @type Object
     */
-    defaultLeafletOptionsCallbacks: {
+    defaultLeafletOptionsCallbacks: Object.freeze({
       coordsToLatLng(coords) {
         const crs = this.get('crs');
         const point = new L.Point(coords[0], coords[1]);
         const latlng = crs.projection.unproject(point);
         if (!isNone(coords[2])) {
-          latlng.alt = coords[2];
+          const [alt] = coords[2];
+          latlng.alt = alt;
         }
 
         return latlng;
       },
-    },
+    }),
 
     /**
       Leaflet map.
@@ -298,7 +299,7 @@ export default Component.extend(
 
           let intersect = false;
           if (l._leafletObject && typeof (l._leafletObject.eachLayer) === 'function') {
-            l._leafletObject.eachLayer(function (layer) {
+            l._leafletObject.eachLayer(function () {
               if (typeof (layer._containsPoint) === 'function') {
                 intersect = intersect || layer._containsPoint(point);
               }
@@ -430,7 +431,7 @@ export default Component.extend(
       @private
     */
     _getAttributesOptions() {
-      return new Promise((resolve, reject) => {
+      return new Promise(() => {
         resolve({
           object: this.get('_leafletObject'),
           settings: {
@@ -827,7 +828,7 @@ export default Component.extend(
       @return {Ember.RSVP.Promise} Returns promise.
     */
     cancelEdit() {
-      return new resolve();
+      return resolve();
     },
 
     /**
@@ -859,7 +860,7 @@ export default Component.extend(
       this._super(...arguments);
 
       // Wait for the layer creation to be finished and set it's state related to actual settings.
-      this.get('_leafletLayerPromise').then((leafletLayer) => {
+      this.get('_leafletLayerPromise').then(() => {
         this._setLayerState();
       });
 
@@ -904,11 +905,12 @@ export default Component.extend(
       Returns leaflet layer.
 
       @method getLeafletObjectPromise
-      @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+      @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+        <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
       Leaflet layer or promise returning such layer.
     */
     getLeafletObject() {
-      return new Promise((resolve, reject) => {
+      return new Promise(() => {
         resolve(this.get('_leafletObject'));
       });
     },
@@ -927,7 +929,8 @@ export default Component.extend(
       Creates leaflet layer related to layer type.
 
       @method createLayer
-      @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+      @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+        <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
       Leaflet layer or promise returning such layer.
     */
     createLayer() {
@@ -957,7 +960,7 @@ export default Component.extend(
       containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
       or a promise returning such array.
     */
-    identify(e) {
+    identify() {
       assert('BaseLayer\'s \'identify\' method should be overridden.');
     },
 
@@ -971,7 +974,7 @@ export default Component.extend(
       containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
       or a promise returning such array.
     */
-    getNearObject(e) {
+    getNearObject() {
       // BaseLayer's 'getNearObject' method should be overridden.
     },
 
@@ -987,7 +990,7 @@ export default Component.extend(
       @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
       or a promise returning such array.
     */
-    search(e) {
+    search() {
       assert('BaseLayer\'s \'search\' method should be overridden.');
     },
 
@@ -1001,7 +1004,7 @@ export default Component.extend(
       @param {Object[]} results.features Array containing leaflet layers objects
       or a promise returning such array.
     */
-    query(layerLinks, e) {
+    query() {
       assert('BaseLayer\'s \'query\' method should be overridden.');
     },
 
@@ -1015,8 +1018,8 @@ export default Component.extend(
       const layer = this.get('_leafletObject');
 
       if (isNone(layer)) {
-        return new Promise((resolve, reject) => {
-          reject(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`);
+        return new Promise((reject) => {
+          reject(new Error(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`));
         });
       }
 
@@ -1087,7 +1090,8 @@ export default Component.extend(
         const point = new L.Point(coords[0], coords[1]);
         const latlng = crs.projection.unproject(point);
         if (!isNone(coords[2])) {
-          latlng.alt = coords[2];
+          const [alt] = coords[2];
+          latlng.alt = alt;
         }
 
         return latlng;
