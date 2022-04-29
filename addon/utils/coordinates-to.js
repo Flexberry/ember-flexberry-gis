@@ -57,7 +57,7 @@ let coordinatesToArray = function(coordinates) {
 
       break;
     default:
-      console.error('Coordinate array error.')
+      console.error('Coordinate array error.');
   }
 
   return coors;
