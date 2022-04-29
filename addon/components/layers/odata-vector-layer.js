@@ -60,7 +60,7 @@ const maxBatchFeatures = 10000;
  */
 export default BaseVectorLayer.extend({
 
-  leafletOptions: [
+  leafletOptions: Object.freeze([
     'attribution',
     'pane',
     'styles',
@@ -73,7 +73,7 @@ export default BaseVectorLayer.extend({
     'metadataUrl',
     'odataUrl',
     'projectionName'
-  ],
+  ]),
 
   clusterize: false,
 
@@ -104,6 +104,8 @@ export default BaseVectorLayer.extend({
         if (layer.state === state.insert) {
           return layer.feature.properties.primarykey;
         }
+
+        return undefined;
       });
       const insertedLayer = leafletObject.getLayers().filter((layer) => layer.state === state.insert);
 
@@ -115,7 +117,7 @@ export default BaseVectorLayer.extend({
         modelsLayer.clear();
         const insertedModelId = [];
         if (!isNone(updatedLayer) && updatedLayer.length > 0) {
-          updatedLayer.map((layer) => {
+          updatedLayer.map((layer) => function () {
             layer.state = state.exist;
           });
         }
@@ -136,7 +138,7 @@ export default BaseVectorLayer.extend({
 
         if (insertedModelId.length > 0) {
           this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(this.layerModel.get('id'), insertedModelId, true)
-            .then(([, lObject, featureLayer]) => {
+            .then(([, , featureLayer]) => {
               this._setLayerState();
               leafletObject.fire('save:success', { layers: featureLayer, });
             });
@@ -289,7 +291,7 @@ export default BaseVectorLayer.extend({
         geometryObject.type = 'MultiPolygon';
         break;
       default:
-        throw `Unknown type ${typeModel}`;
+        throw new Error(`Unknown type ${typeModel}`);
     }
 
     geometryObject.coordinates = this._getGeometry(layer);
@@ -391,7 +393,7 @@ export default BaseVectorLayer.extend({
     @param isIdentify
   */
   _getFeature(filter, maxFeatures, isIdentify = false) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const obj = this.get('_adapterStoreModelProjectionGeom');
 
       const queryBuilder = new QueryBuilder(obj.store)
@@ -509,7 +511,8 @@ export default BaseVectorLayer.extend({
     }
 
     if (equals.length === 1) {
-      filter = equals[0];
+      const [f] = equals[0];
+      filter = f;
     } else {
       filter = new ComplexPredicate(Condition.Or, ...equals);
     }
@@ -592,14 +595,14 @@ export default BaseVectorLayer.extend({
   */
   _getPropsfromModel(model) {
     const props = [];
-    for (const prop in model.toJSON()) {
+    model.toJSON().forEach((prop) => {
       let postfix = '';
       if (model.get(prop) instanceof Object && model.get(`${prop}.name`)) {
         postfix = '.name';
       }
 
       props.push(`${prop}${postfix}`);
-    }
+    });
 
     return props;
   },
@@ -757,8 +760,8 @@ export default BaseVectorLayer.extend({
     }
 
     const mixin = {};
-    jsonModel.attrs.forEach((attr) => {
-      mixin[attr.name] = DS.attr(attr.type);
+    jsonModel.attrs.forEach((attribute) => {
+      mixin[attribute.name] = DS.attribute(attribute.type);
     });
 
     const modelMixin = Mixin.create(mixin);
@@ -801,7 +804,7 @@ export default BaseVectorLayer.extend({
     @return {Promise} Object consists of model, json data and mixin.
   */
   сreateModelHierarchy(metadataUrl, modelName) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       if (!isNone(modelName) && !isNone(metadataUrl)) {
         const _this = this;
         $.ajax({
@@ -826,17 +829,17 @@ export default BaseVectorLayer.extend({
 
                   resolve({ model: mModel, dataModel, modelMixin: mMixin, });
                 }).catch((e) => {
-                  reject(`Can't create parent model: ${parentModelName} .Error: ${e}`);
+                  Promise.reject(new Error(`Can't create parent model: ${parentModelName} .Error: ${e}`));
                 });
               }
             }
           },
           error(e) {
-            reject(`Can't create model: ${modelName} .Error: ${e}`);
+            Promise.reject(new Error(`Can't create model: ${modelName} .Error: ${e}`));
           },
         });
       } else {
-        reject('ModelName and metadataUrl is empty');
+        Promise.reject(new Error('ModelName and metadataUrl is empty'));
       }
     });
   },
@@ -848,7 +851,7 @@ export default BaseVectorLayer.extend({
     @return {Promise}
   */
   createDynamicModel() {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const modelName = this.get('modelName');
       const projectionName = this.get('projectionName');
       const metadataUrl = this.get('metadataUrl');
@@ -886,7 +889,7 @@ export default BaseVectorLayer.extend({
 
           resolve(`Create dynamic model: ${modelName}`);
         }).catch((e) => {
-          reject(`Can't create dynamic model: ${modelName}. Error: ${e}`);
+          Promise.reject(new Error(`Can't create dynamic model: ${modelName}. Error: ${e}`));
         });
       } else {
         resolve(`Model already registered: ${modelName}`);
@@ -964,11 +967,12 @@ export default BaseVectorLayer.extend({
     Creates leaflet layer related to layer type.
 
     @method createLayer
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer() {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       // Retrieve possibly defined in layer's settings filter.
       let filter = this.get('filter');
       if (typeof filter === 'string') {
@@ -1058,12 +1062,12 @@ export default BaseVectorLayer.extend({
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   loadLayerFeatures(e) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       try {
         const leafletObject = this.get('_leafletObject');
         const { featureIds, } = e;
         if (!leafletObject.options.showExisting) {
-          const getLoadedFeatures = (featureIds) => {
+          const getLoadedFeatures = () => {
             const loadIds = [];
             leafletObject.eachLayer((shape) => {
               const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), shape);
@@ -1131,7 +1135,7 @@ export default BaseVectorLayer.extend({
             });
             this._setLayerState();
 
-            const e = { layers: innerLayers, results: A(), };
+            e = { layers: innerLayers, results: A(), };
             leafletObject.fire('load', e);
 
             allSettled(e.results).then(() => {
@@ -1141,8 +1145,8 @@ export default BaseVectorLayer.extend({
         } else {
           resolve(leafletObject);
         }
-      } catch (e) {
-        reject(e);
+      } catch (error) {
+        reject(error);
       }
     });
   },
@@ -1154,7 +1158,7 @@ export default BaseVectorLayer.extend({
     @return {Promise} count of features.
   */
   getCountFeatures() {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const store = this.get('store');
       const modelName = this.get('modelName');
       const projectionName = this.get('projectionName');
@@ -1220,7 +1224,7 @@ export default BaseVectorLayer.extend({
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   getLayerFeatures(e) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       try {
         const leafletObject = this.get('_leafletObject');
         const { featureIds, } = e;
@@ -1261,8 +1265,8 @@ export default BaseVectorLayer.extend({
 
             objs.then((res) => {
               resolve(getLoadedFeatures(res));
-            }).catch((e) => {
-              reject('error');
+            }).catch(() => {
+              Promise.reject(new Error('error'));
             });
           } else { // all layer
             this.getCountFeatures().then((res) => {
@@ -1303,14 +1307,14 @@ export default BaseVectorLayer.extend({
                 promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
               }
 
-              all(promises).then((res) => {
+              all(promises).then((results) => {
                 let result = [];
-                res.forEach((loadedModels) => {
+                results.forEach((loadedModels) => {
                   result = result.concat(getLoadedFeatures(loadedModels));
                 });
                 resolve(result);
-              }).catch((e) => {
-                reject('error');
+              }).catch(() => {
+                Promise.reject(new Error('error'));
               });
             });
           }
@@ -1318,7 +1322,10 @@ export default BaseVectorLayer.extend({
           const objects = [];
           featureIds.forEach((id) => {
             const features = leafletObject._layers;
-            const obj = Object.values(features).find((feature) => this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), feature) === id);
+            const obj = Object.values(features).find((feature) => this
+              .get('mapApi')
+              .getFromApi('mapModel')
+              ._getLayerFeatureId(this.get('layerModel'), feature) === id);
             if (!isNone(obj)) {
               objects.push(obj);
             }
@@ -1327,8 +1334,8 @@ export default BaseVectorLayer.extend({
         } else {
           resolve(Object.values(leafletObject._layers));
         }
-      } catch (e) {
-        reject(e);
+      } catch (error) {
+        reject(error);
       }
     });
   },
@@ -1381,7 +1388,8 @@ export default BaseVectorLayer.extend({
 
           const unionJsts = loadedBoundsJsts.union(boundsJsts);
           const geojsonWriter = new jsts.io.GeoJSONWriter();
-          loadedBounds = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
+          const [getLayer] = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
+          loadedBounds = getLayer;
         } else {
           loadedBounds = bounds;
         }
@@ -1424,7 +1432,7 @@ export default BaseVectorLayer.extend({
 
     const objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
 
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise(() => {
       objs.then((res) => {
         let models = res;
         if (typeof res.toArray === 'function') {
@@ -1503,17 +1511,19 @@ export default BaseVectorLayer.extend({
     const { editTools, } = leafletObject.leafletMap;
 
     const featuresIds = [];
-    const changes = leafletObject.models.filter((item) => true); // for check empty
+    const changes = leafletObject.models.filter(() => true); // for check empty
     if (!Ember.isEmpty(changes)) {
       Object.entries(leafletObject.models)
         .filter((item) => Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))))
         .map((item) => item[1])
         .forEach((model, index) => {
           if (model instanceof Ember.Object) {
-            const layer = Object.values(leafletObject._layers).find((layer) => {
+            const layer = Object.values(leafletObject._layers).find(() => {
               if (layer.model.get('id') === model.get('id')) {
                 return layer;
               }
+
+              return undefined;
             });
 
             const dirtyType = model.get('dirtyType');
@@ -1571,7 +1581,7 @@ export default BaseVectorLayer.extend({
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   cancelEdit(ids) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const leafletObject = this.get('_leafletObject');
       const featuresIds = this.clearChanges(ids);
       if (featuresIds.length === 0) {
@@ -1582,7 +1592,7 @@ export default BaseVectorLayer.extend({
           layer: leafletObject.layerId,
           results: A(),
         };
-        this.loadLayerFeatures(e).then(() => { resolve(); }).catch((e) => reject(e));
+        this.loadLayerFeatures(e).then(() => { resolve(); }).catch(() => reject(e));
       }
     });
   },
@@ -1599,7 +1609,7 @@ export default BaseVectorLayer.extend({
     @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
   */
   getNearObject(e) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const obj = this.get('_adapterStoreModelProjectionGeom');
       const layerModel = this.get('layerModel');
       const config = getOwner(this).resolveRegistration('config:environment');
@@ -1620,12 +1630,12 @@ export default BaseVectorLayer.extend({
             odataUrl,
             null,
             (data) => {
-              new Promise((resolve) => {
+              new Promise(() => {
                 const normalizedRecords = { data: A(), included: A(), };
                 const odataValue = data.value;
                 if (!isNone(odataValue) && Array.isArray(odataValue)) {
                   odataValue.forEach((record) => {
-                    if (record.hasOwnProperty('@odata.type')) {
+                    if (record.prototype.hasOwnProperty.call('@odata.type')) {
                       delete record['@odata.type'];
                     }
 

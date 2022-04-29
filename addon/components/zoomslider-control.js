@@ -11,7 +11,7 @@ import BaseControl from 'ember-flexberry-gis/components/base-control';
 */
 export default BaseControl.extend({
 
-  leafletOptions: ['position', 'stepHeight', 'knobHeight', 'styleNS'],
+  leafletOptions: Object.freeze(['position', 'stepHeight', 'knobHeight', 'styleNS']),
 
   createControl() {
     return new L.Control.Zoomslider(this.get('options'));

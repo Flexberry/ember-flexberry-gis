@@ -30,18 +30,19 @@ export default BaseLayer.extend({
   */
   noWrap: true,
 
-  leafletOptions: [
+  leafletOptions: Object.freeze([
     'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
     'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
     'zoomOffset', 'zoomReverse', 'opacity', 'zIndex', 'unloadInvisibleTiles',
     'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds'
-  ],
+  ]),
 
   /**
     Creates leaflet layer related to layer type.
 
     @method createLayer
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
@@ -62,7 +63,7 @@ export default BaseLayer.extend({
     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
     or a promise returning such array.
   */
-  identify(e) {
+  identify() {
     // Tile-layers hasn't any identify logic.
   },
 
@@ -78,7 +79,7 @@ export default BaseLayer.extend({
     @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
     or a promise returning such array.
   */
-  search(e) {
+  search() {
     // Tile-layers hasn't any search logic.
   },
 });

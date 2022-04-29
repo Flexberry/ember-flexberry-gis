@@ -84,7 +84,7 @@ const BaseMapCommandComponent = BaseMapToolComponent.extend({
     @param {<a href="http://learn.jquery.com/events/introduction-to-events/#the-event-object">jQuery event object</a>} e
     Click event object.
   */
-  click(e) {
+  click() {
     this.executeMapCommand();
   },
 
@@ -116,7 +116,7 @@ const BaseMapCommandComponent = BaseMapToolComponent.extend({
 
     @param {Object} leafletMap Leaflet map.
   */
-  attachLeafletMapEventHandlers(leafletMap) {
+  attachLeafletMapEventHandlers() {
   },
 
   /**
@@ -124,7 +124,7 @@ const BaseMapCommandComponent = BaseMapToolComponent.extend({
 
     @param {Object} leafletMap Leaflet map.
   */
-  detachLeafletMapEventHandlers(leafletMap) {
+  detachLeafletMapEventHandlers() {
   },
 });
 

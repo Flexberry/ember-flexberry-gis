@@ -16,13 +16,13 @@ import TileLayerComponent from './tile-layer';
   @extends TileLayerComponent
  */
 export default TileLayerComponent.extend({
-  leafletOptions: [
+  leafletOptions: Object.freeze([
     'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
     'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
     'zoomOffset', 'zoomReverse', 'opacity', 'zIndex', 'unloadInvisibleTiles',
     'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds',
     'layers', 'styles', 'format', 'transparent', 'version', 'crs', 'info_format', 'tiled'
-  ],
+  ]),
 
   /**
     Inner WMS layer.
@@ -46,10 +46,10 @@ export default TileLayerComponent.extend({
     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
     or a promise returning such array.
   */
-  identify(e) {
+  identify() {
     const innerWmsLayer = this.get('_wmsLayer');
     if (!isNone(innerWmsLayer)) {
-      return innerWmsLayer.identify.apply(innerWmsLayer, arguments);
+      return innerWmsLayer.identify.apply(...arguments);
     }
   },
 
@@ -106,7 +106,8 @@ export default TileLayerComponent.extend({
     Creates leaflet layer related to layer type.
 
     @method createLayer
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createLayer() {

@@ -38,7 +38,8 @@ export default BaseLayer.extend({
     Creates leaflet layer related to layer type.
 
     @method createLayer
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
@@ -56,7 +57,7 @@ export default BaseLayer.extend({
     @param {String|Object} results Received geocoding results.
     @returns {Object[]} Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
   */
-  parseGeocodingResults(results) {
+  parseGeocodingResults() {
     assert('GeocoderBaseLayer\'s \'parseGeocodingResults\' method should be overridden.');
   },
 
@@ -68,7 +69,7 @@ export default BaseLayer.extend({
     @param {String|Object} results Received reverse geocoding results.
     @returns {Object[]} Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
   */
-  parseReverseGeocodingResults(results) {
+  parseReverseGeocodingResults() {
     assert('GeocoderBaseLayer\'s \'parseReverseGeocodingResults\' method should be overridden.');
   },
 
@@ -81,7 +82,7 @@ export default BaseLayer.extend({
     @param {Object} options.searchOptions Search options related to layer type.
     @returns {String|Object} Received geocoding results.
   */
-  executeGeocoding(options) {
+  executeGeocoding() {
     assert('GeocoderBaseLayer\'s \'executeGeocoding\' method should be overridden.');
   },
 
@@ -94,7 +95,7 @@ export default BaseLayer.extend({
     Bounds of reverse geocoding area.
     @returns {String|Object} Received reverse geocoding results.
   */
-  executeReverseGeocoding(options) {
+  executeReverseGeocoding() {
     assert('GeocoderBaseLayer\'s \'executeReverseGeocoding\' method should be overridden.');
   },
 
@@ -121,7 +122,7 @@ export default BaseLayer.extend({
     });
 
     if (!(reverseGeocodingResults instanceof Promise)) {
-      reverseGeocodingResults = new Promise((resolve, reject) => {
+      reverseGeocodingResults = new Promise((resolve) => {
         resolve(reverseGeocodingResults);
       });
     }
@@ -156,7 +157,7 @@ export default BaseLayer.extend({
     let geocodingResults = this.executeGeocoding(e);
 
     if (!(geocodingResults instanceof Promise)) {
-      geocodingResults = new Promise((resolve, reject) => {
+      geocodingResults = new Promise((resolve) => {
         resolve(geocodingResults);
       });
     }

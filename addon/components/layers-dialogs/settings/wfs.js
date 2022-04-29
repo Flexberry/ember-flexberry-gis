@@ -11,7 +11,7 @@ import layout from '../../../templates/components/layers-dialogs/settings/wfs';
 import WmsSettingsComponent from './wms';
 
 // Regular expression used to derive whether settings' url is correct.
-const urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
+const urlRegex = '(https?|ftp)://(-.)?([^s/?.#-]+.?)+(/[^s]*)?';
 
 /**
   Settings-part of WFS layer modal dialog.
@@ -34,6 +34,10 @@ export default WmsSettingsComponent.extend({
   */
   layout,
 
+  setCapabilitiesPromiseError() {
+    this.set('getCapabilitiesPromiseError', null);
+  },
+
   /**
     Get capabilities button error message.
 
@@ -44,15 +48,12 @@ export default WmsSettingsComponent.extend({
   getCapabilitiesErrorMessage: computed(
     'getCapabilitiesPromiseError',
     'i18n',
-    'settings.url',
-    'settings.typeNS',
-    'settings.typeName',
-    'settings.version',
+    'settings.{url, typeNS, typeName, version}',
     function () {
       const getCapabilitiesPromiseError = this.get('getCapabilitiesPromiseError');
 
       if (!isBlank(getCapabilitiesPromiseError)) {
-        this.set('getCapabilitiesPromiseError', null);
+        this.setCapabilitiesPromiseError();
         return getCapabilitiesPromiseError;
       }
 
@@ -112,7 +113,7 @@ export default WmsSettingsComponent.extend({
       L.wfs(settings, null).getBoundingBox(
         (boundingBox) => {
           if (isBlank(boundingBox)) {
-            reject(`Service ${settings.url} had not returned any bounding box`);
+            Promise.reject(new Error(`Service ${settings.url} had not returned any bounding box`));
           }
 
           _this.set('bounds.0.0', boundingBox.getSouth());
@@ -152,5 +153,5 @@ export default WmsSettingsComponent.extend({
     @type Array
     @default []
   */
-  typeGeometry: ['polygon', 'polyline', 'marker'],
+  typeGeometry: Object.freeze(['polygon', 'polyline', 'marker']),
 });

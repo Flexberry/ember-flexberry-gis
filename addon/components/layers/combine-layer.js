@@ -5,7 +5,7 @@ import { once } from '@ember/runloop';
 
 import { guidFor } from '@ember/object/internals';
 import { getOwner } from '@ember/application';
-import { isNone, isBlank } from '@ember/utils';
+import { isNone } from '@ember/utils';
 import { set, get, observer } from '@ember/object';
 import { A } from '@ember/array';
 import { Promise, allSettled } from 'rsvp';
@@ -44,11 +44,12 @@ export default BaseLayer.extend({
     Creates leaflet layer related to layer type.
 
     @method createVectorLayer
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.createAllLayer();
       const promises = A();
       promises.push(this.get('mainLayer._leafletLayerPromise'));
@@ -60,7 +61,7 @@ export default BaseLayer.extend({
         const rejected = layers.filter((item) => item.state === 'rejected').length > 0;
 
         if (rejected) {
-          reject(`Failed to create leaflet layer for '${this.get('layerModel.name')}`);
+          Promise.reject(new Error(`Failed to create leaflet layer for '${this.get('layerModel.name')}`));
         }
 
         const layer = layers[0].value;
@@ -72,7 +73,7 @@ export default BaseLayer.extend({
         layer.hideAllLayerObjects = this.get('hideAllLayerObjects').bind(this);
         resolve(layer);
       }).catch((e) => {
-        reject(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${e}`);
+        Promise.reject(new Error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${e}`));
       });
     });
   },
@@ -124,7 +125,7 @@ export default BaseLayer.extend({
             layer.layerId = guidFor(layer);
             innerLayers.addObject(layer);
           } else {
-            throw (`Invalid layer type ${type} for layer ${this.get('layerModel.name')}`);
+            throw new Error(`Invalid layer type ${type} for layer ${this.get('layerModel.name')}`);
           }
         });
 
@@ -136,7 +137,7 @@ export default BaseLayer.extend({
           layer.onLeafletMapEvent();
         });
       } else {
-        throw (`Invalid layer type ${mainType} for layer ${this.get('layerModel.name')}`);
+        throw new Error(`Invalid layer type ${mainType} for layer ${this.get('layerModel.name')}`);
       }
     }
   },
@@ -242,7 +243,7 @@ export default BaseLayer.extend({
     if (!this._checkAndSetVisibility(mainLayer)) {
       mainLayer.get('innerLayers').forEach((layer) => {
         if (this._checkAndSetVisibility(layer)) {
-
+          // do something
         }
       });
     }
@@ -272,10 +273,10 @@ export default BaseLayer.extend({
     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
     or a promise returning such array.
   */
-  identify(e) {
+  identify() {
     const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.identify.apply(mainLayer, arguments);
+      return mainLayer.identify.apply(...arguments);
     }
   },
 
@@ -291,10 +292,10 @@ export default BaseLayer.extend({
     @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
     or a promise returning such array.
   */
-  search(e) {
+  search() {
     const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.search.apply(mainLayer, arguments);
+      return mainLayer.search.apply(...arguments);
     }
   },
 
@@ -308,10 +309,10 @@ export default BaseLayer.extend({
     @param {Object[]} results.features Array containing leaflet layers objects
     or a promise returning such array.
   */
-  query(layerLinks, e) {
+  query() {
     const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.query.apply(mainLayer, arguments);
+      return mainLayer.query.apply(...arguments);
     }
   },
 
@@ -325,10 +326,10 @@ export default BaseLayer.extend({
     @param {Number} layerObjectId Leaflet layer id.
     @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
   */
-  getNearObject(e) {
+  getNearObject() {
     const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.getNearObject.apply(mainLayer, arguments);
+      return mainLayer.getNearObject.apply(...arguments);
     }
   },
 
@@ -338,7 +339,7 @@ export default BaseLayer.extend({
     @return {Promise}
   */
   showAllLayerObjects() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const mainLayer = this.get('mainLayer');
       if (isNone(mainLayer) || isNone(mainLayer._leafletObject)) {
         return;
@@ -354,7 +355,7 @@ export default BaseLayer.extend({
         const rejected = result.filter((item) => item.state === 'rejected').length > 0;
 
         if (rejected) {
-          reject(`Failed to showAllLayerObjects for '${this.get('layerModel.name')}`);
+          Promise.reject(new Error(`Failed to showAllLayerObjects for '${this.get('layerModel.name')}`));
         }
 
         resolve(result[0].value);

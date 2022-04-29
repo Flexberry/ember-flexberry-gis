@@ -243,9 +243,9 @@ export default Component.extend({
     onSelectCategoryCheckboxChange(categoryIndex, { checked, }) {
       let selectedCategoriesCount = this.get('_selectedCategoriesCount');
       if (checked) {
-        selectedCategoriesCount++;
+        selectedCategoriesCount += 1;
       } else {
-        selectedCategoriesCount--;
+        selectedCategoriesCount -= 1;
       }
 
       const categoriesCount = this.get('styleSettings.style.categories.length');
@@ -270,7 +270,7 @@ export default Component.extend({
       @method actions.onAddCategoryButtonClick
       @param {Object} e Event object.
     */
-    onAddCategoryButtonClick(e) {
+    onAddCategoryButtonClick() {
       const layersStylesRenderer = this.get('_layersStylesRenderer');
       const categories = this.get('styleSettings.style.categories').slice(0);
       categories.push({
@@ -317,7 +317,7 @@ export default Component.extend({
       @method actions.onCategoryStyleEditorOpen
       @param {Object} e Event object.
     */
-    onCategoryStyleEditorOpen(categoryIndex, e) {
+    onCategoryStyleEditorOpen(categoryIndex) {
       const categories = this.get('styleSettings.style.categories');
       this.set('_activeCategory', categories[categoryIndex]);
 
@@ -337,7 +337,7 @@ export default Component.extend({
       @method actions.onCategoryStyleEditorClose
       @param {Object} e Event object.
     */
-    onCategoryStyleEditorClose(e) {
+    onCategoryStyleEditorClose() {
       const $categoryStyleEditor = this.$('.category-style-editor');
       const categoryIndex = Number($categoryStyleEditor.attr('category'));
       $categoryStyleEditor.removeAttr('category');
@@ -376,7 +376,7 @@ export default Component.extend({
       @param {String} inputText Actual input text.
       @param {Object} e Event object.
     */
-    onEditingCellFocusOut(inputText, e) {
+    onEditingCellFocusOut() {
       this.set('_editingCell', null);
     },
 
@@ -481,7 +481,7 @@ export default Component.extend({
       this.$('canvas.category-symbol-preview').each(function () {
         const canvas = this;
         const $canvas = $(canvas);
-        const categoryIndex = Number($canvas.attr('category'));
+        categoryIndex = Number($canvas.attr('category'));
         const category = categories[categoryIndex];
         const categoryStyleSettings = get(category, 'styleSettings');
 

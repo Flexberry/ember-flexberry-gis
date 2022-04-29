@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import { isNone } from '@ember/utils';
 import EmberObject, { observer, get } from '@ember/object';
 import { A } from '@ember/array';
@@ -31,7 +32,7 @@ export default FlexberryDropdown.extend({
 
   noResults: t('components.flexberry-layers-intersections-panel.notResult'),
 
-  message: { noResults: '', },
+  message: Object.freeze({ noResults: '', }),
 
   /**
    * Storage for the items state.
@@ -98,7 +99,7 @@ export default FlexberryDropdown.extend({
     this.set('message', { noResults: noRes, });
 
     const state = Object.entries(this.get('items'))
-      .filter(([key, value]) => !isNone(value))
+      .filter(([, value]) => !isNone(value))
       .map(([i, val]) => {
         let value = val;
         let key = i;
@@ -187,7 +188,7 @@ export default FlexberryDropdown.extend({
       this.get('state').setEach('isVisible', false);
       $('.search-field').val('');
       $('.fb-selector .item.filtered').each((i, item) => {
-        $(item).removeClass('filtered');
+        Ember.run.bind($(item).removeClass('filtered'));
       });
     },
   },

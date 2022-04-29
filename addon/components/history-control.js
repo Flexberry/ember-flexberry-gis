@@ -48,7 +48,7 @@ export default BaseControl.extend({
     @property leafletOptions
     @type Stirng[]
   */
-  leafletOptions: [
+  leafletOptions: Object.freeze([
     'position',
     'maxMovesToSave',
     'backImage',
@@ -62,7 +62,7 @@ export default BaseControl.extend({
     'orientation',
     'useExternalControls',
     'shouldSaveMoveInHistory'
-  ],
+  ]),
 
   /**
     Observes changhes in application's current locale, and refreshes some GUI related to it.

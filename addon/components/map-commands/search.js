@@ -253,7 +253,7 @@ const SearchMapCommandComponent = Component.extend({
       @method actions.onSearchAttributesMapCommandExecute
       @param {Object} e Base map-command's 'execute' action event-object.
     */
-    onMapCommandButtonClick(e) {
+    onMapCommandButtonClick() {
       // Show dialog.
       this._showSearchDialog();
     },

@@ -17,7 +17,7 @@ export default BaseControl.extend({
     @property leafletOptions
     @type Stirng[]
   */
-  leafletOptions: [
+  leafletOptions: Object.freeze([
     'position',
     'dropdownDirection',
     'className',
@@ -34,7 +34,7 @@ export default BaseControl.extend({
     'scales',
     'roundScales',
     'adjustScales'
-  ],
+  ]),
 
   /**
     Creates control instance, should be overridden in child classes.

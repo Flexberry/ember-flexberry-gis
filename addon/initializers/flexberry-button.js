@@ -11,7 +11,6 @@ import FlexberryButton from 'ember-flexberry/components/flexberry-button';
   @method flexberryButton.initialize
 */
 export function initialize() {
-
   FlexberryButton.reopen({
     /**
       Components attributes bindings.
@@ -20,7 +19,7 @@ export function initialize() {
       @type String[]
       @default ['tooltip:title']
     */
-    attributeBindings: ['tooltip:title', 'data-action']
+    attributeBindings: ['tooltip:title', 'data-action'],
   });
 }
 

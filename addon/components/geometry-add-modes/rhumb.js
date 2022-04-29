@@ -472,7 +472,7 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
       }
 
       if (this._tableData.length > 1 && this._tableData.filter((item) => item.skip).length > 1) {
-        if (confirm(this.get('changePermission'))) {
+        if (window.confirm(this.get('changePermission'))) {
           for (let i = 0; i < this._tableData.length; i++) {
             const item = this._tableData[i];
             if (item.id !== row.id) {
@@ -490,7 +490,7 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
       @method actions.inputLimit
     */
     onInputLimit(str, e) {
-      const regex = /^\.|[^\d\.]|\.(?=.*\.)|^0+(?=\d)/g;
+      const regex = /^\.|[^\d.]|\.(?=.*\.)|^0+(?=\d)/g;
       if (!isEmpty(str) && regex.test(str)) {
         $(e.target).val(str.replace(regex, ''));
       }

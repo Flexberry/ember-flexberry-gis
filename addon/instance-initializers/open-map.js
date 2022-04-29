@@ -1,10 +1,5 @@
 import { Promise } from 'rsvp';
 
-export function initialize(appInstance) {
-  const mapApi = appInstance.lookup('service:map-api');
-  mapApi.addToApi('openMap', openMap.bind(appInstance));
-}
-
 /**
   Open map if there is exists.
 
@@ -27,12 +22,17 @@ function openMap(mapId, options) {
         const queryParams = Object.assign({}, options);
         resolve(router.transitionTo('map', mapModel, { queryParams, }));
       }).catch(() => {
-        reject('map is not exists');
+        reject(new Error('map is not exists'));
       });
     } else {
-      reject('mapId is not exists');
+      reject(new Error('mapId is not exists'));
     }
   });
+}
+
+export function initialize(appInstance) {
+  const mapApi = appInstance.lookup('service:map-api');
+  mapApi.addToApi('openMap', openMap.bind(appInstance));
 }
 
 export default {

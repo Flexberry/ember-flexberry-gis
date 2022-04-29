@@ -17,7 +17,7 @@ import SlotsMixin from 'ember-block-slots';
   @method blockSlots.initialize
   @param {<a href="http://emberjs.com/api/classes/Ember.ApplicationInstance.html">Ember.ApplicationInstance</a>} applicationInstance Ember application instance.
 */
-export function initialize(applicationInstance) {
+export function initialize() {
   SlotsMixin.reopen({
     parentViewExcludingSlots: computed('parentView', 'targetObject', function () {
       const getParent = function (context) {
