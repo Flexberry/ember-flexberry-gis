@@ -1298,6 +1298,9 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     onBeforeShow(e) {
       this.sendAction('beforeShow', e);
 
+      // Initialize default print/export options.
+      this.setDefaultExportOptions();
+
       // Switch scale control
       let leafletMap = this.get('leafletMap');
       let switchScaleControlMapName = this.get('switchScaleControlMapName');
@@ -2054,11 +2057,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     this.set('_availablePaperFormats', Ember.A(Object.keys(paperFormatsInMillimeters)));
 
     // Initialize print/export options.
-    let defaultMapCaption = this.get('defaultMapCaption');
-    this.set('_options', Ember.$.extend(true, {}, defaultOptions, {
-      caption: defaultMapCaption,
-      fileName: defaultMapCaption
-    }));
+    this.setDefaultExportOptions();
 
     // Bind context to tabular menu tabs 'click' event handler.
     this.set('actions.onSettingsTabClick', this.get('actions.onSettingsTabClick').bind(this));
@@ -2137,6 +2136,19 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       this.set('_$tabularMenuTabItems', null);
       this.set('_$tabularMenuTabs', null);
     }
+  },
+  /**
+    When the form is expanded, the default settings are set
+
+    @method setDefaultExportOptions
+  */
+  setDefaultExportOptions() {
+    // Initialize default print/export options.
+    let defaultMapCaption = this.get('defaultMapCaption');
+    this.set('_options', Ember.$.extend(true, {}, defaultOptions, {
+      caption: defaultMapCaption,
+      fileName: defaultMapCaption
+    }));
   }
 
   /**

@@ -1,8 +1,6 @@
 <label>{{title}}</label>
 {{#ui-dropdown
   class=(concat "flexberry-dropdown multi-dropdown " class " selection" (if readonly " disabled" ""))
-  onHide=(action 'onHide')
-  onShow=(action 'onShowHide')
   on=on
   allowReselection=allowReselection
   allowAdditions=allowAdditions
@@ -27,7 +25,7 @@
 }}
   <i class="dropdown icon"></i>
   {{#if isClearAllVisible}}
-    <i class="close icon" {{action 'clearAll'}}></i>
+    <i class="close icon" onClick={{action 'clearAll'}}></i>
   {{/if}}
   <div class="text">{{t 'components.flexberry-layers-intersections-panel.chooseCaption'}}: {{countChoose}}</div>
   <div class="menu">
