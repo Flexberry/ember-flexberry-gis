@@ -22,6 +22,6 @@ export default Helper.extend({
     @return {Boolen} Flag: indicates whether the specified object contains the given key or not.
   */
   compute([obj, key]) {
-    return obj.hasOwnProperty(key);
+    return obj.prototype.hasOwnProperty.call(key);
   },
 });

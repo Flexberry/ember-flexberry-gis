@@ -99,7 +99,7 @@ const MetadataModeComponent = BaseModeComponent.extend({
     @type String[]
     @default []
   */
-  bindingProperties: [],
+  bindingProperties: Object.freeze([]),
 
   /**
     Reference to 'store' service.
@@ -142,7 +142,7 @@ const MetadataModeComponent = BaseModeComponent.extend({
       this.set('_metadataRecordsNames', metadataRecordsNames);
     }).catch((error) => {
       this.set('_errorMessage', error);
-    }).finally((result) => {
+    }).finally(() => {
       this.set('_metadataIsLoading', false);
     });
   },

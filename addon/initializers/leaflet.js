@@ -46,8 +46,16 @@ export function initialize(application, baseURL) {
   L.Polygon.include({
     toProjectedGeoJSON(crs, precision) {
       const holes = !L.LineUtil.isFlat(this._latlngs);
-      const multi = holes && !L.LineUtil.isFlat(this._latlngs[0]);
-      let coords = latLngsToCoords(this._latlngs, crs, multi ? 2 : holes ? 1 : 0, true, precision);
+      let multi = holes && !L.LineUtil.isFlat(this._latlngs[0]);
+      if (multi) {
+        multi = 2;
+      } else if (holes) {
+        multi = 1;
+      } else {
+        multi = 0;
+      }
+
+      let coords = latLngsToCoords(this._latlngs, crs, multi, true, precision);
 
       if (!holes) {
         coords = [coords];
@@ -94,7 +102,7 @@ export function initialize(application, baseURL) {
 
             // Squash nested feature collections
             if (feature.type === 'FeatureCollection') {
-              jsons.push.apply(jsons, feature.features);
+              jsons.push.apply(...feature.features);
             } else {
               jsons.push(feature);
             }

@@ -136,7 +136,8 @@ export default Component.extend({
       return null;
     }
 
-    const selectedMarkerStyleIndex = availableMarkerStylesCaptions.findIndex((markerStylesCaption) => markerStylesCaption.toString() === selectedMarkerStyleCaption.toString());
+    const selectedMarkerStyleIndex = availableMarkerStylesCaptions.findIndex((markerStylesCaption) => markerStylesCaption
+      .toString() === selectedMarkerStyleCaption.toString());
 
     const selectedMarkerStyle = selectedMarkerStyleIndex > -1
       ? availableMarkerStyles.objectAt(selectedMarkerStyleIndex)

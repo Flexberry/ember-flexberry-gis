@@ -161,10 +161,10 @@ export default EditFormController.extend(
       },
       ```
     */
-    binding: {
+    binding: Object.freeze({
       visibility: 'visibility',
       opacity: 'settingsAsObject.opacity',
-    },
+    }),
 
     /**
       This method will be invoked before save operation will be called.
@@ -231,7 +231,7 @@ export default EditFormController.extend(
       @returns {Object} Edited layer.
       @private
     */
-    editLayer(options) {
+    editLayer() {
       return this._super(...arguments);
     },
 

@@ -44,9 +44,9 @@ export default BaseGeoProvider.extend({
 
     return new Promise((resolve, reject) => {
       run(() => {
-        $.ajax(requestUrl, { dataType: 'json', }).done((data, textStatus, jqXHR) => {
+        $.ajax(requestUrl, { dataType: 'json', }).done((data) => {
           resolve(data);
-        }).fail((jqXHR, textStatus, errorThrown) => {
+        }).fail((errorThrown) => {
           reject(errorThrown);
         });
       });

@@ -62,7 +62,7 @@ export default GeocoderBaseLayer.extend({
     @param {String|Object} results Received reverse geocoding results.
     @returns {Object[]} Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
   */
-  parseReverseGeocodingResults(results) {
+  parseReverseGeocodingResults() {
     // OSM.ru layer doesn't implement reverse geocoding.
   },
 
@@ -122,7 +122,7 @@ export default GeocoderBaseLayer.extend({
     Bounds of reverse geocoding area.
     @returns {String|Object} Received reverse geocoding results.
   */
-  executeReverseGeocoding(options) {
+  executeReverseGeocoding() {
     // OSM.ru layer doesn't implement reverse geocoding.
   },
 });

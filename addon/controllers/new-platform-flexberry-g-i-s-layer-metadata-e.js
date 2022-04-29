@@ -103,8 +103,8 @@ export default EditFormController.extend(EditFormControllerOperationsIndicationM
     const model = this.get('model');
     const layerProperties = this.get('getLayerProperties')();
 
-    for (const attr of Object.keys(layerProperties)) {
+    Object.keys(layerProperties).forEach((attr) => {
       model.set(attr, layerProperties[attr]);
-    }
+    });
   },
 });

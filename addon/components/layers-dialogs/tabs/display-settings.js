@@ -252,7 +252,7 @@ export default Component.extend({
     @type Object
     @default {}
   */
-  _showableItems: {},
+  _showableItems: Object.freeze({}),
 
   /**
     Returns default locale.
@@ -287,26 +287,26 @@ export default Component.extend({
       const leafletObjectMethod = _this.get('leafletObjectMethod');
       if (!(isBlank(leafletObjectMethod) || isBlank(type))) {
         _this.set('_leafletObjectIsLoading', true);
-        leafletObjectMethod().then((leafletObject) => {
-          _this.set('_leafletObject', leafletObject);
+        leafletObjectMethod().then((leaflet) => {
+          _this.set('_leafletObject', leaflet);
           _this.set('_leafletObjectIsLoading', false);
           const layerClass = getOwner(_this).knownForType('layer', type);
           if (!isBlank(layerClass)) {
-            const allProperties = A(layerClass.getLayerProperties(leafletObject));
+            const allProperties = A(layerClass.getLayerProperties(leaflet));
             _this.set('allProperties', allProperties);
 
             const value = _this.get('value');
 
             const _showableItems = {};
-            allProperties.forEach(function (item, i, allProperties) {
+            allProperties.forEach(function (item) {
               _showableItems[item] = true;
             });
 
-            for (const item in _showableItems) {
+            _showableItems.forEach((item) => {
               if (value.featuresPropertiesSettings.excludedProperties.indexOf(item) !== -1) {
                 _showableItems[item] = false;
               }
-            }
+            });
 
             this.set('_showableItems', _showableItems);
           }
@@ -370,11 +370,11 @@ export default Component.extend({
       set(this, `_showableItems.${property}`, e.checked);
 
       const excluded = [];
-      for (const prop in _showableItems) {
+      _showableItems.forEach((prop) => {
         if (!_showableItems[prop]) {
           excluded.push(prop);
         }
-      }
+      });
 
       this.set('value.featuresPropertiesSettings.excludedProperties', excluded);
     },

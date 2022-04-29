@@ -303,8 +303,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
   */
   _sheetOfPaperRealHeight: computed(
     '_dpi',
-    '_options.paperFormat',
-    '_options.paperOrientation',
+    '_options.{paperFormat, paperOrientation}',
     function () {
       const dpi = this.get('_dpi');
       const paperFormat = this.get('_options.paperFormat');
@@ -325,8 +324,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
   */
   _sheetOfPaperRealWidth: computed(
     '_dpi',
-    '_options.paperFormat',
-    '_options.paperOrientation',
+    '_options.{paperFormat, paperOrientation}',
     function () {
       const dpi = this.get('_dpi');
       const paperFormat = this.get('_options.paperFormat');
@@ -528,8 +526,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @readOnly
   */
   _mapCaptionRealHeight: computed(
-    '_options.captionLineHeight',
-    '_options.captionFontSize',
+    '_options.{captionLineHeight, captionFontSize}',
     function () {
       return Math.floor(this.get('_options.captionLineHeight') * this.get('_options.captionFontSize'));
     }
@@ -544,13 +541,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @readOnly
   */
   _mapCaptionRealStyle: computed(
-    '_options.captionLineHeight',
-    '_options.captionFontFamily',
-    '_options.captionFontSize',
-    '_options.captionFontColor',
-    '_options.captionFontWeight',
-    '_options.captionFontStyle',
-    '_options.captionFontDecoration',
+    '_options.{captionLineHeight, captionFontFamily, captionFontSize, captionFontColor, captionFontWeight, captionFontStyle, captionFontDecoration}',
     '_mapCaptionRealHeight',
     function () {
       return htmlSafe(
@@ -617,12 +608,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @readOnly
   */
   _mapCaptionPreviewStyle: computed(
-    '_options.captionLineHeight',
-    '_options.captionFontFamily',
-    '_options.captionFontColor',
-    '_options.captionFontWeight',
-    '_options.captionFontStyle',
-    '_options.captionFontDecoration',
+    '_options.{captionLineHeight, captionFontFamily, captionFontColor, captionFontWeight, captionFontStyle, captionFontDecoration}',
     '_mapCaptionPreviewFontSize',
     '_mapCaptionPreviewHeight',
     function () {
@@ -717,17 +703,10 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
   */
   _mapLegendLines: computed(
     '_sheetOfPaperPreviewWidth',
-    '_options.captionLineHeight',
-    '_options.captionFontFamily',
-    '_options.captionFontWeight',
-    '_options.captionFontStyle',
-    '_options.captionFontDecoration',
+    '_options.{captionLineHeight, captionFontFamily, captionFontWeight, captionFontStyle, captionFontDecoration, legendControl}',
     '_mapCaptionPreviewFontSize',
     '_mapCaptionPreviewHeight',
-    '_options.legendControl',
-    'layers.@each.visibility',
-    'layers.@each.isDeleted',
-    'layers.@each.legendCanBeDisplayed',
+    'layers.@each.{visibility, isDeleted, legendCanBeDisplayed}',
     'legendsUpdateTrigger',
     function () {
       let lineCount = 1;
@@ -754,7 +733,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
         if (textWidth <= cutWidth) {
           cutWidth -= textWidth;
         } else {
-          lineCount++;
+          lineCount += 1;
           cutWidth = legendWidth - textWidth;
         }
       }, this);
@@ -772,8 +751,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @readOnly
   */
   _mapRealStyle: computed(
-    '_options.displayMode',
-    '_options.legendUnderMap',
+    '_options.{displayMode, legendUnderMap}',
     '_mapLegendLines',
     '_sheetOfPaperRealHeight',
     '_mapCaptionRealHeight',
@@ -810,8 +788,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @readOnly
   */
   _mapPreviewStyle: computed(
-    '_options.displayMode',
-    '_options.legendUnderMap',
+    '_options.{displayMode, legendUnderMap}',
     '_mapLegendLines',
     '_sheetOfPaperPreviewHeight',
     '_mapCaptionPreviewHeight',
@@ -824,9 +801,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
       }
 
       // Real map size has been changed, so we need to refresh it's size after render, otherwise it may be displayed incorrectly.
-      scheduleOnce('afterRender', () => {
-        this._invalidateSizeOfLeafletMap();
-      });
+      scheduleOnce('afterRender', this._invalidateSizeOfLeafletMap());
 
       if (this.get('_options.displayMode') === 'map-only-mode') {
         return htmlSafe('height: 100%;');
@@ -866,7 +841,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @private
   */
   _fileName: computed('_options.fileName', {
-    get(key) {
+    get() {
       return this.get('_options.fileName');
     },
     set(key, value) {
@@ -884,7 +859,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @private
   */
   _caption: computed('_options.caption', {
-    get(key) {
+    get() {
       return this.get('_options.caption');
     },
     set(key, value) {
@@ -1084,7 +1059,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @type Object
     @default {}
   */
-  legends: {},
+  legends: Object.freeze({}),
 
   _getOptions(e, type) {
     if (this.get('_options.legendSecondPage')) {
@@ -1314,8 +1289,8 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
       // Switch scale control
       const leafletMap = this.get('leafletMap');
       const switchScaleControlMapName = this.get('switchScaleControlMapName');
-      if (!Ember.isNone(switchScaleControlMapName)
-        && leafletMap.hasOwnProperty(`switchScaleControl${switchScaleControlMapName}`)
+      if (!isNone(switchScaleControlMapName)
+        && leafletMap.prototype.hasOwnProperty.call(`switchScaleControl${switchScaleControlMapName}`)
         && leafletMap[`switchScaleControl${switchScaleControlMapName}`].options.recalcOnZoomChange) {
         this.set('recalcOnZoomChange', true);
         this.set('zoomDelta', leafletMap.options.zoomDelta);
@@ -1326,13 +1301,13 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
         leafletMap.options.zoomSnap = 1;
         leafletMap.options.wheelPxPerZoomLevel = 60;
 
-        const $leafletMap = Ember.$(leafletMap._container);
-        const $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
-        const $scaleControl = Ember.$('.leaflet-control-scale-line', $leafletMapControls);
+        const $leafletMap = $(leafletMap._container);
+        const $leafletMapControls = $('.leaflet-control-container', $leafletMap);
+        const $scaleControl = $('.leaflet-control-scale-line', $leafletMapControls);
         if ($scaleControl.length === 1) {
-          Ember.$($scaleControl[0]).parent().hide();
+          $($scaleControl[0]).parent().hide();
         } else {
-          Ember.$($scaleControl[1]).parent().hide();
+          $($scaleControl[1]).parent().hide();
         }
       }
     },
@@ -1411,25 +1386,25 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     }
 
     this.set('_mapCanBeShown', newMapCanBeShown);
-    const $leafletMap = Ember.$(leafletMap._container);
-    const $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
-    const $exportScaleControl = Ember.$('.leaflet-control-scale.export', $leafletMapControls);
-    const $mainScaleControl = Ember.$('.leaflet-control-scale.main', $leafletMapControls);
-    const $scaleCotrol = Ember.$('.leaflet-control-scale-line', $leafletMapControls);
+    const $leafletMap = $(leafletMap._container);
+    const $leafletMapControls = $('.leaflet-control-container', $leafletMap);
+    const $exportScaleControl = $('.leaflet-control-scale.export', $leafletMapControls);
+    const $mainScaleControl = $('.leaflet-control-scale.main', $leafletMapControls);
+    const $scaleCotrol = $('.leaflet-control-scale-line', $leafletMapControls);
 
     if (newMapCanBeShown) {
       this._showLeafletMap();
       $exportScaleControl.show();
       $mainScaleControl.hide();
       if ($scaleCotrol.length > 1) {
-        Ember.$($scaleCotrol[1]).parent().hide();
+        $($scaleCotrol[1]).parent().hide();
       }
     } else {
       this._hideLeafletMap();
       $exportScaleControl.hide();
       $mainScaleControl.show();
       if ($scaleCotrol.length > 1) {
-        Ember.$($scaleCotrol[1]).parent().show();
+        $($scaleCotrol[1]).parent().show();
       }
     }
   }),
@@ -1486,7 +1461,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     Promise which will be resolved when invalidation will be finished.
   */
   _invalidateSizeOfLeafletMap() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const leafletMap = this.get('leafletMap');
 
       leafletMap.once('resize', () => {
@@ -1504,13 +1479,13 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
   */
   _activeItemDropdownScale() {
     const leafletMap = this.get('leafletMap');
-    const $leafletMap = Ember.$(leafletMap._container);
-    const $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
-    const $chooseScale = Ember.$('.map-control-scalebar-ratiomenu text', $leafletMapControls).text();
-    const $scaleItems = Ember.$('.map-control-scalebar-ratiomenu .map-control-scalebar-ratiomenu-item.item', $leafletMapControls);
-    Ember.$.each($scaleItems, (i, item) => {
-      if (Ember.$(item).text().replaceAll('\'', '') === $chooseScale) {
-        Ember.$(item).addClass('active selected');
+    const $leafletMap = $(leafletMap._container);
+    const $leafletMapControls = $('.leaflet-control-container', $leafletMap);
+    const $chooseScale = $('.map-control-scalebar-ratiomenu text', $leafletMapControls).text();
+    const $scaleItems = $('.map-control-scalebar-ratiomenu .map-control-scalebar-ratiomenu-item.item', $leafletMapControls);
+    $.each($scaleItems, (i, item) => {
+      if ($(item).text().replaceAll('\'', '') === $chooseScale) {
+        $(item).addClass('active selected');
       }
     });
   },
@@ -1524,7 +1499,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     Promise which will be resolved when fitting will be finished.
   */
   _fitBoundsOfLeafletMap(bounds, zoom) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const leafletMap = this.get('leafletMap');
       if (isNone(zoom)) {
         zoom = leafletMap.getZoom();
@@ -1547,7 +1522,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     Promise which will be resolved when map's tile layers will be ready.
   */
   _waitForLeafletMapTileLayersToBeReady() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const leafletMap = this.get('leafletMap');
       const $leafletMapContainer = $(leafletMap._container);
       const $tiles = $('.leaflet-tile-pane img', $leafletMapContainer);
@@ -1599,7 +1574,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     Promise which will be resolved when map's overlay layers will be ready.
   */
   _waitForLeafletMapOverlayLayersToBeReady() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const leafletMap = this.get('leafletMap');
       const $leafletMapContainer = $(leafletMap._container);
       const $overlays = $('.leaflet-overlay-pane', $leafletMapContainer).children();
@@ -1733,12 +1708,28 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     // It isn't possible to get real screen DPI with JavaScript code,
     // but some workarounds are possible (see http://stackoverflow.com/a/35941703).
     function findFirstPositive(b, a, i, c) {
-      c = (d, e) => (e >= d ? (a = d + (e - d) / 2, b(a) > 0 && (a === d || b(a - 1) <= 0) ? a : b(a) <= 0 ? c(a + 1, e) : c(d, a - 1)) : -1);
+      c = (d, e) => {
+        if (e >= d) {
+          a = d + (e - d) / 2;
+          if (b(a) > 0 && (a === d || b(a - 1) <= 0)) {
+            return a;
+          }
+
+          if (b(a) <= 0) {
+            c(a + 1, e);
+          } else {
+            c(d, a - 1);
+          }
+        } else {
+          return -1;
+        }
+      };
+
       for (i = 1; b(i) <= 0;) {
         i *= 2;
       }
 
-      return c(i / 2, i) | 0;
+      return c(i / 2, i) || 0;
     }
 
     return findFirstPositive((x) => window.matchMedia(`(max-resolution: ${x}dpi)`).matches);
@@ -1758,7 +1749,8 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     if (showDownloadingFileSettings) {
       let fileName = get(innerOptions, 'fileName');
       if (isBlank(fileName)) {
-        fileName = defaultOptions.fileName;
+        const [defaultFileName] = defaultOptions.fileName;
+        fileName = defaultFileName;
       }
 
       if (!isBlank(pageNumber)) {
@@ -1767,7 +1759,8 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
 
       let fileType = get(innerOptions, 'fileType');
       if (isBlank(fileType)) {
-        fileType = defaultOptions.fileType;
+        const defaultFileType = defaultOptions.fileType;
+        fileType = defaultFileType;
       }
 
       set(leafletExportOptions, 'fileName', `${fileName}.${fileType.toLowerCase()}`);
@@ -1775,7 +1768,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     }
 
     // Define custom export method.
-    set(leafletExportOptions, 'export', (exportOptions) => this._export(pageNumber));
+    set(leafletExportOptions, 'export', () => this._export(pageNumber));
 
     return leafletExportOptions;
   },
@@ -1800,7 +1793,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
   beforeExport(pageNumber) {
     this.set('_options.pageNumber', '1');
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       // Sheet of paper with legend or with interactive map, which will be prepered for export and then exported.
       const $sheetOfPaper = pageNumber === '2' ? this.get('_$sheetOfLegend') : this.get('_$sheetOfPaper');
       this.set('_isPreview', false);
@@ -1975,7 +1968,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @method afterExport
   */
   afterExport(pageNumber) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       // Sheet of paper with legend or with interactive map, which will be prepered for export and then exported.
       const $sheetOfPaper = pageNumber === '2' ? this.get('_$sheetOfLegend') : this.get('_$sheetOfPaper');
       this.set('_isPreview', true);
@@ -2080,10 +2073,10 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     this.set('_$sheetOfLegend', $sheetOfLegend);
 
     const $mapCaption = $(`.${flexberryClassNames.sheetOfPaperMapCaption}`, $sheetOfPaper);
-    const mapHeightDelta = parseInt($sheetOfPaper.css('padding-top'))
-      + parseInt($sheetOfPaper.css('padding-bottom'))
-      + parseInt($mapCaption.css('margin-top'))
-      + parseInt($mapCaption.css('margin-bottom'));
+    const mapHeightDelta = parseInt($sheetOfPaper.css('padding-top'), 10)
+      + parseInt($sheetOfPaper.css('padding-bottom'), 10)
+      + parseInt($mapCaption.css('margin-top'), 10)
+      + parseInt($mapCaption.css('margin-bottom'), 10);
     this.set('_mapHeightDelta', mapHeightDelta);
 
     const $tabularMenuTabItems = dialogComponent.$('.tabular.menu .tab.item');

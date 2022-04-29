@@ -72,7 +72,7 @@ export default Component.extend({
     @default []
     @public
   */
-  gradientList: [],
+  gradientList: Object.freeze([]),
 
   /**
     Initial gradient color.
@@ -176,9 +176,9 @@ export default Component.extend({
   */
   didInsertElement() {
     const gradientList = this.get('gradientList');
-    for (const i in gradientList) {
+    gradientList.forEach((i) => {
       this.gradientDrawing(gradientList[i].name, gradientList[i].colorStart, gradientList[i].colorEnd);
-    }
+    });
   },
 
   /**

@@ -23,7 +23,7 @@ export default Controller.extend({
     @property searchConditions
     @type Object
   */
-  searchConditions: {
+  searchConditions: Object.freeze({
     /**
       Comma-separated list of words to search in any text field.
       @property searchConditions.anyText
@@ -88,7 +88,7 @@ export default Controller.extend({
       @default undefined
     */
     boundingBoxEWKT: undefined,
-  },
+  }),
 
   /**
     Array of posible scale filter conditions.
@@ -97,7 +97,7 @@ export default Controller.extend({
     @type String[]
     @default `['>', '>=', '<', '<=', '=', '<>']`
   */
-  scaleFilterConditions: ['>', '>=', '<', '<=', '=', '<>'],
+  scaleFilterConditions: Object.freeze(['>', '>=', '<', '<=', '=', '<>']),
 
   /**
     Array of posible scale values.
@@ -115,7 +115,7 @@ export default Controller.extend({
     @type Object
     @private
   */
-  _selectedRows: {},
+  _selectedRows: Object.freeze({}),
 
   /**
     Count of a selected rows.

@@ -27,7 +27,7 @@ export default BaseVectorLayer.extend({
     @property leafletOptions
     @type Stirng[]
   */
-  leafletOptions: [
+  leafletOptions: Object.freeze([
     'url',
     'version',
     'namespaceUri',
@@ -44,7 +44,7 @@ export default BaseVectorLayer.extend({
     'withCredentials',
     'continueLoading',
     'wpsUrl'
-  ],
+  ]),
 
   /**
     Returns features read format depending on 'format', 'options.crs', 'options.geometryField'.
@@ -53,8 +53,8 @@ export default BaseVectorLayer.extend({
     @return {Object} Features read format.
   */
   getFeaturesReadFormat() {
-    const format = this.get('format');
-    let availableFormats = A(Object.keys(L.Format) || []).filter((format) => {
+    let format = this.get('format');
+    let availableFormats = A(Object.keys(L.Format) || []).filter(() => {
       format = format.toLowerCase();
       return format !== 'base' && format !== 'scheme';
     });
@@ -89,7 +89,7 @@ export default BaseVectorLayer.extend({
     @param {Boolean} [single = false] Flag: indicates whether result should be a single layer.
   */
   _getFeature(options) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       options = $.extend(options || {}, { showExisting: true, });
 
       let filter = get(options, 'filter');
@@ -132,12 +132,12 @@ export default BaseVectorLayer.extend({
     @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
   */
   _getBoundingBox(layer) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       layer.getBoundingBox(
-        (boundingBox, xhr) => {
+        (boundingBox) => {
           resolve(boundingBox);
         },
-        (errorThrown, xhr) => {
+        (errorThrown) => {
           reject(errorThrown);
         }
       );
@@ -186,7 +186,7 @@ export default BaseVectorLayer.extend({
     this._super(...arguments);
   },
 
-  _addLayer(layer) {
+  _addLayer() {
     // не добавляем слой, пока не пройдет promise загрузки
   },
 
@@ -203,7 +203,7 @@ export default BaseVectorLayer.extend({
     const leafletObject = this.get('_leafletObject');
     leafletObject.baseEditLayer(layer);
 
-    if (layer.state = state.update) {
+    if (layer.state === state.update) {
       const coordinates = this._getGeometry(layer);
       set(layer, 'feature.geometry.coordinates', coordinates);
     }
@@ -234,7 +234,7 @@ export default BaseVectorLayer.extend({
     @returns {RSVP.Promise}.
   */
   _loadFeatures(filter, fireLoad = true) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const that = this;
       filter = this.addCustomFilter(filter);
       L.Util.request({
@@ -335,11 +335,12 @@ export default BaseVectorLayer.extend({
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer
     @param {Object} options Layer options.
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer(options) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       // Retrieve possibly defined in layer's settings filter.
       const initialOptions = this.get('options') || {};
       let initialFilter = get(initialOptions, 'filter');
@@ -409,7 +410,8 @@ export default BaseVectorLayer.extend({
           this._setFeaturesProcessCallback(wfsLayer);
           wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);
 
-          // this.get('_leafletObject') is null at this moment. _layers hasn't pane and renderer. For marker layer this is critical (ignore zoom), but for polygon layer doesn't.
+          // this.get('_leafletObject') is null at this moment. _layers hasn't pane and renderer.
+          // For marker layer this is critical (ignore zoom), but for polygon layer doesn't.
           const featureLayers = Object.values(wfsLayer._layers);
           this._addLayersOnMap(featureLayers);
           const load = this.continueLoad(wfsLayer);
@@ -418,7 +420,7 @@ export default BaseVectorLayer.extend({
               layers: featureLayers,
             };
             const promise = this._featuresProcessCallback(loaded.layers, wfsLayer);
-            if (loaded.results && Ember.isArray(loaded.results)) {
+            if (loaded.results && isArray(loaded.results)) {
               loaded.results.push(promise);
             }
           }
@@ -431,7 +433,7 @@ export default BaseVectorLayer.extend({
         .once('error', (e) => {
           reject(e.error || e);
         })
-        .on('load', (e) => {
+        .on('load', () => {
           this._setLayerState();
         });
     });
@@ -455,7 +457,8 @@ export default BaseVectorLayer.extend({
   /**
     Creates leaflet layer related to layer type.
     @method createLayer
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
@@ -476,7 +479,7 @@ export default BaseVectorLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const filter = new L.Filter.Intersects(this.get('geometryField'), e.polygonLayer, this.get('crs'));
 
       this._getFeature({
@@ -549,7 +552,8 @@ export default BaseVectorLayer.extend({
 
     let filter;
     if (equals.length === 1) {
-      filter = equals[0];
+      const [f] = equals[0];
+      filter = f;
     } else {
       filter = new L.Filter.Or(...equals);
     }
@@ -638,11 +642,11 @@ export default BaseVectorLayer.extend({
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   loadLayerFeatures(e) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const leafletObject = this.get('_leafletObject');
       const { featureIds, } = e;
       if (!leafletObject.options.showExisting) {
-        const getLoadedFeatures = (featureIds) => {
+        const getLoadedFeatures = () => {
           const loadIds = [];
           leafletObject.eachLayer((shape) => {
             const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), shape);
@@ -704,7 +708,7 @@ export default BaseVectorLayer.extend({
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   getLayerFeatures(e) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const leafletObject = this.get('_leafletObject');
       const { featureIds, } = e;
       if (!leafletObject.options.showExisting) {
@@ -752,7 +756,9 @@ export default BaseVectorLayer.extend({
         const objects = [];
         featureIds.forEach((id) => {
           const features = leafletObject._layers;
-          const obj = Object.values(features).find((feature) => this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), feature) === id);
+          const obj = Object.values(features).find((feature) => this
+            .get('mapApi').getFromApi('mapModel')
+            ._getLayerFeatureId(this.get('layerModel'), feature) === id);
           if (!isNone(obj)) {
             objects.push(obj);
           }
@@ -809,7 +815,8 @@ export default BaseVectorLayer.extend({
 
           const unionJsts = loadedBoundsJsts.union(boundsJsts);
           const geojsonWriter = new jsts.io.GeoJSONWriter();
-          loadedBounds = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
+          const [getLayer] = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
+          loadedBounds = getLayer;
         } else {
           loadedBounds = bounds;
         }
@@ -833,10 +840,10 @@ export default BaseVectorLayer.extend({
 
       let promise;
       if (needPromise) {
-        promise = new Promise((resolve, reject) => {
+        promise = new Promise(() => {
           leafletObject.once('loadCompleted', () => {
             resolve();
-          }).once('error', (e) => {
+          }).once('error', () => {
             leafletObject.existingFeaturesLoaded = false;
             reject();
           });
@@ -957,7 +964,7 @@ export default BaseVectorLayer.extend({
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   cancelEdit(ids) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const leafletObject = this.get('_leafletObject');
       const featuresIds = this.clearChanges(ids);
       if (featuresIds.length === 0) {
@@ -968,7 +975,7 @@ export default BaseVectorLayer.extend({
           layer: leafletObject.layerId,
           results: A(),
         };
-        this.loadLayerFeatures(e).then(() => { resolve(); }).catch((e) => reject(e));
+        this.loadLayerFeatures(e).then(() => { resolve(); }).catch(() => reject(e));
       }
     });
   },
@@ -1035,7 +1042,7 @@ export default BaseVectorLayer.extend({
     @return {Ember.RSVP.Promise}
   */
   dwithin(featureLayer, distance, exceptFeature) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       const geometryField = this.get('geometryField');
       const crs = this.get('crs');
       let filter = new L.Filter.DWithin(geometryField, featureLayer, crs, distance, 'meter');
@@ -1065,12 +1072,12 @@ export default BaseVectorLayer.extend({
     @return {Ember.RSVP.Promise}
   */
   upDistance(featureLayer, distances, iter, exceptFeature) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       this.dwithin(featureLayer, distances[iter], exceptFeature)
         .then((res) => {
           if (isArray(res) && res.length > 0) {
             resolve(res);
-          } else if (iter++ < distances.length) {
+          } else if (iter < distances.length - 1) {
             resolve(this.upDistance(featureLayer, distances, iter, exceptFeature));
           } else {
             resolve(null);
@@ -1098,7 +1105,7 @@ export default BaseVectorLayer.extend({
     @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
   */
   getNearObject(e) {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       let result = null;
       const mapApi = this.get('mapApi').getFromApi('mapModel');
       const leafletObject = this.get('_leafletObject');
@@ -1142,7 +1149,7 @@ export default BaseVectorLayer.extend({
                   };
                   resolve(result);
                 } else {
-                  reject(`Don't loaded feature with id: ${id} for layer ${layerModel.get('name')}`);
+                  Promise.reject(new Error(`Don't loaded feature with id: ${id} for layer ${layerModel.get('name')}`));
                 }
               });
             } else {
@@ -1150,7 +1157,7 @@ export default BaseVectorLayer.extend({
             }
           },
           error(error) {
-            reject(`Error for request getNearObject via WPS ${wpsUrl} for layer ${layerModel.get('name')}: ${error}`);
+            Promise.reject(new Error(`Error for request getNearObject via WPS ${wpsUrl} for layer ${layerModel.get('name')}: ${error}`));
           },
         });
       } else {

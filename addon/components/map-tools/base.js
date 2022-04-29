@@ -90,9 +90,9 @@ const BaseMapToolComponent = Component.extend(SlotsMixin, {
   */
   _hasCaption: computed('caption', function () {
     const caption = this.get('caption');
-    return typeOf(caption) === 'string' && $.trim(caption) !== ''
-      || typeOf(isHTMLSafe) === 'function' && isHTMLSafe(caption) && $.trim(get(caption, 'string')) !== ''
-      || caption instanceof htmlSafe && $.trim(get(caption, 'string')) !== '';
+    return (typeOf(caption) === 'string' && $.trim(caption) !== '')
+      || (typeOf(isHTMLSafe) === 'function' && isHTMLSafe(caption) && $.trim(get(caption, 'string')) !== '')
+      || (caption instanceof htmlSafe && $.trim(get(caption, 'string')) !== '');
   }),
 
   /**
@@ -264,7 +264,7 @@ const BaseMapToolComponent = Component.extend(SlotsMixin, {
     @param {Object} e.mapTool Enabled map tool.
     @param {Object[]} e.arguments Arguments passed to map tool's 'enable' method.
   */
-  onMapToolEnable(e) {
+  onMapToolEnable() {
     this.set('_isActive', true);
   },
 
@@ -276,7 +276,7 @@ const BaseMapToolComponent = Component.extend(SlotsMixin, {
     @param {Object} e.mapTool Disabled map tool.
     @param {Object[]} e.arguments Arguments passed to map tool's 'disable' method.
   */
-  onMapToolDisable(e) {
+  onMapToolDisable() {
     this.set('_isActive', false);
   },
 
@@ -287,7 +287,7 @@ const BaseMapToolComponent = Component.extend(SlotsMixin, {
     @param {<a href="http://learn.jquery.com/events/introduction-to-events/#the-event-object">jQuery event object</a>} e
     Click event object.
   */
-  click(e) {
+  click() {
     this.activateMapTool();
   },
 
@@ -366,7 +366,7 @@ const BaseMapToolComponent = Component.extend(SlotsMixin, {
     } else if (!isNone(MutationObserver)) {
       // Sometimes Semantic UI adds/removes classes too late what breaks results of component's class name bindings.
       // So to fix it, we need to observe changes in 'class' attribute through mutation observer.
-      const classObserver = new MutationObserver((mutations) => {
+      const classObserver = new MutationObserver(() => {
         const isActive = this.get('_isActive');
         if (isActive && !$item.hasClass('active')) {
           $item.addClass('active');

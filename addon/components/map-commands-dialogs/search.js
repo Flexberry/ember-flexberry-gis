@@ -614,12 +614,12 @@ const FlexberrySearchMapCommandDialogComponent = Component.extend({
             this.get('foundedFeatures').forEach((feature) => {
               const featureProperties = get(feature, 'properties') || {};
 
-              for (const prop in featureProperties) {
+              featureProperties.forEach((prop) => {
                 const value = featureProperties[prop];
                 if (value instanceof Date && !isNone(value) && !isEmpty(value) && !isEmpty(dateFormat)) {
                   featureProperties[prop] = moment(value).format(dateFormat);
                 }
-              }
+              });
             });
           }
 

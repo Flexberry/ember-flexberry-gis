@@ -17,7 +17,7 @@ export default BaseControl.extend({
     @property leafletOptions
     @type Stirng[]
   */
-  leafletOptions: ['position', 'maxWidth', 'metric', 'imperial', 'updateWhenIdle'],
+  leafletOptions: Object.freeze(['position', 'maxWidth', 'metric', 'imperial', 'updateWhenIdle']),
 
   /**
     Creates control instance, should be overridden in child classes.

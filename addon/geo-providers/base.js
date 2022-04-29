@@ -19,7 +19,7 @@ export default EmberObject.extend({
 
     @param {Object} options Query options.
   */
-  _executeRequest(options) {
+  _executeRequest() {
   },
 
   /**
@@ -27,7 +27,7 @@ export default EmberObject.extend({
 
     @param {String} response Response result.
   */
-  _parseRequestResult(response) {
+  _parseRequestResult() {
   },
 
   /**
@@ -41,7 +41,7 @@ export default EmberObject.extend({
     let requestResult = this._executeRequest(options);
 
     if (!(requestResult instanceof Promise)) {
-      requestResult = new Promise((resolve, reject) => {
+      requestResult = new Promise((resolve) => {
         resolve(requestResult);
       });
     }

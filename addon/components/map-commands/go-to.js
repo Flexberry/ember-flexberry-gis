@@ -38,8 +38,10 @@ const flexberryClassNames = {
   ```javascript
   availableCRS: Ember.computed(function() {
     let availableModes = Ember.A();
-    availableModes.push({ crs: this.get('model.crs'), name: t('crs.current.name'), xCaption: t('crs.current.xCaption'), yCaption: t('crs.current.yCaption'), isLatlng: false });
-    availableModes.push({ crs: L.CRS.EPSG4326, name: t('crs.latlng.name'), xCaption: t('crs.latlng.xCaption'), yCaption: t('crs.latlng.yCaption'), isLatlng: true });
+    availableModes.push({ crs: this.get('model.crs'),
+      name: t('crs.current.name'), xCaption: t('crs.current.xCaption'), yCaption: t('crs.current.yCaption'), isLatlng: false });
+    availableModes.push({ crs: L.CRS.EPSG4326, name: t('crs.latlng.name'),
+      xCaption: t('crs.latlng.xCaption'), yCaption: t('crs.latlng.yCaption'), isLatlng: true });
 
     return availableModes;
   }),
@@ -174,7 +176,7 @@ const GoToMapCommandComponent = Component.extend({
 
       @method actions.onMapCommandButtonClick
     */
-    onMapCommandButtonClick(e) {
+    onMapCommandButtonClick() {
       this._showGoToDialog();
     },
 

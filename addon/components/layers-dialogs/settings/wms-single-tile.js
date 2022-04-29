@@ -6,7 +6,7 @@ import WmsLayerSettingsComponent from './wms';
 import layout from '../../../templates/components/layers-dialogs/settings/wms-single-tile';
 
 // Regular expression used to derive whether settings' url is correct.
-const urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
+const urlRegex = '(https?|ftp)://(-.)?([^/?.#-]+.?)+(/[^]*)?';
 
 /**
   Settings-part of WMS single tile layer modal dialog.

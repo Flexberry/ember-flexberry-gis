@@ -44,6 +44,6 @@ export default Component.extend({
     @type Array
     @default []
   */
-  geometryTypes: ['PointPropertyType', 'LineStringPropertyType', 'PolygonPropertyType',
-    'MultiPointPropertyType', 'MultiLineStringPropertyType', 'MultiPolygonPropertyType'],
+  geometryTypes: Object.freeze(['PointPropertyType', 'LineStringPropertyType', 'PolygonPropertyType',
+    'MultiPointPropertyType', 'MultiLineStringPropertyType', 'MultiPolygonPropertyType']),
 });

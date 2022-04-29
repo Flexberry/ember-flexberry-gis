@@ -18,13 +18,13 @@ import TileLayer from './tile-layer';
   @extends TileLayerComponent
  */
 export default TileLayer.extend({
-  leafletOptions: [
+  leafletOptions: Object.freeze([
     'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
     'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
     'zoomOffset', 'zoomReverse', 'opacity', 'zIndex', 'unloadInvisibleTiles',
     'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds', 'filter',
     'layers', 'styles', 'format', 'transparent', 'version', 'crs', 'info_format', 'tiled'
-  ],
+  ]),
 
   /**
     Performs 'getFeatureInfo' request to WMS-service related to layer.
@@ -35,8 +35,8 @@ export default TileLayer.extend({
     const layer = this.get('_leafletObject');
 
     if (isNone(layer)) {
-      return new Promise((resolve, reject) => {
-        reject(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`);
+      return new Promise(() => {
+        Promise.reject(new Error(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`));
       });
     }
 
@@ -47,11 +47,11 @@ export default TileLayer.extend({
         map: this.get('leafletMap'),
         crs: this.get('crs'),
         featureCount: this.get('feature_count'),
-        done(featuresCollection, xhr) {
+        done(featuresCollection) {
           const features = A(get(featuresCollection, 'features') || []);
           resolve(features);
         },
-        fail(errorThrown, xhr) {
+        fail(errorThrown) {
           reject(errorThrown);
         },
       });
@@ -68,10 +68,10 @@ export default TileLayer.extend({
   _getBoundingBox(layer) {
     return new Promise((resolve, reject) => {
       layer.getBoundingBox({
-        done(boundingBox, xhr) {
+        done(boundingBox) {
           resolve(boundingBox);
         },
-        fail(errorThrown, xhr) {
+        fail(errorThrown) {
           reject(errorThrown);
         },
       });
@@ -82,7 +82,8 @@ export default TileLayer.extend({
     Creates leaflet layer related to layer type.
 
     @method createLayer
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
@@ -137,7 +138,7 @@ export default TileLayer.extend({
     @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
     or a promise returning such array.
   */
-  search(e) {
+  search() {
     // Wms-layers hasn't any search logic.
   },
 });
