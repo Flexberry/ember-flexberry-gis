@@ -424,6 +424,7 @@ import BaseVectorLayer from &#x27;../base-vector-layer&#x27;;
 import { checkMapZoom } from &#x27;../../utils/check-zoom&#x27;;
 import { intersectionArea } from &#x27;../../utils/feature-with-area-intersect&#x27;;
 import jsts from &#x27;npm:jsts&#x27;;
+import isUUID  from &#x27;ember-flexberry-data/utils/is-uuid&#x27;;
 import state from &#x27;../../utils/state&#x27;;
 
 /**
@@ -660,7 +661,7 @@ export default BaseVectorLayer.extend({
             that.fire(&#x27;error&#x27;, {
               error: new Error(exceptionReport.message)
             });
-
+            reject(exceptionReport);
             return that;
           }
 
@@ -945,12 +946,32 @@ export default BaseVectorLayer.extend({
         searchFields.forEach((field) =&gt; {
           let typeField = fieldsType[field];
           if (!Ember.isBlank(typeField)) {
-            if (typeField !== &#x27;string&#x27;) {
-              equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
+            let accessProperty = false;
+            if (field !== &#x27;primarykey&#x27;) {
+              switch (typeField) {
+                case &#x27;number&#x27;:
+                  accessProperty = !isNaN(Number(e.searchOptions.queryString));
+                  break;
+                case &#x27;date&#x27;:
+                  accessProperty = new Date(e.searchOptions.queryString).toString() === &#x27;Invalid Date&#x27;;
+                  break;
+                case &#x27;boolean&#x27;:
+                  accessProperty = Boolean(e.searchOptions.queryString);
+                  break;
+                default:
+                  equals.push(new L.Filter.Like(field, &#x27;*&#x27; + e.searchOptions.queryString + &#x27;*&#x27;, {
+                    matchCase: false
+                  }));
+                  break;
+              }
+
+              if (accessProperty &amp;&amp; typeField !== &#x27;string&#x27;) {
+                equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
+              }
             } else {
-              equals.push(new L.Filter.Like(field, &#x27;*&#x27; + e.searchOptions.queryString + &#x27;*&#x27;, {
-                matchCase: false
-              }));
+              if (isUUID(e.searchOptions.queryString)) {
+                equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
+              }
             }
           }
         });

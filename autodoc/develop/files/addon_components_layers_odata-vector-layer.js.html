@@ -429,6 +429,7 @@ import GisAdapter from &#x27;ember-flexberry-gis/adapters/odata&#x27;;
 import DS from &#x27;ember-data&#x27;;
 import jsts from &#x27;npm:jsts&#x27;;
 import { capitalize, camelize } from &#x27;ember-flexberry-data/utils/string-functions&#x27;;
+import isUUID  from &#x27;ember-flexberry-data/utils/is-uuid&#x27;;
 const { Builder } = Query;
 
 /**
@@ -875,17 +876,39 @@ export default BaseVectorLayer.extend({
     if (!Ember.isNone(leafletObject)) {
       let type = this.get(&#x27;layerModel.type&#x27;);
       if (!Ember.isBlank(type)) {
-        let layerClass = Ember.getOwner(this).knownForType(&#x27;layer&#x27;, type);
-        let layerProperties = layerClass.getLayerProperties(leafletObject);
+        let store = Ember.getOwner(this).lookup(&#x27;service:store&#x27;);
+        let modelConstructor = store.modelFor(leafletObject.modelName);
+        let layerProperties = Ember.get(modelConstructor, &#x60;attributes&#x60;);
         searchFields.forEach((field) =&gt; {
-          let ind = layerProperties.indexOf(field);
-          if (ind &gt; -1) {
-            let layerPropertyType = typeof layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            if (layerPropertyType !== &#x27;string&#x27; || (layerPropertyType === &#x27;object&#x27; &amp;&amp; layerPropertyValue instanceof Date)) {
-              equals.push(new Query.SimplePredicate(field, Query.FilterOperator.Eq, e.searchOptions.queryString));
-            } else {
-              equals.push(new Query.StringPredicate(field).contains(e.searchOptions.queryString));
+          let property;
+          let accessProperty = false;
+          if (field === &#x27;primarykey&#x27;) {
+            if (isUUID(e.searchOptions.queryString)) {
+              equals.push(new Query.SimplePredicate(&#x27;id&#x27;, Query.FilterOperator.Eq, e.searchOptions.queryString));
+            }
+          } else {
+            property = layerProperties.get(&#x27;field&#x27;);
+            if (!Ember.isNone(property)) {
+              switch (property.type) {
+                case &#x27;decimal&#x27;:
+                case &#x27;number&#x27;:
+                  let searchString = e.searchOptions.queryString.replace(&#x27;.&#x27;, &#x27;,&#x27;);
+                  accessProperty = !isNaN(Number(searchString));
+                  break;
+                case &#x27;date&#x27;:
+                  accessProperty = new Date(e.searchOptions.queryString).toString() === &#x27;Invalid Date&#x27;;
+                  break;
+                case &#x27;boolean&#x27;:
+                  accessProperty = Boolean(e.searchOptions.queryString);
+                  break;
+                default:
+                  equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
+                  break;
+              }
+
+              if (!accessProperty &amp;&amp; property.type !== &#x27;string&#x27;) {
+                equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, e.searchOptions.queryString));
+              }
             }
           }
         });
