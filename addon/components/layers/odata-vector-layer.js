@@ -12,6 +12,7 @@ import GisAdapter from 'ember-flexberry-gis/adapters/odata';
 import DS from 'ember-data';
 import jsts from 'npm:jsts';
 import { capitalize, camelize } from 'ember-flexberry-data/utils/string-functions';
+import isUUID  from 'ember-flexberry-data/utils/is-uuid';
 const { Builder } = Query;
 
 /**
@@ -458,17 +459,39 @@ export default BaseVectorLayer.extend({
     if (!Ember.isNone(leafletObject)) {
       let type = this.get('layerModel.type');
       if (!Ember.isBlank(type)) {
-        let layerClass = Ember.getOwner(this).knownForType('layer', type);
-        let layerProperties = layerClass.getLayerProperties(leafletObject);
+        let store = Ember.getOwner(this).lookup('service:store');
+        let modelConstructor = store.modelFor(leafletObject.modelName);
+        let layerProperties = Ember.get(modelConstructor, `attributes`);
         searchFields.forEach((field) => {
-          let ind = layerProperties.indexOf(field);
-          if (ind > -1) {
-            let layerPropertyType = typeof layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            if (layerPropertyType !== 'string' || (layerPropertyType === 'object' && layerPropertyValue instanceof Date)) {
-              equals.push(new Query.SimplePredicate(field, Query.FilterOperator.Eq, e.searchOptions.queryString));
-            } else {
-              equals.push(new Query.StringPredicate(field).contains(e.searchOptions.queryString));
+          let property;
+          let accessProperty = false;
+          if (field === 'primarykey') {
+            if (isUUID(e.searchOptions.queryString)) {
+              equals.push(new Query.SimplePredicate('id', Query.FilterOperator.Eq, e.searchOptions.queryString));
+            }
+          } else {
+            property = layerProperties.get('field');
+            if (!Ember.isNone(property)) {
+              switch (property.type) {
+                case 'decimal':
+                case 'number':
+                  let searchString = e.searchOptions.queryString.replace('.', ',');
+                  accessProperty = !isNaN(Number(searchString));
+                  break;
+                case 'date':
+                  accessProperty = new Date(e.searchOptions.queryString).toString() === 'Invalid Date';
+                  break;
+                case 'boolean':
+                  accessProperty = Boolean(e.searchOptions.queryString);
+                  break;
+                default:
+                  equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
+                  break;
+              }
+
+              if (!accessProperty && property.type !== 'string') {
+                equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, e.searchOptions.queryString));
+              }
             }
           }
         });
