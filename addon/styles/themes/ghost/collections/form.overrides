@@ -32,7 +32,3 @@
     border-color: #db2828 !important;
   }
 }
-
-.flatpickr-calendar.open {
-  z-index: 1000;
-}
