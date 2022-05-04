@@ -39091,7 +39091,6 @@ form.flexberry-edit-layer-attributes .ui.tab.segment,
 form.flexberry-geometry-add-mode-manual-form .ui.tab.segment,
 form.flexberry-geometry-add-mode-rhumb-form .ui.tab.segment,
 form.flexberry-geometry-add-mode-geoprovider-form .ui.tab.segment {
-  height: calc(100% - 50px);
   margin: 0;
   overflow: auto;
 }
@@ -39101,7 +39100,6 @@ form.flexberry-edit-layer-attributes .ui.tab.segment.group,
 form.flexberry-geometry-add-mode-manual-form .ui.tab.segment.group,
 form.flexberry-geometry-add-mode-rhumb-form .ui.tab.segment.group,
 form.flexberry-geometry-add-mode-geoprovider-form .ui.tab.segment.group {
-  height: calc(100% - 64px);
   margin-top: 0;
   padding: 0;
   border: none;
@@ -39112,7 +39110,6 @@ form.flexberry-edit-layer-attributes .ui.tab.segment.group .ui.tab.segment,
 form.flexberry-geometry-add-mode-manual-form .ui.tab.segment.group .ui.tab.segment,
 form.flexberry-geometry-add-mode-rhumb-form .ui.tab.segment.group .ui.tab.segment,
 form.flexberry-geometry-add-mode-geoprovider-form .ui.tab.segment.group .ui.tab.segment {
-  height: calc(100% - 40px);
   margin: 0;
 }
 form.flexberry-edit-layermap .ui.tab.segment .flexberry-dropdown.ui.selection.dropdown .menu,
@@ -49340,6 +49337,27 @@ img.item-minus {
 }
 .hidden {
   display: none !important;
+}
+.leaflet-marker-icon.label.point {
+  display: flex;
+}
+.leaflet-marker-icon.label.point.over {
+  align-items: end;
+}
+.leaflet-marker-icon.label.point.along {
+  align-items: center;
+}
+.leaflet-marker-icon.label.point.under {
+  align-items: start;
+}
+.leaflet-marker-icon.label.point.left {
+  justify-content: end;
+}
+.leaflet-marker-icon.label.point.right {
+  justify-content: start;
+}
+.leaflet-marker-icon.label.point.middle {
+  justify-content: center;
 }
 /**
  * All ember-flexberry addon styles.
