@@ -1479,15 +1479,15 @@ export default BaseLayer.extend({
     let hasReplace = false;
     let propName;
     try {
-      propName = Ember.$(&#x27;&lt;p&gt;&#x27; + str + &#x27;&lt;/p&gt;&#x27;).find(&#x27;propertyname&#x27;);
+      propName = Ember.$(str).find(&#x27;propertyname&#x27;);
     } catch (e) {
       hasReplace = true;
       str = str.replaceAll(&#x27;&quot;&#x27;, &#x27;\\&quot;&#x27;).replaceAll(&#x27;(&#x27;, &#x27;\\(&#x27;).replaceAll(&#x27;)&#x27;, &#x27;\\)&#x27;);
-      propName = Ember.$(&#x27;&lt;p&gt;&#x27; + str + &#x27;&lt;/p&gt;&#x27;).find(&#x27;propertyname&#x27;);
+      propName = Ember.$(str).find(&#x27;propertyname&#x27;);
     }
 
     if (propName.length === 0) { // if main node
-      propName = Ember.$(&#x27;&lt;p&gt;&#x27; + str + &#x27;&lt;/p&gt; propertyname&#x27;);
+      propName = Ember.$(str + &#x27; propertyname&#x27;);
     }
 
     if (propName.length &gt; 0) {
@@ -1525,17 +1525,16 @@ export default BaseLayer.extend({
   _applyFunction(str) {
     let func;
     let hasReplace = false;
-
     try {
-      func = Ember.$(&#x27;&lt;p&gt;&#x27; + str + &#x27;&lt;/p&gt;&#x27;).find(&#x27;function&#x27;);
+      func = Ember.$(str).find(&#x27;function&#x27;);
     } catch (e) {
       hasReplace = true;
       str = str.replaceAll(&#x27;&quot;&#x27;, &#x27;\\&quot;&#x27;).replaceAll(&#x27;(&#x27;, &#x27;\\(&#x27;).replaceAll(&#x27;)&#x27;, &#x27;\\)&#x27;);
-      func = Ember.$(&#x27;&lt;p&gt;&#x27; + str + &#x27;&lt;/p&gt;&#x27;).find(&#x27;function&#x27;);
+      func = Ember.$(str).find(&#x27;function&#x27;);
     }
 
     if (func.length === 0) { // if main node
-      func = Ember.$(&#x27;&lt;p&gt;&#x27; + str + &#x27;&lt;/p&gt; function&#x27;);
+      func = Ember.$(str + &#x27; function&#x27;);
     }
 
     if (func.length &gt; 0) {
@@ -1615,8 +1614,7 @@ export default BaseLayer.extend({
     let latlng = null;
     let iconWidth = 10;
     let iconHeight = 40;
-    let anchor = null;
-    let className = &#x27;label&#x27;;
+    let positionPoint = &#x27;&#x27;;
     let html = &#x27;&#x27;;
 
     if (lType.indexOf(&#x27;Polygon&#x27;) !== -1) {
@@ -1637,12 +1635,8 @@ export default BaseLayer.extend({
 
     if (lType.indexOf(&#x27;Point&#x27;) !== -1) {
       latlng = layer.getLatLng();
-      iconWidth = 30;
-      iconHeight = 30;
-      let positionPoint = this._setPositionPoint(iconWidth, iconHeight);
-      anchor = positionPoint.anchor;
-      className += &#x27; point &#x27; + positionPoint.cssClass;
-      html = &#x27;&lt;div style=&quot;&#x27; + style + positionPoint.style + &#x27;&quot;&gt;&#x27; + text + &#x27;&lt;/div&gt;&#x27;;
+      positionPoint = this._setPositionPoint(iconWidth);
+      html = &#x27;&lt;div style=&quot;&#x27; + style + positionPoint + &#x27;&quot;&gt;&#x27; + text + &#x27;&lt;/div&gt;&#x27;;
     }
 
     if (lType.indexOf(&#x27;LineString&#x27;) !== -1) {
@@ -1664,16 +1658,15 @@ export default BaseLayer.extend({
 
     let label = L.marker(latlng, {
       icon: L.divIcon({
-        className: className,
+        className: &#x27;label&#x27;,
         html: html,
-        iconSize: [iconWidth, iconHeight],
-        iconAnchor: anchor
+        iconSize: [iconWidth, iconHeight]
       }),
       zIndexOffset: 1000,
       pane: this.get(&#x27;_paneLabel&#x27;)
     });
     label.style = {
-      className: className,
+      className: &#x27;label&#x27;,
       html: html,
       iconSize: [iconWidth, iconHeight]
     };
@@ -1689,80 +1682,45 @@ export default BaseLayer.extend({
     @method _setPositionPoint
     @param {Number} width
   */
-  _setPositionPoint(width, height) {
-    // значения для маркера по умолчанию
-    let left = 12.5;
-    let right = 12.5;
-    let top = 41;
-    let bottom = 0;
-
-    let iconSize = this.get(&#x27;styleSettings.style.marker.style.iconSize&#x27;);
-    let iconAnchor = this.get(&#x27;styleSettings.style.marker.style.iconAnchor&#x27;);
-    if (!Ember.isNone(iconAnchor) &amp;&amp; iconAnchor.length === 2 &amp;&amp; !Ember.isNone(iconSize) &amp;&amp; iconSize.length === 2) {
-      left = iconAnchor[0] || 0;
-      right = (iconSize[0] || 0) - (iconAnchor[0] || 0);
-      top = iconAnchor[1] || 0;
-      bottom = (iconSize[1] || 0) - (iconAnchor[1] || 0);
-    }
-
-    let style;
-    let anchor;
-    let cssClass;
+  _setPositionPoint(width) {
+    let stylePoint = &#x27;&#x27;;
+    let shiftHor = Math.round(width / 2);
+    let shiftVerTop = &#x27;-60px;&#x27;;
+    let shiftVerBottom = &#x27;30px;&#x27;;
 
     switch (this.get(&#x27;labelSettings.location.locationPoint&#x27;)) {
       case &#x27;overLeft&#x27;:
-        style = &#x27;text-align: right;&#x27;;
-        anchor = [left + width, top + height];
-        cssClass = &#x27;over left&#x27;;
+        stylePoint = &#x27;margin-right: &#x27; + shiftHor + &#x27;px; margin-top: &#x27; + shiftVerTop;
         break;
       case &#x27;overMiddle&#x27;:
-        style = &#x27;text-align: center;&#x27;;
-        anchor = [Math.round((width - (right - left)) / 2), top + height];
-        cssClass = &#x27;over middle&#x27;;
+        stylePoint = &#x27;margin-top: &#x27; + shiftVerTop;
         break;
       case &#x27;overRight&#x27;:
-        style = &#x27;text-align: left;&#x27;;
-        anchor = [-1 * right, top + height];
-        cssClass = &#x27;over right&#x27;;
+        stylePoint = &#x27;margin-left: &#x27; + shiftHor + &#x27;px; margin-top: &#x27; + shiftVerTop;
         break;
       case &#x27;alongLeft&#x27;:
-        style = &#x27;text-align: right;&#x27;;
-        anchor = [left + width, Math.round((height - (bottom - top)) / 2)];
-        cssClass = &#x27;along left&#x27;;
+        stylePoint = &#x27;margin-right: &#x27; + shiftHor + &#x27;px;&#x27;;
         break;
       case &#x27;alongMidle&#x27;:
-        style = &#x27;text-align: center;&#x27;;
-        anchor = [Math.round((width - (right - left)) / 2), Math.round((height - (bottom - top)) / 2)];
-        cssClass = &#x27;along middle&#x27;;
         break;
       case &#x27;alongRight&#x27;:
-        style = &#x27;text-align: left;&#x27;;
-        anchor = [-1 * right, Math.round((height - (bottom - top)) / 2)];
-        cssClass = &#x27;along right&#x27;;
+        stylePoint = &#x27;margin-left: &#x27; + shiftHor + &#x27;px;&#x27;;
         break;
       case &#x27;underLeft&#x27;:
-        style = &#x27;text-align: right;&#x27;;
-        anchor = [left + width, -1 * bottom];
-        cssClass = &#x27;under left&#x27;;
+        stylePoint = &#x27;margin-right: &#x27; + shiftHor + &#x27;px; margin-top: &#x27; + shiftVerBottom;
         break;
       case &#x27;underMiddle&#x27;:
-        style = &#x27;text-align: center;&#x27;;
-        anchor = [Math.round((width - (right - left)) / 2), -1 * bottom];
-        cssClass = &#x27;under middle&#x27;;
+        stylePoint = &#x27;margin-top: &#x27; + shiftVerBottom;
         break;
       case &#x27;underRight&#x27;:
-        style = &#x27;text-align: left;&#x27;;
-        anchor = [-1 * right, -1 * bottom];
-        cssClass = &#x27;under right&#x27;;
+        stylePoint = &#x27;margin-left: &#x27; + shiftHor + &#x27;px; margin-top: &#x27; + shiftVerBottom;
         break;
       default:
-        style = &#x27;text-align: center;&#x27;;
-        anchor = [Math.round((width - (right - left)) / 2), top + height];
-        cssClass = &#x27;over middle&#x27;;
+        stylePoint = &#x27;margin-left: &#x27; + shiftHor + &#x27;px; margin-top: &#x27; + shiftVerTop;
         break;
     }
 
-    return { style, anchor, cssClass };
+    return stylePoint;
   },
 
   /**
