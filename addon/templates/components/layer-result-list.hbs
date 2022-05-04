@@ -9,13 +9,13 @@
   <div class="feature-result-item-group">
     {{#if result.isIntersect}}
       <div class="feature-result-item-buttons hidden">
-        <a class="feature-result-item-select icon item"
-          title="{{t "components.feature-result-item.select-all-caption"}}"
-          {{action "zoomTo" result.features}}>
-          {{#if (eq intersection false)}}
-          <i class="icon-guideline-marker"></i>
-          {{/if}}
-        </a>
+        {{#if (eq intersection false)}}
+          <a class="feature-result-item-select icon item"
+            title="{{t "components.feature-result-item.select-all-caption"}}"
+            {{action "zoomTo" result.features}}>
+              <i class="icon-guideline-marker"></i>
+          </a>
+        {{/if}}
         {{#if (gt result.listForms.length 0)}}
           {{#if (eq result.listForms.length 1)}}
           {{#if result.hasListForm}}
