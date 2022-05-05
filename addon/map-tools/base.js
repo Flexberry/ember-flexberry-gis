@@ -128,17 +128,19 @@ export default EmberObject.extend(Evented,
       this.set('_enabled', true);
       this._enable(...arguments);
 
-      scheduleOnce('afterRender', this, function () {
-        // Trigger common 'enable' event.
-        leafletMap.fire('flexberry-map:tools:enable', {
-          mapTool: this,
-        });
+      scheduleOnce('afterRender', this, this.fireMapTool(leafletMap));
+    },
 
-        // Trigger tool specific 'enable' event.
-        const mapToolName = this.get('name');
-        leafletMap.fire(`flexberry-map:tools:${mapToolName}:enable`, {
-          mapTool: this,
-        });
+    fireMapTool(leafletMap) {
+      // Trigger common 'enable' event.
+      leafletMap.fire('flexberry-map:tools:enable', {
+        mapTool: this,
+      });
+
+      // Trigger tool specific 'enable' event.
+      const mapToolName = this.get('name');
+      leafletMap.fire(`flexberry-map:tools:${mapToolName}:enable`, {
+        mapTool: this,
       });
     },
 

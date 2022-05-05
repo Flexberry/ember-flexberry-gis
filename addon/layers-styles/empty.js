@@ -29,7 +29,7 @@ export default BaseLayerStyle.extend({
     @method getVisibleLeafletLayers
     @return {Object[]} Array containing visible leaflet layers (those nested layers which 'layers-style' doesn't hide).
   */
-  getVisibleLeafletLayers({ leafletLayer, style, }) {
+  getVisibleLeafletLayers() {
     // There is no visible layers in 'empty' layers-style, all layer are hidden.
     return [];
   },
@@ -42,7 +42,7 @@ export default BaseLayerStyle.extend({
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} options.leafletLayer Leaflet layer to which layer-style must be applied.
     @param {Object} options.style Hash containing style settings.
   */
-  renderOnLeafletLayer({ leafletLayer, style, }) {
+  renderOnLeafletLayer({ leafletLayer, }) {
     setLeafletLayerOpacity({ leafletLayer, opacity: 0, });
   },
 
@@ -51,11 +51,12 @@ export default BaseLayerStyle.extend({
 
     @method renderOnCanvas
     @param {Object} options Method options.
-    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which layer-style preview must be rendered.
+    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>}
+      options.canvas Canvas element on which layer-style preview must be rendered.
     @param {Object} options.style Hash containing style settings.
     @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style, target, }) {
+  renderOnCanvas() {
     // Nothing must be rendered on canvas for 'empty' layer style.
   },
 });

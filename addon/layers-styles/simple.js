@@ -110,11 +110,13 @@ export default BaseLayerStyle.extend({
         lineJoin: 'round',
 
         // A string that defines the stroke [dash pattern](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dasharray).
-        // Doesn't work on `Canvas`-powered layers in [some old browsers](https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility).
+        // Doesn't work on `Canvas`-powered layers in [some old browsers]
+        //  (https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility).
         dashArray: '',
 
         // A string that defines the [distance into the dash pattern to start the dash](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dashoffset).
-        // Doesn't work on `Canvas`-powered layers in [some old browsers](https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility).
+        // Doesn't work on `Canvas`-powered layers in [some old browsers]
+        //  (https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility).
         dashOffset: 0,
 
         // Whether to fill the path with color.
@@ -145,7 +147,8 @@ export default BaseLayerStyle.extend({
 
     @method renderOnCanvas
     @param {Object} options Method options.
-    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which layer-style preview must be rendered.
+    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>}
+      options.canvas Canvas element on which layer-style preview must be rendered.
     @param {Object} options.style Hash containing style settings.
     @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
@@ -162,10 +165,10 @@ export default BaseLayerStyle.extend({
     let dashArray = get(pathStyle, 'dashArray');
     dashArray = isBlank(dashArray)
       ? []
-      : dashArray.split(',').map((value) => Number(value)).filter((value) => !isNaN(value));
+      : dashArray.split(',').map((value) => Number(value)).filter((value) => !Number.isNaN(value));
 
     let dashOffset = Number(get(pathStyle, 'dashOffset'));
-    dashOffset = isNaN(dashOffset) ? 0 : dashOffset;
+    dashOffset = Number.isNaN(dashOffset) ? 0 : dashOffset;
 
     ctx.setLineDash(dashArray);
     ctx.lineDashOffset = dashOffset;
@@ -216,7 +219,8 @@ export default BaseLayerStyle.extend({
 
     @method _renderGeometryOnCanvas
     @param {Object} options Method options.
-    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which geometry must be rendered.
+    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>}
+      options.canvas Canvas element on which geometry must be rendered.
     @private
   */
   _renderPreviewGeometryOnCanvas({ canvas, }) {
@@ -254,7 +258,8 @@ export default BaseLayerStyle.extend({
 
     @method _renderGeometryOnCanvas
     @param {Object} options Method options.
-    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which geometry must be rendered.
+    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>}
+      options.canvas Canvas element on which geometry must be rendered.
     @private
   */
   _renderLegendGeometryOnCanvas({ canvas, }) {
@@ -277,7 +282,8 @@ export default BaseLayerStyle.extend({
 
     @method _renderGeometryOnCanvas
     @param {Object} options Method options.
-    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which geometry must be rendered.
+    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>}
+      options.canvas Canvas element on which geometry must be rendered.
     @param {Object} options.geometry Hash containing geometry settings.
     @private
   */

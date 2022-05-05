@@ -126,7 +126,7 @@ export default BaseNonclickableMapTool.extend({
     @returns {Object[]} Flat array of layers satisfying to current identification mode.
     @private
   */
-  _getLayersToIdentify({ excludedLayers, }) {
+  _getLayersToIdentify() {
     assert('Method \'_getLayersToIdentify\' must be overridden in some extended identify map-tool.', false);
   },
 
@@ -258,8 +258,9 @@ export default BaseNonclickableMapTool.extend({
     const bufferRadius = this.get('bufferRadius');
 
     if (isBufferActive && bufferRadius > 0) {
-      const buffer = this._drawBuffer(layer.toGeoJSON());
-      workingPolygon = buffer.getLayers()[0];
+      const buff = this._drawBuffer(layer.toGeoJSON());
+      const [layerBuff] = buff.getLayers()[0];
+      workingPolygon = layerBuff;
       bufferedMainPolygon = layer;
     } else {
       workingPolygon = layer;
