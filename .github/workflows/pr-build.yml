@@ -41,4 +41,4 @@ jobs:
     - name: Run ember try:one default test
       run: |
         set -x
-        ember try:one default test
+        ember try:one ember-default --skip-cleanup
