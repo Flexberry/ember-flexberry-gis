@@ -24,7 +24,7 @@ export default BaseMapCommand.extend(LeafletOptionsMixin, {
     @type <a href=” http://leafletjs.com/reference-1.2.0.html#marker”>L.Marker</a>
     @default null
   */
-  leafletOptions: ['watch', 'setView', 'maxZoom', 'timeout', 'maximumAge', 'enableHighAccuracy'],
+  leafletOptions: Object.freeze(['watch', 'setView', 'maxZoom', 'timeout', 'maximumAge', 'enableHighAccuracy']),
 
   /**
     Flag: indicates whether to start continous watching of location changes (instead of detecting it once) or not.
@@ -109,7 +109,7 @@ export default BaseMapCommand.extend(LeafletOptionsMixin, {
 
     @method execute
   */
-  _execute(options) {
+  _execute() {
     this._super(...arguments);
 
     // Clean up results of previous execution.

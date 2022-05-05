@@ -187,8 +187,8 @@ export default Mixin.create({
   */
   _removeDynamicProperties() {
     const dynamicPropertiesMetadata = this.get('_dynamicPropertiesMetadata');
-    let len = get(dynamicPropertiesMetadata, 'length');
-    while (--len >= 0) {
+    const len = get(dynamicPropertiesMetadata, 'length');
+    while (len - 1 >= 0) {
       const dynamicPropertyMetadata = dynamicPropertiesMetadata[len];
       this._removeDynamicProperty(get(dynamicPropertyMetadata, 'propertyName'));
     }

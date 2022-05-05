@@ -41,7 +41,7 @@ export default BaseMarkerStyle.extend({
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#marker">L.Marker</a>} options.marker Leaflet marker to which marker-style must be applied.
     @param {Object} options.style Hash containing style settings.
   */
-  renderOnLeafletMarker({ marker, style, }) {
+  renderOnLeafletMarker({ marker, }) {
     if (isNone(marker.styleIsSet) || !marker.styleIsSet) {
       marker.setIcon(new L.Icon.Default());
     }
@@ -52,11 +52,12 @@ export default BaseMarkerStyle.extend({
 
     @method renderOnCanvas
     @param {Object} options Method options.
-    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which marker-style preview must be rendered.
+    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>}
+      options.canvas Canvas element on which marker-style preview must be rendered.
     @param {Object} options.style Hash containing style settings.
     @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style, target, }) {
+  renderOnCanvas({ canvas, target, }) {
     // Default 'image' markers-style's settings are settings for leaflet default image icon (L.Icon.Default),
     // so we can reuse 'image' markers-style here.
     const markersStylesRenderer = this.get('_markersStylesRenderer');

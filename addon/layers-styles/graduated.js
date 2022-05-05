@@ -26,7 +26,7 @@ export default CategorizedLayerStyle.extend({
   categoryIsRelevantToPropertyValue({ propertyValue, category, }) {
     // Graduated categorization can be performed only by numeric properties.
     propertyValue = Number(propertyValue);
-    if (isNaN(propertyValue)) {
+    if (Number.isNaN(propertyValue)) {
       return false;
     }
 
@@ -43,7 +43,7 @@ export default CategorizedLayerStyle.extend({
     if (categoryInterval.indexOf('<=') >= 0) {
       const interval = categoryInterval.split('<=');
       const endIntervalValue = Number(interval[1]);
-      if (isNaN(endIntervalValue)) {
+      if (Number.isNaN(endIntervalValue)) {
         return false;
       }
 
@@ -54,7 +54,7 @@ export default CategorizedLayerStyle.extend({
     if (categoryInterval.indexOf('>=') >= 0) {
       const interval = categoryInterval.split('>=');
       const startIntervalValue = Number(interval[1]);
-      if (isNaN(startIntervalValue)) {
+      if (Number.isNaN(startIntervalValue)) {
         return false;
       }
 
@@ -65,7 +65,7 @@ export default CategorizedLayerStyle.extend({
     if (categoryInterval.indexOf('<') >= 0) {
       const interval = categoryInterval.split('<');
       const endIntervalValue = Number(interval[1]);
-      if (isNaN(endIntervalValue)) {
+      if (Number.isNaN(endIntervalValue)) {
         return false;
       }
 
@@ -76,7 +76,7 @@ export default CategorizedLayerStyle.extend({
     if (categoryInterval.indexOf('>') >= 0) {
       const interval = categoryInterval.split('>');
       const startIntervalValue = Number(interval[1]);
-      if (isNaN(startIntervalValue)) {
+      if (Number.isNaN(startIntervalValue)) {
         return false;
       }
 
@@ -91,25 +91,25 @@ export default CategorizedLayerStyle.extend({
       let startIntervalValue = interval[i].trim();
       if (isBlank(startIntervalValue)) {
         // Blank string after split('-') means that there was negative number.
-        i++;
+        i += 1;
         startIntervalValue = `-${interval[i]}`;
       }
 
       startIntervalValue = Number(startIntervalValue);
-      if (isNaN(startIntervalValue)) {
+      if (Number.isNaN(startIntervalValue)) {
         return false;
       }
 
-      i++;
+      i += 1;
       let endIntervalValue = interval[i].trim();
       if (isBlank(endIntervalValue)) {
         // Blank string after split('-') means that there was negative number.
-        i++;
+        i += 1;
         endIntervalValue = `-${interval[i]}`;
       }
 
       endIntervalValue = Number(endIntervalValue);
-      if (isNaN(endIntervalValue)) {
+      if (Number.isNaN(endIntervalValue)) {
         return false;
       }
 
