@@ -2,7 +2,9 @@ name: Check PR
 
 on:
   pull_request:
-    branches: [ develop, master ]
+    branches: [ feature-ember-update ]
+  push:
+    branches: [ feature-ember-update ]
 
 jobs:
   build:
@@ -11,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8.x]
+        node-version: [10.x]
 
     steps:
 
@@ -32,7 +34,7 @@ jobs:
        set -x
        node -v
        npm install -g bower
-       npm install -g ember-cli@2.4.3
+       npm install -g ember-cli@3.1.4
        yarn install
        bower install
 
