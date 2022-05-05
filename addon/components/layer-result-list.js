@@ -352,7 +352,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
 
     this.set('_showLoader', true);
 
-    const displayResults = A();
+    let displayResults = A();
 
     // Prepare results format for template.
     results.forEach((result) => {
