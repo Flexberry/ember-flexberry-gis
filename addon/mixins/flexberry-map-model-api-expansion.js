@@ -62,9 +62,9 @@ export default Mixin.create(rhumbOperations, {
       const e = { layers: newObjs, results: A(), };
       leafletObject.fire('load', e);
 
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         allSettled(e.results).then(() => {
-          newObjs.forEach((layer) => { layer.layerId = layerId; });
+          newObjs.forEach((obj) => { obj.layerId = layerId; });
           resolve(newObjs);
         });
       });
@@ -160,7 +160,7 @@ export default Mixin.create(rhumbOperations, {
     let resultObject = null;
     const geometries = [];
     const scale = this.get('mapApi').getFromApi('precisionScale');
-    objects.forEach((element, i) => {
+    objects.forEach((element) => {
       let g = element;
       if (isJsts) {
         g = geometryToJsts(element.geometry, scale);
@@ -171,12 +171,12 @@ export default Mixin.create(rhumbOperations, {
         geometries.push(g);
         const j = geometries.length - 1;
         if (j !== 0 && this.getGeometryKind(geometries[j]) !== this.getGeometryKind(geometries[j - 1])) {
-          throw 'error: type mismatch. Objects must have the same type';
+          throw new Error('error: type mismatch. Objects must have the same type');
         } else if (j !== 0 && geometries[j].getSRID() !== geometries[j - 1].getSRID()) {
-          throw 'error: CRS mismatch. Objects must have the same crs';
+          throw new Error('error: CRS mismatch. Objects must have the same crs');
         }
       } else if (failIfInvalid) {
-        throw 'error: invalid geometry';
+        throw new Error('error: invalid geometry');
       }
     });
 
@@ -256,6 +256,7 @@ export default Mixin.create(rhumbOperations, {
         return 2;
       case 'Point':
         return 3;
+      default:
     }
 
     return 0;
@@ -353,11 +354,11 @@ export default Mixin.create(rhumbOperations, {
       lineGeom.setSRID(lineGeoJson.crs.properties.name.split(':')[1]);
       if (polygonGeom.isValid() && lineGeom.isValid()) {
         if (polygonGeom.getSRID() !== lineGeom.getSRID()) {
-          reject('CRS mismatch. Objects must have the same crs');
+          reject(new Error('CRS mismatch. Objects must have the same crs'));
           return;
         }
       } else {
-        reject('invalid geometry');
+        reject(new Error('invalid geometry'));
         return;
       }
 
@@ -366,7 +367,7 @@ export default Mixin.create(rhumbOperations, {
       const geojsonWriter = new jsts.io.GeoJSONWriter();
       const intersectionRes = geojsonWriter.write(resultObject);
       if (intersectionRes.coordinates.length === 0) {
-        reject('objects does\' not intersect');
+        reject(new Error('objects does\' not intersect'));
         return;
       }
 
