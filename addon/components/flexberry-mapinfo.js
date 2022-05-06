@@ -208,19 +208,19 @@ const MapInfoComponent = Component.extend({
     onApprove() {
       const showOnOpen = this.get('showOnOpen');
 
-      service = this.get('service');
+      const _service = this.get('service');
       const storageClass = this.get('_storageClassName');
       const mapId = this.get('mapId');
-      service.setToStorage(storageClass, mapId, showOnOpen);
+      _service.setToStorage(storageClass, mapId, showOnOpen);
     },
   },
 
   init() {
     this._super(...arguments);
-    service = this.get('service');
+    const _service = this.get('service');
     const storageClass = this.get('_storageClassName');
     const mapId = this.get('mapId');
-    const dialogVisibility = !isNone(mapId) && service.getFromStorageSingle(storageClass, mapId) !== false;
+    const dialogVisibility = !isNone(mapId) && _service.getFromStorageSingle(storageClass, mapId) !== false;
 
     this.set('visible', dialogVisibility);
     this.set('showOnOpen', dialogVisibility);
