@@ -53,6 +53,7 @@
     {{#each layers as |layer|}}
       {{#if (not layer.isDeleted)}}
         {{#flexberry-maplayer
+          readonly=readonly
           readonlyModel=(or readonly (not (array-contains accessibleModel layer.id)))
           readonlyData=(or readonly (not (array-contains accessibleData layer.id)))
           leafletMap=leafletMap
