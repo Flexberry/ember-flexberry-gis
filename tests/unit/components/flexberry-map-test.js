@@ -39,14 +39,14 @@ test('test function queryToMap', function (assert) {
   let res = component._queryToMap('1', '2');
 
   assert.ok(res instanceof Ember.RSVP.Promise, 'Является ли результат работы функции Promise');
-  res.then((e)=> {
+  res.then((e) => {
     assert.equal(e.results.length, 1, 'Length results equals 1');
     assert.equal(e.queryFilter, '1', 'Check parameter queryFilter');
     assert.equal(e.mapObjectSetting, '2', 'Check parameter mapObjectSetting');
     assert.equal(querySpy.callCount, 1, 'Count call method fire');
     assert.equal(querySpy.args[0][0], 'flexberry-map:query', 'Check call first arg to method fire');
     assert.deepEqual(querySpy.args[0][1], e, 'Check call second arg to method fire');
-    e.results[0].features.then((result)=> {
+    e.results[0].features.then((result) => {
       assert.equal(result[0].id, 1, 'Cherck result id');
       done(1);
     });
@@ -87,26 +87,24 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
 
   assert.equal(leafletMap.getZoom(), 0, 'zoom after change');
 
+  let done = assert.async(1);
+
   // After update to leaflet-1.0.0 panTo not directly change center,
   // it will changed after animation will trigger 'moveend' event.
-  let promise = new Ember.Test.promise((resolve) => {
-    leafletMap.on('moveend', () => {
-      setTimeout(resolve, 500);
+  leafletMap.once('moveend', () => {
+    Ember.run(() => {
+      setTimeout(() => {
+        assert.ok(leafletMap.getCenter().equals([0, 0]), 'center after move: ' + leafletMap.getCenter().lat + ' ' + leafletMap.getCenter().lng);
+        done(1);
+      }, 1000);
     });
   });
 
   Ember.run(() => {
     component.setProperties({
-      'lat': 0,
-      'lng': 0
+      lat: 0,
+      lng: 0
     });
-  });
-
-  let done = assert.async(1);
-
-  promise.then(() => {
-    assert.ok(leafletMap.getCenter().equals([0, 0]), 'center after move');
-    done(1);
   });
 });
 
