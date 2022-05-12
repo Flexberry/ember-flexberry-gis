@@ -78,6 +78,9 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
 
   let leafletMap = component.get('_leafletObject');
 
+  // иначе размер берется с клиента
+  leafletMap._size = new L.Point(200, 200);
+
   assert.equal(leafletMap.getZoom(), 10, 'zoom default');
   assert.ok(leafletMap.getCenter().equals([10, 10]), 'center default');
 
@@ -94,9 +97,11 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
   leafletMap.once('moveend', () => {
     Ember.run(() => {
       setTimeout(() => {
-        assert.ok(leafletMap.getCenter().equals([0, 0]), 'center after move: ' + leafletMap.getCenter().lat + ' ' + leafletMap.getCenter().lng);
+        let size = leafletMap.getSize().x + ' ' + leafletMap.getSize().y;
+        let center = leafletMap.getCenter().lat + ' ' + leafletMap.getCenter().lng;
+        assert.ok(leafletMap.getCenter().equals([0, 0]), 'center after move: center: ' + center + ', size: ' + size);
         done(1);
-      }, 2000);
+      }, 500);
     });
   });
 
