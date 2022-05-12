@@ -25,12 +25,15 @@ test('test function queryToMap', function (assert) {
     center: [51.505, -0.09],
     zoom: 13
   });
+
   let querySpy = sinon.stub(leafletMap, 'fire', (st, e) => {
     e.results.push({ features: Ember.RSVP.resolve([{ id: '1' }]) });
   });
+
   let component = this.subject({
     _leafletObject: leafletMap
   });
+
   let done = assert.async(2);
 
   let res = component._queryToMap('1', '2');
@@ -75,14 +78,14 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
 
   let leafletMap = component.get('_leafletObject');
 
-  assert.equal(leafletMap.getZoom(), 10);
-  assert.ok(leafletMap.getCenter().equals([10, 10]));
+  assert.equal(leafletMap.getZoom(), 10, 'zoom default');
+  assert.ok(leafletMap.getCenter().equals([10, 10]), 'center default');
 
   Ember.run(() => {
     component.set('zoom', 0);
   });
 
-  assert.equal(leafletMap.getZoom(), 0);
+  assert.equal(leafletMap.getZoom(), 0, 'zoom after change');
 
   // After update to leaflet-1.0.0 panTo not directly change center,
   // it will changed after animation will trigger 'moveend' event.
@@ -99,8 +102,11 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
     });
   });
 
-  return promise.then(() => {
-    assert.ok(leafletMap.getCenter().equals([0, 0]));
+  let done = assert.async(1);
+
+  promise.then(() => {
+    assert.ok(leafletMap.getCenter().equals([0, 0]), 'center after move');
+    done(1);
   });
 });
 
