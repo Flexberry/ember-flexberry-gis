@@ -80,6 +80,9 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
 
   const leafletMap = component.get('_leafletObject');
 
+  // иначе размер берется с клиента
+  leafletMap._size = new L.Point(200, 200);
+
   assert.equal(leafletMap.getZoom(), 10);
   assert.ok(leafletMap.getCenter().equals([10, 10]));
 
