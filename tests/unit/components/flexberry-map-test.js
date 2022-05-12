@@ -96,7 +96,7 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
       setTimeout(() => {
         assert.ok(leafletMap.getCenter().equals([0, 0]), 'center after move: ' + leafletMap.getCenter().lat + ' ' + leafletMap.getCenter().lng);
         done(1);
-      }, 1000);
+      }, 2000);
     });
   });
 
