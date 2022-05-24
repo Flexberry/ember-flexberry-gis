@@ -491,7 +491,7 @@ export default Ember.Component.extend({
           if (objB.id !== objA.id) {
             let crs = item.leafletLayer.options.crs;
             if (Ember.isNone(crs)) {
-              crs = leafletMap.options.crs;
+              crs = this.get('leafletMap').options.crs;
             }
 
             let objAJsts = item.leafletLayer.toJsts(crs);
