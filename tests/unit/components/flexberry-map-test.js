@@ -36,7 +36,7 @@ test('test function queryToMap', function (assert) {
   let res = component._queryToMap('1', '2');
 
   assert.ok(res instanceof Ember.RSVP.Promise, 'Является ли результат работы функции Promise');
-  res.then((e)=> {
+  res.then((e) => {
     assert.equal(e.results.length, 1, 'Length results equals 1');
     assert.equal(e.queryFilter, '1', 'Check parameter queryFilter');
     assert.equal(e.mapObjectSetting, '2', 'Check parameter mapObjectSetting');
@@ -75,32 +75,38 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
 
   let leafletMap = component.get('_leafletObject');
 
-  assert.equal(leafletMap.getZoom(), 10);
-  assert.ok(leafletMap.getCenter().equals([10, 10]));
+  // иначе размер берется с клиента
+  leafletMap._size = new L.Point(200, 200);
+
+  assert.equal(leafletMap.getZoom(), 10, 'zoom default');
+  assert.ok(leafletMap.getCenter().equals([10, 10]), 'center default');
 
   Ember.run(() => {
     component.set('zoom', 0);
   });
 
-  assert.equal(leafletMap.getZoom(), 0);
+  assert.equal(leafletMap.getZoom(), 0, 'zoom after change');
+
+  let done = assert.async(1);
 
   // After update to leaflet-1.0.0 panTo not directly change center,
   // it will changed after animation will trigger 'moveend' event.
-  let promise = new Ember.Test.promise((resolve) => {
-    leafletMap.on('moveend', () => {
-      setTimeout(resolve, 500);
+  leafletMap.once('moveend', () => {
+    Ember.run(() => {
+      setTimeout(() => {
+        let size = leafletMap.getSize().x + ' ' + leafletMap.getSize().y;
+        let center = leafletMap.getCenter().lat + ' ' + leafletMap.getCenter().lng;
+        assert.ok(leafletMap.getCenter().equals([0, 0]), 'center after move: center: ' + center + ', size: ' + size);
+        done(1);
+      }, 500);
     });
   });
 
   Ember.run(() => {
     component.setProperties({
-      'lat': 0,
-      'lng': 0
+      lat: 0,
+      lng: 0
     });
-  });
-
-  return promise.then(() => {
-    assert.ok(leafletMap.getCenter().equals([0, 0]));
   });
 });
 
