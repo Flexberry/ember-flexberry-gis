@@ -4932,32 +4932,38 @@ define('dummy/tests/unit/components/flexberry-map-test', ['exports', 'ember', 'e
 
     var leafletMap = component.get('_leafletObject');
 
-    assert.equal(leafletMap.getZoom(), 10);
-    assert.ok(leafletMap.getCenter().equals([10, 10]));
+    // иначе размер берется с клиента
+    leafletMap._size = new L.Point(200, 200);
+
+    assert.equal(leafletMap.getZoom(), 10, 'zoom default');
+    assert.ok(leafletMap.getCenter().equals([10, 10]), 'center default');
 
     _ember['default'].run(function () {
       component.set('zoom', 0);
     });
 
-    assert.equal(leafletMap.getZoom(), 0);
+    assert.equal(leafletMap.getZoom(), 0, 'zoom after change');
+
+    var done = assert.async(1);
 
     // After update to leaflet-1.0.0 panTo not directly change center,
     // it will changed after animation will trigger 'moveend' event.
-    var promise = new _ember['default'].Test.promise(function (resolve) {
-      leafletMap.on('moveend', function () {
-        setTimeout(resolve, 500);
+    leafletMap.once('moveend', function () {
+      _ember['default'].run(function () {
+        setTimeout(function () {
+          var size = leafletMap.getSize().x + ' ' + leafletMap.getSize().y;
+          var center = leafletMap.getCenter().lat + ' ' + leafletMap.getCenter().lng;
+          assert.ok(leafletMap.getCenter().equals([0, 0]), 'center after move: center: ' + center + ', size: ' + size);
+          done(1);
+        }, 500);
       });
     });
 
     _ember['default'].run(function () {
       component.setProperties({
-        'lat': 0,
-        'lng': 0
+        lat: 0,
+        lng: 0
       });
-    });
-
-    return promise.then(function () {
-      assert.ok(leafletMap.getCenter().equals([0, 0]));
     });
   });
 
