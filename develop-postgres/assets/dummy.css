@@ -49338,6 +49338,27 @@ img.item-minus {
 .hidden {
   display: none !important;
 }
+.leaflet-marker-icon.label.point {
+  display: flex;
+}
+.leaflet-marker-icon.label.point.over {
+  align-items: end;
+}
+.leaflet-marker-icon.label.point.along {
+  align-items: center;
+}
+.leaflet-marker-icon.label.point.under {
+  align-items: start;
+}
+.leaflet-marker-icon.label.point.left {
+  justify-content: end;
+}
+.leaflet-marker-icon.label.point.right {
+  justify-content: start;
+}
+.leaflet-marker-icon.label.point.middle {
+  justify-content: center;
+}
 /**
  * All ember-flexberry addon styles.
  */
