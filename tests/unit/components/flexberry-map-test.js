@@ -78,14 +78,16 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
   // иначе размер берется с клиента
   leafletMap._size = new L.Point(200, 200);
 
-  assert.equal(leafletMap.getZoom(), 10);
-  assert.ok(leafletMap.getCenter().equals([10, 10]));
+  assert.equal(leafletMap.getZoom(), 10, 'zoom default');
+  assert.ok(leafletMap.getCenter().equals([10, 10]), 'center default');
 
   Ember.run(() => {
     component.set('zoom', 0);
   });
 
-  assert.equal(leafletMap.getZoom(), 0);
+  assert.equal(leafletMap.getZoom(), 0, 'zoom after change');
+
+  let done = assert.async(1);
 
   // After update to leaflet-1.0.0 panTo not directly change center,
   // it will changed after animation will trigger 'moveend' event.
@@ -102,8 +104,8 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
 
   Ember.run(() => {
     component.setProperties({
-      'lat': 0,
-      'lng': 0
+      lat: 0,
+      lng: 0
     });
   });
 });
