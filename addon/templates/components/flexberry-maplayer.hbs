@@ -65,7 +65,7 @@
                 click=(action "onAttributesButtonClick" readonlyData)
               }}
             {{/if}}
-            {{#if (not readonly)}}
+            {{#if (and (not readonly) (or _fitBoundsOperationIsAvailable (not readonlyModel)))}}
               <div class="allmore floated flexberry-button ui button icon {{flexberryClassNames.preventExpandCollapse}}">
                 {{flexberry-button
                   class=(concat "more floated " flexberryClassNames.preventExpandCollapse)
@@ -185,6 +185,7 @@
     {{#if _hasLayers}}
       {{flexberry-maplayers
         readonly=readonly
+        access=access
         leafletMap=leafletMap
         layers=layer.layers
         compareLayersEnabled=compareLayersEnabled

@@ -52,8 +52,9 @@
         {{#if showTree}}
           {{flexberry-maplayers
             class="styled"
-            accessibleModel=access.mapLayerModel
-            accessibleData=access.mapLayerData
+            access=(hash
+              accessibleModel=access.mapLayerModel
+              accessibleData=access.mapLayerData)
             leafletMap=leafletMap
             sideBySide=sideBySide
             layers=(get-with-dynamic-actions this "model.otherLayers"

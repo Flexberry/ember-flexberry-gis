@@ -470,20 +470,36 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     /**
       Flag: indicates whether layer model is in readonly mode.
 
-      @property readonly
+      @property readonlyModel
       @type Boolean
-      @default false
+      @readonly
     */
-    readonlyModel: false,
+    readonlyModel: Ember.computed('access', 'access.accessibleModel.[]', 'readonly', 'layer', function () {
+      let accessibleModel = this.get('access.accessibleModel');
+      let layer = this.get('layer');
+      let readonly = this.get('readonly');
+
+      let access = !Ember.isNone(layer) && !Ember.isNone(accessibleModel) && Ember.isArray(accessibleModel) && Ember.A(accessibleModel || []).contains(layer.id);
+
+      return readonly || !access;
+    }),
 
     /**
       Flag: indicates whether layer's objects is in readonly mode.
 
-      @property readonly
+      @property readonlyData
       @type Boolean
-      @default false
+      @readonly
     */
-    readonlyData: false,
+    readonlyData: Ember.computed('access', 'access.accessibleData.[]', 'readonly', 'layer', function () {
+      let accessibleData = this.get('access.accessibleData');
+      let layer = this.get('layer');
+      let readonly = this.get('readonly');
+
+      let access = !Ember.isNone(layer) && !Ember.isNone(accessibleData) && Ember.isArray(accessibleData) && Ember.A(accessibleData || []).contains(layer.id);
+
+      return readonly || !access;
+    }),
 
     /**
       Flag: indicates whether layer node has been expanded once.
