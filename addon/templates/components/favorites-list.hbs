@@ -1,4 +1,4 @@
-<button type="submit" class="ui button primary compare" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
+<button type="submit" class="ui button primary compare{{if compareBtnDisabled " disabled"}}" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
   {{t "components.compare-object-geometries.compare-objects-caption"}}
 </button>
 {{#if _showFavorites}}

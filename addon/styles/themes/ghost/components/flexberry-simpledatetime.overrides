@@ -1,0 +1,3 @@
+.flatpickr-calendar.open {
+  z-index: 1000;
+}

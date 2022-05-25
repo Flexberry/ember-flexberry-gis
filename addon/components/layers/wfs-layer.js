@@ -7,6 +7,7 @@ import BaseVectorLayer from '../base-vector-layer';
 import { checkMapZoom } from '../../utils/check-zoom';
 import { intersectionArea } from '../../utils/feature-with-area-intersect';
 import jsts from 'npm:jsts';
+import isUUID  from 'ember-flexberry-data/utils/is-uuid';
 import state from '../../utils/state';
 
 /**
@@ -243,7 +244,7 @@ export default BaseVectorLayer.extend({
             that.fire('error', {
               error: new Error(exceptionReport.message)
             });
-
+            reject(exceptionReport);
             return that;
           }
 
@@ -528,12 +529,32 @@ export default BaseVectorLayer.extend({
         searchFields.forEach((field) => {
           let typeField = fieldsType[field];
           if (!Ember.isBlank(typeField)) {
-            if (typeField !== 'string') {
-              equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
+            let accessProperty = false;
+            if (field !== 'primarykey') {
+              switch (typeField) {
+                case 'number':
+                  accessProperty = !isNaN(Number(e.searchOptions.queryString));
+                  break;
+                case 'date':
+                  accessProperty = new Date(e.searchOptions.queryString).toString() === 'Invalid Date';
+                  break;
+                case 'boolean':
+                  accessProperty = Boolean(e.searchOptions.queryString);
+                  break;
+                default:
+                  equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', {
+                    matchCase: false
+                  }));
+                  break;
+              }
+
+              if (accessProperty && typeField !== 'string') {
+                equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
+              }
             } else {
-              equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', {
-                matchCase: false
-              }));
+              if (isUUID(e.searchOptions.queryString)) {
+                equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
+              }
             }
           }
         });
