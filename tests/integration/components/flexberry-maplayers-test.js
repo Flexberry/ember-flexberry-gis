@@ -80,8 +80,13 @@ test('rights', function (assert) {
     })
   ]));
 
-  this.set('accessibleModel', ['testId2', 'testId4', 'testId5']);
-  this.set('accessibleData', ['testId1', 'testId2', 'testId4', 'testId5']);
+  let access = {
+    accessibleModel: ['testId2', 'testId4', 'testId5'],
+    accessibleData: ['testId1', 'testId2', 'testId4', 'testId5'],
+    createAccess: true
+  };
+
+  this.set('access', access);
   this.set('mapLayerExtraButtons', [{
     class: 'extra-button',
     action: 'extraAction'
@@ -91,8 +96,7 @@ test('rights', function (assert) {
   {{#flexberry-maplayers
     class="styled"
     readonly=false
-    accessibleModel=accessibleModel
-    accessibleData=accessibleData
+    access=access
     showHeader=false
     compareLayersEnabled=false
     sideBySide=false
@@ -107,7 +111,7 @@ test('rights', function (assert) {
   assert.equal(this.$('i.icon-guideline-table').length, 3, 'Attributes buttons for allowed layer types');
   assert.equal(this.$('label.flexberry-maplayer-add-button').length, 2, 'Add layer button for allowed layer types and layers');
   assert.equal(this.$('label.flexberry-maplayer-edit-button').length, 3, 'Edit layer button for allowed layer types and layers');
-  assert.equal(this.$('label.flexberry-maplayer-copy-button').length, 3, 'Copy layer button for allowed layer types and layers');
+  assert.equal(this.$('label.flexberry-maplayer-copy-button').length, 5, 'Copy layer button for allowed layer types and layers');
   assert.equal(this.$('label.flexberry-maplayer-remove-button').length, 3, 'Remove layer button for allowed layer types and layers');
   assert.equal(this.$('label.extra-button').length, 3, 'Extra buttons for allowed layers');
 

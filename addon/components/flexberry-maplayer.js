@@ -468,6 +468,20 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     histEnabled: false,
 
     /**
+      Flag: indicates whether create new layer is avaliable by rights
+
+      @property createNewLayerAccess
+      @type Boolean
+      @readonly
+    */
+    createNewLayerAccess: Ember.computed('access', 'access.createAccess', 'readonly', function () {
+      let createAccess = this.get('access.createAccess');
+      let readonly = this.get('readonly');
+
+      return !readonly && createAccess;
+    }),
+
+    /**
       Flag: indicates whether layer model is in readonly mode.
 
       @property readonlyModel
@@ -479,7 +493,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       let layer = this.get('layer');
       let readonly = this.get('readonly');
 
-      let access = !Ember.isNone(layer) && !Ember.isNone(accessibleModel) && Ember.isArray(accessibleModel) && Ember.A(accessibleModel || []).contains(layer.id);
+      let access = !Ember.isNone(layer) && !Ember.isNone(accessibleModel) && Ember.isArray(accessibleModel) && Ember.A(accessibleModel).contains(layer.id);
 
       return readonly || !access;
     }),
@@ -496,7 +510,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       let layer = this.get('layer');
       let readonly = this.get('readonly');
 
-      let access = !Ember.isNone(layer) && !Ember.isNone(accessibleData) && Ember.isArray(accessibleData) && Ember.A(accessibleData || []).contains(layer.id);
+      let access = !Ember.isNone(layer) && !Ember.isNone(accessibleData) && Ember.isArray(accessibleData) && Ember.A(accessibleData).contains(layer.id);
 
       return readonly || !access;
     }),

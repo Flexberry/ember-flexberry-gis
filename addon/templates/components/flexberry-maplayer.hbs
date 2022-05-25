@@ -65,7 +65,7 @@
                 click=(action "onAttributesButtonClick" readonlyData)
               }}
             {{/if}}
-            {{#if (and (not readonly) (or _fitBoundsOperationIsAvailable (not readonlyModel)))}}
+            {{#if (and (not readonly) (or _fitBoundsOperationIsAvailable (not readonlyModel) createNewLayerAccess))}}
               <div class="allmore floated flexberry-button ui button icon {{flexberryClassNames.preventExpandCollapse}}">
                 {{flexberry-button
                   class=(concat "more floated " flexberryClassNames.preventExpandCollapse)
@@ -95,6 +95,8 @@
                       caption=(t "components.flexberry-maplayer.edit-button.tooltip")
                       click=(action "onEditButtonClick")
                     }}
+                  {{/if}}
+                  {{#if createNewLayerAccess}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.copyButton " floated " flexberryClassNames.preventExpandCollapse)
                       iconClass="copy icon"
@@ -109,6 +111,8 @@
                         click=(action "onAddButtonClick")
                       }}
                     {{/if}}
+                  {{/if}}
+                  {{#if (not readonlyModel)}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.removeButton " floated " flexberryClassNames.preventExpandCollapse)
                       iconClass="icon-guideline-delete-r"
