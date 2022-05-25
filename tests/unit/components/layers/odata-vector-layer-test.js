@@ -666,8 +666,8 @@ test('test method createDynamicModel() with json', function (assert) {
   const spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
   const stubAjax = sinon.stub($, 'ajax');
   stubAjax.yieldsTo('success', jsonModel);
-  const _lookupFactoryStub = sinon.stub(getOwner(this), 'lookup');
-  _lookupFactoryStub.returns(null);
+  const factoryForStub = sinon.stub(getOwner(this), 'factoryFor');
+  factoryForStub.returns(null);
 
   component.createDynamicModel().then(() => {
     assert.equal(spyCreateAdapterForModel.callCount, 1);
@@ -700,7 +700,7 @@ test('test method createDynamicModel() with json', function (assert) {
     spyCreateSerializer.restore();
     spyCreateModelHierarchy.restore();
     stubAjax.restore();
-    _lookupFactoryStub.restore();
+    factoryForStub.restore();
     done(1);
   });
 });
@@ -722,8 +722,8 @@ test('test method createDynamicModel() with json with parent', function (assert)
   const spyCreateMixin = sinon.spy(component, 'createMixin');
   const spyCreateSerializer = sinon.spy(component, 'createSerializer');
   const spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
-  const _lookupFactoryStub = sinon.stub(getOwner(this), 'lookup');
-  _lookupFactoryStub.returns(null);
+  const factoryForStub = sinon.stub(getOwner(this), 'factoryFor');
+  factoryForStub.returns(null);
 
   jsonModel.parentModelName = 'Polygon32640';
   const parentJsonModel = {
@@ -791,7 +791,7 @@ test('test method createDynamicModel() with json with parent', function (assert)
     spyCreateSerializer.restore();
     stubAjax.restore();
     spyCreateModelHierarchy.restore();
-    _lookupFactoryStub.restore();
+    factoryForStub.restore();
   });
 });
 
@@ -800,10 +800,10 @@ test('test method createDynamicModel() without json', function (assert) {
   const done = assert.async(2);
   const component = this.subject(param);
   run.next(() => {
-    const _lookupFactoryStub = sinon.stub(getOwner(this), 'lookup');
-    _lookupFactoryStub.withArgs('model:test-model').returns(null);
-    _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
-    _lookupFactoryStub.withArgs('serializer:test-model').returns({});
+    const factoryForStub = sinon.stub(getOwner(this), 'factoryFor');
+    factoryForStub.withArgs('model:test-model').returns(null);
+    factoryForStub.withArgs('mixin:test-model').returns(null);
+    factoryForStub.withArgs('serializer:test-model').returns({});
 
     const registerStub = sinon.stub(getOwner(this), 'register');
     registerStub.returns({});
@@ -811,7 +811,7 @@ test('test method createDynamicModel() without json', function (assert) {
     component.createDynamicModel().catch((error) => {
       assert.equal(error, 'Can\'t create dynamic model: test-model. Error: ModelName and metadataUrl is empty');
       done();
-      _lookupFactoryStub.restore();
+      factoryForStub.restore();
     });
     done();
   });
@@ -822,13 +822,13 @@ test('test method createDynamicModel() already registered', function (assert) {
   const done = assert.async(2);
   const component = this.subject(param);
   run.next(() => {
-    const _lookupFactoryStub = sinon.stub(getOwner(this), 'lookup');
-    _lookupFactoryStub.returns(1);
+    const factoryForStub = sinon.stub(getOwner(this), 'factoryFor');
+    factoryForStub.returns(1);
 
     component.createDynamicModel().then((msg) => {
       assert.equal(msg, 'Model already registered: test-model');
       done();
-      _lookupFactoryStub.restore();
+      factoryForStub.restore();
     });
     done();
   });
@@ -860,10 +860,10 @@ test('test method createVectorLayer() without dynamicModel', function (assert) {
   const spyAjax = sinon.spy($, 'ajax');
   const spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
 
-  const _lookupFactoryStub = sinon.stub(getOwner(this), 'lookup');
-  _lookupFactoryStub.withArgs('model:test-model').returns(null);
-  _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
-  _lookupFactoryStub.withArgs('serializer:test-model').returns({});
+  const factoryForStub = sinon.stub(getOwner(this), 'factoryFor');
+  factoryForStub.withArgs('model:test-model').returns(null);
+  factoryForStub.withArgs('mixin:test-model').returns(null);
+  factoryForStub.withArgs('serializer:test-model').returns({});
 
   const registerStub = sinon.stub(getOwner(this), 'register');
   registerStub.returns({});
@@ -882,12 +882,12 @@ test('test method createVectorLayer() without dynamicModel', function (assert) {
     spyAjax.restore();
     spyCreateDynamicModel.restore();
     spyCreateModelHierarchy.restore();
-    _lookupFactoryStub.restore();
+    factoryForStub.restore();
     registerStub.restore();
   });
 });
 
-skip('test method createVectorLayer() with dynamicModel=true', function (assert) {
+test('test method createVectorLayer() with dynamicModel=true', function (assert) {
   assert.expect(8);
   const done = assert.async(1);
   param.visibility = false;
@@ -903,10 +903,10 @@ skip('test method createVectorLayer() with dynamicModel=true', function (assert)
   stubAjax.yieldsTo('success', jsonModel);
   const spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
 
-  const _lookupFactoryStub = sinon.stub(getOwner(this), 'lookup');
-  _lookupFactoryStub.withArgs('model:test-model').returns(null);
-  _lookupFactoryStub.withArgs('mixin:test-model').returns(null);
-  _lookupFactoryStub.withArgs('serializer:test-model').returns({});
+  const factoryForStub = sinon.stub(getOwner(this), 'factoryFor');
+  factoryForStub.withArgs('model:test-model').returns(null);
+  factoryForStub.withArgs('mixin:test-model').returns(null);
+  factoryForStub.withArgs('serializer:test-model').returns({});
 
   const registerStub = sinon.stub(getOwner(this), 'register');
   registerStub.returns({});
@@ -926,7 +926,7 @@ skip('test method createVectorLayer() with dynamicModel=true', function (assert)
     spyCreateDynamicModel.restore();
     stubAjax.restore();
     spyCreateModelHierarchy.restore();
-    _lookupFactoryStub.restore();
+    factoryForStub.restore();
     registerStub.restore();
   });
 });

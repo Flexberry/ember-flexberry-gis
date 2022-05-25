@@ -853,10 +853,10 @@ export default BaseVectorLayer.extend({
       const projectionName = this.get('projectionName');
       const metadataUrl = this.get('metadataUrl');
 
-      let modelRegistered = getOwner(this).lookup(`model:${modelName}`);
-      let mixinRegistered = getOwner(this).lookup(`mixin:${modelName}`);
-      const serializerRegistered = getOwner(this).lookup(`serializer:${modelName}`);
-      const adapterRegistered = getOwner(this).lookup(`adapter:${modelName}`);
+      let modelRegistered = getOwner(this).factoryFor(`model:${modelName}`);
+      let mixinRegistered = getOwner(this).factoryFor(`mixin:${modelName}`);
+      const serializerRegistered = getOwner(this).factoryFor(`serializer:${modelName}`);
+      const adapterRegistered = getOwner(this).factoryFor(`adapter:${modelName}`);
 
       if (isNone(serializerRegistered)) {
         const modelSerializer = this.createSerializer();
@@ -873,8 +873,8 @@ export default BaseVectorLayer.extend({
           model.defineProjection(projectionName, modelName, this.createProjection(dataModel));
 
           // Необходимо еще раз проверить регистрацию, т.к. могут быть слои с одной моделью, а код - асинхронный
-          modelRegistered = getOwner(this).lookup(`model:${modelName}`);
-          mixinRegistered = getOwner(this).lookup(`mixin:${modelName}`);
+          modelRegistered = getOwner(this).factoryFor(`model:${modelName}`);
+          mixinRegistered = getOwner(this).factoryFor(`mixin:${modelName}`);
 
           if (isNone(modelRegistered)) {
             getOwner(this).register(`model:${modelName}`, model);
