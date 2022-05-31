@@ -17,16 +17,6 @@ import LeafletOptionsMixin from '../mixins/leaflet-options';
 
 export default BaseMapCommand.extend(LeafletOptionsMixin, {
   /**
-    List of component's properties which must be interpreted as leaflet locate options.
-    See {{#crossLink "LeafletOptionsMixin/leafletOptions:property"}}Leaflet options mixin's 'leafletOptions' property{{/crossLink}}.
-
-    @property leafletOptions
-    @type <a href=” http://leafletjs.com/reference-1.2.0.html#marker”>L.Marker</a>
-    @default null
-  */
-  leafletOptions: Object.freeze(['watch', 'setView', 'maxZoom', 'timeout', 'maximumAge', 'enableHighAccuracy']),
-
-  /**
     Flag: indicates whether to start continous watching of location changes (instead of detecting it once) or not.
     See (leaflet locate options)[http://leafletjs.com/reference-1.2.0.html#locate-options-watch].
 
@@ -103,6 +93,14 @@ export default BaseMapCommand.extend(LeafletOptionsMixin, {
     @default null
   */
   locatePopup: null,
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.leafletOptions = this.leafletOptions || ['watch', 'setView', 'maxZoom', 'timeout', 'maximumAge', 'enableHighAccuracy'];
+  },
 
   /**
     Executes map-command.

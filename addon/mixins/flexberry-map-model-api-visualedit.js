@@ -4,7 +4,7 @@ import { guidFor } from '@ember/object/internals';
 import { isNone, isEqual, isEmpty } from '@ember/utils';
 import { get, set } from '@ember/object';
 import {
-  Promise, resolve, all, allSettled
+  Promise, all, allSettled
 } from 'rsvp';
 import Mixin from '@ember/object/mixin';
 import turfCombine from 'npm:@turf/combine';
@@ -77,7 +77,7 @@ export default Mixin.create(SnapDraw, {
           });
 
           if (!featureLayerLoad) {
-            reject(`Object '${featureId}' not found`);
+            Promise.reject(new Error(`Object '${featureId}' not found`));
           }
 
           const editTools = this._getEditTools();
@@ -212,7 +212,7 @@ export default Mixin.create(SnapDraw, {
             newLayer = editTools.startMarker();
             break;
           default:
-            throw `Unknown layer type: ${layerModel.get('settingsAsObject.typeGeometry')}`;
+            throw new Error(`Unknown layer type: ${layerModel.get('settingsAsObject.typeGeometry')}`);
         }
         this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, false);
         newLayer.layerId = layerId;
@@ -230,7 +230,7 @@ export default Mixin.create(SnapDraw, {
         const [, leafletObject] = this._getModelLeafletObject(id);
         return leafletObject;
       }).filter((l) => !!l);
-      layers.forEach((l, i) => {
+      layers.forEach((l) => {
         l.on('load', this._setSnappingFeatures, this);
       });
       this.set('_snapLayersGroups', layers);
@@ -258,7 +258,7 @@ export default Mixin.create(SnapDraw, {
 
     const layers = this.get('_snapLayersGroups');
     if (layers) {
-      layers.forEach((l, i) => {
+      layers.forEach((l) => {
         if (l) {
           l.off('load', this._setSnappingFeatures, this);
         }
@@ -315,7 +315,7 @@ export default Mixin.create(SnapDraw, {
   getLayerModel(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
     if (isNone(layer)) {
-      throw `Layer '${layerId}' not found`;
+      throw new Error(`Layer '${layerId}' not found`);
     }
 
     return layer;
@@ -331,7 +331,7 @@ export default Mixin.create(SnapDraw, {
     @private
   */
   _getModelLayerFeature(layerId, featureIds, load = false) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
       const e = {
@@ -343,7 +343,7 @@ export default Mixin.create(SnapDraw, {
 
       leafletMap.fire('flexberry-map:getOrLoadLayerFeatures', e);
       if (isEmpty(e.results)) {
-        reject(`Layer '${layerId}' not found`);
+        Promise.reject(new Error(`Layer '${layerId}' not found`));
         return;
       }
 
@@ -351,7 +351,7 @@ export default Mixin.create(SnapDraw, {
       if (features instanceof Promise) {
         features.then((layerObject) => {
           if (isEmpty(layerObject) || isNone(layerObject)) {
-            reject(`Object '${featureIds}' not found`);
+            Promise.reject(new Error(`Object '${featureIds}' not found`));
             return;
           }
 
@@ -370,10 +370,10 @@ export default Mixin.create(SnapDraw, {
 
           resolve([e.results[0].layerModel, e.results[0].leafletObject, featureLayer]);
         }).catch(() => {
-          reject(`Object '${featureIds}' not found`);
+          Promise.reject(new Error(`Object '${featureIds}' not found`));
         });
       } else {
-        reject('Result is not promise');
+        Promise.reject(new Error('Result is not promise'));
       }
     });
   },
@@ -388,7 +388,7 @@ export default Mixin.create(SnapDraw, {
   _getModelLeafletObject(layerId) {
     const layerModel = this.get('mapLayer').findBy('id', layerId);
     if (isNone(layerModel)) {
-      throw `Layer '${layerId}' not found`;
+      throw new Error(`Layer '${layerId}' not found`);
     }
 
     const leafletObject = layerModel.get('_leafletObject');
@@ -457,7 +457,7 @@ export default Mixin.create(SnapDraw, {
         newLayer = editTools.startMarker();
         break;
       default:
-        throw `Unknown layer type: ${layerModel.get('settingsAsObject.typeGeometry')}`;
+        throw new Error(`Unknown layer type: ${layerModel.get('settingsAsObject.typeGeometry')}`);
     }
 
     this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, false);

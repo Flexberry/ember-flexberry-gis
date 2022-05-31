@@ -23,38 +23,14 @@ import state from '../../utils/state';
  */
 export default BaseVectorLayer.extend({
   /**
-    Array containing component's properties which are also leaflet layer options.
-    @property leafletOptions
-    @type Stirng[]
-  */
-  leafletOptions: Object.freeze([
-    'url',
-    'version',
-    'namespaceUri',
-    'typeNS',
-    'typeName',
-    'typeNSName',
-    'geometryField',
-    'crs',
-    'maxFeatures',
-    'showExisting',
-    'style',
-    'filter',
-    'forceMulti',
-    'withCredentials',
-    'continueLoading',
-    'wpsUrl'
-  ]),
-
-  /**
     Returns features read format depending on 'format', 'options.crs', 'options.geometryField'.
     Server responses format will rely on it.
     @method getFeaturesReadFormat
     @return {Object} Features read format.
   */
   getFeaturesReadFormat() {
-    let format = this.get('format');
-    let availableFormats = A(Object.keys(L.Format) || []).filter(() => {
+    const format = this.get('format');
+    let availableFormats = A(Object.keys(L.Format) || []).filter((format) => {
       format = format.toLowerCase();
       return format !== 'base' && format !== 'scheme';
     });
@@ -552,7 +528,7 @@ export default BaseVectorLayer.extend({
 
     let filter;
     if (equals.length === 1) {
-      const [f] = equals[0];
+      const f = equals[0];
       filter = f;
     } else {
       filter = new L.Filter.Or(...equals);
@@ -815,7 +791,7 @@ export default BaseVectorLayer.extend({
 
           const unionJsts = loadedBoundsJsts.union(boundsJsts);
           const geojsonWriter = new jsts.io.GeoJSONWriter();
-          const [getLayer] = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
+          const getLayer = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
           loadedBounds = getLayer;
         } else {
           loadedBounds = bounds;
@@ -876,6 +852,31 @@ export default BaseVectorLayer.extend({
       leafletMap.on('moveend', this.continueLoad, this);
       leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
     }
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.leafletOptions = this.leafletOptions || [
+      'url',
+      'version',
+      'namespaceUri',
+      'typeNS',
+      'typeName',
+      'typeNSName',
+      'geometryField',
+      'crs',
+      'maxFeatures',
+      'showExisting',
+      'style',
+      'filter',
+      'forceMulti',
+      'withCredentials',
+      'continueLoading',
+      'wpsUrl'
+    ];
   },
 
   /**

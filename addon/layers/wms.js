@@ -14,13 +14,12 @@ import TileLayer from './tile';
 */
 export default TileLayer.extend(WfsFilterParserMixin, {
   /**
-    Permitted operations related to layer type.
-
-    @property operations
-    @type String[]
-    @default ['edit', 'remove', 'identify', 'legend', 'filter']
+    Initializes component.
   */
-  operations: Object.freeze(['edit', 'remove', 'identify', 'legend', 'filter']),
+  init() {
+    this._super(...arguments);
+    this.operations = this.operations || ['edit', 'remove', 'identify', 'legend', 'filter'];
+  },
 
   /**
     Creates new settings object (with settings related to layer-type).

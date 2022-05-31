@@ -85,16 +85,14 @@ export default Mixin.create({
       delete localStorageLayer.id;
 
       // Apply properties to layer model.
-      for (const propertyName in localStorageLayer) {
-        if (!localStorageLayer.hasOwnProperty(propertyName)) {
-          continue;
+      localStorageLayer.forEach((propertyName) => {
+        if (localStorageLayer.property.hasOwnProperty.call(propertyName)) {
+          let value = get(localStorageLayer, propertyName);
+          value = typeof value === 'object' ? $.extend(true, this.get(propertyName), value) : value;
+
+          this.set(propertyName, value);
         }
-
-        let value = get(localStorageLayer, propertyName);
-        value = typeof value === 'object' ? $.extend(true, this.get(propertyName), value) : value;
-
-        this.set(propertyName, value);
-      }
+      });
     }
   },
 
@@ -207,7 +205,8 @@ export default Mixin.create({
     @readonly
     @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a> this layer's latLngBounds.
   */
-  bounds: computed(function () {
+  get bounds() {
+  // bounds: computed(function () {
     const layers = this.get('layers').filterBy('visibility', true);
     const type = this.get('type');
 
@@ -219,14 +218,12 @@ export default Mixin.create({
         [90, 180]
       ]);
 
-      for (const layer of layers) {
-        if (layerBounds && layerBounds.equals(earthBounds)) {
-          break;
+      layers.forEach((layer) => {
+        if (!layerBounds && layerBounds.equals(earthBounds)) {
+          const bounds = layer.get('bounds');
+          layerBounds = layerBounds ? layerBounds.extend(bounds) : L.latLngBounds(bounds);
         }
-
-        const bounds = layer.get('bounds');
-        layerBounds = layerBounds ? layerBounds.extend(bounds) : L.latLngBounds(bounds);
-      }
+      });
     } else {
       const boundingBox = this.get('boundingBox');
       const bounds = getBounds(boundingBox);
@@ -234,5 +231,5 @@ export default Mixin.create({
     }
 
     return layerBounds;
-  }).volatile(),
+  },
 });

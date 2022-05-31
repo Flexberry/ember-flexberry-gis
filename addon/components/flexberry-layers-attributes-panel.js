@@ -67,17 +67,6 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
   layersStylesRenderer: service('layers-styles-renderer'),
 
   /**
-    Measure units for buffer tool.
-
-    @property bufferUnits
-    @type Object
-  */
-  bufferUnits: Object.freeze({
-    meters: 'components.flexberry-layers-attributes-panel.buffer.units.meters',
-    kilometers: 'components.flexberry-layers-attributes-panel.buffer.units.kilometers',
-  }),
-
-  /**
     Selected mesure unit.
 
     @property _selectedUnit
@@ -106,8 +95,6 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
     @private
   */
   _bufferLayer: null,
-
-  _activeTabs: Object.freeze({}),
 
   /**
     Cache for tab models.
@@ -216,8 +203,6 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         const tabModel = EmberObject.extend({
           _top: this.get('pageSize'),
           _skip: 0,
-          _selectedRows: Object.freeze({}),
-          _editedRows: Object.freeze({}),
           _selectedRowsCount: computed('_selectedRows', function () {
             const selectedRows = get(this, '_selectedRows');
             return Object.keys(selectedRows).filter((item) => get(selectedRows, item)).length;
@@ -241,16 +226,16 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
                     typeElements.point += 1;
                     break;
                   case 'LineString':
-                    typeElements.line += 1
+                    typeElements.line += 1;
                     break;
                   case 'MultiLineString':
-                    typeElements.multiLine += 1
+                    typeElements.multiLine += 1;
                     break;
                   case 'Polygon':
-                    typeElements.polygon += 1
+                    typeElements.polygon += 1;
                     break;
                   case 'MultiPolygon':
-                    typeElements.multiPolygon += 1
+                    typeElements.multiPolygon += 1;
                     break;
                   default:
                 }
@@ -344,6 +329,10 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
 
           init() {
             this._super(...arguments);
+
+            this._selectedRows = this._selectedRows || {};
+            this._editedRows = this._editedRows || {};
+
             this.get('i18n.locale');
             this._reload();
           },
@@ -624,6 +613,13 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
   */
   init() {
     this._super(...arguments);
+
+    this.bufferUnits = this.bufferUnits || {
+      meters: 'components.flexberry-layers-attributes-panel.buffer.units.meters',
+      kilometers: 'components.flexberry-layers-attributes-panel.buffer.units.kilometers',
+    };
+
+    this._activeTabs = this._activeTabs || {};
 
     let settings = this.get('settings');
     if (isNone(settings)) {

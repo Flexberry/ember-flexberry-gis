@@ -120,31 +120,6 @@ const FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
   flexberryClassNames,
 
   /**
-    Names of observable component's properties.
-    Changes in these properties must trigger Semantic UI module's reinitialization.
-
-    @property observableProperties
-    @type String[]
-    @default ['apiSettings', 'apiSettings.url']
-  */
-  observableProperties: Object.freeze(['apiSettings', 'apiSettings.url']),
-
-  /**
-    Names of component's properties used for init semantic search module
-    @property semanticProperties
-    @type String[]
-   */
-  semanticProperties: Object.freeze([
-    'apiSettings',
-    'type',
-    'minCharacters',
-    'fields',
-    'showNoResults',
-    'onResults',
-    'maxResults'
-  ]),
-
-  /**
     Component's wrapping <div> CSS-classes names.
 
     Any other CSS-classes can be added through component's 'class' property.
@@ -254,6 +229,23 @@ const FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
     this.set('_lastAction', null);
     this.set('_valueWasSelected', false);
   }),
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.observableProperties = this.observableProperties || ['apiSettings', 'apiSettings.url'];
+    this.semanticProperties = this.semanticProperties || [
+      'apiSettings',
+      'type',
+      'minCharacters',
+      'fields',
+      'showNoResults',
+      'onResults',
+      'maxResults'
+    ];
+  },
 
   /**
     Initializes Semantic UI search module.

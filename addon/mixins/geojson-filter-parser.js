@@ -32,9 +32,9 @@ export default Mixin.create({
     const features = geojson.features || [];
     const fields = A();
 
-    for (const property in get(features, '0.properties') || {}) {
+    (get(features, '0.properties') || {}).forEach((property) => {
       fields.addObject(property);
-    }
+    });
 
     return fields;
   },
@@ -115,6 +115,7 @@ export default Mixin.create({
         return `(feature.properties.${field} || '').toString().indexOf('${value}') >= 0`;
       case 'ilike':
         return `(feature.properties.${field} || '').toString().toLowerCase().indexOf('${value}'.toLowerCase()) >= 0`;
+      default:
     }
   },
 
@@ -134,6 +135,7 @@ export default Mixin.create({
         return `(${properties.join('||')})`;
       case 'not':
         return `!(${properties[0]})`;
+      default:
     }
   },
 

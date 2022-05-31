@@ -4,6 +4,56 @@
 
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
+const copyAttributes = function (model, modelCopy) {
+  model.eachAttribute((attr) => {
+    modelCopy.set(attr, model.get(attr));
+  });
+};
+
+const copyLinkParameters = function (linkModel, linkModelCopy, store) {
+  const parameterModels = linkModel.get('parameters');
+  const parameterModelsCopies = linkModelCopy.get('parameters');
+
+  parameterModels.forEach((parameterModel) => {
+    // Create empty link parameter model.
+    const parameterModelCopy = store.createRecord('new-platform-flexberry-g-i-s-link-parameter', { id: generateUniqueId(), });
+
+    // Copy attibutes values into created empty model.
+    copyAttributes(parameterModel, parameterModelCopy);
+
+    // Push created empty model into related details array.
+    parameterModelsCopies.pushObject(parameterModelCopy);
+  });
+};
+
+const copyLayerLinks = function (layerModel, layerModelCopy, store) {
+  const linkModels = layerModel.get('layerLink');
+  const linkModelsCopies = layerModelCopy.get('layerLink');
+
+  linkModels.forEach((linkModel) => {
+    // Create empty layer link model.
+    const linkModelCopy = store.createRecord('new-platform-flexberry-g-i-s-layer-link', { id: generateUniqueId(), });
+
+    // Copy attibutes values into created empty model.
+    copyAttributes(linkModel, linkModelCopy);
+
+    // Copy reference to 'mapObjectSetting' master.
+    linkModelCopy.set('mapObjectSetting', linkModel.get('mapObjectSetting'));
+
+    // Copy 'parameters' details into created empty model.
+    copyLinkParameters(linkModel, linkModelCopy, store);
+
+    // Push created empty model into related details array.
+    linkModelsCopies.pushObject(linkModelCopy);
+  });
+};
+
+const copyLeafletObjectGetter = function (layerModel, layerModelCopy) {
+  const leafletObjectGetter = layerModel.get('leafletObjectGetter');
+
+  layerModelCopy.set('leafletObjectGetter', leafletObjectGetter);
+};
+
 /**
   Creates copy of the specified map layer.
 
@@ -30,56 +80,6 @@ const copyLayer = function (layerModel, store, ignoreLinks) {
   copyLeafletObjectGetter(layerModel, layerModelCopy);
 
   return layerModelCopy;
-};
-
-let copyAttributes = function (model, modelCopy) {
-  model.eachAttribute((attr) => {
-    modelCopy.set(attr, model.get(attr));
-  });
-};
-
-let copyLayerLinks = function (layerModel, layerModelCopy, store) {
-  const linkModels = layerModel.get('layerLink');
-  const linkModelsCopies = layerModelCopy.get('layerLink');
-
-  linkModels.forEach((linkModel) => {
-    // Create empty layer link model.
-    const linkModelCopy = store.createRecord('new-platform-flexberry-g-i-s-layer-link', { id: generateUniqueId(), });
-
-    // Copy attibutes values into created empty model.
-    copyAttributes(linkModel, linkModelCopy);
-
-    // Copy reference to 'mapObjectSetting' master.
-    linkModelCopy.set('mapObjectSetting', linkModel.get('mapObjectSetting'));
-
-    // Copy 'parameters' details into created empty model.
-    copyLinkParameters(linkModel, linkModelCopy, store);
-
-    // Push created empty model into related details array.
-    linkModelsCopies.pushObject(linkModelCopy);
-  });
-};
-
-let copyLinkParameters = function (linkModel, linkModelCopy, store) {
-  const parameterModels = linkModel.get('parameters');
-  const parameterModelsCopies = linkModelCopy.get('parameters');
-
-  parameterModels.forEach((parameterModel) => {
-    // Create empty link parameter model.
-    const parameterModelCopy = store.createRecord('new-platform-flexberry-g-i-s-link-parameter', { id: generateUniqueId(), });
-
-    // Copy attibutes values into created empty model.
-    copyAttributes(parameterModel, parameterModelCopy);
-
-    // Push created empty model into related details array.
-    parameterModelsCopies.pushObject(parameterModelCopy);
-  });
-};
-
-let copyLeafletObjectGetter = function (layerModel, layerModelCopy) {
-  const leafletObjectGetter = layerModel.get('leafletObjectGetter');
-
-  layerModelCopy.set('leafletObjectGetter', leafletObjectGetter);
 };
 
 export {

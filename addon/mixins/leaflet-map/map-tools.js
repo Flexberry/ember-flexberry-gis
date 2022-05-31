@@ -69,7 +69,7 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
     };
 
     // Define flexberryMap.tools namespace & related methods & properties.
-    const tools = leafletMap.flexberryMap.tools = {
+    const tools = {
 
       // Sets default map-tool.
       setDefault(mapToolName, mapToolProperties) {
@@ -226,11 +226,16 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
       },
     };
 
+    leafletMap.flexberryMap.tools = tools;
+
     // Set 'drag' map-tool as default & enable it.
-    scheduleOnce('afterRender', this, function () {
-      tools.setDefault('drag');
-      tools.enable('drag');
-    });
+    scheduleOnce('afterRender', this, this.setTools(tools));
+  },
+
+
+  setTools(tools) {
+    tools.setDefault('drag');
+    tools.enable('drag');
   },
 
   /**

@@ -43,15 +43,6 @@ export default Component.extend({
   resultsLayer: null,
 
   /**
-    List vector layers.
-
-    @property vectorLayers
-    @type Array
-    @default []
-  */
-  vectorLayers: Object.freeze([]),
-
-  /**
     Leaflet map object for zoom and pan.
 
     @property leafletMap
@@ -99,24 +90,6 @@ export default Component.extend({
     @default 0
   */
   bufferR: null,
-
-  /**
-    List of selected vector layers.
-
-    @property selectedLayers
-    @type Array
-    @default []
-  */
-  selectedLayers: Object.freeze([]),
-
-  /**
-    List of intersection results.
-
-    @property  results
-    @type Array
-    @default []
-  */
-  results: Object.freeze([]),
 
   /**
     Selected feature.
@@ -177,6 +150,10 @@ export default Component.extend({
   */
   init() {
     this._super(...arguments);
+
+    this.vectorLayers = this.vectorLayers || [];
+    this.selectedLayers = this.selectedLayers || [];
+    this.results = this.results || [];
     const vlayers = [];
     this.get('layers').forEach((item) => {
       const layers = get(item, 'layers');
@@ -223,7 +200,7 @@ export default Component.extend({
       // If current feature is L.FeatureGroup
       if (currentFeature.leafletLayer.prototype.hasOwnProperty.call('_layers')) {
         if (currentFeature.leafletLayer.getLayers().length === 1) {
-          const [layer] = currentFeature.leafletLayer.getLayers()[0];
+          const layer = currentFeature.leafletLayer.getLayers()[0];
           polygonLayer = layer;
         } else {
           throw new Error(' L.FeatureGroup с несколькими дочерними слоями пока не поддерживается.');
@@ -236,7 +213,7 @@ export default Component.extend({
 
       if (bufferR > 0) {
         const feat = buffer.default(polygonLayer.toGeoJSON(), bufferR, { units: 'meters', });
-        const [polygon] = L.geoJSON(feat).getLayers()[0];
+        const polygon = L.geoJSON(feat).getLayers()[0];
         workingPolygon = polygon;
       } else {
         workingPolygon = polygonLayer;
@@ -293,7 +270,7 @@ export default Component.extend({
       @method actions.inputLimit
     */
     inputLimit(str, e) {
-      const regex = /^\.|[^\d.]|\.(?=.*\.)|^0+(?=\d)/g;
+      const regex = /^\.|[^\d\.]|\.(?=.*\.)|^0+(?=\d)/g;
       if (!isEmpty(str) && regex.test(str)) {
         this.$(e.target).val(str.replace(regex, ''));
       }

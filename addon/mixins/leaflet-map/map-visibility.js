@@ -20,11 +20,11 @@ export default Mixin.create({
       $commandControl.addClass('hidden');
     } else {
       const $commandControlInner = $commandControl.children();
-      for (const command of $commandControlInner) {
+      $commandControlInner.forEach((command) => {
         if (!$(command).hasClass('hidden')) {
           $(command).addClass('hidden');
         }
-      }
+      });
     }
   },
 
@@ -34,11 +34,11 @@ export default Mixin.create({
       $commandControl.removeClass('hidden');
     } else {
       const $commandControlInner = $commandControl.children();
-      for (const command of $commandControlInner) {
+      $commandControlInner.forEach((command) => {
         if ($(command).hasClass('hidden')) {
           $(command).removeClass('hidden');
         }
-      }
+      });
     }
   },
 

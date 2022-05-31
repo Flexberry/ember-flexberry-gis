@@ -65,16 +65,6 @@ export default Component.extend({
   layout,
 
   /**
-    Inner hash containing settings gradient object.
-
-    @property gradientList
-    @type Object[]
-    @default []
-    @public
-  */
-  gradientList: Object.freeze([]),
-
-  /**
     Initial gradient color.
 
     @property gradientColorStart
@@ -160,6 +150,8 @@ export default Component.extend({
   */
   init() {
     this._super(...arguments);
+
+    this.gradientList = this.gradientList || [];
 
     const colorStart = this.get('gradientColorStart');
     const colorEnd = this.get('gradientColorEnd');

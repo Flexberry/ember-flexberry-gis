@@ -21,15 +21,6 @@ export default BaseLayer.extend({
   iconClass: 'folder icon',
 
   /**
-    Permitted operations related to layer type.
-
-    @property operations
-    @type String[]
-    @default ['add', 'edit', 'remove']
-  */
-  operations: Object.freeze(['add', 'edit', 'remove']),
-
-  /**
     Creates new settings object (with settings related to layer-type).
 
     @method createSettings
@@ -37,5 +28,14 @@ export default BaseLayer.extend({
   */
   createSettings() {
     return this._super(...arguments);
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this.operations = this.operations || ['add', 'edit', 'remove'];
   },
 });

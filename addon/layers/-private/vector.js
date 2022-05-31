@@ -23,13 +23,12 @@ export default BaseLayer.extend({
   layersStylesRenderer: service('layers-styles-renderer'),
 
   /**
-    Permitted operations related to layer type.
-
-    @property operations
-    @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'legend']
+    Initializes component.
   */
-  operations: Object.freeze(['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'legend']),
+  init() {
+    this._super(...arguments);
+    this.operations = this.operations || ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'legend'];
+  },
 
   /**
     Creates new settings object (with settings related to layer-type).

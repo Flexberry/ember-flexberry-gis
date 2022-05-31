@@ -149,24 +149,6 @@ export default EditFormController.extend(
     keyProperty: 'model.id',
 
     /**
-      Object containing bindings as key-value pairs.
-
-      @property binding
-      @type Object
-      @example
-      ```javascript
-      binding: {
-        visibility: 'visibility',
-        opacity: 'settingsAsObject.opacity'
-      },
-      ```
-    */
-    binding: Object.freeze({
-      visibility: 'visibility',
-      opacity: 'settingsAsObject.opacity',
-    }),
-
-    /**
       This method will be invoked before save operation will be called.
       Override this method to add some custom logic on save operation start.
 
@@ -266,6 +248,17 @@ export default EditFormController.extend(
       }
 
       return layer;
+    },
+
+    /**
+      Initializes component.
+    */
+    init() {
+      this._super(...arguments);
+      this.binding = this.binding || {
+        visibility: 'visibility',
+        opacity: 'settingsAsObject.opacity',
+      };
     },
   }
 );

@@ -45,9 +45,9 @@ export default Mixin.create({
   _snapLeafletLayers: computed('_snapLayers', function () {
     const layers = [];
     const featuresByLayer = this.get('_snapLayers');
-    for (const layer in featuresByLayer) {
+    featuresByLayer.forEach((layer) => {
       layers.push(...featuresByLayer[layer]);
-    }
+    });
 
     return layers;
   }),
@@ -84,7 +84,7 @@ export default Mixin.create({
         return;
       }
 
-      snapLayers.forEach((leafletObject, i) => {
+      snapLayers.forEach((leafletObject) => {
         const features = [];
         leafletObject.eachLayer((layer) => {
           features.pushObject(layer);
@@ -198,7 +198,7 @@ export default Mixin.create({
   _findClosestLayer(latlng, bounds, layers) {
     let closestLayer = {};
 
-    layers.filter((l) => l._bounds.intersects(bounds)).forEach((layer, index) => {
+    layers.filter((l) => l._bounds.intersects(bounds)).forEach((layer) => {
       const layerDistance = this._calculateDistance(latlng, layer);
 
       if (isNone(closestLayer.distance) || layerDistance.distance < closestLayer.distance) {
@@ -250,7 +250,18 @@ export default Mixin.create({
         if (snapOnlyVertex) {
           distance = this._getPixelDistance(map, latlng, segmentPointA);
         } else {
-          const nextIndex = index + 1 === coords.length ? (isPolygon ? 0 : undefined) : index + 1;
+          let x;
+          if (coords.length) {
+            if (isPolygon) {
+              x = 0;
+            } else {
+              x = undefined;
+            }
+          } else {
+            x = index + 1;
+          }
+
+          const nextIndex = index + 1 === x;
           if (nextIndex) {
             segmentPointB = coords[nextIndex];
           }

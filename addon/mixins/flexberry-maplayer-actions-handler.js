@@ -54,7 +54,7 @@ export default Mixin.create({
         });
       ```
     */
-    onMapLayerHeaderClick(...args) { },
+    onMapLayerHeaderClick() { },
 
     /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}flexberry-maplayers component's 'beforeExpand' action{{/crossLink}}.
@@ -82,10 +82,11 @@ export default Mixin.create({
         });
       ```
     */
-    onMapLayerBeforeExpand(...args) { },
+    onMapLayerBeforeExpand() { },
 
     /**
-      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}flexberry-maplayers component's 'beforeCollapse' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}
+        flexberry-maplayers component's 'beforeCollapse' action{{/crossLink}}.
 
       @method actions.onMapLayerBeforeCollapse
       @param {Object} e Action's event object.
@@ -110,10 +111,11 @@ export default Mixin.create({
         });
       ```
     */
-    onMapLayerBeforeCollapse(...args) { },
+    onMapLayerBeforeCollapse() { },
 
     /**
-      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.visiblilityChange:method"}}flexberry-maplayers component's 'visiblilityChange' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.visiblilityChange:method"}}
+        flexberry-maplayers component's 'visiblilityChange' action{{/crossLink}}.
       It mutates value of property with given name to value of action's event object 'newValue' property.
 
       @method actions.onMapLayerVisibilityChange
@@ -155,7 +157,8 @@ export default Mixin.create({
     },
 
     /**
-      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.changeOpacity:method"}}flexberry-maplayers component's 'changeOpacity' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.changeOpacity:method"}}
+        flexberry-maplayers component's 'changeOpacity' action{{/crossLink}}.
       It mutates value of property with given name to value of action's event object 'newValue' property.
 
       @method actions.onMapLayerChangeOpacity
@@ -245,7 +248,8 @@ export default Mixin.create({
     },
 
     /**
-      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.attributesEdit:method"}}flexberry-maplayers component's 'attributesEdit' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.attributesEdit:method"}}
+        flexberry-maplayers component's 'attributesEdit' action{{/crossLink}}.
       Opens {{#FlexberryLayersAttributesPanelComponent}}flexberry-layers-attributes-panel component to edit attributes of the selected layer.
 
       @method actions.onAttributesEdit
@@ -253,7 +257,8 @@ export default Mixin.create({
       @param {Object} attributesPanelSettingsPathes Object containing pathes to properties containing 'flexberry-layers-attributes-panel' settings.
       @param {String} attributesPanelSettingsPathes.itemsPath path to property containing 'flexberry-layers-attributes-panel' items.
       @param {String} attributesPanelSettingsPathes.selectedTabIndexPath path to property containing 'flexberry-layers-attributes-panel' selected tab index.
-      @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
+      @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating
+        whether 'flexberry-layers-attributes-panel' is folded or not.
     */
     onAttributesEdit(layerPath, {
       itemsPath, selectedTabIndexPath, foldedPath, loadingPath,
@@ -291,7 +296,8 @@ export default Mixin.create({
     },
 
     /**
-      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.onFeatureEdit:method"}}flexberry-maplayers component's 'onFeatureEdit' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.onFeatureEdit:method"}}
+        flexberry-maplayers component's 'onFeatureEdit' action{{/crossLink}}.
       Opens {{#FlexberryEditLayerFeatureComponent}}flexberry-edit-layer-feature component to edit attributes of the selected layer.
 
       @method actions.onFeatureEdit
@@ -299,7 +305,8 @@ export default Mixin.create({
       @param {Object} attributesPanelSettingsPathes Object containing pathes to properties containing 'flexberry-layers-attributes-panel' settings.
       @param {String} attributesPanelSettingsPathes.itemsPath path to property containing 'flexberry-layers-attributes-panel' items.
       @param {String} attributesPanelSettingsPathes.selectedTabIndexPath path to property containing 'flexberry-layers-attributes-panel' selected tab index.
-      @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
+      @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating
+        whether 'flexberry-layers-attributes-panel' is folded or not.
     */
     onFeatureEdit(layerPath, { loadingPath, mapAction, }) {
       const layerModel = getRecord(this, layerPath);

@@ -15,16 +15,6 @@ import layout from '../../../templates/components/layers-styles/simple/stroke-da
 */
 export default Component.extend({
   /**
-    Available 'dash-array' attribute values.
-
-    @property _availableDashArrays
-    @type String[]
-    @default ['', '5,5', '5,10', '10,5', '5,1', '1,5', '1,1', '15,10,5,10', '5,5,1,5', '5,5,1,5,1,5']
-    @private
-  */
-  _availableDashArrays: Object.freeze(['', '5,5', '5,10', '10,5', '5,1', '1,5', '1,1', '15,10,5,10', '5,5,1,5', '5,5,1,5,1,5']),
-
-  /**
     Reference to component's template.
   */
   layout,
@@ -81,5 +71,13 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     this.$().dropdown('destroy');
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this._availableDashArrays = this._availableDashArrays || ['', '5,5', '5,10', '10,5', '5,1', '1,5', '1,1', '15,10,5,10', '5,5,1,5', '5,5,1,5,1,5'];
   },
 });

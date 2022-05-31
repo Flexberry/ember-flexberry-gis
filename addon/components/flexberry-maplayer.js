@@ -153,8 +153,6 @@ const FlexberryMaplayerComponent = Component.extend(
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
 
-    dynamicButtons: Object.freeze([]),
-
     /**
       Layer copy's name postfix
 
@@ -172,17 +170,6 @@ const FlexberryMaplayerComponent = Component.extend(
       @private
     */
     _expanded: false,
-
-    /**
-      Component's required actions names.
-      For actions enumerated in this array an assertion exceptions will be thrown,
-      if actions handlers are not defined for them.
-
-      @property _requiredActions
-      @type String[]
-      @default ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds']
-    */
-    _requiredActionNames: Object.freeze(['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds']),
 
     /**
       Used to identify this component on the page by component name.
@@ -527,6 +514,16 @@ const FlexberryMaplayerComponent = Component.extend(
       date.setDate(date.getDate() + 1);
       return date;
     }),
+
+    /**
+      Initializes component.
+    */
+    init() {
+      this._super(...arguments);
+
+      this.dynamicButtons = this.dynamicButtons || [];
+      this._requiredActionNames = this._requiredActionNames || ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds'];
+    },
 
     /**
       Initializes DOM-related component's properties.

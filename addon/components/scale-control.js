@@ -12,14 +12,6 @@ import BaseControl from 'ember-flexberry-gis/components/base-control';
 */
 export default BaseControl.extend({
   /**
-    Array containing component's properties which are also leaflet layer options.
-
-    @property leafletOptions
-    @type Stirng[]
-  */
-  leafletOptions: Object.freeze(['position', 'maxWidth', 'metric', 'imperial', 'updateWhenIdle']),
-
-  /**
     Creates control instance, should be overridden in child classes.
 
     @method createControl
@@ -27,5 +19,13 @@ export default BaseControl.extend({
   */
   createControl() {
     return L.control.scale(this.get('options'));
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.leafletOptions = this.leafletOptions || ['position', 'maxWidth', 'metric', 'imperial', 'updateWhenIdle'];
   },
 });

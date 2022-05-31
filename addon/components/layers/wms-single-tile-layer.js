@@ -16,14 +16,6 @@ import TileLayerComponent from './tile-layer';
   @extends TileLayerComponent
  */
 export default TileLayerComponent.extend({
-  leafletOptions: Object.freeze([
-    'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
-    'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
-    'zoomOffset', 'zoomReverse', 'opacity', 'zIndex', 'unloadInvisibleTiles',
-    'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds',
-    'layers', 'styles', 'format', 'transparent', 'version', 'crs', 'info_format', 'tiled'
-  ]),
-
   /**
     Inner WMS layer.
     Needed for identification (always invisible, won't be added to map).
@@ -58,6 +50,14 @@ export default TileLayerComponent.extend({
   */
   init() {
     this._super(...arguments);
+
+    this.leafletOptions = this.leafletOptions || [
+      'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
+      'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
+      'zoomOffset', 'zoomReverse', 'opacity', 'zIndex', 'unloadInvisibleTiles',
+      'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds',
+      'layers', 'styles', 'format', 'transparent', 'version', 'crs', 'info_format', 'tiled'
+    ];
 
     const innerWmsLayerProperties = {
       leafletMap: this.get('leafletMap'),

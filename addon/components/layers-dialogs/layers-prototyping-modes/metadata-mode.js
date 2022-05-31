@@ -93,15 +93,6 @@ const MetadataModeComponent = BaseModeComponent.extend({
   flexberryClassNames,
 
   /**
-    Array of property names that will be bound from parentView.
-
-    @property bindingProperties
-    @type String[]
-    @default []
-  */
-  bindingProperties: Object.freeze([]),
-
-  /**
     Reference to 'store' service.
 
     @property store
@@ -117,6 +108,7 @@ const MetadataModeComponent = BaseModeComponent.extend({
     this._super(...arguments);
 
     this._loadMetadataRecords();
+    this.bindingProperties = this.bindingProperties || [];
   },
 
   /**

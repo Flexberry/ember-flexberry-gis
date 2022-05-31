@@ -118,7 +118,7 @@ export default EditFormRoute.extend({
     @param {Object} transition
     @return {*} Model of map project for current route.
   */
-  model(params, transition) {
+  model(params) {
     const mapId = params.id;
     const modelQuery = this.get('mapStore').getMapById(mapId);
     const metadataQuery = this._getMetadata(params.metadata);

@@ -1,16 +1,4 @@
 import { isArray } from '@ember/array';
-/**
-    Sets indexes for layers hierarchy.
-
-    @method setIndexes
-    @param {Array} rootArray Array of layers to set indexes.
-  */
-const setIndexes = (rootArray, hierarchy) => {
-  // Filter root array to avoid gaps in indexes.
-  const index = rootArray.filter((layer) => layer.get('isDeleted') === false).length;
-
-  _setIndexes(hierarchy, index);
-};
 
 /**
   Sets indexes for layers hierarchy.
@@ -21,12 +9,12 @@ const setIndexes = (rootArray, hierarchy) => {
   @returns {Int} Min index.
   @private
 */
-let _setIndexes = (layers, index) => {
+const _setIndexes = (layers, index) => {
   if (isArray(layers) && index > 0) {
     layers.forEach((layer) => {
       if (!layer.get('isDeleted')) {
         layer.set('index', index);
-        index--;
+        index -= 1;
         if (isArray(layer.get('layers'))) {
           index = _setIndexes(layer.get('layers'), index);
         }
@@ -35,6 +23,19 @@ let _setIndexes = (layers, index) => {
   }
 
   return index;
+};
+
+/**
+  Sets indexes for layers hierarchy.
+
+  @method setIndexes
+  @param {Array} rootArray Array of layers to set indexes.
+*/
+const setIndexes = (rootArray, hierarchy) => {
+  // Filter root array to avoid gaps in indexes.
+  const index = rootArray.filter((layer) => layer.get('isDeleted') === false).length;
+
+  _setIndexes(hierarchy, index);
 };
 
 export { setIndexes };

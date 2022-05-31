@@ -390,7 +390,7 @@ export default BaseLayer.extend({
     @return {Promise}
   */
   showAllLayerObjects() {
-    return new Promise(() => {
+    return new Promise((rslv) => {
       const leafletObject = this.get('_leafletObject');
       const map = this.get('leafletMap');
       const layer = this.get('layerModel');
@@ -408,13 +408,13 @@ export default BaseLayer.extend({
           }
         }
 
-        leafletObject.promiseLoadLayer = new Promise(() => {
+        leafletObject.promiseLoadLayer = new Promise((_resolve) => {
           const e = {
             featureIds: null,
           };
 
           leafletObject.loadLayerFeatures(e).then(() => {
-            resolve('Features loaded');
+            _resolve('Features loaded');
           });
         });
       } else {
@@ -423,7 +423,7 @@ export default BaseLayer.extend({
 
         this.continueLoad(leafletObject);
         if (isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Promise)) {
-          leafletObject.promiseLoadLayer = resolve();
+          leafletObject.promiseLoadLayer = rslv();
         }
       }
 
@@ -440,7 +440,7 @@ export default BaseLayer.extend({
           map.addLayer(labelLayer);
         }
 
-        resolve('success');
+        rslv('success');
       });
     });
   },
@@ -480,7 +480,7 @@ export default BaseLayer.extend({
     @return {Ember.RSVP.Promise}
   */
   _setVisibilityObjects(objectIds, visibility = false) {
-    return new Promise((reject) => {
+    return new Promise((rslv, reject) => {
       const leafletObject = this.get('_leafletObject');
       const map = this.get('leafletMap');
       const layer = this.get('layerModel');
@@ -488,13 +488,13 @@ export default BaseLayer.extend({
       if (visibility) {
         const { continueLoading, } = leafletObject.options;
         if (!continueLoading) {
-          leafletObject.promiseLoadLayer = new Promise(() => {
+          leafletObject.promiseLoadLayer = new Promise((_rslv) => {
             const e = {
               featureIds: objectIds,
             };
 
             leafletObject.loadLayerFeatures(e).then(() => {
-              resolve('Features loaded');
+              _rslv('Features loaded');
             });
           });
         } else {
@@ -539,7 +539,7 @@ export default BaseLayer.extend({
           });
         }
 
-        resolve('success');
+        rslv('success');
       });
     });
   },
@@ -556,16 +556,16 @@ export default BaseLayer.extend({
     @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
   */
   getNearObject(e) {
-    return new Promise((reject) => {
+    return new Promise((rslv, reject) => {
       const features = {
         featureIds: null,
       };
       this.getLayerFeatures(features)
         .then((featuresLayer) => {
           if (isArray(featuresLayer) && featuresLayer.length > 0) {
-            resolve(this._calcNearestObject(featuresLayer, e));
+            rslv(this._calcNearestObject(featuresLayer, e));
           } else {
-            resolve('Nearest object not found');
+            rslv('Nearest object not found');
           }
         })
         .catch((error) => {
@@ -619,7 +619,7 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
-    return new Promise((reject) => {
+    return new Promise((rslv, reject) => {
       hash({
         vectorLayer: this.createVectorLayer(),
       }).then(({ vectorLayer, }) => {
@@ -649,9 +649,9 @@ export default BaseLayer.extend({
 
         if (this.get('clusterize')) {
           const clusterLayer = this.createClusterLayer(vectorLayer);
-          resolve(clusterLayer);
+          rslv(clusterLayer);
         } else {
-          resolve(vectorLayer);
+          rslv(vectorLayer);
         }
       }).catch((e) => {
         reject(e);
@@ -704,7 +704,7 @@ export default BaseLayer.extend({
       return satisfiesBounds;
     };
 
-    return new Promise((reject) => {
+    return new Promise((rslv, reject) => {
       try {
         const features = A();
         const bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
@@ -727,9 +727,9 @@ export default BaseLayer.extend({
           }
         });
 
-        resolve(features);
+        rslv(features);
       } catch (error) {
-        reject(e.error || e);
+        reject(error.error || error);
       }
     });
   },
@@ -747,7 +747,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    return new Promise(() => {
+    return new Promise((rslv) => {
       const searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
       const leafletLayer = this.get('_leafletObject');
       const features = A();
@@ -778,7 +778,7 @@ export default BaseLayer.extend({
           }
         }
       });
-      resolve(features);
+      rslv(features);
     });
   },
 
@@ -792,7 +792,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   query(layerLinks, e) {
-    return new Promise(() => {
+    return new Promise((rslv) => {
       const { queryFilter, } = e;
       const features = A();
       const equals = [];
@@ -823,7 +823,7 @@ export default BaseLayer.extend({
         }
       });
 
-      resolve(features);
+      rslv(features);
     });
   },
 
@@ -835,8 +835,8 @@ export default BaseLayer.extend({
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   loadLayerFeatures() {
-    return new Promise(() => {
-      resolve(this.get('_leafletObject'));
+    return new Promise((rslv) => {
+      rslv(this.get('_leafletObject'));
     });
   },
 
@@ -848,7 +848,7 @@ export default BaseLayer.extend({
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   getLayerFeatures(e) {
-    return new Promise(() => {
+    return new Promise((rslv) => {
       const leafletObject = this.get('_leafletObject');
       const { featureIds, } = e;
       if (isArray(featureIds) && !isNone(featureIds)) {
@@ -862,9 +862,9 @@ export default BaseLayer.extend({
             objects.push(obj);
           }
         });
-        resolve(objects);
+        rslv(objects);
       } else {
-        resolve(Object.values(leafletObject._layers));
+        rslv(Object.values(leafletObject._layers));
       }
     });
   },

@@ -78,16 +78,6 @@ const FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
   _loading: false,
 
   /**
-    Object with field names that is invalid.
-
-    @property _parsingErrors
-    @type Object
-    @default null
-    @private
-  */
-  _parsingErrors: Object.freeze({}),
-
-  /**
     Available instances of geoproviders.
 
     @property _availableProviders
@@ -234,6 +224,7 @@ const FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
   init() {
     this._super(...arguments);
     this.initProviders();
+    this._parsingErrors = this._parsingErrors || {};
   },
 
   initialSettings: observer('settings', function () {

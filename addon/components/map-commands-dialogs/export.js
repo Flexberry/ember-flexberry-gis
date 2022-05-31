@@ -1052,15 +1052,6 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
   */
   legendsUpdateTrigger: false,
 
-  /**
-    All loaded legends for layers.
-
-    @property legends
-    @type Object
-    @default {}
-  */
-  legends: Object.freeze({}),
-
   _getOptions(e, type) {
     if (this.get('_options.legendSecondPage')) {
       set(e, 'exportOptions', {
@@ -1749,7 +1740,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     if (showDownloadingFileSettings) {
       let fileName = get(innerOptions, 'fileName');
       if (isBlank(fileName)) {
-        const [defaultFileName] = defaultOptions.fileName;
+        const defaultFileName = defaultOptions.fileName;
         fileName = defaultFileName;
       }
 
@@ -2017,6 +2008,8 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
   */
   init() {
     this._super(...arguments);
+
+    this.legends = this.legends || {};
 
     // There is no easy way to programmatically get list of all available system fonts (in JavaScript),
     // so we can only list some web-safe fonts statically (see https://www.w3schools.com/csSref/css_websafe_fonts.asp).

@@ -49,28 +49,31 @@ export default Mixin.create({
     this._observers = {};
     const properties = this.get('leafletProperties') || [];
     properties.forEach((propExp) => {
-      let [property, leafletProperty, ...params] = propExp.split(':');
+      const [property, , ...params] = propExp.split(':');
+      let [, leafletProperty] = propExp.split(':');
 
       if (!leafletProperty) { leafletProperty = `set${classify(property)}`; }
 
       const objectProperty = property.replace(/\.\[]/, ''); // allow usage of .[] to observe array changes
 
       this._observers[property] = () => {
-        once(() => {
-          const leafletObject = this.get('_leafletObject');
-          if (isNone(leafletObject)) {
-            return;
-          }
-
-          const value = this.get(objectProperty);
-          assert(`${this.constructor} must have a ${leafletProperty} function.`, !!leafletObject[leafletProperty]);
-          const propertyParams = params.map((p) => this.get(p));
-          leafletObject[leafletProperty].call(leafletObject, value, ...propertyParams);
-        });
+        once(this.callLeafletObject(objectProperty, params, leafletProperty));
       };
 
       this.addObserver(property, this, this._observers[property]);
     });
+  },
+
+  callLeafletObject(objectProperty, params, leafletProperty) {
+    const leafletObject = this.get('_leafletObject');
+    if (isNone(leafletObject)) {
+      return;
+    }
+
+    const value = this.get(objectProperty);
+    assert(`${this.constructor} must have a ${leafletProperty} function.`, !!leafletObject[leafletProperty]);
+    const propertyParams = params.map((p) => this.get(p));
+    leafletObject[leafletProperty].call(leafletObject, value, ...propertyParams);
   },
 
   /**

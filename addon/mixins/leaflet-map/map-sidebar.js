@@ -47,7 +47,7 @@ export default Mixin.create({
 
     @param {Object} leafletMap Leaflet map.
   */
-  willDestroyLeafletMap(leafletMap) {
+  willDestroyLeafletMap() {
     this._super(...arguments);
   },
 });

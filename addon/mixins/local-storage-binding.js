@@ -108,7 +108,7 @@ export default Mixin.create({
       return;
     }
 
-    const service = this.get('service');
+    service = this.get('service');
     const className = this.get('bindingClass');
     const key = this.get('bindingKey');
 

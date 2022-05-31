@@ -60,21 +60,6 @@ const maxBatchFeatures = 10000;
  */
 export default BaseVectorLayer.extend({
 
-  leafletOptions: Object.freeze([
-    'attribution',
-    'pane',
-    'styles',
-    'crs',
-    'showExisting',
-    'continueLoading',
-    'filter',
-    'forceMulti',
-    'dynamicModel',
-    'metadataUrl',
-    'odataUrl',
-    'projectionName'
-  ]),
-
   clusterize: false,
 
   store: service(),
@@ -511,7 +496,7 @@ export default BaseVectorLayer.extend({
     }
 
     if (equals.length === 1) {
-      const [f] = equals[0];
+      const f = equals[0];
       filter = f;
     } else {
       filter = new ComplexPredicate(Condition.Or, ...equals);
@@ -1388,7 +1373,7 @@ export default BaseVectorLayer.extend({
 
           const unionJsts = loadedBoundsJsts.union(boundsJsts);
           const geojsonWriter = new jsts.io.GeoJSONWriter();
-          const [getLayer] = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
+          const getLayer = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
           loadedBounds = getLayer;
         } else {
           loadedBounds = bounds;
@@ -1476,6 +1461,28 @@ export default BaseVectorLayer.extend({
       leafletMap.on('moveend', this.continueLoad, this);
       leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
     }
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this.leafletOptions = this.leafletOptions || [
+      'attribution',
+      'pane',
+      'styles',
+      'crs',
+      'showExisting',
+      'continueLoading',
+      'filter',
+      'forceMulti',
+      'dynamicModel',
+      'metadataUrl',
+      'odataUrl',
+      'projectionName'
+    ];
   },
 
   /**

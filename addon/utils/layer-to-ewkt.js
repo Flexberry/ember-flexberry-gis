@@ -7,7 +7,7 @@ const coordinatesFunction = function (coord, altitude) {
     : `${coord.x} ${coord.y}`;
 };
 
-const latLngsToCoords = function (latlngs, crs, levelsDeep, closed, precision, coordinatesFunction) {
+const latLngsToCoords = function (latlngs, crs, levelsDeep, closed, precision) {
   let coords = '';
   let coordClose = '';
   for (let i = 0, len = latlngs.length; i < len; i++) {
@@ -57,7 +57,16 @@ const latlngToPolylineEWKT = function (latlngs, crs, precision) {
 const latlngToPolygonEWKT = function (latlngs, crs, precision) {
   const holes = !L.LineUtil.isFlat(latlngs);
   const multi = holes && !L.LineUtil.isFlat(latlngs[0]);
-  let coords = latLngsToCoords(latlngs, crs, multi ? 2 : holes ? 1 : 0, true, precision, coordinatesFunction);
+  let param;
+  if (multi) {
+    param = 2;
+  } else if (holes) {
+    param = 1;
+  } else {
+    param = 0;
+  }
+
+  let coords = latLngsToCoords(latlngs, crs, param, true, precision, coordinatesFunction);
 
   if (!holes) {
     coords += `(${coords[0]})`;

@@ -15,13 +15,12 @@ import VectorLayer from 'ember-flexberry-gis/layers/-private/vector';
 */
 export default VectorLayer.extend({
   /**
-    Permitted operations related to layer type.
-
-    @property operations
-    @type String[]
-    @default ['edit', 'remove', 'identify', 'search']
+    Initializes component.
   */
-  operations: Object.freeze(['edit', 'remove']),
+  init() {
+    this._super(...arguments);
+    this.operations = this.operations || ['edit', 'remove'];
+  },
 
   /**
     Creates new settings object (with settings related to layer-type).

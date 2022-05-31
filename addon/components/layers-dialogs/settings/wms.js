@@ -11,7 +11,7 @@ import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/settings/wms';
 
 // Regular expression used to derive whether settings' url is correct.
-const urlRegex = '(https?|ftp)://(-.)?([^/?#-]+?)+(/[^]*)?';
+const urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
 
 /**
   Settings-part of WMS layer modal dialog.

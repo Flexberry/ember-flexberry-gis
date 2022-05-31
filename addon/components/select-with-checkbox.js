@@ -32,8 +32,6 @@ export default FlexberryDropdown.extend({
 
   noResults: t('components.flexberry-layers-intersections-panel.notResult'),
 
-  message: Object.freeze({ noResults: '', }),
-
   /**
    * Storage for the items state.
    * @example
@@ -94,6 +92,8 @@ export default FlexberryDropdown.extend({
 
   init() {
     this._super(...arguments);
+
+    this.message = this.message || { noResults: '', };
     this.set('state', new A());
     const noRes = this.get('noResults').toString();
     this.set('message', { noResults: noRes, });

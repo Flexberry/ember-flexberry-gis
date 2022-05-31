@@ -128,16 +128,6 @@ export default Component.extend({
   */
   customFillGradientColorEnd: null,
 
-  /**
-    Inner hash containing settings gradient object.
-
-    @property gradientList
-    @type Object[]
-    @default []
-    @public
-  */
-  gradientList: Object.freeze([]),
-
   actions: {
     /**
       Handles on fill gradient edit by gradient-edit.
@@ -171,6 +161,8 @@ export default Component.extend({
   */
   init() {
     this._super(...arguments);
+
+    this.gradientList = this.gradientList || [];
 
     const paramGradient = this.get('paramGradient');
     const listOfGradients = paramGradient.getGradientList();

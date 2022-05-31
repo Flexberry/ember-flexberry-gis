@@ -6,21 +6,14 @@ const checkMapZoomLayer = (layer) => {
   const mapZoom = layer.leafletMap.getZoom();
   const { minZoom, } = layer;
   const { maxZoom, } = layer;
-  return !mapZoom || !minZoom || !maxZoom || minZoom <= mapZoom && mapZoom <= maxZoom;
+  return !mapZoom || !minZoom || !maxZoom || (minZoom <= (mapZoom && mapZoom) <= maxZoom);
 };
 
-const checkMapZoom = (layer) => {
-  const mapZoom = _getMapZoom(layer.leafletMap);
-  const minZoom = _getLayerOption(layer, 'minZoom');
-  const maxZoom = _getLayerOption(layer, 'maxZoom');
-  return !mapZoom || !minZoom || !maxZoom || minZoom <= mapZoom && mapZoom <= maxZoom;
-};
-
-let _getMapZoom = (map) => {
+const _getMapZoom = (map) => {
   if (map && map.getZoom) {
     const _mapZoom = map.getZoom();
     const _animZoom = map._animateToZoom;
-    if (map._animatingZoom && !isNaN(_animZoom) && _animZoom !== _mapZoom) {
+    if (map._animatingZoom && !Number.isNaN(_animZoom) && _animZoom !== _mapZoom) {
       return _animZoom;
     }
 
@@ -30,19 +23,26 @@ let _getMapZoom = (map) => {
   return null;
 };
 
-let _getLayerOption = (layer, propName) => {
+const _getLayerOption = (layer, propName) => {
   let zoomResult = layer[propName];
   if (!zoomResult) {
     const parentLayers = layer._eventParents;
-    for (const key in parentLayers) {
+    parentLayers.forEach((key) => {
       zoomResult = parentLayers[key][propName];
       if (zoomResult) {
         return zoomResult;
       }
-    }
+    });
   }
 
   return zoomResult;
+};
+
+const checkMapZoom = (layer) => {
+  const mapZoom = _getMapZoom(layer.leafletMap);
+  const minZoom = _getLayerOption(layer, 'minZoom');
+  const maxZoom = _getLayerOption(layer, 'maxZoom');
+  return !mapZoom || !minZoom || !maxZoom || (minZoom <= (mapZoom && mapZoom) <= maxZoom);
 };
 
 export {

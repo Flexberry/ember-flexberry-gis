@@ -36,18 +36,18 @@ const setRecord = function (source, keyName, value) {
 
     for (let i = 1, len = keys.length; i < len; i++) {
       // needed for recognition if key is index
-      const keyValue = parseInt(keys[i]);
+      const keyValue = parseInt(keys[i], 10);
 
       if (i === (len - 1)) {
         // if previous object is array and key is index
-        if (isArray(result) && !isNaN(keyValue)) {
+        if (isArray(result) && !Number.isNaN(keyValue)) {
           return assign(result.objectAt(keys[i]), value);
         }
 
         return set(result, keys[i], value);
       }
 
-      if (isArray(result) && !isNaN(keyValue)) {
+      if (isArray(result) && !Number.isNaN(keyValue)) {
         result = result.objectAt(keys[i]);
       } else {
         result = result.get(keys[i]);

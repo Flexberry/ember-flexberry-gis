@@ -259,7 +259,7 @@ export default BaseNonclickableMapTool.extend({
 
     if (isBufferActive && bufferRadius > 0) {
       const buff = this._drawBuffer(layer.toGeoJSON());
-      const [layerBuff] = buff.getLayers()[0];
+      const layerBuff = buff.getLayers()[0];
       workingPolygon = layerBuff;
       bufferedMainPolygon = layer;
     } else {

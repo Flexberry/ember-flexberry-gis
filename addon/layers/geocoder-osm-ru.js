@@ -23,13 +23,13 @@ export default BaseLayer.extend({
   iconClass: 'info circle icon',
 
   /**
-    Permitted operations related to layer type.
-
-    @property operations
-    @type String[]
-    @default ['edit', 'remove', 'search']
+    Initializes component.
   */
-  operations: Object.freeze(['edit', 'remove', 'search']),
+  init() {
+    this._super(...arguments);
+
+    this.operations = this.operations || ['edit', 'remove', 'search'];
+  },
 
   /**
     Creates new settings object (with settings related to layer-type).

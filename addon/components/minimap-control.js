@@ -25,22 +25,6 @@ export default BaseControl.extend({
   */
   layerGroup: null,
 
-  leafletOptions: Object.freeze([
-    'position',
-    'width',
-    'height',
-    'collapsedWidth',
-    'collapsedHeight',
-    'zoomLevelOffset',
-    'zoomLevelFixed',
-    'centerFixed',
-    'zoomAnimation',
-    'toggleDisplay',
-    'autoToggleDisplay',
-    'minimized',
-    'strings'
-  ]),
-
   /**
     The standard Leaflet.Control position parameter, used like all the other controls.
     @property position
@@ -187,20 +171,30 @@ export default BaseControl.extend({
   */
   showPanel: false,
 
-  /**
-    Overrides the default strings allowing for translation.
-    See {<a href="https://github.com/Norkart/Leaflet-MiniMap#available-strings">for available strings</a>}
-    @property strings
-    @type Object
-    @default {hideText:'', showText:''}
-  */
-  strings: Object.freeze({
-    hideText: '',
-    showText: '',
-  }),
-
   init() {
     this._super(...arguments);
+
+    this.leafletOptions = this.leafletOptions || [
+      'position',
+      'width',
+      'height',
+      'collapsedWidth',
+      'collapsedHeight',
+      'zoomLevelOffset',
+      'zoomLevelFixed',
+      'centerFixed',
+      'zoomAnimation',
+      'toggleDisplay',
+      'autoToggleDisplay',
+      'minimized',
+      'strings'
+    ];
+
+    this.strings = this.strings || {
+      hideText: '',
+      showText: '',
+    };
+
     this.set('layerGroup', L.layerGroup());
   },
 

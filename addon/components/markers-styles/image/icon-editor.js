@@ -299,13 +299,13 @@ export default Component.extend({
     let h = iconZoomSize[1];
 
     if (w === 0 && h === 0) {
-      const [i0] = iconSize[0];
-      const [i1] = iconSize[1];
+      const i0 = iconSize[0];
+      const i1 = iconSize[1];
       w = i0;
       h = i1;
     } else {
-      const [i0] = iconZoomSize[0];
-      const [i1] = iconZoomSize[1];
+      const i0 = iconZoomSize[0];
+      const i1 = iconZoomSize[1];
       w = i0;
       h = i1;
       this.setIsZoom();

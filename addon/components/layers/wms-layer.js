@@ -18,13 +18,6 @@ import TileLayer from './tile-layer';
   @extends TileLayerComponent
  */
 export default TileLayer.extend({
-  leafletOptions: Object.freeze([
-    'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
-    'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
-    'zoomOffset', 'zoomReverse', 'opacity', 'zIndex', 'unloadInvisibleTiles',
-    'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds', 'filter',
-    'layers', 'styles', 'format', 'transparent', 'version', 'crs', 'info_format', 'tiled'
-  ]),
 
   /**
     Performs 'getFeatureInfo' request to WMS-service related to layer.
@@ -140,5 +133,19 @@ export default TileLayer.extend({
   */
   search() {
     // Wms-layers hasn't any search logic.
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.leafletOptions = this.leafletOptions || [
+      'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
+      'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
+      'zoomOffset', 'zoomReverse', 'opacity', 'zIndex', 'unloadInvisibleTiles',
+      'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds', 'filter',
+      'layers', 'styles', 'format', 'transparent', 'version', 'crs', 'info_format', 'tiled'
+    ];
   },
 });

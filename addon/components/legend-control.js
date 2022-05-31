@@ -45,15 +45,6 @@ export default BaseControl.extend({
   layers: null,
 
   /**
-    Leaflet options for control.
-
-    @property leafletOptions
-    @type String[]
-    @default ['position', 'disableClickPropagation', 'disableScrollPropagation']
-  */
-  leafletOptions: Object.freeze(['position', 'disableClickPropagation', 'disableScrollPropagation']),
-
-  /**
     Creates control instance, should be overridden in child classes.
 
     @method createControl
@@ -61,5 +52,13 @@ export default BaseControl.extend({
   */
   createControl() {
     return new L.Control.Div(this.element, this.get('options'));
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.leafletOptions = this.leafletOptions || ['position', 'disableClickPropagation', 'disableScrollPropagation'];
   },
 });

@@ -38,12 +38,12 @@ export default Component.extend({
   settings: null,
 
   /**
-    Available geometry types.
-
-    @property geometryTypes
-    @type Array
-    @default []
+    Initializes component.
   */
-  geometryTypes: Object.freeze(['PointPropertyType', 'LineStringPropertyType', 'PolygonPropertyType',
-    'MultiPointPropertyType', 'MultiLineStringPropertyType', 'MultiPolygonPropertyType']),
+  init() {
+    this._super(...arguments);
+
+    this.geometryTypes = this.geometryTypes || ['PointPropertyType', 'LineStringPropertyType', 'PolygonPropertyType',
+      'MultiPointPropertyType', 'MultiLineStringPropertyType', 'MultiPolygonPropertyType'];
+  },
 });

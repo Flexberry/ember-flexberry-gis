@@ -6,12 +6,6 @@ import {
 } from '../base-vector-layer';
 
 export default BaseVectorLayer.extend({
-  leafletOptions: Object.freeze([
-    'url',
-    'layerName',
-    'style'
-  ]),
-
   /**
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer
@@ -85,4 +79,15 @@ export default BaseVectorLayer.extend({
     leafletLayer.setZIndex(index + begIndex);
   },
 
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.leafletOptions = this.leafletOptions || [
+      'url',
+      'layerName',
+      'style'
+    ];
+  },
 });

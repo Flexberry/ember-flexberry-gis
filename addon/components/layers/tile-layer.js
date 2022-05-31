@@ -30,13 +30,6 @@ export default BaseLayer.extend({
   */
   noWrap: true,
 
-  leafletOptions: Object.freeze([
-    'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
-    'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
-    'zoomOffset', 'zoomReverse', 'opacity', 'zIndex', 'unloadInvisibleTiles',
-    'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds'
-  ]),
-
   /**
     Creates leaflet layer related to layer type.
 
@@ -81,5 +74,19 @@ export default BaseLayer.extend({
   */
   search() {
     // Tile-layers hasn't any search logic.
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this.leafletOptions = this.leafletOptions || [
+      'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
+      'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
+      'zoomOffset', 'zoomReverse', 'opacity', 'zIndex', 'unloadInvisibleTiles',
+      'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds'
+    ];
   },
 });

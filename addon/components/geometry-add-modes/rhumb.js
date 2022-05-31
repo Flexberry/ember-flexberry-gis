@@ -76,22 +76,6 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
   active: false,
 
   /**
-    Form validation flags.
-
-    @property _formValid
-    @type Object
-    @default {
-    startPointValid: false,
-    tableValid: false
-  }
-    @private
-  */
-  _formValid: Object.freeze({
-    startPointValid: false,
-    tableValid: false,
-  }),
-
-  /**
     Availble direction.
   */
   _availableDirection: null,
@@ -133,20 +117,6 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
     @private
   */
   _tableData: A([]),
-
-  /**
-    Form fields.
-
-    @property _dataForm
-    @type Object
-    @default {
-    startPoint: ''
-  }
-    @private
-  */
-  _dataForm: Object.freeze({
-    startPoint: '',
-  }),
 
   /**
     Error message.
@@ -201,6 +171,16 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
 
   init() {
     this._super(...arguments);
+
+
+    this._formValid = this._formValid || {
+      startPointValid: false,
+      tableValid: false,
+    };
+
+    this._dataForm = this._dataForm || {
+      startPoint: '',
+    };
 
     const directionItems = this.get('directionItems');
     const availableDirection = [];
@@ -490,7 +470,7 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
       @method actions.inputLimit
     */
     onInputLimit(str, e) {
-      const regex = /^\.|[^\d.]|\.(?=.*\.)|^0+(?=\d)/g;
+      const regex = /^\.|[^\d\.]|\.(?=.*\.)|^0+(?=\d)/g;
       if (!isEmpty(str) && regex.test(str)) {
         $(e.target).val(str.replace(regex, ''));
       }

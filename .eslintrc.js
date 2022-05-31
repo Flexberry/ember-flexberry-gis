@@ -23,6 +23,7 @@ module.exports = {
     Terraformer: 'writable',
     proj4: 'writable',
     omnivore: 'writable',
+    Chart: 'writable',
   },
   rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true, }],

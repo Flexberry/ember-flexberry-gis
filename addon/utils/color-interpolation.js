@@ -4,6 +4,28 @@
 
 import { hexToRgb, rgbToHex } from 'ember-flexberry-gis/utils/color-convertor';
 
+/**
+  Return interpolated colors.
+
+  @method interpolateColor
+  @param String color1 in HEX
+  @param String color2 in HEX
+  @param int factor
+  @return [] rgbArray
+  @private
+*/
+const interpolateColor = function (color1, color2, factor) {
+  if (arguments.length < 3) {
+    factor = 0.5;
+  }
+
+  const result = color1.slice();
+  for (let i = 0; i < 3; i++) {
+    result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
+  }
+
+  return result;
+};
 
 /**
   Get color range between start and end colors
@@ -34,29 +56,6 @@ const getGradientColors = function (colorStart, colorEnd, steps) {
   }
 
   return interpolatedColorArray;
-};
-
-/**
-  Return interpolated colors.
-
-  @method interpolateColor
-  @param String color1 in HEX
-  @param String color2 in HEX
-  @param int factor
-  @return [] rgbArray
-  @private
-*/
-let interpolateColor = function (color1, color2, factor) {
-  if (arguments.length < 3) {
-    factor = 0.5;
-  }
-
-  const result = color1.slice();
-  for (let i = 0; i < 3; i++) {
-    result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
-  }
-
-  return result;
 };
 
 export {

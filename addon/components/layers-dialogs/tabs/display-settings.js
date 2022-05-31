@@ -246,15 +246,6 @@ export default Component.extend({
   _selectedLocale: undefined,
 
   /**
-    Contains properties with flag showing whether they are showable.
-
-    @property _showableItems
-    @type Object
-    @default {}
-  */
-  _showableItems: Object.freeze({}),
-
-  /**
     Returns default locale.
 
     @property _defaultLocale
@@ -315,6 +306,15 @@ export default Component.extend({
         });
       }
     }
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this._showableItems = this._showableItems || {};
   },
 
   /**

@@ -27,13 +27,12 @@ export default BaseLayer.extend({
   iconClass: 'image icon',
 
   /**
-    Permitted operations related to layer type.
-
-    @property operations
-    @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'filter']
+    Initializes component.
   */
-  operations: Object.freeze(['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'filter']),
+  init() {
+    this._super(...arguments);
+    this.operations = this.operations || ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'filter'];
+  },
 
   /**
     Creates new settings object (with settings related to layer-type).

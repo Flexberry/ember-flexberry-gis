@@ -113,37 +113,6 @@ const FlexberryMapComponent = Component.extend(
     classNames: [flexberryClassNames.wrapper],
 
     /**
-    List of leaflet map options which will be passed into leaflet map.
-  */
-    leafletOptions: Object.freeze([
-
-      // Map state options.
-      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs', 'preferCanvas', 'editable', 'wheelPxPerZoomLevel',
-
-      // Interaction options.
-      'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
-      'zoomSnap', 'zoomDelta', 'tap', 'tapTolerance', 'trackResize', 'worldCopyJump',
-      'closePopupOnClick', 'bounceAtZoomLimits',
-
-      // Keyboard navigation options.
-      'keyboard', 'keyboardPanOffset', 'keyboardZoomOffset',
-
-      // Panning Inertia Options.
-      'inertia', 'inertiaDeceleration', 'inertiaMaxSpeed', 'inertiaThreshold',
-
-      // Control options.
-      'zoomControl', 'attributionControl',
-
-      // Animation options.
-      'fadeAnimation', 'zoomAnimation', 'zoomAnimationThreshold', 'markerZoomAnimation'
-    ]),
-
-    /**
-    List of leaflet map properties bindings.
-  */
-    leafletProperties: Object.freeze(['zoom:setZoom', 'center:panTo:zoomPanOptions', 'maxBounds:setMaxBounds', 'bounds:fitBounds:fitBoundsOptions']),
-
-    /**
     Map center latitude.
 
     @property lat
@@ -500,6 +469,41 @@ const FlexberryMapComponent = Component.extend(
 
     loadMap(leafletMap, mapApi) {
       this.load(leafletMap, mapApi);
+    },
+
+    /**
+    Initializes component.
+  */
+    init() {
+      this._super(...arguments);
+
+
+      this.leafletOptions = this.leafletOptions || [
+
+        // Map state options.
+        'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs', 'preferCanvas', 'editable', 'wheelPxPerZoomLevel',
+
+        // Interaction options.
+        'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
+        'zoomSnap', 'zoomDelta', 'tap', 'tapTolerance', 'trackResize', 'worldCopyJump',
+        'closePopupOnClick', 'bounceAtZoomLimits',
+
+        // Keyboard navigation options.
+        'keyboard', 'keyboardPanOffset', 'keyboardZoomOffset',
+
+        // Panning Inertia Options.
+        'inertia', 'inertiaDeceleration', 'inertiaMaxSpeed', 'inertiaThreshold',
+
+        // Control options.
+        'zoomControl', 'attributionControl',
+
+        // Animation options.
+        'fadeAnimation', 'zoomAnimation', 'zoomAnimationThreshold', 'markerZoomAnimation'
+      ];
+
+      this.leafletProperties = this.leafletProperties || [
+        'zoom:setZoom', 'center:panTo:zoomPanOptions', 'maxBounds:setMaxBounds', 'bounds:fitBounds:fitBoundsOptions'
+      ];
     },
 
     /**

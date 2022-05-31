@@ -154,9 +154,12 @@ export default Mixin.create({
     @param {String} options.serializedCallback Serialized callback.
     @return {Function} Deserialized callback function.
   */
-  parseLeafletOptionsCallback({ callbackName, serializedCallback, }) {
+  parseLeafletOptionsCallback({ serializedCallback, }) {
+    const f = function () {
+      return serializedCallback;
+    };
     return typeof serializedCallback === 'string' && !isBlank(serializedCallback)
-      ? new Function(`return ${serializedCallback}`)()
+      ? f()
       : null;
   },
 

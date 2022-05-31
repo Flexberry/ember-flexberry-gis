@@ -11,7 +11,7 @@ import layout from '../../../templates/components/layers-dialogs/settings/wfs';
 import WmsSettingsComponent from './wms';
 
 // Regular expression used to derive whether settings' url is correct.
-const urlRegex = '(https?|ftp)://(-.)?([^s/?.#-]+.?)+(/[^s]*)?';
+const urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
 
 /**
   Settings-part of WFS layer modal dialog.
@@ -138,6 +138,8 @@ export default WmsSettingsComponent.extend({
   init() {
     this._super(...arguments);
 
+    this.typeGeometry = this.typeGeometry || ['polygon', 'polyline', 'marker'];
+
     // Initialize available formats.
     const availableFormats = A(Object.keys(L.Format) || []).filter((format) => {
       format = format.toLowerCase();
@@ -145,13 +147,4 @@ export default WmsSettingsComponent.extend({
     });
     this.set('_availableInfoFormats', A(availableFormats));
   },
-
-  /**
-    Available geometry types.
-
-    @property typeGeometry
-    @type Array
-    @default []
-  */
-  typeGeometry: Object.freeze(['polygon', 'polyline', 'marker']),
 });

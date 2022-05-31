@@ -18,27 +18,6 @@ import BaseVectorLayer from '../base-vector-layer';
 */
 export default BaseVectorLayer.extend({
   /**
-    Array containing component's properties which are also leaflet layer options.
-
-    @property leafletOptions
-    @type Stirng[]
-  */
-  leafletOptions: Object.freeze([
-    'kmlUrl',
-    'kmlString',
-    'style',
-    'filter'
-  ]),
-
-  /**
-    Array containing component's properties which are also leaflet layer options callbacks.
-
-    @property leafletOptionsCallbacks
-    @type Stirng[]
-  */
-  leafletOptionsCallbacks: Object.freeze(['filter']),
-
-  /**
     Parses specified serialized callback into function.
 
     @method parseLeafletOptionsCallback
@@ -89,5 +68,19 @@ export default BaseVectorLayer.extend({
     }
 
     return omnivore.kml.parse(options.kmlString, {}, layerWithOptions);
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.leafletOptions = this.leafletOptions || [
+      'kmlUrl',
+      'kmlString',
+      'style',
+      'filter'
+    ];
+    this.leafletOptionsCallbacks = this.leafletOptionsCallbacks || ['filter'];
   },
 });

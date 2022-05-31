@@ -111,18 +111,18 @@ export default Component.extend({
   checkboxClass: 'toggle',
 
   /**
-    Current object with search settings.
-
-    @property value
-    @type Object
-    @default Object
+    Initializes component.
   */
-  value: Object.freeze({
-    canBeSearched: undefined,
-    canBeContextSearched: undefined,
-    contextSearchFields: undefined,
-    searchFields: undefined,
-  }),
+  init() {
+    this._super(...arguments);
+
+    this.value = this.value || {
+      canBeSearched: undefined,
+      canBeContextSearched: undefined,
+      contextSearchFields: undefined,
+      searchFields: undefined,
+    };
+  },
 
   /**
     Initializes page's DOM-related properties.

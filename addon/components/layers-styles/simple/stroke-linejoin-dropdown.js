@@ -15,16 +15,6 @@ import layout from '../../../templates/components/layers-styles/simple/stroke-li
 */
 export default Component.extend({
   /**
-    Available 'stroke-linejoin' attribute values.
-
-    @property _availableLineJoins
-    @type String[]
-    @default ['miter', 'round', 'bevel']
-    @private
-  */
-  _availableLineJoins: Object.freeze(['miter', 'round', 'bevel']),
-
-  /**
     Reference to component's template.
   */
   layout,
@@ -55,6 +45,14 @@ export default Component.extend({
     @default '#000000'
   */
   strokeColor: '#000000',
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this._availableLineJoins = this._availableLineJoins || ['miter', 'round', 'bevel'];
+  },
 
   /**
     Initializes component's DOM-related properties.

@@ -426,7 +426,7 @@ const FlexberryIdentifyPanelComponent = Component.extend({
       @method actions.inputLimit
     */
     onInputLimit(str, e) {
-      const regex = /^\.|^,|\.,|,\.|[^\d.,]|\.(?=.*\.)|,(?=.*,)|\.(?=.*,)|,(?=.*\.)|^0+(?=\d)/g;
+      const regex = /^\.|^,|\.,|,\.|[^\d\.,]|\.(?=.*\.)|,(?=.*,)|\.(?=.*,)|,(?=.*\.)|^0+(?=\d)/g;
       if (!isEmpty(str) && regex.test(str)) {
         $(e.target).val(str.replace(regex, ''));
       }

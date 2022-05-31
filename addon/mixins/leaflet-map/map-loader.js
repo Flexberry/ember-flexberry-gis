@@ -57,7 +57,7 @@ export default Mixin.create({
     const mapInteraction = leafletMap.flexberryMap.interaction;
 
     // Define flexberryMap.loader namespace & related methods & properties.
-    const loader = leafletMap.flexberryMap.loader = {
+    const loader = {
 
       // Loader's markup element.
       $loader,
@@ -137,6 +137,8 @@ export default Mixin.create({
         delete leafletMap.flexberryMap.loader;
       },
     };
+
+    leafletMap.flexberryMap.loader = loader;
   },
 
   /**

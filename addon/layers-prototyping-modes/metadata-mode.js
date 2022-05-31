@@ -9,6 +9,13 @@ import BaseEditMode from 'ember-flexberry-gis/layers-prototyping-modes/-private/
   @class MetadataEditMode
 */
 export default BaseEditMode.extend({
-  requiredProperties: Object.freeze(['leafletMap']),
   name: 'metadata-mode',
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.requiredProperties = this.requiredProperties || ['leafletMap'];
+  },
 });

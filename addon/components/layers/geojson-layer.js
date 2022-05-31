@@ -19,30 +19,6 @@ import BaseVectorLayer from '../base-vector-layer';
  */
 export default BaseVectorLayer.extend({
   /**
-    Array containing component's properties which are also leaflet layer options.
-
-    @property leafletOptions
-    @type Stirng[]
-  */
-  leafletOptions: Object.freeze([
-    'pointToLayer',
-    'onEachFeature',
-    'filter',
-    'coordsToLatLng',
-    'geojson',
-    'crs',
-    'style'
-  ]),
-
-  /**
-    Array containing component's properties which are also leaflet layer options callbacks.
-
-    @property leafletOptionsCallbacks
-    @type Stirng[]
-  */
-  leafletOptionsCallbacks: Object.freeze(['pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng']),
-
-  /**
     Url for download geojson.
 
     @property url
@@ -126,5 +102,24 @@ export default BaseVectorLayer.extend({
     }
 
     return L.geoJSON(featureCollection, options);
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this.leafletOptions = this.leafletOptions || [
+      'pointToLayer',
+      'onEachFeature',
+      'filter',
+      'coordsToLatLng',
+      'geojson',
+      'crs',
+      'style'
+    ];
+
+    this.leafletOptionsCallbacks = this.leafletOptionsCallbacks || ['pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng'];
   },
 });

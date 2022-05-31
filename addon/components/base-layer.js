@@ -151,26 +151,6 @@ export default Component.extend(
     leafletOptionsCallbacks: null,
 
     /**
-      Hash containing default implementations for leaflet layer options callbacks (see leaflet-options mixin).
-
-      @property defaultLeafletOptionsCallbacks
-      @type Object
-    */
-    defaultLeafletOptionsCallbacks: Object.freeze({
-      coordsToLatLng(coords) {
-        const crs = this.get('crs');
-        const point = new L.Point(coords[0], coords[1]);
-        const latlng = crs.projection.unproject(point);
-        if (!isNone(coords[2])) {
-          const [alt] = coords[2];
-          latlng.alt = alt;
-        }
-
-        return latlng;
-      },
-    }),
-
-    /**
       Leaflet map.
 
       @property leafletMap
@@ -299,9 +279,9 @@ export default Component.extend(
 
           let intersect = false;
           if (l._leafletObject && typeof (l._leafletObject.eachLayer) === 'function') {
-            l._leafletObject.eachLayer(function () {
-              if (typeof (layer._containsPoint) === 'function') {
-                intersect = intersect || layer._containsPoint(point);
+            l._leafletObject.eachLayer(function (_layer) {
+              if (typeof (_layer._containsPoint) === 'function') {
+                intersect = intersect || _layer._containsPoint(point);
               }
             });
           }
@@ -837,6 +817,20 @@ export default Component.extend(
     init() {
       this._super(...arguments);
 
+      this.defaultLeafletOptionsCallbacks = this.defaultLeafletOptionsCallbacks || {
+        coordsToLatLng(coords) {
+          const crs = this.get('crs');
+          const point = new L.Point(coords[0], coords[1]);
+          const latlng = crs.projection.unproject(point);
+          if (!isNone(coords[2])) {
+            const alt = coords[2];
+            latlng.alt = alt;
+          }
+
+          return latlng;
+        },
+      };
+
       // Здесь можно задать layerModel.archTime. Но мы не будем, т.к. пустая дата - это то же самое, что текущая.
       // Если все таки захотят чтобы дата отображалась, то нужно будет делать сервис, который отдаст одинаковую текущую дату все слои
 
@@ -1090,7 +1084,7 @@ export default Component.extend(
         const point = new L.Point(coords[0], coords[1]);
         const latlng = crs.projection.unproject(point);
         if (!isNone(coords[2])) {
-          const [alt] = coords[2];
+          const alt = coords[2];
           latlng.alt = alt;
         }
 
