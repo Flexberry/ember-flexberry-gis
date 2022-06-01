@@ -88,7 +88,7 @@ export default Mixin.create({
       let crsName;
       let crsLayer;
       if (!isNone(geometryIntersectsBbox)) {
-        if (!geometryIntersectsBbox.prototype.hasOwnProperty.call('crs')) {
+        if (!Object.prototype.hasOwnProperty.call(geometryIntersectsBbox, 'crs')) {
           reject(new Error("Error: geometryIntersectsBbox must have 'crs' attribute"));
         }
 

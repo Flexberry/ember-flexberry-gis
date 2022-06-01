@@ -439,7 +439,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
 
         let displayValue = Ember.none;
         displayProperty.forEach((prop) => {
-          if (featureProperties.prototype.hasOwnProperty.call(prop)) {
+          if (Object.prototype.hasOwnProperty.call(featureProperties, prop)) {
             const value = featureProperties[prop];
             if (isNone(displayValue) && !isNone(value) && !isEmpty(value) && value.toString().toLowerCase() !== 'null') {
               displayValue = value;
@@ -521,7 +521,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
 
               if (isBlank(ownLayerField)) {
                 properties.forEach((p) => {
-                  if (properties.prototype.hasOwnProperty.call(p) && layerField.toLowerCase() === (`${p}`).toLowerCase()) {
+                  if (Object.prototype.hasOwnProperty.call(properties, p) && layerField.toLowerCase() === (`${p}`).toLowerCase()) {
                     if (isBlank(ownLayerField)) {
                       ownLayerField = p;
                     }

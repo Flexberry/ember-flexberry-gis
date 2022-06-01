@@ -251,7 +251,7 @@ const FlexberryEditLayerAttributesDialogComponent = Component.extend({
     let dataIsValid = true;
 
     Array.from(fieldNames).forEach((fieldName) => {
-      if (fieldNames.prototype.hasOwnProperty.call(fieldName)) {
+      if (Object.prototype.hasOwnProperty.call(fieldNames, fieldName)) {
         const text = get(data, fieldName);
         const value = fieldParsers[fieldName](text);
         const valueIsValid = fieldValidators[fieldName](value);

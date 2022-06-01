@@ -1642,7 +1642,7 @@ export default BaseVectorLayer.extend({
                 const odataValue = data.value;
                 if (!isNone(odataValue) && Array.isArray(odataValue)) {
                   odataValue.forEach((record) => {
-                    if (record.prototype.hasOwnProperty.call('@odata.type')) {
+                    if (Object.prototype.hasOwnProperty.call(record, '@odata.type')) {
                       delete record['@odata.type'];
                     }
 

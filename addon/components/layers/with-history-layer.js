@@ -108,7 +108,7 @@ export default BaseLayer.extend({
 
         const historyLayersSettings = get(settings, 'historyLayer');
         A(Object.keys(settings) || []).forEach((key) => {
-          if (!historyLayersSettings.prototype.hasOwnProperty.call(key)) {
+          if (!Object.prototype.hasOwnProperty.call(historyLayersSettings, key)) {
             set(historyLayersSettings, key, settings[key]);
           }
         });

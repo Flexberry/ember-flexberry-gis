@@ -198,7 +198,7 @@ export default Component.extend({
       });
 
       // If current feature is L.FeatureGroup
-      if (currentFeature.leafletLayer.prototype.hasOwnProperty.call('_layers')) {
+      if (Object.prototype.hasOwnProperty.call(currentFeature.leafletLayer, '_layers')) {
         if (currentFeature.leafletLayer.getLayers().length === 1) {
           const layer = currentFeature.leafletLayer.getLayers()[0];
           polygonLayer = layer;

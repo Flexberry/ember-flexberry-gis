@@ -1281,7 +1281,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
       const leafletMap = this.get('leafletMap');
       const switchScaleControlMapName = this.get('switchScaleControlMapName');
       if (!isNone(switchScaleControlMapName)
-        && leafletMap.prototype.hasOwnProperty.call(`switchScaleControl${switchScaleControlMapName}`)
+        && Object.prototype.hasOwnProperty.call(leafletMap, `switchScaleControl${switchScaleControlMapName}`)
         && leafletMap[`switchScaleControl${switchScaleControlMapName}`].options.recalcOnZoomChange) {
         this.set('recalcOnZoomChange', true);
         this.set('zoomDelta', leafletMap.options.zoomDelta);

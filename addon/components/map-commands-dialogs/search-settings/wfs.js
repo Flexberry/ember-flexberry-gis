@@ -19,7 +19,7 @@ export default Component.extend({
     const props = [];
     const searchProperties = this.get('searchProperties');
     searchProperties.foreach((property) => {
-      if (searchProperties.prototype.hasOwnProperty.call(property)) {
+      if (Object.prototype.hasOwnProperty.call(searchProperties, property)) {
         props.push(searchProperties[property]);
       }
     });

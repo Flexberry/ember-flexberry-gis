@@ -55,7 +55,7 @@ export default Helper.extend({
 
     attributes.forEach((attrName) => {
       let currentRelationshipPath = relationshipPath;
-      if (!attributes.prototype.hasOwnProperty.call(attrName)) {
+      if (!Object.prototype.hasOwnProperty.call(attributes, attrName)) {
         return;
       }
 

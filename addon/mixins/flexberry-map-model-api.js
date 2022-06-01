@@ -194,7 +194,7 @@ export default Mixin.create(SnapDraw, {
   */
   getIntersectionObjects(feature, crsName, layerIds) {
     return new Promise((resolve) => {
-      if (!isNone(feature) && feature.prototype.hasOwnProperty.call('geometry')) {
+      if (!isNone(feature) && Object.prototype.hasOwnProperty.call(feature, 'geometry')) {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         const layersIntersect = [];
         layerIds.forEach((id) => {
@@ -539,7 +539,7 @@ export default Mixin.create(SnapDraw, {
   _getLayerFeatureId(layer, layerObject) {
     const field = this._getPkField(layer);
     if (layerObject.state !== state.insert) {
-      if (layerObject.feature.properties.prototype.hasOwnProperty.call(field)) {
+      if (Object.prototype.hasOwnProperty.call(layerObject.feature.properties, field)) {
         return get(layerObject, `feature.properties.${field}`);
       }
 
@@ -1625,7 +1625,7 @@ export default Mixin.create(SnapDraw, {
       }
 
       diffLayerPromise.then((res) => {
-        if (res.prototype.hasOwnProperty.call('diffFeatures')) {
+        if (Object.prototype.hasOwnProperty.call(res, 'diffFeatures')) {
           const jstsGeoJSONReader = new jsts.io.GeoJSONReader();
           res.diffFeatures.forEach((diff) => {
             if (!cond.includes(condition)) {

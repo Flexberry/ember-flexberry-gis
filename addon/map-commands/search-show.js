@@ -56,7 +56,7 @@ export default SearchMapCommand.extend({
 
         let displayValue = Ember.none;
         displayProperty.forEach((prop) => {
-          if (featureProperties.prototype.hasOwnProperty.call(prop)) {
+          if (Object.prototype.hasOwnProperty.call(featureProperties, prop)) {
             const value = featureProperties[prop];
             if (isNone(displayValue) && !isNone(value) && !isEmpty(value)) {
               displayValue = value;

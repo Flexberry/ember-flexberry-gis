@@ -1094,7 +1094,7 @@ export default BaseLayer.extend({
           property = prop.innerText;
         }
 
-        if (property && layer.feature.properties && layer.feature.properties.prototype.hasOwnProperty.call(property)) {
+        if (property && layer.feature.properties && Object.prototype.hasOwnProperty.call(layer.feature.properties, property)) {
           let label = layer.feature.properties[property];
           if (isNone(label)) {
             label = '';
