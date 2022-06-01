@@ -664,7 +664,7 @@ export default Mixin.create(SnapDraw, {
       if (isNone(source.layerId) || isNone(source.objectIds) || isNone(destination.layerId)) {
         reject(new Error('Check the parameters you are passing'));
       } else {
-        /* eslint-disable new-cap */
+        /* eslint-disable-next-line new-cap */
         const loadPromise = new all(this.loadingFeaturesByPackages(source.layerId, source.objectIds, source.shouldRemove));
 
         loadPromise.then((res) => {

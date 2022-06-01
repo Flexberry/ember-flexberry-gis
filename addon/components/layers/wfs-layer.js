@@ -30,9 +30,9 @@ export default BaseVectorLayer.extend({
   */
   getFeaturesReadFormat() {
     const format = this.get('format');
-    let availableFormats = A(Object.keys(L.Format) || []).filter((format) => {
-      format = format.toLowerCase();
-      return format !== 'base' && format !== 'scheme';
+    let availableFormats = A(Object.keys(L.Format) || []).filter((_format) => {
+      _format = _format.toLowerCase();
+      return _format !== 'base' && _format !== 'scheme';
     });
     availableFormats = A(availableFormats);
     assert(
@@ -65,7 +65,7 @@ export default BaseVectorLayer.extend({
     @param {Boolean} [single = false] Flag: indicates whether result should be a single layer.
   */
   _getFeature(options) {
-    return new Promise(() => {
+    return new Promise((rslv, rjct) => {
       options = $.extend(options || {}, { showExisting: true, });
 
       let filter = get(options, 'filter');
@@ -79,7 +79,7 @@ export default BaseVectorLayer.extend({
       const wfsLayer = this.get('_leafletObject');
 
       if (isNone(wfsLayer)) {
-        resolve(A());
+        rslv(A());
         return;
       }
 
@@ -94,9 +94,9 @@ export default BaseVectorLayer.extend({
           features.pushObject(feature);
         });
 
-        resolve(features);
+        rslv(features);
       }).catch((e) => {
-        reject(e);
+        rjct(e);
       });
     });
   },
@@ -108,13 +108,13 @@ export default BaseVectorLayer.extend({
     @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
   */
   _getBoundingBox(layer) {
-    return new Promise(() => {
+    return new Promise((rslv, rjct) => {
       layer.getBoundingBox(
         (boundingBox) => {
-          resolve(boundingBox);
+          rslv(boundingBox);
         },
         (errorThrown) => {
-          reject(errorThrown);
+          rjct(errorThrown);
         }
       );
     });
@@ -210,7 +210,7 @@ export default BaseVectorLayer.extend({
     @returns {RSVP.Promise}.
   */
   _loadFeatures(filter, fireLoad = true) {
-    return new Promise(() => {
+    return new Promise((rslv, rjct) => {
       const that = this;
       filter = this.addCustomFilter(filter);
       L.Util.request({
@@ -270,7 +270,7 @@ export default BaseVectorLayer.extend({
             });
           }
 
-          resolve(layers);
+          rslv(layers);
 
           return that;
         },
@@ -279,7 +279,7 @@ export default BaseVectorLayer.extend({
             error: new Error(errorMessage),
           });
 
-          reject(errorMessage);
+          rjct(errorMessage);
 
           return that;
         },
@@ -316,7 +316,7 @@ export default BaseVectorLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer(options) {
-    return new Promise(() => {
+    return new Promise((rslv, rjct) => {
       // Retrieve possibly defined in layer's settings filter.
       const initialOptions = this.get('options') || {};
       let initialFilter = get(initialOptions, 'filter');
@@ -404,10 +404,10 @@ export default BaseVectorLayer.extend({
           wfsLayer.promiseLoadLayer = load && load instanceof Promise ? load : resolve();
           wfsLayer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
 
-          resolve(wfsLayer);
+          rslv(wfsLayer);
         })
         .once('error', (e) => {
-          reject(e.error || e);
+          rjct(e.error || e);
         })
         .on('load', () => {
           this._setLayerState();
@@ -455,7 +455,7 @@ export default BaseVectorLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    return new Promise(() => {
+    return new Promise((rslv, rjct) => {
       const filter = new L.Filter.Intersects(this.get('geometryField'), e.polygonLayer, this.get('crs'));
 
       this._getFeature({
@@ -470,9 +470,9 @@ export default BaseVectorLayer.extend({
           });
         }
 
-        resolve(filteredFeatures);
+        rslv(filteredFeatures);
       }).catch((message) => {
-        reject(message);
+        rjct(message);
       });
     });
   },
@@ -618,7 +618,7 @@ export default BaseVectorLayer.extend({
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   loadLayerFeatures(e) {
-    return new Promise(() => {
+    return new Promise((rslv, rjct) => {
       const leafletObject = this.get('_leafletObject');
       const { featureIds, } = e;
       if (!leafletObject.options.showExisting) {
@@ -656,7 +656,7 @@ export default BaseVectorLayer.extend({
           if (!isEmpty(remainingFeat)) {
             filter = makeFilterEqOr(remainingFeat);
           } else { // If objects is already loaded, return leafletObject
-            resolve(leafletObject);
+            rslv(leafletObject);
             return;
           }
         } else { // load objects that don't exist yet
@@ -668,10 +668,10 @@ export default BaseVectorLayer.extend({
         }
 
         leafletObject.loadFeatures(filter).then(() => {
-          resolve(leafletObject);
-        }).catch((mes) => reject(mes));
+          rslv(leafletObject);
+        }).catch((mes) => rjct(mes));
       } else {
-        resolve(leafletObject);
+        rslv(leafletObject);
       }
     });
   },
@@ -684,7 +684,7 @@ export default BaseVectorLayer.extend({
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   getLayerFeatures(e) {
-    return new Promise(() => {
+    return new Promise((rslv, rjct) => {
       const leafletObject = this.get('_leafletObject');
       const { featureIds, } = e;
       if (!leafletObject.options.showExisting) {
@@ -708,7 +708,7 @@ export default BaseVectorLayer.extend({
           success(responseText) {
             const exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
             if (exceptionReport) {
-              reject(exceptionReport.message);
+              rjct(exceptionReport.message);
             }
 
             const layers = leafletObject.readFormat.responseToLayers(responseText, {
@@ -722,10 +722,10 @@ export default BaseVectorLayer.extend({
               }
             });
 
-            resolve(layers);
+            rslv(layers);
           },
           error(errorMessage) {
-            reject(errorMessage);
+            rjct(errorMessage);
           },
         });
       } else if (isArray(featureIds) && !isNone(featureIds)) {
@@ -739,9 +739,9 @@ export default BaseVectorLayer.extend({
             objects.push(obj);
           }
         });
-        resolve(objects);
+        rslv(objects);
       } else {
-        resolve(Object.values(leafletObject._layers));
+        rslv(Object.values(leafletObject._layers));
       }
     });
   },
@@ -816,12 +816,12 @@ export default BaseVectorLayer.extend({
 
       let promise;
       if (needPromise) {
-        promise = new Promise(() => {
+        promise = new Promise((rslv, rjct) => {
           leafletObject.once('loadCompleted', () => {
-            resolve();
+            rslv();
           }).once('error', () => {
             leafletObject.existingFeaturesLoaded = false;
-            reject();
+            rjct();
           });
         });
       } else {
@@ -965,18 +965,18 @@ export default BaseVectorLayer.extend({
     @returns {Ember.RSVP.Promise} Returns promise.
   */
   cancelEdit(ids) {
-    return new Promise(() => {
+    return new Promise((rslv, rjct) => {
       const leafletObject = this.get('_leafletObject');
       const featuresIds = this.clearChanges(ids);
       if (featuresIds.length === 0) {
-        resolve();
+        rslv();
       } else {
         const e = {
           featureIds: featuresIds,
           layer: leafletObject.layerId,
           results: A(),
         };
-        this.loadLayerFeatures(e).then(() => { resolve(); }).catch(() => reject(e));
+        this.loadLayerFeatures(e).then(() => { rslv(); }).catch(() => rjct(e));
       }
     });
   },
@@ -1043,7 +1043,7 @@ export default BaseVectorLayer.extend({
     @return {Ember.RSVP.Promise}
   */
   dwithin(featureLayer, distance, exceptFeature) {
-    return new Promise(() => {
+    return new Promise((rslv) => {
       const geometryField = this.get('geometryField');
       const crs = this.get('crs');
       let filter = new L.Filter.DWithin(geometryField, featureLayer, crs, distance, 'meter');
@@ -1057,7 +1057,7 @@ export default BaseVectorLayer.extend({
       const filterPromise = this._getFeature({
         filter,
       });
-      resolve(filterPromise);
+      rslv(filterPromise);
     });
   },
 
@@ -1073,19 +1073,19 @@ export default BaseVectorLayer.extend({
     @return {Ember.RSVP.Promise}
   */
   upDistance(featureLayer, distances, iter, exceptFeature) {
-    return new Promise(() => {
+    return new Promise((rslv, rjct) => {
       this.dwithin(featureLayer, distances[iter], exceptFeature)
         .then((res) => {
           if (isArray(res) && res.length > 0) {
-            resolve(res);
+            rslv(res);
           } else if (iter < distances.length - 1) {
-            resolve(this.upDistance(featureLayer, distances, iter, exceptFeature));
+            rslv(this.upDistance(featureLayer, distances, iter, exceptFeature));
           } else {
-            resolve(null);
+            rslv(null);
           }
         })
         .catch((error) => {
-          reject(error);
+          rjct(error);
         });
     });
   },
@@ -1106,7 +1106,7 @@ export default BaseVectorLayer.extend({
     @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
   */
   getNearObject(e) {
-    return new Promise(() => {
+    return new Promise((rslv, rjct) => {
       let result = null;
       const mapApi = this.get('mapApi').getFromApi('mapModel');
       const leafletObject = this.get('_leafletObject');
@@ -1128,7 +1128,7 @@ export default BaseVectorLayer.extend({
             // and such situation must be handled.
             const exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
             if (exceptionReport) {
-              return reject(exceptionReport.message);
+              return rjct(exceptionReport.message);
             }
 
             const nearObject = leafletObject.readFormat.responseToLayers(responseText, {
@@ -1148,17 +1148,17 @@ export default BaseVectorLayer.extend({
                     layer: layerModel,
                     object: object[0],
                   };
-                  resolve(result);
+                  rslv(result);
                 } else {
-                  Promise.reject(new Error(`Don't loaded feature with id: ${id} for layer ${layerModel.get('name')}`));
+                  rjct(new Error(`Don't loaded feature with id: ${id} for layer ${layerModel.get('name')}`));
                 }
               });
             } else {
-              resolve('Nearest object not found');
+              rslv('Nearest object not found');
             }
           },
           error(error) {
-            Promise.reject(new Error(`Error for request getNearObject via WPS ${wpsUrl} for layer ${layerModel.get('name')}: ${error}`));
+            rjct(new Error(`Error for request getNearObject via WPS ${wpsUrl} for layer ${layerModel.get('name')}: ${error}`));
           },
         });
       } else {
@@ -1168,13 +1168,13 @@ export default BaseVectorLayer.extend({
         this.upDistance(e.featureLayer, distances, 0, exceptFeature)
           .then((resultDwithin) => {
             if (!isNone(resultDwithin)) {
-              resolve(this._calcNearestObject(resultDwithin, e));
+              rslv(this._calcNearestObject(resultDwithin, e));
             } else {
-              resolve('Nearest object not found');
+              rslv('Nearest object not found');
             }
           })
           .catch((error) => {
-            reject(error);
+            rjct(error);
           });
       }
     });

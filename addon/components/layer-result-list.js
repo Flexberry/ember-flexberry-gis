@@ -450,7 +450,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
         return displayValue || '';
       }
 
-      const calculateDisplayProperty = this.eval(`(${displayProperty})`);
+      const calculateDisplayProperty = eval(`(${displayProperty})`);
       assert(
         'Property \'settings.displaySettings.featuresPropertiesSettings.displayProperty\' '
         + 'is not a valid javascript function',

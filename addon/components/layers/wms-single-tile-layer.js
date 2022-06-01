@@ -41,7 +41,7 @@ export default TileLayerComponent.extend({
   identify() {
     const innerWmsLayer = this.get('_wmsLayer');
     if (!isNone(innerWmsLayer)) {
-      return innerWmsLayer.identify.apply(...arguments);
+      return innerWmsLayer.identify.apply(this.get('_wmsLayer'), arguments);
     }
   },
 

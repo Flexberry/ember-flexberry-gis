@@ -49,7 +49,7 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this.createAllLayer();
       const promises = A();
       promises.push(this.get('mainLayer._leafletLayerPromise'));
@@ -61,7 +61,7 @@ export default BaseLayer.extend({
         const rejected = layers.filter((item) => item.state === 'rejected').length > 0;
 
         if (rejected) {
-          Promise.reject(new Error(`Failed to create leaflet layer for '${this.get('layerModel.name')}`));
+          reject(new Error(`Failed to create leaflet layer for '${this.get('layerModel.name')}`));
         }
 
         const layer = layers[0].value;
@@ -73,7 +73,7 @@ export default BaseLayer.extend({
         layer.hideAllLayerObjects = this.get('hideAllLayerObjects').bind(this);
         resolve(layer);
       }).catch((e) => {
-        Promise.reject(new Error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${e}`));
+        reject(new Error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${e}`));
       });
     });
   },
@@ -276,7 +276,7 @@ export default BaseLayer.extend({
   identify() {
     const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.identify.apply(...arguments);
+      return mainLayer.identify.apply(this.get('mainLayer'), arguments);
     }
   },
 
@@ -295,7 +295,7 @@ export default BaseLayer.extend({
   search() {
     const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.search.apply(...arguments);
+      return mainLayer.search.apply(this.get('mainLayer'), arguments);
     }
   },
 
@@ -312,7 +312,7 @@ export default BaseLayer.extend({
   query() {
     const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.query.apply(...arguments);
+      return mainLayer.query.apply(this.get('mainLayer'), arguments);
     }
   },
 
@@ -329,7 +329,7 @@ export default BaseLayer.extend({
   getNearObject() {
     const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.getNearObject.apply(...arguments);
+      return mainLayer.getNearObject.apply(this.get('mainLayer'), arguments);
     }
   },
 
@@ -339,7 +339,7 @@ export default BaseLayer.extend({
     @return {Promise}
   */
   showAllLayerObjects() {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const mainLayer = this.get('mainLayer');
       if (isNone(mainLayer) || isNone(mainLayer._leafletObject)) {
         return;
@@ -355,7 +355,7 @@ export default BaseLayer.extend({
         const rejected = result.filter((item) => item.state === 'rejected').length > 0;
 
         if (rejected) {
-          Promise.reject(new Error(`Failed to showAllLayerObjects for '${this.get('layerModel.name')}`));
+          reject(new Error(`Failed to showAllLayerObjects for '${this.get('layerModel.name')}`));
         }
 
         resolve(result[0].value);

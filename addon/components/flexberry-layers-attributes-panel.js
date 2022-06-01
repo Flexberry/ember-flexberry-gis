@@ -508,7 +508,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
       return null;
     }
 
-    const tab = _tabModels.find(() => get(tab, 'layerModel.id') === id);
+    const tab = _tabModels.find((t) => get(t, 'layerModel.id') === id);
 
     return tab;
   },
@@ -947,14 +947,16 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
 
       const { leafletObject, } = tabModel;
 
+      let saveSuccess;
+
       const saveFailed = (data) => {
         // тут бы восстановить слои
         this.set('loading', false);
         this.set('error', data);
-        leafletObject.off('save:success', this.saveSuccess);
+        leafletObject.off('save:success', saveSuccess);
       };
 
-      const saveSuccess = () => {
+      saveSuccess = () => {
         this.set('loading', false);
         tabModel._reload();
         leafletObject.off('save:failed', saveFailed);

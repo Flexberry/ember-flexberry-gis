@@ -411,8 +411,8 @@ export default Component.extend(
       @private
     */
     _getAttributesOptions() {
-      return new Promise(() => {
-        resolve({
+      return new Promise((_resolve) => {
+        _resolve({
           object: this.get('_leafletObject'),
           settings: {
             readonly: true,
@@ -808,7 +808,8 @@ export default Component.extend(
       @return {Ember.RSVP.Promise} Returns promise.
     */
     cancelEdit() {
-      return resolve();
+      /* eslint-disable-next-line new-cap */
+      return new resolve();
     },
 
     /**

@@ -210,14 +210,14 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
       const captionPath = get(item, 'captionPath');
 
       if (!caption && captionPath) {
-        this.setCaprion(item, i18n, captionPath);
+        this.setCaption(item, i18n, captionPath);
       }
     });
 
     return result;
   }),
 
-  setCaprion(item, i18n, captionPath) {
+  setCaption(item, i18n, captionPath) {
     set(item, 'caption', i18n.t(captionPath));
   },
 

@@ -252,7 +252,8 @@ const FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFe
           return coordinatesWithError();
         }
 
-        addedLayer = L.marker(parsedCoordinates[0][0]);
+        /* eslint-disable-next-line new-cap */
+        addedLayer = new L.marker(parsedCoordinates[0][0]);
         break;
 
       case 'polyline':

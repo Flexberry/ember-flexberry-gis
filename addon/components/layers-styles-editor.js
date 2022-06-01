@@ -141,14 +141,14 @@ export default Component.extend({
 
       const getLeafletLayer = this.get('getLeafletLayer');
       if (typeof getLeafletLayer !== 'function') {
-        Promise.reject(new Error('Property \'getLeafletLayer\' isn\'t a function'));
+        reject(new Error('Property \'getLeafletLayer\' isn\'t a function'));
         return;
       }
 
       this.set('_leafletLayerIsLoading', true);
       getLeafletLayer().then((leaflet) => {
         this.set('_leafletLayer', leaflet);
-        resolve();
+        resolve(leaflet);
       }).catch((e) => {
         this.set('_leafletLayerLoadingIsError', true);
         this.set('_leafletLayerIsLoading', false);

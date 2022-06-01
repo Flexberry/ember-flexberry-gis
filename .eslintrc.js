@@ -72,6 +72,7 @@ module.exports = {
     'no-return-assign': ['error', 'except-parens'],
     'arrow-parens': ['error', 'always'],
     'consistent-return': 'off',
+    "no-eval": "off",
   },
   overrides: [
     // node files

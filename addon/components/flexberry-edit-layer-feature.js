@@ -726,7 +726,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
     @private
   */
   restoreLayers() {
-    return new Promise((reject) => {
+    return new Promise((rslv, reject) => {
       const initialLayers = this.get('dataItems.initialLayers');
       const leafletObject = this.get('leafletObject');
 
@@ -736,17 +736,17 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         const promise = leafletObject.cancelEdit(featureIds);
 
         this.set('loading', true);
-        (promise || resolve()).then(() => {
+        (promise || rslv()).then(() => {
           this.set('loading', false);
           this.cancelEdit(true);
-          resolve();
+          rslv();
         }).catch(() => {
           this.set('loading', false);
           this.cancelEdit(true);
           reject();
         });
       } else {
-        resolve();
+        rslv();
         this.cancelEdit(true);
       }
     });
@@ -930,9 +930,9 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
 
         leafletObject.fire('load', e);
 
-        createPromise = new Promise(() => {
+        createPromise = new Promise((rslv) => {
           allSettled(e.results).then(() => {
-            resolve();
+            rslv();
           });
         });
 
@@ -980,10 +980,12 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         initialFeatureKeys: this.get('dataItems.initialFeatureKeys'),
       };
 
+      let saveSuccess;
+
       const saveFailed = () => {
         this.set('loading', false);
         this.set('error', t('components.flexberry-edit-layer-feature.validation.save-fail'));
-        leafletObject.off('save:success', this.saveSuccess);
+        leafletObject.off('save:success', saveSuccess);
 
         this.restoreLayers().then(() => {
           this.get('leafletMap').fire(`${event}:fail`, e);
@@ -993,7 +995,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         });
       };
 
-      const saveSuccess = (data) => {
+      saveSuccess = (data) => {
         this.set('loading', false);
         leafletObject.off('save:failed', saveFailed);
 

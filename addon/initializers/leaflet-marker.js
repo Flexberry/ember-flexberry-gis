@@ -31,7 +31,9 @@ export function initialize() {
           const label = this._createStringLabel(html, this);
           const opt = Object.assign({}, style.options);
           opt.html = label;
-          this.setIcon(L.divIcon(opt));
+
+          /* eslint-disable-next-line new-cap */
+          this.setIcon(new L.divIcon(opt));
           this.style = opt;
           this.styleIsSet = true;
         } else if (!isNone(style) && !isNone(style.options)) {
@@ -45,7 +47,8 @@ export function initialize() {
         }
       } else if (isNone(this.styleIsSet)) {
         if (!isNone(this.style) && !isNone(this.style.html)) {
-          this.setIcon(L.divIcon(this.style));
+          /* eslint-disable-next-line new-cap */
+          this.setIcon(new L.divIcon(this.style));
         }
 
         this.styleIsSet = false;

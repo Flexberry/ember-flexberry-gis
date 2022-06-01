@@ -202,12 +202,12 @@ export default Component.extend({
     }
 
     const _this = this;
-    Promise((resolve, reject) => {
+    new Promise((resolve, reject) => { // eslint-disable-line no-new
       L.TileLayer.WMS.Format.getAvailable({
         url,
         done(capableFormats) {
           if (!isArray(capableFormats) || capableFormats.length === 0) {
-            Promise.reject(new Error(`Service ${url} had not returned any available formats`));
+            reject(new Error(`Service ${url} had not returned any available formats`));
           }
 
           // Change current info format to available one.
@@ -241,7 +241,7 @@ export default Component.extend({
       }).getBoundingBox({
         done(boundingBox) {
           if (isBlank(boundingBox)) {
-            Promise.reject(new Error(`Service ${settings.url} had not returned any bounding box`));
+            reject(new Error(`Service ${settings.url} had not returned any bounding box`));
           }
 
           _this.set('bounds.0.0', boundingBox.getSouth());

@@ -26,7 +26,9 @@ export default DrawMapTool.extend({
 
         const latlngs = e.layer._latlngs;
         latlngs.push(latlngs[0]);
-        const polygone = L.polygon(latlngs, { editOptions: { editTools: this.get('_editTools'), }, });
+
+        /* eslint-disable-next-line new-cap */
+        const polygone = new L.polygon(latlngs, { editOptions: { editTools: this.get('_editTools'), }, });
 
         this.get('_editTools').stopDrawing();
 

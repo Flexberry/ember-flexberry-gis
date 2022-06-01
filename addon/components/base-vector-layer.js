@@ -161,13 +161,13 @@ export default BaseLayer.extend({
   },
 
   _featuresProcessCallback(layers, leafletObject) {
-    return new Promise(() => {
+    return new Promise((rslv) => {
       if (!leafletObject) {
         leafletObject = this.get('_leafletObject');
       }
 
       if (!layers) {
-        resolve();
+        rslv();
         leafletObject.fire('loadCompleted');
         return;
       }
@@ -188,7 +188,7 @@ export default BaseLayer.extend({
         }
 
         leafletObject.fire('loadCompleted');
-        resolve();
+        rslv();
       });
     });
   },

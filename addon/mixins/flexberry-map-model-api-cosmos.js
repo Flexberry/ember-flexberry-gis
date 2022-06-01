@@ -89,7 +89,7 @@ export default Mixin.create({
       let crsLayer;
       if (!isNone(geometryIntersectsBbox)) {
         if (!geometryIntersectsBbox.prototype.hasOwnProperty.call('crs')) {
-          Promise.reject(new Error("Error: geometryIntersectsBbox must have 'crs' attribute"));
+          reject(new Error("Error: geometryIntersectsBbox must have 'crs' attribute"));
         }
 
         crsName = geometryIntersectsBbox.crs.properties.name;
@@ -119,7 +119,7 @@ export default Mixin.create({
       }
 
       if (filter.length === 0) {
-        Promise.reject(new Error('Error: failed to create a request condition'));
+        reject(new Error('Error: failed to create a request condition'));
       }
 
       let condition;

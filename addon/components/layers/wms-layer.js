@@ -28,8 +28,8 @@ export default TileLayer.extend({
     const layer = this.get('_leafletObject');
 
     if (isNone(layer)) {
-      return new Promise(() => {
-        Promise.reject(new Error(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`));
+      return new Promise((reject) => {
+        reject(new Error(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`));
       });
     }
 
