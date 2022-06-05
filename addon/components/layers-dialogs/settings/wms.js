@@ -108,7 +108,7 @@ export default Component.extend({
   getCapabilitiesErrorMessage: computed(
     'getCapabilitiesPromiseError',
     'i18n',
-    'settings.{url, layers, version}',
+    'settings.{url,layers,version}',
     function () {
       const getCapabilitiesPromiseError = this.get('getCapabilitiesPromiseError');
 

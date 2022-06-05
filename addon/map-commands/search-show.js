@@ -68,7 +68,7 @@ export default SearchMapCommand.extend({
       }
 
       // Defined displayProperty is a serialized java script function, which can calculate display property.
-      const calculateDisplayProperty = this.eval(`(${displayProperty})`);
+      const calculateDisplayProperty = eval(`(${displayProperty})`);
       assert(
         `${'Property \'settings.displaySettings.featuresPropertiesSettings.displayProperty\' '
         + 'in layer \''}${layerName}' is not a valid java script function`,

@@ -165,7 +165,7 @@ const FlexberryMaplayersComponent = Component.extend(
       @readOnly
       @private
     */
-    _hasLayers: computed('layers.{[], @each.isDeleted}', function () {
+    _hasLayers: computed('layers.{[],@each.isDeleted}', function () {
       const layers = this.get('layers');
 
       return isArray(layers) && layers.filter((layer) => !isNone(layer) && get(layer, 'isDeleted') !== true).length > 0;

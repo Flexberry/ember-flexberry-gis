@@ -9,6 +9,7 @@ import { isNone, isBlank } from '@ember/utils';
 import { Promise } from 'rsvp';
 import { once } from '@ember/runloop';
 import { observer, computed } from '@ember/object';
+import { on } from '@ember/object/evented';
 import Component from '@ember/component';
 import layout from '../templates/components/layers-styles-editor';
 
@@ -110,9 +111,9 @@ export default Component.extend({
   */
   layerType: null,
 
-  _layerLoader: observer('layerLoaderIsReady', function () {
+  _layerLoader: on('init', observer('layerLoaderIsReady', function () {
     once(this, '_loadLeafletLayer');
-  }),
+  })),
 
   _loadLeafletLayer() {
     this.set('_leafletLayerLoadingIsError', false);

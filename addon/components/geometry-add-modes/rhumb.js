@@ -4,6 +4,7 @@
 
 import $ from 'jquery';
 
+import { on } from '@ember/object/evented';
 import {
   computed, get, set, observer
 } from '@ember/object';
@@ -221,11 +222,11 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
     set(item, 'caption', i18n.t(captionPath));
   },
 
-  initialSettings: observer('settings', function () {
+  initialSettings: on('init', observer('settings', function () {
     this.set('isError', false);
     this.set('_crs', this.get('settings.layerCRS'));
     this._dropForm();
-  }),
+  })),
 
   getLayer() {
     let error = false;

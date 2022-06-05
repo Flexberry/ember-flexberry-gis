@@ -77,7 +77,7 @@ export default Mixin.create(SnapDraw, {
           });
 
           if (!featureLayerLoad) {
-            Promise.reject(new Error(`Object '${featureId}' not found`));
+            reject(new Error(`Object '${featureId}' not found`));
           }
 
           const editTools = this._getEditTools();
@@ -331,7 +331,7 @@ export default Mixin.create(SnapDraw, {
     @private
   */
   _getModelLayerFeature(layerId, featureIds, load = false) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
       const e = {
@@ -343,7 +343,7 @@ export default Mixin.create(SnapDraw, {
 
       leafletMap.fire('flexberry-map:getOrLoadLayerFeatures', e);
       if (isEmpty(e.results)) {
-        Promise.reject(new Error(`Layer '${layerId}' not found`));
+        reject(new Error(`Layer '${layerId}' not found`));
         return;
       }
 
@@ -351,7 +351,7 @@ export default Mixin.create(SnapDraw, {
       if (features instanceof Promise) {
         features.then((layerObject) => {
           if (isEmpty(layerObject) || isNone(layerObject)) {
-            Promise.reject(new Error(`Object '${featureIds}' not found`));
+            reject(new Error(`Object '${featureIds}' not found`));
             return;
           }
 
@@ -370,10 +370,10 @@ export default Mixin.create(SnapDraw, {
 
           resolve([e.results[0].layerModel, e.results[0].leafletObject, featureLayer]);
         }).catch(() => {
-          Promise.reject(new Error(`Object '${featureIds}' not found`));
+          reject(new Error(`Object '${featureIds}' not found`));
         });
       } else {
-        Promise.reject(new Error('Result is not promise'));
+        reject(new Error('Result is not promise'));
       }
     });
   },

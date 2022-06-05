@@ -80,6 +80,6 @@ export default OdataAdapter.extend(AdapterMixin, {
       } catch (e) {
         return rjct(e);
       }
-    }).fail(rjct));
+    }).fail(reject));
   },
 });

@@ -58,7 +58,7 @@ module('Unit | Mixin | test method setVisibilityObjects', function () {
     // Assert
     assert.ok(result instanceof Promise, 'Equals result = Promise');
     result.catch((res) => {
-      assert.equal(res, 'Layer type not supported');
+      assert.equal(res.message, 'Layer type not supported');
       assert.equal(getModelLeafletObjSpy.callCount, 1, 'Check call count to method _getModelLeafletObject');
       assert.equal(getModelLeafletObjSpy.args[0][0], '1', 'Check call first arg to method _getModelLeafletObject');
       done();

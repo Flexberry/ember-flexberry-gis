@@ -5,6 +5,7 @@
 import { isArray } from '@ember/array';
 
 import { isNone } from '@ember/utils';
+import { on } from '@ember/object/evented';
 import { observer, computed, set } from '@ember/object';
 import Component from '@ember/component';
 import turfCombine from 'npm:@turf/combine';
@@ -96,9 +97,9 @@ const FlexberryGeometryAddModeDrawComponent = Component.extend({
     };
   },
 
-  initialSettings: observer('settings', function () {
+  initialSettings: on('init', observer('settings', function () {
     this._dragAndDrop(false);
-  }),
+  })),
 
   getLayer() {
     const layer = this.get('layer');

@@ -475,9 +475,6 @@ const FlexberryMapComponent = Component.extend(
     Initializes component.
   */
     init() {
-      this._super(...arguments);
-
-
       this.leafletOptions = this.leafletOptions || [
 
         // Map state options.
@@ -504,6 +501,8 @@ const FlexberryMapComponent = Component.extend(
       this.leafletProperties = this.leafletProperties || [
         'zoom:setZoom', 'center:panTo:zoomPanOptions', 'maxBounds:setMaxBounds', 'bounds:fitBounds:fitBoundsOptions'
       ];
+
+      this._super(...arguments);
     },
 
     /**

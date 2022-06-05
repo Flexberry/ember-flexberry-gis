@@ -57,23 +57,21 @@ export default Mixin.create({
       const objectProperty = property.replace(/\.\[]/, ''); // allow usage of .[] to observe array changes
 
       this._observers[property] = () => {
-        once(this.callLeafletObject(objectProperty, params, leafletProperty));
+        once(() => {
+          const leafletObject = this.get('_leafletObject');
+          if (isNone(leafletObject)) {
+            return;
+          }
+
+          const value = this.get(objectProperty);
+          assert(`${this.constructor} must have a ${leafletProperty} function.`, !!leafletObject[leafletProperty]);
+          const propertyParams = params.map((p) => this.get(p));
+          leafletObject[leafletProperty].call(leafletObject, value, ...propertyParams);
+        });
       };
 
       this.addObserver(property, this, this._observers[property]);
     });
-  },
-
-  callLeafletObject(objectProperty, params, leafletProperty) {
-    const leafletObject = this.get('_leafletObject');
-    if (isNone(leafletObject)) {
-      return;
-    }
-
-    const value = this.get(objectProperty);
-    assert(`${this.constructor} must have a ${leafletProperty} function.`, !!leafletObject[leafletProperty]);
-    const propertyParams = params.map((p) => this.get(p));
-    leafletObject[leafletProperty].call(leafletObject, value, ...propertyParams);
   },
 
   /**

@@ -809,7 +809,7 @@ test('test method createDynamicModel() without json', function (assert) {
     registerStub.returns({});
 
     component.createDynamicModel().catch((error) => {
-      assert.equal(error, 'Can\'t create dynamic model: test-model. Error: ModelName and metadataUrl is empty');
+      assert.equal(error.message, 'Can\'t create dynamic model: test-model. Error: Error: ModelName and metadataUrl is empty');
       done();
       factoryForStub.restore();
     });

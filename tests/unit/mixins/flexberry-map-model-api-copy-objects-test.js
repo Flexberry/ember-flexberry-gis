@@ -277,7 +277,7 @@ module('Unit | Mixin | method copyObjects', function () {
     // Assert
     assert.ok(result instanceof Promise, 'Check result instance of Promise');
     result.then(() => {}).catch((message) => {
-      assert.equal(message, 'Check the parameters you are passing', 'Check the error message');
+      assert.equal(message.message, 'Check the parameters you are passing', 'Check the error message');
       done();
     });
   });

@@ -30,7 +30,7 @@ export default Component.extend({
     @private
   */
   _selectedLayerFeaturesLocalizedProperties: computed(
-    '_selectedLayer.settingsAsObject.{displaySettings.featuresPropertiesSettings.localizedProperties, searchSettings.searchFields}',
+    '_selectedLayer.settingsAsObject.{displaySettings.featuresPropertiesSettings.localizedProperties,searchSettings.searchFields}',
     'i18n.locale',
     function () {
       const currentLocale = this.get('i18n.locale');

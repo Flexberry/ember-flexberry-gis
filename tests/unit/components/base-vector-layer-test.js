@@ -573,7 +573,7 @@ test('test _setVisibilityObjects with continueLoading=true and visibility = true
       const removeLayerSpy = sinon.spy(leafletMap, 'removeLayer');
       const addLayerSpy = sinon.spy(leafletMap, 'addLayer');
       leafletObject._setVisibilityObjects(['1'], true).catch((error) => {
-        assert.equal(error, 'Error: Not working to layer with continueLoading');
+        assert.equal(error.message, 'Not working to layer with continueLoading');
         assert.equal(loadLayerFeaturesSpy.callCount, 0);
         assert.equal(removeLayerSpy.callCount, 0);
         assert.equal(addLayerSpy.callCount, 0);

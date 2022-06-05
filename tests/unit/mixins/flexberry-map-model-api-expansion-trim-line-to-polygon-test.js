@@ -68,7 +68,7 @@ module('Unit | Mixin | test method trimLineToPolygon', function () {
 
     assert.ok(promise instanceof Promise);
     promise.then().catch((result) => {
-      assert.equal(result, 'objects does\' not intersect');
+      assert.equal(result.message, 'objects does\' not intersect');
       bGeoJson.geometry.coordinates = [[56.1, 58.1], [56.4, 58.1]];
       done();
     });
@@ -84,7 +84,7 @@ module('Unit | Mixin | test method trimLineToPolygon', function () {
 
     assert.ok(promise instanceof Promise);
     promise.then().catch((result) => {
-      assert.equal(result, 'CRS mismatch. Objects must have the same crs');
+      assert.equal(result.message, 'CRS mismatch. Objects must have the same crs');
       aGeoJson.crs.properties.name = 'EPSG:4326';
       done();
     });

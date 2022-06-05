@@ -622,11 +622,11 @@ export default BaseVectorLayer.extend({
       const leafletObject = this.get('_leafletObject');
       const { featureIds, } = e;
       if (!leafletObject.options.showExisting) {
-        const getLoadedFeatures = () => {
+        const getLoadedFeatures = (_featureIds) => {
           const loadIds = [];
           leafletObject.eachLayer((shape) => {
             const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), shape);
-            if (!isNone(id) && ((isArray(featureIds) && !isNone(featureIds) && featureIds.indexOf(id) !== -1) || !loadIds.includes(id))) {
+            if (!isNone(id) && ((isArray(_featureIds) && !isNone(_featureIds) && _featureIds.indexOf(id) !== -1) || !loadIds.includes(id))) {
               loadIds.push(id);
             }
           });
@@ -858,7 +858,6 @@ export default BaseVectorLayer.extend({
     Initializes component.
   */
   init() {
-    this._super(...arguments);
     this.leafletOptions = this.leafletOptions || [
       'url',
       'version',
@@ -877,6 +876,7 @@ export default BaseVectorLayer.extend({
       'continueLoading',
       'wpsUrl'
     ];
+    this._super(...arguments);
   },
 
   /**
@@ -1078,7 +1078,8 @@ export default BaseVectorLayer.extend({
         .then((res) => {
           if (isArray(res) && res.length > 0) {
             rslv(res);
-          } else if (iter < distances.length - 1) {
+          } else if (iter < distances.length) {
+            iter += 1;
             rslv(this.upDistance(featureLayer, distances, iter, exceptFeature));
           } else {
             rslv(null);

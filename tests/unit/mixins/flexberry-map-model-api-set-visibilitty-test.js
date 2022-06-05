@@ -137,7 +137,7 @@ module('Unit | Mixin | test method setVisibility ', function () {
     // Assert
     assert.ok(result instanceof Promise, 'Equals result = Promise');
     result.catch((res) => {
-      assert.equal(res, 'Layer \'3\' not found.', 'Check result message');
+      assert.equal(res.message, 'Layer \'3\' not found.', 'Check result message');
       assert.equal(mapFireSpy.callCount, 0, 'Check call count method fire on map');
       assert.equal(mapLayerFindSpy.callCount, 2, 'Check call count method findBy on Array');
       assert.equal(mapLayerFindSpy.args[0][0], 'id', 'Check first argument method findBy on Array');
@@ -176,7 +176,7 @@ module('Unit | Mixin | test method setVisibility ', function () {
     // Assert
     assert.ok(result instanceof Promise, 'Equals result = Promise');
     result.catch((res) => {
-      assert.equal(res, 'all layerIds is not found', 'Check result message');
+      assert.equal(res.message, 'all layerIds is not found', 'Check result message');
       assert.equal(mapFireSpy.callCount, 0, 'Check call count method fire on map');
       assert.equal(mapLayerFindSpy.callCount, 0, 'Check call count method findBy on Array');
       done();
@@ -197,7 +197,7 @@ module('Unit | Mixin | test method setVisibility ', function () {
     // Assert
     assert.ok(result instanceof Promise, 'Equals result = Promise');
     result.catch((res) => {
-      assert.equal(res, 'Parametr is not a Array', 'Check result message');
+      assert.equal(res.message, 'Parametr is not a Array', 'Check result message');
       done();
     });
   });

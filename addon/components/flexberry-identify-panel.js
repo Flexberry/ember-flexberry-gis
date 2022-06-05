@@ -2,6 +2,7 @@
   @module ember-flexberry-gis
 */
 
+import { on } from '@ember/object/evented';
 import { once } from '@ember/runloop';
 import $ from 'jquery';
 import {
@@ -452,14 +453,14 @@ const FlexberryIdentifyPanelComponent = Component.extend({
     @type Observer
     @private
   */
-  _leafletMapDidChange: observer('leafletMap', function () {
+  _leafletMapDidChange: on('didInsertElement', observer('leafletMap', function () {
     const leafletMap = this.get('leafletMap');
     if (isNone(leafletMap)) {
       return;
     }
 
     leafletMap.on('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
-  }),
+  })),
 
   /**
     Handles changes in buffer settings.

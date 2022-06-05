@@ -108,13 +108,13 @@ export default Mixin.create({
       return;
     }
 
-    service = this.get('service');
+    const _service = this.get('service');
     const className = this.get('bindingClass');
     const key = this.get('bindingKey');
 
     // Get object from local storage.
     const objectId = get(bindingObject, 'id');
-    const collection = service.getFromStorage(className, key);
+    const collection = _service.getFromStorage(className, key);
     let storedObject = collection.findBy('id', objectId);
 
     if (!isBlank(storedObject)) {
@@ -135,6 +135,6 @@ export default Mixin.create({
 
     // Save changes.
     collection.pushObject(storedObject);
-    service.setToStorage(className, key, collection);
+    _service.setToStorage(className, key, collection);
   },
 });

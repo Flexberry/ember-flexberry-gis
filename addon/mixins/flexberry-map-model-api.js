@@ -193,8 +193,8 @@ export default Mixin.create(SnapDraw, {
     @return {Promise} Array of layers and objects which intersected selected object.
   */
   getIntersectionObjects(feature, crsName, layerIds) {
-    return new Promise((resolve) => {
-      if (!isNone(feature) && Object.prototype.hasOwnProperty.call(feature, 'geometry')) {
+    return new Promise((resolve, reject) => {
+      if (!isNone(feature) && feature.hasOwnProperty('geometry')) {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         const layersIntersect = [];
         layerIds.forEach((id) => {
@@ -255,7 +255,7 @@ export default Mixin.create(SnapDraw, {
   */
   getNearObject(layerId, layerObjectId, layerIds) {
     return new Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, [layerObjectId]).then(([, , layerObject]) => {
+      this._getModelLayerFeature(layerId, [layerObjectId]).then(([, leafletObject, layerObject]) => {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         const layersGetNeatObject = [];
         layerIds.forEach((id) => {
@@ -539,7 +539,7 @@ export default Mixin.create(SnapDraw, {
   _getLayerFeatureId(layer, layerObject) {
     const field = this._getPkField(layer);
     if (layerObject.state !== state.insert) {
-      if (Object.prototype.hasOwnProperty.call(layerObject.feature.properties, field)) {
+      if (layerObject.feature.properties.hasOwnProperty(field)) {
         return get(layerObject, `feature.properties.${field}`);
       }
 
@@ -825,7 +825,7 @@ export default Mixin.create(SnapDraw, {
     layerId, objectId, layerArrIds, options,
   }) {
     return new Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, [objectId]).then(([, leafletObject, featureLayer]) => {
+      this._getModelLayerFeature(layerId, [objectId]).then(([layerModel, leafletObject, featureLayer]) => {
         const allLayers = this.get('mapLayer.canonicalState');
         const allLayersIds = allLayers.map((l) => l.id);
         if (layerArrIds) {
@@ -875,9 +875,9 @@ export default Mixin.create(SnapDraw, {
             $(document).find('.leaflet-top.leaflet-right').css('display', 'none');
             $(document).find('.leaflet-bottom.leaflet-right').css('display', 'none');
 
-            const promises = load.map(() => !isNone(leafletObject.promiseLoadLayer) && (leafletObject.promiseLoadLayer instanceof Promise));
+            const promises = load.map((object) => !isNone(leafletObject.promiseLoadLayer) && (leafletObject.promiseLoadLayer instanceof Promise));
 
-            allSettled(promises).then(() => {
+            allSettled(promises).then((e) => {
               load.forEach((obj) => {
                 obj.statusLoadLayer = false;
                 obj.promiseLoadLayer = null;
@@ -1025,7 +1025,7 @@ export default Mixin.create(SnapDraw, {
 
       const jsts1 = geometryToJsts(geojson1);
       const jsts2 = geometryToJsts(geojson2);
-      const dstnc = jsts1.distance(jsts2);
+      const distance = jsts1.distance(jsts2);
 
       // Get the angle.
       const getAngle = function (p1, p2) {
@@ -1061,21 +1061,21 @@ export default Mixin.create(SnapDraw, {
       return {
         rhumb,
         angle,
-        dstnc,
+        distance,
       };
     };
 
-    const coordToRhumbs = function (type, _coords) {
+    const coordToRhumbs = function (type, coords) {
       let startPoint = null;
       let n;
       let point1;
       let point2;
       const rhumbs = [];
-      for (let i = 0; i < _coords.length - 1; i++) {
-        startPoint = i === 0 ? _coords[i] : startPoint;
-        point1 = _coords[i];
-        n = !isNone(_coords[i + 1]) ? i + 1 : 0;
-        point2 = _coords[n];
+      for (let i = 0; i < coords.length - 1; i++) {
+        startPoint = i === 0 ? coords[i] : startPoint;
+        point1 = coords[i];
+        n = !isNone(coords[i + 1]) ? i + 1 : 0;
+        point2 = coords[n];
         rhumbs.push(calcRhumb(point1, point2));
       }
 
@@ -1221,7 +1221,7 @@ export default Mixin.create(SnapDraw, {
         cache: false,
         contentType: false,
         processData: false,
-        success() {
+        success(data) {
           resolve(data);
         },
         error(e) {
@@ -1245,7 +1245,7 @@ export default Mixin.create(SnapDraw, {
   _convertObjectCoordinates(projection, object, crsName = null) {
     // copy from https://stackoverflow.com/a/48218209/2014079 for replace $.extend
     // such as it is not properly work with Proxy properties
-    const mergeDeep = function (...objects) {
+    var mergeDeep = function (...objects) {
       const isObject = (obj) => obj && typeof obj === 'object';
 
       return objects.reduce((prev, obj) => {
@@ -1348,7 +1348,7 @@ export default Mixin.create(SnapDraw, {
     @return {Promise} Coordinate.
   */
   getCoordPoint(crsName, snap, snapLayers, snapDistance, snapOnlyVertex) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const leafletMap = this.get('mapApi').getFromApi('leafletMap');
       $(leafletMap._container).css('cursor', 'crosshair');
 
@@ -1360,7 +1360,7 @@ export default Mixin.create(SnapDraw, {
         leafletMap.off('mousemove', this._handleSnapping, this);
         const layers = this.get('_snapLayersGroups');
         if (layers) {
-          layers.forEach((l) => {
+          layers.forEach((l, i) => {
             l.off('load', this._setSnappingFeatures, this);
           });
         }
@@ -1382,7 +1382,7 @@ export default Mixin.create(SnapDraw, {
           return leafletObject;
         }).filter((l) => !!l);
 
-        layers.forEach((l) => {
+        layers.forEach((l, i) => {
           l.on('load', this._setSnappingFeatures, this);
         });
 
@@ -1466,17 +1466,20 @@ export default Mixin.create(SnapDraw, {
           reject(new Error('Error loading objects'));
         }
 
+        let count = 0;
         const scale = this.get('mapApi').getFromApi('precisionScale');
         const resultObjs = A();
 
-        layerFeatures.forEach((r) => {
+        layerFeatures.forEach((r, i) => {
           const geometries = A();
-          r.value[2].forEach((obj) => {
+          r.value[2].forEach((obj, ind) => {
             if (get(obj, 'feature.geometry') && get(obj, 'options.crs.code')) {
               const feature = obj.toJsts(obj.options.crs, scale);
               geometries.pushObject(feature);
             }
           });
+
+          count += 1;
 
           // если вся геометрия невалидна, то будет null
           const merged = this._getMulti(geometries, isUnion, failIfInvalid);
@@ -1587,8 +1590,8 @@ export default Mixin.create(SnapDraw, {
             };
             const jstsFeature = jstsGeoJSONReader.read(feature);
             if (jstsFeature.geometry.isValid()) {
-              const _area = jstsFeature.geometry.getArea();
-              return { feature, jstsGeometry: jstsFeature.geometry, _area, };
+              const area = jstsFeature.geometry.getArea();
+              return { feature, jstsGeometry: jstsFeature.geometry, area, };
             }
 
             return { feature, jstsGeometry: jstsFeature.geometry, area: 0, };
@@ -1625,7 +1628,7 @@ export default Mixin.create(SnapDraw, {
       }
 
       diffLayerPromise.then((res) => {
-        if (Object.prototype.hasOwnProperty.call(res, 'diffFeatures')) {
+        if (res.hasOwnProperty('diffFeatures')) {
           const jstsGeoJSONReader = new jsts.io.GeoJSONReader();
           res.diffFeatures.forEach((diff) => {
             if (!cond.includes(condition)) {
@@ -1660,6 +1663,8 @@ export default Mixin.create(SnapDraw, {
 
                     return true;
 
+
+                    break;
                   case cond[1]:
                     if (jstsFeat.geometry.intersects(diff.jstsGeometry) && !jstsFeat.geometry.contains(diff.jstsGeometry)) {
                       object.id = jstsFeat.properties.primarykey;
@@ -1668,6 +1673,8 @@ export default Mixin.create(SnapDraw, {
 
                     return true;
 
+
+                    break;
                   case cond[2]:
                     if (jstsFeat.geometry.intersects(diff.jstsGeometry)) {
                       object.id = jstsFeat.properties.primarykey;
@@ -1676,6 +1683,8 @@ export default Mixin.create(SnapDraw, {
 
                     return true;
 
+
+                    break;
                   default:
                     return true;
                 }
@@ -1707,7 +1716,7 @@ export default Mixin.create(SnapDraw, {
     @return {Number} 100000000.
   */
   _pointAmplifier() {
-    return 10 ** 8;
+    return Math.pow(10, 8);
   },
 
   /**

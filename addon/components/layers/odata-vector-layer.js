@@ -102,8 +102,9 @@ export default BaseVectorLayer.extend({
         modelsLayer.clear();
         const insertedModelId = [];
         if (!isNone(updatedLayer) && updatedLayer.length > 0) {
-          updatedLayer.map((layer) => function () {
+          updatedLayer.map((layer) => {
             layer.state = state.exist;
+            return layer.state;
           });
         }
 
@@ -746,7 +747,7 @@ export default BaseVectorLayer.extend({
 
     const mixin = {};
     jsonModel.attrs.forEach((attribute) => {
-      mixin[attribute.name] = DS.attribute(attribute.type);
+      mixin[attribute.name] = DS.attr(attribute.type);
     });
 
     const modelMixin = Mixin.create(mixin);
@@ -1143,7 +1144,7 @@ export default BaseVectorLayer.extend({
     @return {Promise} count of features.
   */
   getCountFeatures() {
-    return new Promise(() => {
+    return new Promise((rslv) => {
       const store = this.get('store');
       const modelName = this.get('modelName');
       const projectionName = this.get('projectionName');
@@ -1159,7 +1160,7 @@ export default BaseVectorLayer.extend({
       }
 
       store.query(modelName, queryBuilder.build()).then((result) => {
-        resolve(result.meta.count);
+        rslv(result.meta.count);
       });
     });
   },

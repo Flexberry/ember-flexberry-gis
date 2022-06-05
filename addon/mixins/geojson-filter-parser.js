@@ -32,9 +32,9 @@ export default Mixin.create({
     const features = geojson.features || [];
     const fields = A();
 
-    (get(features, '0.properties') || {}).forEach((property) => {
+    for (const property in get(features, '0.properties') || {}) {
       fields.addObject(property);
-    });
+    }
 
     return fields;
   },

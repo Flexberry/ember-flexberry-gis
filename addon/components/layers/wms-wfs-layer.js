@@ -3,6 +3,7 @@
 */
 
 import { getOwner, setOwner } from '@ember/application';
+import { on } from '@ember/object/evented';
 import { isNone } from '@ember/utils';
 import { set, observer } from '@ember/object';
 import $ from 'jquery';
@@ -53,10 +54,10 @@ export default WmsLayerComponent.extend({
   /**
     Sets wfs layer's filter, when wms filter was changed.
   */
-  filterObserver: observer('options.filter', function () {
+  filterObserver: on('init', observer('options.filter', function () {
     const filter = this.get('options.filter');
     this.set('_wfsLayer.options.filter', filter);
-  }),
+  })),
 
   /**
     Returns leaflet layer for filter component.

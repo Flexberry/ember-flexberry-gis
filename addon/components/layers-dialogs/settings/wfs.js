@@ -48,7 +48,7 @@ export default WmsSettingsComponent.extend({
   getCapabilitiesErrorMessage: computed(
     'getCapabilitiesPromiseError',
     'i18n',
-    'settings.{url, typeNS, typeName, version}',
+    'settings.{url,typeNS,typeName,version}',
     function () {
       const getCapabilitiesPromiseError = this.get('getCapabilitiesPromiseError');
 
@@ -113,7 +113,7 @@ export default WmsSettingsComponent.extend({
       L.wfs(settings, null).getBoundingBox(
         (boundingBox) => {
           if (isBlank(boundingBox)) {
-            Promise.reject(new Error(`Service ${settings.url} had not returned any bounding box`));
+            reject(new Error(`Service ${settings.url} had not returned any bounding box`));
           }
 
           _this.set('bounds.0.0', boundingBox.getSouth());

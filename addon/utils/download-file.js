@@ -91,7 +91,7 @@ const downloadFile = function (layerModel, objectIds, outputFormat, crsOuput, cr
         const filters = objectIds.map((id) => new L.Filter.GmlObjectID(id));
         const allfilters = new L.Filter.Or(...filters);
         const wfsElem = wfsLayer.getFeature(allfilters);
-        const { layerHeaders, } = wfsLayer.options.headers;
+        const layerHeaders = wfsLayer.options.headers;
         headers = layerHeaders;
         const doc = document.implementation.createDocument('', '', null);
         const geoserverElem = doc.createElement('geoserver');

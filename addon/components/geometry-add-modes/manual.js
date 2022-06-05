@@ -7,6 +7,7 @@ import { A } from '@ember/array';
 import { getOwner } from '@ember/application';
 import { isNone, isEmpty } from '@ember/utils';
 import { observer, get } from '@ember/object';
+import { on } from '@ember/object/evented';
 import Component from '@ember/component';
 import { translationMacro as t } from 'ember-i18n';
 import layout from '../../templates/components/geometry-add-modes/manual';
@@ -140,7 +141,7 @@ const FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFe
     this.clear();
   },
 
-  initialSettings: observer('settings', 'layer', function () {
+  initialSettings: on('init', observer('settings', 'layer', function () {
     this.clear();
 
     const settings = this.get('settings');
@@ -169,7 +170,7 @@ const FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFe
     } else {
       this.set('_coordinates', '');
     }
-  }),
+  })),
 
   _updateCoordinates() {
     const layer = this.get('layer');
