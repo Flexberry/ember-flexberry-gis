@@ -256,12 +256,16 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       const captionPath = get(item, 'captionPath');
 
       if (!caption && captionPath) {
-        set(item, 'caption', i18n.t(captionPath));
+        this.setCaption(item, i18n, captionPath);
       }
     });
 
     return result;
   }),
+
+  setCaption(item, i18n, captionPath) {
+    set(item, 'caption', i18n.t(captionPath));
+  },
 
   /**
     СRS metadata.

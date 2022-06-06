@@ -270,6 +270,7 @@ export default Component.extend({
       @method actions.inputLimit
     */
     inputLimit(str, e) {
+      /* eslint-disable no-useless-escape */
       const regex = /^\.|[^\d\.]|\.(?=.*\.)|^0+(?=\d)/g;
       if (!isEmpty(str) && regex.test(str)) {
         this.$(e.target).val(str.replace(regex, ''));

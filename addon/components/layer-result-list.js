@@ -6,7 +6,6 @@ import { allSettled } from 'rsvp';
 
 import { assert } from '@ember/debug';
 import { A, isArray } from '@ember/array';
-import { on } from '@ember/object/evented';
 import {
   isBlank, isNone, isEmpty, typeOf
 } from '@ember/utils';
@@ -335,10 +334,18 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
   },
 
   /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this._resultObserver();
+  },
+
+  /**
     Observer for passed results
     @method _resultObserver
   */
-  _resultObserver: on('init', observer('results', function () {
+  _resultObserver: observer('results', function () {
     this.set('_hasError', false);
     this.set('_noData', false);
     this.set('_displayResults', null);
@@ -609,7 +616,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
         }
       }
     });
-  })),
+  }),
 
   /**
     Get an array of layer shapes id.

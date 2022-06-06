@@ -57,6 +57,7 @@ export default Mixin.create({
       const objectProperty = property.replace(/\.\[]/, ''); // allow usage of .[] to observe array changes
 
       this._observers[property] = () => {
+        /* eslint-disable ember/no-incorrect-calls-with-inline-anonymous-functions */
         once(() => {
           const leafletObject = this.get('_leafletObject');
           if (isNone(leafletObject)) {

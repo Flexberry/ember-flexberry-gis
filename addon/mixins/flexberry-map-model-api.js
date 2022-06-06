@@ -7,10 +7,10 @@ import { isNone, isEmpty } from '@ember/utils';
 import { Promise, allSettled, all } from 'rsvp';
 import { inject as service } from '@ember/service';
 import Mixin from '@ember/object/mixin';
-import distance from 'npm:@turf/distance';
+import _distance from 'npm:@turf/distance';
 import helpers from 'npm:@turf/helpers';
 import booleanContains from 'npm:@turf/boolean-contains';
-import area from 'npm:@turf/area';
+import _area from 'npm:@turf/area';
 import intersect from 'npm:@turf/intersect';
 import ClipperLib from 'npm:clipper-lib';
 import jsts from 'npm:jsts';
@@ -193,8 +193,8 @@ export default Mixin.create(SnapDraw, {
     @return {Promise} Array of layers and objects which intersected selected object.
   */
   getIntersectionObjects(feature, crsName, layerIds) {
-    return new Promise((resolve, reject) => {
-      if (!isNone(feature) && feature.hasOwnProperty('geometry')) {
+    return new Promise((resolve) => {
+      if (!isNone(feature) && Object.prototype.hasOwnProperty.call(feature, 'geometry')) {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         const layersIntersect = [];
         layerIds.forEach((id) => {
@@ -255,7 +255,7 @@ export default Mixin.create(SnapDraw, {
   */
   getNearObject(layerId, layerObjectId, layerIds) {
     return new Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, [layerObjectId]).then(([, leafletObject, layerObject]) => {
+      this._getModelLayerFeature(layerId, [layerObjectId]).then(([, , layerObject]) => {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         const layersGetNeatObject = [];
         layerIds.forEach((id) => {
@@ -330,7 +330,7 @@ export default Mixin.create(SnapDraw, {
     const secondObject = helpers.point([secondPoint.lat, secondPoint.lng]);
 
     // Get distance in meters.
-    return distance.default(firstObject, secondObject, { units: 'kilometers', }) * 1000;
+    return _distance.default(firstObject, secondObject, { units: 'kilometers', }) * 1000;
   },
 
   /**
@@ -459,10 +459,10 @@ export default Mixin.create(SnapDraw, {
         const feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
         const intersectionRes = intersect.default(feature2, feature1);
         if (intersectionRes) {
-          const resultArea = area(feature2) - area(intersectionRes);
+          const resultArea = _area(feature2) - _area(intersectionRes);
           resolve(resultArea);
         } else {
-          resolve(area(feature2));
+          resolve(_area(feature2));
         }
       }).catch((e) => {
         reject(e);
@@ -539,7 +539,7 @@ export default Mixin.create(SnapDraw, {
   _getLayerFeatureId(layer, layerObject) {
     const field = this._getPkField(layer);
     if (layerObject.state !== state.insert) {
-      if (layerObject.feature.properties.hasOwnProperty(field)) {
+      if (Object.prototype.hasOwnProperty.call(layerObject.feature.properties, field)) {
         return get(layerObject, `feature.properties.${field}`);
       }
 
@@ -768,7 +768,7 @@ export default Mixin.create(SnapDraw, {
           if (intersectionRes) {
             const object = {
               id: objB.properties.primarykey,
-              area: area(intersectionRes),
+              area: _area(intersectionRes),
             };
             if (showOnMap) {
               const obj = L.geoJSON(intersectionRes, {
@@ -825,7 +825,7 @@ export default Mixin.create(SnapDraw, {
     layerId, objectId, layerArrIds, options,
   }) {
     return new Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, [objectId]).then(([layerModel, leafletObject, featureLayer]) => {
+      this._getModelLayerFeature(layerId, [objectId]).then(([, leafletObject, featureLayer]) => {
         const allLayers = this.get('mapLayer.canonicalState');
         const allLayersIds = allLayers.map((l) => l.id);
         if (layerArrIds) {
@@ -875,9 +875,9 @@ export default Mixin.create(SnapDraw, {
             $(document).find('.leaflet-top.leaflet-right').css('display', 'none');
             $(document).find('.leaflet-bottom.leaflet-right').css('display', 'none');
 
-            const promises = load.map((object) => !isNone(leafletObject.promiseLoadLayer) && (leafletObject.promiseLoadLayer instanceof Promise));
+            const promises = load.map(() => !isNone(leafletObject.promiseLoadLayer) && (leafletObject.promiseLoadLayer instanceof Promise));
 
-            allSettled(promises).then((e) => {
+            allSettled(promises).then(() => {
               load.forEach((obj) => {
                 obj.statusLoadLayer = false;
                 obj.promiseLoadLayer = null;
@@ -895,7 +895,7 @@ export default Mixin.create(SnapDraw, {
                   const image64 = canvas.toDataURL(type);
                   resolve(image64);
                 })
-                .catch((e) => reject(e))
+                .catch((_e) => reject(_e))
                 .finally(() => {
                   document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'block';
                   document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'block';
@@ -1065,17 +1065,17 @@ export default Mixin.create(SnapDraw, {
       };
     };
 
-    const coordToRhumbs = function (type, coords) {
+    const coordToRhumbs = function (type, _coords) {
       let startPoint = null;
       let n;
       let point1;
       let point2;
       const rhumbs = [];
-      for (let i = 0; i < coords.length - 1; i++) {
-        startPoint = i === 0 ? coords[i] : startPoint;
-        point1 = coords[i];
-        n = !isNone(coords[i + 1]) ? i + 1 : 0;
-        point2 = coords[n];
+      for (let i = 0; i < _coords.length - 1; i++) {
+        startPoint = i === 0 ? _coords[i] : startPoint;
+        point1 = _coords[i];
+        n = !isNone(_coords[i + 1]) ? i + 1 : 0;
+        point2 = _coords[n];
         rhumbs.push(calcRhumb(point1, point2));
       }
 
@@ -1221,8 +1221,8 @@ export default Mixin.create(SnapDraw, {
         cache: false,
         contentType: false,
         processData: false,
-        success(data) {
-          resolve(data);
+        success(_data) {
+          resolve(_data);
         },
         error(e) {
           reject(e);
@@ -1245,7 +1245,7 @@ export default Mixin.create(SnapDraw, {
   _convertObjectCoordinates(projection, object, crsName = null) {
     // copy from https://stackoverflow.com/a/48218209/2014079 for replace $.extend
     // such as it is not properly work with Proxy properties
-    var mergeDeep = function (...objects) {
+    const mergeDeep = function (...objects) {
       const isObject = (obj) => obj && typeof obj === 'object';
 
       return objects.reduce((prev, obj) => {
@@ -1348,7 +1348,7 @@ export default Mixin.create(SnapDraw, {
     @return {Promise} Coordinate.
   */
   getCoordPoint(crsName, snap, snapLayers, snapDistance, snapOnlyVertex) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const leafletMap = this.get('mapApi').getFromApi('leafletMap');
       $(leafletMap._container).css('cursor', 'crosshair');
 
@@ -1360,7 +1360,7 @@ export default Mixin.create(SnapDraw, {
         leafletMap.off('mousemove', this._handleSnapping, this);
         const layers = this.get('_snapLayersGroups');
         if (layers) {
-          layers.forEach((l, i) => {
+          layers.forEach((l) => {
             l.off('load', this._setSnappingFeatures, this);
           });
         }
@@ -1382,7 +1382,7 @@ export default Mixin.create(SnapDraw, {
           return leafletObject;
         }).filter((l) => !!l);
 
-        layers.forEach((l, i) => {
+        layers.forEach((l) => {
           l.on('load', this._setSnappingFeatures, this);
         });
 
@@ -1466,20 +1466,17 @@ export default Mixin.create(SnapDraw, {
           reject(new Error('Error loading objects'));
         }
 
-        let count = 0;
         const scale = this.get('mapApi').getFromApi('precisionScale');
         const resultObjs = A();
 
-        layerFeatures.forEach((r, i) => {
+        layerFeatures.forEach((r) => {
           const geometries = A();
-          r.value[2].forEach((obj, ind) => {
+          r.value[2].forEach((obj) => {
             if (get(obj, 'feature.geometry') && get(obj, 'options.crs.code')) {
               const feature = obj.toJsts(obj.options.crs, scale);
               geometries.pushObject(feature);
             }
           });
-
-          count += 1;
 
           // если вся геометрия невалидна, то будет null
           const merged = this._getMulti(geometries, isUnion, failIfInvalid);
@@ -1628,7 +1625,7 @@ export default Mixin.create(SnapDraw, {
       }
 
       diffLayerPromise.then((res) => {
-        if (res.hasOwnProperty('diffFeatures')) {
+        if (Object.prototype.hasOwnProperty.call(res, 'diffFeatures')) {
           const jstsGeoJSONReader = new jsts.io.GeoJSONReader();
           res.diffFeatures.forEach((diff) => {
             if (!cond.includes(condition)) {
@@ -1662,9 +1659,6 @@ export default Mixin.create(SnapDraw, {
                     }
 
                     return true;
-
-
-                    break;
                   case cond[1]:
                     if (jstsFeat.geometry.intersects(diff.jstsGeometry) && !jstsFeat.geometry.contains(diff.jstsGeometry)) {
                       object.id = jstsFeat.properties.primarykey;
@@ -1672,9 +1666,6 @@ export default Mixin.create(SnapDraw, {
                     }
 
                     return true;
-
-
-                    break;
                   case cond[2]:
                     if (jstsFeat.geometry.intersects(diff.jstsGeometry)) {
                       object.id = jstsFeat.properties.primarykey;
@@ -1682,9 +1673,6 @@ export default Mixin.create(SnapDraw, {
                     }
 
                     return true;
-
-
-                    break;
                   default:
                     return true;
                 }
@@ -1716,7 +1704,7 @@ export default Mixin.create(SnapDraw, {
     @return {Number} 100000000.
   */
   _pointAmplifier() {
-    return Math.pow(10, 8);
+    return 10 ** 8;
   },
 
   /**

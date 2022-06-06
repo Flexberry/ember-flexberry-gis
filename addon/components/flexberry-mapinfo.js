@@ -4,7 +4,6 @@
 
 import { observer } from '@ember/object';
 
-import { on } from '@ember/object/evented';
 import { isNone } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
@@ -219,6 +218,7 @@ const MapInfoComponent = Component.extend({
 
   init() {
     this._super(...arguments);
+    this._visibleDidChange();
     const _service = this.get('service');
     const storageClass = this.get('_storageClassName');
     const mapId = this.get('mapId');
@@ -234,12 +234,12 @@ const MapInfoComponent = Component.extend({
     @method _visibleDidChange
     @private
   */
-  _visibleDidChange: on('init', observer('visible', function () {
+  _visibleDidChange: observer('visible', function () {
     if (this.get('visible')) {
       // Include dialog to markup.
       this.set('_infoDialogHasBeenRequested', true);
     }
-  })),
+  }),
 });
 
 // Add component's CSS-class names as component's class static constants

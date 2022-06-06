@@ -10,6 +10,8 @@ import { computed } from '@ember/object';
 import layout from '../../../templates/components/layers-dialogs/settings/wfs';
 import WmsSettingsComponent from './wms';
 
+/* eslint-disable no-useless-escape */
+
 // Regular expression used to derive whether settings' url is correct.
 const urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
 

@@ -1,4 +1,3 @@
-import { on } from '@ember/object/evented';
 import $ from 'jquery';
 import { isBlank, isNone } from '@ember/utils';
 import { isArray, A } from '@ember/array';
@@ -672,7 +671,7 @@ export default Component.extend(
       @method _visibleDidChange
       @private
     */
-    _visibleDidChange: on('init', observer('visible', function () {
+    _visibleDidChange: observer('visible', function () {
       if (this.get('visible') || this.get('visible') === undefined) {
         this.set('_hideBbox', false);
         this._createInnerLayer();
@@ -680,7 +679,7 @@ export default Component.extend(
         this.set('_hideBbox', true);
         this._destroyInnerLayer();
       }
-    })),
+    }),
 
     /**
       Observes type changes & changes link to object containing type-related settings.
@@ -702,6 +701,14 @@ export default Component.extend(
     */
     init() {
       this._super(...arguments);
+
+      if (this.get('visible') || this.get('visible') === undefined) {
+        this.set('_hideBbox', false);
+        this._createInnerLayer();
+      } else {
+        this.set('_hideBbox', true);
+        this._destroyInnerLayer();
+      }
 
       if (isNone(this.get('links'))) {
         this.set('links', A());

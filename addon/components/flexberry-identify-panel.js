@@ -2,7 +2,6 @@
   @module ember-flexberry-gis
 */
 
-import { on } from '@ember/object/evented';
 import { once } from '@ember/runloop';
 import $ from 'jquery';
 import {
@@ -427,6 +426,7 @@ const FlexberryIdentifyPanelComponent = Component.extend({
       @method actions.inputLimit
     */
     onInputLimit(str, e) {
+      /* eslint-disable no-useless-escape */
       const regex = /^\.|^,|\.,|,\.|[^\d\.,]|\.(?=.*\.)|,(?=.*,)|\.(?=.*,)|,(?=.*\.)|^0+(?=\d)/g;
       if (!isEmpty(str) && regex.test(str)) {
         $(e.target).val(str.replace(regex, ''));
@@ -453,14 +453,18 @@ const FlexberryIdentifyPanelComponent = Component.extend({
     @type Observer
     @private
   */
-  _leafletMapDidChange: on('didInsertElement', observer('leafletMap', function () {
+  _leafletMapDidChange: observer('leafletMap', function () {
     const leafletMap = this.get('leafletMap');
     if (isNone(leafletMap)) {
       return;
     }
 
     leafletMap.on('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
-  })),
+  }),
+
+  didInsertElement() {
+    this._leafletMapDidChange();
+  },
 
   /**
     Handles changes in buffer settings.

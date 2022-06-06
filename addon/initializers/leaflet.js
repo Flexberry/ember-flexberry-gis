@@ -102,7 +102,7 @@ export function initialize(application, baseURL) {
 
             // Squash nested feature collections
             if (feature.type === 'FeatureCollection') {
-              jsons.push.apply(jsons, feature.features);
+              jsons.push.apply(...feature.features);
             } else {
               jsons.push(feature);
             }

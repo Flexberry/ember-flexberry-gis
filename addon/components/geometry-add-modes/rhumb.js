@@ -4,7 +4,6 @@
 
 import $ from 'jquery';
 
-import { on } from '@ember/object/evented';
 import {
   computed, get, set, observer
 } from '@ember/object';
@@ -173,7 +172,7 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
   init() {
     this._super(...arguments);
 
-
+    this.initialSettings();
     this._formValid = this._formValid || {
       startPointValid: false,
       tableValid: false,
@@ -222,11 +221,11 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
     set(item, 'caption', i18n.t(captionPath));
   },
 
-  initialSettings: on('init', observer('settings', function () {
+  initialSettings: observer('settings', function () {
     this.set('isError', false);
     this.set('_crs', this.get('settings.layerCRS'));
     this._dropForm();
-  })),
+  }),
 
   getLayer() {
     let error = false;
@@ -471,6 +470,7 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
       @method actions.inputLimit
     */
     onInputLimit(str, e) {
+      /* eslint-disable no-useless-escape */
       const regex = /^\.|[^\d\.]|\.(?=.*\.)|^0+(?=\d)/g;
       if (!isEmpty(str) && regex.test(str)) {
         $(e.target).val(str.replace(regex, ''));

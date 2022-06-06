@@ -43,6 +43,8 @@ import SnapDrawMixin from '../mixins/snap-draw';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 
+/* eslint-disable ember/no-side-effects */
+
 /**
   The component for editing layers attributes.
 
@@ -156,6 +158,10 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
   */
   pageSize: 5,
 
+  setFeatureTabsOffset() {
+    this.set('_featureTabsOffset', 0);
+  },
+
   /**
     Computed property that builds tab models collection from items.
 
@@ -168,7 +174,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
     const editedLayers = this.get('items');
     if (isPresent(editedLayers)) {
       if (editedLayers.length === 1) {
-        this.set('_featureTabsOffset', 0);
+        this.setFeatureTabsOffset();
         this.send('onTabMove', true);
       }
 
@@ -187,15 +193,18 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
           let excludedProperties = get(item, 'settings.excludedProperties');
           excludedProperties = isArray(excludedProperties) ? A(excludedProperties) : A();
 
-          for (const propertyName in get(leafletObject, 'readFormat.featureType.fields')) {
-            if (excludedProperties.includes(propertyName)) {
-              continue;
+          const getLeafletObj = get(leafletObject, 'readFormat.featureType.fields');
+          Object.keys(getLeafletObj).forEach((propertyName) => {
+          // for (const propertyName in get(leafletObject, 'readFormat.featureType.fields')) {
+            if (!excludedProperties.includes(propertyName)) {
+            //   continue;
+            // }
+
+              const propertyCaption = get(localizedProperties, propertyName);
+
+              result[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
             }
-
-            const propertyCaption = get(localizedProperties, propertyName);
-
-            result[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
-          }
+          });
 
           return result;
         };
@@ -205,7 +214,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
           _skip: 0,
           _selectedRowsCount: computed('_selectedRows', function () {
             const selectedRows = get(this, '_selectedRows');
-            return Object.keys(selectedRows).filter((item) => get(selectedRows, item)).length;
+            return Object.keys(selectedRows).filter((_item) => get(selectedRows, _item)).length;
           }),
 
           _typeSelectedRows: computed('_selectedRows', function () {
@@ -217,7 +226,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
               multiPolygon: 0,
             };
             const selectedRows = get(this, '_selectedRows');
-            Object.keys(selectedRows).filter((item) => get(selectedRows, item))
+            Object.keys(selectedRows).filter((_item) => get(selectedRows, _item))
               .map((key) => {
                 const { feature, } = this.get('featureLink')[key];
                 const layer = feature.leafletLayer.toGeoJSON();
@@ -239,6 +248,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
                     break;
                   default:
                 }
+                return typeElements;
               });
             return typeElements;
           }),
@@ -246,7 +256,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
           _selectedRowsProperties: computed('_selectedRows', 'featureLink', function () {
             const selectedRows = get(this, '_selectedRows');
             const featureLink = get(this, 'featureLink');
-            const result = Object.keys(selectedRows).filter((item) => get(selectedRows, item))
+            const result = Object.keys(selectedRows).filter((_item) => get(selectedRows, _item))
               .map((key) => featureLink[key].feature.properties);
 
             return result.length > 0 ? result : get(this, 'properties');
@@ -316,13 +326,13 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
             @param {Object} e Event object.
           */
           _triggerChanged(e) {
-            const [tabModel, layer, setEdited] = this;
+            const [_tabModel, layer, setEdited] = this;
             if (isEqual(guidFor(e.layer), guidFor(layer))) {
-              set(tabModel, 'leafletObject._wasChanged', true);
-              tabModel.notifyPropertyChange('leafletObject._wasChanged');
+              set(_tabModel, 'leafletObject._wasChanged', true);
+              _tabModel.notifyPropertyChange('leafletObject._wasChanged');
 
               if (setEdited) {
-                tabModel.leafletObject.editLayer(layer);
+                _tabModel.leafletObject.editLayer(layer);
               }
             }
           },

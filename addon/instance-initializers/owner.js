@@ -17,6 +17,35 @@ export function initialize(applicationInstance) {
   // Known classes cache.
   const known = {};
 
+  let knownForType;
+
+  /**
+    Returns array containing names of known classes for the specified type.
+    @for ApplicationInstance
+    @method knownNamesForType
+    @param {String} type Type for which known names must be returned.
+    @returns {String[]} Array containing names of known classes for the specified type.
+  */
+  const knownNamesForType = function (type) {
+    return A(Object.keys(knownForType(type)));
+  };
+
+  applicationInstance.knownNamesForType = knownNamesForType;
+
+  /**
+    Checks if class with given name is known for the specified type.
+    @for ApplicationInstance
+    @method isKnownNameForType
+    @param {String} type Type in which class existence must be checked.
+    @param {String} [className] Class name.
+    @returns {String[]} Flag indicating whether class with given name is known for the specified type or not.
+  */
+  const isKnownNameForType = function (type, className) {
+    return knownNamesForType(type).includes(className);
+  };
+
+  applicationInstance.isKnownNameForType = isKnownNameForType;
+
   /**
     Returns object containing factories of known classes for the specified type,
     or a single factory if the class name is specified too.
@@ -27,7 +56,7 @@ export function initialize(applicationInstance) {
     @returns {Object} Object containing factories of known classes for the specified type,
     or a single factory if the class name is specified too.
   */
-  const knownForType = applicationInstance.knownForType = function (type, className) {
+  knownForType = function (type, className) {
     if (!isNone(className)) {
       assert(
         `Wrong value of \`className\` parameter: \`${className}\`. `
@@ -44,10 +73,10 @@ export function initialize(applicationInstance) {
 
       const { resolver, } = applicationInstance.application.__registry__;
       A(Object.keys(resolver.knownForType(type))).forEach((knownClass) => {
-        const className = knownClass.split(':')[1];
+        const _className = knownClass.split(':')[1];
         const classFactory = applicationInstance.factoryFor(knownClass).class;
 
-        knownClasses[className] = classFactory;
+        knownClasses[_className] = classFactory;
       });
 
       known[type] = knownClasses;
@@ -56,28 +85,7 @@ export function initialize(applicationInstance) {
     return knownClasses;
   };
 
-  /**
-    Returns array containing names of known classes for the specified type.
-    @for ApplicationInstance
-    @method knownNamesForType
-    @param {String} type Type for which known names must be returned.
-    @returns {String[]} Array containing names of known classes for the specified type.
-  */
-  let knownNamesForType = applicationInstance.knownNamesForType = function (type) {
-    return A(Object.keys(knownForType(type)));
-  };
-
-  /**
-    Checks if class with given name is known for the specified type.
-    @for ApplicationInstance
-    @method isKnownNameForType
-    @param {String} type Type in which class existence must be checked.
-    @param {String} [className] Class name.
-    @returns {String[]} Flag indicating whether class with given name is known for the specified type or not.
-  */
-  let isKnownNameForType = applicationInstance.isKnownNameForType = function (type, className) {
-    return knownNamesForType(type).includes(className);
-  };
+  applicationInstance.knownForType = knownForType;
 }
 
 export default {
