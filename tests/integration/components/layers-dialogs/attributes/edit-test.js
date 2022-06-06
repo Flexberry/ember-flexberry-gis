@@ -1,6 +1,6 @@
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
-import { moduleForComponent, test } from 'ember-qunit';
+import { moduleForComponent, skip } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
 import I18nService from 'ember-i18n/services/i18n';
@@ -25,7 +25,7 @@ moduleForComponent('layers-dialogs/attributes/edit', 'Integration | Component | 
   },
 });
 
-test('it renders', function(assert) {
+skip('it renders', function(assert) {
   assert.expect(1);
 
   this.set('fieldNames', {
