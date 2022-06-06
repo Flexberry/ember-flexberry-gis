@@ -1,8 +1,6 @@
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
-import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import storageService from 'ember-flexberry-gis/services/local-storage';
 
@@ -10,37 +8,37 @@ import I18nService from 'ember-i18n/services/i18n';
 import I18nRuLocale from 'ember-flexberry-gis/locales/ru/translations';
 import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
 
-module('Integration | Component | spatial bookmark', function (hooks) {
-  setupRenderingTest(hooks);
+moduleForComponent('spatial-bookmark', 'Integration | Component | spatial bookmark', {
+  beforeEach: function (assert) {
+    this.register('locale:ru/translations', I18nRuLocale);
+    this.register('locale:en/translations', I18nEnLocale);
+    this.register('service:i18n', I18nService);
 
-  hooks.beforeEach(function () {
-    this.owner.register('locale:ru/translations', I18nRuLocale);
-    this.owner.register('locale:en/translations', I18nEnLocale);
-    this.owner.register('service:i18n', I18nService);
-
-    this.i18n = this.owner.lookup('service:i18n');
+    this.inject.service('i18n', { as: 'i18n' });
     Component.reopen({
-      i18n: service('i18n'),
+      i18n: service('i18n')
     });
 
     this.set('i18n.locale', 'ru');
 
-    this.owner.register('service:local-storage', storageService);
+    this.register('service:local-storage', storageService);
 
-    this['local-storage-service'] = this.owner.lookup('service:local-storage');
+    this.inject.service('local-storage', { as: 'local-storage-service' });
     Component.reopen({
-      'local-storage-service': service('local-storage'),
+      'local-storage-service': service('local-storage')
     });
-  });
+  },
 
-  hooks.afterEach(function () {
+  afterEach: function() {
     Component.reopen({
-      'local-storage-service': undefined,
+      'local-storage-service': undefined
     });
-  });
+  },
 
-  test('it renders', async function (assert) {
-    await render(hbs`{{spatial-bookmark}}`);
-    assert.equal(this.element.textContent.trim(), 'Добавить в закладки');
-  });
+  integration: true
+});
+
+test('it renders', function (assert) {
+  this.render(hbs`{{spatial-bookmark}}`);
+  assert.equal(this.$().text().trim(), 'Добавить в закладки');
 });

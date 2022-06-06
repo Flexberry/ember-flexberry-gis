@@ -1,17 +1,16 @@
-import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-import { render, find } from '@ember/test-helpers';
+import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | flexberry multiple select', function (hooks) {
-  setupRenderingTest(hooks);
+moduleForComponent('flexberry-multiple-select', 'Integration | Component | flexberry multiple select', {
+  integration: true
+});
 
-  test('it renders', async function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
+test('it renders', function(assert) {
+  // Set any properties with this.set('myProperty', 'value');
+  // Handle any actions with this.on('myAction', function(val) { ... });
 
-    await render(hbs`{{flexberry-multiple-select title='testHead'}}`);
+  this.render(hbs`{{flexberry-multiple-select title='testHead'}}`);
 
-    assert.equal(find('.default.text').textContent.trim(), 'testHead');
-  });
+  assert.equal(this.$('.default.text').text().trim(), 'testHead');
+
 });

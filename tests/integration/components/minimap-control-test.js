@@ -1,22 +1,22 @@
-import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-import { render, find } from '@ember/test-helpers';
+import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | minimap control', function (hooks) {
-  setupRenderingTest(hooks);
+moduleForComponent('minimap-control', 'Integration | Component | minimap control', {
+  integration: true
+});
 
-  test('template return L.layerGroup', async function (assert) {
-    assert.expect(1);
+test('template return L.layerGroup', async function(assert) {
 
-    this.set('layerGroupClass', L.LayerGroup);
+  assert.expect(1);
 
-    await render(hbs`
-      {{#minimap-control as |layerG|}}
-         <div class="layerG-body" is-layergroup="{{instance-of layerG layerGroupClass}}"></div>
-      {{/minimap-control}}
-    `);
+  this.set('layerGroupClass', L.LayerGroup);
 
-    assert.ok(find('div.layerG-body').getAttribute('is-layergroup'));
-  });
+  this.render(hbs`
+    {{#minimap-control as |layerG|}}
+       <div class="layerG-body" is-layergroup="{{instance-of layerG layerGroupClass}}"></div>
+    {{/minimap-control}}
+  `);
+
+  assert.ok(this.$('div.layerG-body').attr('is-layergroup'));
+
 });

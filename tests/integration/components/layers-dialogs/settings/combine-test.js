@@ -2,7 +2,7 @@ import Ember from 'ember';
 import { inject as service } from '@ember/service';
 import { run, next } from '@ember/runloop';
 import Component from '@ember/component';
-import { module, test } from 'qunit';
+import { module, test, skip } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 
@@ -35,7 +35,7 @@ module('Integration | Component | layers dialogs/settings/combine', function (ho
     ownerStub.restore();
   });
 
-  test('it renders without settings and test action addTypeSettings', async function (assert) {
+  skip('it renders without settings and test action addTypeSettings', async function (assert) {
     assert.expect(7);
     ownerStub = sinon.stub(Ember, 'getOwner');
     ownerStub.returns({
@@ -94,7 +94,7 @@ module('Integration | Component | layers dialogs/settings/combine', function (ho
     });
   });
 
-  test('it renders with settings', async function (assert) {
+  skip('it renders with settings', async function (assert) {
     assert.expect(4);
     ownerStub = sinon.stub(Ember, 'getOwner');
     ownerStub.returns({
