@@ -1,25 +1,21 @@
+import { moduleForComponent, test } from 'ember-qunit';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
-import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-import { render, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import I18nService from 'ember-i18n/services/i18n';
 import I18nRuLocale from 'ember-flexberry-gis/locales/ru/translations';
 import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
 import $ from 'jquery';
 
-module('Integration | Component | flexberry search panel', function (hooks) {
-  setupRenderingTest(hooks);
+moduleForComponent('flexberry-search-panel', 'Integration | Component | flexberry search panel', {
+  beforeEach: function (assert) {
+    this.register('locale:ru/translations', I18nRuLocale);
+    this.register('locale:en/translations', I18nEnLocale);
+    this.register('service:i18n', I18nService);
 
-  hooks.beforeEach(function () {
-    this.owner.register('locale:ru/translations', I18nRuLocale);
-    this.owner.register('locale:en/translations', I18nEnLocale);
-    this.owner.register('service:i18n', I18nService);
-
-    this.i18n = this.owner.lookup('service:i18n');
+    this.inject.service('i18n', { as: 'i18n' });
     Component.reopen({
-      i18n: service('i18n'),
+      i18n: service('i18n')
     });
 
     this.set('i18n.locale', 'ru');
@@ -29,23 +25,25 @@ module('Integration | Component | flexberry search panel', function (hooks) {
       zoom: 13,
     });
     this.set('leafletMap', leafletMap);
-  });
+  },
 
-  test('goto by coordinates in degree min sec', async function (assert) {
-    this.set('queryString', '57°27\'49.2" 57°06\'08.3"');
-    await render(hbs`{{flexberry-search-panel leafletMap=leafletMap queryString=queryString}}`);
-    await fillIn('.flexberry-search input', '57°27\'49.2" 57°06\'08.3"');
-    await click('.flexberry-search .search-button');
+  integration: true
+});
 
-    assert.equal($(this.get('leafletMap').getPane('popupPane')).text(), 'Широта: 57°27\'49.2"; Долгота: 57°06\'08.3"×');
-  });
+test('goto by coordinates in degree min sec', function(assert) {
+  this.set('queryString', '57°27\'49.2" 57°06\'08.3"');
+  this.render(hbs`{{flexberry-search-panel leafletMap=leafletMap queryString=queryString}}`);
+  this.$('.flexberry-search input').val('57°27\'49.2" 57°06\'08.3"');
+  this.$('.flexberry-search .search-button').click();
 
-  test('goto by coordinates in decimal degrees', async function (assert) {
-    this.set('queryString', '57.27492 57.06083');
-    await render(hbs`{{flexberry-search-panel leafletMap=leafletMap queryString=queryString}}`);
-    await fillIn('.flexberry-search input', '57.27492 57.06083');
-    await click('.flexberry-search .search-button');
+  assert.equal($(this.get('leafletMap').getPane('popupPane')).text(), 'Широта: 57°27\'49.2"; Долгота: 57°06\'08.3"×');
+});
 
-    assert.equal($(this.get('leafletMap').getPane('popupPane')).text(), 'Широта: 57.27492; Долгота: 57.06083×');
-  });
+test('goto by coordinates in decimal degrees', function(assert) {
+  this.set('queryString', '57.27492 57.06083');
+  this.render(hbs`{{flexberry-search-panel leafletMap=leafletMap queryString=queryString}}`);
+  this.$('.flexberry-search input').val('57.27492 57.06083');
+  this.$('.flexberry-search .search-button').click();
+
+  assert.equal($(this.get('leafletMap').getPane('popupPane')).text(), 'Широта: 57.27492; Долгота: 57.06083×');
 });

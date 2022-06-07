@@ -1,26 +1,24 @@
-import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | layers/osm layer', function (hooks) {
-  setupRenderingTest(hooks);
+moduleForComponent('layers/osm-layer', 'Integration | Component | layers/osm layer', {
+  integration: true,
+});
 
-  test('it renders', async function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
+test('it renders', function(assert) {
+  // Set any properties with this.set('myProperty', 'value');
+  // Handle any actions with this.on('myAction', function(val) { ... });
 
-    await render(hbs`{{layers/osm-layer}}`);
+  this.render(hbs`{{layers/osm-layer}}`);
 
-    assert.equal(this.element.textContent.trim(), '');
+  assert.equal(this.$().text().trim(), '');
 
-    // Template block usage:
-    await render(hbs`
-      {{#layers/osm-layer}}
-        template block text
-      {{/layers/osm-layer}}
-    `);
+  // Template block usage:
+  this.render(hbs`
+    {{#layers/osm-layer}}
+      template block text
+    {{/layers/osm-layer}}
+  `);
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
-  });
+  assert.equal(this.$().text().trim(), 'template block text');
 });
