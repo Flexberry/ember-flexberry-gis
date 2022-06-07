@@ -5,7 +5,7 @@ moduleForComponent('minimap-control', 'Integration | Component | minimap control
   integration: true
 });
 
-skip('template return L.layerGroup', async function(assert) {
+skip('template return L.layerGroup', function(assert) {
 
   assert.expect(1);
 
