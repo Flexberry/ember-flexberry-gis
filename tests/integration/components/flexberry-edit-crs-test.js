@@ -1,9 +1,10 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
 
-moduleForComponent('flexberry-edit-crs', 'Integration | Component | flexberry edit crs', {
-  integration: true,
-});
+module('Integration | Component | flexberry edit crs', function (hooks) {
+  setupRenderingTest(hooks);
 
-test('temp test', function(assert) {
-  assert.equal('', '');
+  test('temp test', function (assert) {
+    assert.equal('', '');
+  });
 });

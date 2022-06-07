@@ -1,11 +1,12 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
 
-moduleForComponent('flexberry-boundingbox', 'Integration | Component | flexberry boundingbox', {
-  integration: true
-});
+module('Integration | Component | flexberry boundingbox', function (hooks) {
+  setupRenderingTest(hooks);
 
-test('temporary test', function(assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-  assert.equal('', '');
+  test('temporary test', function (assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+    assert.equal('', '');
+  });
 });
