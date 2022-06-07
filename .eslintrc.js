@@ -26,7 +26,7 @@ module.exports = {
     Chart: 'writable',
   },
   rules: {
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true, }],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true, optionalDependencies: true, }],
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
     'import/core-modules': [ 'sinon' ],

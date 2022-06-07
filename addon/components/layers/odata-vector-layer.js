@@ -32,6 +32,7 @@ import { attr } from 'ember-flexberry-data/utils/attributes';
 import OdataSerializer from 'ember-flexberry-data/serializers/odata';
 import Condition from 'ember-flexberry-data/query/condition';
 import FilterOperator from 'ember-flexberry-data/query/filter-operator';
+import { pluralize } from 'ember-inflector';
 
 import {
   SimplePredicate,
@@ -1626,7 +1627,7 @@ export default BaseVectorLayer.extend({
       $.ajax({
         url: `${layerModel.get('_leafletObject.options.metadataUrl') + layerModel.get('_leafletObject.modelName')}.json`,
         success(dataClass) {
-          const odataQueryName = Ember.String.pluralize(capitalize(camelize(dataClass.modelName)));
+          const odataQueryName = pluralize(capitalize(camelize(dataClass.modelName)));
           const odataUrl = _this.get('odataUrl');
           obj.adapter.callAction(
             config.APP.backendActions.getNearDistance,

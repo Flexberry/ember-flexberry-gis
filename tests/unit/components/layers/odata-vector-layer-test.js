@@ -7,7 +7,7 @@ import $ from 'jquery';
 import Mixin from '@ember/object/mixin';
 
 import DS from 'ember-data';
-import { moduleForComponent, test, skip } from 'ember-qunit';
+import { moduleForComponent, test } from 'ember-qunit';
 import startApp from 'dummy/tests/helpers/start-app';
 import sinon from 'sinon';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
