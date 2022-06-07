@@ -12,7 +12,7 @@ import GisAdapter from 'ember-flexberry-gis/adapters/odata';
 import DS from 'ember-data';
 import jsts from 'npm:jsts';
 import { capitalize, camelize } from 'ember-flexberry-data/utils/string-functions';
-import isUUID  from 'ember-flexberry-data/utils/is-uuid';
+import isUUID from 'ember-flexberry-data/utils/is-uuid';
 const { Builder } = Query;
 
 /**
@@ -781,7 +781,14 @@ export default BaseVectorLayer.extend({
       }
     });
 
-    let modelSerializer = Serializer.Odata.extend(serializer);
+    let baseSerializer;
+    let odataSerializer = this.get('odataSerializer');
+    if (!Ember.isNone(odataSerializer)) {
+      baseSerializer = Ember.getOwner(this)._lookupFactory(`serializer:${odataSerializer}`);
+    }
+
+    let modelSerializer = !Ember.isNone(baseSerializer) ? baseSerializer.extend(serializer) : Serializer.Odata.extend(serializer);
+
     return modelSerializer;
   },
 
@@ -1505,8 +1512,8 @@ export default BaseVectorLayer.extend({
     let changes = leafletObject.models.filter((item) => true); // for check empty
     if (!Ember.isEmpty(changes)) {
       Object.entries(leafletObject.models)
-        .filter((item) =>  { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))); })
-        .map((item)=> item[1])
+        .filter((item) => { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))); })
+        .map((item) => item[1])
         .forEach((model, index) => {
           if (model instanceof Ember.Object) {
             let layer = Object.values(leafletObject._layers).find((layer) => {

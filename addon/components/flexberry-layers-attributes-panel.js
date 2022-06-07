@@ -896,6 +896,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
     onDeleteRowDialogDeny() {
       this.set('_deleteRowDialogIsVisible', false);
+      this.set('_deleteRowDialogHasBeenRequested', false);
     },
 
     onDeleteRowDialogApprove() {
