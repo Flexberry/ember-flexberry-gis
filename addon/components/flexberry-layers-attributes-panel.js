@@ -69,6 +69,13 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
   layersStylesRenderer: service('layers-styles-renderer'),
 
   /**
+    Measure units for buffer tool.
+    @property bufferUnits
+    @type Object
+  */
+  bufferUnits: null,
+
+  /**
     Selected mesure unit.
 
     @property _selectedUnit
@@ -97,6 +104,8 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
     @private
   */
   _bufferLayer: null,
+
+  _activeTabs: null,
 
   /**
     Cache for tab models.
@@ -195,11 +204,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
 
           const getLeafletObj = get(leafletObject, 'readFormat.featureType.fields');
           Object.keys(getLeafletObj).forEach((propertyName) => {
-          // for (const propertyName in get(leafletObject, 'readFormat.featureType.fields')) {
             if (!excludedProperties.includes(propertyName)) {
-            //   continue;
-            // }
-
               const propertyCaption = get(localizedProperties, propertyName);
 
               result[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
@@ -212,6 +217,8 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         const tabModel = EmberObject.extend({
           _top: this.get('pageSize'),
           _skip: 0,
+          _selectedRows: null,
+          _editedRows: null,
           _selectedRowsCount: computed('_selectedRows', function () {
             const selectedRows = get(this, '_selectedRows');
             return Object.keys(selectedRows).filter((_item) => get(selectedRows, _item)).length;
@@ -1427,9 +1434,9 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
       }
 
       if (split.features.length === 0) {
-        selectedRows = get(tabModel, '_selectedRows');
+        const _selectedRows = get(tabModel, '_selectedRows');
         const key = guidFor(layer.properties);
-        delete selectedRows[key];
+        delete _selectedRows[key];
       }
 
       split.features.forEach((splitResult) => {

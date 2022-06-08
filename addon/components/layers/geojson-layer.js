@@ -19,6 +19,20 @@ import BaseVectorLayer from '../base-vector-layer';
  */
 export default BaseVectorLayer.extend({
   /**
+    Array containing component's properties which are also leaflet layer options.
+    @property leafletOptions
+    @type Stirng[]
+  */
+  leafletOptions: null,
+
+  /**
+    Array containing component's properties which are also leaflet layer options callbacks.
+    @property leafletOptionsCallbacks
+    @type Stirng[]
+  */
+  leafletOptionsCallbacks: null,
+
+  /**
     Url for download geojson.
 
     @property url

@@ -46,7 +46,7 @@ export default Component.extend({
 
   setSearchProperties(localizedProperties, searchFields) {
     const searchProperties = {};
-    Ember.keys(localizedProperties).forEach((prop) => {
+    Object.keys(localizedProperties).forEach((prop) => {
       if (searchFields.indexOf(prop) > -1) {
         Ember.set(searchProperties, prop, localizedProperties[prop]);
       }

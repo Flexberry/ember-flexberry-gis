@@ -149,4 +149,12 @@ export default WmsSettingsComponent.extend({
     });
     this.set('_availableInfoFormats', A(availableFormats));
   },
+
+  /**
+    Available geometry types.
+    @property typeGeometry
+    @type Array
+    @default []
+  */
+  typeGeometry: null,
 });

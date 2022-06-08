@@ -12,6 +12,13 @@ import BaseControl from 'ember-flexberry-gis/components/base-control';
 */
 export default BaseControl.extend({
   /**
+    Array containing component's properties which are also leaflet layer options.
+    @property leafletOptions
+    @type Stirng[]
+  */
+  leafletOptions: null,
+
+  /**
     Creates control instance, should be overridden in child classes.
 
     @method createControl

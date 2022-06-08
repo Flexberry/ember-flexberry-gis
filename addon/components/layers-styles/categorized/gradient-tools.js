@@ -128,6 +128,15 @@ export default Component.extend({
   */
   customFillGradientColorEnd: null,
 
+  /**
+    Inner hash containing settings gradient object.
+    @property gradientList
+    @type Object[]
+    @default []
+    @public
+  */
+  gradientList: null,
+
   actions: {
     /**
       Handles on fill gradient edit by gradient-edit.

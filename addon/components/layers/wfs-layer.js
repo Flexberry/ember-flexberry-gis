@@ -23,6 +23,13 @@ import state from '../../utils/state';
  */
 export default BaseVectorLayer.extend({
   /**
+    Array containing component's properties which are also leaflet layer options.
+    @property leafletOptions
+    @type Stirng[]
+  */
+  leafletOptions: null,
+
+  /**
     Returns features read format depending on 'format', 'options.crs', 'options.geometryField'.
     Server responses format will rely on it.
     @method getFeaturesReadFormat

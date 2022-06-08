@@ -113,6 +113,16 @@ const FlexberryMapComponent = Component.extend(
     classNames: [flexberryClassNames.wrapper],
 
     /**
+    List of leaflet map options which will be passed into leaflet map.
+  */
+    leafletOptions: null,
+
+    /**
+    List of leaflet map properties bindings.
+  */
+    leafletProperties: null,
+
+    /**
     Map center latitude.
 
     @property lat

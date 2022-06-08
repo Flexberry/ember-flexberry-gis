@@ -18,6 +18,7 @@ import TileLayer from './tile-layer';
   @extends TileLayerComponent
  */
 export default TileLayer.extend({
+  leafletOptions: null,
 
   /**
     Performs 'getFeatureInfo' request to WMS-service related to layer.

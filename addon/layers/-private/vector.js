@@ -23,6 +23,14 @@ export default BaseLayer.extend({
   layersStylesRenderer: service('layers-styles-renderer'),
 
   /**
+    Permitted operations related to layer type.
+    @property operations
+    @type String[]
+    @default ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'legend']
+  */
+  operations: null,
+
+  /**
     Initializes component.
   */
   init() {

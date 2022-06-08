@@ -9,6 +9,7 @@ import BaseEditMode from 'ember-flexberry-gis/layers-prototyping-modes/-private/
   @class MetadataEditMode
 */
 export default BaseEditMode.extend({
+  requiredProperties: null,
   name: 'metadata-mode',
 
   /**

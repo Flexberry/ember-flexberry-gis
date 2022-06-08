@@ -12,6 +12,14 @@ import Service from '@ember/service';
 */
 export default Service.extend({
   /**
+    Inner hash containing settings gradient object.
+    @property gradientList
+    @type Object[]
+    @default []
+  */
+  gradientList: null,
+
+  /**
     Initializes component.
   */
   init() {

@@ -29,6 +29,14 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
   iconClass: 'image icon',
 
   /**
+    Permitted operations related to layer type.
+    @property operations
+    @type String[]
+    @default ['edit', 'remove', 'identify', 'search']
+  */
+  operations: null,
+
+  /**
     Crs.
 
     @property crs

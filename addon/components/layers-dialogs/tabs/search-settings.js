@@ -111,6 +111,14 @@ export default Component.extend({
   checkboxClass: 'toggle',
 
   /**
+    Current object with search settings.
+    @property value
+    @type Object
+    @default Object
+  */
+  value: null,
+
+  /**
     Initializes component.
   */
   init() {

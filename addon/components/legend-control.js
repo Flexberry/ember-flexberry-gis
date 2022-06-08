@@ -45,6 +45,14 @@ export default BaseControl.extend({
   layers: null,
 
   /**
+    Leaflet options for control.
+    @property leafletOptions
+    @type String[]
+    @default ['position', 'disableClickPropagation', 'disableScrollPropagation']
+  */
+  leafletOptions: null,
+
+  /**
     Creates control instance, should be overridden in child classes.
 
     @method createControl

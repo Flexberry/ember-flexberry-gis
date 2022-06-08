@@ -25,6 +25,8 @@ export default BaseControl.extend({
   */
   layerGroup: null,
 
+  leafletOptions: null,
+
   /**
     The standard Leaflet.Control position parameter, used like all the other controls.
     @property position
@@ -170,6 +172,15 @@ export default BaseControl.extend({
     @type Boolean
   */
   showPanel: false,
+
+  /**
+    Overrides the default strings allowing for translation.
+    See {<a href="https://github.com/Norkart/Leaflet-MiniMap#available-strings">for available strings</a>}
+    @property strings
+    @type Object
+    @default {hideText:'', showText:''}
+  */
+  strings: null,
 
   init() {
     this._super(...arguments);

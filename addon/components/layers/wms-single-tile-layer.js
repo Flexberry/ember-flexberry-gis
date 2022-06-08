@@ -16,6 +16,8 @@ import TileLayerComponent from './tile-layer';
   @extends TileLayerComponent
  */
 export default TileLayerComponent.extend({
+  leafletOptions: null,
+
   /**
     Inner WMS layer.
     Needed for identification (always invisible, won't be added to map).

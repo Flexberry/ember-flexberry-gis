@@ -246,6 +246,14 @@ export default Component.extend({
   _selectedLocale: undefined,
 
   /**
+    Contains properties with flag showing whether they are showable.
+    @property _showableItems
+    @type Object
+    @default {}
+  */
+  _showableItems: null,
+
+  /**
     Returns default locale.
 
     @property _defaultLocale

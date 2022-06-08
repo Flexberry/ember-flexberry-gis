@@ -156,6 +156,13 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   */
   showTree: false,
 
+  /**
+    Set of scales for map's switch scale control.
+    @property switchScaleControlScales
+    @type Number[]
+  */
+  switchScaleControlScales: null,
+
   _leafletMapDidChange: observer('leafletMap', function () {
     const leafletMap = this.get('leafletMap');
     if (leafletMap) {

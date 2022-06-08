@@ -1,11 +1,10 @@
-import Ember from 'ember';
 import { isNone } from '@ember/utils';
 import EmberObject, { observer, get } from '@ember/object';
 import { A } from '@ember/array';
 import $ from 'jquery';
 import FlexberryDropdown from 'ember-flexberry/components/flexberry-dropdown';
 import { translationMacro as t } from 'ember-i18n';
-import { run } from '@ember/runloop';
+import { run, bind } from '@ember/runloop';
 import layout from '../templates/components/select-with-checkbox';
 
 
@@ -31,6 +30,8 @@ export default FlexberryDropdown.extend({
   isSelectAllVisible: true,
 
   noResults: t('components.flexberry-layers-intersections-panel.notResult'),
+
+  message: null,
 
   /**
    * Storage for the items state.
@@ -188,7 +189,7 @@ export default FlexberryDropdown.extend({
       this.get('state').setEach('isVisible', false);
       $('.search-field').val('');
       $('.fb-selector .item.filtered').each((i, item) => {
-        Ember.run.bind($(item).removeClass('filtered'));
+        bind($(item).removeClass('filtered'));
       });
     },
   },

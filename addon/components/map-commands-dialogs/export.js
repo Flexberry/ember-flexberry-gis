@@ -1052,6 +1052,14 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
   */
   legendsUpdateTrigger: false,
 
+  /**
+    All loaded legends for layers.
+    @property legends
+    @type Object
+    @default {}
+  */
+  legends: null,
+
   _getOptions(e, type) {
     if (this.get('_options.legendSecondPage')) {
       set(e, 'exportOptions', {

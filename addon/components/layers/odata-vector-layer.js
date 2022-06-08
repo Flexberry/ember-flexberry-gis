@@ -61,6 +61,8 @@ const maxBatchFeatures = 10000;
  */
 export default BaseVectorLayer.extend({
 
+  leafletOptions: null,
+
   clusterize: false,
 
   store: service(),

@@ -30,6 +30,8 @@ export default BaseLayer.extend({
   */
   noWrap: true,
 
+  leafletOptions: null,
+
   /**
     Creates leaflet layer related to layer type.
 

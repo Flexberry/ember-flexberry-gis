@@ -27,6 +27,14 @@ export default BaseLayer.extend({
   iconClass: 'image icon',
 
   /**
+    Permitted operations related to layer type.
+    @property operations
+    @type String[]
+    @default ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'filter']
+  */
+  operations: null,
+
+  /**
     Initializes component.
   */
   init() {

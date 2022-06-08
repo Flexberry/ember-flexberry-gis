@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import Ember from 'ember';
+import { bind } from '@ember/runloop';
 import { Promise, allSettled } from 'rsvp';
 import { A, isArray } from '@ember/array';
 import { getOwner } from '@ember/application';
@@ -41,6 +41,14 @@ export default Component.extend({
     @default null
   */
   resultsLayer: null,
+
+  /**
+    List vector layers.
+    @property vectorLayers
+    @type Array
+    @default []
+  */
+  vectorLayers: null,
 
   /**
     Leaflet map object for zoom and pan.
@@ -90,6 +98,22 @@ export default Component.extend({
     @default 0
   */
   bufferR: null,
+
+  /**
+    List of selected vector layers.
+    @property selectedLayers
+    @type Array
+    @default []
+  */
+  selectedLayers: null,
+
+  /**
+    List of intersection results.
+    @property  results
+    @type Array
+    @default []
+  */
+  results: null,
 
   /**
     Selected feature.
@@ -430,7 +454,7 @@ export default Component.extend({
 
     $('.search-field').val('');
     $('.fb-selector .item.filtered').each((i, item) => {
-      Ember.run.bind(this, $(item).removeClass('filtered'));
+      bind(this, $(item).removeClass('filtered'));
     });
   },
 

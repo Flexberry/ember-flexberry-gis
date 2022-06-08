@@ -15,6 +15,15 @@ import layout from '../../../templates/components/layers-styles/simple/stroke-li
 */
 export default Component.extend({
   /**
+    Available 'stroke-linecap' attribute values.
+    @property _availableLineCaps
+    @type String[]
+    @default ['butt', 'round', 'square']
+    @private
+  */
+  _availableLineCaps: null,
+
+  /**
     Reference to component's template.
   */
   layout,

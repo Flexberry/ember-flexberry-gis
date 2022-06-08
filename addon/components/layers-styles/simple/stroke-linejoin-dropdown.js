@@ -15,6 +15,16 @@ import layout from '../../../templates/components/layers-styles/simple/stroke-li
 */
 export default Component.extend({
   /**
+    Available 'stroke-linejoin' attribute values.
+    @property _availableLineJoins
+    @type String[]
+    @default ['miter', 'round', 'bevel']
+    @private
+  */
+  _availableLineJoins: null,
+
+
+  /**
     Reference to component's template.
   */
   layout,

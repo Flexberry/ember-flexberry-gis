@@ -48,6 +48,30 @@ const FlexberryGeometryAddModeDrawComponent = Component.extend({
   */
   classNames: ['draw', flexberryClassNames.wrapper],
 
+  /**
+    Offset validation flags.
+    @property _offsetInvalid
+    @type Object
+    @default {
+      x: false,
+      y: false
+    }
+    @private
+  */
+  _offsetInvalid: null,
+
+  /**
+    Offset
+    @property s
+    @type Object
+    @default {
+      x: null,
+      y: null
+    }
+    @private
+  */
+  _offset: null,
+
   _moveEnabled: false,
 
   /**

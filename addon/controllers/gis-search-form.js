@@ -17,6 +17,20 @@ import { next } from '@ember/runloop';
   @extends <a href="http://emberjs.com/api/classes/Ember.Controller.html">Ember.Controller</a>
 */
 export default Controller.extend({
+  /**
+    Hash containing search conditions.
+    @property searchConditions
+    @type Object
+  */
+  searchConditions: null,
+
+  /**
+    Array of posible scale filter conditions.
+    @property scaleFilterConditions
+    @type String[]
+    @default `['>', '>=', '<', '<=', '=', '<>']`
+  */
+  scaleFilterConditions: null,
 
   /**
     Array of posible scale values.
@@ -26,6 +40,14 @@ export default Controller.extend({
     @default Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000])
   */
   scales: A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),
+
+  /**
+    Hash with ids of selected rows.
+    @property _selectedRows
+    @type Object
+    @private
+  */
+  _selectedRows: null,
 
   /**
     Count of a selected rows.

@@ -149,6 +149,20 @@ export default EditFormController.extend(
     keyProperty: 'model.id',
 
     /**
+      Object containing bindings as key-value pairs.
+      @property binding
+      @type Object
+      @example
+      ```javascript
+      binding: {
+        visibility: 'visibility',
+        opacity: 'settingsAsObject.opacity'
+      },
+      ```
+    */
+    binding: null,
+
+    /**
       This method will be invoked before save operation will be called.
       Override this method to add some custom logic on save operation start.
 

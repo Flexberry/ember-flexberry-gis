@@ -6,6 +6,8 @@ import {
 } from '../base-vector-layer';
 
 export default BaseVectorLayer.extend({
+  leafletOptions: null,
+
   /**
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer

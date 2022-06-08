@@ -25,6 +25,16 @@ import FlexberryBoundingboxMapLoaderMixin from '../mixins/flexberry-boundingbox-
 */
 export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
   /**
+    Query settings for layer metadata loading.
+  */
+  _metadataSettings: null,
+
+  /**
+    Query settings for maps loading.
+  */
+  _mapSettings: null,
+
+  /**
     Initializes component.
   */
   init() {

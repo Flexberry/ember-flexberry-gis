@@ -11,6 +11,8 @@ import BaseControl from 'ember-flexberry-gis/components/base-control';
 */
 export default BaseControl.extend({
 
+  leafletOptions: null,
+
   createControl() {
     return new L.Control.Zoomslider(this.get('options'));
   },

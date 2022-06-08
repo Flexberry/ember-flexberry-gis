@@ -153,6 +153,8 @@ const FlexberryMaplayerComponent = Component.extend(
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
 
+    dynamicButtons: null,
+
     /**
       Layer copy's name postfix
 
@@ -170,6 +172,16 @@ const FlexberryMaplayerComponent = Component.extend(
       @private
     */
     _expanded: false,
+
+    /**
+      Component's required actions names.
+      For actions enumerated in this array an assertion exceptions will be thrown,
+      if actions handlers are not defined for them.
+      @property _requiredActions
+      @type String[]
+      @default ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds']
+    */
+    _requiredActionNames: null,
 
     /**
       Used to identify this component on the page by component name.
@@ -673,20 +685,6 @@ const FlexberryMaplayerComponent = Component.extend(
         }
 
         this.sendAction('onChangeLayer', this.get('leftLayer'), this.get('rightLayer'));
-      },
-
-      nodeClick(e) {
-        const $target = $(e.target);
-        let targetAction = $target.data('action');
-
-        if (!targetAction) {
-          targetAction = $target.parent().data('action');
-        }
-
-        if (targetAction) {
-          this.send(targetAction);
-          e.stopPropagation();
-        }
       },
 
       /**
