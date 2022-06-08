@@ -480,6 +480,16 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   geoproviderMode: true,
 
   /**
+    Indicator for adding a layer to the map for edit mode.
+    When a layer is not activated in the layer tree
+
+    @property isLayerCopy
+    @type boolean
+    @default false
+  */
+  isLayerCopy: false,
+
+  /**
     Edit|Create|Union|Split|Diff|Import
   */
   mode: null,
@@ -549,7 +559,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
     this.set(&#x27;error&#x27;, null);
 
-    // Уберем редактирование с объектов, если оно было
+    // Cancel object editing, if there was one
     let layers = this.get(&#x27;layers&#x27;);
     if (layers) {
       Object.values(layers).filter((layer) =&gt; !Ember.isNone(layer)).forEach((layer) =&gt; {
@@ -577,7 +587,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       this.set(&#x27;initialData&#x27;, {});
       this.set(&#x27;mode&#x27;, dataItems.mode);
 
-      this.set(&#x27;choiceValueData&#x27;, dataItems.choiceValueData); // эта штука должна быть только одна
+      this.set(&#x27;choiceValueData&#x27;, dataItems.choiceValueData); // there must be only one
 
       let editTools = this._getEditTools();
       Ember.set(leafletMap, &#x27;editTools&#x27;, editTools);
@@ -591,7 +601,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
 
           if (this.get(&#x27;state&#x27;) === &#x27;Edit&#x27;) {
-            // сохраним геометрию, чтобы можно было быстро к ней вернуться при отмене
+            // save the geometry, to quickly return to it if the cancel action
             let latlngs;
             switch (layer.feature.geometry.type) {
               case &#x27;Point&#x27;:
@@ -620,7 +630,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
           let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
 
+          // When a layer is not activated in the layer tree, it must be added to the leafletMap
+          // then turn on the layer editing mode
           if (!leafletMap.hasLayer(layer)) {
+            this.set(&#x27;isLayerCopy&#x27;, true);
             leafletMap.addLayer(layer);
           }
 
@@ -657,7 +670,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
         let data = dataItem.data;
         this.set(&#x60;data.${index}&#x60;, data);
-        this.set(&#x60;initialData.${index}&#x60;, Object.assign({}, data)); // копия объекта для быстрого восстановления
+        this.set(&#x60;initialData.${index}&#x60;, Object.assign({}, data)); // A copy of the object for quick recovery
 
         index += 1;
       });
@@ -1048,7 +1061,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         let layer = layers[index];
 
         if (mode === &#x27;Edit&#x27;) {
-          // отменим изменения в слое
+          // undo changes to the layer
           let latlng = latlngs[index];
 
           if (!Ember.isNone(layer) &amp;&amp; !Ember.isNone(latlng)) {
@@ -1070,7 +1083,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             }
           }
 
-          if (afterSave) { // если уходим после неудачного сохранения, то надо данные вернуть
+          if (afterSave) { // If we leave after a failed save, we have to return the data
             let data = initialDatas[index];
             if (!Ember.isNone(data)) {
               for (var key in data) {
@@ -1083,8 +1096,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
               }
             }
 
-            // для надписей
+            // for inscriptions
             leafletObject.editLayer(layer);
+          }
+
+          //Removing a layer from the map that was added for edit mode
+          if (this.get(&#x27;isLayerCopy&#x27;) &amp;&amp; leafletMap.hasLayer(layer)) {
+            leafletMap.removeLayer(layer);
           }
 
           delete latlngs[index];
@@ -1093,7 +1111,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           delete initialDatas[index];
 
         } else {
-          // удалить слой
+          // remove the layer
           if (!Ember.isNone(layer)) {
             if (!Ember.isNone(leafletObject) &amp;&amp; leafletObject.hasLayer(layer)) {
               leafletObject.removeLayer(layer);
@@ -1119,12 +1137,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     }
 
     if (!Ember.isNone(layers)) {
-      // Сервисный слой общий с панелью атрибутов. Не надо очищать, если ничего не редактировали
+      // The service layer is shared with the attributes panel. No need to clear if you haven&#x27;t edited anything
       this.send(&#x27;clearSelected&#x27;);
     }
 
     this.set(&#x27;latlngs&#x27;, null);
     this.set(&#x27;layers&#x27;, null);
+    this.set(&#x27;isLayerCopy&#x27;, false);
 
     this.set(&#x27;data&#x27;, null);
     this.set(&#x27;initialData&#x27;, null);
@@ -1320,7 +1339,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
           layer.disableEdit();
 
-          // создадим новый объект в слое
+          // Create a new object in the layer
           if (leafletObject.createLayerObject) {
             this.get(&#x27;leafletMap&#x27;).removeLayer(layer);
             layer = leafletObject.createLayerObject(leafletObject, data, layer.toGeoJSON().geometry);
@@ -1384,6 +1403,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
           layer.disableEdit();
           leafletObject.editLayer(layer);
+
+          // Deleting a copy of an edited layer from the map
+          if (this.get(&#x27;isLayerCopy&#x27;) &amp;&amp; this.get(&#x27;leafletMap&#x27;).hasLayer(layer)) {
+            this.get(&#x27;leafletMap&#x27;).removeLayer(layer);
+            this.set(&#x27;isLayerCopy&#x27;, false);
+          }
         });
 
         event = &#x27;flexberry-map:edit-feature&#x27;;
@@ -1407,7 +1432,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         this.restoreLayers().then(() =&gt; {
           this.get(&#x27;leafletMap&#x27;).fire(event + &#x27;:fail&#x27;, e);
         }).catch(() =&gt; {
-          // не удалось ни сохранить, ни восстановить слои. непонятно что делать
+          // can&#x27;t save or restore layers. No decision on what to do next
           console.log(&#x27;Save and restore layer error&#x27;);
         });
       };
