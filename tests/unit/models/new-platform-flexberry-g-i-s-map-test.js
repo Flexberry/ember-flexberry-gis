@@ -322,10 +322,13 @@ test('getmulticircuitobject with difference', function (assert) {
       },
     },
   };
+  const getmapApiStub = sinon.stub(map.get('mapApi'), 'getFromApi');
+  getmapApiStub.withArgs('precisionScale').returns(undefined);
 
   const resultObj = map.createMulti([testObjA, testObjB, testObjC], false);
 
   assert.deepEqual(resultObj, multiObject, 'multi object');
+  getmapApiStub.restore();
 });
 
 test('getmulticircuitobject with union', function (assert) {
@@ -387,10 +390,13 @@ test('getmulticircuitobject with union', function (assert) {
       },
     },
   };
+  const getmapApiStub = sinon.stub(map.get('mapApi'), 'getFromApi');
+  getmapApiStub.withArgs('precisionScale').returns(undefined);
 
   const resultObj = map.createMulti([testObjA, testObjB, testObjC], true);
 
   assert.deepEqual(resultObj, multiObject, 'multi object');
+  getmapApiStub.restore();
 });
 
 test('getMergedGeometry with difference should return geoJson feature in EPSG:4326', function (assert) {
@@ -491,6 +497,9 @@ test('getMergedGeometry with difference should return geoJson feature in EPSG:43
   toJstsStub4.returns(objJsts4);
 
   const map = this.subject();
+  const getmapApiStub = sinon.stub(map.get('mapApi'), 'getFromApi');
+  getmapApiStub.withArgs('precisionScale').returns(undefined);
+
   const _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('1', ['1', '2']).returns(
     new Promise((resolve) => {
@@ -510,6 +519,7 @@ test('getMergedGeometry with difference should return geoJson feature in EPSG:43
     assert.deepEqual(feature, geoJsonUnion);
     done();
     _getModelLayerFeatureStub.restore();
+    getmapApiStub.restore();
   });
 });
 
@@ -610,6 +620,9 @@ test('getMergedGeometry with union should return geoJson feature in EPSG:4326', 
   toJstsStub4.returns(objJsts4);
 
   const map = this.subject();
+  const getmapApiStub = sinon.stub(map.get('mapApi'), 'getFromApi');
+  getmapApiStub.withArgs('precisionScale').returns(undefined);
+
   const _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('1', ['1', '2']).returns(
     new Promise((resolve) => {
@@ -629,6 +642,7 @@ test('getMergedGeometry with union should return geoJson feature in EPSG:4326', 
     assert.deepEqual(feature, geoJsonUnion);
     done();
     _getModelLayerFeatureStub.restore();
+    getmapApiStub.restore();
   });
 });
 
@@ -737,6 +751,9 @@ test('getMergedGeometry with geometry reducer and difference should return geoJs
   toJstsStub4.returns(objJsts4);
 
   const map = this.subject();
+  const getmapApiStub = sinon.stub(map.get('mapApi'), 'getFromApi');
+  getmapApiStub.withArgs('precisionScale').returns(undefined);
+
   const _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('1', ['1', '2']).returns(
     new Promise((resolve) => {
@@ -756,6 +773,7 @@ test('getMergedGeometry with geometry reducer and difference should return geoJs
     assert.deepEqual(feature, geoJsonUnion);
     done();
     _getModelLayerFeatureStub.restore();
+    getmapApiStub.restore();
   });
 });
 
@@ -856,6 +874,9 @@ test('getMergedGeometry with geometry reducer and union should return geoJson fe
   toJstsStub4.returns(objJsts4);
 
   const map = this.subject();
+  const getmapApiStub = sinon.stub(map.get('mapApi'), 'getFromApi');
+  getmapApiStub.withArgs('precisionScale').returns(undefined);
+
   const _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs('1', ['1', '2']).returns(
     new Promise((resolve) => {
@@ -875,5 +896,6 @@ test('getMergedGeometry with geometry reducer and union should return geoJson fe
     assert.deepEqual(feature, geoJsonUnion);
     done();
     _getModelLayerFeatureStub.restore();
+    getmapApiStub.restore();
   });
 });
