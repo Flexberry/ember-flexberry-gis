@@ -470,7 +470,7 @@ export default BaseVectorLayer.extend({
               equals.push(new Query.SimplePredicate('id', Query.FilterOperator.Eq, e.searchOptions.queryString));
             }
           } else {
-            property = layerProperties.get('field');
+            property = layerProperties.get(field);
             if (!Ember.isNone(property)) {
               switch (property.type) {
                 case 'decimal':
@@ -500,7 +500,7 @@ export default BaseVectorLayer.extend({
 
     let filter;
     if (equals.length === 0) {
-      return;
+      return Ember.RSVP.resolve(Ember.A());
     } else if (equals.length === 1) {
       filter = equals[0];
     } else {
