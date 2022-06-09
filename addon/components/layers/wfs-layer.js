@@ -533,13 +533,13 @@ export default BaseVectorLayer.extend({
             if (field !== 'primarykey') {
               switch (typeField) {
                 case 'number':
-                  accessProperty = !isNaN(Number(e.searchOptions.queryString));
+                  accessProperty = !e.context && !isNaN(Number(e.searchOptions.queryString));
                   break;
                 case 'date':
-                  accessProperty = new Date(e.searchOptions.queryString).toString() === 'Invalid Date';
+                  accessProperty = !e.context && new Date(e.searchOptions.queryString).toString() !== 'Invalid Date';
                   break;
                 case 'boolean':
-                  accessProperty = Boolean(e.searchOptions.queryString);
+                  accessProperty = !e.context && Boolean(e.searchOptions.queryString);
                   break;
                 default:
                   equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', {
