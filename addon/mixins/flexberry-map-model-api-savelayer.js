@@ -25,12 +25,12 @@ export default Mixin.create({
     }
 
     return new Promise((resolve, reject) => {
-      const promise = new Promise((rslv, rjct) => {
+      const promise = new Promise((resolve, reject) => {
         leafletObject.once('loadCompleted', () => {
-          rslv();
+          resolve();
         }).once('error', () => {
           leafletObject.existingFeaturesLoaded = false;
-          rjct();
+          reject();
         });
       });
       let saveFailed;

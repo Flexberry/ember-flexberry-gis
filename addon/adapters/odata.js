@@ -52,10 +52,10 @@ export default OdataAdapter.extend(AdapterMixin, {
       data: requestBody,
     };
 
-    return new Promise((resolve, rjct) => $.ajax(url, options).done((response, statusText, xhr) => {
+    return new Promise((resolve, reject) => $.ajax(url, options).done((response, statusText, xhr) => {
       const meta = getResponseMeta(xhr.getResponseHeader('Content-Type'));
       if (meta.contentType !== 'multipart/mixed') {
-        return rjct(new Ember.DS.AdapterError('Invalid response type.'));
+        return reject(new Ember.DS.AdapterError('Invalid response type.'));
       }
 
       try {
@@ -78,7 +78,7 @@ export default OdataAdapter.extend(AdapterMixin, {
 
         return resolve(run(store, store.push, normalizedRecords));
       } catch (e) {
-        return rjct(e);
+        return reject(e);
       }
     }).fail(reject));
   },

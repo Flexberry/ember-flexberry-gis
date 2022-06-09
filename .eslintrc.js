@@ -41,6 +41,7 @@ module.exports = {
     "no-console": "off",
     "no-alert": "off",
     'no-plusplus': [2, { allowForLoopAfterthoughts: true }],
+    "no-shadow": [2, {"allow": ["resolve", "reject"]}],
     'no-underscore-dangle': 'off',
     'max-len': [
       'error',

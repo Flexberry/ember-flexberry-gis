@@ -726,7 +726,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
     @private
   */
   restoreLayers() {
-    return new Promise((rslv, reject) => {
+    return new Promise((resolve, reject) => {
       const initialLayers = this.get('dataItems.initialLayers');
       const leafletObject = this.get('leafletObject');
 
@@ -736,17 +736,17 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         const promise = leafletObject.cancelEdit(featureIds);
 
         this.set('loading', true);
-        (promise || rslv()).then(() => {
+        (promise || resolve()).then(() => {
           this.set('loading', false);
           this.cancelEdit(true);
-          rslv();
+          resolve();
         }).catch(() => {
           this.set('loading', false);
           this.cancelEdit(true);
           reject();
         });
       } else {
-        rslv();
+        resolve();
         this.cancelEdit(true);
       }
     });
@@ -930,9 +930,9 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
 
         leafletObject.fire('load', e);
 
-        createPromise = new Promise((rslv) => {
+        createPromise = new Promise((resolve) => {
           allSettled(e.results).then(() => {
-            rslv();
+            resolve();
           });
         });
 

@@ -7,7 +7,7 @@ import { debounce } from '@ember/runloop';
 import { A, isArray } from '@ember/array';
 
 import { getOwner } from '@ember/application';
-import { hash, Promise, resolve } from 'rsvp';
+import { hash, resolve, reject } from 'rsvp';
 import {
   computed, set, observer, get
 } from '@ember/object';
@@ -418,15 +418,13 @@ export default Component.extend(
       @private
     */
     _getAttributesOptions() {
-      return new Promise((_resolve) => {
-        _resolve({
-          object: this.get('_leafletObject'),
-          settings: {
-            readonly: true,
-            localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties'),
-            excludedProperties: this.get('displaySettings.featuresPropertiesSettings.excludedProperties'),
-          },
-        });
+      return resolve({
+        object: this.get('_leafletObject'),
+        settings: {
+          readonly: true,
+          localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties'),
+          excludedProperties: this.get('displaySettings.featuresPropertiesSettings.excludedProperties'),
+        },
       });
     },
 
@@ -912,9 +910,7 @@ export default Component.extend(
       Leaflet layer or promise returning such layer.
     */
     getLeafletObject() {
-      return new Promise((_resolve) => {
-        _resolve(this.get('_leafletObject'));
-      });
+      return resolve(this.get('_leafletObject'));
     },
 
     /**
@@ -1020,9 +1016,7 @@ export default Component.extend(
       const layer = this.get('_leafletObject');
 
       if (isNone(layer)) {
-        return new Promise((_resolve, reject) => {
-          reject(new Error(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`));
-        });
+        return reject(new Error(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`));
       }
 
       const bounds = this._getBoundingBox(layer);
