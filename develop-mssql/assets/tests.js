@@ -644,8 +644,17 @@ define('dummy/tests/integration/components/flexberry-layers-attributes-panel-tes
     assert.equal(this.$().text().trim(), '');
 
     var geoJsonData = '\n    {\n      "type": "FeatureCollection",\n      "features": [{\n        "type": "Feature",\n        "geometry": {\n          "type": "Point",\n          "coordinates": [102.0, 0.5]\n        },\n        "properties": {\n          "prop0": "value0"\n        }\n      }\n    ]\n  }';
-    var geoJson = L.geoJSON(JSON.parse(geoJsonData));
-    _ember['default'].set(geoJson, 'readFormat', {
+    var geoJson1 = L.geoJSON(JSON.parse(geoJsonData));
+    _ember['default'].set(geoJson1, 'readFormat', {
+      featureType: {
+        fieldTypes: { prop0: 'string' },
+        fields: { prop0: function prop0(val) {
+            return val;
+          } }
+      }
+    });
+    var geoJson2 = L.geoJSON(JSON.parse(geoJsonData));
+    _ember['default'].set(geoJson2, 'readFormat', {
       featureType: {
         fieldTypes: { prop0: 'string' },
         fields: { prop0: function prop0(val) {
@@ -654,8 +663,13 @@ define('dummy/tests/integration/components/flexberry-layers-attributes-panel-tes
       }
     });
     this.set('items', _ember['default'].A([{
-      name: 'test layer',
-      leafletObject: geoJson
+      name: 'test layer 1',
+      leafletObject: geoJson1,
+      settings: { readonly: true }
+    }, {
+      name: 'test layer 2',
+      leafletObject: geoJson2,
+      settings: { readonly: false }
     }]));
 
     this.render(_ember['default'].HTMLBars.template((function () {
@@ -703,10 +717,22 @@ define('dummy/tests/integration/components/flexberry-layers-attributes-panel-tes
       };
     })()));
 
-    var $tab = this.$().find('div[data-tab="test layer"]');
+    assert.equal(this.$().find('div.tab.bottompanel-tab-data-panel').length, 2, 'Two tabs was rendered');
 
-    assert.equal($tab.length, 1, 'Layer tab was rendered');
-    assert.equal($tab.find('tbody td:last-child').text().trim(), 'value0', 'Property cell was rendered');
+    var $tab1 = this.$().find('div[data-tab="test layer 1"]');
+    assert.equal($tab1.length, 1, 'Test layer 1 tab was rendered');
+    assert.equal($tab1.find('tbody td:last-child').text().trim(), 'value0', 'Property cell was rendered');
+    assert.equal($tab1.find('label[title="Find an item on the map"]').length, 1, 'Find item on map button available on tab1');
+    assert.equal($tab1.find('label[title="Clear the found items"]').length, 1, 'Clear found items button available on tab1');
+    assert.equal($tab1.find('label[title="Delete the selected items"]').length, 0, 'Delete button unavailable on tab1');
+    assert.equal($tab1.find('.flexberry-geometry-tools').length, 0, 'Edit geometry tools unavailable on tab1');
+
+    var $tab2 = this.$().find('div[data-tab="test layer 2"]');
+    assert.equal($tab2.length, 1, 'Test layer 2 tab was rendered');
+    assert.equal($tab2.find('label[title="Find an item on the map"]').length, 2, 'Find item on map button available on tab2 (toolbar+row)');
+    assert.equal($tab2.find('label[title="Clear the found items"]').length, 1, 'Clear found items button available on tab2');
+    assert.equal($tab2.find('label[title="Delete the selected items"]').length, 1, 'Delete button available on tab2');
+    assert.equal($tab2.find('.flexberry-geometry-tools').length, 1, 'Edit geometry tools available on tab2');
   });
 });
 define('dummy/tests/integration/components/flexberry-layers-attributes-panel-test.jscs-test', ['exports'], function (exports) {
@@ -1063,6 +1089,196 @@ define('dummy/tests/integration/components/flexberry-map-test.jshint', ['exports
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'integration/components/flexberry-map-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/integration/components/flexberry-maplayers-test', ['exports', 'ember-qunit', 'ember-i18n/services/i18n', 'ember-flexberry-gis/locales/ru/translations', 'ember-flexberry-gis/locales/en/translations', 'ember', 'sinon'], function (exports, _emberQunit, _emberI18nServicesI18n, _emberFlexberryGisLocalesRuTranslations, _emberFlexberryGisLocalesEnTranslations, _ember, _sinon) {
+
+  (0, _emberQunit.moduleForComponent)('flexberry-maplayers', 'Integration | Component | flexberry maplayers', {
+    integration: true,
+    beforeEach: function beforeEach(assert) {
+      this.register('locale:ru/translations', _emberFlexberryGisLocalesRuTranslations['default']);
+      this.register('locale:en/translations', _emberFlexberryGisLocalesEnTranslations['default']);
+      this.register('service:i18n', _emberI18nServicesI18n['default']);
+
+      this.inject.service('i18n', { as: 'i18n' });
+      _ember['default'].Component.reopen({
+        i18n: _ember['default'].inject.service('i18n')
+      });
+
+      this.set('i18n.locale', 'en');
+    }
+  });
+
+  (0, _emberQunit.test)('rights', function (assert) {
+    var ownerStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    ownerStub.returns({
+      isKnownNameForType: function isKnownNameForType() {
+        return false;
+      },
+      knownForType: function knownForType(type, val) {
+        switch (val) {
+          case 'type1':
+            return { 'operations': ['editFeatures', 'attributes'] };
+          case 'type2':
+            return { 'operations': ['attributes'] };
+          case 'type3':
+            return { 'operations': ['editFeatures'] };
+          case 'type4':
+            return { 'operations': ['add', 'editFeatures', 'attributes'] };
+          case 'group':
+            return { 'operations': ['add', 'edit', 'remove', 'editFeatures'] };
+        }
+      },
+      lookup: function lookup(val) {
+        return null;
+      }
+    });
+
+    this.set('layers', _ember['default'].A([_ember['default'].Object.create({
+      name: 'test layer1',
+      type: 'type1',
+      id: 'testId1',
+      layerInitialized: true
+    }), _ember['default'].Object.create({
+      name: 'test layer2',
+      type: 'type2',
+      id: 'testId2',
+      layerInitialized: true
+    }), _ember['default'].Object.create({
+      name: 'test layer3',
+      type: 'type3',
+      id: 'testId3',
+      layerInitialized: true
+    }), _ember['default'].Object.create({
+      name: 'test layer4',
+      type: 'type4',
+      id: 'testId4',
+      layerInitialized: true
+    }), _ember['default'].Object.create({
+      name: 'group',
+      type: 'group',
+      id: 'testId5',
+      layerInitialized: true
+    })]));
+
+    var access = {
+      accessibleModel: ['testId2', 'testId4', 'testId5'],
+      accessibleData: ['testId1', 'testId2', 'testId4', 'testId5'],
+      createAccess: true
+    };
+
+    this.set('access', access);
+    this.set('mapLayerExtraButtons', [{
+      'class': 'extra-button',
+      action: 'extraAction'
+    }]);
+
+    this.render(_ember['default'].HTMLBars.template((function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            'fragmentReason': false,
+            'revision': 'Ember@2.4.6',
+            'loc': {
+              'source': null,
+              'start': {
+                'line': 2,
+                'column': 2
+              },
+              'end': {
+                'line': 12,
+                'column': 2
+              }
+            }
+          },
+          isEmpty: true,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes() {
+            return [];
+          },
+          statements: [],
+          locals: [],
+          templates: []
+        };
+      })();
+
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.4.6',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 13,
+              'column': 2
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode('\n');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode('  ');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [['block', 'flexberry-maplayers', [], ['class', 'styled', 'readonly', false, 'access', ['subexpr', '@mut', [['get', 'access', ['loc', [null, [5, 11], [5, 17]]]]], [], []], 'showHeader', false, 'compareLayersEnabled', false, 'sideBySide', false, 'dynamicButtons', ['subexpr', '@mut', [['get', 'mapLayerExtraButtons', ['loc', [null, [9, 19], [9, 39]]]]], [], []], 'layers', ['subexpr', '@mut', [['get', 'layers', ['loc', [null, [10, 11], [10, 17]]]]], [], []]], 0, null, ['loc', [null, [2, 2], [12, 26]]]]],
+        locals: [],
+        templates: [child0]
+      };
+    })()));
+
+    assert.equal(this.$('i.icon-guideline-resize-plus').length, 4, 'Fit layer bounds buttons for all layer, except groups');
+    assert.equal(this.$('i.icon-guideline-plus-r').length, 4, 'Plus button for allowed layers, layer types and groups');
+    assert.equal(this.$('i.icon-guideline-table').length, 3, 'Attributes buttons for allowed layer types');
+    assert.equal(this.$('label.flexberry-maplayer-add-button').length, 2, 'Add layer button for allowed layer types and layers');
+    assert.equal(this.$('label.flexberry-maplayer-edit-button').length, 3, 'Edit layer button for allowed layer types and layers');
+    assert.equal(this.$('label.flexberry-maplayer-copy-button').length, 5, 'Copy layer button for allowed layer types and layers');
+    assert.equal(this.$('label.flexberry-maplayer-remove-button').length, 3, 'Remove layer button for allowed layer types and layers');
+    assert.equal(this.$('label.extra-button').length, 3, 'Extra buttons for allowed layers');
+
+    ownerStub.restore();
+  });
+});
+define('dummy/tests/integration/components/flexberry-maplayers-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - integration/components');
+  test('integration/components/flexberry-maplayers-test.js should pass jscs', function () {
+    ok(true, 'integration/components/flexberry-maplayers-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/integration/components/flexberry-maplayers-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - integration/components/flexberry-maplayers-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'integration/components/flexberry-maplayers-test.js should pass jshint.');
   });
 });
 define('dummy/tests/integration/components/flexberry-maptoolbar-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
@@ -4882,12 +5098,15 @@ define('dummy/tests/unit/components/flexberry-map-test', ['exports', 'ember', 'e
       center: [51.505, -0.09],
       zoom: 13
     });
+
     var querySpy = _sinon['default'].stub(leafletMap, 'fire', function (st, e) {
       e.results.push({ features: _ember['default'].RSVP.resolve([{ id: '1' }]) });
     });
+
     var component = this.subject({
       _leafletObject: leafletMap
     });
+
     var done = assert.async(2);
 
     var res = component._queryToMap('1', '2');
