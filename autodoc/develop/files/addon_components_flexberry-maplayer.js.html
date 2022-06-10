@@ -703,6 +703,20 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether edit/add operation is allowed for layer.
+
+      @property _editOperationIsAvailable
+      @type boolean
+      @readOnly
+      @private
+    */
+    _editOperationIsAvailable: Ember.computed(&#x27;_layerClassFactory&#x27;, &#x27;layer.layerInitialized&#x27;, function () {
+      let layerClassFactory = this.get(&#x27;_layerClassFactory&#x27;);
+
+      return Ember.A(Ember.get(layerClassFactory, &#x27;operations&#x27;) || []).includes(&#x27;editFeatures&#x27;) &amp;&amp; this.get(&#x27;layer.layerInitialized&#x27;);
+    }),
+
+    /**
       Flag: indicates whether attributes operation is allowed for layer.
 
       @property _attributesOperationIsAvailable
@@ -871,14 +885,52 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     histEnabled: false,
 
     /**
-      Flag: indicates whether layer node is in readonly mode.
-      If true, layer node&#x27;s data-related UI will be in readonly mode.
+      Flag: indicates whether create new layer is avaliable by rights
 
-      @property readonly
+      @property createNewLayerAccess
       @type Boolean
-      @default false
+      @readonly
     */
-    readonly: false,
+    createNewLayerAccess: Ember.computed(&#x27;access&#x27;, &#x27;access.createAccess&#x27;, &#x27;readonly&#x27;, function () {
+      let createAccess = this.get(&#x27;access.createAccess&#x27;);
+      let readonly = this.get(&#x27;readonly&#x27;);
+
+      return !readonly &amp;&amp; createAccess;
+    }),
+
+    /**
+      Flag: indicates whether layer model is in readonly mode.
+
+      @property readonlyModel
+      @type Boolean
+      @readonly
+    */
+    readonlyModel: Ember.computed(&#x27;access&#x27;, &#x27;access.accessibleModel.[]&#x27;, &#x27;readonly&#x27;, &#x27;layer&#x27;, function () {
+      let accessibleModel = this.get(&#x27;access.accessibleModel&#x27;);
+      let layer = this.get(&#x27;layer&#x27;);
+      let readonly = this.get(&#x27;readonly&#x27;);
+
+      let access = !Ember.isNone(layer) &amp;&amp; !Ember.isNone(accessibleModel) &amp;&amp; Ember.isArray(accessibleModel) &amp;&amp; Ember.A(accessibleModel).contains(layer.id);
+
+      return readonly || !access;
+    }),
+
+    /**
+      Flag: indicates whether layer&#x27;s objects is in readonly mode.
+
+      @property readonlyData
+      @type Boolean
+      @readonly
+    */
+    readonlyData: Ember.computed(&#x27;access&#x27;, &#x27;access.accessibleData.[]&#x27;, &#x27;readonly&#x27;, &#x27;layer&#x27;, function () {
+      let accessibleData = this.get(&#x27;access.accessibleData&#x27;);
+      let layer = this.get(&#x27;layer&#x27;);
+      let readonly = this.get(&#x27;readonly&#x27;);
+
+      let access = !Ember.isNone(layer) &amp;&amp; !Ember.isNone(accessibleData) &amp;&amp; Ember.isArray(accessibleData) &amp;&amp; Ember.A(accessibleData).contains(layer.id);
+
+      return readonly || !access;
+    }),
 
     /**
       Flag: indicates whether layer node has been expanded once.

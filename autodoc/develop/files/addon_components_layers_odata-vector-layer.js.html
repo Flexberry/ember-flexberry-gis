@@ -429,7 +429,7 @@ import GisAdapter from &#x27;ember-flexberry-gis/adapters/odata&#x27;;
 import DS from &#x27;ember-data&#x27;;
 import jsts from &#x27;npm:jsts&#x27;;
 import { capitalize, camelize } from &#x27;ember-flexberry-data/utils/string-functions&#x27;;
-import isUUID  from &#x27;ember-flexberry-data/utils/is-uuid&#x27;;
+import isUUID from &#x27;ember-flexberry-data/utils/is-uuid&#x27;;
 const { Builder } = Query;
 
 /**
@@ -887,26 +887,26 @@ export default BaseVectorLayer.extend({
               equals.push(new Query.SimplePredicate(&#x27;id&#x27;, Query.FilterOperator.Eq, e.searchOptions.queryString));
             }
           } else {
-            property = layerProperties.get(&#x27;field&#x27;);
+            property = layerProperties.get(field);
             if (!Ember.isNone(property)) {
               switch (property.type) {
                 case &#x27;decimal&#x27;:
                 case &#x27;number&#x27;:
                   let searchString = e.searchOptions.queryString.replace(&#x27;.&#x27;, &#x27;,&#x27;);
-                  accessProperty = !isNaN(Number(searchString));
+                  accessProperty = !e.context &amp;&amp; !isNaN(Number(searchString));
                   break;
                 case &#x27;date&#x27;:
-                  accessProperty = new Date(e.searchOptions.queryString).toString() === &#x27;Invalid Date&#x27;;
+                  accessProperty = !e.context &amp;&amp; new Date(e.searchOptions.queryString).toString() !== &#x27;Invalid Date&#x27;;
                   break;
                 case &#x27;boolean&#x27;:
-                  accessProperty = Boolean(e.searchOptions.queryString);
+                  accessProperty = !e.context &amp;&amp; Boolean(e.searchOptions.queryString);
                   break;
                 default:
                   equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
                   break;
               }
 
-              if (!accessProperty &amp;&amp; property.type !== &#x27;string&#x27;) {
+              if (accessProperty &amp;&amp; property.type !== &#x27;string&#x27;) {
                 equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, e.searchOptions.queryString));
               }
             }
@@ -917,7 +917,7 @@ export default BaseVectorLayer.extend({
 
     let filter;
     if (equals.length === 0) {
-      return;
+      return Ember.RSVP.resolve(Ember.A());
     } else if (equals.length === 1) {
       filter = equals[0];
     } else {
@@ -1198,7 +1198,14 @@ export default BaseVectorLayer.extend({
       }
     });
 
-    let modelSerializer = Serializer.Odata.extend(serializer);
+    let baseSerializer;
+    let odataSerializer = this.get(&#x27;odataSerializer&#x27;);
+    if (!Ember.isNone(odataSerializer)) {
+      baseSerializer = Ember.getOwner(this)._lookupFactory(&#x60;serializer:${odataSerializer}&#x60;);
+    }
+
+    let modelSerializer = !Ember.isNone(baseSerializer) ? baseSerializer.extend(serializer) : Serializer.Odata.extend(serializer);
+
     return modelSerializer;
   },
 
@@ -1922,8 +1929,8 @@ export default BaseVectorLayer.extend({
     let changes = leafletObject.models.filter((item) =&gt; true); // for check empty
     if (!Ember.isEmpty(changes)) {
       Object.entries(leafletObject.models)
-        .filter((item) =&gt;  { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))); })
-        .map((item)=&gt; item[1])
+        .filter((item) =&gt; { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))); })
+        .map((item) =&gt; item[1])
         .forEach((model, index) =&gt; {
           if (model instanceof Ember.Object) {
             let layer = Object.values(leafletObject._layers).find((layer) =&gt; {

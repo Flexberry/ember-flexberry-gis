@@ -447,17 +447,20 @@ export default WmsLayerComponent.extend({
   _getAttributesOptions() {
     let resultingAttribitesOptions;
 
-    return this._super(...arguments).then((attribitesOptions) =&gt; {
-      resultingAttribitesOptions = attribitesOptions;
+    return this._super(...arguments).then((attributesOptions) =&gt; {
+      resultingAttribitesOptions = attributesOptions;
 
-      return attribitesOptions;
-    }).then((attribitesOptions) =&gt; {
-      let options = Ember.$.extend(this.get(&#x27;_wfsLayer.options&#x27;) || {}, { showExisting: true, clusterize: false });
-      let wfsLayer = this.get(&#x27;_wfsLayer&#x27;).createVectorLayer(options);
-
-      return wfsLayer;
-    }).then((wfsLayer) =&gt; {
-      Ember.set(resultingAttribitesOptions, &#x27;object&#x27;, wfsLayer);
+      return attributesOptions;
+    }).then(() =&gt; {
+      // еще бы перезагружать сам слой при добавлении/удалении/изменении
+      // слой уже создан, нет смысла делать еще один, нужно только загрузить в него объекты
+      // увеличим свои шансы загрузить нужный объект (например тот, что мы только что проидентифицировали)
+      // p.s. до этого грузились все объекты по showExisting, но с maxFeatures = 1000 и часто нужного объекта не было
+      this.get(&#x27;_wfsLayer._leafletObject&#x27;).options.continueLoading = true;
+      this.get(&#x27;_wfsLayer._leafletObject&#x27;).showLayerObjects = true;
+      return this.get(&#x27;_wfsLayer&#x27;).continueLoad(this.get(&#x27;_wfsLayer._leafletObject&#x27;));
+    }).then(() =&gt; {
+      Ember.set(resultingAttribitesOptions, &#x27;object&#x27;, this.get(&#x27;_wfsLayer._leafletObject&#x27;));
       Ember.set(resultingAttribitesOptions, &#x27;settings.readonly&#x27;, this.get(&#x27;wfs.readonly&#x27;));
 
       return resultingAttribitesOptions;
