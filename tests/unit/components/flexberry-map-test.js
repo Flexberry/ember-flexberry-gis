@@ -25,12 +25,15 @@ test('test function queryToMap', function (assert) {
     center: [51.505, -0.09],
     zoom: 13
   });
+
   let querySpy = sinon.stub(leafletMap, 'fire', (st, e) => {
     e.results.push({ features: Ember.RSVP.resolve([{ id: '1' }]) });
   });
+
   let component = this.subject({
     _leafletObject: leafletMap
   });
+
   let done = assert.async(2);
 
   let res = component._queryToMap('1', '2');
@@ -43,7 +46,7 @@ test('test function queryToMap', function (assert) {
     assert.equal(querySpy.callCount, 1, 'Count call method fire');
     assert.equal(querySpy.args[0][0], 'flexberry-map:query', 'Check call first arg to method fire');
     assert.deepEqual(querySpy.args[0][1], e, 'Check call second arg to method fire');
-    e.results[0].features.then((result)=> {
+    e.results[0].features.then((result) => {
       assert.equal(result[0].id, 1, 'Cherck result id');
       done(1);
     });

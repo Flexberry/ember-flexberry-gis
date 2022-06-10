@@ -12,7 +12,7 @@ import GisAdapter from 'ember-flexberry-gis/adapters/odata';
 import DS from 'ember-data';
 import jsts from 'npm:jsts';
 import { capitalize, camelize } from 'ember-flexberry-data/utils/string-functions';
-import isUUID  from 'ember-flexberry-data/utils/is-uuid';
+import isUUID from 'ember-flexberry-data/utils/is-uuid';
 const { Builder } = Query;
 
 /**
@@ -470,26 +470,26 @@ export default BaseVectorLayer.extend({
               equals.push(new Query.SimplePredicate('id', Query.FilterOperator.Eq, e.searchOptions.queryString));
             }
           } else {
-            property = layerProperties.get('field');
+            property = layerProperties.get(field);
             if (!Ember.isNone(property)) {
               switch (property.type) {
                 case 'decimal':
                 case 'number':
                   let searchString = e.searchOptions.queryString.replace('.', ',');
-                  accessProperty = !isNaN(Number(searchString));
+                  accessProperty = !e.context && !isNaN(Number(searchString));
                   break;
                 case 'date':
-                  accessProperty = new Date(e.searchOptions.queryString).toString() === 'Invalid Date';
+                  accessProperty = !e.context && new Date(e.searchOptions.queryString).toString() !== 'Invalid Date';
                   break;
                 case 'boolean':
-                  accessProperty = Boolean(e.searchOptions.queryString);
+                  accessProperty = !e.context && Boolean(e.searchOptions.queryString);
                   break;
                 default:
                   equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
                   break;
               }
 
-              if (!accessProperty && property.type !== 'string') {
+              if (accessProperty && property.type !== 'string') {
                 equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, e.searchOptions.queryString));
               }
             }
@@ -500,7 +500,7 @@ export default BaseVectorLayer.extend({
 
     let filter;
     if (equals.length === 0) {
-      return;
+      return Ember.RSVP.resolve(Ember.A());
     } else if (equals.length === 1) {
       filter = equals[0];
     } else {
@@ -781,7 +781,14 @@ export default BaseVectorLayer.extend({
       }
     });
 
-    let modelSerializer = Serializer.Odata.extend(serializer);
+    let baseSerializer;
+    let odataSerializer = this.get('odataSerializer');
+    if (!Ember.isNone(odataSerializer)) {
+      baseSerializer = Ember.getOwner(this)._lookupFactory(`serializer:${odataSerializer}`);
+    }
+
+    let modelSerializer = !Ember.isNone(baseSerializer) ? baseSerializer.extend(serializer) : Serializer.Odata.extend(serializer);
+
     return modelSerializer;
   },
 
@@ -1505,8 +1512,8 @@ export default BaseVectorLayer.extend({
     let changes = leafletObject.models.filter((item) => true); // for check empty
     if (!Ember.isEmpty(changes)) {
       Object.entries(leafletObject.models)
-        .filter((item) =>  { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))); })
-        .map((item)=> item[1])
+        .filter((item) => { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))); })
+        .map((item) => item[1])
         .forEach((model, index) => {
           if (model instanceof Ember.Object) {
             let layer = Object.values(leafletObject._layers).find((layer) => {

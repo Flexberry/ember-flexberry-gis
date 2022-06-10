@@ -248,7 +248,7 @@ export default Ember.Mixin.create({
       @param {String} attributesPanelSettingsPathes.selectedTabIndexPath path to property containing 'flexberry-layers-attributes-panel' selected tab index.
       @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
     */
-    onAttributesEdit(layerPath, { itemsPath, selectedTabIndexPath, foldedPath, loadingPath }) {
+    onAttributesEdit(layerPath, { itemsPath, selectedTabIndexPath, foldedPath, loadingPath }, readonly) {
       let layerModel = getRecord(this, layerPath);
       let name = Ember.get(layerModel, 'name');
       let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
@@ -263,6 +263,13 @@ export default Ember.Mixin.create({
       }
 
       getAttributesOptions().then(({ object, settings }) => {
+        if (readonly) {
+          // флаг readonly может задаваться самим слоем, в настройках слоя.
+          // поэтому будем только добавлять запрет на редактирование, если это задано правами.
+          // разрешать не будем
+          Ember.set(settings, 'readonly', readonly);
+        }
+
         let items = this.get(itemsPath) || Ember.A();
         let index = items.findIndex((item) => Ember.isEqual(item.name, name));
         if (index >= 0) {

@@ -30,7 +30,7 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
     @type String[]
     @default ['edit', 'remove', 'identify', 'search']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'attributes', 'legend', 'filter'],
+  operations: ['edit', 'remove', 'identify', 'search', 'attributes', 'editFeatures', 'legend', 'filter'],
 
   /**
     Crs.

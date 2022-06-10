@@ -27,7 +27,7 @@ export default BaseLayer.extend({
     @type String[]
     @default ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'legend']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'legend'],
+  operations: ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'editFeatures', 'legend'],
 
   /**
     Creates new settings object (with settings related to layer-type).

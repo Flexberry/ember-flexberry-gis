@@ -52,6 +52,9 @@ export let Model = Ember.Mixin.create({
   scale: DS.attr('number'),
   coordinateReferenceSystem: DS.attr('string'),
   boundingBox: DS.attr('json'),
+  public: DS.attr('boolean'),
+  owner: DS.attr('string'),
+  securityKey: DS.attr('string'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),
   editTime: DS.attr('date'),
@@ -95,6 +98,7 @@ export let defineProjections = function (modelClass) {
     scale: Projection.attr('Масштаб'),
     coordinateReferenceSystem: Projection.attr('Система координат'),
     boundingBox: Projection.attr('Граница'),
+    securityKey: Projection.attr('', { hidden: true }),
     parent: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
 
     }, { hidden: true }),
@@ -135,6 +139,7 @@ export let defineProjections = function (modelClass) {
     scale: Projection.attr('Масштаб'),
     coordinateReferenceSystem: Projection.attr('Система координат'),
     boundingBox: Projection.attr('Граница'),
+    securityKey: Projection.attr('', { hidden: true }),
     parent: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
 
     }, { displayMemberPath: 'name' }),
