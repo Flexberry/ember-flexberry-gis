@@ -912,16 +912,10 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         $('.bottompanel-tab-nav-panel-tabs').children().each((index, item) => {
           itemsWidth += $(item).outerWidth();
         });
-        let width;
-        if (panelWidth >= itemsWidth) {
-          width = 0;
-        } else if (offset >= itemsWidth - panelWidth + navButtonWidth) {
-          width = 0;
-        } else {
-          width = itemsWidth - panelWidth + navButtonWidth - offset;
-        }
-
-        const offsetDelta = Math.min(25, width);
+        const _offset = offset >= itemsWidth - panelWidth + navButtonWidth ? 0
+          : itemsWidth - panelWidth + navButtonWidth - offset;
+        const offsetDelta = Math.min(25, (panelWidth >= itemsWidth ? 0
+          : _offset));
         offset += offsetDelta;
       }
 

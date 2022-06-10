@@ -124,8 +124,7 @@ export default Mixin.create({
 
       let condition;
       if (filter.length === 1) {
-        const filterCondition = filter[0];
-        condition = filterCondition;
+        [condition] = filter;
       } else {
         condition = new ComplexPredicate(Condition.And, ...filter);
       }
@@ -181,8 +180,7 @@ export default Mixin.create({
 
         let model = meta.content[0];
         if (meta && typeof meta.toArray === 'function') {
-          const metaModel = meta.toArray()[0];
-          model = metaModel;
+          [model] = meta.toArray();
         }
 
         const mapLayer = createLayerFromMetadata(model, this.get('store'));

@@ -276,7 +276,7 @@ export default BaseLayer.extend({
   identify() {
     const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.identify.apply(...arguments);
+      return mainLayer.identify(...arguments);
     }
   },
 
@@ -295,7 +295,7 @@ export default BaseLayer.extend({
   search() {
     const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.search.apply(...arguments);
+      return mainLayer.search(...arguments);
     }
   },
 
@@ -312,7 +312,7 @@ export default BaseLayer.extend({
   query() {
     const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.query.apply(...arguments);
+      return mainLayer.query(...arguments);
     }
   },
 
@@ -329,7 +329,7 @@ export default BaseLayer.extend({
   getNearObject() {
     const mainLayer = this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.getNearObject.apply(...arguments);
+      return mainLayer.getNearObject(...arguments);
     }
   },
 

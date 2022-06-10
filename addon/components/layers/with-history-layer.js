@@ -240,7 +240,7 @@ export default BaseLayer.extend({
     const historyModeEnabled = this.get('historyModeEnabled');
     const mainLayer = historyModeEnabled ? this.get('historyLayer') : this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.apply(mainLayer.identify, arguments);
+      return mainLayer.identify(...arguments);
     }
   },
 
@@ -260,7 +260,7 @@ export default BaseLayer.extend({
     const historyModeEnabled = this.get('historyModeEnabled');
     const mainLayer = historyModeEnabled ? this.get('historyLayer') : this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.apply(mainLayer.search, arguments);
+      return mainLayer.search(...arguments);
     }
   },
 
@@ -278,7 +278,7 @@ export default BaseLayer.extend({
     const historyModeEnabled = this.get('historyModeEnabled');
     const mainLayer = historyModeEnabled ? this.get('historyLayer') : this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.apply(mainLayer.query, arguments);
+      return mainLayer.query(...arguments);
     }
   },
 
@@ -296,7 +296,7 @@ export default BaseLayer.extend({
     const historyModeEnabled = this.get('historyModeEnabled');
     const mainLayer = historyModeEnabled ? this.get('historyLayer') : this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.apply(mainLayer.getNearObject, arguments);
+      return mainLayer.getNearObject(...arguments);
     }
   },
 

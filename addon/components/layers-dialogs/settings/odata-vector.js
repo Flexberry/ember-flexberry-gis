@@ -38,6 +38,14 @@ export default Component.extend({
   settings: null,
 
   /**
+    Available geometry types.
+    @property geometryTypes
+    @type Array
+    @default []
+  */
+  geometryTypes: null,
+
+  /**
     Initializes component.
   */
   init() {

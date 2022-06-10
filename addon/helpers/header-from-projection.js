@@ -147,10 +147,7 @@ export default Helper.extend({
     let projectionName = null;
 
     if (args.length && args.length === 2) {
-      const arg0 = args[0];
-      const arg1 = args[1];
-      modelName = arg0;
-      projectionName = arg1;
+      [modelName, projectionName] = args;
     } else {
       modelName = get(hash, 'modelName');
       projectionName = get(hash, 'projectionName');

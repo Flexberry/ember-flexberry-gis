@@ -1167,11 +1167,9 @@ export default Mixin.create(SnapDraw, {
 
             let geoJSON = null;
             if (!isNone(crs) && crs.code !== 'EPSG:4326') {
-              const layer = L.geoJSON(polygon, { coordsToLatLng: coordsToLatLng.bind(this), }).getLayers()[0];
-              geoJSON = layer;
+              [geoJSON] = L.geoJSON(polygon, { coordsToLatLng: coordsToLatLng.bind(this), }).getLayers();
             } else {
-              const layer = L.geoJSON(polygon).getLayers()[0];
-              geoJSON = layer;
+              [geoJSON] = L.geoJSON(polygon).getLayers();
             }
 
             if (!isNone(get(geoJSON, 'feature.geometry'))) {

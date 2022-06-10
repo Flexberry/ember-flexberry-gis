@@ -250,18 +250,9 @@ export default Mixin.create({
         if (snapOnlyVertex) {
           distance = this._getPixelDistance(map, latlng, segmentPointA);
         } else {
-          let x;
-          if (coords.length) {
-            if (isPolygon) {
-              x = 0;
-            } else {
-              x = undefined;
-            }
-          } else {
-            x = index + 1;
-          }
+          const polygon = isPolygon ? 0 : undefined;
+          const nextIndex = index + 1 === coords.length ? polygon : index + 1;
 
-          const nextIndex = index + 1 === x;
           if (nextIndex) {
             segmentPointB = coords[nextIndex];
           }

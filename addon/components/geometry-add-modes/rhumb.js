@@ -76,6 +76,18 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
   active: false,
 
   /**
+    Form validation flags.
+    @property _formValid
+    @type Object
+    @default {
+    startPointValid: false,
+    tableValid: false
+  }
+    @private
+  */
+  _formValid: null,
+
+  /**
     Availble direction.
   */
   _availableDirection: null,
@@ -117,6 +129,17 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
     @private
   */
   _tableData: A([]),
+
+  /**
+    Form fields.
+    @property _dataForm
+    @type Object
+    @default {
+    startPoint: ''
+  }
+    @private
+  */
+  _dataForm: null,
 
   /**
     Error message.
@@ -334,8 +357,8 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
   actions: {
 
     apply() {
-      let [addedLayer] = this.getLayer();
       const [error] = this.getLayer();
+      let addedLayer = this.getLayer()[1];
 
       if (error) {
         return;

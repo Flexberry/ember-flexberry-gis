@@ -12,6 +12,8 @@ import FlexberryEditLayerMapComponent from '../../flexberry-edit-layermap';
   @extends Ember.Component
 */
 export default Component.extend({
+  bindingProperties: null,
+
   /**
     Initializes component.
   */

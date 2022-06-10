@@ -237,8 +237,7 @@ export default Component.extend({
 
       if (bufferR > 0) {
         const feat = buffer.default(polygonLayer.toGeoJSON(), bufferR, { units: 'meters', });
-        const polygon = L.geoJSON(feat).getLayers()[0];
-        workingPolygon = polygon;
+        [workingPolygon] = L.geoJSON(feat).getLayers();
       } else {
         workingPolygon = polygonLayer;
       }

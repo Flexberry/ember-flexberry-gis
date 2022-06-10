@@ -65,6 +65,15 @@ export default Component.extend({
   layout,
 
   /**
+    Inner hash containing settings gradient object.
+    @property gradientList
+    @type Object[]
+    @default []
+    @public
+  */
+  gradientList: null,
+
+  /**
     Initial gradient color.
 
     @property gradientColorStart

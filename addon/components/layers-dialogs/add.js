@@ -171,11 +171,11 @@ const FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.exten
       processData: false,
       contentType,
       async: false,
-      success() {
-        successF(data);
+      success(_data) {
+        successF(_data);
       },
-      error() {
-        errorF(data);
+      error(_data) {
+        errorF(_data);
       },
     });
   },

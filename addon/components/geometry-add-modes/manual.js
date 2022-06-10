@@ -290,8 +290,8 @@ const FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFe
 
   actions: {
     apply() {
-      let [addedLayer] = this.getLayer();
       const [error] = this.getLayer();
+      let addedLayer = this.getLayer()[1];
 
       if (error) {
         return;
@@ -382,10 +382,7 @@ const FlexberryGeometryAddModeManualComponent = Component.extend(LeafletZoomToFe
 
             if (crs !== 'EPSG:4326') {
               const projected = this._projectCoordinates(crs, 'EPSG:4326', [x, y]);
-              const p0 = projected[0];
-              const p1 = projected[1];
-              x = p0;
-              y = p1;
+              [x, y] = projected;
             }
 
             mas.push([y, x]);
