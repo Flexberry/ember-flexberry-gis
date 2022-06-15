@@ -442,6 +442,15 @@ export default FlexberryDropdown.extend({
 
   isAllSelected: false,
 
+  /**
+    Minimum number of characters to search
+
+    @property minCharacters
+    @type Number
+    @default 0
+  */
+  minCharacters:0,
+
   isClearAllVisible: true,
 
   isSearchVisible: true,
@@ -548,7 +557,9 @@ export default FlexberryDropdown.extend({
       this.toggleProperty(&#x27;isAllSelected&#x27;);
     },
 
-    clearAll() {
+    clearAll(event) {
+      //click action is defined as a DOM event to cancel the semantic dropdown action
+      event.stopPropagation();
       this.get(&#x27;state&#x27;).setEach(&#x27;isVisible&#x27;, false);
       $(&#x27;.search-field&#x27;).val(&#x27;&#x27;);
       $(&#x27;.fb-selector .item.filtered&#x27;).each((i, item) =&gt; {
@@ -556,16 +567,6 @@ export default FlexberryDropdown.extend({
       });
     },
 
-    onHide() {
-      let $list = Ember.$(&#x27;.fb-selector .menu&#x27;);
-      if ($list.hasClass(&#x27;visible&#x27;)) {
-        $list.removeClass(&#x27;visible&#x27;);
-        $list.addClass(&#x27;hidden&#x27;);
-      } else {
-        $list.removeClass(&#x27;hidden&#x27;);
-        $list.addClass(&#x27;visible&#x27;);
-      }
-    }
   }
 });
 
