@@ -19,85 +19,18 @@ import { next } from '@ember/runloop';
 export default Controller.extend({
   /**
     Hash containing search conditions.
-
     @property searchConditions
     @type Object
   */
-  searchConditions: {
-    /**
-      Comma-separated list of words to search in any text field.
-      @property searchConditions.anyText
-      @type String
-      @default null
-    */
-    anyText: null,
-
-    /**
-      Comma-separated list of key words. Used for search.
-      @property searchConditions.searchKeyWords
-      @type String
-      @default null
-    */
-    keyWords: null,
-
-    /**
-      Scale filter conditions.
-
-      @property searchConditions.scaleFilters
-      @type Array
-      @default []
-    */
-    scaleFilters: A(),
-
-    /**
-      Min longitude value. Used for search.
-      @property searchConditions.minLng
-      @type Number
-      @default null
-    */
-    minLng: -180,
-
-    /**
-      Min latitude value. Used for search.
-      @property searchConditions.minLat
-      @type Number
-      @default null
-    */
-    minLat: -90,
-
-    /**
-      Max longitude value. Used for search.
-      @property searchConditions.maxLng
-      @type Number
-      @default null
-    */
-    maxLng: 180,
-
-    /**
-      Max latitude value. Used for search.
-      @property searchConditions.maxLat
-      @type Number
-      @default null
-    */
-    maxLat: 90,
-
-    /**
-      Bounding box in EWKT format.
-      @property searchConditions.boundingBoxEWKT
-      @type String
-      @default undefined
-    */
-    boundingBoxEWKT: undefined,
-  },
+  searchConditions: null,
 
   /**
     Array of posible scale filter conditions.
-
     @property scaleFilterConditions
     @type String[]
     @default `['>', '>=', '<', '<=', '=', '<>']`
   */
-  scaleFilterConditions: ['>', '>=', '<', '<=', '=', '<>'],
+  scaleFilterConditions: null,
 
   /**
     Array of posible scale values.
@@ -110,12 +43,11 @@ export default Controller.extend({
 
   /**
     Hash with ids of selected rows.
-
     @property _selectedRows
     @type Object
     @private
   */
-  _selectedRows: {},
+  _selectedRows: null,
 
   /**
     Count of a selected rows.
@@ -154,6 +86,78 @@ export default Controller.extend({
 
   init() {
     this._super(...arguments);
+
+    this.searchConditions = this.searchConditions || {
+      /**
+        Comma-separated list of words to search in any text field.
+        @property searchConditions.anyText
+        @type String
+        @default null
+      */
+      anyText: null,
+
+      /**
+        Comma-separated list of key words. Used for search.
+        @property searchConditions.searchKeyWords
+        @type String
+        @default null
+      */
+      keyWords: null,
+
+      /**
+        Scale filter conditions.
+
+        @property searchConditions.scaleFilters
+        @type Array
+        @default []
+      */
+      scaleFilters: A(),
+
+      /**
+        Min longitude value. Used for search.
+        @property searchConditions.minLng
+        @type Number
+        @default null
+      */
+      minLng: -180,
+
+      /**
+        Min latitude value. Used for search.
+        @property searchConditions.minLat
+        @type Number
+        @default null
+      */
+      minLat: -90,
+
+      /**
+        Max longitude value. Used for search.
+        @property searchConditions.maxLng
+        @type Number
+        @default null
+      */
+      maxLng: 180,
+
+      /**
+        Max latitude value. Used for search.
+        @property searchConditions.maxLat
+        @type Number
+        @default null
+      */
+      maxLat: 90,
+
+      /**
+        Bounding box in EWKT format.
+        @property searchConditions.boundingBoxEWKT
+        @type String
+        @default undefined
+      */
+      boundingBoxEWKT: undefined,
+    };
+
+    this.scaleFilterConditions = this.scaleFilterConditions || ['>', '>=', '<', '<=', '=', '<>'];
+
+    this._selectedRows = this._selectedRows || {};
+
     next(this, function () {
       // Initialize Semantic UI tabs.
       $('.gis-search-form .tabular.menu .item').tab();

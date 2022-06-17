@@ -1,21 +1,18 @@
 import { get } from '@ember/object';
 import { isNone, typeOf } from '@ember/utils';
 import {
-  default as BaseVectorLayer,
+  BaseVectorLayer,
   begIndex
 } from '../base-vector-layer';
 
 export default BaseVectorLayer.extend({
-  leafletOptions: [
-    'url',
-    'layerName',
-    'style'
-  ],
+  leafletOptions: null,
 
   /**
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer() {
@@ -43,7 +40,7 @@ export default BaseVectorLayer.extend({
   containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
   or a promise returning such array.
   */
-  identify(e) {
+  identify() {
     // Tile-layers hasn't any identify logic.
   },
 
@@ -59,7 +56,7 @@ export default BaseVectorLayer.extend({
     @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
     or a promise returning such array.
   */
-  search(e) {
+  search() {
     // Tile-layers hasn't any search logic.
   },
 
@@ -84,4 +81,15 @@ export default BaseVectorLayer.extend({
     leafletLayer.setZIndex(index + begIndex);
   },
 
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.leafletOptions = this.leafletOptions || [
+      'url',
+      'layerName',
+      'style'
+    ];
+  },
 });

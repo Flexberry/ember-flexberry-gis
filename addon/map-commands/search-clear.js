@@ -17,7 +17,7 @@ export default SearchMapCommand.extend({
 
     @method execute
   */
-  _execute(options) {
+  _execute() {
     this._super(...arguments);
 
     const featuresLayer = this.get('featuresLayer');

@@ -116,8 +116,11 @@ export default BaseLayerStyle.extend({
     @param {Object} options.category Hash containing category settings.
     @return {Boolean} Flag indicating whether specified category is relevant to the specified property value.
   */
-  categoryIsRelevantToPropertyValue({ propertyValue, category, }) {
-    throw 'Method \'categoryIsRelevantToPropertyValue\' isn\'t implemented in the specified categorized layers-style';
+  categoryIsRelevantToPropertyValue() {
+    const message = 'Method \'categoryIsRelevantToPropertyValue\' isn\'t implemented in the specified categorized layers-style';
+    throw Object.assign(
+      new Error(message)
+    );
   },
 
   /**
@@ -177,10 +180,11 @@ export default BaseLayerStyle.extend({
 
     @method renderOnCanvas
     @param {Object} options Method options.
-    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which layer-style preview must be rendered.
+    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas
+      Canvas element on which layer-style preview must be rendered.
     @param {Object} options.style Hash containing style settings.
     @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style, target, }) {
+  renderOnCanvas() {
   },
 });

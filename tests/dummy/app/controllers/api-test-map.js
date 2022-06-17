@@ -38,6 +38,7 @@ export default MapController.extend({
             case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
               layerr.setStyle({ color: '#008B8B', });
               break;
+            default:
           }
 
           layerr.on('click', function (e) {

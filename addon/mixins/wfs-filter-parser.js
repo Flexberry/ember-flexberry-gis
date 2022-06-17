@@ -30,9 +30,9 @@ export default Mixin.create({
 
     const fields = A();
     const fieldsDescription = get(leafletObject, 'readFormat.featureType.fields') || {};
-    for (const field in fieldsDescription) {
+    fieldsDescription.forEach((field) => {
       fields.addObject(field);
-    }
+    });
 
     return fields;
   },
@@ -73,6 +73,7 @@ export default Mixin.create({
         return new L.Filter.Like(...properties, { matchCase: true, });
       case 'ilike':
         return new L.Filter.Like(...properties, { matchCase: false, });
+      default:
     }
   },
 
@@ -92,6 +93,7 @@ export default Mixin.create({
         return new L.Filter.Or(...properties);
       case 'not':
         return new L.Filter.Not(properties[0]);
+      default:
     }
   },
 
@@ -108,7 +110,7 @@ export default Mixin.create({
   parseFilterGeometryExpression(condition, geoJSON, geometryField) {
     switch (condition) {
       case 'in':
-      case 'not in':
+      case 'not in': {
         const bounds = new Terraformer.Primitive(geoJSON).bbox();
         const filter = new L.Filter.BBox(
           geometryField,
@@ -116,6 +118,8 @@ export default Mixin.create({
           L.CRS.EPSG4326
         );
         return condition === 'in' ? filter : new L.Filter.Not(filter);
+      }
+      default:
     }
   },
 });

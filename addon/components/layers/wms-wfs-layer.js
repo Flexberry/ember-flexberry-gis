@@ -2,11 +2,8 @@
   @module ember-flexberry-gis
 */
 
-import { A } from '@ember/array';
-
 import { getOwner, setOwner } from '@ember/application';
-import { isNone, isBlank } from '@ember/utils';
-import { on } from '@ember/object/evented';
+import { isNone } from '@ember/utils';
 import { set, observer } from '@ember/object';
 import $ from 'jquery';
 import WmsLayerComponent from './wms-layer';
@@ -40,7 +37,7 @@ export default WmsLayerComponent.extend({
       resultingAttribitesOptions = attribitesOptions;
 
       return attribitesOptions;
-    }).then((attribitesOptions) => {
+    }).then(() => {
       const options = $.extend(this.get('_wfsLayer.options') || {}, { showExisting: true, clusterize: false, });
       const wfsLayer = this.get('_wfsLayer').createVectorLayer(options);
 
@@ -56,16 +53,17 @@ export default WmsLayerComponent.extend({
   /**
     Sets wfs layer's filter, when wms filter was changed.
   */
-  filterObserver: on('init', observer('options.filter', function () {
+  filterObserver: observer('options.filter', function () {
     const filter = this.get('options.filter');
     this.set('_wfsLayer.options.filter', filter);
-  })),
+  }),
 
   /**
     Returns leaflet layer for filter component.
 
     @method getLeafletObject
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   getLeafletObject() {
@@ -87,10 +85,10 @@ export default WmsLayerComponent.extend({
     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
     or a promise returning such array.
   */
-  identify(e) {
+  identify() {
     const innerWfsLayer = this.get('_wfsLayer');
     if (!isNone(innerWfsLayer)) {
-      return innerWfsLayer.identify.apply(innerWfsLayer, arguments);
+      return innerWfsLayer.identify(...arguments);
     }
   },
 
@@ -104,10 +102,10 @@ export default WmsLayerComponent.extend({
     @param {Object[]} results.features Array containing leaflet layers objects
     or a promise returning such array.
   */
-  query(layerLinks, e) {
+  query() {
     const innerWfsLayer = this.get('_wfsLayer');
     if (!isNone(innerWfsLayer)) {
-      return innerWfsLayer.query.apply(innerWfsLayer, arguments);
+      return innerWfsLayer.query(...arguments);
     }
   },
 
@@ -123,10 +121,10 @@ export default WmsLayerComponent.extend({
     @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
     or a promise returning such array.
   */
-  search(e) {
+  search() {
     const innerWfsLayer = this.get('_wfsLayer');
     if (!isNone(innerWfsLayer)) {
-      return innerWfsLayer.search.apply(innerWfsLayer, arguments);
+      return innerWfsLayer.search(...arguments);
     }
   },
 
@@ -135,6 +133,8 @@ export default WmsLayerComponent.extend({
   */
   init() {
     this._super(...arguments);
+
+    this.filterObserver();
 
     const innerWfsLayerProperties = {
       leafletMap: this.get('leafletMap'),

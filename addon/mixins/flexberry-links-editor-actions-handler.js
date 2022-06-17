@@ -76,7 +76,8 @@ export default Mixin.create({
     },
 
     /**
-        Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.allowShowLayerLinkCheckboxChange:method"}}flexberry-links-editor component's 'allowShowLayerLinkCheckboxChange' action{{/crossLink}}.
+        Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.allowShowLayerLinkCheckboxChange:method"}}
+          flexberry-links-editor component's 'allowShowLayerLinkCheckboxChange' action{{/crossLink}}.
         It mutates value of property with given name to value of action's event object 'newValue' property.
 
         @method actions.onLayerLinkChangeVisibility

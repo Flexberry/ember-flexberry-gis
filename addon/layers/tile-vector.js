@@ -16,12 +16,19 @@ import VectorLayer from 'ember-flexberry-gis/layers/-private/vector';
 export default VectorLayer.extend({
   /**
     Permitted operations related to layer type.
-
     @property operations
     @type String[]
     @default ['edit', 'remove', 'identify', 'search']
   */
-  operations: ['edit', 'remove'],
+  operations: null,
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.operations = this.operations || ['edit', 'remove'];
+  },
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -54,11 +61,9 @@ export default VectorLayer.extend({
 
     @method getLayerPropertyValues
     @param {Object} leafletObject Leaflet layer object
-    @param {String} selectedField Selected field name
-    @param {Integer} count Amount of values to return (for all values must be 0)
     @returns {Array} Array with selected property values
   */
-  getLayerPropertyValues(leafletObject, selectedField, count) {
+  getLayerPropertyValues(leafletObject) {
     if (isNone(leafletObject)) {
       return A();
     }

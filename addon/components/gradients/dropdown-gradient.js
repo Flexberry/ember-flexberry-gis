@@ -66,13 +66,12 @@ export default Component.extend({
 
   /**
     Inner hash containing settings gradient object.
-
     @property gradientList
     @type Object[]
     @default []
     @public
   */
-  gradientList: [],
+  gradientList: null,
 
   /**
     Initial gradient color.
@@ -161,6 +160,8 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
+    this.gradientList = this.gradientList || [];
+
     const colorStart = this.get('gradientColorStart');
     const colorEnd = this.get('gradientColorEnd');
 
@@ -176,9 +177,9 @@ export default Component.extend({
   */
   didInsertElement() {
     const gradientList = this.get('gradientList');
-    for (const i in gradientList) {
+    gradientList.forEach((i) => {
       this.gradientDrawing(gradientList[i].name, gradientList[i].colorStart, gradientList[i].colorEnd);
-    }
+    });
   },
 
   /**

@@ -150,7 +150,6 @@ export default EditFormController.extend(
 
     /**
       Object containing bindings as key-value pairs.
-
       @property binding
       @type Object
       @example
@@ -161,10 +160,7 @@ export default EditFormController.extend(
       },
       ```
     */
-    binding: {
-      visibility: 'visibility',
-      opacity: 'settingsAsObject.opacity',
-    },
+    binding: null,
 
     /**
       This method will be invoked before save operation will be called.
@@ -231,7 +227,7 @@ export default EditFormController.extend(
       @returns {Object} Edited layer.
       @private
     */
-    editLayer(options) {
+    editLayer() {
       return this._super(...arguments);
     },
 
@@ -266,6 +262,17 @@ export default EditFormController.extend(
       }
 
       return layer;
+    },
+
+    /**
+      Initializes component.
+    */
+    init() {
+      this._super(...arguments);
+      this.binding = this.binding || {
+        visibility: 'visibility',
+        opacity: 'settingsAsObject.opacity',
+      };
     },
   }
 );

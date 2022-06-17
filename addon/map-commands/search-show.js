@@ -39,7 +39,7 @@ export default SearchMapCommand.extend({
       return featureProperties[displayPropertyName];
     };
 
-    const getFeatureDisplayProperty = function (feature, featuresPropertiesSettings) {
+    const getFeatureDisplayProperty = function (feature) {
       const displayPropertyIsCallback = get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
       const displayProperty = get(featuresPropertiesSettings, 'displayProperty');
 
@@ -56,7 +56,7 @@ export default SearchMapCommand.extend({
 
         let displayValue = Ember.none;
         displayProperty.forEach((prop) => {
-          if (featureProperties.hasOwnProperty(prop)) {
+          if (Object.prototype.hasOwnProperty.call(featureProperties, prop)) {
             const value = featureProperties[prop];
             if (isNone(displayValue) && !isNone(value) && !isEmpty(value)) {
               displayValue = value;

@@ -159,12 +159,12 @@ export default Component.extend({
 
     let propertyName = null;
     const properties = this.get('_localizedProperties');
-    for (const key in properties) {
+    properties.forEach((key) => {
       if (this.get('_propertyForClassifyValue') === properties[key]) {
         propertyName = key;
         this.set('_keyChosenClassifyProperty', key);
       }
-    }
+    });
 
     const propertyValues = this.get('_isObjProperties');
     const values = A();

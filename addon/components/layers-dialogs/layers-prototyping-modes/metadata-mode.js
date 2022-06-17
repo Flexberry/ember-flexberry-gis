@@ -94,12 +94,11 @@ const MetadataModeComponent = BaseModeComponent.extend({
 
   /**
     Array of property names that will be bound from parentView.
-
     @property bindingProperties
     @type String[]
     @default []
   */
-  bindingProperties: [],
+  bindingProperties: null,
 
   /**
     Reference to 'store' service.
@@ -117,6 +116,7 @@ const MetadataModeComponent = BaseModeComponent.extend({
     this._super(...arguments);
 
     this._loadMetadataRecords();
+    this.bindingProperties = this.bindingProperties || [];
   },
 
   /**
@@ -142,7 +142,7 @@ const MetadataModeComponent = BaseModeComponent.extend({
       this.set('_metadataRecordsNames', metadataRecordsNames);
     }).catch((error) => {
       this.set('_errorMessage', error);
-    }).finally((result) => {
+    }).finally(() => {
       this.set('_metadataIsLoading', false);
     });
   },

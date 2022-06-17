@@ -3,7 +3,7 @@
  */
 
 import { addObserver, removeObserver } from '@ember/object/observers';
-
+import $ from 'jquery';
 import { isArray } from '@ember/array';
 import { typeOf, isNone } from '@ember/utils';
 import { computed, observer } from '@ember/object';
@@ -102,7 +102,7 @@ const FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
       @method actions.focus
     */
     focusIn() {
-      if (Ember.$('.flexberry-search.ui.search').hasClass('focus')) {
+      if ($('.flexberry-search.ui.search').hasClass('focus')) {
         this.sendAction('focusIn');
       }
     },
@@ -122,27 +122,18 @@ const FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
   /**
     Names of observable component's properties.
     Changes in these properties must trigger Semantic UI module's reinitialization.
-
     @property observableProperties
     @type String[]
     @default ['apiSettings', 'apiSettings.url']
   */
-  observableProperties: ['apiSettings', 'apiSettings.url'],
+  observableProperties: null,
 
   /**
     Names of component's properties used for init semantic search module
     @property semanticProperties
     @type String[]
-   */
-  semanticProperties: [
-    'apiSettings',
-    'type',
-    'minCharacters',
-    'fields',
-    'showNoResults',
-    'onResults',
-    'maxResults'
-  ],
+  */
+  semanticProperties: null,
 
   /**
     Component's wrapping <div> CSS-classes names.
@@ -250,10 +241,27 @@ const FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
 
     @method _valueChange
   */
-  _valueChange: observer('value',  function () {
+  _valueChange: observer('value', function () {
     this.set('_lastAction', null);
     this.set('_valueWasSelected', false);
   }),
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.observableProperties = this.observableProperties || ['apiSettings', 'apiSettings.url'];
+    this.semanticProperties = this.semanticProperties || [
+      'apiSettings',
+      'type',
+      'minCharacters',
+      'fields',
+      'showNoResults',
+      'onResults',
+      'maxResults'
+    ];
+  },
 
   /**
     Initializes Semantic UI search module.
@@ -293,7 +301,7 @@ const FlexberrySearchComponent = Component.extend(DynamicPropertiesMixin, {
 
     semanticProperties.onSelect = onSelect;
 
-    const onSearchQuery = function (query) {
+    const onSearchQuery = function () {
       _this.set('_lastAction', null);
     };
 

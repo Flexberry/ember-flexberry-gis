@@ -112,16 +112,24 @@ export default Component.extend({
 
   /**
     Current object with search settings.
-
     @property value
     @type Object
     @default Object
   */
-  value: {
-    canBeSearched: undefined,
-    canBeContextSearched: undefined,
-    contextSearchFields: undefined,
-    searchFields: undefined,
+  value: null,
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this.value = this.value || {
+      canBeSearched: undefined,
+      canBeContextSearched: undefined,
+      contextSearchFields: undefined,
+      searchFields: undefined,
+    };
   },
 
   /**
@@ -135,12 +143,12 @@ export default Component.extend({
       const leafletObjectMethod = _this.get('_leafletObjectMethod');
       if (!(isBlank(leafletObjectMethod) || isBlank(type))) {
         _this.set('_leafletObjectIsLoading', true);
-        leafletObjectMethod().then((leafletObject) => {
-          _this.set('_leafletObject', leafletObject);
+        leafletObjectMethod().then((_leafletObject) => {
+          _this.set('_leafletObject', _leafletObject);
           _this.set('_leafletObjectIsLoading', false);
           const layerClass = getOwner(_this).knownForType('layer', type);
           if (!isBlank(layerClass)) {
-            _this.set('fields', A(layerClass.getLayerProperties(leafletObject)));
+            _this.set('fields', A(layerClass.getLayerProperties(_leafletObject)));
           }
         }).catch(() => {
           _this.set('_leafletObjectIsLoading', false);

@@ -193,7 +193,7 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
     OnCompareTwoGeometries() {
       const twoObjects = this.get('twoObjectToCompare');
       if (twoObjects.length !== 2) {
-        alert(this.get('selectTwo'));
+        alert(this.get('selectTwo')); // eslint-disable-line no-alert
       } else {
         this.set('showComapreGeometriesPanel', true);
       }
@@ -294,26 +294,26 @@ export default Mixin.create(LeafletZoomToFeatureMixin, {
           const result = A();
           res.forEach((promiseResult) => {
             if (promiseResult.state !== 'rejected') {
-              let favorites = A();
+              let favs = A();
               promiseResult.value[2].forEach((layerObject) => {
                 set(layerObject.feature.properties, 'isFavorite', true);
-                favorites.push(layerObject.feature);
+                favs.push(layerObject.feature);
               });
               let promiseFeature = null;
               const layerModelIndex = this.isLayerModelInArray(result, promiseResult.value[0]);
               if (layerModelIndex !== false) {
-                favorites = favorites.concat(favorites, favFeatures[layerModelIndex].features);
+                favs = favs.concat(favs, favFeatures[layerModelIndex].features);
                 promiseFeature = new Promise((resolve) => {
-                  resolve(favorites);
+                  resolve(favs);
                 });
                 result[layerModelIndex].features = promiseFeature;
-                favFeatures[layerModelIndex].features = favorites;
+                favFeatures[layerModelIndex].features = favs;
               } else {
                 promiseFeature = new Promise((resolve) => {
-                  resolve(favorites);
+                  resolve(favs);
                 });
                 result.addObject({ layerModel: promiseResult.value[0], features: promiseFeature, });
-                favFeatures.addObject({ layerModel: promiseResult.value[0], features: favorites, });
+                favFeatures.addObject({ layerModel: promiseResult.value[0], features: favs, });
               }
             }
           });

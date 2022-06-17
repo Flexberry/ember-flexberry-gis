@@ -56,7 +56,8 @@ export default Component.extend(
       },
 
       /**
-      Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.updateLookupValue:method"}}'flexberry-links-editor' component's 'updateLookupValue' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.updateLookupValue:method"}}
+        'flexberry-links-editor' component's 'updateLookupValue' action{{/crossLink}}.
 
       @method actions.updateLookupValue
       @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
@@ -66,10 +67,12 @@ export default Component.extend(
       },
 
       /**
-      Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}
+        'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
 
       @method actions.allowShowCheckboxChange
-      @param {Object} e eventObject Event object from {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
+      @param {Object} e eventObject Event object from {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}
+        'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
     */
       allowShowCheckboxChange(...args) {
         this.sendAction('allowShowCheckboxChange', ...args);

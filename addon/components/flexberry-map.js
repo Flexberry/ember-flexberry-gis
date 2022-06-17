@@ -115,33 +115,12 @@ const FlexberryMapComponent = Component.extend(
     /**
     List of leaflet map options which will be passed into leaflet map.
   */
-    leafletOptions: [
-
-      // Map state options.
-      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs', 'preferCanvas', 'editable', 'wheelPxPerZoomLevel',
-
-      // Interaction options.
-      'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
-      'zoomSnap', 'zoomDelta', 'tap', 'tapTolerance', 'trackResize', 'worldCopyJump',
-      'closePopupOnClick', 'bounceAtZoomLimits',
-
-      // Keyboard navigation options.
-      'keyboard', 'keyboardPanOffset', 'keyboardZoomOffset',
-
-      // Panning Inertia Options.
-      'inertia', 'inertiaDeceleration', 'inertiaMaxSpeed', 'inertiaThreshold',
-
-      // Control options.
-      'zoomControl', 'attributionControl',
-
-      // Animation options.
-      'fadeAnimation', 'zoomAnimation', 'zoomAnimationThreshold', 'markerZoomAnimation'
-    ],
+    leafletOptions: null,
 
     /**
     List of leaflet map properties bindings.
   */
-    leafletProperties: ['zoom:setZoom', 'center:panTo:zoomPanOptions', 'maxBounds:setMaxBounds', 'bounds:fitBounds:fitBoundsOptions'],
+    leafletProperties: null,
 
     /**
     Map center latitude.
@@ -494,6 +473,48 @@ const FlexberryMapComponent = Component.extend(
   */
     _onLeafletContainerResize: null,
 
+    runQuery(queryFilter, mapObjectSetting) {
+      this._runQuery(queryFilter, mapObjectSetting);
+    },
+
+    loadMap(leafletMap, mapApi) {
+      this.load(leafletMap, mapApi);
+    },
+
+    /**
+    Initializes component.
+  */
+    init() {
+      this.leafletOptions = this.leafletOptions || [
+
+        // Map state options.
+        'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs', 'preferCanvas', 'editable', 'wheelPxPerZoomLevel',
+
+        // Interaction options.
+        'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
+        'zoomSnap', 'zoomDelta', 'tap', 'tapTolerance', 'trackResize', 'worldCopyJump',
+        'closePopupOnClick', 'bounceAtZoomLimits',
+
+        // Keyboard navigation options.
+        'keyboard', 'keyboardPanOffset', 'keyboardZoomOffset',
+
+        // Panning Inertia Options.
+        'inertia', 'inertiaDeceleration', 'inertiaMaxSpeed', 'inertiaThreshold',
+
+        // Control options.
+        'zoomControl', 'attributionControl',
+
+        // Animation options.
+        'fadeAnimation', 'zoomAnimation', 'zoomAnimationThreshold', 'markerZoomAnimation'
+      ];
+
+      this.leafletProperties = this.leafletProperties || [
+        'zoom:setZoom', 'center:panTo:zoomPanOptions', 'maxBounds:setMaxBounds', 'bounds:fitBounds:fitBoundsOptions'
+      ];
+
+      this._super(...arguments);
+    },
+
     /**
     Initializes DOM-related component's properties.
   */
@@ -547,9 +568,7 @@ const FlexberryMapComponent = Component.extend(
         const queryFilter = this.get('queryFilter');
         const mapObjectSetting = this.get('mapObjectSetting');
         if (!isBlank(queryFilter)) {
-          scheduleOnce('afterRender', this, function () {
-            this._runQuery(queryFilter, mapObjectSetting);
-          });
+          scheduleOnce('afterRender', this, this.runQuery(queryFilter, mapObjectSetting));
         }
 
         const mapApi = this.get('mapApi');
@@ -578,9 +597,7 @@ const FlexberryMapComponent = Component.extend(
           this.set('_hasServiceLayer', true);
         }
 
-        scheduleOnce('afterRender', this, function () {
-          this.load(leafletMap, mapApi);
-        });
+        scheduleOnce('afterRender', this, this.loadMap(leafletMap, mapApi));
       }
     },
 

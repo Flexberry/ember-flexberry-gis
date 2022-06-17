@@ -13,28 +13,10 @@ import BaseControl from 'ember-flexberry-gis/components/base-control';
 export default BaseControl.extend({
   /**
     Array containing component's properties which are also leaflet layer options.
-
     @property leafletOptions
     @type Stirng[]
   */
-  leafletOptions: [
-    'position',
-    'dropdownDirection',
-    'className',
-    'ratio',
-    'updateWhenIdle',
-    'ratioPrefix',
-    'ratioCustomItemText',
-    'ratioMenu',
-    'pixelsInMeterWidth',
-    'getMapWidthForLanInMeters',
-    'customScaleTitle',
-    'recalcOnPositionChange',
-    'recalcOnZoomChange',
-    'scales',
-    'roundScales',
-    'adjustScales'
-  ],
+  leafletOptions: null,
 
   /**
     Creates control instance, should be overridden in child classes.
@@ -70,5 +52,30 @@ export default BaseControl.extend({
       leafletMap.on(options.updateWhenIdle ? 'zoomend' : 'zoom', control._updateRound, control);
       control._updateRound();
     }
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.leafletOptions = this.leafletOptions || [
+      'position',
+      'dropdownDirection',
+      'className',
+      'ratio',
+      'updateWhenIdle',
+      'ratioPrefix',
+      'ratioCustomItemText',
+      'ratioMenu',
+      'pixelsInMeterWidth',
+      'getMapWidthForLanInMeters',
+      'customScaleTitle',
+      'recalcOnPositionChange',
+      'recalcOnZoomChange',
+      'scales',
+      'roundScales',
+      'adjustScales'
+    ];
   },
 });

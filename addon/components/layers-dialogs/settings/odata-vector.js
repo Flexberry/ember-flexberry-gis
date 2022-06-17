@@ -39,11 +39,19 @@ export default Component.extend({
 
   /**
     Available geometry types.
-
     @property geometryTypes
     @type Array
     @default []
   */
-  geometryTypes: ['PointPropertyType', 'LineStringPropertyType', 'PolygonPropertyType',
-    'MultiPointPropertyType', 'MultiLineStringPropertyType', 'MultiPolygonPropertyType'],
+  geometryTypes: null,
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this.geometryTypes = this.geometryTypes || ['PointPropertyType', 'LineStringPropertyType', 'PolygonPropertyType',
+      'MultiPointPropertyType', 'MultiLineStringPropertyType', 'MultiPolygonPropertyType'];
+  },
 });

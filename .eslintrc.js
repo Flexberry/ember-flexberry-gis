@@ -20,9 +20,13 @@ module.exports = {
     Base64: 'writable',
     L: 'writable',
     moment: 'writable',
+    Terraformer: 'writable',
+    proj4: 'writable',
+    omnivore: 'writable',
+    Chart: 'writable',
   },
   rules: {
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true, }],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true, optionalDependencies: true, }],
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
     'import/core-modules': [ 'sinon' ],
@@ -34,7 +38,10 @@ module.exports = {
     'prefer-arrow-callback': 'off',
     'func-names': ['error', 'never'],
     'no-continue': 'off',
+    "no-console": "off",
+    "no-alert": "off",
     'no-plusplus': [2, { allowForLoopAfterthoughts: true }],
+    "no-shadow": [2, {"allow": ["resolve", "reject"]}],
     'no-underscore-dangle': 'off',
     'max-len': [
       'error',
@@ -66,6 +73,7 @@ module.exports = {
     'no-return-assign': ['error', 'except-parens'],
     'arrow-parens': ['error', 'always'],
     'consistent-return': 'off',
+    "no-eval": "off",
   },
   overrides: [
     // node files

@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { bind } from '@ember/runloop';
 import { Promise, allSettled } from 'rsvp';
 import { A, isArray } from '@ember/array';
 import { getOwner } from '@ember/application';
@@ -43,12 +44,11 @@ export default Component.extend({
 
   /**
     List vector layers.
-
     @property vectorLayers
     @type Array
     @default []
   */
-  vectorLayers: [],
+  vectorLayers: null,
 
   /**
     Leaflet map object for zoom and pan.
@@ -101,21 +101,19 @@ export default Component.extend({
 
   /**
     List of selected vector layers.
-
     @property selectedLayers
     @type Array
     @default []
   */
-  selectedLayers: [],
+  selectedLayers: null,
 
   /**
     List of intersection results.
-
     @property  results
     @type Array
     @default []
   */
-  results: [],
+  results: null,
 
   /**
     Selected feature.
@@ -176,6 +174,10 @@ export default Component.extend({
   */
   init() {
     this._super(...arguments);
+
+    this.vectorLayers = this.vectorLayers || [];
+    this.selectedLayers = this.selectedLayers || [];
+    this.results = this.results || [];
     const vlayers = [];
     this.get('layers').forEach((item) => {
       const layers = get(item, 'layers');
@@ -211,7 +213,6 @@ export default Component.extend({
       let bufferedMainPolygonLayer;
       const bufferR = isNone(this.get('bufferR')) ? 0 : this.get('bufferR');
 
-      let latlng;
       let workingPolygon;
       const selected = A();
 
@@ -221,21 +222,21 @@ export default Component.extend({
       });
 
       // If current feature is L.FeatureGroup
-      if (currentFeature.leafletLayer.hasOwnProperty('_layers')) {
+      if (Object.prototype.hasOwnProperty.call(currentFeature.leafletLayer, '_layers')) {
         if (currentFeature.leafletLayer.getLayers().length === 1) {
-          polygonLayer = currentFeature.leafletLayer.getLayers()[0];
+          [polygonLayer] = currentFeature.leafletLayer.getLayers();
         } else {
-          throw (' L.FeatureGroup с несколькими дочерними слоями пока не поддерживается.');
+          throw new Error(' L.FeatureGroup с несколькими дочерними слоями пока не поддерживается.');
         }
       } else {
         polygonLayer = currentFeature.leafletLayer;
       }
 
-      latlng = polygonLayer instanceof L.Marker ? polygonLayer.getLatLng() : polygonLayer.getBounds().getCenter();
+      const latlng = polygonLayer instanceof L.Marker ? polygonLayer.getLatLng() : polygonLayer.getBounds().getCenter();
 
       if (bufferR > 0) {
         const feat = buffer.default(polygonLayer.toGeoJSON(), bufferR, { units: 'meters', });
-        workingPolygon = L.geoJSON(feat).getLayers()[0];
+        [workingPolygon] = L.geoJSON(feat).getLayers();
       } else {
         workingPolygon = polygonLayer;
       }
@@ -291,6 +292,7 @@ export default Component.extend({
       @method actions.inputLimit
     */
     inputLimit(str, e) {
+      /* eslint-disable no-useless-escape */
       const regex = /^\.|[^\d\.]|\.(?=.*\.)|^0+(?=\d)/g;
       if (!isEmpty(str) && regex.test(str)) {
         this.$(e.target).val(str.replace(regex, ''));
@@ -450,7 +452,7 @@ export default Component.extend({
 
     $('.search-field').val('');
     $('.fb-selector .item.filtered').each((i, item) => {
-      $(item).removeClass('filtered');
+      bind(this, $(item).removeClass('filtered'));
     });
   },
 

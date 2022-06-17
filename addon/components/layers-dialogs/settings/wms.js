@@ -10,6 +10,8 @@ import { computed, observer } from '@ember/object';
 import Component from '@ember/component';
 import layout from '../../../templates/components/layers-dialogs/settings/wms';
 
+/* eslint-disable no-useless-escape */
+
 // Regular expression used to derive whether settings' url is correct.
 const urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
 
@@ -94,6 +96,10 @@ export default Component.extend({
   */
   getCapabilitiesPromiseError: null,
 
+  setCapabilitiesPromiseError() {
+    this.set('getCapabilitiesPromiseError', null);
+  },
+
   /**
     Get capabilities button error message.
 
@@ -104,14 +110,12 @@ export default Component.extend({
   getCapabilitiesErrorMessage: computed(
     'getCapabilitiesPromiseError',
     'i18n',
-    'settings.url',
-    'settings.layers',
-    'settings.version',
+    'settings.{url,layers,version}',
     function () {
       const getCapabilitiesPromiseError = this.get('getCapabilitiesPromiseError');
 
       if (!isBlank(getCapabilitiesPromiseError)) {
-        this.set('getCapabilitiesPromiseError', null);
+        this.setCapabilitiesPromiseError();
         return getCapabilitiesPromiseError;
       }
 
@@ -200,12 +204,12 @@ export default Component.extend({
     }
 
     const _this = this;
-    new Promise((resolve, reject) => {
+    new Promise((resolve, reject) => { // eslint-disable-line no-new
       L.TileLayer.WMS.Format.getAvailable({
         url,
-        done(capableFormats, xhr) {
+        done(capableFormats) {
           if (!isArray(capableFormats) || capableFormats.length === 0) {
-            reject(`Service ${url} had not returned any available formats`);
+            reject(new Error(`Service ${url} had not returned any available formats`));
           }
 
           // Change current info format to available one.
@@ -217,7 +221,7 @@ export default Component.extend({
           _this.set('_availableInfoFormats', A(capableFormats));
           resolve();
         },
-        fail(errorThrown, xhr) {
+        fail(errorThrown) {
           reject(errorThrown);
         },
       });
@@ -237,9 +241,9 @@ export default Component.extend({
         layers: settings.layers,
         version: settings.version,
       }).getBoundingBox({
-        done(boundingBox, xhr) {
+        done(boundingBox) {
           if (isBlank(boundingBox)) {
-            reject(`Service ${settings.url} had not returned any bounding box`);
+            reject(new Error(`Service ${settings.url} had not returned any bounding box`));
           }
 
           _this.set('bounds.0.0', boundingBox.getSouth());
@@ -249,7 +253,7 @@ export default Component.extend({
 
           resolve();
         },
-        fail(errorThrown, xhr) {
+        fail(errorThrown) {
           _this.set('getCapabilitiesPromiseError', errorThrown);
           _this.send('onErrorMessageShow');
           reject(errorThrown);

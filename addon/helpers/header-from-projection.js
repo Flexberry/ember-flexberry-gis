@@ -53,10 +53,10 @@ export default Helper.extend({
     columnsBuf = columnsBuf || [];
     relationshipPath = relationshipPath || '';
 
-    for (const attrName in attributes) {
+    attributes.forEach((attrName) => {
       let currentRelationshipPath = relationshipPath;
-      if (!attributes.hasOwnProperty(attrName)) {
-        continue;
+      if (!Object.prototype.hasOwnProperty.call(attributes, attrName)) {
+        return;
       }
 
       const attr = attributes[attrName];
@@ -85,7 +85,7 @@ export default Helper.extend({
           this._generateColumns(attr.attributes, columnsBuf, currentRelationshipPath);
           break;
 
-        case 'attr':
+        case 'attr': {
           if (attr.options.hidden) {
             break;
           }
@@ -94,8 +94,10 @@ export default Helper.extend({
           const column = this._createColumn(attr, attrName, bindingPath);
           columnsBuf.push(column);
           break;
+        }
+        default:
       }
-    }
+    });
 
     return columnsBuf;
   },
@@ -145,8 +147,7 @@ export default Helper.extend({
     let projectionName = null;
 
     if (args.length && args.length === 2) {
-      modelName = args[0];
-      projectionName = args[1];
+      [modelName, projectionName] = args;
     } else {
       modelName = get(hash, 'modelName');
       projectionName = get(hash, 'projectionName');

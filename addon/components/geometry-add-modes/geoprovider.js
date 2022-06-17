@@ -7,7 +7,6 @@ import { isArray } from '@ember/array';
 import { getOwner } from '@ember/application';
 import $ from 'jquery';
 import { observer } from '@ember/object';
-import { on } from '@ember/object/evented';
 import { guidFor } from '@ember/object/internals';
 import { isNone, isEqual, isBlank } from '@ember/utils';
 import Component from '@ember/component';
@@ -80,13 +79,12 @@ const FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
 
   /**
     Object with field names that is invalid.
-
     @property _parsingErrors
     @type Object
     @default null
     @private
   */
-  _parsingErrors: {},
+  _parsingErrors: null,
 
   /**
     Available instances of geoproviders.
@@ -235,11 +233,13 @@ const FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
   init() {
     this._super(...arguments);
     this.initProviders();
+    this._parsingErrors = this._parsingErrors || {};
+    this.initialSettings();
   },
 
-  initialSettings: on('init', observer('settings', function () {
+  initialSettings: observer('settings', function () {
     this._cleanUpForm();
-  })),
+  }),
 
   /**
     Makes a request to the selected geoprovider with specified options.
@@ -338,9 +338,10 @@ const FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
 
   getLayer(data) {
     switch (data.type) {
-      case 'marker':
+      case 'marker': {
         const latlng = data.position.split(' ');
         return L.marker([latlng[1], latlng[0]]);
+      }
       default:
         return null;
     }

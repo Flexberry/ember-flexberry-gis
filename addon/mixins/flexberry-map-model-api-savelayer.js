@@ -28,11 +28,12 @@ export default Mixin.create({
       const promise = new Promise((resolve, reject) => {
         leafletObject.once('loadCompleted', () => {
           resolve();
-        }).once('error', (e) => {
+        }).once('error', () => {
           leafletObject.existingFeaturesLoaded = false;
           reject();
         });
       });
+      let saveFailed;
       const saveSuccess = (data) => {
         set(leafletObject, '_wasChanged', false);
         this._getEditTools().featuresLayer.clearLayers();
@@ -57,7 +58,7 @@ export default Mixin.create({
         }
       };
 
-      const saveFailed = (data) => {
+      saveFailed = (data) => {
         leafletObject.off('save:success', saveSuccess);
         reject(data);
       };

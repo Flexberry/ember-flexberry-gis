@@ -8,7 +8,7 @@ import {
   latlngToPolygonJsts
 } from '../utils/layer-to-jsts';
 
-export function initialize(application) {
+export function initialize() {
   // Add custom leaflet functions
   const PointToJsts = {
     toJsts(crs, scale, precision) {

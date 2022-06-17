@@ -5,6 +5,8 @@
 import WmsLayerSettingsComponent from './wms';
 import layout from '../../../templates/components/layers-dialogs/settings/wms-single-tile';
 
+/* eslint-disable no-useless-escape */
+
 // Regular expression used to derive whether settings' url is correct.
 const urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
 

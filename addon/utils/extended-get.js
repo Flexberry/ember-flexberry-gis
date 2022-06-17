@@ -33,10 +33,10 @@ const getRecord = function (source, keyName) {
   if (keys.length > 1) {
     for (let i = 1, len = keys.length; i < len; i++) {
       // needed for recognition if key is index
-      const keyValue = parseInt(keys[i]);
+      const keyValue = parseInt(keys[i], 10);
 
       // if previous object is array and key is index
-      if (isArray(result) && !isNaN(keyValue)) {
+      if (isArray(result) && !Number.isNaN(keyValue)) {
         result = result.objectAt(keys[i]);
       } else {
         result = get(result, keys[i]);

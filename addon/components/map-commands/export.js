@@ -196,7 +196,7 @@ const ExportMapCommandComponent = Component.extend({
   },
 
   actions: {
-    onButtonClick(e) {
+    onButtonClick() {
       this._showExportDialog();
     },
 

@@ -34,7 +34,7 @@ export default GeocoderBaseLayer.extend({
     @param {String|Object} results Received geocoding results.
     @returns {Object[]} Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
   */
-  parseGeocodingResults(results) {
+  parseGeocodingResults() {
     // Overpass layer doesn't implement straight geocoding.
   },
 
@@ -88,7 +88,7 @@ export default GeocoderBaseLayer.extend({
 
     return new Promise((resolve, reject) => {
       run(() => {
-        $.ajax(overpassRequestUrl).done((data, textStatus, jqXHR) => {
+        $.ajax(overpassRequestUrl).done((data) => {
           resolve(data);
         }).fail((jqXHR, textStatus, errorThrown) => {
           reject(errorThrown);

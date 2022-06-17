@@ -386,7 +386,7 @@ test('test method addLayerFromLayerMetadata not found layer', function (assert) 
     assert.ok(spyGetQueryBuilderLayerMetadata.called);
     assert.ok(spyGetMetadataModels.called);
     assert.ok(spyGetMetadataModels.getCall(0).args[0]._id, '123');
-    assert.equal(error, 'LayerMetadata 123 not found.');
+    assert.equal(error.message, 'LayerMetadata 123 not found.');
     done();
     spyGetMetadataModels.restore();
     spyGetQueryBuilderLayerMetadata.restore();

@@ -153,12 +153,16 @@ export default Component.extend({
    */
   expanded: computed('infoExpanded', '_infoExpanded', function () {
     if (this.get('infoExpanded')) {
-      this.set('infoExpanded', false);
-      this.set('_infoExpanded', true);
+      this.setInfoExpanded();
     }
 
     return this.get('_infoExpanded');
   }),
+
+  setInfoExpanded() {
+    this.set('infoExpanded', false);
+    this.set('_infoExpanded', true);
+  },
 
   /**
     Flag: indicates whether component is active.

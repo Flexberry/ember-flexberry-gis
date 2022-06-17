@@ -3,6 +3,53 @@ import { isNone } from '@ember/utils';
 import { Promise } from 'rsvp';
 
 /**
+  Get wfs format.
+  @param {string} outputFormat Output format.
+  @param {Object} crs crs in which to download data.
+  @return {Object} L.Format.
+*/
+const getWfsFormat = function (outputFormat, crs) {
+  if (outputFormat === 'JSON') {
+    return new L.Format.GeoJSON({ crs, });
+  }
+
+  const format = new L.Format.Base({ crs, });
+
+  format.outputFormat = outputFormat;
+
+  if (outputFormat === 'Shape Zip') {
+    format.outputFormat = 'Shape';
+  }
+
+  return format;
+};
+
+/**
+  Get file extension.
+  @param {string} format Output format.
+  @return {string} file extension.
+*/
+const getFileExt = function (format) {
+  switch (format) {
+    case 'JSON':
+      return 'json';
+    case 'GML2':
+    case 'GML3':
+      return 'xml';
+    case 'KML':
+      return 'kml';
+    case 'CSV':
+      return 'csv';
+    case 'GPX':
+    case 'Shape Zip':
+    case 'MIF':
+      return 'zip';
+    default:
+      return 'txt';
+  }
+};
+
+/**
   Download file. Create request in xml format. Specific request for odata layer.
   Makes a request for other layers by creating a wfs layer. Makes a ajax-request for the url
   and gets blob.
@@ -44,7 +91,8 @@ const downloadFile = function (layerModel, objectIds, outputFormat, crsOuput, cr
         const filters = objectIds.map((id) => new L.Filter.GmlObjectID(id));
         const allfilters = new L.Filter.Or(...filters);
         const wfsElem = wfsLayer.getFeature(allfilters);
-        headers = wfsLayer.options.headers;
+        const layerHeaders = wfsLayer.options.headers;
+        headers = layerHeaders;
         const doc = document.implementation.createDocument('', '', null);
         const geoserverElem = doc.createElement('geoserver');
         geoserverElem.setAttribute('url', layerSettings.url);
@@ -83,7 +131,7 @@ const downloadFile = function (layerModel, objectIds, outputFormat, crsOuput, cr
         headers = header;
       }
     } catch (error) {
-      reject(`Error getting data for the request: ${error}`);
+      reject(new Error(`Error getting data for the request: ${error}`));
     }
 
     $.ajax({
@@ -100,57 +148,10 @@ const downloadFile = function (layerModel, objectIds, outputFormat, crsOuput, cr
         resolve({ fileName, blob, });
       },
       error: (errorMessage) => {
-        reject(`Layer upload error ${layerName}: ${errorMessage}`);
+        reject(new Error(`Layer upload error ${layerName}: ${errorMessage}`));
       },
     });
   });
-};
-
-/**
-  Get wfs format.
-  @param {string} outputFormat Output format.
-  @param {Object} crs crs in which to download data.
-  @return {Object} L.Format.
-*/
-let getWfsFormat = function (outputFormat, crs) {
-  if (outputFormat === 'JSON') {
-    return new L.Format.GeoJSON({ crs, });
-  }
-
-  const format = new L.Format.Base({ crs, });
-
-  format.outputFormat = outputFormat;
-
-  if (outputFormat === 'Shape Zip') {
-    format.outputFormat = 'Shape';
-  }
-
-  return format;
-};
-
-/**
-  Get file extension.
-  @param {string} format Output format.
-  @return {string} file extension.
-*/
-let getFileExt = function (format) {
-  switch (format) {
-    case 'JSON':
-      return 'json';
-    case 'GML2':
-    case 'GML3':
-      return 'xml';
-    case 'KML':
-      return 'kml';
-    case 'CSV':
-      return 'csv';
-    case 'GPX':
-    case 'Shape Zip':
-    case 'MIF':
-      return 'zip';
-    default:
-      return 'txt';
-  }
 };
 
 /**

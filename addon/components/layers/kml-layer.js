@@ -19,24 +19,17 @@ import BaseVectorLayer from '../base-vector-layer';
 export default BaseVectorLayer.extend({
   /**
     Array containing component's properties which are also leaflet layer options.
-
     @property leafletOptions
     @type Stirng[]
   */
-  leafletOptions: [
-    'kmlUrl',
-    'kmlString',
-    'style',
-    'filter'
-  ],
+  leafletOptions: null,
 
   /**
     Array containing component's properties which are also leaflet layer options callbacks.
-
     @property leafletOptionsCallbacks
     @type Stirng[]
   */
-  leafletOptionsCallbacks: ['filter'],
+  leafletOptionsCallbacks: null,
 
   /**
     Parses specified serialized callback into function.
@@ -60,7 +53,8 @@ export default BaseVectorLayer.extend({
     Creates leaflet layer related to layer type.
 
     @method createLayer
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer(options) {
@@ -78,7 +72,7 @@ export default BaseVectorLayer.extend({
     if (options.kmlUrl) {
       return new Promise((resolve, reject) => {
         const layer = omnivore.kml(options.kmlUrl, {}, layerWithOptions)
-          .on('ready', (e) => {
+          .on('ready', () => {
             resolve(layer);
           })
           .on('error', (e) => {
@@ -88,5 +82,19 @@ export default BaseVectorLayer.extend({
     }
 
     return omnivore.kml.parse(options.kmlString, {}, layerWithOptions);
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.leafletOptions = this.leafletOptions || [
+      'kmlUrl',
+      'kmlString',
+      'style',
+      'filter'
+    ];
+    this.leafletOptionsCallbacks = this.leafletOptionsCallbacks || ['filter'];
   },
 });

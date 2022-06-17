@@ -44,25 +44,10 @@ export default BaseControl.extend({
     - orientation - 'vertical' | 'horizontal'(default) - whether to position the buttons on top of one another or side-by-side.
     - useExternalControls - true | false(default) - set to true to hide these controls on the map and instead use your own controls.
     - shouldSaveMoveInHistory - a callback you can provide that gets called with every move (return false to not save a move).
-
     @property leafletOptions
     @type Stirng[]
   */
-  leafletOptions: [
-    'position',
-    'maxMovesToSave',
-    'backImage',
-    'forwardImage',
-    'backText',
-    'forwardText',
-    'backTooltip',
-    'forwardTooltip',
-    'backImageBeforeText',
-    'forwardImageBeforeText',
-    'orientation',
-    'useExternalControls',
-    'shouldSaveMoveInHistory'
-  ],
+  leafletOptions: null,
 
   /**
     Observes changhes in application's current locale, and refreshes some GUI related to it.
@@ -90,5 +75,27 @@ export default BaseControl.extend({
     scheduleOnce('afterRender', this, '_localeDidChange');
 
     return new L.HistoryControl(this.get('options'));
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.leafletOptions = this.leafletOptions || [
+      'position',
+      'maxMovesToSave',
+      'backImage',
+      'forwardImage',
+      'backText',
+      'forwardText',
+      'backTooltip',
+      'forwardTooltip',
+      'backImageBeforeText',
+      'forwardImageBeforeText',
+      'orientation',
+      'useExternalControls',
+      'shouldSaveMoveInHistory'
+    ];
   },
 });

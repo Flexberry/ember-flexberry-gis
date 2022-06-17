@@ -1,6 +1,12 @@
 import { A } from '@ember/array';
+import $ from 'jquery';
 import { isBlank, isNone } from '@ember/utils';
-import { computed, get, observer } from '@ember/object';
+import {
+  computed,
+  get,
+  set,
+  observer
+} from '@ember/object';
 import Component from '@ember/component';
 import { translationMacro as t } from 'ember-i18n';
 import layout from '../templates/components/flexberry-search-panel';
@@ -29,8 +35,7 @@ export default Component.extend({
     @private
   */
   _selectedLayerFeaturesLocalizedProperties: computed(
-    '_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.localizedProperties',
-    '_selectedLayer.settingsAsObject.searchSettings.searchFields',
+    '_selectedLayer.settingsAsObject.{displaySettings.featuresPropertiesSettings.localizedProperties,searchSettings.searchFields}',
     'i18n.locale',
     function () {
       const currentLocale = this.get('i18n.locale');
@@ -40,17 +45,22 @@ export default Component.extend({
         + `featuresPropertiesSettings.localizedProperties.${currentLocale}`
       ) || {};
 
-      const searchProperties = {};
-      Ember.keys(localizedProperties).forEach((prop) => {
-        if (searchFields.indexOf(prop) > -1) {
-          Ember.set(searchProperties, prop, localizedProperties[prop]);
-        }
-      });
-
-      this.set('_localizedValue', null);
-      return searchProperties;
+      return this.setSearchProperties(localizedProperties, searchFields);
     }
   ),
+
+  setSearchProperties(localizedProperties, searchFields) {
+    const searchProperties = {};
+    Object.keys(localizedProperties).forEach((prop) => {
+      if (searchFields.indexOf(prop) > -1) {
+        set(searchProperties, prop, localizedProperties[prop]);
+      }
+    });
+
+    this.set('_localizedValue', null);
+
+    return searchProperties;
+  },
 
   /**
     Filter method for available layers.
@@ -251,7 +261,7 @@ export default Component.extend({
       this.set('_selectedLayer', null);
       this.set('_localizedValue', null);
       this.sendAction('clearSearch');
-      const $clearSearch = Ember.$('.clear-search-button');
+      const $clearSearch = $('.clear-search-button');
       if (!$clearSearch.hasClass('hidden')) {
         $clearSearch.addClass('hidden');
       }
@@ -279,11 +289,11 @@ export default Component.extend({
 
     onChange(selectedText) {
       const searchProperties = this.get('_selectedLayerFeaturesLocalizedProperties');
-      for (const property in searchProperties) {
+      searchProperties.forEach((property) => {
         if (searchProperties[property] === selectedText) {
           this.set('propertyName', property);
         }
-      }
+      });
     },
 
     /**

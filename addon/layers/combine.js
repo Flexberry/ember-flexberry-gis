@@ -28,12 +28,19 @@ export default BaseLayer.extend({
 
   /**
     Permitted operations related to layer type.
-
     @property operations
     @type String[]
     @default ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'filter']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'filter'],
+  operations: null,
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.operations = this.operations || ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'filter'];
+  },
 
   /**
     Creates new settings object (with settings related to layer-type).

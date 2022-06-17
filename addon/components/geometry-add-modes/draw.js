@@ -5,7 +5,6 @@
 import { isArray } from '@ember/array';
 
 import { isNone } from '@ember/utils';
-import { on } from '@ember/object/evented';
 import { observer, computed, set } from '@ember/object';
 import Component from '@ember/component';
 import turfCombine from 'npm:@turf/combine';
@@ -51,7 +50,6 @@ const FlexberryGeometryAddModeDrawComponent = Component.extend({
 
   /**
     Offset validation flags.
-
     @property _offsetInvalid
     @type Object
     @default {
@@ -60,14 +58,10 @@ const FlexberryGeometryAddModeDrawComponent = Component.extend({
     }
     @private
   */
-  _offsetInvalid: {
-    x: false,
-    y: false,
-  },
+  _offsetInvalid: null,
 
   /**
     Offset
-
     @property s
     @type Object
     @default {
@@ -76,10 +70,7 @@ const FlexberryGeometryAddModeDrawComponent = Component.extend({
     }
     @private
   */
-  _offset: {
-    x: null,
-    y: null,
-  },
+  _offset: null,
 
   _moveEnabled: false,
 
@@ -112,9 +103,28 @@ const FlexberryGeometryAddModeDrawComponent = Component.extend({
     return false;
   }),
 
-  initialSettings: on('init', observer('settings', function () {
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this._offsetInvalid = this._offsetInvalid || {
+      x: false,
+      y: false,
+    };
+
+    this._offset = this._offset || {
+      x: null,
+      y: null,
+    };
+
+    this.initialSettings();
+  },
+
+  initialSettings: observer('settings', function () {
     this._dragAndDrop(false);
-  })),
+  }),
 
   getLayer() {
     const layer = this.get('layer');
@@ -183,9 +193,9 @@ const FlexberryGeometryAddModeDrawComponent = Component.extend({
         return;
       }
 
-      const curZIndex = parseInt(getComputedStyle(curPane).zIndex);
+      const curZIndex = parseInt(getComputedStyle(curPane).zIndex, 10);
       panes = Object.values(leafletMap.getPanes()).filter((p) => {
-        const zIndex = parseInt(getComputedStyle(p).zIndex);
+        const zIndex = parseInt(getComputedStyle(p).zIndex, 10);
         return p !== curPane && zIndex && curZIndex && zIndex >= curZIndex;
       });
     } catch (ex) {
@@ -256,7 +266,7 @@ const FlexberryGeometryAddModeDrawComponent = Component.extend({
     }
   },
 
-  _dragOnMouseUp(e) {
+  _dragOnMouseUp() {
     const nowDragging = this.get('_nowDragging');
     if (nowDragging) {
       this._stopDragging(this.get('_dragLayer'), true);
@@ -490,6 +500,7 @@ const FlexberryGeometryAddModeDrawComponent = Component.extend({
           case 'multyLine':
             editTools.startPolyline();
             break;
+          default:
         }
       }
     },

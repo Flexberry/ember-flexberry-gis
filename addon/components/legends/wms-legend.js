@@ -22,15 +22,8 @@ export default BaseLegendComponent.extend({
     @readOnly
   */
   _legends: computed(
-    'layer.settingsAsObject.url',
-    'layer.settingsAsObject.version',
-    'layer.settingsAsObject.imageFormat',
-    'layer.settingsAsObject.layers',
-    'layer.settingsAsObject.legendSettings.url',
-    'layer.settingsAsObject.legendSettings.version',
-    'layer.settingsAsObject.legendSettings.format',
-    'layer.settingsAsObject.legendSettings.layers',
-    'layer.settingsAsObject.styles',
+    'layer.settingsAsObject.{url,version,imageFormat,layers,'
+      + 'legendSettings.url,legendSettings.version,legendSettings.format,legendSettings.layers,styles}',
     function () {
       const legends = A();
       const layerSettings = this.get('layer.settingsAsObject') || {};

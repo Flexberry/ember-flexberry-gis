@@ -130,13 +130,12 @@ export default Component.extend({
 
   /**
     Inner hash containing settings gradient object.
-
     @property gradientList
     @type Object[]
     @default []
     @public
   */
-  gradientList: [],
+  gradientList: null,
 
   actions: {
     /**
@@ -171,6 +170,8 @@ export default Component.extend({
   */
   init() {
     this._super(...arguments);
+
+    this.gradientList = this.gradientList || [];
 
     const paramGradient = this.get('paramGradient');
     const listOfGradients = paramGradient.getGradientList();

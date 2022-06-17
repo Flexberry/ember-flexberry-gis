@@ -4,7 +4,7 @@ import { A } from '@ember/array';
 import $ from 'jquery';
 import FlexberryDropdown from 'ember-flexberry/components/flexberry-dropdown';
 import { translationMacro as t } from 'ember-i18n';
-import { run } from '@ember/runloop';
+import { run, bind } from '@ember/runloop';
 import layout from '../templates/components/select-with-checkbox';
 
 
@@ -31,7 +31,7 @@ export default FlexberryDropdown.extend({
 
   noResults: t('components.flexberry-layers-intersections-panel.notResult'),
 
-  message: { noResults: '', },
+  message: null,
 
   /**
    * Storage for the items state.
@@ -93,12 +93,14 @@ export default FlexberryDropdown.extend({
 
   init() {
     this._super(...arguments);
+
+    this.message = this.message || { noResults: '', };
     this.set('state', new A());
     const noRes = this.get('noResults').toString();
     this.set('message', { noResults: noRes, });
 
     const state = Object.entries(this.get('items'))
-      .filter(([key, value]) => !isNone(value))
+      .filter(([, value]) => !isNone(value))
       .map(([i, val]) => {
         let value = val;
         let key = i;
@@ -187,7 +189,7 @@ export default FlexberryDropdown.extend({
       this.get('state').setEach('isVisible', false);
       $('.search-field').val('');
       $('.fb-selector .item.filtered').each((i, item) => {
-        $(item).removeClass('filtered');
+        bind($(item).removeClass('filtered'));
       });
     },
   },

@@ -53,6 +53,7 @@ export default Mixin.create({
         return new SimplePredicate(field, FilterOperator.Leq, value);
       case 'like':
         return new StringPredicate(field).contains(value);
+      default:
     }
   },
 
@@ -72,6 +73,7 @@ export default Mixin.create({
         return new ComplexPredicate(Condition.Or, ...properties);
       case 'not':
         return new NotPredicate(properties[0]);
+      default:
     }
   },
 });

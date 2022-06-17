@@ -88,8 +88,8 @@ export default Mixin.create({
       let crsName;
       let crsLayer;
       if (!isNone(geometryIntersectsBbox)) {
-        if (!geometryIntersectsBbox.hasOwnProperty('crs')) {
-          reject("Error: geometryIntersectsBbox must have 'crs' attribute");
+        if (!Object.prototype.hasOwnProperty.call(geometryIntersectsBbox, 'crs')) {
+          reject(new Error("Error: geometryIntersectsBbox must have 'crs' attribute"));
         }
 
         crsName = geometryIntersectsBbox.crs.properties.name;
@@ -119,12 +119,12 @@ export default Mixin.create({
       }
 
       if (filter.length === 0) {
-        reject('Error: failed to create a request condition');
+        reject(new Error('Error: failed to create a request condition'));
       }
 
       let condition;
       if (filter.length === 1) {
-        condition = filter[0];
+        [condition] = filter;
       } else {
         condition = new ComplexPredicate(Condition.And, ...filter);
       }
@@ -175,12 +175,12 @@ export default Mixin.create({
       const queryBuilder = this._getQueryBuilderLayerMetadata().byId(layerId);
       this._getMetadataModels(queryBuilder).then((meta) => {
         if (meta.content.length === 0) {
-          return reject(`LayerMetadata ${layerId} not found.`);
+          return reject(new Error(`LayerMetadata ${layerId} not found.`));
         }
 
         let model = meta.content[0];
         if (meta && typeof meta.toArray === 'function') {
-          model = meta.toArray()[0];
+          [model] = meta.toArray();
         }
 
         const mapLayer = createLayerFromMetadata(model, this.get('store'));

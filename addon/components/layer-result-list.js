@@ -6,7 +6,6 @@ import { allSettled } from 'rsvp';
 
 import { assert } from '@ember/debug';
 import { A, isArray } from '@ember/array';
-import { on } from '@ember/object/evented';
 import {
   isBlank, isNone, isEmpty, typeOf
 } from '@ember/utils';
@@ -335,10 +334,18 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
   },
 
   /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this._resultObserver();
+  },
+
+  /**
     Observer for passed results
     @method _resultObserver
   */
-  _resultObserver: on('init', observer('results', function () {
+  _resultObserver: observer('results', function () {
     this.set('_hasError', false);
     this.set('_noData', false);
     this.set('_displayResults', null);
@@ -431,16 +438,16 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
       if (!displayPropertyIsCallback) {
         const featureProperties = get(feature, 'properties') || {};
 
-        for (const prop in featureProperties) {
+        featureProperties.forEach((prop) => {
           const value = featureProperties[prop];
           if (value instanceof Date && !isNone(value) && !isEmpty(value) && !isEmpty(dateFormat)) {
             featureProperties[prop] = moment(value).format(dateFormat);
           }
-        }
+        });
 
         let displayValue = Ember.none;
         displayProperty.forEach((prop) => {
-          if (featureProperties.hasOwnProperty(prop)) {
+          if (Object.prototype.hasOwnProperty.call(featureProperties, prop)) {
             const value = featureProperties[prop];
             if (isNone(displayValue) && !isNone(value) && !isEmpty(value) && value.toString().toLowerCase() !== 'null') {
               displayValue = value;
@@ -521,12 +528,13 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
               let queryValue;
 
               if (isBlank(ownLayerField)) {
-                for (const p in properties) {
-                  if (properties.hasOwnProperty(p) && layerField.toLowerCase() === (`${p}`).toLowerCase()) {
-                    ownLayerField = p;
-                    break;
+                properties.forEach((p) => {
+                  if (Object.prototype.hasOwnProperty.call(properties, p) && layerField.toLowerCase() === (`${p}`).toLowerCase()) {
+                    if (isBlank(ownLayerField)) {
+                      ownLayerField = p;
+                    }
                   }
-                }
+                });
               }
 
               if (!isBlank(ownLayerField)) {
@@ -608,7 +616,7 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
         }
       }
     });
-  })),
+  }),
 
   /**
     Get an array of layer shapes id.

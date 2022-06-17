@@ -37,7 +37,7 @@ export default Mixin.create({
     @return {<a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} Prepared layer.
     @private
   */
-  _prepareLayer: function _prepareLayer(layer) {
+  _prepareLayer(layer) {
     const leafletMap = this.get('leafletMap');
     let pane = leafletMap.getPane('zoomto');
     if (!pane || isNone(pane)) {

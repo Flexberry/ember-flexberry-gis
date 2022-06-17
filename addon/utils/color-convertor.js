@@ -28,6 +28,7 @@ const hexToRgb = function (hex) {
   @return String hex
 */
 const rgbToHex = function (rgb) {
+  /* eslint no-bitwise: ["error", { "allow": ["<<"] }] */
   const result = `#${((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1)}`;
   return result;
 };

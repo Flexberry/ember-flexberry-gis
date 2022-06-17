@@ -67,6 +67,23 @@ export default EmberObject.extend(Evented,
     _execute() {
     },
 
+    leafletMapExecute(leafletMap, executionResult) {
+      // Trigger common 'execute' event.
+      leafletMap.fire('flexberry-map:commands:execute', {
+        mapCommand: this,
+        executionResult,
+        args: arguments,
+      });
+
+      // Trigger command specific 'execute' event.
+      const mapCommandName = this.get('name');
+      leafletMap.fire(`flexberry-map:commands:${mapCommandName}:execute`, {
+        mapCommand: this,
+        executionResult,
+        args: arguments,
+      });
+    },
+
     /**
     Executes map-command.
 
@@ -87,22 +104,7 @@ export default EmberObject.extend(Evented,
       this.set('_executing', true);
       const executionResult = this._execute(...arguments);
 
-      scheduleOnce('afterRender', this, function () {
-        // Trigger common 'execute' event.
-        leafletMap.fire('flexberry-map:commands:execute', {
-          mapCommand: this,
-          executionResult,
-          arguments: arguments,
-        });
-
-        // Trigger command specific 'execute' event.
-        const mapCommandName = this.get('name');
-        leafletMap.fire(`flexberry-map:commands:${mapCommandName}:execute`, {
-          mapCommand: this,
-          executionResult,
-          arguments: arguments,
-        });
-      });
+      scheduleOnce('afterRender', this, this.leafletMapExecute(leafletMap, executionResult));
 
       if (executionResult instanceof Promise) {
       // Command is asynchronous & executing is in progress.

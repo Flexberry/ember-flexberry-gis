@@ -61,6 +61,7 @@ const createObjectRhumb = (data, layerCrs, that) => {
       case 'NW':
         result = parseFloat(angle) * -1;
         break;
+      default:
     }
 
     return result * Math.PI / 180;
@@ -115,7 +116,7 @@ const createObjectRhumb = (data, layerCrs, that) => {
     }
 
     if (skip !== 0) {
-      skip--;
+      skip -= 1;
     }
 
     if (skip === 0) {

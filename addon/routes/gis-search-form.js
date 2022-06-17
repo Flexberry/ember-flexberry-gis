@@ -27,25 +27,36 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
   /**
     Query settings for layer metadata loading.
   */
-  _metadataSettings: {
-    title: 'forms.gis-search-form.layer-metadata.title',
-    modelName: 'new-platform-flexberry-g-i-s-layer-metadata',
-    projectionName: 'LayerMetadataL',
-    top: 5,
-    fieldName: 'layerMetadata',
-    tab: 'layer-metadata',
-  },
+  _metadataSettings: null,
 
   /**
     Query settings for maps loading.
   */
-  _mapSettings: {
-    title: 'forms.gis-search-form.maps.title',
-    modelName: 'new-platform-flexberry-g-i-s-map',
-    projectionName: 'MapGisSearchFormL',
-    top: 5,
-    fieldName: 'maps',
-    tab: 'maps',
+  _mapSettings: null,
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this._metadataSettings = this._metadataSettings || {
+      title: 'forms.gis-search-form.layer-metadata.title',
+      modelName: 'new-platform-flexberry-g-i-s-layer-metadata',
+      projectionName: 'LayerMetadataL',
+      top: 5,
+      fieldName: 'layerMetadata',
+      tab: 'layer-metadata',
+    };
+
+    this._mapSettings = this._mapSettings || {
+      title: 'forms.gis-search-form.maps.title',
+      modelName: 'new-platform-flexberry-g-i-s-map',
+      projectionName: 'MapGisSearchFormL',
+      top: 5,
+      fieldName: 'maps',
+      tab: 'maps',
+    };
   },
 
   /**
@@ -103,8 +114,8 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
         query.then((data) => {
           this.get('controller').set(req.fieldName, data);
         }).catch((error) => {
-          const controller = this.get('controller');
-          controller.set('error', error);
+          const _controller = this.get('controller');
+          _controller.set('error', error);
         }).finally(() => {
           this.get('controller').set('isLoading', false);
         });
@@ -115,8 +126,8 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
             this.get('controller').set(tabSettings[i].fieldName, data[i]);
           }
         }).catch((error) => {
-          const controller = this.get('controller');
-          controller.set('error', error);
+          const _controller = this.get('controller');
+          _controller.set('error', error);
         }).finally(() => {
           this.get('controller').set('isLoading', false);
         });
@@ -178,7 +189,7 @@ export default Route.extend(FlexberryBoundingboxMapLoaderMixin, {
           currentCondition = '==';
         }
 
-        const scale = parseInt(item.scale) || 0;
+        const scale = parseInt(item.scale, 10) || 0;
         return new SimplePredicate('scale', currentCondition, scale);
       });
 

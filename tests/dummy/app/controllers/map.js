@@ -158,11 +158,10 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
   /**
     Set of scales for map's switch scale control.
-
     @property switchScaleControlScales
     @type Number[]
   */
-  switchScaleControlScales: [500, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 150000, 200000],
+  switchScaleControlScales: null,
 
   _leafletMapDidChange: observer('leafletMap', function () {
     const leafletMap = this.get('leafletMap');
@@ -239,8 +238,8 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       if ((item.selector !== 'createObject' || this.get('createObject'))
         && (item.selector !== 'createOrEditObject' || this.get('createOrEditObject'))
         && (item.selector !== 'intersectionObjects' || this.get('showIntersectionPanel'))
-        && (item.selector !== 'compareObjects' || this.get('compareObjects')))/* &&
-        (item.selector !== 'compare' || this.get('compare'))) */{
+        && (item.selector !== 'compareObjects' || this.get('compareObjects'))) { /* &&
+        (item.selector !== 'compare' || this.get('compare'))) */
         result.push(item);
       }
     });
@@ -254,7 +253,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @property sidebarItems
     @type Object[]
   */
-  sidebarItems: computed('sidebar.[]', 'sidebar.@each.active', 'i18n', function () {
+  sidebarItems: computed('sidebar.{[],@each.active}', 'i18n', function () {
     const i18n = this.get('i18n');
     const sidebar = this.get('sidebar');
 
@@ -264,12 +263,16 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       const captionPath = get(item, 'captionPath');
 
       if (!caption && captionPath) {
-        set(item, 'caption', i18n.t(captionPath));
+        this.setCaption(item, i18n, captionPath);
       }
     });
 
     return result;
   }),
+
+  setCaption(item, i18n, captionPath) {
+    set(item, 'caption', i18n.t(captionPath));
+  },
 
   /**
     СRS metadata.
@@ -343,6 +346,14 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @default null
   */
   editedLayersPanelSettings: null,
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.switchScaleControlScales = this.switchScaleControlScales || [500, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 150000, 200000];
+  },
 
   /**
     Initializes 'flexberry-layers-attributes-panel'.

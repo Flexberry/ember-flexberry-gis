@@ -48,7 +48,8 @@ export default BaseLayer.extend({
     Creates leaflet layer related to layer type.
 
     @method createVectorLayer
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+            <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
@@ -62,7 +63,7 @@ export default BaseLayer.extend({
         const rejected = layers.filter((item) => item.state === 'rejected').length > 0;
 
         if (rejected) {
-          reject(`Failed to create leaflet layer for '${this.get('layerModel.name')}`);
+          reject(new Error(`Failed to create leaflet layer for '${this.get('layerModel.name')}`));
         }
 
         const layer = layers[0].value;
@@ -74,7 +75,7 @@ export default BaseLayer.extend({
         layer.hideAllLayerObjects = this.get('hideAllLayerObjects').bind(this);
         resolve(layer);
       }).catch((e) => {
-        reject(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${e}`);
+        reject(new Error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${e}`));
       });
     });
   },
@@ -107,7 +108,7 @@ export default BaseLayer.extend({
 
         const historyLayersSettings = get(settings, 'historyLayer');
         A(Object.keys(settings) || []).forEach((key) => {
-          if (!historyLayersSettings.hasOwnProperty(key)) {
+          if (!Object.prototype.hasOwnProperty.call(historyLayersSettings, key)) {
             set(historyLayersSettings, key, settings[key]);
           }
         });
@@ -128,7 +129,7 @@ export default BaseLayer.extend({
         if (!isNone(historyLayer)) {
           historyLayer.layerId = guidFor(historyLayer);
         } else {
-          throw (`Invalid layer type ${type} for layer ${this.get('layerModel.name')}`);
+          throw new Error(`Invalid layer type ${type} for layer ${this.get('layerModel.name')}`);
         }
 
         this.set('historyLayer', historyLayer);
@@ -140,7 +141,7 @@ export default BaseLayer.extend({
         leafletMap.on('flexberry-map:create-feature:end', this.updateHistory, this);
         leafletMap.on('flexberry-map:edit-feature:end', this.updateHistory, this);
       } else {
-        throw (`Invalid layer type ${mainType} for layer ${this.get('layerModel.name')}`);
+        throw new Error(`Invalid layer type ${mainType} for layer ${this.get('layerModel.name')}`);
       }
     }
   },
@@ -235,11 +236,11 @@ export default BaseLayer.extend({
     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
     or a promise returning such array.
   */
-  identify(e) {
+  identify() {
     const historyModeEnabled = this.get('historyModeEnabled');
     const mainLayer = historyModeEnabled ? this.get('historyLayer') : this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.identify.apply(mainLayer, arguments);
+      return mainLayer.identify(...arguments);
     }
   },
 
@@ -255,11 +256,11 @@ export default BaseLayer.extend({
     @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
     or a promise returning such array.
   */
-  search(e) {
+  search() {
     const historyModeEnabled = this.get('historyModeEnabled');
     const mainLayer = historyModeEnabled ? this.get('historyLayer') : this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.search.apply(mainLayer, arguments);
+      return mainLayer.search(...arguments);
     }
   },
 
@@ -273,11 +274,11 @@ export default BaseLayer.extend({
     @param {Object[]} results.features Array containing leaflet layers objects
     or a promise returning such array.
   */
-  query(layerLinks, e) {
+  query() {
     const historyModeEnabled = this.get('historyModeEnabled');
     const mainLayer = historyModeEnabled ? this.get('historyLayer') : this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.query.apply(mainLayer, arguments);
+      return mainLayer.query(...arguments);
     }
   },
 
@@ -291,11 +292,11 @@ export default BaseLayer.extend({
     @param {Number} layerObjectId Leaflet layer id.
     @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
   */
-  getNearObject(e) {
+  getNearObject() {
     const historyModeEnabled = this.get('historyModeEnabled');
     const mainLayer = historyModeEnabled ? this.get('historyLayer') : this.get('mainLayer');
     if (!isNone(mainLayer)) {
-      return mainLayer.getNearObject.apply(mainLayer, arguments);
+      return mainLayer.getNearObject(...arguments);
     }
   },
 
@@ -314,7 +315,7 @@ export default BaseLayer.extend({
       mainLayer._leafletObject.baseShowAllLayerObjects().then((result) => {
         resolve(result.value);
       }).catch(() => {
-        reject(`Failed to showAllLayerObjects for '${this.get('layerModel.name')}`);
+        reject(new Error(`Failed to showAllLayerObjects for '${this.get('layerModel.name')}`));
       });
     });
   },

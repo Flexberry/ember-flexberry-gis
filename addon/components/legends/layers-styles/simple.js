@@ -73,9 +73,9 @@ export default BaseLayerStyleLegendComponent.extend({
       const { legendStyle, } = this.parentView.layer;
       if (!isNone(legendStyle)) {
         styleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
-        for (const opt in legendStyle.style.path) {
+        legendStyle.style.path.forEach((opt) => {
           styleSettings.style.path[opt] = legendStyle.style.path[opt];
-        }
+        });
       }
 
       layersStylesRenderer.renderOnCanvas({

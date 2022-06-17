@@ -1,6 +1,5 @@
 import { isBlank } from '@ember/utils';
 import { Promise } from 'rsvp';
-import { on } from '@ember/object/evented';
 import { A } from '@ember/array';
 import { computed, observer } from '@ember/object';
 import Component from '@ember/component';
@@ -117,7 +116,7 @@ export default Component.extend({
     @method _legendsDidChange
     @private
   */
-  _legendsDidChange: on('init', observer('_legends', function () {
+  _legendsDidChange: observer('_legends', function () {
     const legends = this.get('_legends');
     if (legends instanceof Promise) {
       legends.then((result) => {
@@ -126,7 +125,16 @@ export default Component.extend({
     } else {
       this.sendAction('legendsLoaded', this.get('layer.name'), legends);
     }
-  })),
+  }),
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this._legendsDidChange();
+  },
 
   /**
     Observes changes in right padding property, and changes it's value in the DOM.

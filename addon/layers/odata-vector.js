@@ -30,12 +30,11 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
 
   /**
     Permitted operations related to layer type.
-
     @property operations
     @type String[]
     @default ['edit', 'remove', 'identify', 'search']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'attributes', 'legend', 'filter'],
+  operations: null,
 
   /**
     Crs.
@@ -45,6 +44,14 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
     @default null
   */
   crs: null,
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.operations = this.operations || ['edit', 'remove', 'identify', 'search', 'attributes', 'legend', 'filter'];
+  },
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -140,12 +147,14 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
   parseFilterGeometryExpression(condition, geoJSON, geometryField) {
     switch (condition) {
       case 'in':
-      case 'not in':
+      case 'not in': {
         const geomPredicate = new GeometryPredicate(geometryField);
         const geom = L.geoJSON(geoJSON).getLayers()[0].toEWKT(this.get('crs'));
         const filter = geomPredicate.intersects(geom);
 
         return condition === 'in' ? filter : new NotPredicate(filter);
+      }
+      default:
     }
   },
 });

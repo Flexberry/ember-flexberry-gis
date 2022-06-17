@@ -23,7 +23,7 @@ export default Mixin.create({
     @returns {Object[]} Flat array of layers satisfying to current identification mode.
     @private
   */
-  _getLayersToIdentify({ excludedLayers, }) {
+  _getLayersToIdentify() {
     const allVisibleLayersToIdentify = A(this._super(...arguments) || []);
 
     const topVisibleLayerToIdenify = A();

@@ -25,21 +25,7 @@ export default BaseControl.extend({
   */
   layerGroup: null,
 
-  leafletOptions: [
-    'position',
-    'width',
-    'height',
-    'collapsedWidth',
-    'collapsedHeight',
-    'zoomLevelOffset',
-    'zoomLevelFixed',
-    'centerFixed',
-    'zoomAnimation',
-    'toggleDisplay',
-    'autoToggleDisplay',
-    'minimized',
-    'strings'
-  ],
+  leafletOptions: null,
 
   /**
     The standard Leaflet.Control position parameter, used like all the other controls.
@@ -194,13 +180,32 @@ export default BaseControl.extend({
     @type Object
     @default {hideText:'', showText:''}
   */
-  strings: {
-    hideText: '',
-    showText: '',
-  },
+  strings: null,
 
   init() {
     this._super(...arguments);
+
+    this.leafletOptions = this.leafletOptions || [
+      'position',
+      'width',
+      'height',
+      'collapsedWidth',
+      'collapsedHeight',
+      'zoomLevelOffset',
+      'zoomLevelFixed',
+      'centerFixed',
+      'zoomAnimation',
+      'toggleDisplay',
+      'autoToggleDisplay',
+      'minimized',
+      'strings'
+    ];
+
+    this.strings = this.strings || {
+      hideText: '',
+      showText: '',
+    };
+
     this.set('layerGroup', L.layerGroup());
   },
 

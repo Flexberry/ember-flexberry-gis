@@ -37,7 +37,8 @@ export default Mixin.create({
       this.set('showIntersectionPanel', false);
     },
     /**
-      Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.featureSelected:method"}}layer-result-list component's 'featureSelected' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.featureSelected:method"}}
+        layer-result-list component's 'featureSelected' action{{/crossLink}}.
 
       @method actions.onLayerFeatureSelected
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.

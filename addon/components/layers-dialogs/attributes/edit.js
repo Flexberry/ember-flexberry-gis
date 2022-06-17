@@ -250,22 +250,20 @@ const FlexberryEditLayerAttributesDialogComponent = Component.extend({
     const parsingErrors = {};
     let dataIsValid = true;
 
-    for (const fieldName in fieldNames) {
-      if (!fieldNames.hasOwnProperty(fieldName)) {
-        continue;
+    Array.from(fieldNames).forEach((fieldName) => {
+      if (Object.prototype.hasOwnProperty.call(fieldNames, fieldName)) {
+        const text = get(data, fieldName);
+        const value = fieldParsers[fieldName](text);
+        const valueIsValid = fieldValidators[fieldName](value);
+
+        if (valueIsValid) {
+          set(data, fieldName, value);
+        }
+
+        dataIsValid = dataIsValid && valueIsValid;
+        set(parsingErrors, fieldName, !valueIsValid);
       }
-
-      const text = get(data, fieldName);
-      const value = fieldParsers[fieldName](text);
-      const valueIsValid = fieldValidators[fieldName](value);
-
-      if (valueIsValid) {
-        set(data, fieldName, value);
-      }
-
-      dataIsValid = dataIsValid && valueIsValid;
-      set(parsingErrors, fieldName, !valueIsValid);
-    }
+    });
 
     this.set('parsingErrors', parsingErrors);
 

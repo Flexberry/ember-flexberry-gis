@@ -171,11 +171,11 @@ const FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.exten
       processData: false,
       contentType,
       async: false,
-      success(data) {
-        successF(data);
+      success(_data) {
+        successF(_data);
       },
-      error(data) {
-        errorF(data);
+      error(_data) {
+        errorF(_data);
       },
     });
   },
@@ -210,17 +210,17 @@ const FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.exten
           const config = getOwner(this).resolveRegistration('config:environment');
 
           this.request(`${url[0]}/geoserver/rest/workspaces/${layerName[0]}`, 'GET', 'application/json', '',
-            (data) => {
+            () => {
               this.request(`${url[0]}/geoserver/rest/workspaces/${layerName[0]}/coveragestores/${layerName[1]}`, 'GET', 'application/json', '',
-                (data) => {
+                () => {
                   this.set('rastrMessageVisible', true);
                   this.set('message', this.get('storeExistErrorMessage'));
                   this.set('typeMessage', 'error');
                 },
-                (data) => {
+                () => {
                   _this.request(`${url[0]}/geoserver/rest/workspaces/${layerName[0]}/coveragestores/${layerName[1]}/file.geotiff?coverageName=${layerName[1]}`,
                     'PUT', 'image/tiff', file,
-                    (data) => {
+                    () => {
                       this.sendAction('approve', {
                         layerProperties,
                         layer: this.get('layer'),
@@ -229,14 +229,14 @@ const FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.exten
                       this.set('message', this.get('createLayerMessage'));
                       this.set('typeMessage', 'success');
                     },
-                    (data) => {
+                    () => {
                       this.set('rastrMessageVisible', true);
                       this.set('message', this.get('createLayerErrorMessage'));
                       this.set('typeMessage', 'error');
                     });
                 });
             },
-            (data) => {
+            () => {
               this.set('rastrMessageVisible', true);
               this.set('message', `${this.get('existWorkspaceErrorMessage')} ${config.APP.geoserver.workspaceRastr}`);
               this.set('typeMessage', 'error');

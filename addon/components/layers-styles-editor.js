@@ -9,7 +9,6 @@ import { isNone, isBlank } from '@ember/utils';
 import { Promise } from 'rsvp';
 import { once } from '@ember/runloop';
 import { observer, computed } from '@ember/object';
-import { on } from '@ember/object/evented';
 import Component from '@ember/component';
 import layout from '../templates/components/layers-styles-editor';
 
@@ -111,9 +110,9 @@ export default Component.extend({
   */
   layerType: null,
 
-  _layerLoader: on('init', observer('layerLoaderIsReady', function () {
+  _layerLoader: observer('layerLoaderIsReady', function () {
     once(this, '_loadLeafletLayer');
-  })),
+  }),
 
   _loadLeafletLayer() {
     this.set('_leafletLayerLoadingIsError', false);
@@ -142,14 +141,14 @@ export default Component.extend({
 
       const getLeafletLayer = this.get('getLeafletLayer');
       if (typeof getLeafletLayer !== 'function') {
-        reject('Property \'getLeafletLayer\' isn\'t a function');
+        reject(new Error('Property \'getLeafletLayer\' isn\'t a function'));
         return;
       }
 
       this.set('_leafletLayerIsLoading', true);
-      getLeafletLayer().then((leafletLayer) => {
-        this.set('_leafletLayer', leafletLayer);
-        resolve(leafletLayer);
+      getLeafletLayer().then((leaflet) => {
+        this.set('_leafletLayer', leaflet);
+        resolve(leaflet);
       }).catch((e) => {
         this.set('_leafletLayerLoadingIsError', true);
         this.set('_leafletLayerIsLoading', false);
@@ -255,7 +254,9 @@ export default Component.extend({
       return null;
     }
 
-    const selectedLayerStyleIndex = availableLayerStylesCaptions.findIndex((layerStylesCaption) => layerStylesCaption.toString() === selectedLayerStyleCaption.toString());
+    const selectedLayerStyleIndex = availableLayerStylesCaptions
+      .findIndex((layerStylesCaption) => layerStylesCaption
+        .toString() === selectedLayerStyleCaption.toString());
 
     const selectedLayerStyle = selectedLayerStyleIndex > -1
       ? availableLayerStyles.objectAt(selectedLayerStyleIndex)
@@ -305,6 +306,8 @@ export default Component.extend({
   */
   init() {
     this._super(...arguments);
+
+    this._layerLoader();
 
     // Initialize available layers-styles and related properties.
     this.set('_previouslySelectedLayerStyle', this.get('styleSettings.type'));

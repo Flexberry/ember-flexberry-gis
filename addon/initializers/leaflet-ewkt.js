@@ -4,7 +4,7 @@ import {
   latlngToPolygonEWKT
 } from '../utils/layer-to-ewkt';
 
-export function initialize(application) {
+export function initialize() {
   // Add custom leaflet functions
   const PointToEWKT = {
     toEWKT(crs, precision) {

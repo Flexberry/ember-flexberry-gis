@@ -27,24 +27,7 @@ export default BaseVectorLayer.extend({
     @property leafletOptions
     @type Stirng[]
   */
-  leafletOptions: [
-    'url',
-    'version',
-    'namespaceUri',
-    'typeNS',
-    'typeName',
-    'typeNSName',
-    'geometryField',
-    'crs',
-    'maxFeatures',
-    'showExisting',
-    'style',
-    'filter',
-    'forceMulti',
-    'withCredentials',
-    'continueLoading',
-    'wpsUrl'
-  ],
+  leafletOptions: null,
 
   /**
     Returns features read format depending on 'format', 'options.crs', 'options.geometryField'.
@@ -54,9 +37,9 @@ export default BaseVectorLayer.extend({
   */
   getFeaturesReadFormat() {
     const format = this.get('format');
-    let availableFormats = A(Object.keys(L.Format) || []).filter((format) => {
-      format = format.toLowerCase();
-      return format !== 'base' && format !== 'scheme';
+    let availableFormats = A(Object.keys(L.Format) || []).filter((_format) => {
+      _format = _format.toLowerCase();
+      return _format !== 'base' && _format !== 'scheme';
     });
     availableFormats = A(availableFormats);
     assert(
@@ -134,10 +117,10 @@ export default BaseVectorLayer.extend({
   _getBoundingBox(layer) {
     return new Promise((resolve, reject) => {
       layer.getBoundingBox(
-        (boundingBox, xhr) => {
+        (boundingBox) => {
           resolve(boundingBox);
         },
-        (errorThrown, xhr) => {
+        (errorThrown) => {
           reject(errorThrown);
         }
       );
@@ -186,7 +169,7 @@ export default BaseVectorLayer.extend({
     this._super(...arguments);
   },
 
-  _addLayer(layer) {
+  _addLayer() {
     // не добавляем слой, пока не пройдет promise загрузки
   },
 
@@ -203,7 +186,7 @@ export default BaseVectorLayer.extend({
     const leafletObject = this.get('_leafletObject');
     leafletObject.baseEditLayer(layer);
 
-    if (layer.state = state.update) {
+    if (layer.state === state.update) {
       const coordinates = this._getGeometry(layer);
       set(layer, 'feature.geometry.coordinates', coordinates);
     }
@@ -335,7 +318,8 @@ export default BaseVectorLayer.extend({
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer
     @param {Object} options Layer options.
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer(options) {
@@ -409,7 +393,8 @@ export default BaseVectorLayer.extend({
           this._setFeaturesProcessCallback(wfsLayer);
           wfsLayer.loadFeatures = this.get('_loadFeatures').bind(wfsLayer);
 
-          // this.get('_leafletObject') is null at this moment. _layers hasn't pane and renderer. For marker layer this is critical (ignore zoom), but for polygon layer doesn't.
+          // this.get('_leafletObject') is null at this moment. _layers hasn't pane and renderer.
+          // For marker layer this is critical (ignore zoom), but for polygon layer doesn't.
           const featureLayers = Object.values(wfsLayer._layers);
           this._addLayersOnMap(featureLayers);
           const load = this.continueLoad(wfsLayer);
@@ -418,7 +403,7 @@ export default BaseVectorLayer.extend({
               layers: featureLayers,
             };
             const promise = this._featuresProcessCallback(loaded.layers, wfsLayer);
-            if (loaded.results && Ember.isArray(loaded.results)) {
+            if (loaded.results && isArray(loaded.results)) {
               loaded.results.push(promise);
             }
           }
@@ -431,7 +416,7 @@ export default BaseVectorLayer.extend({
         .once('error', (e) => {
           reject(e.error || e);
         })
-        .on('load', (e) => {
+        .on('load', () => {
           this._setLayerState();
         });
     });
@@ -455,7 +440,8 @@ export default BaseVectorLayer.extend({
   /**
     Creates leaflet layer related to layer type.
     @method createLayer
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
@@ -549,7 +535,7 @@ export default BaseVectorLayer.extend({
 
     let filter;
     if (equals.length === 1) {
-      filter = equals[0];
+      [filter] = equals;
     } else {
       filter = new L.Filter.Or(...equals);
     }
@@ -642,11 +628,11 @@ export default BaseVectorLayer.extend({
       const leafletObject = this.get('_leafletObject');
       const { featureIds, } = e;
       if (!leafletObject.options.showExisting) {
-        const getLoadedFeatures = (featureIds) => {
+        const getLoadedFeatures = (_featureIds) => {
           const loadIds = [];
           leafletObject.eachLayer((shape) => {
             const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), shape);
-            if (!isNone(id) && ((isArray(featureIds) && !isNone(featureIds) && featureIds.indexOf(id) !== -1) || !loadIds.includes(id))) {
+            if (!isNone(id) && ((isArray(_featureIds) && !isNone(_featureIds) && _featureIds.indexOf(id) !== -1) || !loadIds.includes(id))) {
               loadIds.push(id);
             }
           });
@@ -752,7 +738,9 @@ export default BaseVectorLayer.extend({
         const objects = [];
         featureIds.forEach((id) => {
           const features = leafletObject._layers;
-          const obj = Object.values(features).find((feature) => this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), feature) === id);
+          const obj = Object.values(features).find((feature) => this
+            .get('mapApi').getFromApi('mapModel')
+            ._getLayerFeatureId(this.get('layerModel'), feature) === id);
           if (!isNone(obj)) {
             objects.push(obj);
           }
@@ -797,7 +785,7 @@ export default BaseVectorLayer.extend({
           const loadedBoundsJsts = geojsonReader.read(loadedBounds.toGeoJSON().geometry);
           const boundsJsts = geojsonReader.read(L.rectangle(bounds).toGeoJSON().geometry);
 
-          if (loadedBoundsJsts.contains(boundsJsts)) {
+          if (loadedBoundsJsts.includes(boundsJsts)) {
             if (leafletObject.statusLoadLayer) {
               leafletObject.promiseLoadLayer = resolve();
             }
@@ -809,7 +797,7 @@ export default BaseVectorLayer.extend({
 
           const unionJsts = loadedBoundsJsts.union(boundsJsts);
           const geojsonWriter = new jsts.io.GeoJSONWriter();
-          loadedBounds = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
+          [loadedBounds] = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers();
         } else {
           loadedBounds = bounds;
         }
@@ -836,7 +824,7 @@ export default BaseVectorLayer.extend({
         promise = new Promise((resolve, reject) => {
           leafletObject.once('loadCompleted', () => {
             resolve();
-          }).once('error', (e) => {
+          }).once('error', () => {
             leafletObject.existingFeaturesLoaded = false;
             reject();
           });
@@ -869,6 +857,31 @@ export default BaseVectorLayer.extend({
       leafletMap.on('moveend', this.continueLoad, this);
       leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
     }
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this.leafletOptions = this.leafletOptions || [
+      'url',
+      'version',
+      'namespaceUri',
+      'typeNS',
+      'typeName',
+      'typeNSName',
+      'geometryField',
+      'crs',
+      'maxFeatures',
+      'showExisting',
+      'style',
+      'filter',
+      'forceMulti',
+      'withCredentials',
+      'continueLoading',
+      'wpsUrl'
+    ];
+    this._super(...arguments);
   },
 
   /**
@@ -968,7 +981,7 @@ export default BaseVectorLayer.extend({
           layer: leafletObject.layerId,
           results: A(),
         };
-        this.loadLayerFeatures(e).then(() => { resolve(); }).catch((e) => reject(e));
+        this.loadLayerFeatures(e).then(() => { resolve(); }).catch(() => reject(e));
       }
     });
   },
@@ -1035,7 +1048,7 @@ export default BaseVectorLayer.extend({
     @return {Ember.RSVP.Promise}
   */
   dwithin(featureLayer, distance, exceptFeature) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const geometryField = this.get('geometryField');
       const crs = this.get('crs');
       let filter = new L.Filter.DWithin(geometryField, featureLayer, crs, distance, 'meter');
@@ -1070,7 +1083,8 @@ export default BaseVectorLayer.extend({
         .then((res) => {
           if (isArray(res) && res.length > 0) {
             resolve(res);
-          } else if (iter++ < distances.length) {
+          } else if (iter < distances.length) {
+            iter += 1;
             resolve(this.upDistance(featureLayer, distances, iter, exceptFeature));
           } else {
             resolve(null);
@@ -1142,7 +1156,7 @@ export default BaseVectorLayer.extend({
                   };
                   resolve(result);
                 } else {
-                  reject(`Don't loaded feature with id: ${id} for layer ${layerModel.get('name')}`);
+                  reject(new Error(`Don't loaded feature with id: ${id} for layer ${layerModel.get('name')}`));
                 }
               });
             } else {
@@ -1150,7 +1164,7 @@ export default BaseVectorLayer.extend({
             }
           },
           error(error) {
-            reject(`Error for request getNearObject via WPS ${wpsUrl} for layer ${layerModel.get('name')}: ${error}`);
+            reject(new Error(`Error for request getNearObject via WPS ${wpsUrl} for layer ${layerModel.get('name')}: ${error}`));
           },
         });
       } else {

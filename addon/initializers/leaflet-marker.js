@@ -31,6 +31,8 @@ export function initialize() {
           const label = this._createStringLabel(html, this);
           const opt = Object.assign({}, style.options);
           opt.html = label;
+
+          /* eslint-disable-next-line new-cap */
           this.setIcon(new L.divIcon(opt));
           this.style = opt;
           this.styleIsSet = true;
@@ -45,6 +47,7 @@ export function initialize() {
         }
       } else if (isNone(this.styleIsSet)) {
         if (!isNone(this.style) && !isNone(this.style.html)) {
+          /* eslint-disable-next-line new-cap */
           this.setIcon(new L.divIcon(this.style));
         }
 
@@ -83,12 +86,12 @@ export function initialize() {
       let label = '';
       let isProp = false;
       expResult.forEach(function (element) {
-        for (const key in featureLayer.feature.properties) {
+        featureLayer.feature.properties.forEach((key) => {
           if (key === element && !isNone(featureLayer.feature.properties[key]) && !isBlank(featureLayer.feature.properties[key])) {
             label += featureLayer.feature.properties[key];
             isProp = true;
           }
-        }
+        });
 
         label += !isProp ? element : '';
         isProp = false;

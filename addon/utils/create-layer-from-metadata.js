@@ -5,6 +5,58 @@
 import { isArray } from '@ember/array';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 /**
+  Adds link parameters metadata to the layer link model.
+
+  @method addLinkParametersMetadata
+  @param {NewPlatformFlexberryGISLayerLink} layerLinkModel Layer link model.
+  @param {NewPlatformFlexberryGISParameterMetadata} parameters Layer link parameters metadata collection.
+  @private
+*/
+const addLinkParametersMetadata = function (layerLinkModel, parameters, store) {
+  if (!isArray(parameters)) {
+    return;
+  }
+
+  parameters.forEach((item) => {
+    const newLinkParameter = store.createRecord('new-platform-flexberry-g-i-s-link-parameter', {
+      id: generateUniqueId(),
+      objectField: item.objectField,
+      layerField: item.layerField,
+      expression: item.expression,
+      queryKey: item.queryKey,
+      linkField: item.linkField,
+    });
+
+    layerLinkModel.get('parameters').pushObject(newLinkParameter);
+  });
+};
+
+/**
+  Adds link metadata to the layer model.
+
+  @method addLinkMetadata
+  @param {NewPlatformFlexberryGISMapLayer} layerModel Layer model.
+  @param {NewPlatformFlexberryGISLinkMetadata} linkMetadata Link metadata collection.
+  @private
+*/
+const addLinkMetadata = function (layerModel, linkMetadata, store) {
+  if (!isArray(linkMetadata)) {
+    return;
+  }
+
+  linkMetadata.forEach((item) => {
+    const newLayerLink = store.createRecord('new-platform-flexberry-g-i-s-layer-link', {
+      id: generateUniqueId(),
+      allowShow: item.allowShow,
+      mapObjectSetting: item.mapObjectSetting,
+    });
+
+    addLinkParametersMetadata(newLayerLink, item.parameters, store);
+    layerModel.get('layerLink').pushObject(newLayerLink);
+  });
+};
+
+/**
   Creates map layer from metadata.
 
   @for Utils.LayerCreate
@@ -30,58 +82,6 @@ const createLayerFromMetadata = function (metadata, store) {
 
   addLinkMetadata(mapLayer, metadata.get('linkMetadata'), store);
   return mapLayer;
-};
-
-/**
-  Adds link metadata to the layer model.
-
-  @method addLinkMetadata
-  @param {NewPlatformFlexberryGISMapLayer} layerModel Layer model.
-  @param {NewPlatformFlexberryGISLinkMetadata} linkMetadata Link metadata collection.
-  @private
-*/
-let addLinkMetadata = function (layerModel, linkMetadata, store) {
-  if (!isArray(linkMetadata)) {
-    return;
-  }
-
-  linkMetadata.forEach((item) => {
-    const newLayerLink = store.createRecord('new-platform-flexberry-g-i-s-layer-link', {
-      id: generateUniqueId(),
-      allowShow: item.allowShow,
-      mapObjectSetting: item.mapObjectSetting,
-    });
-
-    addLinkParametersMetadata(newLayerLink, item.parameters, store);
-    layerModel.get('layerLink').pushObject(newLayerLink);
-  });
-};
-
-/**
-  Adds link parameters metadata to the layer link model.
-
-  @method addLinkParametersMetadata
-  @param {NewPlatformFlexberryGISLayerLink} layerLinkModel Layer link model.
-  @param {NewPlatformFlexberryGISParameterMetadata} parameters Layer link parameters metadata collection.
-  @private
-*/
-let addLinkParametersMetadata = function (layerLinkModel, parameters, store) {
-  if (!isArray(parameters)) {
-    return;
-  }
-
-  parameters.forEach((item) => {
-    const newLinkParameter = store.createRecord('new-platform-flexberry-g-i-s-link-parameter', {
-      id: generateUniqueId(),
-      objectField: item.objectField,
-      layerField: item.layerField,
-      expression: item.expression,
-      queryKey: item.queryKey,
-      linkField: item.linkField,
-    });
-
-    layerLinkModel.get('parameters').pushObject(newLinkParameter);
-  });
 };
 
 export {

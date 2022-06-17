@@ -206,7 +206,7 @@ module('Unit | Mixin | test api show and hide layers', function () {
     // Act
     assert.throws(
       function () { subject.hideAllLayerObjects('1'); },
-      function (err) { return err.toString() === 'Is not a vector layer'; },
+      function (err) { return err.message.toString() === 'Is not a vector layer'; },
       'Error thrown'
     );
 

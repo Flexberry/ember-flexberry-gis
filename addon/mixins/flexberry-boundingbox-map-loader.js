@@ -39,7 +39,7 @@ export default Mixin.create({
   getBoundingBoxComponentMapModel() {
     const config = getOwner(this).factoryFor('config:environment').class;
     const mapId = this.get('boundingBoxComponentMapId') || get(config, 'APP.components.flexberryBoundingbox.mapId');
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const osmmap = this.get('mapStore.osmmap');
       if (isBlank(mapId)) {
         resolve(osmmap);

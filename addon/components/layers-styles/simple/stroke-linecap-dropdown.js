@@ -16,13 +16,12 @@ import layout from '../../../templates/components/layers-styles/simple/stroke-li
 export default Component.extend({
   /**
     Available 'stroke-linecap' attribute values.
-
     @property _availableLineCaps
     @type String[]
     @default ['butt', 'round', 'square']
     @private
   */
-  _availableLineCaps: ['butt', 'round', 'square'],
+  _availableLineCaps: null,
 
   /**
     Reference to component's template.
@@ -55,6 +54,14 @@ export default Component.extend({
     @default '#000000'
   */
   strokeColor: '#000000',
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this._availableLineCaps = this._availableLineCaps || ['butt', 'round', 'square'];
+  },
 
   /**
     Initializes component's DOM-related properties.

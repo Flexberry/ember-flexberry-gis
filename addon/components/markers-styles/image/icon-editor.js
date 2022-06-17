@@ -299,18 +299,20 @@ export default Component.extend({
     let h = iconZoomSize[1];
 
     if (w === 0 && h === 0) {
-      w = iconSize[0];
-      h = iconSize[1];
+      [w, h] = iconSize;
     } else {
-      w = iconZoomSize[0];
-      h = iconZoomSize[1];
-      this.set('_isZoom', true);
+      [w, h] = iconSize;
+      this.setIsZoom();
     }
 
     return isArray(iconZoomSize)
       ? { width: w, height: h, }
       : { width: 0, height: 0, };
   }),
+
+  setIsZoom() {
+    this.set('_isZoom', true);
+  },
 
   /**
     Flag: indicates icon is zooming.
@@ -446,15 +448,15 @@ export default Component.extend({
     const iconAnchor = this.get('iconAnchor');
     const [width, height] = this.get('iconSize');
     let [newWidth, newHeight] = this.get('iconSizeNew');
-    newWidth = parseInt(newWidth);
-    newHeight = parseInt(newHeight);
+    newWidth = parseInt(newWidth, 10);
+    newHeight = parseInt(newHeight, 10);
 
-    if (isNaN(newWidth) || newWidth === 0) {
+    if (Number.isNaN(newWidth) || newWidth === 0) {
       this.set('invalidWidth', true);
       return;
     }
 
-    if (isNaN(newHeight) || newHeight === 0) {
+    if (Number.isNaN(newHeight) || newHeight === 0) {
       this.set('invalidHeight', true);
       return;
     }
@@ -563,7 +565,7 @@ export default Component.extend({
     @param {Object} e Event object.
     @private
   */
-  _onLoadIconFileError(e) {
+  _onLoadIconFileError() {
     this.setProperties({
       _iconFileLoadingFailed: true,
       _iconFileIsLoading: false,
@@ -811,7 +813,7 @@ export default Component.extend({
       @method actions.onZoomInClick
       @param {Object} e Action's event object.
     */
-    onZoomInClick(e) {
+    onZoomInClick() {
       const iconZoomSize = this.get('_iconZoomSize');
       let iconZoomAnchor = this.get('_iconZoomAnchor');
       if (iconZoomAnchor.x === 0 && iconZoomAnchor.y === 0) {
@@ -847,7 +849,7 @@ export default Component.extend({
       @method actions.onZoomOutClick
       @param {Object} e Action's event object.
     */
-    onZoomOutClick(e) {
+    onZoomOutClick() {
       let iconZoomAnchor = this.get('_iconZoomAnchor');
       if (iconZoomAnchor.x === 0 && iconZoomAnchor.y === 0) {
         iconZoomAnchor = this.get('_iconAnchor');
@@ -886,7 +888,7 @@ export default Component.extend({
       @method actions.onResizeClick
       @param {Object} e Action's event object.
     */
-    onResizeClick(e) {
+    onResizeClick() {
       this._onResizeIcon();
     },
 

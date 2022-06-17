@@ -1,5 +1,4 @@
 import { Promise, resolve, allSettled } from 'rsvp';
-import { keys } from '@ember/polyfills';
 import { isArray, A } from '@ember/array';
 import { isNone, isBlank, isEqual } from '@ember/utils';
 import {
@@ -194,6 +193,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
               case 'MultiPolygon':
                 latlngs = layer.getLatLngs();
                 break;
+              default:
             }
 
             const latlngcopy = {
@@ -271,6 +271,10 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
   */
   leafletObject: null,
 
+  setLeafletObject(leafletObject) {
+    this.set('leafletObject', leafletObject);
+  },
+
   _model: computed('layerModel', 'i18n.locale', function () {
     const layer = this.get('layerModel');
 
@@ -281,7 +285,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
     const settings = get(layer, 'settings') || {};
 
     const leafletObject = get(layer, 'leafletObject');
-    this.set('leafletObject', leafletObject);
+    this.setLeafletObject(leafletObject);
     const readonly = get(settings, 'readonly') || false;
 
     let availableDrawTools = null;
@@ -300,15 +304,12 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
       let excludedProperties = get(settings, 'excludedProperties');
       excludedProperties = isArray(excludedProperties) ? A(excludedProperties) : A();
 
-      for (const propertyName in get(leafletObject, 'readFormat.featureType.fields')) {
-        if (excludedProperties.includes(propertyName)) {
-          continue;
+      get(leafletObject, 'readFormat.featureType.fields').forEach((propertyName) => {
+        if (!excludedProperties.includes(propertyName)) {
+          const propertyCaption = get(localizedProperties, propertyName);
+          result[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
         }
-
-        const propertyCaption = get(localizedProperties, propertyName);
-
-        result[propertyName] = !isBlank(propertyCaption) ? propertyCaption : propertyName;
-      }
+      });
 
       return result;
     };
@@ -419,22 +420,20 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
     const parsingErrors = {};
     let dataIsValid = true;
 
-    for (const fieldName in fieldNames) {
-      if (!fieldNames.hasOwnProperty(fieldName)) {
-        continue;
+    fieldNames.forEach((fieldName) => {
+      if (!Object.prototype.hasOwnProperty.call(fieldNames, fieldName)) {
+        const text = get(data, fieldName);
+        const value = fieldParsers[fieldName](text);
+        const valueIsValid = fieldValidators[fieldName](value);
+
+        if (valueIsValid) {
+          set(data, fieldName, value);
+        }
+
+        dataIsValid = dataIsValid && valueIsValid;
+        set(parsingErrors, fieldName, !valueIsValid);
       }
-
-      const text = get(data, fieldName);
-      const value = fieldParsers[fieldName](text);
-      const valueIsValid = fieldValidators[fieldName](value);
-
-      if (valueIsValid) {
-        set(data, fieldName, value);
-      }
-
-      dataIsValid = dataIsValid && valueIsValid;
-      set(parsingErrors, fieldName, !valueIsValid);
-    }
+    });
 
     this.set(`parsingErrors.${index}`, parsingErrors);
 
@@ -483,6 +482,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         case 'PolygonPropertyType':
         case 'MultiPolygonPropertyType':
           return ['rectangle', 'polygon'];
+        default:
       }
     }
 
@@ -510,6 +510,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         case 'PolygonPropertyType':
         case 'MultiPolygonPropertyType':
           return 'polygon';
+        default:
       }
     }
 
@@ -587,7 +588,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
       const layer = layers[key];
 
       let id;
-      if (data.hasOwnProperty(pkField)) {
+      if (data.property.hasOwnProperty.call(pkField)) {
         id = get(data, pkField);
       } else {
         id = get(layer, 'feature.id');
@@ -650,6 +651,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
               case 'MultiPolygon':
                 layer.setLatLngs(latlng.layer);
                 break;
+              default:
             }
 
             const label = get(layer, '_label');
@@ -661,14 +663,14 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
           if (afterSave) { // если уходим после неудачного сохранения, то надо данные вернуть
             const data = initialDatas[index];
             if (!isNone(data)) {
-              for (const key in data) {
-                if (data.hasOwnProperty(key)) {
+              data.forEach((key) => {
+                if (data.property.hasOwnProperty.call(key)) {
                   const element = data[key];
                   if (!isEqual(element, get(layer.feature, `properties.${key}`))) {
                     set(layer.feature, `properties.${key}`, element);
                   }
                 }
-              }
+              });
             }
 
             // для надписей
@@ -679,26 +681,25 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
           delete layers[index];
           delete datas[index];
           delete initialDatas[index];
-        } else {
-          // удалить слой
-          if (!isNone(layer)) {
-            if (!isNone(leafletObject) && leafletObject.hasLayer(layer)) {
-              leafletObject.removeLayer(layer);
+        } else
+        // удалить слой
+        if (!isNone(layer)) {
+          if (!isNone(leafletObject) && leafletObject.hasLayer(layer)) {
+            leafletObject.removeLayer(layer);
+          }
+
+          if (leafletMap.hasLayer(layer)) {
+            leafletMap.removeLayer(layer);
+          }
+
+          const label = get(layer, '_label');
+          if (!isNone(label)) {
+            if (!isNone(leafletObject) && leafletObject.hasLayer(label)) {
+              leafletObject.removeLayer(label);
             }
 
-            if (leafletMap.hasLayer(layer)) {
-              leafletMap.removeLayer(layer);
-            }
-
-            const label = get(layer, '_label');
-            if (!isNone(label)) {
-              if (!isNone(leafletObject) && leafletObject.hasLayer(label)) {
-                leafletObject.removeLayer(label);
-              }
-
-              if (leafletMap.hasLayer(label)) {
-                leafletMap.removeLayer(label);
-              }
+            if (leafletMap.hasLayer(label)) {
+              leafletMap.removeLayer(label);
             }
           }
         }
@@ -951,19 +952,16 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
 
           const properties = Object.keys(this.get('leafletObject.readFormat.featureType.fields'));
 
-          for (const key in data) {
+          data.forEach((key) => {
             if (!properties.includes(key)) {
               delete layer.feature.properties[key];
-              continue;
-            }
-
-            if (data.hasOwnProperty(key)) {
+            } else if (data.property.hasOwnProperty.call(key)) {
               const element = data[key];
               if (!isEqual(element, get(layer.feature, `properties.${key}`))) {
                 set(layer.feature, `properties.${key}`, element);
               }
             }
-          }
+          });
 
           layer.disableEdit();
           leafletObject.editLayer(layer);
@@ -982,6 +980,8 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         initialFeatureKeys: this.get('dataItems.initialFeatureKeys'),
       };
 
+      let saveSuccess;
+
       const saveFailed = () => {
         this.set('loading', false);
         this.set('error', t('components.flexberry-edit-layer-feature.validation.save-fail'));
@@ -995,7 +995,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
         });
       };
 
-      let saveSuccess = (data) => {
+      saveSuccess = (data) => {
         this.set('loading', false);
         leafletObject.off('save:failed', saveFailed);
 

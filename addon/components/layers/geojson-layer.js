@@ -20,27 +20,17 @@ import BaseVectorLayer from '../base-vector-layer';
 export default BaseVectorLayer.extend({
   /**
     Array containing component's properties which are also leaflet layer options.
-
     @property leafletOptions
     @type Stirng[]
   */
-  leafletOptions: [
-    'pointToLayer',
-    'onEachFeature',
-    'filter',
-    'coordsToLatLng',
-    'geojson',
-    'crs',
-    'style'
-  ],
+  leafletOptions: null,
 
   /**
     Array containing component's properties which are also leaflet layer options callbacks.
-
     @property leafletOptionsCallbacks
     @type Stirng[]
   */
-  leafletOptionsCallbacks: ['pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng'],
+  leafletOptionsCallbacks: null,
 
   /**
     Url for download geojson.
@@ -72,7 +62,8 @@ export default BaseVectorLayer.extend({
   /**
     Creates leaflet layer related to layer type.
     @method createLayer
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|
+      <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer(options) {
@@ -125,5 +116,24 @@ export default BaseVectorLayer.extend({
     }
 
     return L.geoJSON(featureCollection, options);
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this.leafletOptions = this.leafletOptions || [
+      'pointToLayer',
+      'onEachFeature',
+      'filter',
+      'coordsToLatLng',
+      'geojson',
+      'crs',
+      'style'
+    ];
+
+    this.leafletOptionsCallbacks = this.leafletOptionsCallbacks || ['pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng'];
   },
 });
