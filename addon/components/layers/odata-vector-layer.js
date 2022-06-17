@@ -500,8 +500,7 @@ export default BaseVectorLayer.extend({
     }
 
     if (equals.length === 1) {
-      const f = equals[0];
-      filter = f;
+      [filter] = equals;
     } else {
       filter = new ComplexPredicate(Condition.Or, ...equals);
     }
@@ -1377,8 +1376,7 @@ export default BaseVectorLayer.extend({
 
           const unionJsts = loadedBoundsJsts.union(boundsJsts);
           const geojsonWriter = new jsts.io.GeoJSONWriter();
-          const getLayer = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
-          loadedBounds = getLayer;
+          [loadedBounds] = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers();
         } else {
           loadedBounds = bounds;
         }

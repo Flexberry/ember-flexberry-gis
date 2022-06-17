@@ -224,8 +224,7 @@ export default Component.extend({
       // If current feature is L.FeatureGroup
       if (Object.prototype.hasOwnProperty.call(currentFeature.leafletLayer, '_layers')) {
         if (currentFeature.leafletLayer.getLayers().length === 1) {
-          const layer = currentFeature.leafletLayer.getLayers()[0];
-          polygonLayer = layer;
+          [polygonLayer] = currentFeature.leafletLayer.getLayers();
         } else {
           throw new Error(' L.FeatureGroup с несколькими дочерними слоями пока не поддерживается.');
         }

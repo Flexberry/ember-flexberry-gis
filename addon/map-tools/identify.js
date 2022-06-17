@@ -258,9 +258,7 @@ export default BaseNonclickableMapTool.extend({
     const bufferRadius = this.get('bufferRadius');
 
     if (isBufferActive && bufferRadius > 0) {
-      const buff = this._drawBuffer(layer.toGeoJSON());
-      const layerBuff = buff.getLayers()[0];
-      workingPolygon = layerBuff;
+      [workingPolygon] = buffer.getLayers();
       bufferedMainPolygon = layer;
     } else {
       workingPolygon = layer;

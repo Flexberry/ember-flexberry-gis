@@ -303,7 +303,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
   */
   _sheetOfPaperRealHeight: computed(
     '_dpi',
-    '_options.{paperFormat, paperOrientation}',
+    '_options.{paperFormat,paperOrientation}',
     function () {
       const dpi = this.get('_dpi');
       const paperFormat = this.get('_options.paperFormat');
@@ -324,7 +324,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
   */
   _sheetOfPaperRealWidth: computed(
     '_dpi',
-    '_options.{paperFormat, paperOrientation}',
+    '_options.{paperFormat,paperOrientation}',
     function () {
       const dpi = this.get('_dpi');
       const paperFormat = this.get('_options.paperFormat');
@@ -526,7 +526,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @readOnly
   */
   _mapCaptionRealHeight: computed(
-    '_options.{captionLineHeight, captionFontSize}',
+    '_options.{captionLineHeight,captionFontSize}',
     function () {
       return Math.floor(this.get('_options.captionLineHeight') * this.get('_options.captionFontSize'));
     }
@@ -541,7 +541,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @readOnly
   */
   _mapCaptionRealStyle: computed(
-    '_options.{captionLineHeight, captionFontFamily, captionFontSize, captionFontColor, captionFontWeight, captionFontStyle, captionFontDecoration}',
+    '_options.{captionLineHeight,captionFontFamily,captionFontSize,captionFontColor,captionFontWeight,captionFontStyle,captionFontDecoration}',
     '_mapCaptionRealHeight',
     function () {
       return htmlSafe(
@@ -608,7 +608,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @readOnly
   */
   _mapCaptionPreviewStyle: computed(
-    '_options.{captionLineHeight, captionFontFamily, captionFontColor, captionFontWeight, captionFontStyle, captionFontDecoration}',
+    '_options.{captionLineHeight,captionFontFamily,captionFontColor,captionFontWeight,captionFontStyle,captionFontDecoration}',
     '_mapCaptionPreviewFontSize',
     '_mapCaptionPreviewHeight',
     function () {
@@ -703,10 +703,10 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
   */
   _mapLegendLines: computed(
     '_sheetOfPaperPreviewWidth',
-    '_options.{captionLineHeight, captionFontFamily, captionFontWeight, captionFontStyle, captionFontDecoration, legendControl}',
+    '_options.{captionLineHeight,captionFontFamily,captionFontWeight,captionFontStyle,captionFontDecoration,legendControl}',
     '_mapCaptionPreviewFontSize',
     '_mapCaptionPreviewHeight',
-    'layers.@each.{visibility, isDeleted, legendCanBeDisplayed}',
+    'layers.@each.{visibility,isDeleted,legendCanBeDisplayed}',
     'legendsUpdateTrigger',
     function () {
       let lineCount = 1;
@@ -751,7 +751,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @readOnly
   */
   _mapRealStyle: computed(
-    '_options.{displayMode, legendUnderMap}',
+    '_options.{displayMode,legendUnderMap}',
     '_mapLegendLines',
     '_sheetOfPaperRealHeight',
     '_mapCaptionRealHeight',
@@ -788,7 +788,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     @readOnly
   */
   _mapPreviewStyle: computed(
-    '_options.{displayMode, legendUnderMap}',
+    '_options.{displayMode,legendUnderMap}',
     '_mapLegendLines',
     '_sheetOfPaperPreviewHeight',
     '_mapCaptionPreviewHeight',

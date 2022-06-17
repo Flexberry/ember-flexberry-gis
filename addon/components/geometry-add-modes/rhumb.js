@@ -223,7 +223,7 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
     @property directionItems
     @type Object[]
   */
-  directionItems: computed('_objectDirections.{[], .@each.active}', 'i18n', function () {
+  directionItems: computed('_objectDirections.{[],.@each.active}', 'i18n', function () {
     const i18n = this.get('i18n');
     const _objectDirections = this.get('_objectDirections');
 

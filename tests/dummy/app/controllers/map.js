@@ -253,7 +253,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @property sidebarItems
     @type Object[]
   */
-  sidebarItems: computed('sidebar.{[], @each.active}', 'i18n', function () {
+  sidebarItems: computed('sidebar.{[],@each.active}', 'i18n', function () {
     const i18n = this.get('i18n');
     const sidebar = this.get('sidebar');
 

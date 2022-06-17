@@ -702,13 +702,7 @@ export default Component.extend(
     init() {
       this._super(...arguments);
 
-      if (this.get('visible') || this.get('visible') === undefined) {
-        this.set('_hideBbox', false);
-        this._createInnerLayer();
-      } else {
-        this.set('_hideBbox', true);
-        this._destroyInnerLayer();
-      }
+      this._visibleDidChange();
 
       if (isNone(this.get('links'))) {
         this.set('links', A());

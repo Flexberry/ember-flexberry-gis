@@ -1,7 +1,12 @@
 import { A } from '@ember/array';
-import Ember from 'ember';
+import $ from 'jquery';
 import { isBlank, isNone } from '@ember/utils';
-import { computed, get, observer } from '@ember/object';
+import {
+  computed,
+  get,
+  set,
+  observer
+} from '@ember/object';
 import Component from '@ember/component';
 import { translationMacro as t } from 'ember-i18n';
 import layout from '../templates/components/flexberry-search-panel';
@@ -48,7 +53,7 @@ export default Component.extend({
     const searchProperties = {};
     Object.keys(localizedProperties).forEach((prop) => {
       if (searchFields.indexOf(prop) > -1) {
-        Ember.set(searchProperties, prop, localizedProperties[prop]);
+        set(searchProperties, prop, localizedProperties[prop]);
       }
     });
 
@@ -256,7 +261,7 @@ export default Component.extend({
       this.set('_selectedLayer', null);
       this.set('_localizedValue', null);
       this.sendAction('clearSearch');
-      const $clearSearch = Ember.$('.clear-search-button');
+      const $clearSearch = $('.clear-search-button');
       if (!$clearSearch.hasClass('hidden')) {
         $clearSearch.addClass('hidden');
       }

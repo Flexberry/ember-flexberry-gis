@@ -68,11 +68,10 @@ export default TileLayer.extend(WfsFilterParserMixin, {
   */
   createSetingsFromCsw(record) {
     const settings = this._super(...arguments);
-    const url = record.url.split('?')[0];
 
     settings.info_format = 'application/json';
     settings.feature_count = 100;
-    settings.url = url;
+    [settings.url] = record.url.split('?');
     settings.version = '1.3.0';
     settings.layers = record.id;
     settings.format = 'image/png';

@@ -78,6 +78,15 @@ const FlexberryGeometryAddModeGeoProviderComponent = Component.extend({
   _loading: false,
 
   /**
+    Object with field names that is invalid.
+    @property _parsingErrors
+    @type Object
+    @default null
+    @private
+  */
+  _parsingErrors: null,
+
+  /**
     Available instances of geoproviders.
 
     @property _availableProviders
