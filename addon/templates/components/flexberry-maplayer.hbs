@@ -47,28 +47,28 @@
               }}
           {{/if}}
         </div>
-        {{#if (not compareLayersEnabled)}}
+        {{#if (and (not compareLayersEnabled) (not readonly))}}
           <div class="flexberry-treenode-buttons-block hidden">
-            {{#if (not readonly)}}
-              {{#if (not isGroup)}}
-                <button
-                  type="button"
-                  title={{t "components.flexberry-maplayer.plus-button.tooltip"}}
-                  class="ui button flexberry-button {{flexberryClassNames.attributesButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
-                  onclick={{action "onFeatureCreateButtonClick"}}>
-                    <i class="icon-guideline-plus-r"></i>
-                </button>
-              {{/if}}
-              {{#if _attributesOperationIsAvailable}}
-                <button
-                  type="button"
-                  title={{t "components.flexberry-maplayer.attributes-button.tooltip"}}
-                  class="ui button flexberry-button {{flexberryClassNames.attributesButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
-                  onclick={{action "onAttributesButtonClick"}}>
-                    <i class="icon-guideline-table"></i>
-                </button>
-              {{/if}}
-              <div class="allmore floated flexberry-button ui button icon">
+            {{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable)}}
+              <button
+                type="button"
+                title={{t "components.flexberry-maplayer.plus-button.tooltip"}}
+                class="ui button flexberry-button {{flexberryClassNames.attributesButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
+                onclick={{action "onFeatureCreateButtonClick"}}>
+                  <i class="icon-guideline-plus-r"></i>
+              </button>
+            {{/if}}
+            {{#if _attributesOperationIsAvailable}}
+              <button
+                type="button"
+                title={{t "components.flexberry-maplayer.attributes-button.tooltip"}}
+                class="ui button flexberry-button {{flexberryClassNames.attributesButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
+                onclick={{action "onAttributesButtonClick"}}>
+                  <i class="icon-guideline-table"></i>
+              </button>
+            {{/if}}
+            {{#if (and (not readonly) (or _fitBoundsOperationIsAvailable (not readonlyModel) createNewLayerAccess))}}
+              <div class="allmore floated flexberry-button ui button icon {{flexberryClassNames.preventExpandCollapse}}">
                 <button
                   type="button"
                   class="ui button more floated {{flexberryClassNames.preventExpandCollapse}}"
@@ -93,44 +93,49 @@
                         <i class="icon-guideline-resize-plus"></i> {{t "components.flexberry-maplayer.bounds-button.tooltip"}}
                     </label>
                   {{/if}}
-                  <label
-                    type="button"
-                    title={{t "components.flexberry-maplayer.edit-button.tooltip"}}
-                    class="ui button flexberry-button {{flexberryClassNames.editButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
-                    onclick={{action "onEditButtonClick"}}>
-                      <i class="icon-guideline-edit-r"></i> {{t "components.flexberry-maplayer.edit-button.tooltip"}}
-                  </label>
-                  {{flexberry-button
-                    class=(concat flexberryClassNames.copyButton " floated " flexberryClassNames.preventExpandCollapse)
-                    iconClass="copy icon"
-                    caption=(t "components.flexberry-maplayer.copy-button.tooltip")
-                    click=(action "onCopyButtonClick")
-                  }}
-                  {{#if _addOperationIsAvailable}}
-                    {{flexberry-button
-                      class=(concat flexberryClassNames.addButton " floated " flexberryClassNames.preventExpandCollapse)
-                      iconClass="icon-guideline-plus-r"
-                      caption=(t "components.flexberry-maplayer.add-button.tooltip")
-                      click=(action "onAddButtonClick")
-                    }}
-                  {{/if}}
-                  <label
-                    type="button"
-                    title={{t "components.flexberry-maplayer.remove-button.tooltip"}}
-                    class="ui button flexberry-button {{flexberryClassNames.removeButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
-                    onclick={{action "onRemoveButtonClick"}}>
-                      <i class="icon-guideline-delete-r"></i> {{t "components.flexberry-maplayer.remove-button.tooltip"}}
-                  </label>
-
-                  {{#each dynamicButtons as |dynamicButton|}}
+                  {{#if (not readonlyModel)}}
                     <label
                       type="button"
-                      title={{dynamicButton.caption}}
-                      class="ui button flexberry-button {{dynamicButton.class}} floated {{flexberryClassNames.preventExpandCollapse}}"
-                      onclick={{action "external" dynamicButton.action}}>
-                        <i class="{{dynamicButton.icon}}"></i> {{dynamicButton.caption}}
+                      title={{t "components.flexberry-maplayer.edit-button.tooltip"}}
+                      class="ui button flexberry-button {{flexberryClassNames.editButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
+                      onclick={{action "onEditButtonClick"}}>
+                        <i class="icon-guideline-edit-r"></i> {{t "components.flexberry-maplayer.edit-button.tooltip"}}
                     </label>
-                  {{/each}}
+                  {{/if}}
+                  {{#if createNewLayerAccess}}
+                    {{flexberry-button
+                      class=(concat flexberryClassNames.copyButton " floated " flexberryClassNames.preventExpandCollapse)
+                      iconClass="copy icon"
+                      caption=(t "components.flexberry-maplayer.copy-button.tooltip")
+                      click=(action "onCopyButtonClick")
+                    }}
+                    {{#if _addOperationIsAvailable}}
+                      {{flexberry-button
+                        class=(concat flexberryClassNames.addButton " floated " flexberryClassNames.preventExpandCollapse)
+                        iconClass="icon-guideline-plus-r"
+                        caption=(t "components.flexberry-maplayer.add-button.tooltip")
+                        click=(action "onAddButtonClick")
+                      }}
+                    {{/if}}
+                  {{/if}}
+                  {{#if (not readonlyModel)}}
+                    <label
+                      type="button"
+                      title={{t "components.flexberry-maplayer.remove-button.tooltip"}}
+                      class="ui button flexberry-button {{flexberryClassNames.removeButton}} floated {{flexberryClassNames.preventExpandCollapse}}"
+                      onclick={{action "onRemoveButtonClick"}}>
+                        <i class="icon-guideline-delete-r"></i> {{t "components.flexberry-maplayer.remove-button.tooltip"}}
+                    </label>
+                    {{#each dynamicButtons as |dynamicButton|}}
+                      <label
+                        type="button"
+                        title={{dynamicButton.caption}}
+                        class="ui button flexberry-button {{dynamicButton.class}} floated {{flexberryClassNames.preventExpandCollapse}}"
+                        onclick={{action "external" dynamicButton.action}}>
+                          <i class="{{dynamicButton.icon}}"></i> {{dynamicButton.caption}}
+                      </label>
+                    {{/each}}
+                  {{/if}}
                 </div>
               </div>
             {{/if}}
@@ -192,6 +197,7 @@
     {{#if _hasLayers}}
       {{flexberry-maplayers
         readonly=readonly
+        access=access
         leafletMap=leafletMap
         layers=layer.layers
         compareLayersEnabled=compareLayersEnabled

@@ -553,6 +553,7 @@
   }
 }
 
+.ui.modal.flexberry-add-layer-dialog,
 .ui.modal.flexberry-edit-layer-dialog {
   .ui.form {
     div[data-tab="display-tab"] {

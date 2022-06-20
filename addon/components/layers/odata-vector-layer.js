@@ -47,6 +47,7 @@ import {
 import QueryBuilder from 'ember-flexberry-data/query/builder';
 import state from '../../utils/state';
 import { checkMapZoom } from '../../utils/check-zoom';
+import isUUID from 'ember-flexberry-data/utils/is-uuid';
 
 /**
   For batch reading
@@ -477,17 +478,39 @@ export default BaseVectorLayer.extend({
     if (!isNone(leafletObject)) {
       const type = this.get('layerModel.type');
       if (!isBlank(type)) {
-        const layerClass = getOwner(this).knownForType('layer', type);
-        const layerProperties = layerClass.getLayerProperties(leafletObject);
+        let store = getOwner(this).lookup('service:store');
+        let modelConstructor = store.modelFor(leafletObject.modelName);
+        let layerProperties = get(modelConstructor, `attributes`);
         searchFields.forEach((field) => {
-          const ind = layerProperties.indexOf(field);
-          if (ind > -1) {
-            const layerPropertyType = typeof layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            const layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            if (layerPropertyType !== 'string' || (layerPropertyType === 'object' && layerPropertyValue instanceof Date)) {
-              equals.push(new SimplePredicate(field, FilterOperator.Eq, e.searchOptions.queryString));
-            } else {
-              equals.push(new StringPredicate(field).includes(e.searchOptions.queryString));
+          let property;
+          let accessProperty = false;
+          if (field === 'primarykey') {
+            if (isUUID(e.searchOptions.queryString)) {
+              equals.push(new SimplePredicate('id', FilterOperator.Eq, e.searchOptions.queryString));
+            }
+          } else {
+            property = layerProperties.get(field);
+            if (!isNone(property)) {
+              switch (property.type) {
+                case 'decimal':
+                case 'number':
+                  let searchString = e.searchOptions.queryString.replace('.', ',');
+                  accessProperty = !e.context && !isNaN(Number(searchString));
+                  break;
+                case 'date':
+                  accessProperty = !e.context && new Date(e.searchOptions.queryString).toString() !== 'Invalid Date';
+                  break;
+                case 'boolean':
+                  accessProperty = !e.context && Boolean(e.searchOptions.queryString);
+                  break;
+                default:
+                  equals.push(new StringPredicate(property.name).contains(e.searchOptions.queryString));
+                  break;
+              }
+
+              if (accessProperty && property.type !== 'string') {
+                equals.push(new SimplePredicate(property.name, FilterOperator.Eq, e.searchOptions.queryString));
+              }
             }
           }
         });
@@ -496,10 +519,8 @@ export default BaseVectorLayer.extend({
 
     let filter;
     if (equals.length === 0) {
-      return;
-    }
-
-    if (equals.length === 1) {
+      return resolve(A());
+    } else if (equals.length === 1) {
       [filter] = equals;
     } else {
       filter = new ComplexPredicate(Condition.Or, ...equals);
@@ -779,7 +800,14 @@ export default BaseVectorLayer.extend({
       },
     });
 
-    const modelSerializer = OdataSerializer.extend(serializer);
+    let baseSerializer;
+    let odataSerializer = this.get('odataSerializer');
+    if (!isNone(odataSerializer)) {
+      baseSerializer = getOwner(this).factoryFor(`serializer:${odataSerializer}`);
+    }
+
+    const modelSerializer = !isNone(baseSerializer) ? baseSerializer.extend(serializer) : OdataSerializer.extend(serializer);
+
     return modelSerializer;
   },
 
@@ -1523,7 +1551,7 @@ export default BaseVectorLayer.extend({
     const changes = leafletObject.models.filter(() => true); // for check empty
     if (!Ember.isEmpty(changes)) {
       Object.entries(leafletObject.models)
-        .filter((item) => Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))))
+        .filter((item) => isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))))
         .map((item) => item[1])
         .forEach((model, index) => {
           if (model instanceof Ember.Object) {

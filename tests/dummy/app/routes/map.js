@@ -1,6 +1,7 @@
 /**
   @module ember-flexberry-gis-dummy
 */
+
 import EditMapRoute from 'ember-flexberry-gis/routes/edit-map';
 import EditFormRouteOperationsIndicationMixin from 'ember-flexberry/mixins/edit-form-route-operations-indication';
 
@@ -12,4 +13,17 @@ import EditFormRouteOperationsIndicationMixin from 'ember-flexberry/mixins/edit-
   @uses EditFormRouteOperationsIndicationMixin, MapRouteCswLoaderMixin
 */
 export default EditMapRoute.extend(EditFormRouteOperationsIndicationMixin, {
+  access: {
+    map: true,
+    mapLayerModel: [],
+    mapLayerData: []
+  },
+
+  afterModel(model) {
+    this.set('access.mapLayerModel', model.get('mapLayer').map((r) => { return r.id; }));
+    this.set('access.mapLayerData', model.get('mapLayer').map((r) => { return r.id; }));
+
+    this._super(...arguments);
+  },
+
 });

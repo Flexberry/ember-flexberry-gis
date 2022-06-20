@@ -53,6 +53,9 @@ export const Model = Mixin.create({
   scale: DS.attr('number'),
   coordinateReferenceSystem: DS.attr('string'),
   boundingBox: DS.attr('json'),
+  public: DS.attr('boolean'),
+  owner: DS.attr('string'),
+  securityKey: DS.attr('string'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),
   editTime: DS.attr('date'),
@@ -99,6 +102,7 @@ export const defineProjections = function (modelClass) {
     scale: attr('Масштаб'),
     coordinateReferenceSystem: attr('Система координат'),
     boundingBox: attr('Граница'),
+    securityKey: Projection.attr('', { hidden: true }),
     parent: belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
 
     }, { hidden: true, }),
@@ -139,6 +143,7 @@ export const defineProjections = function (modelClass) {
     scale: attr('Масштаб'),
     coordinateReferenceSystem: attr('Система координат'),
     boundingBox: attr('Граница'),
+    securityKey: Projection.attr('', { hidden: true }),
     parent: belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
 
     }, { displayMemberPath: 'name', }),

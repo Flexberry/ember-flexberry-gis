@@ -32,7 +32,7 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
     Permitted operations related to layer type.
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify', 'search']
+    @default ['edit', 'remove', 'identify', 'search', 'attributes', 'editFeatures', 'legend', 'filter']
   */
   operations: null,
 
@@ -50,7 +50,7 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
   */
   init() {
     this._super(...arguments);
-    this.operations = this.operations || ['edit', 'remove', 'identify', 'search', 'attributes', 'legend', 'filter'];
+    this.operations = this.operations || ['edit', 'remove', 'identify', 'search', 'attributes', 'editFeatures', 'legend', 'filter'];
   },
 
   /**

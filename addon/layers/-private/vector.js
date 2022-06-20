@@ -26,7 +26,7 @@ export default BaseLayer.extend({
     Permitted operations related to layer type.
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'legend']
+    @default ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'editFeatures', 'legend']
   */
   operations: null,
 
@@ -35,7 +35,7 @@ export default BaseLayer.extend({
   */
   init() {
     this._super(...arguments);
-    this.operations = this.operations || ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'legend'];
+    this.operations = this.operations || ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'editFeatures', 'legend'];
   },
 
   /**

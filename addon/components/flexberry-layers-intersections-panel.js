@@ -498,6 +498,10 @@ export default Component.extend({
           item.isIntersect = false;
           if (objB.id !== objA.id) {
             const { crs, } = item.leafletLayer.options;
+            if (isNone(crs)) {
+              crs = this.get('leafletMap').options.crs;
+            }
+
             const objAJsts = item.leafletLayer.toJsts(crs);
             const objBJsts = e.polygonLayer.toJsts(crs);
             const intersected = objAJsts.intersection(objBJsts);

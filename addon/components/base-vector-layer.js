@@ -1076,15 +1076,15 @@ export default BaseLayer.extend({
     let hasReplace = false;
     let propName;
     try {
-      propName = $(str).find('propertyname');
+      propName = $('<p>' + str + '</p>').find('propertyname');
     } catch (e) {
       hasReplace = true;
       str = str.replaceAll('"', '\\"').replaceAll('(', '\\(').replaceAll(')', '\\)');
-      propName = $(str).find('propertyname');
+      propName = $('<p>' + str + '</p>').find('propertyname');
     }
 
     if (propName.length === 0) { // if main node
-      propName = $(`${str} propertyname`);
+      propName = $('<p>' + str + '</p> propertyname');
     }
 
     if (propName.length > 0) {
@@ -1122,16 +1122,17 @@ export default BaseLayer.extend({
   _applyFunction(str) {
     let func;
     let hasReplace = false;
+
     try {
-      func = $(str).find('function');
+      func = $('<p>' + str + '</p>').find('function');
     } catch (e) {
       hasReplace = true;
       str = str.replaceAll('"', '\\"').replaceAll('(', '\\(').replaceAll(')', '\\)');
-      func = $(str).find('function');
+      func = $('<p>' + str + '</p>').find('function');
     }
 
     if (func.length === 0) { // if main node
-      func = $(`${str} function`);
+      func = $('<p>' + str + '</p> function');
     }
 
     if (func.length > 0) {
@@ -1214,7 +1215,8 @@ export default BaseLayer.extend({
     let latlng = null;
     let iconWidth = 10;
     let iconHeight = 40;
-    let positionPoint = '';
+    let anchor = null;
+    let className = 'label';
     let html = '';
 
     if (lType.indexOf('Polygon') !== -1) {
@@ -1234,7 +1236,11 @@ export default BaseLayer.extend({
 
     if (lType.indexOf('Point') !== -1) {
       latlng = layer.getLatLng();
-      positionPoint = this._setPositionPoint(iconWidth);
+      iconWidth = 30;
+      iconHeight = 30;
+      let positionPoint = this._setPositionPoint(iconWidth, iconHeight);
+      anchor = positionPoint.anchor;
+      className += ' point ' + positionPoint.cssClass;
       html = `<div style="${style}${positionPoint}">${text}</div>`;
     }
 
@@ -1257,15 +1263,16 @@ export default BaseLayer.extend({
 
     const label = L.marker(latlng, {
       icon: L.divIcon({
-        className: 'label',
+        className,
         html,
         iconSize: [iconWidth, iconHeight],
+        iconAnchor: anchor,
       }),
       zIndexOffset: 1000,
       pane: this.get('_paneLabel'),
     });
     label.style = {
-      className: 'label',
+      className,
       html,
       iconSize: [iconWidth, iconHeight],
     };
@@ -1281,45 +1288,80 @@ export default BaseLayer.extend({
     @method _setPositionPoint
     @param {Number} width
   */
-  _setPositionPoint(width) {
-    let stylePoint = '';
-    const shiftHor = Math.round(width / 2);
-    const shiftVerTop = '-60px;';
-    const shiftVerBottom = '30px;';
+  _setPositionPoint(width, height) {
+    // значения для маркера по умолчанию
+    let left = 12.5;
+    let right = 12.5;
+    let top = 41;
+    let bottom = 0;
+
+    let iconSize = this.get('styleSettings.style.marker.style.iconSize');
+    let iconAnchor = this.get('styleSettings.style.marker.style.iconAnchor');
+    if (!isNone(iconAnchor) && iconAnchor.length === 2 && !isNone(iconSize) && iconSize.length === 2) {
+      left = iconAnchor[0] || 0;
+      right = (iconSize[0] || 0) - (iconAnchor[0] || 0);
+      top = iconAnchor[1] || 0;
+      bottom = (iconSize[1] || 0) - (iconAnchor[1] || 0);
+    }
+
+    let style;
+    let anchor;
+    let cssClass;
 
     switch (this.get('labelSettings.location.locationPoint')) {
       case 'overLeft':
-        stylePoint = `margin-right: ${shiftHor}px; margin-top: ${shiftVerTop}`;
+        style = 'text-align: right;';
+        anchor = [left + width, top + height];
+        cssClass = 'over left';
         break;
       case 'overMiddle':
-        stylePoint = `margin-top: ${shiftVerTop}`;
+        style = 'text-align: center;';
+        anchor = [Math.round((width - (right - left)) / 2), top + height];
+        cssClass = 'over middle';
         break;
       case 'overRight':
-        stylePoint = `margin-left: ${shiftHor}px; margin-top: ${shiftVerTop}`;
+        style = 'text-align: left;';
+        anchor = [-1 * right, top + height];
+        cssClass = 'over right';
         break;
       case 'alongLeft':
-        stylePoint = `margin-right: ${shiftHor}px;`;
+        style = 'text-align: right;';
+        anchor = [left + width, Math.round((height - (bottom - top)) / 2)];
+        cssClass = 'along left';
         break;
       case 'alongMidle':
+        style = 'text-align: center;';
+        anchor = [Math.round((width - (right - left)) / 2), Math.round((height - (bottom - top)) / 2)];
+        cssClass = 'along middle';
         break;
       case 'alongRight':
-        stylePoint = `margin-left: ${shiftHor}px;`;
+        style = 'text-align: left;';
+        anchor = [-1 * right, Math.round((height - (bottom - top)) / 2)];
+        cssClass = 'along right';
         break;
       case 'underLeft':
-        stylePoint = `margin-right: ${shiftHor}px; margin-top: ${shiftVerBottom}`;
+        style = 'text-align: right;';
+        anchor = [left + width, -1 * bottom];
+        cssClass = 'under left';
         break;
       case 'underMiddle':
-        stylePoint = `margin-top: ${shiftVerBottom}`;
+        style = 'text-align: center;';
+        anchor = [Math.round((width - (right - left)) / 2), -1 * bottom];
+        cssClass = 'under middle';
         break;
       case 'underRight':
-        stylePoint = `margin-left: ${shiftHor}px; margin-top: ${shiftVerBottom}`;
+        style = 'text-align: left;';
+        anchor = [-1 * right, -1 * bottom];
+        cssClass = 'under right';
         break;
       default:
-        stylePoint = `margin-left: ${shiftHor}px; margin-top: ${shiftVerTop}`;
+        style = 'text-align: center;';
+        anchor = [Math.round((width - (right - left)) / 2), top + height];
+        cssClass = 'over middle';
         break;
     }
 
-    return stylePoint;
+    return { style, anchor, cssClass };
   },
 
   /**

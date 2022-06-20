@@ -27,7 +27,7 @@ export default WmsLayer.extend({
     Permitted operations related to layer type.
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'filter']
+    @default ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'editFeatures', 'filter']
   */
   operations: null,
 
@@ -36,7 +36,7 @@ export default WmsLayer.extend({
   */
   init() {
     this._super(...arguments);
-    this.operations = this.operations || ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'filter'];
+    this.operations = this.operations || ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'editFeatures', 'filter'];
   },
 
   /**

@@ -23,6 +23,15 @@ export default FlexberryDropdown.extend({
 
   isAllSelected: false,
 
+  /**
+    Minimum number of characters to search
+
+    @property minCharacters
+    @type Number
+    @default 0
+  */
+  minCharacters:0,
+
   isClearAllVisible: true,
 
   isSearchVisible: true,
@@ -185,7 +194,9 @@ export default FlexberryDropdown.extend({
       this.toggleProperty('isAllSelected');
     },
 
-    clearAll() {
+    clearAll(event) {
+      //click action is defined as a DOM event to cancel the semantic dropdown action
+      event.stopPropagation();
       this.get('state').setEach('isVisible', false);
       $('.search-field').val('');
       $('.fb-selector .item.filtered').each((i, item) => {

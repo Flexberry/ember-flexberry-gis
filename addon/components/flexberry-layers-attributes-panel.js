@@ -925,6 +925,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
 
     onDeleteRowDialogDeny() {
       this.set('_deleteRowDialogIsVisible', false);
+      this.set('_deleteRowDialogHasBeenRequested', false);
     },
 
     onDeleteRowDialogApprove() {

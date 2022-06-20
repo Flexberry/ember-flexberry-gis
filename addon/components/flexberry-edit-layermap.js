@@ -764,6 +764,16 @@ export default Component.extend(
 
       let settings = get(_layerHash, 'settings');
 
+      Object.keys(settings).map(function(key) {
+        if (key === 'minZoom' || key  === 'maxZoom') {
+          let value = get(settings, key);
+          let parsedValue = parseInt(value);
+          if (!isNaN(parsedValue)) {
+            set(settings, key, parsedValue);
+          }
+        }
+      });
+
       if (get(settings, 'filter') instanceof Element) {
         set(settings, 'filter', L.XmlUtil.serializeXmlToString(get(settings, 'filter')));
       }

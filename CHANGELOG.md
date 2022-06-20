@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 * Add utils open\close sub menu in componetns: feature-result-item and flexberry-maplayers.
 * Add geometryPrecisionReducer in functions utils/layer-to-jsts
 * Add constant scale on mapApi
+* Add ability to set rights flexberry-maplayers component (property "access")
 
 ### Changed
 * Version of ember-flexberry and ember-flexberry-data

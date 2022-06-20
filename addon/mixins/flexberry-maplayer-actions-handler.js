@@ -260,9 +260,7 @@ export default Mixin.create({
       @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating
         whether 'flexberry-layers-attributes-panel' is folded or not.
     */
-    onAttributesEdit(layerPath, {
-      itemsPath, selectedTabIndexPath, foldedPath, loadingPath,
-    }) {
+    onAttributesEdit(layerPath, { itemsPath, selectedTabIndexPath, foldedPath, loadingPath }, readonly) {
       const layerModel = getRecord(this, layerPath);
       const name = get(layerModel, 'name');
       const getAttributesOptions = get(layerModel, '_attributesOptions');
@@ -276,7 +274,14 @@ export default Mixin.create({
         this.set(foldedPath, false);
       }
 
-      getAttributesOptions().then(({ object, settings, }) => {
+      getAttributesOptions().then(({ object, settings }) => {
+        if (readonly) {
+          // флаг readonly может задаваться самим слоем, в настройках слоя.
+          // поэтому будем только добавлять запрет на редактирование, если это задано правами.
+          // разрешать не будем
+          set(settings, 'readonly', readonly);
+        }
+
         const items = this.get(itemsPath) || A();
         const index = items.findIndex((item) => isEqual(item.name, name));
         if (index >= 0) {

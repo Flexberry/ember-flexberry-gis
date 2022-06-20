@@ -32,39 +32,62 @@ module('Integration | Component | flexberry layers attributes panel', function (
     assert.equal(this.element.textContent.trim(), '');
 
     const geoJsonData = `
-      {
-        "type": "FeatureCollection",
-        "features": [{
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [102.0, 0.5]
-          },
-          "properties": {
-            "prop0": "value0"
-          }
+    {"type": "FeatureCollection",
+      "features": [{
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [102.0, 0.5]
+        },
+        "properties": {
+          "prop0": "value0"
         }
-      ]
+      }]
     }`;
-    const geoJson = L.geoJSON(JSON.parse(geoJsonData));
-    set(geoJson, 'readFormat', {
+    let geoJson1 = L.geoJSON(JSON.parse(geoJsonData));
+    set(geoJson1, 'readFormat', {
       featureType: {
-        fieldTypes: { prop0: 'string', },
+        fieldTypes: { prop0: 'string' },
         fields: { prop0: (val) => val, },
-      },
+      }
+    });
+    let geoJson2 = L.geoJSON(JSON.parse(geoJsonData));
+    set(geoJson2, 'readFormat', {
+      featureType: {
+        fieldTypes: { prop0: 'string' },
+        fields: { prop0: (val) => val, },
+      }
     });
     this.set('items', A([{
-      name: 'test layer',
-      leafletObject: geoJson,
+      name: 'test layer 1',
+      leafletObject: geoJson1,
+      settings: { readonly: true },
+    },
+    {
+      name: 'test layer 2',
+      leafletObject: geoJson2,
+      settings: { readonly: false },
     }]));
 
     await render(hbs`
       {{flexberry-layers-attributes-panel items=items folded=false}}
     `);
 
-    const $tab = this.$().find('div[data-tab="test layer"]');
+    assert.equal(this.$().find('div.tab.bottompanel-tab-data-panel').length, 2, 'Two tabs was rendered');
 
-    assert.equal($tab.length, 1, 'Layer tab was rendered');
-    assert.equal($tab.find('tbody td:last-child').text().trim(), 'value0', 'Property cell was rendered');
+    let $tab1 = this.$().find('div[data-tab="test layer 1"]');
+    assert.equal($tab1.length, 1, 'Test layer 1 tab was rendered');
+    assert.equal($tab1.find('tbody td:last-child').text().trim(), 'value0', 'Property cell was rendered');
+    assert.equal($tab1.find('label[title="Find an item on the map"]').length, 1, 'Find item on map button available on tab1');
+    assert.equal($tab1.find('label[title="Clear the found items"]').length, 1, 'Clear found items button available on tab1');
+    assert.equal($tab1.find('label[title="Delete the selected items"]').length, 0, 'Delete button unavailable on tab1');
+    assert.equal($tab1.find('.flexberry-geometry-tools').length, 0, 'Edit geometry tools unavailable on tab1');
+
+    let $tab2 = this.$().find('div[data-tab="test layer 2"]');
+    assert.equal($tab2.length, 1, 'Test layer 2 tab was rendered');
+    assert.equal($tab2.find('label[title="Find an item on the map"]').length, 2, 'Find item on map button available on tab2 (toolbar+row)');
+    assert.equal($tab2.find('label[title="Clear the found items"]').length, 1, 'Clear found items button available on tab2');
+    assert.equal($tab2.find('label[title="Delete the selected items"]').length, 1, 'Delete button available on tab2');
+    assert.equal($tab2.find('.flexberry-geometry-tools').length, 1, 'Edit geometry tools available on tab2');
   });
 });

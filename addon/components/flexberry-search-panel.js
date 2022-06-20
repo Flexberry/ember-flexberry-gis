@@ -45,7 +45,18 @@ export default Component.extend({
         + `featuresPropertiesSettings.localizedProperties.${currentLocale}`
       ) || {};
 
-      return this.setSearchProperties(localizedProperties, searchFields);
+      let searchProperties = {};
+
+      // when Ember.isArray check this object (searchProperties), length is not null.
+      // and ember thinks the object is an array. This is bad.
+      searchFields.forEach((prop) => {
+        set(searchProperties, prop === 'length' ? '_' + prop : prop,
+          Ember.keys(localizedProperties).indexOf(prop) > -1 ?
+          localizedProperties[prop] : prop);
+      });
+
+      this.set('_localizedValue', null);
+      return searchProperties;
     }
   ),
 
@@ -291,7 +302,7 @@ export default Component.extend({
       const searchProperties = this.get('_selectedLayerFeaturesLocalizedProperties');
       searchProperties.forEach((property) => {
         if (searchProperties[property] === selectedText) {
-          this.set('propertyName', property);
+          this.set('propertyName', property === '_length' ? 'length' : property);
         }
       });
     },

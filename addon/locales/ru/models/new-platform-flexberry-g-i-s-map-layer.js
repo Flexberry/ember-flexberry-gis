@@ -48,6 +48,9 @@ export default {
       boundingBox: {
         __caption__: 'Граница',
       },
+      securityKey: {
+        __caption__: ''
+      },
       parent: {
         __caption__: 'Родитель',
       },
@@ -130,6 +133,9 @@ export default {
       },
       boundingBox: {
         __caption__: 'Граница',
+      },
+      securityKey: {
+        __caption__: ''
       },
       parent: {
         __caption__: 'Родитель',

@@ -30,12 +30,15 @@ test('test function queryToMap', function (assert) {
     center: [51.505, -0.09],
     zoom: 13,
   });
+
   const querySpy = sinon.stub(leafletMap, 'fire').callsFake((st, e) => {
     e.results.push({ features: resolve([{ id: '1', }]), });
   });
+
   const component = this.subject({
     _leafletObject: leafletMap,
   });
+
   const done = assert.async(2);
 
   const res = component._queryToMap('1', '2');
@@ -83,21 +86,30 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
   // иначе размер берется с клиента
   leafletMap._size = new L.Point(200, 200);
 
-  assert.equal(leafletMap.getZoom(), 10);
-  assert.ok(leafletMap.getCenter().equals([10, 10]));
+  // иначе размер берется с клиента
+  leafletMap._size = new L.Point(200, 200);
+
+  assert.equal(leafletMap.getZoom(), 10, 'zoom default');
+  assert.ok(leafletMap.getCenter().equals([10, 10]), 'center default');
 
   run(() => {
     component.set('zoom', 0);
   });
 
-  assert.equal(leafletMap.getZoom(), 0);
+  assert.equal(leafletMap.getZoom(), 0, 'zoom after change');
+
+  let done = assert.async(1);
 
   // After update to leaflet-1.0.0 panTo not directly change center,
   // it will changed after animation will trigger 'moveend' event.
-  /* eslint-disable-next-line new-cap */
-  const promise = new Ember.Test.promise((testResolve) => {
-    leafletMap.on('moveend', () => {
-      setTimeout(testResolve, 1000);
+  leafletMap.once('moveend', () => {
+    run(() => {
+      setTimeout(() => {
+        let size = leafletMap.getSize().x + ' ' + leafletMap.getSize().y;
+        let center = leafletMap.getCenter().lat + ' ' + leafletMap.getCenter().lng;
+        assert.ok(leafletMap.getCenter().equals([0, 0]), 'center after move: center: ' + center + ', size: ' + size);
+        done(1);
+      }, 500);
     });
   });
 
@@ -106,10 +118,6 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
       lat: 0,
       lng: 0,
     });
-  });
-
-  return promise.then(() => {
-    assert.ok(leafletMap.getCenter().equals([0, 0]));
   });
 });
 
