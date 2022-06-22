@@ -13,6 +13,7 @@ import DS from 'ember-data';
 import jsts from 'npm:jsts';
 import { capitalize, camelize } from 'ember-flexberry-data/utils/string-functions';
 import isUUID from 'ember-flexberry-data/utils/is-uuid';
+import moment from 'moment';
 const { Builder } = Query;
 
 /**
@@ -470,7 +471,8 @@ export default BaseVectorLayer.extend({
               equals.push(new Query.SimplePredicate('id', Query.FilterOperator.Eq, e.searchOptions.queryString));
             }
           } else {
-            property = layerProperties.get(field);
+            property = layerProperties.get(field) ? layerProperties.get(field) : console.error(`The field name: \"${field}\" is incorrect,` +
+                                                                                               `check the name of the search attribute in the layer settings`);
             if (!Ember.isNone(property)) {
               switch (property.type) {
                 case 'decimal':
@@ -479,9 +481,11 @@ export default BaseVectorLayer.extend({
                   accessProperty = !e.context && !isNaN(Number(searchString));
                   break;
                 case 'date':
-                  accessProperty = !e.context && new Date(e.searchOptions.queryString).toString() !== 'Invalid Date';
+                  accessProperty = !e.context && moment(e.searchOptions.queryString).isValid();
                   break;
                 case 'boolean':
+                  let parseBooleanValue = e.searchOptions.queryString.toLowerCase();
+                  e.searchOptions.queryString = parseBooleanValue === 'да' ? 'True' : parseBooleanValue === 'нет' ? 'False' : e.searchOptions.queryString;
                   accessProperty = !e.context && Boolean(e.searchOptions.queryString);
                   break;
                 default:
@@ -489,8 +493,47 @@ export default BaseVectorLayer.extend({
                   break;
               }
 
-              if (accessProperty && property.type !== 'string') {
-                equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, e.searchOptions.queryString));
+              if (accessProperty) {
+                switch (property.type) {
+                  case 'number':
+                  case 'boolean':
+                    equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, e.searchOptions.queryString));
+                    break;
+                  case 'date':
+                    let searchDate = moment(e.searchOptions.queryString);
+                    let startInterval = new Query.DatePredicate(property.name, Query.FilterOperator.Geq, searchDate.toISOString(), false);
+                    let endInterval = null;
+                    let endIntervalTime = null;
+                    let filter = null;
+                    switch (searchDate.creationData().format) {
+                      case 'YYYY-MM-DD':
+
+                        // Search the entire day
+                        filter = new Query.DatePredicate(property.name, Query.FilterOperator.Eq, e.searchOptions.queryString, true);
+                        break;
+                      case 'YYYY-MM-DD HH:mm':
+
+                        // Search by the exact time in the interval of one minute
+                        endIntervalTime = searchDate.add(60 - searchDate.seconds(), 'seconds');
+                        endInterval = new Query.DatePredicate(property.name, Query.FilterOperator.Le, endIntervalTime.toISOString(), false);
+                        filter = new Query.ComplexPredicate(Query.Condition.And, startInterval, endInterval);
+                        break;
+                      case 'YYYY-MM-DD HH:mm:ss':
+
+                        // Search by the exact time in the interval of one second
+                        endIntervalTime = searchDate.add(1, 'seconds');
+                        endInterval = new Query.DatePredicate(property.name, Query.FilterOperator.Le, endIntervalTime.toISOString(), false);
+                        filter = new Query.ComplexPredicate(Query.Condition.And, startInterval, endInterval);
+                        break;
+                      default:
+                        filter = new Query.DatePredicate(property.name, Query.FilterOperator.Eq, searchDate.toISOString());
+                        break;
+                    }
+                    equals.push(filter);
+                    break;
+                  default:
+                    break;
+                }
               }
             }
           }
