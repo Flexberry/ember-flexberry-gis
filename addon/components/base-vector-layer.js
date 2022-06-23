@@ -1076,15 +1076,15 @@ export default BaseLayer.extend({
     let hasReplace = false;
     let propName;
     try {
-      propName = $('<p>' + str + '</p>').find('propertyname');
+      propName = $(`<p>${str}</p>`).find('propertyname');
     } catch (e) {
       hasReplace = true;
       str = str.replaceAll('"', '\\"').replaceAll('(', '\\(').replaceAll(')', '\\)');
-      propName = $('<p>' + str + '</p>').find('propertyname');
+      propName = $(`<p>${str}</p>`).find('propertyname');
     }
 
     if (propName.length === 0) { // if main node
-      propName = $('<p>' + str + '</p> propertyname');
+      propName = $(`<p>${str}</p> propertyname`);
     }
 
     if (propName.length > 0) {
@@ -1124,15 +1124,15 @@ export default BaseLayer.extend({
     let hasReplace = false;
 
     try {
-      func = $('<p>' + str + '</p>').find('function');
+      func = $(`<p>${str}</p>`).find('function');
     } catch (e) {
       hasReplace = true;
       str = str.replaceAll('"', '\\"').replaceAll('(', '\\(').replaceAll(')', '\\)');
-      func = $('<p>' + str + '</p>').find('function');
+      func = $(`<p>${str}</p>`).find('function');
     }
 
     if (func.length === 0) { // if main node
-      func = $('<p>' + str + '</p> function');
+      func = $(`<p>${str}</p> function`);
     }
 
     if (func.length > 0) {
@@ -1238,9 +1238,9 @@ export default BaseLayer.extend({
       latlng = layer.getLatLng();
       iconWidth = 30;
       iconHeight = 30;
-      let positionPoint = this._setPositionPoint(iconWidth, iconHeight);
-      anchor = positionPoint.anchor;
-      className += ' point ' + positionPoint.cssClass;
+      const positionPoint = this._setPositionPoint(iconWidth, iconHeight);
+      ({ anchor, } = positionPoint);
+      className += ` point ${positionPoint.cssClass}`;
       html = `<div style="${style}${positionPoint}">${text}</div>`;
     }
 
@@ -1295,8 +1295,8 @@ export default BaseLayer.extend({
     let top = 41;
     let bottom = 0;
 
-    let iconSize = this.get('styleSettings.style.marker.style.iconSize');
-    let iconAnchor = this.get('styleSettings.style.marker.style.iconAnchor');
+    const iconSize = this.get('styleSettings.style.marker.style.iconSize');
+    const iconAnchor = this.get('styleSettings.style.marker.style.iconAnchor');
     if (!isNone(iconAnchor) && iconAnchor.length === 2 && !isNone(iconSize) && iconSize.length === 2) {
       left = iconAnchor[0] || 0;
       right = (iconSize[0] || 0) - (iconAnchor[0] || 0);
@@ -1361,7 +1361,7 @@ export default BaseLayer.extend({
         break;
     }
 
-    return { style, anchor, cssClass };
+    return { style, anchor, cssClass, };
   },
 
   /**

@@ -1,5 +1,10 @@
 /* eslint-disable ember/no-restricted-resolver-tests */
-import Ember from 'ember';
+import { run } from '@ember/runloop';
+
+import { set } from '@ember/object';
+import $ from 'jquery';
+import { A } from '@ember/array';
+import Mixin from '@ember/object/mixin';
 
 import DS from 'ember-data';
 import { moduleForComponent, test } from 'ember-qunit';
@@ -39,7 +44,7 @@ moduleForComponent('layers/with-history-layer', 'Unit | Component | layers/with 
     app = startApp();
     store = app.__container__.lookup('service:store');
 
-    const testModelMixin = Ember.Mixin.create({
+    const testModelMixin = Mixin.create({
       name: DS.attr('string', { defaultValue: '', }),
       shape: DS.attr('json'),
     });
@@ -156,10 +161,10 @@ moduleForComponent('layers/with-history-layer', 'Unit | Component | layers/with 
       format: 'GeoJSON',
       leafletOptions,
       _pane: 'pane000',
-      _renderer: Ember.A(),
+      _renderer: A(),
     };
 
-    paramWFS = Ember.$.extend(paramWFS, optionsWFS);
+    paramWFS = $.extend(paramWFS, optionsWFS);
 
     const bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
 
@@ -190,10 +195,10 @@ moduleForComponent('layers/with-history-layer', 'Unit | Component | layers/with 
     leafletMap.removeLayer = removeLayer;
     leafletMap.hasLayer = hasLayer;
     const editTools = new L.Editable(leafletMap);
-    Ember.set(leafletMap, 'editTools', editTools);
+    set(leafletMap, 'editTools', editTools);
 
-    Ember.$.extend(paramWFS, { layerModel: layerModelWfs, });
-    Ember.$.extend(paramWFS, { leafletMap, });
+    $.extend(paramWFS, { layerModel: layerModelWfs, });
+    $.extend(paramWFS, { leafletMap, });
 
     geoserverFake = sinon.fakeServer.create();
     geoserverFake.autoRespond = true;
@@ -358,11 +363,11 @@ moduleForComponent('layers/with-history-layer', 'Unit | Component | layers/with 
       format: 'GeoJSON',
       leafletOptions,
     };
-    paramOdata = Ember.$.extend(paramOdata, optionsOdata);
+    paramOdata = $.extend(paramOdata, optionsOdata);
     const layerModelOdata = store.createRecord('test-model');
     layerModelOdata.type = 'odata-vector';
     layerModelOdata.settingsAsObject = optionsOdata;
-    Ember.$.extend(paramOdata, {
+    $.extend(paramOdata, {
       geometryType: 'MultiPolygonPropertyType',
       modelName: 'test-model',
       projectionName: 'TestModelL',
@@ -377,7 +382,7 @@ moduleForComponent('layers/with-history-layer', 'Unit | Component | layers/with 
     });
   },
   afterEach() {
-    Ember.run(app, 'destroy');
+    run(app, 'destroy');
     geoserverFake.restore();
   },
 });

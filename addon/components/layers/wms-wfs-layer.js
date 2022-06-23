@@ -137,8 +137,6 @@ export default WmsLayerComponent.extend({
   init() {
     this._super(...arguments);
 
-    this.filterObserver();
-
     const innerWfsLayerProperties = {
       leafletMap: this.get('leafletMap'),
       leafletContainer: this.get('leafletContainer'),
@@ -155,6 +153,7 @@ export default WmsLayerComponent.extend({
 
     // Create inner WFS-layer which is needed for identification (always invisible, won't be added to map).
     this.set('_wfsLayer', WfsLayerComponent.create(innerWfsLayerProperties));
+    this.filterObserver();
   },
 
   /**

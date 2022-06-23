@@ -16,10 +16,9 @@ import {
 } from 'rsvp';
 import $ from 'jquery';
 import { isNone, isBlank, isEmpty } from '@ember/utils';
-import { get, set, computed } from '@ember/object';
+import EmberObject, { get, set, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 
-import Ember from 'ember';
 import BaseVectorLayer from 'ember-flexberry-gis/components/base-vector-layer';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 import GisAdapter from 'ember-flexberry-gis/adapters/odata';
@@ -45,9 +44,9 @@ import {
 } from 'ember-flexberry-data/query/predicate';
 
 import QueryBuilder from 'ember-flexberry-data/query/builder';
+import isUUID from 'ember-flexberry-data/utils/is-uuid';
 import state from '../../utils/state';
 import { checkMapZoom } from '../../utils/check-zoom';
-import isUUID from 'ember-flexberry-data/utils/is-uuid';
 
 /**
   For batch reading
@@ -478,9 +477,9 @@ export default BaseVectorLayer.extend({
     if (!isNone(leafletObject)) {
       const type = this.get('layerModel.type');
       if (!isBlank(type)) {
-        let store = getOwner(this).lookup('service:store');
-        let modelConstructor = store.modelFor(leafletObject.modelName);
-        let layerProperties = get(modelConstructor, `attributes`);
+        const store = getOwner(this).lookup('service:store');
+        const modelConstructor = store.modelFor(leafletObject.modelName);
+        const layerProperties = get(modelConstructor, 'attributes');
         searchFields.forEach((field) => {
           let property;
           let accessProperty = false;
@@ -491,11 +490,12 @@ export default BaseVectorLayer.extend({
           } else {
             property = layerProperties.get(field);
             if (!isNone(property)) {
+              let searchString;
               switch (property.type) {
                 case 'decimal':
                 case 'number':
-                  let searchString = e.searchOptions.queryString.replace('.', ',');
-                  accessProperty = !e.context && !isNaN(Number(searchString));
+                  searchString = e.searchOptions.queryString.replace('.', ',');
+                  accessProperty = !e.context && !Number.isNaN(Number(searchString));
                   break;
                 case 'date':
                   accessProperty = !e.context && new Date(e.searchOptions.queryString).toString() !== 'Invalid Date';
@@ -520,7 +520,9 @@ export default BaseVectorLayer.extend({
     let filter;
     if (equals.length === 0) {
       return resolve(A());
-    } else if (equals.length === 1) {
+    }
+
+    if (equals.length === 1) {
       [filter] = equals;
     } else {
       filter = new ComplexPredicate(Condition.Or, ...equals);
@@ -801,7 +803,7 @@ export default BaseVectorLayer.extend({
     });
 
     let baseSerializer;
-    let odataSerializer = this.get('odataSerializer');
+    const odataSerializer = this.get('odataSerializer');
     if (!isNone(odataSerializer)) {
       baseSerializer = getOwner(this).factoryFor(`serializer:${odataSerializer}`);
     }
@@ -1419,7 +1421,7 @@ export default BaseVectorLayer.extend({
 
         promise = this._downloadFeaturesWithOrNotFilter(leafletObject, obj, filter);
       } else if (showExisting || (showExisting && showLayerObjects)) {
-        const layerFilter = !Ember.isNone(this.get('filter')) ? this.get('filter') : null;
+        const layerFilter = !isNone(this.get('filter')) ? this.get('filter') : null;
         promise = this._downloadFeaturesWithOrNotFilter(leafletObject, this.get('_adapterStoreModelProjectionGeom'), layerFilter);
       } else {
         promise = resolve('The layer does not require loading');
@@ -1549,12 +1551,12 @@ export default BaseVectorLayer.extend({
 
     const featuresIds = [];
     const changes = leafletObject.models.filter(() => true); // for check empty
-    if (!Ember.isEmpty(changes)) {
+    if (!isEmpty(changes)) {
       Object.entries(leafletObject.models)
         .filter((item) => isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))))
         .map((item) => item[1])
         .forEach((model, index) => {
-          if (model instanceof Ember.Object) {
+          if (model instanceof EmberObject) {
             const layer = Object.values(leafletObject._layers).find((_layer) => {
               if (_layer.model.get('id') === model.get('id')) {
                 return _layer;
@@ -1573,15 +1575,15 @@ export default BaseVectorLayer.extend({
               if (editTools.featuresLayer.getLayers().length !== 0) {
                 const editorLayerId = editTools.featuresLayer.getLayerId(layer);
                 const featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
-                if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
+                if (!isNone(editorLayerId) && !isNone(featureLayer) && !isNone(featureLayer.editor)) {
                   const { editLayer, } = featureLayer.editor;
                   editTools.editLayer.removeLayer(editLayer);
                   editTools.featuresLayer.removeLayer(layer);
                 }
               }
             } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
-              if (!Ember.isNone(layer)) {
-                if (!Ember.isNone(layer.editor)) {
+              if (!isNone(layer)) {
+                if (!isNone(layer.editor)) {
                   const { editLayer, } = layer.editor;
                   editTools.editLayer.removeLayer(editLayer);
                 }

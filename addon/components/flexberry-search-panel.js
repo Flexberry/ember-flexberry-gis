@@ -1,3 +1,4 @@
+import { keys } from '@ember/polyfills';
 import { A } from '@ember/array';
 import $ from 'jquery';
 import { isBlank, isNone } from '@ember/utils';
@@ -45,27 +46,19 @@ export default Component.extend({
         + `featuresPropertiesSettings.localizedProperties.${currentLocale}`
       ) || {};
 
-      let searchProperties = {};
-
-      // when Ember.isArray check this object (searchProperties), length is not null.
-      // and ember thinks the object is an array. This is bad.
-      searchFields.forEach((prop) => {
-        set(searchProperties, prop === 'length' ? '_' + prop : prop,
-          Ember.keys(localizedProperties).indexOf(prop) > -1 ?
-          localizedProperties[prop] : prop);
-      });
-
-      this.set('_localizedValue', null);
-      return searchProperties;
+      return this.setSearchProperties(localizedProperties, searchFields);
     }
   ),
 
   setSearchProperties(localizedProperties, searchFields) {
     const searchProperties = {};
-    Object.keys(localizedProperties).forEach((prop) => {
-      if (searchFields.indexOf(prop) > -1) {
-        set(searchProperties, prop, localizedProperties[prop]);
-      }
+
+    // when Ember.isArray check this object (searchProperties), length is not null.
+    // and ember thinks the object is an array. This is bad.
+    searchFields.forEach((prop) => {
+      set(searchProperties, prop === 'length' ? `_${prop}` : prop,
+        keys(localizedProperties).indexOf(prop) > -1
+          ? localizedProperties[prop] : prop);
     });
 
     this.set('_localizedValue', null);

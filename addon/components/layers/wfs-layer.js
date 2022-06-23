@@ -11,10 +11,10 @@ import { get, set } from '@ember/object';
 import { assert } from '@ember/debug';
 import { A, isArray } from '@ember/array';
 import jsts from 'npm:jsts';
+import isUUID from 'ember-flexberry-data/utils/is-uuid';
 import BaseVectorLayer from '../base-vector-layer';
 import { checkMapZoom } from '../../utils/check-zoom';
 import { intersectionArea } from '../../utils/feature-with-area-intersect';
-import isUUID  from 'ember-flexberry-data/utils/is-uuid';
 import state from '../../utils/state';
 
 /**
@@ -520,13 +520,13 @@ export default BaseVectorLayer.extend({
       const fieldsType = get(leafletObject, 'readFormat.featureType.fieldTypes');
       if (!isBlank(fieldsType)) {
         searchFields.forEach((field) => {
-          let typeField = fieldsType[field];
+          const typeField = fieldsType[field];
           if (!isBlank(typeField)) {
             let accessProperty = false;
             if (field !== 'primarykey') {
               switch (typeField) {
                 case 'number':
-                  accessProperty = !e.context && !isNaN(Number(e.searchOptions.queryString));
+                  accessProperty = !e.context && !Number.isNaN(Number(e.searchOptions.queryString));
                   break;
                 case 'date':
                   accessProperty = !e.context && new Date(e.searchOptions.queryString).toString() !== 'Invalid Date';
@@ -535,8 +535,8 @@ export default BaseVectorLayer.extend({
                   accessProperty = !e.context && Boolean(e.searchOptions.queryString);
                   break;
                 default:
-                  equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', {
-                    matchCase: false
+                  equals.push(new L.Filter.Like(field, `*${e.searchOptions.queryString}*`, {
+                    matchCase: false,
                   }));
                   break;
               }
@@ -544,10 +544,8 @@ export default BaseVectorLayer.extend({
               if (accessProperty && typeField !== 'string') {
                 equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
               }
-            } else {
-              if (isUUID(e.searchOptions.queryString)) {
-                equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
-              }
+            } else if (isUUID(e.searchOptions.queryString)) {
+              equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
             }
           }
         });
@@ -806,7 +804,7 @@ export default BaseVectorLayer.extend({
           const loadedBoundsJsts = geojsonReader.read(loadedBounds.toGeoJSON().geometry);
           const boundsJsts = geojsonReader.read(L.rectangle(bounds).toGeoJSON().geometry);
 
-          if (loadedBoundsJsts.includes(boundsJsts)) {
+          if (loadedBoundsJsts.contains(boundsJsts)) {
             if (leafletObject.statusLoadLayer) {
               leafletObject.promiseLoadLayer = resolve();
             }

@@ -1,5 +1,5 @@
-import Ember from 'ember';
 import { Promise } from 'rsvp';
+import Ember from 'ember';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import FlexberryMapModelApiMixin from 'ember-flexberry-gis/mixins/flexberry-map-model-api-expansion';
@@ -146,7 +146,7 @@ module('Unit | Mixin | test method addObjectToLayer', function () {
     // Act
     const promise = subject.addObjectToLayer('1', obj);
 
-    assert.ok(promise instanceof Ember.RSVP.Promise);
+    assert.ok(promise instanceof Promise);
 
     promise.then((result) => {
       assert.equal(leafletObject.getLayers().length, 0, 'Layers count');

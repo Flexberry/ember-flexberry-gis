@@ -161,7 +161,7 @@ export default Component.extend(PaginatedControllerMixin, SlotsMixin, {
       e = $.event.fix(e);
 
       // Wait while input will be embeded into clicked cell (after render), and focus on it.
-      scheduleOnce('afterRender', this, this.cellInput(e));
+      scheduleOnce('afterRender', this, this.cellInput, e);
     },
 
     cellInput(e) {

@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-restricted-resolver-tests */
 import { resolve, Promise } from 'rsvp';
 import { A } from '@ember/array';
-import { run } from '@ember/runloop';
+import { run, next } from '@ember/runloop';
 import EmberObject, { set } from '@ember/object';
 import $ from 'jquery';
 import Mixin from '@ember/object/mixin';
@@ -584,7 +584,7 @@ test('continueLoad()', function (assert) {
 
 test('test methos identify()', function (assert) {
   assert.expect(3);
-  const done = assert.async(2);
+  const done = assert.async(3);
   run(() => {
     const latlngs = [
       [L.latLng(30, 10), L.latLng(40, 40), L.latLng(20, 40), L.latLng(10, 20)]
@@ -603,17 +603,19 @@ test('test methos identify()', function (assert) {
       },
     });
     const component = this.subject(param);
-    run.next(() => {
+    next(() => {
       const spyGetFeature = sinon.spy(component, '_getFeature');
 
       component.identify(e);
-
-      assert.ok(spyGetFeature.getCall(0).args[0] instanceof GeometryPredicate);
-      assert.equal(spyGetFeature.getCall(0).args[0]._attributePath, 'shape');
-      assert.equal(spyGetFeature.getCall(0).args[0]._intersectsValue,
-        'SRID=4326;POLYGON((10 30, 40 40, 40 20, 20 10, 10 30))');
+      next(() => {
+        assert.ok(spyGetFeature.getCall(0).args[0] instanceof GeometryPredicate);
+        assert.equal(spyGetFeature.getCall(0).args[0]._attributePath, 'shape');
+        assert.equal(spyGetFeature.getCall(0).args[0]._intersectsValue,
+          'SRID=4326;POLYGON((10 30, 40 40, 40 20, 20 10, 10 30))');
+        done();
+        spyGetFeature.restore();
+      });
       done();
-      spyGetFeature.restore();
     });
     done();
   });

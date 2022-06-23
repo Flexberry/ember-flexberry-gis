@@ -49,7 +49,7 @@ export default {
         __caption__: 'Граница',
       },
       securityKey: {
-        __caption__: ''
+        __caption__: '',
       },
       parent: {
         __caption__: 'Родитель',
@@ -135,7 +135,7 @@ export default {
         __caption__: 'Граница',
       },
       securityKey: {
-        __caption__: ''
+        __caption__: '',
       },
       parent: {
         __caption__: 'Родитель',

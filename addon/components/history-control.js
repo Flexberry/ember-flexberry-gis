@@ -81,7 +81,6 @@ export default BaseControl.extend({
     Initializes component.
   */
   init() {
-    this._super(...arguments);
     this.leafletOptions = this.leafletOptions || [
       'position',
       'maxMovesToSave',
@@ -97,5 +96,7 @@ export default BaseControl.extend({
       'useExternalControls',
       'shouldSaveMoveInHistory'
     ];
+
+    this._super(...arguments);
   },
 });

@@ -568,7 +568,7 @@ const FlexberryMapComponent = Component.extend(
         const queryFilter = this.get('queryFilter');
         const mapObjectSetting = this.get('mapObjectSetting');
         if (!isBlank(queryFilter)) {
-          scheduleOnce('afterRender', this, this.runQuery(queryFilter, mapObjectSetting));
+          scheduleOnce('afterRender', this, this.runQuery, queryFilter, mapObjectSetting);
         }
 
         const mapApi = this.get('mapApi');
@@ -597,7 +597,7 @@ const FlexberryMapComponent = Component.extend(
           this.set('_hasServiceLayer', true);
         }
 
-        scheduleOnce('afterRender', this, this.loadMap(leafletMap, mapApi));
+        scheduleOnce('afterRender', this, this.loadMap, leafletMap, mapApi);
       }
     },
 

@@ -4,7 +4,12 @@ import { run, next } from '@ember/runloop';
 import Component from '@ember/component';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import {
+  render,
+  click,
+  findAll,
+  find
+} from '@ember/test-helpers';
 
 import hbs from 'htmlbars-inline-precompile';
 
@@ -69,20 +74,20 @@ module('Integration | Component | layers dialogs/settings/combine', function (ho
     await render(hbs`{{layers-dialogs/settings/combine}}`);
 
     assert.equal(this.$('label:first').text().trim(), 'Тип слоя');
-    assert.equal(this.$('label.button').text().trim(), 'Добавить');
-    assert.equal(this.$('.flexberry-dropdown .menu .item').length, 2);
+    assert.equal(find('label.button').textContent.trim(), 'Добавить');
+    assert.equal(findAll('.flexberry-dropdown .menu .item').length, 2);
 
     run(() => {
       this.$('.combineAdd .ui.dropdown').dropdown('set value', '0');
-      next(() => {
-        this.$('.combineAdd .flexberry-button').click();
+      next(async () => {
+        await click('.combineAdd .flexberry-button');
         next(() => {
           assert.equal(this.$('.ui.segment:first h5:first').text().trim(), 'Настройки основного слоя wfs');
           assert.equal(this.$('.ui.segment:first .field').length, 17);
           next(() => {
             this.$('.combineAdd .dropdown').dropdown('set value', '1');
-            next(() => {
-              this.$('.combineAdd .flexberry-button').click();
+            next(async () => {
+              await click('.combineAdd .flexberry-button');
               next(() => {
                 assert.equal(this.$('.ui.segment:last h5:last').text().trim(), 'Настройки wms');
                 assert.equal(this.$('.ui.segment:last .field').length, 10);

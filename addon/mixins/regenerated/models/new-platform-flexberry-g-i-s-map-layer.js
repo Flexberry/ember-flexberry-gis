@@ -102,7 +102,7 @@ export const defineProjections = function (modelClass) {
     scale: attr('Масштаб'),
     coordinateReferenceSystem: attr('Система координат'),
     boundingBox: attr('Граница'),
-    securityKey: Projection.attr('', { hidden: true }),
+    securityKey: attr('', { hidden: true, }),
     parent: belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
 
     }, { hidden: true, }),
@@ -143,7 +143,7 @@ export const defineProjections = function (modelClass) {
     scale: attr('Масштаб'),
     coordinateReferenceSystem: attr('Система координат'),
     boundingBox: attr('Граница'),
-    securityKey: Projection.attr('', { hidden: true }),
+    securityKey: attr('', { hidden: true, }),
     parent: belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
 
     }, { displayMemberPath: 'name', }),

@@ -218,7 +218,7 @@ const MapInfoComponent = Component.extend({
 
   init() {
     this._super(...arguments);
-    this._visibleDidChange();
+
     const _service = this.get('service');
     const storageClass = this.get('_storageClassName');
     const mapId = this.get('mapId');
@@ -226,6 +226,7 @@ const MapInfoComponent = Component.extend({
 
     this.set('visible', dialogVisibility);
     this.set('showOnOpen', dialogVisibility);
+    this._visibleDidChange();
   },
 
   /**

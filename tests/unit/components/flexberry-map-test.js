@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-restricted-resolver-tests */
 import { run } from '@ember/runloop';
 import { resolve, Promise } from 'rsvp';
-import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import sinon from 'sinon';
 
@@ -98,16 +97,16 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
 
   assert.equal(leafletMap.getZoom(), 0, 'zoom after change');
 
-  let done = assert.async(1);
+  const done = assert.async(1);
 
   // After update to leaflet-1.0.0 panTo not directly change center,
   // it will changed after animation will trigger 'moveend' event.
   leafletMap.once('moveend', () => {
     run(() => {
       setTimeout(() => {
-        let size = leafletMap.getSize().x + ' ' + leafletMap.getSize().y;
-        let center = leafletMap.getCenter().lat + ' ' + leafletMap.getCenter().lng;
-        assert.ok(leafletMap.getCenter().equals([0, 0]), 'center after move: center: ' + center + ', size: ' + size);
+        const size = `${leafletMap.getSize().x} ${leafletMap.getSize().y}`;
+        const center = `${leafletMap.getCenter().lat} ${leafletMap.getCenter().lng}`;
+        assert.ok(leafletMap.getCenter().equals([0, 0]), `center after move: center: ${center}, size: ${size}`);
         done(1);
       }, 500);
     });

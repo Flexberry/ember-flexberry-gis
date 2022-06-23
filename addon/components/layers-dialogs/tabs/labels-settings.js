@@ -332,7 +332,7 @@ export default Component.extend({
 
     caretPosition += (caretShift || 0);
     this.set('value.labelSettingsString', newLabelString);
-    scheduleOnce('afterRender', this, this.textAreaFunc(textarea, caretPosition));
+    scheduleOnce('afterRender', this, this.textAreaFunc, textarea, caretPosition);
   },
 
   textAreaFunc(textarea, caretPosition) {

@@ -189,7 +189,7 @@ const EditMapCommandComponent = Component.extend({
 
     // Automatically show map edit dialog for new maps, to allow user immediately define it's properties.
     if (this.get('mapModel.isNew')) {
-      scheduleOnce('afterRender', this, this.setDialog());
+      scheduleOnce('afterRender', this, this.setDialog);
     }
   },
 

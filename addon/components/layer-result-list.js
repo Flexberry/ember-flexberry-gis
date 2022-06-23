@@ -606,11 +606,11 @@ export default Component.extend(LeafletZoomToFeatureMixin, {
       this.set('_displayResults', displayResults);
       this.set('_noData', displayResults.length === 0);
       this.set('_showLoader', false);
-      if (this.get('favoriteMode') !== true && Ember.isNone(this.get('share'))) {
+      if (this.get('favoriteMode') !== true && isNone(this.get('share'))) {
         if (displayResults.length === 1) {
           this.send('zoomTo', displayResults.objectAt(0).features);
         }
-      } else if (!Ember.isNone(this.get('share'))) {
+      } else if (!isNone(this.get('share'))) {
         if (displayResults.length === 1) {
           this.send('selectFeature', displayResults.objectAt(0).features);
         }

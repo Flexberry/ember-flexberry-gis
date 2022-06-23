@@ -801,7 +801,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
       }
 
       // Real map size has been changed, so we need to refresh it's size after render, otherwise it may be displayed incorrectly.
-      scheduleOnce('afterRender', this._invalidateSizeOfLeafletMap());
+      scheduleOnce('afterRender', this, this._invalidateSizeOfLeafletMap);
 
       if (this.get('_options.displayMode') === 'map-only-mode') {
         return htmlSafe('height: 100%;');
@@ -2138,7 +2138,7 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
   */
   setDefaultExportOptions() {
     // Initialize default print/export options.
-    let defaultMapCaption = this.get('defaultMapCaption');
+    const defaultMapCaption = this.get('defaultMapCaption');
     this.set('_options', $.extend(true, {}, defaultOptions, {
       caption: defaultMapCaption,
       fileName: defaultMapCaption,

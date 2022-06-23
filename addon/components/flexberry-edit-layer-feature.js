@@ -1,3 +1,4 @@
+import { keys } from '@ember/polyfills';
 import { Promise, resolve, allSettled } from 'rsvp';
 import { isArray, A } from '@ember/array';
 import { isNone, isBlank, isEqual } from '@ember/utils';
@@ -646,7 +647,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
     const initialDatas = this.get('initialData');
 
     if (!isNone(layers) && mode !== 'Saved') {
-      Ember.keys(layers).forEach((index) => {
+      keys(layers).forEach((index) => {
         const layer = layers[index];
 
         if (mode === 'Edit') {
@@ -690,7 +691,7 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
             leafletObject.editLayer(layer);
           }
 
-          //Removing a layer from the map that was added for edit mode
+          // Removing a layer from the map that was added for edit mode
           if (this.get('isLayerCopy') && leafletMap.hasLayer(layer)) {
             leafletMap.removeLayer(layer);
           }
@@ -699,26 +700,24 @@ export default Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFe
           delete layers[index];
           delete datas[index];
           delete initialDatas[index];
-        } else {
+        } else if (!isNone(layer)) {
           // remove the layer
-          if (!isNone(layer)) {
-            if (!isNone(leafletObject) && leafletObject.hasLayer(layer)) {
-              leafletObject.removeLayer(layer);
+          if (!isNone(leafletObject) && leafletObject.hasLayer(layer)) {
+            leafletObject.removeLayer(layer);
+          }
+
+          if (leafletMap.hasLayer(layer)) {
+            leafletMap.removeLayer(layer);
+          }
+
+          const label = get(layer, '_label');
+          if (!isNone(label)) {
+            if (!isNone(leafletObject) && leafletObject.hasLayer(label)) {
+              leafletObject.removeLayer(label);
             }
 
-            if (leafletMap.hasLayer(layer)) {
-              leafletMap.removeLayer(layer);
-            }
-
-            let label = Ember.get(layer, '_label');
-            if (!isNone(label)) {
-              if (!isNone(leafletObject) && leafletObject.hasLayer(label)) {
-                leafletObject.removeLayer(label);
-              }
-
-              if (leafletMap.hasLayer(label)) {
-                leafletMap.removeLayer(label);
-              }
+            if (leafletMap.hasLayer(label)) {
+              leafletMap.removeLayer(label);
             }
           }
         }

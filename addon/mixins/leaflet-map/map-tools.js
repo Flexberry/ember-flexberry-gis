@@ -229,7 +229,7 @@ export default Mixin.create(LeafletMapVisibilityMixin, {
     leafletMap.flexberryMap.tools = tools;
 
     // Set 'drag' map-tool as default & enable it.
-    scheduleOnce('afterRender', this, this.setTools(tools));
+    scheduleOnce('afterRender', this, this.setTools, tools);
   },
 
 

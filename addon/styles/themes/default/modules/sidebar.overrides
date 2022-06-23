@@ -314,12 +314,12 @@
       a.icon.item.more {
         line-height: 5px;
       }
-      .floated.flexberry-treenode-prevent-expand-collapse.ui.button {
+      label.floated.flexberry-treenode-prevent-expand-collapse.flexberry-button.ui.button.icon {
         border: none;
         box-shadow: none;
         vertical-align: top;
       }
-      .allmore.floated.ui.button.icon {
+      .allmore.floated.flexberry-button.ui.button.icon {
         border: none;
         box-shadow: none;
         vertical-align: top;

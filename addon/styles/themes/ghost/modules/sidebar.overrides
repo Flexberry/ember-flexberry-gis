@@ -359,6 +359,7 @@
     margin-top: 5px;
     margin-left: -13px;
     height: ~"calc(100% - 30px)" !important;
+
     .ui.icon.button:not(.fluid) {
       padding: 6px 0;
     }
@@ -576,6 +577,7 @@
         border: 1px solid @white;
         box-shadow: none;
       }
+
       &.create-edit-object-tab, &.compareObjects, &.intersectionObjects,
       &.compare, &.timelapse, &.history {
         display: none;

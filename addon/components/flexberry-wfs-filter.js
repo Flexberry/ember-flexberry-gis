@@ -310,7 +310,7 @@ export default Component.extend({
 
     caretPosition += (caretShift || 0);
     this.set('filterStringValue', newFilterString);
-    scheduleOnce('afterRender', this, this.setTextArea(textarea, caretPosition));
+    scheduleOnce('afterRender', this, this.setTextArea, textarea, caretPosition);
   },
 
   setTextArea(textarea, caretPosition) {

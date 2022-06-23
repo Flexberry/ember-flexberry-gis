@@ -128,7 +128,7 @@ export default EmberObject.extend(Evented,
       this.set('_enabled', true);
       this._enable(...arguments);
 
-      scheduleOnce('afterRender', this, this.fireMapTool(leafletMap));
+      scheduleOnce('afterRender', this, this.fireMapTool, leafletMap);
     },
 
     fireMapTool(leafletMap) {

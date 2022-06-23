@@ -49,7 +49,7 @@ export default {
         __caption__: 'Bounding box',
       },
       securityKey: {
-        __caption__: 'securityKey'
+        __caption__: 'securityKey',
       },
       parent: {
         __caption__: 'Parent',
@@ -135,7 +135,7 @@ export default {
         __caption__: 'Bounding box',
       },
       securityKey: {
-        __caption__: 'securityKey'
+        __caption__: 'securityKey',
       },
       parent: {
         __caption__: 'Parent',

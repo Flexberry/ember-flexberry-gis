@@ -30,7 +30,7 @@ export default FlexberryDropdown.extend({
     @type Number
     @default 0
   */
-  minCharacters:0,
+  minCharacters: 0,
 
   isClearAllVisible: true,
 
@@ -195,7 +195,7 @@ export default FlexberryDropdown.extend({
     },
 
     clearAll(event) {
-      //click action is defined as a DOM event to cancel the semantic dropdown action
+      // click action is defined as a DOM event to cancel the semantic dropdown action
       event.stopPropagation();
       this.get('state').setEach('isVisible', false);
       $('.search-field').val('');

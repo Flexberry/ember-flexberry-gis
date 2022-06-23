@@ -1,7 +1,7 @@
 /**
   @module ember-flexberry-gis
  */
-import Ember from 'ember';
+import { set } from '@ember/object';
 import BaseControl from 'ember-flexberry-gis/components/base-control';
 
 /**
@@ -32,7 +32,7 @@ export default BaseControl.extend({
     const leafletMap = this.get('leafletMap');
     const control = this.get('control');
     control._restore = this.get('_restore').bind(this);
-    Ember.set(leafletMap, `switchScaleControl${control.options.className}`, control);
+    set(leafletMap, `switchScaleControl${control.options.className}`, control);
   },
 
   _restore() {

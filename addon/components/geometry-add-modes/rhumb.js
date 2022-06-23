@@ -195,7 +195,6 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
   init() {
     this._super(...arguments);
 
-    this.initialSettings();
     this._formValid = this._formValid || {
       startPointValid: false,
       tableValid: false,
@@ -215,6 +214,7 @@ const FlexberryGeometryAddModeRhumbComponent = Component.extend({
     }
 
     this.set('_availableDirection', availableDirection);
+    this.initialSettings();
   },
 
   /**

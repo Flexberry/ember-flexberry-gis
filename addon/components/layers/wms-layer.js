@@ -140,7 +140,6 @@ export default TileLayer.extend({
     Initializes component.
   */
   init() {
-    this._super(...arguments);
     this.leafletOptions = this.leafletOptions || [
       'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
       'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
@@ -148,5 +147,6 @@ export default TileLayer.extend({
       'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds', 'filter',
       'layers', 'styles', 'format', 'transparent', 'version', 'crs', 'info_format', 'tiled'
     ];
+    this._super(...arguments);
   },
 });

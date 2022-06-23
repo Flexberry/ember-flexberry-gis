@@ -497,9 +497,9 @@ export default Component.extend({
           const objB = e.polygonLayer.toGeoJSON();
           item.isIntersect = false;
           if (objB.id !== objA.id) {
-            const { crs, } = item.leafletLayer.options;
+            let { crs, } = item.leafletLayer.options;
             if (isNone(crs)) {
-              crs = this.get('leafletMap').options.crs;
+              ({ crs, } = this.get('leafletMap').options);
             }
 
             const objAJsts = item.leafletLayer.toJsts(crs);

@@ -307,12 +307,11 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    this._layerLoader();
-
     // Initialize available layers-styles and related properties.
     this.set('_previouslySelectedLayerStyle', this.get('styleSettings.type'));
     this.set('_availableLayerStyles', this.get('_layersStylesRenderer').getAvailableLayerStylesTypes());
     this._availableLayerStylesCaptionsOrSelectedLayerStyleDidChange();
+    this._layerLoader();
   },
 
   /**

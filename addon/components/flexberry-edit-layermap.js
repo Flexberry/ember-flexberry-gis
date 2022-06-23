@@ -702,8 +702,6 @@ export default Component.extend(
     init() {
       this._super(...arguments);
 
-      this._visibleDidChange();
-
       if (isNone(this.get('links'))) {
         this.set('links', A());
       }
@@ -744,6 +742,8 @@ export default Component.extend(
       this.set('_selectedModeCaption', i18n.t('components.layers-dialogs.layers-prototyping-modes.new'));
 
       this.sendAction('onInit', this.getLayerProperties.bind(this));
+
+      this._visibleDidChange();
     },
 
     /**
@@ -764,11 +764,11 @@ export default Component.extend(
 
       let settings = get(_layerHash, 'settings');
 
-      Object.keys(settings).map(function(key) {
-        if (key === 'minZoom' || key  === 'maxZoom') {
-          let value = get(settings, key);
-          let parsedValue = parseInt(value);
-          if (!isNaN(parsedValue)) {
+      Object.keys(settings).foreach(function (key) {
+        if (key === 'minZoom' || key === 'maxZoom') {
+          const value = get(settings, key);
+          const parsedValue = parseInt(value, 10);
+          if (!Number.isNaN(parsedValue)) {
             set(settings, key, parsedValue);
           }
         }

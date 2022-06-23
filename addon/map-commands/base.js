@@ -104,7 +104,7 @@ export default EmberObject.extend(Evented,
       this.set('_executing', true);
       const executionResult = this._execute(...arguments);
 
-      scheduleOnce('afterRender', this, this.leafletMapExecute(leafletMap, executionResult));
+      scheduleOnce('afterRender', this, this.leafletMapExecute, leafletMap, executionResult);
 
       if (executionResult instanceof Promise) {
       // Command is asynchronous & executing is in progress.

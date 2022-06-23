@@ -399,7 +399,7 @@ export default Component.extend(
       // Now execute base destroy logic.
       this._removeLayerFromLeafletContainer();
 
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer'))) {
+      if (this.get('labelSettings.signMapObjects') && !isNone(this.get('_labelsLayer'))) {
         this.set('_labelsLayer', null);
       }
 
@@ -590,7 +590,7 @@ export default Component.extend(
 
       leafletContainer.removeLayer(leafletLayer);
 
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && leafletContainer.hasLayer(this.get('_labelsLayer'))) {
+      if (this.get('labelSettings.signMapObjects') && !isNone(this.get('_labelsLayer')) && leafletContainer.hasLayer(this.get('_labelsLayer'))) {
         leafletContainer.removeLayer(this.get('_labelsLayer'));
       }
     },

@@ -309,10 +309,10 @@ const FlexberryMaplayerComponent = Component.extend(
       @readOnly
       @private
     */
-    _editOperationIsAvailable: Ember.computed('_layerClassFactory', 'layer.layerInitialized', function () {
-      let layerClassFactory = this.get('_layerClassFactory');
+    _editOperationIsAvailable: computed('_layerClassFactory', 'layer.layerInitialized', function () {
+      const layerClassFactory = this.get('_layerClassFactory');
 
-      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).includes('editFeatures') && this.get('layer.layerInitialized');
+      return A(get(layerClassFactory, 'operations') || []).includes('editFeatures') && this.get('layer.layerInitialized');
     }),
 
     /**
@@ -490,9 +490,9 @@ const FlexberryMaplayerComponent = Component.extend(
       @type Boolean
       @readonly
     */
-    createNewLayerAccess: Ember.computed('access', 'access.createAccess', 'readonly', function () {
-      let createAccess = this.get('access.createAccess');
-      let readonly = this.get('readonly');
+    createNewLayerAccess: computed('access', 'access.createAccess', 'readonly', function () {
+      const createAccess = this.get('access.createAccess');
+      const readonly = this.get('readonly');
 
       return !readonly && createAccess;
     }),
@@ -504,12 +504,12 @@ const FlexberryMaplayerComponent = Component.extend(
       @type Boolean
       @readonly
     */
-    readonlyModel: Ember.computed('access', 'access.accessibleModel.[]', 'readonly', 'layer', function () {
-      let accessibleModel = this.get('access.accessibleModel');
-      let layer = this.get('layer');
-      let readonly = this.get('readonly');
+    readonlyModel: computed('access', 'access.accessibleModel.[]', 'readonly', 'layer', function () {
+      const accessibleModel = this.get('access.accessibleModel');
+      const layer = this.get('layer');
+      const readonly = this.get('readonly');
 
-      let access = !Ember.isNone(layer) && !Ember.isNone(accessibleModel) && Ember.isArray(accessibleModel) && Ember.A(accessibleModel).contains(layer.id);
+      const access = !isNone(layer) && !isNone(accessibleModel) && isArray(accessibleModel) && A(accessibleModel).includes(layer.id);
 
       return readonly || !access;
     }),
@@ -521,12 +521,12 @@ const FlexberryMaplayerComponent = Component.extend(
       @type Boolean
       @readonly
     */
-    readonlyData: Ember.computed('access', 'access.accessibleData.[]', 'readonly', 'layer', function () {
-      let accessibleData = this.get('access.accessibleData');
-      let layer = this.get('layer');
-      let readonly = this.get('readonly');
+    readonlyData: computed('access', 'access.accessibleData.[]', 'readonly', 'layer', function () {
+      const accessibleData = this.get('access.accessibleData');
+      const layer = this.get('layer');
+      const readonly = this.get('readonly');
 
-      let access = !Ember.isNone(layer) && !Ember.isNone(accessibleData) && Ember.isArray(accessibleData) && Ember.A(accessibleData).contains(layer.id);
+      const access = !isNone(layer) && !isNone(accessibleData) && isArray(accessibleData) && A(accessibleData).includes(layer.id);
 
       return readonly || !access;
     }),

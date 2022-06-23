@@ -13,17 +13,21 @@ import EditFormRouteOperationsIndicationMixin from 'ember-flexberry/mixins/edit-
   @uses EditFormRouteOperationsIndicationMixin, MapRouteCswLoaderMixin
 */
 export default EditMapRoute.extend(EditFormRouteOperationsIndicationMixin, {
-  access: {
-    map: true,
-    mapLayerModel: [],
-    mapLayerData: []
-  },
+  access: null,
 
   afterModel(model) {
-    this.set('access.mapLayerModel', model.get('mapLayer').map((r) => { return r.id; }));
-    this.set('access.mapLayerData', model.get('mapLayer').map((r) => { return r.id; }));
+    this.set('access.mapLayerModel', model.get('mapLayer').map((r) => r.id));
+    this.set('access.mapLayerData', model.get('mapLayer').map((r) => r.id));
 
     this._super(...arguments);
   },
 
+  init() {
+    this._super(...arguments);
+    this.access = this.access || {
+      map: true,
+      mapLayerModel: [],
+      mapLayerData: [],
+    };
+  },
 });

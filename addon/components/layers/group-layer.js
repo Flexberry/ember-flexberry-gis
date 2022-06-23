@@ -2,7 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
+
+import { computed } from '@ember/object';
 import BaseLayer from '../base-layer';
 import layout from '../../templates/components/layers/group-layer';
 
@@ -27,9 +29,9 @@ export default BaseLayer.extend({
     @type String
     @readOnly
   */
-  _pane: Ember.computed('layerModel.id', function () {
+  _pane: computed('layerModel.id', function () {
     // to switch combine-layer
-    const layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
+    const layerId = !isNone(this.get('layerId')) ? this.get('layerId') : '';
     return `groupLayer${this.get('layerModel.id')}${layerId}`;
   }),
 
@@ -38,7 +40,7 @@ export default BaseLayer.extend({
     @type Object
     @readOnly
   */
-  _renderer: Ember.computed('_pane', function () {
+  _renderer: computed('_pane', function () {
     const pane = this.get('_pane');
     return L.canvas({ pane, });
   }),
@@ -57,7 +59,7 @@ export default BaseLayer.extend({
 
     const thisPane = this.get('_pane');
     const pane = leafletMap.getPane(thisPane);
-    if (!pane || Ember.isNone(pane)) {
+    if (!pane || isNone(pane)) {
       leafletMap.createPane(thisPane);
       layer.options.pane = thisPane;
       layer.options.renderer = this.get('_renderer');

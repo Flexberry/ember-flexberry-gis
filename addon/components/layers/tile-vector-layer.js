@@ -1,9 +1,6 @@
 import { get } from '@ember/object';
 import { isNone, typeOf } from '@ember/utils';
-import {
-  BaseVectorLayer,
-  begIndex
-} from '../base-vector-layer';
+import BaseVectorLayer, { begIndex } from '../base-vector-layer';
 
 export default BaseVectorLayer.extend({
   leafletOptions: null,
