@@ -91,6 +91,7 @@ export default BaseVectorLayer.extend({
       }
 
       filter = this.addCustomFilter(filter);
+
       let resultingFilter = filter ? filter.toGml() : null;
 
       let wfsLayer = this.get('_leafletObject');
@@ -690,7 +691,7 @@ export default BaseVectorLayer.extend({
             return loadIds.indexOf(item) === -1;
           });
           if (!Ember.isEmpty(remainingFeat)) {
-            filter = makeFilterEqOr(remainingFeat);
+            filter = this.addCustomFilter(makeFilterEqOr(remainingFeat));
           } else { // If objects is already loaded, return leafletObject
             resolve(leafletObject);
             return;
@@ -699,7 +700,7 @@ export default BaseVectorLayer.extend({
           let alreadyLoaded = getLoadedFeatures(null);
           let filterEqOr = makeFilterEqOr(alreadyLoaded);
           if (!Ember.isNone(filterEqOr)) {
-            filter = new L.Filter.Not(makeFilterEqOr(alreadyLoaded));
+            filter = this.addCustomFilter(new L.Filter.Not(makeFilterEqOr(alreadyLoaded)));
           }
         }
 
@@ -825,7 +826,7 @@ export default BaseVectorLayer.extend({
             return Ember.RSVP.resolve('Features in bounds is already loaded');
           }
 
-          oldPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs));
+          oldPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, L.CRS.EPSG4326));
 
           let unionJsts = loadedBoundsJsts.union(boundsJsts);
           let geojsonWriter = new jsts.io.GeoJSONWriter();
@@ -836,16 +837,14 @@ export default BaseVectorLayer.extend({
 
         this.set('loadedBounds', loadedBounds);
 
-        let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs);
+        let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, L.CRS.EPSG4326);
         let filter = oldPart ? new L.Filter.And(newPart, oldPart) : newPart;
-        let layerFilter = this.get('filter');
-        filter = Ember.isEmpty(layerFilter) ? filter : new L.Filter.And(filter, layerFilter);
+        filter = this.addCustomFilter(filter);
 
         leafletObject.loadFeatures(filter);
         needPromise = true;
       } else if (showExisting && Ember.isEmpty(Object.values(leafletObject._layers))) {
-        let layerFilter = !Ember.isNone(this.get('filter')) ? this.get('filter') : null;
-        leafletObject.loadFeatures(layerFilter);
+        leafletObject.loadFeatures(this.addCustomFilter(null));
         needPromise = true;
       } else if (leafletObject.statusLoadLayer) {
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
