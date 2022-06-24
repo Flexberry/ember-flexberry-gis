@@ -826,7 +826,7 @@ export default BaseVectorLayer.extend({
             return Ember.RSVP.resolve('Features in bounds is already loaded');
           }
 
-          oldPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, L.CRS.EPSG4326));
+          oldPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs));
 
           let unionJsts = loadedBoundsJsts.union(boundsJsts);
           let geojsonWriter = new jsts.io.GeoJSONWriter();
@@ -837,7 +837,7 @@ export default BaseVectorLayer.extend({
 
         this.set('loadedBounds', loadedBounds);
 
-        let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, L.CRS.EPSG4326);
+        let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs);
         let filter = oldPart ? new L.Filter.And(newPart, oldPart) : newPart;
         filter = this.addCustomFilter(filter);
 
