@@ -1,6 +1,5 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import sinon from 'sinon';
-import { Query } from 'ember-flexberry-data';
 
 moduleForComponent('base-layer', 'Unit | Component | base layer', {
   unit: true,
