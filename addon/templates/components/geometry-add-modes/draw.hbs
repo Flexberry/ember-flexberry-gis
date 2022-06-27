@@ -26,14 +26,14 @@
     {{flexberry-button
       tooltip=(t "components.geometry-add-modes.draw.draw-polyline.caption")
       click=(action "onGeometryTypeSelect" "polyline")
-      iconClass="flexberry-map-tool-icon line icon"
+      iconClass="flexberry-map-tool-icon icon-guideline-line"
       class=(if (eq geometryType "polyline") "active")
       readonly=edit
     }}
     {{flexberry-button
       tooltip=(t "components.geometry-add-modes.draw.draw-multi-line.caption")
       click=(action "onGeometryTypeSelect" "multyLine")
-      iconClass="flexberry-map-tool-icon multi-line icon"
+      iconClass="flexberry-map-tool-icon icon-guideline-line-plus"
       class=(if (eq geometryType "multyLine") "active")
       readonly=(not edit)
     }}

@@ -60,6 +60,7 @@
           border-color: @defaultBorderColor;
           font-size: 13px;
           margin-bottom: 24px;
+          width: auto;
 
           &.active {
             box-shadow: @defaultBoxShadow;
@@ -725,7 +726,7 @@
         border-width: 2px;
       }
       .picture:not(.active) {
-        border-color: #E5E5E5;
+        border: none;
       }
     }
   }
