@@ -550,7 +550,7 @@ export default BaseLayer.extend({
     if (thisPaneLabel &amp;&amp; !Ember.isNone(leafletMap)) {
       let pane = leafletMap.getPane(thisPaneLabel);
       if (pane) {
-        pane.style.zIndex = this.get(&#x27;index&#x27;) + begIndex + 1; //to make the label layer higher than the vector layer
+        pane.style.zIndex = (Ember.isNone(this.get(&#x27;labelSettings.index&#x27;)) ? this.get(&#x27;index&#x27;) : this.get(&#x27;labelSettings.index&#x27;)) + begIndex + 1; //to make the label layer higher than the vector layer
       }
     }
   },
