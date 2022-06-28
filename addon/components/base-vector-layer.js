@@ -133,7 +133,7 @@ export default BaseLayer.extend({
     if (thisPaneLabel && !Ember.isNone(leafletMap)) {
       let pane = leafletMap.getPane(thisPaneLabel);
       if (pane) {
-        pane.style.zIndex = Ember.isNone(this.get('labelSettings.index')) ? this.get('index') : this.get('labelSettings.index') + begIndex + 1; //to make the label layer higher than the vector layer
+        pane.style.zIndex = (Ember.isNone(this.get('labelSettings.index')) ? this.get('index') : this.get('labelSettings.index')) + begIndex + 1; //to make the label layer higher than the vector layer
       }
     }
   },
