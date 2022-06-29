@@ -97,3 +97,40 @@ test('should call container addLayer/removeLayer based on visibility property', 
     leafletLayerPromiseResolved();
   });
 });
+
+test('should check method addCustomFilter', function (assert) {
+  assert.expect(9);
+
+  let component = this.subject({
+    createLayer: createLayer
+  });
+
+  this.render();
+
+  let leafletLayerPromiseResolved = assert.async();
+  component.get('_leafletLayerPromise').then((leafletLayer) => {
+    let filterEmpty = component.addCustomFilter(null);
+    assert.equal(filterEmpty, null, 'filter is null');
+
+    let filterForFunction = new L.Filter.LEQ('outerFilter', 10);
+    let filter2 = component.addCustomFilter(filterForFunction);
+    assert.equal(filter2, filterForFunction, 'filter is filterForFunction');
+
+    let layerFilter = new L.Filter.LEQ('innerFilter', 20);
+    component.set('filter', layerFilter);
+    let filter3 = component.addCustomFilter(filterForFunction);
+    assert.equal(filter3.filters.length, 2, 'filter is contains 2 filters');
+    assert.equal(filter3.filters[0].firstValue, 'innerFilter', 'filter is contains innerFilter');
+    assert.equal(filter3.filters[1].firstValue, 'outerFilter', 'filter is contains outerFilter');
+
+    let customFilter = new L.Filter.LEQ('customFilter', 30);
+    component.set('customFilter', customFilter);
+    let filter4 = component.addCustomFilter(filterForFunction);
+    assert.equal(filter4.filters.length, 3, 'filter is contains 3 filters');
+    assert.equal(filter4.filters[0].firstValue, 'innerFilter', 'filter is contains innerFilter');
+    assert.equal(filter4.filters[1].firstValue, 'outerFilter', 'filter is contains outerFilter');
+    assert.equal(filter4.filters[2].firstValue, 'customFilter', 'filter is contains customFilter');
+  }).finally(() => {
+    leafletLayerPromiseResolved();
+  });
+});
