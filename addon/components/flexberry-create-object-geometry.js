@@ -108,7 +108,7 @@ export default Component.extend({
     return editTools;
   }),
 
-  setEditTools: (editTools, leafletMap) => {
+  setEditTools(editTools, leafletMap) {
     editTools = new L.Editable(leafletMap);
     editTools.on('editable:vertex:dragend', this._updateCoordinates, this);
     editTools.on('editable:vertex:deleted', this._updateCoordinates, this);

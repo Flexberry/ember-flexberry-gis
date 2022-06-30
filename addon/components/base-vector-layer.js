@@ -1088,7 +1088,7 @@ export default BaseLayer.extend({
     }
 
     if (propName.length > 0) {
-      propName.forEach((prop) => {
+      Array.from(propName).forEach((prop) => {
         let property = prop.innerHTML;
         if (prop.localName !== 'propertyname') {
           property = prop.innerText;
@@ -1136,7 +1136,7 @@ export default BaseLayer.extend({
     }
 
     if (func.length > 0) {
-      func.forEach((item) => {
+      Array.from(func).forEach((item) => {
         let nameFunc = $(item).attr('name');
         if (!isNone(nameFunc)) {
           nameFunc = $(item).attr('name').replaceAll('\\"', '');
@@ -1191,7 +1191,7 @@ export default BaseLayer.extend({
     if (layers) {
       layers.forEach((layer) => {
         const showExisting = this.get('showExisting');
-        const intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.includes(layer.getLatLng());
+        const intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
         const staticLoad = showExisting !== false && intersectBBox;
         if (!layer._label && (showExisting === false || staticLoad)) {
           const label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));

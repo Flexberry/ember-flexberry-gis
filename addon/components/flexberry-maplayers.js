@@ -477,7 +477,7 @@ const FlexberryMaplayersComponent = Component.extend(
             layersArray.push(layer);
           }
 
-          layer.side = null;
+          layer.set('side', null);
           layer.set('visibility', false);
         });
         this.set('currentLayers', layersArray);

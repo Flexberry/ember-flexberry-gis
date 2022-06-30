@@ -463,6 +463,7 @@ const FlexberryIdentifyPanelComponent = Component.extend({
   }),
 
   didInsertElement() {
+    this._super(...arguments);
     this._leafletMapDidChange();
   },
 

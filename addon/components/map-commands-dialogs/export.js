@@ -4,7 +4,7 @@
 
 import { Promise, hash } from 'rsvp';
 
-import { scheduleOnce, later } from '@ember/runloop';
+import { scheduleOnce, later, next } from '@ember/runloop';
 import $ from 'jquery';
 import { A, isArray } from '@ember/array';
 import { isNone, isBlank, typeOf } from '@ember/utils';
@@ -1369,7 +1369,9 @@ const FlexberryExportMapCommandDialogComponent = Component.extend({
     */
     legendsLoaded(layerName, legends) {
       this[`legends.${layerName}`] = legends;
-      this.set('legendsUpdateTrigger', !this.get('legendsUpdateTrigger'));
+      next(() => {
+        this.set('legendsUpdateTrigger', !this.get('legendsUpdateTrigger'));
+      });
     },
   },
 
