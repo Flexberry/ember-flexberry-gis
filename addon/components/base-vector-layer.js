@@ -1654,7 +1654,11 @@ export default BaseLayer.extend({
   */
   _addLabelsToLeafletContainer(layers, leafletObject) {
     let labelsLayer = this.get('_labelsLayer');
-    let leafletMap = this.get('leafletMap');
+
+    // чтобы слой нормально выключался в группе,
+    // он должен быть в контейнере группы, а не просто в карте
+    let leafletContainer = this.get('leafletContainer');
+
     if (!leafletObject) {
       leafletObject = this.get('_leafletObject');
     }
@@ -1674,9 +1678,9 @@ export default BaseLayer.extend({
     if (Ember.isNone(labelsLayer)) {
       this._showLabels(layers, leafletObject);
       labelsLayer = this.get('_labelsLayer');
-      leafletMap.addLayer(labelsLayer);
-    } else if (!leafletMap.hasLayer(labelsLayer)) {
-      leafletMap.addLayer(labelsLayer);
+      leafletContainer.addLayer(labelsLayer);
+    } else if (!leafletContainer.hasLayer(labelsLayer)) {
+      leafletContainer.addLayer(labelsLayer);
     } else {
       this._showLabels(layers, leafletObject);
     }
