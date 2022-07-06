@@ -81,6 +81,8 @@ test('test method featureWithAreaIntersect for two polygon', function(assert) {
   //Assert
   assert.equal(res.properties.intersectionArea, 43.97863930247094, 'Assert intersectArea');
   assert.equal(stubConvertCoordinates.callCount, 0, 'Assert call count for method _convertObjectCoordinates');
+
+  stubConvertCoordinates.restore();
 });
 
 test('test method featureWithAreaIntersect for two polygon not intersect', function(assert) {
@@ -107,4 +109,6 @@ test('test method featureWithAreaIntersect for two polygon not intersect', funct
   assert.equal(res.properties.intersectionArea, 0, 'Assert intersectArea');
   assert.equal(stubConvertCoordinates.callCount, 1, 'Assert call count for method _convertObjectCoordinates');
   assert.equal(stubConvertCoordinates.args[0][0], 'EPSG:32640', 'Assert first argument on method _convertObjectCoordinates');
+
+  stubConvertCoordinates.restore();
 });

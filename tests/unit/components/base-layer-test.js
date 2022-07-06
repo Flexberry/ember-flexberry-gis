@@ -21,27 +21,28 @@ test('it should throw at init', function (assert) {
 
 test('it should call layer.setZIndex on _setLayerZIndex', function (assert) {
   assert.expect(1);
+  var done = assert.async(1);
 
   let setZIndex = sinon.spy();
   let component = this.subject({
-    createLayer() {
+    createLayer: function() {
       return {
-        setZIndex
+        setZIndex: setZIndex
       };
     }
   });
 
-  let leafletLayerPromiseResolved = assert.async();
   component.get('_leafletLayerPromise').then((leafletLayer) => {
     component._setLayerZIndex();
-    assert.ok(setZIndex.called);
+    assert.equal(setZIndex.callCount, 1);
   }).finally(() => {
-    leafletLayerPromiseResolved();
+    done();
   });
 });
 
 test('should call _setLayerVisibility and _setLayerZIndex on render', function (assert) {
   assert.expect(1);
+  var done = assert.async(1);
 
   let setLayerVisibility = sinon.spy();
 
@@ -52,16 +53,16 @@ test('should call _setLayerVisibility and _setLayerZIndex on render', function (
 
   this.render();
 
-  let leafletLayerPromiseResolved = assert.async();
   component.get('_leafletLayerPromise').then((leafletLayer) => {
     assert.ok(setLayerVisibility.called, 'should call visibilityDidChange');
   }).finally(() => {
-    leafletLayerPromiseResolved();
+    done();
   });
 });
 
 test('should call container addLayer/removeLayer based on visibility property', function(assert) {
   assert.expect(4);
+  var done = assert.async(1);
 
   let addLayer = sinon.spy();
   let removeLayer = sinon.spy();
@@ -81,7 +82,6 @@ test('should call container addLayer/removeLayer based on visibility property', 
     }
   });
 
-  let leafletLayerPromiseResolved = assert.async();
   component.get('_leafletLayerPromise').then((leafletLayer) => {
     component.set('visibility', true);
 
@@ -94,12 +94,13 @@ test('should call container addLayer/removeLayer based on visibility property', 
     assert.ok(removeLayer.calledOnce, 'removeLayer should be called once');
     assert.ok(removeLayer.calledWith(layer), 'removeLayer should be called with layer instance');
   }).finally(() => {
-    leafletLayerPromiseResolved();
+    done();
   });
 });
 
 test('should check method addCustomFilter', function (assert) {
   assert.expect(9);
+  var done = assert.async(1);
 
   let component = this.subject({
     createLayer: createLayer
@@ -107,7 +108,6 @@ test('should check method addCustomFilter', function (assert) {
 
   this.render();
 
-  let leafletLayerPromiseResolved = assert.async();
   component.get('_leafletLayerPromise').then((leafletLayer) => {
     let filterEmpty = component.addCustomFilter(null);
     assert.equal(filterEmpty, null, 'filter is null');
@@ -131,6 +131,6 @@ test('should check method addCustomFilter', function (assert) {
     assert.equal(filter4.filters[1].firstValue, 'outerFilter', 'filter is contains outerFilter');
     assert.equal(filter4.filters[2].firstValue, 'customFilter', 'filter is contains customFilter');
   }).finally(() => {
-    leafletLayerPromiseResolved();
+    done();
   });
 });

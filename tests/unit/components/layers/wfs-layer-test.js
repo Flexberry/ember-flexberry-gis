@@ -193,9 +193,14 @@ test('getLayerFeatures() with options showExisting = false and continueLoading =
         layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
         results: Ember.A()
       };
+
       component._leafletObject = res.target;
       component.getLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Get feature of layers with showExisting = false and continueLoading = true');
+      }).finally(() => {
+        getmapApiStub.restore();
+        getPkFieldStub.restore();
+
         done();
       });
     });
@@ -227,6 +232,10 @@ test('_addLayersOnMap() with options showExisting = true and continueLoading = f
       component._addLayersOnMap(layers);
       assert.equal(layers[0].options.pane, component.get('_pane'), 'Pane on object eqals pane on layer');
       assert.equal(layers[0].options.renderer, component.get('_renderer'), 'Renderer on object eqals renderer on layer');
+
+      getmapApiStub.restore();
+      getLayerFeatureIdStub.restore();
+
       done();
     });
 
@@ -263,6 +272,10 @@ test('getLayerFeatures() with options showExisting = true', function (assert) {
 
       component.getLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Get feature of layers with showExisting = true');
+
+        getmapApiStub.restore();
+        getLayerFeatureIdStub.restore();
+
         done();
       });
     });
@@ -299,9 +312,12 @@ test('loadLayerFeatures() with options showExisting = false', function (assert) 
       component.loadLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Load feature of layers with showExisting = false');
         assert.equal(addCustomFilterSpy.callCount, 1, 'call addCustomFilter');
-        done();
 
         addCustomFilterSpy.restore();
+        getmapApiStub.restore();
+        getPkFieldStub.restore();
+
+        done();
       });
     });
 
@@ -339,6 +355,8 @@ test('loadLayerFeatures() with options showExisting = true', function (assert) {
       component._leafletObject.loadFeatures = () => new Ember.RSVP.resolve();
       component.loadLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Load feature of layers with showExisting = true');
+        getmapApiStub.restore();
+        getPkFieldStub.restore();
         done();
       });
     });
@@ -398,6 +416,10 @@ test('loadLayerFeatures() with options showExisting = false, call 2 times', func
         done();
         component.loadLayerFeatures(e).then((layers) => {
           assert.equal(layers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 2 times');
+
+          getmapApiStub.restore();
+          getPkFieldStub.restore();
+
           done();
         });
       });
@@ -450,6 +472,10 @@ test('test method clearChanges() with no changes', function (assert) {
 
         component.clearChanges();
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+        getmapApiStub.restore();
+        getLayerFeatureIdStub.restore();
+
         done();
       });
     });
@@ -511,6 +537,10 @@ test('test method clearChanges() with create', function (assert) {
 
         component.clearChanges();
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+        getmapApiStub.restore();
+        getLayerFeatureIdStub.restore();
+
         done();
       });
     });
@@ -562,6 +592,10 @@ test('test method clearChanges() with update', function (assert) {
 
         component.clearChanges();
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+        getmapApiStub.restore();
+        getLayerFeatureIdStub.restore();
+
         done();
       });
     });
@@ -611,11 +645,16 @@ test('test method clearChanges() with delete', function (assert) {
 
         component.clearChanges();
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
+
+        getmapApiStub.restore();
+        getLayerFeatureIdStub.restore();
+
         done();
       });
     });
   });
 });
+
 test('test getPkField without pkField', function (assert) {
   assert.expect(1);
   var done = assert.async(1);
@@ -635,6 +674,7 @@ test('test getPkField without pkField', function (assert) {
     });
   });
 });
+
 test('test getPkField with pkField', function (assert) {
   assert.expect(1);
   var done = assert.async(1);
@@ -655,6 +695,7 @@ test('test getPkField with pkField', function (assert) {
     });
   });
 });
+
 test('test editLayer', function (assert) {
   assert.expect(2);
   var done = assert.async(2);
@@ -705,11 +746,15 @@ test('test editLayer', function (assert) {
           '7998208.303352221,6282204.143427601,7998205.77214398,6282035.717038031,7998313.982057768';
         assert.equal(layerUpdate.feature.geometry.coordinates.toString(), coordinates);
 
+        getmapApiStub.restore();
+        getLayerFeatureIdStub.restore();
+
         done();
       });
     });
   });
 });
+
 test('test getNearObject with wpsUrl', function (assert) {
   assert.expect(9);
   var done = assert.async(2);
@@ -785,7 +830,6 @@ test('test getNearObject with wpsUrl', function (assert) {
         assert.equal(_getLayerFeatureIdSpy.callCount, 1);
         assert.equal(getLayerFeaturesStub.callCount, 1);
       }).finally(() => {
-        done(1);
         getmapApiStub.restore();
         stubAjax.restore();
         getLayerFeaturesStub.restore();
@@ -793,12 +837,15 @@ test('test getNearObject with wpsUrl', function (assert) {
         getObjectCenterSpy.restore();
         _getDistanceBetweenObjectsSpy.restore();
         _getLayerFeatureIdSpy.restore();
+
+        done(1);
       });
       assert.ok(promise instanceof Ember.RSVP.Promise);
       done(1);
     });
   });
 });
+
 test('test getNearObject with wpsUrl, Nearest object not found', function (assert) {
   assert.expect(7);
   var done = assert.async(2);
@@ -850,7 +897,6 @@ test('test getNearObject with wpsUrl, Nearest object not found', function (asser
         assert.equal(_getLayerFeatureIdSpy.callCount, 0);
         assert.equal(getLayerFeaturesStub.callCount, 0);
       }).finally(() => {
-        done(1);
         getmapApiStub.restore();
         stubAjax.restore();
         getLayerFeaturesStub.restore();
@@ -858,6 +904,8 @@ test('test getNearObject with wpsUrl, Nearest object not found', function (asser
         getObjectCenterSpy.restore();
         _getDistanceBetweenObjectsSpy.restore();
         _getLayerFeatureIdSpy.restore();
+
+        done(1);
       });
       assert.ok(promise instanceof Ember.RSVP.Promise);
       done(1);
@@ -999,7 +1047,6 @@ test('test getNearObject without wpsUrl, same layer', function (assert) {
         assert.equal(_calcNearestObjectSpy.callCount, 1);
         assert.equal(dwithinStub.callCount, 3);
       }).finally(() => {
-        done(1);
         getmapApiStub.restore();
         _calcNearestObjectSpy.restore();
         upDistanceSpy.restore();
@@ -1007,12 +1054,15 @@ test('test getNearObject without wpsUrl, same layer', function (assert) {
         _getDistanceBetweenObjectsSpy.restore();
         _getLayerFeatureIdSpy.restore();
         dwithinStub.restore();
+
+        done(1);
       });
       assert.ok(promise instanceof Ember.RSVP.Promise);
       done(1);
     });
   });
 });
+
 test('test getNearObject without wpsUrl, other layer', function (assert) {
   assert.expect(10);
   var done = assert.async(2);
@@ -1147,7 +1197,6 @@ test('test getNearObject without wpsUrl, other layer', function (assert) {
         assert.equal(_calcNearestObjectSpy.callCount, 1);
         assert.equal(dwithinStub.callCount, 3);
       }).finally(() => {
-        done(1);
         getmapApiStub.restore();
         _calcNearestObjectSpy.restore();
         upDistanceSpy.restore();
@@ -1155,12 +1204,16 @@ test('test getNearObject without wpsUrl, other layer', function (assert) {
         _getDistanceBetweenObjectsSpy.restore();
         _getLayerFeatureIdSpy.restore();
         dwithinStub.restore();
+
+        done(1);
       });
+
       assert.ok(promise instanceof Ember.RSVP.Promise);
       done(1);
     });
   });
 });
+
 test('test getNearObject without wpsUrl, Nearest object not found', function (assert) {
   assert.expect(8);
   var done = assert.async(2);
@@ -1206,7 +1259,6 @@ test('test getNearObject without wpsUrl, Nearest object not found', function (as
         assert.equal(_calcNearestObjectSpy.callCount, 0);
         assert.equal(dwithinStub.callCount, 8);
       }).finally(() => {
-        done(1);
         getmapApiStub.restore();
         _calcNearestObjectSpy.restore();
         upDistanceSpy.restore();
@@ -1214,9 +1266,12 @@ test('test getNearObject without wpsUrl, Nearest object not found', function (as
         _getDistanceBetweenObjectsSpy.restore();
         _getLayerFeatureIdSpy.restore();
         dwithinStub.restore();
+
+        done(1);
       });
       assert.ok(promise instanceof Ember.RSVP.Promise);
       done(1);
     });
   });
 });
+
