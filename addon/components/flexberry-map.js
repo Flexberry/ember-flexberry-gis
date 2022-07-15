@@ -593,7 +593,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       const readyMapLayers = mapApi.getFromApi('readyMapLayers');
       const errorMapLayers = mapApi.getFromApi('errorMapLayers');
 
-      const rejected = array.filter((item) => { return item.state === 'rejected'; }).length > 0;
+      const rejected = array.filter((item) => { return item.state === 'rejected' || Ember.isNone(item.value);  }).length > 0;
 
       if (!Ember.isNone(readyMapLayers) && !rejected) {
         readyMapLayers();
