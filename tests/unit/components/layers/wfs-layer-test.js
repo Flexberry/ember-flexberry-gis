@@ -273,7 +273,7 @@ test('getLayerFeatures() with options showExisting = true', function (assert) {
 });
 
 test('loadLayerFeatures() with options showExisting = false', function (assert) {
-  assert.expect(2);
+  assert.expect(3);
   var done = assert.async(2);
   Ember.run(() => {
     let component = this.subject(param);
@@ -285,6 +285,7 @@ test('loadLayerFeatures() with options showExisting = false', function (assert) 
 
     let getPkFieldStub = sinon.stub(mapModel, '_getPkField');
     getPkFieldStub.returns('primarykey');
+    let addCustomFilterSpy = sinon.spy(component, 'addCustomFilter');
 
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
       let e = {
@@ -297,7 +298,10 @@ test('loadLayerFeatures() with options showExisting = false', function (assert) 
       component._leafletObject.loadFeatures = () => new Ember.RSVP.resolve();
       component.loadLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Load feature of layers with showExisting = false');
+        assert.equal(addCustomFilterSpy.callCount, 1, 'call addCustomFilter');
         done();
+
+        addCustomFilterSpy.restore();
       });
     });
 

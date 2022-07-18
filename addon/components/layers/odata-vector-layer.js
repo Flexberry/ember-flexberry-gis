@@ -1249,12 +1249,27 @@ export default BaseVectorLayer.extend({
 
   addCustomFilter(filter) {
     let customFilter = this.get('customFilter');
-
-    if (!Ember.isNone(customFilter) && !Ember.isNone(filter)) {
-      return new Query.ComplexPredicate(Query.Condition.And, filter, customFilter);
+    let layerFilter = this.get('filter');
+    let resultFilter = Ember.A();
+    if (!Ember.isNone(layerFilter) && layerFilter instanceof Query.BasePredicate) {
+      resultFilter.pushObject(layerFilter);
     }
 
-    return customFilter || filter;
+    if (!Ember.isNone(filter) && filter instanceof Query.BasePredicate) {
+      resultFilter.pushObject(filter);
+    }
+
+    if (!Ember.isNone(customFilter) && customFilter instanceof Query.BasePredicate) {
+      resultFilter.pushObject(customFilter);
+    }
+
+    if (resultFilter.length === 0) {
+      return null;
+    } else if (resultFilter.length === 1) {
+      return resultFilter[0];
+    } else {
+      return new Query.ComplexPredicate(Query.Condition.And, ...resultFilter);
+    }
   },
 
   /**
@@ -1440,13 +1455,10 @@ export default BaseVectorLayer.extend({
         let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
         let newPart = queryNewBounds.intersects(loadedBounds.toEWKT(this.get('crs')));
         let filter = oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart;
-        let layerFilter = this.get('filter');
-        filter = Ember.isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
 
         promise = this._downloadFeaturesWithOrNotFilter(leafletObject, obj, filter);
       } else if (showExisting || (showExisting && showLayerObjects)) {
-        let layerFilter = !Ember.isNone(this.get('filter')) ? this.get('filter') : null;
-        promise = this._downloadFeaturesWithOrNotFilter(leafletObject, this.get('_adapterStoreModelProjectionGeom'), layerFilter);
+        promise = this._downloadFeaturesWithOrNotFilter(leafletObject, this.get('_adapterStoreModelProjectionGeom'), null);
       } else {
         promise = Ember.RSVP.resolve('The layer does not require loading');
       }

@@ -1405,6 +1405,12 @@ form.flexberry-edit-layermap {
           }
         }
 
+        .simple-layers-style-stroke-editor {
+          div.ui.dropdown .text {
+            width: 35px;
+          }
+        }
+
         .markers-styles-editor {
           .ui.table {
             margin-bottom: 1rem;
