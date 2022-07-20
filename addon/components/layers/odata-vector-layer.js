@@ -15,6 +15,9 @@ import { capitalize, camelize } from 'ember-flexberry-data/utils/string-function
 import isUUID from 'ember-flexberry-data/utils/is-uuid';
 import moment from 'moment';
 const { Builder } = Query;
+import  getBooleanFromString  from '../../utils/get-boolean-from-string';
+import { getDateFormatFromString, createTimeInterval } from '../../utils/get-date-from-string';
+
 
 /**
   For batch reading
@@ -459,94 +462,78 @@ export default BaseVectorLayer.extend({
     let leafletObject = this.get('_leafletObject');
     if (!Ember.isNone(leafletObject)) {
       let type = this.get('layerModel.type');
-      if (!Ember.isBlank(type)) {
+      if (!Ember.isBlank(type) && !Ember.isBlank(e.searchOptions.queryString)) {
         let store = Ember.getOwner(this).lookup('service:store');
         let modelConstructor = store.modelFor(leafletObject.modelName);
         let layerProperties = Ember.get(modelConstructor, `attributes`);
         searchFields.forEach((field) => {
-          let property;
-          let accessProperty = false;
-          if (field === 'primarykey') {
-            if (isUUID(e.searchOptions.queryString)) {
-              equals.push(new Query.SimplePredicate('id', Query.FilterOperator.Eq, e.searchOptions.queryString));
-            }
-          } else {
-            property = layerProperties.get(field) ? layerProperties.get(field) : console.error(`The field name: \"${field}\" is incorrect,` +
-                                                                                               `check the name of the search attribute in the layer settings`);
-            if (!Ember.isNone(property)) {
-              switch (property.type) {
-                case 'decimal':
-                case 'number':
-                  let searchString = e.searchOptions.queryString.replace('.', ',');
-                  accessProperty = !e.context && !isNaN(Number(searchString));
-                  break;
-                case 'date':
-                  accessProperty = !e.context && moment(e.searchOptions.queryString).isValid();
-                  break;
-                case 'boolean':
-                  let parseBooleanValue = e.searchOptions.queryString.toLowerCase();
-                  e.searchOptions.queryString = parseBooleanValue === 'да' ? 'True' : parseBooleanValue === 'нет' ? 'False' : e.searchOptions.queryString;
-                  accessProperty = !e.context && Boolean(e.searchOptions.queryString);
-                  break;
-                default:
-                  equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
-                  break;
-              }
+          let property = layerProperties.get(field);
+          e.searchOptions.queryString = e.searchOptions.queryString.trim();
+          if (field === 'primarykey' && isUUID(e.searchOptions.queryString)) {
+            equals.push(new Query.SimplePredicate('id', Query.FilterOperator.Eq, e.searchOptions.queryString));
+            return;
+          }
 
-              if (accessProperty) {
+          if (!Ember.isNone(property)) {
+              if (e.context) {
+                // Context search is performed only by strings
+                equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
+              } else {
+                // Default search by attribute value
                 switch (property.type) {
+                  case 'decimal':
                   case 'number':
-                  case 'boolean':
-                    equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, e.searchOptions.queryString));
+                    e.searchOptions.queryString = e.searchOptions.queryString ? e.searchOptions.queryString.replace(',', '.') : e.searchOptions.queryString;
+                    if (!isNaN(Number(e.searchOptions.queryString))) {
+                      equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, e.searchOptions.queryString));
+                    } else {
+                      console.error('Failed to convert searched value to numeric type');
+                    }
                     break;
                   case 'date':
-                    let searchDate = moment(e.searchOptions.queryString);
-                    let startInterval = new Query.DatePredicate(property.name, Query.FilterOperator.Geq, searchDate.toISOString(), false);
-                    let endInterval = null;
-                    let endIntervalTime = null;
-                    let filter = null;
-                    switch (searchDate.creationData().format) {
-                      case 'YYYY-MM-DD':
+                    let dateInfo = getDateFormatFromString(e.searchOptions.queryString);
+                    let searchDate = moment(e.searchOptions.queryString, dateInfo.dateFormat + dateInfo.timeFormat);
+                    if (searchDate.isValid()) {
+                      let [startInterval, endInterval] = createTimeInterval(searchDate, dateInfo.dateFormat);
 
-                        // Search the entire day
-                        filter = new Query.DatePredicate(property.name, Query.FilterOperator.Eq, e.searchOptions.queryString, true);
-                        break;
-                      case 'YYYY-MM-DD HH:mm':
-
-                        // Search by the exact time in the interval of one minute
-                        endIntervalTime = searchDate.add(60 - searchDate.seconds(), 'seconds');
-                        endInterval = new Query.DatePredicate(property.name, Query.FilterOperator.Le, endIntervalTime.toISOString(), false);
-                        filter = new Query.ComplexPredicate(Query.Condition.And, startInterval, endInterval);
-                        break;
-                      case 'YYYY-MM-DD HH:mm:ss':
-
-                        // Search by the exact time in the interval of one second
-                        endIntervalTime = searchDate.add(1, 'seconds');
-                        endInterval = new Query.DatePredicate(property.name, Query.FilterOperator.Le, endIntervalTime.toISOString(), false);
-                        filter = new Query.ComplexPredicate(Query.Condition.And, startInterval, endInterval);
-                        break;
-                      default:
-                        filter = new Query.DatePredicate(property.name, Query.FilterOperator.Eq, searchDate.toISOString());
-                        break;
+                      if (endInterval) {
+                        let startIntervalCondition =  new Query.DatePredicate(property.name, Query.FilterOperator.Geq, startInterval, false);
+                        let endIntervalCondition = new Query.DatePredicate(property.name, Query.FilterOperator.Le, endInterval, false);
+                        equals.push(new Query.ComplexPredicate(Query.Condition.And, startIntervalCondition, endIntervalCondition));
+                      } else if (dateInfo.timeFormat === 'THH:mm:ss.SSSSZ') {
+                        equals.push(new Query.DatePredicate(property.name, Query.FilterOperator.Eq, startInterval, false));
+                      } else {
+                        equals.push(new Query.DatePredicate(property.name, Query.FilterOperator.Eq, startInterval, true));
+                      }
+                    } else {
+                      console.error('Failed to convert searched value to date type');
                     }
-                    equals.push(filter);
+                    break;
+                  case 'boolean':
+                    let booleanValue = getBooleanFromString(e.searchOptions.queryString);
+
+                    if (typeof booleanValue === 'boolean') {
+                      equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, booleanValue));
+                    } else {
+                      console.error('Failed to convert searched value to boolean type');
+                    }
                     break;
                   default:
+                    equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
                     break;
                 }
               }
+            } else {
+              console.error(`The field name: \"${field}\" is incorrect,` + `check the name of the search attribute in the layer settings`);
             }
-          }
         });
       }
     }
 
     let filter;
-    if (equals.length === 0) {
-      return Ember.RSVP.resolve(Ember.A());
-    } else if (equals.length === 1) {
+    if (equals.length === 1) {
       filter = equals[0];
-    } else {
+    } else if (equals.length > 1){
       filter = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
     }
 

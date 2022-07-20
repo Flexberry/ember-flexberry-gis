@@ -10,6 +10,8 @@ import jsts from 'npm:jsts';
 import isUUID  from 'ember-flexberry-data/utils/is-uuid';
 import state from '../../utils/state';
 import moment from 'moment';
+import { getDateFormatFromString, createTimeInterval } from '../../utils/get-date-from-string';
+import getBooleanFromString from '../../utils/get-boolean-from-string';
 
 /**
   WFS layer component for leaflet map.
@@ -527,82 +529,64 @@ export default BaseVectorLayer.extend({
     let leafletObject = this.get('_leafletObject');
     if (!Ember.isNone(leafletObject)) {
       let fieldsType = Ember.get(leafletObject, 'readFormat.featureType.fieldTypes');
-      if (!Ember.isBlank(fieldsType)) {
+      if (!Ember.isBlank(fieldsType) && !Ember.isBlank(e.searchOptions.queryString)) {
         searchFields.forEach((field) => {
-          e.searchOptions.queryString = e.searchOptions.queryString ? e.searchOptions.queryString.trim() : e.searchOptions.queryString;
-          let typeField = fieldsType[field] ? fieldsType[field] : console.error(`The field name: \"${field}\" is incorrect,` +
-                                                                                `check the name of the search attribute in the layer settings`);
+          e.searchOptions.queryString = e.searchOptions.queryString.trim();
+          let typeField = fieldsType[field];
           if (!Ember.isBlank(typeField)) {
-            let accessProperty = false;
-            if (field !== 'primarykey') {
+            if (field === 'primarykey' && isUUID(e.searchOptions.queryString)) {
+              equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
+              return;
+            }
+
+            if (e.context) {
+              equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', { matchCase: false }));
+            } else {
               switch (typeField) {
+                case 'decimal':
                 case 'number':
-                  accessProperty = !e.context && !isNaN(Number(e.searchOptions.queryString));
+                  e.searchOptions.queryString = e.searchOptions.queryString ? e.searchOptions.queryString.replace(',', '.') : e.searchOptions.queryString;
+                  if (!isNaN(Number(e.searchOptions.queryString))) {
+                    equals.push(new L.Filter.EQ(field, e.searchOptions.queryString, false));
+                  } else {
+                    console.error('Failed to convert searched value to numeric type');
+                  }
                   break;
                 case 'date':
-                  accessProperty = !e.context && moment(e.searchOptions.queryString).isValid();
+                  let dateInfo = getDateFormatFromString(e.searchOptions.queryString);
+                  let searchDate = moment.utc(e.searchOptions.queryString, dateInfo.dateFormat + dateInfo.timeFormat);
+
+                  if (searchDate.isValid()) {
+                    let [startInterval, endInterval] = createTimeInterval(searchDate, dateInfo.dateFormat);
+
+                    if (endInterval) {
+                      let startIntervalCondition = new L.Filter.GEQ(field, startInterval, false);
+                      let endIntervalCondition = new L.Filter.LT(field, endInterval, false);
+                      equals.push(new L.Filter.And(startIntervalCondition, endIntervalCondition));
+                    } else {
+                      equals.push(new L.Filter.EQ(field, startInterval, false));
+                    }
+
+                  } else {
+                    console.error('Failed to convert searched value to date type');
+                  }
                   break;
                 case 'boolean':
-                  let parseBooleanValue =  e.searchOptions.queryString.toLowerCase();
-                  e.searchOptions.queryString = parseBooleanValue === 'да' ? 'True' : parseBooleanValue === 'нет' ? 'False' : e.searchOptions.queryString;
-                  accessProperty = !e.context && Boolean(e.searchOptions.queryString);
+                  let booleanValue = getBooleanFromString(e.searchOptions.queryString);
+                  if (typeof booleanValue === 'boolean'){
+                    equals.push(new L.Filter.EQ(field, booleanValue, false));
+                  } else {
+                    console.error('Failed to convert searched value to boolean type');
+                  }
                   break;
                 default:
-                  if (Ember.isPresent(e.searchOptions.queryString)) {
-                    equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', { matchCase: false }));
-                  } else {
-                    equals.push(new L.Filter.IsNull(field), new L.Filter.Like(field, '**', { matchCase: false }));
-                  }
-
+                  equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', { matchCase: false }));
                   break;
               }
-
-              if (accessProperty) {
-                switch (typeField) {
-                  case 'number':
-                  case 'boolean':
-                    equals.push(new L.Filter.EQ(field, e.searchOptions.queryString, false));
-                    break;
-                  case 'date':
-                    let searchDate = moment.utc(e.searchOptions.queryString);
-                    let startInterval = null;
-                    let endInterval = null;
-                    let filter = null;
-                    switch (searchDate.creationData().format) {
-                      case 'YYYY-MM-DD':
-
-                        // Search the entire day
-                        startInterval = new L.Filter.GEQ(field, searchDate.toISOString(), false);
-                        endInterval =  new L.Filter.LT(field, searchDate.add(1, 'days').toISOString(), false);
-                        filter = new L.Filter.And(startInterval, endInterval);
-                        break;
-                      case 'YYYY-MM-DD HH:mm':
-
-                        // Search by the exact time in the interval of one minute
-                        startInterval = new L.Filter.GEQ(field, searchDate.toISOString(), false);
-                        endInterval =  new L.Filter.LT(field, searchDate.add(60 - searchDate.seconds(), 'seconds').toISOString(), false);
-                        filter = new L.Filter.And(startInterval, endInterval);
-                        break;
-                      case 'YYYY-MM-DD HH:mm:ss':
-
-                        // Search by the exact time in the interval of one second
-                        startInterval = new L.Filter.GEQ(field, searchDate.toISOString(), false);
-                        endInterval =  new L.Filter.LT(field, searchDate.add(1, 'seconds').toISOString(), false);
-                        filter = new L.Filter.And(startInterval, endInterval);
-                        break;
-                      default:
-                        filter = new L.Filter.EQ(field, searchDate.toISOString(), false);
-                        break;
-                    }
-                    equals.push(filter);
-                    break;
-                }
-              }
-            } else {
-              if (isUUID(e.searchOptions.queryString)) {
-                equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
-              }
             }
+
+          } else {
+            console.error(`The field name: \"${field}\" is incorrect, check the name of the search attribute in the layer settings`);
           }
         });
       }
@@ -611,7 +595,7 @@ export default BaseVectorLayer.extend({
     let filter;
     if (equals.length === 1) {
       filter = equals[0];
-    } else {
+    } else if (equals.length > 1) {
       filter = new L.Filter.Or(...equals);
     }
 
