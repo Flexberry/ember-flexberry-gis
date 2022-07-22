@@ -476,13 +476,13 @@ export default BaseVectorLayer.extend({
                 case 'decimal':
                 case 'number':
                   let searchString = e.searchOptions.queryString.replace('.', ',');
-                  accessProperty = !e.context && !isNaN(Number(searchString));
+                  accessProperty = !isNaN(Number(searchString));
                   break;
                 case 'date':
-                  accessProperty = !e.context && new Date(e.searchOptions.queryString).toString() !== 'Invalid Date';
+                  accessProperty = new Date(e.searchOptions.queryString).toString() !== 'Invalid Date';
                   break;
                 case 'boolean':
-                  accessProperty = !e.context && Boolean(e.searchOptions.queryString);
+                  accessProperty = Boolean(e.searchOptions.queryString);
                   break;
                 default:
                   equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
