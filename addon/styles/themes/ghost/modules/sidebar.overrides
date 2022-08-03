@@ -783,6 +783,9 @@
           min-width: 30px;
         }
       }
+      .bmrk-add-block-buttons .ui.icon.button {
+        line-height: 33px;
+      }
       .bookmark-item,
       .bmrk-add-block {
         .ember-text-field {

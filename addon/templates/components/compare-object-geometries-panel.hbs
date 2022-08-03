@@ -37,45 +37,48 @@
     </div>
     {{/flexberry-toggler}}
 
-    {{#flexberry-toggler caption=(t "components.compare-object-geometries.intersection") expanded=true class="intersection-toggler"}}
-    <div class="result-toolbar hidden">
-      <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomToIntersection" intersection}}>
-        <i class="marker icon"></i>
-      </a>
-      <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" intersection}}>
-        <i class="hand paper icon"></i>
-      </a>
-    </div>
-    <div class="text-line">
-      <label class="intersection-label">{{t "components.compare-object-geometries.object-area"}}</label> {{intersection.area}} {{t "components.compare-object-geometries.m2"}}
-    </div>
-    <div class="text-line">
-      <label class="label">{{t "components.compare-object-geometries.cords"}}</label>
-      <div class="coordinates">
-        {{flexberry-textarea value=intersection.intersectionCoordsText readonly=true placeholder=""}}
+    <div class="intersection-toggler">
+      <div class="result-toolbar hidden">
+        <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomToIntersection" intersection}}>
+          <i class="marker icon"></i>
+        </a>
+        <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" intersection}}>
+          <i class="hand paper icon"></i>
+        </a>
       </div>
+      {{#flexberry-toggler caption=(t "components.compare-object-geometries.intersection") expanded=true}}
+        <div class="text-line">
+          <label class="intersection-label">{{t "components.compare-object-geometries.object-area"}}</label> {{intersection.area}} {{t "components.compare-object-geometries.m2"}}
+        </div>
+        <div class="text-line">
+          <label class="label">{{t "components.compare-object-geometries.cords"}}</label>
+          <div class="coordinates">
+            {{flexberry-textarea value=intersection.intersectionCoordsText readonly=true placeholder=""}}
+          </div>
+        </div>
+      {{/flexberry-toggler}}
     </div>
 
-    {{/flexberry-toggler}}
-
-    {{#flexberry-toggler caption=(t "components.compare-object-geometries.non-intersection") expanded=true class="intersection-toggler"}}
-    <div class="result-toolbar hidden">
-      <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomToIntersection" nonIntersection}}>
-        <i class="marker icon"></i>
-      </a>
-      <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" nonIntersection}}>
-        <i class="hand paper icon"></i>
-      </a>
-    </div>
-    <div class="text-line">
-      <label class="intersection-label">{{t "components.compare-object-geometries.object-area"}}</label> {{nonIntersection.area}}  {{t "components.compare-object-geometries.m2"}}
-    </div>
-    <div class="text-line">
-      <label class="label">{{t "components.compare-object-geometries.cords"}}</label>
-      <div class="coordinates">
-        {{flexberry-textarea value=nonIntersection.intersectionCoordsText readonly=true placeholder=""}}
+    <div class="intersection-toggler">
+      <div class="result-toolbar hidden">
+        <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomToIntersection" nonIntersection}}>
+          <i class="marker icon"></i>
+        </a>
+        <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" nonIntersection}}>
+          <i class="hand paper icon"></i>
+        </a>
       </div>
+      {{#flexberry-toggler caption=(t "components.compare-object-geometries.non-intersection") expanded=true}}
+      <div class="text-line">
+        <label class="intersection-label">{{t "components.compare-object-geometries.object-area"}}</label> {{nonIntersection.area}}  {{t "components.compare-object-geometries.m2"}}
+      </div>
+      <div class="text-line">
+        <label class="label">{{t "components.compare-object-geometries.cords"}}</label>
+        <div class="coordinates">
+          {{flexberry-textarea value=nonIntersection.intersectionCoordsText readonly=true placeholder=""}}
+        </div>
+      </div>
+      {{/flexberry-toggler}}
     </div>
-    {{/flexberry-toggler}}
   </div>
 </div>
