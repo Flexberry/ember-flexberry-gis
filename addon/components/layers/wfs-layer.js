@@ -7,7 +7,7 @@ import BaseVectorLayer from '../base-vector-layer';
 import { checkMapZoom } from '../../utils/check-zoom';
 import { intersectionArea } from '../../utils/feature-with-area-intersect';
 import jsts from 'npm:jsts';
-import isUUID  from 'ember-flexberry-data/utils/is-uuid';
+import isUUID from 'ember-flexberry-data/utils/is-uuid';
 import state from '../../utils/state';
 import moment from 'moment';
 import { getDateFormatFromString, createTimeInterval } from '../../utils/get-date-from-string';
@@ -539,50 +539,49 @@ export default BaseVectorLayer.extend({
               return;
             }
 
-            if (e.context) {
-              equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', { matchCase: false }));
-            } else {
-              switch (typeField) {
-                case 'decimal':
-                case 'number':
-                  e.searchOptions.queryString = e.searchOptions.queryString ? e.searchOptions.queryString.replace(',', '.') : e.searchOptions.queryString;
-                  if (!isNaN(Number(e.searchOptions.queryString))) {
-                    equals.push(new L.Filter.EQ(field, e.searchOptions.queryString, false));
-                  } else {
-                    console.error('Failed to convert searched value to numeric type');
-                  }
-                  break;
-                case 'date':
-                  let dateInfo = getDateFormatFromString(e.searchOptions.queryString);
-                  let searchDate = moment.utc(e.searchOptions.queryString, dateInfo.dateFormat + dateInfo.timeFormat);
+            switch (typeField) {
+              case 'decimal':
+              case 'number':
+                let searchValue = e.searchOptions.queryString ? e.searchOptions.queryString.replace(',', '.') : e.searchOptions.queryString;
+                if (!isNaN(Number(searchValue))) {
+                  equals.push(new L.Filter.EQ(field, searchValue, false));
+                } else {
+                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to numeric type`);
+                }
 
-                  if (searchDate.isValid()) {
-                    let [startInterval, endInterval] = createTimeInterval(searchDate, dateInfo.dateFormat);
+                break;
+              case 'date':
+                let dateInfo = getDateFormatFromString(e.searchOptions.queryString);
+                let searchDate = moment.utc(e.searchOptions.queryString, dateInfo.dateFormat + dateInfo.timeFormat, true);
 
-                    if (endInterval) {
-                      let startIntervalCondition = new L.Filter.GEQ(field, startInterval, false);
-                      let endIntervalCondition = new L.Filter.LT(field, endInterval, false);
-                      equals.push(new L.Filter.And(startIntervalCondition, endIntervalCondition));
-                    } else {
-                      equals.push(new L.Filter.EQ(field, startInterval, false));
-                    }
+                if (searchDate.isValid()) {
+                  let [startInterval, endInterval] = createTimeInterval(searchDate, dateInfo.dateFormat);
 
+                  if (endInterval) {
+                    let startIntervalCondition = new L.Filter.GEQ(field, startInterval, false);
+                    let endIntervalCondition = new L.Filter.LT(field, endInterval, false);
+                    equals.push(new L.Filter.And(startIntervalCondition, endIntervalCondition));
                   } else {
-                    console.error('Failed to convert searched value to date type');
+                    equals.push(new L.Filter.EQ(field, startInterval, false));
                   }
-                  break;
-                case 'boolean':
-                  let booleanValue = getBooleanFromString(e.searchOptions.queryString);
-                  if (typeof booleanValue === 'boolean'){
-                    equals.push(new L.Filter.EQ(field, booleanValue, false));
-                  } else {
-                    console.error('Failed to convert searched value to boolean type');
-                  }
-                  break;
-                default:
-                  equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', { matchCase: false }));
-                  break;
-              }
+                } else {
+                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to date type`);
+                }
+
+                break;
+              case 'boolean':
+                let booleanValue = getBooleanFromString(e.searchOptions.queryString);
+
+                if (typeof booleanValue === 'boolean') {
+                  equals.push(new L.Filter.EQ(field, booleanValue, false));
+                } else {
+                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to boolean type`);
+                }
+
+                break;
+              default:
+                equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', { matchCase: false }));
+                break;
             }
 
           } else {

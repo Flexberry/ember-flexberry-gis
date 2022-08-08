@@ -11,6 +11,10 @@ let getDateFormatFromString = (str) => {
 };
 
 let createTimeInterval = (date, dateFormat) => {
+  if (!date || !dateFormat) {
+    return [];
+  }
+
   let startInterval = date.toISOString();
   let endInterval = null;
   switch (date.creationData().format) {

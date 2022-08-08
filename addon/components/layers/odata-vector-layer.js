@@ -14,16 +14,14 @@ import jsts from 'npm:jsts';
 import { capitalize, camelize } from 'ember-flexberry-data/utils/string-functions';
 import isUUID from 'ember-flexberry-data/utils/is-uuid';
 import moment from 'moment';
-const { Builder } = Query;
-import  getBooleanFromString  from '../../utils/get-boolean-from-string';
+import getBooleanFromString from '../../utils/get-boolean-from-string';
 import { getDateFormatFromString, createTimeInterval } from '../../utils/get-date-from-string';
-
 
 /**
   For batch reading
 */
 const maxBatchFeatures = 10000;
-
+const { Builder } = Query;
 /**
   Investment layer component for leaflet map.
 
@@ -475,57 +473,56 @@ export default BaseVectorLayer.extend({
           }
 
           if (!Ember.isNone(property)) {
-              if (e.context) {
-                // Context search is performed only by strings
-                equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
-              } else {
-                // Default search by attribute value
-                switch (property.type) {
-                  case 'decimal':
-                  case 'number':
-                    e.searchOptions.queryString = e.searchOptions.queryString ? e.searchOptions.queryString.replace(',', '.') : e.searchOptions.queryString;
-                    if (!isNaN(Number(e.searchOptions.queryString))) {
-                      equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, e.searchOptions.queryString));
-                    } else {
-                      console.error('Failed to convert searched value to numeric type');
-                    }
-                    break;
-                  case 'date':
-                    let dateInfo = getDateFormatFromString(e.searchOptions.queryString);
-                    let searchDate = moment(e.searchOptions.queryString, dateInfo.dateFormat + dateInfo.timeFormat);
-                    if (searchDate.isValid()) {
-                      let [startInterval, endInterval] = createTimeInterval(searchDate, dateInfo.dateFormat);
-
-                      if (endInterval) {
-                        let startIntervalCondition =  new Query.DatePredicate(property.name, Query.FilterOperator.Geq, startInterval, false);
-                        let endIntervalCondition = new Query.DatePredicate(property.name, Query.FilterOperator.Le, endInterval, false);
-                        equals.push(new Query.ComplexPredicate(Query.Condition.And, startIntervalCondition, endIntervalCondition));
-                      } else if (dateInfo.timeFormat === 'THH:mm:ss.SSSSZ') {
-                        equals.push(new Query.DatePredicate(property.name, Query.FilterOperator.Eq, startInterval, false));
-                      } else {
-                        equals.push(new Query.DatePredicate(property.name, Query.FilterOperator.Eq, startInterval, true));
-                      }
-                    } else {
-                      console.error('Failed to convert searched value to date type');
-                    }
-                    break;
-                  case 'boolean':
-                    let booleanValue = getBooleanFromString(e.searchOptions.queryString);
-
-                    if (typeof booleanValue === 'boolean') {
-                      equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, booleanValue));
-                    } else {
-                      console.error('Failed to convert searched value to boolean type');
-                    }
-                    break;
-                  default:
-                    equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
-                    break;
+            // Default search by attribute value
+            switch (property.type) {
+              case 'decimal':
+              case 'number':
+                let searchValue = e.searchOptions.queryString ? e.searchOptions.queryString.replace(',', '.') : e.searchOptions.queryString;
+                if (!isNaN(Number(searchValue))) {
+                  equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, searchValue));
+                } else {
+                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to numeric type`);
                 }
-              }
-            } else {
-              console.error(`The field name: \"${field}\" is incorrect,` + `check the name of the search attribute in the layer settings`);
+
+                break;
+              case 'date':
+                let dateInfo = getDateFormatFromString(e.searchOptions.queryString);
+                let searchDate = moment(e.searchOptions.queryString, dateInfo.dateFormat + dateInfo.timeFormat, true);
+                if (searchDate.isValid()) {
+                  let [startInterval, endInterval] = createTimeInterval(searchDate, dateInfo.dateFormat);
+
+                  if (endInterval) {
+                    let startIntervalCondition =  new Query.DatePredicate(property.name, Query.FilterOperator.Geq, startInterval, false);
+                    let endIntervalCondition = new Query.DatePredicate(property.name, Query.FilterOperator.Le, endInterval, false);
+                    equals.push(new Query.ComplexPredicate(Query.Condition.And, startIntervalCondition, endIntervalCondition));
+                  } else if (dateInfo.timeFormat === 'THH:mm:ss.SSSSZ') {
+                    equals.push(new Query.DatePredicate(property.name, Query.FilterOperator.Eq, startInterval, false));
+                  } else {
+                    equals.push(new Query.DatePredicate(property.name, Query.FilterOperator.Eq, startInterval, true));
+                  }
+                } else {
+                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to date type`);
+                }
+
+                break;
+              case 'boolean':
+                let booleanValue = getBooleanFromString(e.searchOptions.queryString);
+
+                if (typeof booleanValue === 'boolean') {
+                  equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, booleanValue));
+                } else {
+                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to boolean type`);
+                }
+
+                break;
+              default:
+                equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
+
+                break;
             }
+          } else {
+            console.error(`The field name: \"${field}\" is incorrect,` + `check the name of the search attribute in the layer settings`);
+          }
         });
       }
     }
@@ -533,7 +530,7 @@ export default BaseVectorLayer.extend({
     let filter;
     if (equals.length === 1) {
       filter = equals[0];
-    } else if (equals.length > 1){
+    } else if (equals.length > 1) {
       filter = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
     }
 
