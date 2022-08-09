@@ -96,20 +96,20 @@ test('test loadIntersectionLayers', function(assert) {
     }); // Tree of depth 2
 
   let layerTree3 = Ember.Object.create({
-      name: 'rootLayer',
-      layers: [Ember.Object.create({
-                name:'layer1',
+    name: 'rootLayer',
+    layers: [Ember.Object.create({
+              name:'layer1',
+              layers:[Ember.Object.create({
+                name:'layer11',
                 layers:[Ember.Object.create({
-                  name:'layer11',
+                  name:'layer111',
                   layers:[Ember.Object.create({
-                    name:'layer111',
-                    layers:[Ember.Object.create({
-                      name:'layer1111',
-                      layers:[]
-                    })]
+                    name:'layer1111',
+                    layers:[]
                   })]
                 })]
-              })
+              })]
+            })
 
       ]
   }); // Tree of depth 3
