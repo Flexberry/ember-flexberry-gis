@@ -51,14 +51,13 @@ test('test method getObjectWithProperties for Polygon', function (assert) {
 test('test loadIntersectionLayers', function(assert) {
   let component = this.subject({
     layers: [],
-
   });
 
   sinon.stub(component, '_checkTypeLayer', function(someArg) {
     return true;
   });
 
-  let emptyLayerTree = {layers:[]};
+  let emptyLayerTree = { layers: [] };
 
   let layerTree1 =  Ember.Object.create({
     name:'rootLayer',
@@ -70,33 +69,35 @@ test('test loadIntersectionLayers', function(assert) {
               name:'layer2',
               layers:[]
             })
-    ]});//Tree of depth 1
+    ]
+  }); // Tree of depth 1
 
-    let layerTree2 = Ember.Object.create(
-      {
-        name:'rootLayer',
-        layers:[Ember.Object.create({
-                  name:'layer1',
-                  layers:[
-                    Ember.Object.create({
-                      name:'layer11',
-                      layers:[]
-                    }),
-                    Ember.Object.create({
-                      name:'layer12',
-                      layers:[]
-                    })
-                  ]
-                }),
-                Ember.Object.create({
-                  name:'layer2',
-                  layers:[]
-                })
-        ]});//Tree of depth 2
+  let layerTree2 = Ember.Object.create(
+    {
+      name: 'rootLayer',
+      layers: [Ember.Object.create({
+                name:'layer1',
+                layers:[
+                  Ember.Object.create({
+                    name:'layer11',
+                    layers:[]
+                  }),
+                  Ember.Object.create({
+                    name:'layer12',
+                    layers:[]
+                  })
+                ]
+              }),
+              Ember.Object.create({
+                name:'layer2',
+                layers:[]
+              })
+      ]
+    }); // Tree of depth 2
 
     let layerTree3 = Ember.Object.create({
-      name:'rootLayer',
-      layers:[Ember.Object.create({
+      name: 'rootLayer',
+      layers: [Ember.Object.create({
                 name:'layer1',
                 layers:[Ember.Object.create({
                   name:'layer11',
@@ -110,16 +111,16 @@ test('test loadIntersectionLayers', function(assert) {
                 })]
               })
 
-    ]});//Tree of depth 3
-
+      ]
+    }); // Tree of depth 3
 
     let testList1 = component.loadIntersectionLayers(emptyLayerTree.layers);
-    assert.equal(0, testList1.length , 'emptyList');
+    assert.equal(0, testList1.length, 'emptyList');
 
     let testList2 = component.loadIntersectionLayers(layerTree1.layers);
-    assert.equal(2, testList2.length , 'layer tree depth 1 with 2 inner layers');
+    assert.equal(2, testList2.length, 'layer tree depth 1 with 2 inner layers');
     let testList3 = component.loadIntersectionLayers(layerTree2.layers);
-    assert.equal(3, testList3.length , 'layer tree depth 2 with 3 inner layers');
+    assert.equal(3, testList3.length, 'layer tree depth 2 with 3 inner layers');
     let testList4 = component.loadIntersectionLayers(layerTree3.layers);
-    assert.equal('layer1111', testList4[0].get('name') , 'layer tree depth 4 with 1 inner layer');
+    assert.equal('layer1111', testList4[0].get('name'), 'layer tree depth 4 with 1 inner layer');
 });
