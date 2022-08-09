@@ -181,8 +181,8 @@ export default Ember.Component.extend({
       } else {
         if (this._checkTypeLayer(layer)) {
           vlayers.push(layer);
-        };
-      };
+        }
+      }
     });
     return vlayers;
   },
