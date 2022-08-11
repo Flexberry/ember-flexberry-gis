@@ -6,6 +6,7 @@ export function initialize() {
     */
     _setView: function (center, zoom, noPrune, noUpdate) {
       var tileZoom = Math.round(zoom);
+
       // it compares with tileZoom in original. When zoom is fractional, round begin show layer and after hide that's why he blinks.
       if ((this.options.maxZoom !== undefined && zoom > this.options.maxZoom) ||
           (this.options.minZoom !== undefined && zoom < this.options.minZoom)) {
