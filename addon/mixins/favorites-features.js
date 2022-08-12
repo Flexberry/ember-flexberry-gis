@@ -122,7 +122,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
           let records = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
             .filterBy('objectKey', feature.properties.primarykey)
             .filterBy('objectLayerKey', feature.layerModel.id);
-          let record = records.objectAt(0)
+          let record = records.objectAt(0);
           record.deleteRecord();
           record.save();
         }

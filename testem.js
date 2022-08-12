@@ -10,6 +10,7 @@ module.exports = {
     "Chrome"
   ],
   "browser_args": {
+    mode: 'ci',
     "Chrome": [
       '--headless',
       '--disable-gpu',
