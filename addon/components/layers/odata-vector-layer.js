@@ -473,7 +473,6 @@ export default BaseVectorLayer.extend({
           }
 
           if (!Ember.isNone(property)) {
-            // Default search by attribute value
             switch (property.type) {
               case 'decimal':
               case 'number':
@@ -521,20 +520,22 @@ export default BaseVectorLayer.extend({
                 break;
             }
           } else {
-            console.error(`The field name: \"${field}\" is incorrect,` + `check the name of the search attribute in the layer settings`);
+            console.error(`The field name: \"${field}\" is incorrect, check the name of the search attribute in the layer settings`);
           }
         });
       }
     }
 
     let filter;
-    if (equals.length === 1) {
+    if (equals.length === 0) {
+      return Ember.RSVP.resolve(Ember.A());
+    } else if (equals.length === 1) {
       filter = equals[0];
-    } else if (equals.length > 1) {
+    } else {
       filter = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
     }
 
-    let featuresPromise = this._getFeature(filter, e.searchOptions.maxResultsCount);
+    let featuresPromise = this._getFeature(filter, e.searchOptions.maxResultsCount + 1);
 
     return featuresPromise;
   },

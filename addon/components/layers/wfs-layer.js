@@ -99,6 +99,10 @@ export default BaseVectorLayer.extend({
 
       let wfsLayer = this.get('_leafletObject');
 
+      let maxFeatures = Ember.get(options, 'maxFeatures');
+
+      Ember.set(Ember.get(wfsLayer, 'options'), 'maxFeatures', maxFeatures ? maxFeatures : 1000);
+
       if (Ember.isNone(wfsLayer)) {
         resolve(Ember.A());
         return;
@@ -594,13 +598,13 @@ export default BaseVectorLayer.extend({
     let filter;
     if (equals.length === 1) {
       filter = equals[0];
-    } else if (equals.length > 1) {
+    } else {
       filter = new L.Filter.Or(...equals);
     }
 
     let featuresPromise = this._getFeature({
       filter,
-      maxFeatures: e.searchOptions.maxResultsCount,
+      maxFeatures: e.searchOptions.maxResultsCount + 1,
       fillOpacity: 0.3,
       style: {
         color: 'yellow',

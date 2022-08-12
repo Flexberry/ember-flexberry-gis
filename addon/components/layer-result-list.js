@@ -327,6 +327,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     this.set('_hasError', false);
     this.set('_noData', false);
     this.set('_displayResults', null);
+    this.set('featuresLength', 0);
 
     let results = this.get('results') || Ember.A();
 
@@ -348,6 +349,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       result.features.then(
         (features) => {
           if (features.length > 0) {
+
+            Ember.set(this, 'featuresLength', this.get('featuresLength') + features.length);
+
             let intersectArray = features.filter((item) => {
               item.isIntersect = false;
               if (!Ember.isNone(item.intersection)) {

@@ -4,9 +4,13 @@
   <div class="nodata">
   {{t "components.layer-result-list.nodata"}}
   </div>
-{{/if}}
-{{#each _displayResults as |result|}}
-  <div class="feature-result-item-group">
+{{else if (gt featuresLength maxResultsCount)}}
+  <div class="nodata">
+    <h5>Найдено более ста объектов по запросу. Пожалуйста, уточните поисковый запрос</h5>
+  </div>
+{{else}}
+  {{#each _displayResults as |result|}}
+    <div class="feature-result-item-group">
     {{#if result.isIntersect}}
       <div class="feature-result-item-buttons hidden">
         {{#if (eq intersection false)}}
@@ -253,10 +257,12 @@
         </div>
       {{/flexberry-toggler}}
     {{/if}}
-  </div>
-{{/each}}
-{{feature-export
-  visible=exportDialogVisible
-  result=exportResult
-  availableCRS=availableCRS
-}}
+    </div>
+  {{/each}}
+  {{feature-export
+    visible=exportDialogVisible
+    result=exportResult
+    availableCRS=availableCRS
+  }}
+{{/if}}
+
