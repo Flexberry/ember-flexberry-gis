@@ -138,6 +138,7 @@ test('substitution _getModelLayerFeature', function (assert) {
   let _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
   _getModelLayerFeatureStub.withArgs(1).returns(objA);
   assert.ok(_getModelLayerFeatureStub(1));
+  _getModelLayerFeatureStub.restore();
 });
 
 test('isContainsObject', function(assert) {
@@ -163,6 +164,8 @@ test('isContainsObject', function(assert) {
   'f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452').then((e) => {
     assert.notOk(e, 'Not contains');
   });
+
+  _getModelLayerFeatureStub.restore();
 });
 
 test('getAreaExtends', function(assert) {
@@ -203,6 +206,8 @@ test('getAreaExtends', function(assert) {
   '63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', 'd633ea1d-eb32-423f-8663-a38abc7ba094').then((e) => {
     assert.equal(e, 43187392.82526295, 'Not intersect');
   });
+
+  _getModelLayerFeatureStub.restore();
 });
 
 test('getIntersectionArea', function(assert) {
@@ -219,6 +224,7 @@ test('getIntersectionArea', function(assert) {
       resolve([null, objWithCrs, objB]);
     })
   );
+
   _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['d633ea1d-eb32-423f-8663-a38abc7ba094']).returns(
     new Ember.RSVP.Promise((resolve, reject) => {
       resolve([null, objWithCrs, objC]);
@@ -236,6 +242,8 @@ test('getIntersectionArea', function(assert) {
   }).catch((e) => {
     assert.ok(e, 'Not intersect');
   });
+
+  _getModelLayerFeatureStub.restore();
 });
 
 test('getDistanceBetweenObjects', function(assert) {
@@ -246,6 +254,7 @@ test('getDistanceBetweenObjects', function(assert) {
       resolve([null, objWithCrs, L.geoJSON(objA[0].feature).getLayers()]);
     })
   );
+
   _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(
     new Ember.RSVP.Promise((resolve, reject) => {
       resolve([null, objWithCrs, L.geoJSON(objB[0].feature).getLayers()]);
@@ -256,6 +265,8 @@ test('getDistanceBetweenObjects', function(assert) {
   '63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233').then((e) => {
     assert.equal(e, 536.4476316355142, 'distance');
   });
+
+  _getModelLayerFeatureStub.restore();
 });
 
 test('getmulticircuitobject with difference', function(assert) {

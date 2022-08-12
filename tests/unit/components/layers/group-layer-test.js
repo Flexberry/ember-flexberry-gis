@@ -12,18 +12,31 @@ moduleForComponent('layers/group-layer', 'Unit | Component | layers/group layer'
   }
 });
 
-test('it return L.LayerGroup on createLayer', function(assert) {
+test('it return L.LayerGroup on createLayer', function (assert) {
   assert.expect(1);
 
-  let component = this.subject({ leafletMap: leafletMap });
+  let component = this.subject({
+    leafletMap: leafletMap,
+    mapApi: {
+      getFromApi() { return {}; }
+    }
+  });
+
   let layer = component.createLayer();
   assert.ok(layer instanceof L.LayerGroup, 'Expected L.LayerGroup instance');
 });
 
-test('it not call _leafletObject.setZIndex on setZIndex', function(assert) {
+test('it not call _leafletObject.setZIndex on setZIndex', function (assert) {
   assert.expect(1);
+  var done = assert.async(1);
 
-  let component = this.subject({ leafletMap: leafletMap });
+  let component = this.subject({
+    leafletMap: leafletMap,
+    mapApi: {
+      getFromApi() { return {}; }
+    }
+  });
+
   let leafletLayerPromiseResolved = assert.async();
   component.get('_leafletLayerPromise').then((leafletLayer) => {
     let layer = component.get('_leafletObject');
@@ -34,5 +47,7 @@ test('it not call _leafletObject.setZIndex on setZIndex', function(assert) {
     assert.equal(spy.callCount, 0);
   }).finally(() => {
     leafletLayerPromiseResolved();
+
+    done();
   });
 });
