@@ -173,11 +173,19 @@ export default Ember.Component.extend({
 
   */
   loadIntersectionLayers(layers) {
+    if (!layers) {
+      return [];
+    }
+
     let vlayers = [];
     layers.forEach(layer => {
-      let isGroupLayer = layer.get('layers.length') > 0 ? true : false;
-      if (isGroupLayer) {
-        vlayers.push(...this.loadIntersectionLayers(layer.get('layers')));
+      let innerLayers = Ember.get(layer, 'layers');
+      if (!innerLayers) {
+        return;
+      }
+
+      if (Ember.get(innerLayers, 'length') > 0) {
+        vlayers.push(...this.loadIntersectionLayers(innerLayers));
       } else {
         if (this._checkTypeLayer(layer)) {
           vlayers.push(layer);
