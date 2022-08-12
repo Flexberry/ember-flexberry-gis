@@ -26,6 +26,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   mapApi: Ember.inject.service(),
 
   /**
+    Injected ember storage.
+
+    @property folded
+    @type Ember.store
+  */
+  store: Ember.inject.service(),
+
+  /**
     Component's wrapping <div> CSS-classes names.
 
     Any other CSS-class names can be added through component's 'class' property.
@@ -449,150 +457,157 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       return result.features;
     });
 
-    Ember.RSVP.allSettled(promises).finally(() => {
-      let order = 1;
-      displayResults.forEach((result) => {
-        result.order = order;
-        result.first = result.order === 1;
-        result.last = result.order === displayResults.length;
-        order += 1;
+    let store = this.get('store');
+    store.findAll('i-i-s-r-g-i-s-p-k-favorite-features').then((idsFavorite) => {
+      Ember.RSVP.allSettled(promises).finally(() => {
+        let order = 1;
+        displayResults.forEach((result) => {
+          result.order = order;
+          result.first = result.order === 1;
+          result.last = result.order === displayResults.length;
+          order += 1;
 
-        result.features = result.features.sort((a, b) => {
+          result.features = result.features.sort((a, b) => {
+            // If displayValue is empty, it should be on the bottom.
+            if (Ember.isBlank(a.displayValue)) {
+              return 1;
+            }
+
+            if (Ember.isBlank(b.displayValue)) {
+              return -1;
+            }
+
+            if (a.displayValue > b.displayValue) {
+              return 1;
+            }
+
+            if (a.displayValue < b.displayValue) {
+              return -1;
+            }
+
+            return 0;
+          });
+
+          if (!Ember.isBlank(result.features)) {
+            let ownLayerField;
+            let objectList = Ember.A();
+
+            let editForms = result.editForms;
+            let listForms = result.listForms;
+
+            result.features.forEach((feature) => {
+              Ember.set(feature, 'properties.isFavorite', !Ember.isNone(idsFavorite.find((favoriteFeature) =>
+                Ember.get(favoriteFeature, 'objectKey') === Ember.get(feature, 'properties.primarykey'))));
+              Ember.set(feature, 'displayValue', getFeatureDisplayProperty(feature, result.settings, result.dateFormat));
+              Ember.set(feature, 'layerModel', Ember.get(result, 'layerModel'));
+              Ember.set(feature, 'editForms', Ember.A());
+              if (editForms.length === 0) {
+                return;
+              }
+
+              editForms.forEach((editForm) => {
+                let url = editForm.url;
+                let layerField = editForm.layerField;
+                let queryKey = editForm.queryKey;
+                let typeName = editForm.typeName;
+
+                if (Ember.isBlank(url) || Ember.isBlank(layerField) || Ember.isBlank(queryKey)) {
+                  return;
+                }
+
+                let properties = feature.properties;
+                let queryValue;
+
+                if (Ember.isBlank(ownLayerField)) {
+                  for (var p in properties) {
+                    if (properties.hasOwnProperty(p) && layerField.toLowerCase() === (p + '').toLowerCase()) {
+                      ownLayerField = p;
+                      break;
+                    }
+                  }
+                }
+
+                if (!Ember.isBlank(ownLayerField)) {
+                  queryValue = properties[ownLayerField];
+                }
+
+                if (Ember.isBlank(queryValue)) {
+                  return;
+                }
+
+                let params = {};
+                Ember.set(params, queryKey, queryValue);
+                Ember.set(params, isMapLimitKey, true);
+
+                feature.editForms.pushObject({
+                  url: url + L.Util.getParamString(params, url),
+                  typeName: typeName
+                });
+
+                objectList.pushObject(queryValue);
+              });
+            });
+
+            let shapeIds = this._getFeatureShapeIds(result.features);
+            Ember.set(result, 'shapeIds', shapeIds);
+
+            let forms = Ember.A();
+            if (objectList.length === 0 || listForms.length === 0) {
+              return;
+            }
+
+            listForms.forEach((listForm) => {
+              let params = {};
+
+              Ember.set(params, isMapLimitKey, true);
+              Ember.set(params, listForm.queryKey, objectList.join(','));
+
+              forms.pushObject({
+                url: listForm.url + L.Util.getParamString(params, listForm.url),
+                typeName: listForm.typeName
+              });
+            });
+
+            result.listForms = forms;
+          }
+        });
+
+        displayResults = displayResults.sort((a, b) => {
           // If displayValue is empty, it should be on the bottom.
-          if (Ember.isBlank(a.displayValue)) {
+          if (!a.name) {
             return 1;
           }
 
-          if (Ember.isBlank(b.displayValue)) {
+          if (!b.name) {
             return -1;
           }
 
-          if (a.displayValue > b.displayValue) {
+          if (a.name > b.name) {
             return 1;
           }
 
-          if (a.displayValue < b.displayValue) {
+          if (a.name < b.name) {
             return -1;
           }
 
           return 0;
         });
 
-        if (!Ember.isBlank(result.features)) {
-          let ownLayerField;
-          let objectList = Ember.A();
-
-          let editForms = result.editForms;
-          let listForms = result.listForms;
-
-          result.features.forEach((feature) => {
-            Ember.set(feature, 'displayValue', getFeatureDisplayProperty(feature, result.settings, result.dateFormat));
-            Ember.set(feature, 'layerModel', Ember.get(result, 'layerModel'));
-            Ember.set(feature, 'editForms', Ember.A());
-            if (editForms.length === 0) {
-              return;
-            }
-
-            editForms.forEach((editForm) => {
-              let url = editForm.url;
-              let layerField = editForm.layerField;
-              let queryKey = editForm.queryKey;
-              let typeName = editForm.typeName;
-
-              if (Ember.isBlank(url) || Ember.isBlank(layerField) || Ember.isBlank(queryKey)) {
-                return;
-              }
-
-              let properties = feature.properties;
-              let queryValue;
-
-              if (Ember.isBlank(ownLayerField)) {
-                for (var p in properties) {
-                  if (properties.hasOwnProperty(p) && layerField.toLowerCase() === (p + '').toLowerCase()) {
-                    ownLayerField = p;
-                    break;
-                  }
-                }
-              }
-
-              if (!Ember.isBlank(ownLayerField)) {
-                queryValue = properties[ownLayerField];
-              }
-
-              if (Ember.isBlank(queryValue)) {
-                return;
-              }
-
-              let params = {};
-              Ember.set(params, queryKey, queryValue);
-              Ember.set(params, isMapLimitKey, true);
-
-              feature.editForms.pushObject({
-                url: url + L.Util.getParamString(params, url),
-                typeName: typeName
-              });
-
-              objectList.pushObject(queryValue);
-            });
-          });
-
-          let shapeIds = this._getFeatureShapeIds(result.features);
-          Ember.set(result, 'shapeIds', shapeIds);
-
-          let forms = Ember.A();
-          if (objectList.length === 0 || listForms.length === 0) {
-            return;
+        this.set('_displayResults', displayResults);
+        this.set('_noData', displayResults.length === 0);
+        this.set('_showLoader', false);
+        if (this.get('favoriteMode') !== true && Ember.isNone(this.get('share'))) {
+          if (displayResults.length === 1) {
+            this.send('zoomTo', displayResults.objectAt(0).features);
           }
-
-          listForms.forEach((listForm) => {
-            let params = {};
-
-            Ember.set(params, isMapLimitKey, true);
-            Ember.set(params, listForm.queryKey, objectList.join(','));
-
-            forms.pushObject({
-              url: listForm.url + L.Util.getParamString(params, listForm.url),
-              typeName: listForm.typeName
-            });
-          });
-
-          result.listForms = forms;
+        } else if (!Ember.isNone(this.get('share'))) {
+          if (displayResults.length === 1) {
+            this.send('selectFeature', displayResults.objectAt(0).features);
+          }
         }
       });
-
-      displayResults = displayResults.sort((a, b) => {
-        // If displayValue is empty, it should be on the bottom.
-        if (!a.name) {
-          return 1;
-        }
-
-        if (!b.name) {
-          return -1;
-        }
-
-        if (a.name > b.name) {
-          return 1;
-        }
-
-        if (a.name < b.name) {
-          return -1;
-        }
-
-        return 0;
-      });
-
-      this.set('_displayResults', displayResults);
-      this.set('_noData', displayResults.length === 0);
-      this.set('_showLoader', false);
-      if (this.get('favoriteMode') !== true && Ember.isNone(this.get('share'))) {
-        if (displayResults.length === 1) {
-          this.send('zoomTo', displayResults.objectAt(0).features);
-        }
-      } else if (!Ember.isNone(this.get('share'))) {
-        if (displayResults.length === 1) {
-          this.send('selectFeature', displayResults.objectAt(0).features);
-        }
-      }
+    }).catch((error) => {
+      console.error(error);
     });
   })),
 
