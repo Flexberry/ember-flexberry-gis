@@ -1324,6 +1324,7 @@ test('test method getNearObject()', function(assert) {
       _getDistanceBetweenObjectsSpy.restore();
       stubAjax.restore();
       _callAjaxStub.restore();
+      registerStub.restore();
     });
     assert.ok(promise instanceof Ember.RSVP.Promise);
     done(1);
