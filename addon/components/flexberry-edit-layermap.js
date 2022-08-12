@@ -666,6 +666,8 @@ export default Ember.Component.extend(
         this._createInnerLayer();
       } else {
         this.set('_hideBbox', true);
+        this.set('_tabularMenuState.activeGroup', 'main-group');
+        this.set('_tabularMenuState.groups.main-group.activeTab', 'main-tab');
         this._destroyInnerLayer();
       }
     })),
