@@ -606,6 +606,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           }
         }
       });
+    }).catch((error) => {
+      console.error(error);
     });
   })),
 
