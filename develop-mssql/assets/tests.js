@@ -4107,6 +4107,43 @@ define('dummy/tests/unit/components/base-layer-test', ['exports', 'ember-qunit',
       leafletLayerPromiseResolved();
     });
   });
+
+  (0, _emberQunit.test)('should check method addCustomFilter', function (assert) {
+    assert.expect(9);
+
+    var component = this.subject({
+      createLayer: createLayer
+    });
+
+    this.render();
+
+    var leafletLayerPromiseResolved = assert.async();
+    component.get('_leafletLayerPromise').then(function (leafletLayer) {
+      var filterEmpty = component.addCustomFilter(null);
+      assert.equal(filterEmpty, null, 'filter is null');
+
+      var filterForFunction = new L.Filter.LEQ('outerFilter', 10);
+      var filter2 = component.addCustomFilter(filterForFunction);
+      assert.equal(filter2, filterForFunction, 'filter is filterForFunction');
+
+      var layerFilter = new L.Filter.LEQ('innerFilter', 20);
+      component.set('filter', layerFilter);
+      var filter3 = component.addCustomFilter(filterForFunction);
+      assert.equal(filter3.filters.length, 2, 'filter is contains 2 filters');
+      assert.equal(filter3.filters[0].firstValue, 'innerFilter', 'filter is contains innerFilter');
+      assert.equal(filter3.filters[1].firstValue, 'outerFilter', 'filter is contains outerFilter');
+
+      var customFilter = new L.Filter.LEQ('customFilter', 30);
+      component.set('customFilter', customFilter);
+      var filter4 = component.addCustomFilter(filterForFunction);
+      assert.equal(filter4.filters.length, 3, 'filter is contains 3 filters');
+      assert.equal(filter4.filters[0].firstValue, 'innerFilter', 'filter is contains innerFilter');
+      assert.equal(filter4.filters[1].firstValue, 'outerFilter', 'filter is contains outerFilter');
+      assert.equal(filter4.filters[2].firstValue, 'customFilter', 'filter is contains customFilter');
+    })['finally'](function () {
+      leafletLayerPromiseResolved();
+    });
+  });
 });
 define('dummy/tests/unit/components/base-layer-test.jscs-test', ['exports'], function (exports) {
   'use strict';
@@ -5018,7 +5055,7 @@ define('dummy/tests/unit/components/flexberry-layers-attributes-panel-test.jshin
     assert.ok(true, 'unit/components/flexberry-layers-attributes-panel-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/components/flexberry-layers-intersections-panel-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+define('dummy/tests/unit/components/flexberry-layers-intersections-panel-test', ['exports', 'ember-qunit', 'ember', 'sinon'], function (exports, _emberQunit, _ember, _sinon) {
 
   (0, _emberQunit.moduleForComponent)('flexberry-layers-intersections-panel', 'Unit | Component | flexberry layers intersections panel', {
     unit: true
@@ -5060,6 +5097,73 @@ define('dummy/tests/unit/components/flexberry-layers-intersections-panel-test', 
     });
     var arrayCoord = component.computeCoordinates(featurePolygon);
     assert.deepEqual(arrayCoord, [[10, 30], [40, 40], [40, 20], [20, 10], [10, 30]]);
+  });
+
+  (0, _emberQunit.test)('test loadIntersectionLayers', function (assert) {
+    var component = this.subject({
+      layers: []
+    });
+
+    _sinon['default'].stub(component, '_checkTypeLayer', function (someArg) {
+      return true;
+    });
+
+    var emptyLayerTree = { layers: [] };
+
+    var layerTree1 = _ember['default'].Object.create({
+      name: 'rootLayer',
+      layers: [_ember['default'].Object.create({
+        name: 'layer1',
+        layers: []
+      }), _ember['default'].Object.create({
+        name: 'layer2',
+        layers: []
+      })]
+    }); // Tree of depth 1
+
+    var layerTree2 = _ember['default'].Object.create({
+      name: 'rootLayer',
+      layers: [_ember['default'].Object.create({
+        name: 'layer1',
+        layers: [_ember['default'].Object.create({
+          name: 'layer11',
+          layers: []
+        }), _ember['default'].Object.create({
+          name: 'layer12',
+          layers: []
+        })]
+      }), _ember['default'].Object.create({
+        name: 'layer2',
+        layers: []
+      })]
+    }); // Tree of depth 2
+
+    var layerTree3 = _ember['default'].Object.create({
+      name: 'rootLayer',
+      layers: [_ember['default'].Object.create({
+        name: 'layer1',
+        layers: [_ember['default'].Object.create({
+          name: 'layer11',
+          layers: [_ember['default'].Object.create({
+            name: 'layer111',
+            layers: [_ember['default'].Object.create({
+              name: 'layer1111',
+              layers: []
+            })]
+          })]
+        })]
+      })]
+    }); // Tree of depth 3
+
+    var testList1 = component.loadIntersectionLayers(emptyLayerTree.layers);
+    assert.equal(0, testList1.length, 'emptyList');
+
+    var testList2 = component.loadIntersectionLayers(layerTree1.layers);
+    assert.equal(2, testList2.length, 'layer tree depth 1 with 2 inner layers');
+    var testList3 = component.loadIntersectionLayers(layerTree2.layers);
+    assert.equal(3, testList3.length, 'layer tree depth 2 with 3 inner layers');
+    var testList4 = component.loadIntersectionLayers(layerTree3.layers);
+    assert.equal('layer1111', testList4[0].get('name'), 'layer tree depth 4 with 1 inner layer');
   });
 });
 define('dummy/tests/unit/components/flexberry-layers-intersections-panel-test.jscs-test', ['exports'], function (exports) {
@@ -5840,9 +5944,9 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
           done();
         });
       })['finally'](function () {
-        done();
         getmapApiStub.restore();
         getPkFieldStub.restore();
+        done();
       });
 
       assert.ok(component, 'Create odata-layer');
@@ -5877,8 +5981,8 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
           done();
         });
       })['finally'](function () {
-        done();
         getCountFeaturesStub.restore();
+        done();
       });
 
       assert.ok(component, 'Create odata-layer');
@@ -5954,34 +6058,40 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       assert.ok(spyGetFeature.getCall(0).args[0] instanceof _emberFlexberryData.Query.GeometryPredicate);
       assert.equal(spyGetFeature.getCall(0).args[0]._attributePath, 'shape');
       assert.equal(spyGetFeature.getCall(0).args[0]._intersectsValue, 'SRID=4326;POLYGON((10 30, 40 40, 40 20, 20 10, 10 30))');
-      done();
       spyGetFeature.restore();
+      done();
     });
   });
 
   (0, _emberQunit.test)('test method createAdapterForModel() with odataUrl', function (assert) {
-    assert.expect(1);
+    assert.expect(2);
     _ember['default'].$.extend(param, {
       'odataUrl': 'http://localhost:6500/odata/'
     });
     var component = this.subject(param);
+    var addLayerSpy = _sinon['default'].spy(component, 'addLayer');
 
     var adapterModel = component.createAdapterForModel();
 
     assert.ok(adapterModel);
+    assert.equal(addLayerSpy.callCount, 0);
+    addLayerSpy.restore();
   });
 
   (0, _emberQunit.test)('test method createAdapterForModel() without odataUrl', function (assert) {
-    assert.expect(1);
+    assert.expect(2);
     var component = this.subject(param);
+    var addLayerSpy = _sinon['default'].spy(component, 'addLayer');
 
     var adapterModel = component.createAdapterForModel();
 
     assert.notOk(adapterModel);
+    assert.equal(addLayerSpy.callCount, 0);
+    addLayerSpy.restore();
   });
 
   (0, _emberQunit.test)('test method createDynamicModel() with json', function (assert) {
-    assert.expect(19);
+    assert.expect(20);
     var done = assert.async(1);
     _ember['default'].$.extend(param, {
       'odataUrl': 'http://localhost:6500/odata/',
@@ -6001,6 +6111,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
     stubAjax.yieldsTo('success', jsonModel);
     var _lookupFactoryStub = _sinon['default'].stub(_ember['default'].getOwner(this), '_lookupFactory');
     _lookupFactoryStub.returns(null);
+    var addLayerSpy = _sinon['default'].spy(component, 'addLayer');
 
     component.createDynamicModel().then(function () {
       assert.equal(spyCreateAdapterForModel.callCount, 1);
@@ -6024,6 +6135,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       assert.equal(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
 
       assert.equal(spyCreateModelHierarchy.callCount, 1);
+      assert.equal(addLayerSpy.callCount, 0);
 
       spyRegister.restore();
       spyCreateAdapterForModel.restore();
@@ -6034,6 +6146,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       spyCreateModelHierarchy.restore();
       stubAjax.restore();
       _lookupFactoryStub.restore();
+      addLayerSpy.restore();
       done(1);
     });
   });
@@ -6112,7 +6225,6 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
 
       assert.equal(spyCreateModelHierarchy.callCount, 2);
 
-      done();
       spyRegister.restore();
       spyCreateAdapterForModel.restore();
       spyCreateModel.restore();
@@ -6122,6 +6234,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       stubAjax.restore();
       spyCreateModelHierarchy.restore();
       _lookupFactoryStub.restore();
+      done();
     });
   });
 
@@ -6139,8 +6252,8 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
 
     component.createDynamicModel()['catch'](function (error) {
       assert.equal(error, 'Can\'t create dynamic model: test-model. Error: ModelName and metadataUrl is empty');
-      done();
       _lookupFactoryStub.restore();
+      done();
     });
   });
 
@@ -6153,8 +6266,8 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
 
     component.createDynamicModel().then(function (msg) {
       assert.equal(msg, 'Model already registered: test-model');
-      done();
       _lookupFactoryStub.restore();
+      done();
     });
   });
 
@@ -6200,7 +6313,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       assert.equal(spyAjax.callCount, 0);
       assert.equal(spyCreateDynamicModel.callCount, 0);
       assert.equal(spyCreateModelHierarchy.callCount, 0);
-      done();
+
       spyContinueLoad.restore();
       _createVectorLayerSpy.restore();
       spyAjax.restore();
@@ -6208,6 +6321,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       spyCreateModelHierarchy.restore();
       _lookupFactoryStub.restore();
       registerStub.restore();
+      done();
     });
   });
 
@@ -6244,7 +6358,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       assert.equal(stubAjax.getCall(0).args[0].url, 'assert/felxberry/models/test-model.json');
       assert.equal(spyCreateDynamicModel.callCount, 1);
       assert.equal(spyCreateModelHierarchy.callCount, 1);
-      done();
+
       spyContinueLoad.restore();
       _createVectorLayerSpy.restore();
       spyCreateDynamicModel.restore();
@@ -6252,6 +6366,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       spyCreateModelHierarchy.restore();
       _lookupFactoryStub.restore();
       registerStub.restore();
+      done();
     });
   });
 
@@ -6275,9 +6390,9 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
         assert.equal(realCountArr(leafletObject.models), 0);
         assert.equal(leafletObject.getLayers().length, 2);
         assert.equal(spyBatchUpdate.callCount, 0);
-        done();
 
         spyBatchUpdate.restore();
+        done();
       });
     });
   });
@@ -6351,11 +6466,11 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
           assert.equal(leafletObject.getLayers().length, 1);
           assert.equal(leafletObject._labelsLayer.getLayers().length, 0);
           assert.equal(leafletObject.getLayers()[0].state, 'exist');
-          done();
 
           spyBatchUpdate.restore();
           stubGetmapApi.restore();
           _getModelLayerFeatureStub.restore();
+          done();
         };
 
         leafletObject.once('save:success', saveSuccess);
@@ -6469,11 +6584,12 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       assert.ok(model);
       assert.ok(dataModel);
       assert.ok(modelMixin);
-      done();
+
       stubAjax.restore();
       spyCreateModel.restore();
       spyCreateMixin.restore();
       spyCreateModelHierarchy.restore();
+      done();
     });
   });
 
@@ -6662,12 +6778,13 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
         assert.equal(getObjectCenterSpy.callCount, 3);
         assert.equal(_getDistanceBetweenObjectsSpy.callCount, 1);
       })['finally'](function () {
-        done(1);
         getmapApiStub.restore();
         getObjectCenterSpy.restore();
         _getDistanceBetweenObjectsSpy.restore();
         stubAjax.restore();
         _callAjaxStub.restore();
+        registerStub.restore();
+        done(1);
       });
       assert.ok(promise instanceof _ember['default'].RSVP.Promise);
       done(1);
@@ -6927,7 +7044,7 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
   (0, _emberQunit.test)('loadLayerFeatures() with options showExisting = false', function (assert) {
     var _this4 = this;
 
-    assert.expect(2);
+    assert.expect(3);
     var done = assert.async(2);
     _ember['default'].run(function () {
       var component = _this4.subject(param);
@@ -6939,6 +7056,7 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
 
       var getPkFieldStub = _sinon['default'].stub(mapModel, '_getPkField');
       getPkFieldStub.returns('primarykey');
+      var addCustomFilterSpy = _sinon['default'].spy(component, 'addCustomFilter');
 
       L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
         var e = {
@@ -6953,7 +7071,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
         };
         component.loadLayerFeatures(e).then(function (layers) {
           assert.ok(layers, 'Load feature of layers with showExisting = false');
+          assert.equal(addCustomFilterSpy.callCount, 1, 'call addCustomFilter');
           done();
+
+          addCustomFilterSpy.restore();
         });
       });
 
@@ -8609,6 +8730,44 @@ define('dummy/tests/unit/initializers/flexberry-map-tools-test.jshint', ['export
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/initializers/flexberry-map-tools-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/initializers/leaflet-grid-layer-test', ['exports', 'ember', 'dummy/initializers/leaflet-grid-layer', 'qunit'], function (exports, _ember, _dummyInitializersLeafletGridLayer, _qunit) {
+
+  var application = undefined;
+
+  (0, _qunit.module)('Unit | Initializer | leaflet grid layer', {
+    beforeEach: function beforeEach() {
+      _ember['default'].run(function () {
+        application = _ember['default'].Application.create();
+        application.deferReadiness();
+      });
+    }
+  });
+
+  // Replace this with your real tests.
+  (0, _qunit.test)('it works', function (assert) {
+    _dummyInitializersLeafletGridLayer['default'].initialize(application);
+
+    // you would normally confirm the results of the initializer here
+    assert.ok(true);
+  });
+});
+define('dummy/tests/unit/initializers/leaflet-grid-layer-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/initializers');
+  test('unit/initializers/leaflet-grid-layer-test.js should pass jscs', function () {
+    ok(true, 'unit/initializers/leaflet-grid-layer-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/initializers/leaflet-grid-layer-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/initializers/leaflet-grid-layer-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/initializers/leaflet-grid-layer-test.js should pass jshint.');
   });
 });
 define('dummy/tests/unit/initializers/local-storage-test', ['exports', 'ember', 'ember-flexberry-gis/initializers/local-storage', 'qunit'], function (exports, _ember, _emberFlexberryGisInitializersLocalStorage, _qunit) {
