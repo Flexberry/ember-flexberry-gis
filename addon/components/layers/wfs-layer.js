@@ -599,7 +599,7 @@ export default BaseVectorLayer.extend({
     if (equals.length === 1) {
       filter = equals[0];
     } else {
-      filter = new L.Filter.Or(...equals);
+      filter = new L.Filter.Or(...equals); // Empty Filter.Or() will return 0 entries
     }
 
     let featuresPromise = this._getFeature({
