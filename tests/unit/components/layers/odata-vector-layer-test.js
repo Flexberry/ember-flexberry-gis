@@ -629,7 +629,7 @@ test('test method createAdapterForModel() without odataUrl', function(assert) {
 });
 
 test('test method createDynamicModel() with json', function(assert) {
-  assert.expect(19);
+  assert.expect(20);
   var done = assert.async(1);
   Ember.$.extend(param, {
     'odataUrl': 'http://localhost:6500/odata/',
