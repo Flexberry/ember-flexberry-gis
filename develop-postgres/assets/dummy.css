@@ -7811,6 +7811,9 @@ form.flexberry-edit-layermap .simple-layers-style .ui.tab.segment .ui.grid.style
 form.flexberry-edit-layermap .simple-layers-style .ui.tab.segment .ui.grid.style-settings-with-preview .simple-layers-style-path-editor .ui.table td > .ui.dropdown {
   height: 50px;
 }
+form.flexberry-edit-layermap .simple-layers-style .ui.tab.segment .ui.grid.style-settings-with-preview .simple-layers-style-stroke-editor div.ui.dropdown .text {
+  width: 35px;
+}
 form.flexberry-edit-layermap .simple-layers-style .ui.tab.segment .ui.grid.style-settings-with-preview .markers-styles-editor .ui.table {
   margin-bottom: 1rem;
 }

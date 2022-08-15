@@ -653,6 +653,11 @@ export default BaseVectorLayer.extend({
       leafletObject = this.get(&#x27;_leafletObject&#x27;);
     }
 
+    if (!layer) {
+      // явная ошибка, не должно быть такой ситуации
+      return leafletObject;
+    }
+
     if (layer.state &amp;&amp; layer.state !== state.insert) {
       L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
       return;
@@ -1623,12 +1628,27 @@ export default BaseVectorLayer.extend({
 
   addCustomFilter(filter) {
     let customFilter = this.get(&#x27;customFilter&#x27;);
-
-    if (!Ember.isNone(customFilter) &amp;&amp; !Ember.isNone(filter)) {
-      return new Query.ComplexPredicate(Query.Condition.And, filter, customFilter);
+    let layerFilter = this.get(&#x27;filter&#x27;);
+    let resultFilter = Ember.A();
+    if (!Ember.isNone(layerFilter) &amp;&amp; layerFilter instanceof Query.BasePredicate) {
+      resultFilter.pushObject(layerFilter);
     }
 
-    return customFilter || filter;
+    if (!Ember.isNone(filter) &amp;&amp; filter instanceof Query.BasePredicate) {
+      resultFilter.pushObject(filter);
+    }
+
+    if (!Ember.isNone(customFilter) &amp;&amp; customFilter instanceof Query.BasePredicate) {
+      resultFilter.pushObject(customFilter);
+    }
+
+    if (resultFilter.length === 0) {
+      return null;
+    } else if (resultFilter.length === 1) {
+      return resultFilter[0];
+    } else {
+      return new Query.ComplexPredicate(Query.Condition.And, ...resultFilter);
+    }
   },
 
   /**
@@ -1814,13 +1834,10 @@ export default BaseVectorLayer.extend({
         let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
         let newPart = queryNewBounds.intersects(loadedBounds.toEWKT(this.get(&#x27;crs&#x27;)));
         let filter = oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart;
-        let layerFilter = this.get(&#x27;filter&#x27;);
-        filter = Ember.isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
 
         promise = this._downloadFeaturesWithOrNotFilter(leafletObject, obj, filter);
       } else if (showExisting || (showExisting &amp;&amp; showLayerObjects)) {
-        let layerFilter = !Ember.isNone(this.get(&#x27;filter&#x27;)) ? this.get(&#x27;filter&#x27;) : null;
-        promise = this._downloadFeaturesWithOrNotFilter(leafletObject, this.get(&#x27;_adapterStoreModelProjectionGeom&#x27;), layerFilter);
+        promise = this._downloadFeaturesWithOrNotFilter(leafletObject, this.get(&#x27;_adapterStoreModelProjectionGeom&#x27;), null);
       } else {
         promise = Ember.RSVP.resolve(&#x27;The layer does not require loading&#x27;);
       }

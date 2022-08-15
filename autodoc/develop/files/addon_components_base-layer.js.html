@@ -513,12 +513,27 @@ export default Ember.Component.extend(
 
     addCustomFilter(filter) {
       let customFilter = this.get(&#x27;customFilter&#x27;);
-
-      if (!Ember.isNone(customFilter) &amp;&amp; !Ember.isNone(filter)) {
-        return new L.Filter.And(filter, customFilter);
+      let layerFilter = this.get(&#x27;filter&#x27;);
+      let resultFilter = Ember.A();
+      if (!Ember.isNone(layerFilter) &amp;&amp; layerFilter !== &#x27;&#x27;) {
+        resultFilter.pushObject(layerFilter);
       }
 
-      return customFilter || filter;
+      if (!Ember.isNone(filter) &amp;&amp; filter !== &#x27;&#x27;) {
+        resultFilter.pushObject(filter);
+      }
+
+      if (!Ember.isNone(customFilter) &amp;&amp; customFilter !== &#x27;&#x27;) {
+        resultFilter.pushObject(customFilter);
+      }
+
+      if (resultFilter.length === 0) {
+        return null;
+      } else if (resultFilter.length === 1) {
+        return resultFilter[0];
+      } else {
+        return new L.Filter.And(...resultFilter);
+      }
     },
 
     setOwner(properties) {

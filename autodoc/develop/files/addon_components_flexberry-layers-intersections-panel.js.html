@@ -582,26 +582,42 @@ export default Ember.Component.extend({
   },
 
   /**
+    loads layers into a list to search for intersections. Casts the tree structure to a list.
+
+    @method loadIntersectionLayers
+    @param {Object[]} layers root of layers tree
+    @return {Object[]} list of layers
+
+  */
+  loadIntersectionLayers(layers) {
+    if (!layers) {
+      return [];
+    }
+
+    let vlayers = [];
+    layers.forEach(layer =&gt; {
+      let innerLayers = Ember.get(layer, &#x27;layers&#x27;);
+      if (!innerLayers) {
+        return;
+      }
+
+      if (Ember.get(innerLayers, &#x27;length&#x27;) &gt; 0) {
+        vlayers.push(...this.loadIntersectionLayers(innerLayers));
+      } else {
+        if (this._checkTypeLayer(layer)) {
+          vlayers.push(layer);
+        }
+      }
+    });
+    return vlayers;
+  },
+
+  /**
     Initializes component.
   */
   init() {
     this._super(...arguments);
-    let vlayers = [];
-    this.get(&#x27;layers&#x27;).forEach(item =&gt; {
-      let layers = Ember.get(item, &#x27;layers&#x27;);
-      if (layers.length &gt; 0) {
-        layers.forEach(layer =&gt; {
-          if (this._checkTypeLayer(layer)) {
-            vlayers.push(layer);
-          }
-        });
-      } else {
-        if (this._checkTypeLayer(item)) {
-          vlayers.push(item);
-        }
-      }
-    });
-    this.set(&#x27;vectorLayers&#x27;, vlayers);
+    this.set(&#x27;vectorLayers&#x27;, this.loadIntersectionLayers(this.get(&#x27;layers&#x27;)));
   },
 
   actions: {

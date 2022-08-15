@@ -555,7 +555,7 @@ export default BaseMapCommand.extend(LeafletOptionsMixin, {
 
     // Create popup with founded location coordinates.
     let locatePopup = L.popup().setContent(
-      this.get(&#x27;i18n&#x27;).t(&#x27;components.map-commands.locate.lat&#x27;) + e.latlng.lat.toFixed(5) + &#x27; &#x27; +
+      this.get(&#x27;i18n&#x27;).t(&#x27;components.map-commands.locate.lat&#x27;) + e.latlng.lat.toFixed(5) + &#x27;; &#x27; +
       this.get(&#x27;i18n&#x27;).t(&#x27;components.map-commands.locate.lng&#x27;) + e.latlng.lng.toFixed(5));
     this.set(&#x27;locatePopup&#x27;, locatePopup);
 
