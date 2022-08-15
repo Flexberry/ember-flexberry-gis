@@ -602,24 +602,30 @@ test('test methos identify()', function(assert) {
 });
 
 test('test method createAdapterForModel() with odataUrl', function(assert) {
-  assert.expect(1);
+  assert.expect(2);
   Ember.$.extend(param, {
     'odataUrl': 'http://localhost:6500/odata/'
   });
   let component = this.subject(param);
+  let addLayerSpy = sinon.spy(component, 'addLayer');
 
   let adapterModel = component.createAdapterForModel();
 
   assert.ok(adapterModel);
+  assert.equal(addLayerSpy.callCount, 0);
+  addLayerSpy.restore();
 });
 
 test('test method createAdapterForModel() without odataUrl', function(assert) {
-  assert.expect(1);
+  assert.expect(2);
   let component = this.subject(param);
+  let addLayerSpy = sinon.spy(component, 'addLayer');
 
   let adapterModel = component.createAdapterForModel();
 
   assert.notOk(adapterModel);
+  assert.equal(addLayerSpy.callCount, 0);
+  addLayerSpy.restore();
 });
 
 test('test method createDynamicModel() with json', function(assert) {
