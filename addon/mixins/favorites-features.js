@@ -117,13 +117,14 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       let favFeatures = this.get('favFeatures');
       let layerModelIndex = this.isLayerModelInArray(favFeatures, feature.layerModel);
       if (Ember.get(feature.properties, 'isFavorite')) {
-        if (layerModelIndex !== false) {
+        if (layerModelIndex !== -1) {
           favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
-          let record = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
+          let records = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
             .filterBy('objectKey', feature.properties.primarykey)
             .filterBy('objectLayerKey', feature.layerModel.id);
-          record[0].deleteRecord();
-          record[0].save();
+          let record = records.objectAt(0);
+          record.deleteRecord();
+          record.save();
         }
 
         Ember.set(feature.properties, 'isFavorite', false);
@@ -135,7 +136,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         }
       } else {
         Ember.set(feature.properties, 'isFavorite', true);
-        if (layerModelIndex !== false) {
+        if (layerModelIndex !== -1) {
           favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);
           let newRecord = { id: generateUniqueId(), objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
           let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', newRecord);
@@ -211,7 +212,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     @method isLayerModelInArray
   */
   isLayerModelInArray(array, layerModel) {
-    let res = false;
+    let res = -1;
     array.forEach((item, index) => {
       if (item.layerModel.id === layerModel.id) {
         res = index;
@@ -271,7 +272,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       let favFeaturesArray = Ember.A();
       favorites.forEach(layer => {
         let id = this.isLayerModelInArray(favFeaturesArray, { id: layer.get('objectLayerKey') });
-        if (id !== false) {
+        if (id !== -1) {
           favFeaturesArray[id].features.push(layer.get('objectKey'));
         } else {
           favFeaturesArray.addObject({ layerModel: { id: layer.get('objectLayerKey') }, features: [layer.get('objectKey')] });
@@ -296,7 +297,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
               });
               let promiseFeature = null;
               let layerModelIndex = this.isLayerModelInArray(result, promiseResult.value[0]);
-              if (layerModelIndex !== false) {
+              if (layerModelIndex !== -1) {
                 favorites = favorites.concat(favorites, favFeatures[layerModelIndex].features);
                 promiseFeature = new Ember.RSVP.Promise((resolve) => {
                   resolve(favorites);
@@ -364,7 +365,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       } else {
         let promiseFeature = null;
         let layerModelIndex = this.isLayerModelInArray(result, favoriteObject.layerModel);
-        if (layerModelIndex !== false) {
+        if (layerModelIndex !== -1) {
           favorites = favorites.concat(favorites, favoriteObject.features);
           promiseFeature = new Ember.RSVP.Promise((resolve) => {
             resolve(favorites);

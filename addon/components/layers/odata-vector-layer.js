@@ -238,6 +238,11 @@ export default BaseVectorLayer.extend({
       leafletObject = this.get('_leafletObject');
     }
 
+    if (!layer) {
+      // явная ошибка, не должно быть такой ситуации
+      return leafletObject;
+    }
+
     if (layer.state && layer.state !== state.insert) {
       L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
       return;

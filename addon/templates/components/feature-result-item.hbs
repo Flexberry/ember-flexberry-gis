@@ -37,24 +37,22 @@
                   <a class="feature-result-item-object icon item"
                     title="{{t "components.feature-result-item.select-object-caption"}}"
                     href="{{feature.editForms.[0].url}}" target="_blank">
-                    <i class="external icon"></i>
+                    <i class="icon-guideline-goout"></i>
                   </a>
                   <a class="feature-result-item-object icon item"
                     title="{{t "components.feature-result-item.action-object-caption"}}"
                     {{action "goToEditForm" feature.layerModel.id featureId}}>
-                    <i class="external icon"></i>
+                    <i class="icon-guideline-goout"></i>
                   </a>
                 </div>
               </div>
             </div>
           {{else}}
-            <div class="feature-result-item-edit-forms">
-              <a class="feature-result-item-object icon item"
-                title="{{t "components.feature-result-item.select-object-caption"}}"
-                href="{{feature.editForms.[0].url}}" target="_blank">
-                <i class="external icon"></i>
-              </a>
-            </div>
+            <a class="feature-result-item-object icon item"
+              title="{{t "components.feature-result-item.select-object-caption"}}"
+              href="{{feature.editForms.[0].url}}" target="_blank">
+              <i class="icon-guideline-goout"></i>
+            </a>
           {{/if}}
         {{else}}
           <div class="feature-result-item-edit-forms">
@@ -66,14 +64,14 @@
                     <a class="feature-result-item-object icon item"
                       title="{{editForm.typeName}}"
                       href="{{editForm.url}}" target="_blank">
-                      <i class="external icon"></i>
+                      <i class="icon-guideline-goout"></i>
                     </a>
                   {{/each}}
                   {{#if hasEditForm}}
                     <a class="feature-result-item-object icon item"
                       title="{{t "components.feature-result-item.action-object-caption"}}"
                       {{action "goToEditForm" feature.layerModel.id featureId}}>
-                      <i class="external icon"></i>
+                      <i class="icon-guideline-goout"></i>
                     </a>
                   {{/if}}
               </div>
@@ -82,13 +80,11 @@
         {{/if}}
       {{else}}
         {{#if hasEditForm}}
-          <div class="feature-result-item-edit-forms">
-            <a class="feature-result-item-object icon item"
-              title="{{t "components.feature-result-item.action-object-caption"}}"
-              {{action "goToEditForm" feature.layerModel.id featureId}}>
-              <i class="external icon"></i>
-            </a>
-          </div>
+          <a class="feature-result-item-object icon item"
+            title="{{t "components.feature-result-item.action-object-caption"}}"
+            {{action "goToEditForm" feature.layerModel.id featureId}}>
+            <i class="icon-guideline-goout"></i>
+          </a>
         {{/if}}
       {{/if}}
       <a class="icon item more" {{action "onSubmenu" on="click"}}>

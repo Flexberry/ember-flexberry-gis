@@ -30,20 +30,20 @@
               <a class="feature-result-item-list icon item"
               title="{{t "components.layer-result-list.select-list-caption"}}"
               href="{{result.listForms.[0].url}}" target="_blank">
-              <i class="list icon"></i>
+              <i class="icon-guideline-gotolist"></i>
               </a>
               <a class="feature-result-item-list icon item"
               title="{{t "components.layer-result-list.select-list-caption"}}"
               {{action "goToListForm" result.layerModel.id result.layerIds}}>
-              <i class="list icon"></i>
+              <i class="icon-guideline-gotolist"></i>
               </a>
             </div>
             </div>
           {{else}}
             <a class="feature-result-item-list icon item"
-            title="{{t "components.layer-result-list.select-list-caption"}}"
-            href="{{result.listForms.[0].url}}" target="_blank">
-            <i class="list icon"></i>
+              title="{{t "components.layer-result-list.select-list-caption"}}"
+              href="{{result.listForms.[0].url}}" target="_blank">
+              <i class="icon-guideline-gotolist"></i>
             </a>
           {{/if}}
           {{else}}
@@ -55,14 +55,14 @@
               <a class="feature-result-item-list icon item"
               title="{{listForm.typeName}}"
               href="{{listForm.url}}" target="_blank">
-                <i class="list icon"></i>
+                <i class="icon-guideline-gotolist"></i>
               </a>
               {{/each}}
               {{#if result.hasListForm}}
               <a class="feature-result-item-list icon item"
                 title="{{t "components.layer-result-list.select-list-caption"}}"
                 {{action "goToListForm" result.layerModel.id result.layerIds}}>
-                <i class="list icon"></i>
+                <i class="icon-guideline-gotolist"></i>
               </a>
               {{/if}}
             </div>
@@ -73,7 +73,7 @@
           <a class="feature-result-item-list icon item"
             title="{{t "components.layer-result-list.select-list-caption"}}"
             {{action "goToListForm" result.layerModel.id result.layerIds}}>
-            <i class="list icon"></i>
+            <i class="icon-guideline-gotolist"></i>
           </a>
           {{/if}}
         {{/if}}
@@ -152,12 +152,12 @@
               <a class="feature-result-item-list icon item"
               title="{{t "components.layer-result-list.select-list-caption"}}"
               href="{{result.listForms.[0].url}}" target="_blank">
-              <i class="list icon"></i>
+              <i class="icon-guideline-gotolist"></i>
               </a>
               <a class="feature-result-item-list icon item"
               title="{{t "components.layer-result-list.select-list-caption"}}"
               {{action "goToListForm" result.layerModel.id result.layerIds}}>
-              <i class="list icon"></i>
+              <i class="icon-guideline-gotolist"></i>
               </a>
             </div>
             </div>
@@ -165,7 +165,7 @@
             <a class="feature-result-item-list icon item"
             title="{{t "components.layer-result-list.select-list-caption"}}"
             href="{{result.listForms.[0].url}}" target="_blank">
-            <i class="list icon"></i>
+            <i class="icon-guideline-gotolist"></i>
             </a>
           {{/if}}
           {{else}}
@@ -177,14 +177,14 @@
               <a class="feature-result-item-list icon item"
               title="{{listForm.typeName}}"
               href="{{listForm.url}}" target="_blank">
-                <i class="list icon"></i>
+                <i class="icon-guideline-gotolist"></i>
               </a>
               {{/each}}
               {{#if result.hasListForm}}
               <a class="feature-result-item-list icon item"
                 title="{{t "components.layer-result-list.select-list-caption"}}"
                 {{action "goToListForm" result.layerModel.id result.layerIds}}>
-                <i class="list icon"></i>
+                <i class="icon-guideline-gotolist"></i>
               </a>
               {{/if}}
             </div>
@@ -195,7 +195,7 @@
           <a class="feature-result-item-list icon item"
             title="{{t "components.layer-result-list.select-list-caption"}}"
             {{action "goToListForm" result.layerModel.id result.layerIds}}>
-            <i class="list icon"></i>
+            <i class="icon-guideline-gotolist"></i>
           </a>
           {{/if}}
         {{/if}}
@@ -207,13 +207,12 @@
           </a>
         {{/if}}
       </div>
-      {{#flexberry-toggler caption=result.name expanded=(and (eq result.features.length 1) result.first) class='layer-result-list-toggler'}}
+      {{#flexberry-toggler caption=result.name  class='layer-result-list-toggler'}}
         <div class="ui list transition">
           {{#each result.features as |feature|}}
             {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
               {{component (concat 'feature-result-item-' result.layerModel.type)
                 feature=feature
-                infoExpanded=(and (eq result.features.length 1) result.first)
                 displayProperty="displayValue"
                 displaySettings=result.settings
                 selectedFeature=_selectedFeature
@@ -234,7 +233,6 @@
             {{else}}
               {{feature-result-item
                 feature=feature
-                infoExpanded=(and (eq result.features.length 1) result.first)
                 displayProperty="displayValue"
                 displaySettings=result.settings
                 selectedFeature=_selectedFeature

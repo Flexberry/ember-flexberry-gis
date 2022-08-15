@@ -487,9 +487,9 @@ test('loadLayerFeatures() with featureIds=null', function(assert) {
         done();
       });
     }).finally(() => {
-      done();
       getmapApiStub.restore();
       getPkFieldStub.restore();
+      done();
     });
 
     assert.ok(component, 'Create odata-layer');
@@ -520,8 +520,8 @@ test('getLayerFeatures() with featureIds=null', function(assert) {
         done();
       });
     }).finally(() => {
-      done();
       getCountFeaturesStub.restore();
+      done();
     });
 
     assert.ok(component, 'Create odata-layer');
@@ -596,34 +596,40 @@ test('test methos identify()', function(assert) {
     assert.equal(spyGetFeature.getCall(0).args[0]._attributePath, 'shape');
     assert.equal(spyGetFeature.getCall(0).args[0]._intersectsValue,
       'SRID=4326;POLYGON((10 30, 40 40, 40 20, 20 10, 10 30))');
-    done();
     spyGetFeature.restore();
+    done();
   });
 });
 
 test('test method createAdapterForModel() with odataUrl', function(assert) {
-  assert.expect(1);
+  assert.expect(2);
   Ember.$.extend(param, {
     'odataUrl': 'http://localhost:6500/odata/'
   });
   let component = this.subject(param);
+  let addLayerSpy = sinon.spy(component, 'addLayer');
 
   let adapterModel = component.createAdapterForModel();
 
   assert.ok(adapterModel);
+  assert.equal(addLayerSpy.callCount, 0);
+  addLayerSpy.restore();
 });
 
 test('test method createAdapterForModel() without odataUrl', function(assert) {
-  assert.expect(1);
+  assert.expect(2);
   let component = this.subject(param);
+  let addLayerSpy = sinon.spy(component, 'addLayer');
 
   let adapterModel = component.createAdapterForModel();
 
   assert.notOk(adapterModel);
+  assert.equal(addLayerSpy.callCount, 0);
+  addLayerSpy.restore();
 });
 
 test('test method createDynamicModel() with json', function(assert) {
-  assert.expect(19);
+  assert.expect(20);
   var done = assert.async(1);
   Ember.$.extend(param, {
     'odataUrl': 'http://localhost:6500/odata/',
@@ -643,6 +649,7 @@ test('test method createDynamicModel() with json', function(assert) {
   stubAjax.yieldsTo('success', jsonModel);
   let _lookupFactoryStub = sinon.stub(Ember.getOwner(this), '_lookupFactory');
   _lookupFactoryStub.returns(null);
+  let addLayerSpy = sinon.spy(component, 'addLayer');
 
   component.createDynamicModel().then(() => {
     assert.equal(spyCreateAdapterForModel.callCount, 1);
@@ -666,6 +673,7 @@ test('test method createDynamicModel() with json', function(assert) {
     assert.equal(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
 
     assert.equal(spyCreateModelHierarchy.callCount, 1);
+    assert.equal(addLayerSpy.callCount, 0);
 
     spyRegister.restore();
     spyCreateAdapterForModel.restore();
@@ -676,6 +684,7 @@ test('test method createDynamicModel() with json', function(assert) {
     spyCreateModelHierarchy.restore();
     stubAjax.restore();
     _lookupFactoryStub.restore();
+    addLayerSpy.restore();
     done(1);
   });
 });
@@ -757,7 +766,6 @@ test('test method createDynamicModel() with json with parent', function(assert) 
 
     assert.equal(spyCreateModelHierarchy.callCount, 2);
 
-    done();
     spyRegister.restore();
     spyCreateAdapterForModel.restore();
     spyCreateModel.restore();
@@ -767,6 +775,7 @@ test('test method createDynamicModel() with json with parent', function(assert) 
     stubAjax.restore();
     spyCreateModelHierarchy.restore();
     _lookupFactoryStub.restore();
+    done();
   });
 });
 
@@ -784,8 +793,8 @@ test('test method createDynamicModel() without json', function(assert) {
 
   component.createDynamicModel().catch((error) => {
     assert.equal(error, 'Can\'t create dynamic model: test-model. Error: ModelName and metadataUrl is empty');
-    done();
     _lookupFactoryStub.restore();
+    done();
   });
 });
 
@@ -798,8 +807,8 @@ test('test method createDynamicModel() already registered', function(assert) {
 
   component.createDynamicModel().then((msg) => {
     assert.equal(msg, 'Model already registered: test-model');
-    done();
     _lookupFactoryStub.restore();
+    done();
   });
 });
 
@@ -845,7 +854,7 @@ test('test method createVectorLayer() without dynamicModel', function(assert) {
     assert.equal(spyAjax.callCount, 0);
     assert.equal(spyCreateDynamicModel.callCount, 0);
     assert.equal(spyCreateModelHierarchy.callCount, 0);
-    done();
+
     spyContinueLoad.restore();
     _createVectorLayerSpy.restore();
     spyAjax.restore();
@@ -853,6 +862,7 @@ test('test method createVectorLayer() without dynamicModel', function(assert) {
     spyCreateModelHierarchy.restore();
     _lookupFactoryStub.restore();
     registerStub.restore();
+    done();
   });
 });
 
@@ -889,7 +899,7 @@ test('test method createVectorLayer() with dynamicModel=true', function(assert) 
     assert.equal(stubAjax.getCall(0).args[0].url, 'assert/felxberry/models/test-model.json');
     assert.equal(spyCreateDynamicModel.callCount, 1);
     assert.equal(spyCreateModelHierarchy.callCount, 1);
-    done();
+
     spyContinueLoad.restore();
     _createVectorLayerSpy.restore();
     spyCreateDynamicModel.restore();
@@ -897,6 +907,7 @@ test('test method createVectorLayer() with dynamicModel=true', function(assert) 
     spyCreateModelHierarchy.restore();
     _lookupFactoryStub.restore();
     registerStub.restore();
+    done();
   });
 });
 
@@ -920,9 +931,9 @@ test('test method save() no modified objects', function(assert) {
       assert.equal(realCountArr(leafletObject.models), 0);
       assert.equal(leafletObject.getLayers().length, 2);
       assert.equal(spyBatchUpdate.callCount, 0);
-      done();
 
       spyBatchUpdate.restore();
+      done();
     });
   });
 });
@@ -999,11 +1010,11 @@ test('test method save() with objects', function(assert) {
         assert.equal(leafletObject.getLayers().length, 1);
         assert.equal(leafletObject._labelsLayer.getLayers().length, 0);
         assert.equal(leafletObject.getLayers()[0].state, 'exist');
-        done();
 
         spyBatchUpdate.restore();
         stubGetmapApi.restore();
         _getModelLayerFeatureStub.restore();
+        done();
       };
 
       leafletObject.once('save:success', saveSuccess);
@@ -1122,11 +1133,12 @@ test('test method createModelHierarchy() with 3 parent', function(assert) {
     assert.ok(model);
     assert.ok(dataModel);
     assert.ok(modelMixin);
-    done();
+
     stubAjax.restore();
     spyCreateModel.restore();
     spyCreateMixin.restore();
     spyCreateModelHierarchy.restore();
+    done();
   });
 });
 
@@ -1318,12 +1330,13 @@ test('test method getNearObject()', function(assert) {
       assert.equal(getObjectCenterSpy.callCount, 3);
       assert.equal(_getDistanceBetweenObjectsSpy.callCount, 1);
     }).finally(() => {
-      done(1);
       getmapApiStub.restore();
       getObjectCenterSpy.restore();
       _getDistanceBetweenObjectsSpy.restore();
       stubAjax.restore();
       _callAjaxStub.restore();
+      registerStub.restore();
+      done(1);
     });
     assert.ok(promise instanceof Ember.RSVP.Promise);
     done(1);
