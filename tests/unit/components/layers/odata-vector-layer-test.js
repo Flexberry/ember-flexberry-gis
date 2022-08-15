@@ -649,6 +649,7 @@ test('test method createDynamicModel() with json', function(assert) {
   stubAjax.yieldsTo('success', jsonModel);
   let _lookupFactoryStub = sinon.stub(Ember.getOwner(this), '_lookupFactory');
   _lookupFactoryStub.returns(null);
+  let addLayerSpy = sinon.spy(component, 'addLayer');
 
   component.createDynamicModel().then(() => {
     assert.equal(spyCreateAdapterForModel.callCount, 1);
@@ -672,6 +673,7 @@ test('test method createDynamicModel() with json', function(assert) {
     assert.equal(spyRegister.secondCall.args[1].PrototypeMixin.mixins[2].properties.host, 'http://localhost:6500/odata/');
 
     assert.equal(spyCreateModelHierarchy.callCount, 1);
+    assert.equal(addLayerSpy.callCount, 0);
 
     spyRegister.restore();
     spyCreateAdapterForModel.restore();
@@ -682,6 +684,7 @@ test('test method createDynamicModel() with json', function(assert) {
     spyCreateModelHierarchy.restore();
     stubAjax.restore();
     _lookupFactoryStub.restore();
+    addLayerSpy.restore();
     done(1);
   });
 });
