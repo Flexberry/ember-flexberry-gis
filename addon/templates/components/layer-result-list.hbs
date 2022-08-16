@@ -248,8 +248,8 @@
               }}
             {{/if}}
           {{/each}}
-          {{#if (gt result.features.length maxResultsCount)}}
-            <div class="nodata">
+          {{#if result.maxResultsLimitOverage}}
+            <div class="max-limit">
               Найдено более ста объектов по запросу. Пожалуйста, уточните поисковый запрос
             </div>
           {{/if}}

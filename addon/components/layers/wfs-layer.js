@@ -596,10 +596,12 @@ export default BaseVectorLayer.extend({
     }
 
     let filter;
-    if (equals.length === 1) {
+    if (equals.length === 0) {
+      return Ember.RSVP.resolve(Ember.A());
+    } else if (equals.length === 1) {
       filter = equals[0];
     } else {
-      filter = new L.Filter.Or(...equals); // Empty Filter.Or() will return 0 entries
+      filter = new L.Filter.Or(...equals);
     }
 
     let featuresPromise = this._getFeature({
