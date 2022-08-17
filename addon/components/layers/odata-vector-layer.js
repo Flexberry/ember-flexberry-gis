@@ -13,13 +13,15 @@ import DS from 'ember-data';
 import jsts from 'npm:jsts';
 import { capitalize, camelize } from 'ember-flexberry-data/utils/string-functions';
 import isUUID from 'ember-flexberry-data/utils/is-uuid';
-const { Builder } = Query;
+import moment from 'moment';
+import getBooleanFromString from '../../utils/get-boolean-from-string';
+import { getDateFormatFromString, createTimeInterval } from '../../utils/get-date-from-string';
 
 /**
   For batch reading
 */
 const maxBatchFeatures = 10000;
-
+const { Builder } = Query;
 /**
   Investment layer component for leaflet map.
 
@@ -463,41 +465,67 @@ export default BaseVectorLayer.extend({
     let leafletObject = this.get('_leafletObject');
     if (!Ember.isNone(leafletObject)) {
       let type = this.get('layerModel.type');
-      if (!Ember.isBlank(type)) {
+      if (!Ember.isBlank(type) && !Ember.isBlank(e.searchOptions.queryString)) {
         let store = Ember.getOwner(this).lookup('service:store');
         let modelConstructor = store.modelFor(leafletObject.modelName);
         let layerProperties = Ember.get(modelConstructor, `attributes`);
         searchFields.forEach((field) => {
-          let property;
-          let accessProperty = false;
-          if (field === 'primarykey') {
-            if (isUUID(e.searchOptions.queryString)) {
-              equals.push(new Query.SimplePredicate('id', Query.FilterOperator.Eq, e.searchOptions.queryString));
+          let property = layerProperties.get(field);
+          e.searchOptions.queryString = e.searchOptions.queryString.trim();
+          if (field === 'primarykey' && isUUID(e.searchOptions.queryString)) {
+            equals.push(new Query.SimplePredicate('id', Query.FilterOperator.Eq, e.searchOptions.queryString));
+            return;
+          }
+
+          if (!Ember.isNone(property)) {
+            switch (property.type) {
+              case 'decimal':
+              case 'number':
+                let searchValue = e.searchOptions.queryString ? e.searchOptions.queryString.replace(',', '.') : e.searchOptions.queryString;
+                if (!isNaN(Number(searchValue))) {
+                  equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, searchValue));
+                } else {
+                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to numeric type`);
+                }
+
+                break;
+              case 'date':
+                let dateInfo = getDateFormatFromString(e.searchOptions.queryString);
+                let searchDate = moment(e.searchOptions.queryString, dateInfo.dateFormat + dateInfo.timeFormat, true);
+                if (searchDate.isValid()) {
+                  let [startInterval, endInterval] = createTimeInterval(searchDate, dateInfo.dateFormat);
+
+                  if (endInterval) {
+                    let startIntervalCondition =  new Query.DatePredicate(property.name, Query.FilterOperator.Geq, startInterval, false);
+                    let endIntervalCondition = new Query.DatePredicate(property.name, Query.FilterOperator.Le, endInterval, false);
+                    equals.push(new Query.ComplexPredicate(Query.Condition.And, startIntervalCondition, endIntervalCondition));
+                  } else if (dateInfo.timeFormat === 'THH:mm:ss.SSSSZ') {
+                    equals.push(new Query.DatePredicate(property.name, Query.FilterOperator.Eq, startInterval, false));
+                  } else {
+                    equals.push(new Query.DatePredicate(property.name, Query.FilterOperator.Eq, startInterval, true));
+                  }
+                } else {
+                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to date type`);
+                }
+
+                break;
+              case 'boolean':
+                let booleanValue = getBooleanFromString(e.searchOptions.queryString);
+
+                if (typeof booleanValue === 'boolean') {
+                  equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, booleanValue));
+                } else {
+                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to boolean type`);
+                }
+
+                break;
+              default:
+                equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
+
+                break;
             }
           } else {
-            property = layerProperties.get(field);
-            if (!Ember.isNone(property)) {
-              switch (property.type) {
-                case 'decimal':
-                case 'number':
-                  let searchString = e.searchOptions.queryString.replace('.', ',');
-                  accessProperty = !e.context && !isNaN(Number(searchString));
-                  break;
-                case 'date':
-                  accessProperty = !e.context && new Date(e.searchOptions.queryString).toString() !== 'Invalid Date';
-                  break;
-                case 'boolean':
-                  accessProperty = !e.context && Boolean(e.searchOptions.queryString);
-                  break;
-                default:
-                  equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
-                  break;
-              }
-
-              if (accessProperty && property.type !== 'string') {
-                equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, e.searchOptions.queryString));
-              }
-            }
+            console.error(`The field name: \"${field}\" is incorrect, check the name of the search attribute in the layer settings`);
           }
         });
       }
@@ -512,7 +540,7 @@ export default BaseVectorLayer.extend({
       filter = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
     }
 
-    let featuresPromise = this._getFeature(filter, e.searchOptions.maxResultsCount);
+    let featuresPromise = this._getFeature(filter, e.searchOptions.maxResultsCount + 1);
 
     return featuresPromise;
   },

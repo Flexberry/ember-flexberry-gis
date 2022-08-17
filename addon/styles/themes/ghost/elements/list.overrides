@@ -250,6 +250,13 @@
     left: 4.7em;
   }
 
+  .ui.list:last-child {
+    .max-limit {
+      margin: 10px 0 10px 10px;
+      color: @labelColor;
+    }
+  }
+
   .feature-result-item-list+.feature-result-item-upload+.layer-result-list-toggler .title .flexberry-toggler-caption {
     margin-left: 5.7em;
     max-width: ~"calc(100% - 6em)";
