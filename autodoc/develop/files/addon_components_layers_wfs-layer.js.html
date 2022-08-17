@@ -424,8 +424,11 @@ import BaseVectorLayer from &#x27;../base-vector-layer&#x27;;
 import { checkMapZoom } from &#x27;../../utils/check-zoom&#x27;;
 import { intersectionArea } from &#x27;../../utils/feature-with-area-intersect&#x27;;
 import jsts from &#x27;npm:jsts&#x27;;
-import isUUID  from &#x27;ember-flexberry-data/utils/is-uuid&#x27;;
+import isUUID from &#x27;ember-flexberry-data/utils/is-uuid&#x27;;
 import state from &#x27;../../utils/state&#x27;;
+import moment from &#x27;moment&#x27;;
+import { getDateFormatFromString, createTimeInterval } from &#x27;../../utils/get-date-from-string&#x27;;
+import getBooleanFromString from &#x27;../../utils/get-boolean-from-string&#x27;;
 
 /**
   WFS layer component for leaflet map.
@@ -512,6 +515,10 @@ export default BaseVectorLayer.extend({
       let resultingFilter = filter ? filter.toGml() : null;
 
       let wfsLayer = this.get(&#x27;_leafletObject&#x27;);
+
+      let maxFeatures = Ember.get(options, &#x27;maxFeatures&#x27;);
+
+      Ember.set(Ember.get(wfsLayer, &#x27;options&#x27;), &#x27;maxFeatures&#x27;, maxFeatures ? maxFeatures : 1000);
 
       if (Ember.isNone(wfsLayer)) {
         resolve(Ember.A());
@@ -943,44 +950,72 @@ export default BaseVectorLayer.extend({
     let leafletObject = this.get(&#x27;_leafletObject&#x27;);
     if (!Ember.isNone(leafletObject)) {
       let fieldsType = Ember.get(leafletObject, &#x27;readFormat.featureType.fieldTypes&#x27;);
-      if (!Ember.isBlank(fieldsType)) {
+      if (!Ember.isBlank(fieldsType) &amp;&amp; !Ember.isBlank(e.searchOptions.queryString)) {
         searchFields.forEach((field) =&gt; {
+          e.searchOptions.queryString = e.searchOptions.queryString.trim();
           let typeField = fieldsType[field];
           if (!Ember.isBlank(typeField)) {
-            let accessProperty = false;
-            if (field !== &#x27;primarykey&#x27;) {
-              switch (typeField) {
-                case &#x27;number&#x27;:
-                  accessProperty = !e.context &amp;&amp; !isNaN(Number(e.searchOptions.queryString));
-                  break;
-                case &#x27;date&#x27;:
-                  accessProperty = !e.context &amp;&amp; new Date(e.searchOptions.queryString).toString() !== &#x27;Invalid Date&#x27;;
-                  break;
-                case &#x27;boolean&#x27;:
-                  accessProperty = !e.context &amp;&amp; Boolean(e.searchOptions.queryString);
-                  break;
-                default:
-                  equals.push(new L.Filter.Like(field, &#x27;*&#x27; + e.searchOptions.queryString + &#x27;*&#x27;, {
-                    matchCase: false
-                  }));
-                  break;
-              }
-
-              if (accessProperty &amp;&amp; typeField !== &#x27;string&#x27;) {
-                equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
-              }
-            } else {
-              if (isUUID(e.searchOptions.queryString)) {
-                equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
-              }
+            if (field === &#x27;primarykey&#x27; &amp;&amp; isUUID(e.searchOptions.queryString)) {
+              equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
+              return;
             }
+
+            switch (typeField) {
+              case &#x27;decimal&#x27;:
+              case &#x27;number&#x27;:
+                let searchValue = e.searchOptions.queryString ? e.searchOptions.queryString.replace(&#x27;,&#x27;, &#x27;.&#x27;) : e.searchOptions.queryString;
+                if (!isNaN(Number(searchValue))) {
+                  equals.push(new L.Filter.EQ(field, searchValue, false));
+                } else {
+                  console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to numeric type&#x60;);
+                }
+
+                break;
+              case &#x27;date&#x27;:
+                let dateInfo = getDateFormatFromString(e.searchOptions.queryString);
+                let searchDate = moment.utc(e.searchOptions.queryString, dateInfo.dateFormat + dateInfo.timeFormat, true);
+
+                if (searchDate.isValid()) {
+                  let [startInterval, endInterval] = createTimeInterval(searchDate, dateInfo.dateFormat);
+
+                  if (endInterval) {
+                    let startIntervalCondition = new L.Filter.GEQ(field, startInterval, false);
+                    let endIntervalCondition = new L.Filter.LT(field, endInterval, false);
+                    equals.push(new L.Filter.And(startIntervalCondition, endIntervalCondition));
+                  } else {
+                    equals.push(new L.Filter.EQ(field, startInterval, false));
+                  }
+                } else {
+                  console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to date type&#x60;);
+                }
+
+                break;
+              case &#x27;boolean&#x27;:
+                let booleanValue = getBooleanFromString(e.searchOptions.queryString);
+
+                if (typeof booleanValue === &#x27;boolean&#x27;) {
+                  equals.push(new L.Filter.EQ(field, booleanValue, false));
+                } else {
+                  console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to boolean type&#x60;);
+                }
+
+                break;
+              default:
+                equals.push(new L.Filter.Like(field, &#x27;*&#x27; + e.searchOptions.queryString + &#x27;*&#x27;, { matchCase: false }));
+                break;
+            }
+
+          } else {
+            console.error(&#x60;The field name: \&quot;${field}\&quot; is incorrect, check the name of the search attribute in the layer settings&#x60;);
           }
         });
       }
     }
 
     let filter;
-    if (equals.length === 1) {
+    if (equals.length === 0) {
+      return Ember.RSVP.resolve(Ember.A());
+    } else if (equals.length === 1) {
       filter = equals[0];
     } else {
       filter = new L.Filter.Or(...equals);
@@ -988,7 +1023,7 @@ export default BaseVectorLayer.extend({
 
     let featuresPromise = this._getFeature({
       filter,
-      maxFeatures: e.searchOptions.maxResultsCount,
+      maxFeatures: e.searchOptions.maxResultsCount + 1,
       fillOpacity: 0.3,
       style: {
         color: &#x27;yellow&#x27;,

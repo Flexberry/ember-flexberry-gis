@@ -773,6 +773,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       result.features.then(
         (features) =&gt; {
           if (features.length &gt; 0) {
+
             let intersectArray = features.filter((item) =&gt; {
               item.isIntersect = false;
               if (!Ember.isNone(item.intersection)) {
@@ -812,7 +813,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               displayProperties: Ember.get(layerModel, &#x27;settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty&#x27;),
               listForms: Ember.A(),
               editForms: Ember.A(),
-              features: Ember.A(features),
+              features: this.get(&#x27;maxResultsCount&#x27;) ? Ember.A(features).slice(0, this.get(&#x27;maxResultsCount&#x27;)) : Ember.A(features),
+              maxResultsLimitOverage: this.get(&#x27;maxResultsCount&#x27;) &amp;&amp; features.length &gt; this.get(&#x27;maxResultsCount&#x27;) ? true : false,
               layerModel: layerModel,
               hasListForm: hasListForm,
               layerIds: layerIds,
