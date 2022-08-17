@@ -14699,6 +14699,33 @@ define('dummy/tests/unit/utils/feature-with-area-intersect-test.jshint', ['expor
     assert.ok(true, 'unit/utils/feature-with-area-intersect-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/utils/get-boolean-from-string-test', ['exports', 'ember-flexberry-gis/utils/get-boolean-from-string', 'qunit'], function (exports, _emberFlexberryGisUtilsGetBooleanFromString, _qunit) {
+  (0, _qunit.module)('Unit | Utility | get boolean from string');
+
+  // Replace this with your real tests.
+  (0, _qunit.test)('it works', function (assert) {
+    assert.equal(null, (0, _emberFlexberryGisUtilsGetBooleanFromString['default'])());
+    assert.ok((0, _emberFlexberryGisUtilsGetBooleanFromString['default'])('true'));
+    assert.notOk((0, _emberFlexberryGisUtilsGetBooleanFromString['default'])('нет'));
+  });
+});
+define('dummy/tests/unit/utils/get-boolean-from-string-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/utils');
+  test('unit/utils/get-boolean-from-string-test.js should pass jscs', function () {
+    ok(true, 'unit/utils/get-boolean-from-string-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/utils/get-boolean-from-string-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/utils/get-boolean-from-string-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/utils/get-boolean-from-string-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/utils/get-crs-by-name-test', ['exports', 'ember', 'ember-flexberry-gis/utils/get-crs-by-name', 'qunit', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'sinon'], function (exports, _ember, _emberFlexberryGisUtilsGetCrsByName, _qunit, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _sinon) {
 
   (0, _qunit.module)('Unit | Utility | get crs by name');
@@ -14778,6 +14805,67 @@ define('dummy/tests/unit/utils/get-crs-by-name-test.jshint', ['exports'], functi
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/utils/get-crs-by-name-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/utils/get-date-from-string-test', ['exports', 'ember-flexberry-gis/utils/get-date-from-string', 'moment', 'qunit'], function (exports, _emberFlexberryGisUtilsGetDateFromString, _moment, _qunit) {
+  var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
+  (0, _qunit.module)('Unit | Utility | get date from string');
+
+  (0, _qunit.test)('getDateFormatFromString() test', function (assert) {
+
+    assert.deepEqual({ dateFormat: 'DD.MM.YYYY', timeFormat: '' }, (0, _emberFlexberryGisUtilsGetDateFromString.getDateFormatFromString)('21.01.2002'));
+    assert.deepEqual({ dateFormat: 'DD.MM.YYYY', timeFormat: ' HH:mm' }, (0, _emberFlexberryGisUtilsGetDateFromString.getDateFormatFromString)('21.01.2002 10:30'));
+    assert.deepEqual({ dateFormat: 'DD.MM.YYYY', timeFormat: ' HH:mm:ss' }, (0, _emberFlexberryGisUtilsGetDateFromString.getDateFormatFromString)('21.01.2002 10:30:22'));
+    assert.deepEqual({ dateFormat: 'YYYY-MM-DD', timeFormat: 'THH:mm:ss.SSSSZ' }, (0, _emberFlexberryGisUtilsGetDateFromString.getDateFormatFromString)('2021-12-28T12:07:37.174Z'));
+    assert.deepEqual({ dateFormat: undefined, timeFormat: undefined }, (0, _emberFlexberryGisUtilsGetDateFromString.getDateFormatFromString)('2021-13-12 12:07:37'));
+  });
+
+  (0, _qunit.test)('createTimeInterval() test', function (assert) {
+    var input = '12.01.2021 10:30:22';
+    var timeInfo = (0, _emberFlexberryGisUtilsGetDateFromString.getDateFormatFromString)(input);
+    var date = _moment['default'].utc(input, timeInfo.dateFormat + timeInfo.timeFormat);
+
+    var _createTimeInterval = (0, _emberFlexberryGisUtilsGetDateFromString.createTimeInterval)(date, timeInfo.dateFormat);
+
+    var _createTimeInterval2 = _slicedToArray(_createTimeInterval, 2);
+
+    var startInterval = _createTimeInterval2[0];
+    var endInterval = _createTimeInterval2[1];
+
+    assert.equal('2021-01-12T10:30:22.000Z', startInterval);
+    assert.equal('2021-01-12T10:30:23.000Z', endInterval);
+
+    var input2 = '2021-01-12T12:20:30.000Z';
+    var timeInfo2 = (0, _emberFlexberryGisUtilsGetDateFromString.getDateFormatFromString)(input2);
+    var date2 = _moment['default'].utc(input2, timeInfo2.dateFormat + timeInfo2.timeFormat);
+
+    var _createTimeInterval3 = (0, _emberFlexberryGisUtilsGetDateFromString.createTimeInterval)(date2, timeInfo2.dateFormat);
+
+    var _createTimeInterval32 = _slicedToArray(_createTimeInterval3, 2);
+
+    var startInterval2 = _createTimeInterval32[0];
+    var endInterval2 = _createTimeInterval32[1];
+
+    assert.equal('2021-01-12T12:20:30.000Z', startInterval2);
+    assert.equal(undefined, endInterval2);
+  });
+});
+define('dummy/tests/unit/utils/get-date-from-string-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/utils');
+  test('unit/utils/get-date-from-string-test.js should pass jscs', function () {
+    ok(true, 'unit/utils/get-date-from-string-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/utils/get-date-from-string-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/utils/get-date-from-string-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/utils/get-date-from-string-test.js should pass jshint.');
   });
 });
 define('dummy/tests/unit/utils/lat-lng-to-coord-test', ['exports', 'ember-flexberry-gis/utils/lat-lng-to-coord', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'qunit', 'npm:jsts'], function (exports, _emberFlexberryGisUtilsLatLngToCoord, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _qunit, _npmJsts) {
