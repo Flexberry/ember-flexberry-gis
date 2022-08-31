@@ -2,188 +2,89 @@ import Ember from 'ember';
 import layout from '../templates/components/flexberry-identify-file';
 import MapModelApiExpansionMixin from '../mixins/flexberry-map-model-api-expansion';
 import { getLeafletCrs } from '../utils/leaflet-crs';
-import { translationMacro as t } from 'ember-i18n';
-import {availableCoordinateReferenceSystemsCodesWithCaptions} from '../utils/available-coordinate-reference-systems-codes';
-
 export default Ember.Component.extend(MapModelApiExpansionMixin, {
   layout,
   mapApi: Ember.inject.service(),
-  fileName: '',
-  _showError: false,
+  serviceLayer: null,
 
-  /**
-    Current error caption.
+  systemCoordinats:['EPSG:32640','EPSG:3857','EPSG:4326','EPSG:59001','EPSG:59002','EPSG:59003'],
+  coordinate:'EPSG:32640',
+  stringFiles:'',
 
-    @property _errorCaption
-    @type String
-    @default undefined
-    @private
-  */
-  _errorCaption: undefined,
+  _type(type) {
+    switch (type) {
+      case 'urn:ogc:def:crs:EPSG::32640':
+        return 'EPSG:32640';
 
-  /**
-    Current error message.
-
-    @property _errorMessage
-    @type String
-    @default undefined
-    @private
-  */
-  _errorMessage: undefined,
-
-  systemCoordinates: availableCoordinateReferenceSystemsCodesWithCaptions(),
-
-  coordinate: 'Определить автоматически',
-
-  importErrorCaption: t('components.geometry-add-modes.import.import-error.caption'),
-
-  importErrorMessage: t('components.geometry-add-modes.import.import-error.message'),
-
-  emptyErrorCaption: t('components.geometry-add-modes.import.empty-error.caption'),
-
-  emptyErrorMessage: t('components.geometry-add-modes.import.empty-error.message'),
-
-  getCoordinate() {
-    return Object.keys(this.systemCoordinates).find(key => this.systemCoordinates[key] === this.coordinate);
+      default:
+        return type;
+    }
   },
 
-  setCoordinate(name) {
-    let key = Object.keys(this.systemCoordinates).find(key => key === name);
-    this.set('coordinate', this.systemCoordinates[key]);
-  },
+  renderLayer(response) {
+    let leafletMap = this.get('leafletMap');
+    if (Ember.isNone(leafletMap)) {
+      return;
+    }
+    let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
 
-  createLayer(response) {
-    let crs = getLeafletCrs('{ "code": "' + this.getCoordinate() + '", "definition": "" }', this);
+    if (Ember.isNone(serviceLayer)) {
+      serviceLayer = L.featureGroup().addTo(leafletMap);
+      this.set('serviceLayer', serviceLayer);
+    }
+
+    let crs = getLeafletCrs('{ "code": "' + this._type(response.crs.properties.name) + '", "definition": "" }', this);
     let coordsToLatLng = function (coords) {
       return crs.unproject(L.point(coords));
     };
 
-    let mapModel = this.get('mapApi').getFromApi('mapModel');
-    response.features.forEach(element => {
-      element.crs = {
-        properties: {
-          name: crs.code
-        }
-      };
-    });
-
-    let multiFeature = mapModel.createMulti(response.features, true);
-    let leafletLayer = L.geoJSON(multiFeature, {
-      coordsToLatLng: coordsToLatLng.bind(this), style: {
-        color: this.get('layerColor'),
-      }
-    }).getLayers();
-
-    return leafletLayer[0];
-  },
-
-  validateFileAndGetFeatures() {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      this.$('input[type="file"]');
-      let file = this.$('input[type="file"]')[0].files[0];
-      let config = Ember.getOwner(this).resolveRegistration('config:environment');
-      let url = `${config.APP.backendUrls.geomFileValidationUrl}?FileName=${file.name}`;
-      let data = new FormData();
-      data.append(file.name, file);
-      data.append('crs', this.getCoordinate());
-
-      Ember.$.ajax({
-        url: url,
-        type: 'POST',
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false
-      }).done((response) => {
-        this.set('_showError', false);
-        if (response && response.features) {
-          this.setCoordinate(response.definedCrs);
-          resolve(response);
-        } else {
-          reject({
-            caption: this.get('emptyErrorCaption'),
-            message: this.get('emptyErrorMessage')
-          });
-        }
-      }).fail((e) => {
-        let errorMessage = e.responseText || this.get('importErrorMessage');
-        reject({
-          caption: this.get('importErrorCaption'),
-          message: errorMessage
-        });
+    if (response.type === 'FeatureCollection') {
+      response.features.forEach(element => {
+        let leafletLayer = L.geoJSON(element, {
+          coordsToLatLng: coordsToLatLng.bind(this), style: {
+            color: '#0061D9',
+          }
+        }).getLayers();
+        serviceLayer.addLayer(leafletLayer[0]);
       });
-    });
-  },
-
-  sendFileToCache() {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      this.$('input[type="file"]');
-      let file = this.$('input[type="file"]')[0].files[0];
-      let config = Ember.getOwner(this).resolveRegistration('config:environment');
-      let url = config.APP.fileCacheUrl;
-      let data = new FormData();
-      data.append(file.name, file);
-
-      Ember.$.ajax({
-        url: url,
-        type: 'POST',
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false
-      }).done((response) => {
-        resolve(response);
-      }).fail((e) => {
-        let errorMessage = e.responseText || this.get('importErrorMessage');
-        reject({
-          caption: this.get('importErrorCaption'),
-          message: errorMessage
-        });
-      });
-    });
-  },
-
-  showError(error) {
-    this.set('_errorCaption', error.caption);
-    this.set('_errorMessage', error.message);
-    this.set('_showError', true);
+    }
   },
 
   actions: {
-    setFiles(e) {
+    setFiles(e){
       this.$(e.target).blur();
       this.$('input[type="file"]').click();
     },
 
     uploadFile(e) {
-      this.set('fileName', e.target.files[0] ? e.target.files[0].name : '');
+      let stringFiles = '';
+      for(let i = 0; i<e.target.files.length; i++)
+      {
+        stringFiles= stringFiles + e.target.files[i].name;
+      }
+      this.set('stringFiles',stringFiles);
     },
 
-    showFileLayer() {
-      this.validateFileAndGetFeatures()
-      .then((response) => {
-        let layer = this.createLayer(response);
-        this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:render', { layer });
-      }, (error) => this.showError(error));
-    },
-
-    identificationFile() {
-      this.validateFileAndGetFeatures()
-      .then((response) => {
-        let layer = this.createLayer(response);
-        this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:render', { layer });
-        this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:identification', { layer });
-      }, (error) => this.showError(error));
-    },
-
-    createLayerByFile() {
+    identification(){
+      this.$('input[type="file"]');
+      let file = this.$('input[type="file"]')[0].files[0];
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
-      this.validateFileAndGetFeatures().then(() => {
-        this.sendFileToCache().then((response) => {
-          let url = `${config.APP.createLayerFormUrl}?cacheFileId=${response.id}&crs=${this.getCoordinate()}`;
-          window.open(url, '_blank').focus();
-        }, (error) => this.showError(error));
-      }, (error) => this.showError(error));
-    }
+      let data = new FormData();
+      data.append(file.name, file);
+
+
+      Ember.$.ajax({
+        url: `${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}`,
+        type: 'POST',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false
+      }).done((response) => {
+        this.renderLayer(response);
+      }).fail(() => {
+      }).always(() => {
+      });
+    } 
   }
 });

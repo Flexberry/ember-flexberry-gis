@@ -15,9 +15,7 @@ export default {
     'caption': 'Многоугольник'
   },
   'file': {
-    'caption': 'Загрузить файл',
-    'form-caption-file': 'Файл *',
-    'form-caption-sk': 'Система координат'
+    'caption': 'Загрузить файл'
   },
   'marker': {
     'caption': 'Точка'

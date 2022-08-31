@@ -11,18 +11,18 @@ export default Ember.Component.extend({
 
   actions: {
     dropdownOpen() {
-      this.set('isOpen', !this.get('isOpen'));
+        this.set('isOpen', !this.get('isOpen'));
     },
     click(str) {
-      this.set('isOpen', false);
-      this.clickButton(str);
+        this.set('isOpen', false);
+        this.clickButton(str);
     },
   },
 
   didInsertElement() {
     this._super(...arguments);
     Ember.$('body').click((e) => {
-      if (!this.$().find(e.target).length) {
+      if(!this.$().find(e.target).length) {
         this.set('isOpen', false);
       }
     });

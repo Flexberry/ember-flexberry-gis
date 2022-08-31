@@ -229,7 +229,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   /**
     Tools option's 'marker' mode's icon CSS-class names.
-
+ 
     @property markerIconClass
     @type String
     @default 'icon-guideline-document'
@@ -382,26 +382,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   layersButton: [],
   toolsButton:[],
-
-  resultsHeightClass: null,
-
-  resultsHeightClassObserver: Ember.observer('isBuffer', 'toolMode', function() {
-    let classHeight = null;
-    if (this.get('isBuffer')) {
-      classHeight = 'buffer';
-    }
-
-    if (this.get('toolMode') === 'file') {
-      classHeight = 'file';
-    }
-
-    if (this.get('isBuffer') && this.get('toolMode') === 'file') {
-      classHeight = 'buffer-file';
-    }
-
-    this.set('resultsHeightClass', classHeight);
-  }),
-
+  
   actions: {
     /**
       Handles layer mode button's 'click' action.
@@ -478,7 +459,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     }
   },
 
-  init() {
+  init(){
     this._super(...arguments);
     const layersButton = [
       {
@@ -524,8 +505,8 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
         layerMode:'file'
       }
     ];
-    this.set('layersButton', layersButton);
-    this.set('toolsButton', toolsButton);
+    this.set('layersButton',layersButton);
+    this.set('toolsButton',toolsButton);
   },
   /**
     Destroys DOM-related component's properties.
