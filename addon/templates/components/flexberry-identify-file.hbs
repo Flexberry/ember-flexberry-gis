@@ -1,0 +1,35 @@
+<input type="file" style="display: none;" onchange={{action 'uploadFile' }}>
+<div class="" style="width: 80%;">
+    <div>
+        <label style="display: block;">Файл * </label>
+        <input onClick={{action 'setFiles' }} value={{stringFiles}}>
+        {{help-popup htmlMessage="<div class='content'>
+            Загрузите файл формата: TAB (в архиве .zip), MIF/MID (в архиве .zip), SHP (в архиве .zip), GEOJSON. Набор
+            связанных файлов, составляющих файл формата TAB, MIF/MID или SHP, должен быть сохранен в основной директории
+            архива .zip, а не в директориях, созданных внутри архива.
+        </div>"}}
+    </div>
+</div>
+<label style="display: block;">Cистема координат</label>
+{{flexberry-dropdown-input
+items=systemCoordinats
+value=coordinate
+class="scale-value fluid"
+}}
+<div style="display: flex;
+    justify-content: space-around;padding: 10px;">
+    {{flexberry-button
+    style="marginmargin:10px"
+    iconClass='icon-guideline-show'
+    click=(action "identification")
+    readonly = (eq stringFiles '')
+    }}
+    {{flexberry-button
+    style="margin:10px"
+    iconClass='icon-guideline-layers-info'
+    }}
+    {{flexberry-button
+    style="margin:10px"
+    iconClass='icon-guideline-goout'
+    }}
+</div>

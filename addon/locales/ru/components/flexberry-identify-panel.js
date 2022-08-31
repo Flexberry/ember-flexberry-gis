@@ -14,6 +14,9 @@ export default {
   'polygon': {
     'caption': 'Многоугольник'
   },
+  'file': {
+    'caption': 'Загрузить файл'
+  },
   'marker': {
     'caption': 'Точка'
   },

@@ -1,0 +1,16 @@
+<div class="flexberry-dropdown-button-selected" onClick={{action 'dropdownOpen' }}>
+  <label> <i class={{selectIcon}}></i></label>
+  <label style="border-left: solid 1px #c5c7ca;"> <i
+      class="icon-guideline-navigate-arrow-down"></i>
+  </label>
+</div>
+<div class="flexberry-dropdown-button-list {{if isOpen 'show'}}">
+  <ul>
+    {{#each items as |item|}}
+    <li onClick={{action "click" item.layerMode}}>
+      <i class={{item.iconClass}}></i>
+      {{item.tooltip}}
+    </li>
+    {{/each}}
+  </ul>
+</div>
