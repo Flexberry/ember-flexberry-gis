@@ -100,19 +100,45 @@
   }
 }
 
+.d-flex{
+  display: flex;
+}
+
+.d-none{
+  display: none;
+}
+
+.ml-20{
+  margin-left: 20px !important;
+}
+
+.w-80{
+  width: 80%;
+}
+
+.justify-content-center{
+  justify-content: center;
+}
+
+.p-10{
+  padding: 10px;
+}
+
+.ml-auto{
+  margin-left: auto !important;
+}
+
 .flexberry-dropdown-button{
   position: relative;
   display: inline-block;
   z-index: 1;
   border-radius: 3.5px;
-  box-shadow: none;
   background: #F4F7FB;
   &  ul {
-    margin-left: 0;
-    padding-left: 8px; 
+    list-style-type: none; 
+    padding-left: 8px;
    }
   & li {
-    list-style-type: none; 
     margin-top: 8px; 
     cursor: pointer;
    }
@@ -132,8 +158,10 @@
   }
   &-list{
     position: absolute;
+    border-radius: 3.5px;
+    box-shadow: 2px 2px 6px 0 fade(#000, 15%);
     display: none;
-    background: #F4F7FB;
+    background: inherit;
     width: 300px;
     
   }
@@ -154,16 +182,21 @@
     border: none;
     background: transparent!important;
   }
+}
 
-  // &:focus {
-  //   box-shadow: none!important;
-  // }
+.wrapper{
+  border: 1px solid #c5c7ca;
+  padding: 10px;
+  margin: 20px;
+  box-shadow: 2px 2px 6px 0 fade(#000, 15%);
+  position: relative;
+  border-radius: 3.5px;
 
-  // &:active{
-  //   background: none !important;
-  // }
-
-  // i[class^="icon-guideline-"] {
-  //   font-size: @iconLargeSize;
-  // }
+  &-exit{
+    position: absolute; 
+    color: #0061D9; 
+    cursor: pointer;
+    right: 0px; 
+    top: 0px;
+  }
 }

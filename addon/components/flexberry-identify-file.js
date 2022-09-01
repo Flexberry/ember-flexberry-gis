@@ -6,11 +6,11 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
   layout,
   mapApi: Ember.inject.service(),
   serviceLayer: null,
-
-  systemCoordinats:['EPSG:32640','EPSG:3857','EPSG:4326','EPSG:59001','EPSG:59002','EPSG:59003'],
-  coordinate:'EPSG:32640',
-  stringFiles:'',
-
+  layer: null,
+  systemCoordinats: ['EPSG:32640', 'EPSG:3857', 'EPSG:4326', 'EPSG:59001', 'EPSG:59002', 'EPSG:59003'],
+  coordinate: 'EPSG:32640',
+  stringFiles: '',
+ 
   _type(type) {
     switch (type) {
       case 'urn:ogc:def:crs:EPSG::32640':
@@ -26,46 +26,46 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
     if (Ember.isNone(leafletMap)) {
       return;
     }
-    let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
-
-    if (Ember.isNone(serviceLayer)) {
-      serviceLayer = L.featureGroup().addTo(leafletMap);
-      this.set('serviceLayer', serviceLayer);
-    }
+    
+    const serviceLayer = this.get('serviceLayer');
 
     let crs = getLeafletCrs('{ "code": "' + this._type(response.crs.properties.name) + '", "definition": "" }', this);
     let coordsToLatLng = function (coords) {
       return crs.unproject(L.point(coords));
     };
 
+    let mapModel = this.get('mapApi').getFromApi('mapModel');
+    response.features.forEach(element => {
+      element.crs = response.crs;
+    });
+
+    let multiFeature = mapModel.createMulti(response.features, true);
     if (response.type === 'FeatureCollection') {
-      response.features.forEach(element => {
-        let leafletLayer = L.geoJSON(element, {
-          coordsToLatLng: coordsToLatLng.bind(this), style: {
-            color: '#0061D9',
-          }
-        }).getLayers();
-        serviceLayer.addLayer(leafletLayer[0]);
-      });
+      let leafletLayer = L.geoJSON(multiFeature, {
+        coordsToLatLng: coordsToLatLng.bind(this), style: {
+          color: '#0061D9',
+        }
+      }).getLayers();
+      this.set('layer', leafletLayer[0])
+      serviceLayer.addLayer(leafletLayer[0]);
     }
   },
 
   actions: {
-    setFiles(e){
+    setFiles(e) {
       this.$(e.target).blur();
       this.$('input[type="file"]').click();
     },
 
     uploadFile(e) {
       let stringFiles = '';
-      for(let i = 0; i<e.target.files.length; i++)
-      {
-        stringFiles= stringFiles + e.target.files[i].name;
+      for (let i = 0; i < e.target.files.length; i++) {
+        stringFiles = stringFiles + e.target.files[i].name;
       }
-      this.set('stringFiles',stringFiles);
+      this.set('stringFiles', stringFiles);
     },
 
-    identification(){
+    identification() {
       this.$('input[type="file"]');
       let file = this.$('input[type="file"]')[0].files[0];
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
@@ -85,6 +85,18 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
       }).fail(() => {
       }).always(() => {
       });
-    } 
+    }
+  },
+
+  init(){
+    this._super(...arguments);
+    const serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+    this.set('serviceLayer', serviceLayer);
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    const serviceLayer = this.get('serviceLayer');
+    serviceLayer.removeLayer(this.get('layer'));
   }
 });

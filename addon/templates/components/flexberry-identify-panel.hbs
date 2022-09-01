@@ -1,58 +1,44 @@
 <div class="{{flexberryClassNames.wrapper}}">
-  {{flexberry-button-dropdown class="flexberry-dropdown-button" clickButton=(action "onLayerModeChange")
-  items=layersButton value=layerMode}}
+  <div class="d-flex">
+    {{flexberry-button-dropdown class="flexberry-dropdown-button" clickButton=(action "onLayerModeChange")
+    items=layersButton value=layerMode}}
 
-  {{flexberry-button-dropdown class="flexberry-dropdown-button" clickButton=(action "onToolModeChange")
-  items=toolsButton value=toolMode}}
+    {{flexberry-button-dropdown class="flexberry-dropdown-button ml-20" clickButton=(action "onToolModeChange")
+    items=toolsButton value=toolMode}}
 
-  {{flexberry-button
-  class=(concat flexberryClassNames.identifyMarker (if isBuffer " active" ""))
-  iconClass='icon-guideline-circle'
-  tooltip=markerCaption
-  click=(action "changeBuffer")
-  }} 
-
-  <div class="{{flexberryClassNames.otherOptions}}">
     {{flexberry-button
-    class=flexberryClassNames.clearButton
-    iconClass=clearIconClass
-    tooltip=clearCaption
-    click=(action "onIdentificationClear")
+    class=(concat flexberryClassNames.identifyMarker (if isBuffer " active ml-20" " ml-20"))
+    iconClass='icon-guideline-circle'
+    tooltip=markerCaption
+    click=(action "changeBuffer")
     }}
+
+    <div class="{{flexberryClassNames.otherOptions}} ml-auto">
+      {{flexberry-button
+      class=flexberryClassNames.clearButton
+      iconClass=clearIconClass
+      tooltip=clearCaption
+      click=(action "onIdentificationClear")
+      }}
+    </div>
   </div>
 
   {{#if (eq toolMode "file")}}
-  <div style="
-    border: 1px solid #c5c7ca;
-    padding: 10px;
-    margin: 20px;
-    box-shadow: 2px 2px 6px 0 rgb(0 0 0 / 15%);
-    position: relative;
-    border-radius: 3.5px;
-">
-    <label id="ember1507" style="position: absolute; color: #0061D9; cursor: pointer;
-    right: 0px; top: 0px;" title="Очистить" class="" onClick={{action "onToolModeChange" "rectangle"}}>
-      <i class="icon-guideline-cross-r"></i>
+  <div class="wrapper">
+    <label id="ember1507" title="Очистить" class="wrapper-exit" onClick={{action "onToolModeChange" "rectangle" }}>
+      <i class="icon-guideline-cross-r "></i>
     </label>
     {{flexberry-identify-file leafletMap=leafletMap}}
   </div>
-  {{/if}}
+  {{/if}} 
 
   {{#if isBuffer}}
-  <div style="
-    border: 1px solid #c5c7ca;
-    padding: 10px;
-    margin: 20px;
-    box-shadow: 2px 2px 6px 0 rgb(0 0 0 / 15%);
-     position: relative;
-     border-radius: 3.5px;
-">
-    <label id="ember1507" style="position: absolute; color: #0061D9;cursor: pointer;
-    right: 0px; top: 0px;" title="Очистить" class="" onClick={{action "changeBuffer" }}>
+  <div class="wrapper">
+    <label id="ember1507" class="wrapper-exit" title="Очистить" onClick={{action "changeBuffer" }}>
       <i class="icon-guideline-cross-r"></i>
     </label>
     <label>{{bufferRadiusCaption}}</label>
-    <div class="buffer-tools" style="display: flex;">
+    <div class="buffer-tools d-flex">
       <div class="field">
         {{input
         type="text"
