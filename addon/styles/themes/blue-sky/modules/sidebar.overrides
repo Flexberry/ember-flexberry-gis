@@ -392,7 +392,7 @@
     overflow-x: hidden;
     margin-top: 5px;
     margin-left: -13px;
-    height: ~"calc(100% - 30px)" !important;
+    height: ~"calc(100% - 120px)" !important;
     .flexberry-treenode-expand-collapse-icon.dropdown.icon:before {
       content: '\f105';
       font-family: Icons;
@@ -1097,7 +1097,13 @@
       display: inline-block;
     }
   }
+  .ui.help-button {
+    float: right;
+    margin-right: 17px;
+  }
   .ui.icon.close {
+    float: right;
+    margin-right: 20px;
     margin-left: 9px;
     background: @whitecolor;
     border: none;
@@ -1167,4 +1173,8 @@
   &::first-letter {
     color: @textColor;
   }
+}
+.ui.help-button {
+  background: transparent;
+  border: none;
 }

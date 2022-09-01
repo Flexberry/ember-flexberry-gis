@@ -783,3 +783,7 @@
     }
   }
 }
+.ui.help-button {
+  background: transparent;
+  border: none;
+}

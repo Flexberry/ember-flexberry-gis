@@ -624,7 +624,22 @@
       box-sizing: border-box;
       border-top-width: 0px;
     }
-    a {
+    .secondary.menu {
+      min-height: 30px;
+      a.tab {
+        cursor: pointer;
+        color: #8F928F;
+        font-size: 14px;
+        font-weight: normal;
+        border-bottom: none;
+        padding: 0 10px;
+        &.active {
+          color: #000000;
+          font-weight: normal;
+        }
+      }
+    }
+    a:not('.tab') {
       position: absolute;
       right: 0;
     }

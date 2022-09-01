@@ -31,15 +31,6 @@ export default EditFormController.extend(
   FavoritesListMixin, {
 
     /**
-      Flag indicates if comapre tool active.
-
-      @property compareLayersEnabled
-      @type Boolean
-      @default false
-    */
-    compareLayersEnabled: false,
-
-    /**
       Leaflet map.
 
       @property leafletMap
