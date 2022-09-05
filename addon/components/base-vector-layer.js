@@ -422,9 +422,13 @@ export default BaseLayer.extend({
             map.addLayer(layerShape);
           }
         });
-        let labelLayer = leafletObject._labelsLayer;
-        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer) && !map.hasLayer(labelLayer)) {
-          map.addLayer(labelLayer);
+        let labelsLayer = leafletObject._labelsLayer;
+        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer) && map.hasLayer(labelsLayer)) {
+          labelsLayer.eachLayer(function (labelLayer) {
+            if (!map.hasLayer(labelLayer)) {
+              map.addLayer(labelLayer);
+            }
+          });
         }
 
         resolve('success');
@@ -1201,12 +1205,45 @@ export default BaseLayer.extend({
     let anchor = null;
     let className = 'label';
     let html = '';
+    let label;
 
     if (lType.indexOf('Polygon') !== -1) {
-      let geojsonReader = new jsts.io.GeoJSONReader();
-      let objJsts = geojsonReader.read(layer.toGeoJSON().geometry);
+      /*let geojsonReader = new jsts.io.GeoJSONReader();
+      let objJsts = geojsonReader.read(layer.toGeoJSON().geometry);*/
+
+      let objJsts = layer.toJsts(L.CRS.EPSG4326);
 
       try {
+        if (objJsts.getNumGeometries() > 1) {
+          label = L.featureGroup();
+          for (let i = 0; i < objJsts.getNumGeometries(); i++) {
+            let polygonN = objJsts.getGeometryN(i);
+            let centroidNJsts = polygonN.isValid() ? polygonN.getInteriorPoint() : polygonN.getCentroid();
+            let geojsonWriter = new jsts.io.GeoJSONWriter();
+            let centroidN = geojsonWriter.write(centroidNJsts);
+            latlng = L.latLng(centroidN.coordinates[1], centroidN.coordinates[0]);
+            html = '<div style="' + style + '">' + text + '</div>';
+
+            let labelN = L.marker(latlng, {
+              icon: L.divIcon({
+                className: className,
+                html: html,
+                iconSize: [iconWidth, iconHeight],
+                iconAnchor: anchor
+              }),
+              zIndexOffset: 1000,
+              pane: this.get('_paneLabel')
+            });
+            labelN.style = {
+              className: className,
+              html: html,
+              iconSize: [iconWidth, iconHeight]
+            };
+
+            label.addLayer(labelN);
+          }
+        }
+
         let centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
         let geojsonWriter = new jsts.io.GeoJSONWriter();
         let centroid = geojsonWriter.write(centroidJsts);
@@ -1245,21 +1282,23 @@ export default BaseLayer.extend({
       return;
     }
 
-    let label = L.marker(latlng, {
-      icon: L.divIcon({
+    if (!label) {
+      label = L.marker(latlng, {
+        icon: L.divIcon({
+          className: className,
+          html: html,
+          iconSize: [iconWidth, iconHeight],
+          iconAnchor: anchor
+        }),
+        zIndexOffset: 1000,
+        pane: this.get('_paneLabel')
+      });
+      label.style = {
         className: className,
         html: html,
-        iconSize: [iconWidth, iconHeight],
-        iconAnchor: anchor
-      }),
-      zIndexOffset: 1000,
-      pane: this.get('_paneLabel')
-    });
-    label.style = {
-      className: className,
-      html: html,
-      iconSize: [iconWidth, iconHeight]
-    };
+        iconSize: [iconWidth, iconHeight]
+      };
+    }
     labelsLayer.addLayer(label);
     label.feature = layer.feature;
     label.leafletMap = labelsLayer.leafletMap;
