@@ -298,41 +298,7 @@ export default Ember.Mixin.create({
       @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
     */
     onFeatureEdit(layerPath, { loadingPath, mapAction }) {
-      let layerModel = getRecord(this, layerPath);
-      let name = Ember.get(layerModel, 'name');
-      let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
-
-      if (Ember.isNone(getAttributesOptions)) {
-        return;
-      }
-
-      getAttributesOptions().then(({ object, settings }) => {
-        let fields = Ember.get(object, 'readFormat.featureType.fields');
-        let data = Object.keys(fields).reduce((result, item) => {
-          result[item] = null;
-          return result;
-        }, {});
-
-        let dataItems = {
-          mode: 'Create',
-          items: [{
-            data: data,
-            layer: null
-          }]
-        };
-
-        this.set(loadingPath, true);
-
-        this.send(mapAction, {
-          dataItems: dataItems,
-          layerModel: { name: name, leafletObject: object, settings, layerModel }
-        });
-
-      }).catch((errorMessage) => {
-        Ember.Logger.error(errorMessage);
-      }).finally(() => {
-        this.set(loadingPath, false);
-      });
+      this.featureEdit(this, layerPath, loadingPath, mapAction);
     },
 
     /**
@@ -575,6 +541,54 @@ export default Ember.Mixin.create({
 
       setIndexes(rootArray, this.get('model.hierarchy'));
     }
+  },
+
+  /**
+    Opens a form for editing or creating objects of the selected layer.
+
+    @method featureEdit
+    @param {Object} controller map controller.
+    @param {String} layerPath path to a layer.
+    @param {String} loadingPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
+    @param {String} mapAction the name of the action to be called.
+    @param {Object} dataValues field values ​​for filling out the form.
+  */
+  featureEdit(controller, layerPath, loadingPath, mapAction, dataValues) {
+    let layerModel = getRecord(controller, layerPath);
+    let name = Ember.get(layerModel, 'name');
+    let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
+
+    if (Ember.isNone(getAttributesOptions)) {
+      return;
+    }
+
+    getAttributesOptions().then(({ object, settings }) => {
+      let fields = Ember.get(object, 'readFormat.featureType.fields');
+      let data = Object.keys(fields).reduce((result, item) => {
+        result[item] = Ember.isNone(dataValues) ? null : dataValues[item];
+        return result;
+      }, {});
+
+      let dataItems = {
+        mode: 'Create',
+        items: [{
+          data: data,
+          layer: null
+        }]
+      };
+
+      controller.set(loadingPath, true);
+
+      controller.send(mapAction, {
+        dataItems: dataItems,
+        layerModel: { name: name, leafletObject: object, settings, layerModel }
+      });
+
+    }).catch((errorMessage) => {
+      Ember.Logger.error(errorMessage);
+    }).finally(() => {
+      controller.set(loadingPath, false);
+    });
   },
 
   /**

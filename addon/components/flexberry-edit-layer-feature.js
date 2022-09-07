@@ -1035,6 +1035,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             if (Ember.isNone(Ember.get(layer, 'feature.leafletLayer'))) {
               Ember.set(layer.feature, 'leafletLayer', layer);
             }
+
+            const afterSaveFeatureFunc = this.get('mapApi').getFromApi('afterSaveFeature');
+            if (typeof afterSaveFeatureFunc === 'function') {
+              afterSaveFeatureFunc(layer.model.id);
+            }
           });
 
           Ember.set(e, 'layers', data.layers);

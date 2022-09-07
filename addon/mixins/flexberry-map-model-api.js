@@ -13,14 +13,29 @@ import jsts from 'npm:jsts';
 import { geometryToJsts } from '../utils/layer-to-jsts';
 import { downloadFile, downloadBlob } from '../utils/download-file';
 import { getCrsByName } from '../utils/get-crs-by-name';
+import actionsHandler from './flexberry-maplayer-actions-handler';
 
-export default Ember.Mixin.create(SnapDraw, {
+export default Ember.Mixin.create(SnapDraw, actionsHandler, {
   /**
     Service for managing map API.
     @property mapApi
     @type MapApiService
   */
   mapApi: Ember.inject.service(),
+
+  /**
+    Opens a form for editing or creating objects of the selected layer.
+
+    @method featureEdit
+    @param {String} layerPath path to a layer.
+    @param {String} loadingPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
+    @param {String} mapAction the name of the action to be called.
+    @param {Object} dataValues field values ​​for filling out the form.
+  */
+  showFeatureEditForm(layerPath, loadingPath, mapAction, dataValues = null) {
+    const controller = Ember.getOwner(this).lookup('controller:map');
+    this.featureEdit(controller, layerPath, loadingPath, mapAction, dataValues);
+  },
 
   /**
     Shows layers specified by IDs.
