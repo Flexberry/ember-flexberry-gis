@@ -52,6 +52,7 @@ const flexberryClassNames = {
   removeButton: flexberryClassNamesPrefix + '-remove-button',
   boundsButton: flexberryClassNamesPrefix + '-bounds-button',
   attributesButton: flexberryClassNamesPrefix + '-attributes-button',
+  loadButton: flexberryClassNamesPrefix + '-load-button',
   caption: flexberryClassNamesPrefix + '-caption-label',
   legendToggler: flexberryClassNamesPrefix + '-legend-toggler',
   preventExpandCollapse: FlexberryTreenodeComponent.flexberryClassNames.preventExpandCollapse,
@@ -516,6 +517,29 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether layer has access for loading.
+
+      @property readonlyData
+      @type Boolean
+      @readonly
+    */
+    accessForLoad: Ember.computed('access', 'readonly', 'layer', function () {
+      let accessForLoad = this.get('access.accessLoad');
+      if (!Ember.isNone(accessForLoad)) {
+        let layer = this.get('layer');
+        let readonly = this.get('readonly');
+
+        let mapLayerId = Object.keys(accessForLoad).find(key => key === layer.id);
+
+        let access = !Ember.isNone(layer) && !Ember.isNone(accessForLoad) && !Ember.isNone(mapLayerId);
+
+        return !readonly || access;
+      }
+
+      return false;
+    }),
+
+    /**
       Flag: indicates whether layer node has been expanded once.
 
       @property hasBeenExpanded
@@ -958,6 +982,12 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
       closeOtherCalendar() {
         this.sendAction('closeOtherCalendar', this.get('layer.id'));
+      },
+
+      onLoadButtonClick() {
+        if (!Ember.isNone(this.get('accessForLoad'))) {
+          this.sendAction('onLoad');
+        }
       }
     },
 

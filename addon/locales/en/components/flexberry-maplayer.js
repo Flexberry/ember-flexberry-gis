@@ -22,5 +22,8 @@ export default {
   },
   'plus-button': {
     'tooltip': 'Create object'
+  },
+  'load-button': {
+    'tooltip': 'Go to data download'
   }
 };

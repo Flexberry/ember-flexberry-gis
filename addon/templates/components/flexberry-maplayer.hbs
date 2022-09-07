@@ -128,6 +128,14 @@
                       }}
                     {{/each}}
                   {{/if}}
+                  {{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable accessForLoad)}}
+                    {{flexberry-button
+                      class=(concat flexberryClassNames.loadButton " floated " flexberryClassNames.preventExpandCollapse)
+                      iconClass="icon-guideline-delete-r"
+                      caption=(t "components.flexberry-maplayer.load-button.tooltip")
+                      click=(action "onLoadButtonClick")
+                    }}
+                  {{/if}}
                 </div>
               </div>
             {{/if}}

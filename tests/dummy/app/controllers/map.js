@@ -422,6 +422,14 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   },
 
   actions: {
+    onLoad(layer) {
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      if (config.APP.backendUrls.hasOwnProperty('loaderBackendUrl')) {
+        let loaderBackendUrl = config.APP.backendUrls.loaderBackendUrl;
+        window.open(loaderBackendUrl, '_blank');
+      }
+    },
+
     OnCompareTwoGeometries() {
       this.set('compareObjects', true);
       Ember.run.later(() => {

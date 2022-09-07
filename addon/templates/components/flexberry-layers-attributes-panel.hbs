@@ -59,16 +59,16 @@
               <div class="bottompanel-tab-head-panel">
                 <div class="buttons">
                    {{#if tabModel.allowEdit}}
-                   {{component "geometry-add-modes/import"
-                        leafletMap=leafletMap
-                        settings=(hash
-                          layerCRS=(get tabModel "leafletObject.options.crs")
-                          layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
-                        )
-                        tabModel=tabModel
-                        importComplete=(action "onImportComplete" tabModel)
-                    }}
-                  {{/if}}
+                      {{component "geometry-add-modes/import"
+                          leafletMap=leafletMap
+                          settings=(hash
+                            layerCRS=(get tabModel "leafletObject.options.crs")
+                            layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
+                          )
+                          tabModel=tabModel
+                          importComplete=(action "onImportComplete" tabModel)
+                      }}
+                    {{/if}}
                   {{flexberry-button
                     tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
                     click=(action "onFindItemClick" tabModel)
