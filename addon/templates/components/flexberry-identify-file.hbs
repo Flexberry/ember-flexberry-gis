@@ -1,4 +1,4 @@
-<input type="file" class="d-none" onchange={{action 'uploadFile' }}>
+<input type="file" accept=".zip,.GEOJSON" class="d-none" onchange={{action 'uploadFile' }}>
 <div class="w-80">
     <div>
         <label>Файл * </label>
@@ -19,15 +19,26 @@ class="scale-value fluid"
 <div class="d-flex justify-content-center p-10">
     {{flexberry-button
     iconClass='icon-guideline-show'
-    click=(action "identification")
+    click=(action "showFileLayer")
     readonly = (eq stringFiles '')
     }}
     {{flexberry-button
     class='ml-20'
     iconClass='icon-guideline-layers-info'
+    click=(action "identificationFile")
+    readonly = (eq stringFiles '')
     }}
     {{flexberry-button
     class='ml-20'
     iconClass='icon-guideline-goout'
     }}
 </div>
+{{#if _showError}}
+{{ui-message
+type="error"
+closeable=true
+visible=_showError
+caption=_errorCaption
+message=_errorMessage
+}}
+{{/if}}

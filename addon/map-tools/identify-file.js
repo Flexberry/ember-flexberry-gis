@@ -2,43 +2,104 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
 import IdentifyMapTool from './identify';
-
+import * as buffer from 'npm:@turf/buffer';
 /**
-  Rectangle identify map-tool.
+  File identify map-tool.
 
-  @class RectangleIdentifyMapTool
+  @class FileIdentifyMapTool
   @extends IdentifyMapTool
 */
 export default IdentifyMapTool.extend({
-  /**
-    Handles map's 'editable:drawing:end' event.
-
-    @method _drawingDidEnd
-    @param {Object} e Event object.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.layer Drawn rectangle layer.
-  */
-  _drawingDidEnd({ layer }) {
-    this._super(...arguments);
-    layer.disableEdit();
-
-    // Remove drawn rectangle.
-    if (this.get('hideOnDrawingEnd')) {
-      layer.remove();
-    }
-
-    // Give to user ability to draw new rectangle.
-    //this.get('_editTools').startRectangle();
-  },
-
   /**
     Enables tool.
 
     @method _enable
     @private
   */
+
+  layer: null,
+  _bufferLayer: null,
+
   _enable() {
     this._super(...arguments);
-    this.get('_editTools').stopDrawing();
+
+    let editTools = this.get('_editTools');
+    if (Ember.isNone(editTools)) {
+      editTools = new L.Editable(leafletMap, {
+        drawingCursor: this.get('cursor')
+      });
+      this.set('_editTools', editTools);
+    }
+    this.leafletMap.on('flexberry-map-loadfile:render', this._renderLayer, this);
+    this.leafletMap.on('flexberry-map-loadfile:identification', this._identificationLayer, this);
+  },
+
+  _disable() {
+    this._super(...arguments);
+
+    let editTools = this.get('_editTools');
+    if (!Ember.isNone(editTools)) {
+      this.leafletMap.off('flexberry-map-loadfile:render', this._renderLayer, this);
+      this.leafletMap.off('flexberry-map-loadfile:identification', this._identificationLayer, this);
+    }
+
+    this._clear();
+  },
+
+  _clear() {
+    if (this.get('layer'))
+      this.leafletMap.removeLayer(this.get('layer'));
+    if (this.get('_bufferLayer'))
+      this.leafletMap.removeLayer(this.get('_bufferLayer'));
+  },
+
+  _renderLayer({ layer }) {
+    this._clear();
+
+    let buf = buffer.default(layer.toGeoJSON(), this.get('bufferRadius') || 0, { units: this.get('bufferUnits') });
+    let _bufferLayer = L.geoJSON(buf).addTo(this.leafletMap);
+    _bufferLayer.addLayer(layer);
+    this.set('layer', layer);
+    this.set('_bufferLayer', _bufferLayer);
+
+  },
+
+  _identificationLayer({ layer }) {
+    let buf = buffer.default(layer.toGeoJSON(), this.get('bufferRadius') || 0, { units: this.get('bufferUnits') });
+    let _bufferLayer = L.geoJSON(buf);
+
+    let e = {
+      latlng: layer._bounds._northEast,
+      polygonLayer: layer,
+      bufferedMainPolygonLayer: _bufferLayer,
+      excludedLayers: Ember.A([]),
+      layers: this._getLayersToIdentify({
+        excludedLayers: []
+      }),
+      results: Ember.A()
+    };
+
+    this.leafletMap.fire('flexberry-map:identify', e);
+    
+    e.results = Ember.isArray(e.results) ? e.results : Ember.A();
+    let promises = Ember.A();
+    e.results.forEach((result) => {
+      if (Ember.isNone(result)) {
+        return;
+      }
+
+      let features = Ember.get(result, 'features');
+ 
+      if (!(features instanceof Ember.RSVP.Promise)) {
+        return;
+      }
+
+      promises.pushObject(features);
+    });
+    Ember.RSVP.allSettled(promises).then(() => {
+      this._finishIdentification(e);
+    });
   }
 });
