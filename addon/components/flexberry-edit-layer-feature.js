@@ -1038,7 +1038,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
             const afterSaveFeatureFunc = this.get('mapApi').getFromApi('afterSaveFeature');
             if (typeof afterSaveFeatureFunc === 'function') {
-              afterSaveFeatureFunc(layer.model.id);
+              afterSaveFeatureFunc(layer.feature.properties.primarykey);
             }
           });
 
