@@ -1052,7 +1052,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
         let _leafletObjectFirst = this.get('layerModel.layerModel._leafletObjectFirst');
         if (!Ember.isNone(_leafletObjectFirst)) {
-          _leafletObjectFirst.setParams({fake: Date.now()}, false);
+          _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
 
         this.sendAction('editFeatureEnd');

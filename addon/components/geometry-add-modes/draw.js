@@ -596,11 +596,13 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         for (var i = 0; i < numGeom; i++) {
           let geometry = targeLayer.getGeometryN(0);
           holes = !Ember.isNone(geometry._holes) && Ember.isArray(geometry._holes) && geometry._holes.length > 0;
-          if (holes) break;
+          if (holes) {
+            break;
+          }
         }
 
         if (newHole && !holes) {
-          latLngs = [latLngs]
+          latLngs = [latLngs];
         }
 
         layer.setLatLngs(latLngs);
