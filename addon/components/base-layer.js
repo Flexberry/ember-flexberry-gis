@@ -351,6 +351,10 @@ export default Ember.Component.extend(
         this.set('_leafletObject', leafletLayer);
 
         if (Ember.isPresent(this.get('layerModel'))) {
+          if (!Ember.isNone(this.get('layerModel._leafletObject'))) {
+            Ember.set(this.get('layerModel'), '_leafletObjectFirst', this.get('layerModel._leafletObject'));
+          }
+
           Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
 
           if (Ember.isNone(this.get('layerModel.leafletObjectGetter'))) {
