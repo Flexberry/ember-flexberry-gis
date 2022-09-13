@@ -733,7 +733,7 @@ let FlexberryMapComponent = Ember.Component.extend(
         }
       });
 
-      if (intersect) {
+      if (!intersect) {
         return;
       }
 

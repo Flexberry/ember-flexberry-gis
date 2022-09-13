@@ -262,5 +262,38 @@ export default EditFormController.extend(
       }
 
       return layer;
+    },
+    actions:{
+      // onMapLeafletInit() {
+      //   this._super(...arguments);
+      //   let leafletMap = this.get('leafletMap');
+      //   let pane = leafletMap.getPane('overlayPane');
+
+      //   L.DomEvent.on(pane, 'click', function (e) {
+      //     if (e._stopped) { return; }
+
+      //     var target = e.target;
+
+      //     // Проблема с пробрасыванием кликов была только из-за введения разных canvas. Если клик попал на другой элемент, то работает стандартная логика
+      //     if (target.tagName.toLowerCase() !== 'canvas') {
+      //       return;
+      //     }
+
+      //     var ev = new MouseEvent(e.type, e);//новый клик
+      //     let removed = { node: target, pointerEvents: target.style.pointerEvents };//
+      //     target.style.pointerEvents = 'none';//выключение кликов для ev
+      //     target = document.elementFromPoint(e.clientX, e.clientY);//в ту же точку новый клик
+
+      //     if (target && target !== pane && target.parentElement && target.parentElement.classList.value.indexOf('leaflet-vectorLayer') !== -1) {
+      //       let stopped = !target.dispatchEvent(ev);
+      //       if (stopped || ev._stopped) {
+      //         L.DomEvent.stop(e);
+      //       }
+      //     }
+
+      //     removed.node.style.pointerEvents = removed.pointerEvents;
+      //   });
+      // },
     }
+
   });

@@ -126,18 +126,8 @@ export default Ember.Mixin.create({
   _selectFeature(feature) {
     let serviceLayer = this.get('serviceLayer');
     if (!Ember.isNone(feature)) {
-      serviceLayer.addLayer(this._prepareLayer(feature.leafletLayer));
+      serviceLayer.addLayer(feature.leafletLayer);
     }
-  },
-
-  /**
-    Additional preparation of the selected layer.
-
-    @param Object layer
-  */
-  _prepareLayer(layer) {
-    layer.options.interactive = false;
-    return layer;
   },
 
   /**

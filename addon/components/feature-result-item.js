@@ -180,6 +180,8 @@ export default Ember.Component.extend({
   */
   displaySettings: null,
 
+  highlight: false,
+
   /**
     Feature's metadata.
 
@@ -220,7 +222,16 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
     const hasEditFormFunc = this.get('mapApi').getFromApi('hasEditForm');
+    let feature = this.get('feature');
 
+    if (feature) {
+      if(feature.geometry.type === 'marker') {
+        feature.leafletLayer.options.renderer.options.tolerance = 10;
+      }
+      feature.leafletLayer.on('click', () => {
+        this.send('highlightFeature');
+      });
+    }
     if (typeof hasEditFormFunc === 'function') {
       const layerId = this.get('feature.layerModel.id');
 
@@ -265,6 +276,15 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    highlightFeature(){
+      this.sendAction('highlightResult'); // clear feature-result-items highlight states
+      if (!this.get('expanded')) {
+        this.send('showInfo');
+        this.send('toggleLinks');
+      }
+      this.set('highlight', !this.get('highlight'));
+      this.element.scrollIntoView({ alignToTop: true, behavior: "smooth"});
+    },
     /**
       Show\hide submenu
 

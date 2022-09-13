@@ -172,6 +172,17 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   exportResult: null,
 
   actions: {
+     /**
+      Show\hide features list (if present). Сlears the highlight state of the features list.
+      @method actions.highlightResult
+    */
+    highlightResult(result) {
+      if (!result) {
+        return;
+      }
+      this.$('.feature-result-item-caption').removeClass('highlight');
+      Ember.set(result, 'highlight', true);
+    },
     /**
       Show\hide links list (if present).
       @method actions.toggleLinks
@@ -398,6 +409,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               editForms: Ember.A(),
               features: this.get('maxResultsCount') ? Ember.A(features).slice(0, this.get('maxResultsCount')) : Ember.A(features),
               maxResultsLimitOverage: this.get('maxResultsCount') && features.length > this.get('maxResultsCount') ? true : false,
+              highlight: false,
               layerModel: layerModel,
               hasListForm: hasListForm,
               layerIds: layerIds,
@@ -604,7 +616,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           }
         } else if (!Ember.isNone(this.get('share'))) {
           if (displayResults.length === 1) {
-            this.send('selectFeature', displayResults.objectAt(0).features);
+            this.send('selectFeature', displayResults.objectAt(0).features); //TODO: подсветить все + включить интерактивнсоть
           }
         }
       });
