@@ -23,6 +23,8 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   */
   sideBySide: L.control.sideBySide(),
 
+  compareService: Ember.Service.inject('compare'),
+
   /**
     Parent route.
 
@@ -536,7 +538,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
     showCompareSideBar() {
       if (sideBySide) {
-        if (!this.get('compareLayersEnabled')) {
+        if (!this.get('compareService.compareLayersEnabled')) {
           this.set('sidebar.7.active', true);
         } else {
           this.set('sidebar.0.active', true);
@@ -550,7 +552,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         }
 
         setTimeout(() => {
-          this.toggleProperty('compareLayersEnabled');
+          this.toggleProperty('compareService.compareLayersEnabled');
         }, 500);
       }
     },
@@ -625,8 +627,8 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         this.set('attrVisible', false);
       }
 
-      if (e.tabName !== 'compare' && this.get('compareLayersEnabled')) {
-        this.set('compareLayersEnabled', false);
+      if (e.tabName !== 'compare' && this.get('compareService.compareLayersEnabled')) {
+        this.set('compareService.compareLayersEnabled', false);
       }
 
       if (e.tabName === 'identify') {

@@ -220,7 +220,6 @@
         {{flexberry-maplayers
           class="styled"
           leafletMap=leafletMap
-          compareLayersEnabled=compareLayersEnabled
           sideBySide=sideBySide
           layers=(get-with-dynamic-actions this "model.hierarchy"
               hierarchyPropertyName="layers"
@@ -293,7 +292,6 @@
         }}
         {{map-tools/compare
           leafletMap=leafletMap
-          compareLayersEnabled=compareLayersEnabled
           showCompareSideBar=(action "showCompareSideBar")
         }}
         {{map-commands/go-to leafletMap=leafletMap}}
