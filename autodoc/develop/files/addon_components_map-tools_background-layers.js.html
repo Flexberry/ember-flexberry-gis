@@ -418,6 +418,7 @@
 import Ember from &#x27;ember&#x27;;
 import layout from &#x27;../../templates/components/map-tools/background-layers&#x27;;
 import { translationMacro as t } from &#x27;ember-i18n&#x27;;
+import CompareLayersMixin from &#x27;../../mixins/compare-layers&#x27;;
 
 const flexberryClassNamesPrefix = &#x27;flexberry-background-map-tool&#x27;;
 const flexberryClassNames = {
@@ -426,7 +427,7 @@ const flexberryClassNames = {
   div: flexberryClassNamesPrefix + &#x27;-div&#x27;
 };
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(CompareLayersMixin, {
   layout,
 
   /**
@@ -542,6 +543,41 @@ export default Ember.Component.extend({
     this.set(&#x27;items&#x27;, items);
   },
 
+  /**
+   * Observe enabling compare mode and changing side to choose right base layer.
+   */
+  compareLayersEnabledSideObserver: Ember.observer(&#x27;compare.compareLayersEnabled&#x27;, &#x27;ignoreCompareMode&#x27;, &#x27;compare.backgroundSide&#x27;, function() {
+    if (this.get(&#x27;compare.compareLayersEnabled&#x27;) &amp;&amp; !this.get(&#x27;ignoreCompareMode&#x27;)) {
+      const items = this.get(&#x27;items&#x27;);
+      items.forEach((item) =&gt; {
+        if (item.id !== this.get(&#x60;compare.compareState.${this.get(&#x27;compare.backgroundSide&#x27;)}.bgLayer.id&#x60;)) {
+          Ember.set(item, &#x27;classActive&#x27;, &#x27;&#x27;);
+        } else {
+          Ember.set(item, &#x27;classActive&#x27;, &#x27;active&#x27;);
+        }
+      });
+    } else {
+      this.setItems(this.get(&#x27;selectedLayer&#x27;));
+    }
+  }),
+
+  /**
+   * Refresh items
+   * @param {Ember.Model} layer
+   */
+  setItems(layer) {
+    let items = this.get(&#x27;items&#x27;);
+    items.forEach(item =&gt; Ember.set(item, &#x27;classActive&#x27;, &#x27;&#x27;));
+    let activeItem = items.find(item =&gt; item.id === layer.get(&#x27;id&#x27;));
+    let inCompareEnabled = this.get(&#x27;compare.compareLayersEnabled&#x27;) &amp;&amp; !this.get(&#x27;ignoreCompareMode&#x27;) &amp;&amp;
+    (this.get(&#x60;compare.compareState.${this.get(&#x27;compare.backgroundSide&#x27;)}.bgLayer.id&#x60;) === layer.get(&#x27;id&#x27;));
+    if (activeItem &amp;&amp; (layer.get(&#x27;visibility&#x27;) || inCompareEnabled)) {
+      Ember.set(activeItem, &#x27;classActive&#x27;, &#x27;active&#x27;);
+    }
+
+    this.set(&#x27;items&#x27;, items);
+  },
+
   actions: {
     /**
       Shows div with layers.
@@ -567,35 +603,24 @@ export default Ember.Component.extend({
     */
     onLayerClick(layer) {
       let selectedLayer = this.get(&#x27;selectedLayer&#x27;);
-      if (Ember.isNone(selectedLayer)) {
-        Ember.set(layer, &#x27;visibility&#x27;, true);
-        this.set(&#x27;selectedLayer&#x27;, layer);
+      if (this.get(&#x27;compare.compareLayersEnabled&#x27;) &amp;&amp; !this.get(&#x27;ignoreCompareMode&#x27;)) {
+        this.setBgLayerBySide(layer, this.get(&#x27;compare.backgroundSide&#x27;), this.get(&#x27;leafletMap&#x27;));
       } else {
-        Ember.set(selectedLayer, &#x27;visibility&#x27;, false);
-        if (Ember.get(selectedLayer, &#x27;id&#x27;) === Ember.get(layer, &#x27;id&#x27;)) {
-          this.set(&#x27;selectedLayer&#x27;, null);
-        } else {
+        if (Ember.isNone(selectedLayer)) {
           Ember.set(layer, &#x27;visibility&#x27;, true);
           this.set(&#x27;selectedLayer&#x27;, layer);
+        } else {
+          Ember.set(selectedLayer, &#x27;visibility&#x27;, false);
+          if (Ember.get(selectedLayer, &#x27;id&#x27;) === Ember.get(layer, &#x27;id&#x27;)) {
+            this.set(&#x27;selectedLayer&#x27;, null);
+          } else {
+            Ember.set(layer, &#x27;visibility&#x27;, true);
+            this.set(&#x27;selectedLayer&#x27;, layer);
+          }
         }
       }
 
-      let items = this.get(&#x27;items&#x27;);
-      items.forEach(item =&gt; {
-        if (item.id === Ember.get(layer, &#x27;id&#x27;)) {
-          if (Ember.get(item, &#x27;classActive&#x27;) !== &#x27;active&#x27;) {
-            Ember.set(item, &#x27;classActive&#x27;, &#x27;active&#x27;);
-          } else {
-            Ember.set(item, &#x27;classActive&#x27;, &#x27;&#x27;);
-          }
-        }
-
-        if (item.id !== Ember.get(layer, &#x27;id&#x27;) &amp;&amp; Ember.get(item, &#x27;classActive&#x27;) === &#x27;active&#x27;) {
-          Ember.set(item, &#x27;classActive&#x27;, &#x27;&#x27;);
-        }
-      });
-
-      this.set(&#x27;items&#x27;, items);
+      this.setItems(layer);
     }
   }
 });

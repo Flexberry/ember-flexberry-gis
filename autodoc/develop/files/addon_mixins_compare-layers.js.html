@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>DynamicPropertiesMixin - Flexberry Documentation</title>
+    <title>addon/mixins/compare-layers.js - Flexberry Documentation</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -410,450 +410,240 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>DynamicPropertiesMixin <small>Class</small></h1>
+    <h1>addon/mixins/compare-layers.js <small>File</small></h1>
 </div>
 
-<div class="well well-small">
-        <div class="uses">
-            Uses
-            <ul class="inline commas">
-                    <li><a href="&lt;a href=&quot;http://emberjs.com/api/classes/Ember.Mixin.html&quot;&gt;Ember.Mixin&lt;/a&gt;.html">&lt;a href=&quot;http://emberjs.com/api/classes/Ember.Mixin.html&quot;&gt;Ember.Mixin&lt;/a&gt;</a></li>
-            </ul>
-        </div>
+<div class="file">
+    <pre class="prettyprint linenums">
+import Ember from &#x27;ember&#x27;;
 
+/**
+ * Mixin with methods to control compare mode
+ */
+export default Ember.Mixin.create({
+  /**
+   * Service with main objects
+   * @property
+   */
+  compare: Ember.inject.service(),
 
-        <div class="foundat">
-            Defined in: <a href="../files/addon_mixins_dynamic-properties.js.html#l7"><code>addon&#x2F;mixins&#x2F;dynamic-properties.js:7</code></a>
-        </div>
+  /**
+   * Flag for component to ignore compare mode
+   * @property
+   */
+  ignoreCompareMode: false,
 
-            Module: <a href="../modules/ember-flexberry-gis.html">ember-flexberry-gis</a>
+  /**
+   * Toogle layer visibility on selected side
+   * @param {Ember.Model} layer
+   * @param {String} side
+   * @param {L.Map} leafletMap
+   */
+  setLayerBySide(layer, side, leafletMap) {
+    const layerId = Ember.get(layer, &#x27;id&#x27;);
+    const leafletOriginalLayer = Ember.get(layer, &#x27;_leafletObject&#x27;);
+    let layersSideSettings = this.get(&#x60;compare.compareState.${side}&#x60;);
+    let existedLayers = layersSideSettings.layers.filter(l =&gt; l.id === layerId);
+    if (existedLayers.length &gt; 0) {
+      existedLayers.forEach(l =&gt; l.layer.remove());
+      Ember.set(layersSideSettings, &#x27;layers&#x27;, layersSideSettings.layers.filter(l =&gt; l.id !== layerId));
+    } else {
+      if (layer.get(&#x27;settingsAsObject.labelSettings.signMapObjects&#x27;)) {
+        const labelsOriginalLayer = layer.get(&#x27;_leafletObject._labelsLayer&#x27;);
+        layersSideSettings.layers.push({
+          id: layerId,
+          layer: labelsOriginalLayer.addTo(leafletMap)
+        });
+      }
 
-</div>
+      layersSideSettings.layers.push({
+        id: layerId,
+        layer: leafletOriginalLayer.addTo(leafletMap)
+      });
+      Ember.set(layersSideSettings, &#x27;layers&#x27;, layersSideSettings.layers.map(l =&gt; l));
+    }
 
+    this.redrawSide(side);
+  },
 
-<div class="well well-small">
-    <p>Mixin containing logic making available passing all desirable properties to components
-in a single object, which keys are related to component's desirable properties.</p>
+  /**
+   * Toggle group layer on selected side
+   * @param {Ember.Model} layer
+   * @param {string} side
+   * @param {L.Map} map
+   */
+  setGroupLayerBySide(layer, side, map) {
+    const settings = this.get(&#x60;compare.compareState.${side}&#x60;);
+    let sideGroupLayers = settings.groupLayersEnabled;
+    let sideChildLayers = settings.childLayersEnabled;
+    const isEnabled = !!sideGroupLayers.find(id =&gt; id === layer.get(&#x27;id&#x27;));
+    if (isEnabled) {
+      sideGroupLayers = sideGroupLayers.filter(id =&gt; id !== layer.get(&#x27;id&#x27;));
+      Ember.set(settings, &#x27;groupLayersEnabled&#x27;, sideGroupLayers);
+      let disableLayers = sideChildLayers.filter(l =&gt; l.parentIds.includes(layer.get(&#x27;id&#x27;)));
+      disableLayers.forEach((l) =&gt; this.setLayerBySide(l.layer, side, map));
+    } else {
+      sideGroupLayers.push(layer.get(&#x27;id&#x27;));
+      Ember.set(settings, &#x27;groupLayersEnabled&#x27;, sideGroupLayers);
+      let layersToEnable = sideChildLayers.filter(l =&gt; l.parentIds.includes(layer.get(&#x27;id&#x27;)) &amp;&amp; this.parentLayersVisible(l.parentIds, side));
+      layersToEnable.forEach((l) =&gt; this.setLayerBySide(l.layer, side, map));
+    }
+  },
 
-</div>
+  /**
+   * Toggle child layer visibility on selected side
+   * @param {Ember.Model} layer
+   * @param {String} side
+   * @param {L.Control.Map} map
+   */
+  setChildLayerBySide(layer, side, map) {
+    const settings = this.get(&#x60;compare.compareState.${side}&#x60;);
+    const sideLayers = settings.layers;
+    let sideChildLayers = settings.childLayersEnabled;
+    const layerEnabled = !!sideChildLayers.find(l =&gt; l.id === layer.get(&#x27;id&#x27;));
+    const layerShown = !!sideLayers.find(l =&gt; l.id === layer.get(&#x27;id&#x27;));
+    if (layerEnabled) {
+      sideChildLayers = sideChildLayers.filter(l =&gt; l.id !== layer.get(&#x27;id&#x27;));
+      Ember.set(settings, &#x27;childLayersEnabled&#x27;, sideChildLayers);
+      if (layerShown) {
+        this.setLayerBySide(layer, side, map);
+      }
+    } else {
+      const parentIds = this.parentLayersIds(layer, []);
+      sideChildLayers = [...sideChildLayers, {
+        id: layer.get(&#x27;id&#x27;),
+        parentIds: parentIds,
+        layer: layer
+      }];
+      Ember.set(settings, &#x27;childLayersEnabled&#x27;, sideChildLayers);
+      if (this.parentLayersVisible(parentIds, side)) {
+        this.setLayerBySide(layer, side, map);
+      }
+    }
+  },
 
+  /**
+   * Recursive get all parent layer ids
+   * @param {Ember.Model} layer
+   * @param {Array&lt;String&gt;} accum
+   * @returns Array&lt;String&gt;
+   */
+  parentLayersIds(layer, accum) {
+    let parent = layer.get(&#x27;parent&#x27;);
+    if (parent) {
+      accum.push(parent.get(&#x27;id&#x27;));
+      return this.parentLayersIds(parent, accum);
+    }
 
-<div>
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#index">Index</a></li>
+    return accum;
+  },
 
-            <li><a data-toggle="tab" href="#methods">Methods</a></li>
-            <li><a data-toggle="tab" href="#properties">Properties</a></li>
-    </ul>
+  /**
+   * Check if all parent layers are visible.
+   * @param {Array&lt;String&gt;} parentIds
+   * @param {String} side
+   * @returns Bool
+   */
+  parentLayersVisible(parentIds, side) {
+    const settings = this.get(&#x60;compare.compareState.${side}&#x60;);
+    let sideGroupLayers = settings.groupLayersEnabled;
+    return parentIds.every(id =&gt; sideGroupLayers.includes(id));
+  },
 
-    <div class="tab-content">
-        <div id="index" class="tab-pane active">
-            <h2 class="off-left">Item Index</h2>
+  /**
+   * Set background layer by selected side
+   * @param {Ember.Model} layer
+   * @param {String} side
+   * @param {L.Map} leafletMap
+   */
+  setBgLayerBySide(layer, side, leafletMap) {
+    const layerId = layer.get(&#x27;id&#x27;);
+    const leafletOriginalLayer = Ember.get(layer, &#x27;_leafletObject&#x27;);
+    const bgSideSettings = this.get(&#x60;compare.compareState.${side}.bgLayer&#x60;);
+    if (bgSideSettings.layer) {
+      bgSideSettings.layer.removeFrom(leafletMap);
+    }
 
-                <div class="index-section methods">
-                    <h3>Methods</h3>
+    const newLayer = L.Util.CloneLayer(leafletOriginalLayer).addTo(leafletMap);
+    bgSideSettings.id = layerId;
+    bgSideSettings.layer = newLayer;
+    this.redrawSide(side);
+  },
 
-                    <ul class="index-list methods">
-                            <li class="index-item method private">
-                                <a href="#" data-tabid="#methods" data-anchor="#method__addDynamicProperty" data-tablink="_addDynamicProperty">_addDynamicProperty</a>
+  /**
+   * Get opposite side
+   * @param {String} side
+   * @returns String
+   */
+  getOppositeSide(side) {
+    return (side === &#x27;Left&#x27;) ? &#x27;Right&#x27; : &#x27;Left&#x27;;
+  },
 
-                            </li>
-                            <li class="index-item method private">
-                                <a href="#" data-tabid="#methods" data-anchor="#method__dynamicPropertiesDidChange" data-tablink="_dynamicPropertiesDidChange">_dynamicPropertiesDidChange</a>
+  /**
+   * Refresh sideBySide side layers
+   * @param {String} side
+   */
+  redrawSide(side) {
+    const sideSettings = this.get(&#x60;compare.compareState.${side}&#x60;);
+    const sbs = this.get(&#x27;sideBySide&#x27;);
+    let layers = [sideSettings.bgLayer.layer, ...sideSettings.layers.map(l =&gt; l.layer)];
+    switch (side) {
+      case &#x27;Left&#x27;:
+        sbs.setLeftLayers(layers);
+        break;
+      case &#x27;Right&#x27;:
+        sbs.setRightLayers(layers);
+        break;
+    }
+  },
 
-                            </li>
-                            <li class="index-item method private">
-                                <a href="#" data-tabid="#methods" data-anchor="#method__removeDynamicProperties" data-tablink="_removeDynamicProperties">_removeDynamicProperties</a>
+  /**
+   * Method to refresh compare mode
+   * @param {L.Map} leafletMap
+   */
+  destroyCompare(leafletMap) {
+    let compareState = this.get(&#x27;compare.compareState&#x27;);
+    let leftLayers = [compareState.Left.bgLayer.layer, ...compareState.Left.layers.map(l =&gt; l.layer)].filter(l =&gt; l);
+    let rightLayers = [compareState.Right.bgLayer.layer, ...compareState.Right.layers.map(l =&gt; l.layer)].filter(l =&gt; l);
+    [...leftLayers, ...rightLayers].forEach(l =&gt; {
+      if (l.getContainer &amp;&amp; l.getContainer()) {
+        l.getContainer().style.clip = &#x27;&#x27;;
+      }
 
-                            </li>
-                            <li class="index-item method private">
-                                <a href="#" data-tabid="#methods" data-anchor="#method__removeDynamicProperty" data-tablink="_removeDynamicProperty">_removeDynamicProperty</a>
+      l.removeFrom(leafletMap);
+    });
+    Ember.set(this.get(&#x27;sideBySide&#x27;), &#x27;_leftLayers&#x27;, []);
+    Ember.set(this.get(&#x27;sideBySide&#x27;), &#x27;_rightLayers&#x27;, []);
+    Ember.set(this.get(&#x27;compare&#x27;), &#x27;compareState&#x27;, {
+      Left: {
+        bgLayer: {},
+        layers: [],
+        groupLayersEnabled: [],
+        childLayersEnabled: [],
+      },
+      Right: {
+        bgLayer: {},
+        layers: [],
+        groupLayersEnabled: [],
+        childLayersEnabled: [],
+      }
+    });
+  },
 
-                            </li>
-                    </ul>
-                </div>
+  actions: {
 
-                <div class="index-section properties">
-                    <h3>Properties</h3>
+    /**
+     * Set background or tree side
+     * @param {String} variable &#x27;side&#x27; or &#x27;backgroundSide&#x27;
+     * @param {String} value Left or Right
+     */
+    setSide(variable, value) {
+      this.set(&#x60;compare.${variable}&#x60;, value);
+    }
+  }
+});
 
-                    <ul class="index-list properties">
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_" data-tablink=""></a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_" data-tablink=""></a>
-
-                            </li>
-                            <li class="index-item property private">
-                                <a href="#" data-tabid="#properties" data-anchor="#property__componentWrapperIsAvailable" data-tablink="_componentWrapperIsAvailable">_componentWrapperIsAvailable</a>
-
-                            </li>
-                            <li class="index-item property private">
-                                <a href="#" data-tabid="#properties" data-anchor="#property__dynamicPropertiesMetadata" data-tablink="_dynamicPropertiesMetadata">_dynamicPropertiesMetadata</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_dynamicProperties" data-tablink="dynamicProperties">dynamicProperties</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_isTagless" data-tablink="isTagless">isTagless</a>
-
-                            </li>
-                    </ul>
-                </div>
-
-
-        </div>
-
-            <div id="methods" class="tab-pane">
-                <h2 class="off-left">Methods</h2>
-
-                    <div id="method__addDynamicProperty" class="method item private">
-                        <h3 class="name"><code>_addDynamicProperty</code></h3>
-                    
-                            <div class="args">
-                                <span class="paren">(</span><ul class="args-list inline commas">
-                                    <li class="arg">
-                                            <code>propertyName</code>
-                                    </li>
-                                </ul><span class="paren">)</span>
-                            </div>
-                    
-                    
-                    
-                            <span class="flag private">private</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_dynamic-properties.js.html#l64"><code>addon&#x2F;mixins&#x2F;dynamic-properties.js:64</code></a>
-                            </p>
-                    
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Adds component's new dynamic property.
-                    Gets related value from DynamicPropertiesMixin:dynamicProperties:property,
-                    and assignes it to related component's property, then attaches observer.</p>
-                    
-                        </div>
-                    
-                            <div class="params">
-                                <h4>Parameters:</h4>
-                    
-                                <ul class="params-list">
-                                    <li class="param">
-                                            <code class="param-name">propertyName</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>Name of dynamic property that must be added.</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                </ul>
-                            </div>
-                    
-                    
-                    </div>
-                    <div id="method__dynamicPropertiesDidChange" class="method item private">
-                        <h3 class="name"><code>_dynamicPropertiesDidChange</code></h3>
-                    
-                            <span class="paren">()</span>
-                    
-                    
-                    
-                            <span class="flag private">private</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_dynamic-properties.js.html#l194"><code>addon&#x2F;mixins&#x2F;dynamic-properties.js:194</code></a>
-                            </p>
-                    
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Observes &amp; handles any changes in
-                    <a href="../classes/DynamicPropertiesMixin.html#property_dynamicProperties" class="crosslink">'dynamicProperties'</a>,
-                    assigns actual values to a component's related properties (including initialization moment).</p>
-                    
-                        </div>
-                    
-                    
-                    
-                    </div>
-                    <div id="method__removeDynamicProperties" class="method item private">
-                        <h3 class="name"><code>_removeDynamicProperties</code></h3>
-                    
-                            <span class="paren">()</span>
-                    
-                    
-                    
-                            <span class="flag private">private</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_dynamic-properties.js.html#l178"><code>addon&#x2F;mixins&#x2F;dynamic-properties.js:178</code></a>
-                            </p>
-                    
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Removes component's all previously added dynamic properties.
-                    Removes related component's properties &amp; observers.</p>
-                    
-                        </div>
-                    
-                    
-                    
-                    </div>
-                    <div id="method__removeDynamicProperty" class="method item private">
-                        <h3 class="name"><code>_removeDynamicProperty</code></h3>
-                    
-                            <div class="args">
-                                <span class="paren">(</span><ul class="args-list inline commas">
-                                    <li class="arg">
-                                            <code>propertyName</code>
-                                    </li>
-                                </ul><span class="paren">)</span>
-                            </div>
-                    
-                    
-                    
-                            <span class="flag private">private</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_dynamic-properties.js.html#l147"><code>addon&#x2F;mixins&#x2F;dynamic-properties.js:147</code></a>
-                            </p>
-                    
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Removes component's previously added dynamic property.
-                    Removes related component's property &amp; observer.</p>
-                    
-                        </div>
-                    
-                            <div class="params">
-                                <h4>Parameters:</h4>
-                    
-                                <ul class="params-list">
-                                    <li class="param">
-                                            <code class="param-name">propertyName</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>Name of dynamic property that must be removed.</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                </ul>
-                            </div>
-                    
-                    
-                    </div>
-            </div>
-
-            <div id="properties" class="tab-pane">
-                <h2 class="off-left">Properties</h2>
-
-                    <div id="property_" class="property item">
-                        <h3 class="name"><code></code></h3>
-                        <span class="type">Unknown</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_compare-layers.js.html#l7"><code>addon&#x2F;mixins&#x2F;compare-layers.js:7</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Service with main objects</p>
-                    
-                        </div>
-                    
-                    
-                    
-                    </div>
-                    <div id="property_" class="property item">
-                        <h3 class="name"><code></code></h3>
-                        <span class="type">Unknown</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_compare-layers.js.html#l13"><code>addon&#x2F;mixins&#x2F;compare-layers.js:13</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Flag for component to ignore compare mode</p>
-                    
-                        </div>
-                    
-                    
-                    
-                    </div>
-                    <div id="property__componentWrapperIsAvailable" class="property item private">
-                        <h3 class="name"><code>_componentWrapperIsAvailable</code></h3>
-                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
-                    
-                    
-                            <span class="flag private">private</span>
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_dynamic-properties.js.html#l42"><code>addon&#x2F;mixins&#x2F;dynamic-properties.js:42</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Flag: indicates whether component's wrapper DOM-element is available for select now.</p>
-                    
-                        </div>
-                    
-                    
-                    
-                    </div>
-                    <div id="property__dynamicPropertiesMetadata" class="property item private">
-                        <h3 class="name"><code>_dynamicPropertiesMetadata</code></h3>
-                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object[]</a></span>
-                    
-                    
-                            <span class="flag private">private</span>
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_dynamic-properties.js.html#l51"><code>addon&#x2F;mixins&#x2F;dynamic-properties.js:51</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Array with objects containing names of already assigned
-                    DynamicPropertiesMixin:dynamicProperties:property
-                    and observer handlers related to them.
-                    Each object in array has following structure: { propertyName: '...', propertyObserverHandler: function() { ... } }.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> null</p>
-                    
-                    
-                    </div>
-                    <div id="property_dynamicProperties" class="property item">
-                        <h3 class="name"><code>dynamicProperties</code></h3>
-                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_dynamic-properties.js.html#l32"><code>addon&#x2F;mixins&#x2F;dynamic-properties.js:32</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Object containing dynamic properties that must be assigned to
-                    component using <a href="../classes/DynamicPropertiesMixin.html" class="crosslink">dynamic-properties mixin</a>.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> null</p>
-                    
-                    
-                    </div>
-                    <div id="property_isTagless" class="property item">
-                        <h3 class="name"><code>isTagless</code></h3>
-                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_dynamic-properties.js.html#l15"><code>addon&#x2F;mixins&#x2F;dynamic-properties.js:15</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Flag: indicates whether component is tagless or not
-                    (has empty <a href="http://emberjs.com/api/classes/Ember.Component.html#property_tagName">tagName</a> or not).</p>
-                    
-                        </div>
-                    
-                    
-                    
-                    </div>
-            </div>
-
-
-    </div>
+    </pre>
 </div>
                     </div>
                 </div>

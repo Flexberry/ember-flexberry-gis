@@ -429,6 +429,8 @@ import DynamicActionsMixin from &#x27;ember-flexberry/mixins/dynamic-actions&#x2
 import DynamicPropertiesMixin from &#x27;../mixins/dynamic-properties&#x27;;
 import layout from &#x27;../templates/components/flexberry-maplayers&#x27;;
 import { translationMacro as t } from &#x27;ember-i18n&#x27;;
+import CompareLayersMixin from &#x27;../mixins/compare-layers&#x27;;
+
 /**
   Component&#x27;s CSS-classes names.
   JSON-object containing string constants with CSS-classes names related to component&#x27;s hbs-markup elements.
@@ -531,7 +533,8 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
   RequiredActionsMixin,
   DomActionsMixin,
   DynamicActionsMixin,
-  DynamicPropertiesMixin, {
+  DynamicPropertiesMixin,
+  CompareLayersMixin, {
 
     /**
       Component&#x27;s required actions names.
@@ -794,15 +797,6 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     showFooter: true,
 
     /**
-      String contains on what side to add layer in sideBySide control.
-
-      @property side
-      @type String
-      @default &#x27;Left&#x27;
-    */
-    side: &#x27;Left&#x27;,
-
-    /**
       Property contatining sideBySide component.
 
       @property sideBySide
@@ -839,15 +833,6 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     currentLayers: [],
 
     /**
-      Flag indicates if compare layers mode enabled.
-
-      @property compareLayersEnabled
-      @type Boolean
-      @default false
-    */
-    compareLayersEnabled: false,
-
-    /**
       Flag for checkAll visibility
 
       @property allLayerVisible
@@ -866,13 +851,29 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     rasterLayers: [],
 
     /**
+     * Number of enabled layers on each side
+     */
+    compareLayersCount: Ember.computed(&#x27;compare.side&#x27;, &#x27;compare.compareState.Left.layers.[]&#x27;, &#x27;compare.compareState.Right.layers.[]&#x27;, function() {
+      return this.get(&#x60;compare.compareState.${this.get(&#x27;compare.side&#x27;)}.layers&#x60;).length;
+    }),
+
+    /**
+     * Array of background layers ids for tree filter
+     */
+    backgroundIds: Ember.computed(&#x27;backgroundLayers&#x27;, &#x27;backgroundLayers.[]&#x27;, function() {
+      const backgroundLayers = this.get(&#x27;backgroundLayers&#x27;);
+      return (backgroundLayers) ? this.get(&#x27;backgroundLayers&#x27;).map(l =&gt; l.get(&#x27;id&#x27;)) : [];
+    }),
+
+    /**
       Adds side by side control to map and removes current visible layers.
 
       @method onCompareLayersEnabled
     */
-    onCompareLayersEnabled: Ember.observer(&#x27;compareLayersEnabled&#x27;, function() {
+    onCompareLayersEnabled: Ember.observer(&#x27;compare.compareLayersEnabled&#x27;, &#x27;ignoreCompareMode&#x27;, function() {
       let map = this.get(&#x27;leafletMap&#x27;);
-      if (this.get(&#x27;compareLayersEnabled&#x27;)) {
+      let sbs = this.get(&#x27;sideBySide&#x27;);
+      if (this.get(&#x27;compare.compareLayersEnabled&#x27;) &amp;&amp; !this.get(&#x27;ignoreCompareMode&#x27;)) {
         let layers = this.get(&#x27;layers&#x27;);
         let layersArray = [];
         layers.forEach(layer =&gt; {
@@ -884,44 +885,32 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
           layer.set(&#x27;visibility&#x27;, false);
         });
         this.set(&#x27;currentLayers&#x27;, layersArray);
-        this.get(&#x27;sideBySide&#x27;).addTo(map);
+        if (this.get(&#x27;selectedBaseLayer&#x27;)) {
+          this.setBgLayerBySide(this.get(&#x27;selectedBaseLayer&#x27;), &#x27;Left&#x27;, map);
+          this.setBgLayerBySide(this.get(&#x27;selectedBaseLayer&#x27;), &#x27;Right&#x27;, map);
+        }
+
+        sbs.addTo(map);
       } else {
-        let sbs = this.get(&#x27;sideBySide&#x27;);
-        if (!Ember.isNone(sbs.baseUpdateClip)) {
-          sbs.off(&#x27;dividermove&#x27;, this.updateClip, this);
-          sbs._updateClip = Ember.get(sbs, &#x27;baseUpdateClip&#x27;).bind(this);
-          map.off(&#x27;move&#x27;, this._updateClip, this);
-        }
-
-        sbs._leftLayers.forEach(function (layer) {
-          if (!Ember.isNone(layer)) {
-            layer.getContainer().style.clip = &#x27;&#x27;;
-          }
-        });
-        sbs._rightLayers.forEach(function (layer) {
-          if (!Ember.isNone(layer)) {
-            layer.getContainer().style.clip = &#x27;&#x27;;
-          }
-        });
+        this.destroyCompare(map);
         sbs.remove();
-        let rightLayer = this.get(&#x27;rightLayer&#x27;);
-        if (!Ember.isNone(rightLayer)) {
-          rightLayer.set(&#x27;visibility&#x27;, false);
-          rightLayer.set(&#x27;side&#x27;, null);
-          this.set(&#x27;rightLayer&#x27;, null);
-        }
-
-        let leftLayer = this.get(&#x27;leftLayer&#x27;);
-        if (!Ember.isNone(leftLayer)) {
-          leftLayer.set(&#x27;visibility&#x27;, false);
-          leftLayer.set(&#x27;side&#x27;, null);
-          this.set(&#x27;leftLayer&#x27;, null);
-        }
 
         let layersToAdd = this.get(&#x27;currentLayers&#x27;);
-        layersToAdd.forEach(layer =&gt; {
-          Ember.set(layer, &#x27;visibility&#x27;, true);
+        let layers = this.get(&#x27;layers&#x27;);
+        layers.forEach(layer =&gt; {
+          const leafletLayer = layer.get(&#x27;_leafletObject&#x27;);
+          if (leafletLayer &amp;&amp; leafletLayer.getContainer &amp;&amp; leafletLayer.getContainer()) {
+            leafletLayer.getContainer().style.clip = &#x27;&#x27;;
+          }
+
+          if (layer.get(&#x27;settingsAsObject.labelSettings.signMapObjects&#x27;)) {
+            const labelsOriginalLayer = layer.get(&#x27;_leafletObject._labelsLayer&#x27;);
+            if (labelsOriginalLayer &amp;&amp; labelsOriginalLayer.getContainer &amp;&amp; labelsOriginalLayer.getContainer()) {
+              leafletLayer.getContainer().style.clip = &#x27;&#x27;;
+            }
+          }
         });
+        layersToAdd.forEach(layer =&gt; Ember.set(layer, &#x27;visibility&#x27;, true));
       }
     }),
 
@@ -950,11 +939,6 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
         };
 
         setVisibility(layers);
-      },
-
-      onChangeLayer(leftLayer, rightLayer) {
-        this.set(&#x27;leftLayer&#x27;, leftLayer);
-        this.set(&#x27;rightLayer&#x27;, rightLayer);
       },
 
       onLayerTimeChanged(layer, time) {
@@ -993,24 +977,6 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       onAddDialogApprove(...args) {
         // Send outer &#x27;add&#x27; action.
         this.sendAction(&#x27;add&#x27;, ...args);
-      },
-
-      /**
-        Handles clicks on left side button.
-
-        @method actions.onLeftClick
-      */
-      onLeftClick() {
-        this.set(&#x27;side&#x27;, &#x27;Left&#x27;);
-      },
-
-      /**
-        Handles clicks on right side button.
-
-        @method actions.onLeftClick
-      */
-      onRightClick() {
-        this.set(&#x27;side&#x27;, &#x27;Right&#x27;);
       }
     },
 

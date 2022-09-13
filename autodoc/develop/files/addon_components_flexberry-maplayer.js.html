@@ -435,7 +435,7 @@ import layout from &#x27;../templates/components/flexberry-maplayer&#x27;;
 import {
   translationMacro as t
 } from &#x27;ember-i18n&#x27;;
-
+import CompareLayerMixin from &#x27;../mixins/compare-layers&#x27;;
 /**
   Component&#x27;s CSS-classes names.
   JSON-object containing string constants with CSS-classes names related to component&#x27;s hbs-markup elements.
@@ -558,7 +558,8 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
   RequiredActionsMixin,
   DomActionsMixin,
   DynamicActionsMixin,
-  DynamicPropertiesMixin, {
+  DynamicPropertiesMixin,
+  CompareLayerMixin, {
 
     dynamicButtons: [],
 
@@ -941,12 +942,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     */
     hasBeenExpanded: false,
 
-    //side to add layer to comapre
-    side: &#x27;&#x27;,
-
-    //compare enabled
-    compareLayersEnabled: false,
-
     /**
       Flag: indicates whether submenu is visible.
 
@@ -981,6 +976,42 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
+     * Value for checkbox in compare mode.
+     * Should be true, if layer is enabled on any side.
+     * @type Bool
+     */
+    comparedLayerEnable: Ember.computed(&#x27;compare.side&#x27;,
+    &#x27;compare.compareState.Left.childLayersEnabled&#x27;,
+    &#x27;compare.compareState.Right.childLayersEnabled&#x27;,
+    &#x27;compare.compareState.Left.groupLayersEnabled&#x27;,
+    &#x27;compare.compareState.Right.groupLayersEnabled&#x27;, function() {
+      const side = this.get(&#x27;compare.side&#x27;);
+      const oppositeSide = this.getOppositeSide(side);
+      const groupSideSettings = this.get(&#x60;compare.compareState.${side}.groupLayersEnabled&#x60;);
+      const childSideSettings = this.get(&#x60;compare.compareState.${side}.childLayersEnabled&#x60;);
+      const oppositeChildSideSettings = this.get(&#x60;compare.compareState.${oppositeSide}.childLayersEnabled&#x60;);
+      const layer = this.get(&#x27;layer&#x27;);
+      if (this.get(&#x27;isGroup&#x27;)) {
+        return !!groupSideSettings.find(id =&gt; id === layer.get(&#x27;id&#x27;));
+      }
+
+      return !![...childSideSettings, ...oppositeChildSideSettings].find(l =&gt; l.id === this.get(&#x27;layer.id&#x27;));
+    }),
+
+    /**
+     * Readonly for checkbox.
+     * Should be true, if layer is enabled on the opposite side.
+     * @type Bool
+     */
+    isLayerSelectedOnOtherSide: Ember.computed(&#x27;compare.side&#x27;,
+    &#x27;compare.compareState.Left.childLayersEnabled.[]&#x27;,
+    &#x27;compare.compareState.Right.childLayersEnabled.[]&#x27;, function() {
+      const oppositeSide = this.getOppositeSide(this.get(&#x27;compare.side&#x27;));
+      const oppositechildSideSettings = this.get(&#x60;compare.compareState.${oppositeSide}.childLayersEnabled&#x60;);
+      return (!!oppositechildSideSettings.find(l =&gt; l.id === this.get(&#x27;layer.id&#x27;)));
+    }),
+
+    /**
       Initializes DOM-related component&#x27;s properties.
     */
     didInsertElement() {
@@ -1008,32 +1039,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         }
       }
     },
-    /**
-      Redefine L.Control.SideBySide._updateClip for work with layer and label layer.
-
-      @method updateClip
-    */
-    updateClip: function () {
-      let map = this.get(&#x27;leafletMap&#x27;);
-      let sbs = this.get(&#x27;sideBySide&#x27;);
-      var nw = map.containerPointToLayerPoint([0, 0]);
-      var se = map.containerPointToLayerPoint(map.getSize());
-      var clipX = nw.x + sbs.getPosition();
-      var dividerX = sbs.getPosition();
-      sbs._divider.style.left = dividerX + &#x27;px&#x27;;
-      var clipLeft = &#x27;rect(&#x27; + [nw.y, clipX, se.y, nw.x].join(&#x27;px,&#x27;) + &#x27;px)&#x27;;
-      var clipRight = &#x27;rect(&#x27; + [nw.y, se.x, se.y, clipX].join(&#x27;px,&#x27;) + &#x27;px)&#x27;;
-      sbs._leftLayers.forEach(function (layer) {
-        if (!Ember.isNone(layer) &amp;&amp; !Ember.isNone(layer.getContainer)) {
-          layer.getContainer().style.clip = clipLeft;
-        }
-      });
-      sbs._rightLayers.forEach(function (layer) {
-        if (!Ember.isNone(layer) &amp;&amp; !Ember.isNone(layer.getContainer)) {
-          layer.getContainer().style.clip = clipRight;
-        }
-      });
-    },
 
     actions: {
       onLayerTimeChange() {
@@ -1052,79 +1057,12 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onChange(e) {
         let layer = this.get(&#x27;layer&#x27;);
-        let sbs = this.get(&#x27;sideBySide&#x27;);
-        Ember.set(sbs, &#x27;baseUpdateClip&#x27;, sbs._updateClip);
-        if (e.newValue === false) {
-          sbs.off(&#x27;dividermove&#x27;, this.updateClip, this);
-          if (this.get(&#x27;side&#x27;) === &#x27;Left&#x27;) {
-            sbs.setLeftLayers(null);
-            this.get(&#x27;leftLayer._leafletObject&#x27;).remove();
-            if (layer.get(&#x27;settingsAsObject.labelSettings.signMapObjects&#x27;)) {
-              this.get(&#x27;leftLayer._leafletObject._labelsLayer&#x27;).remove();
-            }
-
-            this.set(&#x27;leftLayer.side&#x27;, null);
-            this.set(&#x27;leftLayer.visibility&#x27;, false);
-            this.set(&#x27;leftLayer&#x27;, null);
-          } else {
-            sbs.setRightLayers(null);
-            this.get(&#x27;rightLayer._leafletObject&#x27;).remove();
-            if (layer.get(&#x27;settingsAsObject.labelSettings.signMapObjects&#x27;)) {
-              this.get(&#x27;rightLayer._leafletObject._labelsLayer&#x27;).remove();
-            }
-
-            this.set(&#x27;rightLayer.side&#x27;, null);
-            this.set(&#x27;rightLayer.visibility&#x27;, false);
-            this.set(&#x27;rightLayer&#x27;, null);
-          }
+        let map = this.get(&#x27;leafletMap&#x27;);
+        if (this.get(&#x27;isGroup&#x27;)) {
+          this.setGroupLayerBySide(layer, this.get(&#x27;compare.side&#x27;), map);
         } else {
-          Ember.set(layer, &#x27;visibility&#x27;, true);
-          let map = this.get(&#x27;leafletMap&#x27;);
-          sbs._updateClip = this.get(&#x27;updateClip&#x27;).bind(this);
-          sbs.on(&#x27;dividermove&#x27;, this.updateClip, this);
-
-          if (this.get(&#x27;side&#x27;) === &#x27;Left&#x27;) {
-            if (this.get(&#x27;leftLayer&#x27;) !== null) {
-              sbs.setLeftLayers(null);
-              this.get(&#x27;leftLayer._leafletObject&#x27;).remove();
-              this.set(&#x27;leftLayer.visibility&#x27;, false);
-              this.set(&#x27;leftLayer.side&#x27;, null);
-            }
-
-            let leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;).addTo(map);
-            let left = [];
-            left.push(leafletObject);
-            if (layer.get(&#x27;settingsAsObject.labelSettings.signMapObjects&#x27;)) {
-              left.push(leafletObject._labelsLayer.addTo(map));
-            }
-
-            Ember.set(layer, &#x27;side&#x27;, &#x27;Left&#x27;);
-            this.set(&#x27;leftLayer&#x27;, layer);
-            sbs.setLeftLayers(left);
-          }
-
-          if (this.get(&#x27;side&#x27;) === &#x27;Right&#x27;) {
-            if (this.get(&#x27;rightLayer&#x27;) !== null) {
-              sbs.setRightLayers(null);
-              this.get(&#x27;rightLayer._leafletObject&#x27;).remove();
-              this.set(&#x27;rightLayer.visibility&#x27;, false);
-              this.set(&#x27;rightLayer.side&#x27;, null);
-            }
-
-            let leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;).addTo(map);
-            let right = [];
-            right.push(leafletObject);
-            if (layer.get(&#x27;settingsAsObject.labelSettings.signMapObjects&#x27;)) {
-              right.push(leafletObject._labelsLayer.addTo(map));
-            }
-
-            Ember.set(layer, &#x27;side&#x27;, &#x27;Right&#x27;);
-            this.set(&#x27;rightLayer&#x27;, layer);
-            sbs.setRightLayers(right);
-          }
+          this.setChildLayerBySide(layer, this.get(&#x27;compare.side&#x27;), map);
         }
-
-        this.sendAction(&#x27;onChangeLayer&#x27;, this.get(&#x27;leftLayer&#x27;), this.get(&#x27;rightLayer&#x27;));
       },
 
       /**
