@@ -7150,7 +7150,22 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
   box-sizing: border-box;
   border-top-width: 0px;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div a {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .secondary.menu {
+  min-height: 30px;
+}
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .secondary.menu a.tab {
+  cursor: pointer;
+  color: #8F928F;
+  font-size: 14px;
+  font-weight: normal;
+  border-bottom: none;
+  padding: 0 10px;
+}
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .secondary.menu a.tab.active {
+  color: #000000;
+  font-weight: normal;
+}
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div a:not('.tab') {
   position: absolute;
   right: 0;
 }
@@ -46024,6 +46039,10 @@ img.item-minus {
   line-height: 30px;
   margin: 1.8px 5px;
 }
+.ui.help-button {
+  background: transparent;
+  border: none;
+}
 .sidebar-wrapper,
 .rgis-sidebar-wrapper.right-sidebar-wrapper {
   top: 0;
@@ -46446,7 +46465,7 @@ img.item-minus {
   overflow-x: hidden;
   margin-top: 5px;
   margin-left: -13px;
-  height: calc(100% - 30px) !important;
+  height: calc(100% - 120px) !important;
 }
 .ui.right.sidebar.treeview .flexberry-maplayers .flexberry-treenode-expand-collapse-icon.dropdown.icon:before {
   content: '\f105';
@@ -47167,7 +47186,13 @@ img.item-minus {
   margin-bottom: 10px;
   display: inline-block;
 }
+.ui.tab.compare .ui.help-button {
+  float: right;
+  margin-right: 17px;
+}
 .ui.tab.compare .ui.icon.close {
+  float: right;
+  margin-right: 20px;
   margin-left: 9px;
   background: #fff;
   border: none;
@@ -47234,6 +47259,10 @@ img.item-minus {
 }
 .create-edit-block-index::first-letter {
   color: #343A32;
+}
+.ui.help-button {
+  background: transparent;
+  border: none;
 }
 /*!
  * # Semantic UI - Sticky

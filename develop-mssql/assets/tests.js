@@ -1101,6 +1101,7 @@ define('dummy/tests/integration/components/flexberry-maplayers-test', ['exports'
       this.register('service:i18n', _emberI18nServicesI18n['default']);
 
       this.inject.service('i18n', { as: 'i18n' });
+      this.inject.service('compare', { as: 'compare' });
       _ember['default'].Component.reopen({
         i18n: _ember['default'].inject.service('i18n')
       });
@@ -1161,6 +1162,10 @@ define('dummy/tests/integration/components/flexberry-maplayers-test', ['exports'
       layerInitialized: true
     })]));
 
+    this.set('sideBySide', { addTo: function addTo() {
+        return true;
+      } });
+
     var access = {
       accessibleModel: ['testId2', 'testId4', 'testId5'],
       accessibleData: ['testId1', 'testId2', 'testId4', 'testId5'],
@@ -1186,7 +1191,7 @@ define('dummy/tests/integration/components/flexberry-maplayers-test', ['exports'
                 'column': 2
               },
               'end': {
-                'line': 12,
+                'line': 11,
                 'column': 2
               }
             }
@@ -1222,7 +1227,7 @@ define('dummy/tests/integration/components/flexberry-maplayers-test', ['exports'
               'column': 0
             },
             'end': {
-              'line': 13,
+              'line': 12,
               'column': 2
             }
           }
@@ -1246,7 +1251,7 @@ define('dummy/tests/integration/components/flexberry-maplayers-test', ['exports'
           morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
           return morphs;
         },
-        statements: [['block', 'flexberry-maplayers', [], ['class', 'styled', 'readonly', false, 'access', ['subexpr', '@mut', [['get', 'access', ['loc', [null, [5, 11], [5, 17]]]]], [], []], 'showHeader', false, 'compareLayersEnabled', false, 'sideBySide', false, 'dynamicButtons', ['subexpr', '@mut', [['get', 'mapLayerExtraButtons', ['loc', [null, [9, 19], [9, 39]]]]], [], []], 'layers', ['subexpr', '@mut', [['get', 'layers', ['loc', [null, [10, 11], [10, 17]]]]], [], []]], 0, null, ['loc', [null, [2, 2], [12, 26]]]]],
+        statements: [['block', 'flexberry-maplayers', [], ['class', 'styled', 'readonly', false, 'access', ['subexpr', '@mut', [['get', 'access', ['loc', [null, [5, 11], [5, 17]]]]], [], []], 'showHeader', false, 'sideBySide', ['subexpr', '@mut', [['get', 'sideBySide', ['loc', [null, [7, 15], [7, 25]]]]], [], []], 'dynamicButtons', ['subexpr', '@mut', [['get', 'mapLayerExtraButtons', ['loc', [null, [8, 19], [8, 39]]]]], [], []], 'layers', ['subexpr', '@mut', [['get', 'layers', ['loc', [null, [9, 11], [9, 17]]]]], [], []]], 0, null, ['loc', [null, [2, 2], [11, 26]]]]],
         locals: [],
         templates: [child0]
       };
@@ -1261,6 +1266,15 @@ define('dummy/tests/integration/components/flexberry-maplayers-test', ['exports'
     assert.equal(this.$('label.flexberry-maplayer-remove-button').length, 3, 'Remove layer button for allowed layer types and layers');
     assert.equal(this.$('label.extra-button').length, 3, 'Extra buttons for allowed layers');
 
+    this.set('compare.compareLayersEnabled', true);
+
+    assert.equal(this.$('.group.secondary.menu').length, 1, 'Tabs in compare mode are active');
+    assert.equal(this.$('.group.secondary.menu a:first-child').hasClass('active'), true, 'Left tab is active');
+    assert.equal(this.$('.group.secondary.menu a:last-child').hasClass('active'), false, 'Right tab is inactive');
+
+    this.$('.group.secondary.menu a:last-child').click();
+    assert.equal(this.$('.group.secondary.menu a:first-child').hasClass('active'), false, 'Left tab is inactive');
+    assert.equal(this.$('.group.secondary.menu a:last-child').hasClass('active'), true, 'Right tab is active');
     ownerStub.restore();
   });
 });
@@ -1955,6 +1969,79 @@ define('dummy/tests/integration/components/geometry-add-modes/manual-test.jshint
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'integration/components/geometry-add-modes/manual-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/integration/components/help-popup-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+
+  (0, _emberQunit.moduleForComponent)('help-popup', 'Integration | Component | help popup', {
+    integration: true
+  });
+
+  (0, _emberQunit.test)('it renders', function (assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    this.render(Ember.HTMLBars.template((function () {
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.4.6',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 1,
+              'column': 14
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [['content', 'help-popup', ['loc', [null, [1, 0], [1, 14]]]]],
+        locals: [],
+        templates: []
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), '');
+  });
+});
+define('dummy/tests/integration/components/help-popup-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - integration/components');
+  test('integration/components/help-popup-test.js should pass jscs', function () {
+    ok(true, 'integration/components/help-popup-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/integration/components/help-popup-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - integration/components/help-popup-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'integration/components/help-popup-test.js should pass jshint.');
   });
 });
 define('dummy/tests/integration/components/layers-dialogs/attributes/edit-test', ['exports', 'ember', 'ember-qunit', 'ember-i18n/services/i18n', 'ember-flexberry-gis/locales/ru/translations', 'ember-flexberry-gis/locales/en/translations'], function (exports, _ember, _emberQunit, _emberI18nServicesI18n, _emberFlexberryGisLocalesRuTranslations, _emberFlexberryGisLocalesEnTranslations) {
@@ -8914,6 +9001,34 @@ define('dummy/tests/unit/instance-initializers/open-map-test.jshint', ['exports'
     assert.ok(true, 'unit/instance-initializers/open-map-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/mixins/compare-layers-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/compare-layers', 'qunit'], function (exports, _ember, _emberFlexberryGisMixinsCompareLayers, _qunit) {
+
+  (0, _qunit.module)('Unit | Mixin | compare layers');
+
+  // Replace this with your real tests.
+  (0, _qunit.test)('it works', function (assert) {
+    var CompareLayersObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsCompareLayers['default']);
+    var subject = CompareLayersObject.create();
+    assert.ok(subject);
+  });
+});
+define('dummy/tests/unit/mixins/compare-layers-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/compare-layers-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/compare-layers-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/compare-layers-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/compare-layers-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/compare-layers-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/mixins/dynamic-properties-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/dynamic-properties', 'qunit'], function (exports, _ember, _emberFlexberryGisMixinsDynamicProperties, _qunit) {
 
   var ClassWithDynamicPropertiesMixin = _ember['default'].Object.extend(_emberFlexberryGisMixinsDynamicProperties['default'], {});
@@ -14280,6 +14395,36 @@ define('dummy/tests/unit/serializers/new-platform-flexberry-g-i-s-parameter-meta
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/serializers/new-platform-flexberry-g-i-s-parameter-metadata-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/services/compare-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+
+  (0, _emberQunit.moduleFor)('service:compare', 'Unit | Service | compare', {
+    // Specify the other units that are required for this test.
+    // needs: ['service:foo']
+  });
+
+  // Replace this with your real tests.
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var service = this.subject();
+    assert.ok(service);
+  });
+});
+define('dummy/tests/unit/services/compare-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/services');
+  test('unit/services/compare-test.js should pass jscs', function () {
+    ok(true, 'unit/services/compare-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/services/compare-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/services/compare-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/services/compare-test.js should pass jshint.');
   });
 });
 define('dummy/tests/unit/services/local-storage-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
