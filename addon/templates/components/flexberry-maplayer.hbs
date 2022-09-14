@@ -14,15 +14,15 @@
   {{#block-slot "header"}}
     <div class="flexberry-treenode-header-block">
       <div class="flexberry-treenode-caption-block">
-        {{#if compareLayersEnabled}}
+        {{#if (and compare.compareLayersEnabled (not ignoreCompareMode))}}
           {{flexberry-ddau-checkbox
-            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse " " layer.type " " disabled)
-            value=layer.visibility
+            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse " " layer.type)
+            value=comparedLayerEnable
             change=(action "onChange")
-            readonly=(and (not-eq side layer.side) (not-eq layer.side null) true)
+            readonly=(and (not isGroup) isLayerSelectedOnOtherSide)
           }}
         {{else}}
-          {{#if (not compareLayersEnabled)}}
+          {{#if (not compare.compareLayersEnabled)}}
             {{flexberry-ddau-checkbox
               class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse " " layer.type)
               value=layer.visibility
@@ -47,7 +47,7 @@
               }}
           {{/if}}
         </div>
-        {{#if (and (not compareLayersEnabled) (not readonly))}}
+        {{#if (and (not compare.compareLayersEnabled) (not readonly))}}
           <div class="flexberry-treenode-buttons-block hidden">
             {{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable)}}
               {{flexberry-button
@@ -192,12 +192,12 @@
         access=access
         leafletMap=leafletMap
         layers=layer.layers
-        compareLayersEnabled=compareLayersEnabled
-        side=side
         sideBySide=sideBySide
         leftLayer=leftLayer
         rightLayer=rightLayer
         isGroup=isGroup
+        backgroundLayers=backgroundLayers
+        ignoreCompareMode=ignoreCompareMode
       }}
     {{/if}}
     {{#yield-slot "content"}}

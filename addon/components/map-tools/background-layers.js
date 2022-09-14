@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import layout from '../../templates/components/map-tools/background-layers';
 import { translationMacro as t } from 'ember-i18n';
+import CompareLayersMixin from '../../mixins/compare-layers';
 
 const flexberryClassNamesPrefix = 'flexberry-background-map-tool';
 const flexberryClassNames = {
@@ -9,7 +10,7 @@ const flexberryClassNames = {
   div: flexberryClassNamesPrefix + '-div'
 };
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(CompareLayersMixin, {
   layout,
 
   /**
@@ -125,6 +126,41 @@ export default Ember.Component.extend({
     this.set('items', items);
   },
 
+  /**
+   * Observe enabling compare mode and changing side to choose right base layer.
+   */
+  compareLayersEnabledSideObserver: Ember.observer('compare.compareLayersEnabled', 'ignoreCompareMode', 'compare.backgroundSide', function() {
+    if (this.get('compare.compareLayersEnabled') && !this.get('ignoreCompareMode')) {
+      const items = this.get('items');
+      items.forEach((item) => {
+        if (item.id !== this.get(`compare.compareState.${this.get('compare.backgroundSide')}.bgLayer.id`)) {
+          Ember.set(item, 'classActive', '');
+        } else {
+          Ember.set(item, 'classActive', 'active');
+        }
+      });
+    } else {
+      this.setItems(this.get('selectedLayer'));
+    }
+  }),
+
+  /**
+   * Refresh items
+   * @param {Ember.Model} layer
+   */
+  setItems(layer) {
+    let items = this.get('items');
+    items.forEach(item => Ember.set(item, 'classActive', ''));
+    let activeItem = items.find(item => item.id === layer.get('id'));
+    let inCompareEnabled = this.get('compare.compareLayersEnabled') && !this.get('ignoreCompareMode') &&
+    (this.get(`compare.compareState.${this.get('compare.backgroundSide')}.bgLayer.id`) === layer.get('id'));
+    if (activeItem && (layer.get('visibility') || inCompareEnabled)) {
+      Ember.set(activeItem, 'classActive', 'active');
+    }
+
+    this.set('items', items);
+  },
+
   actions: {
     /**
       Shows div with layers.
@@ -150,35 +186,24 @@ export default Ember.Component.extend({
     */
     onLayerClick(layer) {
       let selectedLayer = this.get('selectedLayer');
-      if (Ember.isNone(selectedLayer)) {
-        Ember.set(layer, 'visibility', true);
-        this.set('selectedLayer', layer);
+      if (this.get('compare.compareLayersEnabled') && !this.get('ignoreCompareMode')) {
+        this.setBgLayerBySide(layer, this.get('compare.backgroundSide'), this.get('leafletMap'));
       } else {
-        Ember.set(selectedLayer, 'visibility', false);
-        if (Ember.get(selectedLayer, 'id') === Ember.get(layer, 'id')) {
-          this.set('selectedLayer', null);
-        } else {
+        if (Ember.isNone(selectedLayer)) {
           Ember.set(layer, 'visibility', true);
           this.set('selectedLayer', layer);
+        } else {
+          Ember.set(selectedLayer, 'visibility', false);
+          if (Ember.get(selectedLayer, 'id') === Ember.get(layer, 'id')) {
+            this.set('selectedLayer', null);
+          } else {
+            Ember.set(layer, 'visibility', true);
+            this.set('selectedLayer', layer);
+          }
         }
       }
 
-      let items = this.get('items');
-      items.forEach(item => {
-        if (item.id === Ember.get(layer, 'id')) {
-          if (Ember.get(item, 'classActive') !== 'active') {
-            Ember.set(item, 'classActive', 'active');
-          } else {
-            Ember.set(item, 'classActive', '');
-          }
-        }
-
-        if (item.id !== Ember.get(layer, 'id') && Ember.get(item, 'classActive') === 'active') {
-          Ember.set(item, 'classActive', '');
-        }
-      });
-
-      this.set('items', items);
+      this.setItems(layer);
     }
   }
 });

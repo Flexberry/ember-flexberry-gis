@@ -14,8 +14,9 @@ moduleForComponent('flexberry-maplayers', 'Integration | Component | flexberry m
     this.register('service:i18n', I18nService);
 
     this.inject.service('i18n', { as: 'i18n' });
+    this.inject.service('compare', { as: 'compare' });
     Ember.Component.reopen({
-      i18n: Ember.inject.service('i18n')
+      i18n: Ember.inject.service('i18n'),
     });
 
     this.set('i18n.locale', 'en');
@@ -80,6 +81,8 @@ test('rights', function (assert) {
     })
   ]));
 
+  this.set('sideBySide', { addTo: () => true });
+
   let access = {
     accessibleModel: ['testId2', 'testId4', 'testId5'],
     accessibleData: ['testId1', 'testId2', 'testId4', 'testId5'],
@@ -98,8 +101,7 @@ test('rights', function (assert) {
     readonly=false
     access=access
     showHeader=false
-    compareLayersEnabled=false
-    sideBySide=false
+    sideBySide=sideBySide
     dynamicButtons=mapLayerExtraButtons
     layers=layers
   }}
@@ -115,5 +117,14 @@ test('rights', function (assert) {
   assert.equal(this.$('label.flexberry-maplayer-remove-button').length, 3, 'Remove layer button for allowed layer types and layers');
   assert.equal(this.$('label.extra-button').length, 3, 'Extra buttons for allowed layers');
 
+  this.set('compare.compareLayersEnabled', true);
+
+  assert.equal(this.$('.group.secondary.menu').length, 1, 'Tabs in compare mode are active');
+  assert.equal(this.$('.group.secondary.menu a:first-child').hasClass('active'), true, 'Left tab is active');
+  assert.equal(this.$('.group.secondary.menu a:last-child').hasClass('active'), false, 'Right tab is inactive');
+
+  this.$('.group.secondary.menu a:last-child').click();
+  assert.equal(this.$('.group.secondary.menu a:first-child').hasClass('active'), false, 'Left tab is inactive');
+  assert.equal(this.$('.group.secondary.menu a:last-child').hasClass('active'), true, 'Right tab is active');
   ownerStub.restore();
 });
