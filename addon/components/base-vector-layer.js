@@ -423,7 +423,7 @@ export default BaseLayer.extend({
           }
         });
         let labelsLayer = leafletObject._labelsLayer;
-        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer) && map.hasLayer(labelsLayer)) {
+        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelsLayer) && map.hasLayer(labelsLayer)) {
           labelsLayer.eachLayer(function (labelLayer) {
             if (!map.hasLayer(labelLayer)) {
               map.addLayer(labelLayer);
@@ -1352,6 +1352,7 @@ export default BaseLayer.extend({
         iconSize: [iconWidth, iconHeight]
       };
     }
+
     labelsLayer.addLayer(label);
     label.feature = layer.feature;
     label.leafletMap = labelsLayer.leafletMap;
