@@ -523,15 +523,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @type Boolean
       @readonly
     */
-    accessForLoad: Ember.computed('access', 'readonly', 'layer', function () {
-      let accessForLoad = this.get('access.accessLoad');
-      if (!Ember.isNone(accessForLoad)) {
+    presenceLayerInGeoportal: Ember.computed('access', 'readonly', 'layer', function () {
+      let presenceLayerInGeoportal = this.get('access.presenceLayerInGeoportal');
+      if (!Ember.isNone(presenceLayerInGeoportal)) {
         let layer = this.get('layer');
         let readonly = this.get('readonly');
 
-        let mapLayerId = Object.keys(accessForLoad).find(key => key === layer.id);
+        let mapLayerId = Object.keys(presenceLayerInGeoportal).find(key => key === layer.id);
 
-        let access = !Ember.isNone(layer) && !Ember.isNone(accessForLoad) && !Ember.isNone(mapLayerId);
+        let access = !Ember.isNone(layer) && !Ember.isNone(presenceLayerInGeoportal) && !Ember.isNone(mapLayerId);
 
         return !readonly || access;
       }
@@ -985,7 +985,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       },
 
       onLoadButtonClick() {
-        if (!Ember.isNone(this.get('accessForLoad'))) {
+        if (!Ember.isNone(this.get('presenceLayerInGeoportal'))) {
           this.sendAction('onLoad');
         }
       }
