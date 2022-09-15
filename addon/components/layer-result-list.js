@@ -170,17 +170,17 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @default null
   */
   exportResult: null,
-
   actions: {
      /**
-      Show\hide features list (if present). Сlears the highlight state of the features list.
-      @method actions.highlightResult
+      Сlears the highlight state of the features list.
+      @method actions.clearHighlights
     */
-    highlightResult(result) {
-      if (!result) {
+    clearHighlights(result, clickedFeature) {
+      if (!result || !clickedFeature) {
         return;
       }
-      this.$('.feature-result-item-caption').removeClass('highlight');
+      result.features.filter(feature => feature !== clickedFeature).forEach(feature => Ember.set(feature,'highlight', false)); // clear highlight states of another features
+      Ember.set(clickedFeature, 'highlight', !clickedFeature.highlight);
       Ember.set(result, 'highlight', true);
     },
     /**
@@ -606,25 +606,19 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
           return 0;
         });
-
         this.set('_displayResults', displayResults);
         this.set('_noData', displayResults.length === 0);
         this.set('_showLoader', false);
         if (this.get('favoriteMode') !== true && Ember.isNone(this.get('share'))) {
-          if (displayResults.length === 1) {
-            this.send('zoomTo', displayResults.objectAt(0).features);
-          }
+          displayResults.map(result => result.features.map(feature => this.send('zoomTo', feature, true)));
         } else if (!Ember.isNone(this.get('share'))) {
-          if (displayResults.length === 1) {
-            this.send('selectFeature', displayResults.objectAt(0).features); //TODO: подсветить все + включить интерактивнсоть
-          }
+          displayResults.map(result => result.features.map(feature => this.send('selectFeature', feature, true)));
         }
       });
     }).catch((error) => {
       console.error(error);
     });
   })),
-
   /**
     Get an array of layer shapes id.
     @method _getFeatureShapeIds

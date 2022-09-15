@@ -180,7 +180,14 @@ export default Ember.Component.extend({
   */
   displaySettings: null,
 
-  highlight: false,
+  /**
+   Setting indicating whether an component can be highlighted in layer-result-list (Only for upper layer features)
+
+   @property highlightable
+   @type bool
+   @default false
+  */
+  highlightable: false,
 
   /**
     Feature's metadata.
@@ -224,14 +231,15 @@ export default Ember.Component.extend({
     const hasEditFormFunc = this.get('mapApi').getFromApi('hasEditForm');
     let feature = this.get('feature');
 
-    if (feature) {
-      if(feature.geometry.type === 'marker') {
+    if (feature && this.get('highlightable')) {
+      if (feature.geometry.type === 'marker') {
         feature.leafletLayer.options.renderer.options.tolerance = 10;
       }
       feature.leafletLayer.on('click', () => {
         this.send('highlightFeature');
       });
     }
+
     if (typeof hasEditFormFunc === 'function') {
       const layerId = this.get('feature.layerModel.id');
 
@@ -276,14 +284,21 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    highlightFeature(){
-      this.sendAction('highlightResult'); // clear feature-result-items highlight states
-      if (!this.get('expanded')) {
-        this.send('showInfo');
-        this.send('toggleLinks');
+    /**
+      Highlight feature-result-items caption
+
+      @method actions.highlightFeature
+    */
+    highlightFeature() {
+      let clickedFeature = this.get('feature');
+      this.sendAction('clearHighlights', clickedFeature); // clear other highlight states of feature-result-items in _displayResults. Set the new highlight state
+      if (this.get('feature.highlight')) {
+        if (!this.get('expanded')) { // open feature-result-item properties
+          this.send('showInfo');
+          this.send('toggleLinks');
+        }
+        this.get('element').scrollIntoView({ alignToTop: true, behavior: "smooth" });
       }
-      this.set('highlight', !this.get('highlight'));
-      this.element.scrollIntoView({ alignToTop: true, behavior: "smooth"});
     },
     /**
       Show\hide submenu

@@ -21,7 +21,7 @@ export default Ember.Mixin.create({
       @method actions.selectFeature
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     */
-    selectFeature(feature) {
+    selectFeature(feature, zoomAll) {
       let leafletMap = this.get('leafletMap');
       if (Ember.isNone(leafletMap)) {
         return;
@@ -35,7 +35,9 @@ export default Ember.Mixin.create({
 
       let selectedFeature = this.get('_selectedFeature');
       if (selectedFeature !== feature) {
-        serviceLayer.clearLayers();
+        if (!zoomAll) {
+          serviceLayer.clearLayers();
+        }
 
         if (Ember.isArray(feature)) {
           feature.forEach((item) => this._selectFeature(item));
@@ -55,13 +57,13 @@ export default Ember.Mixin.create({
       @method actions.zoomTo
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     */
-    zoomTo(feature) {
+    zoomTo(feature, zoomAll) {
       let leafletMap = this.get('leafletMap');
       if (Ember.isNone(leafletMap)) {
         return;
       }
 
-      this.send('selectFeature', feature);
+      this.send('selectFeature', feature, zoomAll);
 
       let bounds;
       let serviceLayer = this.get('serviceLayer');

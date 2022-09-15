@@ -5,7 +5,7 @@
   {{t "components.layer-result-list.nodata"}}
   </div>
 {{else}}
-  {{#each _displayResults as |result|}}
+  {{#each _displayResults as |result resultId|}}
     <div class="feature-result-item-group">
     {{#if result.isIntersect}}
       <div class="feature-result-item-buttons hidden">
@@ -89,7 +89,8 @@
                 {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
                   {{component (concat 'feature-result-item-' result.layerModel.type)
                     feature=feature
-                    highlightResult = (action "highlightResult" result)
+                    highlightable = (eq resultId 0)
+                    clearHighlights = (action "clearHighlights" result)
                     infoExpanded=(and (eq result.features.length 1) result.first)
                     displayProperty="displayValue"
                     displaySettings=result.settings
@@ -108,7 +109,8 @@
                 {{else}}
                   {{feature-result-item
                     feature=feature
-                    highlightResult = (action "highlightResult" result)
+                    highlightable = (eq resultId 0)
+                    clearHighlights = (action "clearHighlights" result)
                     infoExpanded=(and (eq result.features.length 1) result.first)
                     displayProperty="displayValue"
                     displaySettings=result.settings
@@ -212,7 +214,8 @@
             {{component (concat 'feature-result-item-' result.layerModel.type)
                 feature=feature
                 displayProperty="displayValue"
-                highlightResult = (action "highlightResult" result)
+                highlightable = (eq resultId 0)
+                clearHighlights = (action "clearHighlights" result)
                 displaySettings=result.settings
                 selectedFeature=_selectedFeature
                 selectFeature=(action "selectFeature")
@@ -234,7 +237,8 @@
                 feature=feature
                 displayProperty="displayValue"
                 displaySettings=result.settings
-                highlightResult = (action "highlightResult" result)
+                highlightable = (eq resultId 0)
+                clearHighlights = (action "clearHighlights" result)
                 selectedFeature=_selectedFeature
                 selectFeature=(action "selectFeature")
                 panTo=(action "panTo")
