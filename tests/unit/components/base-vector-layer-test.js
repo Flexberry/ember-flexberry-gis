@@ -310,8 +310,11 @@ test('test showAllLayerObjects with continueLoading: true and showExisting: fals
         let layer = L.featureGroup([feature]);
         layer.options = options;
         feature.addTo(leafletMap);
-        let _labelsLayer = L.featureGroup();
+
+        let featureLabel = L.marker([50.5, 30.5]);
+        let _labelsLayer = L.featureGroup([featureLabel]);
         layer._labelsLayer = _labelsLayer;
+        _labelsLayer.addTo(leafletMap);
         return layer;
       },
       createReadFormat() {
@@ -343,7 +346,7 @@ test('test showAllLayerObjects with continueLoading: true and showExisting: fals
         assert.equal(removeLayerSpy.callCount, 0);
         assert.equal(addLayerSpy.callCount, 2);
         assert.equal(continueLoadSpy.callCount, 1);
-        assert.equal(hasLayerSpy.callCount, 3);
+        assert.equal(hasLayerSpy.callCount, 4);
         clearLayersSpy.restore();
         loadLayerFeaturesSpy.restore();
         removeLayerSpy.restore();
