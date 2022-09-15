@@ -171,7 +171,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   exportResult: null,
   actions: {
-     /**
+    /**
       Сlears the highlight state of the features list.
       @method actions.clearHighlights
     */
@@ -179,7 +179,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       if (!result || !clickedFeature) {
         return;
       }
-      result.features.filter(feature => feature !== clickedFeature).forEach(feature => Ember.set(feature,'highlight', false)); // clear highlight states of another features
+
+      result.features.filter(feature => feature !== clickedFeature).forEach(feature => Ember.set(feature, 'highlight', false)); // clear highlight states of another features
       Ember.set(clickedFeature, 'highlight', !clickedFeature.highlight);
       Ember.set(result, 'highlight', true);
     },

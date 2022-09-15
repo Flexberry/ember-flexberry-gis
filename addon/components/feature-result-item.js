@@ -235,6 +235,7 @@ export default Ember.Component.extend({
       if (feature.geometry.type === 'marker') {
         feature.leafletLayer.options.renderer.options.tolerance = 10;
       }
+
       feature.leafletLayer.on('click', () => {
         this.send('highlightFeature');
       });
@@ -297,7 +298,8 @@ export default Ember.Component.extend({
           this.send('showInfo');
           this.send('toggleLinks');
         }
-        this.get('element').scrollIntoView({ alignToTop: true, behavior: "smooth" });
+
+        this.get('element').scrollIntoView({ alignToTop: true, behavior: 'smooth' });
       }
     },
     /**
