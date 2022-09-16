@@ -245,3 +245,7 @@
     max-width: ~"calc(100% - 6em)";
   }
 }
+
+.intersection-toggler .result-toolbar {
+  z-index: 100;
+}
