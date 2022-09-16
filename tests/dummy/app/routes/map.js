@@ -16,7 +16,8 @@ export default EditMapRoute.extend(EditFormRouteOperationsIndicationMixin, {
   access: {
     map: true,
     mapLayerModel: [],
-    mapLayerData: []
+    mapLayerData: [],
+    presenceLayerInGeoportal: []
   },
 
   afterModel(model) {

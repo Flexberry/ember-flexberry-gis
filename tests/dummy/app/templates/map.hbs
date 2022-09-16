@@ -55,7 +55,8 @@
             access=(hash
               accessibleModel=access.mapLayerModel
               accessibleData=access.mapLayerData
-              createAccess=true)
+              createAccess=true
+              presenceLayerInGeoportal=access.presenceLayerInGeoportal)
             leafletMap=leafletMap
             sideBySide=sideBySide
             layers=(get-with-dynamic-actions this "model.otherLayers"
@@ -118,6 +119,11 @@
                       loadingPath="editedLayersPanelLoading"
                     )
                   )
+                )
+                (hash
+                  on="onLoad"
+                  actionName="onLoad"
+                  actionArguments=(array "{% layerPath %}")
                 )
               )
             )

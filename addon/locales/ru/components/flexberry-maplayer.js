@@ -22,5 +22,8 @@ export default {
   },
   'plus-button': {
     'tooltip': 'Создать объект'
+  },
+  'load-button': {
+    'tooltip': 'Перейти к загрузке данных'
   }
 };
