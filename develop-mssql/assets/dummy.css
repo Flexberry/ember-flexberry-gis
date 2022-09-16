@@ -17168,6 +17168,9 @@ ol.ui.horizontal.list li:before,
   margin-left: 5.7em;
   max-width: calc(100% - 6em);
 }
+.intersection-toggler .result-toolbar {
+  z-index: 100;
+}
 /*!
  * # Semantic UI - Loader
  * http://github.com/semantic-org/semantic-ui/
