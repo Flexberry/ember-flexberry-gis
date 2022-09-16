@@ -260,20 +260,27 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   getDistance(firstObject, secondObject) {
     let firstCenter;
     let secondCenter;
+
+    let firstFeature = firstObject.leafletLayer;
     if (Ember.get(firstObject, 'leafletLayer.getLayers')) {
-      firstCenter = firstObject.leafletLayer.getLayers()[0].getBounds().getCenter();
-    } else if (firstObject.geometry.type === 'Point') {
-      firstCenter = firstObject.leafletLayer.getLatLng();
-    } else {
-      firstCenter = firstObject.leafletLayer.getBounds().getCenter();
+      firstFeature = firstObject.leafletLayer.getLayers()[0];
     }
 
-    if (Ember.get(secondObject, 'leafletLayer.getLayers')) {
-      secondCenter = secondObject.leafletLayer.getLayers()[0].getBounds().getCenter();
-    } else if (secondObject.geometry.type === 'Point') {
-      secondCenter = secondObject.leafletLayer.getLatLng();
+    if (firstFeature instanceof L.Marker) {
+      firstCenter = firstFeature.getLatLng();
     } else {
-      secondCenter = secondObject.leafletLayer.getBounds().getCenter();
+      firstCenter = firstFeature.getBounds().getCenter();
+    }
+
+    let secondFeature = secondObject.leafletLayer;
+    if (Ember.get(secondObject, 'leafletLayer.getLayers')) {
+      secondFeature = secondObject.leafletLayer.getLayers()[0];
+    }
+
+    if (secondFeature instanceof L.Marker) {
+      secondCenter = secondFeature.getLatLng();
+    } else {
+      secondCenter = secondFeature.getBounds().getCenter();
     }
 
     let firstPoint = helpers.point([firstCenter.lat, firstCenter.lng]);
