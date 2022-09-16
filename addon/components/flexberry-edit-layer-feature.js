@@ -205,7 +205,19 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
             let label = Ember.get(layer, '_label');
             if (label) {
-              latlngcopy.label = this.copy(label.getLatLng());
+              if (Ember.get(label, 'getLatLng') && typeof (label.getLatLng) === 'function') {
+                latlngcopy.label = this.copy(label.getLatLng());
+              } else {
+                let labelCopy = L.featureGroup();
+                label.getLayers().forEach((layer) => {
+                  let layerCopy = L.Util.CloneLayer(layer);
+                  labelCopy.addLayer(layerCopy);
+                });
+
+                labelCopy.feature = label.feature;
+                labelCopy.leafletMap = label.leafletMap;
+                latlngcopy.label = labelCopy;
+              }
             }
 
             this.set(`latlngs.${index}`, latlngcopy);
@@ -662,7 +674,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
             let label = Ember.get(layer, '_label');
             if (label) {
-              label.setLatLng(latlng.label);
+              if (latlng.label) {
+                if (latlng.label instanceof L.FeatureGroup) {
+                  label = latlng.label;
+                } else {
+                  label.setLatLng(latlng.label);
+                }
+              }
             }
           }
 
