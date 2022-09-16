@@ -622,7 +622,19 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
             let label = Ember.get(layer, &#x27;_label&#x27;);
             if (label) {
-              latlngcopy.label = this.copy(label.getLatLng());
+              if (Ember.get(label, &#x27;getLatLng&#x27;) &amp;&amp; typeof (label.getLatLng) === &#x27;function&#x27;) {
+                latlngcopy.label = this.copy(label.getLatLng());
+              } else {
+                let labelCopy = L.featureGroup();
+                label.getLayers().forEach((layer) =&gt; {
+                  let layerCopy = L.Util.CloneLayer(layer);
+                  labelCopy.addLayer(layerCopy);
+                });
+
+                labelCopy.feature = label.feature;
+                labelCopy.leafletMap = label.leafletMap;
+                latlngcopy.label = labelCopy;
+              }
             }
 
             this.set(&#x60;latlngs.${index}&#x60;, latlngcopy);
@@ -1079,7 +1091,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
             let label = Ember.get(layer, &#x27;_label&#x27;);
             if (label) {
-              label.setLatLng(latlng.label);
+              if (latlng.label) {
+                if (latlng.label instanceof L.FeatureGroup) {
+                  label = latlng.label;
+                } else {
+                  label.setLatLng(latlng.label);
+                }
+              }
             }
           }
 
@@ -1451,6 +1469,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           data.layers.forEach((layer) =&gt; {
             if (Ember.isNone(Ember.get(layer, &#x27;feature.leafletLayer&#x27;))) {
               Ember.set(layer.feature, &#x27;leafletLayer&#x27;, layer);
+            }
+
+            const afterSaveFeatureFunc = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;afterSaveFeature&#x27;);
+            if (typeof afterSaveFeatureFunc === &#x27;function&#x27;) {
+              afterSaveFeatureFunc(layer.feature.properties.primarykey);
             }
           });
 

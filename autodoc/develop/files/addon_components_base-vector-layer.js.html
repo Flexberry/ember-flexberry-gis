@@ -839,9 +839,13 @@ export default BaseLayer.extend({
             map.addLayer(layerShape);
           }
         });
-        let labelLayer = leafletObject._labelsLayer;
-        if (layer.get(&#x27;settingsAsObject.labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(labelLayer) &amp;&amp; !map.hasLayer(labelLayer)) {
-          map.addLayer(labelLayer);
+        let labelsLayer = leafletObject._labelsLayer;
+        if (layer.get(&#x27;settingsAsObject.labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(labelsLayer) &amp;&amp; map.hasLayer(labelsLayer)) {
+          labelsLayer.eachLayer(function (labelLayer) {
+            if (!map.hasLayer(labelLayer)) {
+              map.addLayer(labelLayer);
+            }
+          });
         }
 
         resolve(&#x27;success&#x27;);
@@ -1611,6 +1615,10 @@ export default BaseLayer.extend({
     @param {Object} labelsLayer
   */
   _createLabel(text, layer, style, labelsLayer) {
+    if (Ember.isEmpty(text) || Ember.isEmpty(layer)) {
+      return;
+    }
+
     let lType = layer.toGeoJSON().geometry.type;
     let latlng = null;
     let iconWidth = 10;
@@ -1618,17 +1626,49 @@ export default BaseLayer.extend({
     let anchor = null;
     let className = &#x27;label&#x27;;
     let html = &#x27;&#x27;;
+    let label;
+    let geojsonWriter = new jsts.io.GeoJSONWriter();
 
     if (lType.indexOf(&#x27;Polygon&#x27;) !== -1) {
-      let geojsonReader = new jsts.io.GeoJSONReader();
-      let objJsts = geojsonReader.read(layer.toGeoJSON().geometry);
+      let objJsts = layer.toJsts(L.CRS.EPSG4326);
 
       try {
-        let centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
-        let geojsonWriter = new jsts.io.GeoJSONWriter();
-        let centroid = geojsonWriter.write(centroidJsts);
-        latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0]);
-        html = &#x27;&lt;div style=&quot;&#x27; + style + &#x27;&quot;&gt;&#x27; + text + &#x27;&lt;/div&gt;&#x27;;
+        let countGeometries = objJsts.getNumGeometries();
+        if (countGeometries &gt; 1) {
+          label = L.featureGroup();
+          for (let i = 0; i &lt; countGeometries; i++) {
+            let polygonN = objJsts.getGeometryN(i);
+            let centroidNJsts = polygonN.isValid() ? polygonN.getInteriorPoint() : polygonN.getCentroid();
+
+            let centroidN = geojsonWriter.write(centroidNJsts);
+            latlng = L.latLng(centroidN.coordinates[1], centroidN.coordinates[0]);
+            html = &#x27;&lt;div style=&quot;&#x27; + style + &#x27;&quot;&gt;&#x27; + text + &#x27;&lt;/div&gt;&#x27;;
+
+            let labelN = L.marker(latlng, {
+              icon: L.divIcon({
+                className: className,
+                html: html,
+                iconSize: [iconWidth, iconHeight],
+                iconAnchor: anchor
+              }),
+              zIndexOffset: 1000,
+              pane: this.get(&#x27;_paneLabel&#x27;)
+            });
+            labelN.style = {
+              className: className,
+              html: html,
+              iconSize: [iconWidth, iconHeight]
+            };
+
+            label.addLayer(labelN);
+          }
+        } else {
+          let centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
+          let geojsonWriter = new jsts.io.GeoJSONWriter();
+          let centroid = geojsonWriter.write(centroidJsts);
+          latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0]);
+          html = &#x27;&lt;div style=&quot;&#x27; + style + &#x27;&quot;&gt;&#x27; + text + &#x27;&lt;/div&gt;&#x27;;
+        }
       }
       catch (e) {
         console.error(e.message + &#x27;: &#x27; + layer.toGeoJSON().id);
@@ -1647,36 +1687,89 @@ export default BaseLayer.extend({
 
     if (lType.indexOf(&#x27;LineString&#x27;) !== -1) {
       let optionsLabel = this.get(&#x27;labelSettings.options&#x27;);
-      latlng = L.latLng(layer._bounds._northEast.lat, layer._bounds._southWest.lng);
-      let options = {
-        fillColor: Ember.get(optionsLabel, &#x27;captionFontColor&#x27;),
-        align: Ember.get(optionsLabel, &#x27;captionFontAlign&#x27;)
-      };
-      this._addTextForLine(layer, text, options, style);
-      iconWidth = 12;
-      iconHeight = 12;
-      html = Ember.$(layer._svgConteiner).html();
+
+      try {
+        let objJsts = layer.toJsts(L.CRS.EPSG4326);
+        let countGeometries = objJsts.getNumGeometries();
+        if (countGeometries &gt; 1) {
+          label = L.featureGroup();
+          for (let i = 0; i &lt; countGeometries; i++) {
+            let partlineJsts = objJsts.getGeometryN(i);
+            let partlineGeoJson = geojsonWriter.write(partlineJsts);
+            let partline = L.geoJSON(partlineGeoJson).getLayers()[0];
+
+            let bboxJstsN = partlineJsts.getEnvelope();
+            let bboxGeoJsonN = geojsonWriter.write(bboxJstsN);
+            let bbox = L.geoJSON(bboxGeoJsonN).getLayers()[0];
+            latlng = L.latLng(bbox._bounds._northEast.lat, bbox._bounds._southWest.lng);
+
+            let options = {
+              fillColor: Ember.get(optionsLabel, &#x27;captionFontColor&#x27;),
+              align: Ember.get(optionsLabel, &#x27;captionFontAlign&#x27;)
+            };
+            layer._svgConteiner = null;
+            this._addTextForLine(layer, text, options, style, partline);
+            iconWidth = 12;
+            iconHeight = 12;
+            html = Ember.$(layer._svgConteiner).html();
+
+            let labelN = L.marker(latlng, {
+              icon: L.divIcon({
+                className: className,
+                html: html,
+                iconSize: [iconWidth, iconHeight],
+                iconAnchor: anchor
+              }),
+              zIndexOffset: 1000,
+              pane: this.get(&#x27;_paneLabel&#x27;)
+            });
+            labelN.style = {
+              className: className,
+              html: html,
+              iconSize: [iconWidth, iconHeight]
+            };
+
+            label.addLayer(labelN);
+          }
+        } else {
+          latlng = L.latLng(layer._bounds._northEast.lat, layer._bounds._southWest.lng);
+          let options = {
+            fillColor: Ember.get(optionsLabel, &#x27;captionFontColor&#x27;),
+            align: Ember.get(optionsLabel, &#x27;captionFontAlign&#x27;)
+          };
+          this._addTextForLine(layer, text, options, style);
+          iconWidth = 12;
+          iconHeight = 12;
+          html = Ember.$(layer._svgConteiner).html();
+        }
+      }
+      catch (e) {
+        console.error(e.message + &#x27;: &#x27; + layer.toGeoJSON().id);
+      }
     }
 
     if (!latlng) {
       return;
     }
 
-    let label = L.marker(latlng, {
-      icon: L.divIcon({
+    if (!label) {
+      label = L.marker(latlng, {
+        icon: L.divIcon({
+          className: className,
+          html: html,
+          iconSize: [iconWidth, iconHeight],
+          iconAnchor: anchor
+        }),
+        zIndexOffset: 1000,
+        pane: this.get(&#x27;_paneLabel&#x27;)
+      });
+      label.style = {
         className: className,
         html: html,
-        iconSize: [iconWidth, iconHeight],
-        iconAnchor: anchor
-      }),
-      zIndexOffset: 1000,
-      pane: this.get(&#x27;_paneLabel&#x27;)
-    });
-    label.style = {
-      className: className,
-      html: html,
-      iconSize: [iconWidth, iconHeight]
-    };
+        iconSize: [iconWidth, iconHeight]
+      };
+    }
+
     labelsLayer.addLayer(label);
     label.feature = layer.feature;
     label.leafletMap = labelsLayer.leafletMap;
@@ -1804,13 +1897,17 @@ export default BaseLayer.extend({
     @param {Object} layer
     @param {Object} svg
   */
-  _setLabelLine(layer, svg) {
+  _setLabelLine(layer, svg, partline) {
     let leafletMap = this.get(&#x27;leafletMap&#x27;);
     let latlngArr = layer.getLatLngs();
+    if (partline) {
+      latlngArr = partline.getLatLngs();
+    }
+
     let rings = [];
     let begCoord;
     let endCoord;
-    let lType = layer.toGeoJSON().geometry.type;
+    let lType = (!partline) ? layer.toGeoJSON().geometry.type : partline.toGeoJSON().geometry.type;
     if (lType === &#x27;LineString&#x27;) {
       begCoord = leafletMap.latLngToLayerPoint(latlngArr[0]);
       endCoord = leafletMap.latLngToLayerPoint(latlngArr[latlngArr.length - 1]);
@@ -1908,7 +2005,7 @@ export default BaseLayer.extend({
     @param {Object} options
     @param {String} style
   */
-  _addTextForLine(layer, text, options, style) {
+  _addTextForLine(layer, text, options, style, partline) {
     let lsvg = L.svg();
     lsvg._initContainer();
     lsvg._initPath(layer);
@@ -1935,6 +2032,10 @@ export default BaseLayer.extend({
     }
 
     let id = &#x27;pathdef-&#x27; + L.Util.stamp(layer);
+    if (partline) {
+      id = &#x27;pathdef-&#x27; + L.Util.stamp(partline);
+    }
+
     layer._path.setAttribute(&#x27;id&#x27;, id);
 
     let textNode = L.SVG.create(&#x27;text&#x27;);
@@ -1960,7 +2061,7 @@ export default BaseLayer.extend({
     textPath.appendChild(document.createTextNode(text));
     textNode.appendChild(textPath);
 
-    this._setLabelLine(layer, svg);
+    this._setLabelLine(layer, svg, partline);
     layer._path.setAttribute(&#x27;stroke-opacity&#x27;, 0);
     layer._textNode = textNode;
     svg.firstChild.appendChild(layer._path);
@@ -1985,29 +2086,46 @@ export default BaseLayer.extend({
       let _this = this;
       let leafletObject = _this.get(&#x27;_leafletObject&#x27;);
       if (!Ember.isNone(leafletObject)) {
+        let geojsonWriter = new jsts.io.GeoJSONWriter();
         leafletObject.eachLayer(function (layer) {
-          if (!Ember.isNone(layer._path)) {
-            let svg = layer._svg;
-            _this._setLabelLine(layer, svg);
-            let d = layer._path.getAttribute(&#x27;d&#x27;);
-            let path = svg.firstChild.firstChild;
-            path.setAttribute(&#x27;d&#x27;, d);
-            let id = path.getAttribute(&#x27;id&#x27;);
+          if (!Ember.isNone(layer._path) &amp;&amp; !Ember.isEmpty(layer._text)) {
+            let objJsts = layer.toJsts(L.CRS.EPSG4326);
+            let countGeometries = objJsts.getNumGeometries();
+            if (countGeometries &gt; 1) {
+              for (let i = 0; i &lt; countGeometries; i++) {
+                let partlineJsts = objJsts.getGeometryN(i);
+                let partlineGeoJson = geojsonWriter.write(partlineJsts);
+                let partline = L.geoJSON(partlineGeoJson).getLayers()[0];
 
-            Ember.$(&#x27;path#&#x27; + id).attr(&#x27;d&#x27;, d);
-            Ember.$(&#x27;svg#svg-&#x27; + id).attr(&#x27;width&#x27;, svg.getAttribute(&#x27;width&#x27;));
-            Ember.$(&#x27;svg#svg-&#x27; + id).attr(&#x27;height&#x27;, svg.getAttribute(&#x27;height&#x27;));
-
-            let options = layer._textOptions;
-            let text = layer._text;
-            let textNode = layer._textNode;
-
-            _this._setAlignForLine(layer, text, options.align, textNode);
-            Ember.$(&#x27;text#text-&#x27; + id).attr(&#x27;dx&#x27;, textNode.getAttribute(&#x27;dx&#x27;));
+                _this._updateAttributesSvg(layer, partline);
+              }
+            } else {
+              _this._updateAttributesSvg(layer);
+            }
           }
         });
       }
     }
+  },
+
+  _updateAttributesSvg(layer, partline) {
+    let svg = layer._svg;
+    this._setLabelLine(layer, svg, partline);
+    let d = layer._path.getAttribute(&#x27;d&#x27;);
+    let path = svg.firstChild.firstChild;
+    path.setAttribute(&#x27;d&#x27;, d);
+    let id = path.getAttribute(&#x27;id&#x27;);
+
+    Ember.$(&#x27;path#&#x27; + id).attr(&#x27;d&#x27;, d);
+    Ember.$(&#x27;svg#svg-&#x27; + id).attr(&#x27;width&#x27;, svg.getAttribute(&#x27;width&#x27;));
+    Ember.$(&#x27;svg#svg-&#x27; + id).attr(&#x27;height&#x27;, svg.getAttribute(&#x27;height&#x27;));
+
+    let options = layer._textOptions;
+    let text = layer._text;
+    let textNode = layer._textNode;
+
+    this._setAlignForLine(layer, text, options.align, textNode);
+    Ember.$(&#x27;text#text-&#x27; + id).attr(&#x27;dx&#x27;, textNode.getAttribute(&#x27;dx&#x27;));
   },
 
   _labelsLayer: null,
