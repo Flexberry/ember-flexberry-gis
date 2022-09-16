@@ -29449,7 +29449,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 208,
+            "line": 210,
             "description": "Handles click on zoom to icon.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -29465,7 +29465,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 239,
+            "line": 243,
             "description": "Convert feature coordinate.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -32850,7 +32850,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 677,
+            "line": 682,
             "description": "Handles click on tab.",
             "itemtype": "method",
             "name": "actions.onTabClick",
@@ -32871,7 +32871,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 691,
+            "line": 696,
             "description": "Handles attributes row selection.",
             "itemtype": "method",
             "name": "actions.onRowSelect",
@@ -32897,7 +32897,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 706,
+            "line": 711,
             "description": "Handles 'Find an item on the map' button click.",
             "itemtype": "method",
             "name": "actions.onFindItemClick",
@@ -32913,7 +32913,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 723,
+            "line": 728,
             "description": "Handles 'Find an item on the map' button click.",
             "itemtype": "method",
             "name": "actions.onFindItem",
@@ -32929,7 +32929,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 735,
+            "line": 740,
             "description": "Handles units dropdown clicks.",
             "itemtype": "method",
             "name": "actions.onUnitSelected",
@@ -32950,7 +32950,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 746,
+            "line": 751,
             "description": "Handles 'Draw buffer' button click.",
             "itemtype": "method",
             "name": "actions.drawBuffer",
@@ -32966,7 +32966,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 778,
+            "line": 783,
             "description": "Handles 'Delete buffer' button click.",
             "itemtype": "method",
             "name": "actions.deleteBuffer",
@@ -32975,7 +32975,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 801,
+            "line": 806,
             "description": "Handles 'Clear found items' button click.",
             "itemtype": "method",
             "name": "actions.onClearFoundItemClick",
@@ -32984,7 +32984,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 813,
+            "line": 818,
             "description": "Handles find intersecting polygons.",
             "itemtype": "method",
             "name": "actions.onFindIntersectPolygons",
@@ -32993,7 +32993,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 845,
+            "line": 850,
             "description": "Handles 'Select all' checkbox click.",
             "itemtype": "method",
             "name": "actions.onSelectAllClick",
@@ -33009,7 +33009,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 855,
+            "line": 860,
             "description": "Handles 'getData' action from flexberry-table.",
             "itemtype": "method",
             "name": "actions.onTabGetData",
@@ -33030,7 +33030,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 867,
+            "line": 872,
             "description": "Handles tab panel moving.",
             "itemtype": "method",
             "name": "actions.onTabMove",
@@ -33046,7 +33046,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 952,
+            "line": 957,
             "description": "Handles 'Delete selected items' button click.",
             "itemtype": "method",
             "name": "actions.onDeleteItemClick",
@@ -33062,7 +33062,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 964,
+            "line": 969,
             "description": "Performs row editing.",
             "itemtype": "method",
             "name": "actions.onRowEdit",
@@ -33083,7 +33083,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 992,
+            "line": 997,
             "description": "Handles a new geometry adding by import completion.",
             "params": [
                 {
@@ -33102,7 +33102,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1032,
+            "line": 1037,
             "description": "Handles click on 'Difference polygon' button.",
             "params": [
                 {
@@ -33116,7 +33116,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1146,
+            "line": 1151,
             "description": "Handles click on 'Split geometry' button.",
             "params": [
                 {
@@ -33130,7 +33130,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1163,
+            "line": 1168,
             "description": "Handles click on 'Union polygon' button.",
             "itemtype": "method",
             "name": "actions.doCombinedPolygon",
@@ -33146,7 +33146,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1239,
+            "line": 1244,
             "description": "Selected or deselected all objects.",
             "params": [
                 {
@@ -33165,7 +33165,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1264,
+            "line": 1269,
             "description": "Treatment selected and edited rows.",
             "params": [
                 {
@@ -33184,7 +33184,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1277,
+            "line": 1282,
             "description": "Delete layer feature by id.",
             "params": [
                 {
@@ -33203,7 +33203,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1313,
+            "line": 1318,
             "description": "Disables tool and split geometry.",
             "params": [
                 {
@@ -33217,7 +33217,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1432,
+            "line": 1437,
             "description": "Split splitter and split polygon each part splitter.",
             "params": [
                 {
@@ -33236,7 +33236,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1503,
+            "line": 1508,
             "description": "Split polygon.",
             "params": [
                 {
@@ -33255,7 +33255,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1568,
+            "line": 1573,
             "description": "Zooms map to the specified layer.",
             "params": [
                 {
@@ -51547,7 +51547,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/compare-object-geometries-panel.js:239"
+            "line": " addon/components/compare-object-geometries-panel.js:243"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -53175,43 +53175,43 @@
         },
         {
             "message": "Missing item type\nHandles a new geometry adding by import completion.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:992"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:997"
         },
         {
             "message": "Missing item type\nHandles click on 'Difference polygon' button.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1032"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1037"
         },
         {
             "message": "Missing item type\nHandles click on 'Split geometry' button.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1146"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1151"
         },
         {
             "message": "Missing item type\nSelected or deselected all objects.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1239"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1244"
         },
         {
             "message": "Missing item type\nTreatment selected and edited rows.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1264"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1269"
         },
         {
             "message": "Missing item type\nDelete layer feature by id.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1277"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1282"
         },
         {
             "message": "Missing item type\nDisables tool and split geometry.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1313"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1318"
         },
         {
             "message": "Missing item type\nSplit splitter and split polygon each part splitter.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1432"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1437"
         },
         {
             "message": "Missing item type\nSplit polygon.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1503"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1508"
         },
         {
             "message": "Missing item type\nZooms map to the specified layer.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1568"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1573"
         },
         {
             "message": "Missing item type\nReference to component's template.",
