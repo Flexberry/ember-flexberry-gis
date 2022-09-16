@@ -469,6 +469,7 @@ const flexberryClassNames = {
   removeButton: flexberryClassNamesPrefix + &#x27;-remove-button&#x27;,
   boundsButton: flexberryClassNamesPrefix + &#x27;-bounds-button&#x27;,
   attributesButton: flexberryClassNamesPrefix + &#x27;-attributes-button&#x27;,
+  loadButton: flexberryClassNamesPrefix + &#x27;-load-button&#x27;,
   caption: flexberryClassNamesPrefix + &#x27;-caption-label&#x27;,
   legendToggler: flexberryClassNamesPrefix + &#x27;-legend-toggler&#x27;,
   preventExpandCollapse: FlexberryTreenodeComponent.flexberryClassNames.preventExpandCollapse,
@@ -934,6 +935,29 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether layer has access for loading.
+
+      @property readonlyData
+      @type Boolean
+      @readonly
+    */
+    presenceLayerInGeoportal: Ember.computed(&#x27;access&#x27;, &#x27;readonly&#x27;, &#x27;layer&#x27;, function () {
+      let presenceLayerInGeoportal = this.get(&#x27;access.presenceLayerInGeoportal&#x27;);
+      if (!Ember.isNone(presenceLayerInGeoportal)) {
+        let layer = this.get(&#x27;layer&#x27;);
+        let readonly = this.get(&#x27;readonly&#x27;);
+
+        let mapLayerId = Object.keys(presenceLayerInGeoportal).find(key =&gt; key === layer.id);
+
+        let access = !Ember.isNone(layer) &amp;&amp; !Ember.isNone(presenceLayerInGeoportal) &amp;&amp; !Ember.isNone(mapLayerId);
+
+        return !readonly || access;
+      }
+
+      return false;
+    }),
+
+    /**
       Flag: indicates whether layer node has been expanded once.
 
       @property hasBeenExpanded
@@ -1313,6 +1337,12 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
       closeOtherCalendar() {
         this.sendAction(&#x27;closeOtherCalendar&#x27;, this.get(&#x27;layer.id&#x27;));
+      },
+
+      onLoadButtonClick() {
+        if (!Ember.isNone(this.get(&#x27;presenceLayerInGeoportal&#x27;))) {
+          this.sendAction(&#x27;onLoad&#x27;);
+        }
       }
     },
 
