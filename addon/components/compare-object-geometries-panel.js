@@ -188,20 +188,22 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} geometry Contain intersection | non-intersection geometry. (Maybe contain many geometries)
     */
     panToIntersection(geometry) {
-      let featureLayer = null;
-      if (geometry.type === 'GeometryCollection') {
-        featureLayer = L.featureGroup();
-        geometry.geometries.forEach(geom => {
-          featureLayer.addLayer(this._convertGeometryToFeatureLayer(geom));
-        });
-      } else {
-        featureLayer = this._convertGeometryToFeatureLayer(geometry);
-      }
+      if (!Ember.isNone(geometry)) {
+        let featureLayer = null;
+        if (geometry.type === 'GeometryCollection') {
+          featureLayer = L.featureGroup();
+          geometry.geometries.forEach(geom => {
+            featureLayer.addLayer(this._convertGeometryToFeatureLayer(geom));
+          });
+        } else {
+          featureLayer = this._convertGeometryToFeatureLayer(geometry);
+        }
 
-      if (!Ember.isNone(featureLayer)) {
-        let center = featureLayer.getBounds().getCenter();
-        let leafletMap = this.get('leafletMap');
-        leafletMap.panTo(center);
+        if (!Ember.isNone(featureLayer)) {
+          let center = featureLayer.getBounds().getCenter();
+          let leafletMap = this.get('leafletMap');
+          leafletMap.panTo(center);
+        }
       }
     },
 
@@ -212,26 +214,28 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} geometry Contain intersection | non-intersection geometry. (Maybe contain many geometries)
     */
     zoomToIntersection(geometry) {
-      let group = this.get('featuresLayer');
-      group.clearLayers();
-      let featureLayer = null;
-      if (geometry.type === 'GeometryCollection') {
-        featureLayer = L.featureGroup();
-        geometry.geometries.forEach(geom => {
-          featureLayer.addLayer(this._convertGeometryToFeatureLayer(geom, {
+      if (!Ember.isNone(geometry)) {
+        let group = this.get('featuresLayer');
+        group.clearLayers();
+        let featureLayer = null;
+        if (geometry.type === 'GeometryCollection') {
+          featureLayer = L.featureGroup();
+          geometry.geometries.forEach(geom => {
+            featureLayer.addLayer(this._convertGeometryToFeatureLayer(geom, {
+              style: { color: 'green' }
+            }));
+          });
+        } else {
+          featureLayer = this._convertGeometryToFeatureLayer(geometry, {
             style: { color: 'green' }
-          }));
-        });
-      } else {
-        featureLayer = this._convertGeometryToFeatureLayer(geometry, {
-          style: { color: 'green' }
-        });
-      }
+          });
+        }
 
-      if (!Ember.isNone(featureLayer)) {
-        featureLayer.addTo(group);
-        let map = this.get('leafletMap');
-        map.fitBounds(featureLayer.getBounds());
+        if (!Ember.isNone(featureLayer)) {
+          featureLayer.addTo(group);
+          let map = this.get('leafletMap');
+          map.fitBounds(featureLayer.getBounds());
+        }
       }
     }
   },
@@ -256,16 +260,27 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   getDistance(firstObject, secondObject) {
     let firstCenter;
     let secondCenter;
+
+    let firstFeature = firstObject.leafletLayer;
     if (Ember.get(firstObject, 'leafletLayer.getLayers')) {
-      firstCenter = firstObject.leafletLayer.getLayers()[0].getBounds().getCenter();
-    } else {
-      firstCenter = firstObject.leafletLayer.getBounds().getCenter();
+      firstFeature = firstObject.leafletLayer.getLayers()[0];
     }
 
-    if (Ember.get(secondObject, 'leafletLayer.getLayers')) {
-      secondCenter = secondObject.leafletLayer.getLayers()[0].getBounds().getCenter();
+    if (firstFeature instanceof L.Marker) {
+      firstCenter = firstFeature.getLatLng();
     } else {
-      secondCenter = secondObject.leafletLayer.getBounds().getCenter();
+      firstCenter = firstFeature.getBounds().getCenter();
+    }
+
+    let secondFeature = secondObject.leafletLayer;
+    if (Ember.get(secondObject, 'leafletLayer.getLayers')) {
+      secondFeature = secondObject.leafletLayer.getLayers()[0];
+    }
+
+    if (secondFeature instanceof L.Marker) {
+      secondCenter = secondFeature.getLatLng();
+    } else {
+      secondCenter = secondFeature.getBounds().getCenter();
     }
 
     let firstPoint = helpers.point([firstCenter.lat, firstCenter.lng]);
@@ -285,23 +300,29 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   getIntersection(firstObject, secondObject) {
     let intersection = firstObject.intersection(secondObject);
-    let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let intersectionRes = geojsonWriter.write(intersection);
+    if (!intersection.isEmpty()) {
+      let geojsonWriter = new jsts.io.GeoJSONWriter();
+      let intersectionRes = geojsonWriter.write(intersection);
 
-    if (intersectionRes) {
-      intersectionRes.area = intersection.getArea().toFixed(3);
-      return this.getObjectWithProperties(intersectionRes);
+      if (intersectionRes) {
+        intersectionRes.area = intersection.getArea().toFixed(3);
+        return this.getObjectWithProperties(intersectionRes);
+      }
     }
+
+    return { area: '0.000', intersectionCoordsText: '' };
   },
 
   getNonIntersection(firstObject, secondObject) {
     let nonIntersection = firstObject.symDifference(secondObject);
-    let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let nonIntersectionRes = geojsonWriter.write(nonIntersection);
+    if (!nonIntersection.isEmpty()) {
+      let geojsonWriter = new jsts.io.GeoJSONWriter();
+      let nonIntersectionRes = geojsonWriter.write(nonIntersection);
 
-    if (nonIntersectionRes) {
-      nonIntersectionRes.area = nonIntersection.getArea().toFixed(3);
-      return this.getObjectWithProperties(nonIntersectionRes);
+      if (nonIntersectionRes) {
+        nonIntersectionRes.area = nonIntersection.getArea().toFixed(3);
+        return this.getObjectWithProperties(nonIntersectionRes);
+      }
     }
 
     return { area: '0.000', intersectionCoordsText: '' };

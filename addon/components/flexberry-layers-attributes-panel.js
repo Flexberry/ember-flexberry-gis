@@ -672,6 +672,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       if (selectedTabIndex >= index && selectedTabIndex - 1 >= 0) {
         this.set('selectedTabIndex', selectedTabIndex - 1);
       }
+
+      let serviceLayer = this.get('serviceLayer');
+      if (!Ember.isNone(serviceLayer)) {
+        serviceLayer.clearLayers();
+      }
     },
 
     /**
