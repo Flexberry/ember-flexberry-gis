@@ -21,7 +21,7 @@ export default Ember.Mixin.create({
       @method actions.selectFeature
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     */
-    selectFeature(feature, zoomAll) {
+    selectFeature(feature, layerInteractive) {
       let leafletMap = this.get('leafletMap');
       if (Ember.isNone(leafletMap)) {
         return;
@@ -35,14 +35,12 @@ export default Ember.Mixin.create({
 
       let selectedFeature = this.get('_selectedFeature');
       if (selectedFeature !== feature) {
-        if (!zoomAll) {
-          serviceLayer.clearLayers();
-        }
+        serviceLayer.clearLayers();
 
         if (Ember.isArray(feature)) {
-          feature.forEach((item) => this._selectFeature(item));
+          feature.forEach((item) => this._selectFeature(item, layerInteractive));
         } else {
-          this._selectFeature(feature);
+          this._selectFeature(feature, layerInteractive);
         }
 
         this.set('_selectedFeature', feature);
@@ -57,13 +55,13 @@ export default Ember.Mixin.create({
       @method actions.zoomTo
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     */
-    zoomTo(feature, zoomAll) {
+    zoomTo(feature, layerInteractive) {
       let leafletMap = this.get('leafletMap');
       if (Ember.isNone(leafletMap)) {
         return;
       }
 
-      this.send('selectFeature', feature, zoomAll);
+      this.send('selectFeature', feature, layerInteractive);
 
       let bounds;
       let serviceLayer = this.get('serviceLayer');
@@ -125,11 +123,20 @@ export default Ember.Mixin.create({
     @param {Object} feature Describes feature object or array of it.
     @private
   */
-  _selectFeature(feature) {
+  _selectFeature(feature, layerInteractive) {
     let serviceLayer = this.get('serviceLayer');
     if (!Ember.isNone(feature)) {
-      serviceLayer.addLayer(feature.leafletLayer);
+      serviceLayer.addLayer(this._prepareLayer(feature.leafletLayer, layerInteractive));
     }
+  },
+
+  /**
+    Additional preparation of the selected layer.
+    @param Object layer
+  */
+    _prepareLayer(layer, layerInteractive) {
+      layer.options.interactive = layerInteractive ? true : false;
+      return layer;
   },
 
   /**

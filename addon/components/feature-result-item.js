@@ -232,7 +232,7 @@ export default Ember.Component.extend({
     let feature = this.get('feature');
 
     if (feature && this.get('highlightable')) {
-      if (feature.geometry.type === 'marker') {
+      if (feature.geometry.type === 'marker' || feature.geometry.type === 'polyline') {
         feature.leafletLayer.options.renderer.options.tolerance = 10;
       }
 

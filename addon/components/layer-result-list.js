@@ -71,6 +71,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   layout,
 
   /**
+    Flag indicates whether result layers support highlighting
+    @property enableHighlight
+    @type Boolean
+    @default false
+  */
+  enableHighlight: false,
+
+  /**
     FeatureGroup to display layer from selectedFeature.
 
     @property serviceLayer
@@ -610,10 +618,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.set('_displayResults', displayResults);
         this.set('_noData', displayResults.length === 0);
         this.set('_showLoader', false);
+        let selectedFeatures = [...displayResults.map(result => result.features)].flat(1);
+        let enableHighlight = this.get('enableHighlight');
         if (this.get('favoriteMode') !== true && Ember.isNone(this.get('share'))) {
-          displayResults.map(result => result.features.map(feature => this.send('zoomTo', feature, true)));
+          this.send('zoomTo', selectedFeatures, enableHighlight);
         } else if (!Ember.isNone(this.get('share'))) {
-          displayResults.map(result => result.features.map(feature => this.send('selectFeature', feature, true)));
+          this.send('selectFeature', selectedFeatures, enableHighlight);
         }
       });
     }).catch((error) => {

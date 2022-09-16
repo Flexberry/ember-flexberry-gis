@@ -89,7 +89,7 @@
                 {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
                   {{component (concat 'feature-result-item-' result.layerModel.type)
                     feature=feature
-                    highlightable = (eq resultId 0)
+                    highlightable = (and enableHighlight (eq resultId 0))
                     clearHighlights = (action "clearHighlights" result)
                     infoExpanded=(and (eq result.features.length 1) result.first)
                     displayProperty="displayValue"
@@ -109,7 +109,7 @@
                 {{else}}
                   {{feature-result-item
                     feature=feature
-                    highlightable = (eq resultId 0)
+                    highlightable = (and enableHighlight (eq resultId 0))
                     clearHighlights = (action "clearHighlights" result)
                     infoExpanded=(and (eq result.features.length 1) result.first)
                     displayProperty="displayValue"
@@ -214,7 +214,7 @@
             {{component (concat 'feature-result-item-' result.layerModel.type)
                 feature=feature
                 displayProperty="displayValue"
-                highlightable = (eq resultId 0)
+                highlightable = (and enableHighlight (eq resultId 0))
                 clearHighlights = (action "clearHighlights" result)
                 displaySettings=result.settings
                 selectedFeature=_selectedFeature
@@ -237,7 +237,7 @@
                 feature=feature
                 displayProperty="displayValue"
                 displaySettings=result.settings
-                highlightable = (eq resultId 0)
+                highlightable = (and enableHighlight (eq resultId 0))
                 clearHighlights = (action "clearHighlights" result)
                 selectedFeature=_selectedFeature
                 selectFeature=(action "selectFeature")
