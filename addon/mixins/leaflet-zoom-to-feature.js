@@ -134,9 +134,9 @@ export default Ember.Mixin.create({
     Additional preparation of the selected layer.
     @param Object layer
   */
-    _prepareLayer(layer, layerInteractive) {
-      layer.options.interactive = layerInteractive ? true : false;
-      return layer;
+  _prepareLayer(layer, layerInteractive) {
+    layer.options.interactive = layerInteractive ? true : false;
+    return layer;
   },
 
   /**
