@@ -177,6 +177,7 @@ export default Ember.Component.extend({
     if (this.feature.highlight) {
       this.feature.leafletLayer.setStyle({
         color: '#3388FF',
+        fillColor: 'salmon'
       });
       this.feature.leafletLayer.bringToFront();
     } else {
