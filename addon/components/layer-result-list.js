@@ -117,6 +117,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _displayResults: null,
 
   /**
+    Ready-made results.each.features collected from all _displayResults for display without promises.
+
+    @property selectedFeatures
+    @type Ember.A()
+    @default []
+  */
+  selectedFeatures: [],
+
+  /**
     Flag: indicates when results contains no data.
 
     @property _noData
@@ -188,7 +197,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         return;
       }
 
-      result.features.filter(feature => feature !== clickedFeature).forEach(feature => Ember.set(feature, 'highlight', false)); // clear highlight states of another features
+      let previousHighlightedFeature = this.get('selectedFeatures').find(feature => feature !== clickedFeature && Ember.get(feature, 'highlight'));
+      if (previousHighlightedFeature) {
+        Ember.set(previousHighlightedFeature, 'highlight', false);
+      }
+
       Ember.set(clickedFeature, 'highlight', !clickedFeature.highlight);
       Ember.set(result, 'highlight', true);
     },
@@ -595,35 +608,17 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           }
         });
 
-        displayResults = displayResults.sort((a, b) => {
-          // If displayValue is empty, it should be on the bottom.
-          if (!a.name) {
-            return 1;
-          }
+        displayResults = displayResults.sort((a, b) => b.layerModel.get('index') - a.layerModel.get('index'));
 
-          if (!b.name) {
-            return -1;
-          }
-
-          if (a.name > b.name) {
-            return 1;
-          }
-
-          if (a.name < b.name) {
-            return -1;
-          }
-
-          return 0;
-        });
         this.set('_displayResults', displayResults);
         this.set('_noData', displayResults.length === 0);
         this.set('_showLoader', false);
-        let selectedFeatures = [...displayResults.map(result => result.features)].flat(1);
-        let enableHighlight = this.get('enableHighlight');
+        this.set('selectedFeatures', [...displayResults.map(result => result.features)].flat(1));
+
         if (this.get('favoriteMode') !== true && Ember.isNone(this.get('share'))) {
-          this.send('zoomTo', selectedFeatures, enableHighlight);
+          this.send('zoomTo', this.get('selectedFeatures'), this.get('enableHighlight'));
         } else if (!Ember.isNone(this.get('share'))) {
-          this.send('selectFeature', selectedFeatures, enableHighlight);
+          this.send('selectFeature', this.get('selectedFeatures'), this.get('enableHighlight'));
         }
       });
     }).catch((error) => {

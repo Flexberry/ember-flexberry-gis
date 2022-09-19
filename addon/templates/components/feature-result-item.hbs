@@ -20,7 +20,7 @@
         <i class="icon-guideline-intersection"></i>
       </a>
     {{else}}
-      <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
+      <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" feature on="click"}}>
         <i class="icon-guideline-marker"></i>
       </a>
       <a class="icon item" title="{{t "components.compare-object-geometries.add-to-fav-caption"}}" {{action "addToFavorite" on="click"}}>
@@ -121,6 +121,7 @@
   </div>
   <div class="feature-result-item-caption {{if feature.highlight "highlight" ""}}" {{action "showInfo" on="click"}}>
     <label>{{get feature displayProperty}}</label>
+    <label>test</label>
   </div>
 </div>
 <div class="feature-result-item-content content {{if expanded "visible" "hidden"}}">

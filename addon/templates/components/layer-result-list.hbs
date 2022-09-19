@@ -89,8 +89,8 @@
                 {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
                   {{component (concat 'feature-result-item-' result.layerModel.type)
                     feature=feature
-                    highlightable = (and enableHighlight (eq resultId 0))
-                    clearHighlights = (action "clearHighlights" result)
+                    highlightable= enableHighlight
+                    clearHighlights= (action "clearHighlights" result)
                     infoExpanded=(and (eq result.features.length 1) result.first)
                     displayProperty="displayValue"
                     displaySettings=result.settings
@@ -109,8 +109,8 @@
                 {{else}}
                   {{feature-result-item
                     feature=feature
-                    highlightable = (and enableHighlight (eq resultId 0))
-                    clearHighlights = (action "clearHighlights" result)
+                    highlightable= enableHighlight
+                    clearHighlights= (action "clearHighlights" result)
                     infoExpanded=(and (eq result.features.length 1) result.first)
                     displayProperty="displayValue"
                     displaySettings=result.settings
@@ -214,8 +214,8 @@
             {{component (concat 'feature-result-item-' result.layerModel.type)
                 feature=feature
                 displayProperty="displayValue"
-                highlightable = (and enableHighlight (eq resultId 0))
-                clearHighlights = (action "clearHighlights" result)
+                highlightable= enableHighlight
+                clearHighlights= (action "clearHighlights" result)
                 displaySettings=result.settings
                 selectedFeature=_selectedFeature
                 selectFeature=(action "selectFeature")
@@ -237,8 +237,8 @@
                 feature=feature
                 displayProperty="displayValue"
                 displaySettings=result.settings
-                highlightable = (and enableHighlight (eq resultId 0))
-                clearHighlights = (action "clearHighlights" result)
+                highlightable= enableHighlight
+                clearHighlights= (action "clearHighlights" result)
                 selectedFeature=_selectedFeature
                 selectFeature=(action "selectFeature")
                 panTo=(action "panTo")

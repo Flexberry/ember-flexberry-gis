@@ -167,6 +167,24 @@ export default Ember.Component.extend({
   }),
 
   /**
+    Observes and handles changes in feature.highlight state
+    Changes the border style of feature on the map
+
+    @method highlightObserver
+    @private
+  */
+  highlightObserver: Ember.observer('feature.highlight', function() {
+    if (this.feature.highlight) {
+      this.feature.leafletLayer.setStyle({
+        color: '#3388FF',
+      });
+      this.feature.leafletLayer.bringToFront();
+    } else {
+      this.feature.leafletLayer.setStyle(this.get('defaultFeatureStyle'));
+    }
+  }),
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -188,6 +206,15 @@ export default Ember.Component.extend({
    @default false
   */
   highlightable: false,
+
+  /**
+   Default feature.leaflet.style settings. (Uses for restore state after click events)
+
+   @property defaultFeatureStyle
+   @type Object
+   @default null
+  */
+  defaultFeatureStyle: null,
 
   /**
     Feature's metadata.
@@ -229,17 +256,7 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
     const hasEditFormFunc = this.get('mapApi').getFromApi('hasEditForm');
-    let feature = this.get('feature');
-
-    if (feature && this.get('highlightable')) {
-      if (feature.geometry.type === 'marker' || feature.geometry.type === 'polyline') {
-        feature.leafletLayer.options.renderer.options.tolerance = 10;
-      }
-
-      feature.leafletLayer.on('click', () => {
-        this.send('highlightFeature');
-      });
-    }
+    this.prepareFeatureForHighlighting(this.get('highlightable'));
 
     if (typeof hasEditFormFunc === 'function') {
       const layerId = this.get('feature.layerModel.id');
@@ -284,14 +301,58 @@ export default Ember.Component.extend({
     }
   },
 
+  /**
+    Preparation feature for highlighting.
+
+    @method prepareFeatureForHighlighting
+  */
+  prepareFeatureForHighlighting(highlightable) {
+    let feature = this.get('feature');
+    if (!highlightable || !feature) {
+      return;
+    }
+
+    this.set('defaultFeatureStyle', Object.assign({}, feature.leafletLayer.options));
+
+    if (feature.geometry.type === 'marker' || feature.geometry.type === 'polyline') {
+      feature.leafletLayer.options.renderer.options.tolerance = 10;
+    }
+
+    L.DomEvent.on(feature.leafletLayer, 'click', (e) => {
+      this.send('highlightFeature', feature);
+      e.originalEvent.stopPropagation();
+    });
+  },
+
+  /**
+    Collecting settings for executing a zoomToBounds function
+
+    @method getLayerPropsForZoom
+  */
+  getLayerPropsForZoom() {
+    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    let bounds;
+    let feature = this.get('feature');
+
+    if (feature.leafletLayer instanceof L.Marker) {
+      let featureGroup = L.featureGroup().addLayer(feature.leafletLayer);
+      bounds = featureGroup.getBounds();
+    } else {
+      bounds = feature.leafletLayer.getBounds();
+    }
+
+    let minZoom = Ember.get(feature.leafletLayer, 'minZoom');
+    let maxZoom = Ember.get(feature.leafletLayer, 'maxZoom');
+    return { bounds, leafletMap, minZoom, maxZoom };
+  },
+
   actions: {
     /**
       Highlight feature-result-items caption
 
       @method actions.highlightFeature
     */
-    highlightFeature() {
-      let clickedFeature = this.get('feature');
+    highlightFeature(clickedFeature) {
       this.sendAction('clearHighlights', clickedFeature); // clear other highlight states of feature-result-items in _displayResults. Set the new highlight state
       if (this.get('feature.highlight')) {
         if (!this.get('expanded')) { // open feature-result-item properties
@@ -336,19 +397,9 @@ export default Ember.Component.extend({
         let name = Ember.get(layerModel, 'name');
 
         // редактируемый объект должен быть загружен
-        let leafletMap = this.get('mapApi').getFromApi('leafletMap');
         object.statusLoadLayer = true;
 
-        let bounds;
-        if (feature.leafletLayer instanceof L.Marker) {
-          let featureGroup = L.featureGroup().addLayer(feature.leafletLayer);
-          bounds = featureGroup.getBounds();
-        } else {
-          bounds = feature.leafletLayer.getBounds();
-        }
-
-        let minZoom = Ember.get(feature.leafletLayer, 'minZoom');
-        let maxZoom = Ember.get(feature.leafletLayer, 'maxZoom');
+        let { bounds, leafletMap, minZoom, maxZoom } = this.getLayerPropsForZoom();
         zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
         if (Ember.isNone(object.promiseLoadLayer) || !(object.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
           object.promiseLoadLayer = Ember.RSVP.resolve();
@@ -424,8 +475,10 @@ export default Ember.Component.extend({
       Invokes {{#crossLink "FeatureResultItemComponent/sendingActions.zoomTo:method"}}'zoomTo' action{{/crossLink}}.
       @method actions.zoomTo
      */
-    zoomTo() {
-      this.sendAction('zoomTo', this.get('feature'));
+    zoomTo(feature) {
+      this.send('highlightFeature', feature);
+      let { bounds, leafletMap, minZoom, maxZoom } = this.getLayerPropsForZoom();
+      zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
     },
 
     /**
