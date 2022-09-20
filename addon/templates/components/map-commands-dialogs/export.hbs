@@ -40,11 +40,11 @@
             {{/if}}
           {{/if}}
         </div>
-        <div class="{{flexberryClassNames.legendControlMap}} {{if _options.legendUnderMap "" "hidden"}}" style={{_mapCaptionPreviewStyle}}>
+        <div class="{{flexberryClassNames.legendControlMap}} {{if _options.legendUnderMap "" "hidden"}}" style="{{_mapLegendPreviewStyle}}">
           {{#if _mapCanBeShown}}
             {{flexberry-layerslegends
               layers=layers
-              height=(if _isPreview _mapCaptionPreviewHeight _mapCaptionRealHeight)
+              height=(if _isPreview _mapLegendPreviewHeight _mapLegendRealHeight)
               rightPadding=_legendsRightPadding
               legendsLoaded='legendsLoaded'
             }}
@@ -54,11 +54,11 @@
 
       <div class="{{flexberryClassNames.sheetOfLegend}} {{_options.displayMode}} {{if _options.pageNumber2Selected "" "hidden"}}" style={{_sheetOfPaperPreviewStyle}}>
         <div>
-          <div class="{{flexberryClassNames.legendControlMap}}" style={{_mapCaptionPreviewStyle}}>
+          <div class="{{flexberryClassNames.legendControlMap}}" style="{{_mapLegendPreviewStyle}}">
             {{#if _mapCanBeShown}}
               {{flexberry-layerslegends
                 layers=layers
-                height=(if _isPreview _mapCaptionPreviewHeight _mapCaptionRealHeight)
+                height=(if _isPreview _mapLegendPreviewHeight _mapLegendRealHeight)
                 rightPadding=_legendsRightPadding
                 legendsLoaded='legendsLoaded'
               }}

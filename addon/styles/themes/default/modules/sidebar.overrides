@@ -279,7 +279,7 @@
                 .layer-legend-image {
                 }
                 .layer-legend-caption {
-                  color: @layerLegendCaptionColor;
+                  color: @textColor;
                   margin: @layerLegendCaptionMargin;
                   max-width: @layerLegendCaptionMaxWidth;
                   width: @layerLegendCaptionWidth;
