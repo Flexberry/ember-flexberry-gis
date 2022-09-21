@@ -856,7 +856,7 @@ div.measure-drag-panel {
         flex-direction: row;
     }
     &-caption {
-        padding-left: 10px;
+        padding-left: 8px;
         text-overflow: ellipsis;
         max-width: 80%;
         min-width: 350px;

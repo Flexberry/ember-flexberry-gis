@@ -98,7 +98,11 @@
       .feature-result-item-title {
         padding-top: 13px;
         align-items: center;
-
+        .highlight {
+          color:#0061D9;
+          font-size:14px;
+          font-weight:bold;
+        }
         .ui.small.loader {
           right: 0;
           left: initial;

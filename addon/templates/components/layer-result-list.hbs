@@ -81,7 +81,7 @@
           </a>
         {{/if}}
       </div>
-      {{#flexberry-toggler caption=result.name expanded=(and (eq result.features.length 1) result.first) class='layer-result-list-toggler'}}
+      {{#flexberry-toggler caption=result.name expanded=(or (and (eq result.features.length 1) result.first) result.highlight) class='layer-result-list-toggler'}}
         <div class="ui list transition">
           {{#if intersection}}
             {{#each result.features as |feature|}}
@@ -89,6 +89,8 @@
                 {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
                   {{component (concat 'feature-result-item-' result.layerModel.type)
                     feature=feature
+                    highlightable= enableHighlight
+                    clearHighlights= (action "clearHighlights" result)
                     infoExpanded=(and (eq result.features.length 1) result.first)
                     displayProperty="displayValue"
                     displaySettings=result.settings
@@ -107,6 +109,8 @@
                 {{else}}
                   {{feature-result-item
                     feature=feature
+                    highlightable= enableHighlight
+                    clearHighlights= (action "clearHighlights" result)
                     infoExpanded=(and (eq result.features.length 1) result.first)
                     displayProperty="displayValue"
                     displaySettings=result.settings
@@ -203,13 +207,15 @@
           </a>
         {{/if}}
       </div>
-      {{#flexberry-toggler caption=result.name  class='layer-result-list-toggler'}}
+      {{#flexberry-toggler caption=result.name expanded=(or (and (eq result.features.length 1) result.first) result.highlight) class='layer-result-list-toggler'}}
         <div class="ui list transition">
           {{#each result.features as |feature|}}
             {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
-              {{component (concat 'feature-result-item-' result.layerModel.type)
+            {{component (concat 'feature-result-item-' result.layerModel.type)
                 feature=feature
                 displayProperty="displayValue"
+                highlightable= enableHighlight
+                clearHighlights= (action "clearHighlights" result)
                 displaySettings=result.settings
                 selectedFeature=_selectedFeature
                 selectFeature=(action "selectFeature")
@@ -231,6 +237,8 @@
                 feature=feature
                 displayProperty="displayValue"
                 displaySettings=result.settings
+                highlightable= enableHighlight
+                clearHighlights= (action "clearHighlights" result)
                 selectedFeature=_selectedFeature
                 selectFeature=(action "selectFeature")
                 panTo=(action "panTo")

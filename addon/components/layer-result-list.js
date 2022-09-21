@@ -71,6 +71,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   layout,
 
   /**
+    Flag indicates whether result layers support highlighting
+    @property enableHighlight
+    @type Boolean
+    @default false
+  */
+  enableHighlight: false,
+
+  /**
     FeatureGroup to display layer from selectedFeature.
 
     @property serviceLayer
@@ -107,6 +115,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @default null
   */
   _displayResults: null,
+
+  /**
+    Ready-made results.each.features collected from all _displayResults for display without promises.
+
+    @property selectedFeatures
+    @type Ember.A()
+    @default []
+  */
+  selectedFeatures: [],
 
   /**
     Flag: indicates when results contains no data.
@@ -170,8 +187,24 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @default null
   */
   exportResult: null,
-
   actions: {
+    /**
+      Сlears the highlight state of the features list.
+      @method actions.clearHighlights
+    */
+    clearHighlights(result, clickedFeature) {
+      if (!result || !clickedFeature) {
+        return;
+      }
+
+      let previousHighlightedFeature = this.get('selectedFeatures').find(feature => feature !== clickedFeature && Ember.get(feature, 'highlight'));
+      if (previousHighlightedFeature) {
+        Ember.set(previousHighlightedFeature, 'highlight', false);
+      }
+
+      Ember.set(clickedFeature, 'highlight', !clickedFeature.highlight);
+      Ember.set(result, 'highlight', true);
+    },
     /**
       Show\hide links list (if present).
       @method actions.toggleLinks
@@ -398,6 +431,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               editForms: Ember.A(),
               features: this.get('maxResultsCount') ? Ember.A(features).slice(0, this.get('maxResultsCount')) : Ember.A(features),
               maxResultsLimitOverage: this.get('maxResultsCount') && features.length > this.get('maxResultsCount') ? true : false,
+              highlight: false,
               layerModel: layerModel,
               hasListForm: hasListForm,
               layerIds: layerIds,
@@ -574,45 +608,23 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           }
         });
 
-        displayResults = displayResults.sort((a, b) => {
-          // If displayValue is empty, it should be on the bottom.
-          if (!a.name) {
-            return 1;
-          }
-
-          if (!b.name) {
-            return -1;
-          }
-
-          if (a.name > b.name) {
-            return 1;
-          }
-
-          if (a.name < b.name) {
-            return -1;
-          }
-
-          return 0;
-        });
+        displayResults = displayResults.sort((a, b) => b.layerModel.get('index') - a.layerModel.get('index'));
 
         this.set('_displayResults', displayResults);
         this.set('_noData', displayResults.length === 0);
         this.set('_showLoader', false);
+        this.set('selectedFeatures', [...displayResults.map(result => result.features)].flat(1));
+
         if (this.get('favoriteMode') !== true && Ember.isNone(this.get('share'))) {
-          if (displayResults.length === 1) {
-            this.send('zoomTo', displayResults.objectAt(0).features);
-          }
+          this.send('zoomTo', this.get('selectedFeatures'), this.get('enableHighlight'));
         } else if (!Ember.isNone(this.get('share'))) {
-          if (displayResults.length === 1) {
-            this.send('selectFeature', displayResults.objectAt(0).features);
-          }
+          this.send('selectFeature', this.get('selectedFeatures'), this.get('enableHighlight'));
         }
       });
     }).catch((error) => {
       console.error(error);
     });
   })),
-
   /**
     Get an array of layer shapes id.
     @method _getFeatureShapeIds

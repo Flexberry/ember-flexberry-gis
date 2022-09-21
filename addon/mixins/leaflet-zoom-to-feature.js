@@ -20,8 +20,9 @@ export default Ember.Mixin.create({
 
       @method actions.selectFeature
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
+      @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
     */
-    selectFeature(feature) {
+    selectFeature(feature, layerInteractive) {
       let leafletMap = this.get('leafletMap');
       if (Ember.isNone(leafletMap)) {
         return;
@@ -38,9 +39,9 @@ export default Ember.Mixin.create({
         serviceLayer.clearLayers();
 
         if (Ember.isArray(feature)) {
-          feature.forEach((item) => this._selectFeature(item));
+          feature.forEach((item) => this._selectFeature(item, layerInteractive));
         } else {
-          this._selectFeature(feature);
+          this._selectFeature(feature, layerInteractive);
         }
 
         this.set('_selectedFeature', feature);
@@ -54,14 +55,15 @@ export default Ember.Mixin.create({
       Select passed feature and zoom map to its layer bounds
       @method actions.zoomTo
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
+      @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
     */
-    zoomTo(feature) {
+    zoomTo(feature, layerInteractive) {
       let leafletMap = this.get('leafletMap');
       if (Ember.isNone(leafletMap)) {
         return;
       }
 
-      this.send('selectFeature', feature);
+      this.send('selectFeature', feature, layerInteractive);
 
       let bounds;
       let serviceLayer = this.get('serviceLayer');
@@ -121,22 +123,23 @@ export default Ember.Mixin.create({
 
     @method _selectFeature
     @param {Object} feature Describes feature object or array of it.
+    @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
     @private
   */
-  _selectFeature(feature) {
+  _selectFeature(feature, layerInteractive) {
     let serviceLayer = this.get('serviceLayer');
     if (!Ember.isNone(feature)) {
-      serviceLayer.addLayer(this._prepareLayer(feature.leafletLayer));
+      serviceLayer.addLayer(this._prepareLayer(feature.leafletLayer, layerInteractive));
     }
   },
 
   /**
     Additional preparation of the selected layer.
-
-    @param Object layer
+    @param {Object} layer
+    @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
   */
-  _prepareLayer(layer) {
-    layer.options.interactive = false;
+  _prepareLayer(layer, layerInteractive) {
+    layer.options.interactive = layerInteractive ? true : false;
     return layer;
   },
 
