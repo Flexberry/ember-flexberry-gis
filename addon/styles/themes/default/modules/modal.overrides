@@ -135,7 +135,7 @@
       box-shadow: none;
 
       .export-buttons {
-        padding-top: 20px;
+        padding: 20px 0;
         display: flex;
         justify-content: center;
       }
@@ -226,10 +226,15 @@
 
     // Map legend.
     .flexberry-export-map-command-dialog-legend-control-map {
+      .layer-legend {
+        display: inline-block;
+        vertical-align: top;
+        margin-bottom: 6px;
+      }
       .layer-legend-image-wrapper {
         float: left;
         height: inherit;
-        padding-right: 10px;
+        padding-right: 11px;
 
         .layer-legend-image {
           height: inherit;
@@ -246,14 +251,13 @@
   border: 1px solid #d4d4d5;
   width: 100%;
   height: 100%;
-  padding: 14px;
+  padding: 0;
   margin: 0;
   display: block;
   overflow: hidden;
 
   .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
     // Distance between map & it's caption (same as padding inside sheet of paper).
-    margin-bottom: 14px;
     text-align: center;
   }
 

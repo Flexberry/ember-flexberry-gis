@@ -143,7 +143,9 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     let height = this.get('height');
-    if (!Ember.isBlank(height)) {
+
+    // DynamicHeight for wms-legend. If legend is not json, height should be dynamic.
+    if (!Ember.isBlank(height) && !this.get('dynamicHeight')) {
       this.$(`.${this.flexberryClassNames.imageWrapper}`).css('height', height + 'px');
     }
   }
