@@ -421,7 +421,7 @@
 
 import Ember from &#x27;ember&#x27;;
 import layout from &#x27;../../templates/components/geometry-add-modes/draw&#x27;;
-import turfCombine from &#x27;npm:@turf/combine&#x27;;
+import jsts from &#x27;npm:jsts&#x27;;
 
 /**
   Component&#x27;s CSS-classes names.
@@ -993,15 +993,36 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
           return;
         }
 
-        var featureCollection = {
-          type: &#x27;FeatureCollection&#x27;,
-          features: [layer.toGeoJSON(), e.layer.toGeoJSON()]
-        };
+        let targeLayer = layer.toJsts(L.CRS.EPSG4326);
+        let sourceLayer = e.layer.toJsts(L.CRS.EPSG4326);
+        let combinedLeaflet;
+        let newHole = sourceLayer.within(targeLayer);
+        if (newHole) {
+          combinedLeaflet = targeLayer.difference(sourceLayer);
+        } else {
+          combinedLeaflet = targeLayer.union(sourceLayer);
+        }
 
-        let fcCombined = turfCombine.default(featureCollection);
-        const featureCombined = L.geoJSON(fcCombined);
-        const combinedLeaflet = featureCombined.getLayers()[0];
-        layer.setLatLngs(combinedLeaflet.getLatLngs());
+        let geojsonWriter = new jsts.io.GeoJSONWriter();
+        let unionres = geojsonWriter.write(combinedLeaflet);
+        let geoJSON = L.geoJSON(unionres);
+
+        let latLngs = geoJSON.getLayers()[0].getLatLngs();
+        let numGeom = targeLayer.getNumGeometries();
+        let holes = false;
+        for (var i = 0; i &lt; numGeom; i++) {
+          let geometry = targeLayer.getGeometryN(0);
+          holes = !Ember.isNone(geometry._holes) &amp;&amp; Ember.isArray(geometry._holes) &amp;&amp; geometry._holes.length &gt; 0;
+          if (holes) {
+            break;
+          }
+        }
+
+        if (newHole &amp;&amp; !holes) {
+          latLngs = [latLngs];
+        }
+
+        layer.setLatLngs(latLngs);
         layer.disableEdit();
         layer.enableEdit();
 
