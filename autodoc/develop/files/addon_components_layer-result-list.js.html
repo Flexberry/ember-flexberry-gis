@@ -488,6 +488,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   layout,
 
   /**
+    Flag indicates whether result layers support highlighting
+    @property enableHighlight
+    @type Boolean
+    @default false
+  */
+  enableHighlight: false,
+
+  /**
     FeatureGroup to display layer from selectedFeature.
 
     @property serviceLayer
@@ -524,6 +532,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @default null
   */
   _displayResults: null,
+
+  /**
+    Ready-made results.each.features collected from all _displayResults for display without promises.
+
+    @property selectedFeatures
+    @type Ember.A()
+    @default []
+  */
+  selectedFeatures: [],
 
   /**
     Flag: indicates when results contains no data.
@@ -587,8 +604,24 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @default null
   */
   exportResult: null,
-
   actions: {
+    /**
+      Сlears the highlight state of the features list.
+      @method actions.clearHighlights
+    */
+    clearHighlights(result, clickedFeature) {
+      if (!result || !clickedFeature) {
+        return;
+      }
+
+      let previousHighlightedFeature = this.get(&#x27;selectedFeatures&#x27;).find(feature =&gt; feature !== clickedFeature &amp;&amp; Ember.get(feature, &#x27;highlight&#x27;));
+      if (previousHighlightedFeature) {
+        Ember.set(previousHighlightedFeature, &#x27;highlight&#x27;, false);
+      }
+
+      Ember.set(clickedFeature, &#x27;highlight&#x27;, !clickedFeature.highlight);
+      Ember.set(result, &#x27;highlight&#x27;, true);
+    },
     /**
       Show\hide links list (if present).
       @method actions.toggleLinks
@@ -815,6 +848,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               editForms: Ember.A(),
               features: this.get(&#x27;maxResultsCount&#x27;) ? Ember.A(features).slice(0, this.get(&#x27;maxResultsCount&#x27;)) : Ember.A(features),
               maxResultsLimitOverage: this.get(&#x27;maxResultsCount&#x27;) &amp;&amp; features.length &gt; this.get(&#x27;maxResultsCount&#x27;) ? true : false,
+              highlight: false,
               layerModel: layerModel,
               hasListForm: hasListForm,
               layerIds: layerIds,
@@ -991,45 +1025,23 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           }
         });
 
-        displayResults = displayResults.sort((a, b) =&gt; {
-          // If displayValue is empty, it should be on the bottom.
-          if (!a.name) {
-            return 1;
-          }
-
-          if (!b.name) {
-            return -1;
-          }
-
-          if (a.name &gt; b.name) {
-            return 1;
-          }
-
-          if (a.name &lt; b.name) {
-            return -1;
-          }
-
-          return 0;
-        });
+        displayResults = displayResults.sort((a, b) =&gt; b.layerModel.get(&#x27;index&#x27;) - a.layerModel.get(&#x27;index&#x27;));
 
         this.set(&#x27;_displayResults&#x27;, displayResults);
         this.set(&#x27;_noData&#x27;, displayResults.length === 0);
         this.set(&#x27;_showLoader&#x27;, false);
+        this.set(&#x27;selectedFeatures&#x27;, [...displayResults.map(result =&gt; result.features)].flat(1));
+
         if (this.get(&#x27;favoriteMode&#x27;) !== true &amp;&amp; Ember.isNone(this.get(&#x27;share&#x27;))) {
-          if (displayResults.length === 1) {
-            this.send(&#x27;zoomTo&#x27;, displayResults.objectAt(0).features);
-          }
+          this.send(&#x27;zoomTo&#x27;, this.get(&#x27;selectedFeatures&#x27;), this.get(&#x27;enableHighlight&#x27;));
         } else if (!Ember.isNone(this.get(&#x27;share&#x27;))) {
-          if (displayResults.length === 1) {
-            this.send(&#x27;selectFeature&#x27;, displayResults.objectAt(0).features);
-          }
+          this.send(&#x27;selectFeature&#x27;, this.get(&#x27;selectedFeatures&#x27;), this.get(&#x27;enableHighlight&#x27;));
         }
       });
     }).catch((error) =&gt; {
       console.error(error);
     });
   })),
-
   /**
     Get an array of layer shapes id.
     @method _getFeatureShapeIds

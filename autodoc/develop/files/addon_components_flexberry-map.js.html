@@ -949,7 +949,6 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     if (this.get(&#x27;mainMap&#x27;)) {
       this.initServiceLayer(leafletMap);
-      this.initClickOnPanes(leafletMap);
 
       // Run search query if &#x27;queryFilter&#x27; is defined.
       let queryFilter = this.get(&#x27;queryFilter&#x27;);
@@ -1108,66 +1107,6 @@ let FlexberryMapComponent = Ember.Component.extend(
     if (this.get(&#x27;mainMap&#x27;)) {
       this.get(&#x27;mapApi&#x27;).addToApi(&#x27;leafletMap&#x27;, leafletMap);
     }
-  },
-
-  initClickOnPanes(leafletMap) {
-    let pane = leafletMap.getPane(&#x27;overlayPane&#x27;);
-    L.DomEvent.on(pane, &#x27;click&#x27;, function (e) {
-      if (e._stopped) { return; }
-
-      var target = e.target;
-
-      // Проблема с пробрасыванием кликов была только из-за введения разных canvas. Если клик попал на другой элемент, то работает стандартная логика
-      if (target.tagName.toLowerCase() !== &#x27;canvas&#x27;) {
-        return;
-      }
-
-      // в стандартные pane теперь попадают только всякие сервисные вещи, поэтому zoom проверять не будем
-      var point = leafletMap.mouseEventToLayerPoint(e);
-      let intersect = false;
-
-      const checkIntersect = (layer) =&gt; {
-        let innerLayerIntersect = false;
-        if (typeof (layer.eachLayer) === &#x27;function&#x27;) {
-          layer.eachLayer(function (l) {
-            innerLayerIntersect = innerLayerIntersect || checkIntersect(l);
-            if (innerLayerIntersect) {
-              return innerLayerIntersect;
-            }
-          });
-        } else {
-          if (typeof (layer._containsPoint) === &#x27;function&#x27;) {
-            innerLayerIntersect = innerLayerIntersect || layer._containsPoint(point);
-          }
-        }
-
-        return innerLayerIntersect;
-      };
-
-      leafletMap.eachLayer((l) =&gt; {
-        if (l.getPane() === pane) {
-          intersect = intersect || checkIntersect(l);
-        }
-      });
-
-      if (intersect) {
-        return;
-      }
-
-      var ev = new MouseEvent(e.type, e);
-      let removed = { node: target, pointerEvents: target.style.pointerEvents };
-      target.style.pointerEvents = &#x27;none&#x27;;
-      target = document.elementFromPoint(e.clientX, e.clientY);
-
-      if (target &amp;&amp; target !== pane &amp;&amp; target.parentElement &amp;&amp; target.parentElement.classList.value.indexOf(&#x27;leaflet-vectorLayer&#x27;) !== -1) {
-        let stopped = !target.dispatchEvent(ev);
-        if (stopped || ev._stopped) {
-          L.DomEvent.stop(e);
-        }
-      }
-
-      removed.node.style.pointerEvents = removed.pointerEvents;
-    });
   },
 
   /**

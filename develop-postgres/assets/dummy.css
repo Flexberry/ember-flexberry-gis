@@ -7369,7 +7369,7 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   flex-direction: row;
 }
 .layer-result-list .feature-result-item-caption {
-  padding-left: 10px;
+  padding-left: 8px;
   text-overflow: ellipsis;
   max-width: 80%;
   min-width: 350px;

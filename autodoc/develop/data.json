@@ -30032,13 +30032,24 @@
         {
             "file": "addon/components/feature-result-item.js",
             "line": 169,
+            "description": "Observes and handles changes in feature.highlight state\nChanges the border style of feature on the map",
+            "itemtype": "method",
+            "name": "highlightObserver",
+            "access": "private",
+            "tagname": "",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-result-item.js",
+            "line": 190,
             "description": "Reference to component's template.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 174,
+            "line": 195,
             "description": "Settings for display feature info.",
             "itemtype": "property",
             "name": "displaySettings",
@@ -30049,7 +30060,29 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 183,
+            "line": 204,
+            "description": "Setting indicating whether an component can be highlighted in layer-result-list (Only for upper layer features)",
+            "itemtype": "property",
+            "name": "highlightable",
+            "type": "bool",
+            "default": "false",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-result-item.js",
+            "line": 213,
+            "description": "Default feature.leaflet.style settings. (Uses for restore state after click events)",
+            "itemtype": "property",
+            "name": "defaultFeatureStyle",
+            "type": "Object",
+            "default": "null",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-result-item.js",
+            "line": 222,
             "description": "Feature's metadata.",
             "itemtype": "property",
             "name": "feature",
@@ -30059,7 +30092,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 191,
+            "line": 230,
             "description": "Current selected feature.",
             "itemtype": "property",
             "name": "feature",
@@ -30069,7 +30102,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 199,
+            "line": 238,
             "description": "Action button hasEditForm display.",
             "itemtype": "property",
             "name": "hasEditForm",
@@ -30080,7 +30113,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 208,
+            "line": 247,
             "description": "Flag: indicates whether submenu is visible.",
             "itemtype": "property",
             "name": "isSubmenu",
@@ -30091,14 +30124,41 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 217,
+            "line": 256,
             "description": "Initializes DOM-related component's properties.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 268,
+            "line": 307,
+            "description": "Preparation feature for highlighting.",
+            "itemtype": "method",
+            "name": "prepareFeatureForHighlighting",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-result-item.js",
+            "line": 334,
+            "description": "Collecting settings for executing a zoomToBounds function",
+            "itemtype": "method",
+            "name": "getLayerPropsForZoom",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-result-item.js",
+            "line": 357,
+            "description": "Highlight feature-result-items caption",
+            "itemtype": "method",
+            "name": "actions.highlightFeature",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-result-item.js",
+            "line": 373,
             "description": "Show\\hide submenu",
             "itemtype": "method",
             "name": "actions.onSubmenu",
@@ -30107,7 +30167,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 279,
+            "line": 384,
             "description": "Performs row editing.",
             "itemtype": "method",
             "name": "actions.onRowEdit",
@@ -30116,7 +30176,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 356,
+            "line": 451,
             "description": "Handles click on show/hide all intersection coordinates.",
             "itemtype": "method",
             "name": "actions.toggleShowAllCords",
@@ -30125,7 +30185,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 370,
+            "line": 465,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.selectFeature:method\"}}'selectFeature' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.selectFeature",
@@ -30134,7 +30194,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 378,
+            "line": 473,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.panTo:method\"}}'panTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.panTo",
@@ -30143,7 +30203,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 386,
+            "line": 481,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.zoomTo:method\"}}'zoomTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.zoomTo",
@@ -30152,7 +30212,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 394,
+            "line": 491,
             "description": "Show\\hide detailed feature info",
             "itemtype": "method",
             "name": "actions.showInfo",
@@ -30161,7 +30221,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 403,
+            "line": 500,
             "description": "Show\\hide links list (if present).",
             "itemtype": "method",
             "name": "actions.toggleLinks",
@@ -30170,7 +30230,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 411,
+            "line": 508,
             "description": "Process the specified method.",
             "itemtype": "method",
             "name": "actions.goToEditForm",
@@ -30191,7 +30251,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 424,
+            "line": 521,
             "description": "Show\\hide panel for seraching intersections.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.findIntersection",
@@ -30200,7 +30260,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 434,
+            "line": 531,
             "description": "Add feature to favorites list\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToFavorite",
@@ -30209,7 +30269,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 443,
+            "line": 540,
             "description": "Handles click on checkbox.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToCompareGeometries",
@@ -30218,7 +30278,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 452,
+            "line": 549,
             "description": "Pans and zooms to intersection object.",
             "itemtype": "method",
             "name": "actions.panToIntersection",
@@ -30227,7 +30287,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 461,
+            "line": 558,
             "description": "Zooms to intersection and add intersection object on map.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -30236,7 +30296,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 471,
+            "line": 568,
             "description": "Component's action invoking for select feature",
             "itemtype": "method",
             "name": "sendingActions.selectFeature",
@@ -30252,7 +30312,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 477,
+            "line": 574,
             "description": "Component's action invoking for feature zooming",
             "itemtype": "method",
             "name": "sendingActions.zoomTo",
@@ -30268,7 +30328,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 483,
+            "line": 580,
             "description": "Component's action invoking for feature pan",
             "itemtype": "method",
             "name": "sendingActions.panTo",
@@ -34901,7 +34961,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 578,
+            "line": 577,
             "description": "Run an array of prommis.",
             "params": [
                 {
@@ -34915,14 +34975,14 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 612,
+            "line": 611,
             "description": "Destroys DOM-related component's properties.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 629,
+            "line": 628,
             "description": "Performs some initialization before leaflet map will be initialized.",
             "params": [
                 {
@@ -34936,7 +34996,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 642,
+            "line": 641,
             "description": "Performs some clean up before leaflet map will be destroyed.",
             "params": [
                 {
@@ -34950,7 +35010,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 655,
+            "line": 654,
             "description": "Initializes leaflet map related properties.",
             "params": [
                 {
@@ -34964,7 +35024,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 756,
+            "line": 695,
             "description": "Destroys leaflet map.",
             "params": [
                 {
@@ -34978,7 +35038,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 806,
+            "line": 745,
             "description": "Initializes map's service layer.",
             "params": [
                 {
@@ -34992,7 +35052,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 819,
+            "line": 758,
             "description": "Destroys map's service layer.",
             "params": [
                 {
@@ -35006,7 +35066,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 834,
+            "line": 773,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) initialized.",
             "itemtype": "method",
             "name": "sendingActions.leafletInit",
@@ -35029,7 +35089,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 842,
+            "line": 781,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) destroyed.",
             "itemtype": "method",
             "name": "sendingActions.leafletDestroy",
@@ -35038,7 +35098,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 848,
+            "line": 787,
             "description": "Component's action invoking when map's service layer initialized.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerInit",
@@ -35054,7 +35114,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 855,
+            "line": 794,
             "description": "Component's action invoking when maps's service layer destroyed.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerDestroy",
@@ -35063,7 +35123,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 861,
+            "line": 800,
             "description": "Component's action invoking when query on map load finished.",
             "itemtype": "method",
             "name": "sendingActions.queryFinished",
@@ -35079,7 +35139,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 869,
+            "line": 808,
             "description": "Handles edit dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.edit:method\"}}'edit'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onEditDialogApprove",
@@ -38413,6 +38473,17 @@
         {
             "file": "addon/components/layer-result-list.js",
             "line": 73,
+            "description": "Flag indicates whether result layers support highlighting",
+            "itemtype": "property",
+            "name": "enableHighlight",
+            "type": "Boolean",
+            "default": "false",
+            "class": "LayerResultListComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layer-result-list.js",
+            "line": 81,
             "description": "FeatureGroup to display layer from selectedFeature.",
             "itemtype": "property",
             "name": "serviceLayer",
@@ -38423,7 +38494,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 82,
+            "line": 90,
             "description": "Leaflet map object for zoom and pan.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -38434,7 +38505,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 91,
+            "line": 99,
             "description": "Array of results for display, each result contains object with following properties\nlayerModel - MapLayer model\nfeatures - promise for array of GeoJSON features",
             "itemtype": "property",
             "name": "results",
@@ -38445,7 +38516,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 102,
+            "line": 110,
             "description": "Ready results for display without promise.",
             "itemtype": "property",
             "name": "_displayResults",
@@ -38456,7 +38527,18 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 111,
+            "line": 119,
+            "description": "Ready-made results.each.features collected from all _displayResults for display without promises.",
+            "itemtype": "property",
+            "name": "selectedFeatures",
+            "type": "Ember.A()",
+            "default": "[]",
+            "class": "LayerResultListComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layer-result-list.js",
+            "line": 128,
             "description": "Flag: indicates when results contains no data.",
             "itemtype": "property",
             "name": "_noData",
@@ -38467,7 +38549,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 120,
+            "line": 137,
             "description": "Flag: indicates when one or more results.features promises rejected.",
             "itemtype": "property",
             "name": "_hasError",
@@ -38478,7 +38560,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 129,
+            "line": 146,
             "description": "Current selected feature.",
             "itemtype": "property",
             "name": "_selectedFeature",
@@ -38489,7 +38571,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 138,
+            "line": 155,
             "description": "Flag: indicates whether to display links list (if present).",
             "itemtype": "property",
             "name": "_linksExpanded",
@@ -38500,7 +38582,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 147,
+            "line": 164,
             "description": "Action button hasListForm display.",
             "itemtype": "property",
             "name": "hasListForm",
@@ -38511,7 +38593,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 156,
+            "line": 173,
             "description": "Visibility of the export dialog.",
             "itemtype": "property",
             "name": "exportDialogVisible",
@@ -38522,7 +38604,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 165,
+            "line": 182,
             "description": "Object to search",
             "itemtype": "property",
             "name": "exportResult",
@@ -38533,7 +38615,16 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 175,
+            "line": 191,
+            "description": "Сlears the highlight state of the features list.",
+            "itemtype": "method",
+            "name": "actions.clearHighlights",
+            "class": "LayerResultListComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layer-result-list.js",
+            "line": 208,
             "description": "Show\\hide links list (if present).",
             "itemtype": "method",
             "name": "actions.toggleLinks",
@@ -38542,7 +38633,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 183,
+            "line": 216,
             "description": "Process the specified method.",
             "itemtype": "method",
             "name": "actions.goToListForm",
@@ -38563,7 +38654,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 196,
+            "line": 229,
             "description": "Action is sended to layer-result-list-action-handler.\nAction shows intersection panel.",
             "itemtype": "method",
             "name": "actions.findIntersection",
@@ -38578,7 +38669,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 206,
+            "line": 239,
             "description": "Action adds feature to favorites.",
             "itemtype": "method",
             "name": "actions.findIntersection",
@@ -38593,7 +38684,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 216,
+            "line": 249,
             "description": "Performs row editing.",
             "itemtype": "method",
             "name": "actions.editFeature",
@@ -38602,7 +38693,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 225,
+            "line": 258,
             "description": "Action adds feature to array for comparing geometries.",
             "itemtype": "method",
             "name": "actions.addToCompareGeometries",
@@ -38617,7 +38708,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 235,
+            "line": 268,
             "description": "Action zooms to intersection and shows object on map.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -38632,7 +38723,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 245,
+            "line": 278,
             "description": "Set the parameters of export and show the dialog.",
             "params": [
                 {
@@ -38646,7 +38737,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 278,
+            "line": 311,
             "description": "Checks model layer links and adds list and edit forms to result object.",
             "itemtype": "method",
             "name": "_processLayerLinkForDisplayResults",
@@ -38669,7 +38760,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 330,
+            "line": 363,
             "description": "Observer for passed results",
             "itemtype": "method",
             "name": "_resultObserver",
@@ -38678,7 +38769,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 616,
+            "line": 628,
             "description": "Get an array of layer shapes id.",
             "itemtype": "method",
             "name": "_getFeatureShapeIds",
@@ -48783,6 +48874,11 @@
                     "name": "feature",
                     "description": "Describes inner FeatureResultItem's feature object or array of it.",
                     "type": "Object"
+                },
+                {
+                    "name": "layerInteractive",
+                    "description": "Flag indicating whether to enable layer interactivity.",
+                    "type": "Boolean"
                 }
             ],
             "class": "LeafletZoomToFeatureMixin",
@@ -48790,7 +48886,7 @@
         },
         {
             "file": "addon/mixins/leaflet-zoom-to-feature.js",
-            "line": 53,
+            "line": 54,
             "description": "Select passed feature and zoom map to its layer bounds",
             "itemtype": "method",
             "name": "actions.zoomTo",
@@ -48799,6 +48895,11 @@
                     "name": "feature",
                     "description": "Describes inner FeatureResultItem's feature object or array of it.",
                     "type": "Object"
+                },
+                {
+                    "name": "layerInteractive",
+                    "description": "Flag indicating whether to enable layer interactivity.",
+                    "type": "Boolean"
                 }
             ],
             "class": "LeafletZoomToFeatureMixin",
@@ -48806,7 +48907,7 @@
         },
         {
             "file": "addon/mixins/leaflet-zoom-to-feature.js",
-            "line": 82,
+            "line": 84,
             "description": "Select passed feature and pan map to its layer centroid",
             "itemtype": "method",
             "name": "actions.panTo",
@@ -48822,7 +48923,7 @@
         },
         {
             "file": "addon/mixins/leaflet-zoom-to-feature.js",
-            "line": 105,
+            "line": 107,
             "description": "Clear selected features",
             "itemtype": "method",
             "name": "actions.clearSelected",
@@ -48831,7 +48932,7 @@
         },
         {
             "file": "addon/mixins/leaflet-zoom-to-feature.js",
-            "line": 119,
+            "line": 121,
             "description": "Set selected feature and add its layer to serviceLayer on map.",
             "itemtype": "method",
             "name": "_selectFeature",
@@ -48840,6 +48941,11 @@
                     "name": "feature",
                     "description": "Describes feature object or array of it.",
                     "type": "Object"
+                },
+                {
+                    "name": "layerInteractive",
+                    "description": "Flag indicating whether to enable layer interactivity.",
+                    "type": "Boolean"
                 }
             ],
             "access": "private",
@@ -48849,12 +48955,18 @@
         },
         {
             "file": "addon/mixins/leaflet-zoom-to-feature.js",
-            "line": 133,
+            "line": 136,
             "description": "Additional preparation of the selected layer.",
             "params": [
                 {
-                    "name": "Object",
-                    "description": "layer"
+                    "name": "layer",
+                    "description": "",
+                    "type": "Object"
+                },
+                {
+                    "name": "layerInteractive",
+                    "description": "Flag indicating whether to enable layer interactivity.",
+                    "type": "Boolean"
                 }
             ],
             "class": "LeafletZoomToFeatureMixin",
@@ -48862,7 +48974,7 @@
         },
         {
             "file": "addon/mixins/leaflet-zoom-to-feature.js",
-            "line": 143,
+            "line": 146,
             "description": "Action invoking when feature item was selected.",
             "itemtype": "method",
             "name": "sendingActions.featureSelected",
@@ -51670,7 +51782,7 @@
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/components/flexberry-map.js:578"
+            "line": " addon/components/flexberry-map.js:577"
         },
         {
             "message": "unknown tag: computed",
@@ -53190,11 +53302,11 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/feature-result-item.js:169"
+            "line": " addon/components/feature-result-item.js:190"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/feature-result-item.js:217"
+            "line": " addon/components/feature-result-item.js:256"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -53414,35 +53526,35 @@
         },
         {
             "message": "Missing item type\nRun an array of prommis.",
-            "line": " addon/components/flexberry-map.js:578"
+            "line": " addon/components/flexberry-map.js:577"
         },
         {
             "message": "Missing item type\nDestroys DOM-related component's properties.",
-            "line": " addon/components/flexberry-map.js:612"
+            "line": " addon/components/flexberry-map.js:611"
         },
         {
             "message": "Missing item type\nPerforms some initialization before leaflet map will be initialized.",
-            "line": " addon/components/flexberry-map.js:629"
+            "line": " addon/components/flexberry-map.js:628"
         },
         {
             "message": "Missing item type\nPerforms some clean up before leaflet map will be destroyed.",
-            "line": " addon/components/flexberry-map.js:642"
+            "line": " addon/components/flexberry-map.js:641"
         },
         {
             "message": "Missing item type\nInitializes leaflet map related properties.",
-            "line": " addon/components/flexberry-map.js:655"
+            "line": " addon/components/flexberry-map.js:654"
         },
         {
             "message": "Missing item type\nDestroys leaflet map.",
-            "line": " addon/components/flexberry-map.js:756"
+            "line": " addon/components/flexberry-map.js:695"
         },
         {
             "message": "Missing item type\nInitializes map's service layer.",
-            "line": " addon/components/flexberry-map.js:806"
+            "line": " addon/components/flexberry-map.js:745"
         },
         {
             "message": "Missing item type\nDestroys map's service layer.",
-            "line": " addon/components/flexberry-map.js:819"
+            "line": " addon/components/flexberry-map.js:758"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -53558,7 +53670,7 @@
         },
         {
             "message": "Missing item type\nSet the parameters of export and show the dialog.",
-            "line": " addon/components/layer-result-list.js:245"
+            "line": " addon/components/layer-result-list.js:278"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -53814,7 +53926,7 @@
         },
         {
             "message": "Missing item type\nAdditional preparation of the selected layer.",
-            "line": " addon/mixins/leaflet-zoom-to-feature.js:133"
+            "line": " addon/mixins/leaflet-zoom-to-feature.js:136"
         },
         {
             "message": "Missing item type\nService for Map loading from store",
