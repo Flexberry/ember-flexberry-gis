@@ -179,7 +179,7 @@ export default Ember.Component.extend({
         color: '#3388FF',
         fillColor: 'salmon'
       });
-      if (Ember.get(this.feature.leafletLayer, 'bringToFront')){
+      if (Ember.get(this.feature.leafletLayer, 'bringToFront')) {
         this.feature.leafletLayer.bringToFront();
       }
     } else {
@@ -317,10 +317,11 @@ export default Ember.Component.extend({
 
     this.set('defaultFeatureStyle', Object.assign({}, feature.leafletLayer.options));
 
-    if (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' || feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
+    if (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' ||
+        feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
       let layerTolerance = feature.layerModel.get('_leafletObject.options.renderer.options');
-      if (Ember.isPresent(layerTolerance)) {
-        Ember.set(feature.layerModel.get('_leafletObject.options.renderer.options'), 'tolerance' , 3);
+      if (Ember.isPresent(layerTolerance) && layerTolerance === 0) {
+        Ember.set(feature.layerModel.get('_leafletObject.options.renderer.options'), 'tolerance', 3);
       }
     }
 
