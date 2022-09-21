@@ -38815,7 +38815,7 @@ select.ui.dropdown {
   box-shadow: none;
 }
 .ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-settings-column .export-buttons {
-  padding-top: 20px;
+  padding: 20px 0;
   display: flex;
   justify-content: center;
 }
@@ -38879,10 +38879,15 @@ select.ui.dropdown {
 .ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-sheet-of-paper .flexberry-export-map-command-dialog-legend-control-map {
   margin-top: 10px;
 }
+.ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-legend-control-map .layer-legend {
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: 6px;
+}
 .ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-legend-control-map .layer-legend-image-wrapper {
   float: left;
   height: inherit;
-  padding-right: 10px;
+  padding-right: 11px;
 }
 .ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-legend-control-map .layer-legend-image-wrapper .layer-legend-image {
   height: inherit;
@@ -38892,13 +38897,12 @@ select.ui.dropdown {
   border: 1px solid #d4d4d5;
   width: 100%;
   height: 100%;
-  padding: 14px;
+  padding: 0;
   margin: 0;
   display: block;
   overflow: hidden;
 }
 .flexberry-export-map-command-dialog-sheet-of-paper .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
-  margin-bottom: 14px;
   text-align: center;
 }
 .flexberry-export-map-command-dialog-sheet-of-paper .flexberry-export-map-command-dialog-sheet-of-paper-map {
@@ -45611,7 +45615,7 @@ img.item-minus {
 }
 .ui.right.sidebar .ui.styled.accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-caption,
 .ui.right.sidebar .ui.styled.accordion .accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-caption {
-  color: #4D5F82;
+  color: #343A32;
   margin: 5px 0px 0px 5px;
   max-width: 80%;
   width: 80%;
