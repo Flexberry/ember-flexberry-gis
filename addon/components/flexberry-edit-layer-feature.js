@@ -241,6 +241,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
 
           layer.enableEdit(leafletMap);
+          layer.setStyle({
+            fillOpacity: 0.3
+          });
 
           leafletMap.off('editable:vertex:dragstart', this._startSnapping, this);
           layer.off('editable:vertex:dragend', this._updateLabels, [this, layer]);
@@ -1069,6 +1072,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
         this.get('leafletMap').fire(event + ':end', e);
         this.set('mode', 'Saved');
+
+        let _leafletObjectFirst = this.get('layerModel.layerModel._leafletObjectFirst');
+        if (!Ember.isNone(_leafletObjectFirst)) {
+          _leafletObjectFirst.setParams({ fake: Date.now() }, false);
+        }
+
         this.sendAction('editFeatureEnd');
       };
 
