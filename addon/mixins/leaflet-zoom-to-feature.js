@@ -20,6 +20,7 @@ export default Ember.Mixin.create({
 
       @method actions.selectFeature
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
+      @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
     */
     selectFeature(feature, layerInteractive) {
       let leafletMap = this.get('leafletMap');
@@ -54,6 +55,7 @@ export default Ember.Mixin.create({
       Select passed feature and zoom map to its layer bounds
       @method actions.zoomTo
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
+      @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
     */
     zoomTo(feature, layerInteractive) {
       let leafletMap = this.get('leafletMap');
@@ -121,6 +123,7 @@ export default Ember.Mixin.create({
 
     @method _selectFeature
     @param {Object} feature Describes feature object or array of it.
+    @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
     @private
   */
   _selectFeature(feature, layerInteractive) {
@@ -132,7 +135,8 @@ export default Ember.Mixin.create({
 
   /**
     Additional preparation of the selected layer.
-    @param Object layer
+    @param {Object} layer
+    @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
   */
   _prepareLayer(layer, layerInteractive) {
     layer.options.interactive = layerInteractive ? true : false;

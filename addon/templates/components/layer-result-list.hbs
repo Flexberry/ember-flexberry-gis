@@ -5,7 +5,7 @@
   {{t "components.layer-result-list.nodata"}}
   </div>
 {{else}}
-  {{#each _displayResults as |result resultId|}}
+  {{#each _displayResults as |result|}}
     <div class="feature-result-item-group">
     {{#if result.isIntersect}}
       <div class="feature-result-item-buttons hidden">
