@@ -276,8 +276,6 @@
   }
 
   &.map-only-mode {
-    padding: 0;
-
     .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
       display: none;
       margin-bottom: 0;
