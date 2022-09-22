@@ -787,6 +787,7 @@
   bottom: 67px;
   .flexberry-background-map-tool-div {
     .flexberry-background-map-tool {
+      position: absolute;
       padding-left: 9px;
       padding-top: 2px;
       border-radius: 3.5px;
