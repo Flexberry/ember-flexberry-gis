@@ -7151,6 +7151,7 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
   border-top-width: 0px;
 }
 .background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .secondary.menu {
+  border: none;
   min-height: 30px;
 }
 .background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .secondary.menu a.tab {
@@ -46854,6 +46855,7 @@ img.item-minus {
   bottom: 67px;
 }
 .background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .flexberry-background-map-tool {
+  position: absolute;
   padding-left: 9px;
   padding-top: 2px;
   border-radius: 3.5px;
