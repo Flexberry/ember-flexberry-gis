@@ -38918,9 +38918,6 @@ select.ui.dropdown {
   width: 100%;
   height: 100%;
 }
-.flexberry-export-map-command-dialog-sheet-of-paper.map-only-mode {
-  padding: 0;
-}
 .flexberry-export-map-command-dialog-sheet-of-paper.map-only-mode .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
   display: none;
   margin-bottom: 0;
