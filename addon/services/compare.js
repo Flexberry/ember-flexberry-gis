@@ -24,12 +24,14 @@ export default Ember.Service.extend({
     Left: {
       bgLayer: {},
       layers: [],
+      layerIds: [],
       groupLayersEnabled: [],
       childLayersEnabled: [],
     },
     Right: {
       bgLayer: {},
       layers: [],
+      layerIds: [],
       groupLayersEnabled: [],
       childLayersEnabled: [],
     },

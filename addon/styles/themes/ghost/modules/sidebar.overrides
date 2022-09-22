@@ -697,6 +697,7 @@
   bottom: 67px;
   .flexberry-background-map-tool-div {
     .flexberry-background-map-tool {
+      position: absolute;
       border-radius: 3.5px;
       right: 0;
       i.icon:before {

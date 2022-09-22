@@ -625,6 +625,7 @@
       border-top-width: 0px;
     }
     .secondary.menu {
+      border: none;
       min-height: 30px;
       a.tab {
         cursor: pointer;

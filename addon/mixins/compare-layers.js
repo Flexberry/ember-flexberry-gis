@@ -30,6 +30,7 @@ export default Ember.Mixin.create({
     if (existedLayers.length > 0) {
       existedLayers.forEach(l => l.layer.remove());
       Ember.set(layersSideSettings, 'layers', layersSideSettings.layers.filter(l => l.id !== layerId));
+      Ember.set(layersSideSettings, 'layerIds', layersSideSettings.layerIds.filter(l => l !== layerId));
     } else {
       if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
         const labelsOriginalLayer = layer.get('_leafletObject._labelsLayer');
@@ -44,6 +45,7 @@ export default Ember.Mixin.create({
         layer: leafletOriginalLayer.addTo(leafletMap)
       });
       Ember.set(layersSideSettings, 'layers', layersSideSettings.layers.map(l => l));
+      Ember.set(layersSideSettings, 'layerIds', [...layersSideSettings.layerIds, layerId]);
     }
 
     this.redrawSide(side);
@@ -62,12 +64,12 @@ export default Ember.Mixin.create({
     const isEnabled = !!sideGroupLayers.find(id => id === layer.get('id'));
     if (isEnabled) {
       sideGroupLayers = sideGroupLayers.filter(id => id !== layer.get('id'));
-      Ember.set(settings, 'groupLayersEnabled', sideGroupLayers);
+      Ember.set(settings, 'groupLayersEnabled', [...sideGroupLayers]);
       let disableLayers = sideChildLayers.filter(l => l.parentIds.includes(layer.get('id')));
       disableLayers.forEach((l) => this.setLayerBySide(l.layer, side, map));
     } else {
       sideGroupLayers.push(layer.get('id'));
-      Ember.set(settings, 'groupLayersEnabled', sideGroupLayers);
+      Ember.set(settings, 'groupLayersEnabled', [...sideGroupLayers]);
       let layersToEnable = sideChildLayers.filter(l => l.parentIds.includes(layer.get('id')) && this.parentLayersVisible(l.parentIds, side));
       layersToEnable.forEach((l) => this.setLayerBySide(l.layer, side, map));
     }
@@ -201,12 +203,14 @@ export default Ember.Mixin.create({
       Left: {
         bgLayer: {},
         layers: [],
+        layerIds: [],
         groupLayersEnabled: [],
         childLayersEnabled: [],
       },
       Right: {
         bgLayer: {},
         layers: [],
+        layerIds: [],
         groupLayersEnabled: [],
         childLayersEnabled: [],
       }
