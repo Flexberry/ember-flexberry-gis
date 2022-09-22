@@ -45300,7 +45300,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 52,
+            "line": 54,
             "description": "Toggle group layer on selected side",
             "params": [
                 {
@@ -45324,7 +45324,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 76,
+            "line": 78,
             "description": "Toggle child layer visibility on selected side",
             "params": [
                 {
@@ -45348,7 +45348,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 108,
+            "line": 110,
             "description": "Recursive get all parent layer ids",
             "params": [
                 {
@@ -45370,7 +45370,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 124,
+            "line": 126,
             "description": "Check if all parent layers are visible.",
             "params": [
                 {
@@ -45392,7 +45392,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 136,
+            "line": 138,
             "description": "Set background layer by selected side",
             "params": [
                 {
@@ -45416,7 +45416,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 156,
+            "line": 158,
             "description": "Get opposite side",
             "params": [
                 {
@@ -45433,7 +45433,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 165,
+            "line": 167,
             "description": "Refresh sideBySide side layers",
             "params": [
                 {
@@ -45447,7 +45447,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 183,
+            "line": 185,
             "description": "Method to refresh compare mode",
             "params": [
                 {
@@ -45461,7 +45461,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 218,
+            "line": 222,
             "description": "Set background or tree side",
             "params": [
                 {
@@ -50093,14 +50093,14 @@
         },
         {
             "file": "addon/services/compare.js",
-            "line": 38,
+            "line": 40,
             "description": "Current selected side",
             "class": "LayersStylesRendererService",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/services/compare.js",
-            "line": 43,
+            "line": 45,
             "description": "Current selected background side",
             "class": "LayersStylesRendererService",
             "module": "ember-flexberry-gis"
@@ -52014,15 +52014,15 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/compare-layers.js:108"
+            "line": " addon/mixins/compare-layers.js:110"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/compare-layers.js:124"
+            "line": " addon/mixins/compare-layers.js:126"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/compare-layers.js:156"
+            "line": " addon/mixins/compare-layers.js:158"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -53842,39 +53842,39 @@
         },
         {
             "message": "Missing item type\nToggle group layer on selected side",
-            "line": " addon/mixins/compare-layers.js:52"
+            "line": " addon/mixins/compare-layers.js:54"
         },
         {
             "message": "Missing item type\nToggle child layer visibility on selected side",
-            "line": " addon/mixins/compare-layers.js:76"
+            "line": " addon/mixins/compare-layers.js:78"
         },
         {
             "message": "Missing item type\nRecursive get all parent layer ids",
-            "line": " addon/mixins/compare-layers.js:108"
+            "line": " addon/mixins/compare-layers.js:110"
         },
         {
             "message": "Missing item type\nCheck if all parent layers are visible.",
-            "line": " addon/mixins/compare-layers.js:124"
+            "line": " addon/mixins/compare-layers.js:126"
         },
         {
             "message": "Missing item type\nSet background layer by selected side",
-            "line": " addon/mixins/compare-layers.js:136"
+            "line": " addon/mixins/compare-layers.js:138"
         },
         {
             "message": "Missing item type\nGet opposite side",
-            "line": " addon/mixins/compare-layers.js:156"
+            "line": " addon/mixins/compare-layers.js:158"
         },
         {
             "message": "Missing item type\nRefresh sideBySide side layers",
-            "line": " addon/mixins/compare-layers.js:165"
+            "line": " addon/mixins/compare-layers.js:167"
         },
         {
             "message": "Missing item type\nMethod to refresh compare mode",
-            "line": " addon/mixins/compare-layers.js:183"
+            "line": " addon/mixins/compare-layers.js:185"
         },
         {
             "message": "Missing item type\nSet background or tree side",
-            "line": " addon/mixins/compare-layers.js:218"
+            "line": " addon/mixins/compare-layers.js:222"
         },
         {
             "message": "Missing item type\nExecutes component's DOM-related logic.",
@@ -53990,11 +53990,11 @@
         },
         {
             "message": "Missing item type\nCurrent selected side",
-            "line": " addon/services/compare.js:38"
+            "line": " addon/services/compare.js:40"
         },
         {
             "message": "Missing item type\nCurrent selected background side",
-            "line": " addon/services/compare.js:43"
+            "line": " addon/services/compare.js:45"
         },
         {
             "message": "Missing item type\nInitializes service.",

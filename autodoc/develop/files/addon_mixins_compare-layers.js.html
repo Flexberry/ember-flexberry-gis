@@ -447,6 +447,7 @@ export default Ember.Mixin.create({
     if (existedLayers.length &gt; 0) {
       existedLayers.forEach(l =&gt; l.layer.remove());
       Ember.set(layersSideSettings, &#x27;layers&#x27;, layersSideSettings.layers.filter(l =&gt; l.id !== layerId));
+      Ember.set(layersSideSettings, &#x27;layerIds&#x27;, layersSideSettings.layerIds.filter(l =&gt; l !== layerId));
     } else {
       if (layer.get(&#x27;settingsAsObject.labelSettings.signMapObjects&#x27;)) {
         const labelsOriginalLayer = layer.get(&#x27;_leafletObject._labelsLayer&#x27;);
@@ -461,6 +462,7 @@ export default Ember.Mixin.create({
         layer: leafletOriginalLayer.addTo(leafletMap)
       });
       Ember.set(layersSideSettings, &#x27;layers&#x27;, layersSideSettings.layers.map(l =&gt; l));
+      Ember.set(layersSideSettings, &#x27;layerIds&#x27;, [...layersSideSettings.layerIds, layerId]);
     }
 
     this.redrawSide(side);
@@ -479,12 +481,12 @@ export default Ember.Mixin.create({
     const isEnabled = !!sideGroupLayers.find(id =&gt; id === layer.get(&#x27;id&#x27;));
     if (isEnabled) {
       sideGroupLayers = sideGroupLayers.filter(id =&gt; id !== layer.get(&#x27;id&#x27;));
-      Ember.set(settings, &#x27;groupLayersEnabled&#x27;, sideGroupLayers);
+      Ember.set(settings, &#x27;groupLayersEnabled&#x27;, [...sideGroupLayers]);
       let disableLayers = sideChildLayers.filter(l =&gt; l.parentIds.includes(layer.get(&#x27;id&#x27;)));
       disableLayers.forEach((l) =&gt; this.setLayerBySide(l.layer, side, map));
     } else {
       sideGroupLayers.push(layer.get(&#x27;id&#x27;));
-      Ember.set(settings, &#x27;groupLayersEnabled&#x27;, sideGroupLayers);
+      Ember.set(settings, &#x27;groupLayersEnabled&#x27;, [...sideGroupLayers]);
       let layersToEnable = sideChildLayers.filter(l =&gt; l.parentIds.includes(layer.get(&#x27;id&#x27;)) &amp;&amp; this.parentLayersVisible(l.parentIds, side));
       layersToEnable.forEach((l) =&gt; this.setLayerBySide(l.layer, side, map));
     }
@@ -618,12 +620,14 @@ export default Ember.Mixin.create({
       Left: {
         bgLayer: {},
         layers: [],
+        layerIds: [],
         groupLayersEnabled: [],
         childLayersEnabled: [],
       },
       Right: {
         bgLayer: {},
         layers: [],
+        layerIds: [],
         groupLayersEnabled: [],
         childLayersEnabled: [],
       }

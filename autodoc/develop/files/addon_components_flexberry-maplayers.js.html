@@ -853,8 +853,8 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     /**
      * Number of enabled layers on each side
      */
-    compareLayersCount: Ember.computed(&#x27;compare.side&#x27;, &#x27;compare.compareState.Left.layers.[]&#x27;, &#x27;compare.compareState.Right.layers.[]&#x27;, function() {
-      return this.get(&#x60;compare.compareState.${this.get(&#x27;compare.side&#x27;)}.layers&#x60;).length;
+    compareLayersCount: Ember.computed(&#x27;compare.side&#x27;, &#x27;compare.compareState.Left.layerIds.[]&#x27;, &#x27;compare.compareState.Right.layerIds.[]&#x27;, function() {
+      return this.get(&#x60;compare.compareState.${this.get(&#x27;compare.side&#x27;)}.layerIds&#x60;).length;
     }),
 
     /**
