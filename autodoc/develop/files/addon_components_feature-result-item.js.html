@@ -784,7 +784,7 @@ export default Ember.Component.extend({
           this.send(&#x27;toggleLinks&#x27;);
         }
 
-        this.get(&#x27;element&#x27;).scrollIntoView({ alignToTop: true, behavior: &#x27;smooth&#x27; });
+        this.get(&#x27;element&#x27;).scrollIntoView({ behavior: &#x27;smooth&#x27;, block: &#x27;start&#x27;, inline: &#x27;nearest&#x27; });
       }
     },
     /**
