@@ -37,6 +37,7 @@
 // ====== RGIS ========
 .layer-result-list {
   padding-top: 0px;
+  overscroll-behavior: contain;
   .ui.fluid.accordion.flexberry-toggler .accordion.flexberry-toggler {
     border: none;
   }
