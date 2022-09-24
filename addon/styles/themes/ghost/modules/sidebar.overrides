@@ -399,7 +399,7 @@
       left: 40px;
       width: 100%;
       font-size: 0;
-      
+
       [class^="icon-guideline-"] {
         font-size: 20px;
         color: @textColor;
@@ -626,7 +626,9 @@
   .ui.right.sidebar.tabbar {
     position: absolute;
     padding-top: 70px !important;
-    padding-left: 20px !important;
+    .ui.tab:not(.search):not(.identify) {
+      padding-left: 20px !important;
+    }
     top: 0px;
     z-index: 890;
     visibility: visible;
@@ -645,11 +647,12 @@
     transition: left 0.5s;
 
     .ui.tab {
-      padding: 10px;
+      padding: 0px;
       color: @textColor;
 
       h3 {
         font-weight: normal;
+        margin: 40px 30px 15px 30px;
       }
     }
 
@@ -941,7 +944,11 @@
   .layer-result-list {
     overflow-y: auto;
     overflow-x: hidden;
+    padding: 20px;
     height: ~"calc(100% - 140px)" !important;
+  }
+  .active {
+
   }
   .layer-result-list .nodata {
     margin-top: 15px;

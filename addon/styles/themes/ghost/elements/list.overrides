@@ -37,6 +37,8 @@
 // ====== RGIS ========
 .layer-result-list {
   padding-top: 0px;
+  overscroll-behavior: contain;
+
   .ui.fluid.accordion.flexberry-toggler .accordion.flexberry-toggler {
     border: none;
   }
@@ -85,11 +87,21 @@
   }
 
   .flexberry-toggler-content {
+    overscroll-behavior: contain;
+
     .item:not(.icon):first-child {
       .feature-result-item-title {
         padding-top: 12px;
       }
     }
+    .item:not(.icon).feature-result-item.highlight {
+      background: #f4f8fb;
+      margin-left: -50px;
+      width: 500px;
+      padding-left: 50px;
+      margin-top: 20px;
+    }
+
     .item:not(.icon) {
       box-shadow: none;
       padding: 0;

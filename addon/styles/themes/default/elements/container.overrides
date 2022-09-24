@@ -744,6 +744,8 @@ div.measure-drag-panel {
 
 .flexberry-identify-panel {
   background: #fff none;
+  margin-bottom: 10px;
+
   .button {
     border-radius: 5px;
   }
