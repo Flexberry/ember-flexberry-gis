@@ -91,6 +91,10 @@
         padding-top: 12px;
       }
     }
+
+    .item:not(.icon):last-child{
+      margin-bottom: 10px;
+    }
     .item:not(.icon) {
       box-shadow: none;
       padding: 0;

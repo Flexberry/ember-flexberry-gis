@@ -3,7 +3,7 @@
     <div class="ui small active loader"></div>
   {{/if}}
   <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo" on="click"}}>
-    <i class="icon-guideline-navigate-arrow{{if expanded '-down'}}"></i>
+    <i class="icon-guideline-navigate-arrow{{if infoExpanded '-down'}}"></i>
   </a>
   {{#if favoriteMode}}
     {{flexberry-ddau-checkbox
@@ -123,8 +123,8 @@
     <label>{{get feature displayProperty}}</label>
   </div>
 </div>
-<div class="feature-result-item-content content {{if expanded "visible" "hidden"}}">
-  {{#if expanded}}
+<div class="feature-result-item-content content {{if infoExpanded "visible" "hidden"}}">
+  {{#if infoExpanded}}
       {{#each-in feature.properties as |propertyName propertyValue|}}
         {{#if (not (array-contains _excludedProperties propertyName))}}
           <div class="feature-div-property-name">

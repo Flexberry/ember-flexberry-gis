@@ -89,11 +89,11 @@ export default Ember.Component.extend({
   /**
     Flag: indicates whether to display detailed feature info.
 
-    @property _infoExpanded
+    @property infoExpanded
     @type boolean
     @default false
    */
-  _infoExpanded: false,
+  infoExpanded: false,
 
   /**
     Flag: indicates whether to display links list (if present).
@@ -137,22 +137,6 @@ export default Ember.Component.extend({
     let currentLocale = this.get('i18n.locale');
     let localizedProperties = this.get(`displaySettings.localizedProperties.${currentLocale}`) || {};
     return localizedProperties;
-  }),
-
-  /**
-    Flag: indicates whether to display detailed feature info.
-
-    @property expanded
-    @type boolean
-    @readonly
-   */
-  expanded: Ember.computed('infoExpanded', '_infoExpanded', function () {
-    if (this.get('infoExpanded')) {
-      this.set('infoExpanded', false);
-      this.set('_infoExpanded', true);
-    }
-
-    return this.get('_infoExpanded');
   }),
 
   /**
@@ -353,6 +337,16 @@ export default Ember.Component.extend({
     return { bounds, leafletMap, minZoom, maxZoom };
   },
 
+  didRender() {
+    this._super(...arguments);
+    if (this.get('feature.highlight') && this.get('infoExpanded')) {
+      this.$(this.element).closest('.layer-result-list')[0].scrollTo({
+        top: this.$(this.element)[0].offsetTop,
+        left: 0,
+        behavior: 'smooth'
+      });
+    }
+  },
   actions: {
     /**
       Highlight feature-result-items caption
@@ -362,12 +356,10 @@ export default Ember.Component.extend({
     highlightFeature(clickedFeature) {
       this.sendAction('clearHighlights', clickedFeature); // clear other highlight states of feature-result-items in _displayResults. Set the new highlight state
       if (this.get('feature.highlight')) {
-        if (!this.get('expanded')) { // open feature-result-item properties
-          this.send('showInfo');
-          this.send('toggleLinks');
+        if (!this.get('infoExpanded')) { // open feature-result-item properties
+          this.set('infoExpanded', true);
+          this.set('_linksExpanded', true);
         }
-
-        this.get('element').scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
       }
     },
     /**
@@ -493,7 +485,8 @@ export default Ember.Component.extend({
       @method actions.showInfo
      */
     showInfo() {
-      this.set('_infoExpanded', !this.get('_infoExpanded'));
+      Ember.set(this.get('feature'), 'highlight', false);
+      this.set('infoExpanded', !this.get('infoExpanded'));
       this.set('_linksExpanded', false);
     },
 
