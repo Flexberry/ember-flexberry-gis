@@ -506,11 +506,11 @@ export default Ember.Component.extend({
   /**
     Flag: indicates whether to display detailed feature info.
 
-    @property _infoExpanded
+    @property infoExpanded
     @type boolean
     @default false
    */
-  _infoExpanded: false,
+  infoExpanded: false,
 
   /**
     Flag: indicates whether to display links list (if present).
@@ -554,22 +554,6 @@ export default Ember.Component.extend({
     let currentLocale = this.get(&#x27;i18n.locale&#x27;);
     let localizedProperties = this.get(&#x60;displaySettings.localizedProperties.${currentLocale}&#x60;) || {};
     return localizedProperties;
-  }),
-
-  /**
-    Flag: indicates whether to display detailed feature info.
-
-    @property expanded
-    @type boolean
-    @readonly
-   */
-  expanded: Ember.computed(&#x27;infoExpanded&#x27;, &#x27;_infoExpanded&#x27;, function () {
-    if (this.get(&#x27;infoExpanded&#x27;)) {
-      this.set(&#x27;infoExpanded&#x27;, false);
-      this.set(&#x27;_infoExpanded&#x27;, true);
-    }
-
-    return this.get(&#x27;_infoExpanded&#x27;);
   }),
 
   /**
@@ -770,6 +754,16 @@ export default Ember.Component.extend({
     return { bounds, leafletMap, minZoom, maxZoom };
   },
 
+  didRender() {
+    this._super(...arguments);
+    if (this.get(&#x27;feature.highlight&#x27;) &amp;&amp; this.get(&#x27;infoExpanded&#x27;)) {
+      this.$(this.element).closest(&#x27;.layer-result-list&#x27;)[0].scrollTo({
+        top: this.$(this.element)[0].offsetTop,
+        left: 0,
+        behavior: &#x27;smooth&#x27;
+      });
+    }
+  },
   actions: {
     /**
       Highlight feature-result-items caption
@@ -779,12 +773,10 @@ export default Ember.Component.extend({
     highlightFeature(clickedFeature) {
       this.sendAction(&#x27;clearHighlights&#x27;, clickedFeature); // clear other highlight states of feature-result-items in _displayResults. Set the new highlight state
       if (this.get(&#x27;feature.highlight&#x27;)) {
-        if (!this.get(&#x27;expanded&#x27;)) { // open feature-result-item properties
-          this.send(&#x27;showInfo&#x27;);
-          this.send(&#x27;toggleLinks&#x27;);
+        if (!this.get(&#x27;infoExpanded&#x27;)) { // open feature-result-item properties
+          this.set(&#x27;infoExpanded&#x27;, true);
+          this.set(&#x27;_linksExpanded&#x27;, true);
         }
-
-        this.get(&#x27;element&#x27;).scrollIntoView({ behavior: &#x27;smooth&#x27;, block: &#x27;start&#x27;, inline: &#x27;nearest&#x27; });
       }
     },
     /**
@@ -910,7 +902,8 @@ export default Ember.Component.extend({
       @method actions.showInfo
      */
     showInfo() {
-      this.set(&#x27;_infoExpanded&#x27;, !this.get(&#x27;_infoExpanded&#x27;));
+      Ember.set(this.get(&#x27;feature&#x27;), &#x27;highlight&#x27;, false);
+      this.set(&#x27;infoExpanded&#x27;, !this.get(&#x27;infoExpanded&#x27;));
       this.set(&#x27;_linksExpanded&#x27;, false);
     },
 
