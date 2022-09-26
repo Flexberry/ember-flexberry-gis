@@ -13,7 +13,7 @@
       </a>
   </div>
   {{help-popup variation="very wide" position="right center" htmlMessage="<div class='content' style='display: inline-block'><i class=\"help icon-guideline-circle-problem\" style=\"position: absolute; top:15px; left: 15px;\"></i><p style=\"margin-left: 35px\">Выберите в списке слои для отображения на частях карты, используя для переключения вкладки \"Левая часть\" и \"Правая часть\". Для настройки подложки нажмите кнопку \"Подложки\" и, используя для переключения вкладки \"Левая часть\" и \"Правая часть\", выберите те, которые необходимо отображать.</p></div>"}}
-  <p>ВСЕГО ПОКАЗАНО СЛОЁВ: {{compareLayersCount}}</p>
+  <p class="all-layers">ВСЕГО ПОКАЗАНО СЛОЁВ: {{compareLayersCount}}</p>
 {{/if}}
   {{#yield-slot "above-tree" (block-params this)}}
     {{yield}}

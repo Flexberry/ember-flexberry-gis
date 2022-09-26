@@ -634,8 +634,9 @@
         font-weight: normal;
         border-bottom: none;
         padding: 0 10px;
+        line-height: 30px;
         &.active {
-          color: #000000;
+          color: #3B4256;
           font-weight: normal;
         }
       }

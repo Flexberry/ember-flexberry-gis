@@ -723,6 +723,9 @@
       bottom: -1px;
       right: 0;
       padding-bottom: 4px;
+      &.tabs {
+        padding-top: 0px;
+      }
       .picture.active {
         border-width: 2px;
       }
@@ -967,11 +970,20 @@
   .ui.help-button {
     float: right;
     margin-right: 17px;
+    transform: translate(0px, -15%);
+    i {
+      color: #3B4256;
+      font-size: 30px;
+    }
+  }
+  .all-layers {
+    color: #848E99;
   }
   .ui.icon.close {
     float: right;
     margin-right: 20px;
     margin-left: 9px;
+    margin-top: 9px;
     background: @whitecolor;
     border: none;
     height: 32px;
@@ -1001,7 +1013,7 @@
       font-weight: normal;
       border-bottom: none;
       &.active {
-        color: #000000;
+        color: #3B4256;
         font-weight: normal;
       }
     }
