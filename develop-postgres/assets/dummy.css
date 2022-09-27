@@ -7161,9 +7161,10 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
   font-weight: normal;
   border-bottom: none;
   padding: 0 10px;
+  line-height: 30px;
 }
 .background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .secondary.menu a.tab.active {
-  color: #000000;
+  color: #3B4256;
   font-weight: normal;
 }
 .background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div a:not('.tab') {
@@ -46881,6 +46882,9 @@ img.item-minus {
   right: 0;
   padding-bottom: 4px;
 }
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .main-background-layers.tabs {
+  padding-top: 0px;
+}
 .background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .main-background-layers .picture.active {
   border-width: 2px;
 }
@@ -47195,11 +47199,20 @@ img.item-minus {
 .ui.tab.compare .ui.help-button {
   float: right;
   margin-right: 17px;
+  transform: translate(0px, -15%);
+}
+.ui.tab.compare .ui.help-button i {
+  color: #3B4256;
+  font-size: 30px;
+}
+.ui.tab.compare .all-layers {
+  color: #848E99;
 }
 .ui.tab.compare .ui.icon.close {
   float: right;
   margin-right: 20px;
   margin-left: 9px;
+  margin-top: 9px;
   background: #fff;
   border: none;
   height: 32px;
@@ -47231,7 +47244,7 @@ img.item-minus {
   border-bottom: none;
 }
 .ui.tab.compare .ui.pointing.group.secondary.menu a.item.active {
-  color: #000000;
+  color: #3B4256;
   font-weight: normal;
 }
 .ui.tab.compare .flexberry-maplayers {

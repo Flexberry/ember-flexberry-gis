@@ -623,6 +623,7 @@ export default Ember.Mixin.create({
         layerIds: [],
         groupLayersEnabled: [],
         childLayersEnabled: [],
+        sidebarState: [],
       },
       Right: {
         bgLayer: {},
@@ -630,6 +631,42 @@ export default Ember.Mixin.create({
         layerIds: [],
         groupLayersEnabled: [],
         childLayersEnabled: [],
+        sidebarState: [],
+      }
+    });
+  },
+
+  /**
+   * Function to save and update sidebar state on each side
+   * @param {String} side Next side
+   */
+  updateSidebar(side) {
+    let currentSide = this.getOppositeSide(side);
+    let currentState = [];
+
+    // Get sidebar tree
+    const tree = Ember.$(&#x27;div[class^=&quot;treenodeember&quot;]&#x27;, &#x27;.flexberry-maplayers&#x27;);
+
+    // Get sidebar state and close accordions
+    tree.each(function (index) {
+      let element = Ember.$(this);
+      currentState.push({
+        &#x27;active&#x27;: Ember.$(&#x27;.title.active&#x27;, element).length &gt; 0,
+        &#x27;index&#x27;: index
+      });
+      if (Ember.$(&#x27;.title.active&#x27;, element).length &gt; 0) {
+        Ember.$(&#x27;.title.active&#x27;, element)[0].click();
+      }
+    });
+
+    // Save sidebar state
+    this.set(&#x60;compare.compareState.${currentSide}.sidebarState&#x60;, currentState);
+
+    // Get next side state and open selected accordions
+    let stateToSet = this.get(&#x60;compare.compareState.${side}.sidebarState&#x60;);
+    stateToSet.forEach(node =&gt; {
+      if (node.active) {
+        Ember.$(&#x27;.title&#x27;, tree[node.index])[0].click();
       }
     });
   },
@@ -642,6 +679,10 @@ export default Ember.Mixin.create({
      * @param {String} value Left or Right
      */
     setSide(variable, value) {
+      if (variable === &#x27;side&#x27;) {
+        this.updateSidebar(value);
+      }
+
       this.set(&#x60;compare.${variable}&#x60;, value);
     }
   }

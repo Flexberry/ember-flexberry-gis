@@ -45451,6 +45451,20 @@
         {
             "file": "addon/mixins/compare-layers.js",
             "line": 222,
+            "description": "Function to save and update sidebar state on each side",
+            "params": [
+                {
+                    "name": "side",
+                    "description": "Next side",
+                    "type": "String"
+                }
+            ],
+            "class": "DynamicPropertiesMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/compare-layers.js",
+            "line": 259,
             "description": "Set background or tree side",
             "params": [
                 {
@@ -50082,14 +50096,14 @@
         },
         {
             "file": "addon/services/compare.js",
-            "line": 40,
+            "line": 42,
             "description": "Current selected side",
             "class": "LayersStylesRendererService",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/services/compare.js",
-            "line": 45,
+            "line": 47,
             "description": "Current selected background side",
             "class": "LayersStylesRendererService",
             "module": "ember-flexberry-gis"
@@ -53862,8 +53876,12 @@
             "line": " addon/mixins/compare-layers.js:185"
         },
         {
-            "message": "Missing item type\nSet background or tree side",
+            "message": "Missing item type\nFunction to save and update sidebar state on each side",
             "line": " addon/mixins/compare-layers.js:222"
+        },
+        {
+            "message": "Missing item type\nSet background or tree side",
+            "line": " addon/mixins/compare-layers.js:259"
         },
         {
             "message": "Missing item type\nExecutes component's DOM-related logic.",
@@ -53979,11 +53997,11 @@
         },
         {
             "message": "Missing item type\nCurrent selected side",
-            "line": " addon/services/compare.js:40"
+            "line": " addon/services/compare.js:42"
         },
         {
             "message": "Missing item type\nCurrent selected background side",
-            "line": " addon/services/compare.js:45"
+            "line": " addon/services/compare.js:47"
         },
         {
             "message": "Missing item type\nInitializes service.",
