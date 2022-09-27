@@ -182,7 +182,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       let curZIndex = parseInt(getComputedStyle(curPane).zIndex);
       panes = Object.values(leafletMap.getPanes()).filter((p) => {
         let zIndex = parseInt(getComputedStyle(p).zIndex);
-        return p !== curPane && zIndex && curZIndex && zIndex >= curZIndex;
+        return p.className !== curPane.className && zIndex && curZIndex && zIndex >= curZIndex && p.className !== leafletMap._mapPane.className;
       });
     }
     catch (ex) {
@@ -592,16 +592,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
         let latLngs = geoJSON.getLayers()[0].getLatLngs();
         let numGeom = targeLayer.getNumGeometries();
-        let holes = false;
-        for (var i = 0; i < numGeom; i++) {
-          let geometry = targeLayer.getGeometryN(0);
-          holes = !Ember.isNone(geometry._holes) && Ember.isArray(geometry._holes) && geometry._holes.length > 0;
-          if (holes) {
-            break;
-          }
-        }
 
-        if (newHole && !holes) {
+        if (newHole && numGeom === 1) {
           latLngs = [latLngs];
         }
 
