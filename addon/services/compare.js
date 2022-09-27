@@ -27,6 +27,7 @@ export default Ember.Service.extend({
       layerIds: [],
       groupLayersEnabled: [],
       childLayersEnabled: [],
+      sidebarState: [],
     },
     Right: {
       bgLayer: {},
@@ -34,6 +35,7 @@ export default Ember.Service.extend({
       layerIds: [],
       groupLayersEnabled: [],
       childLayersEnabled: [],
+      sidebarState: [],
     },
   },
 

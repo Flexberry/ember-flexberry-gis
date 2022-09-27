@@ -1,6 +1,6 @@
 <div class={{flexberryClassNames.div}}>
   {{#if isVisible}}
-    <div class="main-background-layers">
+    <div class="main-background-layers {{if (and compare.compareLayersEnabled (not ignoreCompareMode)) "tabs" ""}}">
       {{#if (and compare.compareLayersEnabled (not ignoreCompareMode))}}
         <div class="ui pointing group secondary menu">
           <a class="tab {{if (eq compare.backgroundSide "Left") "active"}}" onclick={{action "setSide" "backgroundSide" "Left"}}>
