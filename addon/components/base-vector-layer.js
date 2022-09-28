@@ -1311,6 +1311,7 @@ export default BaseLayer.extend({
               html: html,
               iconSize: [iconWidth, iconHeight]
             };
+            labelN._parentLayer = partline;
 
             label.addLayer(labelN);
           }
@@ -1672,16 +1673,10 @@ export default BaseLayer.extend({
         let geojsonWriter = new jsts.io.GeoJSONWriter();
         leafletObject.eachLayer(function (layer) {
           if (!Ember.isNone(layer._path) && !Ember.isEmpty(layer._text)) {
-            let objJsts = layer.toJsts(L.CRS.EPSG4326);
-            let countGeometries = objJsts.getNumGeometries();
-            if (countGeometries > 1) {
-              for (let i = 0; i < countGeometries; i++) {
-                let partlineJsts = objJsts.getGeometryN(i);
-                let partlineGeoJson = geojsonWriter.write(partlineJsts);
-                let partline = L.geoJSON(partlineGeoJson).getLayers()[0];
-
-                _this._updateAttributesSvg(layer, partline);
-              }
+            if (layer._label instanceof L.FeatureGroup) {
+              layer._label.getLayers().forEach((label) => {
+                _this._updateAttributesSvg(layer, label._parentLayer);
+              });
             } else {
               _this._updateAttributesSvg(layer);
             }
@@ -1698,17 +1693,20 @@ export default BaseLayer.extend({
     let path = svg.firstChild.firstChild;
     path.setAttribute('d', d);
     let id = path.getAttribute('id');
+    if (partline) {
+      id = L.Util.stamp(partline);
+    }
 
-    Ember.$('path#' + id).attr('d', d);
-    Ember.$('svg#svg-' + id).attr('width', svg.getAttribute('width'));
-    Ember.$('svg#svg-' + id).attr('height', svg.getAttribute('height'));
+    Ember.$('path#pathdef-' + id).attr('d', d);
+    Ember.$('svg#svg-pathdef-' + id).attr('width', svg.getAttribute('width'));
+    Ember.$('svg#svg-pathdef-' + id).attr('height', svg.getAttribute('height'));
 
     let options = layer._textOptions;
     let text = layer._text;
     let textNode = layer._textNode;
 
     this._setAlignForLine(layer, text, options.align, textNode);
-    Ember.$('text#text-' + id).attr('dx', textNode.getAttribute('dx'));
+    Ember.$('text#text-pathdef-' + id).attr('dx', textNode.getAttribute('dx'));
   },
 
   _labelsLayer: null,
