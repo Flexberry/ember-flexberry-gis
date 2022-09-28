@@ -472,6 +472,7 @@ export default Ember.Component.extend({
       if (this.get('highlightable') && !feature.highlight) {
         this.send('highlightFeature', feature);
       }
+
       this.sendAction('panTo', this.get('feature'));
     },
 
@@ -483,6 +484,7 @@ export default Ember.Component.extend({
       if (this.get('highlightable') && !feature.highlight) {
         this.send('highlightFeature', feature);
       }
+
       let { bounds, leafletMap, minZoom, maxZoom } = this.getLayerPropsForZoom();
       zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
     },
