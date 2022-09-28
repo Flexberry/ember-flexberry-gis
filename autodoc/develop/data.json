@@ -29176,7 +29176,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1362,
+            "line": 1363,
             "description": "Set position for point.",
             "itemtype": "method",
             "name": "_setPositionPoint",
@@ -29192,7 +29192,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1444,
+            "line": 1445,
             "description": "Get text width for line object.",
             "itemtype": "method",
             "name": "_getWidthText",
@@ -29233,7 +29233,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1476,
+            "line": 1477,
             "description": "Set label for line object",
             "itemtype": "method",
             "name": "_setLabelLine",
@@ -29254,7 +29254,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1550,
+            "line": 1551,
             "description": "Set align for line object's label",
             "itemtype": "method",
             "name": "_setAlignForLine",
@@ -29275,7 +29275,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1582,
+            "line": 1583,
             "description": "Add text for line object",
             "itemtype": "method",
             "name": "_addTextForLine",
@@ -29306,7 +29306,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1661,
+            "line": 1662,
             "description": "Update position for line object's label",
             "itemtype": "method",
             "name": "_updatePositionLabelForLine",
@@ -29315,7 +29315,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1716,
+            "line": 1713,
             "description": "Show lables",
             "itemtype": "method",
             "name": "_showLabels",
@@ -29336,7 +29336,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1765,
+            "line": 1762,
             "description": "Adds labels to it's leaflet container.",
             "itemtype": "method",
             "name": "_addLabelsToLeafletContainer",
@@ -29359,7 +29359,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1807,
+            "line": 1804,
             "description": "Removes labels from it's leaflet container.",
             "itemtype": "method",
             "name": "_removeLabelsFromLeafletContainer",
@@ -29370,7 +29370,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1823,
+            "line": 1820,
             "description": "Sets leaflet layer's visibility.",
             "itemtype": "method",
             "name": "_setLayerVisibility",
