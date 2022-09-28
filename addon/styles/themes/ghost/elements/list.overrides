@@ -91,6 +91,12 @@
         padding-top: 12px;
       }
     }
+    .item:not(.icon).feature-result-item.highlight {
+      background: #f4f8fb;
+      margin-left: -50px;
+      width: 500px;
+      padding-left: 50px;
+    }
 
     .item:not(.icon):last-child{
       margin-bottom: 10px;
