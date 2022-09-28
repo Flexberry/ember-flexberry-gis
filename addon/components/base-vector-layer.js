@@ -1670,7 +1670,6 @@ export default BaseLayer.extend({
       let _this = this;
       let leafletObject = _this.get('_leafletObject');
       if (!Ember.isNone(leafletObject)) {
-        let geojsonWriter = new jsts.io.GeoJSONWriter();
         leafletObject.eachLayer(function (layer) {
           if (!Ember.isNone(layer._path) && !Ember.isEmpty(layer._text)) {
             if (layer._label instanceof L.FeatureGroup) {
