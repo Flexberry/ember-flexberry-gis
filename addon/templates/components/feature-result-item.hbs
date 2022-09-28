@@ -97,7 +97,7 @@
           </a>
         </div>
         <div>
-          <a class="icon item" {{action "panTo" on="click"}}>
+          <a class="icon item" {{action "panTo" feature on="click"}}>
             <i class="icon-guideline-hand"></i>
             {{t "components.feature-result-item.pan-to-caption"}}
           </a>
@@ -121,6 +121,7 @@
   </div>
   <div class="feature-result-item-caption {{if feature.highlight "highlight" ""}}" {{action "showInfo" on="click"}}>
     <label>{{get feature displayProperty}}</label>
+    <label>test</label>
   </div>
 </div>
 <div class="feature-result-item-content content {{if infoExpanded "visible" "hidden"}}">
