@@ -340,8 +340,10 @@ export default Ember.Component.extend({
   didRender() {
     this._super(...arguments);
     if (this.get('feature.highlight') && this.get('infoExpanded')) {
-      this.$(this.element).closest('.layer-result-list')[0].scrollTo({
-        top: this.$(this.element)[0].offsetTop,
+      let layerResultList = this.$(this.element).closest('.layer-result-list')[0]; // scroll element
+      let group = this.$(this.element).closest('.feature-result-item-group')[0]; // parent of highlighted element
+      layerResultList.scrollTo({
+        top: group.offsetTop + this.$(this.element)[0].offsetTop - layerResultList.offsetTop,
         left: 0,
         behavior: 'smooth'
       });
