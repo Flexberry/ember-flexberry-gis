@@ -491,15 +491,69 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         return Ember.String.htmlSafe(``);
       }
 
-      let padding = (this.get('_options.displayMode') !== 'map-only-mode') ? `padding: 0 ${mapPadding}px;` : `padding: ${mapPadding}px;`;
+      let padding = (this.get('_options.displayMode') !== 'map-only-mode') ? `0 ${mapPadding}px` : `${mapPadding}px`;
+
+      let styleObject = {
+        height: {
+          value: sheetOfPaperPreviewHeight,
+          addPx: true,
+        },
+        width: {
+          value: sheetOfPaperPreviewWidth,
+          addPx: true,
+        },
+        padding: {
+          value: padding,
+          addPx: false,
+        }
+      };
 
       if (this.get('_options.pageNumber2Selected')) {
-        padding = `padding: ${mapPadding}px;`;
+        styleObject.padding = {
+          value: mapPadding,
+          addPx: true,
+        };
+        styleObject.columns = {
+          value: 2,
+          addPx: false
+        };
+        styleObject['column-fill'] = {
+          value: 'auto',
+          addPx: false,
+        };
+        styleObject['column-gap'] = {
+          value: mapPadding,
+          addPx: true,
+        };
       }
 
-      return Ember.String.htmlSafe(`height: ${sheetOfPaperPreviewHeight}px; width: ${sheetOfPaperPreviewWidth}px; ${padding}`);
+      return Ember.String.htmlSafe(Object.keys(styleObject).reduce((accum, key) => {
+        let value = styleObject[key].value;
+        let addPx = styleObject[key].addPx;
+        accum = `${key}: ${value}${addPx ? 'px' : ''};${accum}`;
+        return accum;
+      }, ''));
+
     }
   ),
+
+  /**
+   * Style is needed to be copied while exporting
+   * Also needed to rewrite deep children
+   */
+  legendCustomStyle: Ember.computed('', function() {
+    return Ember.String.htmlSafe(`<style>
+    .flexberry-export-map-command-dialog-legend-control-map .layer-legend {
+      display: block !important;
+      vertical-align: top;
+      margin-bottom: 6px;
+      overflow: hidden;
+    }
+    .flexberry-export-map-command-dialog-legend-control-map .layer-legend-image-wrapper {
+      float: none !important;
+    }
+    </style>`);
+  }),
 
   /**
     Legends padding-right property.
@@ -673,6 +727,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         `font-weight: ${this.get('_options.captionFontWeight')}; ` +
         `font-style: ${this.get('_options.captionFontStyle')}; ` +
         `text-decoration: ${this.get('_options.captionFontDecoration')}; ` +
+        `height: ${captionHeight}px;` +
         `margin-top: ${captionTopMargin}px;` +
         `margin-bottom: ${captionTopMargin}px;` +
         `color: ${this.get('_options.captionFontColor')};`);
@@ -798,7 +853,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let elementWidth = Ember.$(element)[0].getBoundingClientRect().width;
     element.remove();
 
-    return elementWidth;
+    return (imageSrc) ? elementWidth : elementWidth + height;
   },
 
   /**
@@ -823,12 +878,14 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     'layers.@each.isDeleted',
     'layers.@each.legendCanBeDisplayed',
     'legendsUpdateTrigger',
+    '_sheetOfPaperPreviewScaleFactor',
     function () {
       let lineCount = 1;
       let layers = this.get('layers');
       let legends = this.get('legends');
       let legendsInfo = this._getLayersInfo(layers, legends);
-      let legendWidth = this.get('_sheetOfPaperPreviewWidth') - legendStyleConstants.widthPadding * 2; // padding left/right 14, border 1.
+      let padding = this.get('mapPadding') * this.get('_sheetOfPaperPreviewScaleFactor');
+      let legendWidth = this.get('_sheetOfPaperPreviewWidth') - (padding * 2);
       let cutWidth = legendWidth;
 
       legendsInfo.forEach(function (legendInfo) {
@@ -836,15 +893,17 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
           legendInfo = {};
         }
 
+        let fontSize = this.get('legendFontSize') * this.get('_sheetOfPaperPreviewScaleFactor');
+
         let font = {
           'font-family': this.get('_options.captionFontFamily'),
           'line-height': this.get('_options.captionLineHeight'),
-          'font-size': this.get('_mapCaptionPreviewFontSize') + 'px',
+          'font-size': `${fontSize}px`,
           'font-weight': this.get('_options.captionFontWeight'),
           'font-style': this.get('_options.captionFontStyle')
         };
 
-        let textWidth = this._getLayerLegendWidth(legendInfo.name, font, legendInfo.image, this.get('_mapCaptionPreviewHeight'));
+        let textWidth = this._getLayerLegendWidth(legendInfo.name, font, legendInfo.image, this.get('_mapLegendPreviewHeight'));
         if (textWidth <= cutWidth) {
           cutWidth -= textWidth;
         } else {
@@ -929,6 +988,9 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         // Logic for understand are there any invisible layers (should add '...'?)
         let container = Ember.$('.flexberry-export-map-command-dialog-sheet-of-paper')[0];
         let legends = Ember.$('.layer-legend-image-wrapper:not(.layer-caption)', container);
+        legends.each(function() {
+          Ember.$(this).parent().css('visibility', 'visible');
+        });
         let lastVisible = legends.filter((l) => this.isElementFullyVisibleInContainer(legends[l], container)).last();
         let invisibleLegends = legends.filter((l) => !this.isElementFullyVisibleInContainer(legends[l], container));
         if (this.get('_options.legendUnderMap')) {
@@ -952,7 +1014,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
       var legendHeight = this.get('_mapLegendPreviewHeight');
       var legendLines = this.get('_mapLegendLines');
-      legendHeight = legendHeight * legendLines + legendStyleConstants.heightMargin + padding; // margin
+      legendHeight = legendHeight * legendLines + padding; // margin
       if (!this.get('_options.legendUnderMap') || !this.get('_options.legendControl')) {
         legendHeight = padding;
       }
@@ -961,7 +1023,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       let pxHeightValue = sheetOfPaperPreviewHeight - mapCaptionHeight -
         legendHeight;
 
-      return Ember.String.htmlSafe(`height: ${pxHeightValue}px;`);
+      return Ember.String.htmlSafe(`height: ${pxHeightValue}px; min-height: 60%;`);
     }
   ),
 
@@ -1976,18 +2038,25 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         $legendControlMap.css('margin-top', '10px');
       }
 
-      if (this.get('_options.legendPosition') === 'second-page') {
-        $legendControlMap.css('margin-top', `${this.get('mapPadding')}px`);
+      const secondPage = this.get('_options.legendPosition') === 'second-page';
+
+      if (secondPage && pageNumber === '2') {
+        $sheetOfPaper.css({
+          'padding': `${this.get('mapPadding')}px`,
+          'columns': '2',
+          'column-fill': 'auto',
+          'column-gap': `${this.get('mapPadding')}px`
+        });
       }
 
       let _this = this;
 
       //Styles that missing when copy sheet to body;
-      Ember.$('.layer-legend', $legendControlMap).each(function() {
+      Ember.$('.layer-legend', $legendControlMap).each(function () {
         let visible = Ember.$(this).css('visibility');
         Ember.$(this).attr('style', `display: inline-block; vertical-align: top; margin-bottom: 10px; visibility:${visible};`);
-        Ember.$('.layer-legend-image-wrapper', this).css('display', 'inline-block');
-        Ember.$('.layer-legend-image-wrapper', this).css('height', `${_this.get('legendLiheHeight')}px`);
+        Ember.$('.layer-legend-image-wrapper', this).css('display', secondPage ? 'block' : 'inline-block');
+        Ember.$('.layer-legend-image-wrapper', this).css('height', secondPage ? 'auto' : `${_this.get('legendLineHeight')}px`);
         Ember.$('.layer-legend-image-wrapper.layer-caption', this).css('vertical-align', 'top');
       });
 
