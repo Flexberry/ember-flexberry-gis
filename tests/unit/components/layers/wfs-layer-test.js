@@ -30,7 +30,8 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
       version: '1.1.0',
       continueLoading: true,
       typeNS: 'les',
-      typeName: 'kvartalutverzhdenopolygon32640'
+      typeName: 'kvartalutverzhdenopolygon32640',
+      pkField: 'primarykey'
     };
 
     let leafletOptions = [
@@ -186,8 +187,11 @@ test('getLayerFeatures() with options showExisting = false and continueLoading =
 
     let getPkFieldStub = sinon.stub(mapModel, '_getPkField');
     getPkFieldStub.returns('primarykey');
+    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
+    getPkFieldLayerStub.returns('primarykey');
 
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
         layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -197,6 +201,10 @@ test('getLayerFeatures() with options showExisting = false and continueLoading =
       component.getLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Get feature of layers with showExisting = false and continueLoading = true');
         done();
+
+        getmapApiStub.restore();
+        getPkFieldStub.restore();
+        getPkFieldLayerStub.restore();
       });
     });
 
@@ -220,14 +228,21 @@ test('_addLayersOnMap() with options showExisting = true and continueLoading = f
 
     let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
     getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
+    getPkFieldLayerStub.returns('primarykey');
 
     options.showExisting = true;
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      res.target.readFormat.excludedProperties = ['primarykey'];
       let layers = Object.values(res.target._layers);
       component._addLayersOnMap(layers);
       assert.equal(layers[0].options.pane, component.get('_pane'), 'Pane on object eqals pane on layer');
       assert.equal(layers[0].options.renderer, component.get('_renderer'), 'Renderer on object eqals renderer on layer');
       done();
+
+      getmapApiStub.restore();
+      getLayerFeatureIdStub.restore();
+      getPkFieldLayerStub.restore();
     });
 
     assert.ok(component, 'Create wfs-layer with showExisting = true');
@@ -250,9 +265,12 @@ test('getLayerFeatures() with options showExisting = true', function (assert) {
 
     let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
     getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
+    getPkFieldLayerStub.returns('primarykey');
 
     options.showExisting = true;
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
         layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -264,6 +282,10 @@ test('getLayerFeatures() with options showExisting = true', function (assert) {
       component.getLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Get feature of layers with showExisting = true');
         done();
+
+        getmapApiStub.restore();
+        getLayerFeatureIdStub.restore();
+        getPkFieldLayerStub.restore();
       });
     });
 
@@ -286,8 +308,12 @@ test('loadLayerFeatures() with options showExisting = false', function (assert) 
     let getPkFieldStub = sinon.stub(mapModel, '_getPkField');
     getPkFieldStub.returns('primarykey');
     let addCustomFilterSpy = sinon.spy(component, 'addCustomFilter');
+    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
+    getPkFieldLayerStub.returns('primarykey');
+
 
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
         layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -302,6 +328,9 @@ test('loadLayerFeatures() with options showExisting = false', function (assert) 
         done();
 
         addCustomFilterSpy.restore();
+        getmapApiStub.restore();
+        getPkFieldStub.restore();
+        getPkFieldLayerStub.restore();
       });
     });
 
@@ -325,9 +354,12 @@ test('loadLayerFeatures() with options showExisting = true', function (assert) {
 
     let getPkFieldStub = sinon.stub(mapModel, '_getPkField');
     getPkFieldStub.returns('primarykey');
+    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
+    getPkFieldLayerStub.returns('primarykey');
 
     options.showExisting = true;
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
         layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -340,6 +372,10 @@ test('loadLayerFeatures() with options showExisting = true', function (assert) {
       component.loadLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Load feature of layers with showExisting = true');
         done();
+
+        getmapApiStub.restore();
+        getPkFieldStub.restore();
+        getPkFieldLayerStub.restore();
       });
     });
 
@@ -362,9 +398,12 @@ test('loadLayerFeatures() with options showExisting = false, call 2 times', func
 
     let getPkFieldStub = sinon.stub(mapModel, '_getPkField');
     getPkFieldStub.returns('primarykey');
+    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
+    getPkFieldLayerStub.returns('primarykey');
 
     options.continueLoading = false;
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: null,
         layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -399,6 +438,10 @@ test('loadLayerFeatures() with options showExisting = false, call 2 times', func
         component.loadLayerFeatures(e).then((layers) => {
           assert.equal(layers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 2 times');
           done();
+
+          getmapApiStub.restore();
+          getPkFieldStub.restore();
+          getPkFieldLayerStub.restore();
         });
       });
     });
@@ -421,9 +464,12 @@ test('test method clearChanges() with no changes', function (assert) {
 
     let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
     getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
+    getPkFieldLayerStub.returns('primarykey');
 
     options.showExisting = true;
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
         layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -451,6 +497,10 @@ test('test method clearChanges() with no changes', function (assert) {
         component.clearChanges();
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
         done();
+
+        getmapApiStub.restore();
+        getLayerFeatureIdStub.restore();
+        getPkFieldLayerStub.restore();
       });
     });
   });
@@ -469,9 +519,12 @@ test('test method clearChanges() with create', function (assert) {
 
     let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
     getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
+    getPkFieldLayerStub.returns('primarykey');
 
     options.showExisting = true;
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
         layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -512,6 +565,10 @@ test('test method clearChanges() with create', function (assert) {
         component.clearChanges();
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
         done();
+
+        getmapApiStub.restore();
+        getLayerFeatureIdStub.restore();
+        getPkFieldLayerStub.restore();
       });
     });
   });
@@ -530,9 +587,12 @@ test('test method clearChanges() with update', function (assert) {
 
     let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
     getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
+    getPkFieldLayerStub.returns('primarykey');
 
     options.showExisting = true;
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
         layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -563,6 +623,10 @@ test('test method clearChanges() with update', function (assert) {
         component.clearChanges();
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
         done();
+
+        getmapApiStub.restore();
+        getLayerFeatureIdStub.restore();
+        getPkFieldLayerStub.restore();
       });
     });
   });
@@ -581,9 +645,12 @@ test('test method clearChanges() with delete', function (assert) {
 
     let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
     getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
+    getPkFieldLayerStub.returns('primarykey');
 
     options.showExisting = true;
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
         layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -612,6 +679,10 @@ test('test method clearChanges() with delete', function (assert) {
         component.clearChanges();
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
         done();
+
+        getmapApiStub.restore();
+        getLayerFeatureIdStub.restore();
+        getPkFieldLayerStub.restore();
       });
     });
   });
