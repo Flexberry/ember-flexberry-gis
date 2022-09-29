@@ -326,7 +326,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           continue;
         }
 
-        if (layer.layerModel.get('type').contains('wfs') && propertyName.toLowerCase() === 'primarykey') {
+        if (Ember.get(leafletObject, 'readFormat.excludedProperties').includes(propertyName.toLowerCase())) {
           continue;
         }
 

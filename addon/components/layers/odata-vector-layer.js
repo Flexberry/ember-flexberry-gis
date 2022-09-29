@@ -1059,6 +1059,7 @@ export default BaseVectorLayer.extend({
     });
 
     readFormat.featureType.geometryFields[geometryField] = this.get('geometryType');
+    readFormat.excludedProperties = [];
     return readFormat;
   },
 
