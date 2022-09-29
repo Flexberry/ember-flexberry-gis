@@ -111,7 +111,7 @@ export default BaseVectorLayer.extend({
         });
 
         if (insertedModelId.length > 0) {
-          this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(this.layerModel.get('id'), insertedModelId, true)
+          this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(this.layerModel.get('id'), insertedModelId, true, true)
             .then(([, lObject, featureLayer]) => {
               this._setLayerState();
               leafletObject.fire('save:success', { layers: featureLayer });
@@ -1041,8 +1041,24 @@ export default BaseVectorLayer.extend({
   },
 
   createReadFormat() {
-    let readFormat = this._super(...arguments);
-    readFormat.featureType.geometryFields = [this.get('geometryType')];
+    let crs = this.get('crs');
+    let geometryField = this.get('geometryField') || 'geometry';
+    let readFormat = new L.Format.GeoJSON({ crs, geometryField });
+    readFormat.featureType = new L.GML.FeatureType({
+      geometryField: geometryField
+    });
+
+    let store = Ember.getOwner(this).lookup('service:store');
+    let modelConstructor = store.modelFor(this.get('modelName'));
+    let layerProperties = Ember.get(modelConstructor, `attributes`);
+
+    layerProperties.forEach((property) => {
+      if (property.name !== geometryField) {
+        readFormat.featureType.appendField(property.name, property.type);
+      }
+    });
+
+    readFormat.featureType.geometryFields[geometryField] = this.get('geometryType');
     return readFormat;
   },
 
@@ -1095,7 +1111,8 @@ export default BaseVectorLayer.extend({
       try {
         let leafletObject = this.get('_leafletObject');
         let featureIds = e.featureIds;
-        if (!leafletObject.options.showExisting) {
+
+        if (!leafletObject.options.showExisting || e.loadNew) {
           let getLoadedFeatures = (featureIds) => {
             let loadIds = [];
             leafletObject.eachLayer((shape) => {

@@ -326,6 +326,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           continue;
         }
 
+        if (layer.layerModel.get('type').contains('wfs') && propertyName.toLowerCase() === 'primarykey') {
+          continue;
+        }
+
         let propertyCaption = Ember.get(localizedProperties, propertyName);
 
         result[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;
