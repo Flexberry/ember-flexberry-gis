@@ -468,22 +468,22 @@ export default Ember.Component.extend({
       Invokes {{#crossLink "FeatureResultItemComponent/sendingActions.panTo:method"}}'panTo' action{{/crossLink}}.
       @method actions.panTo
      */
-    panTo(feature) {
+    panTo() {
 
-      if (this.get('highlightable') && !feature.highlight) {
-        this.send('highlightFeature', feature, false);
+      if (this.get('highlightable') && !this.get('feature.highlight')) {
+        this.send('highlightFeature', this.get('feature'), false);
       }
 
-      this.sendAction('panTo', feature);
+      this.sendAction('panTo', this.get('feature'));
     },
 
     /**
       Invokes {{#crossLink "FeatureResultItemComponent/sendingActions.zoomTo:method"}}'zoomTo' action{{/crossLink}}.
       @method actions.zoomTo
      */
-    zoomTo(feature) {
-      if (this.get('highlightable') && !feature.highlight) {
-        this.send('highlightFeature', feature, false);
+    zoomTo() {
+      if (this.get('highlightable') && !this.get('feature.highlight')) {
+        this.send('highlightFeature', this.get('feature'), false);
       }
 
       let { bounds, leafletMap, minZoom, maxZoom } = this.getLayerPropsForZoom();
