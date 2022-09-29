@@ -93,7 +93,7 @@
     }
 
     .item:not(.icon).feature-result-item.highlight {
-      background: #f4f8fb;
+      background: @highlightBackgroundColor;
       margin-left: -50px;
       width: 500px;
       padding-left: 50px;
