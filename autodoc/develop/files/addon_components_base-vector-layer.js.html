@@ -738,6 +738,7 @@ export default BaseLayer.extend({
     let describeFeatureTypeXml = L.XmlUtil.parseXml(describeFeatureTypeResponse);
     let featureInfo = describeFeatureTypeXml.documentElement;
     readFormat.setFeatureDescription(featureInfo);
+    readFormat.excludedProperties = [];
 
     return readFormat;
   },

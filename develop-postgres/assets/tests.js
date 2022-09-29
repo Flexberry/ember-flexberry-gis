@@ -6953,7 +6953,8 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
         version: '1.1.0',
         continueLoading: true,
         typeNS: 'les',
-        typeName: 'kvartalutverzhdenopolygon32640'
+        typeName: 'kvartalutverzhdenopolygon32640',
+        pkField: 'primarykey'
       };
 
       var leafletOptions = ['url', 'version', 'namespaceUri', 'typeNS', 'typeName', 'typeNSName', 'geometryField', 'crs', 'maxFeatures', 'showExisting', 'style', 'filter', 'forceMulti', 'withCredentials', 'continueLoading'];
@@ -7041,8 +7042,11 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
 
       var getPkFieldStub = _sinon['default'].stub(mapModel, '_getPkField');
       getPkFieldStub.returns('primarykey');
+      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
+      getPkFieldLayerStub.returns('primarykey');
 
       L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -7052,6 +7056,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
         component.getLayerFeatures(e).then(function (layers) {
           assert.ok(layers, 'Get feature of layers with showExisting = false and continueLoading = true');
           done();
+
+          getmapApiStub.restore();
+          getPkFieldStub.restore();
+          getPkFieldLayerStub.restore();
         });
       });
 
@@ -7077,14 +7085,21 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
 
       var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
+      getPkFieldLayerStub.returns('primarykey');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        res.target.readFormat.excludedProperties = ['primarykey'];
         var layers = Object.values(res.target._layers);
         component._addLayersOnMap(layers);
         assert.equal(layers[0].options.pane, component.get('_pane'), 'Pane on object eqals pane on layer');
         assert.equal(layers[0].options.renderer, component.get('_renderer'), 'Renderer on object eqals renderer on layer');
         done();
+
+        getmapApiStub.restore();
+        getLayerFeatureIdStub.restore();
+        getPkFieldLayerStub.restore();
       });
 
       assert.ok(component, 'Create wfs-layer with showExisting = true');
@@ -7109,9 +7124,12 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
 
       var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
+      getPkFieldLayerStub.returns('primarykey');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -7123,6 +7141,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
         component.getLayerFeatures(e).then(function (layers) {
           assert.ok(layers, 'Get feature of layers with showExisting = true');
           done();
+
+          getmapApiStub.restore();
+          getLayerFeatureIdStub.restore();
+          getPkFieldLayerStub.restore();
         });
       });
 
@@ -7147,8 +7169,11 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
       var getPkFieldStub = _sinon['default'].stub(mapModel, '_getPkField');
       getPkFieldStub.returns('primarykey');
       var addCustomFilterSpy = _sinon['default'].spy(component, 'addCustomFilter');
+      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
+      getPkFieldLayerStub.returns('primarykey');
 
       L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -7165,6 +7190,9 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           done();
 
           addCustomFilterSpy.restore();
+          getmapApiStub.restore();
+          getPkFieldStub.restore();
+          getPkFieldLayerStub.restore();
         });
       });
 
@@ -7190,9 +7218,12 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
 
       var getPkFieldStub = _sinon['default'].stub(mapModel, '_getPkField');
       getPkFieldStub.returns('primarykey');
+      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
+      getPkFieldLayerStub.returns('primarykey');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -7207,6 +7238,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
         component.loadLayerFeatures(e).then(function (layers) {
           assert.ok(layers, 'Load feature of layers with showExisting = true');
           done();
+
+          getmapApiStub.restore();
+          getPkFieldStub.restore();
+          getPkFieldLayerStub.restore();
         });
       });
 
@@ -7231,9 +7266,12 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
 
       var getPkFieldStub = _sinon['default'].stub(mapModel, '_getPkField');
       getPkFieldStub.returns('primarykey');
+      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
+      getPkFieldLayerStub.returns('primarykey');
 
       options.continueLoading = false;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: null,
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -7270,6 +7308,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           component.loadLayerFeatures(e).then(function (layers) {
             assert.equal(layers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 2 times');
             done();
+
+            getmapApiStub.restore();
+            getPkFieldStub.restore();
+            getPkFieldLayerStub.restore();
           });
         });
       });
@@ -7294,9 +7336,12 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
 
       var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
+      getPkFieldLayerStub.returns('primarykey');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -7324,6 +7369,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           component.clearChanges();
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
           done();
+
+          getmapApiStub.restore();
+          getLayerFeatureIdStub.restore();
+          getPkFieldLayerStub.restore();
         });
       });
     });
@@ -7344,9 +7393,12 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
 
       var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
+      getPkFieldLayerStub.returns('primarykey');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -7385,6 +7437,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           component.clearChanges();
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
           done();
+
+          getmapApiStub.restore();
+          getLayerFeatureIdStub.restore();
+          getPkFieldLayerStub.restore();
         });
       });
     });
@@ -7405,9 +7461,12 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
 
       var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
+      getPkFieldLayerStub.returns('primarykey');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -7438,6 +7497,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           component.clearChanges();
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
           done();
+
+          getmapApiStub.restore();
+          getLayerFeatureIdStub.restore();
+          getPkFieldLayerStub.restore();
         });
       });
     });
@@ -7458,9 +7521,12 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
 
       var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
+      getPkFieldLayerStub.returns('primarykey');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
           layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
@@ -7489,6 +7555,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           component.clearChanges();
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
           done();
+
+          getmapApiStub.restore();
+          getLayerFeatureIdStub.restore();
+          getPkFieldLayerStub.restore();
         });
       });
     });
@@ -7552,6 +7622,8 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
 
       var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
       getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
+      getPkFieldLayerStub.returns('primarykey');
 
       options.showExisting = true;
 
@@ -7588,6 +7660,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           assert.equal(layerUpdate.feature.geometry.coordinates.toString(), coordinates);
 
           done();
+
+          getmapApiStub.restore();
+          getLayerFeatureIdStub.restore();
+          getPkFieldLayerStub.restore();
         });
       });
     });

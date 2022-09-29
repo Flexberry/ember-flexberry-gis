@@ -528,7 +528,7 @@ export default BaseVectorLayer.extend({
         });
 
         if (insertedModelId.length &gt; 0) {
-          this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;)._getModelLayerFeature(this.layerModel.get(&#x27;id&#x27;), insertedModelId, true)
+          this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;)._getModelLayerFeature(this.layerModel.get(&#x27;id&#x27;), insertedModelId, true, true)
             .then(([, lObject, featureLayer]) =&gt; {
               this._setLayerState();
               leafletObject.fire(&#x27;save:success&#x27;, { layers: featureLayer });
@@ -1458,8 +1458,25 @@ export default BaseVectorLayer.extend({
   },
 
   createReadFormat() {
-    let readFormat = this._super(...arguments);
-    readFormat.featureType.geometryFields = [this.get(&#x27;geometryType&#x27;)];
+    let crs = this.get(&#x27;crs&#x27;);
+    let geometryField = this.get(&#x27;geometryField&#x27;) || &#x27;geometry&#x27;;
+    let readFormat = new L.Format.GeoJSON({ crs, geometryField });
+    readFormat.featureType = new L.GML.FeatureType({
+      geometryField: geometryField
+    });
+
+    let store = Ember.getOwner(this).lookup(&#x27;service:store&#x27;);
+    let modelConstructor = store.modelFor(this.get(&#x27;modelName&#x27;));
+    let layerProperties = Ember.get(modelConstructor, &#x60;attributes&#x60;);
+
+    layerProperties.forEach((property) =&gt; {
+      if (property.name !== geometryField) {
+        readFormat.featureType.appendField(property.name, property.type);
+      }
+    });
+
+    readFormat.featureType.geometryFields[geometryField] = this.get(&#x27;geometryType&#x27;);
+    readFormat.excludedProperties = [];
     return readFormat;
   },
 
@@ -1512,7 +1529,8 @@ export default BaseVectorLayer.extend({
       try {
         let leafletObject = this.get(&#x27;_leafletObject&#x27;);
         let featureIds = e.featureIds;
-        if (!leafletObject.options.showExisting) {
+
+        if (!leafletObject.options.showExisting || e.loadNew) {
           let getLoadedFeatures = (featureIds) =&gt; {
             let loadIds = [];
             leafletObject.eachLayer((shape) =&gt; {
