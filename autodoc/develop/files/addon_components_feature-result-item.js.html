@@ -483,7 +483,7 @@ export default Ember.Component.extend({
     @type String[]
     @default [&#x27;isActive:active&#x27;]
   */
-  classNameBindings: [&#x27;isActive:active&#x27;],
+  classNameBindings: [&#x27;isActive:active&#x27;, &#x27;feature.highlight:highlight&#x27;],
 
   /**
     Flag indicates if intersection panel is active.
@@ -757,8 +757,10 @@ export default Ember.Component.extend({
   didRender() {
     this._super(...arguments);
     if (this.get(&#x27;feature.highlight&#x27;) &amp;&amp; this.get(&#x27;infoExpanded&#x27;)) {
-      this.$(this.element).closest(&#x27;.layer-result-list&#x27;)[0].scrollTo({
-        top: this.$(this.element)[0].offsetTop,
+      let layerResultList = this.$(this.element).closest(&#x27;.layer-result-list&#x27;)[0]; // scroll element
+      let group = this.$(this.element).closest(&#x27;.feature-result-item-group&#x27;)[0]; // parent of highlighted element
+      layerResultList.scrollTo({
+        top: group.offsetTop + this.$(this.element)[0].offsetTop - layerResultList.offsetTop,
         left: 0,
         behavior: &#x27;smooth&#x27;
       });
@@ -770,9 +772,9 @@ export default Ember.Component.extend({
 
       @method actions.highlightFeature
     */
-    highlightFeature(clickedFeature) {
+    highlightFeature(clickedFeature, expandInfo = true) {
       this.sendAction(&#x27;clearHighlights&#x27;, clickedFeature); // clear other highlight states of feature-result-items in _displayResults. Set the new highlight state
-      if (this.get(&#x27;feature.highlight&#x27;)) {
+      if (this.get(&#x27;feature.highlight&#x27;) &amp;&amp; expandInfo) {
         if (!this.get(&#x27;infoExpanded&#x27;)) { // open feature-result-item properties
           this.set(&#x27;infoExpanded&#x27;, true);
           this.set(&#x27;_linksExpanded&#x27;, true);
@@ -884,6 +886,11 @@ export default Ember.Component.extend({
       @method actions.panTo
      */
     panTo() {
+
+      if (this.get(&#x27;highlightable&#x27;) &amp;&amp; !this.get(&#x27;feature.highlight&#x27;)) {
+        this.send(&#x27;highlightFeature&#x27;, this.get(&#x27;feature&#x27;), false);
+      }
+
       this.sendAction(&#x27;panTo&#x27;, this.get(&#x27;feature&#x27;));
     },
 
@@ -891,8 +898,11 @@ export default Ember.Component.extend({
       Invokes {{#crossLink &quot;FeatureResultItemComponent/sendingActions.zoomTo:method&quot;}}&#x27;zoomTo&#x27; action{{/crossLink}}.
       @method actions.zoomTo
      */
-    zoomTo(feature) {
-      this.send(&#x27;highlightFeature&#x27;, feature);
+    zoomTo() {
+      if (this.get(&#x27;highlightable&#x27;) &amp;&amp; !this.get(&#x27;feature.highlight&#x27;)) {
+        this.send(&#x27;highlightFeature&#x27;, this.get(&#x27;feature&#x27;), false);
+      }
+
       let { bounds, leafletMap, minZoom, maxZoom } = this.getLayerPropsForZoom();
       zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
     },
@@ -902,7 +912,6 @@ export default Ember.Component.extend({
       @method actions.showInfo
      */
     showInfo() {
-      Ember.set(this.get(&#x27;feature&#x27;), &#x27;highlight&#x27;, false);
       this.set(&#x27;infoExpanded&#x27;, !this.get(&#x27;infoExpanded&#x27;));
       this.set(&#x27;_linksExpanded&#x27;, false);
     },

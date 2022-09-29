@@ -30145,7 +30145,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 351,
+            "line": 353,
             "description": "Highlight feature-result-items caption",
             "itemtype": "method",
             "name": "actions.highlightFeature",
@@ -30154,7 +30154,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 365,
+            "line": 367,
             "description": "Show\\hide submenu",
             "itemtype": "method",
             "name": "actions.onSubmenu",
@@ -30163,7 +30163,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 376,
+            "line": 378,
             "description": "Performs row editing.",
             "itemtype": "method",
             "name": "actions.onRowEdit",
@@ -30172,7 +30172,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 443,
+            "line": 445,
             "description": "Handles click on show/hide all intersection coordinates.",
             "itemtype": "method",
             "name": "actions.toggleShowAllCords",
@@ -30181,7 +30181,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 457,
+            "line": 459,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.selectFeature:method\"}}'selectFeature' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.selectFeature",
@@ -30190,7 +30190,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 465,
+            "line": 467,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.panTo:method\"}}'panTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.panTo",
@@ -30199,7 +30199,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 473,
+            "line": 480,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.zoomTo:method\"}}'zoomTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.zoomTo",
@@ -30208,7 +30208,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 483,
+            "line": 493,
             "description": "Show\\hide detailed feature info",
             "itemtype": "method",
             "name": "actions.showInfo",
@@ -30217,7 +30217,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 493,
+            "line": 502,
             "description": "Show\\hide links list (if present).",
             "itemtype": "method",
             "name": "actions.toggleLinks",
@@ -30226,7 +30226,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 501,
+            "line": 510,
             "description": "Process the specified method.",
             "itemtype": "method",
             "name": "actions.goToEditForm",
@@ -30247,7 +30247,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 514,
+            "line": 523,
             "description": "Show\\hide panel for seraching intersections.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.findIntersection",
@@ -30256,7 +30256,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 524,
+            "line": 533,
             "description": "Add feature to favorites list\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToFavorite",
@@ -30265,7 +30265,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 533,
+            "line": 542,
             "description": "Handles click on checkbox.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToCompareGeometries",
@@ -30274,7 +30274,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 542,
+            "line": 551,
             "description": "Pans and zooms to intersection object.",
             "itemtype": "method",
             "name": "actions.panToIntersection",
@@ -30283,7 +30283,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 551,
+            "line": 560,
             "description": "Zooms to intersection and add intersection object on map.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -30292,7 +30292,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 561,
+            "line": 570,
             "description": "Component's action invoking for select feature",
             "itemtype": "method",
             "name": "sendingActions.selectFeature",
@@ -30308,7 +30308,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 567,
+            "line": 576,
             "description": "Component's action invoking for feature zooming",
             "itemtype": "method",
             "name": "sendingActions.zoomTo",
@@ -30324,7 +30324,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 573,
+            "line": 582,
             "description": "Component's action invoking for feature pan",
             "itemtype": "method",
             "name": "sendingActions.panTo",
@@ -48933,7 +48933,7 @@
         },
         {
             "file": "addon/mixins/leaflet-zoom-to-feature.js",
-            "line": 107,
+            "line": 106,
             "description": "Clear selected features",
             "itemtype": "method",
             "name": "actions.clearSelected",
@@ -48942,7 +48942,7 @@
         },
         {
             "file": "addon/mixins/leaflet-zoom-to-feature.js",
-            "line": 121,
+            "line": 120,
             "description": "Set selected feature and add its layer to serviceLayer on map.",
             "itemtype": "method",
             "name": "_selectFeature",
@@ -48965,7 +48965,7 @@
         },
         {
             "file": "addon/mixins/leaflet-zoom-to-feature.js",
-            "line": 136,
+            "line": 135,
             "description": "Additional preparation of the selected layer.",
             "params": [
                 {
@@ -48984,7 +48984,7 @@
         },
         {
             "file": "addon/mixins/leaflet-zoom-to-feature.js",
-            "line": 146,
+            "line": 145,
             "description": "Action invoking when feature item was selected.",
             "itemtype": "method",
             "name": "sendingActions.featureSelected",
@@ -53944,7 +53944,7 @@
         },
         {
             "message": "Missing item type\nAdditional preparation of the selected layer.",
-            "line": " addon/mixins/leaflet-zoom-to-feature.js:136"
+            "line": " addon/mixins/leaflet-zoom-to-feature.js:135"
         },
         {
             "message": "Missing item type\nService for Map loading from store",
