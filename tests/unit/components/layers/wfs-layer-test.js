@@ -311,7 +311,6 @@ test('loadLayerFeatures() with options showExisting = false', function (assert) 
     let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
     getPkFieldLayerStub.returns('primarykey');
 
-
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
       res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
@@ -740,6 +739,8 @@ test('test editLayer', function (assert) {
 
     let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
     getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
+    getPkFieldLayerStub.returns('primarykey');
 
     options.showExisting = true;
 
@@ -777,6 +778,10 @@ test('test editLayer', function (assert) {
         assert.equal(layerUpdate.feature.geometry.coordinates.toString(), coordinates);
 
         done();
+
+        getmapApiStub.restore();
+        getLayerFeatureIdStub.restore();
+        getPkFieldLayerStub.restore();
       });
     });
   });
