@@ -373,6 +373,8 @@ export default BaseVectorLayer.extend({
       L.wfst(options, featuresReadFormat)
         .once('load', (e) => {
           let wfsLayer = e.target;
+          let pkField = this.getPkField(this.get('layerModel'));
+          e.target.readFormat.excludedProperties = [pkField];
           let leafletMap = this.get('leafletMap');
 
           wfsLayer.on('save:success', this._setLayerState, this);

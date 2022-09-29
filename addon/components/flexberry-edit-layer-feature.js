@@ -326,6 +326,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           continue;
         }
 
+        if (Ember.get(leafletObject, 'readFormat.excludedProperties').includes(propertyName.toLowerCase())) {
+          continue;
+        }
+
         let propertyCaption = Ember.get(localizedProperties, propertyName);
 
         result[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;

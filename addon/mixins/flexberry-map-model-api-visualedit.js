@@ -319,10 +319,11 @@ export default Ember.Mixin.create(SnapDraw, {
     @param {string} layerId Layer id.
     @param {Object[]} featureIds Array object id.
     @param {Boolean} load flag which indicate load or get feature
+    @param {Boolean} loadNew flag which indicate load new feature or not
     @returns {[layerModel, leafletObject, featureLayer]} Get [layerModel, leafletObject, featureLayer] or [layerModel, leafletObject, undefined].
     @private
   */
-  _getModelLayerFeature(layerId, featureIds, load = false) {
+  _getModelLayerFeature(layerId, featureIds, load = false, loadNew = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
@@ -330,6 +331,7 @@ export default Ember.Mixin.create(SnapDraw, {
         featureIds: featureIds,
         layer: layerId,
         load: load,
+        loadNew: loadNew,
         results: Ember.A()
       };
 
