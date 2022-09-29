@@ -355,9 +355,9 @@ export default Ember.Component.extend({
 
       @method actions.highlightFeature
     */
-    highlightFeature(clickedFeature) {
+    highlightFeature(clickedFeature, expandInfo = true) {
       this.sendAction('clearHighlights', clickedFeature); // clear other highlight states of feature-result-items in _displayResults. Set the new highlight state
-      if (this.get('feature.highlight')) {
+      if (this.get('feature.highlight') && expandInfo) {
         if (!this.get('infoExpanded')) { // open feature-result-item properties
           this.set('infoExpanded', true);
           this.set('_linksExpanded', true);
@@ -469,11 +469,12 @@ export default Ember.Component.extend({
       @method actions.panTo
      */
     panTo(feature) {
+
       if (this.get('highlightable') && !feature.highlight) {
-        this.send('highlightFeature', feature);
+        this.send('highlightFeature', feature, false);
       }
 
-      this.sendAction('panTo', this.get('feature'));
+      this.sendAction('panTo', feature);
     },
 
     /**
@@ -482,7 +483,7 @@ export default Ember.Component.extend({
      */
     zoomTo(feature) {
       if (this.get('highlightable') && !feature.highlight) {
-        this.send('highlightFeature', feature);
+        this.send('highlightFeature', feature, false);
       }
 
       let { bounds, leafletMap, minZoom, maxZoom } = this.getLayerPropsForZoom();
@@ -494,7 +495,6 @@ export default Ember.Component.extend({
       @method actions.showInfo
      */
     showInfo() {
-      Ember.set(this.get('feature'), 'highlight', false);
       this.set('infoExpanded', !this.get('infoExpanded'));
       this.set('_linksExpanded', false);
     },

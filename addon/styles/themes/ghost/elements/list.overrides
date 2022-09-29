@@ -91,6 +91,7 @@
         padding-top: 12px;
       }
     }
+
     .item:not(.icon).feature-result-item.highlight {
       background: #f4f8fb;
       margin-left: -50px;

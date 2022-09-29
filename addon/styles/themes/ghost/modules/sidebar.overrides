@@ -647,7 +647,7 @@
     transition: left 0.5s;
 
     .ui.tab {
-      padding: 0px;
+      padding: 0 0 60px 0;
       color: @textColor;
 
       h3 {
@@ -947,7 +947,7 @@
   .layer-result-list {
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 20px;
+    padding: 20px 20px 60px 20px;
     height: ~"calc(100% - 140px)" !important;
   }
   .layer-result-list .nodata {
