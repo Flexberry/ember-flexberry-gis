@@ -647,12 +647,11 @@
     transition: left 0.5s;
 
     .ui.tab {
-      padding: 0 0 60px 0;
+      padding: 10px;
       color: @textColor;
 
       h3 {
         font-weight: normal;
-        margin: 40px 30px 15px 30px;
       }
     }
 
@@ -931,9 +930,14 @@
 .ui.tab.search {
   overflow-y: hidden !important;
   overflow-x: hidden;
+  padding: 0 0 60px 0 !important;
+  h3 {
+    margin: 40px 30px 15px 30px !important;
+  }
   .layer-result-list {
     overflow-y: auto;
     overflow-x: hidden;
+    padding: 20px 20px 60px 20px;
     height: ~"calc(100% - 35px)" !important;
   }
 }
@@ -944,6 +948,10 @@
 .ui.tab.identify {
   overflow-y: hidden !important;
   overflow-x: hidden;
+  padding: 0 0 60px 0 !important;
+  h3 {
+    margin: 40px 30px 15px 30px !important;
+  }
   .layer-result-list {
     overflow-y: auto;
     overflow-x: hidden;
