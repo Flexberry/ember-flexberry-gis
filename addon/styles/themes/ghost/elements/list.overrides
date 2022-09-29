@@ -92,6 +92,13 @@
       }
     }
 
+    .item:not(.icon).feature-result-item.highlight {
+      background: @highlightBackgroundColor;
+      margin-left: -50px;
+      width: 500px;
+      padding-left: 50px;
+    }
+
     .item:not(.icon):last-child{
       margin-bottom: 10px;
     }

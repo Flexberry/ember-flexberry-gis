@@ -399,7 +399,7 @@
       left: 40px;
       width: 100%;
       font-size: 0;
-      
+
       [class^="icon-guideline-"] {
         font-size: 20px;
         color: @textColor;
@@ -626,7 +626,9 @@
   .ui.right.sidebar.tabbar {
     position: absolute;
     padding-top: 70px !important;
-    padding-left: 20px !important;
+    .ui.tab:not(.search):not(.identify) {
+      padding-left: 20px !important;
+    }
     top: 0px;
     z-index: 890;
     visibility: visible;
@@ -928,9 +930,14 @@
 .ui.tab.search {
   overflow-y: hidden !important;
   overflow-x: hidden;
+  padding: 0 0 60px 0 !important;
+  h3 {
+    margin: 40px 30px 15px 30px !important;
+  }
   .layer-result-list {
     overflow-y: auto;
     overflow-x: hidden;
+    padding: 20px 20px 60px 20px;
     height: ~"calc(100% - 35px)" !important;
   }
 }
@@ -941,9 +948,14 @@
 .ui.tab.identify {
   overflow-y: hidden !important;
   overflow-x: hidden;
+  padding: 0 0 60px 0 !important;
+  h3 {
+    margin: 40px 30px 15px 30px !important;
+  }
   .layer-result-list {
     overflow-y: auto;
     overflow-x: hidden;
+    padding: 20px 20px 60px 20px;
     height: ~"calc(100% - 140px)" !important;
   }
   .layer-result-list .nodata {

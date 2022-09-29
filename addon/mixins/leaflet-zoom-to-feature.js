@@ -101,7 +101,6 @@ export default Ember.Mixin.create({
 
       // TODO: pass action with panTo latLng outside
       this.get('leafletMap').panTo(latLng);
-      this.send('selectFeature', feature);
     },
 
     /**
