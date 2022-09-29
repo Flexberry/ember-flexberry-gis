@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import DS from 'ember-data';
 import BaseLegendComponent from './-private/base-legend';
 
 /**
@@ -56,48 +57,55 @@ export default BaseLegendComponent.extend({
         return legends;
       }
 
-      Ember.A((Ember.get(layerSettings, 'legendSettings.layers') || Ember.get(layerSettings, 'layers') || '').split(',')).forEach((layerName) => {
-        const format = Ember.get(layerSettings, 'legendSettings.format') || Ember.get(layerSettings, 'imageFormat') || 'image/png';
-        let parameters = {
-          service: 'WMS',
-          request: 'GetLegendGraphic',
-          version: Ember.get(layerSettings, 'legendSettings.version') || Ember.get(layerSettings, 'version') || '1.1.0',
-          format: format,
-          layer: layerName,
-          style: Ember.get(layerSettings, 'styles') || ''
-        };
+      return DS.PromiseArray.create({
+        promise: Ember.RSVP.Promise.all(Ember.A((Ember.get(layerSettings, 'legendSettings.layers') || Ember.get(layerSettings, 'layers') || '').split(','))
+        .map((layerName) => {
+          return new Ember.RSVP.Promise((resolve) => {
+            const format = Ember.get(layerSettings, 'legendSettings.format') || Ember.get(layerSettings, 'imageFormat') || 'image/png';
+            let parameters = {
+              service: 'WMS',
+              request: 'GetLegendGraphic',
+              version: Ember.get(layerSettings, 'legendSettings.version') || Ember.get(layerSettings, 'version') || '1.1.0',
+              format: format,
+              layer: layerName,
+              style: Ember.get(layerSettings, 'styles') || ''
+            };
 
-        if (format !== 'application/json') {
-          legends.pushObject({
-            src: `${url}${L.Util.getParamString(parameters)}`,
-            layerName: layerName,
-            useLayerName: false
-          });
-        } else {
-          let legendUrl = `${url}${L.Util.getParamString(parameters)}`;
-          Ember.$.ajax(legendUrl, {
-            method: 'GET'
-          }).done((response) => {
-            if (response && response.Legend && response.Legend[0]) {
-              // One legend per query.
-              response.Legend[0].rules.forEach(rule => {
-                parameters.rule = rule.name;
-                parameters.format = 'image/png';
-                parameters.width = this.get('constantHeight');
-                parameters.height = this.get('constantHeight');
-                legends.pushObject({
-                  src: `${url}${L.Util.getParamString(parameters)}`,
-                  layerName: rule.name,
-                  useLayerName: true,
-                  style: `height: ${this.get('height')}px;`
-                });
+            if (format !== 'application/json') {
+              resolve({
+                src: `${url}${L.Util.getParamString(parameters)}`,
+                layerName: layerName,
+                useLayerName: false
               });
+            } else {
+              let legendUrl = `${url}${L.Util.getParamString(parameters)}`;
+              Ember.$.ajax(legendUrl, {
+                method: 'GET'
+              })
+                .fail(() => resolve(null))
+                .done((response) => {
+                  if (response && response.Legend && response.Legend[0]) {
+                    // One legend per query.
+                    response.Legend[0].rules.forEach(rule => {
+                      parameters.rule = rule.name;
+                      parameters.format = 'image/png';
+                      parameters.width = this.get('constantHeight');
+                      parameters.height = this.get('constantHeight');
+                      resolve({
+                        src: `${url}${L.Util.getParamString(parameters)}`,
+                        layerName: rule.name,
+                        useLayerName: true,
+                        style: `height: ${this.get('height')}px;`
+                      });
+                    });
+                  }
+                });
             }
           });
-        }
+        })).then(lArray => {
+          legends.pushObjects(lArray.filter(l => !!l));
+          return legends;
+        })
       });
-
-      return legends;
-    }
-  )
+    })
 });

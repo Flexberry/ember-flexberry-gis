@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import DS from 'ember-data';
 import layout from '../../../templates/components/legends/-private/base-legend';
 
 /**
@@ -114,7 +115,7 @@ export default Ember.Component.extend({
   */
   _legendsDidChange: Ember.on('init', Ember.observer('_legends', function() {
     let legends = this.get('_legends');
-    if (legends instanceof Ember.RSVP.Promise) {
+    if (legends instanceof Ember.RSVP.Promise || legends instanceof DS.PromiseArray) {
       legends.then((result) => {
         this.sendAction('legendsLoaded', this.get('layer.name'), result);
       });
