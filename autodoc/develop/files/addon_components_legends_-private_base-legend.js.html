@@ -416,6 +416,7 @@
 <div class="file">
     <pre class="prettyprint linenums">
 import Ember from &#x27;ember&#x27;;
+import DS from &#x27;ember-data&#x27;;
 import layout from &#x27;../../../templates/components/legends/-private/base-legend&#x27;;
 
 /**
@@ -531,7 +532,7 @@ export default Ember.Component.extend({
   */
   _legendsDidChange: Ember.on(&#x27;init&#x27;, Ember.observer(&#x27;_legends&#x27;, function() {
     let legends = this.get(&#x27;_legends&#x27;);
-    if (legends instanceof Ember.RSVP.Promise) {
+    if (legends instanceof Ember.RSVP.Promise || legends instanceof DS.PromiseArray) {
       legends.then((result) =&gt; {
         this.sendAction(&#x27;legendsLoaded&#x27;, this.get(&#x27;layer.name&#x27;), result);
       });

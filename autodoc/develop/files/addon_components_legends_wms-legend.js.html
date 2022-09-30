@@ -416,6 +416,7 @@
 <div class="file">
     <pre class="prettyprint linenums">
 import Ember from &#x27;ember&#x27;;
+import DS from &#x27;ember-data&#x27;;
 import BaseLegendComponent from &#x27;./-private/base-legend&#x27;;
 
 /**
@@ -473,50 +474,57 @@ export default BaseLegendComponent.extend({
         return legends;
       }
 
-      Ember.A((Ember.get(layerSettings, &#x27;legendSettings.layers&#x27;) || Ember.get(layerSettings, &#x27;layers&#x27;) || &#x27;&#x27;).split(&#x27;,&#x27;)).forEach((layerName) =&gt; {
-        const format = Ember.get(layerSettings, &#x27;legendSettings.format&#x27;) || Ember.get(layerSettings, &#x27;imageFormat&#x27;) || &#x27;image/png&#x27;;
-        let parameters = {
-          service: &#x27;WMS&#x27;,
-          request: &#x27;GetLegendGraphic&#x27;,
-          version: Ember.get(layerSettings, &#x27;legendSettings.version&#x27;) || Ember.get(layerSettings, &#x27;version&#x27;) || &#x27;1.1.0&#x27;,
-          format: format,
-          layer: layerName,
-          style: Ember.get(layerSettings, &#x27;styles&#x27;) || &#x27;&#x27;
-        };
+      return DS.PromiseArray.create({
+        promise: Ember.RSVP.Promise.all(Ember.A((Ember.get(layerSettings, &#x27;legendSettings.layers&#x27;) || Ember.get(layerSettings, &#x27;layers&#x27;) || &#x27;&#x27;).split(&#x27;,&#x27;))
+        .map((layerName) =&gt; {
+          return new Ember.RSVP.Promise((resolve) =&gt; {
+            const format = Ember.get(layerSettings, &#x27;legendSettings.format&#x27;) || Ember.get(layerSettings, &#x27;imageFormat&#x27;) || &#x27;image/png&#x27;;
+            let parameters = {
+              service: &#x27;WMS&#x27;,
+              request: &#x27;GetLegendGraphic&#x27;,
+              version: Ember.get(layerSettings, &#x27;legendSettings.version&#x27;) || Ember.get(layerSettings, &#x27;version&#x27;) || &#x27;1.1.0&#x27;,
+              format: format,
+              layer: layerName,
+              style: Ember.get(layerSettings, &#x27;styles&#x27;) || &#x27;&#x27;
+            };
 
-        if (format !== &#x27;application/json&#x27;) {
-          legends.pushObject({
-            src: &#x60;${url}${L.Util.getParamString(parameters)}&#x60;,
-            layerName: layerName,
-            useLayerName: false
-          });
-        } else {
-          let legendUrl = &#x60;${url}${L.Util.getParamString(parameters)}&#x60;;
-          Ember.$.ajax(legendUrl, {
-            method: &#x27;GET&#x27;
-          }).done((response) =&gt; {
-            if (response &amp;&amp; response.Legend &amp;&amp; response.Legend[0]) {
-              // One legend per query.
-              response.Legend[0].rules.forEach(rule =&gt; {
-                parameters.rule = rule.name;
-                parameters.format = &#x27;image/png&#x27;;
-                parameters.width = this.get(&#x27;constantHeight&#x27;);
-                parameters.height = this.get(&#x27;constantHeight&#x27;);
-                legends.pushObject({
-                  src: &#x60;${url}${L.Util.getParamString(parameters)}&#x60;,
-                  layerName: rule.name,
-                  useLayerName: true,
-                  style: &#x60;height: ${this.get(&#x27;height&#x27;)}px;&#x60;
-                });
+            if (format !== &#x27;application/json&#x27;) {
+              resolve({
+                src: &#x60;${url}${L.Util.getParamString(parameters)}&#x60;,
+                layerName: layerName,
+                useLayerName: false
               });
+            } else {
+              let legendUrl = &#x60;${url}${L.Util.getParamString(parameters)}&#x60;;
+              Ember.$.ajax(legendUrl, {
+                method: &#x27;GET&#x27;
+              })
+                .fail(() =&gt; resolve(null))
+                .done((response) =&gt; {
+                  if (response &amp;&amp; response.Legend &amp;&amp; response.Legend[0]) {
+                    // One legend per query.
+                    response.Legend[0].rules.forEach(rule =&gt; {
+                      parameters.rule = rule.name;
+                      parameters.format = &#x27;image/png&#x27;;
+                      parameters.width = this.get(&#x27;constantHeight&#x27;);
+                      parameters.height = this.get(&#x27;constantHeight&#x27;);
+                      resolve({
+                        src: &#x60;${url}${L.Util.getParamString(parameters)}&#x60;,
+                        layerName: rule.name,
+                        useLayerName: true,
+                        style: &#x60;height: ${this.get(&#x27;height&#x27;)}px;&#x60;
+                      });
+                    });
+                  }
+                });
             }
           });
-        }
+        })).then(lArray =&gt; {
+          legends.pushObjects(lArray.filter(l =&gt; !!l));
+          return legends;
+        })
       });
-
-      return legends;
-    }
-  )
+    })
 });
 
     </pre>

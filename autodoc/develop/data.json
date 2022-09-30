@@ -4808,7 +4808,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/legends/-private/base-legend.js",
-            "line": 30,
+            "line": 31,
             "description": "Base component representing map layer's legend.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
         },
@@ -4988,7 +4988,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/legends/wms-legend.js",
-            "line": 4,
+            "line": 5,
             "description": "Component representing map layer's legend for WMS-layers.",
             "extends": "BaseLegendComponent"
         },
@@ -5207,7 +5207,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 137,
+            "line": 138,
             "description": "Flexberry 'export' map-command modal dialog with [Semantic UI modal](http://semantic-ui.com/modules/modal.html) style.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
         },
@@ -19427,7 +19427,7 @@
         },
         {
             "file": "addon/components/legends/-private/base-legend.js",
-            "line": 4,
+            "line": 5,
             "description": "Component's CSS-classes names.\nJSON-object containing string constants with CSS-classes names related to component's hbs-markup elements.",
             "itemtype": "property",
             "name": "flexberryClassNames",
@@ -19471,21 +19471,21 @@
         },
         {
             "file": "addon/components/legends/-private/base-legend.js",
-            "line": 37,
+            "line": 38,
             "description": "Reference to component's template.",
             "class": "BaseLegendComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/legends/-private/base-legend.js",
-            "line": 42,
+            "line": 43,
             "description": "Reference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
             "class": "BaseLegendComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/legends/-private/base-legend.js",
-            "line": 48,
+            "line": 49,
             "description": "Component's wrapping <div> CSS-classes names.\n\nAny other CSS-classes can be added through component's 'class' property.",
             "itemtype": "property",
             "name": "classNames",
@@ -19496,7 +19496,7 @@
         },
         {
             "file": "addon/components/legends/-private/base-legend.js",
-            "line": 59,
+            "line": 60,
             "description": "Flag: indicates whether to show layer name or not.",
             "itemtype": "property",
             "name": "showLayerName",
@@ -19507,7 +19507,7 @@
         },
         {
             "file": "addon/components/legends/-private/base-legend.js",
-            "line": 68,
+            "line": 69,
             "description": "Flag: indicates whether legend was lazy loaded.",
             "itemtype": "property",
             "name": "lazyLoaded",
@@ -19518,7 +19518,7 @@
         },
         {
             "file": "addon/components/legends/-private/base-legend.js",
-            "line": 77,
+            "line": 78,
             "description": "Component's right pading.",
             "itemtype": "property",
             "name": "rightPadding",
@@ -19529,7 +19529,7 @@
         },
         {
             "file": "addon/components/legends/-private/base-legend.js",
-            "line": 86,
+            "line": 87,
             "description": "Component's height.",
             "itemtype": "property",
             "name": "height",
@@ -19540,7 +19540,7 @@
         },
         {
             "file": "addon/components/legends/-private/base-legend.js",
-            "line": 95,
+            "line": 96,
             "description": "Array of legend's for layer.\nEvery legend is an object with following structure { src: ... },\nwhere 'src' is legend's image source (url or base64-string).",
             "itemtype": "property",
             "name": "_legends",
@@ -19553,7 +19553,7 @@
         },
         {
             "file": "addon/components/legends/-private/base-legend.js",
-            "line": 109,
+            "line": 110,
             "description": "Observes changes in legends array, and sends 'legendsLoaded' action notifying that legends are loaded.",
             "itemtype": "method",
             "name": "_legendsDidChange",
@@ -19564,7 +19564,7 @@
         },
         {
             "file": "addon/components/legends/-private/base-legend.js",
-            "line": 126,
+            "line": 127,
             "description": "Observes changes in right padding property, and changes it's value in the DOM.",
             "itemtype": "method",
             "name": "_legendsDidChange",
@@ -19575,7 +19575,7 @@
         },
         {
             "file": "addon/components/legends/-private/base-legend.js",
-            "line": 139,
+            "line": 140,
             "description": "Called after a component has been rendered, both on initial render and in subsequent rerenders.",
             "class": "BaseLegendComponent",
             "module": "ember-flexberry-gis"
@@ -19803,28 +19803,28 @@
         },
         {
             "file": "addon/components/legends/wms-legend.js",
-            "line": 11,
+            "line": 12,
             "description": "Flag shows that height of legend can be dynamic (for full legend)",
             "class": "WmsLegendComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/legends/wms-legend.js",
-            "line": 16,
+            "line": 17,
             "description": "Height for GetLegendImage query (JSON)",
             "class": "WmsLegendComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/legends/wms-legend.js",
-            "line": 21,
+            "line": 22,
             "description": "Height for image container (dynamic)",
             "class": "WmsLegendComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/legends/wms-legend.js",
-            "line": 26,
+            "line": 27,
             "description": "Array of legend's for layer.\nEvery legend is an object with following structure { src: ... },\nwhere 'src' is legend's image source (url or base64-string).",
             "itemtype": "property",
             "name": "_legends",
@@ -21682,28 +21682,28 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 36,
+            "line": 37,
             "description": "Constant representing sizes (in millimeters) of available paper formats.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 92,
+            "line": 93,
             "description": "Constant representing default DPI.\nThe most common value used by browsers is 96.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 98,
+            "line": 99,
             "description": "Constant representing count of millimeters in one inch.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 103,
+            "line": 104,
             "description": "Component's CSS-classes names.\nJSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.",
             "itemtype": "property",
             "name": "flexberryClassNames",
@@ -21727,7 +21727,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 144,
+            "line": 145,
             "description": "Sheet of paper placed on dialog's preview block.",
             "itemtype": "property",
             "name": "_$sheetOfPaper",
@@ -21740,7 +21740,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 154,
+            "line": 155,
             "description": "Sheet of paper clone which will be placed on dialog's preview block while export operation is executing.",
             "itemtype": "property",
             "name": "_$sheetOfPaperClone",
@@ -21753,7 +21753,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 164,
+            "line": 165,
             "description": "Sheet of paper with map legend placed on dialog's preview block.",
             "itemtype": "property",
             "name": "_$sheetOfLegend",
@@ -21766,7 +21766,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 174,
+            "line": 175,
             "description": "Sheet of paper clone with map legend which will be placed on dialog's preview block while export operation is executing.",
             "itemtype": "property",
             "name": "_$sheetOfLegendClone",
@@ -21779,7 +21779,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 184,
+            "line": 185,
             "description": "Tabular menu tabs items placed on dialog's settings block.",
             "itemtype": "property",
             "name": "_$tabularMenuTabItems",
@@ -21792,7 +21792,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 194,
+            "line": 195,
             "description": "Tabular menu tabs placed on dialog's settings block.",
             "itemtype": "property",
             "name": "_$tabularMenuTabs",
@@ -21805,7 +21805,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 204,
+            "line": 205,
             "description": "Tabular menu clicked tab.",
             "itemtype": "property",
             "name": "_tabularMenuClickedTab",
@@ -21818,7 +21818,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 214,
+            "line": 215,
             "description": "Available font families.",
             "itemtype": "property",
             "name": "_availableFontFamilies",
@@ -21831,7 +21831,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 224,
+            "line": 225,
             "description": "Available font sizes.",
             "itemtype": "property",
             "name": "_availableFontSizes",
@@ -21844,7 +21844,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 234,
+            "line": 235,
             "description": "Available paper formats.",
             "itemtype": "property",
             "name": "_availablePaperFormats",
@@ -21857,7 +21857,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 244,
+            "line": 245,
             "description": "Available file types.",
             "itemtype": "property",
             "name": "_availableFileTypes",
@@ -21870,7 +21870,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 254,
+            "line": 255,
             "description": "Hash containing export options.",
             "itemtype": "property",
             "name": "_options",
@@ -21883,7 +21883,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 264,
+            "line": 265,
             "description": "Current screen approximate DPI.\nWill be computed in component's 'didInsertElement' hook.",
             "itemtype": "property",
             "name": "_dpi",
@@ -21897,7 +21897,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 276,
+            "line": 277,
             "description": "Indicates whether or not use preview styles.",
             "itemtype": "property",
             "name": "_isPreview",
@@ -21910,7 +21910,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 286,
+            "line": 287,
             "description": "Sheet of paper real height.",
             "itemtype": "property",
             "name": "_sheetOfPaperRealHeight",
@@ -21923,7 +21923,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 308,
+            "line": 309,
             "description": "Sheet of paper real width.",
             "itemtype": "property",
             "name": "_sheetOfPaperRealWidth",
@@ -21936,7 +21936,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 330,
+            "line": 331,
             "description": "Sheet of paper real style.",
             "itemtype": "property",
             "name": "_sheetOfPaperRealStyle",
@@ -21949,7 +21949,21 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 360,
+            "line": 361,
+            "description": "Array with legend pages when legends on second page.\nNot computed because of every call recompute.\nBetter to store value in static variable",
+            "class": "FlexberryExportMapCommandDialogComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/map-commands-dialogs/export.js",
+            "line": 368,
+            "description": "Observer to compute legend pages",
+            "class": "FlexberryExportMapCommandDialogComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/map-commands-dialogs/export.js",
+            "line": 424,
             "description": "Sheet of paper container height.\nInitializes in 'didInsertElement' hook.",
             "itemtype": "property",
             "name": "_sheetOfPaperInitialHeight",
@@ -21962,7 +21976,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 371,
+            "line": 435,
             "description": "Sheet of paper container width.\nInitializes in 'didInsertElement' hook.",
             "itemtype": "property",
             "name": "_sheetOfPaperInitialWidth",
@@ -21975,7 +21989,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 382,
+            "line": 446,
             "description": "Fixed difference between map height and sheet of paper height.\nInitializes in 'didInsertElement' hook.",
             "itemtype": "property",
             "name": "_mapHeightDelta",
@@ -21988,7 +22002,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 393,
+            "line": 457,
             "description": "Sheet of paper preview scale factor.",
             "itemtype": "property",
             "name": "_sheetOfPaperPreviewScaleFactor",
@@ -22001,7 +22015,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 428,
+            "line": 492,
             "description": "Sheet of paper preview height.",
             "itemtype": "property",
             "name": "_sheetOfPaperPreviewHeight",
@@ -22014,7 +22028,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 449,
+            "line": 513,
             "description": "Sheet of paper preview width.",
             "itemtype": "property",
             "name": "_sheetOfPaperPreviewWidth",
@@ -22027,7 +22041,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 470,
+            "line": 534,
             "description": "Style related to user-defined sheet of paper settings.",
             "itemtype": "property",
             "name": "_sheetOfPaperPreviewStyle",
@@ -22040,14 +22054,14 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 540,
+            "line": 604,
             "description": "Style is needed to be copied while exporting\nAlso needed to rewrite deep children",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 558,
+            "line": 622,
             "description": "Legends padding-right property.",
             "itemtype": "property",
             "name": "_legendsRightPadding    @type Number",
@@ -22059,7 +22073,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 581,
+            "line": 645,
             "description": "Map caption real height.",
             "itemtype": "property",
             "name": "_mapCaptionRealHeight",
@@ -22072,7 +22086,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 597,
+            "line": 661,
             "description": "Map caption real style.",
             "itemtype": "property",
             "name": "_mapCaptionRealStyle",
@@ -22085,7 +22099,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 635,
+            "line": 699,
             "description": "Map caption preview height.",
             "itemtype": "property",
             "name": "_mapCaptionPreviewHeight",
@@ -22098,7 +22112,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 656,
+            "line": 720,
             "description": "Map caption preview font size.",
             "itemtype": "property",
             "name": "_mapCaptionPreviewFontSize",
@@ -22111,28 +22125,28 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 677,
+            "line": 741,
             "description": "Padding for sheet of paper",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 682,
+            "line": 746,
             "description": "Legend font size",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 687,
+            "line": 751,
             "description": "Legend line height",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 692,
+            "line": 756,
             "description": "Map caption preview style.",
             "itemtype": "property",
             "name": "_mapCaptionPreviewStyle",
@@ -22145,7 +22159,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 737,
+            "line": 801,
             "description": "Map legend real style.",
             "itemtype": "property",
             "name": "_mapLegendRealStyle",
@@ -22158,7 +22172,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 757,
+            "line": 821,
             "description": "Map caption preview style.",
             "itemtype": "property",
             "name": "_mapLegendPreviewStyle",
@@ -22171,7 +22185,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 779,
+            "line": 843,
             "description": "Map caption preview style.",
             "itemtype": "property",
             "name": "_mapLegendPreviewStyle",
@@ -22184,7 +22198,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 796,
+            "line": 860,
             "description": "Get map layers info.",
             "type": "Array",
             "access": "private",
@@ -22194,7 +22208,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 831,
+            "line": 895,
             "description": "Get layer legend width.",
             "type": "Number",
             "access": "private",
@@ -22204,7 +22218,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 859,
+            "line": 923,
             "description": "Map legend lines.",
             "itemtype": "property",
             "name": "_mapLegendLines",
@@ -22217,7 +22231,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 919,
+            "line": 983,
             "description": "Map real style.",
             "itemtype": "property",
             "name": "_mapRealStyle",
@@ -22230,7 +22244,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 960,
+            "line": 1024,
             "description": "Map preview style.",
             "itemtype": "property",
             "name": "_mapPreviewStyle",
@@ -22243,7 +22257,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1030,
+            "line": 1111,
             "description": "Is element is visible in container.\nFor \"...\" add if legend is not fully rendered in container.",
             "params": [
                 {
@@ -22265,7 +22279,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1048,
+            "line": 1129,
             "description": "Flag: indicates whether file name has been changed by user or not.",
             "itemtype": "property",
             "name": "_fileNameHasBeenChanged",
@@ -22278,7 +22292,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1058,
+            "line": 1139,
             "description": "File name which will be applied to exported file.",
             "itemtype": "property",
             "name": "_fileName",
@@ -22290,7 +22304,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1076,
+            "line": 1157,
             "description": "Map caption.",
             "itemtype": "property",
             "name": "_caption",
@@ -22302,7 +22316,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1097,
+            "line": 1178,
             "description": "Flag: indicates whether print/export dialog is already rendered.",
             "itemtype": "property",
             "name": "_isDialogAlreadyRendered",
@@ -22315,7 +22329,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1107,
+            "line": 1188,
             "description": "Flag: indicates whether print/export dialog is shown.",
             "itemtype": "property",
             "name": "_isDialogShown",
@@ -22328,7 +22342,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1117,
+            "line": 1198,
             "description": "Flag: indicates whether map can be shown or not.",
             "itemtype": "property",
             "name": "_mapCanBeShown",
@@ -22341,7 +22355,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1127,
+            "line": 1208,
             "description": "Leaflet map's initial bounds which must be restored after dialog will be closed.",
             "itemtype": "property",
             "name": "_leafletMapInitialBounds",
@@ -22353,7 +22367,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1136,
+            "line": 1217,
             "description": "Leaflet map's initial zoom which must be restored after dialog will be closed.",
             "itemtype": "property",
             "name": "_leafletMapInitialZoom",
@@ -22365,7 +22379,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1145,
+            "line": 1226,
             "description": "Leaflet map container's clone.",
             "itemtype": "property",
             "name": "_$leafletMapClone",
@@ -22378,7 +22392,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1155,
+            "line": 1236,
             "description": "Main leaflet map.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -22389,7 +22403,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1164,
+            "line": 1245,
             "description": "Map layers hierarchy.",
             "itemtype": "property",
             "name": "layers",
@@ -22400,21 +22414,21 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1173,
+            "line": 1254,
             "description": "Reference to component's template.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1178,
+            "line": 1259,
             "description": "Reference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1184,
+            "line": 1265,
             "description": "Component's additional CSS-class names.",
             "itemtype": "property",
             "name": "class",
@@ -22425,7 +22439,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1193,
+            "line": 1274,
             "description": "Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)\nis empty to disable component's wrapping <div>.",
             "itemtype": "property",
             "name": "tagName",
@@ -22436,7 +22450,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1203,
+            "line": 1284,
             "description": "Flag: indicates whether dialog is visible or not.\nIf true, then dialog will be shown, otherwise dialog will be closed.",
             "itemtype": "property",
             "name": "visible",
@@ -22447,7 +22461,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1213,
+            "line": 1294,
             "description": "Flag: indicates whether export dialog is busy or not.",
             "type": "Boolean",
             "default": "false",
@@ -22459,7 +22473,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1223,
+            "line": 1304,
             "description": "Flag: indicates whether to show downloading file settings or not.",
             "itemtype": "property",
             "name": "showDownloadingFileSettings",
@@ -22470,7 +22484,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1232,
+            "line": 1313,
             "description": "Flag: indicates whether to show error message or not.",
             "itemtype": "property",
             "name": "showErrorMessage",
@@ -22481,7 +22495,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1241,
+            "line": 1322,
             "description": "Error message.",
             "itemtype": "property",
             "name": "errorMessage",
@@ -22492,7 +22506,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1250,
+            "line": 1331,
             "description": "Map caption that will be displayed on print/export preview by default.",
             "itemtype": "property",
             "name": "defaultMapCaption",
@@ -22503,7 +22517,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1259,
+            "line": 1340,
             "description": "Max timeout (in milliseconds) to wait for map's layers readiness before export.",
             "itemtype": "property",
             "name": "timeout",
@@ -22514,7 +22528,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1268,
+            "line": 1349,
             "description": "Trigger for recompute _mapLegendLines.",
             "itemtype": "property",
             "name": "legendsUpdateTrigger",
@@ -22525,7 +22539,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1277,
+            "line": 1358,
             "description": "All loaded legends for layers.",
             "itemtype": "property",
             "name": "legends",
@@ -22536,7 +22550,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1300,
+            "line": 1381,
             "description": "Flag: whether to recalc scale on map zoom change.",
             "itemtype": "property",
             "name": "recalcOnZoomChange",
@@ -22547,7 +22561,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1309,
+            "line": 1390,
             "description": "Saves the value zoomDelta for map.",
             "itemtype": "property",
             "name": "zoomDelta",
@@ -22558,7 +22572,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1318,
+            "line": 1399,
             "description": "Saves the value zoomSnap for map.",
             "itemtype": "property",
             "name": "zoomSnap",
@@ -22569,7 +22583,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1327,
+            "line": 1408,
             "description": "Saves the value wheelPxPerZoomLevel for map.",
             "itemtype": "property",
             "name": "wheelPxPerZoomLevel",
@@ -22580,7 +22594,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1336,
+            "line": 1417,
             "description": "Saves the value zoom for map.",
             "itemtype": "property",
             "name": "zoom",
@@ -22591,7 +22605,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1345,
+            "line": 1426,
             "description": "Saves the value scales for map.",
             "itemtype": "property",
             "name": "scales",
@@ -22602,7 +22616,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1355,
+            "line": 1436,
             "description": "Handler for settings tabs 'click' action.",
             "itemtype": "method",
             "name": "actions.onSettingsTabClick",
@@ -22618,7 +22632,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1374,
+            "line": 1455,
             "description": "Handler for bold font button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onBoldFontButtonClick",
@@ -22627,7 +22641,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1384,
+            "line": 1465,
             "description": "Handler for italic font button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onItalicFontButtonClick",
@@ -22636,7 +22650,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1394,
+            "line": 1475,
             "description": "Handler for underline font button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onUnderlineFontButtonClick",
@@ -22645,7 +22659,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1404,
+            "line": 1485,
             "description": "Handler for line-through font button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onLinethroughFontButtonClick",
@@ -22654,7 +22668,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1414,
+            "line": 1495,
             "description": "Handler for font colorpicker's 'change' action.",
             "itemtype": "method",
             "name": "actions.onCaptionFontColorChange",
@@ -22663,7 +22677,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1423,
+            "line": 1504,
             "description": "Handler for display mode change.",
             "itemtype": "method",
             "name": "actions.onDisplayModeChange",
@@ -22679,7 +22693,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1433,
+            "line": 1514,
             "description": "Handler for legend position change.",
             "itemtype": "method",
             "name": "actions.onLegendPositionChange",
@@ -22695,7 +22709,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1443,
+            "line": 1524,
             "description": "Handler for page number change.",
             "itemtype": "method",
             "name": "actions.onPageChange",
@@ -22704,6 +22718,11 @@
                     "name": "newPageNumber",
                     "description": "New page number.",
                     "type": "String"
+                },
+                {
+                    "name": "additionalPageNumber",
+                    "description": "Additional legend page number.",
+                    "type": "Integer"
                 }
             ],
             "class": "FlexberryExportMapCommandDialogComponent",
@@ -22711,7 +22730,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1453,
+            "line": 1550,
             "description": "Handler for paper orientation change.",
             "itemtype": "method",
             "name": "actions.onPaperOrientationChange",
@@ -22727,7 +22746,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1463,
+            "line": 1560,
             "description": "Handler for map control change.",
             "itemtype": "method",
             "name": "actions.onMapControlChange",
@@ -22743,7 +22762,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1474,
+            "line": 1571,
             "description": "Handler for error 'ui-message' component 'onShow' action.",
             "itemtype": "method",
             "name": "actions.onErrorMessageShow",
@@ -22752,7 +22771,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1481,
+            "line": 1578,
             "description": "Handler for error 'ui-message' component 'onHide' action.",
             "itemtype": "method",
             "name": "actions.onErrorMessageHide",
@@ -22761,7 +22780,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1502,
+            "line": 1599,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.beforeShow:method\"}}'flexberry-dialog' component's 'beforeShow' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryExportMapCommandDialogComponent/sendingActions.beforeShow:method\"}}'beforeShow' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onBeforeShow",
@@ -22770,7 +22789,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1540,
+            "line": 1637,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.beforeHide:method\"}}'flexberry-dialog' component's 'beforeHide' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryExportMapCommandDialogComponent/sendingActions.beforeHide:method\"}}'beforeHide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onBeforeHide",
@@ -22779,7 +22798,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1566,
+            "line": 1663,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.show:method\"}}'flexberry-dialog' component's 'show' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryExportMapCommandDialogComponent/sendingActions.show:method\"}}'show' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onShow",
@@ -22788,7 +22807,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1578,
+            "line": 1675,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.hide:method\"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryExportMapCommandDialogComponent/sendingActions.hide:method\"}}'hide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHide",
@@ -22797,7 +22816,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1588,
+            "line": 1685,
             "description": "Called when legends for one of the layers is loaded.",
             "itemtype": "method",
             "name": "actions.legendsLoaded",
@@ -22806,7 +22825,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1599,
+            "line": 1696,
             "description": "Observers changes in properties that affect the ability to show leaflet map.",
             "itemtype": "method",
             "name": "_mapCanBeShownDidChange",
@@ -22817,7 +22836,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1637,
+            "line": 1734,
             "description": "Observers changes in properties that affect the ability to show legend map.",
             "itemtype": "method",
             "name": "_legendControlDidChange",
@@ -22828,7 +22847,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1655,
+            "line": 1752,
             "description": "Observers changes in properties that affect the ability to show scale map.",
             "itemtype": "method",
             "name": "_scaleControlDidChange",
@@ -22839,7 +22858,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1669,
+            "line": 1766,
             "description": "Observers changes in properties that affect the ability to show pages.",
             "itemtype": "method",
             "name": "_pageNumberDidChange",
@@ -22850,7 +22869,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1681,
+            "line": 1778,
             "description": "Invalidates leaflet map's size.",
             "itemtype": "method",
             "name": "_invalidateSizeOfLeafletMap",
@@ -22862,7 +22881,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1700,
+            "line": 1797,
             "description": "Sets active dropdown item.",
             "itemtype": "method",
             "name": "_activeItemDropdownScale",
@@ -22871,7 +22890,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1718,
+            "line": 1815,
             "description": "Fits specified leaflet map's bounds.",
             "itemtype": "method",
             "name": "_fitBoundsOfLeafletMap",
@@ -22890,7 +22909,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1742,
+            "line": 1839,
             "description": "Waits for leaflet map tile layers to be ready.",
             "itemtype": "method",
             "name": "_waitForLeafletMapTileLayersToBeReady",
@@ -22902,7 +22921,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1794,
+            "line": 1891,
             "description": "Waits for leaflet map overlay layers to be ready.",
             "itemtype": "method",
             "name": "_waitForLeafletMapOverlayLayersToBeReady",
@@ -22914,7 +22933,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1833,
+            "line": 1930,
             "description": "Waits for leaflet map layers to be ready.",
             "itemtype": "method",
             "name": "_waitForLeafletMapLayersToBeReady",
@@ -22926,7 +22945,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1847,
+            "line": 1944,
             "description": "Shows leaflet map.",
             "itemtype": "method",
             "name": "_showLeafletMap",
@@ -22937,7 +22956,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1889,
+            "line": 1986,
             "description": "Hides leaflet map.",
             "itemtype": "method",
             "name": "_hideLeafletMap",
@@ -22948,7 +22967,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1925,
+            "line": 2022,
             "description": "Computes current scren approximate DPI.",
             "return": {
                 "description": "Current scren approximate DPI.",
@@ -22959,7 +22978,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1949,
+            "line": 2046,
             "description": "Returns inner options transformed into Leaflet.Export options.",
             "itemtype": "method",
             "name": "_getLeafletExportOptions",
@@ -22972,7 +22991,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 1987,
+            "line": 2084,
             "description": "Export's map with respect to selected export options.",
             "itemtype": "method",
             "name": "_export",
@@ -22983,7 +23002,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2003,
+            "line": 2100,
             "description": "Prepares map for export with respect to selected export options.",
             "itemtype": "method",
             "name": "beforeExport",
@@ -22992,7 +23011,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2090,
+            "line": 2191,
             "description": "Export's map with respect to selected export options.",
             "itemtype": "method",
             "name": "export",
@@ -23001,7 +23020,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2210,
+            "line": 2323,
             "description": "Performs after export clean up.",
             "itemtype": "method",
             "name": "afterExport",
@@ -23010,35 +23029,35 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2262,
+            "line": 2375,
             "description": "Initializes component.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2302,
+            "line": 2415,
             "description": "Initializes component's DOM-related properties.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2337,
+            "line": 2450,
             "description": "Called after a component has been rendered, both on initial render and in subsequent rerenders.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2353,
+            "line": 2466,
             "description": "Destroys component.",
             "class": "FlexberryExportMapCommandDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2375,
+            "line": 2488,
             "description": "When the form is expanded, the default settings are set",
             "itemtype": "method",
             "name": "setDefaultExportOptions",
@@ -23047,7 +23066,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2389,
+            "line": 2502,
             "description": "Component's action invoking when dialog starts to show.",
             "itemtype": "method",
             "name": "sendingActions.beforeShow",
@@ -23056,7 +23075,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2395,
+            "line": 2508,
             "description": "Component's action invoking when dialog starts to hide.",
             "itemtype": "method",
             "name": "sendingActions.beforeHide",
@@ -23065,7 +23084,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2401,
+            "line": 2514,
             "description": "Component's action invoking when dialog is shown.",
             "itemtype": "method",
             "name": "sendingActions.show",
@@ -23074,7 +23093,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2407,
+            "line": 2520,
             "description": "Component's action invoking when dialog is hidden.",
             "itemtype": "method",
             "name": "sendingActions.hide",
@@ -23083,7 +23102,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2413,
+            "line": 2526,
             "description": "Component's action invoking when dialog is approved.",
             "itemtype": "method",
             "name": "sendingActions.approve",
@@ -23092,7 +23111,7 @@
         },
         {
             "file": "addon/components/map-commands-dialogs/export.js",
-            "line": 2419,
+            "line": 2532,
             "description": "Component's action invoking when dialog is denied.",
             "itemtype": "method",
             "name": "sendingActions.deny",
@@ -51721,31 +51740,31 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1030"
+            "line": " addon/components/map-commands-dialogs/export.js:1111"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1681"
+            "line": " addon/components/map-commands-dialogs/export.js:1778"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1718"
+            "line": " addon/components/map-commands-dialogs/export.js:1815"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1742"
+            "line": " addon/components/map-commands-dialogs/export.js:1839"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1794"
+            "line": " addon/components/map-commands-dialogs/export.js:1891"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1833"
+            "line": " addon/components/map-commands-dialogs/export.js:1930"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/map-commands-dialogs/export.js:1925"
+            "line": " addon/components/map-commands-dialogs/export.js:2022"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -52749,15 +52768,15 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/legends/-private/base-legend.js:37"
+            "line": " addon/components/legends/-private/base-legend.js:38"
         },
         {
             "message": "Missing item type\nReference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
-            "line": " addon/components/legends/-private/base-legend.js:42"
+            "line": " addon/components/legends/-private/base-legend.js:43"
         },
         {
             "message": "Missing item type\nCalled after a component has been rendered, both on initial render and in subsequent rerenders.",
-            "line": " addon/components/legends/-private/base-legend.js:139"
+            "line": " addon/components/legends/-private/base-legend.js:140"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -52797,15 +52816,15 @@
         },
         {
             "message": "Missing item type\nFlag shows that height of legend can be dynamic (for full legend)",
-            "line": " addon/components/legends/wms-legend.js:11"
+            "line": " addon/components/legends/wms-legend.js:12"
         },
         {
             "message": "Missing item type\nHeight for GetLegendImage query (JSON)",
-            "line": " addon/components/legends/wms-legend.js:16"
+            "line": " addon/components/legends/wms-legend.js:17"
         },
         {
             "message": "Missing item type\nHeight for image container (dynamic)",
-            "line": " addon/components/legends/wms-legend.js:21"
+            "line": " addon/components/legends/wms-legend.js:22"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -52933,75 +52952,83 @@
         },
         {
             "message": "Missing item type\nConstant representing sizes (in millimeters) of available paper formats.",
-            "line": " addon/components/map-commands-dialogs/export.js:36"
+            "line": " addon/components/map-commands-dialogs/export.js:37"
         },
         {
             "message": "Missing item type\nConstant representing default DPI.\nThe most common value used by browsers is 96.",
-            "line": " addon/components/map-commands-dialogs/export.js:92"
+            "line": " addon/components/map-commands-dialogs/export.js:93"
         },
         {
             "message": "Missing item type\nConstant representing count of millimeters in one inch.",
-            "line": " addon/components/map-commands-dialogs/export.js:98"
+            "line": " addon/components/map-commands-dialogs/export.js:99"
+        },
+        {
+            "message": "Missing item type\nArray with legend pages when legends on second page.\nNot computed because of every call recompute.\nBetter to store value in static variable",
+            "line": " addon/components/map-commands-dialogs/export.js:361"
+        },
+        {
+            "message": "Missing item type\nObserver to compute legend pages",
+            "line": " addon/components/map-commands-dialogs/export.js:368"
         },
         {
             "message": "Missing item type\nStyle is needed to be copied while exporting\nAlso needed to rewrite deep children",
-            "line": " addon/components/map-commands-dialogs/export.js:540"
+            "line": " addon/components/map-commands-dialogs/export.js:604"
         },
         {
             "message": "Missing item type\nPadding for sheet of paper",
-            "line": " addon/components/map-commands-dialogs/export.js:677"
+            "line": " addon/components/map-commands-dialogs/export.js:741"
         },
         {
             "message": "Missing item type\nLegend font size",
-            "line": " addon/components/map-commands-dialogs/export.js:682"
+            "line": " addon/components/map-commands-dialogs/export.js:746"
         },
         {
             "message": "Missing item type\nLegend line height",
-            "line": " addon/components/map-commands-dialogs/export.js:687"
+            "line": " addon/components/map-commands-dialogs/export.js:751"
         },
         {
             "message": "Missing item type\nGet map layers info.",
-            "line": " addon/components/map-commands-dialogs/export.js:796"
+            "line": " addon/components/map-commands-dialogs/export.js:860"
         },
         {
             "message": "Missing item type\nGet layer legend width.",
-            "line": " addon/components/map-commands-dialogs/export.js:831"
+            "line": " addon/components/map-commands-dialogs/export.js:895"
         },
         {
             "message": "Missing item type\nIs element is visible in container.\nFor \"...\" add if legend is not fully rendered in container.",
-            "line": " addon/components/map-commands-dialogs/export.js:1030"
+            "line": " addon/components/map-commands-dialogs/export.js:1111"
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/map-commands-dialogs/export.js:1173"
+            "line": " addon/components/map-commands-dialogs/export.js:1254"
         },
         {
             "message": "Missing item type\nReference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
-            "line": " addon/components/map-commands-dialogs/export.js:1178"
+            "line": " addon/components/map-commands-dialogs/export.js:1259"
         },
         {
             "message": "Missing item type\nFlag: indicates whether export dialog is busy or not.",
-            "line": " addon/components/map-commands-dialogs/export.js:1213"
+            "line": " addon/components/map-commands-dialogs/export.js:1294"
         },
         {
             "message": "Missing item type\nComputes current scren approximate DPI.",
-            "line": " addon/components/map-commands-dialogs/export.js:1925"
+            "line": " addon/components/map-commands-dialogs/export.js:2022"
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/map-commands-dialogs/export.js:2262"
+            "line": " addon/components/map-commands-dialogs/export.js:2375"
         },
         {
             "message": "Missing item type\nInitializes component's DOM-related properties.",
-            "line": " addon/components/map-commands-dialogs/export.js:2302"
+            "line": " addon/components/map-commands-dialogs/export.js:2415"
         },
         {
             "message": "Missing item type\nCalled after a component has been rendered, both on initial render and in subsequent rerenders.",
-            "line": " addon/components/map-commands-dialogs/export.js:2337"
+            "line": " addon/components/map-commands-dialogs/export.js:2450"
         },
         {
             "message": "Missing item type\nDestroys component.",
-            "line": " addon/components/map-commands-dialogs/export.js:2353"
+            "line": " addon/components/map-commands-dialogs/export.js:2466"
         },
         {
             "message": "Missing item type\nReference to component's template.",
