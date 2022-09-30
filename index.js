@@ -18,6 +18,8 @@ module.exports = {
 
     app.import('vendor/jquery/jquery.drag-resize.js');
 
+    app.import('vendor/jquery/jquery.waitForImages.js');
+
     // Import Leaflet library & it's resources.
     // Leaflet must be prepended (imported with prepend: true option),
     // because ember-addons depending on ember-flexberry-gis

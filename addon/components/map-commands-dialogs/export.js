@@ -30,7 +30,8 @@ const defaultOptions = {
   fileName: 'map',
   fileType: 'PNG',
   pageNumber: '1',
-  pageNumber2Selected: false
+  pageNumber2Selected: false,
+  additionalPageNumber: -1
 };
 
 /**
@@ -356,6 +357,69 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         `border: none`);
     }
   ),
+
+  /**
+   * Array with legend pages when legends on second page.
+   * Not computed because of every call recompute.
+   * Better to store value in static variable
+   */
+  additionalPages: Ember.A(),
+
+  /**
+   * Observer to compute legend pages
+   */
+  additionalPagesObserver: Ember.observer('_options.legendPosition', '_sheetOfPaperPreviewScaleFactor', function () {
+    let additionalPages = Ember.A();
+    if (this.get('_options.legendPosition') === 'second-page') {
+      let legendContainer = Ember.$('.flexberry-export-map-command-dialog-sheet-of-legend')[0];
+      if (legendContainer) {
+        let mapPadding = this.get('mapPadding') * this.get('_sheetOfPaperPreviewScaleFactor');
+        let legendCopyContainer = Ember.$(legendContainer).clone();
+        legendCopyContainer.css('position', 'absolute');
+        legendCopyContainer.css('top', '0');
+        legendCopyContainer.css('left', '0');
+        legendCopyContainer.css('padding', `${mapPadding}px`);
+        legendCopyContainer.css('columns', '2');
+        legendCopyContainer.css('column-fill', 'auto');
+        legendCopyContainer.css('column-gap', `${mapPadding}px`);
+        legendCopyContainer.css('column-gap', `${mapPadding}px`);
+        legendCopyContainer.css('overflow', `hidden`);
+        legendCopyContainer.appendTo('body');
+        legendCopyContainer.removeClass('hidden');
+        let _this = this;
+        let legends = Ember.$('.ember-view.layer-legend', legendCopyContainer[0]);
+        legends.each(function () {
+          Ember.$(this).css('visibility', 'visible');
+          Ember.$(this).css('position', 'relative');
+        });
+        legendCopyContainer.waitForImages(function () {
+          let legendReduce = [...legends];
+          let startIndex = 0;
+          let count = 2;
+          while (legendReduce.length > 0) {
+            let lastVisibleIndex = legendReduce.filter((l) => _this.isElementFullyVisibleInContainer(l, legendCopyContainer[0])).length - 1;
+            additionalPages.pushObject({
+              index: count,
+              start: startIndex,
+              end: startIndex + lastVisibleIndex
+            });
+            count++;
+            startIndex += lastVisibleIndex + 1;
+            for (let i = 0; i <= lastVisibleIndex; i++) {
+              legendReduce[i].remove();
+            }
+
+            legendReduce = legendReduce.slice(lastVisibleIndex + 1);
+          }
+
+          legendCopyContainer.remove();
+          Ember.set(_this, 'additionalPages', additionalPages);
+        });
+      }
+    } else {
+      Ember.set(this, 'additionalPages', Ember.A());
+    }
+  }),
 
   /**
     Sheet of paper container height.
@@ -987,23 +1051,40 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
         // Logic for understand are there any invisible layers (should add '...'?)
         let container = Ember.$('.flexberry-export-map-command-dialog-sheet-of-paper')[0];
-        let legends = Ember.$('.layer-legend-image-wrapper:not(.layer-caption)', container);
-        legends.each(function() {
-          Ember.$(this).parent().css('visibility', 'visible');
-        });
-        let lastVisible = legends.filter((l) => this.isElementFullyVisibleInContainer(legends[l], container)).last();
-        let invisibleLegends = legends.filter((l) => !this.isElementFullyVisibleInContainer(legends[l], container));
-        if (this.get('_options.legendUnderMap')) {
-          if (!Ember.$('label#export-legend-more').length && invisibleLegends.length) {
-            Ember.$(lastVisible).append('<label id="export-legend-more">...</label>');
-          } else if (!invisibleLegends.length) {
-            Ember.$('label#export-legend-more').remove();
+        let _this = this;
+        this.set('isBusy', true);
+        Ember.$(container).waitForImages(function() {
+          let legends = Ember.$('.ember-view.layer-legend', container);
+          legends.each(function () {
+            Ember.$(this).css('visibility', 'visible');
+          });
+
+          let firstInvisibleIndex = legends.length;
+          legends.each(function(l) {
+            if (!_this.isElementFullyVisibleInContainer(legends[l], container) && l < firstInvisibleIndex) {
+              firstInvisibleIndex = l;
+            }
+          });
+          let lastVisible = (firstInvisibleIndex > 0 && firstInvisibleIndex < legends.length) ? legends[firstInvisibleIndex - 1] : null;
+          let invisibleLegends = legends.filter((l) => !_this.isElementFullyVisibleInContainer(legends[l], container));
+          if (_this.get('_options.legendUnderMap')) {
+            if (!Ember.$('label#export-legend-more').length && invisibleLegends.length) {
+              if (!lastVisible) {
+                Ember.$('.flexberry-export-map-command-dialog-legend-control-map', container).prepend('<label id="export-legend-more">...</label>');
+              } else {
+                Ember.$('.layer-legend-image-wrapper:not(.layer-caption)', lastVisible).append('<label id="export-legend-more">...</label>');
+              }
+            } else if (!invisibleLegends.length) {
+              Ember.$('label#export-legend-more').remove();
+            }
+
+            for (let i = firstInvisibleIndex; i < legends.length; i++) {
+              Ember.$(legends[i]).css('visibility', 'hidden');
+            }
           }
 
-          invisibleLegends.each(function() {
-            Ember.$(this).parent().css('visibility', 'hidden');
-          });
-        }
+          _this.set('isBusy', false);
+        });
       });
 
       const padding = (this.get('mapPadding') * this.get('_sheetOfPaperPreviewScaleFactor'));
@@ -1287,12 +1368,12 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     if (this.get('_options.legendSecondPage')) {
       Ember.set(e, 'exportOptions', {
         type: type,
-        data: [this._getLeafletExportOptions('1'), this._getLeafletExportOptions('2')]
+        data: [this._getLeafletExportOptions('1', -1), ...this.get('additionalPages').map((btn, index) => this._getLeafletExportOptions('2', index))]
       });
     } else {
       Ember.set(e, 'exportOptions', {
         type: type,
-        data: [this._getLeafletExportOptions('1')]
+        data: [this._getLeafletExportOptions('1', -1)]
       });
     }
   },
@@ -1445,9 +1526,25 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
       @method actions.onPageChange
       @param {String} newPageNumber New page number.
+      @param {Integer} additionalPageNumber Additional legend page number.
     */
-    onPageChange(newPageNumber) {
+    onPageChange(newPageNumber, additionalPageNumber) {
+      if (additionalPageNumber >= 0) {
+        let indexes = this.get('additionalPages')[additionalPageNumber];
+        let legends = Ember.$('.ember-view.layer-legend', this.get('_$sheetOfLegend'));
+        legends.each(function() {
+          Ember.$(this).css('visibility', 'hidden');
+          Ember.$(this).css('position', 'absolute');
+        });
+
+        for (let i = indexes.start; i <= indexes.end; i++) {
+          Ember.$(legends[i]).css('visibility', 'visible');
+          Ember.$(legends[i]).css('position', 'relative');
+        }
+      }
+
       this.set('_options.pageNumber', newPageNumber);
+      this.set('_options.additionalPageNumber', additionalPageNumber);
     },
 
     /**
@@ -1952,7 +2049,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     @method _getLeafletExportOptions
     @return {Object} Hash containing inner options transformed into Leaflet.Export options.
   */
-  _getLeafletExportOptions(pageNumber) {
+  _getLeafletExportOptions(pageNumber, additionalPageNumber) {
     let leafletExportOptions = {};
     let innerOptions = this.get('_options');
 
@@ -1978,7 +2075,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
     // Define custom export method.
     Ember.set(leafletExportOptions, 'export', (exportOptions) => {
-      return this._export(pageNumber);
+      return this._export({ pageNumber, additionalPageNumber });
     });
 
     return leafletExportOptions;
@@ -1990,13 +2087,13 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     @method _export
     @private
   */
-  _export(pageNumber) {
-    return this.beforeExport(pageNumber).then(() => {
+  _export(options) {
+    return this.beforeExport(options).then(() => {
       return this._waitForLeafletMapLayersToBeReady();
     }).then(() => {
-      return this.export(pageNumber);
+      return this.export(options);
     }).finally(() => {
-      this.afterExport(pageNumber);
+      this.afterExport(options);
     });
   },
 
@@ -2005,12 +2102,12 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
     @method beforeExport
   */
-  beforeExport(pageNumber) {
+  beforeExport(options) {
     this.set('_options.pageNumber', '1');
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       // Sheet of paper with legend or with interactive map, which will be prepered for export and then exported.
-      let $sheetOfPaper = pageNumber === '2' ? this.get('_$sheetOfLegend') : this.get('_$sheetOfPaper');
+      let $sheetOfPaper = options.pageNumber === '2' ? this.get('_$sheetOfLegend') : this.get('_$sheetOfPaper');
       this.set('_isPreview', false);
 
       let $legendControlMap = Ember.$(`.${flexberryClassNames.legendControlMap}`, $sheetOfPaper);
@@ -2040,12 +2137,16 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
       const secondPage = this.get('_options.legendPosition') === 'second-page';
 
-      if (secondPage && pageNumber === '2') {
+      if (secondPage && options.pageNumber === '2') {
         $sheetOfPaper.css({
           'padding': `${this.get('mapPadding')}px`,
           'columns': '2',
           'column-fill': 'auto',
           'column-gap': `${this.get('mapPadding')}px`
+        });
+        Ember.$('.layer-legend', $sheetOfPaper).each(function() {
+          Ember.$(this).css('visibility', 'visible');
+          Ember.$(this).css('position', 'relative');
         });
       }
 
@@ -2063,7 +2164,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       // Replace interactivva map inside dialog with it's static clone for a while.
       $sheetOfPaperClone.prependTo($sheetOfPaperParent[0]);
 
-      if (pageNumber === '2') {
+      if (options.pageNumber === '2') {
         resolve();
       } else {
         let leafletMap = this.get('leafletMap');
@@ -2092,7 +2193,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
     @method export
   */
-  export(pageNumber) {
+  export(options) {
     let $sheetOfPaper = this.get('_$sheetOfPaper');
     let $sheetOfLegend = this.get('_$sheetOfLegend');
     let exportSheetOfPaper = () => {
@@ -2115,6 +2216,18 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let exportSheetOfLegend = () => {
       $sheetOfPaper.addClass('hidden');
       $sheetOfLegend.removeClass('hidden');
+      if (options.additionalPageNumber >= 0) {
+        let indexes = this.get('additionalPages')[options.additionalPageNumber];
+        let legends = Ember.$('.ember-view.layer-legend', $sheetOfLegend);
+        legends.each(function() {
+          Ember.$(this).css('visibility', 'hidden');
+          Ember.$(this).css('position', 'absolute');
+        });
+        for (let i = indexes.start; i <= indexes.end; i++) {
+          Ember.$(legends[i]).css('visibility', 'visible');
+          Ember.$(legends[i]).css('position', 'relative');
+        }
+      }
 
       return window.html2canvas($sheetOfLegend[0], {
         useCORS: true,
@@ -2136,7 +2249,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     };
 
     // Print second page.
-    if (pageNumber === '2') {
+    if (options.pageNumber === '2') {
       return exportSheetOfLegend();
     }
 
@@ -2212,10 +2325,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
     @method afterExport
   */
-  afterExport(pageNumber) {
+  afterExport(options) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       // Sheet of paper with legend or with interactive map, which will be prepered for export and then exported.
-      let $sheetOfPaper = pageNumber === '2' ? this.get('_$sheetOfLegend') : this.get('_$sheetOfPaper');
+      let $sheetOfPaper = options.pageNumber === '2' ? this.get('_$sheetOfLegend') : this.get('_$sheetOfPaper');
       this.set('_isPreview', true);
 
       let $legendControlMap = Ember.$(`.${flexberryClassNames.legendControlMap}`, $sheetOfPaper);
@@ -2235,7 +2348,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       $body.css('height', '');
       $body.css('width', '');
 
-      if (pageNumber === '2') {
+      if (options.pageNumber === '2') {
         resolve();
       } else {
         let leafletMap = this.get('leafletMap');

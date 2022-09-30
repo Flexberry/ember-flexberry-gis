@@ -75,17 +75,19 @@
           {{flexberry-button
             class=(concat "primary" (unless (eq _options.pageNumber "1") " basic"))
             caption="1"
-            click=(action "onPageChange" "1")
+            click=(action "onPageChange" "1" -1)
           }}
         </div>
         {{#if _options.legendSecondPage}}
-          <div class="field">
-            {{flexberry-button
-              class=(concat "primary" (unless (eq _options.pageNumber "2") " basic"))
-              caption="2"
-              click=(action "onPageChange" "2")
-            }}
-          </div>
+          {{#each additionalPages as |page index|}}
+            <div class="field">
+              {{flexberry-button
+                class=(concat "primary" (unless (and (eq _options.pageNumber "2") (eq _options.additionalPageNumber index)) " basic"))
+                caption=(concat "" page.index)
+                click=(action "onPageChange" "2" index)
+              }}
+            </div>
+          {{/each}}
         {{/if}}
       </div>
 
