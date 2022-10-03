@@ -441,7 +441,7 @@ export default Ember.Mixin.create({
    */
   setLayerBySide(layer, side, leafletMap) {
     const layerId = Ember.get(layer, &#x27;id&#x27;);
-    const leafletOriginalLayer = Ember.get(layer, &#x27;_leafletObject&#x27;);
+    const leafletOriginalLayer = Ember.get(layer, &#x27;_leafletObjectFirst&#x27;) || Ember.get(layer, &#x27;_leafletObject&#x27;);
     let layersSideSettings = this.get(&#x60;compare.compareState.${side}&#x60;);
     let existedLayers = layersSideSettings.layers.filter(l =&gt; l.id === layerId);
     if (existedLayers.length &gt; 0) {
