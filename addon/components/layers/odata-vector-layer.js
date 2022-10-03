@@ -472,8 +472,11 @@ export default BaseVectorLayer.extend({
         searchFields.forEach((field) => {
           let property = layerProperties.get(field);
           e.searchOptions.queryString = e.searchOptions.queryString.trim();
-          if (field === 'primarykey' && isUUID(e.searchOptions.queryString)) {
-            equals.push(new Query.SimplePredicate('id', Query.FilterOperator.Eq, e.searchOptions.queryString));
+          if (field === 'primarykey') {
+            if (isUUID(e.searchOptions.queryString)) {
+              equals.push(new Query.SimplePredicate('id', Query.FilterOperator.Eq, e.searchOptions.queryString));
+            }
+
             return;
           }
 
@@ -496,7 +499,7 @@ export default BaseVectorLayer.extend({
                   let [startInterval, endInterval] = createTimeInterval(searchDate, dateInfo.dateFormat);
 
                   if (endInterval) {
-                    let startIntervalCondition =  new Query.DatePredicate(property.name, Query.FilterOperator.Geq, startInterval, false);
+                    let startIntervalCondition = new Query.DatePredicate(property.name, Query.FilterOperator.Geq, startInterval, false);
                     let endIntervalCondition = new Query.DatePredicate(property.name, Query.FilterOperator.Le, endInterval, false);
                     equals.push(new Query.ComplexPredicate(Query.Condition.And, startIntervalCondition, endIntervalCondition));
                   } else if (dateInfo.timeFormat === 'THH:mm:ss.SSSSZ') {
