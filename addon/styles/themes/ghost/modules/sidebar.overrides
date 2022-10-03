@@ -931,9 +931,7 @@
   overflow-y: hidden !important;
   overflow-x: hidden;
   padding: 0 0 60px 0 !important;
-  h3 {
-    margin: 40px 30px 15px 30px !important;
-  }
+
   .layer-result-list {
     overflow-y: auto;
     overflow-x: hidden;
@@ -942,16 +940,14 @@
   }
 }
 .outer-search.flexberry-search-panel.attr~.ui.sidebar.treeview.pushable.tabbar .ui.tab.search.active .layer-result-list {
-  height: ~"calc(100% - 200px)" !important;
-}
+    height: ~"calc(100% - 200px)" !important;
+  }
 
 .ui.tab.identify {
   overflow-y: hidden !important;
   overflow-x: hidden;
-  padding: 0 0 60px 0 !important;
-  h3 {
-    margin: 40px 30px 15px 30px !important;
-  }
+  padding: 0 0 60px 0 !important;  
+
   .layer-result-list {
     overflow-y: auto;
     overflow-x: hidden;
@@ -962,6 +958,15 @@
     margin-top: 15px;
   }
 }
+
+.ui.right.sidebar {
+  .ui.tab.identify, .ui.tab.search {
+    h3 {
+      margin: 40px 30px 15px 30px;
+    }
+  }
+}
+
 .flexberry-gis-edit-panel {
   display: flex;
   font-size: 0;
