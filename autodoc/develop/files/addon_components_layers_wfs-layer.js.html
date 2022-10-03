@@ -957,8 +957,11 @@ export default BaseVectorLayer.extend({
           e.searchOptions.queryString = e.searchOptions.queryString.trim();
           let typeField = fieldsType[field];
           if (!Ember.isBlank(typeField)) {
-            if (field === &#x27;primarykey&#x27; &amp;&amp; isUUID(e.searchOptions.queryString)) {
-              equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
+            if (field === &#x27;primarykey&#x27;) {
+              if (isUUID(e.searchOptions.queryString)) {
+                equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
+              }
+
               return;
             }
 
@@ -1460,40 +1463,40 @@ export default BaseVectorLayer.extend({
     let crsName = L.CRS.EPSG4326.code;
     return &#x27;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x27; +
       &#x27;&lt;wps:Execute version=&quot;1.0.0&quot; service=&quot;WPS&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; &#x27; +
-        &#x27;xmlns=&quot;http://www.opengis.net/wps/1.0.0&quot; xmlns:wfs=&quot;http://www.opengis.net/wfs&quot; xmlns:wps=&quot;http://www.opengis.net/wps/1.0.0&quot; &#x27; +
-        &#x27;xmlns:ows=&quot;http://www.opengis.net/ows/1.1&quot; xmlns:gml=&quot;http://www.opengis.net/gml&quot; xmlns:ogc=&quot;http://www.opengis.net/ogc&quot; &#x27; +
-        &#x27;xmlns:wcs=&quot;http://www.opengis.net/wcs/1.1.1&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; &#x27; +
-        &#x27;xsi:schemaLocation=&quot;http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd&quot;&gt;&#x27; +
-        &#x27;&lt;ows:Identifier&gt;gs:Nearest&lt;/ows:Identifier&gt;&#x27; +
-        &#x27;&lt;wps:DataInputs&gt;&#x27; +
-          &#x27;&lt;wps:Input&gt;&#x27; +
-            &#x27;&lt;ows:Identifier&gt;features&lt;/ows:Identifier&gt;&#x27; +
-            &#x27;&lt;wps:Reference mimeType=&quot;text/xml; subtype=wfs-collection/1.0&quot; xlink:href=&quot;http://geoserver/wfs&quot; method=&quot;POST&quot;&gt;&#x27; +
-              &#x27;&lt;wps:Body&gt;&#x27; +
-                &#x27;&lt;wfs:GetFeature service=&quot;WFS&quot; version=&quot;1.0.0&quot; outputFormat=&quot;GML2&quot;&gt;&#x27; +
-                  &#x27;&lt;wfs:Query typeName=&quot;&#x27; + typeNS + &#x27;:&#x27; + typeName + &#x27;&quot;/&gt;&#x27; +
-                &#x27;&lt;/wfs:GetFeature&gt;&#x27; +
-              &#x27;&lt;/wps:Body&gt;&#x27; +
-            &#x27;&lt;/wps:Reference&gt;&#x27; +
-          &#x27;&lt;/wps:Input&gt;&#x27; +
-          &#x27;&lt;wps:Input&gt;&#x27; +
-            &#x27;&lt;ows:Identifier&gt;point&lt;/ows:Identifier&gt;&#x27; +
-            &#x27;&lt;wps:Data&gt;&#x27; +
-              &#x27;&lt;wps:ComplexData mimeType=&quot;text/xml; subtype=gml/3.1.1&quot;&gt;&lt;![CDATA[&#x27; + point + &#x27;]]&gt;&lt;/wps:ComplexData&gt;&#x27; +
-            &#x27;&lt;/wps:Data&gt;&#x27; +
-          &#x27;&lt;/wps:Input&gt;&#x27; +
-          &#x27;&lt;wps:Input&gt;&#x27; +
-            &#x27;&lt;ows:Identifier&gt;crs&lt;/ows:Identifier&gt;&#x27; +
-            &#x27;&lt;wps:Data&gt;&#x27; +
-              &#x27;&lt;wps:LiteralData&gt;&#x27; + crsName + &#x27;&lt;/wps:LiteralData&gt;&#x27; +
-            &#x27;&lt;/wps:Data&gt;&#x27; +
-          &#x27;&lt;/wps:Input&gt;&#x27; +
-        &#x27;&lt;/wps:DataInputs&gt;&#x27; +
-        &#x27;&lt;wps:ResponseForm&gt;&#x27; +
-          &#x27;&lt;wps:RawDataOutput mimeType=&quot;application/json&quot;&gt;&#x27; +
-            &#x27;&lt;ows:Identifier&gt;result&lt;/ows:Identifier&gt;&#x27; +
-          &#x27;&lt;/wps:RawDataOutput&gt;&#x27; +
-        &#x27;&lt;/wps:ResponseForm&gt;&#x27; +
+      &#x27;xmlns=&quot;http://www.opengis.net/wps/1.0.0&quot; xmlns:wfs=&quot;http://www.opengis.net/wfs&quot; xmlns:wps=&quot;http://www.opengis.net/wps/1.0.0&quot; &#x27; +
+      &#x27;xmlns:ows=&quot;http://www.opengis.net/ows/1.1&quot; xmlns:gml=&quot;http://www.opengis.net/gml&quot; xmlns:ogc=&quot;http://www.opengis.net/ogc&quot; &#x27; +
+      &#x27;xmlns:wcs=&quot;http://www.opengis.net/wcs/1.1.1&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; &#x27; +
+      &#x27;xsi:schemaLocation=&quot;http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd&quot;&gt;&#x27; +
+      &#x27;&lt;ows:Identifier&gt;gs:Nearest&lt;/ows:Identifier&gt;&#x27; +
+      &#x27;&lt;wps:DataInputs&gt;&#x27; +
+      &#x27;&lt;wps:Input&gt;&#x27; +
+      &#x27;&lt;ows:Identifier&gt;features&lt;/ows:Identifier&gt;&#x27; +
+      &#x27;&lt;wps:Reference mimeType=&quot;text/xml; subtype=wfs-collection/1.0&quot; xlink:href=&quot;http://geoserver/wfs&quot; method=&quot;POST&quot;&gt;&#x27; +
+      &#x27;&lt;wps:Body&gt;&#x27; +
+      &#x27;&lt;wfs:GetFeature service=&quot;WFS&quot; version=&quot;1.0.0&quot; outputFormat=&quot;GML2&quot;&gt;&#x27; +
+      &#x27;&lt;wfs:Query typeName=&quot;&#x27; + typeNS + &#x27;:&#x27; + typeName + &#x27;&quot;/&gt;&#x27; +
+      &#x27;&lt;/wfs:GetFeature&gt;&#x27; +
+      &#x27;&lt;/wps:Body&gt;&#x27; +
+      &#x27;&lt;/wps:Reference&gt;&#x27; +
+      &#x27;&lt;/wps:Input&gt;&#x27; +
+      &#x27;&lt;wps:Input&gt;&#x27; +
+      &#x27;&lt;ows:Identifier&gt;point&lt;/ows:Identifier&gt;&#x27; +
+      &#x27;&lt;wps:Data&gt;&#x27; +
+      &#x27;&lt;wps:ComplexData mimeType=&quot;text/xml; subtype=gml/3.1.1&quot;&gt;&lt;![CDATA[&#x27; + point + &#x27;]]&gt;&lt;/wps:ComplexData&gt;&#x27; +
+      &#x27;&lt;/wps:Data&gt;&#x27; +
+      &#x27;&lt;/wps:Input&gt;&#x27; +
+      &#x27;&lt;wps:Input&gt;&#x27; +
+      &#x27;&lt;ows:Identifier&gt;crs&lt;/ows:Identifier&gt;&#x27; +
+      &#x27;&lt;wps:Data&gt;&#x27; +
+      &#x27;&lt;wps:LiteralData&gt;&#x27; + crsName + &#x27;&lt;/wps:LiteralData&gt;&#x27; +
+      &#x27;&lt;/wps:Data&gt;&#x27; +
+      &#x27;&lt;/wps:Input&gt;&#x27; +
+      &#x27;&lt;/wps:DataInputs&gt;&#x27; +
+      &#x27;&lt;wps:ResponseForm&gt;&#x27; +
+      &#x27;&lt;wps:RawDataOutput mimeType=&quot;application/json&quot;&gt;&#x27; +
+      &#x27;&lt;ows:Identifier&gt;result&lt;/ows:Identifier&gt;&#x27; +
+      &#x27;&lt;/wps:RawDataOutput&gt;&#x27; +
+      &#x27;&lt;/wps:ResponseForm&gt;&#x27; +
       &#x27;&lt;/wps:Execute&gt;&#x27;;
   },
 
