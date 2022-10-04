@@ -1338,6 +1338,14 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   },
 
   /**
+   * Observe map display mod and turn off legend
+   */
+  mapOnlyModeObserver: Ember.observer(&#x27;_options.displayMode&#x27;, function() {
+    if (this.get(&#x27;_options.displayMode&#x27;) === &#x27;map-only-mode&#x27;) {
+      this.set(&#x27;_options.legendControl&#x27;, false);
+    }
+  }),
+  /**
     Map legend lines.
 
     @property _mapLegendLines
@@ -1421,7 +1429,9 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       let legendHeight = this.get(&#x27;legendLineHeight&#x27;);
       let legendLines = this.get(&#x27;_mapLegendLines&#x27;);
       const padding = this.get(&#x27;mapPadding&#x27;);
-      legendHeight = legendHeight * legendLines + legendStyleConstants.heightMargin + padding;
+
+      // 6 - is margin from css
+      legendHeight = (legendHeight + 6) * legendLines + legendStyleConstants.heightMargin + padding;
 
       if (!this.get(&#x27;_options.legendUnderMap&#x27;)) {
         legendHeight = this.get(&#x27;mapPadding&#x27;);
@@ -1462,6 +1472,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         return Ember.String.htmlSafe(&#x60;&#x60;);
       }
 
+      const padding = (this.get(&#x27;mapPadding&#x27;) * this.get(&#x27;_sheetOfPaperPreviewScaleFactor&#x27;));
+
       // Real map size has been changed, so we need to refresh it&#x27;s size after render, otherwise it may be displayed incorrectly.
       Ember.run.scheduleOnce(&#x27;afterRender&#x27;, () =&gt; {
         this._invalidateSizeOfLeafletMap();
@@ -1478,7 +1490,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
           let firstInvisibleIndex = legends.length;
           legends.each(function(l) {
-            if (!_this.isElementFullyVisibleInContainer(legends[l], container) &amp;&amp; l &lt; firstInvisibleIndex) {
+            if (!_this.isElementFullyVisibleInContainer(legends[l], container, padding) &amp;&amp; l &lt; firstInvisibleIndex) {
               firstInvisibleIndex = l;
             }
           });
@@ -1504,15 +1516,15 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         });
       });
 
-      const padding = (this.get(&#x27;mapPadding&#x27;) * this.get(&#x27;_sheetOfPaperPreviewScaleFactor&#x27;));
-
       if (this.get(&#x27;_options.displayMode&#x27;) === &#x27;map-only-mode&#x27;) {
         return Ember.String.htmlSafe(&#x60;height: 100%;&#x60;);
       }
 
       var legendHeight = this.get(&#x27;_mapLegendPreviewHeight&#x27;);
       var legendLines = this.get(&#x27;_mapLegendLines&#x27;);
-      legendHeight = legendHeight * legendLines + padding; // margin
+
+      // 6 - is margin from css
+      legendHeight = (legendHeight + 6) * legendLines + padding; // margin
       if (!this.get(&#x27;_options.legendUnderMap&#x27;) || !this.get(&#x27;_options.legendControl&#x27;)) {
         legendHeight = padding;
       }
@@ -1530,16 +1542,18 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
    * For &quot;...&quot; add if legend is not fully rendered in container.
    * @param {DOM} element
    * @param {DOM} container
+   * @param {Float} bottomPadding
    * @returns Boolean
    */
-  isElementFullyVisibleInContainer(element, container) {
+  isElementFullyVisibleInContainer(element, container, bottomPadding) {
     const elementSettings = element.getBoundingClientRect();
     const containerSettings = container.getBoundingClientRect();
+    let padding = (bottomPadding) ? bottomPadding : 0;
     return (
       (elementSettings.left &gt; containerSettings.left) &amp;&amp;
       (elementSettings.top &gt; containerSettings.top) &amp;&amp;
       (elementSettings.right &lt; containerSettings.right) &amp;&amp;
-      (elementSettings.bottom &lt; containerSettings.bottom)
+      (elementSettings.bottom &lt; (containerSettings.bottom - padding))
     );
   },
 
