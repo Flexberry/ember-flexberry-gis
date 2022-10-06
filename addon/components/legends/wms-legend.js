@@ -72,11 +72,11 @@ export default BaseLegendComponent.extend({
             };
 
             if (format !== 'application/json') {
-              resolve({
+              resolve([{
                 src: `${url}${L.Util.getParamString(parameters)}`,
                 layerName: layerName,
                 useLayerName: false
-              });
+              }]);
             } else {
               let legendUrl = `${url}${L.Util.getParamString(parameters)}`;
               Ember.$.ajax(legendUrl, {
@@ -86,24 +86,26 @@ export default BaseLegendComponent.extend({
                 .done((response) => {
                   if (response && response.Legend && response.Legend[0]) {
                     // One legend per query.
+                    let legendsContainer = [];
                     response.Legend[0].rules.forEach(rule => {
                       parameters.rule = rule.name;
                       parameters.format = 'image/png';
                       parameters.width = this.get('constantHeight');
                       parameters.height = this.get('constantHeight');
-                      resolve({
+                      legendsContainer.push({
                         src: `${url}${L.Util.getParamString(parameters)}`,
                         layerName: rule.name,
                         useLayerName: true,
                         style: `height: ${this.get('height')}px;`
                       });
                     });
+                    resolve(legendsContainer);
                   }
                 });
             }
           });
         })).then(lArray => {
-          legends.pushObjects(lArray.filter(l => !!l));
+          legends.pushObjects(lArray.filter(l => !!l).flat());
           return legends;
         })
       });
