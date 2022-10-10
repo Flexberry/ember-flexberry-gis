@@ -147,7 +147,11 @@ export default Ember.Component.extend({
 
     // DynamicHeight for wms-legend. If legend is not json, height should be dynamic.
     if (!Ember.isBlank(height) && !this.get('dynamicHeight')) {
-      this.$(`.${this.flexberryClassNames.imageWrapper}`).css('height', height + 'px');
+      if (this.get('legendForPrint')) {
+        this.$(`.${this.flexberryClassNames.image}`).css('height', height + 'px');
+      } else {
+        this.$(`.${this.flexberryClassNames.imageWrapper}`).css('height', height + 'px');
+      }
     }
   }
 });
