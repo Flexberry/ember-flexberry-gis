@@ -1004,6 +1004,7 @@
     background: @whitecolor;
     border: none;
     height: 32px;
+    cursor: pointer;
     i.remove.icon {
       padding-left: 2px;
       padding-top: 2px;
@@ -1069,4 +1070,38 @@
   &::first-letter {
     color: @textColor;
   }
+}
+.ui.popup.help-popup {
+  padding: 15px 25px 15px 45px;
+  max-width: 552px;
+  margin-top: -48px;
+  text-align:justify;
+}
+
+.ui.bottom.left.popup.help-popup::before {
+  content: "\e945";
+  font-family: 'guideline-icons';
+  transform: none;
+  height: auto;
+  width: auto;
+  box-shadow: none;
+  background: transparent;
+  font-size: 30px;
+  line-height: 1;
+  color: @textColor;
+  top: 16px;
+  left: 5px;
+}
+
+.ui.icon.button.help-button.no-lable-field-popup {
+  position: relative;
+  padding-top: 0;
+}
+
+.help-label {
+  position: relative;
+}
+
+.help-label .ui.icon.button.help-button {
+  top: -50%;
 }
