@@ -1524,7 +1524,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       var legendLines = this.get(&#x27;_mapLegendLines&#x27;);
 
       // 6 - is margin from css
-      legendHeight = (legendHeight + 6) * legendLines + padding; // margin
+      legendHeight = (legendHeight + 6) * legendLines + padding + legendStyleConstants.heightMargin; // margin
       if (!this.get(&#x27;_options.legendUnderMap&#x27;) || !this.get(&#x27;_options.legendControl&#x27;)) {
         legendHeight = padding;
       }

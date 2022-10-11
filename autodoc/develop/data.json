@@ -45327,7 +45327,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 54,
+            "line": 56,
             "description": "Toggle group layer on selected side",
             "params": [
                 {
@@ -45351,7 +45351,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 78,
+            "line": 80,
             "description": "Toggle child layer visibility on selected side",
             "params": [
                 {
@@ -45375,7 +45375,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 110,
+            "line": 112,
             "description": "Recursive get all parent layer ids",
             "params": [
                 {
@@ -45397,7 +45397,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 126,
+            "line": 128,
             "description": "Check if all parent layers are visible.",
             "params": [
                 {
@@ -45419,7 +45419,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 138,
+            "line": 140,
             "description": "Set background layer by selected side",
             "params": [
                 {
@@ -45443,7 +45443,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 158,
+            "line": 160,
             "description": "Get opposite side",
             "params": [
                 {
@@ -45460,7 +45460,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 167,
+            "line": 169,
             "description": "Refresh sideBySide side layers",
             "params": [
                 {
@@ -45474,7 +45474,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 185,
+            "line": 187,
             "description": "Method to refresh compare mode",
             "params": [
                 {
@@ -45488,7 +45488,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 222,
+            "line": 224,
             "description": "Function to save and update sidebar state on each side",
             "params": [
                 {
@@ -45502,7 +45502,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 259,
+            "line": 261,
             "description": "Set background or tree side",
             "params": [
                 {
@@ -52060,15 +52060,15 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/compare-layers.js:110"
+            "line": " addon/mixins/compare-layers.js:112"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/compare-layers.js:126"
+            "line": " addon/mixins/compare-layers.js:128"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/compare-layers.js:158"
+            "line": " addon/mixins/compare-layers.js:160"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -53904,43 +53904,43 @@
         },
         {
             "message": "Missing item type\nToggle group layer on selected side",
-            "line": " addon/mixins/compare-layers.js:54"
+            "line": " addon/mixins/compare-layers.js:56"
         },
         {
             "message": "Missing item type\nToggle child layer visibility on selected side",
-            "line": " addon/mixins/compare-layers.js:78"
+            "line": " addon/mixins/compare-layers.js:80"
         },
         {
             "message": "Missing item type\nRecursive get all parent layer ids",
-            "line": " addon/mixins/compare-layers.js:110"
+            "line": " addon/mixins/compare-layers.js:112"
         },
         {
             "message": "Missing item type\nCheck if all parent layers are visible.",
-            "line": " addon/mixins/compare-layers.js:126"
+            "line": " addon/mixins/compare-layers.js:128"
         },
         {
             "message": "Missing item type\nSet background layer by selected side",
-            "line": " addon/mixins/compare-layers.js:138"
+            "line": " addon/mixins/compare-layers.js:140"
         },
         {
             "message": "Missing item type\nGet opposite side",
-            "line": " addon/mixins/compare-layers.js:158"
+            "line": " addon/mixins/compare-layers.js:160"
         },
         {
             "message": "Missing item type\nRefresh sideBySide side layers",
-            "line": " addon/mixins/compare-layers.js:167"
+            "line": " addon/mixins/compare-layers.js:169"
         },
         {
             "message": "Missing item type\nMethod to refresh compare mode",
-            "line": " addon/mixins/compare-layers.js:185"
+            "line": " addon/mixins/compare-layers.js:187"
         },
         {
             "message": "Missing item type\nFunction to save and update sidebar state on each side",
-            "line": " addon/mixins/compare-layers.js:222"
+            "line": " addon/mixins/compare-layers.js:224"
         },
         {
             "message": "Missing item type\nSet background or tree side",
-            "line": " addon/mixins/compare-layers.js:259"
+            "line": " addon/mixins/compare-layers.js:261"
         },
         {
             "message": "Missing item type\nExecutes component's DOM-related logic.",
