@@ -34,10 +34,12 @@ export default Ember.Mixin.create({
     } else {
       if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
         const labelsOriginalLayer = layer.get('_leafletObject._labelsLayer');
-        layersSideSettings.layers.push({
-          id: layerId,
-          layer: labelsOriginalLayer.addTo(leafletMap)
-        });
+        if (labelsOriginalLayer) {
+          layersSideSettings.layers.push({
+            id: layerId,
+            layer: labelsOriginalLayer.addTo(leafletMap)
+          });
+        }
       }
 
       layersSideSettings.layers.push({
