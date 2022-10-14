@@ -912,7 +912,7 @@ export default BaseVectorLayer.extend({
               case &#x27;date&#x27;:
                 let dateInfo = getDateFormatFromString(e.searchOptions.queryString);
                 let searchDate = moment(e.searchOptions.queryString, dateInfo.dateFormat + dateInfo.timeFormat, true);
-                if (searchDate.isValid()) {
+                if (dateInfo.dateFormat &amp;&amp; searchDate.isValid()) {
                   let [startInterval, endInterval] = createTimeInterval(searchDate, dateInfo.dateFormat);
 
                   if (endInterval) {
