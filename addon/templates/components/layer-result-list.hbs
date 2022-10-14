@@ -12,7 +12,7 @@
         {{#if (eq intersection false)}}
           <a class="feature-result-item-select icon item"
             title="{{t "components.feature-result-item.select-all-caption"}}"
-            {{action "zoomTo" result.features}}>
+            {{action "zoomTo" result.features enableHighlight false}}>
               <i class="icon-guideline-marker"></i>
           </a>
         {{/if}}
@@ -137,7 +137,7 @@
       <div class="feature-result-item-buttons hidden">
         <a class="feature-result-item-select icon item"
           title="{{t "components.feature-result-item.select-all-caption"}}"
-          {{action "zoomTo" result.features}}>
+          {{action "zoomTo" result.features enableHighlight false}}>
           {{#if (eq intersection false)}}
           <i class="icon-guideline-marker"></i>
           {{/if}}

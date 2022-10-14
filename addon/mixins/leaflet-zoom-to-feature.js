@@ -21,8 +21,9 @@ export default Ember.Mixin.create({
       @method actions.selectFeature
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
       @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
+      @param {Boolean} clearLayers Flag indicating whether to clear the result service layer.
     */
-    selectFeature(feature, layerInteractive) {
+    selectFeature(feature, layerInteractive = false, clearLayers = true) {
       let leafletMap = this.get('leafletMap');
       if (Ember.isNone(leafletMap)) {
         return;
@@ -36,7 +37,7 @@ export default Ember.Mixin.create({
 
       let selectedFeature = this.get('_selectedFeature');
       if (selectedFeature !== feature) {
-        serviceLayer.clearLayers();
+        clearLayers ? serviceLayer.clearLayers() : null;
 
         if (Ember.isArray(feature)) {
           feature.forEach((item) => this._selectFeature(item, layerInteractive));
@@ -56,14 +57,15 @@ export default Ember.Mixin.create({
       @method actions.zoomTo
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
       @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
+      @param {Boolean} clearLayers Flag indicating whether to clear the result service layer.
     */
-    zoomTo(feature, layerInteractive) {
+    zoomTo(feature, layerInteractive = false, clearLayers = true) {
       let leafletMap = this.get('leafletMap');
       if (Ember.isNone(leafletMap)) {
         return;
       }
 
-      this.send('selectFeature', feature, layerInteractive);
+      this.send('selectFeature', feature, layerInteractive, clearLayers);
 
       let bounds;
       let serviceLayer = this.get('serviceLayer');
