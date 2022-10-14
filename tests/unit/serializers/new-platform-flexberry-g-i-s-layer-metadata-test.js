@@ -6,11 +6,8 @@ moduleForModel('new-platform-flexberry-g-i-s-layer-metadata', 'Unit | Serializer
     'serializer:new-platform-flexberry-g-i-s-layer-metadata',
     'transform:file',
     'transform:decimal',
-    'transform:guid',
+    'transform:json',
 
-    'model:new-platform-flexberry-g-i-s-csw-connection',
-    'model:new-platform-flexberry-g-i-s-data-link-parameter',
-    'model:new-platform-flexberry-g-i-s-data-link',
     'model:new-platform-flexberry-g-i-s-layer-link',
     'model:new-platform-flexberry-g-i-s-layer-metadata',
     'model:new-platform-flexberry-g-i-s-link-metadata',
