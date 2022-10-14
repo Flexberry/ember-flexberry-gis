@@ -37,7 +37,9 @@ export default Ember.Mixin.create({
 
       let selectedFeature = this.get('_selectedFeature');
       if (selectedFeature !== feature) {
-        clearLayers ? serviceLayer.clearLayers() : null;
+        if (clearLayers) {
+          serviceLayer.clearLayers();
+        }
 
         if (Ember.isArray(feature)) {
           feature.forEach((item) => this._selectFeature(item, layerInteractive));
