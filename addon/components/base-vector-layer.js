@@ -1699,7 +1699,7 @@ export default BaseLayer.extend({
     if (partline) {
       // здесь без префикса pathdef-
       id = 'pathdef-' + L.Util.stamp(partline);
-    }    
+    }
 
     Ember.$('path#' + id).attr('d', d);
     Ember.$('svg#svg-' + id).attr('width', svg.getAttribute('width'));
