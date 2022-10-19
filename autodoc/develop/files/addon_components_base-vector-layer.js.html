@@ -2109,21 +2109,25 @@ export default BaseLayer.extend({
     let d = layer._path.getAttribute(&#x27;d&#x27;);
     let path = svg.firstChild.firstChild;
     path.setAttribute(&#x27;d&#x27;, d);
+
+    // здесь с префиксом pathdef-
     let id = path.getAttribute(&#x27;id&#x27;);
+
     if (partline) {
-      id = L.Util.stamp(partline);
+      // здесь без префикса pathdef-
+      id = &#x27;pathdef-&#x27; + L.Util.stamp(partline);
     }
 
-    Ember.$(&#x27;path#pathdef-&#x27; + id).attr(&#x27;d&#x27;, d);
-    Ember.$(&#x27;svg#svg-pathdef-&#x27; + id).attr(&#x27;width&#x27;, svg.getAttribute(&#x27;width&#x27;));
-    Ember.$(&#x27;svg#svg-pathdef-&#x27; + id).attr(&#x27;height&#x27;, svg.getAttribute(&#x27;height&#x27;));
+    Ember.$(&#x27;path#&#x27; + id).attr(&#x27;d&#x27;, d);
+    Ember.$(&#x27;svg#svg-&#x27; + id).attr(&#x27;width&#x27;, svg.getAttribute(&#x27;width&#x27;));
+    Ember.$(&#x27;svg#svg-&#x27; + id).attr(&#x27;height&#x27;, svg.getAttribute(&#x27;height&#x27;));
 
     let options = layer._textOptions;
     let text = layer._text;
     let textNode = layer._textNode;
 
     this._setAlignForLine(layer, text, options.align, textNode);
-    Ember.$(&#x27;text#text-pathdef-&#x27; + id).attr(&#x27;dx&#x27;, textNode.getAttribute(&#x27;dx&#x27;));
+    Ember.$(&#x27;text#text-&#x27; + id).attr(&#x27;dx&#x27;, textNode.getAttribute(&#x27;dx&#x27;));
   },
 
   _labelsLayer: null,
