@@ -30167,7 +30167,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 318,
+            "line": 319,
             "description": "Collecting settings for executing a zoomToBounds function",
             "itemtype": "method",
             "name": "getLayerPropsForZoom",
@@ -30176,7 +30176,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 353,
+            "line": 354,
             "description": "Highlight feature-result-items caption",
             "itemtype": "method",
             "name": "actions.highlightFeature",
@@ -30185,7 +30185,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 367,
+            "line": 368,
             "description": "Show\\hide submenu",
             "itemtype": "method",
             "name": "actions.onSubmenu",
@@ -30194,7 +30194,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 378,
+            "line": 379,
             "description": "Performs row editing.",
             "itemtype": "method",
             "name": "actions.onRowEdit",
@@ -30203,7 +30203,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 445,
+            "line": 446,
             "description": "Handles click on show/hide all intersection coordinates.",
             "itemtype": "method",
             "name": "actions.toggleShowAllCords",
@@ -30212,7 +30212,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 459,
+            "line": 460,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.selectFeature:method\"}}'selectFeature' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.selectFeature",
@@ -30221,7 +30221,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 467,
+            "line": 468,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.panTo:method\"}}'panTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.panTo",
@@ -30230,7 +30230,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 480,
+            "line": 481,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.zoomTo:method\"}}'zoomTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.zoomTo",
@@ -30239,7 +30239,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 493,
+            "line": 494,
             "description": "Show\\hide detailed feature info",
             "itemtype": "method",
             "name": "actions.showInfo",
@@ -30248,7 +30248,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 502,
+            "line": 503,
             "description": "Show\\hide links list (if present).",
             "itemtype": "method",
             "name": "actions.toggleLinks",
@@ -30257,7 +30257,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 510,
+            "line": 511,
             "description": "Process the specified method.",
             "itemtype": "method",
             "name": "actions.goToEditForm",
@@ -30278,7 +30278,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 523,
+            "line": 524,
             "description": "Show\\hide panel for seraching intersections.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.findIntersection",
@@ -30287,7 +30287,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 533,
+            "line": 534,
             "description": "Add feature to favorites list\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToFavorite",
@@ -30296,7 +30296,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 542,
+            "line": 543,
             "description": "Handles click on checkbox.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToCompareGeometries",
@@ -30305,7 +30305,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 551,
+            "line": 552,
             "description": "Pans and zooms to intersection object.",
             "itemtype": "method",
             "name": "actions.panToIntersection",
@@ -30314,7 +30314,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 560,
+            "line": 561,
             "description": "Zooms to intersection and add intersection object on map.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -30323,7 +30323,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 570,
+            "line": 571,
             "description": "Component's action invoking for select feature",
             "itemtype": "method",
             "name": "sendingActions.selectFeature",
@@ -30339,7 +30339,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 576,
+            "line": 577,
             "description": "Component's action invoking for feature zooming",
             "itemtype": "method",
             "name": "sendingActions.zoomTo",
@@ -30355,7 +30355,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 582,
+            "line": 583,
             "description": "Component's action invoking for feature pan",
             "itemtype": "method",
             "name": "sendingActions.panTo",
