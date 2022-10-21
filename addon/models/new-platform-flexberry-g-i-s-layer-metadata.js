@@ -26,7 +26,20 @@ let Model = Projection.Model.extend(Offline.ModelMixin, LayerMetadataMixin, Laye
 
   anyTextCompute() {
     return `${this.get('name') || ''} ${this.get('description') || ''} ${(this.get('keyWords') || '').replace(/,/g, ' ')}`;
-  }
+  },
+
+  additionaldataParse: Ember.on('init', Ember.observer('additionaldata', function() {
+    if (!Ember.isNone(additionaldata)) {
+      try {
+        return JSON.parse(this.get('additionaldata'));
+      } catch (e) {
+        console.error(e);
+        return null;
+      }
+    }
+
+    return null;
+  }))
 });
 
 defineProjections(Model);

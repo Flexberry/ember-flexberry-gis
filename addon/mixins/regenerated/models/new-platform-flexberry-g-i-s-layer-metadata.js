@@ -92,7 +92,6 @@ export let defineProjections = function (modelClass) {
     scale: Projection.attr('Масштаб', { index: 5 }),
     coordinateReferenceSystem: Projection.attr('Система координат', { index: 6 }),
     boundingBox: Projection.attr('Граница', { index: 7 }),
-    additionaldata: Projection.attr('Дополнительные данные', { index: 8 }),
     linkMetadata:Projection. hasMany('new-platform-flexberry-g-i-s-link-metadata', '', {
       layer: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
         name: Projection.attr('', { index: 1, hidden: true })
@@ -117,6 +116,7 @@ export let defineProjections = function (modelClass) {
   modelClass.defineProjection('LayerMetadataL', 'new-platform-flexberry-g-i-s-layer-metadata', {
     name: Projection.attr('Наименование', { index: 0 }),
     description: Projection.attr('Описание', { index: 1 }),
-    type: Projection.attr('Тип', { index: 2 })
+    type: Projection.attr('Тип', { index: 2 }),
+    additionaldata: Projection.attr('Дополнительные данные', { index: 3 }),
   });
 };
