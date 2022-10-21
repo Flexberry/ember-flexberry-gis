@@ -29,7 +29,7 @@ let Model = Projection.Model.extend(Offline.ModelMixin, LayerMetadataMixin, Laye
   },
 
   additionaldataParse: Ember.on('init', Ember.observer('additionaldata', function() {
-    if (!Ember.isNone(additionaldata)) {
+    if (!Ember.isNone(this.get('additionaldata'))) {
       try {
         return JSON.parse(this.get('additionaldata'));
       } catch (e) {
