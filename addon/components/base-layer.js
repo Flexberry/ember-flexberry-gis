@@ -417,8 +417,12 @@ export default Ember.Component.extend(
       // Now execute base destroy logic.
       this._removeLayerFromLeafletContainer();
 
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer'))) {
-        this.set('_labelsLayer', null);
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerMulti'))) {
+        this.set('_labelsLayerMulti', null);
+      }
+
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerNotMulti'))) {
+        this.set('_labelsLayerNotMulti', null);
       }
 
       this.set('_leafletObject', null);
@@ -611,8 +615,14 @@ export default Ember.Component.extend(
 
       leafletContainer.removeLayer(leafletLayer);
 
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && leafletContainer.hasLayer(this.get('_labelsLayer'))) {
-        leafletContainer.removeLayer(this.get('_labelsLayer'));
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerMulti')) &&
+        leafletContainer.hasLayer(this.get('_labelsLayerMulti'))) {
+        leafletContainer.removeLayer(this.get('_labelsLayerMulti'));
+      }
+
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerNotMulti')) &&
+        leafletContainer.hasLayer(this.get('_labelsLayerNotMulti'))) {
+        leafletContainer.removeLayer(this.get('_labelsLayerNotMulti'));
       }
     },
 

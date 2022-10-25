@@ -487,8 +487,13 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
           }
 
           if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
-            const labelsOriginalLayer = layer.get('_leafletObject._labelsLayer');
+            const labelsOriginalLayer = layer.get('_leafletObject._labelsLayerMulti');
             if (labelsOriginalLayer && labelsOriginalLayer.getContainer && labelsOriginalLayer.getContainer()) {
+              leafletLayer.getContainer().style.clip = '';
+            }
+
+            const labelsNotMultiOriginalLayer = layer.get('_leafletObject._labelsLayerNotMulti');
+            if (labelsNotMultiOriginalLayer && labelsNotMultiOriginalLayer.getContainer && labelsNotMultiOriginalLayer.getContainer()) {
               leafletLayer.getContainer().style.clip = '';
             }
           }

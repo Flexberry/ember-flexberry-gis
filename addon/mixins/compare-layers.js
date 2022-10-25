@@ -33,11 +33,19 @@ export default Ember.Mixin.create({
       Ember.set(layersSideSettings, 'layerIds', layersSideSettings.layerIds.filter(l => l !== layerId));
     } else {
       if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
-        const labelsOriginalLayer = layer.get('_leafletObject._labelsLayer');
+        const labelsOriginalLayer = layer.get('_leafletObject._labelsLayerMulti');
         if (labelsOriginalLayer) {
           layersSideSettings.layers.push({
             id: layerId,
             layer: labelsOriginalLayer.addTo(leafletMap)
+          });
+        }
+
+        const labelsNotMultiOriginalLayer = layer.get('_leafletObject._labelsLayerNotMulti');
+        if (labelsNotMultiOriginalLayer) {
+          layersSideSettings.layers.push({
+            id: layerId,
+            layer: labelsNotMultiOriginalLayer.addTo(leafletMap)
           });
         }
       }

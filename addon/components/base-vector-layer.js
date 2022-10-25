@@ -78,6 +78,17 @@ export default BaseLayer.extend({
   },
 
   /**
+    @method _getContainerPaneLabelNotMulti
+    @return HTMLElement
+    Returns the HTML element for this label layer.
+  */
+  _getContainerPaneLabelNotMulti: function () {
+    let className = 'leaflet-' + this.get('_paneLabelNotMulti') + '-pane';
+    let container = Ember.$(`.${className}`);
+    return container[0];
+  },
+
+  /**
     @property _pane
     @type String
     @readOnly
@@ -98,6 +109,21 @@ export default BaseLayer.extend({
       // to switch combine-layer
       let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
       return 'labelLayer' + this.get('layerModel.id') + layerId;
+    }
+
+    return null;
+  }),
+
+  /**
+    @property _paneLabelNotMulti
+    @type String
+    @readOnly
+  */
+  _paneLabelNotMulti: Ember.computed('layerModel.id', 'labelSettings.signMapObjects', function () {
+    if (this.get('labelSettings.signMapObjects')) {
+      // to switch combine-layer
+      let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
+      return 'labelLayerNotMulti' + this.get('layerModel.id') + layerId;
     }
 
     return null;
@@ -132,6 +158,14 @@ export default BaseLayer.extend({
     let thisPaneLabel = this.get('_paneLabel');
     if (thisPaneLabel && !Ember.isNone(leafletMap)) {
       let pane = leafletMap.getPane(thisPaneLabel);
+      if (pane) {
+        pane.style.zIndex = (Ember.isNone(this.get('labelSettings.index')) ? this.get('index') : this.get('labelSettings.index')) + begIndex + 1; //to make the label layer higher than the vector layer
+      }
+    }
+
+    let thisPaneLabelNotMulti = this.get('_paneLabelNotMulti');
+    if (thisPaneLabelNotMulti && !Ember.isNone(leafletMap)) {
+      let pane = leafletMap.getPane(thisPaneLabelNotMulti);
       if (pane) {
         pane.style.zIndex = (Ember.isNone(this.get('labelSettings.index')) ? this.get('index') : this.get('labelSettings.index')) + begIndex + 1; //to make the label layer higher than the vector layer
       }
@@ -423,9 +457,18 @@ export default BaseLayer.extend({
             map.addLayer(layerShape);
           }
         });
-        let labelsLayer = leafletObject._labelsLayer;
-        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelsLayer) && map.hasLayer(labelsLayer)) {
-          labelsLayer.eachLayer(function (labelLayer) {
+        let _labelsLayerNotMulti = leafletObject._labelsLayerNotMulti;
+        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(_labelsLayerNotMulti) && map.hasLayer(_labelsLayerNotMulti)) {
+          _labelsLayerNotMulti.eachLayer(function (labelLayer) {
+            if (!map.hasLayer(labelLayer)) {
+              map.addLayer(labelLayer);
+            }
+          });
+        }
+
+        let _labelsLayerMulti = leafletObject._labelsLayerMulti;
+        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(_labelsLayerMulti) && map.hasLayer(_labelsLayerMulti)) {
+          _labelsLayerMulti.eachLayer(function (labelLayer) {
             if (!map.hasLayer(labelLayer)) {
               map.addLayer(labelLayer);
             }
@@ -454,9 +497,18 @@ export default BaseLayer.extend({
         map.removeLayer(layerShape);
       }
     });
-    let labelsLayer = leafletObject._labelsLayer;
-    if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelsLayer) && map.hasLayer(labelsLayer)) {
-      labelsLayer.eachLayer(function (labelLayer) {
+    let _labelsLayerNotMulti = leafletObject._labelsLayerNotMulti;
+    if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(_labelsLayerNotMulti) && map.hasLayer(_labelsLayerNotMulti)) {
+      _labelsLayerNotMulti.eachLayer(function (labelLayer) {
+        if (map.hasLayer(labelLayer)) {
+          map.removeLayer(labelLayer);
+        }
+      });
+    }
+
+    let _labelsLayerMulti = leafletObject._labelsLayerMulti;
+    if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(_labelsLayerMulti) && map.hasLayer(_labelsLayerMulti)) {
+      _labelsLayerMulti.eachLayer(function (labelLayer) {
         if (map.hasLayer(labelLayer)) {
           map.removeLayer(labelLayer);
         }
@@ -513,10 +565,28 @@ export default BaseLayer.extend({
             });
           }
         });
-        let labelLayer = leafletObject._labelsLayer;
-        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelLayer)) {
+        let _labelsLayerMulti = leafletObject._labelsLayerMulti;
+        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(_labelsLayerMulti)) {
           objectIds.forEach(objectId => {
-            let objects = Object.values(labelLayer._layers).filter(shape => {
+            let objects = Object.values(_labelsLayerMulti._layers).filter(shape => {
+              return this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layer, shape) === objectId;
+            });
+            if (objects.length > 0) {
+              objects.forEach(obj => {
+                if (visibility) {
+                  map.addLayer(obj);
+                } else {
+                  map.removeLayer(obj);
+                }
+              });
+            }
+          });
+        }
+
+        let _labelsLayerNotMulti = leafletObject._labelsLayerNotMulti;
+        if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(_labelsLayerNotMulti)) {
+          objectIds.forEach(objectId => {
+            let objects = Object.values(_labelsLayerNotMulti._layers).filter(shape => {
               return this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(layer, shape) === objectId;
             });
             if (objects.length > 0) {
@@ -925,13 +995,24 @@ export default BaseLayer.extend({
     });
     leafletObject.clearLayers();
 
-    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
-      leafletObject._labelsLayer.eachLayer((layerShape) => {
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerNotMulti')) &&
+      !Ember.isNone(this.get('_leafletObject._labelsLayerNotMulti'))) {
+      leafletObject._labelsLayerNotMulti.eachLayer((layerShape) => {
         if (map.hasLayer(layerShape)) {
           map.removeLayer(layerShape);
         }
       });
-      leafletObject._labelsLayer.clearLayers();
+      leafletObject._labelsLayerNotMulti.clearLayers();
+    }
+
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerMulti')) &&
+      !Ember.isNone(this.get('_leafletObject._labelsLayerMulti'))) {
+      leafletObject._labelsLayerMulti.eachLayer((layerShape) => {
+        if (map.hasLayer(layerShape)) {
+          map.removeLayer(layerShape);
+        }
+      });
+      leafletObject._labelsLayerMulti.clearLayers();
     }
 
     this.set('loadedBounds', null);
@@ -988,10 +1069,25 @@ export default BaseLayer.extend({
     let thisPaneLabel = this.get('_paneLabel');
     if (this.get('labelSettings.signMapObjects') && !Ember.isNone(leafletMap) && thisPaneLabel && !Ember.isNone(leafletObject)) {
       let pane = leafletMap.getPane(thisPaneLabel);
-      let labelsLayer = this.get('_labelsLayer');
+      let labelsLayer = this.get('_labelsLayerMulti');
       let mapPane = leafletMap._mapPane;
       if (!Ember.isNone(mapPane) && !Ember.isNone(pane) && !Ember.isNone(labelsLayer)) {
         let existPaneDomElem = Ember.$(mapPane).children(`[class*='${thisPaneLabel}']`).length;
+        if (existPaneDomElem > 0 && !checkMapZoom(labelsLayer)) {
+          L.DomUtil.remove(pane);
+        } else if (existPaneDomElem === 0 && checkMapZoom(labelsLayer)) {
+          mapPane.appendChild(pane);
+        }
+      }
+    }
+
+    let thisPaneLabelNotMulti = this.get('_paneLabelNotMulti');
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(leafletMap) && thisPaneLabelNotMulti && !Ember.isNone(leafletObject)) {
+      let pane = leafletMap.getPane(thisPaneLabelNotMulti);
+      let labelsLayer = this.get('_labelsLayerNotMulti');
+      let mapPane = leafletMap._mapPane;
+      if (!Ember.isNone(mapPane) && !Ember.isNone(pane) && !Ember.isNone(labelsLayer)) {
+        let existPaneDomElem = Ember.$(mapPane).children(`[class*='${thisPaneLabelNotMulti}']`).length;
         if (existPaneDomElem > 0 && !checkMapZoom(labelsLayer)) {
           L.DomUtil.remove(pane);
         } else if (existPaneDomElem === 0 && checkMapZoom(labelsLayer)) {
@@ -1014,6 +1110,10 @@ export default BaseLayer.extend({
       if (this.get('typeGeometry') === 'polyline') {
         leafletMap.off('zoomend', this._updatePositionLabelForLine, this);
       }
+
+      if (this.get('showExisting') !== false) {
+        leafletMap.off('moveend', this._showLabelsMovingMap, this);
+      }
     }
   },
 
@@ -1033,9 +1133,9 @@ export default BaseLayer.extend({
   */
   _zoomMinDidChange: Ember.observer('labelSettings.scaleRange.minScaleRange', function () {
     let minZoom = this.get('labelSettings.scaleRange.minScaleRange');
-    let labelsLayer = this.get('_labelsLayer');
-    if (!Ember.isNone(labelsLayer) && !Ember.isNone(minZoom)) {
-      labelsLayer.minZoom = minZoom;
+    let _labelsLayerMulti = this.get('_labelsLayerMulti');
+    if (!Ember.isNone(_labelsLayerMulti) && !Ember.isNone(minZoom)) {
+      _labelsLayerMulti.minZoom = minZoom;
       this._checkZoomPane();
     }
   }),
@@ -1048,9 +1148,39 @@ export default BaseLayer.extend({
   */
   _zoomMaxDidChange: Ember.observer('labelSettings.scaleRange.maxScaleRange', function () {
     let maxZoom = this.get('labelSettings.scaleRange.maxScaleRange');
-    let labelsLayer = this.get('_labelsLayer');
-    if (!Ember.isNone(labelsLayer) && !Ember.isNone(maxZoom)) {
-      labelsLayer.maxZoom = maxZoom;
+    let _labelsLayerMulti = this.get('_labelsLayerMulti');
+    if (!Ember.isNone(_labelsLayerMulti) && !Ember.isNone(maxZoom)) {
+      _labelsLayerMulti.maxZoom = maxZoom;
+      this._checkZoomPane();
+    }
+  }),
+
+  /**
+    Switches labels layer's minScaleRange.
+
+    @method _zoomMinDidChange
+    @private
+  */
+  _zoomMinOneDidChange: Ember.observer('labelSettings.scaleRange.minScaleRangeOneLabel', function () {
+    let minZoom = this.get('labelSettings.scaleRange.minScaleRangeOneLabel');
+    let _labelsLayerNotMulti = this.get('_labelsLayerNotMulti');
+    if (!Ember.isNone(_labelsLayerNotMulti) && !Ember.isNone(minZoom)) {
+      _labelsLayerNotMulti.minZoom = minZoom;
+      this._checkZoomPane();
+    }
+  }),
+
+  /**
+    Switches labels layer's maxScaleRange.
+
+    @method _zoomMaxDidChange
+    @private
+  */
+  _zoomMaxOneDidChange: Ember.observer('labelSettings.scaleRange.maxScaleRangeOneLabel', function () {
+    let maxZoom = this.get('labelSettings.scaleRange.maxScaleRangeOneLabel');
+    let _labelsLayerNotMulti = this.get('_labelsLayerNotMulti');
+    if (!Ember.isNone(_labelsLayerNotMulti) && !Ember.isNone(maxZoom)) {
+      _labelsLayerNotMulti.maxZoom = maxZoom;
       this._checkZoomPane();
     }
   }),
@@ -1156,13 +1286,27 @@ export default BaseLayer.extend({
   },
 
   /**
+    Show labels when map moving
+    @method _showLabelsMovingMap
+  */
+  _showLabelsMovingMap() {
+    let _labelsLayerMulti = this.get('_labelsLayerMulti');
+    let _labelsLayerNotMulti = this.get('_labelsLayerNotMulti');
+    let leafletObject = this.get('_leafletObject');
+    if (this.get('leafletMap').hasLayer(_labelsLayerMulti) && leafletObject) {
+      this._createStringLabel(leafletObject.getLayers(), _labelsLayerMulti, _labelsLayerNotMulti);
+    }
+  },
+
+  /**
     Create label string for every object of layer.
 
     @method _createStringLabel
-    @param {Object} labelsLayer Labels layer
     @param {Array} layers new layers for add labels
+    @param {Object} labelsLayerMulti Labels layer with multi labels
+    @param {Object} labelsLayerNotMulti Labels layer with not multi labels
   */
-  _createStringLabel(labelsLayer, layers) {
+  _createStringLabel(layers, labelsLayerMulti, labelsLayerNotMulti) {
     let optionsLabel = this.get('labelSettings.options');
     let labelSettingsString = this.get('labelSettings.labelSettingsString');
     let style = Ember.String.htmlSafe(
@@ -1183,7 +1327,7 @@ export default BaseLayer.extend({
         let staticLoad = showExisting !== false && intersectBBox;
         if (!layer._label && (showExisting === false || staticLoad)) {
           let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
-          this._createLabel(label, layer, style, labelsLayer);
+          this._createLabel(label, layer, style, labelsLayerMulti, labelsLayerNotMulti);
         }
       });
     }
@@ -1196,9 +1340,10 @@ export default BaseLayer.extend({
     @param {String} text
     @param {Object} layer
     @param {String} style
-    @param {Object} labelsLayer
+    @param {Object} labelsLayerMulti
+    @param {Object} labelsLayerNotMulti
   */
-  _createLabel(text, layer, style, labelsLayer) {
+  _createLabel(text, layer, style, labelsLayerMulti, labelsLayerNotMulti) {
     if (Ember.isEmpty(text) || Ember.isEmpty(layer)) {
       return;
     }
@@ -1211,6 +1356,8 @@ export default BaseLayer.extend({
     let className = 'label';
     let html = '';
     let label;
+    let labelMulti;
+    let labelLine;
     let geojsonWriter = new jsts.io.GeoJSONWriter();
 
     if (lType.indexOf('Polygon') !== -1) {
@@ -1219,7 +1366,7 @@ export default BaseLayer.extend({
       try {
         let countGeometries = objJsts.getNumGeometries();
         if (countGeometries > 1) {
-          label = L.featureGroup();
+          labelMulti = L.featureGroup();
           for (let i = 0; i < countGeometries; i++) {
             let polygonN = objJsts.getGeometryN(i);
             let centroidNJsts = polygonN.isValid() ? polygonN.getInteriorPoint() : polygonN.getCentroid();
@@ -1244,15 +1391,14 @@ export default BaseLayer.extend({
               iconSize: [iconWidth, iconHeight]
             };
 
-            label.addLayer(labelN);
+            labelMulti.addLayer(labelN);
           }
-        } else {
-          let centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
-          let geojsonWriter = new jsts.io.GeoJSONWriter();
-          let centroid = geojsonWriter.write(centroidJsts);
-          latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0]);
-          html = '<div style="' + style + '">' + text + '</div>';
         }
+
+        let centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
+        let centroid = geojsonWriter.write(centroidJsts);
+        latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0]);
+        html = '<div style="' + style + '">' + text + '</div>';
       }
       catch (e) {
         console.error(e.message + ': ' + layer.toGeoJSON().id);
@@ -1276,7 +1422,7 @@ export default BaseLayer.extend({
         let objJsts = layer.toJsts(L.CRS.EPSG4326);
         let countGeometries = objJsts.getNumGeometries();
         if (countGeometries > 1) {
-          label = L.featureGroup();
+          labelMulti = L.featureGroup();
           for (let i = 0; i < countGeometries; i++) {
             let partlineJsts = objJsts.getGeometryN(i);
             let partlineGeoJson = geojsonWriter.write(partlineJsts);
@@ -1313,8 +1459,30 @@ export default BaseLayer.extend({
               iconSize: [iconWidth, iconHeight]
             };
             labelN._parentLayer = partline;
+            labelN._path = layer._path;
+            labelN._textNode = layer._textNode;
+            labelN._svg = layer._svg;
+            labelN._svgConteiner = layer._svgConteiner;
 
-            label.addLayer(labelN);
+            labelMulti.addLayer(labelN);
+
+            if (i === 0) {
+              labelLine = L.marker(latlng, {
+                icon: L.divIcon({
+                  className: className,
+                  html: html,
+                  iconSize: [iconWidth, iconHeight],
+                  iconAnchor: anchor
+                }),
+                zIndexOffset: 1000,
+                pane: this.get('_paneLabelNotMulti')
+              });
+
+              labelLine._path = layer._path;
+              labelLine._textNode = layer._textNode;
+              labelLine._svg = layer._svg;
+              labelLine._svgConteiner = layer._svgConteiner;
+            }
           }
         } else {
           latlng = L.latLng(layer._bounds._northEast.lat, layer._bounds._southWest.lng);
@@ -1337,7 +1505,42 @@ export default BaseLayer.extend({
       return;
     }
 
-    if (!label) {
+    let leafletMap = this.get('leafletMap');
+    if (labelsLayerNotMulti) {
+      if (!labelLine) {
+        label = L.marker(latlng, {
+          icon: L.divIcon({
+            className: className,
+            html: html,
+            iconSize: [iconWidth, iconHeight],
+            iconAnchor: anchor
+          }),
+          zIndexOffset: 1000,
+          pane: this.get('_paneLabelNotMulti')
+        });
+
+        if (lType.indexOf('LineString') !== -1) {
+          label._path = layer._path;
+          label._textNode = layer._textNode;
+          label._svg = layer._svg;
+          label._svgConteiner = layer._svgConteiner;
+        }
+      } else {
+        label = labelLine;
+      }
+
+      label.style = {
+        className: className,
+        html: html,
+        iconSize: [iconWidth, iconHeight]
+      };
+      label.feature = layer.feature;
+      label.leafletMap = leafletMap;
+      layer._label = label;
+      labelsLayerNotMulti.addLayer(label);
+    }
+
+    if (!labelMulti) {
       label = L.marker(latlng, {
         icon: L.divIcon({
           className: className,
@@ -1348,17 +1551,31 @@ export default BaseLayer.extend({
         zIndexOffset: 1000,
         pane: this.get('_paneLabel')
       });
+      if (lType.indexOf('LineString') !== -1) {
+        label._path = layer._path;
+        label._textNode = layer._textNode;
+        label._svg = layer._svg;
+        label._svgConteiner = layer._svgConteiner;
+      }
+
       label.style = {
         className: className,
         html: html,
         iconSize: [iconWidth, iconHeight]
       };
+      label.feature = layer.feature;
+      label.leafletMap = leafletMap;
+      layer._labelMulti = label;  //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      labelsLayerMulti.addLayer(label);
+    } else {
+      labelsLayerMulti.addLayer(labelMulti);
     }
 
-    labelsLayer.addLayer(label);
-    label.feature = layer.feature;
-    label.leafletMap = labelsLayer.leafletMap;
-    layer._label = label;
+    if (labelMulti) {
+      labelMulti.feature = layer.feature;
+      labelMulti.leafletMap = leafletMap;
+      layer._labelMulti = labelMulti;
+    }
   },
 
   /**
@@ -1666,19 +1883,19 @@ export default BaseLayer.extend({
     @method _updatePositionLabelForLine
   */
   _updatePositionLabelForLine() {
-    let labelsLayer = this.get('_labelsLayer');
-    if (this.get('leafletMap').hasLayer(labelsLayer)) {
+    let _labelsLayerMulti = this.get('_labelsLayerMulti');
+    if (this.get('leafletMap').hasLayer(_labelsLayerMulti)) {
       let _this = this;
       let leafletObject = _this.get('_leafletObject');
       if (!Ember.isNone(leafletObject)) {
         leafletObject.eachLayer(function (layer) {
           if (!Ember.isNone(layer._path) && !Ember.isEmpty(layer._text)) {
-            if (layer._label instanceof L.FeatureGroup) {
-              layer._label.getLayers().forEach((label) => {
-                _this._updateAttributesSvg(layer, label._parentLayer);
+            if (!Ember.isNone(layer._labelMulti) && layer._labelMulti instanceof L.FeatureGroup) {
+              layer._labelMulti.getLayers().forEach((label) => {
+                _this._updateAttributesSvg(layer, label._parentLayer, label._svg, label._path);
               });
             } else {
-              _this._updateAttributesSvg(layer);
+              _this._updateAttributesSvg(layer, null, layer._label._svg, layer._label._path);
             }
           }
         });
@@ -1686,11 +1903,9 @@ export default BaseLayer.extend({
     }
   },
 
-  _updateAttributesSvg(layer, partline) {
-    let svg = layer._svg;
+  _updateAttributesSvg(layer, partline, svg, path) {
     this._setLabelLine(layer, svg, partline);
     let d = layer._path.getAttribute('d');
-    let path = svg.firstChild.firstChild;
     path.setAttribute('d', d);
 
     // здесь с префиксом pathdef-
@@ -1714,6 +1929,8 @@ export default BaseLayer.extend({
   },
 
   _labelsLayer: null,
+  _labelsLayerMulti: null,
+  _labelsLayerNotMulti: null,
 
   /**
     Show lables
@@ -1730,31 +1947,53 @@ export default BaseLayer.extend({
         leafletObject = this.get('_leafletObject');
       }
 
-      let labelsLayer = this.get('_labelsLayer');
-      if (!Ember.isNone(labelsLayer) && Ember.isNone(leafletObject._labelsLayer)) {
-        labelsLayer.clearLayers();
+      let labelsLayerMulti = this.get('_labelsLayerMulti');
+      if (!Ember.isNone(labelsLayerMulti) && Ember.isNone(leafletObject._labelsLayerMulti)) {
+        labelsLayerMulti.clearLayers();
       }
 
-      if (Ember.isNone(labelsLayer)) {
-        labelsLayer = L.featureGroup();
+      let labelsLayerNotMulti = this.get('_labelsLayerNotMulti');
+      if (!Ember.isNone(labelsLayerNotMulti) && Ember.isNone(leafletObject._labelsLayerNotMulti)) {
+        labelsLayerNotMulti.clearLayers();
+      }
+
+      if (Ember.isNone(labelsLayerMulti)) {
+        labelsLayerMulti = L.featureGroup();
         let minScaleRange = this.get('labelSettings.scaleRange.minScaleRange') || this.get('minZoom');
         let maxScaleRange = this.get('labelSettings.scaleRange.maxScaleRange') || this.get('maxZoom');
-        labelsLayer.minZoom = minScaleRange;
-        labelsLayer.maxZoom = maxScaleRange;
-        labelsLayer.leafletMap = leafletMap;
-        labelsLayer.getContainer = this.get('_getContainerPane').bind(this);
-        leafletObject._labelsLayer = labelsLayer;
+        labelsLayerMulti.minZoom = minScaleRange;
+        labelsLayerMulti.maxZoom = maxScaleRange;
+        labelsLayerMulti.leafletMap = leafletMap;
+        labelsLayerMulti.getContainer = this.get('_getContainerPane').bind(this);
+        leafletObject._labelsLayerMulti = labelsLayerMulti;
+
+        let minScaleRangeOneLabel = this.get('labelSettings.scaleRange.minScaleRangeOneLabel');
+        let maxScaleRangeOneLabel = this.get('labelSettings.scaleRange.maxScaleRangeOneLabel');
+        if (!Ember.isNone(minScaleRangeOneLabel) && !Ember.isNone(maxScaleRangeOneLabel)) {
+          labelsLayerNotMulti = L.featureGroup();
+          labelsLayerNotMulti.minZoom = minScaleRangeOneLabel;
+          labelsLayerNotMulti.maxZoom = maxScaleRangeOneLabel;
+          labelsLayerNotMulti.leafletMap = leafletMap;
+          labelsLayerNotMulti.getContainer = this.get('_getContainerPaneLabelNotMulti').bind(this);
+          leafletObject._labelsLayerNotMulti = labelsLayerNotMulti;
+        }
 
         if (this.get('typeGeometry') === 'polyline') {
           leafletMap.on('zoomend', this._updatePositionLabelForLine, this);
         }
+
+        if (this.get('showExisting') !== false) {
+          leafletMap.on('moveend', this._showLabelsMovingMap, this);
+        }
       } else {
-        leafletObject._labelsLayer = labelsLayer;
+        leafletObject._labelsLayerMulti = labelsLayerMulti;
+        leafletObject._labelsLayerNotMulti = labelsLayerNotMulti;
       }
 
-      this._createStringLabel(labelsLayer, layers);
-      if (Ember.isNone(this.get('_labelsLayer'))) {
-        this.set('_labelsLayer', labelsLayer);
+      this._createStringLabel(layers, labelsLayerMulti, labelsLayerNotMulti);
+      if (Ember.isNone(this.get('_labelsLayerMulti'))) {
+        this.set('_labelsLayerMulti', labelsLayerMulti);
+        this.set('_labelsLayerNotMulti', labelsLayerNotMulti);
         this._checkZoomPane();
       }
 
@@ -1773,7 +2012,8 @@ export default BaseLayer.extend({
     @private
   */
   _addLabelsToLeafletContainer(layers, leafletObject) {
-    let labelsLayer = this.get('_labelsLayer');
+    let _labelsLayerMulti = this.get('_labelsLayerMulti');
+    let _labelsLayerNotMulti = this.get('_labelsLayerNotMulti');
 
     // чтобы слой нормально выключался в группе,
     // он должен быть в контейнере группы, а не просто в карте
@@ -1781,6 +2021,18 @@ export default BaseLayer.extend({
 
     if (!leafletObject) {
       leafletObject = this.get('_leafletObject');
+    }
+
+    let thisPaneNotMulti = this.get('_paneLabelNotMulti');
+    if (thisPaneNotMulti) {
+      let leafletMap = this.get('leafletMap');
+      if (thisPaneNotMulti && !Ember.isNone(leafletMap)) {
+        let pane = leafletMap.getPane(thisPaneNotMulti);
+        if (!pane || Ember.isNone(pane)) {
+          this._createPane(thisPaneNotMulti);
+          this._setLayerZIndex();
+        }
+      }
     }
 
     let thisPane = this.get('_paneLabel');
@@ -1795,12 +2047,20 @@ export default BaseLayer.extend({
       }
     }
 
-    if (Ember.isNone(labelsLayer)) {
+    if (Ember.isNone(_labelsLayerMulti)) {
       this._showLabels(layers, leafletObject);
-      labelsLayer = this.get('_labelsLayer');
-      leafletContainer.addLayer(labelsLayer);
-    } else if (!leafletContainer.hasLayer(labelsLayer)) {
-      leafletContainer.addLayer(labelsLayer);
+      _labelsLayerMulti = this.get('_labelsLayerMulti');
+      leafletContainer.addLayer(_labelsLayerMulti);
+
+      _labelsLayerNotMulti = this.get('_labelsLayerNotMulti');
+      if (_labelsLayerNotMulti) {
+        leafletContainer.addLayer(_labelsLayerNotMulti);
+      }
+    } else if (!leafletContainer.hasLayer(_labelsLayerMulti)) {
+      leafletContainer.addLayer(_labelsLayerMulti);
+      if (_labelsLayerNotMulti && !leafletContainer.hasLayer(_labelsLayerNotMulti)) {
+        leafletContainer.addLayer(_labelsLayerNotMulti);
+      }
     } else {
       this._showLabels(layers, leafletObject);
     }
@@ -1813,13 +2073,21 @@ export default BaseLayer.extend({
     @private
   */
   _removeLabelsFromLeafletContainer() {
-    let labelsLayer = this.get('_labelsLayer');
-    if (Ember.isNone(labelsLayer)) {
+    let leafletMap = this.get('leafletMap');
+
+    let _labelsLayerMulti = this.get('_labelsLayerMulti');
+    if (Ember.isNone(_labelsLayerMulti)) {
       return;
     }
 
-    let leafletMap = this.get('leafletMap');
-    leafletMap.removeLayer(labelsLayer);
+    leafletMap.removeLayer(_labelsLayerMulti);
+
+    let _labelsLayerNotMulti = this.get('_labelsLayerNotMulti');
+    if (Ember.isNone(_labelsLayerNotMulti)) {
+      return;
+    }
+
+    leafletMap.removeLayer(_labelsLayerNotMulti);
   },
 
   /**
@@ -1831,12 +2099,15 @@ export default BaseLayer.extend({
   _setLayerVisibility() {
     if (this.get('visibility')) {
       this._addLayerToLeafletContainer();
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerMulti')) &&
+        !Ember.isNone(this.get('_leafletObject._labelsLayerMulti'))) {
         this._addLabelsToLeafletContainer();
+        this._updatePositionLabelForLine();
       }
     } else {
       this._removeLayerFromLeafletContainer();
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerMulti')) &&
+        !Ember.isNone(this.get('_leafletObject._labelsLayerMulti'))) {
         this._removeLabelsFromLeafletContainer();
       }
     }
