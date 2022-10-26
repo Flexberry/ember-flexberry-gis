@@ -148,6 +148,13 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     dynamicButtons: [],
 
     /**
+      Service for managing map API.
+      @property mapApi
+      @type MapApiService
+    */
+    mapApi: Ember.inject.service(),
+
+    /**
       Layer copy's name postfix
 
       @property copyPostfix
