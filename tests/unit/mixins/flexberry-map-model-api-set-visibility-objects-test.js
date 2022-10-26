@@ -20,7 +20,7 @@ leafletObject.options = {
   showExisting: false,
   continueLoading: false
 };
-leafletObject._labelsLayerMulti = _labelsLayer;
+leafletObject._labelsLayerNotMulti = _labelsLayer;
 let firstTestLayer = L.polygon([[1, 2], [4, 2], [4, 4], [1, 2]]).addTo(leafletObject);
 firstTestLayer.id = '1';
 let secondTestLayer = L.polygon([[10, 20], [40, 20], [40, 40], [10, 20]]).addTo(leafletObject);

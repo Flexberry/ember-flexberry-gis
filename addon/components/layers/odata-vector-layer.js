@@ -173,14 +173,14 @@ export default BaseVectorLayer.extend({
   updateLabel(layer) {
     let leafletObject = this.get('_leafletObject');
 
-    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerMulti')) &&
-      !Ember.isNone(this.get('_leafletObject._labelsLayerMulti'))) {
-      L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayerMulti, layer._labelMulti);
-      layer._labelMulti = null;
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerNotMulti')) &&
-        !Ember.isNone(this.get('_leafletObject._labelsLayerNotMulti'))) {
-        L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayerNotMulti, layer._label);
-        layer._label = null;
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerNotMulti')) &&
+      !Ember.isNone(this.get('_leafletObject._labelsLayerNotMulti'))) {
+      L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayerNotMulti, layer._label);
+      layer._label = null;
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerMulti')) &&
+        !Ember.isNone(this.get('_leafletObject._labelsLayerMulti'))) {
+        L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayerMulti, layer._labelMulti);
+        layer._labelMulti = null;
       }
 
       this._createStringLabel([layer], leafletObject._labelsLayerMulti, leafletObject._labelsLayerNotMulti);

@@ -68,8 +68,8 @@ const createcommonLabelSettings = function () {
     scaleRange: {
       minScaleRange: null,
       maxScaleRange: null,
-      minScaleRangeOneLabel: null,
-      maxScaleRangeOneLabel: null,
+      minScaleRangeMultiLabel: null,
+      maxScaleRangeMultiLabel: null,
     }
   };
 };

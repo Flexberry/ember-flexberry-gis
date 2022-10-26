@@ -552,7 +552,7 @@ test('test method clearChanges() with create', function (assert) {
           _leaflet_id: 1000
         };
         leafletObject.addLayer(layerAdd);
-        leafletObject._labelsLayerMulti = {
+        leafletObject._labelsLayerNotMulti = {
           1000: {}
         };
         layerAdd.enableEdit(leafletMap);

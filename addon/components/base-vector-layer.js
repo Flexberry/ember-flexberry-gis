@@ -209,7 +209,7 @@ export default BaseLayer.extend({
         this._addLayersOnMap(layers, leafletObject);
 
         if (this.get('labelSettings.signMapObjects')) {
-          this._addLabelsToLeafletContainer(layers, leafletObject);
+          this._showLabels(layers, leafletObject);
         }
 
         leafletObject.fire('loadCompleted');
@@ -1133,36 +1133,6 @@ export default BaseLayer.extend({
   */
   _zoomMinDidChange: Ember.observer('labelSettings.scaleRange.minScaleRange', function () {
     let minZoom = this.get('labelSettings.scaleRange.minScaleRange');
-    let _labelsLayerMulti = this.get('_labelsLayerMulti');
-    if (!Ember.isNone(_labelsLayerMulti) && !Ember.isNone(minZoom)) {
-      _labelsLayerMulti.minZoom = minZoom;
-      this._checkZoomPane();
-    }
-  }),
-
-  /**
-    Switches labels layer's maxScaleRange.
-
-    @method _zoomMaxDidChange
-    @private
-  */
-  _zoomMaxDidChange: Ember.observer('labelSettings.scaleRange.maxScaleRange', function () {
-    let maxZoom = this.get('labelSettings.scaleRange.maxScaleRange');
-    let _labelsLayerMulti = this.get('_labelsLayerMulti');
-    if (!Ember.isNone(_labelsLayerMulti) && !Ember.isNone(maxZoom)) {
-      _labelsLayerMulti.maxZoom = maxZoom;
-      this._checkZoomPane();
-    }
-  }),
-
-  /**
-    Switches labels layer's minScaleRange.
-
-    @method _zoomMinDidChange
-    @private
-  */
-  _zoomMinOneDidChange: Ember.observer('labelSettings.scaleRange.minScaleRangeOneLabel', function () {
-    let minZoom = this.get('labelSettings.scaleRange.minScaleRangeOneLabel');
     let _labelsLayerNotMulti = this.get('_labelsLayerNotMulti');
     if (!Ember.isNone(_labelsLayerNotMulti) && !Ember.isNone(minZoom)) {
       _labelsLayerNotMulti.minZoom = minZoom;
@@ -1176,11 +1146,41 @@ export default BaseLayer.extend({
     @method _zoomMaxDidChange
     @private
   */
-  _zoomMaxOneDidChange: Ember.observer('labelSettings.scaleRange.maxScaleRangeOneLabel', function () {
-    let maxZoom = this.get('labelSettings.scaleRange.maxScaleRangeOneLabel');
+  _zoomMaxDidChange: Ember.observer('labelSettings.scaleRange.maxScaleRange', function () {
+    let maxZoom = this.get('labelSettings.scaleRange.maxScaleRange');
     let _labelsLayerNotMulti = this.get('_labelsLayerNotMulti');
     if (!Ember.isNone(_labelsLayerNotMulti) && !Ember.isNone(maxZoom)) {
       _labelsLayerNotMulti.maxZoom = maxZoom;
+      this._checkZoomPane();
+    }
+  }),
+
+  /**
+    Switches labels layer's minScaleRange.
+
+    @method _zoomMinMultiDidChange
+    @private
+  */
+  _zoomMinMultiDidChange: Ember.observer('labelSettings.scaleRange.minScaleRangeMultiLabel', function () {
+    let minZoom = this.get('labelSettings.scaleRange.minScaleRangeMultiLabel');
+    let _labelsLayerMulti = this.get('_labelsLayerMulti');
+    if (!Ember.isNone(_labelsLayerMulti) && !Ember.isNone(minZoom)) {
+      _labelsLayerMulti.minZoom = minZoom;
+      this._checkZoomPane();
+    }
+  }),
+
+  /**
+    Switches labels layer's maxScaleRangeMultiLabel.
+
+    @method _zoomMaxMultiDidChange
+    @private
+  */
+  _zoomMaxMultiDidChange: Ember.observer('labelSettings.scaleRange.maxScaleRangeMultiLabel', function () {
+    let maxZoom = this.get('labelSettings.scaleRange.maxScaleRangeMultiLabel');
+    let _labelsLayerMulti = this.get('_labelsLayerMulti');
+    if (!Ember.isNone(_labelsLayerMulti) && !Ember.isNone(maxZoom)) {
+      _labelsLayerMulti.maxZoom = maxZoom;
       this._checkZoomPane();
     }
   }),
@@ -1293,7 +1293,7 @@ export default BaseLayer.extend({
     let _labelsLayerMulti = this.get('_labelsLayerMulti');
     let _labelsLayerNotMulti = this.get('_labelsLayerNotMulti');
     let leafletObject = this.get('_leafletObject');
-    if (this.get('leafletMap').hasLayer(_labelsLayerMulti) && leafletObject) {
+    if (this.get('leafletMap').hasLayer(_labelsLayerNotMulti) && leafletObject) {
       this._createStringLabel(leafletObject.getLayers(), _labelsLayerMulti, _labelsLayerNotMulti);
     }
   },
@@ -1540,35 +1540,37 @@ export default BaseLayer.extend({
       labelsLayerNotMulti.addLayer(label);
     }
 
-    if (!labelMulti) {
-      label = L.marker(latlng, {
-        icon: L.divIcon({
+    if (labelsLayerMulti) {
+      if (!labelMulti) {
+        label = L.marker(latlng, {
+          icon: L.divIcon({
+            className: className,
+            html: html,
+            iconSize: [iconWidth, iconHeight],
+            iconAnchor: anchor
+          }),
+          zIndexOffset: 1000,
+          pane: this.get('_paneLabel')
+        });
+        if (lType.indexOf('LineString') !== -1) {
+          label._path = layer._path;
+          label._textNode = layer._textNode;
+          label._svg = layer._svg;
+          label._svgConteiner = layer._svgConteiner;
+        }
+
+        label.style = {
           className: className,
           html: html,
-          iconSize: [iconWidth, iconHeight],
-          iconAnchor: anchor
-        }),
-        zIndexOffset: 1000,
-        pane: this.get('_paneLabel')
-      });
-      if (lType.indexOf('LineString') !== -1) {
-        label._path = layer._path;
-        label._textNode = layer._textNode;
-        label._svg = layer._svg;
-        label._svgConteiner = layer._svgConteiner;
+          iconSize: [iconWidth, iconHeight]
+        };
+        label.feature = layer.feature;
+        label.leafletMap = leafletMap;
+        layer._labelMulti = label;
+        labelsLayerMulti.addLayer(label);
+      } else {
+        labelsLayerMulti.addLayer(labelMulti);
       }
-
-      label.style = {
-        className: className,
-        html: html,
-        iconSize: [iconWidth, iconHeight]
-      };
-      label.feature = layer.feature;
-      label.leafletMap = leafletMap;
-      layer._labelMulti = label;  //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      labelsLayerMulti.addLayer(label);
-    } else {
-      labelsLayerMulti.addLayer(labelMulti);
     }
 
     if (labelMulti) {
@@ -1957,25 +1959,25 @@ export default BaseLayer.extend({
         labelsLayerNotMulti.clearLayers();
       }
 
-      if (Ember.isNone(labelsLayerMulti)) {
-        labelsLayerMulti = L.featureGroup();
+      if (Ember.isNone(labelsLayerNotMulti)) {
+        labelsLayerNotMulti = L.featureGroup();
         let minScaleRange = this.get('labelSettings.scaleRange.minScaleRange') || this.get('minZoom');
         let maxScaleRange = this.get('labelSettings.scaleRange.maxScaleRange') || this.get('maxZoom');
-        labelsLayerMulti.minZoom = minScaleRange;
-        labelsLayerMulti.maxZoom = maxScaleRange;
-        labelsLayerMulti.leafletMap = leafletMap;
-        labelsLayerMulti.getContainer = this.get('_getContainerPane').bind(this);
-        leafletObject._labelsLayerMulti = labelsLayerMulti;
+        labelsLayerNotMulti.minZoom = minScaleRange;
+        labelsLayerNotMulti.maxZoom = maxScaleRange;
+        labelsLayerNotMulti.leafletMap = leafletMap;
+        labelsLayerNotMulti.getContainer = this.get('_getContainerPaneLabelNotMulti').bind(this);
+        leafletObject._labelsLayerNotMulti = labelsLayerNotMulti;
 
-        let minScaleRangeOneLabel = this.get('labelSettings.scaleRange.minScaleRangeOneLabel');
-        let maxScaleRangeOneLabel = this.get('labelSettings.scaleRange.maxScaleRangeOneLabel');
-        if (!Ember.isNone(minScaleRangeOneLabel) && !Ember.isNone(maxScaleRangeOneLabel)) {
-          labelsLayerNotMulti = L.featureGroup();
-          labelsLayerNotMulti.minZoom = minScaleRangeOneLabel;
-          labelsLayerNotMulti.maxZoom = maxScaleRangeOneLabel;
-          labelsLayerNotMulti.leafletMap = leafletMap;
-          labelsLayerNotMulti.getContainer = this.get('_getContainerPaneLabelNotMulti').bind(this);
-          leafletObject._labelsLayerNotMulti = labelsLayerNotMulti;
+        let minScaleRangeMultiLabel = this.get('labelSettings.scaleRange.minScaleRangeMultiLabel');
+        let maxScaleRangeMultiLabel = this.get('labelSettings.scaleRange.maxScaleRangeMultiLabel');
+        if (!Ember.isNone(minScaleRangeMultiLabel) && !Ember.isNone(maxScaleRangeMultiLabel)) {
+          labelsLayerMulti = L.featureGroup();
+          labelsLayerMulti.minZoom = minScaleRangeMultiLabel;
+          labelsLayerMulti.maxZoom = maxScaleRangeMultiLabel;
+          labelsLayerMulti.leafletMap = leafletMap;
+          labelsLayerMulti.getContainer = this.get('_getContainerPane').bind(this);
+          leafletObject._labelsLayerMulti = labelsLayerMulti;
         }
 
         if (this.get('typeGeometry') === 'polyline') {
@@ -1991,7 +1993,7 @@ export default BaseLayer.extend({
       }
 
       this._createStringLabel(layers, labelsLayerMulti, labelsLayerNotMulti);
-      if (Ember.isNone(this.get('_labelsLayerMulti'))) {
+      if (Ember.isNone(this.get('_labelsLayerNotMulti'))) {
         this.set('_labelsLayerMulti', labelsLayerMulti);
         this.set('_labelsLayerNotMulti', labelsLayerNotMulti);
         this._checkZoomPane();
@@ -2047,19 +2049,19 @@ export default BaseLayer.extend({
       }
     }
 
-    if (Ember.isNone(_labelsLayerMulti)) {
+    if (Ember.isNone(_labelsLayerNotMulti)) {
       this._showLabels(layers, leafletObject);
-      _labelsLayerMulti = this.get('_labelsLayerMulti');
-      leafletContainer.addLayer(_labelsLayerMulti);
-
       _labelsLayerNotMulti = this.get('_labelsLayerNotMulti');
-      if (_labelsLayerNotMulti) {
-        leafletContainer.addLayer(_labelsLayerNotMulti);
+      leafletContainer.addLayer(_labelsLayerNotMulti);
+
+      _labelsLayerMulti = this.get('_labelsLayerMulti');
+      if (_labelsLayerMulti) {
+        leafletContainer.addLayer(_labelsLayerMulti);
       }
-    } else if (!leafletContainer.hasLayer(_labelsLayerMulti)) {
-      leafletContainer.addLayer(_labelsLayerMulti);
-      if (_labelsLayerNotMulti && !leafletContainer.hasLayer(_labelsLayerNotMulti)) {
-        leafletContainer.addLayer(_labelsLayerNotMulti);
+    } else if (!leafletContainer.hasLayer(_labelsLayerNotMulti)) {
+      leafletContainer.addLayer(_labelsLayerNotMulti);
+      if (_labelsLayerMulti && !leafletContainer.hasLayer(_labelsLayerMulti)) {
+        leafletContainer.addLayer(_labelsLayerMulti);
       }
     } else {
       this._showLabels(layers, leafletObject);
@@ -2099,15 +2101,16 @@ export default BaseLayer.extend({
   _setLayerVisibility() {
     if (this.get('visibility')) {
       this._addLayerToLeafletContainer();
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerMulti')) &&
-        !Ember.isNone(this.get('_leafletObject._labelsLayerMulti'))) {
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerNotMulti')) &&
+        !Ember.isNone(this.get('_leafletObject._labelsLayerNotMulti'))) {
         this._addLabelsToLeafletContainer();
+        this._checkZoomPane();
         this._updatePositionLabelForLine();
       }
     } else {
       this._removeLayerFromLeafletContainer();
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerMulti')) &&
-        !Ember.isNone(this.get('_leafletObject._labelsLayerMulti'))) {
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayerNotMulti')) &&
+        !Ember.isNone(this.get('_leafletObject._labelsLayerNotMulti'))) {
         this._removeLabelsFromLeafletContainer();
       }
     }
