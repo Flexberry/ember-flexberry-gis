@@ -1349,234 +1349,229 @@ export default BaseLayer.extend({
     }
 
     let lType = layer.toGeoJSON().geometry.type;
+
+    if (lType.indexOf('Polygon') !== -1) {
+      this._createLabelForPolygon(text, layer, style, labelsLayerMulti, labelsLayerNotMulti);
+    }
+
+    if (lType.indexOf('Point') !== -1) {
+      this._createLabelForPoint(text, layer, style, labelsLayerMulti, labelsLayerNotMulti);
+    }
+
+    if (lType.indexOf('LineString') !== -1) {
+      this._createLabelForPolyline(text, layer, style, labelsLayerMulti, labelsLayerNotMulti);
+    }
+  },
+
+  _createLabelForPoint(text, layer, style, labelsLayerMulti, labelsLayerNotMulti) {
+    let latlng = layer.getLatLng();
+    let iconWidth = 30;
+    let iconHeight = 30;
+    let positionPoint = this._setPositionPoint(iconWidth, iconHeight);
+    let anchor = positionPoint.anchor;
+    let className = 'label';
+    className += ' point ' + positionPoint.cssClass;
+    let html = '<div style="' + style + positionPoint.style + '">' + text + '</div>';
+
+    let label = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, this.get('_paneLabelNotMulti'));
+
+    if (!latlng) {
+      return;
+    }
+
+    // adding labels to layers
+    this._addLabelsToLayers(labelsLayerNotMulti, labelsLayerMulti, null, label, null);
+  },
+
+  _createLabelForPolygon(text, layer, style, labelsLayerMulti, labelsLayerNotMulti) {
     let latlng = null;
     let iconWidth = 10;
     let iconHeight = 40;
     let anchor = null;
-    let className = 'label';
     let html = '';
     let label;
     let labelMulti;
-    let labelLine;
     let geojsonWriter = new jsts.io.GeoJSONWriter();
+    let className = 'label';
 
-    if (lType.indexOf('Polygon') !== -1) {
-      let objJsts = layer.toJsts(L.CRS.EPSG4326);
+    let objJsts = layer.toJsts(L.CRS.EPSG4326);
 
-      try {
-        let countGeometries = objJsts.getNumGeometries();
-        if (countGeometries > 1) {
-          labelMulti = L.featureGroup();
-          for (let i = 0; i < countGeometries; i++) {
-            let polygonN = objJsts.getGeometryN(i);
-            let centroidNJsts = polygonN.isValid() ? polygonN.getInteriorPoint() : polygonN.getCentroid();
+    try {
+      let countGeometries = objJsts.getNumGeometries();
+      if (countGeometries > 1) {
+        labelMulti = L.featureGroup();
+        for (let i = 0; i < countGeometries; i++) {
+          let polygonN = objJsts.getGeometryN(i);
+          let centroidNJsts = polygonN.isValid() ? polygonN.getInteriorPoint() : polygonN.getCentroid();
 
-            let centroidN = geojsonWriter.write(centroidNJsts);
-            latlng = L.latLng(centroidN.coordinates[1], centroidN.coordinates[0]);
-            html = '<div style="' + style + '">' + text + '</div>';
+          let centroidN = geojsonWriter.write(centroidNJsts);
+          latlng = L.latLng(centroidN.coordinates[1], centroidN.coordinates[0]);
+          html = '<div style="' + style + '">' + text + '</div>';
 
-            let labelN = L.marker(latlng, {
-              icon: L.divIcon({
-                className: className,
-                html: html,
-                iconSize: [iconWidth, iconHeight],
-                iconAnchor: anchor
-              }),
-              zIndexOffset: 1000,
-              pane: this.get('_paneLabel')
-            });
-            labelN.style = {
-              className: className,
-              html: html,
-              iconSize: [iconWidth, iconHeight]
-            };
-
-            labelMulti.addLayer(labelN);
-          }
-        }
-
-        let centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
-        let centroid = geojsonWriter.write(centroidJsts);
-        latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0]);
-        html = '<div style="' + style + '">' + text + '</div>';
-      }
-      catch (e) {
-        console.error(e.message + ': ' + layer.toGeoJSON().id);
-      }
-    }
-
-    if (lType.indexOf('Point') !== -1) {
-      latlng = layer.getLatLng();
-      iconWidth = 30;
-      iconHeight = 30;
-      let positionPoint = this._setPositionPoint(iconWidth, iconHeight);
-      anchor = positionPoint.anchor;
-      className += ' point ' + positionPoint.cssClass;
-      html = '<div style="' + style + positionPoint.style + '">' + text + '</div>';
-    }
-
-    if (lType.indexOf('LineString') !== -1) {
-      let optionsLabel = this.get('labelSettings.options');
-
-      try {
-        let objJsts = layer.toJsts(L.CRS.EPSG4326);
-        let countGeometries = objJsts.getNumGeometries();
-        if (countGeometries > 1) {
-          labelMulti = L.featureGroup();
-          for (let i = 0; i < countGeometries; i++) {
-            let partlineJsts = objJsts.getGeometryN(i);
-            let partlineGeoJson = geojsonWriter.write(partlineJsts);
-            let partline = L.geoJSON(partlineGeoJson).getLayers()[0];
-
-            let bboxJstsN = partlineJsts.getEnvelope();
-            let bboxGeoJsonN = geojsonWriter.write(bboxJstsN);
-            let bbox = L.geoJSON(bboxGeoJsonN).getLayers()[0];
-            latlng = L.latLng(bbox._bounds._northEast.lat, bbox._bounds._southWest.lng);
-
-            let options = {
-              fillColor: Ember.get(optionsLabel, 'captionFontColor'),
-              align: Ember.get(optionsLabel, 'captionFontAlign')
-            };
-            layer._svgConteiner = null;
-            this._addTextForLine(layer, text, options, style, partline);
-            iconWidth = 12;
-            iconHeight = 12;
-            html = Ember.$(layer._svgConteiner).html();
-
-            let labelN = L.marker(latlng, {
-              icon: L.divIcon({
-                className: className,
-                html: html,
-                iconSize: [iconWidth, iconHeight],
-                iconAnchor: anchor
-              }),
-              zIndexOffset: 1000,
-              pane: this.get('_paneLabel')
-            });
-            labelN.style = {
-              className: className,
-              html: html,
-              iconSize: [iconWidth, iconHeight]
-            };
-            labelN._parentLayer = partline;
-            labelN._path = layer._path;
-            labelN._textNode = layer._textNode;
-            labelN._svg = layer._svg;
-            labelN._svgConteiner = layer._svgConteiner;
-
-            labelMulti.addLayer(labelN);
-
-            if (i === 0) {
-              labelLine = L.marker(latlng, {
-                icon: L.divIcon({
-                  className: className,
-                  html: html,
-                  iconSize: [iconWidth, iconHeight],
-                  iconAnchor: anchor
-                }),
-                zIndexOffset: 1000,
-                pane: this.get('_paneLabelNotMulti')
-              });
-
-              labelLine._path = layer._path;
-              labelLine._textNode = layer._textNode;
-              labelLine._svg = layer._svg;
-              labelLine._svgConteiner = layer._svgConteiner;
-            }
-          }
-        } else {
-          latlng = L.latLng(layer._bounds._northEast.lat, layer._bounds._southWest.lng);
-          let options = {
-            fillColor: Ember.get(optionsLabel, 'captionFontColor'),
-            align: Ember.get(optionsLabel, 'captionFontAlign')
-          };
-          this._addTextForLine(layer, text, options, style);
-          iconWidth = 12;
-          iconHeight = 12;
-          html = Ember.$(layer._svgConteiner).html();
+          let labelN = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, this.get('_paneLabel'));
+          labelMulti.addLayer(labelN);
         }
       }
-      catch (e) {
-        console.error(e.message + ': ' + layer.toGeoJSON().id);
-      }
+
+      let centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
+      let centroid = geojsonWriter.write(centroidJsts);
+      latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0]);
+      html = '<div style="' + style + '">' + text + '</div>';
+    }
+    catch (e) {
+      console.error(e.message + ': ' + layer.toGeoJSON().id);
     }
 
     if (!latlng) {
       return;
     }
 
-    let leafletMap = this.get('leafletMap');
-    if (labelsLayerNotMulti) {
-      if (!labelLine) {
-        label = L.marker(latlng, {
-          icon: L.divIcon({
-            className: className,
-            html: html,
-            iconSize: [iconWidth, iconHeight],
-            iconAnchor: anchor
-          }),
-          zIndexOffset: 1000,
-          pane: this.get('_paneLabelNotMulti')
-        });
-
-        if (lType.indexOf('LineString') !== -1) {
-          label._path = layer._path;
-          label._textNode = layer._textNode;
-          label._svg = layer._svg;
-          label._svgConteiner = layer._svgConteiner;
-        }
-      } else {
-        label = labelLine;
-      }
-
-      label.style = {
-        className: className,
-        html: html,
-        iconSize: [iconWidth, iconHeight]
-      };
-      label.feature = layer.feature;
-      label.leafletMap = leafletMap;
-      layer._label = label;
-      labelsLayerNotMulti.addLayer(label);
+    if (labelMulti) {
+      labelMulti.feature = layer.feature;
+      labelMulti.leafletMap = this.get('leafletMap');
+      layer._labelMulti = labelMulti;
     }
 
-    if (labelsLayerMulti) {
-      if (!labelMulti) {
-        label = L.marker(latlng, {
-          icon: L.divIcon({
-            className: className,
-            html: html,
-            iconSize: [iconWidth, iconHeight],
-            iconAnchor: anchor
-          }),
-          zIndexOffset: 1000,
-          pane: this.get('_paneLabel')
-        });
-        if (lType.indexOf('LineString') !== -1) {
-          label._path = layer._path;
-          label._textNode = layer._textNode;
-          label._svg = layer._svg;
-          label._svgConteiner = layer._svgConteiner;
-        }
+    label = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, this.get('_paneLabelNotMulti'));
+    if (!labelMulti) {
+      labelMulti = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, this.get('_paneLabel'));
+    }
 
-        label.style = {
-          className: className,
-          html: html,
-          iconSize: [iconWidth, iconHeight]
-        };
-        label.feature = layer.feature;
-        label.leafletMap = leafletMap;
-        layer._labelMulti = label;
-        labelsLayerMulti.addLayer(label);
+    // adding labels to layers
+    this._addLabelsToLayers(labelsLayerNotMulti, labelsLayerMulti, null, label, labelMulti);
+  },
+
+  _createLabelForPolyline(text, layer, style, labelsLayerMulti, labelsLayerNotMulti) {
+    let latlng = null;
+    let iconWidth = 10;
+    let iconHeight = 40;
+    let anchor = null;
+    let html = '';
+    let labelMulti;
+    let labelLine;
+    let geojsonWriter = new jsts.io.GeoJSONWriter();
+    let optionsLabel = this.get('labelSettings.options');
+    let className = 'label';
+
+    try {
+      let objJsts = layer.toJsts(L.CRS.EPSG4326);
+      let countGeometries = objJsts.getNumGeometries();
+      if (countGeometries > 1) {
+        labelMulti = L.featureGroup();
+        for (let i = 0; i < countGeometries; i++) {
+          let partlineJsts = objJsts.getGeometryN(i);
+          let partlineGeoJson = geojsonWriter.write(partlineJsts);
+          let partline = L.geoJSON(partlineGeoJson).getLayers()[0];
+
+          let bboxJstsN = partlineJsts.getEnvelope();
+          let bboxGeoJsonN = geojsonWriter.write(bboxJstsN);
+          let bbox = L.geoJSON(bboxGeoJsonN).getLayers()[0];
+          latlng = L.latLng(bbox._bounds._northEast.lat, bbox._bounds._southWest.lng);
+
+          let options = {
+            fillColor: Ember.get(optionsLabel, 'captionFontColor'),
+            align: Ember.get(optionsLabel, 'captionFontAlign')
+          };
+          layer._svgConteiner = null;
+          this._addTextForLine(layer, text, options, style, partline);
+          iconWidth = 12;
+          iconHeight = 12;
+          html = Ember.$(layer._svgConteiner).html();
+
+          let labelN = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, this.get('_paneLabel'));
+          labelN._parentLayer = partline;
+
+          labelMulti.addLayer(labelN);
+
+          if (i === 0) { // for not multi label
+            labelLine = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, this.get('_paneLabelNotMulti'));
+          }
+        }
       } else {
-        labelsLayerMulti.addLayer(labelMulti);
+        latlng = L.latLng(layer._bounds._northEast.lat, layer._bounds._southWest.lng);
+        let options = {
+          fillColor: Ember.get(optionsLabel, 'captionFontColor'),
+          align: Ember.get(optionsLabel, 'captionFontAlign')
+        };
+        this._addTextForLine(layer, text, options, style);
+        iconWidth = 12;
+        iconHeight = 12;
+        html = Ember.$(layer._svgConteiner).html();
       }
+    }
+    catch (e) {
+      console.error(e.message + ': ' + layer.toGeoJSON().id);
+    }
+
+    if (!latlng) {
+      return;
     }
 
     if (labelMulti) {
       labelMulti.feature = layer.feature;
-      labelMulti.leafletMap = leafletMap;
+      labelMulti.leafletMap = this.get('leafletMap');
       layer._labelMulti = labelMulti;
+    }
+
+    if (!labelLine) {
+      labelLine = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, this.get('_paneLabelNotMulti'));
+    }
+
+    if (!labelMulti) {
+      labelMulti = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, this.get('_paneLabel'));
+    }
+
+    // adding labels to layers
+    this._addLabelsToLayers(labelsLayerNotMulti, labelsLayerMulti, labelLine, null, labelMulti);
+  },
+
+  _createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, pane) {
+    let leafletMap = this.get('leafletMap');
+    let label = L.marker(latlng, {
+      icon: L.divIcon({
+        className: className,
+        html: html,
+        iconSize: [iconWidth, iconHeight],
+        iconAnchor: anchor
+      }),
+      zIndexOffset: 1000,
+      pane: pane
+    });
+
+    if (layer._path) {
+      label._path = layer._path;
+      label._textNode = layer._textNode;
+      label._svg = layer._svg;
+      label._svgConteiner = layer._svgConteiner;
+    }
+
+    label.style = {
+      className: className,
+      html: html,
+      iconSize: [iconWidth, iconHeight]
+    };
+    label.feature = layer.feature;
+    label.leafletMap = leafletMap;
+    layer._label = label;
+
+    return label;
+  },
+
+  _addLabelsToLayers(labelsLayerNotMulti, labelsLayerMulti, labelLine, label, labelMulti) {
+    if (labelsLayerNotMulti) {
+      if (!labelLine) {
+        labelsLayerNotMulti.addLayer(label);
+      } else {
+        labelsLayerNotMulti.addLayer(labelLine);
+      }
+    }
+
+    if (labelsLayerMulti) {
+      if (!labelMulti) {
+        labelsLayerMulti.addLayer(label);
+      } else {
+        labelsLayerMulti.addLayer(labelMulti);
+      }
     }
   },
 
