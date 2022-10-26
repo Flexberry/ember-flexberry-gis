@@ -203,7 +203,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       Ember.set(clickedFeature, 'highlight', !clickedFeature.highlight);
-      Ember.set(result, 'highlight', true);
+
+      if(clickedFeature === true) {
+        Ember.set(result, 'expanded', true)
+      }
     },
     /**
       Show\hide links list (if present).
@@ -432,6 +435,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               features: this.get('maxResultsCount') ? Ember.A(features).slice(0, this.get('maxResultsCount')) : Ember.A(features),
               maxResultsLimitOverage: this.get('maxResultsCount') && features.length > this.get('maxResultsCount') ? true : false,
               highlight: false,
+              expanded: features.length === 1,
               layerModel: layerModel,
               hasListForm: hasListForm,
               layerIds: layerIds,

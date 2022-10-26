@@ -81,8 +81,8 @@
           </a>
         {{/if}}
       </div>
-      {{#flexberry-toggler caption=result.name expanded=(or (and (eq result.features.length 1) result.first) result.highlight) class='layer-result-list-toggler'}}
-        <div class="ui list transition">
+      {{#flexberry-toggler caption=result.name expanded=result.expanded class='layer-result-list-toggler'}}
+        <div class="ui list transition {{if result.expanded "visible" "hidden"}}">
           {{#if intersection}}
             {{#each result.features as |feature|}}
               {{#if feature.isIntersect}}
@@ -207,8 +207,8 @@
           </a>
         {{/if}}
       </div>
-      {{#flexberry-toggler caption=result.name expanded=(or (and (eq result.features.length 1) result.first) result.highlight) class='layer-result-list-toggler'}}
-        <div class="ui list transition">
+      {{#flexberry-toggler caption=result.name expanded=result.expanded class='layer-result-list-toggler'}}
+        <div class="ui list transition {{if result.expanded "visible" "hidden"}}">
           {{#each result.features as |feature|}}
             {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
             {{component (concat 'feature-result-item-' result.layerModel.type)
