@@ -13,6 +13,8 @@ import { zoomToBounds } from '../utils/zoom-to-bounds';
 */
 export default Ember.Mixin.create({
 
+  serviceRenderer: null,
+
   actions: {
     /**
       Handles inner FeatureResultItem's bubbled 'selectFeature' action.
@@ -26,6 +28,11 @@ export default Ember.Mixin.create({
       let leafletMap = this.get('leafletMap');
       if (Ember.isNone(leafletMap)) {
         return;
+      }
+
+      let serviceRenderer = this.get('serviceRenderer');
+      if (Ember.isNone(serviceRenderer)) {
+        serviceRenderer = L.canvas({ pane: 'overlayPane' });
       }
 
       let serviceLayer = this.get('serviceLayer');
@@ -139,6 +146,13 @@ export default Ember.Mixin.create({
   */
   _prepareLayer(layer, layerInteractive) {
     layer.options.interactive = layerInteractive ? true : false;
+    if (layerInteractive) {
+      layer.options.pane = 'overlayPane';
+
+      let serviceRenderer = this.get('serviceRenderer');
+      layer.options.renderer = serviceRenderer;
+    }
+
     return layer;
   },
 

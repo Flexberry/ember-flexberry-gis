@@ -608,7 +608,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           }
         });
 
-        displayResults = displayResults.sort((a, b) => b.layerModel.get('index') - a.layerModel.get('index'));
+        displayResults = displayResults.sort((a, b) => a.layerModel.get('index') - b.layerModel.get('index'));
 
         this.set('_displayResults', displayResults);
         this.set('_noData', displayResults.length === 0);
