@@ -13,6 +13,8 @@ import { zoomToBounds } from '../utils/zoom-to-bounds';
 */
 export default Ember.Mixin.create({
 
+  serviceRenderer: null,
+
   actions: {
     /**
       Handles inner FeatureResultItem's bubbled 'selectFeature' action.
@@ -29,6 +31,11 @@ export default Ember.Mixin.create({
         return;
       }
 
+      let serviceRenderer = this.get('serviceRenderer');
+      if (Ember.isNone(serviceRenderer)) {
+        serviceRenderer = L.canvas({ pane: 'overlayPane' });
+      }
+
       let serviceLayer = this.get('serviceLayer');
       if (Ember.isNone(serviceLayer)) {
         serviceLayer = L.featureGroup().addTo(leafletMap);
@@ -42,7 +49,10 @@ export default Ember.Mixin.create({
         }
 
         if (Ember.isArray(feature)) {
-          feature.forEach((item) => this._selectFeature(item, layerInteractive));
+
+          // Adding objects to the layer (serviceRenderer) occurs at the end, which confuses the hierarchy on the map.
+          // Correct addition, taking into account indexes - to the beginning
+          feature.reverse().forEach((item) => this._selectFeature(item, layerInteractive));
         } else {
           this._selectFeature(feature, layerInteractive);
         }
@@ -143,6 +153,13 @@ export default Ember.Mixin.create({
   */
   _prepareLayer(layer, layerInteractive) {
     layer.options.interactive = layerInteractive ? true : false;
+    if (layerInteractive) {
+      layer.options.pane = 'overlayPane';
+
+      let serviceRenderer = this.get('serviceRenderer');
+      layer.options.renderer = serviceRenderer;
+    }
+
     return layer;
   },
 

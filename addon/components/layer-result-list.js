@@ -189,23 +189,39 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   exportResult: null,
   actions: {
     /**
-      Сlears the highlight state of the features list.
-      @method actions.clearHighlights
+      Zooms to all features in the layer.
+      @method actions.zoomToAll
+      @param {Object} result search/identification result object.
     */
-    clearHighlights(result, clickedFeature) {
-      if (!result || !clickedFeature) {
+    zoomToAll(result) {
+      if (!result || !result.features) {
         return;
       }
 
-      let previousHighlightedFeature = this.get('selectedFeatures').find(feature => feature !== clickedFeature && Ember.get(feature, 'highlight'));
-      if (previousHighlightedFeature) {
-        Ember.set(previousHighlightedFeature, 'highlight', false);
+      if (!this.get('enableHighlight')) {
+        this.send('zoomTo', result.features);
+        return;
       }
 
-      Ember.set(clickedFeature, 'highlight', !clickedFeature.highlight);
+      result.features.forEach(feature => Ember.set(feature, 'highlight', true));
+      this.send('clearHighlights', result.features);
+      this.send('zoomTo', result.features, this.get('enableHighlight'), false);
+    },
 
-      if(clickedFeature === true) {
-        Ember.set(result, 'expanded', true)
+    /**
+      Сlears the highlight state of selectedFeatures elements (all found features).
+      @method actions.clearHighlights
+      @param {Array} clickedFeatures list of objects for which the "highlight" state changes
+    */
+    clearHighlights(clickedFeatures) {
+      if (Ember.isArray(clickedFeatures)) {
+        this.get('selectedFeatures')
+          .filter(feature => clickedFeatures.indexOf(feature) === -1 && Ember.get(feature, 'highlight'))
+          .forEach(feature => Ember.set(feature, 'highlight', false));
+      } else {
+        this.get('selectedFeatures')
+          .filter(feature => feature !== clickedFeatures && Ember.get(feature, 'highlight'))
+          .forEach(feature => Ember.set(feature, 'highlight', false));
       }
     },
     /**
