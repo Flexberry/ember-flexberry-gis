@@ -157,7 +157,7 @@ export default Ember.Component.extend({
     @type Boolean
     @default false
   */
-    activeScroll: false,
+  activeScroll: false,
 
   /**
     Observes and handles changes in feature.highlight state
@@ -363,6 +363,7 @@ export default Ember.Component.extend({
         behavior: 'smooth'
       });
     }
+
     this.set('activeScroll', false);
   },
   actions: {
@@ -378,18 +379,19 @@ export default Ember.Component.extend({
         this.sendAction('clearHighlights', this.get('feature'));
         Ember.set(clickedFeature, 'highlight', true);
         return;
-      };
+      }
 
       // The layer-result-list component has a zoomToAll option
       // that causes the feature.highlight state to change, which is not correct.
-      let selectedAllFeaturesInResult = !this.get('resultObject.features').find(e => e.highlight === false) && this.get('resultObject.features.length') > 1 ? true : false;
+      let selectedAllFeaturesInResult = !this.get('resultObject.features').find(e => e.highlight === false) &&
+                                        this.get('resultObject.features.length') > 1 ? true : false;
 
       // We can turn off the highlight if there was only one previous highlighted element
       Ember.set(clickedFeature, 'highlight', selectedAllFeaturesInResult ? true : !clickedFeature.highlight);
       this.sendAction('clearHighlights', clickedFeature); // clear other highlight states of feature-result-items in _displayResults.
       Ember.set(this.get('resultObject'), 'expanded', true);
       if (clickedFeature.highlight) {
-        this.set('activeScroll', true)
+        this.set('activeScroll', true);
         if (!this.get('infoExpanded')) { // open feature-result-item properties
           this.set('infoExpanded', true);
           this.set('_linksExpanded', true);
@@ -501,7 +503,7 @@ export default Ember.Component.extend({
       @method actions.panTo
      */
     panTo() {
-      this.send('highlightFeature', this.get('feature'), false)
+      this.send('highlightFeature', this.get('feature'), false);
       this.sendAction('panTo', this.get('feature'));
     },
 
@@ -510,7 +512,7 @@ export default Ember.Component.extend({
       @method actions.zoomTo
      */
     zoomTo() {
-      this.send('highlightFeature', this.get('feature'), false)
+      this.send('highlightFeature', this.get('feature'), false);
       let { bounds, leafletMap, minZoom, maxZoom } = this.getLayerPropsForZoom();
       zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
     },
