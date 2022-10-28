@@ -603,8 +603,6 @@ export default BaseLayer.extend({
                 });
               }
             });
-
-
           });
         }
 
@@ -1399,7 +1397,7 @@ export default BaseLayer.extend({
 
     let objJsts = layer.toJsts(L.CRS.EPSG4326);
     if (additionalZoomLabel) {
-      multiZoomLabel = additionalZoomLabel.filter(layer => { return layer.check === 'multi'});
+      multiZoomLabel = additionalZoomLabel.filter(layer => { return layer.check === 'multi'; });
     }
 
     try {
@@ -1475,7 +1473,7 @@ export default BaseLayer.extend({
     let multiZoomLabel = Ember.A();
 
     if (additionalZoomLabel) {
-      multiZoomLabel = additionalZoomLabel.filter(layer => { return layer.check === 'multi'});
+      multiZoomLabel = additionalZoomLabel.filter(layer => { return layer.check === 'multi'; });
     }
 
     try {
@@ -1610,7 +1608,7 @@ export default BaseLayer.extend({
 
     let multiZoomLabel;
     if (additionalZoomLabel) {
-      multiZoomLabel = additionalZoomLabel.filter(layer => { return layer.check === 'multi'});
+      multiZoomLabel = additionalZoomLabel.filter(layer => { return layer.check === 'multi'; });
     }
 
     if (multiZoomLabel) {
@@ -1932,7 +1930,7 @@ export default BaseLayer.extend({
     let multiZoomLabel = Ember.A();
     let _this = this;
     if (additionalZoomLabel) {
-      multiZoomLabel = additionalZoomLabel.filter(layer => { return layer.check === 'multi'});
+      multiZoomLabel = additionalZoomLabel.filter(layer => { return layer.check === 'multi'; });
     }
 
     if (!Ember.isNone(leafletObject)) {
@@ -2049,7 +2047,7 @@ export default BaseLayer.extend({
               let labelsLayer = L.featureGroup();
               labelsLayer.minZoom = zoomSettings.minZoom;
               labelsLayer.maxZoom = zoomSettings.maxZoom;
-              labelsLayer.check = zoomSettings.check
+              labelsLayer.check = zoomSettings.check;
               labelsLayer.leafletMap = leafletMap;
               labelsLayer.getContainer = _getContainerPaneLabel.bind(this);
               labelsLayer._paneLabel = _paneLabel;
