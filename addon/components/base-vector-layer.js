@@ -1320,7 +1320,7 @@ export default BaseLayer.extend({
 
     let leafletMap = this.get('leafletMap');
     let bbox = leafletMap.getBounds();
-    if (layers) {      
+    if (layers) {
       let additionalLabelLayer = null;
       if (additionalZoomLabel) {
         let zoom = this.get('leafletMap').getZoom();
@@ -1489,8 +1489,6 @@ export default BaseLayer.extend({
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let optionsLabel = this.get('labelSettings.options');
     let className = 'label';
-
-    let multi = additionalLabelLayer ? additionalLabelLayer.check === 'multi' : false;
 
     try {
       let objJsts = layer.toJsts(L.CRS.EPSG4326);
@@ -1992,7 +1990,7 @@ export default BaseLayer.extend({
 
   /**
     Show lables
-  
+
     @method _showLabels
     @param {Array} layers new layers for add labels
     @param {Object} leafletObject leaflet layer
@@ -2100,15 +2098,15 @@ export default BaseLayer.extend({
     _addLabelsToLeafletContainer(layers, leafletObject) {
       let additionalZoomLabel = this.get('additionalZoomLabel');
       let _labelsLayer = this.get('_labelsLayer');
-  
+
       // чтобы слой нормально выключался в группе,
       // он должен быть в контейнере группы, а не просто в карте
       let leafletContainer = this.get('leafletContainer');
-  
+
       if (!leafletObject) {
         leafletObject = this.get('_leafletObject');
       }
-  
+
       let thisPane = this.get('_paneLabel');
       if (thisPane) {
         let leafletMap = this.get('leafletMap');
@@ -2120,12 +2118,12 @@ export default BaseLayer.extend({
           }
         }
       }
-  
+
       if (Ember.isNone(_labelsLayer)) {
         this._showLabels(layers, leafletObject);
         _labelsLayer = this.get('_labelsLayer');
         leafletContainer.addLayer(_labelsLayer);
-  
+
         additionalZoomLabel = this.get('additionalZoomLabel');
         if (additionalZoomLabel && additionalZoomLabel.length > 0) {
           this._additionalZoomLabelPane();
@@ -2145,9 +2143,9 @@ export default BaseLayer.extend({
       } else {
         this._showLabels(layers, leafletObject);
         this._additionalZoomLabelPane();
-      }  
+      }
     },
-  
+
     _additionalZoomLabelPane() {
       let additionalZoomLabel = this.get('additionalZoomLabel');
       if (additionalZoomLabel) {
