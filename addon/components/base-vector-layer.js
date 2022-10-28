@@ -1490,6 +1490,8 @@ export default BaseLayer.extend({
     let optionsLabel = this.get('labelSettings.options');
     let className = 'label';
 
+    let multi = additionalLabelLayer ? additionalLabelLayer.check === 'multi' : false;
+
     try {
       let objJsts = layer.toJsts(L.CRS.EPSG4326);
       let countGeometries = objJsts.getNumGeometries();
@@ -1921,12 +1923,15 @@ export default BaseLayer.extend({
 
     let _this = this;
 
-    let zoom =  this.get('leafletMap').getZoom();
-    let aLayers = additionalZoomLabel.filter(l => { return (l.minZoom == null || l.minZoom <= zoom) && (l.maxZoom == null || l.maxZoom >= zoom); });
-
     let additionalLabelLayer = null;
-    if (aLayers.length > 0) {
-      additionalLabelLayer = aLayers[0];
+    if (additionalZoomLabel) {
+      let zoom =  this.get('leafletMap').getZoom();
+
+      let aLayers = additionalZoomLabel.filter(l => { return (l.minZoom == null || l.minZoom <= zoom) && (l.maxZoom == null || l.maxZoom >= zoom); });
+      
+      if (aLayers.length > 0) {
+        additionalLabelLayer = aLayers[0];
+      }
     }
 
     if (!Ember.isNone(leafletObject)) {
