@@ -41,11 +41,21 @@ export default Ember.Mixin.create({
           });
         }
 
-        const labelsNotMultiOriginalLayer = layer.get('_leafletObject._labelsLayerNotMulti');
-        if (labelsNotMultiOriginalLayer) {
+        const labelsAdditionalOriginalLayer = layer.get('_leafletObject.additionalZoomLabel');
+        if (labelsAdditionalOriginalLayer) {
+          labelsAdditionalOriginalLayer.forEach(zoomLabels => {
+            layersSideSettings.layers.push({
+              id: layerId,
+              layer: zoomLabels.addTo(leafletMap)
+            });
+          });
+        }
+
+        const labelsMultiOriginalLayer = layer.get('_leafletObject._labelsLayer');
+        if (labelsMultiOriginalLayer) {
           layersSideSettings.layers.push({
             id: layerId,
-            layer: labelsNotMultiOriginalLayer.addTo(leafletMap)
+            layer: labelsMultiOriginalLayer.addTo(leafletMap)
           });
         }
       }

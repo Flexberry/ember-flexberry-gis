@@ -313,7 +313,7 @@ test('test showAllLayerObjects with continueLoading: true and showExisting: fals
 
         let featureLabel = L.marker([50.5, 30.5]);
         let _labelsLayer = L.featureGroup([featureLabel]);
-        layer._labelsLayerNotMulti = _labelsLayer;
+        layer._labelsLayer = _labelsLayer;
         _labelsLayer.addTo(leafletMap);
         return layer;
       },
@@ -383,7 +383,7 @@ test('test hideAllLayerObjects', function (assert) {
         feature.addTo(leafletMap);
         let label = L.marker([50.5, 30.5]);
         let _labelsLayer = L.featureGroup([label]);
-        layer._labelsLayerNotMulti = _labelsLayer;
+        layer._labelsLayer = _labelsLayer;
         _labelsLayer.addTo(leafletMap);
         label.addTo(leafletMap);
         return layer;
@@ -434,7 +434,7 @@ test('test _setVisibilityObjects with showExisting=false and visibility = true',
         let layer = L.featureGroup([feature]);
         layer.options = options;
         let _labelsLayer = L.featureGroup([feature]);
-        layer._labelsLayerNotMulti = _labelsLayer;
+        layer._labelsLayer = _labelsLayer;
         return layer;
       },
       createReadFormat() {
@@ -492,7 +492,7 @@ test('test _setVisibilityObjects with showExisting=false and visibility = false'
         feature.addTo(leafletMap);
         layer.options = options;
         let _labelsLayer = L.featureGroup([feature]);
-        layer._labelsLayerNotMulti = _labelsLayer;
+        layer._labelsLayer = _labelsLayer;
         _labelsLayer.addTo(leafletMap);
         return layer;
       },
