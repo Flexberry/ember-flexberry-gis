@@ -12,7 +12,7 @@
         {{#if (eq intersection false)}}
           <a class="feature-result-item-select icon item"
             title="{{t "components.feature-result-item.select-all-caption"}}"
-            {{action "zoomTo" result.features}}>
+            {{action "zoomToAll" result}}>
               <i class="icon-guideline-marker"></i>
           </a>
         {{/if}}
@@ -81,16 +81,17 @@
           </a>
         {{/if}}
       </div>
-      {{#flexberry-toggler caption=result.name expanded=(or (and (eq result.features.length 1) result.first) result.highlight) class='layer-result-list-toggler'}}
-        <div class="ui list transition">
+      {{#flexberry-toggler caption=result.name expanded=result.expanded class='layer-result-list-toggler'}}
+        <div class="ui list transition {{if result.expanded "visible" "hidden"}}">
           {{#if intersection}}
             {{#each result.features as |feature|}}
               {{#if feature.isIntersect}}
                 {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
                   {{component (concat 'feature-result-item-' result.layerModel.type)
                     feature=feature
-                    highlightable= enableHighlight
-                    clearHighlights= (action "clearHighlights" result)
+                    resultObject=result
+                    highlightable=enableHighlight
+                    clearHighlights=(action "clearHighlights")
                     infoExpanded=(and (eq result.features.length 1) result.first)
                     displayProperty="displayValue"
                     displaySettings=result.settings
@@ -109,8 +110,9 @@
                 {{else}}
                   {{feature-result-item
                     feature=feature
-                    highlightable= enableHighlight
-                    clearHighlights= (action "clearHighlights" result)
+                    resultObject=result
+                    highlightable=enableHighlight
+                    clearHighlights=(action "clearHighlights")
                     infoExpanded=(and (eq result.features.length 1) result.first)
                     displayProperty="displayValue"
                     displaySettings=result.settings
@@ -137,7 +139,7 @@
       <div class="feature-result-item-buttons hidden">
         <a class="feature-result-item-select icon item"
           title="{{t "components.feature-result-item.select-all-caption"}}"
-          {{action "zoomTo" result.features}}>
+          {{action "zoomToAll" result}}>
           {{#if (eq intersection false)}}
           <i class="icon-guideline-marker"></i>
           {{/if}}
@@ -207,15 +209,16 @@
           </a>
         {{/if}}
       </div>
-      {{#flexberry-toggler caption=result.name expanded=(or (and (eq result.features.length 1) result.first) result.highlight) class='layer-result-list-toggler'}}
-        <div class="ui list transition">
+      {{#flexberry-toggler caption=result.name expanded=result.expanded class='layer-result-list-toggler'}}
+        <div class="ui list transition {{if result.expanded "visible" "hidden"}}">
           {{#each result.features as |feature|}}
             {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
             {{component (concat 'feature-result-item-' result.layerModel.type)
                 feature=feature
+                resultObject=result
                 displayProperty="displayValue"
-                highlightable= enableHighlight
-                clearHighlights= (action "clearHighlights" result)
+                highlightable=enableHighlight
+                clearHighlights=(action "clearHighlights")
                 displaySettings=result.settings
                 selectedFeature=_selectedFeature
                 selectFeature=(action "selectFeature")
@@ -235,10 +238,11 @@
             {{else}}
               {{feature-result-item
                 feature=feature
+                resultObject=result
                 displayProperty="displayValue"
                 displaySettings=result.settings
-                highlightable= enableHighlight
-                clearHighlights= (action "clearHighlights" result)
+                highlightable=enableHighlight
+                clearHighlights=(action "clearHighlights")
                 selectedFeature=_selectedFeature
                 selectFeature=(action "selectFeature")
                 panTo=(action "panTo")
