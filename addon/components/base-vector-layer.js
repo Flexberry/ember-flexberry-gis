@@ -1692,21 +1692,25 @@ export default BaseLayer.extend({
     let d = layer._path.getAttribute('d');
     let path = svg.firstChild.firstChild;
     path.setAttribute('d', d);
+
+    // здесь с префиксом pathdef-
     let id = path.getAttribute('id');
+
     if (partline) {
-      id = L.Util.stamp(partline);
+      // здесь без префикса pathdef-
+      id = 'pathdef-' + L.Util.stamp(partline);
     }
 
-    Ember.$('path#pathdef-' + id).attr('d', d);
-    Ember.$('svg#svg-pathdef-' + id).attr('width', svg.getAttribute('width'));
-    Ember.$('svg#svg-pathdef-' + id).attr('height', svg.getAttribute('height'));
+    Ember.$('path#' + id).attr('d', d);
+    Ember.$('svg#svg-' + id).attr('width', svg.getAttribute('width'));
+    Ember.$('svg#svg-' + id).attr('height', svg.getAttribute('height'));
 
     let options = layer._textOptions;
     let text = layer._text;
     let textNode = layer._textNode;
 
     this._setAlignForLine(layer, text, options.align, textNode);
-    Ember.$('text#text-pathdef-' + id).attr('dx', textNode.getAttribute('dx'));
+    Ember.$('text#text-' + id).attr('dx', textNode.getAttribute('dx'));
   },
 
   _labelsLayer: null,
