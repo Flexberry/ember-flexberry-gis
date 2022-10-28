@@ -417,6 +417,10 @@ export default Ember.Component.extend(
       // Now execute base destroy logic.
       this._removeLayerFromLeafletContainer();
 
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('additionalZoomLabel'))) {
+        this.set('additionalZoomLabel', null);
+      }
+
       if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer'))) {
         this.set('_labelsLayer', null);
       }
@@ -611,7 +615,16 @@ export default Ember.Component.extend(
 
       leafletContainer.removeLayer(leafletLayer);
 
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && leafletContainer.hasLayer(this.get('_labelsLayer'))) {
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('additionalZoomLabel'))) {
+        this.get('additionalZoomLabel').forEach(zoomLabels => {
+          if (leafletContainer.hasLayer(zoomLabels)) {
+            leafletContainer.removeLayer(zoomLabels);
+          }
+        });
+      }
+
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
+        leafletContainer.hasLayer(this.get('_labelsLayer'))) {
         leafletContainer.removeLayer(this.get('_labelsLayer'));
       }
     },

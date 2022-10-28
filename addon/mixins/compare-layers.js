@@ -33,11 +33,29 @@ export default Ember.Mixin.create({
       Ember.set(layersSideSettings, 'layerIds', layersSideSettings.layerIds.filter(l => l !== layerId));
     } else {
       if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
-        const labelsOriginalLayer = layer.get('_leafletObject._labelsLayer');
+        const labelsOriginalLayer = layer.get('_leafletObject._labelsLayerMulti');
         if (labelsOriginalLayer) {
           layersSideSettings.layers.push({
             id: layerId,
             layer: labelsOriginalLayer.addTo(leafletMap)
+          });
+        }
+
+        const labelsAdditionalOriginalLayer = layer.get('_leafletObject.additionalZoomLabel');
+        if (labelsAdditionalOriginalLayer) {
+          labelsAdditionalOriginalLayer.forEach(zoomLabels => {
+            layersSideSettings.layers.push({
+              id: layerId,
+              layer: zoomLabels.addTo(leafletMap)
+            });
+          });
+        }
+
+        const labelsMultiOriginalLayer = layer.get('_leafletObject._labelsLayer');
+        if (labelsMultiOriginalLayer) {
+          layersSideSettings.layers.push({
+            id: layerId,
+            layer: labelsMultiOriginalLayer.addTo(leafletMap)
           });
         }
       }
