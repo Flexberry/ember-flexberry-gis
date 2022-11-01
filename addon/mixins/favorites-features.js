@@ -113,50 +113,64 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       @param feature
     */
     addToFavorite(feature) {
+      if (Ember.isNone(Ember.get(feature.properties, 'isFavorite'))) {
+        return;
+      }
+
       let store = this.get('store');
       let favFeatures = this.get('favFeatures');
+
       let layerModelIndex = this.isLayerModelInArray(favFeatures, feature.layerModel);
+      let savePromise;
       if (Ember.get(feature.properties, 'isFavorite')) {
         if (layerModelIndex !== -1) {
-          favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
           let records = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
             .filterBy('objectKey', feature.properties.primarykey)
             .filterBy('objectLayerKey', feature.layerModel.id);
           let record = records.objectAt(0);
           record.deleteRecord();
-          record.save();
-        }
+          Ember.set(feature.properties, 'isFavorite', null);
+          savePromise = record.save().then(() => {
+            favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
 
-        Ember.set(feature.properties, 'isFavorite', false);
+            Ember.set(feature.properties, 'isFavorite', false);
 
-        if (Ember.get(feature, 'compareEnabled')) {
-          Ember.set(feature, 'compareEnabled', false);
-          let twoObjects = this.get('twoObjectToCompare');
-          twoObjects.removeObject(feature);
+            if (Ember.get(feature, 'compareEnabled')) {
+              Ember.set(feature, 'compareEnabled', false);
+              let twoObjects = this.get('twoObjectToCompare');
+              twoObjects.removeObject(feature);
+            }
+          });
         }
       } else {
-        Ember.set(feature.properties, 'isFavorite', true);
-        if (layerModelIndex !== -1) {
-          favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);
-          let newRecord = { id: generateUniqueId(), objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
-          let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', newRecord);
-          record.save();
-        } else {
-          favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature.layerModel, feature);
-          let newRecord = { id: generateUniqueId(), objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
-          let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', newRecord);
-          record.save();
-        }
+        let newRecord = { id: generateUniqueId(), objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
+        let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', newRecord);
+        Ember.set(feature.properties, 'isFavorite', null);
+        savePromise = record.save().then(() => {
+          if (layerModelIndex !== -1) {
+            favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);
+          } else {
+            favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature.layerModel, feature);
+          }
+
+          Ember.set(feature.properties, 'isFavorite', true);
+        });
       }
 
-      let layerModelPromise = Ember.A();
-      favFeatures.forEach(object => {
-        let promise = new Ember.RSVP.Promise((resolve) => {
-          resolve(object.features);
+      // в списках layer-result-list используется запрос к серверу на получения списка избранного,
+      // поэтому отдавать результаты необходимо с уже сохраненными объектами
+      (savePromise || Ember.RSVP.resolve()).then(() => {
+        let layerModelPromise = Ember.A();
+        favFeatures.forEach(object => {
+          let promise = new Ember.RSVP.Promise((resolve) => {
+            resolve(object.features);
+          });
+
+          layerModelPromise.addObject({ layerModel: object.layerModel, features: promise });
         });
-        layerModelPromise.addObject({ layerModel: object.layerModel, features: promise });
+
+        this.set('result', layerModelPromise);
       });
-      this.set('result', layerModelPromise);
     },
 
     /**

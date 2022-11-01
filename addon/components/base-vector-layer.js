@@ -1334,7 +1334,9 @@ export default BaseLayer.extend({
       layers.forEach((layer) => {
         let currentLabelExists = false;
         if (additionalLabelLayer) {
-          currentLabelExists = layer._labelAdditional && layer._labelAdditional.filter(label => { return label.zoomCheck === additionalLabelLayer.check; }).length > 0;
+          currentLabelExists = layer._labelAdditional && layer._labelAdditional.filter(label => {
+            return label.zoomCheck === additionalLabelLayer.check;
+          }).length > 0;
         } else {
           currentLabelExists = !Ember.isNone(layer._label);
         }
@@ -1928,7 +1930,7 @@ export default BaseLayer.extend({
       let zoom =  this.get('leafletMap').getZoom();
 
       let aLayers = additionalZoomLabel.filter(l => { return (l.minZoom == null || l.minZoom <= zoom) && (l.maxZoom == null || l.maxZoom >= zoom); });
-      
+
       if (aLayers.length > 0) {
         additionalLabelLayer = aLayers[0];
       }
@@ -1991,7 +1993,7 @@ export default BaseLayer.extend({
   },
 
   _labelsLayer: null,
-    additionalZoomLabel: null,
+  additionalZoomLabel: null,
 
   /**
     Show lables
@@ -2100,75 +2102,75 @@ export default BaseLayer.extend({
     @param {Object} leafletObject leaflet layer
     @private
   */
-    _addLabelsToLeafletContainer(layers, leafletObject) {
-      let additionalZoomLabel = this.get('additionalZoomLabel');
-      let _labelsLayer = this.get('_labelsLayer');
+  _addLabelsToLeafletContainer(layers, leafletObject) {
+    let additionalZoomLabel = this.get('additionalZoomLabel');
+    let _labelsLayer = this.get('_labelsLayer');
 
-      // чтобы слой нормально выключался в группе,
-      // он должен быть в контейнере группы, а не просто в карте
-      let leafletContainer = this.get('leafletContainer');
+    // чтобы слой нормально выключался в группе,
+    // он должен быть в контейнере группы, а не просто в карте
+    let leafletContainer = this.get('leafletContainer');
 
-      if (!leafletObject) {
-        leafletObject = this.get('_leafletObject');
-      }
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
 
-      let thisPane = this.get('_paneLabel');
-      if (thisPane) {
-        let leafletMap = this.get('leafletMap');
-        if (thisPane && !Ember.isNone(leafletMap)) {
-          let pane = leafletMap.getPane(thisPane);
-          if (!pane || Ember.isNone(pane)) {
-            this._createPane(thisPane);
-            this._setLayerZIndex();
-          }
+    let thisPane = this.get('_paneLabel');
+    if (thisPane) {
+      let leafletMap = this.get('leafletMap');
+      if (thisPane && !Ember.isNone(leafletMap)) {
+        let pane = leafletMap.getPane(thisPane);
+        if (!pane || Ember.isNone(pane)) {
+          this._createPane(thisPane);
+          this._setLayerZIndex();
         }
       }
+    }
 
-      if (Ember.isNone(_labelsLayer)) {
-        this._showLabels(layers, leafletObject);
-        _labelsLayer = this.get('_labelsLayer');
-        leafletContainer.addLayer(_labelsLayer);
+    if (Ember.isNone(_labelsLayer)) {
+      this._showLabels(layers, leafletObject);
+      _labelsLayer = this.get('_labelsLayer');
+      leafletContainer.addLayer(_labelsLayer);
 
-        additionalZoomLabel = this.get('additionalZoomLabel');
-        if (additionalZoomLabel && additionalZoomLabel.length > 0) {
-          this._additionalZoomLabelPane();
-          additionalZoomLabel.forEach(zoomLabels => {
-            leafletContainer.addLayer(zoomLabels);
-          });
-        }
-      } else if (!leafletContainer.hasLayer(_labelsLayer)) {
-        leafletContainer.addLayer(_labelsLayer);
-        if (additionalZoomLabel && additionalZoomLabel.length > 0) {
-          additionalZoomLabel.forEach(zoomLabels => {
-            if (zoomLabels && !leafletContainer.hasLayer(zoomLabels)) {
-              leafletContainer.addLayer(zoomLabels);
-            }
-          });
-        }
-      } else {
-        this._showLabels(layers, leafletObject);
+      additionalZoomLabel = this.get('additionalZoomLabel');
+      if (additionalZoomLabel && additionalZoomLabel.length > 0) {
         this._additionalZoomLabelPane();
-      }
-    },
-
-    _additionalZoomLabelPane() {
-      let additionalZoomLabel = this.get('additionalZoomLabel');
-      if (additionalZoomLabel) {
         additionalZoomLabel.forEach(zoomLabels => {
-          let thisPane = zoomLabels._paneLabel;
-          if (thisPane) {
-            let leafletMap = this.get('leafletMap');
-            if (thisPane && !Ember.isNone(leafletMap)) {
-              let pane = leafletMap.getPane(thisPane);
-              if (!pane || Ember.isNone(pane)) {
-                this._createPane(thisPane);
-                this._setLayerZIndex();
-              }
-            }
+          leafletContainer.addLayer(zoomLabels);
+        });
+      }
+    } else if (!leafletContainer.hasLayer(_labelsLayer)) {
+      leafletContainer.addLayer(_labelsLayer);
+      if (additionalZoomLabel && additionalZoomLabel.length > 0) {
+        additionalZoomLabel.forEach(zoomLabels => {
+          if (zoomLabels && !leafletContainer.hasLayer(zoomLabels)) {
+            leafletContainer.addLayer(zoomLabels);
           }
         });
       }
-    },
+    } else {
+      this._showLabels(layers, leafletObject);
+      this._additionalZoomLabelPane();
+    }
+  },
+
+  _additionalZoomLabelPane() {
+    let additionalZoomLabel = this.get('additionalZoomLabel');
+    if (additionalZoomLabel) {
+      additionalZoomLabel.forEach(zoomLabels => {
+        let thisPane = zoomLabels._paneLabel;
+        if (thisPane) {
+          let leafletMap = this.get('leafletMap');
+          if (thisPane && !Ember.isNone(leafletMap)) {
+            let pane = leafletMap.getPane(thisPane);
+            if (!pane || Ember.isNone(pane)) {
+              this._createPane(thisPane);
+              this._setLayerZIndex();
+            }
+          }
+        }
+      });
+    }
+  },
 
   /**
     Removes labels from it's leaflet container.
