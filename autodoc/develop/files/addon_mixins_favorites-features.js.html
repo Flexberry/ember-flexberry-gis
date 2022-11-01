@@ -530,12 +530,14 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       @param feature
     */
     addToFavorite(feature) {
-      if (Ember.isNone(Ember.get(feature.properties, &#x27;isFavorite&#x27;))) {
+      if (Ember.get(feature.properties, &#x27;favUpdating&#x27;)) {
         return;
       }
 
       let store = this.get(&#x27;store&#x27;);
       let favFeatures = this.get(&#x27;favFeatures&#x27;);
+
+      let isFavourite = null;
 
       let layerModelIndex = this.isLayerModelInArray(favFeatures, feature.layerModel);
       let savePromise;
@@ -546,11 +548,11 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
             .filterBy(&#x27;objectLayerKey&#x27;, feature.layerModel.id);
           let record = records.objectAt(0);
           record.deleteRecord();
-          Ember.set(feature.properties, &#x27;isFavorite&#x27;, null);
+          Ember.set(feature.properties, &#x27;favUpdating&#x27;, true);
           savePromise = record.save().then(() =&gt; {
             favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
 
-            Ember.set(feature.properties, &#x27;isFavorite&#x27;, false);
+            isFavourite = false;
 
             if (Ember.get(feature, &#x27;compareEnabled&#x27;)) {
               Ember.set(feature, &#x27;compareEnabled&#x27;, false);
@@ -562,21 +564,23 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       } else {
         let newRecord = { id: generateUniqueId(), objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
         let record = store.createRecord(&#x27;i-i-s-r-g-i-s-p-k-favorite-features&#x27;, newRecord);
-        Ember.set(feature.properties, &#x27;isFavorite&#x27;, null);
+        Ember.set(feature.properties, &#x27;favUpdating&#x27;, true);
         savePromise = record.save().then(() =&gt; {
+          isFavourite = true;
+
           if (layerModelIndex !== -1) {
             favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);
           } else {
             favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature.layerModel, feature);
           }
-
-          Ember.set(feature.properties, &#x27;isFavorite&#x27;, true);
         });
       }
 
       // в списках layer-result-list используется запрос к серверу на получения списка избранного,
       // поэтому отдавать результаты необходимо с уже сохраненными объектами
       (savePromise || Ember.RSVP.resolve()).then(() =&gt; {
+        Ember.set(feature.properties, &#x27;isFavorite&#x27;, isFavourite);
+
         let layerModelPromise = Ember.A();
         favFeatures.forEach(object =&gt; {
           let promise = new Ember.RSVP.Promise((resolve) =&gt; {
@@ -587,6 +591,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         });
 
         this.set(&#x27;result&#x27;, layerModelPromise);
+      }).finally(() =&gt; {
+        Ember.set(feature.properties, &#x27;favUpdating&#x27;, false);
       });
     },
 

@@ -38905,7 +38905,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 648,
+            "line": 649,
             "description": "Get an array of layer shapes id.",
             "itemtype": "method",
             "name": "_getFeatureShapeIds",
@@ -45913,7 +45913,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 176,
+            "line": 182,
             "description": "Handles click on checkbox in favorite list.",
             "itemtype": "method",
             "name": "addToCompareGeometries",
@@ -45928,7 +45928,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 198,
+            "line": 204,
             "description": "Handles compare features button.",
             "itemtype": "method",
             "name": "OnCompareTwoGeometries",
@@ -45937,7 +45937,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 212,
+            "line": 218,
             "description": "Habdles click on exit comare panel icon",
             "itemtype": "method",
             "name": "closeComparePanel",
@@ -45946,7 +45946,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 222,
+            "line": 228,
             "description": "Method checks id layerModel in array.\nif it is returns its index.",
             "itemtype": "method",
             "name": "isLayerModelInArray",
@@ -45955,7 +45955,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 238,
+            "line": 244,
             "description": "Adding new featre to leayer model array of features.",
             "itemtype": "method",
             "name": "addNewFeatureToLayerModel",
@@ -45964,7 +45964,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 249,
+            "line": 255,
             "description": "Adding new layer model and new feature to array.",
             "itemtype": "method",
             "name": "addNewFeatureToNewLayerModel",
@@ -45973,7 +45973,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 261,
+            "line": 267,
             "description": "Remove feature from fav features list.",
             "itemtype": "method",
             "name": "removeFeatureFromLayerModel",
@@ -45982,7 +45982,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 277,
+            "line": 283,
             "description": "Get features from array of ids.",
             "itemtype": "method",
             "name": "fromIdArrayToFeatureArray",
@@ -45991,7 +45991,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 342,
+            "line": 348,
             "description": "This method update favorite feature when feature is edited",
             "params": [
                 {
@@ -54079,7 +54079,7 @@
         },
         {
             "message": "Missing item type\nThis method update favorite feature when feature is edited",
-            "line": " addon/mixins/favorites-features.js:342"
+            "line": " addon/mixins/favorites-features.js:348"
         },
         {
             "message": "Missing item type\nService for Map loading from store",
