@@ -552,10 +552,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             let listForms = result.listForms;
 
             result.features.forEach((feature) => {
-              Ember.set(feature, 'properties.isFavorite', !Ember.isNone(idsFavorite.find((favoriteFeature) =>
-                Ember.get(favoriteFeature, 'objectKey') === Ember.get(feature, 'properties.primarykey'))));
-              Ember.set(feature, 'displayValue', getFeatureDisplayProperty(feature, result.settings, result.dateFormat));
               Ember.set(feature, 'layerModel', Ember.get(result, 'layerModel'));
+              Ember.set(feature, 'properties.isFavorite', !Ember.isNone(idsFavorite.find((favoriteFeature) =>
+                Ember.get(favoriteFeature, 'objectKey') === Ember.get(feature, 'properties.primarykey') &&
+                Ember.get(favoriteFeature, 'objectLayerKey') === Ember.get(feature, 'layerModel.id'))));
+              Ember.set(feature, 'displayValue', getFeatureDisplayProperty(feature, result.settings, result.dateFormat));
               Ember.set(feature, 'editForms', Ember.A());
               if (editForms.length === 0) {
                 return;

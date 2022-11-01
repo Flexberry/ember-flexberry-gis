@@ -25,7 +25,7 @@
       </a>
       {{#if allowFavorite}}
         <a class="icon item" title="{{t "components.compare-object-geometries.add-to-fav-caption"}}" {{action "addToFavorite" on="click"}}>
-          <i class="icon-guideline-bookmark{{if feature.properties.isFavorite "-filled"}} {{if (is-none feature.properties.isFavorite) "disabled"}}"></i>
+          <i class="icon-guideline-bookmark{{if feature.properties.isFavorite "-filled"}} {{if feature.properties.favUpdating "disabled"}}"></i>
         </a>
       {{/if}}
       {{#if (gt feature.editForms.length 0)}}
