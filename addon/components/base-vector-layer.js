@@ -1311,8 +1311,9 @@ export default BaseLayer.extend({
       layers.forEach((layer) => {
         let currentLabelExists = false;
         if (additionalLabelLayer) {
-          currentLabelExists = layer._labelAdditional &&
-          layer._labelAdditional.filter(label => { return label.zoomCheck === additionalLabelLayer.check; }).length > 0;
+          currentLabelExists = layer._labelAdditional && layer._labelAdditional.filter(label => {
+            return label.zoomCheck === additionalLabelLayer.check;
+          }).length > 0;
         } else {
           currentLabelExists = !Ember.isNone(layer._label);
         }

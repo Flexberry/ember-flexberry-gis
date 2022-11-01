@@ -80,11 +80,20 @@ export default Ember.Component.extend({
   /**
     Flag indicates if feature is in favorire list.
 
-    @property intersection
+    @property favoriteMode
     @type Boolean
     @default false
   */
   favoriteMode: false,
+
+  /**
+    Flag indicates if user can add feature to favourite
+
+    @property allowFavorite
+    @type Boolean
+    @default false
+  */
+  allowFavorite: false,
 
   /**
     Flag: indicates whether to display detailed feature info.

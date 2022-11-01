@@ -23,9 +23,11 @@
       <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
         <i class="icon-guideline-marker"></i>
       </a>
-      <a class="icon item" title="{{t "components.compare-object-geometries.add-to-fav-caption"}}" {{action "addToFavorite" on="click"}}>
-        <i class="icon-guideline-bookmark{{if feature.properties.isFavorite "-filled"}}"></i>
-      </a>
+      {{#if allowFavorite}}
+        <a class="icon item" title="{{t "components.compare-object-geometries.add-to-fav-caption"}}" {{action "addToFavorite" on="click"}}>
+          <i class="icon-guideline-bookmark{{if feature.properties.isFavorite "-filled"}} {{if (is-none feature.properties.isFavorite) "disabled"}}"></i>
+        </a>
+      {{/if}}
       {{#if (gt feature.editForms.length 0)}}
         {{#if (eq feature.editForms.length 1)}}
           {{#if hasEditForm}}
