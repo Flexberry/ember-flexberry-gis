@@ -29201,7 +29201,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1331,
+            "line": 1332,
             "description": "Create label for object of layer.",
             "itemtype": "method",
             "name": "_createLabel",
@@ -29237,7 +29237,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1594,
+            "line": 1595,
             "description": "Set position for point.",
             "itemtype": "method",
             "name": "_setPositionPoint",
@@ -29253,7 +29253,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1676,
+            "line": 1677,
             "description": "Get text width for line object.",
             "itemtype": "method",
             "name": "_getWidthText",
@@ -29294,7 +29294,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1708,
+            "line": 1709,
             "description": "Set label for line object",
             "itemtype": "method",
             "name": "_setLabelLine",
@@ -29315,7 +29315,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1782,
+            "line": 1783,
             "description": "Set align for line object's label",
             "itemtype": "method",
             "name": "_setAlignForLine",
@@ -29336,7 +29336,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1814,
+            "line": 1815,
             "description": "Add text for line object",
             "itemtype": "method",
             "name": "_addTextForLine",
@@ -29367,7 +29367,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1893,
+            "line": 1894,
             "description": "Update position for line object's label",
             "itemtype": "method",
             "name": "_updatePositionLabelForLine",
@@ -29376,7 +29376,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1974,
+            "line": 1975,
             "description": "Show lables",
             "itemtype": "method",
             "name": "_showLabels",
@@ -29397,7 +29397,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2073,
+            "line": 2074,
             "description": "Adds labels to it's leaflet container.",
             "itemtype": "method",
             "name": "_addLabelsToLeafletContainer",
@@ -29420,7 +29420,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2132,
+            "line": 2133,
             "description": "Create pane for additional labels.",
             "itemtype": "method",
             "name": "_additionalZoomLabelPane",
@@ -29431,7 +29431,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2157,
+            "line": 2158,
             "description": "Removes labels from it's leaflet container.",
             "itemtype": "method",
             "name": "_removeLabelsFromLeafletContainer",
@@ -29442,7 +29442,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2179,
+            "line": 2180,
             "description": "Sets leaflet layer's visibility.",
             "itemtype": "method",
             "name": "_setLayerVisibility",
@@ -30020,7 +30020,7 @@
             "line": 80,
             "description": "Flag indicates if feature is in favorire list.",
             "itemtype": "property",
-            "name": "intersection",
+            "name": "favoriteMode",
             "type": "Boolean",
             "default": "false",
             "class": "FeatureResultItemComponent",
@@ -30029,6 +30029,17 @@
         {
             "file": "addon/components/feature-result-item.js",
             "line": 89,
+            "description": "Flag indicates if user can add feature to favourite",
+            "itemtype": "property",
+            "name": "allowFavorite",
+            "type": "Boolean",
+            "default": "false",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-result-item.js",
+            "line": 98,
             "description": "Flag: indicates whether to display detailed feature info.",
             "itemtype": "property",
             "name": "infoExpanded",
@@ -30039,7 +30050,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 98,
+            "line": 107,
             "description": "Flag: indicates whether to display links list (if present).",
             "itemtype": "property",
             "name": "_linksExpanded",
@@ -30050,7 +30061,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 107,
+            "line": 116,
             "description": "Property to represent feature.",
             "itemtype": "property",
             "name": "displayProperty",
@@ -30062,7 +30073,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 116,
+            "line": 125,
             "description": "Feature properties excluded from being displayed in info table.",
             "itemtype": "property",
             "name": "_excludedProperties",
@@ -30075,7 +30086,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 128,
+            "line": 137,
             "description": "Features localized properties to being displayed in info table.",
             "itemtype": "property",
             "name": "_localizedProperties",
@@ -30088,7 +30099,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 142,
+            "line": 151,
             "description": "Flag: indicates whether component is active.",
             "itemtype": "property",
             "name": "isActive",
@@ -30099,7 +30110,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 153,
+            "line": 162,
             "description": "flag to enable scrolling of the list of results",
             "itemtype": "property",
             "name": "activeScroll",
@@ -30110,7 +30121,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 162,
+            "line": 171,
             "description": "Observes and handles changes in feature.highlight state\nChanges the border style of feature on the map",
             "itemtype": "method",
             "name": "highlightObserver",
@@ -30121,14 +30132,14 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 180,
+            "line": 189,
             "description": "Reference to component's template.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 185,
+            "line": 194,
             "description": "Settings for display feature info.",
             "itemtype": "property",
             "name": "displaySettings",
@@ -30139,7 +30150,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 194,
+            "line": 203,
             "description": "Search and identification results object",
             "itemtype": "property",
             "name": "resultObject",
@@ -30150,7 +30161,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 202,
+            "line": 211,
             "description": "Setting indicating whether an component can be highlighted in layer-result-list (Only for upper layer features)",
             "itemtype": "property",
             "name": "highlightable",
@@ -30161,7 +30172,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 211,
+            "line": 220,
             "description": "Default feature.leaflet.style settings. (Uses for restore state after click events)",
             "itemtype": "property",
             "name": "defaultFeatureStyle",
@@ -30172,7 +30183,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 220,
+            "line": 229,
             "description": "Feature's metadata.",
             "itemtype": "property",
             "name": "feature",
@@ -30182,7 +30193,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 228,
+            "line": 237,
             "description": "Current selected feature.",
             "itemtype": "property",
             "name": "feature",
@@ -30192,7 +30203,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 236,
+            "line": 245,
             "description": "Action button hasEditForm display.",
             "itemtype": "property",
             "name": "hasEditForm",
@@ -30203,7 +30214,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 245,
+            "line": 254,
             "description": "Flag: indicates whether submenu is visible.",
             "itemtype": "property",
             "name": "isSubmenu",
@@ -30214,14 +30225,14 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 254,
+            "line": 263,
             "description": "Initializes DOM-related component's properties.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 305,
+            "line": 314,
             "description": "Preparation feature for highlighting.",
             "itemtype": "method",
             "name": "prepareFeatureForHighlighting",
@@ -30230,7 +30241,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 333,
+            "line": 342,
             "description": "Collecting settings for executing a zoomToBounds function",
             "itemtype": "method",
             "name": "getLayerPropsForZoom",
@@ -30239,7 +30250,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 370,
+            "line": 379,
             "description": "Highlight feature-result-items",
             "itemtype": "method",
             "name": "actions.highlightFeature",
@@ -30260,7 +30271,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 401,
+            "line": 410,
             "description": "Show\\hide submenu",
             "itemtype": "method",
             "name": "actions.onSubmenu",
@@ -30269,7 +30280,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 412,
+            "line": 421,
             "description": "Performs row editing.",
             "itemtype": "method",
             "name": "actions.onRowEdit",
@@ -30278,7 +30289,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 479,
+            "line": 488,
             "description": "Handles click on show/hide all intersection coordinates.",
             "itemtype": "method",
             "name": "actions.toggleShowAllCords",
@@ -30287,7 +30298,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 493,
+            "line": 502,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.selectFeature:method\"}}'selectFeature' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.selectFeature",
@@ -30296,7 +30307,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 501,
+            "line": 510,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.panTo:method\"}}'panTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.panTo",
@@ -30305,7 +30316,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 510,
+            "line": 519,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.zoomTo:method\"}}'zoomTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.zoomTo",
@@ -30314,7 +30325,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 520,
+            "line": 529,
             "description": "Show\\hide detailed feature info",
             "itemtype": "method",
             "name": "actions.showInfo",
@@ -30323,7 +30334,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 529,
+            "line": 538,
             "description": "Show\\hide links list (if present).",
             "itemtype": "method",
             "name": "actions.toggleLinks",
@@ -30332,7 +30343,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 537,
+            "line": 546,
             "description": "Process the specified method.",
             "itemtype": "method",
             "name": "actions.goToEditForm",
@@ -30353,7 +30364,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 550,
+            "line": 559,
             "description": "Show\\hide panel for seraching intersections.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.findIntersection",
@@ -30362,7 +30373,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 560,
+            "line": 569,
             "description": "Add feature to favorites list\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToFavorite",
@@ -30371,7 +30382,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 569,
+            "line": 578,
             "description": "Handles click on checkbox.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToCompareGeometries",
@@ -30380,7 +30391,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 578,
+            "line": 587,
             "description": "Pans and zooms to intersection object.",
             "itemtype": "method",
             "name": "actions.panToIntersection",
@@ -30389,7 +30400,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 587,
+            "line": 596,
             "description": "Zooms to intersection and add intersection object on map.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -30398,7 +30409,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 597,
+            "line": 606,
             "description": "Component's action invoking for select feature",
             "itemtype": "method",
             "name": "sendingActions.selectFeature",
@@ -30414,7 +30425,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 603,
+            "line": 612,
             "description": "Component's action invoking for feature zooming",
             "itemtype": "method",
             "name": "sendingActions.zoomTo",
@@ -30430,7 +30441,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 609,
+            "line": 618,
             "description": "Component's action invoking for feature pan",
             "itemtype": "method",
             "name": "sendingActions.panTo",
@@ -45902,7 +45913,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 162,
+            "line": 176,
             "description": "Handles click on checkbox in favorite list.",
             "itemtype": "method",
             "name": "addToCompareGeometries",
@@ -45917,7 +45928,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 184,
+            "line": 198,
             "description": "Handles compare features button.",
             "itemtype": "method",
             "name": "OnCompareTwoGeometries",
@@ -45926,7 +45937,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 198,
+            "line": 212,
             "description": "Habdles click on exit comare panel icon",
             "itemtype": "method",
             "name": "closeComparePanel",
@@ -45935,7 +45946,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 208,
+            "line": 222,
             "description": "Method checks id layerModel in array.\nif it is returns its index.",
             "itemtype": "method",
             "name": "isLayerModelInArray",
@@ -45944,7 +45955,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 224,
+            "line": 238,
             "description": "Adding new featre to leayer model array of features.",
             "itemtype": "method",
             "name": "addNewFeatureToLayerModel",
@@ -45953,7 +45964,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 235,
+            "line": 249,
             "description": "Adding new layer model and new feature to array.",
             "itemtype": "method",
             "name": "addNewFeatureToNewLayerModel",
@@ -45962,7 +45973,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 247,
+            "line": 261,
             "description": "Remove feature from fav features list.",
             "itemtype": "method",
             "name": "removeFeatureFromLayerModel",
@@ -45971,7 +45982,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 263,
+            "line": 277,
             "description": "Get features from array of ids.",
             "itemtype": "method",
             "name": "fromIdArrayToFeatureArray",
@@ -45980,7 +45991,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 328,
+            "line": 342,
             "description": "This method update favorite feature when feature is edited",
             "params": [
                 {
@@ -53472,11 +53483,11 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/feature-result-item.js:180"
+            "line": " addon/components/feature-result-item.js:189"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/feature-result-item.js:254"
+            "line": " addon/components/feature-result-item.js:263"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -54068,7 +54079,7 @@
         },
         {
             "message": "Missing item type\nThis method update favorite feature when feature is edited",
-            "line": " addon/mixins/favorites-features.js:328"
+            "line": " addon/mixins/favorites-features.js:342"
         },
         {
             "message": "Missing item type\nService for Map loading from store",
