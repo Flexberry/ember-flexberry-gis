@@ -1,44 +1,47 @@
-<input type="file" accept=".zip,.GEOJSON" class="d-none" onchange={{action 'uploadFile' }}>
-<div class="w-80">
-    <div>
-        <label>Файл * </label>
-        <input onClick={{action 'setFiles' }} value={{stringFiles}}>
-        {{help-popup htmlMessage="<div class='content'>
+<input type="file" accept=".zip,.GEOJSON,.gml" class="d-none" onchange={{action 'uploadFile' }}>
+<div class="w-100">
+  <div class="file-panel">
+    <label>{{t "components.flexberry-identify-panel.file.form-caption-file"}}</label>
+    <input class="file-input" onClick={{action 'setFiles' }} value={{fileName}}>
+    {{help-popup htmlMessage="<div class='content'>
             Загрузите файл формата: TAB (в архиве .zip), MIF/MID (в архиве .zip), SHP (в архиве .zip), GEOJSON. Набор
             связанных файлов, составляющих файл формата TAB, MIF/MID или SHP, должен быть сохранен в основной директории
             архива .zip, а не в директориях, созданных внутри архива.
-        </div>"}}
-    </div>
+        </div>"
+    }}
+  </div>
 </div>
-<label>Cистема координат</label>
+<label>{{t "components.flexberry-identify-panel.file.form-caption-sk"}}</label>
 {{flexberry-dropdown-input
-items=systemCoordinats
-value=coordinate
-class="scale-value fluid"
+  items=systemCoordinates
+  value=coordinate
+  class="scale-value fluid"
 }}
 <div class="d-flex justify-content-center p-10">
-    {{flexberry-button
+  {{flexberry-button
     iconClass='icon-guideline-show'
     click=(action "showFileLayer")
-    readonly = (eq stringFiles '')
-    }}
-    {{flexberry-button
+    readonly = (eq fileName '')
+  }}
+  {{flexberry-button
     class='ml-20'
     iconClass='icon-guideline-layers-info'
     click=(action "identificationFile")
-    readonly = (eq stringFiles '')
-    }}
-    {{flexberry-button
+    readonly = (eq fileName '')
+  }}
+  {{flexberry-button
     class='ml-20'
     iconClass='icon-guideline-goout'
-    }}
+    click=(action "createLayerByFile")
+    readonly = (or (eq fileName '') (not isAuthenticated))
+  }}
 </div>
 {{#if _showError}}
-{{ui-message
-type="error"
-closeable=true
-visible=_showError
-caption=_errorCaption
-message=_errorMessage
-}}
+  {{ui-message
+    type="error"
+    closeable=true
+    visible=_showError
+    caption=_errorCaption
+    message=_errorMessage
+  }}
 {{/if}}

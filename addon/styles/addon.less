@@ -100,7 +100,7 @@
   }
 }
 
-.d-flex{
+.d-flex {
   display: flex;
 }
 
@@ -112,11 +112,23 @@
   margin-left: 20px !important;
 }
 
+.ml-18{
+  margin-left: 18px !important;
+}
+
+.h-42 {
+  height: 42px;
+}
+
 .w-80{
   width: 80%;
 }
 
-.justify-content-center{
+.w-100{
+  width: 100%;
+}
+
+.justify-content-center {
   justify-content: center;
 }
 
@@ -128,11 +140,12 @@
   margin-left: auto !important;
 }
 
-.flexberry-dropdown-button{
+.flexberry-dropdown-button {
   position: relative;
   display: inline-block;
   z-index: 1;
   border-radius: 3.5px;
+  font-size: 14px;
   background: #F4F7FB;
   &  ul {
     list-style-type: none; 
@@ -145,29 +158,57 @@
   & i {
     color: #0061D9;
   }
-  &-selected{
+
+  div.main-image {
+    width: 28px; 
+    height: 24px; 
+    display: inline-block;
+  }
+
+  div.arrow {
+    width: 20px; 
+    height: 24px; 
+    display: inline-block; 
+    border-left: 1px solid #c5c7ca;
+    padding-left: 2px;
+  }
+
+  &-selected {
     padding: 8px;
     border-radius: 3.5px;
     border:solid 1px transparent;
     box-shadow: 2px 2px 6px 0  fade(#000, 15%);
+    height: 42px;
+    background: #F4F7FB;
+
     &:hover{
-      background:transparent;
-      border:solid 1px #0061D9;
       cursor: pointer;
     }
+    &.active {
+      height: 52px;
+    }
   }
-  &-list{
+  &-list {
     position: absolute;
     border-radius: 3.5px;
     box-shadow: 2px 2px 6px 0 fade(#000, 15%);
     display: none;
     background: inherit;
-    width: 300px;
-    
+    width: 170px;
+    ul {
+      margin: 5px 0;
+    }
+    .dropdown-label {
+      font-size: 11px;
+      line-height: 14px;
+      margin-left: 8px;
+      cursor: pointer;
+    }
   }
-  &-list.show{
+  &-list.show {
     display: flex;
     flex-direction: column;
+    box-shadow: none !important;
   }
 }
 
@@ -184,7 +225,7 @@
   }
 }
 
-.wrapper{
+.wrapper {
   border: 1px solid #c5c7ca;
   padding: 10px;
   margin: 20px;
@@ -198,5 +239,25 @@
     cursor: pointer;
     right: 0px; 
     top: 0px;
+  }
+  .selection.dropdown {
+    height: 32px;
+    font-size: 14px;
+    line-height: 24px;
+  }
+}
+
+.flexberry-identify-panel {
+  .wrapper {
+    margin: 20px 0px;
+  }
+  .file-input {
+    width: 85% !important;
+    height: 32px;
+  }
+  .file-panel {
+    button {
+      padding: 4px 6px;
+    }
   }
 }
