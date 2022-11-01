@@ -606,21 +606,40 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   exportResult: null,
   actions: {
     /**
-      Сlears the highlight state of the features list.
-      @method actions.clearHighlights
+      Zooms to all features in the layer.
+      @method actions.zoomToAll
+      @param {Object} result search/identification result object.
     */
-    clearHighlights(result, clickedFeature) {
-      if (!result || !clickedFeature) {
+    zoomToAll(result) {
+      if (!result || !result.features) {
         return;
       }
 
-      let previousHighlightedFeature = this.get(&#x27;selectedFeatures&#x27;).find(feature =&gt; feature !== clickedFeature &amp;&amp; Ember.get(feature, &#x27;highlight&#x27;));
-      if (previousHighlightedFeature) {
-        Ember.set(previousHighlightedFeature, &#x27;highlight&#x27;, false);
+      if (!this.get(&#x27;enableHighlight&#x27;)) {
+        this.send(&#x27;zoomTo&#x27;, result.features);
+        return;
       }
 
-      Ember.set(clickedFeature, &#x27;highlight&#x27;, !clickedFeature.highlight);
-      Ember.set(result, &#x27;highlight&#x27;, true);
+      result.features.forEach(feature =&gt; Ember.set(feature, &#x27;highlight&#x27;, true));
+      this.send(&#x27;clearHighlights&#x27;, result.features);
+      this.send(&#x27;zoomTo&#x27;, result.features, this.get(&#x27;enableHighlight&#x27;), false);
+    },
+
+    /**
+      Сlears the highlight state of selectedFeatures elements (all found features).
+      @method actions.clearHighlights
+      @param {Array} clickedFeatures list of objects for which the &quot;highlight&quot; state changes
+    */
+    clearHighlights(clickedFeatures) {
+      if (Ember.isArray(clickedFeatures)) {
+        this.get(&#x27;selectedFeatures&#x27;)
+          .filter(feature =&gt; clickedFeatures.indexOf(feature) === -1 &amp;&amp; Ember.get(feature, &#x27;highlight&#x27;))
+          .forEach(feature =&gt; Ember.set(feature, &#x27;highlight&#x27;, false));
+      } else {
+        this.get(&#x27;selectedFeatures&#x27;)
+          .filter(feature =&gt; feature !== clickedFeatures &amp;&amp; Ember.get(feature, &#x27;highlight&#x27;))
+          .forEach(feature =&gt; Ember.set(feature, &#x27;highlight&#x27;, false));
+      }
     },
     /**
       Show\hide links list (if present).
@@ -849,6 +868,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               features: this.get(&#x27;maxResultsCount&#x27;) ? Ember.A(features).slice(0, this.get(&#x27;maxResultsCount&#x27;)) : Ember.A(features),
               maxResultsLimitOverage: this.get(&#x27;maxResultsCount&#x27;) &amp;&amp; features.length &gt; this.get(&#x27;maxResultsCount&#x27;) ? true : false,
               highlight: false,
+              expanded: features.length === 1,
               layerModel: layerModel,
               hasListForm: hasListForm,
               layerIds: layerIds,

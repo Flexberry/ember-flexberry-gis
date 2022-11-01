@@ -522,7 +522,16 @@ export default BaseVectorLayer.extend({
 
         insertedLayer.forEach(function (layer) {
           L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
-          if (leafletMap.hasLayer(layer._label)) {
+          if (!Ember.isNone(layer._labelAdditional) &amp;&amp; leafletObject.additionalZoomLabel) {
+            leafletObject.additionalZoomLabel.forEach(zoomLabels =&gt; {
+              let labelAdditional = layer._labelAdditional.filter(label =&gt; { return label.zoomCheck === zoomLabels.check; });
+              if (labelAdditional.length !== 0) {
+                L.FeatureGroup.prototype.removeLayer.call(zoomLabels, labelAdditional[0]);
+              }
+            });
+          }
+
+          if (!Ember.isNone(layer._label) &amp;&amp; leafletMap.hasLayer(layer._label)) {
             L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
           }
         });
@@ -586,10 +595,22 @@ export default BaseVectorLayer.extend({
   updateLabel(layer) {
     let leafletObject = this.get(&#x27;_leafletObject&#x27;);
 
-    if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;)) &amp;&amp; !Ember.isNone(this.get(&#x27;_leafletObject._labelsLayer&#x27;))) {
+    if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;)) &amp;&amp;
+      !Ember.isNone(this.get(&#x27;_leafletObject._labelsLayer&#x27;))) {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
       layer._label = null;
-      this._createStringLabel(leafletObject._labelsLayer, [layer]);
+      if (!Ember.isNone(layer._labelAdditional) &amp;&amp; leafletObject.additionalZoomLabel) {
+        leafletObject.additionalZoomLabel.forEach(zoomLabels =&gt; {
+          let labelAdditional = layer._labelAdditional.filter(label =&gt; { return label.zoomCheck === zoomLabels.check; });
+          if (labelAdditional.length !== 0) {
+            let id = layer._labelAdditional.indexOf(labelAdditional[0]);
+            L.FeatureGroup.prototype.removeLayer.call(zoomLabels, labelAdditional[0]);
+            delete layer._labelAdditional[id];
+          }
+        });
+      }
+
+      this._createStringLabel([layer], leafletObject._labelsLayer, leafletObject.additionalZoomLabel);
     }
   },
 
@@ -604,7 +625,16 @@ export default BaseVectorLayer.extend({
       L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
     });
 
-    if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;)) &amp;&amp; !Ember.isNone(this.get(&#x27;_leafletObject._labelsLayer&#x27;))) {
+    if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; leafletObject.additionalZoomLabel) {
+      leafletObject.additionalZoomLabel.forEach(zoomLabels =&gt; {
+        zoomLabels.eachLayer(layer =&gt; {
+          L.FeatureGroup.prototype.removeLayer.call(zoomLabels, layer);
+        });
+      });
+    }
+
+    if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;)) &amp;&amp;
+      !Ember.isNone(this.get(&#x27;_leafletObject._labelsLayer&#x27;))) {
       leafletObject._labelsLayer.eachLayer((layer) =&gt; {
         L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer);
       });
@@ -639,7 +669,20 @@ export default BaseVectorLayer.extend({
       leafletObject.models[id] = layer.model;
     }
 
-    if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;)) &amp;&amp; !Ember.isNone(this.get(&#x27;_leafletObject._labelsLayer&#x27;))) {
+    if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; leafletObject.additionalZoomLabel) {
+      if (!Ember.isNone(layer._labelAdditional) &amp;&amp; leafletObject.additionalZoomLabel) {
+        leafletObject.additionalZoomLabel.forEach(zoomLabels =&gt; {
+          let labelAdditional = layer._labelAdditional.filter(label =&gt; { return label.zoomCheck === zoomLabels.check; });
+          if (labelAdditional.length !== 0) {
+            L.FeatureGroup.prototype.removeLayer.call(zoomLabels, labelAdditional[0]);
+            delete layer._labelAdditional;
+          }
+        });
+      }
+    }
+
+    if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;)) &amp;&amp;
+      !Ember.isNone(this.get(&#x27;_leafletObject._labelsLayer&#x27;))) {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
     }
   },

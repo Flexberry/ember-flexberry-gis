@@ -430,6 +430,8 @@ import { zoomToBounds } from &#x27;../utils/zoom-to-bounds&#x27;;
 */
 export default Ember.Mixin.create({
 
+  serviceRenderer: null,
+
   actions: {
     /**
       Handles inner FeatureResultItem&#x27;s bubbled &#x27;selectFeature&#x27; action.
@@ -438,11 +440,17 @@ export default Ember.Mixin.create({
       @method actions.selectFeature
       @param {Object} feature Describes inner FeatureResultItem&#x27;s feature object or array of it.
       @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
+      @param {Boolean} clearLayers Flag indicating whether to clear the result service layer.
     */
-    selectFeature(feature, layerInteractive) {
+    selectFeature(feature, layerInteractive = false, clearLayers = true) {
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
       if (Ember.isNone(leafletMap)) {
         return;
+      }
+
+      let serviceRenderer = this.get(&#x27;serviceRenderer&#x27;);
+      if (Ember.isNone(serviceRenderer)) {
+        serviceRenderer = L.canvas({ pane: &#x27;overlayPane&#x27; });
       }
 
       let serviceLayer = this.get(&#x27;serviceLayer&#x27;);
@@ -453,10 +461,15 @@ export default Ember.Mixin.create({
 
       let selectedFeature = this.get(&#x27;_selectedFeature&#x27;);
       if (selectedFeature !== feature) {
-        serviceLayer.clearLayers();
+        if (clearLayers) {
+          serviceLayer.clearLayers();
+        }
 
         if (Ember.isArray(feature)) {
-          feature.forEach((item) =&gt; this._selectFeature(item, layerInteractive));
+
+          // Adding objects to the layer (serviceRenderer) occurs at the end, which confuses the hierarchy on the map.
+          // Correct addition, taking into account indexes - to the beginning
+          feature.reverse().forEach((item) =&gt; this._selectFeature(item, layerInteractive));
         } else {
           this._selectFeature(feature, layerInteractive);
         }
@@ -473,14 +486,15 @@ export default Ember.Mixin.create({
       @method actions.zoomTo
       @param {Object} feature Describes inner FeatureResultItem&#x27;s feature object or array of it.
       @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
+      @param {Boolean} clearLayers Flag indicating whether to clear the result service layer.
     */
-    zoomTo(feature, layerInteractive) {
+    zoomTo(feature, layerInteractive = false, clearLayers = true) {
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
       if (Ember.isNone(leafletMap)) {
         return;
       }
 
-      this.send(&#x27;selectFeature&#x27;, feature, layerInteractive);
+      this.send(&#x27;selectFeature&#x27;, feature, layerInteractive, clearLayers);
 
       let bounds;
       let serviceLayer = this.get(&#x27;serviceLayer&#x27;);
@@ -556,6 +570,13 @@ export default Ember.Mixin.create({
   */
   _prepareLayer(layer, layerInteractive) {
     layer.options.interactive = layerInteractive ? true : false;
+    if (layerInteractive) {
+      layer.options.pane = &#x27;overlayPane&#x27;;
+
+      let serviceRenderer = this.get(&#x27;serviceRenderer&#x27;);
+      layer.options.renderer = serviceRenderer;
+    }
+
     return layer;
   },
 
