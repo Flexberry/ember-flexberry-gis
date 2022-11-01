@@ -1,65 +1,72 @@
 <div class="{{flexberryClassNames.wrapper}}">
-  <div class="d-flex">
-    {{flexberry-button-dropdown class="flexberry-dropdown-button" clickButton=(action "onLayerModeChange")
-    items=layersButton value=layerMode}}
+  <div class="d-flex h-42">
+    {{flexberry-button-dropdown 
+      class="flexberry-dropdown-button" 
+      clickButton=(action "onLayerModeChange")
+      items=layersButton
+      value=layerMode
+    }}
 
-    {{flexberry-button-dropdown class="flexberry-dropdown-button ml-20" clickButton=(action "onToolModeChange")
-    items=toolsButton value=toolMode}}
+    {{flexberry-button-dropdown 
+      class="flexberry-dropdown-button ml-18" 
+      clickButton=(action "onToolModeChange")
+      items=toolsButton 
+      value=toolMode
+    }}
 
     {{flexberry-button
-    class=(concat flexberryClassNames.identifyMarker (if isBuffer " active ml-20" " ml-20"))
-    iconClass='icon-guideline-circle'
-    tooltip=markerCaption
-    click=(action "changeBuffer")
+      class=(concat flexberryClassNames.identifyMarker (if isBuffer " active ml-18" " ml-18"))
+      iconClass='icon-guideline-circle'
+      click=(action "changeBuffer")
     }}
 
     <div class="{{flexberryClassNames.otherOptions}} ml-auto">
       {{flexberry-button
-      class=flexberryClassNames.clearButton
-      iconClass=clearIconClass
-      tooltip=clearCaption
-      click=(action "onIdentificationClear")
+        class=flexberryClassNames.clearButton
+        iconClass=clearIconClass
+        click=(action "onIdentificationClear")
       }}
     </div>
   </div>
 
-  {{#if (eq toolMode "file")}}
-  <div class="wrapper">
-    <label id="ember1507" title="Очистить" class="wrapper-exit" onClick={{action "onToolModeChange" "rectangle" }}>
-      <i class="icon-guideline-cross-r "></i>
-    </label>
-    {{flexberry-identify-file leafletMap=leafletMap}}
-  </div>
-  {{/if}} 
-
   {{#if isBuffer}}
-  <div class="wrapper">
-    <label id="ember1507" class="wrapper-exit" title="Очистить" onClick={{action "changeBuffer" }}>
-      <i class="icon-guideline-cross-r"></i>
-    </label>
-    <label>{{bufferRadiusCaption}}</label>
-    <div class="buffer-tools d-flex">
-      <div class="field">
-        {{input
-        type="text"
-        value=bufferRadius
-        key-up=(action "onInputLimit")
-        }}
-      </div>
-      <div class="field">
-        {{#ui-dropdown class="item fluid selection" onChange=(action "onBufferUnitsChange")}}
-        <i class="dropdown icon"></i>
-        <div class="text">
-          {{t (get bufferUnitsList bufferUnits)}}
+    <div class="wrapper">
+      <label title="Очистить" class="wrapper-exit" onClick={{action "changeBuffer" }}>
+        <i class="icon-guideline-cross-r"></i>
+      </label>
+      <label>{{bufferRadiusCaption}}</label>
+      <div class="buffer-tools d-flex">
+        <div class="field">
+          {{input
+            type="text"
+            value=bufferRadius
+            key-up=(action "onInputLimit")
+          }}
         </div>
-        <div class="menu">
-          {{#each-in bufferUnitsList as |unitsValue unitsLocalizedCaptionPath|}}
-          <div class="item" data-value="{{unitsValue}}">{{t unitsLocalizedCaptionPath}}</div>
-          {{/each-in}}
+        <div class="field">
+          {{#ui-dropdown class="item fluid selection" onChange=(action "onBufferUnitsChange")}}
+          <i class="dropdown icon"></i>
+          <div class="text">
+            {{t (get bufferUnitsList bufferUnits)}}
+          </div>
+          <div class="menu">
+            {{#each-in bufferUnitsList as |unitsValue unitsLocalizedCaptionPath|}}
+              <div class="item" data-value="{{unitsValue}}">{{t unitsLocalizedCaptionPath}}</div>
+            {{/each-in}}
+          </div>
+          {{/ui-dropdown}}
         </div>
-        {{/ui-dropdown}}
       </div>
     </div>
-  </div>
   {{/if}}
+
+  {{#if (eq toolMode "file")}}
+    <div class="wrapper">
+      <label title="Очистить" class="wrapper-exit" onClick={{action "onToolModeChange" "rectangle" }}>
+        <i class="icon-guideline-cross-r "></i>
+      </label>
+      {{flexberry-identify-file leafletMap=leafletMap isAuthenticated=isAuthenticated layerColor=fileLayerColor}}
+    </div>
+  {{/if}} 
+
 </div>

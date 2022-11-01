@@ -24,6 +24,7 @@ export default IdentifyMapTool.extend({
 
   _enable() {
     this._super(...arguments);
+    let leafletMap = this.get('leafletMap');
 
     let editTools = this.get('_editTools');
     if (Ember.isNone(editTools)) {
@@ -32,8 +33,9 @@ export default IdentifyMapTool.extend({
       });
       this.set('_editTools', editTools);
     }
-    this.leafletMap.on('flexberry-map-loadfile:render', this._renderLayer, this);
-    this.leafletMap.on('flexberry-map-loadfile:identification', this._identificationLayer, this);
+
+    leafletMap.on('flexberry-map-loadfile:render', this._renderLayer, this);
+    leafletMap.on('flexberry-map-loadfile:identification', this._identificationLayer, this);
   },
 
   _disable() {
@@ -49,10 +51,13 @@ export default IdentifyMapTool.extend({
   },
 
   _clear() {
-    if (this.get('layer'))
+    if (this.get('layer')) {
       this.leafletMap.removeLayer(this.get('layer'));
-    if (this.get('_bufferLayer'))
+    }
+
+    if (this.get('_bufferLayer')) {
       this.leafletMap.removeLayer(this.get('_bufferLayer'));
+    }
   },
 
   _renderLayer({ layer }) {
@@ -82,7 +87,7 @@ export default IdentifyMapTool.extend({
     };
 
     this.leafletMap.fire('flexberry-map:identify', e);
-    
+
     e.results = Ember.isArray(e.results) ? e.results : Ember.A();
     let promises = Ember.A();
     e.results.forEach((result) => {
@@ -91,7 +96,7 @@ export default IdentifyMapTool.extend({
       }
 
       let features = Ember.get(result, 'features');
- 
+
       if (!(features instanceof Ember.RSVP.Promise)) {
         return;
       }

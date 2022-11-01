@@ -47,6 +47,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   classNames: ['layer-result-list'],
 
+  classNameBindings: ['resultsHeightClass'],
+
   /**
     Flag indicates if intersection panel is active.
 
