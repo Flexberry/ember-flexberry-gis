@@ -115,21 +115,6 @@ export default BaseLayer.extend({
   }),
 
   /**
-    @property _paneLabelMulti
-    @type String
-    @readOnly
-  */
-  /*_paneLabelMulti: Ember.computed('layerModel.id', 'labelSettings.signMapObjects', function () {
-    if (this.get('labelSettings.signMapObjects')) {
-      // to switch combine-layer
-      let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
-      return 'labelLayerMulti' + this.get('layerModel.id') + layerId;
-    }
-
-    return null;
-  }),*/
-
-  /**
     @property _renderer
     @type Object
     @readOnly
@@ -175,14 +160,6 @@ export default BaseLayer.extend({
         }
       });
     }
-
-    /*let thisPaneLabelMulti = this.get('_paneLabelMulti');
-    if (thisPaneLabelMulti && !Ember.isNone(leafletMap)) {
-      let pane = leafletMap.getPane(thisPaneLabelMulti);
-      if (pane) {
-        pane.style.zIndex = (Ember.isNone(this.get('labelSettings.index')) ? this.get('index') : this.get('labelSettings.index')) + begIndex + 1; //to make the label layer higher than the vector layer
-      }
-    }*/
   },
 
   _setFeaturesProcessCallback(leafletObject) {
@@ -2153,6 +2130,12 @@ export default BaseLayer.extend({
     }
   },
 
+  /**
+    Create pane for additional labels.
+
+    @method _additionalZoomLabelPane
+    @private
+  */
   _additionalZoomLabelPane() {
     let additionalZoomLabel = this.get('additionalZoomLabel');
     if (additionalZoomLabel) {
@@ -2182,10 +2165,6 @@ export default BaseLayer.extend({
     let leafletMap = this.get('leafletMap');
 
     let additionalZoomLabel = this.get('additionalZoomLabel');
-    if (Ember.isNone(additionalZoomLabel)) {
-      return;
-    }
-
     if (additionalZoomLabel && additionalZoomLabel.length > 0) {
       additionalZoomLabel.forEach(zoomLabels => {
         leafletMap.removeLayer(zoomLabels);
@@ -2193,11 +2172,9 @@ export default BaseLayer.extend({
     }
 
     let _labelsLayer = this.get('_labelsLayer');
-    if (Ember.isNone(_labelsLayer)) {
-      return;
+    if (!Ember.isNone(_labelsLayer)) {
+      leafletMap.removeLayer(_labelsLayer);
     }
-
-    leafletMap.removeLayer(_labelsLayer);
   },
 
   /**
