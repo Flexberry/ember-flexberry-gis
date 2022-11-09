@@ -47216,6 +47216,7 @@ img.item-minus {
   background: #fff;
   border: none;
   height: 32px;
+  cursor: pointer;
 }
 .ui.tab.compare .ui.icon.close i.remove.icon {
   padding-left: 2px;
@@ -47279,9 +47280,35 @@ img.item-minus {
 .create-edit-block-index::first-letter {
   color: #343A32;
 }
-.ui.help-button {
+.ui.popup.help-popup {
+  padding: 15px 25px 15px 45px;
+  max-width: 552px;
+  margin-top: -48px;
+  text-align: justify;
+}
+.ui.bottom.left.popup.help-popup::before {
+  content: "\e945";
+  font-family: 'guideline-icons';
+  transform: none;
+  height: auto;
+  width: auto;
+  box-shadow: none;
   background: transparent;
-  border: none;
+  font-size: 30px;
+  line-height: 1;
+  color: #343A32;
+  top: 16px;
+  left: 5px;
+}
+.ui.icon.button.help-button.no-lable-field-popup {
+  position: relative;
+  padding-top: 0;
+}
+.help-label {
+  position: relative;
+}
+.help-label .ui.icon.button.help-button {
+  top: -50%;
 }
 /*!
  * # Semantic UI - Sticky

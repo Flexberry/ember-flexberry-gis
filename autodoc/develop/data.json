@@ -45611,7 +45611,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 279,
+            "line": 286,
             "description": "Set background or tree side",
             "params": [
                 {
@@ -54059,7 +54059,7 @@
         },
         {
             "message": "Missing item type\nSet background or tree side",
-            "line": " addon/mixins/compare-layers.js:279"
+            "line": " addon/mixins/compare-layers.js:286"
         },
         {
             "message": "Missing item type\nExecutes component's DOM-related logic.",

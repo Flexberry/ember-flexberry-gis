@@ -674,9 +674,6 @@ export default Ember.Mixin.create({
         &#x27;active&#x27;: Ember.$(&#x27;.title.active&#x27;, element).length &gt; 0,
         &#x27;index&#x27;: index
       });
-      if (Ember.$(&#x27;.title.active&#x27;, element).length &gt; 0) {
-        Ember.$(&#x27;.title.active&#x27;, element)[0].click();
-      }
     });
 
     // Save sidebar state
@@ -684,8 +681,18 @@ export default Ember.Mixin.create({
 
     // Get next side state and open selected accordions
     let stateToSet = this.get(&#x60;compare.compareState.${side}.sidebarState&#x60;);
+    if (stateToSet.length === 0) {
+      tree.each(function () {
+        let element = Ember.$(this);
+        if (Ember.$(&#x27;.title.active&#x27;, element).length &gt; 0) {
+          Ember.$(&#x27;.title.active&#x27;, element)[0].click();
+        }
+      });
+    }
+
     stateToSet.forEach(node =&gt; {
-      if (node.active) {
+      let stateIsEqual = node.active === Ember.$(Ember.$(&#x27;.title&#x27;, tree[node.index])[0]).hasClass(&#x27;active&#x27;);
+      if (!stateIsEqual) {
         Ember.$(&#x27;.title&#x27;, tree[node.index])[0].click();
       }
     });
