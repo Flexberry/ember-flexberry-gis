@@ -769,6 +769,21 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   }),
 
   /**
+    Whether or not layer&#x27;s properties are readonly.
+  */
+  isPropertiesReadonly: Ember.computed(&#x27;layerModel.layerModel&#x27;, function () {
+    const layerId = this.get(&#x27;layerModel.layerModel.id&#x27;);
+    if (!Ember.isNone(layerId)) {
+      const canEditLayerPropertiesFunc = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;canEditLayerProperties&#x27;);
+      if (typeof canEditLayerPropertiesFunc === &#x27;function&#x27;) {
+        return !canEditLayerPropertiesFunc(layerId);
+      }
+    }
+
+    return false;
+  }),
+
+  /**
     Name of the selected group value.
 
     @property choiceValue

@@ -1132,6 +1132,9 @@ define('dummy/tests/integration/components/flexberry-maplayers-test', ['exports'
       },
       lookup: function lookup(val) {
         return null;
+      },
+      _lookupFactory: function _lookupFactory() {
+        return null;
       }
     });
 
