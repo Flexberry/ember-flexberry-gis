@@ -546,6 +546,11 @@
   }
 }
 
+// Убираю высоту для вложенных maplayers
+.ui.right.sidebar.treeview .flexberry-maplayers .flexberry-maplayers {
+  height: auto!important;
+}
+
 // ====== RGIS map-themes ========
 .sidebar-wrapper,
 .rgis-sidebar-wrapper {
