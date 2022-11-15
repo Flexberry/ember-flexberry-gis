@@ -2556,9 +2556,7 @@
         "addon/mixins/regenerated/models/new-platform-flexberry-g-i-s-layer-metadata.js": {
             "name": "addon/mixins/regenerated/models/new-platform-flexberry-g-i-s-layer-metadata.js",
             "modules": {},
-            "classes": {
-                "NewPlatformFlexberyGISLayerMetadataModelMixin": 1
-            },
+            "classes": {},
             "fors": {},
             "namespaces": {}
         },
@@ -2639,15 +2637,6 @@
             "modules": {},
             "classes": {
                 "NewPlatformFlexberyGISLayerMetadataOfflineSerializerMixin": 1
-            },
-            "fors": {},
-            "namespaces": {}
-        },
-        "addon/mixins/regenerated/serializers/new-platform-flexberry-g-i-s-layer-metadata.js": {
-            "name": "addon/mixins/regenerated/serializers/new-platform-flexberry-g-i-s-layer-metadata.js",
-            "modules": {},
-            "classes": {
-                "NewPlatformFlexberyGISLayerMetadataSerializerMixin": 1
             },
             "fors": {},
             "namespaces": {}
@@ -3746,7 +3735,6 @@
                 "IdentifyTopMixin": 1,
                 "IdentifyVisibleMixin": 1,
                 "NewPlatformFlexberyGISLayerLinkModelMixin": 1,
-                "NewPlatformFlexberyGISLayerMetadataModelMixin": 1,
                 "NewPlatformFlexberyGISLinkMetadataModelMixin": 1,
                 "NewPlatformFlexberyGISLinkParameterModelMixin": 1,
                 "NewPlatformFlexberyGISMapLayerModelMixin": 1,
@@ -3756,7 +3744,6 @@
                 "NewPlatformFlexberyGISLayerLinkOfflineSerializerMixin": 1,
                 "NewPlatformFlexberyGISLayerLinkSerializerMixin": 1,
                 "NewPlatformFlexberyGISLayerMetadataOfflineSerializerMixin": 1,
-                "NewPlatformFlexberyGISLayerMetadataSerializerMixin": 1,
                 "NewPlatformFlexberyGISLinkMetadataOfflineSerializerMixin": 1,
                 "NewPlatformFlexberyGISLinkMetadataSerializerMixin": 1,
                 "NewPlatformFlexberyGISLinkParameterOfflineSerializerMixin": 1,
@@ -7509,21 +7496,6 @@
             "description": "Mixin containing layer link model attributes, relations & projections.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Mixin.html\">Ember.Mixin</a>"
         },
-        "NewPlatformFlexberyGISLayerMetadataModelMixin": {
-            "name": "NewPlatformFlexberyGISLayerMetadataModelMixin",
-            "shortname": "NewPlatformFlexberyGISLayerMetadataModelMixin",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "module": "ember-flexberry-gis",
-            "namespace": "",
-            "file": "addon/mixins/regenerated/models/new-platform-flexberry-g-i-s-layer-metadata.js",
-            "line": 9,
-            "description": "Mixin containing layer metadata model attributes, relations & projections.",
-            "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Mixin.html\">Ember.Mixin</a>"
-        },
         "NewPlatformFlexberyGISLinkMetadataModelMixin": {
             "name": "NewPlatformFlexberyGISLinkMetadataModelMixin",
             "shortname": "NewPlatformFlexberyGISLinkMetadataModelMixin",
@@ -7657,21 +7629,6 @@
             "file": "addon/mixins/regenerated/serializers/new-platform-flexberry-g-i-s-layer-metadata-offline.js",
             "line": 7,
             "description": "Mixin containing initializetion logic for layer metadata offline serializer.",
-            "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Mixin.html\">Ember.Mixin</a>"
-        },
-        "NewPlatformFlexberyGISLayerMetadataSerializerMixin": {
-            "name": "NewPlatformFlexberyGISLayerMetadataSerializerMixin",
-            "shortname": "NewPlatformFlexberyGISLayerMetadataSerializerMixin",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "module": "ember-flexberry-gis",
-            "namespace": "",
-            "file": "addon/mixins/regenerated/serializers/new-platform-flexberry-g-i-s-layer-metadata.js",
-            "line": 7,
-            "description": "Mixin containing initializetion logic for layer metadata serializer.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Mixin.html\">Ember.Mixin</a>"
         },
         "NewPlatformFlexberyGISLinkMetadataOfflineSerializerMixin": {
@@ -45387,16 +45344,16 @@
         },
         {
             "file": "addon/mixins/regenerated/models/new-platform-flexberry-g-i-s-layer-metadata.js",
-            "line": 20,
-            "description": "Non-stored property for full text search combining 'name', 'description', and 'keywords'.\nSee computaton logic in related model's 'anyTextCompute' method).\nAlso see OpenGIS Catalogue Services Specification (ISO19115/ISO19119).",
+            "line": 9,
+            "description": "Non-stored property.",
             "itemtype": "property",
             "name": "anyText",
-            "class": "NewPlatformFlexberyGISLayerMetadataModelMixin",
+            "class": "NewPlatformFlexberyGISLinkMetadataModelMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/regenerated/models/new-platform-flexberry-g-i-s-layer-metadata.js",
-            "line": 29,
+            "line": 15,
             "description": "Method to set non-stored property.\nPlease, use code below in model class (outside of this mixin) otherwise it will be replaced during regeneration of models.\nPlease, implement 'anyTextCompute' method in model class (outside of this mixin) if you want to compute value of 'anyText' property.",
             "itemtype": "method",
             "name": "_anyTextCompute",
@@ -45405,7 +45362,7 @@
             "example": [
                 "\n  ```javascript\n  _anyTextChanged: Ember.on('init', Ember.observer('anyText', function() {\n    Ember.run.once(this, '_anyTextCompute');\n  }))\n  ```"
             ],
-            "class": "NewPlatformFlexberyGISLayerMetadataModelMixin",
+            "class": "NewPlatformFlexberyGISLinkMetadataModelMixin",
             "module": "ember-flexberry-gis"
         },
         {
