@@ -1,31 +1,17 @@
-/**
-  @module ember-flexberry-gis
-*/
-
 import Ember from 'ember';
 import DS from 'ember-data';
 import { Projection } from 'ember-flexberry-data';
 
-/**
-  Mixin containing layer metadata model attributes, relations & projections.
-
-  @class NewPlatformFlexberyGISLayerMetadataModelMixin
-  @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
-*/
 export let Model = Ember.Mixin.create({
   name: DS.attr('string'),
   description: DS.attr('string'),
   keyWords: DS.attr('string'),
-
   /**
-    Non-stored property for full text search combining 'name', 'description', and 'keywords'.
-    See computaton logic in related model's 'anyTextCompute' method).
-    Also see OpenGIS Catalogue Services Specification (ISO19115/ISO19119).
+    Non-stored property.
 
     @property anyText
   */
   anyText: DS.attr('string'),
-
   /**
     Method to set non-stored property.
     Please, use code below in model class (outside of this mixin) otherwise it will be replaced during regeneration of models.
@@ -44,18 +30,17 @@ export let Model = Ember.Mixin.create({
     let result = (this.anyTextCompute && typeof this.anyTextCompute === 'function') ? this.anyTextCompute() : null;
     this.set('anyText', result);
   },
-
   type: DS.attr('string'),
   settings: DS.attr('string'),
   scale: DS.attr('number'),
   coordinateReferenceSystem: DS.attr('string'),
   boundingBox: DS.attr('json'),
+  additionaldata: DS.attr('string'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),
   editTime: DS.attr('date'),
   editor: DS.attr('string'),
   linkMetadata: DS.hasMany('new-platform-flexberry-g-i-s-link-metadata', { inverse: 'layer', async: false }),
-
   getValidations: function () {
     let parentValidations = this._super();
     let thisValidations = {
@@ -64,7 +49,6 @@ export let Model = Ember.Mixin.create({
     };
     return Ember.$.extend(true, {}, parentValidations, thisValidations);
   },
-
   init: function () {
     this.set('validations', this.getValidations());
     this._super.apply(this, arguments);
@@ -73,61 +57,67 @@ export let Model = Ember.Mixin.create({
 
 export let defineProjections = function (modelClass) {
   modelClass.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-layer-metadata', {
-    name: Projection.attr('Наименование'),
-    creator: Projection.attr('Создатель'),
-    createTime: Projection.attr('Время создания'),
-    editor: Projection.attr('Редактор'),
-    editTime: Projection.attr('Время редактирования'),
+    name: Projection.attr('Наименование', { index: 0 }),
+    creator: Projection.attr('Создатель', { index: 1 }),
+    createTime: Projection.attr('Время создания', { index: 2 }),
+    editor: Projection.attr('Редактор', { index: 3 }),
+    editTime: Projection.attr('Время редактирования', { index: 4 }),
     linkMetadata: Projection.hasMany('new-platform-flexberry-g-i-s-link-metadata', '', {
-      allowShow: Projection.attr('Показывать'),
+      allowShow: Projection.attr('Показывать', { index: 0 }),
       layer: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
-      }),
+
+      }, { index: 1 }),
       mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
-      }),
+
+      }, { index: 2 }),
       parameters: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', 'Параметры связи', {
-        objectField: Projection.attr('Поле объекта'),
-        layerField: Projection.attr('Поле слоя'),
-        expression: Projection.attr('Выражение'),
-        queryKey: Projection.attr('Ключ запроса'),
-        linkField: Projection.attr('Поле связи'),
+        objectField: Projection.attr('Поле объекта', { index: 0 }),
+        layerField: Projection.attr('Поле слоя', { index: 1 }),
+        expression: Projection.attr('Выражение', { index: 2 }),
+        queryKey: Projection.attr('Ключ запроса', { index: 3 }),
+        linkField: Projection.attr('Поле связи', { index: 4 }),
         layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
-        })
+
+        }, { index: 5 })
       })
     })
   });
 
   modelClass.defineProjection('LayerMetadataE', 'new-platform-flexberry-g-i-s-layer-metadata', {
-    name: Projection.attr('Наименование'),
-    description: Projection.attr('Описание'),
-    keyWords: Projection.attr('Ключевые слова'),
-    type: Projection.attr('Тип'),
-    settings: Projection.attr('Настройки'),
-    scale: Projection.attr('Масштаб'),
-    coordinateReferenceSystem: Projection.attr('Система координат'),
-    boundingBox: Projection.attr('Граница'),
-    linkMetadata: Projection.hasMany('new-platform-flexberry-g-i-s-link-metadata', '', {
+    name: Projection.attr('Наименование', { index: 0 }),
+    description: Projection.attr('Описание', { index: 1 }),
+    keyWords: Projection.attr('Ключевые слова', { index: 2 }),
+    type: Projection.attr('Тип', { index: 3 }),
+    settings: Projection.attr('Настройки', { index: 4 }),
+    scale: Projection.attr('Масштаб', { index: 5 }),
+    coordinateReferenceSystem: Projection.attr('Система координат', { index: 6 }),
+    boundingBox: Projection.attr('Граница', { index: 7 }),
+    additionaldata: Projection.attr('Дополнительные данные', { index: 8 }),
+    linkMetadata:Projection. hasMany('new-platform-flexberry-g-i-s-link-metadata', '', {
       layer: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
-        name: Projection.attr('', { hidden: true })
-      }, { displayMemberPath: 'name' }),
+        name: Projection.attr('', { index: 1, hidden: true })
+      }, { index: 0, displayMemberPath: 'name' }),
       mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
-        typeName: Projection.attr('', { hidden: true })
-      }, { displayMemberPath: 'typeName' }),
-      allowShow: Projection.attr('Показывать'),
+        typeName: Projection.attr('', { index: 3, hidden: true })
+      }, { index: 2, displayMemberPath: 'typeName' }),
+      allowShow: Projection.attr('Показывать', { index: 4 }),
       parameters: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', 'Параметры связи', {
-        objectField: Projection.attr('Поле объекта'),
-        layerField: Projection.attr('Поле слоя'),
-        expression: Projection.attr('Выражение'),
-        queryKey: Projection.attr('Ключ запроса'),
-        linkField: Projection.attr('Поле связи'),
+        objectField: Projection.attr('Поле объекта', { index: 0 }),
+        layerField: Projection.attr('Поле слоя', { index: 1 }),
+        expression: Projection.attr('Выражение', { index: 2 }),
+        queryKey: Projection.attr('Ключ запроса', { index: 3 }),
+        linkField: Projection.attr('Поле связи', { index: 4 }),
         layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
-        }, { hidden: true })
+
+        }, { index: 5, hidden: true })
       })
     })
   });
 
   modelClass.defineProjection('LayerMetadataL', 'new-platform-flexberry-g-i-s-layer-metadata', {
-    name: Projection.attr('Наименование'),
-    description: Projection.attr('Описание'),
-    type: Projection.attr('Тип')
+    name: Projection.attr('Наименование', { index: 0 }),
+    description: Projection.attr('Описание', { index: 1 }),
+    type: Projection.attr('Тип', { index: 2 }),
+    additionaldata: Projection.attr('Дополнительные данные', { index: 3 }),
   });
 };

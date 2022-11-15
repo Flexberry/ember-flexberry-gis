@@ -30,20 +30,20 @@ export default {
         parameters: {
           __caption__: 'Параметры связи',
           objectField: {
-          __caption__: 'Поле объекта'
-        },
+            __caption__: 'Поле объекта'
+          },
           layerField: {
-          __caption__: 'Поле слоя'
-        },
+            __caption__: 'Поле слоя'
+          },
           expression: {
-          __caption__: 'Выражение'
-        },
+            __caption__: 'Выражение'
+          },
           queryKey: {
-          __caption__: 'Ключ запроса'
-        },
+            __caption__: 'Ключ запроса'
+          },
           linkField: {
-          __caption__: 'Поле связи'
-        },
+            __caption__: 'Поле связи'
+          },
           layerLink: {
             __caption__: 'Связь'
           }
@@ -75,6 +75,9 @@ export default {
       boundingBox: {
         __caption__: 'Граница'
       },
+      additionaldata: {
+        __caption__: 'Дополнительные данные'
+      },
       linkMetadata: {
         __caption__: '',
         layer: {
@@ -95,20 +98,20 @@ export default {
         parameters: {
           __caption__: 'Параметры связи',
           objectField: {
-          __caption__: 'Поле объекта'
-        },
+            __caption__: 'Поле объекта'
+          },
           layerField: {
-          __caption__: 'Поле слоя'
-        },
+            __caption__: 'Поле слоя'
+          },
           expression: {
-          __caption__: 'Выражение'
-        },
+            __caption__: 'Выражение'
+          },
           queryKey: {
-          __caption__: 'Ключ запроса'
-        },
+            __caption__: 'Ключ запроса'
+          },
           linkField: {
-          __caption__: 'Поле связи'
-        },
+            __caption__: 'Поле связи'
+          },
           layerLink: {
             __caption__: 'Связь'
           }

@@ -78,6 +78,15 @@
       "stored": true
     },
     {
+      "name": "additionaldata",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
       "name": "createTime",
       "type": "date",
       "flexberryType": "AuditNullableDateTime",
@@ -216,6 +225,12 @@
           "caption": "Граница",
           "hidden": false,
           "index": 7
+        },
+        {
+          "name": "additionaldata",
+          "caption": "Дополнительные данные",
+          "hidden": false,
+          "index": 8
         }
       ],
       "belongsTo": [],
