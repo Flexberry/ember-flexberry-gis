@@ -105,9 +105,7 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
           request.respond(200, { 'Content-Type': 'application/json' },
             '{"type":"FeatureCollection","features":[],"totalFeatures":0,"numberMatched":0,"numberReturned":0,"timeStamp":"2020-02-27T04:44:49.909Z",' +
             '"crs":null}');
-        }
-
-        if (request.requestBody.indexOf('<wfs:GetFeature') !== -1) {
+        } else if (request.requestBody.indexOf('<wfs:GetFeature') !== -1) {
           request.respond(200, { 'Content-Type': 'application/json' },
             '{"type":"FeatureCollection","features":[{"type":"Feature","id":"vydel_utverzhdeno_polygon.06350c71-ec5c-431e-a5ab-e423cf662128",' +
             '"geometry":{"type":"MultiPolygon","coordinates":[[[[6215353.89391635,8117916.10977998],[6215317.82640125,8117408.36954415],' +
@@ -121,9 +119,10 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
             'null,"area":373798.7024302,"length":null,"primarykey":"06350c71-ec5c-431e-a5ab-e423cf662128","createtime":null,"creator":null,' +
             '"edittime":null,"editor":null}}],"totalFeatures":1,"numberMatched":1,"numberReturned":1,"timeStamp":"2020-02-27T04:44:49.909Z",' +
             '"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::3857"}}}');
-        }
-
-        if (request.requestBody.indexOf('<wfs:DescribeFeatureType') !== -1) {
+        } else if (request.requestBody.indexOf('<wfs:DescribeFeatureType xmlns:wfs="http://www.opengis.net/wfs" service="WFS" version="1.1.0">' +
+          '<TypeName>les:test') !== -1) {
+          request.respond(404, { 'error': 'Error' }, null);
+        } else if (request.requestBody.indexOf('<wfs:DescribeFeatureType') !== -1) {
           request.respond(200, { 'Content-Type': 'text/plain;charset=utf-8' },
             '<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" ' +
             'xmlns:rgisperm="http://rgis.permkrai.ru" elementFormDefault="qualified" targetNamespace="http://rgis.permkrai.ru">' +
@@ -1293,6 +1292,130 @@ test('test getNearObject without wpsUrl, Nearest object not found', function (as
       });
       assert.ok(promise instanceof Ember.RSVP.Promise);
       done(1);
+    });
+  });
+});
+
+test('test _createVectorLayer with error', function (assert) {
+  assert.expect(5);
+  var done = assert.async(1);
+  Ember.run(() => {
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let layerModel = store.createRecord('new-platform-flexberry-g-i-s-map-layer');
+    layerModel.settingsAsObject = { pkField:'primarykey' };
+    component.set('layerModel', layerModel);
+
+    let wfstSpy = sinon.spy(L, 'wfst');
+
+    let wfsLayer = component._createVectorLayer(null, options);
+    assert.ok(wfsLayer, 'Create layer');
+    assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+    assert.ok(wfsLayer.error, 'Create layer with error');
+    assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+    assert.equal(wfstSpy.callCount, 1, 'Create layer');
+
+    done();
+
+    wfstSpy.restore();
+  });
+});
+
+test('test _createVectorLayer without error', function (assert) {
+  assert.expect(5);
+  var done = assert.async(1);
+  Ember.run(() => {
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let layerModel = store.createRecord('new-platform-flexberry-g-i-s-map-layer');
+    layerModel.settingsAsObject = { pkField:'primarykey' };
+    component.set('layerModel', layerModel);
+    let featuresReadFormat = component.getFeaturesReadFormat();
+    let layer = L.wfst(options, featuresReadFormat);
+
+    let wfstSpy = sinon.spy(L, 'wfst');
+
+    let wfsLayer = component._createVectorLayer(layer, options, featuresReadFormat);
+    assert.ok(wfsLayer, 'Create layer');
+    assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+    assert.notOk(wfsLayer.error, 'Create layer without error');
+    assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+    assert.equal(wfstSpy.callCount, 0, 'Layer already create');
+
+    done();
+
+    wfstSpy.restore();
+  });
+});
+
+test('test createVectorLayer without error', function (assert) {
+  assert.expect(8);
+  var done = assert.async(1);
+  Ember.run(() => {
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let layerModel = store.createRecord('new-platform-flexberry-g-i-s-map-layer');
+    layerModel.settingsAsObject = { pkField:'primarykey' };
+    component.set('layerModel', layerModel);
+
+    let wfstSpy = sinon.spy(L, 'wfst');
+    let createVectorLayerSpy = sinon.spy(component, 'createVectorLayer');
+    let _createVectorLayerSpy = sinon.spy(component, '_createVectorLayer');
+
+    component.createVectorLayer(options).then((wfsLayer) => {
+      assert.ok(wfsLayer, 'Create layer');
+      assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+      assert.notOk(wfsLayer.error, 'Create layer without error');
+      assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+      assert.equal(wfstSpy.callCount, 1, 'Create layer');
+      assert.equal(createVectorLayerSpy.callCount, 1, 'Call createVectorLayer');
+      assert.equal(_createVectorLayerSpy.callCount, 2, 'Call _createVectorLayer');
+      assert.ok(_createVectorLayerSpy.getCall(0).args[0], 'Call _createVectorLayer');
+
+      done();
+
+      wfstSpy.restore();
+      createVectorLayerSpy.restore();
+      _createVectorLayerSpy.restore();
+    });
+  });
+});
+
+test('test createVectorLayer with error', function (assert) {
+  assert.expect(8);
+  var done = assert.async(1);
+  Ember.run(() => {
+    param.typeName = 'test';
+    options.typeName = 'test';
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let layerModel = store.createRecord('new-platform-flexberry-g-i-s-map-layer');
+    layerModel.settingsAsObject = { pkField:'primarykey' };
+    component.set('layerModel', layerModel);
+
+    let wfstSpy = sinon.spy(L, 'wfst');
+    let createVectorLayerSpy = sinon.spy(component, 'createVectorLayer');
+    let _createVectorLayerSpy = sinon.spy(component, '_createVectorLayer');
+
+    component.createVectorLayer(options).then((wfsLayer) => {
+      assert.ok(wfsLayer, 'Create layer');
+      assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+      assert.ok(wfsLayer.error, 'Create layer without error');
+      assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+      assert.equal(wfstSpy.callCount, 3, 'Create layer');
+      assert.equal(createVectorLayerSpy.callCount, 1, 'Call createVectorLayer');
+      assert.equal(_createVectorLayerSpy.callCount, 2, 'Call _createVectorLayer');
+      assert.notOk(_createVectorLayerSpy.getCall(0).args[0], 'Call _createVectorLayer');
+
+      done();
+
+      wfstSpy.restore();
+      createVectorLayerSpy.restore();
+      _createVectorLayerSpy.restore();
     });
   });
 });
