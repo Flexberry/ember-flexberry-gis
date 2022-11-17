@@ -27,7 +27,7 @@ export default BaseLayer.extend({
     @type String[]
     @default ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'legend']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'legend'],
+  operations: ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes', 'editFeatures', 'legend'],
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -72,5 +72,17 @@ export default BaseLayer.extend({
     });
 
     return settings;
+  },
+
+  /**
+    Indicates whether related layer is vector layer.
+
+    @method isVectorType
+    @param {Object} layer Layer model.
+    @param {Boolean} howVector.
+    @returns {Boolean}
+  */
+  isVectorType(layer) {
+    return true;
   }
 });

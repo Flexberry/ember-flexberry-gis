@@ -66,3 +66,36 @@
 .leaflet-popup-pane { z-index: 2000; }
 .leaflet-tooltip-pane { z-index: 2000; }
 .leaflet-overlay-pane { z-index: 2000; }
+.leaflet-zoomto-pane { z-index: 2000; }
+
+.hidden {
+  display: none !important;
+}
+
+.leaflet-marker-icon.label.point  {
+  display: flex;
+
+  &.over {
+    align-items: end;
+  }
+
+  &.along {
+    align-items: center;
+  }
+
+  &.under {
+    align-items: start;
+  }
+
+  &.left {
+    justify-content: end;
+  }
+
+  &.right {
+    justify-content: start;
+  }
+
+  &.middle {
+    justify-content: center;
+  }
+}

@@ -3,6 +3,7 @@
  */
 
 import Ember from 'ember';
+import { zoomToBounds } from '../utils/zoom-to-bounds';
 
 /**
   Mixin with the logic of finding a feature on the map.
@@ -12,6 +13,8 @@ import Ember from 'ember';
 */
 export default Ember.Mixin.create({
 
+  serviceRenderer: null,
+
   actions: {
     /**
       Handles inner FeatureResultItem's bubbled 'selectFeature' action.
@@ -19,11 +22,18 @@ export default Ember.Mixin.create({
 
       @method actions.selectFeature
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
+      @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
+      @param {Boolean} clearLayers Flag indicating whether to clear the result service layer.
     */
-    selectFeature(feature) {
+    selectFeature(feature, layerInteractive = false, clearLayers = true) {
       let leafletMap = this.get('leafletMap');
       if (Ember.isNone(leafletMap)) {
         return;
+      }
+
+      let serviceRenderer = this.get('serviceRenderer');
+      if (Ember.isNone(serviceRenderer)) {
+        serviceRenderer = L.canvas({ pane: 'overlayPane' });
       }
 
       let serviceLayer = this.get('serviceLayer');
@@ -34,12 +44,17 @@ export default Ember.Mixin.create({
 
       let selectedFeature = this.get('_selectedFeature');
       if (selectedFeature !== feature) {
-        serviceLayer.clearLayers();
+        if (clearLayers) {
+          serviceLayer.clearLayers();
+        }
 
         if (Ember.isArray(feature)) {
-          feature.forEach((item) => this._selectFeature(item));
+
+          // Adding objects to the layer (serviceRenderer) occurs at the end, which confuses the hierarchy on the map.
+          // Correct addition, taking into account indexes - to the beginning
+          feature.reverse().forEach((item) => this._selectFeature(item, layerInteractive));
         } else {
-          this._selectFeature(feature);
+          this._selectFeature(feature, layerInteractive);
         }
 
         this.set('_selectedFeature', feature);
@@ -53,14 +68,16 @@ export default Ember.Mixin.create({
       Select passed feature and zoom map to its layer bounds
       @method actions.zoomTo
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
+      @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
+      @param {Boolean} clearLayers Flag indicating whether to clear the result service layer.
     */
-    zoomTo(feature) {
+    zoomTo(feature, layerInteractive = false, clearLayers = true) {
       let leafletMap = this.get('leafletMap');
       if (Ember.isNone(leafletMap)) {
         return;
       }
 
-      this.send('selectFeature', feature);
+      this.send('selectFeature', feature, layerInteractive, clearLayers);
 
       let bounds;
       let serviceLayer = this.get('serviceLayer');
@@ -72,22 +89,9 @@ export default Ember.Mixin.create({
       }
 
       if (!Ember.isNone(bounds)) {
-        // 'bound.pad(1)' bounds with zoom decreased by 1 point (padding).
-        //  That allows to make map's bounds slightly larger than serviceLayer's bounds to make better UI.
-
-        let sidebarElement = Ember.$('.sidebar-wrapper:visible .sidebar');
-        const widthPadding = sidebarElement.width() || 0;
-
-        let bottompanelElement = Ember.$('.bottompanel-wrapper:visible .bottom.bottompanel');
-        const heightPadding = bottompanelElement.height() || 0;
-
-        let bboxZoom = leafletMap.getBoundsZoom(bounds.pad(1));
         let minZoom = Ember.isArray(feature) ? Ember.get(feature[0], 'leafletLayer.minZoom') : Ember.get(feature, 'leafletLayer.minZoom');
-        if (!Ember.isNone(minZoom) && minZoom > bboxZoom) {
-          leafletMap.flyToBounds(bounds, { paddingTopLeft: [0 - widthPadding, 0], maxZoom: minZoom });
-        } else {
-          leafletMap.fitBounds(bounds.pad(1), { paddingTopLeft: [0 - widthPadding, 0] });
-        }
+        let maxZoom = Ember.isArray(feature) ? Ember.get(feature[0], 'leafletLayer.maxZoom') : Ember.get(feature, 'leafletLayer.maxZoom');
+        zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
       }
     },
 
@@ -111,7 +115,6 @@ export default Ember.Mixin.create({
 
       // TODO: pass action with panTo latLng outside
       this.get('leafletMap').panTo(latLng);
-      this.send('selectFeature', feature);
     },
 
     /**
@@ -133,22 +136,30 @@ export default Ember.Mixin.create({
 
     @method _selectFeature
     @param {Object} feature Describes feature object or array of it.
+    @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
     @private
   */
-  _selectFeature(feature) {
+  _selectFeature(feature, layerInteractive) {
     let serviceLayer = this.get('serviceLayer');
     if (!Ember.isNone(feature)) {
-      serviceLayer.addLayer(this._prepareLayer(feature.leafletLayer));
+      serviceLayer.addLayer(this._prepareLayer(feature.leafletLayer, layerInteractive));
     }
   },
 
   /**
     Additional preparation of the selected layer.
-
-    @param Object layer
+    @param {Object} layer
+    @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
   */
-  _prepareLayer(layer) {
-    layer.options.interactive = false;
+  _prepareLayer(layer, layerInteractive) {
+    layer.options.interactive = layerInteractive ? true : false;
+    if (layerInteractive) {
+      layer.options.pane = 'overlayPane';
+
+      let serviceRenderer = this.get('serviceRenderer');
+      layer.options.renderer = serviceRenderer;
+    }
+
     return layer;
   },
 

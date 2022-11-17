@@ -28,7 +28,7 @@ export default WmsLayer.extend({
     @type String[]
     @default ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'filter']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'filter'],
+  operations: ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'editFeatures', 'filter'],
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -67,5 +67,21 @@ export default WmsLayer.extend({
     let wfsLayer = owner.lookup('layer:wfs');
 
     return wfsLayer.createSearchSettings();
+  },
+
+  /**
+    Indicates whether related layer is vector layer.
+
+    @method isVectorType
+    @param {Object} layer Layer model.
+    @param {Boolean} howVector Sometimes (in intersection panel) wms-wfs layer can work how a vector (example for identify).
+    @returns {Boolean}
+  */
+  isVectorType(layer, howVector) {
+    if (howVector) {
+      return true;
+    }
+
+    return false;
   }
 });

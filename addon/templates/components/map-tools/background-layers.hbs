@@ -1,13 +1,23 @@
 <div class={{flexberryClassNames.div}}>
   {{#if isVisible}}
-      <div class="main-background-layers">
-        {{#each items as |item|}}
-          <div class="child-background-layers {{item.class}}" onclick={{action "onLayerClick" item.layer}}>
-            <img src="{{item.pic}}" class="picture {{item.classActive}}">
-            <p>{{item.name}}</p>
-          </div>
-        {{/each}}
-      </div>
+    <div class="main-background-layers {{if (and compare.compareLayersEnabled (not ignoreCompareMode)) "tabs" ""}}">
+      {{#if (and compare.compareLayersEnabled (not ignoreCompareMode))}}
+        <div class="ui pointing group secondary menu">
+          <a class="tab {{if (eq compare.backgroundSide "Left") "active"}}" onclick={{action "setSide" "backgroundSide" "Left"}}>
+            {{t "components.flexberry-maplayers.left-part"}}
+          </a>
+          <a class="tab {{if (eq compare.backgroundSide "Right") "active"}}" onclick={{action "setSide" "backgroundSide" "Right"}}>
+            {{t "components.flexberry-maplayers.right-part"}}
+          </a>
+        </div>
+      {{/if}}
+      {{#each items as |item|}}
+        <div class="child-background-layers {{item.class}}" onclick={{action "onLayerClick" item.layer}}>
+          <img src="{{item.pic}}" class="picture {{item.classActive}}">
+          <p>{{item.name}}</p>
+        </div>
+      {{/each}}
+    </div>
   {{/if}}
   {{map-tools/base
     class=(concat flexberryClassNames.wrapper)

@@ -109,7 +109,7 @@ let FlexberryMapComponent = Ember.Component.extend(
   leafletOptions: [
 
     // Map state options.
-    'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs', 'preferCanvas', 'editable',
+    'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs', 'preferCanvas', 'editable', 'wheelPxPerZoomLevel',
 
     // Interaction options.
     'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
@@ -181,6 +181,16 @@ let FlexberryMapComponent = Ember.Component.extend(
     @default true
   */
   editable: true,
+
+  /**
+    How many scroll pixels (as reported by L.DomEvent.getWheelDelta) mean a change of one full zoom level.
+    Smaller values will make wheel-zooming faster (and vice versa).
+
+    @property wheelPxPerZoomLevel
+    @type Number
+    @default 60
+  */
+  wheelPxPerZoomLevel: 60,
 
   /**
     Forces the map's zoom level to always be a multiple of this.
@@ -522,7 +532,6 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     if (this.get('mainMap')) {
       this.initServiceLayer(leafletMap);
-      this.initClickOnPanes(leafletMap);
 
       // Run search query if 'queryFilter' is defined.
       let queryFilter = this.get('queryFilter');
@@ -583,7 +592,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       const readyMapLayers = mapApi.getFromApi('readyMapLayers');
       const errorMapLayers = mapApi.getFromApi('errorMapLayers');
 
-      const rejected = array.filter((item) => { return item.state === 'rejected'; }).length > 0;
+      const rejected = array.filter((item) => { return item.state === 'rejected' || Ember.isNone(item.value);  }).length > 0;
 
       if (!Ember.isNone(readyMapLayers) && !rejected) {
         readyMapLayers();
@@ -681,66 +690,6 @@ let FlexberryMapComponent = Ember.Component.extend(
     if (this.get('mainMap')) {
       this.get('mapApi').addToApi('leafletMap', leafletMap);
     }
-  },
-
-  initClickOnPanes(leafletMap) {
-    let pane = leafletMap.getPane('overlayPane');
-    L.DomEvent.on(pane, 'click', function (e) {
-      if (e._stopped) { return; }
-
-      var target = e.target;
-
-      // Проблема с пробрасыванием кликов была только из-за введения разных canvas. Если клик попал на другой элемент, то работает стандартная логика
-      if (target.tagName.toLowerCase() !== 'canvas') {
-        return;
-      }
-
-      // в стандартные pane теперь попадают только всякие сервисные вещи, поэтому zoom проверять не будем
-      var point = leafletMap.mouseEventToLayerPoint(e);
-      let intersect = false;
-
-      const checkIntersect = (layer) => {
-        let innerLayerIntersect = false;
-        if (typeof (layer.eachLayer) === 'function') {
-          layer.eachLayer(function (l) {
-            innerLayerIntersect = innerLayerIntersect || checkIntersect(l);
-            if (innerLayerIntersect) {
-              return innerLayerIntersect;
-            }
-          });
-        } else {
-          if (typeof (layer._containsPoint) === 'function') {
-            innerLayerIntersect = innerLayerIntersect || layer._containsPoint(point);
-          }
-        }
-
-        return innerLayerIntersect;
-      };
-
-      leafletMap.eachLayer((l) => {
-        if (l.getPane() === pane) {
-          intersect = intersect || checkIntersect(l);
-        }
-      });
-
-      if (intersect) {
-        return;
-      }
-
-      var ev = new MouseEvent(e.type, e);
-      let removed = { node: target, pointerEvents: target.style.pointerEvents };
-      target.style.pointerEvents = 'none';
-      target = document.elementFromPoint(e.clientX, e.clientY);
-
-      if (target && target !== pane && target.parentElement && target.parentElement.classList.value.indexOf('leaflet-vectorLayer') !== -1) {
-        let stopped = !target.dispatchEvent(ev);
-        if (stopped || ev._stopped) {
-          L.DomEvent.stop(e);
-        }
-      }
-
-      removed.node.style.pointerEvents = removed.pointerEvents;
-    });
   },
 
   /**

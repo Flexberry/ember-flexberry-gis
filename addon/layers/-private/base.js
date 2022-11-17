@@ -67,7 +67,9 @@ const createcommonLabelSettings = function () {
     },
     scaleRange: {
       minScaleRange: null,
-      maxScaleRange: null
+      maxScaleRange: null,
+      minScaleRangeMultiLabel: null,
+      maxScaleRangeMultiLabel: null,
     }
   };
 };
@@ -212,9 +214,10 @@ export default Ember.Object.extend({
     @param {String} expression Filter string
     @param {String} geometryField Layer's geometry field
     @param {Boolean} isInnerExpression Indicates it's inner expression or not
+    @param {Object} layerLinks layerLinks
     @returns {Object} Filter object for layer
   */
-  parseFilter(expression, geometryField, isInnerExpression) {
+  parseFilter(expression, geometryField, isInnerExpression, layerLinks) {
     const logicalExp = /^\s*([Aa][Nn][Dd]|[Oo][Rr]|[Nn][Oo][Tt])\s*\((.+)\)\s*$/;
     const conditionExp = /^\s*('[^']+'|"[^"]+")\s*(=|<|>|<=|>=|!=|[Ii]?[Ll][Ii][Kk][Ee])\s*('[^']+'|"[^"]+"|[Nn][Uu][Ll][Ll])\s*$/;
     const geometryExp = /^\s*((?:[Nn][Oo][Tt]\s)?[Ii][Nn])\s*\((.+)\)\s*$/;
@@ -237,7 +240,23 @@ export default Ember.Object.extend({
         conditionExpResult[3] = '';
       }
 
-      return this.parseFilterConditionExpression(conditionExpResult[1], conditionExpResult[2].toLowerCase(), conditionExpResult[3]);
+      let field = conditionExpResult[1];
+
+      if (field.startsWith('@') && !Ember.isNone(layerLinks) && layerLinks.length > 0) {
+        layerLinks.forEach((link) => {
+          let linkParameters = link.get('parameters');
+
+          if (Ember.isArray(linkParameters) && linkParameters.length > 0) {
+            let linkParam = linkParameters.filter(linkParam => linkParam.get('queryKey') === field.slice(1));
+            if (!Ember.isNone(linkParam) && linkParam.length > 0) {
+              field = linkParam[0].get('layerField');
+              return;
+            }
+          }
+        });
+      }
+
+      return this.parseFilterConditionExpression(field, conditionExpResult[2].toLowerCase(), conditionExpResult[3]);
     }
 
     let logicalExpResult = logicalExp.exec(exp);
@@ -254,7 +273,7 @@ export default Ember.Object.extend({
           }
 
           if (logicalExp.test(condition) || conditionExp.test(condition) || geometryExp.test(condition)) {
-            properties.addObject(this.parseFilter(condition, geometryField, true));
+            properties.addObject(this.parseFilter(condition, geometryField, true, layerLinks));
             propertiesString = propertiesString.slice(index + 1);
             index = 0;
           }
@@ -266,7 +285,7 @@ export default Ember.Object.extend({
           }
 
           if (logicalExp.test(propertiesString) || conditionExp.test(propertiesString) || geometryExp.test(propertiesString)) {
-            properties.addObject(this.parseFilter(propertiesString, geometryField, true));
+            properties.addObject(this.parseFilter(propertiesString, geometryField, true, layerLinks));
           } else {
             return null;
           }
@@ -337,4 +356,16 @@ export default Ember.Object.extend({
   parseFilterGeometryExpression(condition, geoJSON, geometryField) {
     assert('BaseLayer\'s \'parseFilterBboxExpression\' should be overridden.');
   },
+
+  /**
+    Indicates whether related layer is vector layer.
+
+    @method isVectorType
+    @param {Object} layer Layer model.
+    @param {Boolean} howVector.
+    @returns {Boolean}
+  */
+  isVectorType(layer) {
+    return false;
+  }
 });

@@ -10,6 +10,7 @@ import FlexberryLayersActionsHandlerMixin from '../mixins/flexberry-layers-actio
 import LayerResultListActionsHandlerMixin from '../mixins/layer-result-list-actions-handler';
 import LocalStorageBindingMixin from '../mixins/local-storage-binding';
 import FavoritesListMixin from '../mixins/favorites-features';
+import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
 /**
   Edit map controller.
@@ -28,15 +29,6 @@ export default EditFormController.extend(
   LayerResultListActionsHandlerMixin,
   LocalStorageBindingMixin,
   FavoritesListMixin, {
-
-    /**
-      Flag indicates if comapre tool active.
-
-      @property compareLayersEnabled
-      @type Boolean
-      @default false
-    */
-    compareLayersEnabled: false,
 
     /**
       Leaflet map.
@@ -203,7 +195,7 @@ export default EditFormController.extend(
     createLayer(options) {
       options = options || {};
       let parentLayer = Ember.get(options, 'parentLayer');
-      let layerProperties = Ember.get(options, 'layerProperties');
+      let layerProperties = Ember.$.extend({ id: generateUniqueId() }, Ember.get(options, 'layerProperties'));
 
       let store = this.get('store');
       let layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', layerProperties);
@@ -261,5 +253,37 @@ export default EditFormController.extend(
       }
 
       return layer;
+    },
+    actions:{
+      onMapLeafletInit() {
+        this._super(...arguments);
+        let leafletMap = this.get('leafletMap');
+        let pane = leafletMap.getPane('overlayPane');
+
+        L.DomEvent.on(pane, 'click', function (e) {
+          if (e._stopped) { return; }
+
+          var target = e.target;
+
+          // Проблема с пробрасыванием кликов была только из-за введения разных canvas. Если клик попал на другой элемент, то работает стандартная логика
+          if (target.tagName.toLowerCase() !== 'canvas') {
+            return;
+          }
+
+          var ev = new MouseEvent(e.type, e);//новый клик
+          let removed = { node: target, pointerEvents: target.style.pointerEvents };//
+          target.style.pointerEvents = 'none';//выключение кликов для ev
+          target = document.elementFromPoint(e.clientX, e.clientY);//в ту же точку новый клик
+
+          if (target && target !== pane && target.parentElement && target.parentElement.classList.value.indexOf('leaflet-vectorLayer') !== -1) {
+            let stopped = !target.dispatchEvent(ev);
+            if (stopped || ev._stopped) {
+              L.DomEvent.stop(e);
+            }
+          }
+
+          removed.node.style.pointerEvents = removed.pointerEvents;
+        });
+      },
     }
   });

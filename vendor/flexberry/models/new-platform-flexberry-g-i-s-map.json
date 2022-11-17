@@ -2,104 +2,18 @@
   "name": "NewPlatformFlexberryGISMap",
   "modelName": "new-platform-flexberry-g-i-s-map",
   "className": "Map",
+  "nameSpace": "NewPlatform.Flexberry.GIS",
   "parentModelName": null,
   "parentClassName": null,
   "attrs": [
-    {
-      "name": "name",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": true,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "flexberryType": "stringMax",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "keyWords",
-      "type": "string",
-      "flexberryType": "stringMax",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "anyText",
-      "type": "string",
-      "flexberryType": "stringMax",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": false
-    },
-    {
-      "name": "lat",
-      "type": "number",
-      "flexberryType": "double",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "lng",
-      "type": "number",
-      "flexberryType": "double",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "zoom",
-      "type": "number",
-      "flexberryType": "double",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "public",
-      "type": "boolean",
-      "flexberryType": "bool",
-      "notNull": true,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "scale",
-      "type": "number",
-      "flexberryType": "int",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "coordinateReferenceSystem",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "boundingBox",
-      "type": "string",
-      "flexberryType": "Geography",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
     {
       "name": "createTime",
       "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "creator",
@@ -107,7 +21,8 @@
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "editTime",
@@ -115,7 +30,8 @@
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "editor",
@@ -123,7 +39,125 @@
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": true,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "keyWords",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "anyText",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": false,
+      "ordered": false
+    },
+    {
+      "name": "lat",
+      "type": "decimal",
+      "flexberryType": "double",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "lng",
+      "type": "decimal",
+      "flexberryType": "double",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "zoom",
+      "type": "decimal",
+      "flexberryType": "double",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "public",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": true,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "scale",
+      "type": "number",
+      "flexberryType": "int",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "coordinateReferenceSystem",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "boundingBox",
+      "type": "string",
+      "flexberryType": "Geography",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "owner",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "picture",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
     }
   ],
   "belongsTo": [],
@@ -280,6 +314,12 @@
           "caption": "Граница",
           "hidden": false,
           "index": 9
+        },
+        {
+          "name": "picture",
+          "caption": "Изображение",
+          "hidden": false,
+          "index": 10
         }
       ],
       "belongsTo": [],
@@ -326,6 +366,12 @@
           "caption": "Общая",
           "hidden": false,
           "index": 4
+        },
+        {
+          "name": "picture",
+          "caption": "Изображение",
+          "hidden": false,
+          "index": 5
         }
       ],
       "belongsTo": [],
@@ -333,5 +379,6 @@
     }
   ],
   "stored": true,
-  "offline": true
+  "offline": true,
+  "external": false
 }

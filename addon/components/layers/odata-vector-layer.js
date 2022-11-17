@@ -11,13 +11,17 @@ import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 import GisAdapter from 'ember-flexberry-gis/adapters/odata';
 import DS from 'ember-data';
 import jsts from 'npm:jsts';
-const { Builder } = Query;
+import { capitalize, camelize } from 'ember-flexberry-data/utils/string-functions';
+import isUUID from 'ember-flexberry-data/utils/is-uuid';
+import moment from 'moment';
+import getBooleanFromString from '../../utils/get-boolean-from-string';
+import { getDateFormatFromString, createTimeInterval } from '../../utils/get-date-from-string';
 
 /**
   For batch reading
 */
 const maxBatchFeatures = 10000;
-
+const { Builder } = Query;
 /**
   Investment layer component for leaflet map.
 
@@ -26,7 +30,20 @@ const maxBatchFeatures = 10000;
  */
 export default BaseVectorLayer.extend({
 
-  leafletOptions: ['attribution', 'pane', 'styles'],
+  leafletOptions: [
+    'attribution',
+    'pane',
+    'styles',
+    'crs',
+    'showExisting',
+    'continueLoading',
+    'filter',
+    'forceMulti',
+    'dynamicModel',
+    'metadataUrl',
+    'odataUrl',
+    'projectionName'
+  ],
 
   clusterize: false,
 
@@ -40,35 +57,18 @@ export default BaseVectorLayer.extend({
     @method save
   */
   save() {
-    let _this = this;
-    let leafletObject = _this.get('_leafletObject');
+    let leafletObject = this.get('_leafletObject');
     let leafletMap = this.get('leafletMap');
-    leafletObject.eachLayer(function (layer) {
+    leafletObject.eachLayer(layer => {
       if (Ember.get(layer, 'model.hasDirtyAttributes')) {
         if (layer.state === state.insert) {
-          const geometryField = _this.get('geometryField') || 'geometry';
-          let geometryObject = Ember.A();
-          let coordinates = Ember.A();
-          let type = Ember.get(layer, 'feature.geometry.type');
-          if (layer instanceof L.Marker) {
-            coordinates = _this.transformToCoords(layer._latlng);
-          } else {
-            coordinates = _this.transformToCoords(layer._latlngs, type);
-          }
-
-          if (_this.get('forceMulti') && (layer.toGeoJSON().geometry.type === 'Polygon' || layer.toGeoJSON().geometry.type === 'LineString')) {
-            geometryObject = [coordinates];
-          } else {
-            geometryObject = coordinates;
-          }
-
-          Ember.set(layer, 'feature.geometry.coordinates', geometryObject);
+          let coordinates = this._getGeometry(layer);
+          Ember.set(layer, 'feature.geometry.coordinates', coordinates);
         }
       }
     }, leafletObject);
 
     let modelsLayer = leafletObject.models;
-    const store = this.get('store');
     if (modelsLayer.length > 0) {
       let insertedIds = leafletObject.getLayers().map((layer) => {
         if (layer.state === state.insert) {
@@ -105,17 +105,24 @@ export default BaseVectorLayer.extend({
 
         insertedLayer.forEach(function (layer) {
           L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
-          if (leafletMap.hasLayer(layer._label)) {
-            leafletMap.removeLayer(layer._label);
-            let id = leafletObject.getLayerId(layer._label);
-            delete leafletObject._labelsLayer[id];
+          if (!Ember.isNone(layer._labelAdditional) && leafletObject.additionalZoomLabel) {
+            leafletObject.additionalZoomLabel.forEach(zoomLabels => {
+              let labelAdditional = layer._labelAdditional.filter(label => { return label.zoomCheck === zoomLabels.check; });
+              if (labelAdditional.length !== 0) {
+                L.FeatureGroup.prototype.removeLayer.call(zoomLabels, labelAdditional[0]);
+              }
+            });
+          }
+
+          if (!Ember.isNone(layer._label) && leafletMap.hasLayer(layer._label)) {
+            L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
           }
         });
 
         if (insertedModelId.length > 0) {
-          _this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(_this.layerModel.get('id'), insertedModelId, true)
+          this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(this.layerModel.get('id'), insertedModelId, true, true)
             .then(([, lObject, featureLayer]) => {
-              _this._setLayerState();
+              this._setLayerState();
               leafletObject.fire('save:success', { layers: featureLayer });
             });
         } else {
@@ -171,10 +178,22 @@ export default BaseVectorLayer.extend({
   updateLabel(layer) {
     let leafletObject = this.get('_leafletObject');
 
-    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
+      !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
       layer._label = null;
-      this._createStringLabel(leafletObject._labelsLayer, [layer]);
+      if (!Ember.isNone(layer._labelAdditional) && leafletObject.additionalZoomLabel) {
+        leafletObject.additionalZoomLabel.forEach(zoomLabels => {
+          let labelAdditional = layer._labelAdditional.filter(label => { return label.zoomCheck === zoomLabels.check; });
+          if (labelAdditional.length !== 0) {
+            let id = layer._labelAdditional.indexOf(labelAdditional[0]);
+            L.FeatureGroup.prototype.removeLayer.call(zoomLabels, labelAdditional[0]);
+            delete layer._labelAdditional[id];
+          }
+        });
+      }
+
+      this._createStringLabel([layer], leafletObject._labelsLayer, leafletObject.additionalZoomLabel);
     }
   },
 
@@ -188,6 +207,21 @@ export default BaseVectorLayer.extend({
     leafletObject.eachLayer((layer) => {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
     });
+
+    if (this.get('labelSettings.signMapObjects') && leafletObject.additionalZoomLabel) {
+      leafletObject.additionalZoomLabel.forEach(zoomLabels => {
+        zoomLabels.eachLayer(layer => {
+          L.FeatureGroup.prototype.removeLayer.call(zoomLabels, layer);
+        });
+      });
+    }
+
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
+      !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+      leafletObject._labelsLayer.eachLayer((layer) => {
+        L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer);
+      });
+    }
 
     return leafletObject;
   },
@@ -218,7 +252,20 @@ export default BaseVectorLayer.extend({
       leafletObject.models[id] = layer.model;
     }
 
-    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+    if (this.get('labelSettings.signMapObjects') && leafletObject.additionalZoomLabel) {
+      if (!Ember.isNone(layer._labelAdditional) && leafletObject.additionalZoomLabel) {
+        leafletObject.additionalZoomLabel.forEach(zoomLabels => {
+          let labelAdditional = layer._labelAdditional.filter(label => { return label.zoomCheck === zoomLabels.check; });
+          if (labelAdditional.length !== 0) {
+            L.FeatureGroup.prototype.removeLayer.call(zoomLabels, labelAdditional[0]);
+            delete layer._labelAdditional;
+          }
+        });
+      }
+    }
+
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
+      !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
     }
   },
@@ -229,15 +276,23 @@ export default BaseVectorLayer.extend({
     @method addLayer
     @param layer
   */
-  addLayer(layer) {
-    let leafletObject = this.get('_leafletObject');
+  addLayer(layer, leafletObject) {
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
+
+    if (!layer) {
+      // явная ошибка, не должно быть такой ситуации
+      return leafletObject;
+    }
 
     if (layer.state && layer.state !== state.insert) {
       L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
       return;
     }
 
-    const model = this.get('store').createRecord(this.get('modelName'), layer.feature.properties || {});
+    const featureProperties = Ember.$.extend({ id: generateUniqueId() }, layer.feature.properties);
+    const model = this.get('store').createRecord(this.get('modelName'), featureProperties);
     const geometryField = this.get('geometryField') || 'geometry';
     const geometryObject = {};
     let typeModel = this.get('geometryType');
@@ -278,28 +333,6 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-    Get geometry from layer in ewkt array
-
-    @method _getGeometry
-    @param {Object} layer
-  */
-  _getGeometry(layer) {
-    let coordinates = Ember.A();
-    let type = layer.toGeoJSON().geometry.type;
-    if (layer instanceof L.Marker) {
-      coordinates = this.transformToCoords(layer._latlng);
-    } else {
-      coordinates = this.transformToCoords(layer._latlngs, type);
-    }
-
-    if (this.get('forceMulti') && (type === 'Polygon' || type === 'LineString')) {
-      return [coordinates];
-    } else {
-      return coordinates;
-    }
-  },
-
-  /**
     Set layer properties
 
     @method _setLayerProperties
@@ -312,6 +345,8 @@ export default BaseVectorLayer.extend({
     layer.options.crs = this.get('crs');
     layer.model = model;
     layer.modelProj = modelProj;
+    layer.minZoom = this.get('minZoom');
+    layer.maxZoom = this.get('maxZoom');
     layer.feature = {
       type: 'Feature',
       geometry: geometry,
@@ -389,7 +424,11 @@ export default BaseVectorLayer.extend({
         queryBuilder.top(maxFeatures);
       }
 
-      queryBuilder.where(filter);
+      filter = this.addCustomFilter(filter);
+      if (!Ember.isNone(filter)) {
+        queryBuilder.where(filter);
+      }
+
       let build = queryBuilder.build();
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
       let intersectionArea = config.APP.intersectionArea;
@@ -409,6 +448,7 @@ export default BaseVectorLayer.extend({
 
         models.forEach(model => {
           let feat = this.addLayerObject(layer, model, false);
+          Ember.set(feat.feature, 'arch', this.get('hasTime') || false);
           features.push(feat.feature);
         });
 
@@ -468,19 +508,70 @@ export default BaseVectorLayer.extend({
     let leafletObject = this.get('_leafletObject');
     if (!Ember.isNone(leafletObject)) {
       let type = this.get('layerModel.type');
-      if (!Ember.isBlank(type)) {
-        let layerClass = Ember.getOwner(this).knownForType('layer', type);
-        let layerProperties = layerClass.getLayerProperties(leafletObject);
+      if (!Ember.isBlank(type) && !Ember.isBlank(e.searchOptions.queryString)) {
+        let store = Ember.getOwner(this).lookup('service:store');
+        let modelConstructor = store.modelFor(leafletObject.modelName);
+        let layerProperties = Ember.get(modelConstructor, `attributes`);
         searchFields.forEach((field) => {
-          let ind = layerProperties.indexOf(field);
-          if (ind > -1) {
-            let layerPropertyType = typeof layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            if (layerPropertyType !== 'string' || (layerPropertyType === 'object' && layerPropertyValue instanceof Date)) {
-              equals.push(new Query.SimplePredicate(field, Query.FilterOperator.Eq, e.searchOptions.queryString));
-            } else {
-              equals.push(new Query.StringPredicate(field).contains(e.searchOptions.queryString));
+          let property = layerProperties.get(field);
+          e.searchOptions.queryString = e.searchOptions.queryString.trim();
+          if (field === 'primarykey') {
+            if (isUUID(e.searchOptions.queryString)) {
+              equals.push(new Query.SimplePredicate('id', Query.FilterOperator.Eq, e.searchOptions.queryString));
             }
+
+            return;
+          }
+
+          if (!Ember.isNone(property)) {
+            switch (property.type) {
+              case 'decimal':
+              case 'number':
+                let searchValue = e.searchOptions.queryString ? e.searchOptions.queryString.replace(',', '.') : e.searchOptions.queryString;
+                if (!isNaN(Number(searchValue))) {
+                  equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, searchValue));
+                } else {
+                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to numeric type`);
+                }
+
+                break;
+              case 'date':
+                let dateInfo = getDateFormatFromString(e.searchOptions.queryString);
+                let searchDate = moment(e.searchOptions.queryString, dateInfo.dateFormat + dateInfo.timeFormat, true);
+                if (dateInfo.dateFormat && searchDate.isValid()) {
+                  let [startInterval, endInterval] = createTimeInterval(searchDate, dateInfo.dateFormat);
+
+                  if (endInterval) {
+                    let startIntervalCondition = new Query.DatePredicate(property.name, Query.FilterOperator.Geq, startInterval, false);
+                    let endIntervalCondition = new Query.DatePredicate(property.name, Query.FilterOperator.Le, endInterval, false);
+                    equals.push(new Query.ComplexPredicate(Query.Condition.And, startIntervalCondition, endIntervalCondition));
+                  } else if (dateInfo.timeFormat === 'THH:mm:ss.SSSSZ') {
+                    equals.push(new Query.DatePredicate(property.name, Query.FilterOperator.Eq, startInterval, false));
+                  } else {
+                    equals.push(new Query.DatePredicate(property.name, Query.FilterOperator.Eq, startInterval, true));
+                  }
+                } else {
+                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to date type`);
+                }
+
+                break;
+              case 'boolean':
+                let booleanValue = getBooleanFromString(e.searchOptions.queryString);
+
+                if (typeof booleanValue === 'boolean') {
+                  equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, booleanValue));
+                } else {
+                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to boolean type`);
+                }
+
+                break;
+              default:
+                equals.push(new Query.StringPredicate(property.name).contains(e.searchOptions.queryString));
+
+                break;
+            }
+          } else {
+            console.error(`The field name: \"${field}\" is incorrect, check the name of the search attribute in the layer settings`);
           }
         });
       }
@@ -488,14 +579,14 @@ export default BaseVectorLayer.extend({
 
     let filter;
     if (equals.length === 0) {
-      return;
+      return Ember.RSVP.resolve(Ember.A());
     } else if (equals.length === 1) {
       filter = equals[0];
     } else {
       filter = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
     }
 
-    let featuresPromise = this._getFeature(filter, e.searchOptions.maxResultsCount);
+    let featuresPromise = this._getFeature(filter, e.searchOptions.maxResultsCount + 1);
 
     return featuresPromise;
   },
@@ -604,10 +695,13 @@ export default BaseVectorLayer.extend({
     return props;
   },
 
-  _addLayersOnMap(layers) {
-    let leafletObject = this.get('_leafletObject');
+  _addLayersOnMap(layers, leafletObject) {
+    if (!leafletObject) {
+      leafletObject = this.get('_leafletObject');
+    }
+
     layers.forEach((layer) => {
-      leafletObject.addLayer(layer);
+      leafletObject.addLayer(layer, leafletObject);
     });
 
     this._super(...arguments);
@@ -693,8 +787,6 @@ export default BaseVectorLayer.extend({
     @return {Object} Model
   */
   createModel(modelMixin) {
-    let modelName = this.get('modelName');
-    let projectionName = this.get('projectionName');
     let namespace = this.get('namespace');
     let model = Projection.Model.extend(modelMixin);
     model.reopenClass({
@@ -768,7 +860,14 @@ export default BaseVectorLayer.extend({
       }
     });
 
-    let modelSerializer = Serializer.Odata.extend(serializer);
+    let baseSerializer;
+    let odataSerializer = this.get('odataSerializer');
+    if (!Ember.isNone(odataSerializer)) {
+      baseSerializer = Ember.getOwner(this)._lookupFactory(`serializer:${odataSerializer}`);
+    }
+
+    let modelSerializer = !Ember.isNone(baseSerializer) ? baseSerializer.extend(serializer) : Serializer.Odata.extend(serializer);
+
     return modelSerializer;
   },
 
@@ -791,6 +890,7 @@ export default BaseVectorLayer.extend({
             if (!Ember.isNone(dataModel)) {
               let parentModelName = dataModel.parentModelName;
               if (Ember.isNone(parentModelName)) {
+                _this.set('namespace', dataModel.nameSpace);
                 let modelMixin = _this.createMixin(dataModel);
                 let model = _this.createModel(modelMixin);
                 resolve({ model: model, dataModel: dataModel, modelMixin: modelMixin });
@@ -850,6 +950,11 @@ export default BaseVectorLayer.extend({
       if (Ember.isNone(modelRegistered) || Ember.isNone(mixinRegistered)) {
         this.сreateModelHierarchy(metadataUrl, modelName).then(({ model, dataModel, modelMixin }) => {
           model.defineProjection(projectionName, modelName, this.createProjection(dataModel));
+
+          // Необходимо еще раз проверить регистрацию, т.к. могут быть слои с одной моделью, а код - асинхронный
+          modelRegistered = Ember.getOwner(this)._lookupFactory(`model:${modelName}`);
+          mixinRegistered = Ember.getOwner(this)._lookupFactory(`mixin:${modelName}`);
+
           if (Ember.isNone(modelRegistered)) {
             Ember.getOwner(this).register(`model:${modelName}`, model);
           }
@@ -928,6 +1033,7 @@ export default BaseVectorLayer.extend({
     // for check zoom
     layer.leafletMap = leafletMap;
     this.set('loadedBounds', null);
+    this._setFeaturesProcessCallback(layer);
     let load = this.continueLoad(layer);
     layer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
     return layer;
@@ -980,39 +1086,26 @@ export default BaseVectorLayer.extend({
     return crs.unproject(point);
   },
 
-  /**
-   Projects geometry from latlng to coords.
-
-   @method transformToCoords
-   @param {Leaflet Object} latlngs
-   @param {String} type
-   @returns coordinates in GeoJSON
-   */
-  transformToCoords(latlngs, type) {
-    if (Array.isArray(latlngs[0]) || (!(latlngs instanceof L.LatLng) && (latlngs[0] instanceof L.LatLng))) {
-      let coords = [];
-      for (let i = 0; i < latlngs.length; i++) {
-        coords.push(this.transformToCoords(latlngs[i], type));
-      }
-
-      // ewkt requires closeing polygon
-      if (!Ember.isNone(type) && type.indexOf('Polygon') !== -1 && !Array.isArray(coords[0][0])) {
-        let first = coords[0];
-        coords.push(first);
-      }
-
-      return coords;
-    }
-
-    const crs = this.get('crs');
-    const latLng = latlngs instanceof L.LatLng ? latlngs : L.latLng(latlngs[1], latlngs[0]);
-    const point = crs.project(latLng);
-    return [point.x, point.y];
-  },
-
   createReadFormat() {
-    let readFormat = this._super(...arguments);
-    readFormat.featureType.geometryFields = [this.get('geometryType')];
+    let crs = this.get('crs');
+    let geometryField = this.get('geometryField') || 'geometry';
+    let readFormat = new L.Format.GeoJSON({ crs, geometryField });
+    readFormat.featureType = new L.GML.FeatureType({
+      geometryField: geometryField
+    });
+
+    let store = Ember.getOwner(this).lookup('service:store');
+    let modelConstructor = store.modelFor(this.get('modelName'));
+    let layerProperties = Ember.get(modelConstructor, `attributes`);
+
+    layerProperties.forEach((property) => {
+      if (property.name !== geometryField) {
+        readFormat.featureType.appendField(property.name, property.type);
+      }
+    });
+
+    readFormat.featureType.geometryFields[geometryField] = this.get('geometryType');
+    readFormat.excludedProperties = [];
     return readFormat;
   },
 
@@ -1044,9 +1137,6 @@ export default BaseVectorLayer.extend({
       return;
     }
 
-    let builder = new Builder(store)
-      .from(modelName)
-      .selectByProjection(projectionName);
     return {
       store: store,
       modelName: modelName,
@@ -1068,7 +1158,8 @@ export default BaseVectorLayer.extend({
       try {
         let leafletObject = this.get('_leafletObject');
         let featureIds = e.featureIds;
-        if (!leafletObject.options.showExisting) {
+
+        if (!leafletObject.options.showExisting || e.loadNew) {
           let getLoadedFeatures = (featureIds) => {
             let loadIds = [];
             leafletObject.eachLayer((shape) => {
@@ -1111,7 +1202,7 @@ export default BaseVectorLayer.extend({
             });
 
             if (!Ember.isEmpty(remainingFeat)) {
-              queryBuilder.where(makeFilterEqOr(remainingFeat));
+              queryBuilder.where(this.addCustomFilter(makeFilterEqOr(remainingFeat)));
             } else { // If objects is already loaded, return leafletObject
               resolve(leafletObject);
               return;
@@ -1120,7 +1211,7 @@ export default BaseVectorLayer.extend({
             let alreadyLoaded = getLoadedFeatures(null);
             let filterEqOr = makeFilterEqOr(alreadyLoaded);
             if (!Ember.isNone(filterEqOr)) {
-              queryBuilder.where(new Query.NotPredicate(makeFilterEqOr(alreadyLoaded)));
+              queryBuilder.where(this.addCustomFilter(new Query.NotPredicate(makeFilterEqOr(alreadyLoaded))));
             }
           }
 
@@ -1172,10 +1263,67 @@ export default BaseVectorLayer.extend({
         .top(1)
         .count();
 
+      let filter = this.addCustomFilter(null);
+      if (!Ember.isNone(filter)) {
+        queryBuilder.where(filter);
+      }
+
       store.query(modelName, queryBuilder.build()).then((result) => {
         resolve(result.meta.count);
       });
     });
+  },
+
+  customFilter: Ember.computed('layerModel.archTime', 'hasTime', 'modelName', function () {
+    let predicates = [];
+    if (this.get('hasTime')) {
+      let time = this.get('layerModel.archTime');
+      let formattedTime;
+      if (Ember.isBlank(time) || time === 'present' || Ember.isNone(time)) {
+        formattedTime = moment().toISOString();
+      } else {
+        formattedTime = moment(time).toISOString();
+      }
+
+      predicates.push(new Query.DatePredicate('archiveStart', Query.FilterOperator.Leq, formattedTime));
+    }
+
+    predicates.push(new Query.IsOfPredicate(this.get('modelName')));
+
+    if (predicates.length > 0) {
+      if (predicates.length === 1) {
+        return predicates[0];
+      } else {
+        return new Query.ComplexPredicate(Query.Condition.And, ...predicates);
+      }
+    }
+
+    return null;
+  }),
+
+  addCustomFilter(filter) {
+    let customFilter = this.get('customFilter');
+    let layerFilter = this.get('filter');
+    let resultFilter = Ember.A();
+    if (!Ember.isNone(layerFilter) && layerFilter instanceof Query.BasePredicate) {
+      resultFilter.pushObject(layerFilter);
+    }
+
+    if (!Ember.isNone(filter) && filter instanceof Query.BasePredicate) {
+      resultFilter.pushObject(filter);
+    }
+
+    if (!Ember.isNone(customFilter) && customFilter instanceof Query.BasePredicate) {
+      resultFilter.pushObject(customFilter);
+    }
+
+    if (resultFilter.length === 0) {
+      return null;
+    } else if (resultFilter.length === 1) {
+      return resultFilter[0];
+    } else {
+      return new Query.ComplexPredicate(Query.Condition.And, ...resultFilter);
+    }
   },
 
   /**
@@ -1218,9 +1366,9 @@ export default BaseVectorLayer.extend({
               .selectByProjection(obj.projectionName);
 
             if (equals.length === 1) {
-              queryBuilder.where(equals[0]);
+              queryBuilder.where(this.addCustomFilter(equals[0]));
             } else {
-              queryBuilder.where(new Query.ComplexPredicate(Query.Condition.Or, ...equals));
+              queryBuilder.where(this.addCustomFilter(new Query.ComplexPredicate(Query.Condition.Or, ...equals)));
             }
 
             let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
@@ -1243,6 +1391,11 @@ export default BaseVectorLayer.extend({
                   .skip(skip)
                   .orderBy('id');
 
+                let customFilter = this.addCustomFilter(null);
+                if (!Ember.isNone(customFilter)) {
+                  queryBuilder.where(customFilter);
+                }
+
                 promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
                 count -= maxBatchFeatures;
                 skip += maxBatchFeatures;
@@ -1255,6 +1408,11 @@ export default BaseVectorLayer.extend({
                   .top(count)
                   .skip(skip)
                   .orderBy('id');
+
+                let customFilter = this.addCustomFilter(null);
+                if (!Ember.isNone(customFilter)) {
+                  queryBuilder.where(customFilter);
+                }
 
                 promises.push(obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store));
               }
@@ -1297,27 +1455,27 @@ export default BaseVectorLayer.extend({
     Handles zoomend
   */
   continueLoad(leafletObject) {
-    let loadedBounds = this.get('loadedBounds');
-
-    if (!leafletObject) {
+    if (!leafletObject || !(leafletObject instanceof L.FeatureGroup)) {
       leafletObject = this.get('_leafletObject');
     }
 
-    let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletObject)) {
-      let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
+      // it's from api showAllLayerObjects, to load objects if layer is not visibility
+      let showLayerObjects = (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
+      let show = this.get('visibility');
       let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
+      let showExisting = leafletObject.options.showExisting && !leafletObject.options.continueLoading && Ember.isEmpty(Object.values(leafletObject._layers));
 
-      if (continueLoad && show && checkMapZoom(leafletObject)) {
+      let promise;
+
+      if ((continueLoad && show && checkMapZoom(leafletObject)) || (showLayerObjects && continueLoad)) {
+        let loadedBounds = this.get('loadedBounds');
+        let leafletMap = this.get('leafletMap');
+        let obj = this.get('_adapterStoreModelProjectionGeom');
         let bounds = L.rectangle(leafletMap.getBounds());
         if (!Ember.isNone(leafletObject.showLayerObjects)) {
           leafletObject.showLayerObjects = false;
         }
-
-        let obj = this.get('_adapterStoreModelProjectionGeom');
-        let queryBuilder = new Builder(obj.store)
-          .from(obj.modelName)
-          .selectByProjection(obj.projectionName);
 
         let oldPart;
         if (!Ember.isNone(loadedBounds)) {
@@ -1351,47 +1509,79 @@ export default BaseVectorLayer.extend({
         let queryNewBounds = new Query.GeometryPredicate(obj.geometryField);
         let newPart = queryNewBounds.intersects(loadedBounds.toEWKT(this.get('crs')));
         let filter = oldPart ? new Query.ComplexPredicate(Query.Condition.And, oldPart, newPart) : newPart;
-        let layerFilter = this.get('filter');
-        filter = Ember.isEmpty(layerFilter) ? filter : new Query.ComplexPredicate(Query.Condition.And, filter, layerFilter);
 
-        queryBuilder.where(filter);
-
-        let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
-
-        let promise = new Ember.RSVP.Promise((resolve, reject) => {
-          objs.then(res => {
-            let models = res;
-            if (typeof res.toArray === 'function') {
-              models = res.toArray();
-            }
-
-            let innerLayers = [];
-            models.forEach(model => {
-              let l = this.addLayerObject(leafletObject, model, false);
-              innerLayers.push(l);
-            });
-
-            let e = { layers: innerLayers, results: Ember.A() };
-            leafletObject.fire('load', e);
-
-            Ember.RSVP.allSettled(e.results).then(() => {
-              this._setLayerState();
-              resolve();
-            });
-          });
-        });
-
-        if (leafletObject.statusLoadLayer) {
-          leafletObject.promiseLoadLayer = promise;
-        }
-
-        return promise;
-      } else if (leafletObject.statusLoadLayer) {
-        leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
-        return Ember.RSVP.resolve('The layer does not require loading');
+        promise = this._downloadFeaturesWithOrNotFilter(leafletObject, obj, filter);
+      } else if (showExisting || (showExisting && showLayerObjects)) {
+        promise = this._downloadFeaturesWithOrNotFilter(leafletObject, this.get('_adapterStoreModelProjectionGeom'), null);
+      } else {
+        promise = Ember.RSVP.resolve('The layer does not require loading');
       }
+
+      if (leafletObject.statusLoadLayer) {
+        leafletObject.promiseLoadLayer = promise;
+      }
+
+      return promise;
     } else {
       return Ember.RSVP.reject('leafletObject is none');
+    }
+  },
+
+  _downloadFeaturesWithOrNotFilter(leafletObject, obj, filter) {
+    let queryBuilder = new Builder(obj.store)
+      .from(obj.modelName)
+      .selectByProjection(obj.projectionName);
+
+    filter = this.addCustomFilter(filter);
+    if (!Ember.isNone(filter)) {
+      queryBuilder.where(filter);
+    }
+
+    let objs = obj.adapter.batchLoadModel(obj.modelName, queryBuilder.build(), obj.store);
+
+    let promise = new Ember.RSVP.Promise((resolve, reject) => {
+      objs.then(res => {
+        let models = res;
+        if (typeof res.toArray === 'function') {
+          models = res.toArray();
+        }
+
+        let innerLayers = [];
+        models.forEach(model => {
+          let l = this.addLayerObject(leafletObject, model, false);
+          innerLayers.push(l);
+        });
+
+        let e = { layers: innerLayers, results: Ember.A() };
+        leafletObject.fire('load', e);
+
+        Ember.RSVP.allSettled(e.results).then(() => {
+          this._setLayerState();
+          resolve();
+        });
+      });
+    });
+
+    if (leafletObject.statusLoadLayer) {
+      leafletObject.promiseLoadLayer = promise;
+    }
+
+    return promise;
+  },
+
+  /**
+    Adds a listener function to leafletMap.
+
+    @method onLeafletMapEvent
+    @return nothing.
+  */
+  onLeafletMapEvent() {
+    this._super(...arguments);
+
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.on('moveend', this.continueLoad, this);
+      leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
     }
   },
 
@@ -1400,55 +1590,91 @@ export default BaseVectorLayer.extend({
   */
   didInsertElement() {
     this._super(...arguments);
-
-    let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
-      leafletMap.on('moveend', () => { this.continueLoad(); });
-      leafletMap.on('flexberry-map:moveend', this._continueLoad, this);
-    }
+    this.onLeafletMapEvent();
   },
 
-  clearChanges() {
+  /**
+    Deinitializes DOM-related component's properties.
+  */
+  willDestroyElement() {
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.off('moveend', this.continueLoad, this);
+      leafletMap.off('flexberry-map:moveend', this._continueLoad, this);
+    }
+
+    this._super(...arguments);
+  },
+
+  /**
+    Clear changes.
+
+    @method clearChanges
+    @param {Array} ids Array contains internal leaflet IDs for a layer.
+    @return {Array} Array contains primarykey features which need load.
+  */
+  clearChanges(ids) {
     let leafletObject = this.get('_leafletObject');
     let editTools = leafletObject.leafletMap.editTools;
 
     let featuresIds = [];
-    leafletObject.models.forEach((model, layerId) => {
-      let layer = leafletObject.getLayer(layerId);
-      let dirtyType = model.get('dirtyType');
-      if (dirtyType === 'created') {
-        if (leafletObject.hasLayer(layer)) {
-          leafletObject.removeLayer(layer);
-        }
+    let changes = leafletObject.models.filter((item) => true); // for check empty
+    if (!Ember.isEmpty(changes)) {
+      Object.entries(leafletObject.models)
+        .filter((item) => { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(leafletObject.getLayer(item[0]))); })
+        .map((item) => item[1])
+        .forEach((model, index) => {
+          if (model instanceof Ember.Object) {
+            let layer = Object.values(leafletObject._layers).find((layer) => {
+              if (layer.model.get('id') === model.get('id')) {
+                return layer;
+              }
+            });
 
-        delete leafletObject.models[layerId];
-        if (editTools.featuresLayer.getLayers().length !== 0) {
-          let editorLayerId = editTools.featuresLayer.getLayerId(layer);
-          let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
-          if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
-            let editLayer = featureLayer.editor.editLayer;
-            editTools.editLayer.removeLayer(editLayer);
-            editTools.featuresLayer.removeLayer(layer);
-          }
-        }
-      } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
-        if (!Ember.isNone(layer)) {
-          if (!Ember.isNone(layer.editor)) {
-            let editLayer = layer.editor.editLayer;
-            editTools.editLayer.removeLayer(editLayer);
-          }
+            let dirtyType = model.get('dirtyType');
+            if (dirtyType === 'created') {
+              if (leafletObject.hasLayer(layer)) {
+                leafletObject.removeLayer(layer);
+              }
 
-          if (leafletObject.hasLayer(layer)) {
-            leafletObject.removeLayer(layer);
-          }
-        }
+              delete leafletObject.models[index];
+              if (editTools.featuresLayer.getLayers().length !== 0) {
+                let editorLayerId = editTools.featuresLayer.getLayerId(layer);
+                let featureLayer = editTools.featuresLayer.getLayer(editorLayerId);
+                if (!Ember.isNone(editorLayerId) && !Ember.isNone(featureLayer) && !Ember.isNone(featureLayer.editor)) {
+                  let editLayer = featureLayer.editor.editLayer;
+                  editTools.editLayer.removeLayer(editLayer);
+                  editTools.featuresLayer.removeLayer(layer);
+                }
+              }
+            } else if (dirtyType === 'updated' || dirtyType === 'deleted') {
+              if (!Ember.isNone(layer)) {
+                if (!Ember.isNone(layer.editor)) {
+                  let editLayer = layer.editor.editLayer;
+                  editTools.editLayer.removeLayer(editLayer);
+                }
 
-        model.rollbackAttributes();
-        delete leafletObject.models[layerId];
-        featuresIds.push(model.get('id'));
+                if (leafletObject.hasLayer(layer)) {
+                  leafletObject.removeLayer(layer);
+                }
+              }
+
+              model.rollbackAttributes();
+              delete leafletObject.models[index];
+              featuresIds.push(model.get('id'));
+            }
+          }
+        });
+
+      if (!Ember.isNone(ids)) {
+        ids.forEach((id) => {
+          delete leafletObject.models[id];
+        });
+      } else {
+        editTools.editLayer.clearLayers();
       }
-    });
-    editTools.editLayer.clearLayers();
+    }
+
     return featuresIds;
   },
 
@@ -1456,12 +1682,13 @@ export default BaseVectorLayer.extend({
     Handles 'flexberry-map:cancelEdit' event of leaflet map.
 
     @method cancelEdit
+    @param {Array} ids Array contains internal leaflet IDs for a layer.
     @returns {Ember.RSVP.Promise} Returns promise.
   */
-  cancelEdit() {
+  cancelEdit(ids) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletObject = this.get('_leafletObject');
-      let featuresIds = this.clearChanges();
+      let featuresIds = this.clearChanges(ids);
       if (featuresIds.length === 0) {
         resolve();
       } else {
@@ -1472,6 +1699,88 @@ export default BaseVectorLayer.extend({
         };
         this.loadLayerFeatures(e).then(() => { resolve(); }).catch((e) => reject(e));
       }
+    });
+  },
+
+  /**
+    Get nearest object.
+    Gets all leaflet layer objects and processes them _calcNearestObject().
+
+    @method getNearObject
+    @param {Object} e Event object..
+    @param {Object} featureLayer Leaflet layer object.
+    @param {Number} featureId Leaflet layer object id.
+    @param {Number} layerObjectId Leaflet layer id.
+    @return {Ember.RSVP.Promise} Returns object with distance, layer model and nearest leaflet layer object.
+  */
+  getNearObject(e) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let obj = this.get('_adapterStoreModelProjectionGeom');
+      let layerModel = this.get('layerModel');
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      let mapApi = this.get('mapApi').getFromApi('mapModel');
+      let _this = this;
+      Ember.$.ajax({
+        url: layerModel.get('_leafletObject.options.metadataUrl') + layerModel.get('_leafletObject.modelName') + '.json',
+        success: function (dataClass) {
+          let odataQueryName = Ember.String.pluralize(capitalize(camelize(dataClass.modelName)));
+          let odataUrl = _this.get('odataUrl');
+          obj.adapter.callAction(
+            config.APP.backendActions.getNearDistance,
+            {
+              geom: L.marker(mapApi.getObjectCenter(e.featureLayer)).toEWKT(_this.get('crs')),
+              odataQueryName: odataQueryName,
+              odataProjectionName: obj.projectionName
+            },
+            odataUrl,
+            null,
+            (data) => {
+              new Ember.RSVP.Promise((resolve) => {
+                const normalizedRecords = { data: Ember.A(), included: Ember.A() };
+                let odataValue = data.value;
+                if (!Ember.isNone(odataValue) && Array.isArray(odataValue)) {
+                  odataValue.forEach(record => {
+                    if (record.hasOwnProperty('@odata.type')) {
+                      delete record['@odata.type'];
+                    }
+
+                    const normalized = obj.store.normalize(obj.modelName, record);
+                    normalizedRecords.data.addObject(normalized.data);
+                    if (normalized.included) {
+                      normalizedRecords.included.addObjects(normalized.included);
+                    }
+                  });
+                }
+
+                resolve(Ember.run(obj.store, obj.store.push, normalizedRecords));
+              }).then((result) => {
+                let features = Ember.A();
+                let models = result;
+                if (typeof result.toArray === 'function') {
+                  models = result.toArray();
+                }
+
+                let layer = L.featureGroup();
+
+                models.forEach(model => {
+                  let feat = _this.addLayerObject(layer, model, false);
+                  features.push(feat.feature);
+                });
+
+                const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, features[0].leafletLayer);
+                resolve({
+                  distance: distance,
+                  layer: layerModel,
+                  object: features[0].leafletLayer,
+                });
+              });
+            },
+            (message) => {
+              reject(message);
+            }
+          );
+        }
+      });
     });
   }
 });

@@ -90,12 +90,7 @@
             color: @leafletBarButtonColor;
             background: @leafletBarButtonBackground;
             font-size: @leafletBarButtonFontSize;
-            .icon {
-                padding: 3px;
-                &:before {
-                    font-size: 1em;
-                }
-            }
+
             &.active,
             &:hover {
                 color: @leafletBarButtonColor;
@@ -110,10 +105,6 @@
                 }
                 i.icon:before {
                     color: @lightgraycolor;
-                    &:hover {
-                        color: @leafletBarButtonDisabledHoveredColor;
-                        background: @leafletBarButtonDisabledHoveredBackground;
-                    }
                 }
             }
         }
@@ -252,6 +243,11 @@
 .flexberry-maptoolbar.ui.menu {
   flex-wrap: wrap;
 }
+.mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar a,
+.mappanel .leaflet-right.leaflet-top .history-control.leaflet-bar a {
+  box-shadow: @defaultBoxShadow;
+}
+
 .ui.menu.flexberry-maptoolbar {
     z-index: 1000 !important;
     margin: 10px 10px 0px 10px;
@@ -267,6 +263,7 @@
         color: @darkbluecolor;
         font-size: 0px;
         background: @whitecolor;
+        box-shadow: @defaultBoxShadow;
     }
     /* элементы меню */
     .item {
@@ -409,14 +406,9 @@
     }
     /* иконки */
     i.icon {
-        width: 20px;
-        height: 20px;
-        &:before {
-            font-family: Crimean;
-        }
-        &.dropdown:before {
-            font-family: Icons;
-        }
+      &.dropdown:before {
+          font-family: Icons;
+      }
     }
     /* отступ в кнопках с иконками */
     .ui.icon.button {
@@ -465,10 +457,6 @@
     /* перейти к точке */
     i.icon.location.arrow:before {
         content: "\e812";
-    }
-    /* отдалить на полную */
-    i.icon.globe:before {
-        content: "\e830";
     }
     i.icon.resize:before {
         font-family: Icons;
@@ -554,14 +542,6 @@
             content: "\e822";
         }
     }
-    /* еще */
-    i.icon.more {
-      margin: 0px 0px 0px 2px;
-      &:before {
-        content: "\f141";
-        font-family: Icons;
-      }
-    }
     i.icon.minimap {
       &:before {
         content: '\f278';
@@ -635,7 +615,7 @@
       position: absolute;
       bottom: 0px;
       right: 0px;
-      max-width:352px;
+      max-width: 357px;
       background: @whitecolor;
       box-shadow: @uiIconButtonBoxShadow;
       clip-path: inset(0px -2px 0px -2px);
@@ -644,7 +624,24 @@
       box-sizing: border-box;
       border-top-width: 0px;
     }
-    a {
+    .secondary.menu {
+      border: none;
+      min-height: 30px;
+      a.tab {
+        cursor: pointer;
+        color: #8F928F;
+        font-size: 14px;
+        font-weight: normal;
+        border-bottom: none;
+        padding: 0 10px;
+        line-height: 30px;
+        &.active {
+          color: #3B4256;
+          font-weight: normal;
+        }
+      }
+    }
+    a:not('.tab') {
       position: absolute;
       right: 0;
     }
@@ -656,11 +653,11 @@
     }
     .child-background-layers{
       position: relative;
-      padding-bottom: 6px;
+      padding-bottom: 10px;
       display: inline-block;
       .picture {
-        margin-bottom: 5px;
-        border: 1px solid  @graybluecolor;
+        border: @defaultGrayBorder;
+        box-shadow: @defaultBoxShadow;
         width: 94px;
         height: 49px;
         box-sizing: border-box;
@@ -673,6 +670,7 @@
         font-size: 11px;
         width: 94px;
         line-height: 13px;
+        word-break: break-word;
       }
     }
   }
@@ -691,18 +689,14 @@ div.minimap-drag-panel {
   border-radius: 5px;
   padding: 15px 10px 5px 10px;
 
-  i.icon {
-    font-size: 12px;
-  }
-
   .leaflet-control-minimap {
    box-shadow: none;
   }
 
   .flexberry-minimap-close {
     position: absolute;
-    top: 1px;
-    right: 1px;
+    top: 0;
+    right: 0;
     z-index: 1000;
     cursor: pointer;
   }
@@ -759,6 +753,13 @@ div.measure-drag-panel {
     &.map.marker {
       font-family: 'Icons';
     }
+    &.minus {
+      margin-right: 0.6em !important;
+      margin-top: -2px !important;
+    }
+    &.rectangle {
+      margin-top: 1px !important;
+    }
   }
   &,
   &-layers-options,
@@ -788,7 +789,7 @@ div.measure-drag-panel {
   .flexberry-identify-panel-tools-options {
     display: inline-block;
     margin-right: 12px;
-    i.icon.square.outline:before {
+    i.icon.rectangle:before {
       font-family: Icons;
       content: "\f248";
     }
@@ -840,16 +841,7 @@ div.measure-drag-panel {
 .layer-result-list {
   padding-top: 15px;
   text-align: center;
-  .icon.caret {
-    font-size: 20px;
-    margin: 0;
-  }
-  i.icon.caret.down:before {
-    content: '\f107';
-  }
-  i.icon.caret.right:before {
-    content: '\f105';
-  }
+
   .ui.active.inline.loader {
     margin-top: 10px;
     left: 45%;
@@ -866,7 +858,7 @@ div.measure-drag-panel {
         flex-direction: row;
     }
     &-caption {
-        padding-left: 10px;
+        padding-left: 8px;
         text-overflow: ellipsis;
         max-width: 80%;
         min-width: 350px;
@@ -891,7 +883,7 @@ div.measure-drag-panel {
       width: 250px;
       z-index: 100;
       background: @whitecolor;
-      border: 1px solid #E5E5E5;
+      border: none;
       box-sizing: border-box;
       border-radius: 3.5px;
       p {
@@ -913,6 +905,12 @@ div.measure-drag-panel {
   }
   .feature-result-item-title {
     position: relative;
+    .ui.checkbox {
+      margin: auto 0;
+    }
+    .ui.checkbox label {
+      padding-left: 26px;
+    }
   }
   .feature-result-item-caption {
     max-width: 68%;
@@ -920,6 +918,7 @@ div.measure-drag-panel {
     word-wrap: break-word;
     font-size: 14px;
     color: @darkbluecolor;
+    align-self: center;
   }
   .feature-result-item-select.icon.item, .feature-result-item-upload.icon.item {
     font-size: 1.4em;
@@ -964,20 +963,12 @@ div.measure-drag-panel {
     padding: 0 !important;
     display: block;
     float: left;
-    transform-origin: 50% 60%;
-    &:before {
-      font-size: 20px;
-      content: '\f105';
-    }
   }
-  .ui.accordion .title.active .dropdown.icon {
-    &:before {
-      content: '\f105';
-    }
-  }
+
   .layer-result-list-toggler {
     .title {
       display: flex;
+      align-items: end;
       .flexberry-toggler-caption {
         margin-left: 6px;
         display: block;
@@ -1050,7 +1041,7 @@ div.measure-drag-panel {
   .feature-div-property-name {
     font-size: 12px;
     color: #8F928F;
-    padding: 15px 0px 10px 0px;
+    padding: 10px 0px 5px 0px;
   }
   .feature-div-property-value {
     font-size: 12px;
@@ -1061,6 +1052,9 @@ div.measure-drag-panel {
       tr td {
         border: none;
       }
+    }
+    .intersection-table tr{
+      height: 1em;
     }
   }
   .feature-result-item-content {
@@ -1425,6 +1419,12 @@ form.flexberry-edit-layermap {
                 height: 50px;
               }
             }
+          }
+        }
+
+        .simple-layers-style-stroke-editor {
+          div.ui.dropdown .text {
+            width: 35px;
           }
         }
 

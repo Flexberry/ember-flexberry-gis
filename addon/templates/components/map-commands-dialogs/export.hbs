@@ -30,19 +30,21 @@
         <div class="{{flexberryClassNames.sheetOfPaperMap}}" style={{_mapPreviewStyle}}>
           {{#if _mapCanBeShown}}
             {{#if _options.scaleControl}}
-              {{scale-control
-                map=leafletMap
-                imperial=false
-                position="bottomright"
+              {{switch-scale-control
+                leafletMap=leafletMap
+                updateWhenIdle=false
+                scales=scalesForExport
+                recalcOnZoomChange=false
               }}
+              {{scale-control leafletMap=leafletMap imperial=false}}
             {{/if}}
           {{/if}}
         </div>
-        <div class="{{flexberryClassNames.legendControlMap}} {{if _options.legendUnderMap "" "hidden"}}" style={{_mapCaptionPreviewStyle}}>
-          {{#if _mapCanBeShown}}
+        <div class="{{flexberryClassNames.legendControlMap}} {{if _options.legendUnderMap "" "hidden"}}" style="{{_mapLegendPreviewStyle}}">
+          {{#if (and _mapCanBeShown (not-eq _options.displayMode 'map-only-mode'))}}
             {{flexberry-layerslegends
               layers=layers
-              height=(if _isPreview _mapCaptionPreviewHeight _mapCaptionRealHeight)
+              height=(if _isPreview _mapLegendPreviewHeight _mapLegendRealHeight)
               rightPadding=_legendsRightPadding
               legendsLoaded='legendsLoaded'
             }}
@@ -52,11 +54,14 @@
 
       <div class="{{flexberryClassNames.sheetOfLegend}} {{_options.displayMode}} {{if _options.pageNumber2Selected "" "hidden"}}" style={{_sheetOfPaperPreviewStyle}}>
         <div>
-          <div class="{{flexberryClassNames.legendControlMap}}" style={{_mapCaptionPreviewStyle}}>
+          {{#if (eq _options.legendPosition "second-page")}}
+            {{legendCustomStyle}}
+          {{/if}}
+          <div class="{{flexberryClassNames.legendControlMap}}" style="{{_mapLegendPreviewStyle}}">
             {{#if _mapCanBeShown}}
               {{flexberry-layerslegends
                 layers=layers
-                height=(if _isPreview _mapCaptionPreviewHeight _mapCaptionRealHeight)
+                height=(if _isPreview _mapLegendPreviewHeight _mapLegendRealHeight)
                 rightPadding=_legendsRightPadding
                 legendsLoaded='legendsLoaded'
               }}
@@ -68,19 +73,21 @@
       <div class="{{flexberryClassNames.pagingColumn}}">
         <div class="field">
           {{flexberry-button
-            class=(if (eq _options.pageNumber "1") "active" "")
+            class=(concat "primary" (unless (eq _options.pageNumber "1") " basic"))
             caption="1"
-            click=(action "onPageChange" "1")
+            click=(action "onPageChange" "1" -1)
           }}
         </div>
         {{#if _options.legendSecondPage}}
-          <div class="field">
-            {{flexberry-button
-              class=(if (eq _options.pageNumber "2") "active" "")
-              caption="2"
-              click=(action "onPageChange" "2")
-            }}
-          </div>
+          {{#each additionalPages as |page index|}}
+            <div class="field">
+              {{flexberry-button
+                class=(concat "primary" (unless (and (eq _options.pageNumber "2") (eq _options.additionalPageNumber index)) " basic"))
+                caption=(concat "" page.index)
+                click=(action "onPageChange" "2" index)
+              }}
+            </div>
+          {{/each}}
         {{/if}}
       </div>
 
@@ -160,13 +167,12 @@
               <label>{{t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.caption"}}</label>
               <div class="ui fluid buttons">
                 {{flexberry-button
-                  class=(if (eq _options.displayMode "standard-mode") "active" "")
+                  class=(if (eq _options.displayMode "standard-mode") "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.standard-mode.caption")
                   click=(action "onDisplayModeChange" "standard-mode")
                 }}
-
                 {{flexberry-button
-                  class=(if (eq _options.displayMode "map-only-mode") "active" "")
+                  class=(if (eq _options.displayMode "map-only-mode") "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.map-only-mode.caption")
                   click=(action "onDisplayModeChange" "map-only-mode")
                 }}
@@ -177,12 +183,12 @@
               <label>{{t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.caption"}}</label>
               <div class="ui fluid buttons">
                 {{flexberry-button
-                  class=(if _options.legendControl "active" "")
+                  class=(if _options.legendControl "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.legend-control.caption")
                   click=(action "onMapControlChange" "legendControl")
                 }}
                 {{flexberry-button
-                  class=(if _options.scaleControl "active" "")
+                  class=(if _options.scaleControl "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.scale-control.caption")
                   click=(action "onMapControlChange" "scaleControl")
                 }}
@@ -193,12 +199,12 @@
               <label>{{t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.caption"}}</label>
               <div class="ui fluid buttons">
                 {{flexberry-button
-                  class=(if (eq _options.legendPosition "under-map") "active" "")
+                  class=(if (eq _options.legendPosition "under-map") "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.under-map.caption")
                   click=(action "onLegendPositionChange" "under-map")
                 }}
                 {{flexberry-button
-                  class=(if (eq _options.legendPosition "second-page") "active" "")
+                  class=(if (eq _options.legendPosition "second-page") "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.second-page.caption")
                   click=(action "onLegendPositionChange" "second-page")
                 }}
@@ -209,13 +215,13 @@
               <label>{{t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.caption"}}</label>
               <div class="ui fluid buttons">
                 {{flexberry-button
-                  class=(if (eq _options.paperOrientation "landscape") "active" "")
+                  class=(if (eq _options.paperOrientation "landscape") "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.landscape-orientation.caption")
                   click=(action "onPaperOrientationChange" "landscape")
                 }}
 
                 {{flexberry-button
-                  class=(if (eq _options.paperOrientation "portrait") "active" "")
+                  class=(if (eq _options.paperOrientation "portrait") "primary" "primary basic")
                   caption=(t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.portrait-orientation.caption")
                   click=(action "onPaperOrientationChange" "portrait")
                 }}

@@ -135,6 +135,9 @@
     }
   }
 
+  i.icon:before {
+    font-family: 'Crimean';
+  }
   .flexberry-full-extent-map-command,
   .flexberry-go-to-map-command,
   .flexberry-locate-map-command,

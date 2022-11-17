@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import DS from 'ember-data';
 import layout from '../../../templates/components/legends/-private/base-legend';
 
 /**
@@ -114,7 +115,7 @@ export default Ember.Component.extend({
   */
   _legendsDidChange: Ember.on('init', Ember.observer('_legends', function() {
     let legends = this.get('_legends');
-    if (legends instanceof Ember.RSVP.Promise) {
+    if (legends instanceof Ember.RSVP.Promise || legends instanceof DS.PromiseArray) {
       legends.then((result) => {
         this.sendAction('legendsLoaded', this.get('layer.name'), result);
       });
@@ -143,8 +144,14 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     let height = this.get('height');
-    if (!Ember.isBlank(height)) {
-      this.$(`.${this.flexberryClassNames.imageWrapper}`).css('height', height + 'px');
+
+    // DynamicHeight for wms-legend. If legend is not json, height should be dynamic.
+    if (!Ember.isBlank(height) && !this.get('dynamicHeight')) {
+      if (this.get('legendForPrint')) {
+        this.$(`.${this.flexberryClassNames.image}`).css('height', height + 'px');
+      } else {
+        this.$(`.${this.flexberryClassNames.imageWrapper}`).css('height', height + 'px');
+      }
     }
   }
 });

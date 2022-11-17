@@ -3,7 +3,7 @@
     <div class="ui small active loader"></div>
   {{/if}}
   <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo" on="click"}}>
-    <i class="caret {{if expanded 'down' 'right'}} icon"></i>
+    <i class="icon-guideline-navigate-arrow{{if infoExpanded '-down'}}"></i>
   </a>
   {{#if favoriteMode}}
     {{flexberry-ddau-checkbox
@@ -14,18 +14,20 @@
   <div class="feature-result-item-toolbar {{if favoriteMode "favorite"}} {{if (gt feature.editForms.length 1) "links" ""}} hidden">
     {{#if intersection}}
       <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" on="click"}}>
-        <i class="marker icon"></i>
+        <i class="icon-guideline-marker"></i>
       </a>
       <a class="icon item" title="{{t 'components.flexberry-layers-intersections-panel.show-on-map'}}" {{action "zoomToIntersection" on="click"}}>
-        <i class="intersections icon"></i>
+        <i class="icon-guideline-intersection"></i>
       </a>
     {{else}}
       <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
-        <i class="marker icon"></i>
+        <i class="icon-guideline-marker"></i>
       </a>
-      <a class="icon item" title="{{t "components.compare-object-geometries.add-to-fav-caption"}}" {{action "addToFavorite" on="click"}}>
-        <i class="fvicon favorites {{if feature.properties.isFavorite "filled" "unfilled"}} icon"></i>
-      </a>
+      {{#if allowFavorite}}
+        <a class="icon item" title="{{t "components.compare-object-geometries.add-to-fav-caption"}}" {{action "addToFavorite" on="click"}}>
+          <i class="icon-guideline-bookmark{{if feature.properties.isFavorite "-filled"}} {{if feature.properties.favUpdating "disabled"}}"></i>
+        </a>
+      {{/if}}
       {{#if (gt feature.editForms.length 0)}}
         {{#if (eq feature.editForms.length 1)}}
           {{#if hasEditForm}}
@@ -37,24 +39,22 @@
                   <a class="feature-result-item-object icon item"
                     title="{{t "components.feature-result-item.select-object-caption"}}"
                     href="{{feature.editForms.[0].url}}" target="_blank">
-                    <i class="external icon"></i>
+                    <i class="icon-guideline-goout"></i>
                   </a>
                   <a class="feature-result-item-object icon item"
                     title="{{t "components.feature-result-item.action-object-caption"}}"
                     {{action "goToEditForm" feature.layerModel.id featureId}}>
-                    <i class="external icon"></i>
+                    <i class="icon-guideline-goout"></i>
                   </a>
                 </div>
               </div>
             </div>
           {{else}}
-            <div class="feature-result-item-edit-forms">
-              <a class="feature-result-item-object icon item"
-                title="{{t "components.feature-result-item.select-object-caption"}}"
-                href="{{feature.editForms.[0].url}}" target="_blank">
-                <i class="external icon"></i>
-              </a>
-            </div>
+            <a class="feature-result-item-object icon item"
+              title="{{t "components.feature-result-item.select-object-caption"}}"
+              href="{{feature.editForms.[0].url}}" target="_blank">
+              <i class="icon-guideline-goout"></i>
+            </a>
           {{/if}}
         {{else}}
           <div class="feature-result-item-edit-forms">
@@ -66,14 +66,14 @@
                     <a class="feature-result-item-object icon item"
                       title="{{editForm.typeName}}"
                       href="{{editForm.url}}" target="_blank">
-                      <i class="external icon"></i>
+                      <i class="icon-guideline-goout"></i>
                     </a>
                   {{/each}}
                   {{#if hasEditForm}}
                     <a class="feature-result-item-object icon item"
                       title="{{t "components.feature-result-item.action-object-caption"}}"
                       {{action "goToEditForm" feature.layerModel.id featureId}}>
-                      <i class="external icon"></i>
+                      <i class="icon-guideline-goout"></i>
                     </a>
                   {{/if}}
               </div>
@@ -82,53 +82,51 @@
         {{/if}}
       {{else}}
         {{#if hasEditForm}}
-          <div class="feature-result-item-edit-forms">
-            <a class="feature-result-item-object icon item"
-              title="{{t "components.feature-result-item.action-object-caption"}}"
-              {{action "goToEditForm" feature.layerModel.id featureId}}>
-              <i class="external icon"></i>
-            </a>
-          </div>
+          <a class="feature-result-item-object icon item"
+            title="{{t "components.feature-result-item.action-object-caption"}}"
+            {{action "goToEditForm" feature.layerModel.id featureId}}>
+            <i class="icon-guideline-goout"></i>
+          </a>
         {{/if}}
       {{/if}}
       <a class="icon item more" {{action "onSubmenu" on="click"}}>
-        <i class="icon">...</i>
+        <i class="icon-guideline-points"></i>
       </a>
       <div class="more submenu {{if isSubmenu '' 'hidden'}}">
         <div>
           <a class="more-button" {{action "onSubmenu" on="click"}}>
-            <p>...</p>
+            <i class="icon-guideline-points"></i>
           </a>
         </div>
         <div>
           <a class="icon item" {{action "panTo" on="click"}}>
-            <i class="hand paper icon"></i>
+            <i class="icon-guideline-hand"></i>
             {{t "components.feature-result-item.pan-to-caption"}}
           </a>
         </div>
         <div>
-          {{#if availableEdit}}
+          {{#if (and availableEdit (not feature.arch))}}
             <a class="icon item" {{action "onRowEdit" on="click"}}>
-              <i class="edit icon"></i>
+              <i class="icon-guideline-edit-r"></i>
               {{t "components.feature-result-item.edit-caption"}}
             </a>
           {{/if}}
         </div>
         <div>
           <a class="icon item"  {{action "findIntersection" on="click"}}>
-            <i class="intersections icon"></i>
+            <i class="icon-guideline-intersection"></i>
             {{t "components.feature-result-item.find-intersection-caption"}}
           </a>
         </div>
       </div>
     {{/if}}
   </div>
-  <div class="feature-result-item-caption" {{action "showInfo" on="click"}}>
+  <div class="feature-result-item-caption {{if feature.highlight "highlight" ""}}" {{action "showInfo" on="click"}}>
     <label>{{get feature displayProperty}}</label>
   </div>
 </div>
-<div class="feature-result-item-content content {{if expanded "visible" "hidden"}}">
-  {{#if expanded}}
+<div class="feature-result-item-content content {{if infoExpanded "visible" "hidden"}}">
+  {{#if infoExpanded}}
       {{#each-in feature.properties as |propertyName propertyValue|}}
         {{#if (not (array-contains _excludedProperties propertyName))}}
           <div class="feature-div-property-name">
@@ -162,7 +160,7 @@
           </div>
           <div class="feature-div-property-value">
               <div>
-                <table class="ui compact celled table">
+                <table class="ui compact celled table intersection-table">
                   <tr>
                     <td>
                       {{t 'components.flexberry-layers-intersections-panel.x-cord'}}
@@ -174,12 +172,14 @@
                   {{#if showAllCords}}
                     {{#each feature.intersection.intersectionCords as |cords|}}
                       <tr>
-                        <td>
-                          {{cords.[0]}}
-                        </td>
-                        <td>
-                          {{cords.[1]}}
-                        </td>
+                        {{#if cords}}
+                          <td>
+                            {{cords.[0]}}
+                          </td>
+                          <td>
+                            {{cords.[1]}}
+                          </td>
+                        {{/if}}
                       </tr>
                     {{/each}}
                   {{else}}

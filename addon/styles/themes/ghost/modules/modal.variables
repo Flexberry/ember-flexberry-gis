@@ -1,0 +1,30 @@
+/*******************************
+             Modal
+*******************************/
+
+@headerColor: @white;
+@headerBackground: @darkbluecolor;
+@headerPadding: 1rem;
+
+@tabularMenuItemColor: @bluecolor;
+@tabularMenuItemActiveColor: @darkbluecolor;
+@tabularMenuItemHoveredCcolor: @bluecolor;
+@tabularMenuItemDisabledIconColor: #999 !important;
+
+@fieldButtonColor: @darkbluecolor;
+
+// ====== RGIS ========
+@border: none;
+@boxShadow: rgb(136, 136, 136) 0px 0px 6px;
+
+@headerBackground: @backgroundGradient;
+
+@positiveButtonHoverColor: @buttonHoverColor !important;
+@positiveButtonActiveColor: @primaryColor !important;
+@negativeButtonHoverColor: @white !important;
+@negativeButtonActiveColor: @white !important;
+
+@tabularMenuItemColor: @textColor;
+@layersFieldsContainerBorderColor: @controlBorderColor;
+
+@modalSegmentButtonsHoveredColor: @white !important;

@@ -8,6 +8,9 @@ import FlexberryDdauSliderActionsHandlerMixin from 'ember-flexberry/mixins/flexb
 import {
   getRecord
 } from 'ember-flexberry/utils/extended-get';
+import {
+  setIndexes
+} from '../utils/change-index-on-map-layers';
 
 /**
   Mixin containing handlers for
@@ -245,7 +248,7 @@ export default Ember.Mixin.create({
       @param {String} attributesPanelSettingsPathes.selectedTabIndexPath path to property containing 'flexberry-layers-attributes-panel' selected tab index.
       @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
     */
-    onAttributesEdit(layerPath, { itemsPath, selectedTabIndexPath, foldedPath, loadingPath }) {
+    onAttributesEdit(layerPath, { itemsPath, selectedTabIndexPath, foldedPath, loadingPath }, readonly) {
       let layerModel = getRecord(this, layerPath);
       let name = Ember.get(layerModel, 'name');
       let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
@@ -260,6 +263,13 @@ export default Ember.Mixin.create({
       }
 
       getAttributesOptions().then(({ object, settings }) => {
+        if (readonly) {
+          // флаг readonly может задаваться самим слоем, в настройках слоя.
+          // поэтому будем только добавлять запрет на редактирование, если это задано правами.
+          // разрешать не будем
+          Ember.set(settings, 'readonly', readonly);
+        }
+
         let items = this.get(itemsPath) || Ember.A();
         let index = items.findIndex((item) => Ember.isEqual(item.name, name));
         if (index >= 0) {
@@ -288,41 +298,7 @@ export default Ember.Mixin.create({
       @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
     */
     onFeatureEdit(layerPath, { loadingPath, mapAction }) {
-      let layerModel = getRecord(this, layerPath);
-      let name = Ember.get(layerModel, 'name');
-      let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
-
-      if (Ember.isNone(getAttributesOptions)) {
-        return;
-      }
-
-      getAttributesOptions().then(({ object, settings }) => {
-        let fields = Ember.get(object, 'readFormat.featureType.fields');
-        let data = Object.keys(fields).reduce((result, item) => {
-          result[item] = null;
-          return result;
-        }, {});
-
-        let dataItems = {
-          mode: 'Create',
-          items: [{
-            data: data,
-            layer: null
-          }]
-        };
-
-        this.set(loadingPath, true);
-
-        this.send(mapAction, {
-          dataItems: dataItems,
-          layerModel: { name: name, leafletObject: object, settings, layerModel }
-        });
-
-      }).catch((errorMessage) => {
-        Ember.Logger.error(errorMessage);
-      }).finally(() => {
-        this.set(loadingPath, false);
-      });
+      this.featureEdit(this, layerPath, loadingPath, mapAction);
     },
 
     /**
@@ -356,11 +332,14 @@ export default Ember.Mixin.create({
     onMapLayerAdd(...args) {
       let rootPath = 'model.mapLayer';
 
-      let parentLayerPath = args[0];
+      let primaryParentLayerPath = args[0];
       Ember.assert(
-        `Wrong type of \`parentLayerPath\` argument: actual type is \`${Ember.typeOf(parentLayerPath)}\`, ` +
+        `Wrong type of \`parentLayerPath\` argument: actual type is \`${Ember.typeOf(primaryParentLayerPath)}\`, ` +
         `but \`string\` is expected`,
-        Ember.typeOf(parentLayerPath) === 'string');
+        Ember.typeOf(primaryParentLayerPath) === 'string');
+
+      let secondaryParentLayerPath = primaryParentLayerPath.indexOf('hierarchy') !== -1 ? 'model.otherLayers' : 'model.hierarchy';
+      let backgroundLayerPath = 'model.backgroundLayers';
 
       let {
         layerProperties,
@@ -371,26 +350,29 @@ export default Ember.Mixin.create({
         `but \`object\` or  \`instance\` is expected`,
         Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
 
-      let parentLayer = getRecord(this, parentLayerPath);
+      let primaryParentLayer = getRecord(this, primaryParentLayerPath);
       Ember.assert(
-        `Wrong type of \`parentLayer\` property: actual type is \`${Ember.typeOf(parentLayer)}\`, ` +
+        `Wrong type of \`parentLayer\` property: actual type is \`${Ember.typeOf(primaryParentLayer)}\`, ` +
         `but \`array\` or \`object\` or  \`instance\` is expected`,
-        Ember.isArray(parentLayer) || Ember.typeOf(parentLayer) === 'object' || Ember.typeOf(parentLayer) === 'instance');
+        Ember.isArray(primaryParentLayer) || Ember.typeOf(primaryParentLayer) === 'object' || Ember.typeOf(primaryParentLayer) === 'instance');
 
-      let childLayers = Ember.isArray(parentLayer) ? parentLayer : Ember.get(parentLayer, 'layers');
-      if (Ember.isNone(childLayers)) {
-        childLayers = Ember.A();
-        Ember.set(parentLayer, 'layers', childLayers);
+      let secondaryParentLayer = getRecord(this, secondaryParentLayerPath);
+      let backgroundLayer = getRecord(this, backgroundLayerPath);
+
+      let primaryChildLayers = Ember.isArray(primaryParentLayer) ? primaryParentLayer : Ember.get(primaryParentLayer, 'layers');
+      if (Ember.isNone(primaryChildLayers)) {
+        primaryChildLayers = Ember.A();
+        Ember.set(primaryParentLayer, 'layers', primaryChildLayers);
       }
 
       Ember.assert(
-        `Wrong type of \`parentLayer.layers\` property: actual type is \`${Ember.typeOf(childLayers)}\`, ` +
+        `Wrong type of \`parentLayer.layers\` property: actual type is \`${Ember.typeOf(primaryChildLayers)}\`, ` +
         `but \`Ember.NativeArray\` is expected`,
-        Ember.isArray(childLayers) && Ember.typeOf(childLayers.pushObject) === 'function');
+        Ember.isArray(primaryChildLayers) && Ember.typeOf(primaryChildLayers.pushObject) === 'function');
 
       let childLayer;
       if (Ember.isNone(layer)) {
-        childLayer = this.createLayer({ parentLayer: parentLayer, layerProperties: layerProperties });
+        childLayer = this.createLayer({ parentLayer: primaryParentLayer, layerProperties: layerProperties });
       } else {
         layer.setProperties(layerProperties);
         childLayer = layer;
@@ -400,12 +382,29 @@ export default Ember.Mixin.create({
         Ember.set(childLayer, 'layers', Ember.A());
       }
 
-      childLayers.pushObject(childLayer);
+      let canBeBackground = childLayer.get('settingsAsObject.backgroundSettings.canBeBackground');
+
+      if (canBeBackground) {
+        if (primaryParentLayerPath.indexOf('hierarchy') !== -1) {
+          primaryChildLayers.pushObject(childLayer);
+        } else {
+          secondaryParentLayer.pushObject(childLayer);
+        }
+
+        if (!Ember.isNone(backgroundLayer)) {
+          backgroundLayer.pushObject(childLayer);
+        }
+      } else {
+        primaryChildLayers.pushObject(childLayer);
+        if (!Ember.isNone(secondaryParentLayer)) {
+          secondaryParentLayer.pushObject(childLayer);
+        }
+      }
 
       let rootArray = this.get(rootPath);
       rootArray.pushObject(childLayer);
 
-      this.setIndexes(rootArray);
+      setIndexes(rootArray, this.get('model.hierarchy'));
     },
 
     /**
@@ -540,8 +539,56 @@ export default Ember.Mixin.create({
 
       let rootArray = this.get(rootPath);
 
-      this.setIndexes(rootArray);
+      setIndexes(rootArray, this.get('model.hierarchy'));
     }
+  },
+
+  /**
+    Opens a form for editing or creating objects of the selected layer.
+
+    @method featureEdit
+    @param {Object} controller map controller.
+    @param {String} layerPath path to a layer.
+    @param {String} loadingPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
+    @param {String} mapAction the name of the action to be called.
+    @param {Object} dataValues field values ​​for filling out the form.
+  */
+  featureEdit(controller, layerPath, loadingPath, mapAction, dataValues) {
+    let layerModel = getRecord(controller, layerPath);
+    let name = Ember.get(layerModel, 'name');
+    let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
+
+    if (Ember.isNone(getAttributesOptions)) {
+      return;
+    }
+
+    getAttributesOptions().then(({ object, settings }) => {
+      let fields = Ember.get(object, 'readFormat.featureType.fields');
+      let data = Object.keys(fields).reduce((result, item) => {
+        result[item] = Ember.isNone(dataValues) ? null : dataValues[item];
+        return result;
+      }, {});
+
+      let dataItems = {
+        mode: 'Create',
+        items: [{
+          data: data,
+          layer: null
+        }]
+      };
+
+      controller.set(loadingPath, true);
+
+      controller.send(mapAction, {
+        dataItems: dataItems,
+        layerModel: { name: name, leafletObject: object, settings, layerModel }
+      });
+
+    }).catch((errorMessage) => {
+      Ember.Logger.error(errorMessage);
+    }).finally(() => {
+      controller.set(loadingPath, false);
+    });
   },
 
   /**
@@ -605,45 +652,5 @@ export default Ember.Mixin.create({
 
     Ember.set(layer, 'isDeleted', true);
     return layer;
-  },
-
-  /**
-    Sets indexes for layers hierarchy.
-
-    @method setIndexes
-    @param {Array} rootArray Array of layers to set indexes.
-  */
-  setIndexes(rootArray) {
-    let hierarchy = this.get('model.hierarchy');
-
-    // Filter root array to avoid gaps in indexes.
-    let index = rootArray.filter(layer => layer.get('isDeleted') === false).length;
-
-    this._setIndexes(hierarchy, index);
-  },
-
-  /**
-    Sets indexes for layers hierarchy.
-
-    @method _setIndexes
-    @param {Array} layers Hierarchy of layers to set indexes.
-    @param {Int} index Max index.
-    @returns {Int} Min index.
-    @private
-  */
-  _setIndexes(layers, index) {
-    if (Ember.isArray(layers) && index > 0) {
-      layers.forEach((layer) => {
-        if (!layer.get('isDeleted')) {
-          layer.set('index', index);
-          index--;
-          if (Ember.isArray(layer.get('layers'))) {
-            index = this._setIndexes(layer.get('layers'), index);
-          }
-        }
-      }, this);
-    }
-
-    return index;
   }
 });

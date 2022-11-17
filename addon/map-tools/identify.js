@@ -93,7 +93,7 @@ export default BaseNonclickableMapTool.extend({
     @type Boolean
     @default false
   */
-  hideOnDrawingEnd: false,
+  hideOnDrawingEnd: true,
 
   /**
     Flag: indicates whether to hide previously drawn figure on drawing end or not.

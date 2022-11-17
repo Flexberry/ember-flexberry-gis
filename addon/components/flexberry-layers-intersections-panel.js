@@ -1,9 +1,9 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-intersections-panel';
 import * as buffer from 'npm:@turf/buffer';
-import VectorLayer from '../layers/-private/vector';
-import WmsWfsLayer from 'ember-flexberry-gis/layers/wms-wfs';
 import * as jsts from 'npm:jsts';
+import { coordinatesToArray } from '../utils/coordinates-to';
+
 /**
   The component for searching for intersections with selected feature.
 
@@ -155,31 +155,52 @@ export default Ember.Component.extend({
     this.clearPanel();
   }),
 
+  _checkTypeLayer(layer) {
+    let className = Ember.get(layer, 'type');
+    let layerClass = Ember.isNone(className) ?
+      null :
+      Ember.getOwner(this).knownForType('layer', className);
+
+    return !Ember.isNone(layerClass) && layerClass.isVectorType(layer, true);
+  },
+
+  /**
+    loads layers into a list to search for intersections. Casts the tree structure to a list.
+
+    @method loadIntersectionLayers
+    @param {Object[]} layers root of layers tree
+    @return {Object[]} list of layers
+
+  */
+  loadIntersectionLayers(layers) {
+    if (!layers) {
+      return [];
+    }
+
+    let vlayers = [];
+    layers.forEach(layer => {
+      let innerLayers = Ember.get(layer, 'layers');
+      if (!innerLayers) {
+        return;
+      }
+
+      if (Ember.get(innerLayers, 'length') > 0) {
+        vlayers.push(...this.loadIntersectionLayers(innerLayers));
+      } else {
+        if (this._checkTypeLayer(layer)) {
+          vlayers.push(layer);
+        }
+      }
+    });
+    return vlayers;
+  },
+
   /**
     Initializes component.
   */
   init() {
     this._super(...arguments);
-    let vlayers = [];
-    this.get('layers').forEach(item => {
-      let layers = Ember.get(item, 'layers');
-      if (layers.length > 0) {
-        layers.forEach(layer => {
-          let className = Ember.get(layer, 'type');
-          let layerType = Ember.getOwner(this).knownForType('layer', className);
-          if (layerType instanceof VectorLayer || layerType instanceof WmsWfsLayer) {
-            vlayers.push(layer);
-          }
-        });
-      } else {
-        let className = Ember.get(item, 'type');
-        let layerType = Ember.getOwner(this).knownForType('layer', className);
-        if (layerType instanceof VectorLayer || layerType instanceof WmsWfsLayer) {
-          vlayers.push(item);
-        }
-      }
-    });
-    this.set('vectorLayers', vlayers);
+    this.set('vectorLayers', this.loadIntersectionLayers(this.get('layers')));
   },
 
   actions: {
@@ -477,7 +498,6 @@ export default Ember.Component.extend({
     }
 
     let square = Ember.isNone(this.get('square')) ? 0 : this.get('square');
-    let mapModel = this.get('mapApi').getFromApi('mapModel');
     e.results.forEach((layer) => {
       layer.features.then((features) => {
         features.forEach((item) => {
@@ -486,6 +506,10 @@ export default Ember.Component.extend({
           item.isIntersect = false;
           if (objB.id !== objA.id) {
             let crs = item.leafletLayer.options.crs;
+            if (Ember.isNone(crs)) {
+              crs = this.get('leafletMap').options.crs;
+            }
+
             let objAJsts = item.leafletLayer.toJsts(crs);
             let objBJsts = e.polygonLayer.toJsts(crs);
             let intersected = objAJsts.intersection(objBJsts);
@@ -509,25 +533,20 @@ export default Ember.Component.extend({
   },
 
   computeCoordinates(feature) {
-    let coordinatesArray = [];
-    if (feature.type === 'MultiPolygon' || feature.type === 'Polygon') {
-      feature.coordinates.forEach(arr => {
-        arr.forEach(pair => {
-          if (feature.type === 'MultiPolygon') {
-            pair.forEach(cords => {
-              coordinatesArray.push(cords);
-            });
-          } else {
-            coordinatesArray.push(pair);
-          }
+    if (feature) {
+      let coordinatesArray = [];
+      if (feature.type === 'GeometryCollection') {
+        feature.geometries.forEach((geometry) => {
+          coordinatesArray = coordinatesArray.concat(coordinatesToArray(geometry.coordinates));
+          coordinatesArray = coordinatesArray.concat(null);
         });
-      });
-    } else if (feature.type === 'Point') {
-      coordinatesArray.push(feature.coordinates);
-    } else {
-      coordinatesArray = feature.coordinates;
+      } else {
+        coordinatesArray = coordinatesToArray(feature.coordinates);
+      }
+
+      return coordinatesArray;
     }
 
-    return coordinatesArray;
+    return null;
   }
 });

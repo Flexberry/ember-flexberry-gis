@@ -52,6 +52,11 @@
         {{#if showTree}}
           {{flexberry-maplayers
             class="styled"
+            access=(hash
+              accessibleModel=access.mapLayerModel
+              accessibleData=access.mapLayerData
+              createAccess=true
+              presenceLayerInGeoportal=access.presenceLayerInGeoportal)
             leafletMap=leafletMap
             sideBySide=sideBySide
             layers=(get-with-dynamic-actions this "model.otherLayers"
@@ -115,6 +120,11 @@
                     )
                   )
                 )
+                (hash
+                  on="onLoad"
+                  actionName="onLoad"
+                  actionArguments=(array "{% layerPath %}")
+                )
               )
             )
             add=(action "onMapLayerAdd" "model.hierarchy")
@@ -133,11 +143,13 @@
           results=searchResults
           serviceLayer=serviceLayer
           leafletMap=leafletMap
+          serviceRenderer=serviceRenderer
           showIntersectionPanel=(action 'onIntersectionPanel')
           featureSelected=(action "onLayerFeatureSelected")
           addToFavorite=(action "addToFavorite")
           editFeature=(action 'onCreateOrEditFeature')
           availableEdit=true
+          accessibleData=access.mapLayerData
         }}
       </div>
       <div data-tab="identify" class="ui tab identify">
@@ -157,12 +169,14 @@
           results=identifyToolResults
           serviceLayer=serviceLayer
           leafletMap=leafletMap
+          serviceRenderer=serviceRenderer
           showIntersectionPanel=(action 'onIntersectionPanel')
           featureSelected=(action "onLayerFeatureSelected")
           addToFavorite=(action "addToFavorite")
           availableCRS=availableCRS
           editFeature=(action 'onCreateOrEditFeature')
           availableEdit=true
+          accessibleData=access.mapLayerData
         }}
       </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
@@ -198,6 +212,7 @@
       <div data-tab="createOrEditObject" class="ui tab createOrEditObject">
       <h3>{{t "forms.map.tabbar.createOrEditObject.caption"}}</h3>
         {{flexberry-edit-layer-feature
+          isFavorite=createOrEditedFeature.isFavorite
           dataItems=createOrEditedFeature.dataItems
           layerModel=createOrEditedFeature.layerModel
           leafletMap=leafletMap
@@ -213,7 +228,6 @@
         {{flexberry-maplayers
           class="styled"
           leafletMap=leafletMap
-          compareLayersEnabled=compareLayersEnabled
           sideBySide=sideBySide
           layers=(get-with-dynamic-actions this "model.hierarchy"
               hierarchyPropertyName="layers"
@@ -286,7 +300,6 @@
         }}
         {{map-tools/compare
           leafletMap=leafletMap
-          compareLayersEnabled=compareLayersEnabled
           showCompareSideBar=(action "showCompareSideBar")
         }}
         {{map-commands/go-to leafletMap=leafletMap}}
@@ -327,7 +340,7 @@
     </div>
   </div>
   {{#flexberry-maptoolbar class="background-layers"}}
-    {{map-tools/background-layers layers=model.hierarchy}}
+    {{map-tools/background-layers layers=model.hierarchy leafletMap=leafletMap}}
   {{/flexberry-maptoolbar}}
   <div class="mappanel">
     <div class="pusher">
@@ -368,7 +381,6 @@
           updateWhenIdle=true
           scales=switchScaleControlScales
         }}
-
       {{/flexberry-map}}
     </div>
   </div>

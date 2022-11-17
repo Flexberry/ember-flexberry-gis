@@ -3,7 +3,6 @@ import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import layout from '../templates/components/flexberry-edit-layermap';
-import VectorLayer from '../layers/-private/vector';
 import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
 import {
   translationMacro as t
@@ -442,7 +441,7 @@ export default Ember.Component.extend(
         Ember.getOwner(this).knownForType('layer', className);
 
       // Style settings are available only for vector layers.
-      return !Ember.isNone(layerClass) && layerClass instanceof VectorLayer;
+      return !Ember.isNone(layerClass) && layerClass.isVectorType(this.get('layer'));
     }),
 
     /**
@@ -667,6 +666,8 @@ export default Ember.Component.extend(
         this._createInnerLayer();
       } else {
         this.set('_hideBbox', true);
+        this.set('_tabularMenuState.activeGroup', 'main-group');
+        this.set('_tabularMenuState.groups.main-group.activeTab', 'main-tab');
         this._destroyInnerLayer();
       }
     })),
@@ -751,6 +752,16 @@ export default Ember.Component.extend(
       Ember.set(_layerHash, 'coordinateReferenceSystem', coordinateReferenceSystem);
 
       let settings = Ember.get(_layerHash, 'settings');
+
+      Object.keys(settings).map(function(key) {
+        if (key === 'minZoom' || key  === 'maxZoom') {
+          let value = Ember.get(settings, key);
+          let parsedValue = parseInt(value);
+          if (!isNaN(parsedValue)) {
+            Ember.set(settings, key, parsedValue);
+          }
+        }
+      });
 
       if (Ember.get(settings, 'filter') instanceof Element) {
         Ember.set(settings, 'filter', L.XmlUtil.serializeXmlToString(Ember.get(settings, 'filter')));

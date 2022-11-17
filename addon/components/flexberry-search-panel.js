@@ -27,14 +27,27 @@ export default Ember.Component.extend({
   */
   _selectedLayerFeaturesLocalizedProperties: Ember.computed(
     '_selectedLayer.settingsAsObject.displaySettings.featuresPropertiesSettings.localizedProperties',
+    '_selectedLayer.settingsAsObject.searchSettings.searchFields',
     'i18n.locale',
     function () {
       let currentLocale = this.get('i18n.locale');
+      let searchFields = this.get('_selectedLayer.settingsAsObject.searchSettings.searchFields') || [];
       let localizedProperties = this.get(
         `_selectedLayer.settingsAsObject.displaySettings.` +
         `featuresPropertiesSettings.localizedProperties.${currentLocale}`) || {};
+
+      let searchProperties = {};
+
+      // when Ember.isArray check this object (searchProperties), length is not null.
+      // and ember thinks the object is an array. This is bad.
+      searchFields.forEach((prop) => {
+        Ember.set(searchProperties, prop === 'length' ? '_' + prop : prop,
+          Ember.keys(localizedProperties).indexOf(prop) > -1 ?
+          localizedProperties[prop] : prop);
+      });
+
       this.set('_localizedValue', null);
-      return localizedProperties;
+      return searchProperties;
     }
   ),
 
@@ -125,7 +138,7 @@ export default Ember.Component.extend({
   */
   queryStringEmpty: '',
 
-  queryStringObserver: Ember.observer('queryString', function() {
+  queryStringObserver: Ember.observer('queryString', function () {
     this.set('queryStringEmpty', !Ember.isBlank(this.get('queryString')));
   }),
 
@@ -154,13 +167,15 @@ export default Ember.Component.extend({
     @return {Nothing} Go to coordinates.
     @private
   */
-  goTo(coord1, coord2) {
+  goTo(coord1, coord2, degMinSec1, degMinSec2) {
     let latlng = new L.LatLng(coord1, coord2);
     let xCaption = this.get('xCaption');
     let yCaption = this.get('yCaption');
+    let lat = !Ember.isNone(degMinSec1) ? degMinSec1 : latlng.lat;
+    let lng = !Ember.isNone(degMinSec2) ? degMinSec2 : latlng.lng;
     let popupContent =
-      `${xCaption}: ${latlng.lat}; ` +
-      `${yCaption}: ${latlng.lng}`;
+      `${xCaption}: ${lat}; ` +
+      `${yCaption}: ${lng}`;
 
     let leafletMap = this.get('leafletMap');
     leafletMap.openPopup(popupContent, latlng);
@@ -182,7 +197,7 @@ export default Ember.Component.extend({
       }
 
       this.set('showErrorMessage', false);
-      let queryString =  this.get('queryString');
+      let queryString = this.get('queryString');
       let leafletMap = this.get('leafletMap');
       const regexDegree = /^([-]?[0-9]+[.]?[0-9]*) ([-]?[0-9]+[.]?[0-9]*)/;
       const regexDegreeMinSec = /^([-]?[0-9]+[°][0-9]+['][0-9]+[.]?[0-9]*["]) ([-]?[0-9]+[°][0-9]+['][0-9]+[.]?[0-9]*["])/;
@@ -195,22 +210,24 @@ export default Ember.Component.extend({
         let degMinSec = regexDegreeMinSec.exec(queryString);
         let coord1 = this.degreeMinSecToDegree(degMinSec[1]);
         let coord2 = this.degreeMinSecToDegree(degMinSec[2]);
-        this.goTo(coord1, coord2);
+        this.goTo(coord1, coord2, degMinSec[1], degMinSec[2]);
       } else {
         // Сontext search and coordinate search
         let filter;
+        let selectedLayerId;
         let searchOptions = {
           queryString: queryString,
           maxResultsCount: this.get('maxResultsCount')
         };
         if (!this.get('attrVisible')) {
-          filter = function(layerModel) {
+          filter = function (layerModel) {
             return layerModel.get('canBeContextSearched') && layerModel.get('visibility');
           };
         } else {
           searchOptions.propertyName = this.get('propertyName');
           let selectedLayer = this.get('_selectedLayer');
-          filter = function(layerModel) {
+          selectedLayerId = selectedLayer.get('id');
+          filter = function (layerModel) {
             return layerModel === selectedLayer;
           };
         }
@@ -220,7 +237,8 @@ export default Ember.Component.extend({
           searchOptions: searchOptions,
           context: !this.get('attrVisible'),
           filter: filter,
-          results: Ember.A()
+          results: Ember.A(),
+          selectedLayer: selectedLayerId
         };
         this.sendAction('querySearch', e);
       }
@@ -231,6 +249,10 @@ export default Ember.Component.extend({
       this.set('_selectedLayer', null);
       this.set('_localizedValue', null);
       this.sendAction('clearSearch');
+      let $clearSearch = Ember.$('.clear-search-button');
+      if (!$clearSearch.hasClass('hidden')) {
+        $clearSearch.addClass('hidden');
+      }
     },
 
     attrSearch() {
@@ -257,7 +279,7 @@ export default Ember.Component.extend({
       let searchProperties = this.get('_selectedLayerFeaturesLocalizedProperties');
       for (var property in searchProperties) {
         if (searchProperties[property] === selectedText) {
-          this.set('propertyName', property);
+          this.set('propertyName', property === '_length' ? 'length' : property);
         }
       }
     },
@@ -278,5 +300,15 @@ export default Ember.Component.extend({
     onErrorMessageHide() {
       this.set('showErrorMessage', false);
     },
+
+    /**
+      Action called when search input has received focus
+      Invokes {{#crossLink "FlexberrySearchComponent/sendingActions.focus:method"}}'focus' action{{/crossLink}}.
+      @method actions.focus
+    */
+    focus() {
+      let leafletMap = this.get('leafletMap');
+      leafletMap.fire('flexberry-map:focusSearch', { focusSearch: 'focusSearch' });
+    }
   }
 });

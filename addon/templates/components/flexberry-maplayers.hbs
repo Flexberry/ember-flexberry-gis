@@ -3,18 +3,27 @@
   {{yield}} is required here to make yield-slots available.
 --}}
 {{yield}}
-{{#if (and compareLayersEnabled (not isGroup))}}
+{{#if (and compare.compareLayersEnabled (not isGroup) (not ignoreCompareMode))}}
    <div class="ui pointing group secondary menu">
-      <a class="item {{if (eq side "Left") "active"}}" onclick={{action "onLeftClick"}}>
+      <a class="item {{if (eq compare.side "Left") "active"}}" onclick={{action "setSide" "side" "Left"}}>
         {{t "components.flexberry-maplayers.left-part"}}
       </a>
-      <a class="item {{if (eq side "Right") "active"}}" onclick={{action "onRightClick"}}>
+      <a class="item {{if (eq compare.side "Right") "active"}}" onclick={{action "setSide" "side" "Right"}}>
         {{t "components.flexberry-maplayers.right-part"}}
       </a>
   </div>
+  {{help-popup variation="very wide" position="bottom left" htmlMessage="<div class='content'><p>Выберите в списке слои для отображения на частях карты, используя для переключения вкладки \"Левая часть\" и \"Правая часть\". Для настройки подложки нажмите кнопку \"Подложки\" и, используя для переключения вкладки \"Левая часть\" и \"Правая часть\", выберите те, которые необходимо отображать.</p></div>"}}
+  <p class="all-layers">ВСЕГО ПОКАЗАНО СЛОЁВ: {{compareLayersCount}}</p>
 {{/if}}
   {{#yield-slot "above-tree" (block-params this)}}
     {{yield}}
+
+    {{#if (not compare.compareLayersEnabled)}}
+      <div class="flexberry-check-all">
+        <span {{action "onAllLayerVisibilityChanged"}}>{{#if allLayerVisible}}Снять выделение{{else}}Выделить все{{/if}}</span>
+      </div>
+    {{/if}}
+
   {{/yield-slot}}
   {{#flexberry-tree
     _isRoot=_isRoot
@@ -44,20 +53,27 @@
 
   {{#block-slot "content"}}
     {{#each layers as |layer|}}
-      {{#if (not layer.isDeleted)}}
-        {{flexberry-maplayer
+      {{#if (and (not layer.isDeleted) (not (array-contains backgroundIds layer.id)))}}
+        {{#flexberry-maplayer
           readonly=readonly
+          access=access
           leafletMap=leafletMap
+          histEnabled=histEnabled
           layer=layer
           dynamicProperties=layer.dynamicProperties
           dynamicActions=layer.dynamicActions
-          compareLayersEnabled=compareLayersEnabled
           side=side
           sideBySide=sideBySide
           leftLayer=leftLayer
           rightLayer=rightLayer
-          onChangeLayer = (action "onChangeLayer")
+          closeOtherCalendar = (action "closeOtherCalendar")
+          layerTimeChanged=(action "onLayerTimeChanged")
+          dynamicButtons=dynamicButtons
+          external=(action 'external')
+          backgroundLayers=backgroundLayers
+          ignoreCompareMode=ignoreCompareMode
         }}
+        {{/flexberry-maplayer}}
       {{/if}}
     {{/each}}
     {{#yield-slot "content" (block-params this)}}

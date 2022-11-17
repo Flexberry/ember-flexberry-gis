@@ -79,6 +79,24 @@
 </div>
 <div class="field">
   <label>
+    {{t "components.layers-dialogs.settings.wfs.min-zoom.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.minZoom
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.max-zoom.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.maxZoom
+  }}
+</div>
+<div class="field">
+  <label>
     {{t "components.layers-dialogs.settings.wms.transparent-checkbox.caption"}}
   </label>
   {{flexberry-checkbox

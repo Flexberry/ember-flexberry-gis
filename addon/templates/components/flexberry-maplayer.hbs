@@ -14,15 +14,15 @@
   {{#block-slot "header"}}
     <div class="flexberry-treenode-header-block">
       <div class="flexberry-treenode-caption-block">
-        {{#if compareLayersEnabled}}
+        {{#if (and compare.compareLayersEnabled (not ignoreCompareMode))}}
           {{flexberry-ddau-checkbox
-            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse " " layer.type " " disabled)
-            value=layer.visibility
+            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse " " layer.type)
+            value=comparedLayerEnable
             change=(action "onChange")
-            readonly=(and (not-eq side layer.side) (not-eq layer.side null) true)
+            readonly=(and (not isGroup) isLayerSelectedOnOtherSide)
           }}
         {{else}}
-          {{#if (not compareLayersEnabled)}}
+          {{#if (not compare.compareLayersEnabled)}}
             {{flexberry-ddau-checkbox
               class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse " " layer.type)
               value=layer.visibility
@@ -33,76 +33,111 @@
         {{flexberry-icon
           class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
         }}
-        <label class={{flexberryClassNames.caption}}>
+        <div class={{flexberryClassNames.caption}}>
           {{layer.name}}
-        </label>
-        {{#if (not compareLayersEnabled)}}
+          {{#if (and histEnabled (eq layer.type "with-history"))}}
+           от {{flexberry-simpledatetime
+                _flatpickr=layer._flatpickr
+                value=layer.archTime
+                type="datetime"
+                max=maxDate
+                placeholder=""
+                change=(action "onLayerTimeChange")
+                closeOtherCalendar = (action "closeOtherCalendar")
+              }}
+          {{/if}}
+        </div>
+        {{#if (and (not compare.compareLayersEnabled) (not readonly))}}
           <div class="flexberry-treenode-buttons-block hidden">
-            {{#if (not readonly)}}
-              {{#if (not isGroup)}}
-                {{flexberry-button
-                  class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
-                  iconClass="plus icon"
-                  tooltip=(t "components.flexberry-maplayer.plus-button.tooltip")
-                  click=(action "onFeatureCreateButtonClick")
-                }}
-              {{/if}}
-              {{#if _attributesOperationIsAvailable}}
-                {{flexberry-button
-                  class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
-                  iconClass="browser icon"
-                  tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
-                  click=(action "onAttributesButtonClick")
-                }}
-              {{/if}}
+            {{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable _addFeatureIsAvailableApi)}}
+              {{flexberry-button
+                class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
+                iconClass="icon-guideline-plus-r"
+                tooltip=(t "components.flexberry-maplayer.plus-button.tooltip")
+                click=(action "onFeatureCreateButtonClick")
+              }}
+            {{/if}}
+            {{#if _attributesOperationIsAvailable}}
+              {{flexberry-button
+                class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
+                iconClass="icon-guideline-table"
+                tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
+                click=(action "onAttributesButtonClick" readonlyData)
+              }}
+            {{/if}}
+            {{#if (and (not readonly) (or _fitBoundsOperationIsAvailable (not readonlyModel) createNewLayerAccess))}}
               <div class="allmore floated flexberry-button ui button icon {{flexberryClassNames.preventExpandCollapse}}">
                 {{flexberry-button
                   class=(concat "more floated " flexberryClassNames.preventExpandCollapse)
-                  iconClass="more icon"
+                  iconClass="icon-guideline-points"
                   click=(action "onSubmenu")
                 }}
                 <div class="more submenu {{if isSubmenu '' 'hidden'}}">
                   <div class="button-more-submenu">
                   {{flexberry-button
                     class=(concat "more submenu floated " flexberryClassNames.preventExpandCollapse)
-                    iconClass="more icon"
+                    iconClass="icon-guideline-points"
                     click=(action "onSubmenu")
                   }}
                   </div>
                   {{#if _fitBoundsOperationIsAvailable}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.boundsButton " floated " flexberryClassNames.preventExpandCollapse)
-                      iconClass="maximize icon"
+                      iconClass="icon-guideline-resize-plus"
                       caption=(t "components.flexberry-maplayer.bounds-button.tooltip")
                       click=(action "onBoundsButtonClick")
                     }}
                   {{/if}}
-                  {{flexberry-button
-                    class=(concat flexberryClassNames.editButton " floated " flexberryClassNames.preventExpandCollapse)
-                    iconClass="edit icon"
-                    caption=(t "components.flexberry-maplayer.edit-button.tooltip")
-                    click=(action "onEditButtonClick")
-                  }}
-                  {{flexberry-button
-                    class=(concat flexberryClassNames.copyButton " floated " flexberryClassNames.preventExpandCollapse)
-                    iconClass="copy icon"
-                    caption=(t "components.flexberry-maplayer.copy-button.tooltip")
-                    click=(action "onCopyButtonClick")
-                  }}
-                  {{#if _addOperationIsAvailable}}
+                  {{#if (and (not readonlyModel) _editLayerIsAvailableApi)}}
                     {{flexberry-button
-                      class=(concat flexberryClassNames.addButton " floated " flexberryClassNames.preventExpandCollapse)
-                      iconClass="plus icon"
-                      caption=(t "components.flexberry-maplayer.add-button.tooltip")
-                      click=(action "onAddButtonClick")
+                      class=(concat flexberryClassNames.editButton " floated " flexberryClassNames.preventExpandCollapse)
+                      iconClass="icon-guideline-edit-r"
+                      caption=(t "components.flexberry-maplayer.edit-button.tooltip")
+                      click=(action "onEditButtonClick")
                     }}
                   {{/if}}
-                  {{flexberry-button
-                    class=(concat flexberryClassNames.removeButton " floated " flexberryClassNames.preventExpandCollapse)
-                    iconClass="trash icon"
-                    caption=(t "components.flexberry-maplayer.remove-button.tooltip")
-                    click=(action "onRemoveButtonClick")
-                  }}
+                  {{#if createNewLayerAccess}}
+                    {{flexberry-button
+                      class=(concat flexberryClassNames.copyButton " floated " flexberryClassNames.preventExpandCollapse)
+                      iconClass="copy icon"
+                      caption=(t "components.flexberry-maplayer.copy-button.tooltip")
+                      click=(action "onCopyButtonClick")
+                    }}
+                    {{#if (and _addOperationIsAvailable _addFeatureIsAvailableApi)}}
+                      {{flexberry-button
+                        class=(concat flexberryClassNames.addButton " floated " flexberryClassNames.preventExpandCollapse)
+                        iconClass="icon-guideline-plus-r"
+                        caption=(t "components.flexberry-maplayer.add-button.tooltip")
+                        click=(action "onAddButtonClick")
+                      }}
+                    {{/if}}
+                  {{/if}}
+                  {{#if (not readonlyModel)}}
+                    {{#if _deleteLayerIsAvailableApi}}
+                      {{flexberry-button
+                        class=(concat flexberryClassNames.removeButton " floated " flexberryClassNames.preventExpandCollapse)
+                        iconClass="icon-guideline-delete-r"
+                        caption=(t "components.flexberry-maplayer.remove-button.tooltip")
+                        click=(action "onRemoveButtonClick")
+                      }}
+                    {{/if}}
+                    {{#each dynamicButtons as |dynamicButton|}}
+                      {{flexberry-button
+                        class=(concat dynamicButton.class " floated " flexberryClassNames.preventExpandCollapse)
+                        iconClass=dynamicButton.icon
+                        caption=dynamicButton.caption
+                        click=(action "external" dynamicButton.action)
+                      }}
+                    {{/each}}
+                  {{/if}}
+                  {{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable presenceLayerInGeoportal _loadLayerDataIsAvailableApi)}}
+                    {{flexberry-button
+                      class=(concat flexberryClassNames.loadButton " floated " flexberryClassNames.preventExpandCollapse)
+                      iconClass="icon-guideline-download-layer"
+                      caption=(t "components.flexberry-maplayer.load-button.tooltip")
+                      click=(action "onLoadButtonClick")
+                    }}
+                  {{/if}}
                 </div>
               </div>
             {{/if}}
@@ -164,14 +199,15 @@
     {{#if _hasLayers}}
       {{flexberry-maplayers
         readonly=readonly
+        access=access
         leafletMap=leafletMap
         layers=layer.layers
-        compareLayersEnabled=compareLayersEnabled
-        side=side
         sideBySide=sideBySide
         leftLayer=leftLayer
         rightLayer=rightLayer
         isGroup=isGroup
+        backgroundLayers=backgroundLayers
+        ignoreCompareMode=ignoreCompareMode
       }}
     {{/if}}
     {{#yield-slot "content"}}

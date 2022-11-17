@@ -1,0 +1,4 @@
+@treeIcon: "\e94a";
+@treeIconFont: 'guideline-icons';
+@iconFontSize: 24px;
+@treeIconColor: @textColor;

@@ -4,19 +4,18 @@
   <div class="nodata">
   {{t "components.layer-result-list.nodata"}}
   </div>
-{{/if}}
-{{#each _displayResults as |result|}}
-  <div class="feature-result-item-group">
+{{else}}
+  {{#each _displayResults as |result|}}
+    <div class="feature-result-item-group">
     {{#if result.isIntersect}}
-      {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
-	    <div class="feature-result-item-buttons hidden">
-        <a class="feature-result-item-select icon item"
-          title="{{t "components.feature-result-item.select-all-caption"}}"
-          {{action "zoomTo" result.features}}>
-          {{#if (eq intersection false)}}
-          <i class="marker icon"></i>
-          {{/if}}
-        </a>
+      <div class="feature-result-item-buttons hidden">
+        {{#if (eq intersection false)}}
+          <a class="feature-result-item-select icon item"
+            title="{{t "components.feature-result-item.select-all-caption"}}"
+            {{action "zoomToAll" result}}>
+              <i class="icon-guideline-marker"></i>
+          </a>
+        {{/if}}
         {{#if (gt result.listForms.length 0)}}
           {{#if (eq result.listForms.length 1)}}
           {{#if result.hasListForm}}
@@ -27,20 +26,20 @@
               <a class="feature-result-item-list icon item"
               title="{{t "components.layer-result-list.select-list-caption"}}"
               href="{{result.listForms.[0].url}}" target="_blank">
-              <i class="list icon"></i>
+              <i class="icon-guideline-gotolist"></i>
               </a>
               <a class="feature-result-item-list icon item"
               title="{{t "components.layer-result-list.select-list-caption"}}"
               {{action "goToListForm" result.layerModel.id result.layerIds}}>
-              <i class="list icon"></i>
+              <i class="icon-guideline-gotolist"></i>
               </a>
             </div>
             </div>
           {{else}}
             <a class="feature-result-item-list icon item"
-            title="{{t "components.layer-result-list.select-list-caption"}}"
-            href="{{result.listForms.[0].url}}" target="_blank">
-            <i class="list icon"></i>
+              title="{{t "components.layer-result-list.select-list-caption"}}"
+              href="{{result.listForms.[0].url}}" target="_blank">
+              <i class="icon-guideline-gotolist"></i>
             </a>
           {{/if}}
           {{else}}
@@ -52,14 +51,14 @@
               <a class="feature-result-item-list icon item"
               title="{{listForm.typeName}}"
               href="{{listForm.url}}" target="_blank">
-                <i class="list icon"></i>
+                <i class="icon-guideline-gotolist"></i>
               </a>
               {{/each}}
               {{#if result.hasListForm}}
               <a class="feature-result-item-list icon item"
                 title="{{t "components.layer-result-list.select-list-caption"}}"
                 {{action "goToListForm" result.layerModel.id result.layerIds}}>
-                <i class="list icon"></i>
+                <i class="icon-guideline-gotolist"></i>
               </a>
               {{/if}}
             </div>
@@ -70,7 +69,7 @@
           <a class="feature-result-item-list icon item"
             title="{{t "components.layer-result-list.select-list-caption"}}"
             {{action "goToListForm" result.layerModel.id result.layerIds}}>
-            <i class="list icon"></i>
+            <i class="icon-guideline-gotolist"></i>
           </a>
           {{/if}}
         {{/if}}
@@ -78,17 +77,21 @@
           <a class="feature-result-item-upload icon item"
           title="{{t "components.layer-result-list.flexberry-export-caption"}}"
           {{action "upload" result}}>
-          <i class="upload icon"></i>
+          <i class="icon-guideline-file-download"></i>
           </a>
         {{/if}}
-        </div>
-        <div class="ui list transition">
+      </div>
+      {{#flexberry-toggler caption=result.name expanded=result.expanded class='layer-result-list-toggler'}}
+        <div class="ui list transition {{if result.expanded "visible" "hidden"}}">
           {{#if intersection}}
             {{#each result.features as |feature|}}
               {{#if feature.isIntersect}}
                 {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
                   {{component (concat 'feature-result-item-' result.layerModel.type)
                     feature=feature
+                    resultObject=result
+                    highlightable=enableHighlight
+                    clearHighlights=(action "clearHighlights")
                     infoExpanded=(and (eq result.features.length 1) result.first)
                     displayProperty="displayValue"
                     displaySettings=result.settings
@@ -102,11 +105,14 @@
                     zoomToIntersection=(action 'zoomToIntersection')
                     panToIntersection=panToIntersection
                     editFeature=(action 'editFeature')
-                    availableEdit=availableEdit
+                    availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
                 }}
                 {{else}}
                   {{feature-result-item
                     feature=feature
+                    resultObject=result
+                    highlightable=enableHighlight
+                    clearHighlights=(action "clearHighlights")
                     infoExpanded=(and (eq result.features.length 1) result.first)
                     displayProperty="displayValue"
                     displaySettings=result.settings
@@ -120,7 +126,7 @@
                     zoomToIntersection=(action 'zoomToIntersection')
                     panToIntersection=panToIntersection
                     editFeature=(action 'editFeature')
-                    availableEdit=availableEdit
+                    availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
                   }}
                 {{/if}}
               {{/if}}
@@ -133,9 +139,9 @@
       <div class="feature-result-item-buttons hidden">
         <a class="feature-result-item-select icon item"
           title="{{t "components.feature-result-item.select-all-caption"}}"
-          {{action "zoomTo" result.features}}>
+          {{action "zoomToAll" result}}>
           {{#if (eq intersection false)}}
-          <i class="marker icon"></i>
+          <i class="icon-guideline-marker"></i>
           {{/if}}
         </a>
         {{#if (gt result.listForms.length 0)}}
@@ -148,12 +154,12 @@
               <a class="feature-result-item-list icon item"
               title="{{t "components.layer-result-list.select-list-caption"}}"
               href="{{result.listForms.[0].url}}" target="_blank">
-              <i class="list icon"></i>
+              <i class="icon-guideline-gotolist"></i>
               </a>
               <a class="feature-result-item-list icon item"
               title="{{t "components.layer-result-list.select-list-caption"}}"
               {{action "goToListForm" result.layerModel.id result.layerIds}}>
-              <i class="list icon"></i>
+              <i class="icon-guideline-gotolist"></i>
               </a>
             </div>
             </div>
@@ -161,7 +167,7 @@
             <a class="feature-result-item-list icon item"
             title="{{t "components.layer-result-list.select-list-caption"}}"
             href="{{result.listForms.[0].url}}" target="_blank">
-            <i class="list icon"></i>
+            <i class="icon-guideline-gotolist"></i>
             </a>
           {{/if}}
           {{else}}
@@ -173,14 +179,14 @@
               <a class="feature-result-item-list icon item"
               title="{{listForm.typeName}}"
               href="{{listForm.url}}" target="_blank">
-                <i class="list icon"></i>
+                <i class="icon-guideline-gotolist"></i>
               </a>
               {{/each}}
               {{#if result.hasListForm}}
               <a class="feature-result-item-list icon item"
                 title="{{t "components.layer-result-list.select-list-caption"}}"
                 {{action "goToListForm" result.layerModel.id result.layerIds}}>
-                <i class="list icon"></i>
+                <i class="icon-guideline-gotolist"></i>
               </a>
               {{/if}}
             </div>
@@ -191,7 +197,7 @@
           <a class="feature-result-item-list icon item"
             title="{{t "components.layer-result-list.select-list-caption"}}"
             {{action "goToListForm" result.layerModel.id result.layerIds}}>
-            <i class="list icon"></i>
+            <i class="icon-guideline-gotolist"></i>
           </a>
           {{/if}}
         {{/if}}
@@ -199,18 +205,20 @@
           <a class="feature-result-item-upload icon item"
           title="{{t "components.layer-result-list.flexberry-export-caption"}}"
           {{action "upload" result}}>
-          <i class="upload icon"></i>
+          <i class="icon-guideline-file-download"></i>
           </a>
         {{/if}}
       </div>
-      {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
-        <div class="ui list transition">
+      {{#flexberry-toggler caption=result.name expanded=result.expanded class='layer-result-list-toggler'}}
+        <div class="ui list transition {{if result.expanded "visible" "hidden"}}">
           {{#each result.features as |feature|}}
             {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
-              {{component (concat 'feature-result-item-' result.layerModel.type)
+            {{component (concat 'feature-result-item-' result.layerModel.type)
                 feature=feature
-                infoExpanded=(and (eq result.features.length 1) result.first)
+                resultObject=result
                 displayProperty="displayValue"
+                highlightable=enableHighlight
+                clearHighlights=(action "clearHighlights")
                 displaySettings=result.settings
                 selectedFeature=_selectedFeature
                 selectFeature=(action "selectFeature")
@@ -222,17 +230,20 @@
                 zoomToIntersection=(action 'zoomToIntersection')
                 panToIntersection=panToIntersection
                 favoriteMode=favoriteMode
+                allowFavorite=allowFavorite
                 addToFavorite=(action 'addToFavorite')
                 addToCompareGeometries=(action 'addToCompareGeometries')
                 editFeature=(action 'editFeature')
-                availableEdit=availableEdit
+                availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
             }}
             {{else}}
               {{feature-result-item
                 feature=feature
-                infoExpanded=(and (eq result.features.length 1) result.first)
+                resultObject=result
                 displayProperty="displayValue"
                 displaySettings=result.settings
+                highlightable=enableHighlight
+                clearHighlights=(action "clearHighlights")
                 selectedFeature=_selectedFeature
                 selectFeature=(action "selectFeature")
                 panTo=(action "panTo")
@@ -243,20 +254,28 @@
                 zoomToIntersection=(action 'zoomToIntersection')
                 panToIntersection=panToIntersection
                 favoriteMode=favoriteMode
+                allowFavorite=allowFavorite
                 addToFavorite=(action 'addToFavorite')
                 addToCompareGeometries=(action 'addToCompareGeometries')
                 editFeature=(action 'editFeature')
-                availableEdit=availableEdit
+                availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
               }}
             {{/if}}
           {{/each}}
+          {{#if result.maxResultsLimitOverage}}
+            <div class="max-limit">
+              Найдено более {{maxResultsCount}} объектов по запросу. Пожалуйста, уточните поисковый запрос
+            </div>
+          {{/if}}
         </div>
       {{/flexberry-toggler}}
     {{/if}}
-  </div>
-{{/each}}
-{{feature-export
-  visible=exportDialogVisible
-  result=exportResult
-  availableCRS=availableCRS
-}}
+    </div>
+  {{/each}}
+  {{feature-export
+    visible=exportDialogVisible
+    result=exportResult
+    availableCRS=availableCRS
+  }}
+{{/if}}
+

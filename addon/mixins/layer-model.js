@@ -19,6 +19,8 @@ export default Ember.Mixin.create({
   */
   localStorageService: Ember.inject.service('local-storage'),
 
+  archTime: null,
+
   /**
     Object with layer's settings.
     @property settingsAsObject
@@ -36,7 +38,7 @@ export default Ember.Mixin.create({
     @method _settingsDidChange
     @private
   */
-  _settingsDidChange: Ember.on('init', Ember.observer('settings', function() {
+  _settingsDidChange: Ember.on('init', Ember.observer('settings', 'map', 'map.mapLayer', function() {
     let stringToDeserialize = this.get('settings');
     let settingsAsObject = {};
 
@@ -65,7 +67,7 @@ export default Ember.Mixin.create({
   _applyLayerPropertiesFromLocalStorage() {
     let mapId = this.get('map.id');
     let layerId = this.get('id');
-    let localStorageLayer = Ember.isBlank(mapId) || Ember.isBlank(layerId) ?
+    let localStorageLayer = Ember.isBlank(mapId) || Ember.isBlank(layerId) || Ember.isNone(this.get('localStorageService')) ?
       null :
       this.get('localStorageService').getFromStorage('layers', mapId).findBy('id', layerId);
     if (!Ember.isNone(localStorageLayer)) {

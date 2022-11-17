@@ -53,17 +53,21 @@ export default Ember.Mixin.create(rhumbOperations, {
       geoJSON = L.geoJSON(object);
     }
 
-    let newObj = geoJSON.getLayers()[0];
+    let newObjs = geoJSON.getLayers();
 
-    let e = { layers: [newObj], results: Ember.A() };
-    leafletObject.fire('load', e);
+    if (newObjs.length > 0) {
+      let e = { layers: newObjs, results: Ember.A() };
+      leafletObject.fire('load', e);
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.RSVP.allSettled(e.results).then(() => {
-        newObj.layerId = layerId;
-        resolve(newObj);
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        Ember.RSVP.allSettled(e.results).then(() => {
+          newObjs.forEach((layer) => { layer.layerId = layerId; });
+          resolve(newObjs);
+        });
       });
-    });
+    } else {
+      throw new Error('Can not create object from geojson');
+    }
   },
 
   /**
@@ -152,10 +156,11 @@ export default Ember.Mixin.create(rhumbOperations, {
     let separateObjects = [];
     let resultObject = null;
     let geometries = [];
+    let scale = this.get('mapApi').getFromApi('precisionScale');
     objects.forEach((element, i) => {
       let g = element;
       if (isJsts) {
-        g = geometryToJsts(element.geometry);
+        g = geometryToJsts(element.geometry, scale);
         g.setSRID(element.crs.properties.name.split(':')[1]);
       }
 
@@ -205,7 +210,7 @@ export default Ember.Mixin.create(rhumbOperations, {
 
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let unionres = geojsonWriter.write(resultObject);
-    let crsResult = 'EPSG:' + geometries[0].getSRID();
+    let crsResult = 'EPSG:' + (Ember.isNone(geometries) ? '' :  geometries[0].getSRID());
 
     let type = unionres.type;
     let coordinates = unionres.coordinates;

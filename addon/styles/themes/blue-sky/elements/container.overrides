@@ -63,13 +63,13 @@
     .leaflet-control-scale {
       margin-bottom: 8px;
       margin-left: 0px;
-      &.map-control-scalebar {
+      &.map-control-scalebar, &.main, &.export {
         margin-bottom: 0px;
       }
     }
 
     .leaflet-control-scale-line,
-    .map-control-scalebar-ratiomenu {
+    .map-control-scalebar-ratiomenu, .main-ratiomenu, .export-rationmenu {
       width: 90px !important;
       height: 16px;
       background: #ffffff;
@@ -193,7 +193,7 @@ div.measure-drag-panel {
 
   .flexberry-identify-panel-tools-options {
     margin-right: 8px;
-    i.icon.square.outline:before {
+    i.icon.rectangle:before {
       content: "\f096";
       font-family: FontAwesome;
     }
@@ -217,7 +217,7 @@ div.measure-drag-panel {
     }
   }
   .buffer-tools {
-    margin-top: 7px;
+    margin-top: 2px;
     .field {
       height: 32px !important;
       border: @defaultGrayBorder;
@@ -243,7 +243,8 @@ div.measure-drag-panel {
             font-family: Crimean;
             content: "\e82f";
             font-size: 6px;
-            color: #8F928F;
+            color: @greyIconColor;
+            opacity: 1;
           }
         }
         .text {
@@ -332,11 +333,11 @@ a.item:active,
 *********************************************/
 
 .layer-result-list {
-  .item .active {
+  .item.active {
     background: @layerResultListActiveBackground;
     color: @primaryColor;
   }
-  
+
   .flexberry-toggler-content {
     padding-top: 0px !important;
   }

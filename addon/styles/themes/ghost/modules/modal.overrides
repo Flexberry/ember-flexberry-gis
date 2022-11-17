@@ -1,0 +1,798 @@
+/*******************************
+         Theme Overrides
+*******************************/
+
+.ui.modal.flexberry-remove-layer-dialog,
+.ui.modal.flexberry-mapinfo-dialog,
+.ui.modal.flexberry-add-layer-dialog,
+.ui.modal.flexberry-copy-layer-dialog,
+.ui.modal.flexberry-edit-layer-dialog,
+.ui.modal.flexberry-edit-map-dialog,
+.ui.modal.flexberry-edit-layer-attributes-dialog,
+.ui.modal.flexberry-geometry-add-mode-manual-dialog,
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog,
+.ui.modal.flexberry-geometry-add-mode-geoprovider-dialog,
+.ui.modal.flexberry-geometry-add-mode-import-dialog,
+.ui.modal.flexberry-geometry-add-mode-import-result,
+.ui.modal.flexberry-export-map-command-dialog,
+.ui.modal.flexberry-search-map-command-dialog,
+.ui.modal.flexberry-go-to-map-command-dialog,
+.ui.modal.olv-toolbar-info-modal-dialog {
+  .content {
+    overflow: auto;
+    &.layers-fields-container {
+      border-radius: @defaultBorderRadius;
+      border: 1px solid @layersFieldsContainerBorderColor;
+      margin: 5px !important;
+      height: 200px;
+    }
+  }
+
+  .ui.attached.menu {
+      background: @whitecolor;
+  }
+  /* вкладки в модальных окнах */
+  .ui.tabular.menu .item {
+      color: @tabularMenuItemColor;
+      &.active {
+          color: @tabularMenuItemActiveColor;
+      }
+      &:hover {
+          color: @tabularMenuItemHoveredCcolor;
+      }
+      &.disabled i.icon:before {
+          color: @tabularMenuItemDisabledIconColor;
+      }
+  }
+  .actions:not(.ui) {
+      border-top: none;
+      background-color: @lightbluecolor;
+      padding: 1rem;
+      color: @whitecolor;
+      .ui.button {
+          padding: .6em 2em;
+      }
+  }
+  .ui.error.message {
+      margin: 10px 0 0 0;
+  }
+  /* иконка закрытия */
+  i.icon.close:before {
+      font-family: Crimean;
+      content: "\e806";
+  }
+  /* контент окна */
+  .flexberry-dialog-content {
+      padding: 0px 1.5rem !important;
+  }
+  .ui.form .field {
+    .button.flexberry-button {
+      &>i.icon:before {
+        color: @darkbluecolor;
+      }
+      &:hover {
+          &>i.icon:before {
+            color: @darkbluecolor;
+          }
+      }
+    }
+  }
+  .ui.icon.button.switch {
+      display: inline-block;
+      height: auto;
+  }
+  /* кнопка ОК */
+  .ui.positive.button {
+    font-weight: normal;
+    background-color: @primaryColor !important;
+    border: solid 1px @primaryColor !important;
+    box-shadow: @defaultBoxShadow;
+    color: @whitecolor;
+    &:hover {
+      opacity: 1;
+      background-color: @positiveButtonHoverColor;
+      box-shadow: none;
+    }
+    &:active{
+      background-color: @positiveButtonActiveColor;
+      box-shadow: none;
+    }
+  }
+
+  /* кнопка Отмена */
+  .ui.negative.button {
+    font-weight: normal;
+    background-color: @white !important;
+    background-image: none;
+    border: @defaultGrayBorder !important;
+    box-shadow: @defaultBoxShadow;
+    color: @primaryColor !important;
+    margin-left: 0px;
+    &:hover {
+      opacity: 1;
+      color: @buttonHoverColor;
+      background-color: @negativeButtonHoverColor;
+      box-shadow: none;
+    }
+    &:active{
+      background-color: @negativeButtonActiveColor;
+      box-shadow: none;
+    }
+  }
+
+  .ui.attached.tab.segment .flexberry-button:not(.success) {
+      background: @white !important;
+      box-shadow: @darkBoxShadow;
+      &:hover {
+          background: #f1f7ff !important;
+          color: @darkbluecolor;
+      }
+      &:not(.disabled) {
+          border: none;
+      }
+      &.filter-operator-button {
+          margin: 5px;
+          width: 6em;
+      }
+  }
+
+  .ui.tab.segment,
+  .ui.tabular.menu {
+    margin-bottom: 0px !important;
+    &.fluid {
+      &.item:last-child {
+        width: calc( 16.75% + 1px );
+      }
+    }
+  }
+  .flexberry-edit-layermap .ui.small.fluid.buttons:not(.basic):not(.inverted) > .button.flexberry-button {
+    color: @darkbluecolor;
+  }
+}
+.ui.modal.flexberry-dialog-move {
+    /* кнопка Отмена */
+  .ui.negative.button {
+    background-color: @white !important;
+    background-image: none;
+    border: @defaultGrayBorder !important;
+    color: @primaryColor !important;
+    font-weight: normal;
+    margin-left: 0px;
+    &:hover {
+      opacity: 1;
+      background-color: @negativeButtonHoverColor;
+    }
+    &:active{
+      background-color: @negativeButtonActiveColor;
+    }
+  }
+}
+
+.ui.modal.flexberry-add-layer-dialog,
+.ui.modal.flexberry-copy-layer-dialog,
+.ui.modal.flexberry-edit-layer-dialog,
+.ui.modal.flexberry-edit-map-dialog,
+.ui.modal.flexberry-edit-layer-attributes-dialog,
+.ui.modal.flexberry-geometry-add-mode-manual-dialog,
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog,
+.ui.modal.flexberry-geometry-add-mode-geoprovider-dialog {
+    .ui.form {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        .ui.bottom.attached.tab.segment {
+            border-radius: 0px 0px 5px 5px;
+        }
+    }
+    .flexberry-jsonarea div.row:first-child {
+        text-align: center;
+    }
+}
+
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog {
+    .flexberry-geometry-add-mode-rhumb-table-block {
+        overflow: auto;
+        height: 170px;
+    }
+}
+
+.ui.modal.flexberry-search-map-command-dialog {
+    &>.content {
+        max-height: 400px;
+        min-height: 400px;
+        .ui.form {
+            height: 100%;
+            .ui.two.column.celled.grid {
+                min-height: 400px;
+            }
+            .flexberry-button.ui.button.icon:not(.fluid) {
+                height: 36px;
+                width: 36px;
+                padding: 12px 8px;
+            }
+            i {
+                &.icon.map:before {
+                    content: "\e812";
+                    font-family: Crimean;
+                }
+            }
+        }
+    }
+}
+
+/******************************************************************
+         flexberry-edit-layer-dialog label-settings
+         override styles for Row
+*******************************************************************/
+.ui.grid > .location:last-child {
+    padding-bottom: 1rem;
+}
+.ui.grid > .location:first-child {
+    padding-top: 1rem;
+}
+.ui.grid > .location {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 0rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog {
+    .rhumb {
+        width: 33%;
+        margin: 3% 0;
+    }
+    .rhumb .first {
+        margin-top: 0.2em;
+    }
+    .rhumb.last {
+        padding-right: 5px;
+    }
+    table>tbody .flexberry-dropdown {
+        margin-bottom: 10px;
+    }
+}
+
+// ====== RGIS ========
+
+.flexberry-dialog-content.content {
+  .ui.celled.grid {
+    border: none;
+    box-shadow: none;
+  }
+}
+
+.ui.modal.flexberry-add-layer-dialog,
+.ui.modal.flexberry-copy-layer-dialog,
+.ui.modal.flexberry-edit-layer-dialog,
+.ui.modal.flexberry-edit-map-dialog,
+.ui.modal.flexberry-edit-layer-attributes-dialog,
+.ui.modal.flexberry-export-map-command-dialog,
+.ui.modal.flexberry-search-map-command-dialog,
+.ui.modal.flexberry-geometry-add-mode-manual-dialog,
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog,
+.ui.modal.flexberry-geometry-add-mode-import-dialog,
+.ui.modal.flexberry-geometry-add-mode-import-result,
+.ui.modal.flexberry-geometry-add-mode-geoprovider-dialog,
+.ui.modal.flexberry-go-to-map-command-dialog,
+.ui.modal.flexberry-mapinfo-dialog,
+.ui.modal.olv-toolbar-info-modal-dialog {
+  .ui.tab.segment,
+  .ui.segment {
+    overflow: visible;
+  }
+
+  .ui.form .field {
+    .button.flexberry-button {
+      &>i.icon:before {
+        color: @primaryColor;
+      }
+      &:hover {
+        &>i.icon:before {
+          color: @primaryColor;
+        }
+      }
+    }
+  }
+  .actions {
+    &:not(.ui) {
+      background-color: @white;
+      label.ui.button {
+        padding-top: 9px;
+        padding-bottom: 9px;
+      }
+    }
+  }
+
+  i.icon.close:before {
+    color: @white;
+  }
+
+  .pages .ui.button {
+    line-height: 1.5em;
+  }
+
+  &>.flexberry-dialog-content {
+    padding: 1.5rem !important;
+    &.content {
+      // Same as dialog content's max-height in Semantic UI.
+      min-height: 400px;
+      overflow: auto !important;
+
+      .flexberry-export-map-command-dialog-sheet-of-paper {
+        box-shadow: @defaultFieldBoxShadow;
+      }
+
+      & > .ui.form > .ui.grid .flexberry-export-map-command-dialog-paging-column {
+        padding-left: 15px;
+        label {
+          border-radius: @defaultBorderRadius;
+          box-shadow: @defaultBoxShadow;
+          height: 40px;
+          margin: 0;
+          width: 40px;
+          font-size: 20px;
+          padding: 0;
+          line-height: 40px;
+          color: @white;
+        }
+      }
+    }
+  }
+
+  .ui.attached.tab.segment,
+  .ui.attached.segment {
+    .flexberry-button:not(.icon) {
+      width: 50%;
+    }
+  }
+}
+.ui.modal.flexberry-edit-layer-dialog {
+  i.icon.close:before {
+    color: @primaryColor;
+  }
+}
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  border-radius: 3px;
+}
+
+.ui.modal.flexberry-export-map-command-dialog {
+  .flexberry-dialog-header, .flexberry-dialog-toolbar {
+    display: none;
+  }
+
+  i.icon.close.flexberry-dialog-close-button:before {
+    color: @primaryColor;
+  }
+
+  .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-settings-column {
+    padding: 1em 0;
+    border: none;
+    box-shadow: none;
+
+    h3 {
+      font-weight: normal;
+      text-align: center;
+    }
+
+    .export-buttons {
+      .button.flexberry-button {
+        color:@white;
+        background: @primaryColor;
+        height: 32px;
+        min-height: 32px;
+        min-width: 200px;
+        padding: 8px 0;
+        margin: 0 15px;
+      }
+    }
+
+    .ui.segment {
+      border: none;
+
+      .ui.grid .row .ui.buttons {
+        .ui.icon.button {
+          border: @defaultGrayBorder;
+          border-radius: @defaultBorderRadius;
+          box-shadow: @defaultBoxShadow;
+          margin-right: 2px;
+          min-width: 40px;
+          max-width: 40px;
+          &:hover {
+            background: @white !important;
+            border: @buttonMenuHoveredBorder;
+          }
+          &.active {
+            background: @buttonMenuActiveBackground !important;
+            border: @buttonMenuHoveredBorder;
+            i.icon:before {
+              color: @white;
+            }
+          }
+          &:first-child,
+          &:last-child {
+            border-radius: @defaultBorderRadius;
+          }
+        }
+      }
+      .minicolors {
+        width: 40px;
+        height: 40px;
+        .minicolors-swatch-color {
+          border-radius: @defaultBorderRadius;
+        }
+      }
+    }
+  }
+}
+
+.ui.modal.flexberry-search-map-command-dialog {
+  &>.content .ui.form .collapsing {
+    .flexberry-button.ui.button.icon {
+      padding: 9px 0em;
+    }
+  }
+}
+
+.ui.flexberry-geometry-add-mode-import-form {
+  padding: 0em 1em;
+  padding-bottom: 0.5em;
+  .ui.flexberry-jsonarea {
+    box-shadow: none;
+    .row {
+      box-shadow: none;
+      label.ui.button.flexberry-button.positive {
+        i.icon:before {
+          color: @white;
+        }
+        &:hover {
+          i.icon:before {
+            color: @white;
+          }
+        }
+      }
+    }
+    .column {
+      padding: 0px;
+    }
+    .flexberry-textarea {
+      margin-top: 1.7em;
+    }
+    label.ui.button.flexberry-button {
+      margin-left: 0px;
+      &.positive {
+        background-color: @primaryColor;
+        &:hover {
+          background-color: @lightgrassGreenColor;
+        }
+      }
+      &:hover {
+        background-color: @white;
+      }
+    }
+    textarea.ember-text-area {
+      margin: 0em;
+      min-height: 120px;
+    }
+  }
+}
+
+.flexberry-geometry-add-mode-rhumb-dialog {
+  .ui.form {
+    &>.field {
+      margin: 1.7em 0em 0em;
+    }
+    .flexberry-table {
+      input.ember-text-field {
+         max-width: unset;
+      }
+      label.flexberry-button {
+        width: 35px;
+        margin: 0px;
+        padding-left: 0.6em;
+        padding-top: 0.7em;
+        .icon {
+          left: 0px;
+        }
+      }
+      td.narrow {
+        text-align: center;
+      }
+    }
+  }
+}
+
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog {
+  table>tbody .flexberry-dropdown {
+    margin-top: 0.455em !important;
+  }
+  .rhumb .first .flexberry-textbox>input {
+    padding-top: 0px;
+    padding-bottom: 0.49em;
+  }
+  table>thead>tr>th.direction {
+    width: 160px !important;
+  }
+}
+
+.flexberry-geometry-add-mode-manual-dialog {
+  .ui.form {
+    .flexberry-dropdown {
+      i.icon {
+        margin-right: 0px;
+      }
+      .menu.transition {
+        min-width: 100%;
+        width: 100%;
+        margin: 0px;
+      }
+    }
+  }
+}
+
+.ui.modal.flexberry-geometry-add-mode-import-result.flexberry-dialog {
+  &>.flexberry-dialog-content.content {
+    margin: 1.5rem;
+    width: 96%;
+    padding: 0px !important;
+  }
+}
+
+.ui.modal {
+  box-shadow: #888888 0px 0px 3px;
+}
+
+.ui.modal.flexberry-add-layer-dialog,
+.ui.modal.flexberry-edit-layer-dialog {
+  .ui.form {
+    .ui.bottom.attached.tab.segment {
+        border-radius: @defaultBorderRadius;
+    }
+  }
+}
+
+.ui.modal.flexberry-add-layer-dialog,
+.ui.modal.flexberry-edit-layer-dialog {
+  .ui.form {
+    div[data-tab="display-tab"] {
+      table td.collapsing {
+        text-align: center;
+      }
+    }
+    div[data-tab="settings-tab"] .field .flexberry-button {
+      font-size: 14px;
+      padding: 9px;
+    }
+    div[data-tab="links-group"] {
+      .flexberry-links-editor {
+        .object-list-view-container {
+          table.ui.table {
+            width: 100%;
+          }
+        }
+        .ui.grid {
+          align-items: baseline;
+          .two.wide.column > .field {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .flexberry-links-editor-visibility-checkbox {
+            margin-top: 3px;
+          }
+          .flexberry-links-editor-clear-button {
+            border: none;
+            &:hover {
+              border: none;
+              i.remove.icon:before {
+                color: @lightgrassGreenColor;
+              }
+            }
+          }
+        }
+        .check-all-at-page-button.button:hover i.icon.check-square-o:before {
+          color: @primaryColor;
+        }
+        .object-list-view-container {
+          .object-list-view-operations {
+            text-align: center;
+            .check-all-at-page-button {
+              vertical-align: middle;
+            }
+          }
+          .object-list-view-helper-column-cell {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            .cell {
+              display: flex;
+              &.asterisk-cell {
+                align-self: center;
+                margin-right: -5px;
+                i.icon.asterisk {
+                  line-height: 0.9em;
+                  &:before {
+                    font-size: 9px;
+                    color: @red;
+                  }
+                }
+              }
+            }
+            .cell:not(.asterisk-cell) {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+      .field > label {
+        font-size: 14px;
+        padding: 9px;
+      }
+    }
+    div[data-tab="style-tab"] {
+      .simple-layers-style {
+        .flexberry-colorpicker {
+          margin-left: 9px;
+        }
+        .simple-layers-style-path-editor {
+          .ui.dropdown {
+            padding: 0px 1rem;
+            .menu .item {
+              padding: 3px 1em !important;
+            }
+          }
+          .ui.checkbox {
+            margin-left: 1.15em;
+          }
+        }
+        .ui.grid.style-settings-with-preview canvas {
+          width: 200px;
+          height: 138px;
+        }
+        .markers-styles-editor {
+          .flexberry-file-add-button:hover {
+            i.icon.add:before {
+              color: @primaryColor;
+            }
+          }
+          .ui.menu.flexberry-maptoolbar {
+            box-shadow: none;
+            .flexberry-map-tool {
+              padding: 0px;
+            }
+          }
+        }
+      }
+      .graduated-layers-style,
+      .unique-layers-style {
+        .toolbar {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: flex-start;
+          .classify-categories-segment {
+            padding: 1em 0px;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            .categorized-layers-style-layer-property-dropdown {
+              width: 220px;
+            }
+            .categories-count {
+              width: 45px;
+              height: 30px;
+              margin-left: 7px;
+            }
+            .classify-button {
+              margin-right: 0px;
+              margin-left: 7px;
+            }
+          }
+          .gradient-tools-segment {
+            .ui.horizontal.list {
+              .search.selection {
+                margin: 0px 1em;
+                padding: 7px 10px;
+              }
+              .item:not(.dropdown-gradient) {
+                margin: 0px 1em;
+              }
+            }
+          }
+        }
+        .categories-table tr td:nth-child(2) {
+          text-align: center;
+        }
+      }
+    }
+    div[data-tab="filter-tab"] {
+      .ui.label.title.active {
+        background-color: @yellowGreenColor;
+      }
+      .content .eight.wide.column {
+        .ui.flexberry-button {
+          width: 100%;
+        }
+      }
+      .filter-correction-check-label {
+        margin-left: 10px;
+        &.positive {
+          color: @primaryColor;
+        }
+        &.negative {
+          color: @red;
+        }
+      }
+    }
+    div[data-tab="bbox-tab"] {
+      .eight.wide.column {
+        .flexberry-button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+.leaflet-popup a.leaflet-popup-close-button {
+  color: @white;
+  &:hover {
+    color: @white;
+  }
+}
+
+.ui.modal.flexberry-modal {
+  i.icon.close:before {
+    color: @white;
+  }
+}
+
+.ui.form.flexberry-geometry-add-mode-manual-form {
+  overflow: hidden;
+}
+
+.flexberry-export-map-command-dialog-settings-column-inner {
+  max-width: 454px;
+  height: calc(~'100vh - 6em');
+}
+
+.ui.form .flexberry-export-map-command-dialog-settings-column-inner .field {
+  margin-bottom: 1em;
+}
+
+.flexberry-export-map-command-dialog-settings-column-inner .ui.grid > .row:first-child {
+  padding-bottom: 0;
+}
+
+.ui.modal.flexberry-geometry-add-mode-import-dialog textarea {
+
+}
+
+.flexberry-export-map-command-dialog-settings-column {
+  .ui.buttons.flexberry-font-buttons {
+    justify-content: space-between;
+    &::after {
+      display: none;
+    }
+
+    .ui.icon.button {
+      padding-left: 0!important;
+      padding-right: 0!important;
+    }
+  }
+
+  .field.flexberry-card-buttons {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    .ui.button.flexberry-button {
+      height: 32px;
+      padding: 8px 0 !important;
+    }
+    > .field {
+      padding: 0 1rem;
+    }
+  }
+}

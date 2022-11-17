@@ -23,6 +23,8 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   */
   sideBySide: L.control.sideBySide(),
 
+  compareService: Ember.Service.inject('compare'),
+
   /**
     Parent route.
 
@@ -156,6 +158,13 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @type Number[]
   */
   switchScaleControlScales: [500, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 150000, 200000],
+
+  _leafletMapDidChange: Ember.observer('leafletMap', function () {
+    let leafletMap = this.get('leafletMap');
+    if (leafletMap) {
+      leafletMap.on('flexberry-map:toggleSidebar', this.onToggleSidebar, this);
+    }
+  }),
 
   /**
    Flat indicates that map should fire create object on first load
@@ -364,6 +373,29 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     });
   },
 
+  onToggleSidebar() {
+    let tab;
+    if (this.get('sidebarOpened')) {
+      Ember.$('.sidebar-wrapper .main-map-tab-bar > .item.tab.active').removeClass('active');
+    } else {
+      // поищем поcледнюю активную. у самих data-tab класс не сбрасывается
+      let activeTab = Ember.$('.sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
+      if (activeTab.length > 0) {
+        let dataTab = activeTab.attr('data-tab');
+        Ember.$('.sidebar-wrapper .main-map-tab-bar > .item.tab[data-tab=' + dataTab + ']').addClass('active');
+        tab = dataTab;
+      } else {
+        this.set('sidebar.0.active', true);
+        tab = 'treeview';
+      }
+    }
+
+    this.send('toggleSidebar', {
+      changed: false,
+      tabName: tab
+    });
+  },
+
   /**
     Observes changes in sidebar state and performs some changes in related 'flexberry-layers-attributes-panel'.
 
@@ -392,16 +424,24 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   },
 
   actions: {
+    onLoad(layer) {
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      if (config.APP.backendUrls.hasOwnProperty('loaderBackendUrl')) {
+        let loaderBackendUrl = config.APP.backendUrls.loaderBackendUrl;
+        window.open(loaderBackendUrl, '_blank');
+      }
+    },
+
     OnCompareTwoGeometries() {
       this.set('compareObjects', true);
       Ember.run.later(() => {
         let tab;
-        let activeTab = Ember.$('.rgis-sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
+        let activeTab = Ember.$('.sidebar-wrapper .sidebar.tabbar > .ui.tab.active');
         if (activeTab.length > 0) {
           tab = activeTab.attr('data-tab');
         }
 
-        Ember.$('.rgis-sidebar-wrapper .main-map-tab-bar > .item.tab.active').removeClass('active');
+        Ember.$('.sidebar-wrapper .main-map-tab-bar > .item.tab.active').removeClass('active');
 
         this.set('sidebar.8.active', true);
 
@@ -422,7 +462,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this.set('sidebar.3.active', true);
       this.send('toggleSidebar', {
         changed: true,
-        tabName: 'bookmarksAndFavorites'
+        tabName: 'bookmarks'
       });
     },
 
@@ -506,7 +546,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
     showCompareSideBar() {
       if (sideBySide) {
-        if (!this.get('compareLayersEnabled')) {
+        if (!this.get('compareService.compareLayersEnabled')) {
           this.set('sidebar.7.active', true);
         } else {
           this.set('sidebar.0.active', true);
@@ -520,7 +560,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         }
 
         setTimeout(() => {
-          this.toggleProperty('compareLayersEnabled');
+          this.toggleProperty('compareService.compareLayersEnabled');
         }, 500);
       }
     },
@@ -562,6 +602,12 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     */
     onMapLeafletDestroy() {
       this.destroyEditPanel();
+      this.set('sidebarOpened', false);
+      this.set('showTree', false);
+      let leafletMap = this.get('leafletMap');
+      if (leafletMap) {
+        leafletMap.off('flexberry-map:toggleSidebar', this.onToggleSidebar, this);
+      }
 
       this._super(...arguments);
     },
@@ -589,8 +635,8 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         this.set('attrVisible', false);
       }
 
-      if (e.tabName !== 'compare' && this.get('compareLayersEnabled')) {
-        this.set('compareLayersEnabled', false);
+      if (e.tabName !== 'compare' && this.get('compareService.compareLayersEnabled')) {
+        this.set('compareService.compareLayersEnabled', false);
       }
 
       if (e.tabName === 'identify') {

@@ -1,0 +1,34 @@
+// Success and error classes for buttons, inputs, etc.
+.ui.input.error {
+  input, input:focus {
+    border-color: #db2828;
+    color: #db2828;
+    box-shadow: none;
+  }
+}
+
+.ui.input.success {
+  input, input:focus {
+    border-color: #21ba45;
+    color: #21ba45;
+    box-shadow: none;
+  }
+}
+
+.ui.button.success {
+  color: #fff;
+  background: #21ba45;
+  border-color: #21ba45;
+  opacity: 0.75;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.ui.basic.label {
+  &.red {
+    color: #db2828 !important;
+    border-color: #db2828 !important;
+  }
+}

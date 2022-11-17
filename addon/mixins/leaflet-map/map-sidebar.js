@@ -20,21 +20,21 @@ export default Ember.Mixin.create({
     this._super(...arguments);
 
     // Define flexberryMap.commands namespace & related methods & properties.
-    let sidebar = leafletMap.flexberryMap.sidebar = {
+    leafletMap.flexberryMap.sidebar = {
 
       // Hide sidebar.
       hide() {
-        let $control = Ember.$('.sidebar-wrapper');
-        if ($control.length === 1 && !$control.hasClass('hidden')) {
-          $control.addClass('hidden');
+        let $control = Ember.$('*[class$="sidebar-wrapper"],*[class*="sidebar-wrapper "]');
+        if ($control.length === 1 && $control.hasClass('visible')) {
+          leafletMap.fire('flexberry-map:toggleSidebar');
         }
       },
 
       // Show sidebar.
       show() {
-        let $control = Ember.$('.sidebar-wrapper');
-        if ($control.length === 1 && $control.hasClass('hidden')) {
-          $control.removeClass('hidden');
+        let $control = Ember.$('*[class$="sidebar-wrapper"],*[class*="sidebar-wrapper "]');
+        if ($control.length === 1 && !$control.hasClass('visible')) {
+          leafletMap.fire('flexberry-map:toggleSidebar');
         }
       }
     };

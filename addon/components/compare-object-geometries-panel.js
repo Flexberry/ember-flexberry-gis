@@ -4,6 +4,7 @@ import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import distance from 'npm:@turf/distance';
 import helpers from 'npm:@turf/helpers';
 import jsts from 'npm:jsts';
+import { coordinatesToString } from '../utils/coordinates-to';
 
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   layout,
@@ -183,55 +184,103 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles click on pan to icon.
 
-      @method actions.hidePanel
+      @method actions.panToIntersection
+      @param {Object} geometry Contain intersection | non-intersection geometry. (Maybe contain many geometries)
     */
     panToIntersection(geometry) {
-      if (!Ember.isBlank(geometry.coordinates[0])) {
-        let copyGeometry = Object.assign({}, geometry);
-        let mapModel = this.get('mapApi').getFromApi('mapModel');
-        let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
-        let featureLayer = L.geoJSON(convertedFeatureLayer.geometry);
-        let center = featureLayer.getBounds().getCenter();
-        let leafletMap = this.get('leafletMap');
-        leafletMap.panTo(center);
+      if (!Ember.isNone(geometry)) {
+        let featureLayer = null;
+        if (geometry.type === 'GeometryCollection') {
+          featureLayer = L.featureGroup();
+          geometry.geometries.forEach(geom => {
+            featureLayer.addLayer(this._convertGeometryToFeatureLayer(geom));
+          });
+        } else {
+          featureLayer = this._convertGeometryToFeatureLayer(geometry);
+        }
+
+        if (!Ember.isNone(featureLayer)) {
+          let center = featureLayer.getBounds().getCenter();
+          let leafletMap = this.get('leafletMap');
+          leafletMap.panTo(center);
+        }
       }
     },
 
     /**
       Handles click on zoom to icon.
 
-      @method actions.hidePanel
+      @method actions.zoomToIntersection
+      @param {Object} geometry Contain intersection | non-intersection geometry. (Maybe contain many geometries)
     */
     zoomToIntersection(geometry) {
-      if (!Ember.isBlank(geometry.coordinates[0])) {
+      if (!Ember.isNone(geometry)) {
         let group = this.get('featuresLayer');
         group.clearLayers();
-        let copyGeometry = Object.assign({}, geometry);
-        let mapModel = this.get('mapApi').getFromApi('mapModel');
-        let convertedFeatureLayer =  mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
-        let featureLayer = L.geoJSON(convertedFeatureLayer.geometry, {
-          style: { color: 'green' }
-        });
-        featureLayer.addTo(group);
-        let map = this.get('leafletMap');
-        map.fitBounds(featureLayer.getBounds());
+        let featureLayer = null;
+        if (geometry.type === 'GeometryCollection') {
+          featureLayer = L.featureGroup();
+          geometry.geometries.forEach(geom => {
+            featureLayer.addLayer(this._convertGeometryToFeatureLayer(geom, {
+              style: { color: 'green' }
+            }));
+          });
+        } else {
+          featureLayer = this._convertGeometryToFeatureLayer(geometry, {
+            style: { color: 'green' }
+          });
+        }
+
+        if (!Ember.isNone(featureLayer)) {
+          featureLayer.addTo(group);
+          let map = this.get('leafletMap');
+          map.fitBounds(featureLayer.getBounds());
+        }
       }
+    }
+  },
+
+  /**
+      Convert feature coordinate.
+
+      @method actions.zoomToIntersection
+      @param {Object} geometry Contain coordinates
+      @param {Object} style Contain style if need to paint feature
+      @returns {Object} geoJSON layer
+    */
+  _convertGeometryToFeatureLayer(geometry, style) {
+    if (!Ember.isBlank(geometry.coordinates[0])) {
+      let copyGeometry = Object.assign({}, geometry);
+      let mapModel = this.get('mapApi').getFromApi('mapModel');
+      let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get('crs').code, { geometry: copyGeometry });
+      return L.geoJSON(convertedFeatureLayer.geometry, style);
     }
   },
 
   getDistance(firstObject, secondObject) {
     let firstCenter;
     let secondCenter;
+
+    let firstFeature = firstObject.leafletLayer;
     if (Ember.get(firstObject, 'leafletLayer.getLayers')) {
-      firstCenter = firstObject.leafletLayer.getLayers()[0].getBounds().getCenter();
-    } else {
-      firstCenter = firstObject.leafletLayer.getBounds().getCenter();
+      firstFeature = firstObject.leafletLayer.getLayers()[0];
     }
 
-    if (Ember.get(secondObject, 'leafletLayer.getLayers')) {
-      secondCenter = secondObject.leafletLayer.getLayers()[0].getBounds().getCenter();
+    if (firstFeature instanceof L.Marker) {
+      firstCenter = firstFeature.getLatLng();
     } else {
-      secondCenter = secondObject.leafletLayer.getBounds().getCenter();
+      firstCenter = firstFeature.getBounds().getCenter();
+    }
+
+    let secondFeature = secondObject.leafletLayer;
+    if (Ember.get(secondObject, 'leafletLayer.getLayers')) {
+      secondFeature = secondObject.leafletLayer.getLayers()[0];
+    }
+
+    if (secondFeature instanceof L.Marker) {
+      secondCenter = secondFeature.getLatLng();
+    } else {
+      secondCenter = secondFeature.getBounds().getCenter();
     }
 
     let firstPoint = helpers.point([firstCenter.lat, firstCenter.lng]);
@@ -251,63 +300,45 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   getIntersection(firstObject, secondObject) {
     let intersection = firstObject.intersection(secondObject);
-    let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let intersectionRes = geojsonWriter.write(intersection);
+    if (!intersection.isEmpty()) {
+      let geojsonWriter = new jsts.io.GeoJSONWriter();
+      let intersectionRes = geojsonWriter.write(intersection);
 
-    if (intersectionRes) {
-      intersectionRes.area = intersection.getArea().toFixed(3);
-      let displayCrs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
-      return this.getObjectWithProperties(intersectionRes, displayCrs);
-    }
-  },
-
-  getNonIntersection(firstObject, secondObject) {
-    let nonIntersection = firstObject.symDifference(secondObject);
-    let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let nonIntersectionRes = geojsonWriter.write(nonIntersection);
-
-    if (nonIntersectionRes) {
-      nonIntersectionRes.area = nonIntersection.getArea().toFixed(3);
-      let displayCrs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
-      return this.getObjectWithProperties(nonIntersectionRes, displayCrs);
+      if (intersectionRes) {
+        intersectionRes.area = intersection.getArea().toFixed(3);
+        return this.getObjectWithProperties(intersectionRes);
+      }
     }
 
     return { area: '0.000', intersectionCoordsText: '' };
   },
 
-  getObjectWithProperties(jstsGeometry, displаyCrs) {
-    displаyCrs = displаyCrs ? displаyCrs : 'EPSG:4326';
+  getNonIntersection(firstObject, secondObject) {
+    let nonIntersection = firstObject.symDifference(secondObject);
+    if (!nonIntersection.isEmpty()) {
+      let geojsonWriter = new jsts.io.GeoJSONWriter();
+      let nonIntersectionRes = geojsonWriter.write(nonIntersection);
+
+      if (nonIntersectionRes) {
+        nonIntersectionRes.area = nonIntersection.getArea().toFixed(3);
+        return this.getObjectWithProperties(nonIntersectionRes);
+      }
+    }
+
+    return { area: '0.000', intersectionCoordsText: '' };
+  },
+
+  getObjectWithProperties(jstsGeometry) {
     if (jstsGeometry) {
-      jstsGeometry.intersectionCords = [];
-      if (jstsGeometry.type !== 'Point') {
-        jstsGeometry.coordinates.forEach(arr => {
-          if (jstsGeometry.type.indexOf('Multi') !== -1) {
-            arr.forEach(pair => {
-              if (jstsGeometry.type === 'MultiPolygon') {
-                pair.forEach(cords => {
-                  jstsGeometry.intersectionCords.push(cords[0] + ' ' + cords[1]);
-                });
-                jstsGeometry.intersectionCords.push('');
-              } else {
-                jstsGeometry.intersectionCords.push(pair[0] + ' ' + pair[1]);
-              }
-            });
-          } else {
-            if (jstsGeometry.type === 'Polygon') {
-              arr.forEach(cords => {
-                jstsGeometry.intersectionCords.push(cords[0] + ' ' + cords[1]);
-              });
-              jstsGeometry.intersectionCords.push('');
-            } else {
-              jstsGeometry.intersectionCords.push(arr[0] + ' ' + arr[1]);
-            }
-          }
+      jstsGeometry.intersectionCoordsText = '';
+      if (jstsGeometry.type === 'GeometryCollection') {
+        jstsGeometry.geometries.forEach((geometry) => {
+          jstsGeometry.intersectionCoordsText += coordinatesToString(geometry.coordinates) + '\n';
         });
       } else {
-        jstsGeometry.intersectionCords.push(jstsGeometry.coordinates[0] + ' ' + jstsGeometry.coordinates[1]);
+        jstsGeometry.intersectionCoordsText = coordinatesToString(jstsGeometry.coordinates);
       }
 
-      jstsGeometry.intersectionCoordsText = jstsGeometry.intersectionCords.join('\r\n');
       return jstsGeometry;
     }
 

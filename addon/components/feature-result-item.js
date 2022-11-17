@@ -5,6 +5,8 @@
 import Ember from 'ember';
 import layout from '../templates/components/feature-result-item';
 import { translationMacro as t } from 'ember-i18n';
+import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
+import { zoomToBounds } from '../utils/zoom-to-bounds';
 
 /**
   Component for display GeoJSON feature object details
@@ -64,7 +66,7 @@ export default Ember.Component.extend({
     @type String[]
     @default ['isActive:active']
   */
-  classNameBindings: ['isActive:active'],
+  classNameBindings: ['isActive:active', 'feature.highlight:highlight'],
 
   /**
     Flag indicates if intersection panel is active.
@@ -78,20 +80,29 @@ export default Ember.Component.extend({
   /**
     Flag indicates if feature is in favorire list.
 
-    @property intersection
+    @property favoriteMode
     @type Boolean
     @default false
   */
   favoriteMode: false,
 
   /**
+    Flag indicates if user can add feature to favourite
+
+    @property allowFavorite
+    @type Boolean
+    @default false
+  */
+  allowFavorite: false,
+
+  /**
     Flag: indicates whether to display detailed feature info.
 
-    @property _infoExpanded
+    @property infoExpanded
     @type boolean
     @default false
    */
-  _infoExpanded: false,
+  infoExpanded: false,
 
   /**
     Flag: indicates whether to display links list (if present).
@@ -138,17 +149,6 @@ export default Ember.Component.extend({
   }),
 
   /**
-    Flag: indicates whether to display detailed feature info.
-
-    @property expanded
-    @type boolean
-    @readonly
-   */
-  expanded: Ember.computed('infoExpanded', '_infoExpanded', function () {
-    return this.get('infoExpanded') || this.get('_infoExpanded');
-  }),
-
-  /**
     Flag: indicates whether component is active.
 
     @property isActive
@@ -157,6 +157,33 @@ export default Ember.Component.extend({
    */
   isActive: Ember.computed('selectedFeature', 'feature', function () {
     return this.get('selectedFeature') === this.get('feature');
+  }),
+
+  /**
+    flag to enable scrolling of the list of results
+
+    @property activeScroll
+    @type Boolean
+    @default false
+  */
+  activeScroll: false,
+
+  /**
+    Observes and handles changes in feature.highlight state
+    Changes the border style of feature on the map
+
+    @method highlightObserver
+    @private
+  */
+  highlightObserver: Ember.observer('feature.highlight', function() {
+    if (this.feature.highlight) {
+      this.feature.leafletLayer.setStyle({
+        color: '#3388FF',
+        fillColor: 'salmon'
+      });
+    } else {
+      this.feature.leafletLayer.setStyle(this.get('defaultFeatureStyle'));
+    }
   }),
 
   /**
@@ -172,6 +199,32 @@ export default Ember.Component.extend({
    @default null
   */
   displaySettings: null,
+
+  /**
+   Search and identification results object
+   @property resultObject
+   @type Object
+   @default null
+  */
+  resultObject: null,
+
+  /**
+   Setting indicating whether an component can be highlighted in layer-result-list (Only for upper layer features)
+
+   @property highlightable
+   @type bool
+   @default false
+  */
+  highlightable: false,
+
+  /**
+   Default feature.leaflet.style settings. (Uses for restore state after click events)
+
+   @property defaultFeatureStyle
+   @type Object
+   @default null
+  */
+  defaultFeatureStyle: null,
 
   /**
     Feature's metadata.
@@ -213,6 +266,7 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
     const hasEditFormFunc = this.get('mapApi').getFromApi('hasEditForm');
+    this.prepareFeatureForHighlighting(this.get('highlightable'));
 
     if (typeof hasEditFormFunc === 'function') {
       const layerId = this.get('feature.layerModel.id');
@@ -257,29 +311,112 @@ export default Ember.Component.extend({
     }
   },
 
+  /**
+    Preparation feature for highlighting.
+
+    @method prepareFeatureForHighlighting
+  */
+  prepareFeatureForHighlighting(highlightable) {
+    let feature = this.get('feature');
+    if (!highlightable || !feature) {
+      return;
+    }
+
+    this.set('defaultFeatureStyle', Object.assign({}, feature.leafletLayer.options));
+
+    if (feature.geometry && feature.geometry.type &&
+        (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' ||
+        feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString')) {
+      let layerTolerance = feature.layerModel.get('_leafletObject.options.renderer.options');
+      if (Ember.isPresent(layerTolerance) && layerTolerance === 0) {
+        Ember.set(feature.layerModel.get('_leafletObject.options.renderer.options'), 'tolerance', 3);
+      }
+    }
+
+    L.DomEvent.on(feature.leafletLayer, 'click', (e) => {
+      this.send('highlightFeature', feature);
+      e.originalEvent.stopPropagation();
+    });
+  },
+
+  /**
+    Collecting settings for executing a zoomToBounds function
+
+    @method getLayerPropsForZoom
+  */
+  getLayerPropsForZoom() {
+    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    let bounds;
+    let feature = this.get('feature');
+
+    if (feature.leafletLayer instanceof L.Marker) {
+      let featureGroup = L.featureGroup().addLayer(feature.leafletLayer);
+      bounds = featureGroup.getBounds();
+    } else {
+      bounds = feature.leafletLayer.getBounds();
+    }
+
+    let minZoom = Ember.get(feature.leafletLayer, 'minZoom');
+    let maxZoom = Ember.get(feature.leafletLayer, 'maxZoom');
+    return { bounds, leafletMap, minZoom, maxZoom };
+  },
+
+  didRender() {
+    this._super(...arguments);
+    if (this.get('activeScroll')) {
+      let layerResultList = this.$(this.element).closest('.layer-result-list')[0]; // scroll element
+      let group = this.$(this.element).closest('.feature-result-item-group')[0]; // parent of highlighted element
+      layerResultList.scrollTo({
+        top: group.offsetTop + this.$(this.element)[0].offsetTop - layerResultList.offsetTop,
+        left: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    this.set('activeScroll', false);
+  },
   actions: {
+    /**
+      Highlight feature-result-items
+
+      @method actions.highlightFeature
+      @param {Object} clickedFeature feature for which the "highlight" state changes
+      @param {Boolean} activeScroll flag to enable scrolling of the list of results
+    */
+    highlightFeature(clickedFeature, activeScroll = true) {
+      if (!activeScroll) {
+        this.sendAction('clearHighlights', this.get('feature'));
+        Ember.set(clickedFeature, 'highlight', true);
+        return;
+      }
+
+      // The layer-result-list component has a zoomToAll option
+      // that causes the feature.highlight state to change, which is not correct.
+      let selectedAllFeaturesInResult = !this.get('resultObject.features').find(e => e.highlight === false) &&
+                                        this.get('resultObject.features.length') > 1 ? true : false;
+
+      // We can turn off the highlight if there was only one previous highlighted element
+      Ember.set(clickedFeature, 'highlight', selectedAllFeaturesInResult ? true : !clickedFeature.highlight);
+      this.sendAction('clearHighlights', clickedFeature); // clear other highlight states of feature-result-items in _displayResults.
+      Ember.set(this.get('resultObject'), 'expanded', true);
+      if (clickedFeature.highlight) {
+        this.set('activeScroll', true);
+        if (!this.get('infoExpanded')) { // open feature-result-item properties
+          this.set('infoExpanded', true);
+          this.set('_linksExpanded', true);
+        }
+      }
+    },
     /**
       Show\hide submenu
 
       @method actions.onSubmenu
     */
     onSubmenu() {
-      const isHidden = this.get('isSubmenu');
-      this.set('isSubmenu', !isHidden);
-
-      if (!isHidden) {
-        const component = this.get('element');
-        const moreButton = component.getElementsByClassName('icon item more');
-        const elements = component.getElementsByClassName('more submenu hidden');
-        const element = elements[0];
-        Ember.run.next(() => {
-          // Устанавливаем фиксированное позиционирование для подменю, чтобы не зависеть от внешнего контенера.
-          const { top, left } = moreButton[0].getBoundingClientRect();
-          element.style.position = 'fixed';
-          element.style.left = `${left - 8}px`;
-          element.style.top = `${top + 1}px`;
-        });
-      }
+      let component = this.get('element');
+      let moreButton = component.getElementsByClassName('icon item more');
+      let elements = component.getElementsByClassName('more submenu hidden');
+      openCloseSubmenu(this, moreButton, elements, 4, 0);
     },
     /**
       Performs row editing.
@@ -304,18 +441,10 @@ export default Ember.Component.extend({
         let name = Ember.get(layerModel, 'name');
 
         // редактируемый объект должен быть загружен
-        let leafletMap = this.get('mapApi').getFromApi('leafletMap');
         object.statusLoadLayer = true;
 
-        let bounds;
-        if (feature.leafletLayer instanceof L.Marker) {
-          let featureGroup = L.featureGroup().addLayer(feature.leafletLayer);
-          bounds = featureGroup.getBounds();
-        } else {
-          bounds = feature.leafletLayer.getBounds();
-        }
-
-        leafletMap.fitBounds(bounds);
+        let { bounds, leafletMap, minZoom, maxZoom } = this.getLayerPropsForZoom();
+        zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
         if (Ember.isNone(object.promiseLoadLayer) || !(object.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
           object.promiseLoadLayer = Ember.RSVP.resolve();
         }
@@ -348,6 +477,7 @@ export default Ember.Component.extend({
           };
 
           this.sendAction('editFeature', {
+            isFavorite: feature.properties.isFavorite,
             dataItems: dataItems,
             layerModel: { name: name, leafletObject: object, settings, layerModel }
           });
@@ -382,6 +512,7 @@ export default Ember.Component.extend({
       @method actions.panTo
      */
     panTo() {
+      this.send('highlightFeature', this.get('feature'), false);
       this.sendAction('panTo', this.get('feature'));
     },
 
@@ -390,7 +521,9 @@ export default Ember.Component.extend({
       @method actions.zoomTo
      */
     zoomTo() {
-      this.sendAction('zoomTo', this.get('feature'));
+      this.send('highlightFeature', this.get('feature'), false);
+      let { bounds, leafletMap, minZoom, maxZoom } = this.getLayerPropsForZoom();
+      zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
     },
 
     /**
@@ -398,7 +531,7 @@ export default Ember.Component.extend({
       @method actions.showInfo
      */
     showInfo() {
-      this.set('_infoExpanded', !this.get('_infoExpanded'));
+      this.set('infoExpanded', !this.get('infoExpanded'));
       this.set('_linksExpanded', false);
     },
 

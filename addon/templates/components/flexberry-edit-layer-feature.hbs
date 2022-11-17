@@ -20,13 +20,13 @@
 
         <a class="editfeature tab item manual {{if (eq activeGeoTool "manual") "curtab active"}}" data-tab="manual"
           {{action "setGeometryTool" "manual"}}>
-          <i class="keyboard icon"></i>
+          <i class="icon-guideline-coordinates"></i>
         </a>
 
         {{#if drawMode }}
         <a class="editfeature tab item {{if (eq activeGeoTool "draw") "curtab active"}}" data-tab="draw"
           {{action "setGeometryTool" "draw"}}>
-          <i class="draw-area icon"></i>
+          <i class="icon-guideline-polygone"></i>
         </a>
         {{/if}}
 
@@ -34,7 +34,7 @@
           {{#if (and rhumbMode (not (eq _model.typeGeometry "marker"))) }}
           <a class="editfeature tab item {{if (eq activeGeoTool "rhumb") "curtab active"}}" data-tab="rhumb"
             {{action "setGeometryTool" "rhumb"}}>
-            <i class="compass icon"></i>
+            <i class="icon-guideline-compass"></i>
           </a>
           {{/if}}
           {{#if (and geoproviderMode (eq _model.typeGeometry "marker")) }}
@@ -57,6 +57,7 @@
             layerCRS=_model.layerCRS
             typeGeometry=_model.typeGeometry
           )
+          active=(eq activeGeoTool "manual")
           updateLayer=(action "updateLayer")
       }}
     </div>
@@ -73,6 +74,7 @@
               drawTools=_model.availableDrawTools
               typeGeometry=_model.typeGeometry
             )
+            active=(eq activeGeoTool "draw")
             drawStart=(action "onAddDrawStart" _model.typeGeometry)
             updateLayer=(action "updateLayer")
             block=(action "blockForm")
@@ -91,6 +93,7 @@
               layerCRS=_model.layerCRS
               typeGeometry=_model.typeGeometry
             )
+            active=(eq activeGeoTool "rhumb")
             updateLayer=(action "updateLayer")
         }}
       </div>
@@ -125,7 +128,7 @@
   {{#each-in data as |index dataValue|}}
   <div class="create-edit-block-data {{if (eq (concat "" curIndex) index) "visible" "hidden"}}">
     <a class="icon item" {{action "toggleAttributes" on="click"}}>
-      <i class="caret {{if _attributesExpanded 'down' 'right'}} icon"></i>
+      <i class="icon-guideline-navigate-arrow{{if _attributesExpanded '-down'}}"></i>
       {{t "components.flexberry-edit-layer-feature.attributes"}}
     </a>
 
@@ -137,25 +140,31 @@
               class="create-edit-block-choices"
               items=choiceItems
               value=choiceValue
+              placeholder=""
             }}
           </div>
         {{/if}}
         {{#each-in _model.fieldNames as |fieldName fieldValue|}}
         <div class="field {{if (get (get parsingErrors (concat '' curIndex)) fieldName) "error" ""}}">
           <label>{{fieldValue}}</label>
-          {{#if (eq (get fieldTypes fieldName) "date")}}
-          {{flexberry-datepicker
-                  value=(mut (get dataValue fieldName))
-                }}
-          {{else if (eq (get fieldTypes fieldName) "boolean")}}
-          {{flexberry-checkbox
-                  value=(mut (get dataValue fieldName))
-                }}
+          {{#if (eq (get _model.fieldTypes fieldName) "date")}}
+            {{flexberry-simpledatetime
+              type="date"
+              value=(mut (get dataValue fieldName))
+              placeholder=placeholderDataPicker
+              readonly=isPropertiesReadonly
+            }}
+          {{else if (eq (get _model.fieldTypes fieldName) "boolean")}}
+            {{flexberry-checkbox
+              value=(mut (get dataValue fieldName))
+              readonly=isPropertiesReadonly
+            }}
           {{else}}
-          {{input
-                  type="text"
-                  value=(mut (get dataValue fieldName))
-                }}
+            {{input
+              type="text"
+              value=(mut (get dataValue fieldName))
+              readonly=isPropertiesReadonly
+            }}
           {{/if}}
           {{#if (get (get parsingErrors (concat '' curIndex)) fieldName)}}
           <div class="validation">

@@ -54,7 +54,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
     };
 
     // Define flexberryMap.commands namespace & related methods & properties.
-    let commands = leafletMap.flexberryMap.commands = {
+    leafletMap.flexberryMap.commands = {
 
       // Executes specified map-command.
       execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions) {
@@ -62,6 +62,10 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
         if (Ember.isNone(mapCommand)) {
           return;
         }
+
+        leafletMap.fire('flexberry-map:commands:choose', {
+          mapCommand: mapCommand
+        });
 
         // Execute specified map-command.
         // It will also trigger 'flexberry-map:commands:execute' event on leaflet map.

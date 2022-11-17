@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
 export default Ember.Route.extend({
 
@@ -11,6 +12,7 @@ export default Ember.Route.extend({
 
     // Create map model.
     let map = store.createRecord('new-platform-flexberry-g-i-s-map', {
+      id: generateUniqueId(),
       name: 'testmap',
       lat: 43.4012499836,
       lng: 39.8487556040693,
@@ -21,6 +23,7 @@ export default Ember.Route.extend({
 
     // Create layer model & add to map model.
     let openStreetMapLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', {
+      id: generateUniqueId(),
       name: 'OSM',
       type: 'tile',
       visibility: true,

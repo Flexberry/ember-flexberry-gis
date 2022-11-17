@@ -8,7 +8,6 @@ moduleForModel('new-platform-flexberry-g-i-s-layer-metadata', 'Unit | Serializer
     'transform:decimal',
     'transform:json',
 
-    'model:custom-inflector-rules',
     'model:new-platform-flexberry-g-i-s-layer-link',
     'model:new-platform-flexberry-g-i-s-layer-metadata',
     'model:new-platform-flexberry-g-i-s-link-metadata',

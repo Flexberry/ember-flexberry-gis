@@ -123,5 +123,12 @@ export default {
     'autocomplete-url-textbox': {
       'caption': 'Autocomplete Url'
     }
+  },
+
+  'combine': {
+    'main-settings-caption': 'Main layer settings ',
+    'inner-settings-caption': 'Settings ',
+    'type-dropdown': 'Layer type',
+    'add-button-caption': 'Add'
   }
 };

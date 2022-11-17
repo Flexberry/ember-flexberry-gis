@@ -31,7 +31,7 @@ export default Ember.Component.extend(
       @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
       @default null
       @private
-     */
+    */
     _leafletObject: null,
 
     /**
@@ -66,11 +66,79 @@ export default Ember.Component.extend(
     */
     tagName: '',
 
+    archTime: null,
+    hasTime: null,
+
+    timeObserverDelay: 1500,
+
+    timeObserver: Ember.observer('layerModel.archTime', function () {
+      // Из комбинированого исторического слоя это изменение пробросится и для основного тоже. Проконтролируем
+      if (this.get('hasTime') && this.reload && typeof (this.reload) === 'function') {
+        Ember.run.debounce(this, this.reload, this.get('timeObserverDelay'));
+      }
+    }),
+
+    customFilter: Ember.computed('layerModel.archTime', function () {
+      if (this.get('hasTime')) {
+        let time = this.get('layerModel.archTime');
+        let formattedTime;
+        if (Ember.isBlank(time) || time === 'present' || Ember.isNone(time)) {
+          formattedTime = moment().toISOString();
+        } else {
+          formattedTime = moment(time).toISOString();
+        }
+
+        return new L.Filter.And(
+          new L.Filter.LEQ('archivestart', formattedTime),
+          new L.Filter.GEQ('archiveend', formattedTime));
+      }
+    }),
+
+    addCustomFilter(filter) {
+      let customFilter = this.get('customFilter');
+      let layerFilter = this.get('filter');
+      let resultFilter = Ember.A();
+      if (!Ember.isNone(layerFilter) && layerFilter !== '') {
+        resultFilter.pushObject(layerFilter);
+      }
+
+      if (!Ember.isNone(filter) && filter !== '') {
+        resultFilter.pushObject(filter);
+      }
+
+      if (!Ember.isNone(customFilter) && customFilter !== '') {
+        resultFilter.pushObject(customFilter);
+      }
+
+      if (resultFilter.length === 0) {
+        return null;
+      } else if (resultFilter.length === 1) {
+        return resultFilter[0];
+      } else {
+        return new L.Filter.And(...resultFilter);
+      }
+    },
+
+    setOwner(properties) {
+      let owner = Ember.getOwner(this);
+      let ownerKey = null;
+      Ember.A(Object.keys(this) || []).forEach((key) => {
+        if (this[key] === owner) {
+          ownerKey = key;
+          return false;
+        }
+      });
+
+      if (!Ember.isBlank(ownerKey)) {
+        properties[ownerKey] = owner;
+      }
+    },
+
     /**
       Array containing component's properties which are also leaflet layer options (see leaflet-options mixin).
 
       @property leafletOptions
-      @type Stirng[]
+      @type String[]
     */
     leafletOptions: null,
 
@@ -279,10 +347,14 @@ export default Ember.Component.extend(
       }).then(({
         leafletLayer
       }) => {
-        leafletLayer.leafletMap = this.get('leafletMap');
+        Ember.set(leafletLayer, 'leafletMap', this.get('leafletMap'));
         this.set('_leafletObject', leafletLayer);
 
         if (Ember.isPresent(this.get('layerModel'))) {
+          if (!Ember.isNone(this.get('layerModel._leafletObject'))) {
+            Ember.set(this.get('layerModel'), '_leafletObjectFirst', this.get('layerModel._leafletObject'));
+          }
+
           Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
 
           if (Ember.isNone(this.get('layerModel.leafletObjectGetter'))) {
@@ -302,13 +374,33 @@ export default Ember.Component.extend(
           layerInitCallback(this);
         }
 
-        this._setFeaturesProcessCallback();
-
         return leafletLayer;
       }).catch((errorMessage) => {
         Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
       }));
     },
+
+    _setFilter: Ember.observer('layerModel.filter', function () {
+
+      let filter = this.get('layerModel.filter');
+      if (typeof filter === 'string') {
+        try {
+          let layerLinks = this.get('layerModel.layerLink');
+          let layerModel = this.get('layerModel');
+
+          // this.get('type') to get type for layers in combine-layer
+          let type = !Ember.isNone(this.get('type')) ? this.get('type') : layerModel.get('type');
+          filter = Ember.getOwner(this).lookup(`layer:${type}`).parseFilter(filter, (this.get('geometryField') || 'geometry'), null, layerLinks);
+        }
+        catch (ex) {
+          console.error(ex);
+          return;
+        }
+      }
+
+      // Observer will work via mixin/leaflet-options. Option 'filter' need be in leafletOptions components/layers/..
+      this.set('filter', filter);
+    }),
 
     /**
       Destroys leaflet layer related to layer type.
@@ -324,6 +416,14 @@ export default Ember.Component.extend(
 
       // Now execute base destroy logic.
       this._removeLayerFromLeafletContainer();
+
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('additionalZoomLabel'))) {
+        this.set('additionalZoomLabel', null);
+      }
+
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer'))) {
+        this.set('_labelsLayer', null);
+      }
 
       this.set('_leafletObject', null);
       this.set('_leafletLayerPromise', null);
@@ -392,8 +492,11 @@ export default Ember.Component.extend(
       @method _setLayerZIndex
       @private
     */
-    _setLayerZIndex() {
-      const leafletLayer = this.get('_leafletObject');
+    _setLayerZIndex(leafletLayer) {
+      if (!leafletLayer) {
+        leafletLayer = this.get('_leafletObject');
+      }
+
       if (Ember.isNone(leafletLayer)) {
         return;
       }
@@ -467,6 +570,7 @@ export default Ember.Component.extend(
     _addLayerToLeafletContainer() {
       let leafletContainer = this.get('leafletContainer');
       let leafletLayer = this.get('_leafletObject');
+
       if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) || leafletContainer.hasLayer(leafletLayer)) {
         return;
       }
@@ -504,11 +608,25 @@ export default Ember.Component.extend(
     _removeLayerFromLeafletContainer() {
       let leafletContainer = this.get('leafletContainer');
       let leafletLayer = this.get('_leafletObject');
+
       if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) || !leafletContainer.hasLayer(leafletLayer)) {
         return;
       }
 
       leafletContainer.removeLayer(leafletLayer);
+
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('additionalZoomLabel'))) {
+        this.get('additionalZoomLabel').forEach(zoomLabels => {
+          if (leafletContainer.hasLayer(zoomLabels)) {
+            leafletContainer.removeLayer(zoomLabels);
+          }
+        });
+      }
+
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
+        leafletContainer.hasLayer(this.get('_labelsLayer'))) {
+        leafletContainer.removeLayer(this.get('_labelsLayer'));
+      }
     },
 
     /**
@@ -589,6 +707,37 @@ export default Ember.Component.extend(
     },
 
     /**
+      Handles 'flexberry-map:getNearObject' event of leaflet map.
+
+      @method _getNearObject
+      @param {Object} e Event object.
+      @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.boundingBox Leaflet layer
+      representing bounding box within which layer's objects must be identified.
+      @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
+      @param {Object[]} layers Objects describing those layers which must be identified.
+      @param {Object[]} results Objects describing identification results.
+      Every result-object has the following structure: { layer: ..., features: [...] },
+      where 'layer' is metadata of layer related to identification result, features is array
+      containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+      or a promise returning such array.
+      @private
+    */
+    _getNearObject(e) {
+      let layerModel = this.get('layerModel');
+      let isVectorLayer = Ember.getOwner(this).lookup('layer:' + layerModel.get('type')).isVectorType(layerModel);
+      let shouldGetNearObject = Ember.A(e.layers || []).contains(layerModel) && isVectorLayer;
+      if (!shouldGetNearObject) {
+        return;
+      }
+
+      // Call public getNearObject method, if layer should be getNearObject.
+      e.results.push({
+        layerModel: layerModel,
+        features: this.getNearObject(e)
+      });
+    },
+
+    /**
       Handles 'flexberry-map:search' event of leaflet map.
 
       @method search
@@ -616,16 +765,16 @@ export default Ember.Component.extend(
     /**
       Handles 'flexberry-map:query' event of leaflet map.
 
-     @method query
-     @param {Object} e Event object.
-     @param {Object} queryFilter Object with query filter parameters
-     @param {Object} mapObjectSetting Object describing current query setting
-     @param {Object[]} results Objects describing query results.
-     Every result-object has the following structure: { layer: ..., features: [...] },
-     where 'layer' is metadata of layer related to query result, features is array
-     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
-     or a promise returning such array.
-   */
+      @method query
+      @param {Object} e Event object.
+      @param {Object} queryFilter Object with query filter parameters
+      @param {Object} mapObjectSetting Object describing current query setting
+      @param {Object[]} results Objects describing query results.
+      Every result-object has the following structure: { layer: ..., features: [...] },
+      where 'layer' is metadata of layer related to query result, features is array
+      containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+      or a promise returning such array.
+    */
     _query(e) {
       // Filter current layer links by setting.
       let layerLinks =
@@ -689,7 +838,7 @@ export default Ember.Component.extend(
     */
     _cancelEdit(e) {
       if (e.layerIds.indexOf(this.get('layerModel.id')) !== -1) {
-        e.results.pushObject(this.cancelEdit());
+        e.results.pushObject(this.cancelEdit(e.ids));
       }
     },
 
@@ -709,8 +858,20 @@ export default Ember.Component.extend(
     init() {
       this._super(...arguments);
 
+      // Здесь можно задать layerModel.archTime. Но мы не будем, т.к. пустая дата - это то же самое, что текущая.
+      // Если все таки захотят чтобы дата отображалась, то нужно будет делать сервис, который отдаст одинаковую текущую дату все слои
+
       // Create leaflet layer.
       this._createLayer();
+    },
+
+    /**
+      Adds a listener function to leafletMap.
+
+      @method onLeafletMapEvent
+      @return nothing.
+    */
+    onLeafletMapEvent() {
     },
 
     /**
@@ -733,6 +894,7 @@ export default Ember.Component.extend(
         leafletMap.on('flexberry-map:query', this._query, this);
         leafletMap.on('flexberry-map:createObject', this._createObject, this);
         leafletMap.on('flexberry-map:cancelEdit', this._cancelEdit, this);
+        leafletMap.on('flexberry-map:getNearObject', this._getNearObject, this);
 
         leafletMap.on('flexberry-map:load', (e) => {
           e.results.push(this.get('_leafletLayerPromise'));
@@ -754,6 +916,7 @@ export default Ember.Component.extend(
         leafletMap.off('flexberry-map:query', this._query, this);
         leafletMap.off('flexberry-map:createObject', this._createObject, this);
         leafletMap.off('flexberry-map:cancelEdit', this._cancelEdit, this);
+        leafletMap.off('flexberry-map:getNearObject', this._getNearObject, this);
       }
 
       // Destroy leaflet layer.
@@ -819,6 +982,20 @@ export default Ember.Component.extend(
     */
     identify(e) {
       assert('BaseLayer\'s \'identify\' method should be overridden.');
+    },
+
+    /**
+      Get nearest object.
+
+      @method getNearObject
+      @param {Object} e Event object.
+      Every result-object has the following structure: { layer: ..., features: [...] },
+      where 'layer' is metadata of layer related to getNearObject result, features is array
+      containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+      or a promise returning such array.
+    */
+    getNearObject(e) {
+      // BaseLayer's 'getNearObject' method should be overridden.
     },
 
     /**
@@ -963,14 +1140,14 @@ export default Ember.Component.extend(
     @param {Object} eventObject Action param
     @param {Object} eventObject.leafletObject Created (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
     @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
-   */
+  */
 
   /**
    Component's action invoking before the layer destroying.
 
-   @method sendingActions.layerDestroy
-   @param {Object} eventObject Action param
-   @param {Object} eventObject.leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
-   @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
+  @method sendingActions.layerDestroy
+  @param {Object} eventObject Action param
+  @param {Object} eventObject.leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
+  @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
   */
 );
