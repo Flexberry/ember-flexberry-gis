@@ -36,10 +36,11 @@ export default Ember.Mixin.create({
             Ember.$(command).removeClass('hidden');
           }
         }
-        if(children.childNodes) {
-          removeHidden(children.children())
-        }
-      }
+
+        if (children.childNodes) {
+          removeHidden(children.children());
+        };
+      };
 
       removeHidden($commandControl.children());
 
@@ -68,7 +69,7 @@ export default Ember.Mixin.create({
       return true;
     }
 
-    switch(mapCommandName) {
+    switch (mapCommandName) {
       case 'treeview':
       case 'search':
       case 'identify':
