@@ -39,7 +39,7 @@ export default Ember.Mixin.create({
 
         if (children.childNodes) {
           removeHidden(children.children());
-        };
+        }
       };
 
       removeHidden($commandControl.children());
