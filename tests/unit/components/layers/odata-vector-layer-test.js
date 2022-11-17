@@ -7,12 +7,13 @@ import { Query, Projection } from 'ember-flexberry-data';
 import sinon from 'sinon';
 import { Serializer } from 'ember-flexberry-data';
 import crsFactory4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';
+import createLeafletMap from 'dummy/tests/helpers/common-for-layer';
 
 let app;
 let options;
 let param;
 let odataServerFake;
-let bounds;
+let bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
 let store;
 let responseBatchUpdate;
 
@@ -78,36 +79,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     };
     param = Ember.$.extend(param, options);
 
-    bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
-
-    let getBounds = function() {
-      return bounds;
-    };
-
-    let getPane = function() {
-      return undefined;
-    };
-
-    let createPane = function() {
-      return {};
-    };
-
-    let hasLayer = function() {
-      return true;
-    };
-
-    let removeLayer = function() {
-      return {};
-    };
-
-    let leafletMap = L.map(document.createElement('div'));
-    leafletMap.getBounds = getBounds;
-    leafletMap.getPane = getPane;
-    leafletMap.createPane = createPane;
-    leafletMap.removeLayer = removeLayer;
-    leafletMap.hasLayer = hasLayer;
-    let editTools = new L.Editable(leafletMap);
-    Ember.set(leafletMap, 'editTools', editTools);
+    let leafletMap = createLeafletMap();
 
     store = app.__container__.lookup('service:store');
     let layerModel = store.createRecord('test-model');
@@ -545,6 +517,11 @@ test('continueLoad()', function(assert) {
           assert.ok(JSON.stringify(loadedBounds.getBounds()) === JSON.stringify(bounds), 'loadedBounds get from map');
 
           bounds = L.latLngBounds(L.latLng(58.46807257997011, 56.61014556884766), L.latLng(58.443780224452524, 56.44535064697266));
+          let getBounds = function() {
+            return bounds;
+          };
+
+          component.leafletMap.getBounds = getBounds;
 
           let load = component.continueLoad();
           load.then(Ember.run(() => {
