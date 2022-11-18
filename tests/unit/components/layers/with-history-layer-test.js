@@ -6,6 +6,7 @@ import startApp from 'dummy/tests/helpers/start-app';
 import { Projection } from 'ember-flexberry-data';
 import sinon from 'sinon';
 import { Serializer } from 'ember-flexberry-data';
+import createLeafletMap from 'dummy/tests/helpers/common-for-layer';
 
 let app;
 let geoserverFake;
@@ -156,36 +157,7 @@ moduleForComponent('layers/with-history-layer', 'Unit | Component | layers/with 
 
     paramWFS = Ember.$.extend(paramWFS, optionsWFS);
 
-    let bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
-
-    let getBounds = function () {
-      return bounds;
-    };
-
-    let getPane = function () {
-      return undefined;
-    };
-
-    let createPane = function () {
-      return {};
-    };
-
-    let hasLayer = function () {
-      return true;
-    };
-
-    let removeLayer = function () {
-      return {};
-    };
-
-    let leafletMap = L.map(document.createElement('div'));
-    leafletMap.getBounds = getBounds;
-    leafletMap.getPane = getPane;
-    leafletMap.createPane = createPane;
-    leafletMap.removeLayer = removeLayer;
-    leafletMap.hasLayer = hasLayer;
-    let editTools = new L.Editable(leafletMap);
-    Ember.set(leafletMap, 'editTools', editTools);
+    let leafletMap = createLeafletMap();
 
     Ember.$.extend(paramWFS, { 'layerModel': layerModelWfs });
     Ember.$.extend(paramWFS, { 'leafletMap': leafletMap });

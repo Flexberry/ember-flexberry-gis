@@ -2,11 +2,26 @@ import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import sinon from 'sinon';
 import startApp from 'dummy/tests/helpers/start-app';
+import createLeafletMap from 'dummy/tests/helpers/common-for-layer';
 
 let app;
 let geoserverFake;
 let options;
 let param;
+
+let commonStub = function(param, that) {
+  let component = that.subject(param);
+  let store = app.__container__.lookup('service:store');
+  let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+  let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+  getmapApiStub.returns(mapModel);
+  let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+  getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+  let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
+  getPkFieldLayerStub.returns('primarykey');
+
+  return { component, getmapApiStub, getLayerFeatureIdStub, getPkFieldLayerStub };
+};
 
 moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
   unit: true,
@@ -60,36 +75,7 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
     };
     param = Ember.$.extend(param, options);
 
-    let bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
-
-    let getBounds = function () {
-      return bounds;
-    };
-
-    let getPane = function () {
-      return undefined;
-    };
-
-    let createPane = function () {
-      return {};
-    };
-
-    let hasLayer = function () {
-      return true;
-    };
-
-    let removeLayer = function () {
-      return {};
-    };
-
-    let leafletMap = L.map(document.createElement('div'));
-    leafletMap.getBounds = getBounds;
-    leafletMap.getPane = getPane;
-    leafletMap.createPane = createPane;
-    leafletMap.removeLayer = removeLayer;
-    leafletMap.hasLayer = hasLayer;
-    let editTools = new L.Editable(leafletMap);
-    Ember.set(leafletMap, 'editTools', editTools);
+    let leafletMap = createLeafletMap();
 
     Ember.$.extend(param, { 'leafletMap': leafletMap });
 
@@ -105,9 +91,7 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
           request.respond(200, { 'Content-Type': 'application/json' },
             '{"type":"FeatureCollection","features":[],"totalFeatures":0,"numberMatched":0,"numberReturned":0,"timeStamp":"2020-02-27T04:44:49.909Z",' +
             '"crs":null}');
-        }
-
-        if (request.requestBody.indexOf('<wfs:GetFeature') !== -1) {
+        } else if (request.requestBody.indexOf('<wfs:GetFeature') !== -1) {
           request.respond(200, { 'Content-Type': 'application/json' },
             '{"type":"FeatureCollection","features":[{"type":"Feature","id":"vydel_utverzhdeno_polygon.06350c71-ec5c-431e-a5ab-e423cf662128",' +
             '"geometry":{"type":"MultiPolygon","coordinates":[[[[6215353.89391635,8117916.10977998],[6215317.82640125,8117408.36954415],' +
@@ -121,9 +105,10 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
             'null,"area":373798.7024302,"length":null,"primarykey":"06350c71-ec5c-431e-a5ab-e423cf662128","createtime":null,"creator":null,' +
             '"edittime":null,"editor":null}}],"totalFeatures":1,"numberMatched":1,"numberReturned":1,"timeStamp":"2020-02-27T04:44:49.909Z",' +
             '"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::3857"}}}');
-        }
-
-        if (request.requestBody.indexOf('<wfs:DescribeFeatureType') !== -1) {
+        } else if (request.requestBody.indexOf('<wfs:DescribeFeatureType xmlns:wfs="http://www.opengis.net/wfs" service="WFS" version="1.1.0">' +
+          '<TypeName>les:test') !== -1) {
+          request.respond(404, { 'error': 'Error' }, null);
+        } else if (request.requestBody.indexOf('<wfs:DescribeFeatureType') !== -1) {
           request.respond(200, { 'Content-Type': 'text/plain;charset=utf-8' },
             '<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" ' +
             'xmlns:rgisperm="http://rgis.permkrai.ru" elementFormDefault="qualified" targetNamespace="http://rgis.permkrai.ru">' +
@@ -219,33 +204,23 @@ test('_addLayersOnMap() with options showExisting = true and continueLoading = f
   Ember.run(() => {
     param.showExisting = true;
 
-    let component = this.subject(param);
-
-    let store = app.__container__.lookup('service:store');
-    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-    getmapApiStub.returns(mapModel);
-
-    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
-    getPkFieldLayerStub.returns('primarykey');
+    let objStub = commonStub(param, this);
 
     options.showExisting = true;
-    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+    L.wfst(options, objStub.component.getFeaturesReadFormat()).once('load', (res) => {
       res.target.readFormat.excludedProperties = ['primarykey'];
       let layers = Object.values(res.target._layers);
-      component._addLayersOnMap(layers);
-      assert.equal(layers[0].options.pane, component.get('_pane'), 'Pane on object eqals pane on layer');
-      assert.equal(layers[0].options.renderer, component.get('_renderer'), 'Renderer on object eqals renderer on layer');
+      objStub.component._addLayersOnMap(layers);
+      assert.equal(layers[0].options.pane, objStub.component.get('_pane'), 'Pane on object eqals pane on layer');
+      assert.equal(layers[0].options.renderer, objStub.component.get('_renderer'), 'Renderer on object eqals renderer on layer');
       done();
 
-      getmapApiStub.restore();
-      getLayerFeatureIdStub.restore();
-      getPkFieldLayerStub.restore();
+      objStub.getmapApiStub.restore();
+      objStub.getLayerFeatureIdStub.restore();
+      objStub.getPkFieldLayerStub.restore();
     });
 
-    assert.ok(component, 'Create wfs-layer with showExisting = true');
+    assert.ok(objStub.component, 'Create wfs-layer with showExisting = true');
     done();
   });
 });
@@ -256,20 +231,10 @@ test('getLayerFeatures() with options showExisting = true', function (assert) {
   Ember.run(() => {
     param.showExisting = true;
 
-    let component = this.subject(param);
-
-    let store = app.__container__.lookup('service:store');
-    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-    getmapApiStub.returns(mapModel);
-
-    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
-    getPkFieldLayerStub.returns('primarykey');
+    let objStub = commonStub(param, this);
 
     options.showExisting = true;
-    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+    L.wfst(options, objStub.component.getFeaturesReadFormat()).once('load', (res) => {
       res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
@@ -277,19 +242,19 @@ test('getLayerFeatures() with options showExisting = true', function (assert) {
         results: Ember.A()
       };
 
-      component._leafletObject = res.target;
+      objStub.component._leafletObject = res.target;
 
-      component.getLayerFeatures(e).then((layers) => {
+      objStub.component.getLayerFeatures(e).then((layers) => {
         assert.ok(layers, 'Get feature of layers with showExisting = true');
         done();
 
-        getmapApiStub.restore();
-        getLayerFeatureIdStub.restore();
-        getPkFieldLayerStub.restore();
+        objStub.getmapApiStub.restore();
+        objStub.getLayerFeatureIdStub.restore();
+        objStub.getPkFieldLayerStub.restore();
       });
     });
 
-    assert.ok(component, 'Create wfs-layer with showExisting = true');
+    assert.ok(objStub.component, 'Create wfs-layer with showExisting = true');
     done();
   });
 });
@@ -298,7 +263,7 @@ test('loadLayerFeatures() with options showExisting = false', function (assert) 
   assert.expect(3);
   var done = assert.async(2);
   Ember.run(() => {
-    let component = this.subject(param);
+    let component = this.subject(param, this);
 
     let store = app.__container__.lookup('service:store');
     let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
@@ -454,20 +419,10 @@ test('test method clearChanges() with no changes', function (assert) {
   assert.expect(7);
   var done = assert.async(1);
   Ember.run(() => {
-    let component = this.subject(param);
-
-    let store = app.__container__.lookup('service:store');
-    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-    getmapApiStub.returns(mapModel);
-
-    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
-    getPkFieldLayerStub.returns('primarykey');
+    let objStub = commonStub(param, this);
 
     options.showExisting = true;
-    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+    L.wfst(options, objStub.component.getFeaturesReadFormat()).once('load', (res) => {
       res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
@@ -475,11 +430,11 @@ test('test method clearChanges() with no changes', function (assert) {
         results: Ember.A()
       };
 
-      component._leafletObject = res.target;
+      objStub.component._leafletObject = res.target;
 
-      component.getLayerFeatures(e).then((layers) => {
-        let leafletObject = component.get('_leafletObject');
-        let leafletMap = component.get('leafletMap');
+      objStub.component.getLayerFeatures(e).then((layers) => {
+        let leafletObject = objStub.component.get('_leafletObject');
+        let leafletMap = objStub.component.get('leafletMap');
         leafletObject.leafletMap = leafletMap;
 
         assert.equal(realCountArr(leafletObject.changes), 0);
@@ -493,13 +448,13 @@ test('test method clearChanges() with no changes', function (assert) {
         assert.equal(leafletObject.getLayers().length, 1);
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
-        component.clearChanges();
+        objStub.component.clearChanges();
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
         done();
 
-        getmapApiStub.restore();
-        getLayerFeatureIdStub.restore();
-        getPkFieldLayerStub.restore();
+        objStub.getmapApiStub.restore();
+        objStub.getLayerFeatureIdStub.restore();
+        objStub.getPkFieldLayerStub.restore();
       });
     });
   });
@@ -509,20 +464,10 @@ test('test method clearChanges() with create', function (assert) {
   assert.expect(7);
   var done = assert.async(1);
   Ember.run(() => {
-    let component = this.subject(param);
-
-    let store = app.__container__.lookup('service:store');
-    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-    getmapApiStub.returns(mapModel);
-
-    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
-    getPkFieldLayerStub.returns('primarykey');
+    let objStub = commonStub(param, this);
 
     options.showExisting = true;
-    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+    L.wfst(options, objStub.component.getFeaturesReadFormat()).once('load', (res) => {
       res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
@@ -530,11 +475,11 @@ test('test method clearChanges() with create', function (assert) {
         results: Ember.A()
       };
 
-      component._leafletObject = res.target;
+      objStub.component._leafletObject = res.target;
 
-      component.getLayerFeatures(e).then((layers) => {
-        let leafletObject = component.get('_leafletObject');
-        let leafletMap = component.get('leafletMap');
+      objStub.component.getLayerFeatures(e).then((layers) => {
+        let leafletObject = objStub.component.get('_leafletObject');
+        let leafletMap = objStub.component.get('leafletMap');
         leafletObject.leafletMap = leafletMap;
 
         assert.equal(realCountArr(leafletObject.changes), 0);
@@ -561,13 +506,13 @@ test('test method clearChanges() with create', function (assert) {
         assert.equal(leafletObject.getLayers().length, 2);
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
-        component.clearChanges();
+        objStub.component.clearChanges();
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
         done();
 
-        getmapApiStub.restore();
-        getLayerFeatureIdStub.restore();
-        getPkFieldLayerStub.restore();
+        objStub.getmapApiStub.restore();
+        objStub.getLayerFeatureIdStub.restore();
+        objStub.getPkFieldLayerStub.restore();
       });
     });
   });
@@ -577,20 +522,10 @@ test('test method clearChanges() with update', function (assert) {
   assert.expect(7);
   var done = assert.async(1);
   Ember.run(() => {
-    let component = this.subject(param);
-
-    let store = app.__container__.lookup('service:store');
-    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-    getmapApiStub.returns(mapModel);
-
-    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
-    getPkFieldLayerStub.returns('primarykey');
+    let objStub = commonStub(param, this);
 
     options.showExisting = true;
-    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+    L.wfst(options, objStub.component.getFeaturesReadFormat()).once('load', (res) => {
       res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
@@ -598,11 +533,11 @@ test('test method clearChanges() with update', function (assert) {
         results: Ember.A()
       };
 
-      component._leafletObject = res.target;
+      objStub.component._leafletObject = res.target;
 
-      component.getLayerFeatures(e).then((layers) => {
-        let leafletObject = component.get('_leafletObject');
-        let leafletMap = component.get('leafletMap');
+      objStub.component.getLayerFeatures(e).then((layers) => {
+        let leafletObject = objStub.component.get('_leafletObject');
+        let leafletMap = objStub.component.get('leafletMap');
         leafletObject.leafletMap = leafletMap;
 
         assert.equal(realCountArr(leafletObject.changes), 0);
@@ -619,13 +554,13 @@ test('test method clearChanges() with update', function (assert) {
         assert.equal(leafletObject.getLayers().length, 1);
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
-        component.clearChanges();
+        objStub.component.clearChanges();
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
         done();
 
-        getmapApiStub.restore();
-        getLayerFeatureIdStub.restore();
-        getPkFieldLayerStub.restore();
+        objStub.getmapApiStub.restore();
+        objStub.getLayerFeatureIdStub.restore();
+        objStub.getPkFieldLayerStub.restore();
       });
     });
   });
@@ -635,20 +570,10 @@ test('test method clearChanges() with delete', function (assert) {
   assert.expect(7);
   var done = assert.async(1);
   Ember.run(() => {
-    let component = this.subject(param);
-
-    let store = app.__container__.lookup('service:store');
-    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-    getmapApiStub.returns(mapModel);
-
-    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
-    getPkFieldLayerStub.returns('primarykey');
+    let objStub = commonStub(param, this);
 
     options.showExisting = true;
-    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+    L.wfst(options, objStub.component.getFeaturesReadFormat()).once('load', (res) => {
       res.target.readFormat.excludedProperties = ['primarykey'];
       let e = {
         featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
@@ -656,11 +581,11 @@ test('test method clearChanges() with delete', function (assert) {
         results: Ember.A()
       };
 
-      component._leafletObject = res.target;
+      objStub.component._leafletObject = res.target;
 
-      component.getLayerFeatures(e).then((layers) => {
-        let leafletObject = component.get('_leafletObject');
-        let leafletMap = component.get('leafletMap');
+      objStub.component.getLayerFeatures(e).then((layers) => {
+        let leafletObject = objStub.component.get('_leafletObject');
+        let leafletMap = objStub.component.get('leafletMap');
         leafletObject.leafletMap = leafletMap;
 
         assert.equal(realCountArr(leafletObject.changes), 0);
@@ -675,13 +600,13 @@ test('test method clearChanges() with delete', function (assert) {
         assert.equal(leafletObject.getLayers().length, 0);
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
-        component.clearChanges();
+        objStub.component.clearChanges();
         assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
         done();
 
-        getmapApiStub.restore();
-        getLayerFeatureIdStub.restore();
-        getPkFieldLayerStub.restore();
+        objStub.getmapApiStub.restore();
+        objStub.getLayerFeatureIdStub.restore();
+        objStub.getPkFieldLayerStub.restore();
       });
     });
   });
@@ -730,23 +655,13 @@ test('test editLayer', function (assert) {
   var done = assert.async(2);
   Ember.run(() => {
     param = Ember.$.extend(param, { showExisting: true });
-    let component = this.subject(param);
-
-    let store = app.__container__.lookup('service:store');
-    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
-    getmapApiStub.returns(mapModel);
-
-    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
-    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-    let getPkFieldLayerStub = sinon.stub(component, 'getPkField');
-    getPkFieldLayerStub.returns('primarykey');
+    let objStub = commonStub(param, this);
 
     options.showExisting = true;
 
-    component.get('_leafletLayerPromise').then((leafletObject) => {
-      component.set('_leafletObject', leafletObject);
-      let leafletMap = component.get('leafletMap');
+    objStub.component.get('_leafletLayerPromise').then((leafletObject) => {
+      objStub.component.set('_leafletObject', leafletObject);
+      let leafletMap = objStub.component.get('leafletMap');
       leafletObject.leafletMap = leafletMap;
 
       let e = {
@@ -757,7 +672,7 @@ test('test editLayer', function (assert) {
 
       done();
 
-      component.getLayerFeatures(e).then((layers) => {
+      objStub.component.getLayerFeatures(e).then((layers) => {
         let layerUpdate = leafletObject.getLayers()[0];
         layerUpdate.feature.properties.name = 'test';
 
@@ -779,9 +694,9 @@ test('test editLayer', function (assert) {
 
         done();
 
-        getmapApiStub.restore();
-        getLayerFeatureIdStub.restore();
-        getPkFieldLayerStub.restore();
+        objStub.getmapApiStub.restore();
+        objStub.getLayerFeatureIdStub.restore();
+        objStub.getPkFieldLayerStub.restore();
       });
     });
   });
@@ -1293,6 +1208,109 @@ test('test getNearObject without wpsUrl, Nearest object not found', function (as
       });
       assert.ok(promise instanceof Ember.RSVP.Promise);
       done(1);
+    });
+  });
+});
+
+test('test _createVectorLayer with error', function (assert) {
+  assert.expect(5);
+  var done = assert.async(1);
+  Ember.run(() => {
+    let objStub = commonStub(param, this);
+    let wfstSpy = sinon.spy(L, 'wfst');
+
+    let wfsLayer = objStub.component._createVectorLayer(null, options);
+    assert.ok(wfsLayer, 'Create layer');
+    assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+    assert.ok(wfsLayer.error, 'Create layer with error');
+    assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+    assert.equal(wfstSpy.callCount, 1, 'Create layer');
+
+    done();
+
+    wfstSpy.restore();
+  });
+});
+
+test('test _createVectorLayer without error', function (assert) {
+  assert.expect(5);
+  var done = assert.async(1);
+  Ember.run(() => {
+    let objStub = commonStub(param, this);
+    let featuresReadFormat = objStub.component.getFeaturesReadFormat();
+    let layer = L.wfst(options, featuresReadFormat);
+
+    let wfstSpy = sinon.spy(L, 'wfst');
+
+    let wfsLayer = objStub.component._createVectorLayer(layer, options, featuresReadFormat);
+    assert.ok(wfsLayer, 'Create layer');
+    assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+    assert.notOk(wfsLayer.error, 'Create layer without error');
+    assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+    assert.equal(wfstSpy.callCount, 0, 'Layer already create');
+
+    done();
+
+    wfstSpy.restore();
+  });
+});
+
+test('test createVectorLayer without error', function (assert) {
+  assert.expect(8);
+  var done = assert.async(1);
+  Ember.run(() => {
+    let objStub = commonStub(param, this);
+
+    let wfstSpy = sinon.spy(L, 'wfst');
+    let createVectorLayerSpy = sinon.spy(objStub.component, 'createVectorLayer');
+    let _createVectorLayerSpy = sinon.spy(objStub.component, '_createVectorLayer');
+
+    objStub.component.createVectorLayer(options).then((wfsLayer) => {
+      assert.ok(wfsLayer, 'Create layer');
+      assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+      assert.notOk(wfsLayer.error, 'Create layer without error');
+      assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+      assert.equal(wfstSpy.callCount, 1, 'Create layer');
+      assert.equal(createVectorLayerSpy.callCount, 1, 'Call createVectorLayer');
+      assert.equal(_createVectorLayerSpy.callCount, 2, 'Call _createVectorLayer');
+      assert.ok(_createVectorLayerSpy.getCall(0).args[0], 'Call _createVectorLayer');
+
+      done();
+
+      wfstSpy.restore();
+      createVectorLayerSpy.restore();
+      _createVectorLayerSpy.restore();
+    });
+  });
+});
+
+test('test createVectorLayer with error', function (assert) {
+  assert.expect(8);
+  var done = assert.async(1);
+  Ember.run(() => {
+    param.typeName = 'test';
+    options.typeName = 'test';
+    let objStub = commonStub(param, this);
+
+    let wfstSpy = sinon.spy(L, 'wfst');
+    let createVectorLayerSpy = sinon.spy(objStub.component, 'createVectorLayer');
+    let _createVectorLayerSpy = sinon.spy(objStub.component, '_createVectorLayer');
+
+    objStub.component.createVectorLayer(options).then((wfsLayer) => {
+      assert.ok(wfsLayer, 'Create layer');
+      assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+      assert.ok(wfsLayer.error, 'Create layer without error');
+      assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+      assert.equal(wfstSpy.callCount, 3, 'Create layer');
+      assert.equal(createVectorLayerSpy.callCount, 1, 'Call createVectorLayer');
+      assert.equal(_createVectorLayerSpy.callCount, 2, 'Call _createVectorLayer');
+      assert.notOk(_createVectorLayerSpy.getCall(0).args[0], 'Call _createVectorLayer');
+
+      done();
+
+      wfstSpy.restore();
+      createVectorLayerSpy.restore();
+      _createVectorLayerSpy.restore();
     });
   });
 });
