@@ -74,9 +74,8 @@ export default Ember.Mixin.create({
       case 'search':
       case 'identify':
       case 'bookmarks':
-        funcClass(Ember.$(`.isogd-${mapCommandName}-tab`));
+        funcClass(Ember.$(`.${mapCommandName}-tab`));
         return true;
-      case 'background-layers':
       case 'toggle-button':
       case 'outer-search':
         funcClass(Ember.$(`.${mapCommandName}`));

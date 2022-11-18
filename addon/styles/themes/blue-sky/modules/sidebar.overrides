@@ -626,7 +626,7 @@
         border: 1px solid @white;
         box-shadow: none;
       }
-      &.isogd-treeview-tab {
+      &.treeview-tab {
         padding: 10px 12px;
       }
       &.create-edit-object-tab, &.compareObjects, &.intersectionObjects,
@@ -676,11 +676,11 @@
           border-radius: @defaultBorderRadius !important;
         }
 
-        &.isogd-treeview-tab > i.icon {
+        &.treeview-tab > i.icon {
           margin-left: -4px;
         }
 
-        &.isogd-identify-tab > i.icon {
+        &.identify-tab > i.icon {
           margin-left: -6px;
         }
 
@@ -785,8 +785,8 @@
 
 .background-layers.flexberry-maptoolbar.ui.menu {
   bottom: 67px;
-  .flexberry-background-map-tool-div {
-    .flexberry-background-map-tool {
+  .flexberry-background-layers-map-tool-div {
+    .flexberry-background-layers-map-tool {
       position: absolute;
       padding-left: 9px;
       padding-top: 2px;

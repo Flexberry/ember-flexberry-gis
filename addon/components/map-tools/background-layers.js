@@ -3,7 +3,7 @@ import layout from '../../templates/components/map-tools/background-layers';
 import { translationMacro as t } from 'ember-i18n';
 import CompareLayersMixin from '../../mixins/compare-layers';
 
-const flexberryClassNamesPrefix = 'flexberry-background-map-tool';
+const flexberryClassNamesPrefix = 'flexberry-background-layers-map-tool';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
@@ -168,7 +168,7 @@ export default Ember.Component.extend(CompareLayersMixin, {
       @method actions.showBackgroundLayers
     */
     showBackgroundLayers() {
-      let $tool = Ember.$('.flexberry-background-map-tool');
+      let $tool = Ember.$('.flexberry-background-layers-map-tool');
       if (!this.get('isVisible') && this.get('layers').length !== 0) {
         this.set('isVisible', true);
         $tool.addClass('visible');
