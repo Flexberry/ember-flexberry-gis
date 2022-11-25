@@ -163,7 +163,7 @@
             {{input
               type="text"
               value=(mut (get dataValue fieldName))
-              readonly=isPropertiesReadonly
+              disabled=isPropertiesReadonly
             }}
           {{/if}}
           {{#if (get (get parsingErrors (concat '' curIndex)) fieldName)}}
