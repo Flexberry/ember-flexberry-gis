@@ -702,8 +702,8 @@
 
 .background-layers.flexberry-maptoolbar.ui.menu {
   bottom: 67px;
-  .flexberry-background-map-tool-div {
-    .flexberry-background-map-tool {
+  .flexberry-background-layers-map-tool-div {
+    .flexberry-background-layers-map-tool {
       position: absolute;
       border-radius: 3.5px;
       right: 0;
@@ -951,7 +951,7 @@
 .ui.tab.identify {
   overflow-y: hidden !important;
   overflow-x: hidden;
-  padding: 0 0 60px 0 !important;  
+  padding: 0 0 60px 0 !important;
 
   .layer-result-list {
     overflow-y: auto;
