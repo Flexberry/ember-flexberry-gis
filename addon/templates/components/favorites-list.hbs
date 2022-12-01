@@ -1,6 +1,9 @@
 <button type="submit" class="ui button primary compare{{if compareBtnDisabled " disabled"}}" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
   {{t "components.compare-object-geometries.compare-objects-caption"}}
 </button>
+<div class="flexberry-clear">
+  <span {{action "clear"}}>Сбросить выделение</span>
+</div>
 {{#if _showFavorites}}
   {{layer-result-list
     results=data
@@ -12,6 +15,13 @@
     addToCompareGeometries=(action 'addToCompareGeometries')
     showIntersectionPanel=(action 'showIntersectionPanel')
     availableCRS=availableCRS
+    pane="zoomto"
+    zoomToCopy=true
+    copyStyle=(hash 
+      weight=5
+      fill=false
+      color="green"
+    )
   }}
 {{else}}
   <div class="ui form loading" style="height: 100%; margin-right: 20px;">

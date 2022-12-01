@@ -7,7 +7,7 @@ import Ember from 'ember';
   @param {Object} leafletMap Map.
   @param {Object} leafletObject Layer.
 */
-let zoomToBounds = function(bounds, leafletMap, minZoom, maxZoom) {
+let zoomToBounds = function (bounds, leafletMap, minZoom, maxZoom) {
 
   let sidebarElement = Ember.$('div[class*="sidebar-wrapper"].visible .sidebar');
   const widthPadding = sidebarElement.width() || 0;
@@ -28,7 +28,7 @@ let zoomToBounds = function(bounds, leafletMap, minZoom, maxZoom) {
 };
 
 // Overwrites, because L.Map._getBoundsCenterZoom return min zoom from zoom of bounds and maxZoom from options.
-let fitBounds = function(leafletMap, bounds, options) {
+let fitBounds = function (leafletMap, bounds, options) {
   if (!(bounds instanceof L.LatLngBounds) || Ember.isNone(leafletMap)) {
     return;
   }
@@ -37,8 +37,30 @@ let fitBounds = function(leafletMap, bounds, options) {
     throw new Error('Bounds are not valid.');
   }
 
-  var target = leafletMap._getBoundsCenterZoom(bounds, options);
-  return leafletMap.setView(target.center, options.maxZoom, options);
+  // стандартный L.Map._getBoundsCenterZoom возьмет минимальный zoom из полученного из Bounds и переданного в options
+  // но нам это не подходит, т.к. при maxzoom, большем чем полученный из bounds, неправильно вычисляется сдвиг
+  let getBoundsCenterZoom = (leafletMap, bounds, options) => {
+    let toPoint = (coord) => {
+      return new L.Point(coord[0], coord[1]);
+    };
+
+    let paddingTL = toPoint(options.paddingTopLeft || [0, 0]);
+    let paddingBR = toPoint([0, 0]);
+    let zoom = options.maxZoom;
+
+    let paddingOffset = paddingBR.subtract(paddingTL).divideBy(2);
+    let swPoint = leafletMap.project(bounds.getSouthWest(), zoom);
+    let nePoint = leafletMap.project(bounds.getNorthEast(), zoom);
+    let center = leafletMap.unproject(swPoint.add(nePoint).divideBy(2).add(paddingOffset), zoom);
+
+    return {
+      center: center,
+      zoom: zoom
+    };
+  };
+
+  let target = getBoundsCenterZoom(leafletMap, bounds, options);
+  return leafletMap.setView(target.center, target.zoom);
 };
 
 export {
