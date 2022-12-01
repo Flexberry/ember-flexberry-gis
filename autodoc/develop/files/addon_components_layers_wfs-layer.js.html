@@ -678,6 +678,11 @@ export default BaseVectorLayer.extend({
   _loadFeatures(filter, fireLoad = true) {
     return new Ember.RSVP.Promise((resolve, reject) =&gt; {
       var that = this;
+      if (that.error) {
+        resolve([]);
+        return that;
+      }
+
       filter = this.addCustomFilter(filter);
       L.Util.request({
         url: this.options.url,
@@ -822,72 +827,88 @@ export default BaseVectorLayer.extend({
       L.wfst(options, featuresReadFormat)
         .once(&#x27;load&#x27;, (e) =&gt; {
           let wfsLayer = e.target;
-          let pkField = this.getPkField(this.get(&#x27;layerModel&#x27;));
-          e.target.readFormat.excludedProperties = [pkField];
-          let leafletMap = this.get(&#x27;leafletMap&#x27;);
-
-          wfsLayer.on(&#x27;save:success&#x27;, this._setLayerState, this);
-          wfsLayer.on(&#x27;save:success&#x27;, this.saveSuccess, this);
-          Ember.set(wfsLayer, &#x27;baseAddLayer&#x27;, wfsLayer.addLayer);
-          wfsLayer.addLayer = this.get(&#x27;_addLayer&#x27;).bind(this);
-
-          Ember.set(wfsLayer, &#x27;baseRemoveLayer&#x27;, wfsLayer.removeLayer);
-          wfsLayer.removeLayer = this.get(&#x27;_removeLayer&#x27;).bind(this);
-          Ember.set(wfsLayer, &#x27;baseClearLayers&#x27;, wfsLayer.clearLayers);
-          wfsLayer.clearLayers = this.get(&#x27;_clearLayers&#x27;).bind(this);
-          Ember.set(wfsLayer, &#x27;baseEditLayer&#x27;, wfsLayer.editLayer);
-          wfsLayer.editLayer = this.get(&#x27;_editLayer&#x27;).bind(this);
-
-          wfsLayer.reload = this.get(&#x27;reload&#x27;).bind(this);
-          wfsLayer.cancelEdit = this.get(&#x27;cancelEdit&#x27;).bind(this);
-          wfsLayer.updateLabel = this.get(&#x27;updateLabel&#x27;).bind(this);
-          wfsLayer.addCustomFilter = this.get(&#x27;addCustomFilter&#x27;).bind(this);
-
-          if (!Ember.isNone(leafletMap)) {
-            let thisPane = this.get(&#x27;_pane&#x27;);
-            let pane = leafletMap.getPane(thisPane);
-            if (!pane || Ember.isNone(pane)) {
-              this._createPane(thisPane);
-              wfsLayer.options.pane = thisPane;
-              wfsLayer.options.renderer = this.get(&#x27;_renderer&#x27;);
-              this._setLayerZIndex();
-            }
-          }
-
-          // for check zoom
-          wfsLayer.minZoom = this.get(&#x27;minZoom&#x27;);
-          wfsLayer.maxZoom = this.get(&#x27;maxZoom&#x27;);
-          wfsLayer.leafletMap = leafletMap;
-          this.set(&#x27;loadedBounds&#x27;, null);
-          this._setFeaturesProcessCallback(wfsLayer);
-          wfsLayer.loadFeatures = this.get(&#x27;_loadFeatures&#x27;).bind(wfsLayer);
-
-          // this.get(&#x27;_leafletObject&#x27;) is null at this moment. _layers hasn&#x27;t pane and renderer. For marker layer this is critical (ignore zoom), but for polygon layer doesn&#x27;t.
-          let featureLayers = Object.values(wfsLayer._layers);
-          this._addLayersOnMap(featureLayers);
-          let load = this.continueLoad(wfsLayer);
-          if (options.showExisting) {
-            let loaded = {
-              layers: featureLayers
-            };
-            let promise = this._featuresProcessCallback(loaded.layers, wfsLayer);
-            if (loaded.results &amp;&amp; Ember.isArray(loaded.results)) {
-              loaded.results.push(promise);
-            }
-          }
-
-          wfsLayer.promiseLoadLayer = load &amp;&amp; load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
-          wfsLayer.loadLayerFeatures = this.get(&#x27;loadLayerFeatures&#x27;).bind(this);
-
-          resolve(wfsLayer);
+          let layer = this._createVectorLayer(wfsLayer, options, featuresReadFormat);
+          resolve(layer);
         })
         .once(&#x27;error&#x27;, (e) =&gt; {
-          reject(e.error || e);
+          console.error(e.error || e);
+          let layer = this._createVectorLayer(null, options, featuresReadFormat);
+          resolve(layer);
         })
         .on(&#x27;load&#x27;, (e) =&gt; {
           this._setLayerState();
         });
     });
+  },
+
+  _createVectorLayer(wfsLayer, options, featuresReadFormat) {
+    let error = false;
+    if (Ember.isNone(wfsLayer)) {
+      wfsLayer = L.wfst(options, featuresReadFormat);
+      error = true;
+    }
+
+    wfsLayer.error = error;
+    let pkField = this.getPkField(this.get(&#x27;layerModel&#x27;));
+    wfsLayer.readFormat.excludedProperties = [pkField];
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+
+    wfsLayer.on(&#x27;save:success&#x27;, this._setLayerState, this);
+    wfsLayer.on(&#x27;save:success&#x27;, this.saveSuccess, this);
+    Ember.set(wfsLayer, &#x27;baseAddLayer&#x27;, wfsLayer.addLayer);
+    wfsLayer.addLayer = this.get(&#x27;_addLayer&#x27;).bind(this);
+
+    Ember.set(wfsLayer, &#x27;baseRemoveLayer&#x27;, wfsLayer.removeLayer);
+    wfsLayer.removeLayer = this.get(&#x27;_removeLayer&#x27;).bind(this);
+    Ember.set(wfsLayer, &#x27;baseClearLayers&#x27;, wfsLayer.clearLayers);
+    wfsLayer.clearLayers = this.get(&#x27;_clearLayers&#x27;).bind(this);
+    Ember.set(wfsLayer, &#x27;baseEditLayer&#x27;, wfsLayer.editLayer);
+    wfsLayer.editLayer = this.get(&#x27;_editLayer&#x27;).bind(this);
+
+    wfsLayer.reload = this.get(&#x27;reload&#x27;).bind(this);
+    wfsLayer.cancelEdit = this.get(&#x27;cancelEdit&#x27;).bind(this);
+    wfsLayer.updateLabel = this.get(&#x27;updateLabel&#x27;).bind(this);
+    wfsLayer.addCustomFilter = this.get(&#x27;addCustomFilter&#x27;).bind(this);
+
+    if (!Ember.isNone(leafletMap)) {
+      let thisPane = this.get(&#x27;_pane&#x27;);
+      let pane = leafletMap.getPane(thisPane);
+      if (!pane || Ember.isNone(pane)) {
+        this._createPane(thisPane);
+        wfsLayer.options.pane = thisPane;
+        wfsLayer.options.renderer = this.get(&#x27;_renderer&#x27;);
+        this._setLayerZIndex();
+      }
+    }
+
+    // for check zoom
+    wfsLayer.minZoom = this.get(&#x27;minZoom&#x27;);
+    wfsLayer.maxZoom = this.get(&#x27;maxZoom&#x27;);
+    wfsLayer.leafletMap = leafletMap;
+    this.set(&#x27;loadedBounds&#x27;, null);
+    this._setFeaturesProcessCallback(wfsLayer);
+    wfsLayer.loadFeatures = this.get(&#x27;_loadFeatures&#x27;).bind(wfsLayer);
+
+    if (!error) {
+      // this.get(&#x27;_leafletObject&#x27;) is null at this moment. _layers hasn&#x27;t pane and renderer. For marker layer this is critical (ignore zoom), but for polygon layer doesn&#x27;t.
+      let featureLayers = Object.values(wfsLayer._layers);
+      this._addLayersOnMap(featureLayers);
+      let load = this.continueLoad(wfsLayer);
+      if (options.showExisting) {
+        let loaded = {
+          layers: featureLayers
+        };
+        let promise = this._featuresProcessCallback(loaded.layers, wfsLayer);
+        if (loaded.results &amp;&amp; Ember.isArray(loaded.results)) {
+          loaded.results.push(promise);
+        }
+      }
+
+      wfsLayer.promiseLoadLayer = load &amp;&amp; load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
+    }
+
+    wfsLayer.loadLayerFeatures = this.get(&#x27;loadLayerFeatures&#x27;).bind(this);
+    return wfsLayer;
   },
 
   saveSuccess() {

@@ -549,12 +549,12 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
         let result = _this.showHide(mapCommandName, _this.addClassHidden, leafletMap, true);
 
         if (!result) {
-          let mapCommand = lookupMapTool(mapCommandName, null);
-          if (Ember.isNone(mapCommand)) {
+          let mapTool = lookupMapTool(mapCommandName, null);
+          if (Ember.isNone(mapTool)) {
             return;
           }
 
-          mapCommand.hideTool();
+          mapTool.hideTool();
         }
       },
 

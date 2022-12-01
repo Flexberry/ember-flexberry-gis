@@ -13040,7 +13040,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 341,
+            "line": 346,
             "description": "Removes all the layers from the group.",
             "itemtype": "method",
             "name": "_clearLayers",
@@ -13049,7 +13049,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 370,
+            "line": 375,
             "description": "Creates leaflet vector layer related to layer type.",
             "itemtype": "method",
             "name": "createVectorLayer",
@@ -13068,7 +13068,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 504,
+            "line": 525,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -13080,7 +13080,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 515,
+            "line": 536,
             "description": "Handles 'flexberry-map:identify' event of leaflet map.",
             "itemtype": "method",
             "name": "identify",
@@ -13111,7 +13111,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 550,
+            "line": 571,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -13156,7 +13156,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 670,
+            "line": 691,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "_query",
@@ -13187,7 +13187,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 705,
+            "line": 726,
             "description": "Get an array of link parameter restrictions.",
             "itemtype": "method",
             "name": "getFilterParameters",
@@ -13211,7 +13211,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 733,
+            "line": 754,
             "description": "Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "loadLayerFeatures",
@@ -13231,7 +13231,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 801,
+            "line": 822,
             "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "getLayerFeatures",
@@ -13251,14 +13251,14 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 873,
+            "line": 894,
             "description": "Handles zoomend",
             "class": "WfsLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 962,
+            "line": 983,
             "description": "Adds a listener function to leafletMap.",
             "itemtype": "method",
             "name": "onLeafletMapEvent",
@@ -13270,21 +13270,21 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 978,
+            "line": 999,
             "description": "Initializes DOM-related component's properties.",
             "class": "WfsLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 986,
+            "line": 1007,
             "description": "Deinitializes DOM-related component's properties.",
             "class": "WfsLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 999,
+            "line": 1020,
             "description": "Clear changes.",
             "itemtype": "method",
             "name": "clearChanges",
@@ -13304,7 +13304,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 1056,
+            "line": 1077,
             "description": "Handles 'flexberry-map:cancelEdit' event of leaflet map.",
             "itemtype": "method",
             "name": "cancelEdit",
@@ -13324,7 +13324,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 1080,
+            "line": 1101,
             "description": "Create body of request gs:Nearest for WPS.",
             "itemtype": "method",
             "name": "getWPSgsNearest",
@@ -13344,7 +13344,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 1131,
+            "line": 1152,
             "description": "Request with filter DWithin.",
             "itemtype": "method",
             "name": "dwithin",
@@ -13374,7 +13374,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 1160,
+            "line": 1181,
             "description": "Recursively calls itself increasing the distance until it gets the result.",
             "itemtype": "method",
             "name": "upDistance",
@@ -13409,7 +13409,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 1189,
+            "line": 1210,
             "description": "Get nearest object.\nIf settings of layer has wpsUrl, it do request to WPS service with request 'gs:Nearest'. It get data for request calling getWPSgsNearest().\nResponse of WPS servise is FeatureCollection in json format with one feature without themselves properties of feature.\nTherefore, feature by id is loaded and distance is calculated.\nIf settings of layer has not wpsUrl, it do call upDistance() for array of distances [1, 10, 100, 1000, 10000, 100000, 1000000].\nResult being processed base-vector-layer's method _calcNearestObject.",
             "itemtype": "method",
             "name": "getNearObject",
@@ -45174,7 +45174,7 @@
         },
         {
             "file": "addon/mixins/leaflet-map/map-visibility.js",
-            "line": 42,
+            "line": 50,
             "description": "Show or hide tools/commands",
             "params": [
                 {
@@ -51857,27 +51857,27 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:370"
+            "line": " addon/components/layers/wfs-layer.js:375"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:504"
+            "line": " addon/components/layers/wfs-layer.js:525"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:705"
+            "line": " addon/components/layers/wfs-layer.js:726"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:733"
+            "line": " addon/components/layers/wfs-layer.js:754"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:801"
+            "line": " addon/components/layers/wfs-layer.js:822"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:1056"
+            "line": " addon/components/layers/wfs-layer.js:1077"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -52565,15 +52565,15 @@
         },
         {
             "message": "Missing item type\nHandles zoomend",
-            "line": " addon/components/layers/wfs-layer.js:873"
+            "line": " addon/components/layers/wfs-layer.js:894"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/layers/wfs-layer.js:978"
+            "line": " addon/components/layers/wfs-layer.js:999"
         },
         {
             "message": "Missing item type\nDeinitializes DOM-related component's properties.",
-            "line": " addon/components/layers/wfs-layer.js:986"
+            "line": " addon/components/layers/wfs-layer.js:1007"
         },
         {
             "message": "Missing item type\nInitializes component.",
@@ -54041,7 +54041,7 @@
         },
         {
             "message": "Missing item type\nShow or hide tools/commands",
-            "line": " addon/mixins/leaflet-map/map-visibility.js:42"
+            "line": " addon/mixins/leaflet-map/map-visibility.js:50"
         },
         {
             "message": "Missing item type\nMixin with methods to control compare mode",
