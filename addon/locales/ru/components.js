@@ -75,5 +75,10 @@ export default {
   'flexberry-create-object-geometry': FlexberryCreateObjectGeometry,
   'compare-object-geometries': CompareObjectGeometries,
   'minimap': MinimapComponent,
-  'flexberry-edit-layer-feature': EditLayerFeatureComponent
+  'flexberry-edit-layer-feature': EditLayerFeatureComponent,
+  'favourites-list': {
+    'clear': {
+      'tooltip': 'Очистить выделение на карте'
+    }
+  }
 };
