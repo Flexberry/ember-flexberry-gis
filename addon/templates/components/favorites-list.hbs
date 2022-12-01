@@ -1,9 +1,12 @@
 <button type="submit" class="ui button primary compare{{if compareBtnDisabled " disabled"}}" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
   {{t "components.compare-object-geometries.compare-objects-caption"}}
 </button>
-<div class="flexberry-clear">
-  <span {{action "clear"}}>Сбросить выделение</span>
-</div>
+{{flexberry-button
+  class="fav-list clear"
+  tooltip=(t "components.favourites-list.clear.tooltip")
+  iconClass="icon-guideline-clear-layers"
+  click=(action "clear")
+}}
 {{#if _showFavorites}}
   {{layer-result-list
     results=data
@@ -18,9 +21,8 @@
     pane="zoomto"
     zoomToCopy=true
     copyStyle=(hash 
-      weight=5
+      weight=2
       fill=false
-      color="green"
     )
   }}
 {{else}}
