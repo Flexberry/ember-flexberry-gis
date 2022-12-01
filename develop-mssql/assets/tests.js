@@ -219,6 +219,61 @@ define('dummy/tests/controllers/sitemap-node.jshint', ['exports'], function (exp
     assert.ok(true, 'controllers/sitemap-node.js should pass jshint.');
   });
 });
+define('dummy/tests/helpers/common-for-layer', ['exports', 'ember'], function (exports, _ember) {
+  exports['default'] = createLeafletMap;
+
+  function createLeafletMap() {
+    var bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
+
+    var getBounds = function getBounds() {
+      return bounds;
+    };
+
+    var getPane = function getPane() {
+      return undefined;
+    };
+
+    var createPane = function createPane() {
+      return {};
+    };
+
+    var hasLayer = function hasLayer() {
+      return true;
+    };
+
+    var removeLayer = function removeLayer() {
+      return {};
+    };
+
+    var leafletMap = L.map(document.createElement('div'));
+    leafletMap.getBounds = getBounds;
+    leafletMap.getPane = getPane;
+    leafletMap.createPane = createPane;
+    leafletMap.removeLayer = removeLayer;
+    leafletMap.hasLayer = hasLayer;
+    var editTools = new L.Editable(leafletMap);
+    _ember['default'].set(leafletMap, 'editTools', editTools);
+
+    return leafletMap;
+  }
+});
+define('dummy/tests/helpers/common-for-layer.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - helpers');
+  test('helpers/common-for-layer.js should pass jscs', function () {
+    ok(true, 'helpers/common-for-layer.js should pass jscs.');
+  });
+});
+define('dummy/tests/helpers/common-for-layer.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - helpers/common-for-layer.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'helpers/common-for-layer.js should pass jshint.');
+  });
+});
 define('dummy/tests/helpers/destroy-app', ['exports', 'ember'], function (exports, _ember) {
   exports['default'] = destroyApp;
 
@@ -2932,9 +2987,9 @@ define('dummy/tests/integration/components/map-tools/background-layers-test', ['
       };
     })()));
 
-    assert.equal(this.$().find('.flexberry-background-map-tool-div').length, 1);
-    assert.equal(this.$().find('.flexberry-background-map-tool').length, 1);
-    assert.equal(this.$('.flexberry-background-map-tool').attr('title'), 'Background layers');
+    assert.equal(this.$().find('.flexberry-background-layers-map-tool-div').length, 1);
+    assert.equal(this.$().find('.flexberry-background-layers-map-tool').length, 1);
+    assert.equal(this.$('.flexberry-background-layers-map-tool').attr('title'), 'Background layers');
 
     assert.equal(this.$().find('.main-background-layers').length, 0);
     assert.equal(this.$().find('.child-background-layers').length, 0);
@@ -3010,9 +3065,9 @@ define('dummy/tests/integration/components/map-tools/background-layers-test', ['
       };
     })()));
 
-    assert.equal(this.$().find('.flexberry-background-map-tool-div').length, 1);
-    assert.equal(this.$().find('.flexberry-background-map-tool').length, 1);
-    assert.equal(this.$('.flexberry-background-map-tool').attr('title'), 'Background layers');
+    assert.equal(this.$().find('.flexberry-background-layers-map-tool-div').length, 1);
+    assert.equal(this.$().find('.flexberry-background-layers-map-tool').length, 1);
+    assert.equal(this.$('.flexberry-background-layers-map-tool').attr('title'), 'Background layers');
 
     assert.equal(this.$('.main-background-layers').length, 1);
     assert.equal(this.$('.child-background-layers').length, 2);
@@ -5789,13 +5844,13 @@ define('dummy/tests/unit/components/layers/group-layer-test.jshint', ['exports']
     assert.ok(true, 'unit/components/layers/group-layer-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports', 'ember', 'ember-data', 'ember-qunit', 'dummy/tests/helpers/start-app', 'ember-flexberry-data', 'sinon', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326'], function (exports, _ember, _emberData, _emberQunit, _dummyTestsHelpersStartApp, _emberFlexberryData, _sinon, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326) {
+define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports', 'ember', 'ember-data', 'ember-qunit', 'dummy/tests/helpers/start-app', 'ember-flexberry-data', 'sinon', 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326', 'dummy/tests/helpers/common-for-layer'], function (exports, _ember, _emberData, _emberQunit, _dummyTestsHelpersStartApp, _emberFlexberryData, _sinon, _emberFlexberryGisCoordinateReferenceSystemsEpsg4326, _dummyTestsHelpersCommonForLayer) {
 
   var app = undefined;
   var options = undefined;
   var param = undefined;
   var odataServerFake = undefined;
-  var bounds = undefined;
+  var bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
   var store = undefined;
   var responseBatchUpdate = undefined;
 
@@ -5843,36 +5898,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
       };
       param = _ember['default'].$.extend(param, options);
 
-      bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
-
-      var getBounds = function getBounds() {
-        return bounds;
-      };
-
-      var getPane = function getPane() {
-        return undefined;
-      };
-
-      var createPane = function createPane() {
-        return {};
-      };
-
-      var hasLayer = function hasLayer() {
-        return true;
-      };
-
-      var removeLayer = function removeLayer() {
-        return {};
-      };
-
-      var leafletMap = L.map(document.createElement('div'));
-      leafletMap.getBounds = getBounds;
-      leafletMap.getPane = getPane;
-      leafletMap.createPane = createPane;
-      leafletMap.removeLayer = removeLayer;
-      leafletMap.hasLayer = hasLayer;
-      var editTools = new L.Editable(leafletMap);
-      _ember['default'].set(leafletMap, 'editTools', editTools);
+      var leafletMap = (0, _dummyTestsHelpersCommonForLayer['default'])();
 
       store = app.__container__.lookup('service:store');
       var layerModel = store.createRecord('test-model');
@@ -6101,6 +6127,11 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
             assert.ok(JSON.stringify(loadedBounds.getBounds()) === JSON.stringify(bounds), 'loadedBounds get from map');
 
             bounds = L.latLngBounds(L.latLng(58.46807257997011, 56.61014556884766), L.latLng(58.443780224452524, 56.44535064697266));
+            var getBounds = function getBounds() {
+              return bounds;
+            };
+
+            component.leafletMap.getBounds = getBounds;
 
             var load = component.continueLoad();
             load.then(_ember['default'].run(function () {
@@ -6932,12 +6963,26 @@ define('dummy/tests/unit/components/layers/tile-layer-test.jshint', ['exports'],
     assert.ok(true, 'unit/components/layers/tile-layer-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember', 'ember-qunit', 'sinon', 'dummy/tests/helpers/start-app'], function (exports, _ember, _emberQunit, _sinon, _dummyTestsHelpersStartApp) {
+define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember', 'ember-qunit', 'sinon', 'dummy/tests/helpers/start-app', 'dummy/tests/helpers/common-for-layer'], function (exports, _ember, _emberQunit, _sinon, _dummyTestsHelpersStartApp, _dummyTestsHelpersCommonForLayer) {
 
   var app = undefined;
   var geoserverFake = undefined;
   var options = undefined;
   var param = undefined;
+
+  var commonStub = function commonStub(param, that) {
+    var component = that.subject(param);
+    var store = app.__container__.lookup('service:store');
+    var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+    var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
+    var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
+    getPkFieldLayerStub.returns('primarykey');
+
+    return { component: component, getmapApiStub: getmapApiStub, getLayerFeatureIdStub: getLayerFeatureIdStub, getPkFieldLayerStub: getPkFieldLayerStub };
+  };
 
   (0, _emberQunit.moduleForComponent)('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
     unit: true,
@@ -6970,36 +7015,7 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
       };
       param = _ember['default'].$.extend(param, options);
 
-      var bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
-
-      var getBounds = function getBounds() {
-        return bounds;
-      };
-
-      var getPane = function getPane() {
-        return undefined;
-      };
-
-      var createPane = function createPane() {
-        return {};
-      };
-
-      var hasLayer = function hasLayer() {
-        return true;
-      };
-
-      var removeLayer = function removeLayer() {
-        return {};
-      };
-
-      var leafletMap = L.map(document.createElement('div'));
-      leafletMap.getBounds = getBounds;
-      leafletMap.getPane = getPane;
-      leafletMap.createPane = createPane;
-      leafletMap.removeLayer = removeLayer;
-      leafletMap.hasLayer = hasLayer;
-      var editTools = new L.Editable(leafletMap);
-      _ember['default'].set(leafletMap, 'editTools', editTools);
+      var leafletMap = (0, _dummyTestsHelpersCommonForLayer['default'])();
 
       _ember['default'].$.extend(param, { 'leafletMap': leafletMap });
 
@@ -7009,13 +7025,11 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
       geoserverFake.respondWith('POST', 'http://geoserverFake/geoserver/ows?', function (request) {
         if (request.requestBody === '<wfs:GetFeature xmlns:wfs="http://www.opengis.net/wfs" service="WFS" version="1.1.0" outputFormat="application/json">' + '<wfs:Query typeName="les:povorottochkipoint32640" srsName="EPSG:3857"><ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><Not><Or>' + '<ogc:PropertyIsEqualTo matchCase="false"><ogc:PropertyName>primarykey</ogc:PropertyName><ogc:Literal>475adc5b-fee4-4e8c-bed0-93746a9f00f0' + '</ogc:Literal></ogc:PropertyIsEqualTo></Or></Not></ogc:Filter></wfs:Query></wfs:GetFeature>') {
           request.respond(200, { 'Content-Type': 'application/json' }, '{"type":"FeatureCollection","features":[],"totalFeatures":0,"numberMatched":0,"numberReturned":0,"timeStamp":"2020-02-27T04:44:49.909Z",' + '"crs":null}');
-        }
-
-        if (request.requestBody.indexOf('<wfs:GetFeature') !== -1) {
+        } else if (request.requestBody.indexOf('<wfs:GetFeature') !== -1) {
           request.respond(200, { 'Content-Type': 'application/json' }, '{"type":"FeatureCollection","features":[{"type":"Feature","id":"vydel_utverzhdeno_polygon.06350c71-ec5c-431e-a5ab-e423cf662128",' + '"geometry":{"type":"MultiPolygon","coordinates":[[[[6215353.89391635,8117916.10977998],[6215317.82640125,8117408.36954415],' + '[6215322.83577823,8116959.81224657],[6213934.34777038,8117228.98625252],[6213930.67422719,8117229.84351009],' + '[6214007.26203691,8117650.34021493],[6214045.44462228,8117860.38311881],[6214113.79478966,8118235.47443556],' + '[6214237.35942438,8118229.9015124],[6214247.82345653,8118288.63175866],[6215053.10865244,8118087.57903733],' + '[6215031.95794919,8118033.35145873],[6215042.3106618,8117957.47637766],[6215353.89391635,8117916.10977998]]]]},' + '"geometry_name":"shape","properties":' + '{"id":"000","lesnichestvo":"-","uchastkovoelesnichestvo":"-","nomerkvartala":"141","urochishe":null,"nomer":10,"ploshad":200,"kategoriyazemel":' + '"Эксплуатационные леса","preobladayushayaporoda":"Сосна","bonitet":"2","gruppavozrasta":"Молодняки I гр.","klassvozrasta":"1","klasstovarnosti":' + 'null,"area":373798.7024302,"length":null,"primarykey":"06350c71-ec5c-431e-a5ab-e423cf662128","createtime":null,"creator":null,' + '"edittime":null,"editor":null}}],"totalFeatures":1,"numberMatched":1,"numberReturned":1,"timeStamp":"2020-02-27T04:44:49.909Z",' + '"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::3857"}}}');
-        }
-
-        if (request.requestBody.indexOf('<wfs:DescribeFeatureType') !== -1) {
+        } else if (request.requestBody.indexOf('<wfs:DescribeFeatureType xmlns:wfs="http://www.opengis.net/wfs" service="WFS" version="1.1.0">' + '<TypeName>les:test') !== -1) {
+          request.respond(404, { 'error': 'Error' }, null);
+        } else if (request.requestBody.indexOf('<wfs:DescribeFeatureType') !== -1) {
           request.respond(200, { 'Content-Type': 'text/plain;charset=utf-8' }, '<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" ' + 'xmlns:rgisperm="http://rgis.permkrai.ru" elementFormDefault="qualified" targetNamespace="http://rgis.permkrai.ru">' + '<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://rgispk.wdepo.ru:80/geoserver/schemas/gml/3.1.1/base/gml.xsd"/>' + '<xsd:complexType name="vydel_utverzhdeno_polygonType">' + '<xsd:complexContent>' + '<xsd:extension base="gml:AbstractFeatureType">' + '<xsd:sequence>' + '<xsd:element maxOccurs="1" minOccurs="1" name="primarykey" nillable="false" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="shape" nillable="true" type="gml:MultiSurfacePropertyType"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="id" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="lesnichestvo" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="uchastkovoelesnichestvo" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="nomerkvartala" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="urochishe" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="nomer" nillable="true" type="xsd:int"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="ploshad" nillable="true" type="xsd:decimal"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="kategoriyazemel" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="preobladayushayaporoda" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="bonitet" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="gruppavozrasta" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="klassvozrasta" nillable="true" type="xsd:int"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="klasstovarnosti" nillable="true" type="xsd:int"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="area" nillable="true" type="xsd:decimal"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="length" nillable="true" type="xsd:decimal"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="createtime" nillable="true" type="xsd:dateTime"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="creator" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="edittime" nillable="true" type="xsd:dateTime"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="editor" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="kl" nillable="true" type="xsd:string"/>' + '</xsd:sequence>' + '</xsd:extension>' + '</xsd:complexContent>' + '</xsd:complexType>' + '<xsd:element name="vydel_utverzhdeno_polygon" substitutionGroup="gml:_Feature" type="rgisperm:vydel_utverzhdeno_polygonType"/>' + '</xsd:schema>');
         }
       });
@@ -7079,33 +7093,23 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
     _ember['default'].run(function () {
       param.showExisting = true;
 
-      var component = _this2.subject(param);
-
-      var store = app.__container__.lookup('service:store');
-      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
-      getPkFieldLayerStub.returns('primarykey');
+      var objStub = commonStub(param, _this2);
 
       options.showExisting = true;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+      L.wfst(options, objStub.component.getFeaturesReadFormat()).once('load', function (res) {
         res.target.readFormat.excludedProperties = ['primarykey'];
         var layers = Object.values(res.target._layers);
-        component._addLayersOnMap(layers);
-        assert.equal(layers[0].options.pane, component.get('_pane'), 'Pane on object eqals pane on layer');
-        assert.equal(layers[0].options.renderer, component.get('_renderer'), 'Renderer on object eqals renderer on layer');
+        objStub.component._addLayersOnMap(layers);
+        assert.equal(layers[0].options.pane, objStub.component.get('_pane'), 'Pane on object eqals pane on layer');
+        assert.equal(layers[0].options.renderer, objStub.component.get('_renderer'), 'Renderer on object eqals renderer on layer');
         done();
 
-        getmapApiStub.restore();
-        getLayerFeatureIdStub.restore();
-        getPkFieldLayerStub.restore();
+        objStub.getmapApiStub.restore();
+        objStub.getLayerFeatureIdStub.restore();
+        objStub.getPkFieldLayerStub.restore();
       });
 
-      assert.ok(component, 'Create wfs-layer with showExisting = true');
+      assert.ok(objStub.component, 'Create wfs-layer with showExisting = true');
       done();
     });
   });
@@ -7118,20 +7122,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
     _ember['default'].run(function () {
       param.showExisting = true;
 
-      var component = _this3.subject(param);
-
-      var store = app.__container__.lookup('service:store');
-      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
-      getPkFieldLayerStub.returns('primarykey');
+      var objStub = commonStub(param, _this3);
 
       options.showExisting = true;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+      L.wfst(options, objStub.component.getFeaturesReadFormat()).once('load', function (res) {
         res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
@@ -7139,19 +7133,19 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           results: _ember['default'].A()
         };
 
-        component._leafletObject = res.target;
+        objStub.component._leafletObject = res.target;
 
-        component.getLayerFeatures(e).then(function (layers) {
+        objStub.component.getLayerFeatures(e).then(function (layers) {
           assert.ok(layers, 'Get feature of layers with showExisting = true');
           done();
 
-          getmapApiStub.restore();
-          getLayerFeatureIdStub.restore();
-          getPkFieldLayerStub.restore();
+          objStub.getmapApiStub.restore();
+          objStub.getLayerFeatureIdStub.restore();
+          objStub.getPkFieldLayerStub.restore();
         });
       });
 
-      assert.ok(component, 'Create wfs-layer with showExisting = true');
+      assert.ok(objStub.component, 'Create wfs-layer with showExisting = true');
       done();
     });
   });
@@ -7162,7 +7156,7 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
     assert.expect(3);
     var done = assert.async(2);
     _ember['default'].run(function () {
-      var component = _this4.subject(param);
+      var component = _this4.subject(param, _this4);
 
       var store = app.__container__.lookup('service:store');
       var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
@@ -7330,20 +7324,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
     assert.expect(7);
     var done = assert.async(1);
     _ember['default'].run(function () {
-      var component = _this8.subject(param);
-
-      var store = app.__container__.lookup('service:store');
-      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
-      getPkFieldLayerStub.returns('primarykey');
+      var objStub = commonStub(param, _this8);
 
       options.showExisting = true;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+      L.wfst(options, objStub.component.getFeaturesReadFormat()).once('load', function (res) {
         res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
@@ -7351,11 +7335,11 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           results: _ember['default'].A()
         };
 
-        component._leafletObject = res.target;
+        objStub.component._leafletObject = res.target;
 
-        component.getLayerFeatures(e).then(function (layers) {
-          var leafletObject = component.get('_leafletObject');
-          var leafletMap = component.get('leafletMap');
+        objStub.component.getLayerFeatures(e).then(function (layers) {
+          var leafletObject = objStub.component.get('_leafletObject');
+          var leafletMap = objStub.component.get('leafletMap');
           leafletObject.leafletMap = leafletMap;
 
           assert.equal(realCountArr(leafletObject.changes), 0);
@@ -7369,13 +7353,13 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           assert.equal(leafletObject.getLayers().length, 1);
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
-          component.clearChanges();
+          objStub.component.clearChanges();
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
           done();
 
-          getmapApiStub.restore();
-          getLayerFeatureIdStub.restore();
-          getPkFieldLayerStub.restore();
+          objStub.getmapApiStub.restore();
+          objStub.getLayerFeatureIdStub.restore();
+          objStub.getPkFieldLayerStub.restore();
         });
       });
     });
@@ -7387,20 +7371,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
     assert.expect(7);
     var done = assert.async(1);
     _ember['default'].run(function () {
-      var component = _this9.subject(param);
-
-      var store = app.__container__.lookup('service:store');
-      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
-      getPkFieldLayerStub.returns('primarykey');
+      var objStub = commonStub(param, _this9);
 
       options.showExisting = true;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+      L.wfst(options, objStub.component.getFeaturesReadFormat()).once('load', function (res) {
         res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
@@ -7408,11 +7382,11 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           results: _ember['default'].A()
         };
 
-        component._leafletObject = res.target;
+        objStub.component._leafletObject = res.target;
 
-        component.getLayerFeatures(e).then(function (layers) {
-          var leafletObject = component.get('_leafletObject');
-          var leafletMap = component.get('leafletMap');
+        objStub.component.getLayerFeatures(e).then(function (layers) {
+          var leafletObject = objStub.component.get('_leafletObject');
+          var leafletMap = objStub.component.get('leafletMap');
           leafletObject.leafletMap = leafletMap;
 
           assert.equal(realCountArr(leafletObject.changes), 0);
@@ -7437,13 +7411,13 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           assert.equal(leafletObject.getLayers().length, 2);
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
-          component.clearChanges();
+          objStub.component.clearChanges();
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
           done();
 
-          getmapApiStub.restore();
-          getLayerFeatureIdStub.restore();
-          getPkFieldLayerStub.restore();
+          objStub.getmapApiStub.restore();
+          objStub.getLayerFeatureIdStub.restore();
+          objStub.getPkFieldLayerStub.restore();
         });
       });
     });
@@ -7455,20 +7429,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
     assert.expect(7);
     var done = assert.async(1);
     _ember['default'].run(function () {
-      var component = _this10.subject(param);
-
-      var store = app.__container__.lookup('service:store');
-      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
-      getPkFieldLayerStub.returns('primarykey');
+      var objStub = commonStub(param, _this10);
 
       options.showExisting = true;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+      L.wfst(options, objStub.component.getFeaturesReadFormat()).once('load', function (res) {
         res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
@@ -7476,11 +7440,11 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           results: _ember['default'].A()
         };
 
-        component._leafletObject = res.target;
+        objStub.component._leafletObject = res.target;
 
-        component.getLayerFeatures(e).then(function (layers) {
-          var leafletObject = component.get('_leafletObject');
-          var leafletMap = component.get('leafletMap');
+        objStub.component.getLayerFeatures(e).then(function (layers) {
+          var leafletObject = objStub.component.get('_leafletObject');
+          var leafletMap = objStub.component.get('leafletMap');
           leafletObject.leafletMap = leafletMap;
 
           assert.equal(realCountArr(leafletObject.changes), 0);
@@ -7497,13 +7461,13 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           assert.equal(leafletObject.getLayers().length, 1);
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
-          component.clearChanges();
+          objStub.component.clearChanges();
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
           done();
 
-          getmapApiStub.restore();
-          getLayerFeatureIdStub.restore();
-          getPkFieldLayerStub.restore();
+          objStub.getmapApiStub.restore();
+          objStub.getLayerFeatureIdStub.restore();
+          objStub.getPkFieldLayerStub.restore();
         });
       });
     });
@@ -7515,20 +7479,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
     assert.expect(7);
     var done = assert.async(1);
     _ember['default'].run(function () {
-      var component = _this11.subject(param);
-
-      var store = app.__container__.lookup('service:store');
-      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
-      getPkFieldLayerStub.returns('primarykey');
+      var objStub = commonStub(param, _this11);
 
       options.showExisting = true;
-      L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+      L.wfst(options, objStub.component.getFeaturesReadFormat()).once('load', function (res) {
         res.target.readFormat.excludedProperties = ['primarykey'];
         var e = {
           featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
@@ -7536,11 +7490,11 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           results: _ember['default'].A()
         };
 
-        component._leafletObject = res.target;
+        objStub.component._leafletObject = res.target;
 
-        component.getLayerFeatures(e).then(function (layers) {
-          var leafletObject = component.get('_leafletObject');
-          var leafletMap = component.get('leafletMap');
+        objStub.component.getLayerFeatures(e).then(function (layers) {
+          var leafletObject = objStub.component.get('_leafletObject');
+          var leafletMap = objStub.component.get('leafletMap');
           leafletObject.leafletMap = leafletMap;
 
           assert.equal(realCountArr(leafletObject.changes), 0);
@@ -7555,13 +7509,13 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
           assert.equal(leafletObject.getLayers().length, 0);
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
-          component.clearChanges();
+          objStub.component.clearChanges();
           assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
           done();
 
-          getmapApiStub.restore();
-          getLayerFeatureIdStub.restore();
-          getPkFieldLayerStub.restore();
+          objStub.getmapApiStub.restore();
+          objStub.getLayerFeatureIdStub.restore();
+          objStub.getPkFieldLayerStub.restore();
         });
       });
     });
@@ -7616,23 +7570,13 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
     var done = assert.async(2);
     _ember['default'].run(function () {
       param = _ember['default'].$.extend(param, { showExisting: true });
-      var component = _this14.subject(param);
-
-      var store = app.__container__.lookup('service:store');
-      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
-      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
-      getmapApiStub.returns(mapModel);
-
-      var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
-      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
-      var getPkFieldLayerStub = _sinon['default'].stub(component, 'getPkField');
-      getPkFieldLayerStub.returns('primarykey');
+      var objStub = commonStub(param, _this14);
 
       options.showExisting = true;
 
-      component.get('_leafletLayerPromise').then(function (leafletObject) {
-        component.set('_leafletObject', leafletObject);
-        var leafletMap = component.get('leafletMap');
+      objStub.component.get('_leafletLayerPromise').then(function (leafletObject) {
+        objStub.component.set('_leafletObject', leafletObject);
+        var leafletMap = objStub.component.get('leafletMap');
         leafletObject.leafletMap = leafletMap;
 
         var e = {
@@ -7643,7 +7587,7 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
 
         done();
 
-        component.getLayerFeatures(e).then(function (layers) {
+        objStub.component.getLayerFeatures(e).then(function (layers) {
           var layerUpdate = leafletObject.getLayers()[0];
           layerUpdate.feature.properties.name = 'test';
 
@@ -7664,9 +7608,9 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
 
           done();
 
-          getmapApiStub.restore();
-          getLayerFeatureIdStub.restore();
-          getPkFieldLayerStub.restore();
+          objStub.getmapApiStub.restore();
+          objStub.getLayerFeatureIdStub.restore();
+          objStub.getPkFieldLayerStub.restore();
         });
       });
     });
@@ -8157,6 +8101,117 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
       });
     });
   });
+
+  (0, _emberQunit.test)('test _createVectorLayer with error', function (assert) {
+    var _this20 = this;
+
+    assert.expect(5);
+    var done = assert.async(1);
+    _ember['default'].run(function () {
+      var objStub = commonStub(param, _this20);
+      var wfstSpy = _sinon['default'].spy(L, 'wfst');
+
+      var wfsLayer = objStub.component._createVectorLayer(null, options);
+      assert.ok(wfsLayer, 'Create layer');
+      assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+      assert.ok(wfsLayer.error, 'Create layer with error');
+      assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+      assert.equal(wfstSpy.callCount, 1, 'Create layer');
+
+      done();
+
+      wfstSpy.restore();
+    });
+  });
+
+  (0, _emberQunit.test)('test _createVectorLayer without error', function (assert) {
+    var _this21 = this;
+
+    assert.expect(5);
+    var done = assert.async(1);
+    _ember['default'].run(function () {
+      var objStub = commonStub(param, _this21);
+      var featuresReadFormat = objStub.component.getFeaturesReadFormat();
+      var layer = L.wfst(options, featuresReadFormat);
+
+      var wfstSpy = _sinon['default'].spy(L, 'wfst');
+
+      var wfsLayer = objStub.component._createVectorLayer(layer, options, featuresReadFormat);
+      assert.ok(wfsLayer, 'Create layer');
+      assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+      assert.notOk(wfsLayer.error, 'Create layer without error');
+      assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+      assert.equal(wfstSpy.callCount, 0, 'Layer already create');
+
+      done();
+
+      wfstSpy.restore();
+    });
+  });
+
+  (0, _emberQunit.test)('test createVectorLayer without error', function (assert) {
+    var _this22 = this;
+
+    assert.expect(8);
+    var done = assert.async(1);
+    _ember['default'].run(function () {
+      var objStub = commonStub(param, _this22);
+
+      var wfstSpy = _sinon['default'].spy(L, 'wfst');
+      var createVectorLayerSpy = _sinon['default'].spy(objStub.component, 'createVectorLayer');
+      var _createVectorLayerSpy = _sinon['default'].spy(objStub.component, '_createVectorLayer');
+
+      objStub.component.createVectorLayer(options).then(function (wfsLayer) {
+        assert.ok(wfsLayer, 'Create layer');
+        assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+        assert.notOk(wfsLayer.error, 'Create layer without error');
+        assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+        assert.equal(wfstSpy.callCount, 1, 'Create layer');
+        assert.equal(createVectorLayerSpy.callCount, 1, 'Call createVectorLayer');
+        assert.equal(_createVectorLayerSpy.callCount, 2, 'Call _createVectorLayer');
+        assert.ok(_createVectorLayerSpy.getCall(0).args[0], 'Call _createVectorLayer');
+
+        done();
+
+        wfstSpy.restore();
+        createVectorLayerSpy.restore();
+        _createVectorLayerSpy.restore();
+      });
+    });
+  });
+
+  (0, _emberQunit.test)('test createVectorLayer with error', function (assert) {
+    var _this23 = this;
+
+    assert.expect(8);
+    var done = assert.async(1);
+    _ember['default'].run(function () {
+      param.typeName = 'test';
+      options.typeName = 'test';
+      var objStub = commonStub(param, _this23);
+
+      var wfstSpy = _sinon['default'].spy(L, 'wfst');
+      var createVectorLayerSpy = _sinon['default'].spy(objStub.component, 'createVectorLayer');
+      var _createVectorLayerSpy = _sinon['default'].spy(objStub.component, '_createVectorLayer');
+
+      objStub.component.createVectorLayer(options).then(function (wfsLayer) {
+        assert.ok(wfsLayer, 'Create layer');
+        assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+        assert.ok(wfsLayer.error, 'Create layer without error');
+        assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+        assert.equal(wfstSpy.callCount, 3, 'Create layer');
+        assert.equal(createVectorLayerSpy.callCount, 1, 'Call createVectorLayer');
+        assert.equal(_createVectorLayerSpy.callCount, 2, 'Call _createVectorLayer');
+        assert.notOk(_createVectorLayerSpy.getCall(0).args[0], 'Call _createVectorLayer');
+
+        done();
+
+        wfstSpy.restore();
+        createVectorLayerSpy.restore();
+        _createVectorLayerSpy.restore();
+      });
+    });
+  });
 });
 define('dummy/tests/unit/components/layers/wfs-layer-test.jscs-test', ['exports'], function (exports) {
   'use strict';
@@ -8175,7 +8230,7 @@ define('dummy/tests/unit/components/layers/wfs-layer-test.jshint', ['exports'], 
     assert.ok(true, 'unit/components/layers/wfs-layer-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/components/layers/with-history-layer-test', ['exports', 'ember', 'ember-data', 'ember-qunit', 'dummy/tests/helpers/start-app', 'ember-flexberry-data', 'sinon'], function (exports, _ember, _emberData, _emberQunit, _dummyTestsHelpersStartApp, _emberFlexberryData, _sinon) {
+define('dummy/tests/unit/components/layers/with-history-layer-test', ['exports', 'ember', 'ember-data', 'ember-qunit', 'dummy/tests/helpers/start-app', 'ember-flexberry-data', 'sinon', 'dummy/tests/helpers/common-for-layer'], function (exports, _ember, _emberData, _emberQunit, _dummyTestsHelpersStartApp, _emberFlexberryData, _sinon, _dummyTestsHelpersCommonForLayer) {
 
   var app = undefined;
   var geoserverFake = undefined;
@@ -8298,36 +8353,7 @@ define('dummy/tests/unit/components/layers/with-history-layer-test', ['exports',
 
       paramWFS = _ember['default'].$.extend(paramWFS, optionsWFS);
 
-      var bounds = L.latLngBounds(L.latLng(58.4436454695997, 56.369991302490234), L.latLng(58.46793791815783, 56.53478622436524));
-
-      var getBounds = function getBounds() {
-        return bounds;
-      };
-
-      var getPane = function getPane() {
-        return undefined;
-      };
-
-      var createPane = function createPane() {
-        return {};
-      };
-
-      var hasLayer = function hasLayer() {
-        return true;
-      };
-
-      var removeLayer = function removeLayer() {
-        return {};
-      };
-
-      var leafletMap = L.map(document.createElement('div'));
-      leafletMap.getBounds = getBounds;
-      leafletMap.getPane = getPane;
-      leafletMap.createPane = createPane;
-      leafletMap.removeLayer = removeLayer;
-      leafletMap.hasLayer = hasLayer;
-      var editTools = new L.Editable(leafletMap);
-      _ember['default'].set(leafletMap, 'editTools', editTools);
+      var leafletMap = (0, _dummyTestsHelpersCommonForLayer['default'])();
 
       _ember['default'].$.extend(paramWFS, { 'layerModel': layerModelWfs });
       _ember['default'].$.extend(paramWFS, { 'leafletMap': leafletMap });

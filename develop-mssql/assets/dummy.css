@@ -7122,22 +7122,22 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
   width: 100%;
   padding: 0;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div {
   position: absolute;
   top: 0;
   right: 0;
   margin: 0px 30px 30px 0px;
   width: 360px;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .flexberry-background-map-tool {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .flexberry-background-layers-map-tool {
   margin-bottom: 0px;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .visible {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .visible {
   border-radius: 5px 5px 0px 0px;
   border-bottom-width: 0px;
   clip-path: inset(-2px -2px 0px -2px);
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .main-background-layers {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .main-background-layers {
   position: absolute;
   bottom: 0px;
   right: 0px;
@@ -7150,11 +7150,11 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
   box-sizing: border-box;
   border-top-width: 0px;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .secondary.menu {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .secondary.menu {
   border: none;
   min-height: 30px;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .secondary.menu a.tab {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .secondary.menu a.tab {
   cursor: pointer;
   color: #8F928F;
   font-size: 14px;
@@ -7163,36 +7163,36 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
   padding: 0 10px;
   line-height: 30px;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .secondary.menu a.tab.active {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .secondary.menu a.tab.active {
   color: #3B4256;
   font-weight: normal;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div a:not('.tab') {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div a:not('.tab') {
   position: absolute;
   right: 0;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .last-item {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .last-item {
   padding-right: 0px;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .first-item {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .first-item {
   padding-right: 17px;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .child-background-layers {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .child-background-layers {
   position: relative;
   padding-bottom: 10px;
   display: inline-block;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .child-background-layers .picture {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .child-background-layers .picture {
   border: 1px solid #E5E5E5;
   box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.15);
   width: 94px;
   height: 49px;
   box-sizing: border-box;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .child-background-layers .active {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .child-background-layers .active {
   border: 1px solid #3C4F76;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .child-background-layers p {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .child-background-layers p {
   text-align: center;
   font-size: 11px;
   width: 94px;
@@ -46690,8 +46690,8 @@ img.item-minus {
   border: 1px solid #FFFFFF;
   box-shadow: none;
 }
-.sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar .tab.item.isogd-treeview-tab,
-.rgis-sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar .tab.item.isogd-treeview-tab {
+.sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar .tab.item.treeview-tab,
+.rgis-sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar .tab.item.treeview-tab {
   padding: 10px 12px;
 }
 .sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar .tab.item.create-edit-object-tab,
@@ -46750,12 +46750,12 @@ img.item-minus {
 .rgis-sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar.main-map-tab-bar a.tab.active {
   border-radius: 3.5px !important;
 }
-.sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar.main-map-tab-bar a.tab.isogd-treeview-tab > i.icon,
-.rgis-sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar.main-map-tab-bar a.tab.isogd-treeview-tab > i.icon {
+.sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar.main-map-tab-bar a.tab.treeview-tab > i.icon,
+.rgis-sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar.main-map-tab-bar a.tab.treeview-tab > i.icon {
   margin-left: -4px;
 }
-.sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar.main-map-tab-bar a.tab.isogd-identify-tab > i.icon,
-.rgis-sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar.main-map-tab-bar a.tab.isogd-identify-tab > i.icon {
+.sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar.main-map-tab-bar a.tab.identify-tab > i.icon,
+.rgis-sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar.main-map-tab-bar a.tab.identify-tab > i.icon {
   margin-left: -6px;
 }
 .sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar.main-map-tab-bar a.tab.analytics > i.icon,
@@ -46852,29 +46852,29 @@ img.item-minus {
 .background-layers.flexberry-maptoolbar.ui.menu {
   bottom: 67px;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .flexberry-background-map-tool {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .flexberry-background-layers-map-tool {
   position: absolute;
   padding-left: 9px;
   padding-top: 2px;
   border-radius: 3.5px;
   right: 0;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .flexberry-background-map-tool i.icon:before {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .flexberry-background-layers-map-tool i.icon:before {
   font-size: 22px;
   line-height: 25px;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .flexberry-background-map-tool.visible {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .flexberry-background-layers-map-tool.visible {
   border-top: none;
   border-radius: 0px 0px 3.5px 3.5px;
   border-bottom: 1px solid #E5E5E5;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .flexberry-background-map-tool:hover {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .flexberry-background-layers-map-tool:hover {
   background: #fff;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .flexberry-background-map-tool:not(.visible):hover {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .flexberry-background-layers-map-tool:not(.visible):hover {
   border: 1px solid #7ba7d9;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .main-background-layers {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .main-background-layers {
   border: 1px solid #E5E5E5;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
   border-radius: 3.5px 3.5px 0px 3.5px;
@@ -46882,13 +46882,13 @@ img.item-minus {
   right: 0;
   padding-bottom: 4px;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .main-background-layers.tabs {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .main-background-layers.tabs {
   padding-top: 0px;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .main-background-layers .picture.active {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .main-background-layers .picture.active {
   border-width: 2px;
 }
-.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-map-tool-div .main-background-layers .picture:not(.active) {
+.background-layers.flexberry-maptoolbar.ui.menu .flexberry-background-layers-map-tool-div .main-background-layers .picture:not(.active) {
   border-color: #E5E5E5;
 }
 /************************************
