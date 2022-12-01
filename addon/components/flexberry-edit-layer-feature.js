@@ -836,7 +836,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       this.set('block', block);
     },
 
-    updateLayer(layer, zoom) {
+    updateLayer(layer, zoom, skipFire) {
       if (Ember.isNone(layer.feature)) {
         Ember.set(layer, 'feature', { type: 'Feature' });
       }
@@ -860,7 +860,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let index = this.get('curIndex');
       this.set(`layers.${index}`, layer);
 
-      layer.fire('create-layer:change', { layer: layer });
+      // Нет смысла обновлять координаты на менее точные, если событие обновления вызвано изменением координат, введенных вручную
+      if (!skipFire) {
+        layer.fire('create-layer:change', { layer: layer });
+      }
+
       this._updateLabels.apply([this, layer]);
 
       if (this.get('dataItemCount') > 1) {
@@ -1093,7 +1097,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         this.set('mode', 'Saved');
 
         let _leafletObjectFirst = this.get('layerModel.layerModel._leafletObjectFirst');
-        if (!Ember.isNone(_leafletObjectFirst) && typeof _leafletObjectFirst.setParams  === 'function') {
+        if (!Ember.isNone(_leafletObjectFirst) && typeof _leafletObjectFirst.setParams === 'function') {
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
 

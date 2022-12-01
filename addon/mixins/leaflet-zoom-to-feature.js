@@ -15,6 +15,11 @@ export default Ember.Mixin.create({
 
   serviceRenderer: null,
 
+  zoomToCopy: false,
+  copyStyle: null,
+
+  pane: 'overlayPane',
+
   actions: {
     /**
       Handles inner FeatureResultItem's bubbled 'selectFeature' action.
@@ -33,7 +38,15 @@ export default Ember.Mixin.create({
 
       let serviceRenderer = this.get('serviceRenderer');
       if (Ember.isNone(serviceRenderer)) {
-        serviceRenderer = L.canvas({ pane: 'overlayPane' });
+        let paneName = this.get('pane');
+        let pane = leafletMap.getPane(paneName);
+        if (!pane || Ember.isNone(pane)) {
+          pane = leafletMap.createPane(paneName);
+          pane.style.pointerEvents = 'none';
+        }
+
+        serviceRenderer = L.canvas({ pane: paneName });
+        this.set('serviceRenderer', serviceRenderer);
       }
 
       let serviceLayer = this.get('serviceLayer');
@@ -152,15 +165,29 @@ export default Ember.Mixin.create({
     @param {Boolean} layerInteractive Flag indicating whether to enable layer interactivity.
   */
   _prepareLayer(layer, layerInteractive) {
-    layer.options.interactive = layerInteractive ? true : false;
-    if (layerInteractive) {
-      layer.options.pane = 'overlayPane';
+    let l = layer;
 
-      let serviceRenderer = this.get('serviceRenderer');
-      layer.options.renderer = serviceRenderer;
+    if (this.get('zoomToCopy')) {
+      // кажется options у geoJSON слоя нельзя менять динамически, нужно задавать сразу правильные
+      l = L.geoJson(layer.toGeoJSON(), {
+        pane: this.get('pane')
+      });
+
+      let style = this.get('copyStyle');
+      if (style) {
+        l.setStyle(style);
+      }
     }
 
-    return layer;
+    l.options.interactive = layerInteractive ? true : false;
+    if (layerInteractive) {
+      l.options.pane = this.get('pane');
+
+      let serviceRenderer = this.get('serviceRenderer');
+      l.options.renderer = serviceRenderer;
+    }
+
+    return l;
   },
 
   /**

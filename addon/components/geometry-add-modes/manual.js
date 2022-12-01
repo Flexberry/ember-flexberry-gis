@@ -7,6 +7,7 @@ import layout from '../../templates/components/geometry-add-modes/manual';
 import LeafletZoomToFeatureMixin from '../../mixins/leaflet-zoom-to-feature';
 import { translationMacro as t } from 'ember-i18n';
 import { coordinatesToString } from '../../utils/coordinates-to';
+import { getCrsCode } from '../../utils/get-crs-by-name';
 
 /**
   Component's CSS-classes names.
@@ -178,6 +179,10 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
 
     const str = coordinatesToString(coordinates);
     this.set('_coordinates', str);
+
+    // почему-то обсервер в flexberry-edit-crs срабатывает, но _crs не обновляется
+    this.set('_crs', baseCrs);
+    this.set('_crsCode', getCrsCode(baseCrs, this));
   },
 
   getLayer() {
@@ -297,7 +302,12 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
         addedLayer = layer;
       }
 
-      this.sendAction('updateLayer', addedLayer, true);
+      // не будем вызывать обновление координат с карты если нет необходимости, ибо это снижает точность
+      let baseCrs = this.get('settings.layerCRS');
+      let crs = this.get('_crs');
+      let skip = getCrsCode(baseCrs, this) === getCrsCode(crs, this);
+
+      this.sendAction('updateLayer', addedLayer, true, skip);
     }
   },
 

@@ -175,7 +175,7 @@ export default Ember.Component.extend({
     @method highlightObserver
     @private
   */
-  highlightObserver: Ember.observer('feature.highlight', function() {
+  highlightObserver: Ember.observer('feature.highlight', function () {
     if (this.feature.highlight) {
       this.feature.leafletLayer.setStyle({
         color: '#3388FF',
@@ -325,7 +325,7 @@ export default Ember.Component.extend({
     this.set('defaultFeatureStyle', Object.assign({}, feature.leafletLayer.options));
 
     if (feature.geometry && feature.geometry.type &&
-        (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' ||
+      (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' ||
         feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString')) {
       let layerTolerance = feature.layerModel.get('_leafletObject.options.renderer.options');
       if (Ember.isPresent(layerTolerance) && layerTolerance === 0) {
@@ -375,6 +375,7 @@ export default Ember.Component.extend({
 
     this.set('activeScroll', false);
   },
+
   actions: {
     /**
       Highlight feature-result-items
@@ -393,7 +394,7 @@ export default Ember.Component.extend({
       // The layer-result-list component has a zoomToAll option
       // that causes the feature.highlight state to change, which is not correct.
       let selectedAllFeaturesInResult = !this.get('resultObject.features').find(e => e.highlight === false) &&
-                                        this.get('resultObject.features.length') > 1 ? true : false;
+        this.get('resultObject.features.length') > 1 ? true : false;
 
       // We can turn off the highlight if there was only one previous highlighted element
       Ember.set(clickedFeature, 'highlight', selectedAllFeaturesInResult ? true : !clickedFeature.highlight);
@@ -418,6 +419,7 @@ export default Ember.Component.extend({
       let elements = component.getElementsByClassName('more submenu hidden');
       openCloseSubmenu(this, moreButton, elements, 4, 0);
     },
+
     /**
       Performs row editing.
 
@@ -512,7 +514,10 @@ export default Ember.Component.extend({
       @method actions.panTo
      */
     panTo() {
-      this.send('highlightFeature', this.get('feature'), false);
+      if (this.get('highlightable')) {
+        this.send('highlightFeature', this.get('feature'), false);
+      }
+
       this.sendAction('panTo', this.get('feature'));
     },
 
@@ -521,9 +526,13 @@ export default Ember.Component.extend({
       @method actions.zoomTo
      */
     zoomTo() {
-      this.send('highlightFeature', this.get('feature'), false);
-      let { bounds, leafletMap, minZoom, maxZoom } = this.getLayerPropsForZoom();
-      zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
+      if (this.get('highlightable')) {
+        this.send('highlightFeature', this.get('feature'), false);
+        let { bounds, leafletMap, minZoom, maxZoom } = this.getLayerPropsForZoom();
+        zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
+      } else {
+        this.sendAction('zoomTo', this.get('feature'));
+      }
     },
 
     /**
