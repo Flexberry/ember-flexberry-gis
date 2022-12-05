@@ -7,7 +7,7 @@
             Загрузите файл формата: TAB (в архиве .zip), MIF/MID (в архиве .zip), SHP (в архиве .zip), GEOJSON. Набор
             связанных файлов, составляющих файл формата TAB, MIF/MID или SHP, должен быть сохранен в основной директории
             архива .zip, а не в директориях, созданных внутри архива.
-        </div>"
+        </div>" variation="very wide" position="bottom left" small=true
     }}
   </div>
 </div>
@@ -23,18 +23,20 @@
     click=(action "showFileLayer")
     readonly = (eq fileName '')
   }}
-  {{flexberry-button
-    class='ml-20'
-    iconClass='icon-guideline-layers-info'
-    click=(action "identificationFile")
-    readonly = (eq fileName '')
-  }}
-  {{flexberry-button
-    class='ml-20'
-    iconClass='icon-guideline-goout'
-    click=(action "createLayerByFile")
-    readonly = (or (eq fileName '') (not isAuthenticated))
-  }}
+  {{#if (not geomOnly)}}
+    {{flexberry-button
+      class='ml-20'
+      iconClass='icon-guideline-layers-info'
+      click=(action "identificationFile")
+      readonly = (eq fileName '')
+    }}
+    {{flexberry-button
+      class='ml-20'
+      iconClass='icon-guideline-goout'
+      click=(action "createLayerByFile")
+      readonly = (or (eq fileName '') (not isAuthenticated))
+    }}
+  {{/if}}
 </div>
 {{#if _showError}}
   {{ui-message

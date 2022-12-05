@@ -1,11 +1,13 @@
 <div class="{{flexberryClassNames.wrapper}}">
   <div class="d-flex h-42">
-    {{flexberry-button-dropdown 
-      class="flexberry-dropdown-button" 
-      clickButton=(action "onLayerModeChange")
-      items=layersButton
-      value=layerMode
-    }}
+    {{#if (not geomOnly)}}
+      {{flexberry-button-dropdown 
+        class="flexberry-dropdown-button" 
+        clickButton=(action "onLayerModeChange")
+        items=layersButton
+        value=layerMode
+      }}
+    {{/if}}
 
     {{flexberry-button-dropdown 
       class="flexberry-dropdown-button ml-18" 
@@ -65,7 +67,7 @@
       <label title="Очистить" class="wrapper-exit" onClick={{action "onToolModeChange" "rectangle" }}>
         <i class="icon-guideline-cross-r "></i>
       </label>
-      {{flexberry-identify-file leafletMap=leafletMap isAuthenticated=isAuthenticated layerColor=fileLayerColor}}
+      {{flexberry-identify-file leafletMap=leafletMap isAuthenticated=isAuthenticated layerColor=fileLayerColor geomOnly=geomOnly}}
     </div>
   {{/if}} 
 

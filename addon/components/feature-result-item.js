@@ -576,6 +576,16 @@ export default Ember.Component.extend({
     },
 
     /**
+     * Action for search satellites
+     * @method actions.findIntersection
+     */
+    searchSatellites() {
+      this.set('isSubmenu', false);
+      let { bounds } = this.getLayerPropsForZoom();
+      this.sendAction('searchSatellites', bounds);
+    },
+
+    /**
       Add feature to favorites list
       Action is sended to layer-result-list.
       @method actions.addToFavorite
