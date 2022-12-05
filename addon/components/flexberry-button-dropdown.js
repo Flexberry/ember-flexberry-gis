@@ -22,7 +22,7 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
     Ember.$('body').click((e) => {
-      if (!this.$().find(e.target).length) {
+      if (this.$() && !this.$().find(e.target).length) {
         this.set('isOpen', false);
       }
     });

@@ -8,6 +8,7 @@ export default {
   'load-button-caption': 'Load from file',
   'check-all-title': 'Check all',
   'uncheck-all-title': 'Uncheck all',
+  'coordinates-auto': 'Define automatically',
   'import-error': {
     'caption': 'Import failed',
     'message': 'Server unavailable or imported file is incorrrect'

@@ -26,6 +26,8 @@ export default {
   */
   definition: '+title=WGS 84 (long/lat) +proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees',
 
+  localeCaption: 'crs.epsg4326',
+
   /**
     Creates CRS instance CRS.
 

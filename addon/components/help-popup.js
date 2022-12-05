@@ -36,6 +36,8 @@ export default Ember.Component.extend({
 
   htmlMessage: '',
 
+  small: false,
+
   /**
     See [EmberJS API](https://emberjs.com/api/).
 
@@ -47,7 +49,7 @@ export default Ember.Component.extend({
       on: 'hover',
       hoverable: true,
       transition: 'fade',
-      className: { popup: 'ui popup help-popup' }
+      className: { popup: `ui popup help-popup ${this.get('small') ? 'small' : ''}` }
     });
   }
 });

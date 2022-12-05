@@ -258,6 +258,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     /**
+     * Search satellite action
+     * @param feature
+     */
+    searchSatellites(feature) {
+      this.sendAction('showSatellitePanel', feature);
+    },
+
+    /**
       Action adds feature to favorites.
 
       @method actions.findIntersection
