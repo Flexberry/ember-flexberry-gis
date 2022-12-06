@@ -77,6 +77,10 @@ export default Ember.Mixin.create({
         return;
       }
 
+      if (Ember.isNone(feature) || (Ember.isArray(feature) && feature.length === 0)) {
+        return;
+      }
+
       this.send('selectFeature', feature, layerInteractive, clearLayers);
 
       let bounds;
