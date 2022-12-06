@@ -45,6 +45,9 @@ test('rights', function (assert) {
     },
     lookup(val) {
       return null;
+    },
+    _lookupFactory() {
+      return null;
     }
   });
 

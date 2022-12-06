@@ -148,6 +148,13 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     dynamicButtons: [],
 
     /**
+      Service for managing map API.
+      @property mapApi
+      @type MapApiService
+    */
+    mapApi: Ember.inject.service(),
+
+    /**
       Layer copy's name postfix
 
       @property copyPostfix
@@ -259,6 +266,82 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       let layerClassFactory = this.get('_layerClassFactory');
 
       return Ember.get(layerClassFactory, 'iconClass');
+    }),
+
+    /**
+      Flag: indicates whether add feature operation is allowed by api function for layer.
+      @property _addFeatureIsAvailableApi
+      @type boolean
+      @readOnly
+      @private
+    */
+    _addFeatureIsAvailableApi: Ember.computed('layer', function () {
+      const layerId = this.get('layer.id');
+      if (!Ember.isNone(layerId)) {
+        const canAddLayerFeatureFunc = this.get('mapApi').getFromApi('canAddLayerFeature');
+        if (typeof canAddLayerFeatureFunc === 'function') {
+          return canAddLayerFeatureFunc(layerId);
+        }
+      }
+
+      return true;
+    }),
+
+    /**
+      Flag: indicates whether edit layer operation is allowed by api function.
+      @property _editLayerIsAvailableApi
+      @type boolean
+      @readOnly
+      @private
+    */
+    _editLayerIsAvailableApi: Ember.computed('layer', function () {
+      const layerId = this.get('layer.id');
+      if (!Ember.isNone(layerId)) {
+        const canEditLayerFunc = this.get('mapApi').getFromApi('canEditLayer');
+        if (typeof canEditLayerFunc === 'function') {
+          return canEditLayerFunc(layerId);
+        }
+      }
+
+      return true;
+    }),
+
+    /**
+      Flag: indicates whether delete layer operation is allowed by api function.
+      @property _addOperationIsAvailableApi
+      @type boolean
+      @readOnly
+      @private
+    */
+    _deleteLayerIsAvailableApi: Ember.computed('layer', function () {
+      const layerId = this.get('layer.id');
+      if (!Ember.isNone(layerId)) {
+        const canDeleteLayerFunc = this.get('mapApi').getFromApi('canDeleteLayer');
+        if (typeof canDeleteLayerFunc === 'function') {
+          return canDeleteLayerFunc(layerId);
+        }
+      }
+
+      return true;
+    }),
+
+    /**
+      Flag: indicates whether load layer data operation is allowed by api function.
+      @property _loadLayerDataIsAvailableApi
+      @type boolean
+      @readOnly
+      @private
+    */
+    _loadLayerDataIsAvailableApi: Ember.computed('layer', function () {
+      const layerId = this.get('layer.id');
+      if (!Ember.isNone(layerId)) {
+        const canLoadLayerDataFunc = this.get('mapApi').getFromApi('canLoadLayerData');
+        if (typeof canLoadLayerDataFunc === 'function') {
+          return canLoadLayerDataFunc(layerId);
+        }
+      }
+
+      return true;
     }),
 
     /**

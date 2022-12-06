@@ -49,7 +49,7 @@
         </div>
         {{#if (and (not compare.compareLayersEnabled) (not readonly))}}
           <div class="flexberry-treenode-buttons-block hidden">
-            {{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable)}}
+            {{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable _addFeatureIsAvailableApi)}}
               {{flexberry-button
                 class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
                 iconClass="icon-guideline-plus-r"
@@ -88,7 +88,7 @@
                       click=(action "onBoundsButtonClick")
                     }}
                   {{/if}}
-                  {{#if (not readonlyModel)}}
+                  {{#if (and (not readonlyModel) _editLayerIsAvailableApi)}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.editButton " floated " flexberryClassNames.preventExpandCollapse)
                       iconClass="icon-guideline-edit-r"
@@ -103,7 +103,7 @@
                       caption=(t "components.flexberry-maplayer.copy-button.tooltip")
                       click=(action "onCopyButtonClick")
                     }}
-                    {{#if _addOperationIsAvailable}}
+                    {{#if (and _addOperationIsAvailable _addFeatureIsAvailableApi)}}
                       {{flexberry-button
                         class=(concat flexberryClassNames.addButton " floated " flexberryClassNames.preventExpandCollapse)
                         iconClass="icon-guideline-plus-r"
@@ -113,12 +113,14 @@
                     {{/if}}
                   {{/if}}
                   {{#if (not readonlyModel)}}
-                    {{flexberry-button
-                      class=(concat flexberryClassNames.removeButton " floated " flexberryClassNames.preventExpandCollapse)
-                      iconClass="icon-guideline-delete-r"
-                      caption=(t "components.flexberry-maplayer.remove-button.tooltip")
-                      click=(action "onRemoveButtonClick")
-                    }}
+                    {{#if _deleteLayerIsAvailableApi}}
+                      {{flexberry-button
+                        class=(concat flexberryClassNames.removeButton " floated " flexberryClassNames.preventExpandCollapse)
+                        iconClass="icon-guideline-delete-r"
+                        caption=(t "components.flexberry-maplayer.remove-button.tooltip")
+                        click=(action "onRemoveButtonClick")
+                      }}
+                    {{/if}}
                     {{#each dynamicButtons as |dynamicButton|}}
                       {{flexberry-button
                         class=(concat dynamicButton.class " floated " flexberryClassNames.preventExpandCollapse)
@@ -128,7 +130,7 @@
                       }}
                     {{/each}}
                   {{/if}}
-                  {{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable presenceLayerInGeoportal)}}
+{{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable presenceLayerInGeoportal _loadLayerDataIsAvailableApi)}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.loadButton " floated " flexberryClassNames.preventExpandCollapse)
                       iconClass="icon-guideline-download-layer"
