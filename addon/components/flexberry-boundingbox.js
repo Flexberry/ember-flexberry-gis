@@ -156,15 +156,16 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
     return this.get('_minLatIsValid') && this.get('_minLngIsValid') && this.get('_maxLatIsValid') && this.get('_maxLngIsValid');
   }),
 
-  boundariesChangedObs: Ember.observer( '_coordinatesAreValid', function() {
+  boundariesChangedObs: Ember.observer('_coordinatesAreValid', function() {
     if (!this.get('_coordinatesAreValid')) {
       return;
     }
+
     Ember.run.once(this, 'setBoundaries');
   }),
 
   setBoundaries() {
-    this.setProperties( {
+    this.setProperties({
       minLat: parseFloat(this.get('_minLat')),
       minLng: parseFloat(this.get('_minLng')),
       maxLat: parseFloat(this.get('_maxLat')),
@@ -184,7 +185,7 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
     set() {
       return arguments[1];
     }
-    }),
+  }),
 
   /**
     Flag: indicates whether areaselect neeed to be updated (in case of manual changes in coordanates) or not (in case of changes throught GUI).
