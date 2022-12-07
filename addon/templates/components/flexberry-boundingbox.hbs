@@ -48,7 +48,7 @@
       {{flexberry-button
         caption= (t "components.flexberry-boundingbox.button-caption")
         class=(concat "fluid top attached" (if (and _coordinatesAreValid _coordinatesAreChanged) " success" " disabled"))
-        click=(action "onButtonClick")
+        click=(action "acceptBoundaryChanges")
       }}
       {{#flexberry-map
         lat=mapModel.lat
