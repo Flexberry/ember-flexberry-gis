@@ -1044,8 +1044,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let e = {
         layers: Object.values(layers),
         layerModel: layerModel,
-        initialFeatureKeys: this.get('dataItems.initialFeatureKeys')
+        initialFeatureKeys: this.get('dataItems.initialFeatureKeys'),
+        editMode: this.get('mode')
       };
+
+      if (!Ember.isNone(initialLayers)) {
+        e.initialFeatureIds = initialLayers.map(l => Ember.get(l, 'feature.properties.primarykey'));
+      }
 
       let saveFailed = () => {
         this.set('loading', false);
