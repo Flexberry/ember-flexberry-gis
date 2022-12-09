@@ -145,7 +145,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
           });
         }
       } else {
-        let newRecord = { id: generateUniqueId(), objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
+        let objectKey = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(feature.layerModel, { feature });
+        let newRecord = { id: generateUniqueId(), objectKey: objectKey, objectLayerKey: feature.layerModel.id };
         let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', newRecord);
         Ember.set(feature.properties, 'favUpdating', true);
         savePromise = record.save().then(() => {

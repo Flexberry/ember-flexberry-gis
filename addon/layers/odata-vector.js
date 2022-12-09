@@ -54,7 +54,12 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
       modelName: undefined,
       projectionName: undefined,
       geometryField: 'geometry',
-      geometryType: 'PolygonPropertyType'
+      geometryType: 'PolygonPropertyType',
+      displaySettings: {
+        featuresPropertiesSettings: {
+          excludedProperties: Ember.A(['shape', 'isFavorite'])
+        }
+      }
     });
     Ember.set(settings, 'searchSettings', this.createSearchSettings());
     return settings;

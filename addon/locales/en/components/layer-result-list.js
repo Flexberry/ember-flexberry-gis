@@ -10,5 +10,9 @@ export default {
     'denyButtonCaption': 'Cancel',
     'formatCaption': 'Format',
     'crsCaption': 'Coordinate reference systems'
+  },
+  'boolean': {
+    'yes': 'Yes',
+    'no': 'No'
   }
 };

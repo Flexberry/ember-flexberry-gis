@@ -1118,7 +1118,8 @@ export default BaseVectorLayer.extend({
   _getAttributesOptions() {
     return this._super(...arguments).then((attributesOptions) => {
       Ember.set(attributesOptions, 'settings.readonly', this.get('readonly') || false);
-      Ember.set(attributesOptions, 'settings.excludedProperties', Ember.A(['syncDownTime', 'readOnly', 'creator', 'editor', 'createTime', 'editTime']));
+      Ember.set(attributesOptions, 'settings.excludedProperties', Ember.A(['syncDownTime', 'readOnly', 'creator',
+        'editor', 'createTime', 'editTime', 'intersectionArea']));
       return attributesOptions;
     });
   },

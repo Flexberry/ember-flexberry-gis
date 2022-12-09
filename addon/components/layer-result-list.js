@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/layer-result-list';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
+import moment from 'moment';
 
 // Url key used to identify transitions from ember-flexberry-gis on other resources.
 const isMapLimitKey = 'GISLinked';
@@ -456,6 +457,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               hasListForm: hasListForm,
               layerIds: layerIds,
               dateFormat: Ember.get(layerModel, 'settingsAsObject.displaySettings.dateFormat'),
+              dateTimeFormat: Ember.get(layerModel, 'settingsAsObject.displaySettings.dateTimeFormat'),
               isIntersect: isIntersect
             };
 
@@ -465,9 +467,39 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         }
       );
     });
-    let getFeatureDisplayProperty = (feature, featuresPropertiesSettings, dateFormat) => {
+    let getFeatureDisplayProperty = (feature, featuresPropertiesSettings, dateFormat, dateTimeFormat, layerModel) => {
       let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
       let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
+
+      let featureProperties = Ember.get(feature, 'properties') || {};
+      let fieldTypes = layerModel.get('_leafletObject.readFormat.featureType.fieldTypes');
+
+      for (var prop in featureProperties) {
+        let type = fieldTypes ? fieldTypes[prop] : null;
+        let value = featureProperties[prop];
+        if ((type && type === 'date') && !Ember.isNone(value) && !Ember.isEmpty(value) &&
+          (!Ember.isEmpty(dateFormat) || !Ember.isEmpty(dateTimeFormat))) {
+          if (!Ember.isEmpty(dateTimeFormat)) {
+            let dateValue = moment(value);
+            featureProperties[prop] = (dateValue.utc().format('HH:mm:ss') === '00:00:00') ?
+              moment(value).format(dateFormat) :
+              moment(value).format(dateTimeFormat);
+          } else {
+            featureProperties[prop] = moment(value).format(dateFormat);
+          }
+        }
+
+        if (type && type === 'boolean') {
+          let i18n = this.get('i18n');
+          let yes = i18n.t('components.layer-result-list.boolean.yes');
+          let no = i18n.t('components.layer-result-list.boolean.no');
+          if (typeof (value) === 'boolean') {
+            featureProperties[prop] = (value) ? yes : no;
+          } else {
+            featureProperties[prop] = (value === 'true') ? yes : no;
+          }
+        }
+      }
 
       if (!Ember.isArray(displayProperty) && !displayPropertyIsCallback) {
         return '';
@@ -478,14 +510,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       if (!displayPropertyIsCallback) {
-        let featureProperties = Ember.get(feature, 'properties') || {};
-
-        for (var prop in featureProperties) {
-          let value = featureProperties[prop];
-          if (value instanceof Date && !Ember.isNone(value) && !Ember.isEmpty(value) && !Ember.isEmpty(dateFormat)) {
-            featureProperties[prop] = moment(value).format(dateFormat);
-          }
-        }
 
         let displayValue = Ember.none;
         displayProperty.forEach((prop) => {
@@ -556,7 +580,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               Ember.set(feature, 'properties.isFavorite', !Ember.isNone(idsFavorite.find((favoriteFeature) =>
                 Ember.get(favoriteFeature, 'objectKey') === Ember.get(feature, 'properties.primarykey') &&
                 Ember.get(favoriteFeature, 'objectLayerKey') === Ember.get(feature, 'layerModel.id'))));
-              Ember.set(feature, 'displayValue', getFeatureDisplayProperty(feature, result.settings, result.dateFormat));
+              Ember.set(feature, 'displayValue',
+                getFeatureDisplayProperty(feature, result.settings, result.dateFormat, result.dateTimeFormat, result.layerModel));
               Ember.set(feature, 'editForms', Ember.A());
               if (editForms.length === 0) {
                 return;

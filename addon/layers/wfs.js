@@ -35,7 +35,12 @@ export default VectorLayer.extend(WfsFilterParserMixin, {
       namespaceUri: undefined,
       readonly: undefined,
       forceMulti: undefined,
-      withCredentials: false
+      withCredentials: false,
+      displaySettings: {
+        featuresPropertiesSettings: {
+          excludedProperties: Ember.A(['isFavorite'])
+        }
+      }
     });
 
     return settings;
