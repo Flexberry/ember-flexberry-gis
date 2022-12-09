@@ -1049,7 +1049,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       };
 
       if (!Ember.isNone(initialLayers)) {
-        e.initialFeatureIds = initialLayers.map(l => Ember.get(l, 'feature.properties.primarykey'));
+        const mapModelApi = this.get('mapApi').getFromApi('mapModel');
+        const pkField = mapModelApi._getPkField(this.get('layerModel.layerModel'));
+        e.initialFeatureIds = initialLayers.map(l => Ember.get(l, `feature.properties.${pkField}`));
       }
 
       let saveFailed = () => {
