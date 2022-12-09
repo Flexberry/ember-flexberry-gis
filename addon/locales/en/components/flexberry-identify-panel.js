@@ -14,6 +14,11 @@ export default {
   'polygon': {
     'caption': 'Polygon'
   },
+  'file': {
+    'caption': 'Upload file',
+    'form-caption-file': 'File *',
+    'form-caption-sk': 'Coordinate system'
+  },
   'marker': {
     'caption': 'Point'
   },

@@ -958,6 +958,15 @@
     overflow-x: hidden;
     padding: 20px 20px 60px 20px;
     height: ~"calc(100% - 140px)" !important;
+    &.buffer {
+      height: ~"calc(100% - 260px)" !important;
+    }
+    &.file {
+      height: ~"calc(100% - 370px)" !important;
+    }
+    &.buffer-file {
+      height: ~"calc(100% - 470px)" !important;
+    }
   }
   .layer-result-list .nodata {
     margin-top: 15px;
