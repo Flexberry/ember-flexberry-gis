@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-edit-crs';
+import { getCrsCode, getAvailableCoordinateReferenceSystemsCodes } from '../utils/get-crs-by-name';
 import {
   translationMacro as t
 } from 'ember-i18n';
@@ -124,26 +125,11 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
 
-    // Retrieve & remember constant (proj4 CRS code).
-    let proj4CrsFactory = Ember.getOwner(this).knownForType('coordinate-reference-system', 'proj4');
-    proj4CrsCode = Ember.get(proj4CrsFactory, 'code');
-
-    let owner = Ember.getOwner(this);
-
     // Available CRS codes for related dropdown.
-    let crsFactories = owner.knownForType('coordinate-reference-system');
-    let crsFactoriesNames = owner.knownNamesForType('coordinate-reference-system');
-    this.set('_availableCoordinateReferenceSystemsCodes', Ember.A(crsFactoriesNames.map((crsFactoryName) => {
-      let crsFactory = Ember.get(crsFactories, crsFactoryName);
-      return Ember.get(crsFactory, 'code');
-    })));
+    this.set('_availableCoordinateReferenceSystemsCodes', getAvailableCoordinateReferenceSystemsCodes(this));
 
     let crs = this.get('coordinateReferenceSystem');
-    let crsCode = Ember.get(crs, 'code');
-    if (!Ember.isBlank(crsCode) && !this.get('_availableCoordinateReferenceSystemsCodes').contains(crsCode)) {
-      // Unknown CRS code means that proj4 is used.
-      crsCode = proj4CrsCode;
-    }
+    let crsCode = getCrsCode(crs, this);
 
     this.set('_coordinateReferenceSystemCode', crsCode);
 

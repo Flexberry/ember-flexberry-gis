@@ -34,11 +34,19 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   compareBtnDisabled: true,
 
-  onTwoObjectsChange: Ember.observer('features.[]', function() {
+  onTwoObjectsChange: Ember.observer('features.[]', function () {
     this.set('data', this.get('features'));
   }),
 
   actions: {
+    /**
+      Clear selected features from map
+
+      @method actions.clear
+    */
+    clear() {
+      this.sendAction('clear');
+    },
 
     /**
       Action adds feature to favorites.
