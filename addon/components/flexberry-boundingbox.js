@@ -49,6 +49,16 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
   _areaSelect: null,
 
   /**
+    Max length textboxes of boundaries values
+
+    @property boundaryMaxlength
+    @type number
+    @default 5
+    @private
+  */
+  boundaryMaxlength: 5,
+
+  /**
     Minimal latitude value binded to textbox.
 
     @property _minLat

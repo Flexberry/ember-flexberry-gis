@@ -157,6 +157,7 @@
         leafletMap=leafletMap
         typeIsReadonly=false
         approve=(action "onAddDialogApprove")
+        deny=(action "onAddDialogDeny")
       }}
     {{/if}}
     {{#if _copyDialogHasBeenRequested}}
@@ -167,6 +168,7 @@
         typeIsReadonly=true
         leafletMap=leafletMap
         approve=(action "onCopyDialogApprove")
+        deny=(action "onCopyDialogDeny")
       }}
     {{/if}}
     {{#if _editDialogHasBeenRequested}}
@@ -179,6 +181,7 @@
         typeIsReadonly=true
         leafletMap=leafletMap
         approve=(action "onEditDialogApprove")
+        deny=(action "onEditDialogDeny")
       }}
     {{/if}}
     {{#if _removeDialogHasBeenRequested}}
@@ -187,6 +190,7 @@
         visible=_removeDialogIsVisible
         layer=_removeDialogLayer
         approve=(action "onRemoveDialogApprove")
+        deny=(action "onRemoveDialogDeny")
       }}
     {{/if}}
 

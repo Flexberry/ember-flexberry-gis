@@ -904,6 +904,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onAddDialogApprove(...args) {
         // Send outer 'add' action.
         this.sendAction('add', ...args);
+        this.set('_addDialogHasBeenRequested', false);
+      },
+
+      /**
+        Handles add dialog's 'deny' action.
+
+        @method actions.onAddDialogDeny
+      */
+      onAddDialogDeny() {
+        this.set('_addDialogHasBeenRequested', false);
       },
 
       /**
@@ -941,6 +951,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
         // Send outer 'copy' action.
         this.sendAction('copy', { layerProperties, layer });
+        this.set('_copyDialogHasBeenRequested', false);
+      },
+
+      /**
+        Handles copy dialog's 'deny' action.
+
+        @method actions.onCopyDialogDeny
+      */
+      onCopyDialogDeny() {
+        this.set('_copyDialogHasBeenRequested', false);
       },
 
       /**
@@ -973,6 +993,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onEditDialogApprove(...args) {
         // Send outer 'edit' action.
         this.sendAction('edit', ...args);
+        this.set('_editDialogHasBeenRequested', false);
+      },
+
+      /**
+        Handles edit dialog's 'deny' action.
+
+        @method actions.onEditDialogDeny
+      */
+      onEditDialogDeny() {
+        this.set('_editDialogHasBeenRequested', false);
       },
 
       /**
@@ -1003,6 +1033,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onRemoveDialogApprove(...args) {
         // Send outer 'remove' action.
         this.sendAction('remove', ...args);
+        this.set('_removeDialogHasBeenRequested', false);
+      },
+
+      /**
+        Handles remove dialog's 'deny' action.
+
+        @method actions.onRemoveDialogDeny
+      */
+      onRemoveDialogDeny() {
+        this.set('_removeDialogHasBeenRequested', false);
       },
 
       closeOtherCalendar() {
