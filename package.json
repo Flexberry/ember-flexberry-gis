@@ -74,7 +74,7 @@
     "jsts": "1.6.1",
     "leaflet-side-by-side": "git+https://github.com/asola-bi4group/leaflet-side-by-side.git#fix-multilayer-clip",
     "loader.js": "^4.0.1",
-    "moment": "2.24.0",
+    "moment": "2.29.4",
     "moment-timezone": "0.5.0",
     "node-uuid": "^1.4.7",
     "resolve": "1.11.0",
