@@ -1,7 +1,7 @@
-<button type="submit" class="ui button primary compare{{if compareBtnDisabled " disabled"}}" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
-  {{t "components.compare-object-geometries.compare-objects-caption"}}
-</button>
 {{#if _showFavorites}}
+  <button type="submit" class="ui button primary compare{{if compareBtnDisabled " disabled"}}" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
+    {{t "components.compare-object-geometries.compare-objects-caption"}}
+  </button>
   {{layer-result-list
     results=data
     serviceLayer=serviceLayer
@@ -14,7 +14,6 @@
     availableCRS=availableCRS
   }}
 {{else}}
-  <div class="ui form loading" style="height: 100%; margin-right: 20px;">
-  </div>
+  <div class="ui form loading"></div>
 {{/if}}
 
