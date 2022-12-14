@@ -17,6 +17,8 @@ export default BaseControl.extend({
   */
   layout,
 
+  miniMap: null,
+
   /**
     Leaflet layerGroup for this control
     @property layerGroup
@@ -210,6 +212,8 @@ export default BaseControl.extend({
 
   afterCreateControl() {
     Ember.$(this.get('control')._container).appendTo('.minimap-drag-panel');
+    this.set('miniMap', this.get('control')._miniMap);
+
     this.get('control')._restore();
   },
 

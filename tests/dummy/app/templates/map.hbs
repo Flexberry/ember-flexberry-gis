@@ -325,10 +325,11 @@
             {{map-tools/measure leafletMap=leafletMap addHaArea=true}}
           {{#minimap-control
             minimized=true
-            leafletMap=leafletMap as |groupLayers|
+            leafletMap=leafletMap as |groupLayers miniMap|
           }}
             {{flexberry-layers
               leafletContainer=groupLayers
+              leafletMap=miniMap
               layers=model.hierarchy
               forMinimap=true
             }}
