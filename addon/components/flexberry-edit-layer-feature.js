@@ -231,6 +231,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             this.set('isLayerCopy', true);
             leafletMap.addLayer(layer);
           }
+          // Работаем со слоем, не с копией!
 
           this.send('zoomTo', [layer.feature]);
           this.send('clearSelected');
@@ -241,6 +242,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
 
           layer.enableEdit(leafletMap);
+
+          // save feature style settings to undo changes
+          if (!this.get('isLayerCopy')) {
+            Ember.set(layer, 'defaultFeatureStyle', Object.assign({}, layer.options));
+          }
+
           layer.setStyle({
             fillOpacity: 0.3
           });
@@ -724,8 +731,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
 
           //Removing a layer from the map that was added for edit mode
-          if (this.get('isLayerCopy') && leafletMap.hasLayer(layer)) {
-            leafletMap.removeLayer(layer);
+          if (leafletMap.hasLayer(layer)) {
+            if (this.get('isLayerCopy')) {
+              leafletMap.removeLayer(layer);
+            }
+            else {
+              layer.setStyle(layer.defaultFeatureStyle);
+            }
           }
 
           delete latlngs[index];
