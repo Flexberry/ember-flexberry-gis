@@ -127,6 +127,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
   isFavorite: false,
 
+  isIdentified: false,
+
   dataItemCount: Ember.computed('dataItems', function () {
     let items = this.get('dataItems.items');
     if (Ember.isNone(items)) {
@@ -893,7 +895,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       if (this.get('loading')) {
         return;
       }
-
+      this.get('leafletMap').fire('flexberry-map:updateFeatureResultItem', { editedLayers: null });
       this.set('dataItems', null);
       this.sendAction('editFeatureEnd');
     },
@@ -1063,7 +1065,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         this.set('loading', false);
         this.set('error', t('components.flexberry-edit-layer-feature.validation.save-fail'));
         leafletObject.off('save:success', saveSuccess);
-
+        this.get('leafletMap').fire('flexberry-map:updateFeatureResultItem', { editedLayers: null });
         this.restoreLayers().then(() => {
           this.get('leafletMap').fire(event + ':fail', e);
         }).catch(() => {
@@ -1108,7 +1110,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         if (!Ember.isNone(_leafletObjectFirst) && typeof _leafletObjectFirst.setParams  === 'function') {
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
-
+        this.get('leafletMap').fire('flexberry-map:updateFeatureResultItem', { editedLayers: e.layers[0], layerModel: e.layerModel });
         this.sendAction('editFeatureEnd');
       };
 
