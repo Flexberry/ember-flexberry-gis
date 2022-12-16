@@ -613,85 +613,24 @@ export default Ember.Component.extend({
 
   },
 
-
   /**
    * This method update feature result item when feature is edited
-   * @param {Object} data This parameter contain layerModel and layer (object) which the was edited.
+   * @param {Object} editedLayers This parameter contains layer (object) which the was edited.
    */
-  _updateFeatureResultItem({ editedLayers, layerModel }) {
-
+  _updateFeatureResultItem({ editedLayers }) {
+    let feature = this.get('feature');
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-    if (!editedLayers && !leafletMap.hasLayer(this.feature.leafletLayer)) {
-      leafletMap.addLayer(this.feature.leafletLayer);
-      console.log('Добавлен обратно');
-      return;
-    }
-
 
     if (editedLayers) {
-      let saveService = this.get('feature.leafletLayer');
-      Ember.set(this, 'feature.options', editedLayers.feature.options); // Передаем атрибуты
-      Ember.set(this, 'feature.leafletLayer', layerModel._leafletObject); // Передаем геометрию
-      leafletMap.addLayer(this.feature.leafletLayer);
-      console.log('Обновлен');
+      // on successfull edit
+      Ember.set(this, 'feature.options', editedLayers.feature.options); // Update feature attributes
+      feature.leafletLayer.setLatLngs(editedLayers.getLatLngs()) // Update feature geometry
+    };
+
+    if (!leafletMap.hasLayer(feature.leafletLayer)) {
+      leafletMap.addLayer(feature.leafletLayer); // return back featureLayer with identification/search results
     }
-    return;
-    // let result = Ember.A();
-    // let favFeatures = Ember.A();
-    // let twoObjects = this.get('twoObjectToCompare');
-    // let updatedLayer = data.layers[0];
-    // let idUpdatedFavorite = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(data.layerModel.layerModel, data.layers[0]);
-    // this.get('favFeatures').forEach((favoriteObject) => {
-    //   let favorites = Ember.A();
-    //   if (favoriteObject.layerModel.id === data.layerModel.layerModel.id) {
-    //     favoriteObject.features.forEach((feature) => {
-    //       let id = feature.properties.primarykey;
-    //       if (idUpdatedFavorite === id) {
-    //         updatedLayer.feature.layerModel = data.layerModel.layerModel;
-    //         Ember.set(updatedLayer.feature.properties, 'isFavorite', true);
-    //         if (!Ember.isEmpty(twoObjects)) {
-    //           if (Ember.get(feature, 'compareEnabled')) {
-    //             twoObjects.removeObject(feature);
-    //             Ember.set(updatedLayer.feature, 'compareEnabled', true);
-    //             twoObjects.pushObject(updatedLayer.feature);
-    //           }
-    //         }
-
-    //         favorites.push(updatedLayer.feature);
-    //       } else {
-    //         favorites.push(feature);
-    //       }
-    //     });
-
-    //     let promiseFeature = new Ember.RSVP.Promise((resolve) => {
-    //       resolve(favorites);
-    //     });
-    //     result.addObject({ layerModel: favoriteObject.layerModel, features: promiseFeature });
-    //     favFeatures.addObject({ layerModel: favoriteObject.layerModel, features: favorites });
-    //   } else {
-    //     let promiseFeature = null;
-    //     let layerModelIndex = this.isLayerModelInArray(result, favoriteObject.layerModel);
-    //     if (layerModelIndex !== -1) {
-    //       favorites = favorites.concat(favorites, favoriteObject.features);
-    //       promiseFeature = new Ember.RSVP.Promise((resolve) => {
-    //         resolve(favorites);
-    //       });
-    //       result[layerModelIndex].features = promiseFeature;
-    //       favFeatures[layerModelIndex].features = favorites;
-    //     } else {
-    //       favorites = favoriteObject.features;
-    //       promiseFeature = new Ember.RSVP.Promise((resolve) => {
-    //         resolve(favorites);
-    //       });
-    //       result.addObject({ layerModel: favoriteObject.layerModel, features: promiseFeature });
-    //       favFeatures.addObject({ layerModel: favoriteObject.layerModel, features: favorites });
-    //     }
-    //   }
-    // });
-    // this.set('result', result);
-    // this.set('favFeatures', favFeatures);
   },
-
 
   /**
     Component's action invoking for select feature
