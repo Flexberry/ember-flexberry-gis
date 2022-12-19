@@ -7,14 +7,14 @@ import layout from '../templates/components/feature-result-item';
 import { translationMacro as t } from 'ember-i18n';
 import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
 import { zoomToBounds } from '../utils/zoom-to-bounds';
-
+import ResultFeatureInitializer from '../mixins/result-feature-initializer'
 /**
   Component for display GeoJSON feature object details
 
   @class FeatureResultItemComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
-export default Ember.Component.extend({
+export default Ember.Component.extend(ResultFeatureInitializer, {
 
   /**
     Service for managing map API.
@@ -615,16 +615,22 @@ export default Ember.Component.extend({
 
   /**
    * This method update feature result item when feature is edited
-   * @param {Object} editedLayers This parameter contains layer (object) which the was edited.
+   * @param {Object} editedLayer This parameter contains layer (object) which the was edited.
    */
-  _updateFeatureResultItem({ editedLayers }) {
+  _updateFeatureResultItem({ editedLayer }) {
     let feature = this.get('feature');
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    let resultObject = this.get('resultObject'); // parent result object from layer-result-list
+    let editedFeatureId = editedLayer ? Ember.get(editedLayer, 'feature.id') : null;
 
-    if (editedLayers) {
+    if (editedLayer && editedFeatureId && editedFeatureId === feature.id) {
       // on successfull edit
-      Ember.set(this, 'feature.options', editedLayers.feature.options); // Update feature attributes
-      feature.leafletLayer.setLatLngs(editedLayers.getLatLngs()) // Update feature geometry
+      Object.keys(editedLayer.feature.properties).forEach(attribute => {
+        Ember.set(feature.properties, attribute, editedLayer.feature.properties[attribute]);
+      });
+      Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature, resultObject.settings, resultObject.dateFormat));
+      feature.leafletLayer.setLatLngs(editedLayer.getLatLngs()) // Update feature geometry
+      this.rerender(); // force component re-render to recalculate #each-in helper
     };
 
     if (!leafletMap.hasLayer(feature.leafletLayer)) {

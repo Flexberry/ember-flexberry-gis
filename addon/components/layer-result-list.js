@@ -5,7 +5,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/layer-result-list';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
-
+import ResultFeatureInitializer from '../mixins/result-feature-initializer'
 // Url key used to identify transitions from ember-flexberry-gis on other resources.
 const isMapLimitKey = 'GISLinked';
 
@@ -16,7 +16,7 @@ const isMapLimitKey = 'GISLinked';
   @uses LeafletZoomToFeatureMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
-export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
+export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureInitializer, {
 
   /**
   Service for managing map API.
@@ -465,49 +465,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         }
       );
     });
-    let getFeatureDisplayProperty = (feature, featuresPropertiesSettings, dateFormat) => {
-      let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
-      let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
 
-      if (!Ember.isArray(displayProperty) && !displayPropertyIsCallback) {
-        return '';
-      }
-
-      if (Ember.typeOf(displayProperty) !== 'string' && displayPropertyIsCallback) {
-        return '';
-      }
-
-      if (!displayPropertyIsCallback) {
-        let featureProperties = Ember.get(feature, 'properties') || {};
-
-        for (var prop in featureProperties) {
-          let value = featureProperties[prop];
-          if (value instanceof Date && !Ember.isNone(value) && !Ember.isEmpty(value) && !Ember.isEmpty(dateFormat)) {
-            featureProperties[prop] = moment(value).format(dateFormat);
-          }
-        }
-
-        let displayValue = Ember.none;
-        displayProperty.forEach((prop) => {
-          if (featureProperties.hasOwnProperty(prop)) {
-            let value = featureProperties[prop];
-            if (Ember.isNone(displayValue) && !Ember.isNone(value) && !Ember.isEmpty(value) && value.toString().toLowerCase() !== 'null') {
-              displayValue = value;
-            }
-          }
-        });
-
-        return displayValue || '';
-      }
-
-      let calculateDisplayProperty = eval(`(${displayProperty})`);
-      Ember.assert(
-        'Property \'settings.displaySettings.featuresPropertiesSettings.displayProperty\' ' +
-        'is not a valid javascript function',
-        Ember.typeOf(calculateDisplayProperty) === 'function');
-
-      return calculateDisplayProperty(feature);
-    };
 
     let promises = results.map((result) => {
       return result.features;
@@ -556,7 +514,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               Ember.set(feature, 'properties.isFavorite', !Ember.isNone(idsFavorite.find((favoriteFeature) =>
                 Ember.get(favoriteFeature, 'objectKey') === Ember.get(feature, 'properties.primarykey') &&
                 Ember.get(favoriteFeature, 'objectLayerKey') === Ember.get(feature, 'layerModel.id'))));
-              Ember.set(feature, 'displayValue', getFeatureDisplayProperty(feature, result.settings, result.dateFormat));
+              Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature, result.settings, result.dateFormat));
               Ember.set(feature, 'editForms', Ember.A());
               if (editForms.length === 0) {
                 return;
