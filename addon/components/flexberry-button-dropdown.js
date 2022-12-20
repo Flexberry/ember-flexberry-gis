@@ -18,13 +18,4 @@ export default Ember.Component.extend({
       this.clickButton(str);
     },
   },
-
-  didInsertElement() {
-    this._super(...arguments);
-    Ember.$('body').click((e) => {
-      if (!this.$().find(e.target).length) {
-        this.set('isOpen', false);
-      }
-    });
-  },
 });
