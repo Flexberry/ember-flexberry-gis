@@ -23,6 +23,8 @@ export default FlexberryDropdown.extend({
   */
   fullTextSearch: true,
 
+  match: 'text',
+
   isAllSelected: false,
 
   /**
