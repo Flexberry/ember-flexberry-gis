@@ -986,6 +986,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       };
 
       this.sendAction('editFeature', {
+        isFavorite: true, // проще чтобы проверилось непосредственно в избранном
         dataItems: dataItems,
         layerModel: tabModel,
         settings: tabModel.settings

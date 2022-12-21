@@ -66,7 +66,11 @@ export default Ember.Component.extend({
     @type String[]
     @default ['isActive:active']
   */
-  classNameBindings: ['isActive:active', 'feature.highlight:highlight'],
+  classNameBindings: ['isActive:active', 'featureIsHL:highlight'],
+
+  featureIsHL: Ember.computed('highlightable', 'feature.highlight', function () {
+    return this.get('feature.highlight') && this.get('highlightable');
+  }),
 
   /**
     Flag indicates if intersection panel is active.
