@@ -30,12 +30,20 @@ export default Ember.Mixin.create({
     if ($commandControl.length === 1 && $commandControl.hasClass('hidden')) {
       $commandControl.removeClass('hidden');
     } else {
-      let $commandControlInner = $commandControl.children();
-      for (var command of $commandControlInner) {
-        if (Ember.$(command).hasClass('hidden')) {
-          Ember.$(command).removeClass('hidden');
+      let removeHidden = function(children) {
+        for (var command of children) {
+          if (Ember.$(command).hasClass('hidden')) {
+            Ember.$(command).removeClass('hidden');
+          }
         }
-      }
+
+        if (children.childNodes) {
+          removeHidden(children.children());
+        }
+      };
+
+      removeHidden($commandControl.children());
+
     }
   },
 
@@ -52,20 +60,43 @@ export default Ember.Mixin.create({
 
     if (Ember.isNone(mapCommandName)) {
       funcClass(Ember.$('.flexberry-maptoolbar'));
+      funcClass(Ember.$('.toggle-button'));
+      funcClass(Ember.$('.outer-search'));
+      funcClass(Ember.$('.main-map-tab-bar'));
       funcClass($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
+      funcClass($leafletContainer.find('.leaflet-control-container .leaflet-control-scale'));
       funcClass($leafletContainer.find('.leaflet-control-container .history-control'));
       return true;
     }
 
-    if (mapCommandName.includes('history-')) {
-      funcClass($leafletContainer.find(`.leaflet-control-container .history-control .${mapCommandName}-button`));
-      return true;
-    } else if (mapCommandName.includes('zoom-') && !isTool) {
-      funcClass($leafletContainer.find(`.leaflet-control-container .leaflet-control-zoom .leaflet-control-${mapCommandName}`));
-      return true;
+    switch (mapCommandName) {
+      case 'treeview':
+      case 'search':
+      case 'identify':
+      case 'bookmarks':
+        funcClass(Ember.$(`.${mapCommandName}-tab`));
+        return true;
+      case 'toggle-button':
+      case 'outer-search':
+        funcClass(Ember.$(`.${mapCommandName}`));
+        return true;
+      case 'analytics':
+        funcClass(Ember.$(`.item.${mapCommandName}`));
+        return true;
+      case 'zoom':
+      case 'scale':
+        funcClass($leafletContainer.find(`.leaflet-control-${mapCommandName}`));
+        return true;
+      case 'history':
+        funcClass($leafletContainer.find(`.${mapCommandName}-control`));
+        return true;
+      case 'more':
+      case 'full-extent':
+        funcClass(Ember.$(`.flexberry-${mapCommandName}-map-command`));
+        return true;
+      default:
+        return false;
     }
-
-    return false;
   },
 
   showHideTool(mapToolName, isTool, funcClass) {

@@ -30,20 +30,20 @@ export default {
         parameters: {
           __caption__: 'Link parameters',
           objectField: {
-          __caption__: 'Object field'
-        },
+            __caption__: 'Object field'
+          },
           layerField: {
-          __caption__: 'Layer field'
-        },
+            __caption__: 'Layer field'
+          },
           expression: {
-          __caption__: 'Expression'
-        },
+            __caption__: 'Expression'
+          },
           queryKey: {
-          __caption__: 'Query key'
-        },
+            __caption__: 'Query key'
+          },
           linkField: {
-          __caption__: 'Link field'
-        },
+            __caption__: 'Link field'
+          },
           layerLink: {
             __caption__: 'Layer link'
           }
@@ -75,6 +75,9 @@ export default {
       boundingBox: {
         __caption__: 'Bounding box'
       },
+      additionaldata: {
+        __caption__: 'additionaldata'
+      },
       linkMetadata: {
         __caption__: 'Link metadata',
         layer: {
@@ -95,20 +98,20 @@ export default {
         parameters: {
           __caption__: 'Link parameters',
           objectField: {
-          __caption__: 'Object field'
-        },
+            __caption__: 'Object field'
+          },
           layerField: {
-          __caption__: 'Layer field'
-        },
+            __caption__: 'Layer field'
+          },
           expression: {
-          __caption__: 'Expression'
-        },
+            __caption__: 'Expression'
+          },
           queryKey: {
-          __caption__: 'Query key'
-        },
+            __caption__: 'Query key'
+          },
           linkField: {
-          __caption__: 'Link field'
-        },
+            __caption__: 'Link field'
+          },
           layerLink: {
             __caption__: 'Layer link'
           }

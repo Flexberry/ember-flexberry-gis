@@ -626,7 +626,7 @@
         border: 1px solid @white;
         box-shadow: none;
       }
-      &.isogd-treeview-tab {
+      &.treeview-tab {
         padding: 10px 12px;
       }
       &.create-edit-object-tab, &.compareObjects, &.intersectionObjects,
@@ -676,11 +676,11 @@
           border-radius: @defaultBorderRadius !important;
         }
 
-        &.isogd-treeview-tab > i.icon {
+        &.treeview-tab > i.icon {
           margin-left: -4px;
         }
 
-        &.isogd-identify-tab > i.icon {
+        &.identify-tab > i.icon {
           margin-left: -6px;
         }
 
@@ -785,8 +785,8 @@
 
 .background-layers.flexberry-maptoolbar.ui.menu {
   bottom: 67px;
-  .flexberry-background-map-tool-div {
-    .flexberry-background-map-tool {
+  .flexberry-background-layers-map-tool-div {
+    .flexberry-background-layers-map-tool {
       position: absolute;
       padding-left: 9px;
       padding-top: 2px;
@@ -1079,6 +1079,15 @@
     overflow-y: auto;
     overflow-x: hidden;
     height: ~"calc(100% - 140px)" !important;
+    &.buffer {
+      height: ~"calc(100% - 260px)" !important;
+    }
+    &.file {
+      height: ~"calc(100% - 370px)" !important;
+    }
+    &.buffer-file {
+      height: ~"calc(100% - 470px)" !important;
+    }
   }
   .layer-result-list .nodata {
     margin-top: 15px;
@@ -1121,6 +1130,7 @@
     background: @whitecolor;
     border: none;
     height: 32px;
+    cursor: pointer;
     i.remove.icon {
       padding-left: 2px;
       padding-top: 2px;
@@ -1187,7 +1197,37 @@
     color: @textColor;
   }
 }
-.ui.help-button {
+.ui.popup.help-popup {
+  padding: 15px 25px 15px 45px;
+  max-width: 552px;
+  margin-top: -48px;
+  text-align:justify;
+}
+
+.ui.bottom.left.popup.help-popup::before {
+  content: "\e945";
+  font-family: 'guideline-icons';
+  transform: none;
+  height: auto;
+  width: auto;
+  box-shadow: none;
   background: transparent;
-  border: none;
+  font-size: 30px;
+  line-height: 1;
+  color: @textColor;
+  top: 16px;
+  left: 5px;
+}
+
+.ui.icon.button.help-button.no-lable-field-popup {
+  position: relative;
+  padding-top: 0;
+}
+
+.help-label {
+  position: relative;
+}
+
+.help-label .ui.icon.button.help-button {
+  top: -50%;
 }

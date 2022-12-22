@@ -29,9 +29,9 @@ test('isVisible false', function(assert) {
     {{map-tools/background-layers layers=layers isVisible=isVisible}}
   `);
 
-  assert.equal(this.$().find('.flexberry-background-map-tool-div').length, 1);
-  assert.equal(this.$().find('.flexberry-background-map-tool').length, 1);
-  assert.equal(this.$('.flexberry-background-map-tool').attr('title'), 'Background layers');
+  assert.equal(this.$().find('.flexberry-background-layers-map-tool-div').length, 1);
+  assert.equal(this.$().find('.flexberry-background-layers-map-tool').length, 1);
+  assert.equal(this.$('.flexberry-background-layers-map-tool').attr('title'), 'Background layers');
 
   assert.equal(this.$().find('.main-background-layers').length, 0);
   assert.equal(this.$().find('.child-background-layers').length, 0);
@@ -69,9 +69,9 @@ test('isVisible true', function(assert) {
     {{map-tools/background-layers layers=layers isVisible=isVisible}}
   `);
 
-  assert.equal(this.$().find('.flexberry-background-map-tool-div').length, 1);
-  assert.equal(this.$().find('.flexberry-background-map-tool').length, 1);
-  assert.equal(this.$('.flexberry-background-map-tool').attr('title'), 'Background layers');
+  assert.equal(this.$().find('.flexberry-background-layers-map-tool-div').length, 1);
+  assert.equal(this.$().find('.flexberry-background-layers-map-tool').length, 1);
+  assert.equal(this.$('.flexberry-background-layers-map-tool').attr('title'), 'Background layers');
 
   assert.equal(this.$('.main-background-layers').length, 1);
   assert.equal(this.$('.child-background-layers').length, 2);

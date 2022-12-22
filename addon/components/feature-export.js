@@ -42,22 +42,22 @@ let FeatureExportDialogComponent = Ember.Component.extend({
   crsCaption: t('components.layer-result-list.flexberry-export.crsCaption'),
 
   /**
-   * Availble format.
+   * Available format.
    */
   _availableFormats: null,
 
   /**
-   * Availble crs.
+   * Available crs.
    */
   availableCRS: null,
 
   /**
-   * Availble crs name.
+   * Available crs name.
    */
   _availableCRSNames: null,
 
   /**
-   * All availble crs name.
+   * All Available crs name.
    */
   _allCRSNames: null,
 

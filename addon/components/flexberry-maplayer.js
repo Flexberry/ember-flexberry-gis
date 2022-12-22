@@ -270,6 +270,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
     /**
       Flag: indicates whether add feature operation is allowed by api function for layer.
+
       @property _addFeatureIsAvailableApi
       @type boolean
       @readOnly
@@ -289,6 +290,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
     /**
       Flag: indicates whether edit layer operation is allowed by api function.
+
       @property _editLayerIsAvailableApi
       @type boolean
       @readOnly
@@ -308,6 +310,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
     /**
       Flag: indicates whether delete layer operation is allowed by api function.
+
       @property _addOperationIsAvailableApi
       @type boolean
       @readOnly
@@ -327,6 +330,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
     /**
       Flag: indicates whether load layer data operation is allowed by api function.
+
       @property _loadLayerDataIsAvailableApi
       @type boolean
       @readOnly

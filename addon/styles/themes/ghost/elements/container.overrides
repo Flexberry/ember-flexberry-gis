@@ -176,7 +176,7 @@ div.measure-drag-panel {
 /* Идентификация */
 .flexberry-identify-panel {
   background-color: @white;
-  margin-left: 20px;
+  padding: 0px 30px !important;
   margin-bottom: 10px;
 
   .flexberry-identify-panel-tools-options,

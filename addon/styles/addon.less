@@ -72,7 +72,7 @@
   display: none !important;
 }
 
-.leaflet-marker-icon.label.point  {
+.leaflet-marker-icon.label.point {
   display: flex;
 
   &.over {
@@ -97,5 +97,167 @@
 
   &.middle {
     justify-content: center;
+  }
+}
+
+.d-flex {
+  display: flex;
+}
+
+.d-none{
+  display: none;
+}
+
+.ml-20{
+  margin-left: 20px !important;
+}
+
+.ml-18{
+  margin-left: 18px !important;
+}
+
+.h-42 {
+  height: 42px;
+}
+
+.w-80{
+  width: 80%;
+}
+
+.w-100{
+  width: 100%;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.p-10{
+  padding: 10px;
+}
+
+.ml-auto{
+  margin-left: auto !important;
+}
+
+.flexberry-dropdown-button {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+  border-radius: 3.5px;
+  font-size: 14px;
+  background: #F4F7FB;
+  &  ul {
+    list-style-type: none; 
+    padding-left: 8px;
+   }
+  & li {
+    margin-top: 8px; 
+    cursor: pointer;
+   }
+  & i {
+    color: #0061D9;
+  }
+
+  div.main-image {
+    width: 28px; 
+    height: 24px; 
+    display: inline-block;
+  }
+
+  div.arrow {
+    width: 20px; 
+    height: 24px; 
+    display: inline-block; 
+    border-left: 1px solid #c5c7ca;
+    padding-left: 2px;
+  }
+
+  &-selected {
+    padding: 8px;
+    border-radius: 3.5px;
+    border:solid 1px transparent;
+    box-shadow: 2px 2px 6px 0  fade(#000, 15%);
+    height: 42px;
+    background: #F4F7FB;
+
+    &:hover{
+      cursor: pointer;
+    }
+    &.active {
+      height: 52px;
+    }
+  }
+  &-list {
+    position: absolute;
+    border-radius: 3.5px;
+    box-shadow: 2px 2px 6px 0 fade(#000, 15%);
+    display: none;
+    background: inherit;
+    width: 170px;
+    ul {
+      margin: 5px 0;
+    }
+    .dropdown-label {
+      font-size: 11px;
+      line-height: 14px;
+      margin-left: 8px;
+      cursor: pointer;
+    }
+  }
+  &-list.show {
+    display: flex;
+    flex-direction: column;
+    box-shadow: none !important;
+  }
+}
+
+.ui.icon.button.help-button.help-button {
+  box-shadow: none !important;
+  margin: 0;
+  position: absolute;
+  margin-left: 0.5em;
+
+  &:hover {
+    box-shadow: none !important;
+    border: none;
+    background: transparent!important;
+  }
+}
+
+.wrapper {
+  border: 1px solid #c5c7ca;
+  padding: 10px;
+  margin: 20px;
+  box-shadow: 2px 2px 6px 0 fade(#000, 15%);
+  position: relative;
+  border-radius: 3.5px;
+
+  &-exit{
+    position: absolute; 
+    color: #0061D9; 
+    cursor: pointer;
+    right: 0px; 
+    top: 0px;
+  }
+  .selection.dropdown {
+    height: 32px;
+    font-size: 14px;
+    line-height: 24px;
+  }
+}
+
+.flexberry-identify-panel {
+  .wrapper {
+    margin: 20px 0px;
+  }
+  .file-input {
+    width: 85% !important;
+    height: 32px;
+  }
+  .file-panel {
+    button {
+      padding: 4px 6px;
+    }
   }
 }

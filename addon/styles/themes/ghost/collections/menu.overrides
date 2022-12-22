@@ -95,9 +95,13 @@
     top: 190px;
   }
 
+  .flexberry-share-location-map-tool {
+      position:absolute;
+      top: 250px;
+    }
   .ui.dropdown.flexberry-more-map-command {
     position: absolute;
-    top: 250px;
+    top: 310px;
     padding: 7px;
 
     .flexberry-map-command-submenu.menu {

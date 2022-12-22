@@ -67,6 +67,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 let FlexberryIdentifyPanelComponent = Ember.Component.extend({
+  i18n: Ember.inject.service(),
   /**
     Identify tool name computed by the specified tool settings.
 
@@ -74,7 +75,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @type String
     @readOnly
   */
-  _identifyToolName: Ember.computed('layerMode', 'toolMode', function() {
+  _identifyToolName: Ember.computed('layerMode', 'toolMode', function () {
     let identifyToolName = 'identify';
     let layerMode = this.get('layerMode');
     let toolMode = this.get('toolMode');
@@ -152,6 +153,8 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   */
   allCaption: t('components.flexberry-identify-panel.identify-all.caption'),
 
+  isBuffer: false,
+
   /**
     layers option's 'all' mode's icon CSS-class names.
 
@@ -214,6 +217,24 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @default 'map marker icon'
   */
   markerIconClass: 'map marker icon',
+
+  /**
+   Tools option's 'marker' mode's caption.
+
+   @property markerCaption
+   @type String
+   @default t('components.flexberry-identify-panel.marker.caption')
+ */
+  fileCaption: t('components.flexberry-identify-panel.file.caption'),
+
+  /**
+    Tools option's 'marker' mode's icon CSS-class names.
+
+    @property markerIconClass
+    @type String
+    @default 'icon-guideline-document'
+  */
+  fileIconClass: 'icon-guideline-document',
 
   /**
     Tools option's 'polyline' mode's caption.
@@ -344,6 +365,13 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   bufferRadius: null,
 
   /**
+   * Color for identification layer from file
+   * @property fileLayerColor
+   * @default #0061D9
+   */
+  fileLayerColor: '#0061D9',
+
+  /**
     Leaflet map.
 
     @property leafletMap
@@ -351,6 +379,28 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @default null
   */
   leafletMap: null,
+
+  layersButton: [],
+  toolsButton:[],
+
+  resultsHeightClass: null,
+
+  resultsHeightClassObserver: Ember.observer('isBuffer', 'toolMode', function() {
+    let classHeight = null;
+    if (this.get('isBuffer')) {
+      classHeight = 'buffer';
+    }
+
+    if (this.get('toolMode') === 'file') {
+      classHeight = 'file';
+    }
+
+    if (this.get('isBuffer') && this.get('toolMode') === 'file') {
+      classHeight = 'buffer-file';
+    }
+
+    this.set('resultsHeightClass', classHeight);
+  }),
 
   actions: {
     /**
@@ -421,9 +471,62 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       if (!Ember.isEmpty(str) && regex.test(str)) {
         Ember.$(e.target).val(str.replace(regex, ''));
       }
+    },
+
+    changeBuffer() {
+      this.set('isBuffer', !this.get('isBuffer'));
     }
   },
 
+  init() {
+    this._super(...arguments);
+    const layersButton = [
+      {
+        iconClass: this.allIconClass,
+        tooltip: this.get('i18n').t('components.flexberry-identify-panel.identify-all.caption').string,
+        layerMode:'all'
+      },
+      {
+        iconClass: this.visibleIconClass,
+        tooltip: this.get('i18n').t('components.flexberry-identify-panel.identify-all-visible.caption').string,
+        layerMode:'visible'
+      },
+      {
+        iconClass: this.topIconClass,
+        tooltip: this.get('i18n').t('components.flexberry-identify-panel.identify-top-visible.caption').string,
+        layerMode:'top'
+      },
+    ];
+    const toolsButton = [
+      {
+        iconClass: this.markerIconClass,
+        tooltip: this.get('i18n').t('components.flexberry-identify-panel.marker.caption').string,
+        layerMode:'marker'
+      },
+      {
+        iconClass: this.polylineIconClass,
+        tooltip: this.get('i18n').t('components.flexberry-identify-panel.polyline.caption').string,
+        layerMode:'polyline'
+      },
+      {
+        iconClass: this.rectangleIconClass,
+        tooltip: this.get('i18n').t('components.flexberry-identify-panel.rectangle.caption').string,
+        layerMode:'rectangle'
+      },
+      {
+        iconClass: this.polygonIconClass,
+        tooltip: this.get('i18n').t('components.flexberry-identify-panel.polygon.caption').string,
+        layerMode:'polygon'
+      },
+      {
+        iconClass: this.fileIconClass,
+        tooltip: this.get('i18n').t('components.flexberry-identify-panel.file.caption').string,
+        layerMode:'file'
+      }
+    ];
+    this.set('layersButton', layersButton);
+    this.set('toolsButton', toolsButton);
+  },
   /**
     Destroys DOM-related component's properties.
   */
