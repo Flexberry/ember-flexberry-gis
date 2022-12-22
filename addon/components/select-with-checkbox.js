@@ -23,7 +23,23 @@ export default FlexberryDropdown.extend({
   */
   fullTextSearch: true,
 
+  /**
+    When using search selection specifies how to match values.
+    <both> matches against text and value
+    <value> matches against value only
+    <text> matches against text only
+    @type String
+    @default 'text'
+  */
   match: 'text',
+
+  /**
+    flag indicates to add "selection" subclass to "multi-dropdown"
+    that forces element selection on opening, scroll goes down to first menu element.
+    @type Boolean
+    @default true
+  */
+  selection: true,
 
   isAllSelected: false,
 
