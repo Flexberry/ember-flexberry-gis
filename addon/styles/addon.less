@@ -104,16 +104,8 @@
   display: flex;
 }
 
-.d-none{
+.d-none {
   display: none;
-}
-
-.ml-20{
-  margin-left: 20px !important;
-}
-
-.ml-18{
-  margin-left: 18px !important;
 }
 
 .h-42 {
@@ -146,7 +138,10 @@
   z-index: 1;
   border-radius: 3.5px;
   font-size: 14px;
-  background: #F4F7FB;
+  background: @inputBackgroundColor;
+  &.ml-18 {
+    margin-left: 18px;
+  }
   &  ul {
     list-style-type: none; 
     padding-left: 8px;
@@ -169,7 +164,7 @@
     width: 20px; 
     height: 24px; 
     display: inline-block; 
-    border-left: 1px solid #c5c7ca;
+    border-left: 1px solid @borderColor;
     padding-left: 2px;
   }
 
@@ -179,7 +174,7 @@
     border:solid 1px transparent;
     box-shadow: 2px 2px 6px 0  fade(#000, 15%);
     height: 42px;
-    background: #F4F7FB;
+    background: @inputBackgroundColor;
 
     &:hover{
       cursor: pointer;
@@ -226,7 +221,7 @@
 }
 
 .wrapper {
-  border: 1px solid #c5c7ca;
+  border: 1px solid @borderColor;
   padding: 10px;
   margin: 20px;
   box-shadow: 2px 2px 6px 0 fade(#000, 15%);

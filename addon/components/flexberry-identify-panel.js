@@ -450,6 +450,19 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     },
 
     /**
+      Handles 'flexberry-map:onGeomChanged' event of leaflet map.
+
+      @method onGeomChanged
+      @param {Object} e Event object.
+    */
+    onGeomChanged(e) {
+      let onGeomChanged = this.get('onGeomChanged');
+      if (Ember.typeOf(onGeomChanged) === 'function') {
+        onGeomChanged(e);
+      }
+    },
+
+    /**
       Handles clear button's 'click' action.
 
       @method actions.onIdentificationClear
@@ -457,6 +470,14 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     */
     onIdentificationClear(e) {
       let identificationClear = this.get('identificationClear');
+      let leafletMap = this.get('leafletMap');
+      if (this.get('geomOnly')) {
+        let identifyToolName = this.get('_identifyToolName');
+        let identifyToolProperties = this.get('_identifyToolProperties');
+        leafletMap.flexberryMap.tools.disable(identifyToolName);
+        leafletMap.flexberryMap.tools.enable(identifyToolName, identifyToolProperties);
+      }
+
       if (Ember.typeOf(identificationClear) === 'function') {
         identificationClear();
       }
@@ -527,6 +548,13 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     this.set('layersButton', layersButton);
     this.set('toolsButton', toolsButton);
   },
+
+  didInsertElement() {
+    this._super(...arguments);
+    if (this.get('geomOnly') && this.get('toolMode')) {
+      this._enableActualIdentifyTool();
+    }
+  },
   /**
     Destroys DOM-related component's properties.
   */
@@ -534,6 +562,12 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       leafletMap.off('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
+      leafletMap.off('flexberry-map:onGeomChanged', this.actions.onGeomChanged, this);
+    }
+
+    if (this.get('geomOnly')) {
+      let identifyToolName = this.get('_identifyToolName');
+      leafletMap.flexberryMap.tools.disable(identifyToolName);
     }
 
     this._super(...arguments);
@@ -553,6 +587,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     }
 
     leafletMap.on('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
+    leafletMap.on('flexberry-map:geomChanged', this.actions.onGeomChanged, this);
   })),
 
   /**

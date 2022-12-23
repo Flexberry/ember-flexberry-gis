@@ -145,6 +145,14 @@
         color: @buttonMenuColor;
       }
     }
+
+    &.ml-18 {
+      margin-left: 18px;
+    }
+
+    &.ml-20 {
+      margin-left: 20px;
+    }
   }
 }
 
