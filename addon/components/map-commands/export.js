@@ -180,6 +180,11 @@ let ExportMapCommandComponent = Ember.Component.extend({
   timeout: 30000,
 
   /**
+   * Compare service. Disable before open map.
+   */
+  compare: Ember.inject.service(),
+
+  /**
       Shows export dialog.
 
       @method _showExportDialog
@@ -195,7 +200,20 @@ let ExportMapCommandComponent = Ember.Component.extend({
 
   actions: {
     onButtonClick(e) {
-      this._showExportDialog();
+      let compare = this.get('compare');
+      let timeout = 0;
+      if (compare.get('compareLayersEnabled')) {
+        Ember.set(compare, 'compareLayersEnabled', false);
+        timeout = 500;
+        let mapController = Ember.getOwner(this).lookup('controller:map');
+        if (mapController) {
+          mapController.send('showCompareSideBarEnd');
+        }
+      }
+
+      Ember.run.later(() => {
+        this._showExportDialog();
+      }, timeout);
     },
 
     /**
