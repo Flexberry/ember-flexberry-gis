@@ -162,10 +162,7 @@ export default FlexberryDropdown.extend({
       //click action is defined as a DOM event to cancel the semantic dropdown action
       event.stopPropagation();
       this.get('state').setEach('isVisible', false);
-      $('.search-field').val('');
-      $('.fb-selector .item.filtered').each((i, item) => {
-        $(item).removeClass('filtered');
-      });
+      this.sendAction('clearAll');
     },
 
   }

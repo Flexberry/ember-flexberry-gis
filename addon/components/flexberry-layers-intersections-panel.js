@@ -26,15 +26,6 @@ export default Ember.Component.extend({
   disaplayName: null,
 
   /**
-    Layer contains identification result features.
-
-    @property resultsLayer
-    @type Object
-    @default null
-  */
-  resultsLayer: null,
-
-  /**
     List vector layers.
 
     @property vectorLayers
@@ -61,8 +52,6 @@ export default Ember.Component.extend({
   */
   _OnMapChanged: Ember.observer('leafletMap', function () {
     let map = this.get('leafletMap');
-    let group = L.featureGroup().addTo(map);
-    this.set('resultsLayer', group);
   }),
 
   /**
@@ -152,7 +141,7 @@ export default Ember.Component.extend({
     @readonly
   */
   _OnFeatureChange: Ember.observer('feature', function () {
-    this.clearPanel();
+    Ember.run.once(this, 'clearPanel');
   }),
 
   _checkTypeLayer(layer) {
@@ -273,6 +262,19 @@ export default Ember.Component.extend({
     },
 
     /**
+      Clear selected layers.
+      Also handles closeAll event from select-with-checkbox component.
+
+      @method actions.clearSelected
+    */
+    clearSelected() {
+      Ember.$('.search-field').val('');
+      Ember.$('.fb-selector .item.filtered').each((i, item) => {
+        Ember.$(item).removeClass('filtered');
+      });
+    },
+
+    /**
       Handles click on tab.
 
       @method actions.hidePanel
@@ -282,6 +284,8 @@ export default Ember.Component.extend({
     },
 
     /**
+      //TODO: old implementation, needs to be redone
+
       Handles click on zoom icon.
 
       @method actions.hidePanel
@@ -445,8 +449,6 @@ export default Ember.Component.extend({
     @method clearPanel
   */
   clearPanel() {
-    let group = this.get('resultsLayer');
-    group.clearLayers();
     this.removeLayers();
     this.set('selectedLayers', []);
     this.set('square', null);
@@ -459,10 +461,7 @@ export default Ember.Component.extend({
       this.childViews[0].get('state').setEach('isVisible', false);
     }
 
-    Ember.$('.search-field').val('');
-    Ember.$('.fb-selector .item.filtered').each((i, item) => {
-      Ember.$(item).removeClass('filtered');
-    });
+    this.send("clearSelected");
   },
 
   /**
