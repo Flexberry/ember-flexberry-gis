@@ -44,17 +44,6 @@ export default Ember.Component.extend({
   leafletMap: null,
 
   /**
-    Observer for leafletMap property adding layer with results.
-
-    @property _OnMapChanged
-    @private
-    @readonly
-  */
-  _OnMapChanged: Ember.observer('leafletMap', function () {
-    let map = this.get('leafletMap');
-  }),
-
-  /**
     Flag indicates if there are any results of intersection.
 
     @property noIntersectionResults
@@ -284,7 +273,7 @@ export default Ember.Component.extend({
     },
 
     /**
-      //TODO: old implementation, needs to be redone
+      // TODO: old implementation, needs to be redone
 
       Handles click on zoom icon.
 
