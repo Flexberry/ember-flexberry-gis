@@ -675,6 +675,141 @@ define('dummy/tests/integration/components/flexberry-edit-crs-test.jshint', ['ex
     assert.ok(true, 'integration/components/flexberry-edit-crs-test.js should pass jshint.');
   });
 });
+define('dummy/tests/integration/components/flexberry-identify-file-test', ['exports', 'ember-qunit', 'ember', 'ember-i18n/services/i18n', 'ember-flexberry-gis/locales/ru/translations', 'ember-flexberry-gis/locales/en/translations'], function (exports, _emberQunit, _ember, _emberI18nServicesI18n, _emberFlexberryGisLocalesRuTranslations, _emberFlexberryGisLocalesEnTranslations) {
+
+  (0, _emberQunit.moduleForComponent)('flexberry-identify-file', 'Integration | Component | flexberry identify file', {
+    beforeEach: function beforeEach(assert) {
+      this.register('locale:ru/translations', _emberFlexberryGisLocalesRuTranslations['default']);
+      this.register('locale:en/translations', _emberFlexberryGisLocalesEnTranslations['default']);
+      this.register('service:i18n', _emberI18nServicesI18n['default']);
+
+      this.inject.service('i18n', { as: 'i18n' });
+      _ember['default'].Component.reopen({
+        i18n: _ember['default'].inject.service('i18n')
+      });
+    },
+    integration: true
+  });
+
+  (0, _emberQunit.test)('it renders', function (assert) {
+    this.set('coordinate', 'auto');
+    this.set('systemCoordinates', { 'auto': 'auto' });
+    this.render(_ember['default'].HTMLBars.template((function () {
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.4.6',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 3,
+              'column': 2
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode('\n    ');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode('\n  ');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [['inline', 'flexberry-identify-file', [], ['geomOnly', true, 'coordinate', ['subexpr', '@mut', [['get', 'coordinate', ['loc', [null, [2, 55], [2, 65]]]]], [], []], 'systemCoordinates', ['subexpr', '@mut', [['get', 'systemCoordinates', ['loc', [null, [2, 84], [2, 101]]]]], [], []]], ['loc', [null, [2, 4], [2, 103]]]]],
+        locals: [],
+        templates: []
+      };
+    })()));
+    var hiddenInput = this.$().find('input.d-none');
+    var fileInput = this.$().find('input.file-input');
+    var selectedCrs = this.$('.flexberry-dropdown .text').text();
+    assert.equal(hiddenInput.length, 1);
+    assert.equal(fileInput.length, 1);
+    assert.equal(selectedCrs, 'auto');
+
+    this.render(_ember['default'].HTMLBars.template((function () {
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.4.6',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 3,
+              'column': 2
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode('\n    ');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode('\n  ');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [['inline', 'flexberry-identify-file', [], ['geomOnly', false, 'coordinate', ['subexpr', '@mut', [['get', 'coordinate', ['loc', [null, [2, 56], [2, 66]]]]], [], []], 'systemCoordinates', ['subexpr', '@mut', [['get', 'systemCoordinates', ['loc', [null, [2, 85], [2, 102]]]]], [], []]], ['loc', [null, [2, 4], [2, 104]]]]],
+        locals: [],
+        templates: []
+      };
+    })()));
+    var buttons = this.$('.d-flex.justify-content-center.p-10 .flexberry-button');
+    assert.equal(buttons.length, 3);
+  });
+});
+define('dummy/tests/integration/components/flexberry-identify-file-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - integration/components');
+  test('integration/components/flexberry-identify-file-test.js should pass jscs', function () {
+    ok(true, 'integration/components/flexberry-identify-file-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/integration/components/flexberry-identify-file-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - integration/components/flexberry-identify-file-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'integration/components/flexberry-identify-file-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/integration/components/flexberry-layers-attributes-panel-test', ['exports', 'ember-qunit', 'ember', 'ember-i18n/services/i18n', 'ember-flexberry-gis/locales/ru/translations', 'ember-flexberry-gis/locales/en/translations'], function (exports, _emberQunit, _ember, _emberI18nServicesI18n, _emberFlexberryGisLocalesRuTranslations, _emberFlexberryGisLocalesEnTranslations) {
 
   (0, _emberQunit.moduleForComponent)('flexberry-layers-attributes-panel', 'Integration | Component | flexberry layers attributes panel', {
@@ -5137,6 +5272,110 @@ define('dummy/tests/unit/components/compare-object-geometries-panel-test.jshint'
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/components/compare-object-geometries-panel-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/components/flexberry-identify-file-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+
+  (0, _emberQunit.moduleForComponent)('flexberry-identify-file', 'Unit | Component | flexberry identify file', {
+    unit: true,
+    needs: ['service:map-api', 'service:i18n']
+  });
+
+  (0, _emberQunit.test)('test createLayerMethod', function (assert) {
+    var response = {
+      'type': 'FeatureCollection',
+      'features': [{
+        'type': 'Feature',
+        'id': 'vodnyiobjektpoint32640.ed201773-3a7c-4c5e-97a9-63524f12885d',
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [448559.297603457, 6424330.67035587]
+        },
+        'geometry_name': 'shape',
+        'properties': {
+          'primarykey': 'ed201773-3a7c-4c5e-97a9-63524f12885d',
+          'naimenovanie': null,
+          'tip': null,
+          'dlina': null,
+          'shirina': null,
+          'createtime': null,
+          'creator': 'user',
+          'edittime': null,
+          'editor': null
+        }
+      }, {
+        'type': 'Feature',
+        'id': 'vodnyiobjektpoint32640.b6206860-0b1c-4f69-bdce-3d5ed31fb8c5',
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [448559.297603457, 6424330.67035587]
+        },
+        'geometry_name': 'shape',
+        'properties': {
+          'primarykey': 'b6206860-0b1c-4f69-bdce-3d5ed31fb8c5',
+          'naimenovanie': null,
+          'tip': null,
+          'dlina': null,
+          'shirina': null,
+          'createtime': null,
+          'creator': 'user',
+          'edittime': null,
+          'editor': null
+        }
+      }, {
+        'type': 'Feature',
+        'id': 'vodnyiobjektpoint32640.780291de-4b30-4b87-a8c0-285405df23f4',
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [453932.314442248, 6422913.65058862]
+        },
+        'geometry_name': 'shape',
+        'properties': {
+          'primarykey': '780291de-4b30-4b87-a8c0-285405df23f4',
+          'naimenovanie': null,
+          'tip': null,
+          'dlina': null,
+          'shirina': null,
+          'createtime': null,
+          'creator': 'user',
+          'edittime': null,
+          'editor': null
+        }
+      }],
+      'totalFeatures': 3,
+      'numberMatched': 3,
+      'numberReturned': 3,
+      'timeStamp': '2022-12-15T05:29:31.705Z',
+      'crs': {
+        'type': 'name',
+        'properties': {
+          'name': 'urn:ogc:def:crs:EPSG::32640'
+        }
+      }
+    };
+
+    var component = this.subject();
+    var layer = component._createLayer(response, L.CRS.EPSG4326);
+    assert.equal(layer.feature.crs.properties.name, 'EPSG:4326');
+    assert.equal(layer.feature.geometry.type, 'MultiPoint');
+    assert.equal(JSON.stringify(layer.feature.geometry.coordinates), JSON.stringify([[448559.297603457, 6424330.67035587], [453932.314442248, 6422913.65058862]]));
+  });
+});
+define('dummy/tests/unit/components/flexberry-identify-file-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/components');
+  test('unit/components/flexberry-identify-file-test.js should pass jscs', function () {
+    ok(true, 'unit/components/flexberry-identify-file-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/components/flexberry-identify-file-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/components/flexberry-identify-file-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/components/flexberry-identify-file-test.js should pass jshint.');
   });
 });
 define('dummy/tests/unit/components/flexberry-layers-attributes-panel-test', ['exports', 'ember-qunit', 'ember'], function (exports, _emberQunit, _ember) {
@@ -12306,6 +12545,34 @@ define('dummy/tests/unit/mixins/flexberry_map_model_api_show_and_hide_test.jshin
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/mixins/flexberry_map_model_api_show_and_hide_test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/geom-only-map-tool-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/geom-only-map-tool', 'qunit'], function (exports, _ember, _emberFlexberryGisMixinsGeomOnlyMapTool, _qunit) {
+
+  (0, _qunit.module)('Unit | Mixin | geom only map tool');
+
+  // Replace this with your real tests.
+  (0, _qunit.test)('it works', function (assert) {
+    var GeomOnlyMapToolObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsGeomOnlyMapTool['default']);
+    var subject = GeomOnlyMapToolObject.create();
+    assert.ok(subject);
+  });
+});
+define('dummy/tests/unit/mixins/geom-only-map-tool-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/geom-only-map-tool-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/geom-only-map-tool-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/geom-only-map-tool-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/geom-only-map-tool-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/geom-only-map-tool-test.js should pass jshint.');
   });
 });
 define('dummy/tests/unit/mixins/leaflet-events-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/leaflet-events', 'qunit', 'sinon'], function (exports, _ember, _emberFlexberryGisMixinsLeafletEvents, _qunit, _sinon) {
