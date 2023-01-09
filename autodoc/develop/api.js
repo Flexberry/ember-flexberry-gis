@@ -64,6 +64,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "ExportMapCommandComponent",
         "ExportPrintMapCommand",
         "FeatureResultItemComponent",
+        "FileIdentifyMapTool",
         "FlexberryAddLayerDialogComponent",
         "FlexberryBoundingboxComponent",
         "FlexberryBoundingboxMapLoaderMixin",
