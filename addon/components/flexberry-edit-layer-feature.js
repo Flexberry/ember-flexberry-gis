@@ -847,7 +847,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       layer = layers[1];
     } else {
       let urlSplit = leafletObject._url.split('/');
-      let indexGeoserver = urlSplit.indexOf("geoserver");
+      let indexGeoserver = urlSplit.indexOf('geoserver');
       if (indexGeoserver > -1 && urlSplit.length === indexGeoserver + 3) {
         workspace = urlSplit.at(indexGeoserver + 1);
       } else {
@@ -876,9 +876,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let zoomStart = zoom - 1 > 0 ? zoom - 1 : zoom;
       let zoomStop = zoom + 1 < 20 ? zoom + 1 : zoom;
       let styles = leafletObject.wmsParams.styles;
-      let parameter_STYLES = '';
+      let parameterStyles = '';
       if (!Ember.isNone(styles)) {
-        parameter_STYLES = `parameter_STYLES=${workspace}:${styles}&`;
+        parameterStyles = `parameter_STYLES=${workspace}:${styles}&`;
       }
 
       let crsName = leafletObject.wmsParams.crs;
@@ -887,7 +887,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
       }
 
-      let bounds = leafletMap.getBounds()
+      let bounds = leafletMap.getBounds();
       let minXY = L.marker(bounds._southWest).toProjectedGeoJSON(crs);
       let maxXY = L.marker(bounds._northEast).toProjectedGeoJSON(crs);
 
@@ -896,7 +896,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         url: url,
         async: true,
         data: `threadCount=01&type=truncate&gridSetId=${gridSetId}&tileFormat=image%2Fpng&zoomStart=${zoomStart}&zoomStop=${zoomStop}&` +
-          `${parameter_STYLES}minX=${minXY.geometry.coordinates[0]}&minY=${minXY.geometry.coordinates[1]}` +
+          `${parameterStyles}minX=${minXY.geometry.coordinates[0]}&minY=${minXY.geometry.coordinates[1]}` +
           `&maxX=${maxXY.geometry.coordinates[0]}&maxY=${maxXY.geometry.coordinates[1]}`,
         contentType: 'text/html',
         error: function(data) {
