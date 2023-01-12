@@ -859,7 +859,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     }
 
     if (!Ember.isBlank(leafletObject._url.match(new RegExp('(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?')))) {
-      let indexGeoserver = leafletObject._url.indexOf("geoserver");
+      let indexGeoserver = leafletObject._url.indexOf('geoserver');
       if (indexGeoserver === -1) {
         console.error('Can\'t get url geoserver');
         return;
