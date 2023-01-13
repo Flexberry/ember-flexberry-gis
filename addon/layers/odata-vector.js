@@ -84,9 +84,12 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
     let fields = Ember.A();
     this.set('crs', leafletObject.options.crs);
 
+    const geometryField = leafletObject.geometryField;
+
+    const pkField = leafletObject.getPkField(leafletObject.layerModel);
+
     props.forEach((key) => {
       let prop = projection.attributes[key];
-      const geometryField = leafletObject.geometryField;
       if (!prop.options.hidden && key !== geometryField) {
         fields.addObject(key);
       }

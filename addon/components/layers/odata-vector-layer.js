@@ -1094,6 +1094,10 @@ export default BaseVectorLayer.extend({
       geometryField: geometryField
     });
 
+    // у odata ключ никогда не бывает в представлении, чтобы его показывать необходимо добавить вручную
+    let pkField = this.getPkField(this.get('layerModel'));
+    readFormat.featureType.appendField(pkField, 'string');
+
     let store = Ember.getOwner(this).lookup('service:store');
     let modelConstructor = store.modelFor(this.get('modelName'));
     let layerProperties = Ember.get(modelConstructor, `attributes`);
@@ -1105,7 +1109,8 @@ export default BaseVectorLayer.extend({
     });
 
     readFormat.featureType.geometryFields[geometryField] = this.get('geometryType');
-    readFormat.excludedProperties = [];
+    // это поля, которые исключены из РЕДАКТИРОВАНИЯ
+    readFormat.excludedProperties = [pkField, 'creator', 'editor', 'createTime', 'editTime'];
     return readFormat;
   },
 
@@ -1117,9 +1122,9 @@ export default BaseVectorLayer.extend({
   */
   _getAttributesOptions() {
     return this._super(...arguments).then((attributesOptions) => {
+
       Ember.set(attributesOptions, 'settings.readonly', this.get('readonly') || false);
-      Ember.set(attributesOptions, 'settings.excludedProperties', Ember.A(['syncDownTime', 'readOnly', 'creator',
-        'editor', 'createTime', 'editTime', 'intersectionArea']));
+      Ember.set(attributesOptions, 'settings.excludedProperties', Ember.A(['syncDownTime', 'readOnly', 'intersectionArea']));
       return attributesOptions;
     });
   },
