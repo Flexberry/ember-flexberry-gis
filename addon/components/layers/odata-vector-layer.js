@@ -531,7 +531,9 @@ export default BaseVectorLayer.extend({
                 if (!isNaN(Number(searchValue))) {
                   equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, searchValue));
                 } else {
-                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to numeric type`);
+                  if (!e.context) {
+                    console.error(`Failed to convert \"${e.searchOptions.queryString}\" to numeric type`);
+                  }
                 }
 
                 break;
@@ -551,7 +553,9 @@ export default BaseVectorLayer.extend({
                     equals.push(new Query.DatePredicate(property.name, Query.FilterOperator.Eq, startInterval, true));
                   }
                 } else {
-                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to date type`);
+                  if (!e.context) {
+                    console.error(`Failed to convert \"${e.searchOptions.queryString}\" to date type`);
+                  }
                 }
 
                 break;
@@ -561,7 +565,9 @@ export default BaseVectorLayer.extend({
                 if (typeof booleanValue === 'boolean') {
                   equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, booleanValue));
                 } else {
-                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to boolean type`);
+                  if (!e.context) {
+                    console.error(`Failed to convert \"${e.searchOptions.queryString}\" to boolean type`);
+                  }
                 }
 
                 break;
@@ -1109,6 +1115,7 @@ export default BaseVectorLayer.extend({
     });
 
     readFormat.featureType.geometryFields[geometryField] = this.get('geometryType');
+
     // это поля, которые исключены из РЕДАКТИРОВАНИЯ
     readFormat.excludedProperties = [pkField, 'creator', 'editor', 'createTime', 'editTime'];
     return readFormat;
@@ -1120,11 +1127,26 @@ export default BaseVectorLayer.extend({
     @method _getAttributesOptions
     @private
   */
-  _getAttributesOptions() {
+  _getAttributesOptions(source) {
     return this._super(...arguments).then((attributesOptions) => {
 
       Ember.set(attributesOptions, 'settings.readonly', this.get('readonly') || false);
-      Ember.set(attributesOptions, 'settings.excludedProperties', Ember.A(['syncDownTime', 'readOnly', 'intersectionArea']));
+
+      let excluded = Ember.get(attributesOptions, 'settings.excludedProperties');
+      if (Ember.isNone(excluded)) {
+        excluded = Ember.A();
+      }
+
+      let extraExcluded = source && source === 'identify' ? Ember.A(['syncDownTime', 'readOnly']) : Ember.A(['syncDownTime', 'readOnly', 'intersectionArea']);
+
+      extraExcluded.forEach((p) => {
+        if (!excluded.contains(p)) {
+          excluded.pushObject(p);
+        }
+      });
+
+      Ember.set(attributesOptions, 'settings.excludedProperties', excluded);
+
       return attributesOptions;
     });
   },

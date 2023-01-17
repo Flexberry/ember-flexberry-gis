@@ -257,18 +257,32 @@ export default BaseLayer.extend({
     @method _getAttributesOptions
     @private
   */
-  _getAttributesOptions() {
-    return this._super(...arguments).then((attribitesOptions) => {
-      let leafletObject = Ember.get(attribitesOptions, 'object');
+  _getAttributesOptions(source) {
+    return this._super(...arguments).then((attributesOptions) => {
+      let leafletObject = Ember.get(attributesOptions, 'object');
 
       // Return original vector layer for 'flexberry-layers-attributes-panel' component instead of marker cluster group.
       if (leafletObject instanceof L.MarkerClusterGroup) {
-        Ember.set(attribitesOptions, 'object', leafletObject._originalVectorLayer);
+        Ember.set(attributesOptions, 'object', leafletObject._originalVectorLayer);
       }
 
-      Ember.set(attribitesOptions, 'settings.styleSettings', this.get('styleSettings'));
+      Ember.set(attributesOptions, 'settings.styleSettings', this.get('styleSettings'));
 
-      return attribitesOptions;
+      let excluded = Ember.get(attributesOptions, 'settings.excludedProperties');
+
+      if (Ember.isNone(excluded)) {
+        excluded = Ember.A();
+      }
+
+      ['shape', 'isFavorite', 'favUpdating'].forEach((p) => {
+        if (!excluded.contains(p)) {
+          excluded.pushObject(p);
+        }
+      });
+
+      Ember.set(attributesOptions, 'settings.excludedProperties', excluded);
+
+      return attributesOptions;
     }.bind(this));
   },
 
