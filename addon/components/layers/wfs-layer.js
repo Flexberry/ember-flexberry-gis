@@ -151,7 +151,7 @@ export default BaseVectorLayer.extend({
     @method _getAttributesOptions
     @private
   */
-  _getAttributesOptions() {
+  _getAttributesOptions(source) {
     return this._super(...arguments).then((attribitesOptions) => {
       Ember.set(attribitesOptions, 'settings.readonly', this.get('readonly') || false);
 
@@ -621,7 +621,9 @@ export default BaseVectorLayer.extend({
                 if (!isNaN(Number(searchValue))) {
                   equals.push(new L.Filter.EQ(field, searchValue, false));
                 } else {
-                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to numeric type`);
+                  if (!e.context) {
+                    console.error(`Failed to convert \"${e.searchOptions.queryString}\" to numeric type`);
+                  }
                 }
 
                 break;
@@ -640,7 +642,9 @@ export default BaseVectorLayer.extend({
                     equals.push(new L.Filter.EQ(field, startInterval, false));
                   }
                 } else {
-                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to date type`);
+                  if (!e.context) {
+                    console.error(`Failed to convert \"${e.searchOptions.queryString}\" to date type`);
+                  }
                 }
 
                 break;
@@ -650,7 +654,9 @@ export default BaseVectorLayer.extend({
                 if (typeof booleanValue === 'boolean') {
                   equals.push(new L.Filter.EQ(field, booleanValue, false));
                 } else {
-                  console.error(`Failed to convert \"${e.searchOptions.queryString}\" to boolean type`);
+                  if (!e.context) {
+                    console.error(`Failed to convert \"${e.searchOptions.queryString}\" to boolean type`);
+                  }
                 }
 
                 break;

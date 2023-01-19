@@ -210,8 +210,8 @@ export default BaseLayer.extend({
     @method _getAttributesOptions
     @private
   */
-  _getAttributesOptions() {
-    return this.get('mainLayer')._getAttributesOptions();
+  _getAttributesOptions(source) {
+    return this.get('mainLayer')._getAttributesOptions(source);
   },
 
   /**

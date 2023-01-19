@@ -27,7 +27,7 @@ export default WmsLayerComponent.extend({
     @method _getAttributesOptions
     @private
   */
-  _getAttributesOptions() {
+  _getAttributesOptions(source) {
     let resultingAttribitesOptions;
 
     return this._super(...arguments).then((attributesOptions) => {
