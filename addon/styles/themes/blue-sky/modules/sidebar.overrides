@@ -1121,7 +1121,7 @@
     }
   }
   .all-layers {
-    color: #848E99;
+    color: @blueyGreyColor;
   }
   .ui.icon.close {
     float: right;
