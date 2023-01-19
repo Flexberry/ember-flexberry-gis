@@ -291,6 +291,11 @@ export default BaseNonclickableMapTool.extend({
       this._clearPolygonLayer();
     }
 
+    this._baseDrawingDidEnd(workingPolygon, bufferedMainPolygon, latlng);
+    this._additionalDrawingDidEnd(layer);
+  },
+
+  _baseDrawingDidEnd(workingPolygon, bufferedMainPolygon, latlng) {
     // Show map loader.
     let leafletMap = this.get('leafletMap');
     leafletMap.flexberryMap.loader.show({ content: this.get('i18n').t('map-tools.identify.loader-message') });
@@ -302,6 +307,8 @@ export default BaseNonclickableMapTool.extend({
       latlng: latlng
     });
   },
+
+  _additionalDrawingDidEnd() {},
 
   /**
     Draw buffer around selected area

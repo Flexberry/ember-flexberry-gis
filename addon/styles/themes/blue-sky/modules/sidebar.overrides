@@ -351,7 +351,7 @@
     overflow-x: hidden;
     overflow-y: hidden !important;
 	.ui.styled.accordion {
-      height: ~"calc(100% - 60px)" !important;
+      height: ~"calc(100% - 70px)" !important;
       width: 1000px;
       .accordion:first-child .title {
         border-top: none;
@@ -377,6 +377,7 @@
       }
     }
     .content .flexberry-maplayers.accordion {
+      overflow-y: hidden;
       margin-top: 0px;
     }
   }
@@ -630,7 +631,7 @@
         padding: 10px 12px;
       }
       &.create-edit-object-tab, &.compareObjects, &.intersectionObjects,
-      &.compare, &.timelapse, &.history {
+      &.compare, &.timelapse, &.history, &.satellite-search {
         display: none;
         position: absolute;
       }
@@ -1079,6 +1080,15 @@
     overflow-y: auto;
     overflow-x: hidden;
     height: ~"calc(100% - 140px)" !important;
+    &.buffer {
+      height: ~"calc(100% - 260px)" !important;
+    }
+    &.file {
+      height: ~"calc(100% - 370px)" !important;
+    }
+    &.buffer-file {
+      height: ~"calc(100% - 470px)" !important;
+    }
   }
   .layer-result-list .nodata {
     margin-top: 15px;
@@ -1106,7 +1116,7 @@
     margin-right: 17px;
     transform: translate(0px, -15%);
     i {
-      color: #3B4256;
+      color: @activeItemColor;
       font-size: 30px;
     }
   }
@@ -1148,7 +1158,7 @@
       font-weight: normal;
       border-bottom: none;
       &.active {
-        color: #3B4256;
+        color: @activeItemColor;
         font-weight: normal;
       }
     }
@@ -1156,6 +1166,218 @@
   .flexberry-maplayers {
     margin-top: 0px !important;
   }
+}
+
+.ui.tab.satellite-search {
+  h3 {
+    margin: 10px 0px 5px 0px !important;
+  }
+  h4 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    color: @headerTextColor;
+    margin-bottom: 0px;
+  }
+  .ui.grid {
+    &.satellite-search {
+      margin-top: 20px; width: 100%;
+      .row.sources, .row.geom {
+        margin: 10px 0px;
+      }
+    }
+    .row {
+      padding: 0px !important;
+    }
+  }
+  .ui.pointing.group.secondary.menu {
+    margin-top: 6px;
+    border-bottom: none;
+    min-height: 35px;
+    margin-bottom: 10px;
+    a.item {
+      color: @labelColor;
+      font-size: 20px;
+      line-height: 26px;
+      margin-right: 10px;
+      font-weight: normal;
+      border-bottom: none;
+      padding: 0px;
+      &.active {
+        color: @activeItemColor;
+        font-weight: normal;
+      }
+    }
+  }
+  .predefined-buttons {
+    a {
+      font-size: 12px;
+      line-height: 20px;
+      align-items: center;
+      text-align: center;
+      text-decoration-line: underline;
+      color: @activeItemColor;
+      margin-right: 14px;
+    }
+  }
+  .ui.error.message {
+    border: none !important;
+    padding: 5px 0px !important;
+    margin: 5px 0px !important;
+  }
+
+  .row.sources .ui.help-button {
+    margin-right: 17px;
+    width: 24px;
+    transform: translate(0px, -9%);
+    position: absolute;
+    left: 140px;
+    i {
+      color: @activeItemColor;
+      font-size: 24px;
+    }
+  }
+
+  .file-panel {
+    .ui.help-button {
+      width: 24px;
+      i {
+        color: @activeItemColor;
+        font-size: 24px;
+      }  
+    }
+    .file-input {
+      background: @inputBackgroundColor;
+      border: none;
+      box-shadow: none;
+      color: @activeItemColor;
+    }
+  }
+
+  .flexberry-identify-panel {
+    margin-top: 15px;
+    padding: 0px !important;
+    .flexberry-dropdown-button {
+      margin-left: 0px;
+    }
+    .buffer-tools .field:first-child {
+      width: 83px !important;
+      input {
+        width: 80px;
+        height: 32px;
+        background: @inputBackgroundColor;
+        border: none !important;
+      }
+    }
+  }
+
+  .ui.buttons.geometry .ui.button {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 6px 10px !important;
+    border: 1px solid #0061D9;
+    &:not(.primary) {
+      background-color: transparent;
+      color: #0061D9;
+    }
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 30px;
+    button.search {
+      padding: 6px 50px;
+      line-height: 17px;
+      font-size: 14px;
+    }
+  }
+
+  .ui.tab.segment {
+    box-shadow: none !important;
+    margin-top: 0px !important;
+  }
+
+  .search-result {
+    position: relative;
+    margin-top: 12px;
+
+    .buttons {
+      display: inline-block;
+      position: absolute;
+      left: 35px;
+      bottom: 0;
+      a {
+        display: inline-block;
+        width: 105px;
+        text-align: center;
+        font-size: 12px;
+        line-height: 20px;
+        border: 1px solid #0061D9;
+        &.left {
+          border-radius: 3.5px 0px 0px 3.5px;
+        }
+        &.right {
+          border-left: none !important;
+          border-radius: 0px 3.5px 3.5px 0px;
+        }
+      }
+    }
+
+    img {
+      margin-left: 35px;
+    }
+
+    .flexberry-checkbox-label {
+      font-size: 14px !important;
+      line-height: 20px !important;
+      color: #0061D9 !important;
+      padding-left: 35px !important;
+    }
+    
+    .image {
+      position: relative;
+      height: 115px;
+    }
+
+    .zoom-to-bounds {
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      padding: 0px !important;
+      &:hover {
+        border: none !important
+      }
+
+      i {
+        font-size: 16px !important;
+        color: @activeItemColor !important;
+      }
+    }
+  }
+
+    div[data-tab="results"] {
+      label.sort {
+        font-size: 15px;
+        display: inline-block;
+        min-width: 90px;
+        &.source {
+          color: #0061D9;
+        }
+        i {
+          font-size: 14px !important;
+        }
+      }
+      .ui.button.results {
+        font-size: 13px;
+        line-height: 17px;
+        &:not(.primary) {
+          background: white;
+          color: #0061D9 !important;
+          border: 1px solid #0061D9 !important;
+          box-shadow: none !important;
+        }
+      }
+    }
 }
 
 .ui.tab.treeview .treeview.root.header.hidden+.flexberry-maplayers {
@@ -1207,6 +1429,12 @@
   line-height: 1;
   color: @textColor;
   top: 16px;
+  left: 5px;
+}
+
+.ui.bottom.left.popup.help-popup.small::before {
+  font-size: 24px;
+  top: 22px;
   left: 5px;
 }
 

@@ -1,0 +1,49 @@
+<input type="file" accept=".zip,.GEOJSON,.gml" class="d-none" onchange={{action 'uploadFile' }}>
+<div class="w-100">
+  <div class="file-panel">
+    <label>{{t "components.flexberry-identify-panel.file.form-caption-file"}}</label>
+    <input class="file-input" onClick={{action 'setFiles' }} value={{fileName}}>
+    {{help-popup
+      htmlMessage=(t 'components.flexberry-identify-panel.file.help')
+      variation="very wide"
+      position="bottom left"
+      small=true
+    }}
+  </div>
+</div>
+<label>{{t "components.flexberry-identify-panel.file.form-caption-sk"}}</label>
+{{flexberry-dropdown-input
+  items=systemCoordinates
+  value=coordinate
+  class="scale-value fluid"
+}}
+<div class="d-flex justify-content-center p-10">
+  {{flexberry-button
+    iconClass='icon-guideline-show'
+    click=(action "showFileLayer")
+    readonly = (eq fileName '')
+  }}
+  {{#if (not geomOnly)}}
+    {{flexberry-button
+      class='ml-20'
+      iconClass='icon-guideline-layers-info'
+      click=(action "identificationFile")
+      readonly = (eq fileName '')
+    }}
+    {{flexberry-button
+      class='ml-20'
+      iconClass='icon-guideline-goout'
+      click=(action "createLayerByFile")
+      readonly = (or (eq fileName '') (not isAuthenticated))
+    }}
+  {{/if}}
+</div>
+{{#if _showError}}
+  {{ui-message
+    type="error"
+    closeable=true
+    visible=_showError
+    caption=_errorCaption
+    message=_errorMessage
+  }}
+{{/if}}

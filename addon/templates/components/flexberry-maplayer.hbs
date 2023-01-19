@@ -130,6 +130,7 @@
                       }}
                     {{/each}}
                   {{/if}}
+
                   {{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable presenceLayerInGeoportal _loadLayerDataIsAvailableApi)}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.loadButton " floated " flexberryClassNames.preventExpandCollapse)

@@ -23,6 +23,7 @@ const createFeaturesPropertiesSettings = function () {
 const createDisplaySettings = function () {
   return {
     dateFormat: 'DD.MM.YYYY',
+    dateTimeFormat: 'DD.MM.YYYY HH:mm:ss',
     featuresPropertiesSettings: createFeaturesPropertiesSettings()
   };
 };

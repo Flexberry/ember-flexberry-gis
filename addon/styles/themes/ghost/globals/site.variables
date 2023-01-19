@@ -82,3 +82,8 @@
 @defaultGrayBorder: 1px solid @graycolor;
 
 @labelFontSize: 13px;
+
+@inputBackgroundColor: #F4F7FB
+@borderColor: #c5c7ca;
+@headerTextColor: #0C49CD;
+@activeItemColor: #3B4256;

@@ -1,81 +1,74 @@
 <div class="{{flexberryClassNames.wrapper}}">
-  <div class="{{flexberryClassNames.layersOptions}}">
-    {{flexberry-button
-      class=(concat flexberryClassNames.identifyAll (if (eq layerMode "all") " active" ""))
-      iconClass=allIconClass
-      tooltip=allCaption
-      click=(action "onLayerModeChange" "all")
+  <div class="d-flex h-42">
+    {{#if (not geomOnly)}}
+      {{flexberry-button-dropdown 
+        class="flexberry-dropdown-button" 
+        clickButton=(action "onLayerModeChange")
+        items=layersButton
+        value=layerMode
+      }}
+    {{/if}}
+
+    {{flexberry-button-dropdown 
+      class="flexberry-dropdown-button ml-18" 
+      clickButton=(action "onToolModeChange")
+      items=toolsButton 
+      value=toolMode
     }}
+
     {{flexberry-button
-      class=(concat flexberryClassNames.identifyAllVisible (if (eq layerMode "visible") " active" ""))
-      iconClass=visibleIconClass
-      tooltip=visibleCaption
-      click=(action "onLayerModeChange" "visible")
+      class=(concat flexberryClassNames.identifyMarker (if isBuffer " active ml-18" " ml-18"))
+      iconClass='icon-guideline-circle'
+      click=(action "changeBuffer")
     }}
-    {{flexberry-button
-      class=(concat flexberryClassNames.identifyTopVisible (if (eq layerMode "top") " active" ""))
-      iconClass=topIconClass
-      tooltip=topCaption
-      click=(action "onLayerModeChange" "top")
-    }}
-  </div>
-  <div class="{{flexberryClassNames.toolsOptions}}">
-    {{flexberry-button
-      class=(concat flexberryClassNames.identifyMarker (if (eq toolMode "marker") " active" ""))
-      iconClass=markerIconClass
-      tooltip=markerCaption
-      click=(action "onToolModeChange" "marker")
-    }}
-    {{flexberry-button
-      class=(concat flexberryClassNames.identifyPolyline (if (eq toolMode "polyline") " active" ""))
-      iconClass=polylineIconClass
-      tooltip=polylineCaption
-      click=(action "onToolModeChange" "polyline")
-    }}
-    {{flexberry-button
-      class=(concat flexberryClassNames.identifyRectangle (if (eq toolMode "rectangle") " active" ""))
-      iconClass=rectangleIconClass
-      tooltip=rectangleCaption
-      click=(action "onToolModeChange" "rectangle")
-    }}
-    {{flexberry-button
-      class=(concat flexberryClassNames.identifyPolygon (if (eq toolMode "polygon") " active" ""))
-      iconClass=polygonIconClass
-      tooltip=polygonCaption
-      click=(action "onToolModeChange" "polygon")
-    }}
-  </div>
-  <div class="{{flexberryClassNames.otherOptions}}">
-    {{flexberry-button
-      class=flexberryClassNames.clearButton
-      iconClass=clearIconClass
-      tooltip=clearCaption
-      click=(action "onIdentificationClear")
-    }}
-  </div>
-  <div class="buffer-caption">
-    <label>{{bufferRadiusCaption}}</label>
-  </div>
-  <div class="buffer-tools">
-    <div class="field">
-      {{input
-        type="text"
-        value=bufferRadius
-        key-up=(action "onInputLimit")
+
+    <div class="{{flexberryClassNames.otherOptions}} ml-auto">
+      {{flexberry-button
+        class=flexberryClassNames.clearButton
+        iconClass=clearIconClass
+        click=(action "onIdentificationClear")
       }}
     </div>
-    <div class="field">
-      {{#ui-dropdown class="item fluid selection" onChange=(action "onBufferUnitsChange")}}
-        <i class="dropdown icon"></i>
-        <div class="text">
-          {{t (get bufferUnitsList bufferUnits)}}
-        </div>
-        <div class="menu">
-          {{#each-in bufferUnitsList as |unitsValue unitsLocalizedCaptionPath|}}
-            <div class="item" data-value="{{unitsValue}}">{{t unitsLocalizedCaptionPath}}</div>
-          {{/each-in}}
-        </div>
-      {{/ui-dropdown}}
-    </div>
   </div>
+
+  {{#if isBuffer}}
+    <div class="wrapper">
+      <label title="{{t "components.flexberry-identify-panel.clear.caption"}}" class="wrapper-exit" onClick={{action "changeBuffer" }}>
+        <i class="icon-guideline-cross-r"></i>
+      </label>
+      <label>{{bufferRadiusCaption}}</label>
+      <div class="buffer-tools d-flex">
+        <div class="field">
+          {{input
+            type="text"
+            value=bufferRadius
+            key-up=(action "onInputLimit")
+          }}
+        </div>
+        <div class="field">
+          {{#ui-dropdown class="item fluid selection" onChange=(action "onBufferUnitsChange")}}
+          <i class="dropdown icon"></i>
+          <div class="text">
+            {{t (get bufferUnitsList bufferUnits)}}
+          </div>
+          <div class="menu">
+            {{#each-in bufferUnitsList as |unitsValue unitsLocalizedCaptionPath|}}
+              <div class="item" data-value="{{unitsValue}}">{{t unitsLocalizedCaptionPath}}</div>
+            {{/each-in}}
+          </div>
+          {{/ui-dropdown}}
+        </div>
+      </div>
+    </div>
+  {{/if}}
+
+  {{#if (eq toolMode "file")}}
+    <div class="wrapper">
+      <label title="{{t "components.flexberry-identify-panel.clear.caption"}}" class="wrapper-exit" onClick={{action "onToolModeChange" "rectangle" }}>
+        <i class="icon-guideline-cross-r "></i>
+      </label>
+      {{flexberry-identify-file leafletMap=leafletMap isAuthenticated=isAuthenticated layerColor=fileLayerColor geomOnly=geomOnly systemCoordinates=systemCoordinates coordinate=coordinate}}
+    </div>
+  {{/if}} 
+
 </div>

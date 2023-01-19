@@ -10,5 +10,9 @@ export default {
     'denyButtonCaption': 'Отмена',
     'formatCaption': 'Формат',
     'crsCaption': 'Система координат'
+  },
+  'boolean': {
+    'yes': 'Да',
+    'no': 'Нет'
   }
 };

@@ -1,3 +1,9 @@
+{{flexberry-button
+  class="fav-list clear"
+  tooltip=(t "components.favourites-list.clear.tooltip")
+  iconClass="icon-guideline-clear-layers"
+  click=(action "clear")
+}}
 {{#if _showFavorites}}
   <button type="submit" class="ui button primary compare{{if compareBtnDisabled " disabled"}}" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
     {{t "components.compare-object-geometries.compare-objects-caption"}}
@@ -12,6 +18,13 @@
     addToCompareGeometries=(action 'addToCompareGeometries')
     showIntersectionPanel=(action 'showIntersectionPanel')
     availableCRS=availableCRS
+    _selectedFeature=_selectedFeature
+    pane="zoomto"
+    zoomToCopy=true
+    copyStyle=(hash
+      weight=2
+      fill=false
+    )
   }}
 {{else}}
   <div class="ui form loading"></div>

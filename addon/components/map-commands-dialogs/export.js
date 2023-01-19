@@ -692,7 +692,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         `color: ${this.get('_options.captionFontColor')}; ` +
         `margin-top: ${captionTopMargin}px;` +
         `margin-bottom: ${captionTopMargin}px;` +
-        `height: ${this.get('_mapCaptionRealHeight')}px;`);
+        `height: ${this.get('_mapCaptionRealHeight')}px;` +
+        'overflow: hidden;' +
+        'text-overflow: ellipsis;' +
+        'white-space: nowrap;');
     }
   ),
 
@@ -794,7 +797,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         `height: ${captionHeight}px;` +
         `margin-top: ${captionTopMargin}px;` +
         `margin-bottom: ${captionTopMargin}px;` +
-        `color: ${this.get('_options.captionFontColor')};`);
+        `color: ${this.get('_options.captionFontColor')};` +
+        'overflow: hidden;' +
+        'text-overflow: ellipsis;' +
+        'white-space: nowrap;');
     }
   ),
 
@@ -926,6 +932,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   mapOnlyModeObserver: Ember.observer('_options.displayMode', function() {
     if (this.get('_options.displayMode') === 'map-only-mode') {
       this.set('_options.legendControl', false);
+      this.set('_options.scaleControl', false);
+      this.send('onPageChange', '1', -1);
     }
   }),
   /**

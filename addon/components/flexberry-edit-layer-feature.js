@@ -335,10 +335,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           continue;
         }
 
-        if (Ember.get(leafletObject, 'readFormat.excludedProperties').includes(propertyName.toLowerCase())) {
-          continue;
-        }
-
         let propertyCaption = Ember.get(localizedProperties, propertyName);
 
         result[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;
@@ -356,6 +352,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       fieldTypes: Ember.get(leafletObject, 'readFormat.featureType.fieldTypes'),
       fieldParsers: Ember.get(leafletObject, 'readFormat.featureType.fields'),
       fieldValidators: Ember.get(leafletObject, 'readFormat.featureType.fieldValidators'),
+      readOnlyFields: Ember.get(leafletObject, 'readFormat.excludedProperties'),
       fieldNames: getHeader()
     };
   }),
@@ -464,8 +461,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   */
   parseData(index, data) {
     let fieldNames = this.get('_model.fieldNames');
+    let readOnlyFields = this.get('_model.readOnlyFields');
     let fieldParsers = this.get('_model.fieldParsers');
     let fieldValidators = this.get('_model.fieldValidators');
+    let fieldTypes = this.get('_model.fieldTypes');
 
     let parsingErrors = {};
     let dataIsValid = true;
@@ -475,8 +474,14 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         continue;
       }
 
+      if (readOnlyFields.contains(fieldName)) {
+        continue;
+      }
+
       let text = Ember.get(data, fieldName);
-      let value = fieldParsers[fieldName](text);
+
+      // если поля типа boolean, то его не надо парсить, оно уже в нужном виде. а парсинг его ломает
+      let value = fieldTypes[fieldName] === 'boolean' ? (text || false) : fieldParsers[fieldName](text);
       let valueIsValid = fieldValidators[fieldName](value);
 
       if (valueIsValid) {
@@ -850,7 +855,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       this.set('block', block);
     },
 
-    updateLayer(layer, zoom) {
+    updateLayer(layer, zoom, skipFire) {
       if (Ember.isNone(layer.feature)) {
         Ember.set(layer, 'feature', { type: 'Feature' });
       }
@@ -874,7 +879,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let index = this.get('curIndex');
       this.set(`layers.${index}`, layer);
 
-      layer.fire('create-layer:change', { layer: layer });
+      // Нет смысла обновлять координаты на менее точные, если событие обновления вызвано изменением координат, введенных вручную
+      if (!skipFire) {
+        layer.fire('create-layer:change', { layer: layer });
+      }
+
       this._updateLabels.apply([this, layer]);
 
       if (this.get('dataItemCount') > 1) {
@@ -1058,8 +1067,15 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let e = {
         layers: Object.values(layers),
         layerModel: layerModel,
-        initialFeatureKeys: this.get('dataItems.initialFeatureKeys')
+        initialFeatureKeys: this.get('dataItems.initialFeatureKeys'),
+        editMode: this.get('mode')
       };
+
+      if (!Ember.isNone(initialLayers)) {
+        const mapModelApi = this.get('mapApi').getFromApi('mapModel');
+        const pkField = mapModelApi._getPkField(this.get('layerModel.layerModel'));
+        e.initialFeatureIds = initialLayers.map(l => Ember.get(l, `feature.properties.${pkField}`));
+      }
 
       let saveFailed = () => {
         this.set('loading', false);
@@ -1107,7 +1123,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         this.set('mode', 'Saved');
 
         let _leafletObjectFirst = this.get('layerModel.layerModel._leafletObjectFirst');
-        if (!Ember.isNone(_leafletObjectFirst) && typeof _leafletObjectFirst.setParams  === 'function') {
+        if (!Ember.isNone(_leafletObjectFirst) && typeof _leafletObjectFirst.setParams === 'function') {
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
         this.get('leafletMap').fire('flexberry-map:updateFeatureResultItem', { editedLayer: e.layers[0], layerModel: e.layerModel });

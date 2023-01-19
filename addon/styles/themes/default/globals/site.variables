@@ -26,3 +26,8 @@
 @darkBoxShadow: 0 0 4px @darkbluecolor;
 
 @erroneousFieldColor: #E0B4B4;
+
+@inputBackgroundColor: #F4F7FB;
+@borderColor: #c5c7ca;
+@headerTextColor: #0C49CD;
+@activeItemColor: #3B4256;

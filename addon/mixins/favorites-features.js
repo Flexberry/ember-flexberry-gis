@@ -94,7 +94,6 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     let leafletMap = this.get('leafletMap');
     leafletMap.off('flexberry-map:allLayersLoaded', this.fromIdArrayToFeatureArray, this);
     leafletMap.off('flexberry-map:updateFavorite', this._updateFavorite, this);
-
   },
 
   /**
@@ -145,8 +144,10 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
           });
         }
       } else {
-        let newRecord = { id: generateUniqueId(), objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
+        let objectKey = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(feature.layerModel, { feature });
+        let newRecord = { id: generateUniqueId(), objectKey: objectKey, objectLayerKey: feature.layerModel.id };
         let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', newRecord);
+
         Ember.set(feature.properties, 'favUpdating', true);
         savePromise = record.save().then(() => {
           isFavourite = true;
@@ -242,7 +243,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
   },
 
   /**
-    Adding new featre to leayer model array of features.
+    Adding new feature to leayer model array of features.
 
     @method addNewFeatureToLayerModel
   */
@@ -304,6 +305,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         let featurePromises = this.get('mapApi').getFromApi('mapModel').loadingFeaturesByPackages(item.layerModel.id, item.features);
         promises = promises.concat(featurePromises);
       });
+
       if (!Ember.isBlank(promises)) {
         Ember.RSVP.allSettled(promises).then((res) => {
           let favFeatures = Ember.A();
@@ -313,8 +315,11 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
               let favorites = Ember.A();
               promiseResult.value[2].forEach((layerObject) => {
                 Ember.set(layerObject.feature.properties, 'isFavorite', true);
+                Ember.set(layerObject.feature, 'leafletLayer', layerObject);
+
                 favorites.push(layerObject.feature);
               });
+
               let promiseFeature = null;
               let layerModelIndex = this.isLayerModelInArray(result, promiseResult.value[0]);
               if (layerModelIndex !== -1) {
@@ -322,17 +327,20 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
                 promiseFeature = new Ember.RSVP.Promise((resolve) => {
                   resolve(favorites);
                 });
+
                 result[layerModelIndex].features = promiseFeature;
                 favFeatures[layerModelIndex].features = favorites;
               } else {
                 promiseFeature = new Ember.RSVP.Promise((resolve) => {
                   resolve(favorites);
                 });
+
                 result.addObject({ layerModel: promiseResult.value[0], features: promiseFeature });
                 favFeatures.addObject({ layerModel: promiseResult.value[0], features: favorites });
               }
             }
           });
+
           this.set('result', result);
           this.set('favFeatures', favFeatures);
           this.set('_showFavorites', true);
@@ -354,7 +362,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     let favFeatures = Ember.A();
     let twoObjects = this.get('twoObjectToCompare');
     let updatedLayer = data.layers[0];
-    let idUpdatedFavorite = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(data.layerModel.layerModel, data.layers[0]);
+    let idUpdatedFavorite = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(data.layerModel.layerModel, updatedLayer);
     this.get('favFeatures').forEach((favoriteObject) => {
       let favorites = Ember.A();
       if (favoriteObject.layerModel.id === data.layerModel.layerModel.id) {
@@ -380,6 +388,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         let promiseFeature = new Ember.RSVP.Promise((resolve) => {
           resolve(favorites);
         });
+
         result.addObject({ layerModel: favoriteObject.layerModel, features: promiseFeature });
         favFeatures.addObject({ layerModel: favoriteObject.layerModel, features: favorites });
       } else {
@@ -390,6 +399,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
           promiseFeature = new Ember.RSVP.Promise((resolve) => {
             resolve(favorites);
           });
+
           result[layerModelIndex].features = promiseFeature;
           favFeatures[layerModelIndex].features = favorites;
         } else {
@@ -397,11 +407,13 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
           promiseFeature = new Ember.RSVP.Promise((resolve) => {
             resolve(favorites);
           });
+
           result.addObject({ layerModel: favoriteObject.layerModel, features: promiseFeature });
           favFeatures.addObject({ layerModel: favoriteObject.layerModel, features: favorites });
         }
       }
     });
+
     this.set('result', result);
     this.set('favFeatures', favFeatures);
   }

@@ -66,7 +66,11 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     @type String[]
     @default ['isActive:active']
   */
-  classNameBindings: ['isActive:active', 'feature.highlight:highlight'],
+  classNameBindings: ['isActive:active', 'featureIsHL:highlight'],
+
+  featureIsHL: Ember.computed('highlightable', 'feature.highlight', function () {
+    return this.get('feature.highlight') && this.get('highlightable');
+  }),
 
   /**
     Flag indicates if intersection panel is active.
@@ -175,7 +179,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     @method highlightObserver
     @private
   */
-  highlightObserver: Ember.observer('feature.highlight', function() {
+  highlightObserver: Ember.observer('feature.highlight', function () {
     if (this.feature.highlight) {
       this.feature.leafletLayer.setStyle({
         color: '#3388FF',
@@ -332,7 +336,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     this.set('defaultFeatureStyle', Object.assign({}, feature.leafletLayer.options));
 
     if (feature.geometry && feature.geometry.type &&
-        (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' ||
+      (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' ||
         feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString')) {
       let layerTolerance = feature.layerModel.get('_leafletObject.options.renderer.options');
       if (Ember.isPresent(layerTolerance) && layerTolerance === 0) {
@@ -382,6 +386,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
 
     this.set('activeScroll', false);
   },
+
   actions: {
     /**
       Highlight feature-result-items
@@ -400,7 +405,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       // The layer-result-list component has a zoomToAll option
       // that causes the feature.highlight state to change, which is not correct.
       let selectedAllFeaturesInResult = !this.get('resultObject.features').find(e => e.highlight === false) &&
-                                        this.get('resultObject.features.length') > 1 ? true : false;
+        this.get('resultObject.features.length') > 1 ? true : false;
 
       // We can turn off the highlight if there was only one previous highlighted element
       Ember.set(clickedFeature, 'highlight', selectedAllFeaturesInResult ? true : !clickedFeature.highlight);
@@ -425,6 +430,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       let elements = component.getElementsByClassName('more submenu hidden');
       openCloseSubmenu(this, moreButton, elements, 4, 0);
     },
+
     /**
       Performs row editing.
 
@@ -521,7 +527,10 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       @method actions.panTo
      */
     panTo() {
-      this.send('highlightFeature', this.get('feature'), false);
+      if (this.get('highlightable')) {
+        this.send('highlightFeature', this.get('feature'), false);
+      }
+
       this.sendAction('panTo', this.get('feature'));
     },
 
@@ -530,9 +539,13 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       @method actions.zoomTo
      */
     zoomTo() {
-      this.send('highlightFeature', this.get('feature'), false);
-      let { bounds, leafletMap, minZoom, maxZoom } = this.getLayerPropsForZoom();
-      zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
+      if (this.get('highlightable')) {
+        this.send('highlightFeature', this.get('feature'), false);
+        let { bounds, leafletMap, minZoom, maxZoom } = this.getLayerPropsForZoom();
+        zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
+      } else {
+        this.sendAction('zoomTo', this.get('feature'));
+      }
     },
 
     /**
@@ -573,6 +586,15 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     findIntersection() {
       this.set('isSubmenu', false);
       this.sendAction('findIntersection', this.get('feature'));
+    },
+
+    /**
+     * Action for search satellites
+     * @method actions.findIntersection
+     */
+    searchSatellites() {
+      this.set('isSubmenu', false);
+      this.sendAction('searchSatellites', this.get('feature'));
     },
 
     /**
@@ -628,7 +650,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       Object.keys(editedLayer.feature.properties).forEach(attribute => {
         Ember.set(feature.properties, attribute, editedLayer.feature.properties[attribute]);
       });
-      Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature, resultObject.settings, resultObject.dateFormat));
+      Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature, resultObject.settings, resultObject.dateFormat,  resultObject.dateTimeFormat, resultObject.layerModel));
       feature.leafletLayer.setLatLngs(editedLayer.getLatLngs()) // Update feature geometry
       this.rerender(); // force component re-render to recalculate #each-in helper
     };

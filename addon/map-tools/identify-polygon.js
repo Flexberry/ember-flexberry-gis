@@ -18,7 +18,7 @@ export default IdentifyMapTool.extend({
     @param {Object} e Event object.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#polygon">L.Polygon</a>} e.layer Drawn polygon layer.
   */
-  _drawingDidEnd({ layer }) {
+  _additionalDrawingDidEnd(layer) {
     this._super(...arguments);
 
     layer.disableEdit();
