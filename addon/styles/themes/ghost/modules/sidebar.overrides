@@ -687,6 +687,11 @@
   .compare-geometries-panel > div,
   .bottom-compare-panel {
     height: 100%;
+
+    .result-toolbar a i {
+      font-size: 16px;
+      color: @activeItemColor;
+    }
   }
   .compare-main-panel {
     height: ~"calc(100% - 30px)";
@@ -888,7 +893,7 @@
 
       .icon-guideline-cross-r {
         font-size: 18px;
-        color: #848E99;
+        color: @blueyGreyColor;
       }
 
       .icon {
@@ -941,7 +946,7 @@
   .layer-result-list {
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 20px 20px 60px 20px;
+    padding: 0 20px 60px 20px;
     height: ~"calc(100% - 35px)" !important;
   }
 }
@@ -957,8 +962,8 @@
   .layer-result-list {
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 20px 20px 60px 20px;
-    height: ~"calc(100% - 140px)" !important;
+    padding: 0 20px 60px 20px;
+    height: ~"calc(100vh - 240px)" !important;
     &.buffer {
       height: ~"calc(100% - 260px)" !important;
     }
@@ -977,7 +982,7 @@
 .ui.right.sidebar {
   .ui.tab.identify, .ui.tab.search {
     h3 {
-      margin: 40px 30px 15px 30px;
+      margin: 20px 20px 11px 20px;
     }
   }
 }
@@ -1009,7 +1014,7 @@
     }
   }
   .all-layers {
-    color: #848E99;
+    color: @blueyGreyColor;
   }
   .ui.icon.close {
     float: right;

@@ -12,5 +12,7 @@ export default {
   'cords': 'Coordinates',
   'x':'X',
   'y':'Y',
-  'select2': 'Select 2 objects'
+  'select2': 'Select 2 objects',
+  'first-object-display-value': 'Object 1',
+  'second-object-display-value': 'Object 2'
 };
