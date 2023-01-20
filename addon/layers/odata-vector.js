@@ -54,12 +54,7 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
       modelName: undefined,
       projectionName: undefined,
       geometryField: 'geometry',
-      geometryType: 'PolygonPropertyType',
-      displaySettings: {
-        featuresPropertiesSettings: {
-          excludedProperties: Ember.A(['shape', 'isFavorite'])
-        }
-      }
+      geometryType: 'PolygonPropertyType'
     });
     Ember.set(settings, 'searchSettings', this.createSearchSettings());
     return settings;
@@ -84,9 +79,10 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
     let fields = Ember.A();
     this.set('crs', leafletObject.options.crs);
 
+    const geometryField = leafletObject.geometryField;
+
     props.forEach((key) => {
       let prop = projection.attributes[key];
-      const geometryField = leafletObject.geometryField;
       if (!prop.options.hidden && key !== geometryField) {
         fields.addObject(key);
       }

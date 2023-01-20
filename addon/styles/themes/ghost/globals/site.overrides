@@ -89,21 +89,17 @@
     padding-top: 20px;
 }
 .flexberry-dropdown.multi-dropdown.selection {
-    & > i.close.icon {
-        margin-right: 0px;
-        right: 6px;
+    & > .icon-guideline-cross-r {
         position: absolute;
-        top: 3px;
-        line-height: 1;
-        width: auto;
-        height: auto;
-        &:before {
-            content: "\e90e";
-        }
+        right: 6px;
+        top: 6px;
+        font-size: 18px;
+        color: @blueyGreyColor;
     }
     & > i.dropdown.icon {
         margin-right: 16px;
         font-size: 20px;
+        padding: 6px;
     }
     .item .flexberry-checkbox.ui.checkbox {
         width: 100%;

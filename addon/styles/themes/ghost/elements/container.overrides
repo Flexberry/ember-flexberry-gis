@@ -650,7 +650,7 @@ div.bottompanel-wrapper {
           border: none;
           .button {
             font-size: 18px;
-            color: #848E99!important;
+            color: @blueyGreyColor !important;
             border: none;
             &:first-child {
               padding-left: 0.3125em!important;
