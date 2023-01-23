@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import TileLayer from './tile-layer';
+import { begIndex } from '../base-vector-layer';
 
 /**
   WMS layer component for leaflet map.
@@ -133,5 +134,29 @@ export default TileLayer.extend({
   */
   search(e) {
     // Wms-layers hasn't any search logic.
-  }
+  },
+
+  /**
+    Sets leaflet layer's zindex.
+
+    @method _setLayerZIndex
+    @private
+  */
+  _setLayerZIndex(leafletLayer) {
+    if (!leafletLayer) {
+      leafletLayer = this.get('_leafletObject');
+    }
+
+    if (Ember.isNone(leafletLayer)) {
+      return;
+    }
+
+    const setZIndexFunc = Ember.get(leafletLayer, 'setZIndex');
+    if (Ember.typeOf(setZIndexFunc) !== 'function') {
+      return;
+    }
+
+    const index = this.get('index');
+    leafletLayer.setZIndex(index + begIndex);
+  },
 });
