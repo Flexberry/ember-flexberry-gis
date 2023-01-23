@@ -6,8 +6,7 @@ import { translationMacro as t } from 'ember-i18n';
 const {
   observer,
   A,
-  on,
-  $
+  on
 } = Ember;
 
 export default FlexberryDropdown.extend({

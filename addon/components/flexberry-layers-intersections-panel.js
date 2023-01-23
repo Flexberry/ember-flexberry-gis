@@ -51,8 +51,7 @@ export default Ember.Component.extend({
   */
   leafletMap: null,
 
-
-   /**
+  /**
     Observer for leafletMap property adding layer with results.
 
     @property _OnMapChanged
@@ -472,7 +471,7 @@ export default Ember.Component.extend({
       this.childViews[0].get('state').setEach('isVisible', false);
     }
 
-    this.send("clearSelected");
+    this.send('clearSelected');
   },
 
   /**
