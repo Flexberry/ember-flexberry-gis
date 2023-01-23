@@ -8,6 +8,7 @@ export default {
   'load-button-caption': 'Загрузить из файла',
   'check-all-title': 'Выбрать все',
   'uncheck-all-title': 'Снять выделение',
+  'coordinates-auto': 'Определить автоматически',
   'import-error': {
     'caption': 'Во время импорта произошла ошибка',
     'message': 'Сервер недоступен или импортируемый файл некорректен'

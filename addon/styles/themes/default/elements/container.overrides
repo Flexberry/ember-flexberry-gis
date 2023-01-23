@@ -636,7 +636,7 @@
         padding: 0 10px;
         line-height: 30px;
         &.active {
-          color: #3B4256;
+          color: @activeItemColor;
           font-weight: normal;
         }
       }
@@ -904,6 +904,7 @@ div.measure-drag-panel {
     left: 62px;
   }
   .feature-result-item-title {
+    height: 40px;
     position: relative;
     .ui.checkbox {
       margin: auto 0;

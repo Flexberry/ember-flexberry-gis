@@ -3,7 +3,7 @@ import layout from '../templates/components/flexberry-identify-file';
 import MapModelApiExpansionMixin from '../mixins/flexberry-map-model-api-expansion';
 import { getLeafletCrs } from '../utils/leaflet-crs';
 import { translationMacro as t } from 'ember-i18n';
-import {availableCoordinateReferenceSystemsCodesWithCaptions} from '../utils/available-coordinate-reference-systems-codes';
+import { availableCoordinateReferenceSystemsCodesWithCaptions } from '../utils/available-coordinate-reference-systems-for-dropdown';
 
 export default Ember.Component.extend(MapModelApiExpansionMixin, {
   layout,
@@ -31,9 +31,9 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
   */
   _errorMessage: undefined,
 
-  systemCoordinates: availableCoordinateReferenceSystemsCodesWithCaptions(),
+  systemCoordinates: null,
 
-  coordinate: 'Определить автоматически',
+  coordinate: null,
 
   importErrorCaption: t('components.geometry-add-modes.import.import-error.caption'),
 
@@ -43,22 +43,26 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
 
   emptyErrorMessage: t('components.geometry-add-modes.import.empty-error.message'),
 
+  didInsertElement() {
+    this._super(...arguments);
+    this.set('systemCoordinates', this.get('systemCoordinates') || availableCoordinateReferenceSystemsCodesWithCaptions(this));
+    this.set('coordinate', this.get('coordinate') || this.get('i18n').t('components.geometry-add-modes.import.coordinates-auto').string);
+  },
+
   getCoordinate() {
-    return Object.keys(this.systemCoordinates).find(key => this.systemCoordinates[key] === this.coordinate);
+    return Object.keys(this.get('systemCoordinates')).find(key => this.get(`systemCoordinates.${key}`) === this.get('coordinate'));
   },
 
   setCoordinate(name) {
-    let key = Object.keys(this.systemCoordinates).find(key => key === name);
+    let key = Object.keys(this.get('systemCoordinates')).find(key => key === name);
     this.set('coordinate', this.systemCoordinates[key]);
   },
 
-  createLayer(response) {
-    let crs = getLeafletCrs('{ "code": "' + this.getCoordinate() + '", "definition": "" }', this);
+  _createLayer(response, crs) {
     let coordsToLatLng = function (coords) {
       return crs.unproject(L.point(coords));
     };
 
-    let mapModel = this.get('mapApi').getFromApi('mapModel');
     response.features.forEach(element => {
       element.crs = {
         properties: {
@@ -67,7 +71,7 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
       };
     });
 
-    let multiFeature = mapModel.createMulti(response.features, true);
+    let multiFeature = this.createMulti(response.features, true);
     let leafletLayer = L.geoJSON(multiFeature, {
       coordsToLatLng: coordsToLatLng.bind(this), style: {
         color: this.get('layerColor'),
@@ -75,6 +79,11 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
     }).getLayers();
 
     return leafletLayer[0];
+  },
+
+  createLayer(response) {
+    let crs = getLeafletCrs('{ "code": "' + this.getCoordinate() + '", "definition": "" }', this);
+    return this._createLayer(response, crs);
   },
 
   validateFileAndGetFeatures() {

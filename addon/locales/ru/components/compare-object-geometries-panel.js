@@ -12,5 +12,7 @@ export default {
   'cords': 'Координаты',
   'x':'X',
   'y':'Y',
-  'select2': 'Выберите 2 объекта'
+  'select2': 'Выберите 2 объекта',
+  'first-object-display-value': 'Объект 1',
+  'second-object-display-value': 'Объект 2'
 };

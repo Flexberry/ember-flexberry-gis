@@ -8,5 +8,6 @@ export default {
   'select-object-caption': 'Go to object',
   'action-object-caption': 'Go action',
   'find-intersection-caption': 'Search intersections',
-  'edit-caption': 'Edit object'
+  'edit-caption': 'Edit object',
+  'search-satellite': 'Search satellites',
 };

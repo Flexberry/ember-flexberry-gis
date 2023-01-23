@@ -179,6 +179,12 @@ div.measure-drag-panel {
   padding: 0px 30px !important;
   margin-bottom: 10px;
 
+  .flexberry-dropdown-button {
+    &.ml-20 {
+      margin-left: 20px;
+    }
+  }
+
   .flexberry-identify-panel-tools-options,
   .flexberry-identify-panel-layers-options,
   .flexberry-identify-panel-options {
@@ -644,7 +650,7 @@ div.bottompanel-wrapper {
           border: none;
           .button {
             font-size: 18px;
-            color: #848E99!important;
+            color: @blueyGreyColor !important;
             border: none;
             &:first-child {
               padding-left: 0.3125em!important;

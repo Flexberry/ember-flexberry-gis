@@ -18,7 +18,7 @@ export default IdentifyMapTool.extend({
     @param {Object} e Event object.
     @param {<a href="https://leafletjs.com/reference-1.3.0.html#point">L.Point</a>} e.layer Drawn marker layer.
   */
-  _drawingDidEnd({ layer }) {
+  _additionalDrawingDidEnd(layer) {
     this._super(...arguments);
 
     layer.disableEdit();

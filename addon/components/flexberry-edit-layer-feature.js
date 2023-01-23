@@ -326,10 +326,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           continue;
         }
 
-        if (Ember.get(leafletObject, 'readFormat.excludedProperties').includes(propertyName.toLowerCase())) {
-          continue;
-        }
-
         let propertyCaption = Ember.get(localizedProperties, propertyName);
 
         result[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;
@@ -347,6 +343,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       fieldTypes: Ember.get(leafletObject, 'readFormat.featureType.fieldTypes'),
       fieldParsers: Ember.get(leafletObject, 'readFormat.featureType.fields'),
       fieldValidators: Ember.get(leafletObject, 'readFormat.featureType.fieldValidators'),
+      readOnlyFields: Ember.get(leafletObject, 'readFormat.excludedProperties'),
       fieldNames: getHeader()
     };
   }),
@@ -455,8 +452,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   */
   parseData(index, data) {
     let fieldNames = this.get('_model.fieldNames');
+    let readOnlyFields = this.get('_model.readOnlyFields');
     let fieldParsers = this.get('_model.fieldParsers');
     let fieldValidators = this.get('_model.fieldValidators');
+    let fieldTypes = this.get('_model.fieldTypes');
 
     let parsingErrors = {};
     let dataIsValid = true;
@@ -466,8 +465,14 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         continue;
       }
 
+      if (readOnlyFields.contains(fieldName)) {
+        continue;
+      }
+
       let text = Ember.get(data, fieldName);
-      let value = fieldParsers[fieldName](text);
+
+      // если поля типа boolean, то его не надо парсить, оно уже в нужном виде. а парсинг его ломает
+      let value = fieldTypes[fieldName] === 'boolean' ? (text || false) : fieldParsers[fieldName](text);
       let valueIsValid = fieldValidators[fieldName](value);
 
       if (valueIsValid) {

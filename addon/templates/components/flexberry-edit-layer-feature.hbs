@@ -152,18 +152,18 @@
               type="date"
               value=(mut (get dataValue fieldName))
               placeholder=placeholderDataPicker
-              readonly=isPropertiesReadonly
+              readonly=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
             }}
           {{else if (eq (get _model.fieldTypes fieldName) "boolean")}}
             {{flexberry-checkbox
               value=(mut (get dataValue fieldName))
-              readonly=isPropertiesReadonly
+              readonly=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
             }}
           {{else}}
             {{input
               type="text"
               value=(mut (get dataValue fieldName))
-              disabled=isPropertiesReadonly
+              disabled=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
             }}
           {{/if}}
           {{#if (get (get parsingErrors (concat '' curIndex)) fieldName)}}

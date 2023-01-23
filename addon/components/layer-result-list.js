@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/layer-result-list';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
+import moment from 'moment';
 
 // Url key used to identify transitions from ember-flexberry-gis on other resources.
 const isMapLimitKey = 'GISLinked';
@@ -258,6 +259,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     /**
+     * Search satellite action
+     * @param feature
+     */
+    searchSatellites(feature) {
+      this.sendAction('showSatellitePanel', feature);
+    },
+
+    /**
       Action adds feature to favorites.
 
       @method actions.findIntersection
@@ -401,75 +410,119 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     let displayResults = Ember.A();
 
+    let promises = Ember.A();
+
     // Prepare results format for template.
     results.forEach((result) => {
       if (Ember.isBlank(result.features)) {
         return;
       }
 
-      result.features.then(
-        (features) => {
-          if (features.length > 0) {
+      const layerModel = Ember.get(result, 'layerModel');
 
-            let intersectArray = features.filter((item) => {
-              item.isIntersect = false;
-              if (!Ember.isNone(item.intersection)) {
-                item.isIntersect = true;
-              }
+      let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
+      let attrPromise = !Ember.isNone(getAttributesOptions) ? getAttributesOptions(this.get('source')) : new Ember.RSVP.resolve();
 
-              return !Ember.isNone(item.intersection);
-            });
+      promises.pushObject(
+        attrPromise.then(({ settings }) => {
+          return result.features.then((features) => {
+            if (features.length > 0) {
 
-            let isIntersect = false;
-            if (!Ember.isEmpty(intersectArray)) {
-              isIntersect = true;
-            }
-
-            const hasListFormFunc = this.get('mapApi').getFromApi('hasListForm');
-            const layerModel = Ember.get(result, 'layerModel');
-            let hasListForm;
-            if (typeof hasListFormFunc === 'function') {
-              hasListForm = hasListFormFunc(layerModel.id);
-            }
-
-            let layerIds = Ember.A();
-            if (hasListForm) {
-              layerIds = Ember.A(features).map(feature => {
-                const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
-                if (typeof getLayerFeatureIdFunc === 'function') {
-                  return getLayerFeatureIdFunc(layerModel, feature.leafletLayer);
+              let intersectArray = features.filter((item) => {
+                item.isIntersect = false;
+                if (!Ember.isNone(item.intersection)) {
+                  item.isIntersect = true;
                 }
 
-                return Ember.get(feature, 'id');
+                return !Ember.isNone(item.intersection);
               });
+
+              let isIntersect = false;
+              if (!Ember.isEmpty(intersectArray)) {
+                isIntersect = true;
+              }
+
+              const hasListFormFunc = this.get('mapApi').getFromApi('hasListForm');
+
+              let hasListForm;
+              if (typeof hasListFormFunc === 'function') {
+                hasListForm = hasListFormFunc(layerModel.id);
+              }
+
+              let layerIds = Ember.A();
+              if (hasListForm) {
+                layerIds = Ember.A(features).map(feature => {
+                  const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
+                  if (typeof getLayerFeatureIdFunc === 'function') {
+                    return getLayerFeatureIdFunc(layerModel, feature.leafletLayer);
+                  }
+
+                  return Ember.get(feature, 'id');
+                });
+              }
+
+              let featuresPropertiesSettings = JSON.parse(JSON.stringify(Ember.get(layerModel, 'settingsAsObject.displaySettings.featuresPropertiesSettings')));
+              featuresPropertiesSettings = Ember.$.extend(featuresPropertiesSettings, settings);
+
+              let displayResult = {
+                name: Ember.get(layerModel, 'name') || '',
+                settings: featuresPropertiesSettings,
+                displayProperties: Ember.get(featuresPropertiesSettings, 'displayProperty'),
+                listForms: Ember.A(),
+                editForms: Ember.A(),
+                features: this.get('maxResultsCount') ? Ember.A(features).slice(0, this.get('maxResultsCount')) : Ember.A(features),
+                maxResultsLimitOverage: this.get('maxResultsCount') && features.length > this.get('maxResultsCount') ? true : false,
+                highlight: false,
+                expanded: features.length === 1,
+                layerModel: layerModel,
+                hasListForm: hasListForm,
+                layerIds: layerIds,
+                dateFormat: Ember.get(layerModel, 'settingsAsObject.displaySettings.dateFormat'),
+                dateTimeFormat: Ember.get(layerModel, 'settingsAsObject.displaySettings.dateTimeFormat'),
+                isIntersect: isIntersect
+              };
+
+              this._processLayerLinkForDisplayResults(result, displayResult);
+              displayResults.pushObject(displayResult);
             }
-
-            let displayResult = {
-              name: Ember.get(layerModel, 'name') || '',
-              settings: Ember.get(layerModel, 'settingsAsObject.displaySettings.featuresPropertiesSettings'),
-              displayProperties: Ember.get(layerModel, 'settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty'),
-              listForms: Ember.A(),
-              editForms: Ember.A(),
-              features: this.get('maxResultsCount') ? Ember.A(features).slice(0, this.get('maxResultsCount')) : Ember.A(features),
-              maxResultsLimitOverage: this.get('maxResultsCount') && features.length > this.get('maxResultsCount') ? true : false,
-              highlight: false,
-              expanded: features.length === 1,
-              layerModel: layerModel,
-              hasListForm: hasListForm,
-              layerIds: layerIds,
-              dateFormat: Ember.get(layerModel, 'settingsAsObject.displaySettings.dateFormat'),
-              isIntersect: isIntersect
-            };
-
-            this._processLayerLinkForDisplayResults(result, displayResult);
-            displayResults.pushObject(displayResult);
           }
-        }
-      );
+          );
+        }));
     });
-    let getFeatureDisplayProperty = (feature, featuresPropertiesSettings, dateFormat) => {
+
+    let getFeatureDisplayProperty = (feature, featuresPropertiesSettings, dateFormat, dateTimeFormat, layerModel) => {
       let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
       let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
+
+      let featureProperties = Ember.get(feature, 'properties') || {};
+      let fieldTypes = layerModel.get('_leafletObject.readFormat.featureType.fieldTypes');
+
+      for (var prop in featureProperties) {
+        let type = fieldTypes ? fieldTypes[prop] : null;
+        let value = featureProperties[prop];
+        if ((type && type === 'date') && !Ember.isNone(value) && !Ember.isEmpty(value) &&
+          (!Ember.isEmpty(dateFormat) || !Ember.isEmpty(dateTimeFormat))) {
+          if (!Ember.isEmpty(dateTimeFormat)) {
+            let dateValue = moment(value);
+            featureProperties[prop] = (dateValue.utc().format('HH:mm:ss') === '00:00:00') ?
+              moment(value).format(dateFormat) :
+              moment(value).format(dateTimeFormat);
+          } else {
+            featureProperties[prop] = moment(value).format(dateFormat);
+          }
+        }
+
+        if (type && type === 'boolean') {
+          let i18n = this.get('i18n');
+          let yes = i18n.t('components.layer-result-list.boolean.yes');
+          let no = i18n.t('components.layer-result-list.boolean.no');
+          if (typeof (value) === 'boolean') {
+            featureProperties[prop] = (value) ? yes : no;
+          } else {
+            featureProperties[prop] = (value === 'true') ? yes : no;
+          }
+        }
+      }
 
       if (!Ember.isArray(displayProperty) && !displayPropertyIsCallback) {
         return '';
@@ -480,14 +533,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       if (!displayPropertyIsCallback) {
-        let featureProperties = Ember.get(feature, 'properties') || {};
-
-        for (var prop in featureProperties) {
-          let value = featureProperties[prop];
-          if (value instanceof Date && !Ember.isNone(value) && !Ember.isEmpty(value) && !Ember.isEmpty(dateFormat)) {
-            featureProperties[prop] = moment(value).format(dateFormat);
-          }
-        }
 
         let displayValue = Ember.none;
         displayProperty.forEach((prop) => {
@@ -510,10 +555,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       return calculateDisplayProperty(feature);
     };
-
-    let promises = results.map((result) => {
-      return result.features;
-    });
 
     let store = this.get('store');
     store.findAll('i-i-s-r-g-i-s-p-k-favorite-features').then((idsFavorite) => {
@@ -558,7 +599,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               Ember.set(feature, 'properties.isFavorite', !Ember.isNone(idsFavorite.find((favoriteFeature) =>
                 Ember.get(favoriteFeature, 'objectKey') === Ember.get(feature, 'properties.primarykey') &&
                 Ember.get(favoriteFeature, 'objectLayerKey') === Ember.get(feature, 'layerModel.id'))));
-              Ember.set(feature, 'displayValue', getFeatureDisplayProperty(feature, result.settings, result.dateFormat));
+              Ember.set(feature, 'displayValue',
+                getFeatureDisplayProperty(feature, result.settings, result.dateFormat, result.dateTimeFormat, result.layerModel));
               Ember.set(feature, 'editForms', Ember.A());
               if (editForms.length === 0) {
                 return;

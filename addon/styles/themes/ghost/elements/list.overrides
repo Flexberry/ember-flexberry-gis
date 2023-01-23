@@ -86,17 +86,12 @@
   }
 
   .flexberry-toggler-content {
-    .item:not(.icon):first-child {
-      .feature-result-item-title {
-        padding-top: 12px;
-      }
-    }
 
     .item:not(.icon).feature-result-item.highlight {
       background: @highlightBackgroundColor;
       margin-left: -50px;
-      width: 500px;
-      padding-left: 50px;
+      width: 378px;
+      padding: 0 1em 0 50px;
     }
 
     .item:not(.icon):last-child{
@@ -108,7 +103,6 @@
       margin: 0;
 
       .feature-result-item-title {
-        padding-top: 13px;
         align-items: center;
         .highlight {
           color:#0061D9;
@@ -124,14 +118,12 @@
         .feature-result-item-toolbar {
           z-index: 100;
           height: 100%;
-          top: 8px;
-          left: 22px;
+          top: 0;
+          left: 28px;
           align-items: center;
+          gap: 4px;
           [class^="icon-guideline-"] {
             margin-right: 4px;
-          }
-          > a.icon.item {
-            padding: 5px;
           }
           a.icon.item.more {
             color: @textColor;
@@ -212,6 +204,7 @@
       }
     }
     .feature-result-item-content {
+      padding-bottom: 8px;
       .feature-div-property-name:first-child {
         padding-top: 6px;
       }
