@@ -19867,7 +19867,7 @@
         {
             "file": "addon/components/legends/wms-legend.js",
             "line": 17,
-            "description": "Height for GetLegendImage query (JSON)",
+            "description": "Default scale options (height and width) for GetLegendGraphic query (JSON)",
             "class": "WmsLegendComponent",
             "module": "ember-flexberry-gis"
         },
@@ -29651,7 +29651,7 @@
             "line": 150,
             "description": "Layer contains non/intersection features.",
             "itemtype": "property",
-            "name": "resultsLayer",
+            "name": "featuresLayer",
             "type": "Object",
             "default": "null",
             "class": "DivControlComponent",
@@ -29735,7 +29735,7 @@
             "line": 269,
             "description": "Convert feature coordinate.",
             "itemtype": "method",
-            "name": "actions.zoomToIntersection",
+            "name": "actions._convertGeometryToFeatureLayer",
             "params": [
                 {
                     "name": "geometry",
@@ -34012,7 +34012,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 37,
+            "line": 36,
             "description": "List vector layers.",
             "itemtype": "property",
             "name": "vectorLayers",
@@ -34023,7 +34023,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 46,
+            "line": 45,
             "description": "Leaflet map object for zoom and pan.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -34034,7 +34034,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 55,
+            "line": 54,
             "description": "Observer for leafletMap property adding layer with results.",
             "itemtype": "property",
             "name": "_OnMapChanged",
@@ -34046,7 +34046,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 68,
+            "line": 67,
             "description": "Flag indicates if there are any results of intersection.",
             "itemtype": "property",
             "name": "noIntersectionResults",
@@ -34057,7 +34057,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 77,
+            "line": 76,
             "description": "intersection area over which to look.",
             "itemtype": "property",
             "name": "square",
@@ -34068,7 +34068,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 86,
+            "line": 85,
             "description": "Buffer radius in selected units.",
             "itemtype": "property",
             "name": "bufferR",
@@ -34079,7 +34079,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 95,
+            "line": 94,
             "description": "List of selected vector layers.",
             "itemtype": "property",
             "name": "selectedLayers",
@@ -34090,7 +34090,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 104,
+            "line": 103,
             "description": "List of intersection results.",
             "itemtype": "property",
             "name": "results",
@@ -34101,7 +34101,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 113,
+            "line": 112,
             "description": "Selected feature.",
             "itemtype": "property",
             "name": "feature",
@@ -34112,7 +34112,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 122,
+            "line": 121,
             "description": "Flag indicates if panel is folded.",
             "itemtype": "property",
             "name": "folded",
@@ -34123,7 +34123,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 131,
+            "line": 130,
             "description": "Injected ember storage.",
             "itemtype": "property",
             "name": "store",
@@ -34133,7 +34133,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 139,
+            "line": 138,
             "description": "Injected map Api.",
             "itemtype": "property",
             "name": "mapApi",
@@ -34143,7 +34143,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 147,
+            "line": 146,
             "description": "Observer for feature. If changed=> clear form.",
             "itemtype": "property",
             "name": "_OnMapChanged",
@@ -34155,7 +34155,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 167,
+            "line": 166,
             "description": "loads layers into a list to search for intersections. Casts the tree structure to a list.",
             "itemtype": "method",
             "name": "loadIntersectionLayers",
@@ -34175,14 +34175,14 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 198,
+            "line": 197,
             "description": "Initializes component.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 207,
+            "line": 206,
             "description": "Handles click on a button.",
             "itemtype": "method",
             "name": "actions.findIntersections",
@@ -34191,7 +34191,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 265,
+            "line": 264,
             "description": "Handles click on a close button.",
             "itemtype": "method",
             "name": "actions.findIntersections",
@@ -34200,7 +34200,16 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 275,
+            "line": 274,
+            "description": "Clear selected layers.\nAlso handles closeAll event from select-with-checkbox component.",
+            "itemtype": "method",
+            "name": "actions.clearSelected",
+            "class": "FlexberryLayersAttributesPanelComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-layers-intersections-panel.js",
+            "line": 287,
             "description": "Handles click on tab.",
             "itemtype": "method",
             "name": "actions.hidePanel",
@@ -34209,7 +34218,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 284,
+            "line": 296,
             "description": "Handles click on zoom icon.",
             "itemtype": "method",
             "name": "actions.hidePanel",
@@ -34225,7 +34234,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 299,
+            "line": 311,
             "description": "Handles input limit.",
             "itemtype": "method",
             "name": "actions.inputLimit",
@@ -34234,7 +34243,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 311,
+            "line": 323,
             "description": "Starts identification by array of satisfying layers inside given polygon area.",
             "itemtype": "method",
             "name": "_startIdentification",
@@ -34274,7 +34283,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 379,
+            "line": 391,
             "description": "Finishes identification.",
             "itemtype": "method",
             "name": "_finishIdentification",
@@ -34323,7 +34332,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 442,
+            "line": 454,
             "description": "Cleaning after changing feature.",
             "itemtype": "method",
             "name": "clearPanel",
@@ -34332,7 +34341,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 468,
+            "line": 477,
             "description": "Removing layers with identification results.",
             "itemtype": "method",
             "name": "removeLayers",
@@ -34341,7 +34350,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 486,
+            "line": 495,
             "description": "Searching intersections.",
             "itemtype": "method",
             "name": "_findIntersections",
@@ -39923,21 +39932,39 @@
         },
         {
             "file": "addon/components/select-with-checkbox.js",
-            "line": 14,
+            "line": 13,
             "description": "Reference to component's template.",
             "class": "SpatialBookmarkComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/select-with-checkbox.js",
-            "line": 21,
+            "line": 20,
             "description": "Search for occurrences in the entire text (SemanticUI settings).",
             "class": "SpatialBookmarkComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/select-with-checkbox.js",
-            "line": 28,
+            "line": 25,
+            "description": "When using search selection specifies how to match values.\n<both> matches against text and value\n<value> matches against value only\n<text> matches against text only",
+            "type": "String",
+            "default": "'text'",
+            "class": "SpatialBookmarkComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/select-with-checkbox.js",
+            "line": 35,
+            "description": "flag indicates to add \"selection\" subclass to \"multi-dropdown\"\nthat forces element selection on opening, scroll goes down to first menu element.",
+            "type": "Boolean",
+            "default": "true",
+            "class": "SpatialBookmarkComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/select-with-checkbox.js",
+            "line": 45,
             "description": "Minimum number of characters to search",
             "itemtype": "property",
             "name": "minCharacters",
@@ -39948,7 +39975,7 @@
         },
         {
             "file": "addon/components/select-with-checkbox.js",
-            "line": 47,
+            "line": 64,
             "description": "Storage for the items state.",
             "example": [
                 "\n```javascript\n[\n  {\n    key: '2e46cce0-b9fa-4b34-b417-4bd600a89c5d',\n    value: 'Подтверждена',\n    isVisible: false\n  },\n  ...\n]\n```"
@@ -39958,7 +39985,7 @@
         },
         {
             "file": "addon/components/select-with-checkbox.js",
-            "line": 63,
+            "line": 80,
             "description": "Flag indicates whether is array consists of objects or not.",
             "itemtype": "property",
             "name": "isObject",
@@ -39969,7 +39996,7 @@
         },
         {
             "file": "addon/components/select-with-checkbox.js",
-            "line": 72,
+            "line": 89,
             "description": "Array with selected dropdown items.",
             "itemtype": "property",
             "name": "selectedItems",
@@ -39980,7 +40007,7 @@
         },
         {
             "file": "addon/components/select-with-checkbox.js",
-            "line": 81,
+            "line": 98,
             "description": "Count selected items.",
             "itemtype": "property",
             "name": "countChoose",
@@ -39991,7 +40018,7 @@
         },
         {
             "file": "addon/components/select-with-checkbox.js",
-            "line": 90,
+            "line": 107,
             "description": "Classname.",
             "itemtype": "property",
             "name": "selectorName",
@@ -53265,7 +53292,7 @@
             "line": " addon/components/legends/wms-legend.js:12"
         },
         {
-            "message": "Missing item type\nHeight for GetLegendImage query (JSON)",
+            "message": "Missing item type\nDefault scale options (height and width) for GetLegendGraphic query (JSON)",
             "line": " addon/components/legends/wms-legend.js:17"
         },
         {
@@ -53986,7 +54013,7 @@
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/flexberry-layers-intersections-panel.js:198"
+            "line": " addon/components/flexberry-layers-intersections-panel.js:197"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -54210,15 +54237,23 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/select-with-checkbox.js:14"
+            "line": " addon/components/select-with-checkbox.js:13"
         },
         {
             "message": "Missing item type\nSearch for occurrences in the entire text (SemanticUI settings).",
-            "line": " addon/components/select-with-checkbox.js:21"
+            "line": " addon/components/select-with-checkbox.js:20"
+        },
+        {
+            "message": "Missing item type\nWhen using search selection specifies how to match values.\n<both> matches against text and value\n<value> matches against value only\n<text> matches against text only",
+            "line": " addon/components/select-with-checkbox.js:25"
+        },
+        {
+            "message": "Missing item type\nflag indicates to add \"selection\" subclass to \"multi-dropdown\"\nthat forces element selection on opening, scroll goes down to first menu element.",
+            "line": " addon/components/select-with-checkbox.js:35"
         },
         {
             "message": "Missing item type\nStorage for the items state.",
-            "line": " addon/components/select-with-checkbox.js:47"
+            "line": " addon/components/select-with-checkbox.js:64"
         },
         {
             "message": "Missing item type\nValidation settings",

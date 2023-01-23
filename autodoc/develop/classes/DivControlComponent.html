@@ -458,6 +458,10 @@
 
                             </li>
                             <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_actions._convertGeometryToFeatureLayer" data-tablink="actions._convertGeometryToFeatureLayer">actions._convertGeometryToFeatureLayer</a>
+
+                            </li>
+                            <li class="index-item method">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_actions.findIntersections" data-tablink="actions.findIntersections">actions.findIntersections</a>
 
                             </li>
@@ -467,10 +471,6 @@
                             </li>
                             <li class="index-item method">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_actions.panToIntersection" data-tablink="actions.panToIntersection">actions.panToIntersection</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#" data-tabid="#methods" data-anchor="#method_actions.zoomToIntersection" data-tablink="actions.zoomToIntersection">actions.zoomToIntersection</a>
 
                             </li>
                             <li class="index-item method">
@@ -533,6 +533,10 @@
 
                             </li>
                             <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_featuresLayer" data-tablink="featuresLayer">featuresLayer</a>
+
+                            </li>
+                            <li class="index-item property">
                                 <a href="#" data-tabid="#properties" data-anchor="#property_firstObject" data-tablink="firstObject">firstObject</a>
 
                             </li>
@@ -574,10 +578,6 @@
                             </li>
                             <li class="index-item property inherited">
                                 <a href="#" data-tabid="#properties" data-anchor="#property_position" data-tablink="position">position</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_resultsLayer" data-tablink="resultsLayer">resultsLayer</a>
 
                             </li>
                             <li class="index-item property">
@@ -664,6 +664,85 @@
                         </div>
                     
                     
+                    
+                    </div>
+                    <div id="method_actions._convertGeometryToFeatureLayer" class="method item">
+                        <h3 class="name"><code>actions._convertGeometryToFeatureLayer</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>geometry</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>style</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_compare-object-geometries-panel.js.html#l269"><code>addon&#x2F;components&#x2F;compare-object-geometries-panel.js:269</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Convert feature coordinate.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">geometry</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Contain coordinates</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">style</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Contain style if need to paint feature</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
+                                        <p>geoJSON layer</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_actions.findIntersections" class="method item">
@@ -830,85 +909,6 @@
                                 </ul>
                             </div>
                     
-                    
-                    </div>
-                    <div id="method_actions.zoomToIntersection" class="method item">
-                        <h3 class="name"><code>actions.zoomToIntersection</code></h3>
-                    
-                            <div class="args">
-                                <span class="paren">(</span><ul class="args-list inline commas">
-                                    <li class="arg">
-                                            <code>geometry</code>
-                                    </li>
-                                    <li class="arg">
-                                            <code>style</code>
-                                    </li>
-                                </ul><span class="paren">)</span>
-                            </div>
-                    
-                            <span class="returns-inline">
-                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                            </span>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_compare-object-geometries-panel.js.html#l269"><code>addon&#x2F;components&#x2F;compare-object-geometries-panel.js:269</code></a>
-                            </p>
-                    
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Convert feature coordinate.</p>
-                    
-                        </div>
-                    
-                            <div class="params">
-                                <h4>Parameters:</h4>
-                    
-                                <ul class="params-list">
-                                    <li class="param">
-                                            <code class="param-name">geometry</code>
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>Contain coordinates</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                    <li class="param">
-                                            <code class="param-name">style</code>
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>Contain style if need to paint feature</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                </ul>
-                            </div>
-                    
-                            <div class="returns">
-                                <h4>Returns:</h4>
-                    
-                                <div class="returns-description">
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
-                                        <p>geoJSON layer</p>
-                    
-                                </div>
-                            </div>
                     
                     </div>
                     <div id="method_afterCreateControl" class="method item inherited">
@@ -1340,6 +1340,32 @@
                     
                     
                     </div>
+                    <div id="property_featuresLayer" class="property item">
+                        <h3 class="name"><code>featuresLayer</code></h3>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_compare-object-geometries-panel.js.html#l150"><code>addon&#x2F;components&#x2F;compare-object-geometries-panel.js:150</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Layer contains non/intersection features.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> null</p>
+                    
+                    
+                    </div>
                     <div id="property_firstObject" class="property item">
                         <h3 class="name"><code>firstObject</code></h3>
                         <span class="type">Feature</span>
@@ -1624,32 +1650,6 @@
                         </div>
                     
                             <p><strong>Default:</strong> &#x27;topright&#x27;</p>
-                    
-                    
-                    </div>
-                    <div id="property_resultsLayer" class="property item">
-                        <h3 class="name"><code>resultsLayer</code></h3>
-                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_compare-object-geometries-panel.js.html#l150"><code>addon&#x2F;components&#x2F;compare-object-geometries-panel.js:150</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Layer contains non/intersection features.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> null</p>
                     
                     
                     </div>

@@ -431,9 +431,9 @@ export default BaseLegendComponent.extend({
   dynamicHeight: true,
 
   /**
-   * Height for GetLegendImage query (JSON)
+   * Default scale options (height and width) for GetLegendGraphic query (JSON)
    */
-  constantHeight: 24,
+  defaultScale: 24,
 
   /**
    * Height for image container (dynamic)
@@ -478,11 +478,14 @@ export default BaseLegendComponent.extend({
         .map((layerName) =&gt; {
           return new Ember.RSVP.Promise((resolve) =&gt; {
             const format = Ember.get(layerSettings, &#x27;legendSettings.format&#x27;) || Ember.get(layerSettings, &#x27;imageFormat&#x27;) || &#x27;image/png&#x27;;
+            let legendImageScale = this.get(&#x27;defaultScale&#x27;);
             let parameters = {
               service: &#x27;WMS&#x27;,
               request: &#x27;GetLegendGraphic&#x27;,
               version: Ember.get(layerSettings, &#x27;legendSettings.version&#x27;) || Ember.get(layerSettings, &#x27;version&#x27;) || &#x27;1.1.0&#x27;,
               format: format,
+              width: legendImageScale,
+              height: legendImageScale,
               layer: layerName,
               style: Ember.get(layerSettings, &#x27;styles&#x27;) || &#x27;&#x27;
             };
@@ -506,8 +509,8 @@ export default BaseLegendComponent.extend({
                     response.Legend[0].rules.forEach(rule =&gt; {
                       parameters.rule = rule.name;
                       parameters.format = &#x27;image/png&#x27;;
-                      parameters.width = this.get(&#x27;constantHeight&#x27;);
-                      parameters.height = this.get(&#x27;constantHeight&#x27;);
+                      parameters.width = legendImageScale;
+                      parameters.height = legendImageScale;
                       legendsContainer.push({
                         src: &#x60;${url}${L.Util.getParamString(parameters)}&#x60;,
                         layerName: rule.name,

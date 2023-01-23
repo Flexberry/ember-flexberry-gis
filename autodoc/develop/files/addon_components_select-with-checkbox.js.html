@@ -422,8 +422,7 @@ import { translationMacro as t } from &#x27;ember-i18n&#x27;;
 const {
   observer,
   A,
-  on,
-  $
+  on
 } = Ember;
 
 export default FlexberryDropdown.extend({
@@ -438,6 +437,24 @@ export default FlexberryDropdown.extend({
     Search for occurrences in the entire text (SemanticUI settings).
   */
   fullTextSearch: true,
+
+  /**
+    When using search selection specifies how to match values.
+    &lt;both&gt; matches against text and value
+    &lt;value&gt; matches against value only
+    &lt;text&gt; matches against text only
+    @type String
+    @default &#x27;text&#x27;
+  */
+  match: &#x27;text&#x27;,
+
+  /**
+    flag indicates to add &quot;selection&quot; subclass to &quot;multi-dropdown&quot;
+    that forces element selection on opening, scroll goes down to first menu element.
+    @type Boolean
+    @default true
+  */
+  selection: true,
 
   isAllSelected: false,
 
@@ -560,10 +577,7 @@ export default FlexberryDropdown.extend({
       //click action is defined as a DOM event to cancel the semantic dropdown action
       event.stopPropagation();
       this.get(&#x27;state&#x27;).setEach(&#x27;isVisible&#x27;, false);
-      $(&#x27;.search-field&#x27;).val(&#x27;&#x27;);
-      $(&#x27;.fb-selector .item.filtered&#x27;).each((i, item) =&gt; {
-        $(item).removeClass(&#x27;filtered&#x27;);
-      });
+      this.sendAction(&#x27;clearAll&#x27;);
     },
 
   }
