@@ -597,6 +597,23 @@ export default Ember.Component.extend({
       this.sendAction('addToCompareGeometries', this.get('feature'));
     },
 
+    /**
+      Pans and zooms to intersection object.
+      @method actions.panToIntersection
+     */
+    panToIntersection() {
+      this.sendAction('zoomTo', this.get('feature'));
+      this.sendAction('panTo', this.get('feature'));
+    },
+
+    /**
+      Zooms to intersection and add intersection object on map.
+      @method actions.zoomToIntersection
+      */
+    zoomToIntersection() {
+      this.sendAction('zoomTo', this.get('feature'));
+      this.sendAction('zoomToIntersection', this.get('feature'));
+    }
   }
 
   /**

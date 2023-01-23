@@ -26,6 +26,14 @@ export default Ember.Component.extend({
   disaplayName: null,
 
   /**
+    Layer contains identification result features.
+    @property resultsLayer
+    @type Object
+    @default null
+  */
+  resultsLayer: null,
+
+  /**
     List vector layers.
 
     @property vectorLayers
@@ -42,6 +50,20 @@ export default Ember.Component.extend({
     @default null
   */
   leafletMap: null,
+
+
+   /**
+    Observer for leafletMap property adding layer with results.
+
+    @property _OnMapChanged
+    @private
+    @readonly
+  */
+  _OnMapChanged: Ember.observer('leafletMap', function () {
+    let map = this.get('leafletMap');
+    let group = L.featureGroup().addTo(map);
+    this.set('resultsLayer', group);
+  }),
 
   /**
     Flag indicates if there are any results of intersection.
@@ -273,8 +295,6 @@ export default Ember.Component.extend({
     },
 
     /**
-      // TODO: old implementation, needs to be redone
-
       Handles click on zoom icon.
 
       @method actions.hidePanel
@@ -438,6 +458,8 @@ export default Ember.Component.extend({
     @method clearPanel
   */
   clearPanel() {
+    let group = this.get('resultsLayer');
+    group.clearLayers();
     this.removeLayers();
     this.set('selectedLayers', []);
     this.set('square', null);
