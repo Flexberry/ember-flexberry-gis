@@ -470,12 +470,7 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
       modelName: undefined,
       projectionName: undefined,
       geometryField: &#x27;geometry&#x27;,
-      geometryType: &#x27;PolygonPropertyType&#x27;,
-      displaySettings: {
-        featuresPropertiesSettings: {
-          excludedProperties: Ember.A([&#x27;shape&#x27;, &#x27;isFavorite&#x27;])
-        }
-      }
+      geometryType: &#x27;PolygonPropertyType&#x27;
     });
     Ember.set(settings, &#x27;searchSettings&#x27;, this.createSearchSettings());
     return settings;
@@ -500,9 +495,10 @@ export default VectorLayer.extend(OdataFilterParserMixin, {
     let fields = Ember.A();
     this.set(&#x27;crs&#x27;, leafletObject.options.crs);
 
+    const geometryField = leafletObject.geometryField;
+
     props.forEach((key) =&gt; {
       let prop = projection.attributes[key];
-      const geometryField = leafletObject.geometryField;
       if (!prop.options.hidden &amp;&amp; key !== geometryField) {
         fields.addObject(key);
       }

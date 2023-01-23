@@ -855,14 +855,14 @@ export default Ember.Component.extend(
       @method _getAttributesOptions
       @private
     */
-    _getAttributesOptions() {
+    _getAttributesOptions(source) {
       return new Ember.RSVP.Promise((resolve, reject) =&gt; {
         resolve({
           object: this.get(&#x27;_leafletObject&#x27;),
           settings: {
             readonly: true,
-            localizedProperties: this.get(&#x27;displaySettings.featuresPropertiesSettings.localizedProperties&#x27;),
-            excludedProperties: this.get(&#x27;displaySettings.featuresPropertiesSettings.excludedProperties&#x27;),
+            localizedProperties: JSON.parse(JSON.stringify(this.get(&#x27;displaySettings.featuresPropertiesSettings.localizedProperties&#x27;))),
+            excludedProperties: JSON.parse(JSON.stringify(this.get(&#x27;displaySettings.featuresPropertiesSettings.excludedProperties&#x27;))),
           }
         });
       });

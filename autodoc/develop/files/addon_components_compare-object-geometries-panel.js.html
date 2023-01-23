@@ -511,6 +511,19 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   firstObject: null,
 
   /**
+    First object&#x27;s value to display.
+
+    @property firstObjectDisplayValue
+    @type String
+    @default undefined
+  */
+  firstObjectDisplayValue: Ember.computed(&#x27;firstObject.displayValue&#x27;, function () {
+    let displayValue = this.get(&#x27;firstObject.displayValue&#x27;);
+    let i18n = this.get(&#x27;i18n&#x27;);
+    return displayValue ? displayValue : i18n.t(&#x27;components.compare-object-geometries.first-object-display-value&#x27;);
+  }),
+
+  /**
     Second object to compare.
 
     @property secondObject
@@ -518,6 +531,19 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @default null
   */
   secondObject: null,
+
+  /**
+    Second object&#x27;s value to display.
+
+    @property secondObjectDisplayValue
+    @type String
+    @default undefined
+  */
+  secondObjectDisplayValue: Ember.computed(&#x27;secondObject.displayValue&#x27;, function () {
+    let displayValue = this.get(&#x27;secondObject.displayValue&#x27;);
+    let i18n = this.get(&#x27;i18n&#x27;);
+    return displayValue ? displayValue : i18n.t(&#x27;components.compare-object-geometries.second-object-display-value&#x27;);
+  }),
 
   /**
      Leaflet map object for zoom and pan.

@@ -947,7 +947,9 @@ export default BaseVectorLayer.extend({
                 if (!isNaN(Number(searchValue))) {
                   equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, searchValue));
                 } else {
-                  console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to numeric type&#x60;);
+                  if (!e.context) {
+                    console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to numeric type&#x60;);
+                  }
                 }
 
                 break;
@@ -967,7 +969,9 @@ export default BaseVectorLayer.extend({
                     equals.push(new Query.DatePredicate(property.name, Query.FilterOperator.Eq, startInterval, true));
                   }
                 } else {
-                  console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to date type&#x60;);
+                  if (!e.context) {
+                    console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to date type&#x60;);
+                  }
                 }
 
                 break;
@@ -977,7 +981,9 @@ export default BaseVectorLayer.extend({
                 if (typeof booleanValue === &#x27;boolean&#x27;) {
                   equals.push(new Query.SimplePredicate(property.name, Query.FilterOperator.Eq, booleanValue));
                 } else {
-                  console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to boolean type&#x60;);
+                  if (!e.context) {
+                    console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to boolean type&#x60;);
+                  }
                 }
 
                 break;
@@ -1510,6 +1516,10 @@ export default BaseVectorLayer.extend({
       geometryField: geometryField
     });
 
+    // у odata ключ никогда не бывает в представлении, чтобы его показывать необходимо добавить вручную
+    let pkField = this.getPkField(this.get(&#x27;layerModel&#x27;));
+    readFormat.featureType.appendField(pkField, &#x27;string&#x27;);
+
     let store = Ember.getOwner(this).lookup(&#x27;service:store&#x27;);
     let modelConstructor = store.modelFor(this.get(&#x27;modelName&#x27;));
     let layerProperties = Ember.get(modelConstructor, &#x60;attributes&#x60;);
@@ -1521,7 +1531,9 @@ export default BaseVectorLayer.extend({
     });
 
     readFormat.featureType.geometryFields[geometryField] = this.get(&#x27;geometryType&#x27;);
-    readFormat.excludedProperties = [];
+
+    // это поля, которые исключены из РЕДАКТИРОВАНИЯ
+    readFormat.excludedProperties = [pkField, &#x27;creator&#x27;, &#x27;editor&#x27;, &#x27;createTime&#x27;, &#x27;editTime&#x27;];
     return readFormat;
   },
 
@@ -1531,11 +1543,26 @@ export default BaseVectorLayer.extend({
     @method _getAttributesOptions
     @private
   */
-  _getAttributesOptions() {
+  _getAttributesOptions(source) {
     return this._super(...arguments).then((attributesOptions) =&gt; {
+
       Ember.set(attributesOptions, &#x27;settings.readonly&#x27;, this.get(&#x27;readonly&#x27;) || false);
-      Ember.set(attributesOptions, &#x27;settings.excludedProperties&#x27;, Ember.A([&#x27;syncDownTime&#x27;, &#x27;readOnly&#x27;, &#x27;creator&#x27;,
-        &#x27;editor&#x27;, &#x27;createTime&#x27;, &#x27;editTime&#x27;, &#x27;intersectionArea&#x27;]));
+
+      let excluded = Ember.get(attributesOptions, &#x27;settings.excludedProperties&#x27;);
+      if (Ember.isNone(excluded)) {
+        excluded = Ember.A();
+      }
+
+      let extraExcluded = source &amp;&amp; source === &#x27;identify&#x27; ? Ember.A([&#x27;syncDownTime&#x27;, &#x27;readOnly&#x27;]) : Ember.A([&#x27;syncDownTime&#x27;, &#x27;readOnly&#x27;, &#x27;intersectionArea&#x27;]);
+
+      extraExcluded.forEach((p) =&gt; {
+        if (!excluded.contains(p)) {
+          excluded.pushObject(p);
+        }
+      });
+
+      Ember.set(attributesOptions, &#x27;settings.excludedProperties&#x27;, excluded);
+
       return attributesOptions;
     });
   },

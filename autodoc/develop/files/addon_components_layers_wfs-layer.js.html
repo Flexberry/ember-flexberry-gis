@@ -567,7 +567,7 @@ export default BaseVectorLayer.extend({
     @method _getAttributesOptions
     @private
   */
-  _getAttributesOptions() {
+  _getAttributesOptions(source) {
     return this._super(...arguments).then((attribitesOptions) =&gt; {
       Ember.set(attribitesOptions, &#x27;settings.readonly&#x27;, this.get(&#x27;readonly&#x27;) || false);
 
@@ -1037,7 +1037,9 @@ export default BaseVectorLayer.extend({
                 if (!isNaN(Number(searchValue))) {
                   equals.push(new L.Filter.EQ(field, searchValue, false));
                 } else {
-                  console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to numeric type&#x60;);
+                  if (!e.context) {
+                    console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to numeric type&#x60;);
+                  }
                 }
 
                 break;
@@ -1056,7 +1058,9 @@ export default BaseVectorLayer.extend({
                     equals.push(new L.Filter.EQ(field, startInterval, false));
                   }
                 } else {
-                  console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to date type&#x60;);
+                  if (!e.context) {
+                    console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to date type&#x60;);
+                  }
                 }
 
                 break;
@@ -1066,7 +1070,9 @@ export default BaseVectorLayer.extend({
                 if (typeof booleanValue === &#x27;boolean&#x27;) {
                   equals.push(new L.Filter.EQ(field, booleanValue, false));
                 } else {
-                  console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to boolean type&#x60;);
+                  if (!e.context) {
+                    console.error(&#x60;Failed to convert \&quot;${e.searchOptions.queryString}\&quot; to boolean type&#x60;);
+                  }
                 }
 
                 break;

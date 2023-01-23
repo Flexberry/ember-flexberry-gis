@@ -420,6 +420,7 @@ import SnapDrawMixin from &#x27;../mixins/snap-draw&#x27;;
 import EditFeatureMixin from &#x27;../mixins/edit-feature&#x27;;
 import LeafletZoomToFeatureMixin from &#x27;../mixins/leaflet-zoom-to-feature&#x27;;
 import { translationMacro as t } from &#x27;ember-i18n&#x27;;
+import { getLeafletCrs } from &#x27;../utils/leaflet-crs&#x27;;
 
 export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFeatureMixin, {
   /**
@@ -742,10 +743,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           continue;
         }
 
-        if (Ember.get(leafletObject, &#x27;readFormat.excludedProperties&#x27;).includes(propertyName.toLowerCase())) {
-          continue;
-        }
-
         let propertyCaption = Ember.get(localizedProperties, propertyName);
 
         result[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;
@@ -763,6 +760,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       fieldTypes: Ember.get(leafletObject, &#x27;readFormat.featureType.fieldTypes&#x27;),
       fieldParsers: Ember.get(leafletObject, &#x27;readFormat.featureType.fields&#x27;),
       fieldValidators: Ember.get(leafletObject, &#x27;readFormat.featureType.fieldValidators&#x27;),
+      readOnlyFields: Ember.get(leafletObject, &#x27;readFormat.excludedProperties&#x27;),
       fieldNames: getHeader()
     };
   }),
@@ -871,8 +869,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   */
   parseData(index, data) {
     let fieldNames = this.get(&#x27;_model.fieldNames&#x27;);
+    let readOnlyFields = this.get(&#x27;_model.readOnlyFields&#x27;);
     let fieldParsers = this.get(&#x27;_model.fieldParsers&#x27;);
     let fieldValidators = this.get(&#x27;_model.fieldValidators&#x27;);
+    let fieldTypes = this.get(&#x27;_model.fieldTypes&#x27;);
 
     let parsingErrors = {};
     let dataIsValid = true;
@@ -882,8 +882,14 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         continue;
       }
 
+      if (readOnlyFields.contains(fieldName)) {
+        continue;
+      }
+
       let text = Ember.get(data, fieldName);
-      let value = fieldParsers[fieldName](text);
+
+      // если поля типа boolean, то его не надо парсить, оно уже в нужном виде. а парсинг его ломает
+      let value = fieldTypes[fieldName] === &#x27;boolean&#x27; ? (text || false) : fieldParsers[fieldName](text);
       let valueIsValid = fieldValidators[fieldName](value);
 
       if (valueIsValid) {
@@ -1246,6 +1252,81 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     }
   },
 
+  /**
+    Sends request to trancate GeoWebCache for layer by boundingBox.
+
+    @method trancateGeoWebCache
+    @param {Object} leafletObject laeflet layer.
+  */
+  trancateGeoWebCache(leafletObject) {
+    let layers = leafletObject.wmsParams.layers.split();
+    let workspace;
+    let layer;
+    let geoWebCache;
+    if (layers.length === 2) {
+      workspace = layers[0];
+      layer = layers[1];
+    } else {
+      let urlSplit = leafletObject._url.split(&#x27;/&#x27;);
+      let indexGeoserver = urlSplit.indexOf(&#x27;geoserver&#x27;);
+      if (indexGeoserver &gt; -1 &amp;&amp; urlSplit.length === indexGeoserver + 3) {
+        workspace = urlSplit.at(indexGeoserver + 1);
+      } else {
+        console.error(&#x27;Can\&#x27;t get workspace in geoserver&#x27;);
+        return;
+      }
+
+      layer = layers[0];
+    }
+
+    if (!Ember.isBlank(leafletObject._url.match(new RegExp(&#x27;(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?&#x27;)))) {
+      let indexGeoserver = leafletObject._url.indexOf(&#x27;geoserver&#x27;);
+      if (indexGeoserver === -1) {
+        console.error(&#x27;Can\&#x27;t get url geoserver&#x27;);
+        return;
+      }
+
+      geoWebCache = leafletObject._url.slice(0, indexGeoserver + 10) + &#x27;/gwc/rest/seed/&#x27;;
+    }
+
+    if (!Ember.isNone(geoWebCache)) {
+      let url = geoWebCache + workspace + &#x27;:&#x27; + layer;
+      let gridSetId = leafletObject.wmsParams.crs + &#x27;_&#x27; + leafletObject.wmsParams.width;
+      let leafletMap = this.get(&#x27;leafletMap&#x27;);
+      let zoom = Math.trunc(leafletMap.getZoom());
+      let zoomStart = zoom - 1 &gt; 0 ? zoom - 1 : zoom;
+      let zoomStop = zoom + 1 &lt; 20 ? zoom + 1 : zoom;
+      let styles = leafletObject.wmsParams.styles;
+      let parameterStyles = &#x27;&#x27;;
+      if (!Ember.isNone(styles)) {
+        parameterStyles = &#x60;parameter_STYLES=${workspace}:${styles}&amp;&#x60;;
+      }
+
+      let crsName = leafletObject.wmsParams.crs;
+      let crs;
+      if (!Ember.isNone(crsName)) {
+        crs = getLeafletCrs(&#x27;{ &quot;code&quot;: &quot;&#x27; + crsName.toUpperCase() + &#x27;&quot;, &quot;definition&quot;: &quot;&quot; }&#x27;, this);
+      }
+
+      let bounds = leafletMap.getBounds();
+      let minXY = L.marker(bounds._southWest).toProjectedGeoJSON(crs);
+      let maxXY = L.marker(bounds._northEast).toProjectedGeoJSON(crs);
+
+      Ember.$.ajax({
+        method: &#x27;POST&#x27;,
+        url: url,
+        async: true,
+        data: &#x60;threadCount=01&amp;type=truncate&amp;gridSetId=${gridSetId}&amp;tileFormat=image%2Fpng&amp;zoomStart=${zoomStart}&amp;zoomStop=${zoomStop}&amp;&#x60; +
+          &#x60;${parameterStyles}minX=${minXY.geometry.coordinates[0]}&amp;minY=${minXY.geometry.coordinates[1]}&#x60; +
+          &#x60;&amp;maxX=${maxXY.geometry.coordinates[0]}&amp;maxY=${maxXY.geometry.coordinates[1]}&#x60;,
+        contentType: &#x27;text/html&#x27;,
+        error: function(data) {
+          console.error(data);
+        }
+      });
+    }
+  },
+
   actions: {
 
     blockForm(block) {
@@ -1521,6 +1602,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
         let _leafletObjectFirst = this.get(&#x27;layerModel.layerModel._leafletObjectFirst&#x27;);
         if (!Ember.isNone(_leafletObjectFirst) &amp;&amp; typeof _leafletObjectFirst.setParams === &#x27;function&#x27;) {
+          this.trancateGeoWebCache(_leafletObjectFirst);
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
 
