@@ -7208,6 +7208,7 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
   var geoserverFake = undefined;
   var options = undefined;
   var param = undefined;
+  var leafletOptions = undefined;
 
   var commonStub = function commonStub(param, that) {
     var component = that.subject(param);
@@ -8347,19 +8348,44 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
     assert.expect(5);
     var done = assert.async(1);
     _ember['default'].run(function () {
+      var options = {
+        url: 'http://geoserverFake/geoserver/ows',
+        geometryField: 'shape',
+        showExisting: false,
+        withCredentials: false,
+        crs: L.CRS.EPSG3857,
+        typeNSName: 'rgisperm',
+        filter: null,
+        version: '1.1.0',
+        continueLoading: true,
+        typeNS: 'les',
+        typeName: 'test',
+        pkField: 'primarykey'
+      };
+
+      var param = {
+        format: 'GeoJSON',
+        leafletOptions: leafletOptions,
+        _pane: 'pane000',
+        _renderer: _ember['default'].A()
+      };
+      param = _ember['default'].$.extend(param, options);
+
       var objStub = commonStub(param, _this20);
       var wfstSpy = _sinon['default'].spy(L, 'wfst');
 
-      var wfsLayer = objStub.component._createVectorLayer(null, options);
-      assert.ok(wfsLayer, 'Create layer');
-      assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
-      assert.ok(wfsLayer.error, 'Create layer with error');
-      assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
-      assert.equal(wfstSpy.callCount, 1, 'Create layer');
+      objStub.component.get('_leafletLayerPromise').then(function () {
+        var wfsLayer = objStub.component._createVectorLayer(null, options);
+        assert.ok(wfsLayer, 'Create layer');
+        assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+        assert.ok(wfsLayer.error, 'Create layer with error');
+        assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+        assert.equal(wfstSpy.callCount, 2, 'Create layer');
 
-      done();
+        done();
 
-      wfstSpy.restore();
+        wfstSpy.restore();
+      });
     });
   });
 
@@ -8369,22 +8395,26 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
     assert.expect(5);
     var done = assert.async(1);
     _ember['default'].run(function () {
+      param.typeName = 'kvartalutverzhdenopolygon32640';
+      options.typeName = 'kvartalutverzhdenopolygon32640';
       var objStub = commonStub(param, _this21);
       var featuresReadFormat = objStub.component.getFeaturesReadFormat();
       var layer = L.wfst(options, featuresReadFormat);
 
       var wfstSpy = _sinon['default'].spy(L, 'wfst');
 
-      var wfsLayer = objStub.component._createVectorLayer(layer, options, featuresReadFormat);
-      assert.ok(wfsLayer, 'Create layer');
-      assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
-      assert.notOk(wfsLayer.error, 'Create layer without error');
-      assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
-      assert.equal(wfstSpy.callCount, 0, 'Layer already create');
+      objStub.component.get('_leafletLayerPromise').then(function () {
+        var wfsLayer = objStub.component._createVectorLayer(layer, options, featuresReadFormat);
+        assert.ok(wfsLayer, 'Create layer');
+        assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+        assert.notOk(wfsLayer.error, 'Create layer without error');
+        assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+        assert.equal(wfstSpy.callCount, 0, 'Layer already create');
 
-      done();
+        done();
 
-      wfstSpy.restore();
+        wfstSpy.restore();
+      });
     });
   });
 
@@ -8394,6 +8424,8 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
     assert.expect(8);
     var done = assert.async(1);
     _ember['default'].run(function () {
+      param.typeName = 'kvartalutverzhdenopolygon32640';
+      options.typeName = 'kvartalutverzhdenopolygon32640';
       var objStub = commonStub(param, _this22);
 
       var wfstSpy = _sinon['default'].spy(L, 'wfst');
@@ -8425,8 +8457,28 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
     assert.expect(8);
     var done = assert.async(1);
     _ember['default'].run(function () {
-      param.typeName = 'test';
-      options.typeName = 'test';
+      var options = {
+        url: 'http://geoserverFake/geoserver/ows',
+        geometryField: 'shape',
+        showExisting: false,
+        withCredentials: false,
+        crs: L.CRS.EPSG3857,
+        typeNSName: 'rgisperm',
+        filter: null,
+        version: '1.1.0',
+        continueLoading: true,
+        typeNS: 'les',
+        typeName: 'test',
+        pkField: 'primarykey'
+      };
+
+      var param = {
+        format: 'GeoJSON',
+        leafletOptions: leafletOptions,
+        _pane: 'pane000',
+        _renderer: _ember['default'].A()
+      };
+      param = _ember['default'].$.extend(param, options);
       var objStub = commonStub(param, _this23);
 
       var wfstSpy = _sinon['default'].spy(L, 'wfst');

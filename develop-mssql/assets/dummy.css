@@ -7420,6 +7420,7 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   left: 62px;
 }
 .layer-result-list .feature-result-item-title {
+  height: 40px;
   position: relative;
 }
 .layer-result-list .feature-result-item-title .ui.checkbox {
@@ -47224,7 +47225,7 @@ img.item-minus {
   font-size: 30px;
 }
 .ui.tab.compare .all-layers {
-  color: #848E99;
+  color: #8e999f;
 }
 .ui.tab.compare .ui.icon.close {
   float: right;
@@ -49610,6 +49611,9 @@ img.item-minus {
   -ms-user-select: none;
   user-select: none;
 }
+.leaflet-tile-pane {
+  z-index: auto;
+}
 .leaflet-marker-pane {
   z-index: 2500;
 }
@@ -49673,76 +49677,6 @@ img.item-minus {
 .ml-auto {
   margin-left: auto !important;
 }
-.flexberry-dropdown-button {
-  position: relative;
-  display: inline-block;
-  z-index: 1;
-  border-radius: 3.5px;
-  font-size: 14px;
-  background: #F4F7FB;
-}
-.flexberry-dropdown-button.ml-18 {
-  margin-left: 18px;
-}
-.flexberry-dropdown-button ul {
-  list-style-type: none;
-  padding-left: 8px;
-}
-.flexberry-dropdown-button li {
-  margin-top: 8px;
-  cursor: pointer;
-}
-.flexberry-dropdown-button i {
-  color: #0061D9;
-}
-.flexberry-dropdown-button div.main-image {
-  width: 28px;
-  height: 24px;
-  display: inline-block;
-}
-.flexberry-dropdown-button div.arrow {
-  width: 20px;
-  height: 24px;
-  display: inline-block;
-  border-left: 1px solid #c5c7ca;
-  padding-left: 2px;
-}
-.flexberry-dropdown-button-selected {
-  padding: 8px;
-  border-radius: 3.5px;
-  border: solid 1px transparent;
-  box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.15);
-  height: 42px;
-  background: #F4F7FB;
-}
-.flexberry-dropdown-button-selected:hover {
-  cursor: pointer;
-}
-.flexberry-dropdown-button-selected.active {
-  height: 52px;
-}
-.flexberry-dropdown-button-list {
-  position: absolute;
-  border-radius: 3.5px;
-  box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.15);
-  display: none;
-  background: inherit;
-  width: 170px;
-}
-.flexberry-dropdown-button-list ul {
-  margin: 5px 0;
-}
-.flexberry-dropdown-button-list .dropdown-label {
-  font-size: 11px;
-  line-height: 14px;
-  margin-left: 8px;
-  cursor: pointer;
-}
-.flexberry-dropdown-button-list.show {
-  display: flex;
-  flex-direction: column;
-  box-shadow: none !important;
-}
 .ui.icon.button.help-button.help-button {
   box-shadow: none !important;
   margin: 0;
@@ -49753,26 +49687,6 @@ img.item-minus {
   box-shadow: none !important;
   border: none;
   background: transparent!important;
-}
-.wrapper {
-  border: 1px solid #c5c7ca;
-  padding: 10px;
-  margin: 20px;
-  box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.15);
-  position: relative;
-  border-radius: 3.5px;
-}
-.wrapper-exit {
-  position: absolute;
-  color: #0061D9;
-  cursor: pointer;
-  right: 0px;
-  top: 0px;
-}
-.wrapper .selection.dropdown {
-  height: 32px;
-  font-size: 14px;
-  line-height: 24px;
 }
 .flexberry-identify-panel .wrapper {
   margin: 20px 0px;
