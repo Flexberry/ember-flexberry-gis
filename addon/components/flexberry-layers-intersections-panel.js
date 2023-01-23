@@ -27,7 +27,6 @@ export default Ember.Component.extend({
 
   /**
     Layer contains identification result features.
-
     @property resultsLayer
     @type Object
     @default null
@@ -152,7 +151,7 @@ export default Ember.Component.extend({
     @readonly
   */
   _OnFeatureChange: Ember.observer('feature', function () {
-    this.clearPanel();
+    Ember.run.once(this, 'clearPanel');
   }),
 
   _checkTypeLayer(layer) {
@@ -270,6 +269,19 @@ export default Ember.Component.extend({
     closePanel() {
       this.clearPanel();
       this.sendAction('closeIntersectionPanel');
+    },
+
+    /**
+      Clear selected layers.
+      Also handles closeAll event from select-with-checkbox component.
+
+      @method actions.clearSelected
+    */
+    clearSelected() {
+      Ember.$('.search-field').val('');
+      Ember.$('.fb-selector .item.filtered').each((i, item) => {
+        Ember.$(item).removeClass('filtered');
+      });
     },
 
     /**
@@ -459,10 +471,7 @@ export default Ember.Component.extend({
       this.childViews[0].get('state').setEach('isVisible', false);
     }
 
-    Ember.$('.search-field').val('');
-    Ember.$('.fb-selector .item.filtered').each((i, item) => {
-      Ember.$(item).removeClass('filtered');
-    });
+    this.send('clearSelected');
   },
 
   /**

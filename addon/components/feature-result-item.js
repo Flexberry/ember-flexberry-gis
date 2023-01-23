@@ -331,7 +331,7 @@ export default Ember.Component.extend({
     if (feature.geometry && feature.geometry.type &&
       (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' ||
         feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString')) {
-      let layerTolerance = feature.layerModel.get('_leafletObject.options.renderer.options');
+      let layerTolerance = feature.layerModel.get('_leafletObject.options.renderer.options.tolerance');
       if (Ember.isPresent(layerTolerance) && layerTolerance === 0) {
         Ember.set(feature.layerModel.get('_leafletObject.options.renderer.options'), 'tolerance', 3);
       }
@@ -618,7 +618,7 @@ export default Ember.Component.extend({
     /**
       Zooms to intersection and add intersection object on map.
       @method actions.zoomToIntersection
-     */
+      */
     zoomToIntersection() {
       this.sendAction('zoomTo', this.get('feature'));
       this.sendAction('zoomToIntersection', this.get('feature'));
