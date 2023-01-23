@@ -8,6 +8,7 @@ let app;
 let geoserverFake;
 let options;
 let param;
+let leafletOptions;
 
 let commonStub = function(param, that) {
   let component = that.subject(param);
@@ -1216,19 +1217,44 @@ test('test _createVectorLayer with error', function (assert) {
   assert.expect(5);
   var done = assert.async(1);
   Ember.run(() => {
+    let options = {
+      url: 'http://geoserverFake/geoserver/ows',
+      geometryField: 'shape',
+      showExisting: false,
+      withCredentials: false,
+      crs: L.CRS.EPSG3857,
+      typeNSName: 'rgisperm',
+      filter: null,
+      version: '1.1.0',
+      continueLoading: true,
+      typeNS: 'les',
+      typeName: 'test',
+      pkField: 'primarykey'
+    };
+
+    let param = {
+      format: 'GeoJSON',
+      leafletOptions: leafletOptions,
+      _pane: 'pane000',
+      _renderer: Ember.A()
+    };
+    param = Ember.$.extend(param, options);
+
     let objStub = commonStub(param, this);
     let wfstSpy = sinon.spy(L, 'wfst');
 
-    let wfsLayer = objStub.component._createVectorLayer(null, options);
-    assert.ok(wfsLayer, 'Create layer');
-    assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
-    assert.ok(wfsLayer.error, 'Create layer with error');
-    assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
-    assert.equal(wfstSpy.callCount, 1, 'Create layer');
+    objStub.component.get('_leafletLayerPromise').then(() => {
+      let wfsLayer = objStub.component._createVectorLayer(null, options);
+      assert.ok(wfsLayer, 'Create layer');
+      assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+      assert.ok(wfsLayer.error, 'Create layer with error');
+      assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+      assert.equal(wfstSpy.callCount, 2, 'Create layer');
 
-    done();
+      done();
 
-    wfstSpy.restore();
+      wfstSpy.restore();
+    });
   });
 });
 
@@ -1236,22 +1262,26 @@ test('test _createVectorLayer without error', function (assert) {
   assert.expect(5);
   var done = assert.async(1);
   Ember.run(() => {
+    param.typeName = 'kvartalutverzhdenopolygon32640';
+    options.typeName = 'kvartalutverzhdenopolygon32640';
     let objStub = commonStub(param, this);
     let featuresReadFormat = objStub.component.getFeaturesReadFormat();
     let layer = L.wfst(options, featuresReadFormat);
 
     let wfstSpy = sinon.spy(L, 'wfst');
 
-    let wfsLayer = objStub.component._createVectorLayer(layer, options, featuresReadFormat);
-    assert.ok(wfsLayer, 'Create layer');
-    assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
-    assert.notOk(wfsLayer.error, 'Create layer without error');
-    assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
-    assert.equal(wfstSpy.callCount, 0, 'Layer already create');
+    objStub.component.get('_leafletLayerPromise').then(() => {
+      let wfsLayer = objStub.component._createVectorLayer(layer, options, featuresReadFormat);
+      assert.ok(wfsLayer, 'Create layer');
+      assert.ok(wfsLayer instanceof L.WFS, 'Create WFS layer');
+      assert.notOk(wfsLayer.error, 'Create layer without error');
+      assert.equal(wfsLayer.getLayers().length, 0, 'Layer with 0 feature');
+      assert.equal(wfstSpy.callCount, 0, 'Layer already create');
 
-    done();
+      done();
 
-    wfstSpy.restore();
+      wfstSpy.restore();
+    });
   });
 });
 
@@ -1259,6 +1289,8 @@ test('test createVectorLayer without error', function (assert) {
   assert.expect(8);
   var done = assert.async(1);
   Ember.run(() => {
+    param.typeName = 'kvartalutverzhdenopolygon32640';
+    options.typeName = 'kvartalutverzhdenopolygon32640';
     let objStub = commonStub(param, this);
 
     let wfstSpy = sinon.spy(L, 'wfst');
@@ -1288,8 +1320,28 @@ test('test createVectorLayer with error', function (assert) {
   assert.expect(8);
   var done = assert.async(1);
   Ember.run(() => {
-    param.typeName = 'test';
-    options.typeName = 'test';
+    let options = {
+      url: 'http://geoserverFake/geoserver/ows',
+      geometryField: 'shape',
+      showExisting: false,
+      withCredentials: false,
+      crs: L.CRS.EPSG3857,
+      typeNSName: 'rgisperm',
+      filter: null,
+      version: '1.1.0',
+      continueLoading: true,
+      typeNS: 'les',
+      typeName: 'test',
+      pkField: 'primarykey'
+    };
+
+    let param = {
+      format: 'GeoJSON',
+      leafletOptions: leafletOptions,
+      _pane: 'pane000',
+      _renderer: Ember.A()
+    };
+    param = Ember.$.extend(param, options);
     let objStub = commonStub(param, this);
 
     let wfstSpy = sinon.spy(L, 'wfst');

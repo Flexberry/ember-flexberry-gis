@@ -150,7 +150,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   /**
     Layer contains non/intersection features.
 
-    @property resultsLayer
+    @property featuresLayer
     @type Object
     @default null
   */
@@ -269,7 +269,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   /**
       Convert feature coordinate.
 
-      @method actions.zoomToIntersection
+      @method actions._convertGeometryToFeatureLayer
       @param {Object} geometry Contain coordinates
       @param {Object} style Contain style if need to paint feature
       @returns {Object} geoJSON layer
