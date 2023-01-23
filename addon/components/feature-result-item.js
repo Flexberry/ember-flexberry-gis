@@ -7,7 +7,7 @@ import layout from '../templates/components/feature-result-item';
 import { translationMacro as t } from 'ember-i18n';
 import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
 import { zoomToBounds } from '../utils/zoom-to-bounds';
-import ResultFeatureInitializer from '../mixins/result-feature-initializer'
+import ResultFeatureInitializer from '../mixins/result-feature-initializer';
 /**
   Component for display GeoJSON feature object details
 
@@ -651,9 +651,9 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
         Ember.set(feature.properties, attribute, editedLayer.feature.properties[attribute]);
       });
       Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature, resultObject.settings, resultObject.dateFormat,  resultObject.dateTimeFormat, resultObject.layerModel));
-      feature.leafletLayer.setLatLngs(editedLayer.getLatLngs()) // Update feature geometry
+      feature.leafletLayer.setLatLngs(editedLayer.getLatLngs()); // Update feature geometry
       this.rerender(); // force component re-render to recalculate #each-in helper
-    };
+    }
 
     if (!leafletMap.hasLayer(feature.leafletLayer)) {
       leafletMap.addLayer(feature.leafletLayer); // return back featureLayer with identification/search results

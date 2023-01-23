@@ -5,7 +5,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/layer-result-list';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
-import ResultFeatureInitializer from '../mixins/result-feature-initializer'
+import ResultFeatureInitializer from '../mixins/result-feature-initializer';
 
 
 // Url key used to identify transitions from ember-flexberry-gis on other resources.
@@ -622,7 +622,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
     }).catch((error) => {
       console.error(error);
     });
-  })})),
+  });
+  })),
   /**
     Get an array of layer shapes id.
     @method _getFeatureShapeIds
