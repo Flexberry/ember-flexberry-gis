@@ -565,7 +565,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   },
 
   _onEdit(e) {
-
+    if (!e) {
+      return;
+    }
   },
 
   /**
