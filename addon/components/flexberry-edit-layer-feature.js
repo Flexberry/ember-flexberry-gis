@@ -128,8 +128,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
   isFavorite: false,
 
-  isIdentified: false,
-
   dataItemCount: Ember.computed('dataItems', function () {
     let items = this.get('dataItems.items');
     if (Ember.isNone(items)) {
@@ -234,7 +232,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             this.set('isLayerCopy', true);
             leafletMap.addLayer(layer);
           }
-          // Работаем со слоем, не с копией!
 
           this.send('zoomTo', [layer.feature]);
           this.send('clearSelected');
@@ -742,8 +739,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           if (leafletMap.hasLayer(layer)) {
             if (this.get('isLayerCopy')) {
               leafletMap.removeLayer(layer);
-            }
-            else {
+            } else {
               layer.setStyle(layer.defaultFeatureStyle);
             }
           }
@@ -980,9 +976,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       if (this.get('loading')) {
         return;
       }
-      this.get('leafletMap').fire('flexberry-map:updateFeatureResultItem', { editedLayer: null });
+
       this.set('dataItems', null);
-      this.sendAction('editFeatureEnd');
+      this.get('leafletMap').fire('flexberry-map:edit-feature:end', null); // cancel edit-feature mode
+      this.sendAction('editFeatureEnd'); // close edit tab
     },
 
     prev() {
@@ -1157,7 +1154,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         this.set('loading', false);
         this.set('error', t('components.flexberry-edit-layer-feature.validation.save-fail'));
         leafletObject.off('save:success', saveSuccess);
-        this.get('leafletMap').fire('flexberry-map:updateFeatureResultItem', { editedLayer: null });
         this.restoreLayers().then(() => {
           this.get('leafletMap').fire(event + ':fail', e);
         }).catch(() => {
@@ -1203,8 +1199,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           this.trancateGeoWebCache(_leafletObjectFirst);
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
-        this.get('leafletMap').fire('flexberry-map:updateFeatureResultItem', { editedLayer: e.layers[0], layerModel: e.layerModel });
-        this.sendAction('editFeatureEnd');
+
+        this.sendAction('editFeatureEnd'); // close edit tab
       };
 
       leafletObject.off('save:failed', saveFailed);

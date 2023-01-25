@@ -318,7 +318,8 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
   willDestroyElement() {
     this._super(...arguments);
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-    leafletMap.off('flexberry-map:updateFeatureResultItem', this._updateFeatureResultItem, this);
+    leafletMap.off('flexberry-map:edit-feature:end', this._updateFeatureResultItem, this);
+    leafletMap.off('flexberry-map:edit-feature:fail', this._updateFeatureResultItem, this);
   },
 
   /**
@@ -331,8 +332,10 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     if (!highlightable || !feature) {
       return;
     }
+
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-    leafletMap.on('flexberry-map:updateFeatureResultItem', this._updateFeatureResultItem, this);
+    leafletMap.on('flexberry-map:edit-feature:end', this._updateFeatureResultItem, this);
+    leafletMap.on('flexberry-map:edit-feature:fail', this._updateFeatureResultItem, this);
     this.set('defaultFeatureStyle', Object.assign({}, feature.leafletLayer.options));
 
     if (feature.geometry && feature.geometry.type &&
@@ -492,7 +495,6 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
           leafletMap.removeLayer(feature.leafletLayer);
           this.sendAction('editFeature', {
             isFavorite: feature.properties.isFavorite,
-            isIdentified: true,
             dataItems: dataItems,
             layerModel: { name: name, leafletObject: object, settings, layerModel }
           });
@@ -639,19 +641,36 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
    * This method update feature result item when feature is edited
    * @param {Object} editedLayer This parameter contains layer (object) which the was edited.
    */
-  _updateFeatureResultItem({ editedLayer }) {
+  _updateFeatureResultItem(editedLayer) {
+    let editedLayerId = null;
+    let editedFeature = null;
+    let editedFeatureId = null;
+
+    if (editedLayer && editedLayer.layers) {
+      editedLayerId = editedLayer.layerModel.layerModel.id;
+      editedFeature = editedLayer.layers[0];
+      editedFeatureId = editedFeature.feature.id;
+    }
+
     let feature = this.get('feature');
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     let resultObject = this.get('resultObject'); // parent result object from layer-result-list
-    let editedFeatureId = editedLayer ? Ember.get(editedLayer, 'feature.id') : null;
 
-    if (editedLayer && editedFeatureId && editedFeatureId === feature.id) {
+    if (editedLayer && editedLayerId ===  resultObject.layerModel.id && editedFeature && editedFeatureId === feature.id) {
       // on successfull edit
-      Object.keys(editedLayer.feature.properties).forEach(attribute => {
-        Ember.set(feature.properties, attribute, editedLayer.feature.properties[attribute]);
+      Object.keys(editedFeature.feature.properties).forEach(attribute => {
+        if (attribute === 'primarykey') {
+          return;
+        }
+
+        Ember.set(feature.properties, attribute, editedFeature.feature.properties[attribute]);
       });
-      Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature, resultObject.settings, resultObject.dateFormat,  resultObject.dateTimeFormat, resultObject.layerModel));
-      feature.leafletLayer.setLatLngs(editedLayer.getLatLngs()); // Update feature geometry
+      Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature,
+                                                                        resultObject.settings,
+                                                                        resultObject.dateFormat,
+                                                                        resultObject.dateTimeFormat,
+                                                                        resultObject.layerModel));
+      feature.leafletLayer.setLatLngs(editedFeature.getLatLngs()); // Update feature geometry
       this.rerender(); // force component re-render to recalculate #each-in helper
     }
 
