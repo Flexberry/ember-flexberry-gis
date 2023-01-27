@@ -758,7 +758,7 @@
   .ui.right.sidebar.tabbar {
     .ui.tab.bookmarks,
     .ui.tab.favorites {
-      padding: 0;
+      padding: 30px 0px;
     }
 
     /**

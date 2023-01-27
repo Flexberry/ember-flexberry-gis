@@ -242,6 +242,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
 
           layer.enableEdit(leafletMap);
+
+          // save feature style settings to undo changes
+          if (!this.get('isLayerCopy')) {
+            Ember.set(layer, 'defaultFeatureStyle', Object.assign({}, layer.options));
+          }
+
           layer.setStyle({
             fillOpacity: 0.3
           });
@@ -730,8 +736,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
 
           //Removing a layer from the map that was added for edit mode
-          if (this.get('isLayerCopy') && leafletMap.hasLayer(layer)) {
-            leafletMap.removeLayer(layer);
+          if (leafletMap.hasLayer(layer)) {
+            if (this.get('isLayerCopy')) {
+              leafletMap.removeLayer(layer);
+            } else {
+              layer.setStyle(layer.defaultFeatureStyle);
+            }
           }
 
           delete latlngs[index];
@@ -968,7 +978,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       }
 
       this.set('dataItems', null);
-      this.sendAction('editFeatureEnd');
+      this.get('leafletMap').fire('flexberry-map:edit-feature:end', null); // cancel edit-feature mode
+      this.sendAction('editFeatureEnd'); // close edit tab
     },
 
     prev() {
@@ -1143,7 +1154,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         this.set('loading', false);
         this.set('error', t('components.flexberry-edit-layer-feature.validation.save-fail'));
         leafletObject.off('save:success', saveSuccess);
-
         this.restoreLayers().then(() => {
           this.get('leafletMap').fire(event + ':fail', e);
         }).catch(() => {
@@ -1190,7 +1200,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
 
-        this.sendAction('editFeatureEnd');
+        this.sendAction('editFeatureEnd'); // close edit tab
       };
 
       leafletObject.off('save:failed', saveFailed);

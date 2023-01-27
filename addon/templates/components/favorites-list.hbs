@@ -1,6 +1,3 @@
-<button type="submit" class="ui button primary compare{{if compareBtnDisabled " disabled"}}" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
-  {{t "components.compare-object-geometries.compare-objects-caption"}}
-</button>
 {{flexberry-button
   class="fav-list clear"
   tooltip=(t "components.favourites-list.clear.tooltip")
@@ -8,6 +5,9 @@
   click=(action "clear")
 }}
 {{#if _showFavorites}}
+  <button type="submit" class="ui button primary compare{{if compareBtnDisabled " disabled"}}" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
+    {{t "components.compare-object-geometries.compare-objects-caption"}}
+  </button>
   {{layer-result-list
     results=data
     serviceLayer=serviceLayer
@@ -21,13 +21,12 @@
     _selectedFeature=_selectedFeature
     pane="zoomto"
     zoomToCopy=true
-    copyStyle=(hash 
+    copyStyle=(hash
       weight=2
       fill=false
     )
   }}
 {{else}}
-  <div class="ui form loading" style="height: 100%; margin-right: 20px;">
-  </div>
+  <div class="ui form loading"></div>
 {{/if}}
 

@@ -7,14 +7,14 @@ import layout from '../templates/components/feature-result-item';
 import { translationMacro as t } from 'ember-i18n';
 import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
 import { zoomToBounds } from '../utils/zoom-to-bounds';
-
+import ResultFeatureInitializer from '../mixins/result-feature-initializer';
 /**
   Component for display GeoJSON feature object details
 
   @class FeatureResultItemComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
-export default Ember.Component.extend({
+export default Ember.Component.extend(ResultFeatureInitializer, {
 
   /**
     Service for managing map API.
@@ -315,6 +315,13 @@ export default Ember.Component.extend({
     }
   },
 
+  willDestroyElement() {
+    this._super(...arguments);
+    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    leafletMap.off('flexberry-map:edit-feature:end', this._updateFeatureResultItem, this);
+    leafletMap.off('flexberry-map:edit-feature:fail', this._updateFeatureResultItem, this);
+  },
+
   /**
     Preparation feature for highlighting.
 
@@ -326,6 +333,9 @@ export default Ember.Component.extend({
       return;
     }
 
+    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    leafletMap.on('flexberry-map:edit-feature:end', this._updateFeatureResultItem, this);
+    leafletMap.on('flexberry-map:edit-feature:fail', this._updateFeatureResultItem, this);
     this.set('defaultFeatureStyle', Object.assign({}, feature.leafletLayer.options));
 
     if (feature.geometry && feature.geometry.type &&
@@ -482,6 +492,7 @@ export default Ember.Component.extend({
             }]
           };
 
+          leafletMap.removeLayer(feature.leafletLayer);
           this.sendAction('editFeature', {
             isFavorite: feature.properties.isFavorite,
             dataItems: dataItems,
@@ -622,8 +633,51 @@ export default Ember.Component.extend({
     zoomToIntersection() {
       this.sendAction('zoomTo', this.get('feature'));
       this.sendAction('zoomToIntersection', this.get('feature'));
+    },
+
+  },
+
+  /**
+   * This method update feature result item when feature is edited
+   * @param {Object} editedLayer This parameter contains layer (object) which the was edited.
+   */
+  _updateFeatureResultItem(editedLayer) {
+    let editedLayerId = null;
+    let editedFeature = null;
+    let editedFeatureId = null;
+
+    if (editedLayer && editedLayer.layers) {
+      editedLayerId = editedLayer.layerModel.layerModel.id;
+      editedFeature = editedLayer.layers[0];
+      editedFeatureId = editedFeature.feature.id;
     }
-  }
+
+    let feature = this.get('feature');
+    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    let resultObject = this.get('resultObject'); // parent result object from layer-result-list
+
+    if (editedLayer && editedLayerId ===  resultObject.layerModel.id && editedFeature && editedFeatureId === feature.id) {
+      // on successfull edit
+      Object.keys(editedFeature.feature.properties).forEach(attribute => {
+        if (attribute === 'primarykey') {
+          return;
+        }
+
+        Ember.set(feature.properties, attribute, editedFeature.feature.properties[attribute]);
+      });
+      Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature,
+                                                                        resultObject.settings,
+                                                                        resultObject.dateFormat,
+                                                                        resultObject.dateTimeFormat,
+                                                                        resultObject.layerModel));
+      feature.leafletLayer.setLatLngs(editedFeature.getLatLngs()); // Update feature geometry
+      this.rerender(); // force component re-render to recalculate #each-in helper
+    }
+
+    if (!leafletMap.hasLayer(feature.leafletLayer)) {
+      leafletMap.addLayer(feature.leafletLayer); // return back featureLayer with identification/search results
+    }
+  },
 
   /**
     Component's action invoking for select feature

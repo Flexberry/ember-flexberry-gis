@@ -139,6 +139,10 @@ export default BaseLayer.extend({
   },
 
   updateHistory(e) {
+    if (!e) {
+      return;
+    }
+
     let id = Ember.get(e.layerModel, 'layerModel.id');
     if (this.get('layerModel.id') === id) {
       let historyLayer = this.get('historyLayer');

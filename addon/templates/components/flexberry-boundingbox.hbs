@@ -35,6 +35,7 @@
         {{flexberry-textbox
           type="number"
           value=_minLng
+          maxlength=boundaryMaxlength
           class=(if _minLngIsValid (if _coordinatesAreChanged "success" "") "error")
         }}
       </div>
@@ -48,7 +49,7 @@
       {{flexberry-button
         caption= (t "components.flexberry-boundingbox.button-caption")
         class=(concat "fluid top attached" (if (and _coordinatesAreValid _coordinatesAreChanged) " success" " disabled"))
-        click=(action "onButtonClick")
+        click=(action "acceptBoundaryChanges")
       }}
       {{#flexberry-map
         lat=mapModel.lat
@@ -77,6 +78,7 @@
         {{flexberry-textbox
           type="number"
           value=_maxLng
+          maxlength=boundaryMaxlength
           class=(if _maxLngIsValid (if _coordinatesAreChanged "success" "") "error")
         }}
       </div>
@@ -99,6 +101,7 @@
           {{flexberry-textbox
             type="number"
             value=_minLat
+            maxlength=boundaryMaxlength
             class=(if _minLatIsValid (if _coordinatesAreChanged "success" "") "error")
           }}
           {{#if (not _minLatIsValid)}}
