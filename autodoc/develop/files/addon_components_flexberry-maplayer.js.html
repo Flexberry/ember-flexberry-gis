@@ -1320,6 +1320,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onAddDialogApprove(...args) {
         // Send outer &#x27;add&#x27; action.
         this.sendAction(&#x27;add&#x27;, ...args);
+        this.set(&#x27;_addDialogHasBeenRequested&#x27;, false);
+      },
+
+      /**
+        Handles add dialog&#x27;s &#x27;deny&#x27; action.
+
+        @method actions.onAddDialogDeny
+      */
+      onAddDialogDeny() {
+        this.set(&#x27;_addDialogHasBeenRequested&#x27;, false);
       },
 
       /**
@@ -1357,6 +1367,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
         // Send outer &#x27;copy&#x27; action.
         this.sendAction(&#x27;copy&#x27;, { layerProperties, layer });
+        this.set(&#x27;_copyDialogHasBeenRequested&#x27;, false);
+      },
+
+      /**
+        Handles copy dialog&#x27;s &#x27;deny&#x27; action.
+
+        @method actions.onCopyDialogDeny
+      */
+      onCopyDialogDeny() {
+        this.set(&#x27;_copyDialogHasBeenRequested&#x27;, false);
       },
 
       /**
@@ -1389,6 +1409,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onEditDialogApprove(...args) {
         // Send outer &#x27;edit&#x27; action.
         this.sendAction(&#x27;edit&#x27;, ...args);
+        this.set(&#x27;_editDialogHasBeenRequested&#x27;, false);
+      },
+
+      /**
+        Handles edit dialog&#x27;s &#x27;deny&#x27; action.
+
+        @method actions.onEditDialogDeny
+      */
+      onEditDialogDeny() {
+        this.set(&#x27;_editDialogHasBeenRequested&#x27;, false);
       },
 
       /**
@@ -1419,6 +1449,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onRemoveDialogApprove(...args) {
         // Send outer &#x27;remove&#x27; action.
         this.sendAction(&#x27;remove&#x27;, ...args);
+        this.set(&#x27;_removeDialogHasBeenRequested&#x27;, false);
+      },
+
+      /**
+        Handles remove dialog&#x27;s &#x27;deny&#x27; action.
+
+        @method actions.onRemoveDialogDeny
+      */
+      onRemoveDialogDeny() {
+        this.set(&#x27;_removeDialogHasBeenRequested&#x27;, false);
       },
 
       closeOtherCalendar() {

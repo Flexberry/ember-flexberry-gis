@@ -465,6 +465,16 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
   _areaSelect: null,
 
   /**
+    Max length textboxes of boundaries values
+
+    @property boundaryMaxlength
+    @type number
+    @default 5
+    @private
+  */
+  boundaryMaxlength: 5,
+
+  /**
     Minimal latitude value binded to textbox.
 
     @property _minLat
@@ -572,6 +582,22 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
     return this.get(&#x27;_minLatIsValid&#x27;) &amp;&amp; this.get(&#x27;_minLngIsValid&#x27;) &amp;&amp; this.get(&#x27;_maxLatIsValid&#x27;) &amp;&amp; this.get(&#x27;_maxLngIsValid&#x27;);
   }),
 
+  boundariesChangedObs: Ember.observer(&#x27;_coordinatesAreValid&#x27;, function() {
+    if (!this.get(&#x27;_coordinatesAreValid&#x27;)) {
+      return;
+    }
+
+    Ember.run.once(this, &#x27;setBoundaries&#x27;);
+  }),
+
+  setBoundaries() {
+    this.setProperties({
+      minLat: parseFloat(this.get(&#x27;_minLat&#x27;)),
+      minLng: parseFloat(this.get(&#x27;_minLng&#x27;)),
+      maxLat: parseFloat(this.get(&#x27;_maxLat&#x27;)),
+      maxLng: parseFloat(this.get(&#x27;_maxLng&#x27;))
+    });
+  },
   /**
     Flag: indicates whether coordinates in textboxes are changed or not.
 
@@ -580,24 +606,11 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
     @readOnly
     @private
   */
-  _coordinatesAreChanged: Ember.computed(&#x27;_minLat&#x27;, &#x27;_minLng&#x27;, &#x27;_maxLat&#x27;, &#x27;_maxLng&#x27;, &#x27;minLat&#x27;, &#x27;minLng&#x27;, &#x27;maxLat&#x27;, &#x27;maxLng&#x27;, function() {
-    if (parseFloat(this.get(&#x27;_minLat&#x27;)) !== parseFloat(this.get(&#x27;minLat&#x27;))) {
-      return true;
+  _coordinatesAreChanged: Ember.computed(&#x27;minLat&#x27;, &#x27;minLng&#x27;, &#x27;maxLat&#x27;, &#x27;maxLng&#x27;, {
+    get: () =&gt; true,
+    set() {
+      return arguments[1];
     }
-
-    if (parseFloat(this.get(&#x27;_minLng&#x27;)) !== parseFloat(this.get(&#x27;minLng&#x27;))) {
-      return true;
-    }
-
-    if (parseFloat(this.get(&#x27;_maxLat&#x27;)) !== parseFloat(this.get(&#x27;maxLat&#x27;))) {
-      return true;
-    }
-
-    if (parseFloat(this.get(&#x27;_maxLng&#x27;)) !== parseFloat(this.get(&#x27;maxLng&#x27;))) {
-      return true;
-    }
-
-    return false;
   }),
 
   /**
@@ -797,6 +810,7 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
     areaSelect.on(&#x27;change&#x27;, this._areaSelectOnChange, this);
 
     this._boundingBoxCoordinatesDidChange();
+    this.send(&#x27;acceptBoundaryChanges&#x27;);
   },
 
   /**
@@ -842,55 +856,6 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
     } else {
       this.set(&#x27;_needToUpdateAreaSelect&#x27;, true);
     }
-
-    let coordinatesBounds = [
-      [minLng, minLat],
-      [maxLng, minLat],
-      [maxLng, maxLat],
-      [minLng, maxLat],
-      [minLng, minLat]
-    ];
-
-    if (minLat === -90 &amp;&amp; maxLat === 90) {
-      coordinatesBounds.splice(2, 0, [maxLng, 0]);
-      coordinatesBounds.splice(5, 0, [minLng, 0]);
-    }
-
-    // If some of polygon&#x27;s edges have length of 180 (for example from latitude -90 till latitude 90)
-    // then PostGIS will throw an exception &quot;Antipodal (180 degrees long) edge detected&quot;.
-    // Workaround is to make each edge shorter (add additional points into polygon&#x27;s edges).
-    let bboxEWKT = &#x60;SRID=4326;POLYGON((&#x60; +
-      &#x60;${minLng} ${minLat},&#x60; +
-      &#x60;${minLng + (maxLng - minLng) * 0.5} ${minLat},&#x60; +
-      &#x60;${maxLng} ${minLat},&#x60; +
-      &#x60;${maxLng} ${minLat + (maxLat - minLat) * 0.5},&#x60; +
-      &#x60;${maxLng} ${maxLat},&#x60; +
-      &#x60;${minLng + (maxLng - minLng) * 0.5} ${maxLat},&#x60; +
-      &#x60;${minLng} ${maxLat},&#x60; +
-      &#x60;${minLng} ${minLat + (maxLat - minLat) * 0.5},&#x60; +
-      &#x60;${minLng} ${minLat}))&#x60;;
-
-    // Send &#x27;boundingBoxChange&#x27; action to report about changes in bounds.
-    this.sendAction(&#x27;boundingBoxChange&#x27;, {
-      minLat: minLat,
-      minLng: minLng,
-      maxLat: maxLat,
-      maxLng: maxLng,
-      bounds: L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng)),
-      bboxEWKT: bboxEWKT,
-      bboxGeoJSON: {
-        type: &#x27;Polygon&#x27;,
-        coordinates: [
-          coordinatesBounds
-        ],
-        crs: {
-          type: &#x27;name&#x27;,
-          properties: {
-            name: &#x27;EPSG:4326&#x27;
-          }
-        }
-      }
-    });
   },
 
   /**
@@ -1021,19 +986,65 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
 
       @method actions.onButtonClick
     */
-    onButtonClick() {
-      if (!(this.get(&#x27;_coordinatesAreValid&#x27;) || this.get(&#x27;_coordinatesAreChanged&#x27;))) {
+    acceptBoundaryChanges() {
+      if (!this.get(&#x27;_coordinatesAreValid&#x27;) || !this.get(&#x27;_coordinatesAreChanged&#x27;)) {
         return;
       }
 
-      // Update related public properties with coordiantes to force &#x27;_updateBoundingBoxCoordiantes&#x27; to be triggered.
-      this.set(&#x27;_needToUpdateAreaSelect&#x27;, true);
-      this.setProperties({
-        minLat: parseFloat(this.get(&#x27;_minLat&#x27;)),
-        minLng: parseFloat(this.get(&#x27;_minLng&#x27;)),
-        maxLat: parseFloat(this.get(&#x27;_maxLat&#x27;)),
-        maxLng: parseFloat(this.get(&#x27;_maxLng&#x27;))
+      let minLng = this.get(&#x27;minLng&#x27;);
+      let maxLng = this.get(&#x27;maxLng&#x27;);
+      let minLat = this.get(&#x27;minLat&#x27;);
+      let maxLat = this.get(&#x27;maxLat&#x27;);
+
+      let coordinatesBounds = [
+        [minLng, minLat],
+        [maxLng, minLat],
+        [maxLng, maxLat],
+        [minLng, maxLat],
+        [minLng, minLat]
+      ];
+
+      if (minLat === -90 &amp;&amp; maxLat === 90) {
+        coordinatesBounds.splice(2, 0, [maxLng, 0]);
+        coordinatesBounds.splice(5, 0, [minLng, 0]);
+      }
+
+      // If some of polygon&#x27;s edges have length of 180 (for example from latitude -90 till latitude 90)
+      // then PostGIS will throw an exception &quot;Antipodal (180 degrees long) edge detected&quot;.
+      // Workaround is to make each edge shorter (add additional points into polygon&#x27;s edges).
+      let bboxEWKT = &#x60;SRID=4326;POLYGON((&#x60; +
+        &#x60;${minLng} ${minLat},&#x60; +
+        &#x60;${minLng + (maxLng - minLng) * 0.5} ${minLat},&#x60; +
+        &#x60;${maxLng} ${minLat},&#x60; +
+        &#x60;${maxLng} ${minLat + (maxLat - minLat) * 0.5},&#x60; +
+        &#x60;${maxLng} ${maxLat},&#x60; +
+        &#x60;${minLng + (maxLng - minLng) * 0.5} ${maxLat},&#x60; +
+        &#x60;${minLng} ${maxLat},&#x60; +
+        &#x60;${minLng} ${minLat + (maxLat - minLat) * 0.5},&#x60; +
+        &#x60;${minLng} ${minLat}))&#x60;;
+
+      // Send &#x27;boundingBoxChange&#x27; action to report about changes in bounds.
+      this.sendAction(&#x27;boundingBoxChange&#x27;, {
+        minLat: minLat,
+        minLng: minLng,
+        maxLat: maxLat,
+        maxLng: maxLng,
+        bounds: L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng)),
+        bboxEWKT: bboxEWKT,
+        bboxGeoJSON: {
+          type: &#x27;Polygon&#x27;,
+          coordinates: [
+            coordinatesBounds
+          ],
+          crs: {
+            type: &#x27;name&#x27;,
+            properties: {
+              name: &#x27;EPSG:4326&#x27;
+            }
+          }
+        }
       });
+      this.set(&#x27;_coordinatesAreChanged&#x27;, false);
     }
   }
 

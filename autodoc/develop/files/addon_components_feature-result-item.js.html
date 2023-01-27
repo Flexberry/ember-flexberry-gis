@@ -423,14 +423,14 @@ import layout from &#x27;../templates/components/feature-result-item&#x27;;
 import { translationMacro as t } from &#x27;ember-i18n&#x27;;
 import openCloseSubmenu from &#x27;ember-flexberry-gis/utils/open-close-sub-menu&#x27;;
 import { zoomToBounds } from &#x27;../utils/zoom-to-bounds&#x27;;
-
+import ResultFeatureInitializer from &#x27;../mixins/result-feature-initializer&#x27;;
 /**
   Component for display GeoJSON feature object details
 
   @class FeatureResultItemComponent
   @extends &lt;a href=&quot;http://emberjs.com/api/classes/Ember.Component.html&quot;&gt;Ember.Component&lt;/a&gt;
  */
-export default Ember.Component.extend({
+export default Ember.Component.extend(ResultFeatureInitializer, {
 
   /**
     Service for managing map API.
@@ -731,6 +731,13 @@ export default Ember.Component.extend({
     }
   },
 
+  willDestroyElement() {
+    this._super(...arguments);
+    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+    leafletMap.off(&#x27;flexberry-map:edit-feature:end&#x27;, this._updateFeatureResultItem, this);
+    leafletMap.off(&#x27;flexberry-map:edit-feature:fail&#x27;, this._updateFeatureResultItem, this);
+  },
+
   /**
     Preparation feature for highlighting.
 
@@ -742,6 +749,9 @@ export default Ember.Component.extend({
       return;
     }
 
+    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+    leafletMap.on(&#x27;flexberry-map:edit-feature:end&#x27;, this._updateFeatureResultItem, this);
+    leafletMap.on(&#x27;flexberry-map:edit-feature:fail&#x27;, this._updateFeatureResultItem, this);
     this.set(&#x27;defaultFeatureStyle&#x27;, Object.assign({}, feature.leafletLayer.options));
 
     if (feature.geometry &amp;&amp; feature.geometry.type &amp;&amp;
@@ -898,6 +908,7 @@ export default Ember.Component.extend({
             }]
           };
 
+          leafletMap.removeLayer(feature.leafletLayer);
           this.sendAction(&#x27;editFeature&#x27;, {
             isFavorite: feature.properties.isFavorite,
             dataItems: dataItems,
@@ -1038,8 +1049,51 @@ export default Ember.Component.extend({
     zoomToIntersection() {
       this.sendAction(&#x27;zoomTo&#x27;, this.get(&#x27;feature&#x27;));
       this.sendAction(&#x27;zoomToIntersection&#x27;, this.get(&#x27;feature&#x27;));
+    },
+
+  },
+
+  /**
+   * This method update feature result item when feature is edited
+   * @param {Object} editedLayer This parameter contains layer (object) which the was edited.
+   */
+  _updateFeatureResultItem(editedLayer) {
+    let editedLayerId = null;
+    let editedFeature = null;
+    let editedFeatureId = null;
+
+    if (editedLayer &amp;&amp; editedLayer.layers) {
+      editedLayerId = editedLayer.layerModel.layerModel.id;
+      editedFeature = editedLayer.layers[0];
+      editedFeatureId = editedFeature.feature.id;
     }
-  }
+
+    let feature = this.get(&#x27;feature&#x27;);
+    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+    let resultObject = this.get(&#x27;resultObject&#x27;); // parent result object from layer-result-list
+
+    if (editedLayer &amp;&amp; editedLayerId ===  resultObject.layerModel.id &amp;&amp; editedFeature &amp;&amp; editedFeatureId === feature.id) {
+      // on successfull edit
+      Object.keys(editedFeature.feature.properties).forEach(attribute =&gt; {
+        if (attribute === &#x27;primarykey&#x27;) {
+          return;
+        }
+
+        Ember.set(feature.properties, attribute, editedFeature.feature.properties[attribute]);
+      });
+      Ember.set(feature, &#x27;displayValue&#x27;, this.getFeatureDisplayProperty(feature,
+                                                                        resultObject.settings,
+                                                                        resultObject.dateFormat,
+                                                                        resultObject.dateTimeFormat,
+                                                                        resultObject.layerModel));
+      feature.leafletLayer.setLatLngs(editedFeature.getLatLngs()); // Update feature geometry
+      this.rerender(); // force component re-render to recalculate #each-in helper
+    }
+
+    if (!leafletMap.hasLayer(feature.leafletLayer)) {
+      leafletMap.addLayer(feature.leafletLayer); // return back featureLayer with identification/search results
+    }
+  },
 
   /**
     Component&#x27;s action invoking for select feature

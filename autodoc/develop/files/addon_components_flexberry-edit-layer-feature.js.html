@@ -658,6 +658,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
 
           layer.enableEdit(leafletMap);
+
+          // save feature style settings to undo changes
+          if (!this.get(&#x27;isLayerCopy&#x27;)) {
+            Ember.set(layer, &#x27;defaultFeatureStyle&#x27;, Object.assign({}, layer.options));
+          }
+
           layer.setStyle({
             fillOpacity: 0.3
           });
@@ -1146,8 +1152,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           }
 
           //Removing a layer from the map that was added for edit mode
-          if (this.get(&#x27;isLayerCopy&#x27;) &amp;&amp; leafletMap.hasLayer(layer)) {
-            leafletMap.removeLayer(layer);
+          if (leafletMap.hasLayer(layer)) {
+            if (this.get(&#x27;isLayerCopy&#x27;)) {
+              leafletMap.removeLayer(layer);
+            } else {
+              layer.setStyle(layer.defaultFeatureStyle);
+            }
           }
 
           delete latlngs[index];
@@ -1384,7 +1394,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       }
 
       this.set(&#x27;dataItems&#x27;, null);
-      this.sendAction(&#x27;editFeatureEnd&#x27;);
+      this.get(&#x27;leafletMap&#x27;).fire(&#x27;flexberry-map:edit-feature:end&#x27;, null); // cancel edit-feature mode
+      this.sendAction(&#x27;editFeatureEnd&#x27;); // close edit tab
     },
 
     prev() {
@@ -1559,7 +1570,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         this.set(&#x27;loading&#x27;, false);
         this.set(&#x27;error&#x27;, t(&#x27;components.flexberry-edit-layer-feature.validation.save-fail&#x27;));
         leafletObject.off(&#x27;save:success&#x27;, saveSuccess);
-
         this.restoreLayers().then(() =&gt; {
           this.get(&#x27;leafletMap&#x27;).fire(event + &#x27;:fail&#x27;, e);
         }).catch(() =&gt; {
@@ -1606,7 +1616,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
 
-        this.sendAction(&#x27;editFeatureEnd&#x27;);
+        this.sendAction(&#x27;editFeatureEnd&#x27;); // close edit tab
       };
 
       leafletObject.off(&#x27;save:failed&#x27;, saveFailed);

@@ -533,16 +533,84 @@ define('dummy/tests/helpers/validate-properties', ['exports', 'ember', 'ember-qu
     testPropertyValues(propertyName, values, false, context);
   }
 });
-define('dummy/tests/integration/components/flexberry-boundingbox-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+define('dummy/tests/integration/components/flexberry-boundingbox-test', ['exports', 'ember-qunit', 'ember', 'ember-i18n/services/i18n', 'ember-flexberry-gis/locales/ru/translations', 'ember-flexberry-gis/locales/en/translations', 'dummy/tests/helpers/start-app'], function (exports, _emberQunit, _ember, _emberI18nServicesI18n, _emberFlexberryGisLocalesRuTranslations, _emberFlexberryGisLocalesEnTranslations, _dummyTestsHelpersStartApp) {
+
+  var app = undefined;
 
   (0, _emberQunit.moduleForComponent)('flexberry-boundingbox', 'Integration | Component | flexberry boundingbox', {
+    beforeEach: function beforeEach(assert) {
+      this.register('locale:ru/translations', _emberFlexberryGisLocalesRuTranslations['default']);
+      this.register('locale:en/translations', _emberFlexberryGisLocalesEnTranslations['default']);
+      this.register('service:i18n', _emberI18nServicesI18n['default']);
+      app = (0, _dummyTestsHelpersStartApp['default'])();
+
+      this.inject.service('i18n', { as: 'i18n' });
+      _ember['default'].Component.reopen({
+        i18n: _ember['default'].inject.service('i18n')
+      });
+    },
     integration: true
   });
 
-  (0, _emberQunit.test)('temporary test', function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-    assert.equal('', '');
+  (0, _emberQunit.test)('flexberry-boundingbox test', function (assert) {
+    var _this = this;
+
+    assert.expect(2);
+    var done = assert.async(1);
+    this.set('leafletMap', L.map(document.createElement('div')));
+    this.render(_ember['default'].HTMLBars.template((function () {
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.4.6',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 1,
+              'column': 48
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [['inline', 'flexberry-boundingbox', [], ['_leafletMap', ['subexpr', '@mut', [['get', 'leafletMap', ['loc', [null, [1, 36], [1, 46]]]]], [], []]], ['loc', [null, [1, 0], [1, 48]]]]],
+        locals: [],
+        templates: []
+      };
+    })()));
+
+    var resultMessage = 'bounding box accept button is disabled on init';
+    assert.equal(this.$('.flexberry-boundingbox .flexberry-button').hasClass('disabled'), true, resultMessage);
+
+    fillIn('.flexberry-boundingbox input:first', '1').then(function () {
+      resultMessage = 'bounding box accept button is enabled on input fields changing';
+      assert.equal(_this.$('.flexberry-boundingbox .flexberry-button').hasClass('disabled'), false, resultMessage);
+      done();
+    });
+
+    this.$('.leaflet-areaselect-handle .leaflet-control');
   });
 });
 define('dummy/tests/integration/components/flexberry-boundingbox-test.jscs-test', ['exports'], function (exports) {
@@ -13482,6 +13550,34 @@ define('dummy/tests/unit/mixins/odata-filter-parser-test.jshint', ['exports'], f
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/mixins/odata-filter-parser-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/result-feature-initializer-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/result-feature-initializer', 'qunit'], function (exports, _ember, _emberFlexberryGisMixinsResultFeatureInitializer, _qunit) {
+
+  (0, _qunit.module)('Unit | Mixin | result feature initializer');
+
+  // Replace this with your real tests.
+  (0, _qunit.test)('it works', function (assert) {
+    var ResultFeatureInitializerObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsResultFeatureInitializer['default']);
+    var subject = ResultFeatureInitializerObject.create();
+    assert.ok(subject);
+  });
+});
+define('dummy/tests/unit/mixins/result-feature-initializer-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/result-feature-initializer-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/result-feature-initializer-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/result-feature-initializer-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/result-feature-initializer-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/result-feature-initializer-test.js should pass jshint.');
   });
 });
 define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-layer-link-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
