@@ -167,7 +167,7 @@ export default Ember.Component.extend({
     let currentLayerId = this.get('feature.layerModel.id');
     let vectorLayers = this.get('vectorLayers');
 
-    return Ember.isNone(currentLayerId) ? vectorLayers : vectorLayers.filter((l) => { return l.id !== currentLayerId });
+    return Ember.isNone(currentLayerId) ? vectorLayers : vectorLayers.filter((l) => { return l.id !== currentLayerId; });
   }),
 
   /**
@@ -181,7 +181,7 @@ export default Ember.Component.extend({
   loadIntersectionLayers(layers) {
     if (!layers) {
       return [];
-    }    
+    }
 
     let vlayers = [];
     layers.forEach(layer => {
