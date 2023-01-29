@@ -64,6 +64,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @method actions.compareTwoGeometries
     */
     compareTwoGeometries() {
+      this.sendAction('clear');
       this.sendAction('compareTwoGeometries', 'open');
     },
 
