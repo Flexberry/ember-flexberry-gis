@@ -163,6 +163,13 @@ export default Ember.Component.extend({
     return !Ember.isNone(layerClass) && layerClass.isVectorType(layer, true);
   },
 
+  filteredVectorLayers: Ember.computed('vectorLayers', 'feature', function () {
+    let currentLayerId = this.get('feature.layerModel.id');
+    let vectorLayers = this.get('vectorLayers');
+
+    return Ember.isNone(currentLayerId) ? vectorLayers : vectorLayers.filter((l) => { return l.id !== currentLayerId; });
+  }),
+
   /**
     loads layers into a list to search for intersections. Casts the tree structure to a list.
 
@@ -191,6 +198,7 @@ export default Ember.Component.extend({
         }
       }
     });
+
     return vlayers;
   },
 

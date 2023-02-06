@@ -16,7 +16,7 @@
               {{t "components.flexberry-layers-intersections-panel.layers-list"}}
               <div class="field intersection-multiselect">
                 {{select-with-checkbox
-                  items=vectorLayers
+                  items=filteredVectorLayers
                   selectedItems = selectedLayers
                   clearAll=(action "clearSelected")
                   isSelectAllVisible = false
