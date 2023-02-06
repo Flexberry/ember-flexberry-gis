@@ -1489,7 +1489,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         let container = Ember.$(&#x27;.flexberry-export-map-command-dialog-sheet-of-paper&#x27;)[0];
         let _this = this;
         this.set(&#x27;isBusy&#x27;, true);
-        Ember.$(container).waitForImages(function() {
+
+        Ember.$(container).waitForImages(() =&gt; {
           let legends = Ember.$(&#x27;.ember-view.layer-legend&#x27;, container);
           legends.each(function () {
             Ember.$(this).css(&#x27;visibility&#x27;, &#x27;visible&#x27;);
@@ -1519,7 +1520,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
             }
           }
 
-          _this.set(&#x27;isBusy&#x27;, false);
+          Ember.run.later(() =&gt; { _this.set(&#x27;isBusy&#x27;, false); }, 0);
         });
       });
 
