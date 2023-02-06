@@ -440,6 +440,7 @@ div.bottompanel-wrapper {
 
         .buttons {
           font-size: 0;
+          margin-bottom: 10px;
           .ui.button.flexberry-button,
           .flexberry-geometry-buffer {
             border: @defaultGrayBorder;

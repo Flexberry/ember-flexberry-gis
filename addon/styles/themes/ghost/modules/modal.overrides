@@ -730,7 +730,23 @@
     div[data-tab="bbox-tab"] {
       .eight.wide.column {
         .flexberry-button {
-          width: 100%;
+          &.success {
+            background-color: @primaryColor;
+            color: @buttonMenuHoveredBackground;
+            text-shadow: none;
+            opacity: 1;
+            width:100%;
+
+            &:hover {
+              background: #0056C0;
+            }
+
+            &.disabled {
+              background: @buttonMenuHoveredBackground;
+              color: #848E99;
+            }
+          }
+
         }
       }
     }
