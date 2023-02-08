@@ -592,7 +592,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
 
     /**
      * Action for search satellites
-     * @method actions.findIntersection
+     * @method actions.searchSatellites
      */
     searchSatellites() {
       this.set('isSubmenu', false);
@@ -622,8 +622,8 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       @method actions.panToIntersection
      */
     panToIntersection() {
-      this.sendAction('zoomTo', this.get('feature'));
       this.sendAction('panTo', this.get('feature'));
+      this.sendAction('panToIntersection', this.get('feature'));
     },
 
     /**
@@ -631,7 +631,6 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       @method actions.zoomToIntersection
       */
     zoomToIntersection() {
-      this.sendAction('zoomTo', this.get('feature'));
       this.sendAction('zoomToIntersection', this.get('feature'));
     },
 
