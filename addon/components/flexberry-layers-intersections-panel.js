@@ -150,8 +150,12 @@ export default Ember.Component.extend({
     }
     let layerCopy = L.geoJson(feature.leafletLayer.toGeoJSON());
 
-    layerCopy.setStyle({color:'blue'}); //#3388FF
-    Ember.set(feature, 'leafletLayer', layerCopy)
+    layerCopy.setStyle({color: '#3388FF', fill: false, fillOpacity: 0}); //#3388FF
+
+    Ember.set(feature, 'leafletLayer', layerCopy.getLayers()[0])
+    Ember.set(feature.leafletLayer, 'defaultOptions', Object.assign({}, { defaultFeatureStyle: feature.leafletLayer.options }));
+    Ember.set(feature.leafletLayer, 'feature', feature);
+
     serviceLayer.addLayer(feature.leafletLayer)
   }),
 
@@ -274,7 +278,7 @@ export default Ember.Component.extend({
     /**
       Handles click on a close button.
 
-      @method actions.findIntersections
+      @method actions.closePanel
     */
     closePanel() {
       this.clearPanel();
@@ -315,24 +319,32 @@ export default Ember.Component.extend({
       @param {Object} feature Selected feature to zoom.
     */
     zoomToIntersection(feature) {
-      let group = this.get('serviceLayer');
-      group.clearLayers();
-      let intersectedObject = feature.intersection.intersectedObject;
+      let serviceLayer = this.get('serviceLayer');
 
-      let obj = L.geoJSON(intersectedObject, {
-        style: { color: '#008000' },
-        coordsToLatLng: intersectedObject.coordsToLatLng
+      this.clearFeaturesStyle().then(() =>{
+        let intersectionLayer = feature.intersection.intersectionLayer;
+        if (intersectionLayer) {
+          intersectionLayer.setStyle({ color: '#008000' })
+          if (!serviceLayer.hasLayer(intersectionLayer)) {
+            intersectionLayer.addTo(serviceLayer);
+          }
+          return;
+        }
+
+        let intersectedObject = feature.intersection.intersectedObject;
+        intersectionLayer = L.geoJSON(intersectedObject, {
+          style: { color: '#008000' },
+          coordsToLatLng: intersectedObject.coordsToLatLng,
+          defaultFeatureStyle: { color: '#3388FF', weight: 2, fillOpacity: 0.2 }
+        });
+
+        Ember.set(feature.intersection, 'intersectionLayer', intersectionLayer.getLayers()[0])
+        feature.intersection.intersectionLayer.addTo(serviceLayer);
       });
-
-      obj.addTo(group);
     },
 
     panToIntersection(feature){
-      let group = this.get('serviceLayer');
-      group.clearLayers();
-      feature.leafletLayer.setStyle({color:'green', fillColor:'green',fillOpacity:1})
-
-      feature.leafletLayer.addTo(group);
+      this.clearFeaturesStyle().then(() =>  feature.leafletLayer.setStyle({ color:'#008000'}));
     },
 
     /**
@@ -448,6 +460,7 @@ export default Ember.Component.extend({
               }
 
               Ember.set(feature, 'leafletLayer', leafletLayer);
+              Ember.set(feature.leafletLayer, 'defaultOptions', {defaultFeatureStyle: Object.assign({}, feature.leafletLayer.options)});
             } else {
               let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
               if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
@@ -457,8 +470,10 @@ export default Ember.Component.extend({
                   fillOpacity: 0
                 });
               }
+              console.log('нужна ветка эта?')
 
               Ember.set(feature, 'leafletLayer', leafletLayer);
+              Ember.set(feature.leafletLayer, 'defaultOptions',{defaultFeatureStyle: Object.assign({}, feature.leafletLayer.options)});
             }
           });
         });
@@ -516,6 +531,24 @@ export default Ember.Component.extend({
         });
     });
     this.set('results', []);
+  },
+
+  clearFeaturesStyle() {
+    //[...this.get('serviceLayer').getLayers()].forEach( layer =>  layer.setStyle(layer.defaultOptions.defaultFeatureStyle))
+    this.get('serviceLayer').clearLayers()
+    this.feature.leafletLayer.addTo(this.get('serviceLayer'))
+    let promises = Ember.A();
+      this.get('results').forEach((identificationResult) => {
+        promises.pushObject(identificationResult.features);
+     });
+
+     return Ember.RSVP.allSettled(promises).then((results) => {
+        let features = results.map(result => result.value).flat(1)
+
+        features.forEach((feature) => {
+          feature.leafletLayer.setStyle(feature.leafletLayer.defaultOptions.defaultFeatureStyle)
+        });
+      });
   },
 
   /**
