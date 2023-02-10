@@ -310,7 +310,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
       @method actions.panToIntersection
       @param feature
     */
-    panToIntersection(feature){
+    panToIntersection(feature) {
       this.send('panTo', feature);
       this.sendAction('panToIntersection', feature);
     },

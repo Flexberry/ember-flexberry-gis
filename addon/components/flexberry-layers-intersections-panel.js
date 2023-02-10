@@ -36,7 +36,7 @@ export default Ember.Component.extend({
 
   activeIntersectionColor: '#008000',
 
-  defaultIntersectionStyle: { color: '#3388FF', weight: 2, fillOpacity: 0.2 },
+  defaultIntersectionStyle: { color: '#3388FF', weight: 2, fillOpacity: 0 },
 
   /**
     List vector layers.
@@ -148,20 +148,22 @@ export default Ember.Component.extend({
     if (!feature) {
       return;
     }
+
     let leafletMap = this.get('leafletMap');
-    let serviceLayer = this.get('serviceLayer')
-    if(!leafletMap.hasLayer(serviceLayer)) {
-      serviceLayer.addTo(leafletMap)
+    let serviceLayer = this.get('serviceLayer');
+    if (!leafletMap.hasLayer(serviceLayer)) {
+      serviceLayer.addTo(leafletMap);
     }
+
     let layerCopy = L.geoJson(feature.leafletLayer.toGeoJSON());
 
-    layerCopy.setStyle({color: '#3388FF', fill: false, fillOpacity: 0}); //#3388FF
+    layerCopy.setStyle(this.get('defaultIntersectionStyle'));
 
-    Ember.set(feature, 'leafletLayer', layerCopy.getLayers()[0])
+    Ember.set(feature, 'leafletLayer', layerCopy.getLayers()[0]);
     Ember.set(feature.leafletLayer, 'defaultOptions', Object.assign({}, { defaultFeatureStyle: feature.leafletLayer.options }));
     Ember.set(feature.leafletLayer, 'feature', feature);
 
-    serviceLayer.addLayer(feature.leafletLayer)
+    serviceLayer.addLayer(feature.leafletLayer);
   }),
 
   _checkTypeLayer(layer) {
@@ -288,10 +290,11 @@ export default Ember.Component.extend({
     closePanel() {
       this.clearPanel();
       let leafletMap = this.get('leafletMap');
-      let serviceLayer = this.get('serviceLayer')
+      let serviceLayer = this.get('serviceLayer');
       if (leafletMap.hasLayer(serviceLayer)) {
-        leafletMap.removeLayer(serviceLayer)
+        leafletMap.removeLayer(serviceLayer);
       }
+
       this.sendAction('closeIntersectionPanel');
     },
 
@@ -450,30 +453,30 @@ export default Ember.Component.extend({
   _finishIdentification(e) {
     e.results.forEach((identificationResult) => {
       identificationResult.features.then((features) => {
-          // Show identification result features
-          features.forEach((feature) => {
-            let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
-            let weight = 0;
-            let fillOpacity = 0;
+        // Show identification result features
+        features.forEach((feature) => {
+          let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+          let weight = 0;
+          let fillOpacity = 0;
 
-            if (feature.intersection) {
-              weight = 2;
-              fillOpacity = 0.2;
-            }
+          if (feature.intersection) {
+            weight = 2;
+            fillOpacity = 0.2;
+          }
 
-            if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
-              leafletLayer.setStyle({
-                color: 'salmon',
-                weight: weight,
-                fillOpacity: fillOpacity
-              });
-            }
+          if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+            leafletLayer.setStyle({
+              color: 'salmon',
+              weight: weight,
+              fillOpacity: fillOpacity
+            });
+          }
 
-            Ember.set(feature, 'leafletLayer', leafletLayer);
-            Ember.set(feature.leafletLayer, 'defaultOptions', { defaultFeatureStyle: Object.assign({}, feature.leafletLayer.options) });
-          });
+          Ember.set(feature, 'leafletLayer', leafletLayer);
+          Ember.set(feature.leafletLayer, 'defaultOptions', { defaultFeatureStyle: Object.assign({}, feature.leafletLayer.options) });
         });
       });
+    });
 
     // Hide map loader.
     let leafletMap = this.get('leafletMap');
@@ -537,7 +540,7 @@ export default Ember.Component.extend({
       defaultFeatureStyle: this.get('defaultIntersectionStyle')
     });
 
-    Ember.set(feature.intersection, 'intersectionLayer', intersectionLayer.getLayers()[0])
+    Ember.set(feature.intersection, 'intersectionLayer', intersectionLayer.getLayers()[0]);
 
     return intersectionLayer;
   },
