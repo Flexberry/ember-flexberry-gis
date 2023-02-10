@@ -622,7 +622,6 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       @method actions.panToIntersection
      */
     panToIntersection() {
-      this.sendAction('panTo', this.get('feature'));
       this.sendAction('panToIntersection', this.get('feature'));
     },
 
