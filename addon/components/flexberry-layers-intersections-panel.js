@@ -523,19 +523,19 @@ export default Ember.Component.extend({
     let res = this.get('results');
     res.forEach((identificationResult) => {
       identificationResult.features.then((features) => {
-          features.forEach((feature) => {
-            Ember.get(feature, 'leafletLayer').remove();
-          });
+        features.forEach((feature) => {
+          Ember.get(feature, 'leafletLayer').remove();
         });
+      });
     });
     this.set('results', []);
   },
 
-  createIntersectionLayer (feature) {
+  createIntersectionLayer(feature) {
     let intersectedObject = feature.intersection.intersectedObject;
 
     let intersectionLayer = L.geoJSON(intersectedObject, {
-      style: { color: this.get('activeIntersectionColor')},
+      style: { color: this.get('activeIntersectionColor') },
       coordsToLatLng: intersectedObject.coordsToLatLng,
       defaultFeatureStyle: this.get('defaultIntersectionStyle')
     });
@@ -575,7 +575,7 @@ export default Ember.Component.extend({
   activateIntersection(intersectionLayer) {
     let activeIntersectionColor = this.get('activeIntersectionColor');
 
-    intersectionLayer.setStyle({color: activeIntersectionColor});
+    intersectionLayer.setStyle({ color: activeIntersectionColor });
   },
 
   /**
