@@ -3,6 +3,7 @@ import layout from '../templates/components/flexberry-layers-intersections-panel
 import * as buffer from 'npm:@turf/buffer';
 import * as jsts from 'npm:jsts';
 import { coordinatesToArray } from '../utils/coordinates-to';
+import { zoomToBounds } from '../utils/zoom-to-bounds';
 
 /**
   The component for searching for intersections with selected feature.
@@ -26,12 +27,16 @@ export default Ember.Component.extend({
   disaplayName: null,
 
   /**
-    Layer contains identification result features.
-    @property resultsLayer
+    Layer contains layers of intersection results
+    @property serviceLayer
     @type Object
     @default null
   */
-  resultsLayer: null,
+  serviceLayer: null,
+
+  activeIntersectionColor: '#008000',
+
+  defaultIntersectionStyle: { color: '#3388FF', weight: 2, fillOpacity: 0 },
 
   /**
     List vector layers.
@@ -50,19 +55,6 @@ export default Ember.Component.extend({
     @default null
   */
   leafletMap: null,
-
-  /**
-    Observer for leafletMap property adding layer with results.
-
-    @property _OnMapChanged
-    @private
-    @readonly
-  */
-  _OnMapChanged: Ember.observer('leafletMap', function () {
-    let map = this.get('leafletMap');
-    let group = L.featureGroup().addTo(map);
-    this.set('resultsLayer', group);
-  }),
 
   /**
     Flag indicates if there are any results of intersection.
@@ -151,7 +143,27 @@ export default Ember.Component.extend({
     @readonly
   */
   _OnFeatureChange: Ember.observer('feature', function () {
-    Ember.run.once(this, 'clearPanel');
+    this.clearPanel();
+    let feature = this.get('feature');
+    if (!feature) {
+      return;
+    }
+
+    let leafletMap = this.get('leafletMap');
+    let serviceLayer = this.get('serviceLayer');
+    if (!leafletMap.hasLayer(serviceLayer)) {
+      serviceLayer.addTo(leafletMap);
+    }
+
+    let layerCopy = L.geoJson(feature.leafletLayer.toGeoJSON());
+
+    layerCopy.setStyle(this.get('defaultIntersectionStyle'));
+
+    Ember.set(feature, 'leafletLayer', layerCopy.getLayers()[0]);
+    Ember.set(feature.leafletLayer, 'defaultOptions', Object.assign({}, { defaultFeatureStyle: feature.leafletLayer.options }));
+    Ember.set(feature.leafletLayer, 'feature', feature);
+
+    serviceLayer.addLayer(feature.leafletLayer);
   }),
 
   _checkTypeLayer(layer) {
@@ -208,6 +220,7 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
     this.set('vectorLayers', this.loadIntersectionLayers(this.get('layers')));
+    this.set('serviceLayer', L.featureGroup());
   },
 
   actions: {
@@ -272,10 +285,16 @@ export default Ember.Component.extend({
     /**
       Handles click on a close button.
 
-      @method actions.findIntersections
+      @method actions.closePanel
     */
     closePanel() {
       this.clearPanel();
+      let leafletMap = this.get('leafletMap');
+      let serviceLayer = this.get('serviceLayer');
+      if (leafletMap.hasLayer(serviceLayer)) {
+        leafletMap.removeLayer(serviceLayer);
+      }
+
       this.sendAction('closeIntersectionPanel');
     },
 
@@ -304,16 +323,35 @@ export default Ember.Component.extend({
     /**
       Handles click on zoom icon.
 
-      @method actions.hidePanel
-      @param {Object} feature Selected feature to zoom.
+      @method actions.zoomToIntersection
+      @param {Object} feature object from which to form the intersection with the main object (this.feature)
     */
     zoomToIntersection(feature) {
-      let group = this.get('resultsLayer');
-      group.clearLayers();
-      let obj = L.geoJSON(feature.intersection.intersectedObject, {
-        style: { color: 'green' }
+      let serviceLayer = this.get('serviceLayer');
+      let leafletMap = this.get('leafletMap');
+
+      this.clearFeaturesStyle().then(() => {
+        let intersectionLayer = feature.intersection.intersectionLayer || this.createIntersectionLayer(feature);
+        this.activateIntersection(intersectionLayer);
+        if (!serviceLayer.hasLayer(intersectionLayer)) {
+          intersectionLayer.addTo(serviceLayer);
+        }
+
+        let bounds = intersectionLayer.getBounds();
+        let minZoom = Ember.get(intersectionLayer, 'minZoom');
+        let maxZoom = Ember.get(intersectionLayer, 'maxZoom');
+        zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
       });
-      obj.addTo(group);
+    },
+
+    /**
+      Handles click on pan icon.
+
+      @method actions.panToIntersection
+      @param {Object} feature Selected feature to pan.
+    */
+    panToIntersection(feature) {
+      this.clearFeaturesStyle().then(() => this.activateIntersection(feature.leafletLayer));
     },
 
     /**
@@ -414,42 +452,37 @@ export default Ember.Component.extend({
   */
   _finishIdentification(e) {
     e.results.forEach((identificationResult) => {
-      identificationResult.features.then(
-        (features) => {
-          //Show new features.
-          features.forEach((feature) => {
-            if (feature.intersection) {
-              let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
-              if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
-                leafletLayer.setStyle({
-                  color: 'salmon',
-                  weight: 2,
-                  fillOpacity: 0.2
-                });
-              }
+      identificationResult.features.then((features) => {
+        // Show identification result features
+        features.forEach((feature) => {
+          let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+          let weight = 0;
+          let fillOpacity = 0;
 
-              Ember.set(feature, 'leafletLayer', leafletLayer);
-            } else {
-              let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
-              if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
-                leafletLayer.setStyle({
-                  color: 'salmon',
-                  weight: 0,
-                  fillOpacity: 0
-                });
-              }
+          if (feature.intersection) {
+            weight = 2;
+            fillOpacity = 0.2;
+          }
 
-              Ember.set(feature, 'leafletLayer', leafletLayer);
-            }
-          });
+          if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+            leafletLayer.setStyle({
+              color: 'salmon',
+              weight: weight,
+              fillOpacity: fillOpacity
+            });
+          }
+
+          Ember.set(feature, 'leafletLayer', leafletLayer);
+          Ember.set(feature.leafletLayer, 'defaultOptions', { defaultFeatureStyle: Object.assign({}, feature.leafletLayer.options) });
         });
+      });
     });
 
     // Hide map loader.
     let leafletMap = this.get('leafletMap');
     leafletMap.flexberryMap.loader.hide({ content: '' });
 
-    //Assign current tool's boundingBoxLayer
+    // Assign current tool's boundingBoxLayer
     let polygonLayer = Ember.get(e, 'polygonLayer');
     this.set('polygonLayer', polygonLayer);
 
@@ -465,8 +498,7 @@ export default Ember.Component.extend({
     @method clearPanel
   */
   clearPanel() {
-    let group = this.get('resultsLayer');
-    group.clearLayers();
+    this.get('serviceLayer').clearLayers();
     this.removeLayers();
     this.set('selectedLayers', []);
     this.set('square', null);
@@ -490,14 +522,60 @@ export default Ember.Component.extend({
   removeLayers() {
     let res = this.get('results');
     res.forEach((identificationResult) => {
-      identificationResult.features.then(
-        (features) => {
-          features.forEach((feature) => {
-            Ember.get(feature, 'leafletLayer').remove();
-          });
+      identificationResult.features.then((features) => {
+        features.forEach((feature) => {
+          Ember.get(feature, 'leafletLayer').remove();
         });
+      });
     });
     this.set('results', []);
+  },
+
+  createIntersectionLayer(feature) {
+    let intersectedObject = feature.intersection.intersectedObject;
+
+    let intersectionLayer = L.geoJSON(intersectedObject, {
+      style: { color: this.get('activeIntersectionColor') },
+      coordsToLatLng: intersectedObject.coordsToLatLng,
+      defaultFeatureStyle: this.get('defaultIntersectionStyle')
+    });
+
+    Ember.set(feature.intersection, 'intersectionLayer', intersectionLayer.getLayers()[0]);
+
+    return intersectionLayer;
+  },
+
+  clearFeaturesStyle() {
+    let promises = Ember.A();
+    let serviceLayer = this.get('serviceLayer');
+    let feature = this.get('feature');
+    let intersectionResults = this.get('results');
+
+    serviceLayer.clearLayers();
+    feature.leafletLayer.addTo(serviceLayer);
+
+    intersectionResults.forEach((intersectionResult) => {
+      promises.pushObject(intersectionResult.features);
+    });
+
+    return Ember.RSVP.allSettled(promises).then((results) => {
+      let features = results.map(result => result.value).flat(1);
+
+      features.forEach(feature => this.setDefaultFeatureStyle(feature));
+    });
+  },
+
+  setDefaultFeatureStyle(feature) {
+    let featureLayer = feature.leafletLayer;
+    let defaultStyle = feature.leafletLayer.defaultOptions.defaultFeatureStyle;
+
+    featureLayer.setStyle(defaultStyle);
+  },
+
+  activateIntersection(intersectionLayer) {
+    let activeIntersectionColor = this.get('activeIntersectionColor');
+
+    intersectionLayer.setStyle({ color: activeIntersectionColor });
   },
 
   /**
@@ -527,21 +605,28 @@ export default Ember.Component.extend({
               crs = this.get('leafletMap').options.crs;
             }
 
+            let coordsToLatLng = function(coords) {
+              return crs.unproject(L.point(coords));
+            };
+
             let objAJsts = item.leafletLayer.toJsts(crs);
             let objBJsts = e.polygonLayer.toJsts(crs);
             let intersected = objAJsts.intersection(objBJsts);
             let areaIntersection = intersected.getArea().toFixed(3);
             let geojsonWriter = new jsts.default.io.GeoJSONWriter();
             let res = geojsonWriter.write(intersected);
-            if (res && areaIntersection >= square) {
+            if (res && areaIntersection >= square && intersected.isValid()) {
               item.isIntersect = true;
               item.intersection = {};
               item.intersection.intersectionCords = this.computeCoordinates(res);
               item.intersection.intersectedArea = areaIntersection;
               item.intersection.intersectedObject = res;
+              item.intersection.intersectedObject.coordsToLatLng = coordsToLatLng;
               if (res.type === 'Polygon' || res.type === 'MultiPolygon') {
                 item.intersection.isPolygon = true;
               }
+            } else {
+              console.error('Intersection layer is not valid');
             }
           }
         });

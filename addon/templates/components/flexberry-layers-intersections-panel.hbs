@@ -66,11 +66,11 @@
       <legend>{{t 'components.flexberry-layers-intersections-panel.results'}}</legend>
       {{layer-result-list
         results=results
-        serviceLayer=serviceLayer
         leafletMap=leafletMap
         availableCRS=availableCRS
         intersection=true
         zoomToIntersection=(action 'zoomToIntersection')
+        panToIntersection=(action 'panToIntersection')
       }}
     </fieldset>
   </div>

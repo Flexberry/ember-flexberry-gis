@@ -304,6 +304,16 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
     zoomToIntersection(feature) {
       this.sendAction('zoomToIntersection', feature);
     },
+    /**
+      Action pans to intersection feature.
+
+      @method actions.panToIntersection
+      @param feature
+    */
+    panToIntersection(feature) {
+      this.send('panTo', feature);
+      this.sendAction('panToIntersection', feature);
+    },
 
     /**
      * Set the parameters of export and show the dialog.
@@ -499,7 +509,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
             result.last = result.order === displayResults.length;
             order += 1;
 
-            result.features = result.features.sort((a, b) => {
+            Ember.set(result, 'features', result.features.sort((a, b) => {
               // If displayValue is empty, it should be on the bottom.
               if (Ember.isBlank(a.displayValue)) {
                 return 1;
@@ -518,7 +528,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
               }
 
               return 0;
-            });
+            }));
 
             if (!Ember.isBlank(result.features)) {
               let ownLayerField;
