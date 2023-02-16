@@ -181,10 +181,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
   */
   highlightObserver: Ember.observer('feature.highlight', function () {
     if (this.feature.highlight) {
-      this.feature.leafletLayer.setStyle({
-        color: '#3388FF',
-        fillColor: 'salmon'
-      });
+      this.feature.leafletLayer.setStyle(this.get('highlightFeatureStyle'));
     } else {
       this.feature.leafletLayer.setStyle(this.get('defaultFeatureStyle'));
     }
@@ -229,6 +226,17 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
    @default null
   */
   defaultFeatureStyle: null,
+
+  /**
+   Default feature hightlight settings. (Uses for highlight feature)
+
+   @property highlightFeatureStyle
+   @type Object
+  */
+  highlightFeatureStyle: {
+    color: '#3388FF',
+    fill: false
+  },
 
   /**
     Feature's metadata.
