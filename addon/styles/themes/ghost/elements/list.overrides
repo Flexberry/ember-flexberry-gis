@@ -92,6 +92,11 @@
       margin-left: -50px;
       width: 378px;
       padding: 0 1em 0 50px;
+
+      .feature-result-item-title {
+        font-size: 14px;
+        font-weight: bold;
+      }
     }
 
     .item:not(.icon):last-child{
