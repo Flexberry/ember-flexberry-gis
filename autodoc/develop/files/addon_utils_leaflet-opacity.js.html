@@ -465,8 +465,39 @@ let setLeafletLayerOpacity = function({ leafletLayer, opacity,
   }
 };
 
+let addAlpha = function(color, opacity) {
+  opacity = Ember.isNone(opacity) ? 1 : opacity;
+
+  const _opacity = Math.round(opacity * 255);
+  return color + _opacity.toString(16).padStart(2, &#x27;0&#x27;).toUpperCase();
+};
+
+let splitColor = function(hex) {
+  if (!Ember.isNone(hex)) {
+    if (hex.length !== 9) {
+      return {
+        color: hex,
+        opacity: 1
+      };
+    }
+
+    let opacity = Math.round((parseInt(hex.substring(7, 9), 16) / 255) * 100) / 100;
+    let color = hex.substring(0, 7);
+
+    return {
+      color: color,
+      opacity: opacity
+    };
+  }
+
+  return {
+    color: null,
+    opacity: null
+  };
+};
+
 export {
-  setLeafletLayerOpacity, maxGeometryOpacity
+  setLeafletLayerOpacity, maxGeometryOpacity, addAlpha, splitColor
 };
 
     </pre>

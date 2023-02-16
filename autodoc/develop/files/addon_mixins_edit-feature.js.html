@@ -419,6 +419,13 @@ import Ember from &#x27;ember&#x27;;
 
 export default Ember.Mixin.create({
 
+  zoomFeatureStyle: {
+    color: &#x27;salmon&#x27;,
+    weight: 2,
+    opacity: 1,
+    fillOpacity: 0.3
+  },
+
   /**
     Leaflet.Editable drawing tools instance.
 
@@ -462,12 +469,7 @@ export default Ember.Mixin.create({
 
     return L.geoJson(layer.toGeoJSON(), {
       pane: &#x27;zoomto&#x27;
-    }).setStyle({
-      color: &#x27;salmon&#x27;,
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.3
-    });
+    }).setStyle(this.get(&#x27;zoomFeatureStyle&#x27;));
   }
 });
 
