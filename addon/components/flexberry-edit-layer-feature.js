@@ -5,6 +5,7 @@ import EditFeatureMixin from '../mixins/edit-feature';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import { translationMacro as t } from 'ember-i18n';
 import { getLeafletCrs } from '../utils/leaflet-crs';
+import { addAlpha, splitColor } from '../utils/leaflet-opacity';
 
 export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFeatureMixin, {
   /**
@@ -246,11 +247,24 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           // save feature style settings to undo changes
           if (!this.get('isLayerCopy')) {
             Ember.set(layer, 'defaultFeatureStyle', Object.assign({}, layer.options));
+            Ember.set(layer, 'defaultSetStyle', layer.styleIsSet);
           }
 
-          layer.setStyle({
-            fillOpacity: 0.3
-          });
+          // нельзя задавать прозрачность через fillOpacity - ломается логика задания прозрачности слоя
+          // будем делать как на портале - через прозрачность цвета fillColor
+          let fillColor = layer.options.fillColor;
+          if (!Ember.isNone(fillColor) && layer.options.fill) {
+            let colorAndOpacity = splitColor(fillColor);
+            if (colorAndOpacity.color && colorAndOpacity.opacity) {
+              let newOpacity = Math.round(colorAndOpacity.opacity * 30) / 100;
+
+              layer.setStyle({
+                fillColor: addAlpha(colorAndOpacity.color, newOpacity)
+              });
+
+              layer.styleIsSet = true;
+            }
+          }
 
           leafletMap.off('editable:vertex:dragstart', this._startSnapping, this);
           layer.off('editable:vertex:dragend', this._updateLabels, [this, layer]);
@@ -735,12 +749,13 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             leafletObject.editLayer(layer);
           }
 
-          //Removing a layer from the map that was added for edit mode
+          // Removing a layer from the map that was added for edit mode
           if (leafletMap.hasLayer(layer)) {
+            layer.setStyle(layer.defaultFeatureStyle);
+            layer.styleIsSet = layer.defaultSetStyle;
+
             if (this.get('isLayerCopy')) {
               leafletMap.removeLayer(layer);
-            } else {
-              layer.setStyle(layer.defaultFeatureStyle);
             }
           }
 
@@ -1024,6 +1039,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       let layerModel = this.get('layerModel');
       let leafletObject = this.get('layerModel.leafletObject');
       let initialLayers = this.get('dataItems.initialLayers');
+      let leafletMap = this.get('leafletMap');
 
       if (!Ember.isNone(initialLayers)) {
         initialLayers.forEach((l) => {
@@ -1060,10 +1076,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
           // Create a new object in the layer
           if (leafletObject.createLayerObject) {
-            this.get('leafletMap').removeLayer(layer);
+            leafletMap.removeLayer(layer);
             layer = leafletObject.createLayerObject(leafletObject, data, layer.toGeoJSON().geometry);
           } else {
-            this.get('leafletMap').removeLayer(layer);
+            leafletMap.removeLayer(layer);
             Ember.set(layer, 'feature', { type: 'Feature' });
             Ember.set(layer.feature, 'properties', data);
             Ember.set(layer.feature, 'leafletLayer', layer);
@@ -1123,10 +1139,15 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           layer.disableEdit();
           leafletObject.editLayer(layer);
 
-          // Deleting a copy of an edited layer from the map
-          if (this.get('isLayerCopy') && this.get('leafletMap').hasLayer(layer)) {
-            this.get('leafletMap').removeLayer(layer);
-            this.set('isLayerCopy', false);
+          if (leafletMap.hasLayer(layer)) {
+            layer.setStyle(layer.defaultFeatureStyle);
+            layer.styleIsSet = layer.defaultSetStyle;
+
+            if (this.get('isLayerCopy')) {
+              // Deleting a copy of an edited layer from the map
+              leafletMap.removeLayer(layer);
+              this.set('isLayerCopy', false);
+            }
           }
         });
 
