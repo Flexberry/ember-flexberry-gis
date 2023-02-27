@@ -406,6 +406,7 @@ export default BaseNonclickableMapTool.extend({
       if (typeof polygonLayer.disableEdit === 'function') {
         polygonLayer.disableEdit();
       }
+
       polygonLayer.remove();
     }
 

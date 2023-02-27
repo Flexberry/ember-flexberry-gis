@@ -1,11 +1,24 @@
 import { moduleForComponent, test } from 'ember-qunit';
 
+import Ember from 'ember';
+import sinon from 'sinon';
+import startApp from 'dummy/tests/helpers/start-app';
+
+let app;
+
 moduleForComponent('flexberry-identify-file', 'Unit | Component | flexberry identify file', {
   unit: true,
   needs: [
     'service:map-api',
-    'service:i18n'
-  ]
+    'service:i18n',
+    'model:new-platform-flexberry-g-i-s-map'
+  ],
+  beforeEach: function () {
+    app = startApp();
+  },
+  afterEach: function () {
+    Ember.run(app, 'destroy');
+  }
 });
 
 test('test createLayerMethod', function (assert) {
@@ -94,10 +107,20 @@ test('test createLayerMethod', function (assert) {
     }
   };
 
-  let component = this.subject();
-  let layer = component._createLayer(response, L.CRS.EPSG4326);
-  assert.equal(layer.feature.crs.properties.name, 'EPSG:4326');
-  assert.equal(layer.feature.geometry.type, 'MultiPoint');
-  assert.equal(JSON.stringify(layer.feature.geometry.coordinates),
-  JSON.stringify([[448559.297603457, 6424330.67035587], [453932.314442248, 6422913.65058862]]));
+  Ember.run(() => {
+    let component = this.subject();
+
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    let layer = component._createLayer(response, L.CRS.EPSG4326);
+    assert.equal(layer.feature.crs.properties.name, 'EPSG:4326');
+    assert.equal(layer.feature.geometry.type, 'MultiPoint');
+    assert.equal(JSON.stringify(layer.feature.geometry.coordinates),
+      JSON.stringify([[448559.297603457, 6424330.67035587], [453932.314442248, 6422913.65058862]]));
+
+    getmapApiStub.restore();
+  });
 });

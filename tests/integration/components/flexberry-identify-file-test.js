@@ -27,8 +27,8 @@ test('it renders', function(assert) {
   this.render(hbs`
     {{flexberry-identify-file geomOnly=true coordinate=coordinate systemCoordinates=systemCoordinates}}
   `);
-  let hiddenInput = this.$().find('input.d-none');
-  let fileInput = this.$().find('input.file-input');
+  let hiddenInput = this.$().find('input.hidden');
+  let fileInput = this.$().find('input.flexberry-file-filename-input');
   let selectedCrs = this.$('.flexberry-dropdown .text').text();
   assert.equal(hiddenInput.length, 1);
   assert.equal(fileInput.length, 1);
@@ -37,6 +37,6 @@ test('it renders', function(assert) {
   this.render(hbs`
     {{flexberry-identify-file geomOnly=false coordinate=coordinate systemCoordinates=systemCoordinates}}
   `);
-  let buttons = this.$('.d-flex.justify-content-center.p-10 .flexberry-button');
-  assert.equal(buttons.length, 3);
+  let buttons = this.$('.d-flex.justify-content-center .flexberry-button');
+  assert.equal(buttons.length, 2);
 });
