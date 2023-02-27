@@ -39,6 +39,20 @@ let doEWKT = function(crs, type, coord) {
   return `SRID=${crs.code.split(':')[1]};${type}(${coord})`;
 };
 
+// for multipoint
+let featureGroupToMultiPointEWKT = function(layers, crs, precision) {
+  let coords = [];
+  for (let i = 0, len = layers.length; i < len; i++) {
+    if (!(layers[i] instanceof L.Marker)) {
+      throw('Not implemented toGml function for featureGroup, only FeatureGroup that is MultiPoint');
+    }
+
+    coords.push(latLngToCoords(layers[i].getLatLng(), crs, precision, coordinatesFunction));
+  }
+
+  return doEWKT(crs, 'MULTIPOINT', coords.join(','));
+};
+
 // for point
 let latlngToPointEWKT = function(latlng, crs, precision) {
   let coord = latLngToCoords(latlng, crs, precision, coordinatesFunction);
@@ -70,5 +84,6 @@ let latlngToPolygonEWKT = function(latlngs, crs, precision) {
 export {
   latlngToPointEWKT,
   latlngToPolylineEWKT,
-  latlngToPolygonEWKT
+  latlngToPolygonEWKT,
+  featureGroupToMultiPointEWKT
 };

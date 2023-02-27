@@ -745,6 +745,11 @@ div.measure-drag-panel {
 
 .flexberry-identify-panel {
   background: #fff none;
+  .wrapper .label {
+    font-size: 14px;
+    display: block; 
+    margin: 5px 0;
+  }
   .button {
     border-radius: 5px;
   }
@@ -819,8 +824,9 @@ div.measure-drag-panel {
       border-radius: 5px;
       vertical-align: top;
       .item.ui.dropdown {
-        border: none;
-        box-shadow: none;
+        .menu.transition.visible {
+          border:  1px solid @inputBackgroundColor;
+        }
       }
       .input {
         border-bottom: none;
@@ -829,6 +835,32 @@ div.measure-drag-panel {
       &:first-child {
         height: 38px;
         margin-right: 15px;
+      }
+    }
+  }
+
+  .flexberry-file.field {
+    .ui.input.upload {
+      width: ~"calc(100% - 40px)";
+
+      input.flexberry-file-filename-input[readonly=readonly] {
+        background: @inputBackgroundColor;
+        background-color: @inputBackgroundColor;
+      }
+
+      label.ui.icon.button {
+        width: 32px;
+        height: 32px;
+
+        background: @inputBackgroundColor;
+        background-color: @inputBackgroundColor;
+        border: 1px solid @inputBackgroundColor;
+        box-shadow: none;
+
+        &:hover {
+          background: @inputBackgroundColor !important;
+          background-color: @inputBackgroundColor !important;
+        }
       }
     }
   }
@@ -984,6 +1016,11 @@ div.measure-drag-panel {
     padding: 5px;
     margin-bottom: 5px;
     margin-top: 5px;
+  }
+  
+  .feature-result-item-group:first-child .flexberry-toggler {
+    padding-top: 0px;
+    margin-top: 0px;
   }
   .ui.accordion:not(.styled) .title~.content:not(.ui):last-child:not(.flexberry-toggler-content) {
     padding: 5px;

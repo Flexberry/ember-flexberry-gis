@@ -1,4 +1,4 @@
-import { latlngToPointEWKT, latlngToPolylineEWKT, latlngToPolygonEWKT } from '../utils/layer-to-ewkt';
+import { latlngToPointEWKT, latlngToPolylineEWKT, latlngToPolygonEWKT, featureGroupToMultiPointEWKT } from '../utils/layer-to-ewkt';
 
 export function initialize(application) {
   // Add custom leaflet functions
@@ -21,6 +21,12 @@ export function initialize(application) {
   L.Polygon.include({
     toEWKT: function (crs, precision) {
       return latlngToPolygonEWKT(this._latlngs, crs, precision);
+    }
+  });
+
+  L.FeatureGroup.include({
+    toEWKT: function (crs, precision) {
+      return featureGroupToMultiPointEWKT(this.getLayers(), crs, precision);
     }
   });
 }

@@ -20,7 +20,10 @@ export default {
     'form-caption-sk': 'Coordinate system',
     'help': '<div class="content">Upload file formats: TAB (in .zip archive), MIF/MID (in .zip archive), SHP (in .zip archive), GEOJSON. ' +
     'Several linked files, representing TAB, MIF/MID or SHP, should be saved in main directory' +
-    ' of .zip archive, not in directories, created inside archive.</div>'
+    ' of .zip archive, not in directories, created inside archive.</div>',
+    'identify': {'caption': 'Identify' },
+    'create-layer': {'caption': 'Create layer' },
+    'preview': {'caption': 'Preview area' }
   },
   'marker': {
     'caption': 'Point'
