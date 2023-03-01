@@ -34,7 +34,7 @@ export default SimpleDatetime.extend({
     // Переопределим родительский метод, он тут не нужен. Будем вызывать событие через DOM - так оно сработает раньше
   },
 
-  willDestroyElement(){
+  willDestroyElement() {
     this._super(...arguments);
 
     let namespace = this.get('eventNamespace');
