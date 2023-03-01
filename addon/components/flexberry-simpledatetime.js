@@ -32,20 +32,5 @@ export default SimpleDatetime.extend({
 
     this.$('.custom-flatpickr').on('click', (e) => { this.inputClick(this, e); });
     this.$('.button').on('click', (e) => { this.actions.remove(this, e); });
-  },
-
-  actions: {
-    remove(_this, e) {
-      e.stopPropagation();
-      if (!_this.get('readonly')) {
-        const flatpickr = _this.get('_flatpickr');
-        const value = _this.get('value') || new Date();
-
-        value.setHours(_this.get('defaultHour'), _this.get('defaultMinute'));
-        _this.set('value', value);
-        flatpickr.setDate(value, false);
-        flatpickr.clear();
-      }
-    }
   }
 });
