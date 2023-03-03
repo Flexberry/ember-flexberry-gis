@@ -437,6 +437,7 @@ export default IdentifyMapTool.extend({
 
   layer: null,
   _bufferLayer: null,
+  cursor: &#x27;default&#x27;,
 
   _enable() {
     this._super(...arguments);
@@ -451,8 +452,11 @@ export default IdentifyMapTool.extend({
     }
 
     leafletMap.on(&#x27;flexberry-map-loadfile:render&#x27;, this._renderLayer, this);
+    leafletMap.on(&#x27;flexberry-map-loadfile:clear&#x27;, this._clear, this);
     leafletMap.on(&#x27;flexberry-map-loadfile:identification&#x27;, this._identificationLayer, this);
   },
+
+  _enableDraw() {},
 
   _disable() {
     this._super(...arguments);
@@ -460,11 +464,14 @@ export default IdentifyMapTool.extend({
     let editTools = this.get(&#x27;_editTools&#x27;);
     if (!Ember.isNone(editTools)) {
       this.leafletMap.off(&#x27;flexberry-map-loadfile:render&#x27;, this._renderLayer, this);
+      this.leafletMap.off(&#x27;flexberry-map-loadfile:clear&#x27;, this._clear, this);
       this.leafletMap.off(&#x27;flexberry-map-loadfile:identification&#x27;, this._identificationLayer, this);
     }
 
     this._clear();
   },
+
+  _disableDraw() {},
 
   _clear() {
     if (this.get(&#x27;layer&#x27;)) {
@@ -476,25 +483,51 @@ export default IdentifyMapTool.extend({
     }
   },
 
-  _renderLayer({ layer }) {
+  bufferObserver: Ember.observer(&#x27;bufferActive&#x27;, &#x27;bufferRadius&#x27;, &#x27;bufferUnits&#x27;, function () {
+    Ember.run.debounce(this, () =&gt; {
+      let layer = this.get(&#x27;layer&#x27;);
+      if (!Ember.isNone(layer) &amp;&amp; this.leafletMap.hasLayer(layer)) {
+        this._renderLayer({ layer }, false);
+      }
+    }, 500);
+  }),
+
+  _renderLayer({ layer }, fit = true) {
     this._clear();
 
-    let buf = buffer.default(layer.toGeoJSON(), this.get(&#x27;bufferRadius&#x27;) || 0, { units: this.get(&#x27;bufferUnits&#x27;) });
-    let _bufferLayer = L.geoJSON(buf).addTo(this.leafletMap);
-    _bufferLayer.addLayer(layer);
+    let isBufferActive = this.get(&#x27;bufferActive&#x27;);
+    let bufferRadius = this.get(&#x27;bufferRadius&#x27;);
+    let bufferUnits = this.get(&#x27;bufferUnits&#x27;);
+
+    let _bufferLayer;
+    if (isBufferActive &amp;&amp; bufferRadius &gt; 0) {
+      let buf = buffer.default(layer.toGeoJSON(), bufferRadius, { units: bufferUnits });
+      _bufferLayer = L.geoJSON(buf).addTo(this.leafletMap);
+    }
+
+    layer.addTo(this.leafletMap);
+    if (fit) {
+      this.leafletMap.fitBounds(layer.getBounds());
+    }
+
     this.set(&#x27;layer&#x27;, layer);
     this.set(&#x27;_bufferLayer&#x27;, _bufferLayer);
-
   },
 
   _identificationLayer({ layer }) {
-    let buf = buffer.default(layer.toGeoJSON(), this.get(&#x27;bufferRadius&#x27;) || 0, { units: this.get(&#x27;bufferUnits&#x27;) });
-    let _bufferLayer = L.geoJSON(buf);
+    let workingLayer;
+    let isBufferActive = this.get(&#x27;bufferActive&#x27;);
+    let bufferRadius = this.get(&#x27;bufferRadius&#x27;);
+
+    if (isBufferActive &amp;&amp; bufferRadius &gt; 0) {
+      let buf = buffer.default(layer.toGeoJSON(), bufferRadius, { units: this.get(&#x27;bufferUnits&#x27;) });
+      workingLayer = L.geoJSON(buf).getLayers()[0];
+    } else {
+      workingLayer = layer;
+    }
 
     let e = {
-      latlng: layer._bounds._northEast,
-      polygonLayer: layer,
-      bufferedMainPolygonLayer: _bufferLayer,
+      polygonLayer: workingLayer,
       excludedLayers: Ember.A([]),
       layers: this._getLayersToIdentify({
         excludedLayers: []
@@ -519,6 +552,8 @@ export default IdentifyMapTool.extend({
 
       promises.pushObject(features);
     });
+
+    this.leafletMap.flexberryMap.loader.show({ content: this.get(&#x27;i18n&#x27;).t(&#x27;map-tools.identify.loader-message&#x27;) });
     Ember.RSVP.allSettled(promises).then(() =&gt; {
       this._finishIdentification(e);
     });

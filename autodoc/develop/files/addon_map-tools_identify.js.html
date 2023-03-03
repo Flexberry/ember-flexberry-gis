@@ -751,6 +751,10 @@ export default BaseNonclickableMapTool.extend({
   */
   _enable() {
     this._super(...arguments);
+    this._enableDraw();
+  },
+
+  _enableDraw() {
     let leafletMap = this.get(&#x27;leafletMap&#x27;);
     let editTools = this.get(&#x27;_editTools&#x27;);
     if (Ember.isNone(editTools)) {
@@ -773,6 +777,10 @@ export default BaseNonclickableMapTool.extend({
     this._clearPolygonLayer();
     this._super(...arguments);
 
+    this._disableDraw();
+  },
+
+  _disableDraw() {
     let editTools = this.get(&#x27;_editTools&#x27;);
     if (!Ember.isNone(editTools)) {
       editTools.off(&#x27;editable:drawing:end&#x27;, this._drawingDidEnd, this);
@@ -811,7 +819,10 @@ export default BaseNonclickableMapTool.extend({
     // Remove already drawn figure.
     let polygonLayer = this.get(&#x27;polygonLayer&#x27;);
     if (polygonLayer) {
-      polygonLayer.disableEdit();
+      if (typeof polygonLayer.disableEdit === &#x27;function&#x27;) {
+        polygonLayer.disableEdit();
+      }
+
       polygonLayer.remove();
     }
 
@@ -819,7 +830,6 @@ export default BaseNonclickableMapTool.extend({
     if (bufferedMainPolygon) {
       bufferedMainPolygon.remove();
     }
-
   }
 });
 

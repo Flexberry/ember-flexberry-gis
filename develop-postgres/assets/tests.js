@@ -806,8 +806,8 @@ define('dummy/tests/integration/components/flexberry-identify-file-test', ['expo
         templates: []
       };
     })()));
-    var hiddenInput = this.$().find('input.d-none');
-    var fileInput = this.$().find('input.file-input');
+    var hiddenInput = this.$().find('input.hidden');
+    var fileInput = this.$().find('input.flexberry-file-filename-input');
     var selectedCrs = this.$('.flexberry-dropdown .text').text();
     assert.equal(hiddenInput.length, 1);
     assert.equal(fileInput.length, 1);
@@ -857,8 +857,8 @@ define('dummy/tests/integration/components/flexberry-identify-file-test', ['expo
         templates: []
       };
     })()));
-    var buttons = this.$('.d-flex.justify-content-center.p-10 .flexberry-button');
-    assert.equal(buttons.length, 3);
+    var buttons = this.$('.d-flex.justify-content-center .flexberry-button');
+    assert.equal(buttons.length, 2);
   });
 });
 define('dummy/tests/integration/components/flexberry-identify-file-test.jscs-test', ['exports'], function (exports) {
@@ -5343,14 +5343,24 @@ define('dummy/tests/unit/components/compare-object-geometries-panel-test.jshint'
     assert.ok(true, 'unit/components/compare-object-geometries-panel-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/components/flexberry-identify-file-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+define('dummy/tests/unit/components/flexberry-identify-file-test', ['exports', 'ember-qunit', 'ember', 'sinon', 'dummy/tests/helpers/start-app'], function (exports, _emberQunit, _ember, _sinon, _dummyTestsHelpersStartApp) {
+
+  var app = undefined;
 
   (0, _emberQunit.moduleForComponent)('flexberry-identify-file', 'Unit | Component | flexberry identify file', {
     unit: true,
-    needs: ['service:map-api', 'service:i18n']
+    needs: ['service:map-api', 'service:i18n', 'model:new-platform-flexberry-g-i-s-map'],
+    beforeEach: function beforeEach() {
+      app = (0, _dummyTestsHelpersStartApp['default'])();
+    },
+    afterEach: function afterEach() {
+      _ember['default'].run(app, 'destroy');
+    }
   });
 
   (0, _emberQunit.test)('test createLayerMethod', function (assert) {
+    var _this = this;
+
     var response = {
       'type': 'FeatureCollection',
       'features': [{
@@ -5423,11 +5433,21 @@ define('dummy/tests/unit/components/flexberry-identify-file-test', ['exports', '
       }
     };
 
-    var component = this.subject();
-    var layer = component._createLayer(response, L.CRS.EPSG4326);
-    assert.equal(layer.feature.crs.properties.name, 'EPSG:4326');
-    assert.equal(layer.feature.geometry.type, 'MultiPoint');
-    assert.equal(JSON.stringify(layer.feature.geometry.coordinates), JSON.stringify([[448559.297603457, 6424330.67035587], [453932.314442248, 6422913.65058862]]));
+    _ember['default'].run(function () {
+      var component = _this.subject();
+
+      var store = app.__container__.lookup('service:store');
+      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
+      getmapApiStub.returns(mapModel);
+
+      var layer = component._createLayer(response, L.CRS.EPSG4326);
+      assert.equal(layer.feature.crs.properties.name, 'EPSG:4326');
+      assert.equal(layer.feature.geometry.type, 'MultiPoint');
+      assert.equal(JSON.stringify(layer.feature.geometry.coordinates), JSON.stringify([[448559.297603457, 6424330.67035587], [453932.314442248, 6422913.65058862]]));
+
+      getmapApiStub.restore();
+    });
   });
 });
 define('dummy/tests/unit/components/flexberry-identify-file-test.jscs-test', ['exports'], function (exports) {
