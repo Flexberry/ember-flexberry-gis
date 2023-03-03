@@ -7267,6 +7267,11 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   background: #fff none;
   /* удаление */
 }
+.flexberry-identify-panel .wrapper .label {
+  font-size: 14px;
+  display: block;
+  margin: 5px 0;
+}
 .flexberry-identify-panel .button {
   border-radius: 5px;
 }
@@ -7341,9 +7346,8 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   border-radius: 5px;
   vertical-align: top;
 }
-.flexberry-identify-panel .buffer-tools .field .item.ui.dropdown {
-  border: none;
-  box-shadow: none;
+.flexberry-identify-panel .buffer-tools .field .item.ui.dropdown .menu.transition.visible {
+  border: 1px solid #F4F7FB;
 }
 .flexberry-identify-panel .buffer-tools .field .input {
   border-bottom: none;
@@ -7352,6 +7356,25 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
 .flexberry-identify-panel .buffer-tools .field:first-child {
   height: 38px;
   margin-right: 15px;
+}
+.flexberry-identify-panel .flexberry-file.field .ui.input.upload {
+  width: calc(100% - 40px);
+}
+.flexberry-identify-panel .flexberry-file.field .ui.input.upload input.flexberry-file-filename-input[readonly=readonly] {
+  background: #F4F7FB;
+  background-color: #F4F7FB;
+}
+.flexberry-identify-panel .flexberry-file.field .ui.input.upload label.ui.icon.button {
+  width: 32px;
+  height: 32px;
+  background: #F4F7FB;
+  background-color: #F4F7FB;
+  border: 1px solid #F4F7FB;
+  box-shadow: none;
+}
+.flexberry-identify-panel .flexberry-file.field .ui.input.upload label.ui.icon.button:hover {
+  background: #F4F7FB !important;
+  background-color: #F4F7FB !important;
 }
 /*********************************************
             Layers result list
@@ -7496,6 +7519,10 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   padding: 5px;
   margin-bottom: 5px;
   margin-top: 5px;
+}
+.layer-result-list .feature-result-item-group:first-child .flexberry-toggler {
+  padding-top: 0px;
+  margin-top: 0px;
 }
 .layer-result-list .ui.accordion:not(.styled) .title ~ .content:not(.ui):last-child:not(.flexberry-toggler-content) {
   padding: 5px;
@@ -8176,7 +8203,6 @@ div.measure-drag-panel .div-tools a.flexberry-map-tool i.star.icon:before {
   opacity: 1;
 }
 .flexberry-identify-panel .buffer-tools .field:last-child .text {
-  padding-left: 10px;
   color: #343A32;
 }
 .ui.styled.accordion {
@@ -47184,16 +47210,16 @@ img.item-minus {
 .ui.tab.identify .layer-result-list {
   overflow-y: auto;
   overflow-x: hidden;
-  height: calc(100% - 140px) !important;
+  height: calc(100vh - 210px) !important;
 }
 .ui.tab.identify .layer-result-list.buffer {
-  height: calc(100% - 260px) !important;
+  height: calc(100vh - 305px) !important;
 }
 .ui.tab.identify .layer-result-list.file {
-  height: calc(100% - 370px) !important;
+  height: calc(100vh - 410px) !important;
 }
 .ui.tab.identify .layer-result-list.buffer-file {
-  height: calc(100% - 470px) !important;
+  height: calc(100vh - 510px) !important;
 }
 .ui.tab.identify .layer-result-list .nodata {
   margin-top: 15px;
@@ -49688,8 +49714,14 @@ img.item-minus {
   border: none;
   background: transparent!important;
 }
+.flexberry-identify-panel .identify-file-buttons {
+  padding: 10px 10px 0 10px;
+}
 .flexberry-identify-panel .wrapper {
   margin: 20px 0px;
+}
+.flexberry-identify-panel .wrapper:last-child {
+  margin-bottom: 0px;
 }
 .flexberry-identify-panel .file-input {
   width: 85% !important;
