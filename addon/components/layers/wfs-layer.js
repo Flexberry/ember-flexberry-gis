@@ -152,10 +152,10 @@ export default BaseVectorLayer.extend({
     @private
   */
   _getAttributesOptions(source) {
-    return this._super(...arguments).then((attribitesOptions) => {
-      Ember.set(attribitesOptions, 'settings.readonly', this.get('readonly') || false);
+    return this._super(...arguments).then((attributesOptions) => {
+      Ember.set(attributesOptions, 'settings.readonly', this.get('readonly') || false);
 
-      return attribitesOptions;
+      return attributesOptions;
     });
   },
 

@@ -28,12 +28,29 @@ export default WmsLayerComponent.extend({
     @private
   */
   _getAttributesOptions(source) {
-    let resultingAttribitesOptions;
+    let resultingAttributesOptions;
 
     return this._super(...arguments).then((attributesOptions) => {
-      resultingAttribitesOptions = attributesOptions;
+      resultingAttributesOptions = attributesOptions;
 
-      return attributesOptions;
+      return this.get('_wfsLayer')._getAttributesOptions(source).then((wfsAttributesOptions) => {
+        let excluded = Ember.get(resultingAttributesOptions, 'settings.excludedProperties');
+        let wfsExcluded = Ember.get(wfsAttributesOptions, 'settings.excludedProperties');
+
+        if (Ember.isNone(excluded)) {
+          excluded = Ember.A();
+        }
+
+        if (!Ember.isNone(wfsExcluded)) {
+          wfsExcluded.forEach((p) => {
+            if (!excluded.contains(p)) {
+              excluded.pushObject(p);
+            }
+          });
+        }
+
+        Ember.set(resultingAttributesOptions, 'settings.excludedProperties', excluded);
+      });
     }).then(() => {
       // еще бы перезагружать сам слой при добавлении/удалении/изменении
       // слой уже создан, нет смысла делать еще один, нужно только загрузить в него объекты
@@ -43,17 +60,17 @@ export default WmsLayerComponent.extend({
       this.get('_wfsLayer._leafletObject').showLayerObjects = true;
       return this.get('_wfsLayer').continueLoad(this.get('_wfsLayer._leafletObject'));
     }).then(() => {
-      Ember.set(resultingAttribitesOptions, 'object', this.get('_wfsLayer._leafletObject'));
-      Ember.set(resultingAttribitesOptions, 'settings.readonly', this.get('wfs.readonly'));
+      Ember.set(resultingAttributesOptions, 'object', this.get('_wfsLayer._leafletObject'));
+      Ember.set(resultingAttributesOptions, 'settings.readonly', this.get('wfs.readonly'));
 
-      return resultingAttribitesOptions;
+      return resultingAttributesOptions;
     });
   },
 
   /**
     Sets wfs layer's filter, when wms filter was changed.
   */
-  filterObserver: Ember.on('init', Ember.observer('options.filter', function() {
+  filterObserver: Ember.on('init', Ember.observer('options.filter', function () {
     let filter = this.get('options.filter');
     this.set('_wfsLayer.options.filter', filter);
   })),

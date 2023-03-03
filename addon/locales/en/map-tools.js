@@ -1,6 +1,7 @@
 export default {
   'identify': {
-    'loader-message': 'Identification...'
+    'loader-message': 'Identification...',
+    'file-loading': 'File loading...'
   },
   'measure': {
     'measure-coordinates': {

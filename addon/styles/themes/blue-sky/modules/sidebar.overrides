@@ -1079,15 +1079,15 @@
   .layer-result-list {
     overflow-y: auto;
     overflow-x: hidden;
-    height: ~"calc(100% - 140px)" !important;
+    height: ~"calc(100vh - 210px)" !important;
     &.buffer {
-      height: ~"calc(100% - 260px)" !important;
+      height: ~"calc(100vh - 305px)" !important;
     }
     &.file {
-      height: ~"calc(100% - 370px)" !important;
+      height: ~"calc(100vh - 410px)" !important;
     }
     &.buffer-file {
-      height: ~"calc(100% - 470px)" !important;
+      height: ~"calc(100vh - 510px)" !important;
     }
   }
   .layer-result-list .nodata {

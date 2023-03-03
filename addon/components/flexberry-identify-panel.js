@@ -96,6 +96,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @private
   */
   _identifyToolProperties: Ember.computed(
+    'isBuffer',
     'bufferUnits',
     'bufferRadius',
     'layerMode',
@@ -104,7 +105,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     function() {
       let radius = typeof this.get('bufferRadius') === 'string' ? this.get('bufferRadius').replace(',', '.') : this.get('bufferRadius');
       return {
-        bufferActive: !Ember.isNone(this.get('bufferRadius')) || !Ember.isBlank(this.get('bufferRadius')),
+        bufferActive: this.get('isBuffer'),
         bufferUnits: this.get('bufferUnits'),
         bufferRadius: radius,
         layerMode: this.get('layerMode'),
@@ -595,7 +596,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     @method _bufferSettingsDidChange
   */
-  _bufferSettingsDidChange: Ember.observer('bufferUnits', 'bufferRadius', function() {
+  _bufferSettingsDidChange: Ember.observer('bufferUnits', 'bufferRadius', 'isBuffer', function() {
     Ember.run.once(this, '_enableActualIdentifyTool');
   }),
 
