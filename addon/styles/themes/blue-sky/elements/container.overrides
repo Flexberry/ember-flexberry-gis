@@ -248,7 +248,6 @@ div.measure-drag-panel {
           }
         }
         .text {
-          padding-left: 10px;
           color: @textColor;
         }
       }

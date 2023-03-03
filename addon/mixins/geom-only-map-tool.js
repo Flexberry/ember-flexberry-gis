@@ -22,6 +22,5 @@ export default Ember.Mixin.create({
     if (bufferedMainPolygon) {
       bufferedMainPolygon.remove();
     }
-
   }
 });

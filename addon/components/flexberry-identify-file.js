@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import $ from 'jquery';
 import layout from '../templates/components/flexberry-identify-file';
 import MapModelApiExpansionMixin from '../mixins/flexberry-map-model-api-expansion';
 import { getLeafletCrs } from '../utils/leaflet-crs';
@@ -8,7 +9,11 @@ import { availableCoordinateReferenceSystemsCodesWithCaptions } from '../utils/a
 export default Ember.Component.extend(MapModelApiExpansionMixin, {
   layout,
   mapApi: Ember.inject.service(),
-  fileName: '',
+
+  file: null,
+  filePreview: false,
+  fileLoadAjax: null,
+
   _showError: false,
 
   /**
@@ -34,8 +39,7 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
   systemCoordinates: null,
 
   coordinate: null,
-
-  importErrorCaption: t('components.geometry-add-modes.import.import-error.caption'),
+  geometryType: null,
 
   importErrorMessage: t('components.geometry-add-modes.import.import-error.message'),
 
@@ -46,16 +50,13 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
   didInsertElement() {
     this._super(...arguments);
     this.set('systemCoordinates', this.get('systemCoordinates') || availableCoordinateReferenceSystemsCodesWithCaptions(this));
-    this.set('coordinate', this.get('coordinate') || this.get('i18n').t('components.geometry-add-modes.import.coordinates-auto').string);
+    this.set('coordinate', 'auto');
+    this.set('filePreview', false);
   },
 
-  getCoordinate() {
-    return Object.keys(this.get('systemCoordinates')).find(key => this.get(`systemCoordinates.${key}`) === this.get('coordinate'));
-  },
-
-  setCoordinate(name) {
-    let key = Object.keys(this.get('systemCoordinates')).find(key => key === name);
-    this.set('coordinate', this.systemCoordinates[key]);
+  willDestroyElement() {
+    this._super(...arguments);
+    this.clearAjax();
   },
 
   _createLayer(response, crs) {
@@ -71,7 +72,7 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
       };
     });
 
-    let multiFeature = this.createMulti(response.features, true);
+    let multiFeature = this.get('mapApi').getFromApi('mapModel').createMulti(response.features, true);
     let leafletLayer = L.geoJSON(multiFeature, {
       coordsToLatLng: coordsToLatLng.bind(this), style: {
         color: this.get('layerColor'),
@@ -82,45 +83,91 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
   },
 
   createLayer(response) {
-    let crs = getLeafletCrs('{ "code": "' + this.getCoordinate() + '", "definition": "" }', this);
+    let crs = getLeafletCrs('{ "code": "' + this.get('coordinate') + '", "definition": "" }', this);
     return this._createLayer(response, crs);
   },
 
+  getGeometryType(type) {
+    let geometryType = null;
+
+    switch (type) {
+      case 'Point':
+        geometryType = 'point';
+        break;
+      case 'MultiLineString':
+      case 'LineString':
+        geometryType = 'polyline';
+        break;
+      case 'MultiPolygon':
+      case 'Polygon':
+        geometryType = 'polygon';
+        break;
+    }
+
+    return geometryType;
+  },
+
   validateFileAndGetFeatures() {
+    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this.$('input[type="file"]');
-      let file = this.$('input[type="file"]')[0].files[0];
+      let file = this.get('file');
+      if (!file) {
+        reject();
+      }
+
+      let ajax = this.get('fileLoadAjax');
+      if (ajax) {
+        if (ajax.readyState === 4 && ajax.status === 200) {
+          resolve(this.get('fileLoadAjax').responseJSON);
+          return;
+        }
+
+        // если еще выполняется или успешно выполнен, то не будем ничего запускать
+        if (ajax.readyState !== 4) {
+          resolve();
+          return;
+        }
+      }
+
+      leafletMap.flexberryMap.loader.show({ content: this.get('i18n').t('map-tools.identify.file-loading') });
+
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
       let url = `${config.APP.backendUrls.geomFileValidationUrl}?FileName=${file.name}`;
       let data = new FormData();
       data.append(file.name, file);
-      data.append('crs', this.getCoordinate());
+      data.append('crs', this.get('coordinate'));
+      this.set('_showError', false);
+      this.set('geometryType', null);
 
-      Ember.$.ajax({
-        url: url,
-        type: 'POST',
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false
-      }).done((response) => {
-        this.set('_showError', false);
-        if (response && response.features) {
-          this.setCoordinate(response.definedCrs);
-          resolve(response);
-        } else {
+      this.set('fileLoadAjax',
+        Ember.$.ajax({
+          url: url,
+          type: 'POST',
+          data: data,
+          cache: false,
+          contentType: false,
+          processData: false
+        }).done((response) => {
+          leafletMap.flexberryMap.loader.hide({ content: '' });
+          if (response && response.features) {
+            this.set('coordinate', response.definedCrs);
+            this.set('geometryType', this.getGeometryType(response.features[0].geometry.type));
+
+            resolve(response);
+          } else {
+            reject({
+              caption: this.get('emptyErrorCaption'),
+              message: this.get('emptyErrorMessage')
+            });
+          }
+        }).fail((e) => {
+          leafletMap.flexberryMap.loader.hide({ content: '' });
+          let errorMessage = e.responseText || this.get('importErrorMessage');
           reject({
-            caption: this.get('emptyErrorCaption'),
-            message: this.get('emptyErrorMessage')
+            message: errorMessage
           });
-        }
-      }).fail((e) => {
-        let errorMessage = e.responseText || this.get('importErrorMessage');
-        reject({
-          caption: this.get('importErrorCaption'),
-          message: errorMessage
-        });
-      });
+        }));
     });
   },
 
@@ -145,7 +192,6 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
       }).fail((e) => {
         let errorMessage = e.responseText || this.get('importErrorMessage');
         reject({
-          caption: this.get('importErrorCaption'),
           message: errorMessage
         });
       });
@@ -153,35 +199,71 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
   },
 
   showError(error) {
-    this.set('_errorCaption', error.caption);
-    this.set('_errorMessage', error.message);
-    this.set('_showError', true);
+    if (error) {
+      this.set('_errorMessage', error.message);
+      this.set('_showError', true);
+    }
+  },
+
+  clearAjax() {
+    let ajax = this.get('fileLoadAjax');
+    if (ajax) {
+      ajax.abort();
+
+      this.set('fileLoadAjax', null);
+    }
   },
 
   actions: {
-    setFiles(e) {
-      this.$(e.target).blur();
-      this.$('input[type="file"]').click();
+    onCoordinateChange() {
+      this.set('_showError', false);
+      this.clearAjax();
     },
 
-    uploadFile(e) {
-      this.set('fileName', e.target.files[0] ? e.target.files[0].name : '');
+    clearFile() {
+      this.set('file', null);
+      this.set('_showError', false);
+
+      this.clearAjax();
+      if (this.get('filePreview')) {
+        this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:clear');
+        this.set('filePreview', false);
+      }
+
+      $('#fileinput').val('');
+      $('.ui.button.upload').removeClass('hidden');
+      $('.ui.button.remove').addClass('hidden');
+    },
+
+    clickFile(e) {
+      let file = e.target.files[0];
+      this.set('file', file);
+      this.clearAjax();
+      $('.ui.button.upload').addClass('hidden');
+      $('.ui.button.remove').removeClass('hidden');
     },
 
     showFileLayer() {
-      this.validateFileAndGetFeatures()
-      .then((response) => {
-        let layer = this.createLayer(response);
-        this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:render', { layer });
-      }, (error) => this.showError(error));
+      if (this.get('filePreview')) {
+        this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:clear');
+      } else {
+        this.validateFileAndGetFeatures().then((response) => {
+          if (response) {
+            let layer = this.createLayer(response);
+            this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:render', { layer });
+          }
+        }, (error) => this.showError(error));
+      }
+
+      this.set('filePreview', !this.get('filePreview'));
     },
 
     identificationFile() {
-      this.validateFileAndGetFeatures()
-      .then((response) => {
-        let layer = this.createLayer(response);
-        this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:render', { layer });
-        this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:identification', { layer });
+      this.validateFileAndGetFeatures().then((response) => {
+        if (response) {
+          let layer = this.createLayer(response);
+          this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:identification', { layer });
+        }
       }, (error) => this.showError(error));
     },
 
@@ -189,7 +271,7 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, {
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
       this.validateFileAndGetFeatures().then(() => {
         this.sendFileToCache().then((response) => {
-          let url = `${config.APP.createLayerFormUrl}?cacheFileId=${response.id}&crs=${this.getCoordinate()}`;
+          let url = `${config.APP.createLayerFormUrl}?cacheFileId=${response.id}&crs=${this.get('coordinate')}&geometryType=${this.get('geometryType')}`;
           window.open(url, '_blank').focus();
         }, (error) => this.showError(error));
       }, (error) => this.showError(error));

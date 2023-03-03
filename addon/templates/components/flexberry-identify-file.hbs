@@ -1,8 +1,16 @@
-<input type="file" accept=".zip,.GEOJSON,.gml" class="d-none" onchange={{action 'uploadFile' }}>
 <div class="w-100">
-  <div class="file-panel">
-    <label>{{t "components.flexberry-identify-panel.file.form-caption-file"}}</label>
-    <input class="file-input" onClick={{action 'setFiles' }} value={{fileName}}>
+  <div class="field upload flexberry-file">
+    <label class="label">Файл {{#if (not file.name)}}*{{/if}}</label>
+    <div class="ui action input upload">
+      <input type="file" accept=".zip,.GEOJSON,.gml" class="hidden" onchange={{action "clickFile"}} id="fileinput" />
+      <input class="flexberry-file-filename-input" readonly="readonly" value={{file.name}}/>
+      <label for="fileinput" class="ui icon button upload flexberry-file-add-button">
+        <i class="ui upload icon" title="Прикрепить файл"></i>
+      </label>
+      <label class="ui icon button remove flexberry-file-remove-button hidden" onclick={{action "clearFile"}}>
+        <i class="ui icon"></i>
+      </label>
+    </div>
     {{help-popup
       htmlMessage=(t 'components.flexberry-identify-panel.file.help')
       variation="very wide"
@@ -11,39 +19,49 @@
     }}
   </div>
 </div>
-<label>{{t "components.flexberry-identify-panel.file.form-caption-sk"}}</label>
-{{flexberry-dropdown-input
+
+<label class="label">{{t "components.flexberry-identify-panel.file.form-caption-sk"}}</label>
+{{flexberry-dropdown
   items=systemCoordinates
   value=coordinate
+  displayCaptions=true
+  onChange=(action 'onCoordinateChange')
   class="scale-value fluid"
 }}
-<div class="d-flex justify-content-center p-10">
+
+<div class="d-flex justify-content-center identify-file-buttons">
   {{flexberry-button
-    iconClass='icon-guideline-show'
+    iconClass=(if filePreview 'icon-guideline-show' 'icon-guideline-hide')
     click=(action "showFileLayer")
-    readonly = (eq fileName '')
+    readonly = (not file)
+    tooltip=(t "components.flexberry-identify-panel.file.preview.caption")
   }}
+
   {{#if (not geomOnly)}}
     {{flexberry-button
       class='ml-20'
       iconClass='icon-guideline-layers-info'
       click=(action "identificationFile")
-      readonly = (eq fileName '')
+      readonly = (not file)
+      tooltip=(t "components.flexberry-identify-panel.file.identify.caption")
     }}
-    {{flexberry-button
-      class='ml-20'
-      iconClass='icon-guideline-goout'
-      click=(action "createLayerByFile")
-      readonly = (or (eq fileName '') (not isAuthenticated))
-    }}
+
+    {{#if isAuthenticated}}
+      {{flexberry-button
+        class='ml-20'
+        iconClass='icon-guideline-goout'
+        click=(action "createLayerByFile")
+        readonly = (not file)
+        tooltip=(t "components.flexberry-identify-panel.file.create-layer.caption")
+      }}
+    {{/if}}
   {{/if}}
 </div>
 {{#if _showError}}
   {{ui-message
     type="error"
-    closeable=true
+    closeable=false
     visible=_showError
-    caption=_errorCaption
     message=_errorMessage
   }}
 {{/if}}
