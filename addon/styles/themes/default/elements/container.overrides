@@ -939,7 +939,7 @@ div.measure-drag-panel {
     height: 40px;
     position: relative;
     .ui.checkbox {
-      margin: auto 0;
+      margin: 0.25rem 0;
     }
     .ui.checkbox label {
       padding-left: 26px;

@@ -632,9 +632,6 @@
   .ui.right.sidebar.tabbar {
     position: absolute;
     padding-top: 70px !important;
-    .ui.tab:not(.search):not(.identify) {
-      padding-left: 20px !important;
-    }
     top: 0px;
     z-index: 890;
     visibility: visible;
@@ -653,7 +650,7 @@
     transition: left 0.5s;
 
     .ui.tab {
-      padding: 10px;
+      padding: 10px 10px 10px 30px;
       color: @textColor;
 
       h3 {
@@ -758,7 +755,7 @@
   .ui.right.sidebar.tabbar {
     .ui.tab.bookmarks,
     .ui.tab.favorites {
-      padding: 30px 0px;
+      padding: 0 0 30px;
     }
 
     /**
@@ -982,7 +979,7 @@
 .ui.right.sidebar {
   .ui.tab.identify, .ui.tab.search {
     h3 {
-      margin: 20px 20px 11px 20px;
+      margin: 20px 30px 11px;
     }
   }
 }
