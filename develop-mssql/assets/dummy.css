@@ -7447,7 +7447,7 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   position: relative;
 }
 .layer-result-list .feature-result-item-title .ui.checkbox {
-  margin: auto 0;
+  margin: 0.25rem 0;
 }
 .layer-result-list .feature-result-item-title .ui.checkbox label {
   padding-left: 26px;
@@ -16999,20 +16999,29 @@ ol.ui.horizontal.list li:before,
 .layer-result-list .flexberry-toggler-content .item:not(.icon) {
   padding: 5px;
 }
-.layer-result-list .feature-result-item-upload,
-.layer-result-list .feature-result-item-select,
-.layer-result-list .feature-result-item-list {
-  margin-top: 0.6em;
+.layer-result-list .flexberry-toggler-content .item:not(.icon) .feature-result-item-title {
+  align-items: flex-start;
+}
+.layer-result-list .flexberry-toggler-content .item:not(.icon) .feature-result-item-title a.item.title {
+  align-self: center;
 }
 .layer-result-list .ui.list.transaction {
   margin-left: 10px;
 }
+.layer-result-list .feature-result-item-group .feature-result-item-buttons {
+  top: 0.5rem;
+}
+.layer-result-list .feature-result-item-title .feature-result-item-buttons {
+  top: 0.7rem;
+}
 .layer-result-list .feature-result-item-buttons {
   position: absolute;
-  top: 11px;
-  left: 20px;
+  left: 30px;
   width: 300px;
   margin-left: 7px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 .layer-result-list .feature-result-item-list + .layer-result-list-toggler .title .flexberry-toggler-caption,
 .layer-result-list .feature-result-item-upload + .layer-result-list-toggler .title .flexberry-toggler-caption {
@@ -17045,18 +17054,13 @@ ol.ui.horizontal.list li:before,
   border: none;
 }
 .layer-result-list .feature-result-item-buttons {
-  position: absolute;
-  height: 25px;
-  width: 300px;
-  left: 30px;
-  top: 9px;
   z-index: 100;
 }
 .layer-result-list .feature-result-item-buttons i.icon:before {
   font-size: 16px;
 }
 .layer-result-list .feature-result-item-buttons .icon.item {
-  bottom: 2px;
+  margin: 0 !important;
 }
 .layer-result-list .feature-result-item-buttons .icon.item.feature-result-item-select {
   left: 0px;
@@ -17158,27 +17162,15 @@ ol.ui.horizontal.list li:before,
 .layer-result-list .flexberry-toggler-content .item:not(.icon) .feature-result-item-title .feature-result-item-caption {
   min-width: 0;
   width: 300px;
+  min-height: 1em;
+  align-self: flex-start;
+  padding-top: 0.25rem;
 }
 .layer-result-list .flexberry-toggler-content .item:not(.icon):first-child .feature-result-item-title {
   border-top: none;
 }
 .layer-result-list .flexberry-toggler-content .feature-result-item-content .feature-div-property-name:first-child {
   padding-top: 6px;
-}
-.layer-result-list .feature-result-item-select {
-  margin-top: .6em;
-  left: 1.9em;
-  position: absolute;
-}
-.layer-result-list .feature-result-item-list {
-  margin-top: .7em;
-  left: 3.4em;
-  position: absolute;
-}
-.layer-result-list .feature-result-item-upload {
-  margin-top: .8em;
-  left: 3.4em;
-  position: absolute;
 }
 .layer-result-list .feature-result-item-group .layer-result-list-toggler {
   margin-bottom: 0px;
@@ -17187,9 +17179,6 @@ ol.ui.horizontal.list li:before,
 .layer-result-list .feature-result-item-group:not(:first-child) .layer-result-list-toggler {
   margin-top: 0px;
   padding-top: 0px;
-}
-.layer-result-list .feature-result-item-group:not(:first-child) .feature-result-item-buttons {
-  top: 6px;
 }
 .layer-result-list .feature-result-item-list + .layer-result-list-toggler .title .flexberry-toggler-caption,
 .layer-result-list .feature-result-item-upload + .layer-result-list-toggler .title .flexberry-toggler-caption {
