@@ -37419,11 +37419,11 @@ html.ios body {
 
 @font-face {
   font-family: 'guideline-icons';
-  src:  url('fonts/guideline-icons/guideline-icons.eot?o6xazw');
-  src:  url('fonts/guideline-icons/guideline-icons.eot?o6xazw#iefix') format('embedded-opentype'),
-    url('fonts/guideline-icons/guideline-icons.ttf?o6xazw') format('truetype'),
-    url('fonts/guideline-icons/guideline-icons.woff?o6xazw') format('woff'),
-    url('fonts/guideline-icons/guideline-icons.svg?o6xazw#guideline-icons') format('svg');
+  src:  url('fonts/guideline-icons/guideline-icons.eot?mii5yn');
+  src:  url('fonts/guideline-icons/guideline-icons.eot?mii5yn#iefix') format('embedded-opentype'),
+    url('fonts/guideline-icons/guideline-icons.ttf?mii5yn') format('truetype'),
+    url('fonts/guideline-icons/guideline-icons.woff?mii5yn') format('woff'),
+    url('fonts/guideline-icons/guideline-icons.svg?mii5yn#guideline-icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -37444,6 +37444,48 @@ html.ios body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-guideline-map-edit:before {
+  content: "\e914";
+}
+.icon-guideline-calculate:before {
+  content: "\e911";
+}
+.icon-guideline-hierarchical-collapce:before {
+  content: "\e903";
+}
+.icon-guideline-hierarchical-expand:before {
+  content: "\e902";
+}
+.icon-guideline-hierarchical-list:before {
+  content: "\e900";
+}
+.icon-guideline-update-progress:before {
+  content: "\e901";
+}
+.icon-guideline-update:before {
+  content: "\e990";
+}
+.icon-guideline-clear-layers:before {
+  content: "\e98f";
+}
+.icon-guideline-earth-zu:before {
+  content: "\e98e";
+}
+.icon-guideline-group-minus-audit:before {
+  content: "\e98b";
+}
+.icon-guideline-group-plus-audit:before {
+  content: "\e98c";
+}
+.icon-guideline-group-edit-audit:before {
+  content: "\e98d";
+}
+.icon-guideline-navigate-arrow-left:before {
+  content: "\e989";
+}
+.icon-guideline-navigate-arrow-up:before {
+  content: "\e98a";
+}
 .icon-guideline-download-layer:before {
   content: "\e988";
 }
@@ -37630,13 +37672,13 @@ html.ios body {
 .icon-guideline-circle-check:before {
   content: "\e939";
 }
-.icon-guideline-copy-r:before {
+.icon-guideline-copy:before {
   content: "\e93a";
 }
 .icon-guideline-cross-r:before {
   content: "\e93b";
 }
-.icon-guideline-delete-r:before {
+.icon-guideline-delete:before {
   content: "\e93c";
 }
 .icon-guideline-earth:before {
@@ -37648,7 +37690,7 @@ html.ios body {
 .icon-guideline-earth-plus:before {
   content: "\e93f";
 }
-.icon-guideline-edit-r:before {
+.icon-guideline-edit:before {
   content: "\e940";
 }
 .icon-guideline-edit-note:before {
@@ -37678,13 +37720,13 @@ html.ios body {
 .icon-guideline-navigate-arrow:before {
   content: "\e94a";
 }
-.icon-guideline-minus-r:before {
+.icon-guideline-minus:before {
   content: "\e949";
 }
-.icon-guideline-plus-r:before {
+.icon-guideline-plus:before {
   content: "\e94b";
 }
-.icon-guideline-search-r:before {
+.icon-guideline-search:before {
   content: "\e94c";
 }
 .icon-guideline-user:before {
@@ -37693,23 +37735,8 @@ html.ios body {
 .icon-guideline-check-menu:before {
   content: "\e932";
 }
-.icon-guideline-flask:before {
+.icon-guideline-limit-editor:before {
   content: "\e930";
-}
-.icon-guideline-copy:before {
-  content: "\e931";
-}
-.icon-guideline-arrow-long-down1:before {
-  content: "\e900";
-}
-.icon-guideline-arrow-long-left:before {
-  content: "\e901";
-}
-.icon-guideline-arrow-long-right:before {
-  content: "\e902";
-}
-.icon-guideline-arrow-long-up1:before {
-  content: "\e903";
 }
 .icon-guideline-arrow-short-down:before {
   content: "\e904";
@@ -37750,17 +37777,11 @@ html.ios body {
 .icon-guideline-datetime:before {
   content: "\e910";
 }
-.icon-guideline-delete:before {
-  content: "\e911";
-}
 .icon-guideline-download:before {
   content: "\e912";
 }
 .icon-guideline-drag-and-drop:before {
   content: "\e913";
-}
-.icon-guideline-edit:before {
-  content: "\e914";
 }
 .icon-guideline-excel:before {
   content: "\e916";
@@ -37776,9 +37797,6 @@ html.ios body {
 }
 .icon-guideline-filter:before {
   content: "\e91a";
-}
-.icon-guideline-filter-active:before {
-  content: "\e91b";
 }
 .icon-guideline-like:before {
   content: "\e91c";
@@ -37801,12 +37819,6 @@ html.ios body {
 .icon-guideline-play:before {
   content: "\e922";
 }
-.icon-guideline-plus:before {
-  content: "\e923";
-}
-.icon-guideline-minus:before {
-  content: "\e934";
-}
 .icon-guideline-profile:before {
   content: "\e924";
 }
@@ -37815,9 +37827,6 @@ html.ios body {
 }
 .icon-guideline-sad:before {
   content: "\e926";
-}
-.icon-guideline-search:before {
-  content: "\e927";
 }
 .icon-guideline-select-all:before {
   content: "\e928";
