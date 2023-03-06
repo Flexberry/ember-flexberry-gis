@@ -52,7 +52,7 @@
             {{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable _addFeatureIsAvailableApi)}}
               {{flexberry-button
                 class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
-                iconClass="icon-guideline-plus-r"
+                iconClass="icon-guideline-plus"
                 tooltip=(t "components.flexberry-maplayer.plus-button.tooltip")
                 click=(action "onFeatureCreateButtonClick")
               }}
@@ -91,7 +91,7 @@
                   {{#if (and (not readonlyModel) _editLayerIsAvailableApi)}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.editButton " floated " flexberryClassNames.preventExpandCollapse)
-                      iconClass="icon-guideline-edit-r"
+                      iconClass="icon-guideline-edit"
                       caption=(t "components.flexberry-maplayer.edit-button.tooltip")
                       click=(action "onEditButtonClick")
                     }}
@@ -106,7 +106,7 @@
                     {{#if (and _addOperationIsAvailable _addFeatureIsAvailableApi)}}
                       {{flexberry-button
                         class=(concat flexberryClassNames.addButton " floated " flexberryClassNames.preventExpandCollapse)
-                        iconClass="icon-guideline-plus-r"
+                        iconClass="icon-guideline-plus"
                         caption=(t "components.flexberry-maplayer.add-button.tooltip")
                         click=(action "onAddButtonClick")
                       }}
@@ -116,7 +116,7 @@
                     {{#if _deleteLayerIsAvailableApi}}
                       {{flexberry-button
                         class=(concat flexberryClassNames.removeButton " floated " flexberryClassNames.preventExpandCollapse)
-                        iconClass="icon-guideline-delete-r"
+                        iconClass="icon-guideline-delete"
                         caption=(t "components.flexberry-maplayer.remove-button.tooltip")
                         click=(action "onRemoveButtonClick")
                       }}
