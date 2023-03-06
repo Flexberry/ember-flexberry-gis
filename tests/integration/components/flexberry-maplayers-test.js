@@ -112,7 +112,7 @@ test('rights', function (assert) {
   `);
 
   assert.equal(this.$('i.icon-guideline-resize-plus').length, 4, 'Fit layer bounds buttons for all layer, except groups');
-  assert.equal(this.$('i.icon-guideline-plus-r').length, 4, 'Plus button for allowed layers, layer types and groups');
+  assert.equal(this.$('i.icon-guideline-plus').length, 4, 'Plus button for allowed layers, layer types and groups');
   assert.equal(this.$('i.icon-guideline-table').length, 3, 'Attributes buttons for allowed layer types');
   assert.equal(this.$('label.flexberry-maplayer-add-button').length, 2, 'Add layer button for allowed layer types and layers');
   assert.equal(this.$('label.flexberry-maplayer-edit-button').length, 3, 'Edit layer button for allowed layer types and layers');

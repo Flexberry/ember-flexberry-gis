@@ -96,9 +96,9 @@
                       readonly=row.skip
                       onChange=(action "onRhumbSkipChange" row)
                     }}
-        <i class="icon-guideline-plus-r" {{action "OnAddRow" row.id}}></i>
+        <i class="icon-guideline-plus" {{action "OnAddRow" row.id}}></i>
         {{#if (gt _tableData.length 1)}}
-          <i class="icon-guideline-delete-r" {{action "OnRemoveRow" row.id}}></i>
+          <i class="icon-guideline-delete" {{action "OnRemoveRow" row.id}}></i>
         {{/if}}
       </td>
       {{/block-slot}}
