@@ -402,7 +402,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     /**
       Handles click on available geometry type.
 
-      @method onGeometryTypeSelect
+      @method onMoveSelect
       @param {String} geometryType Selected geometry type.
     */
     onMoveSelect(geometryType) {
@@ -471,6 +471,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
         switch (geometryType) {
           case 'marker':
+            // Clear previous marker when drawing new one
+            editTools.featuresLayer.clearLayers();
             editTools.startMarker();
             break;
           case 'polyline':
