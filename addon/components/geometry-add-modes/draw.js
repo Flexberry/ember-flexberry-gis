@@ -471,8 +471,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
         switch (geometryType) {
           case 'marker':
-            // Clear previous marker when drawing new one
-            editTools.featuresLayer.clearLayers();
+            editTools.featuresLayer.clearLayers(); // Clear previous marker when drawing new one
             editTools.startMarker();
             break;
           case 'polyline':
