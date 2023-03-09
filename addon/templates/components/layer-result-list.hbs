@@ -107,6 +107,7 @@
                     panToIntersection=(action 'panToIntersection')
                     editFeature=(action 'editFeature')
                     availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
+                    accessibleMap=accessibleMap
                 }}
                 {{else}}
                   {{feature-result-item
@@ -129,6 +130,7 @@
                     panToIntersection=(action 'panToIntersection')
                     editFeature=(action 'editFeature')
                     availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
+                    accessibleMap=accessibleMap
                   }}
                 {{/if}}
               {{/if}}
@@ -238,6 +240,7 @@
                 addToCompareGeometries=(action 'addToCompareGeometries')
                 editFeature=(action 'editFeature')
                 availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
+                accessibleMap=accessibleMap
             }}
             {{else}}
               {{feature-result-item
@@ -263,6 +266,7 @@
                 addToCompareGeometries=(action 'addToCompareGeometries')
                 editFeature=(action 'editFeature')
                 availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
+                accessibleMap=accessibleMap
               }}
             {{/if}}
           {{/each}}
