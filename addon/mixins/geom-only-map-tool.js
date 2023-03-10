@@ -1,18 +1,30 @@
 import Ember from 'ember';
 
 export default Ember.Mixin.create({
-  _baseDrawingDidEnd(workingPolygon) {
+  // не будем удалять слой после завершения рисования
+  hideOnDrawingEnd: false,
+  hidePreviousOnDrawingStart: true,
+  clearOnDisable: false,
+  cursor: 'crosshair',
+
+  _baseDrawingDidEnd(workingPolygon, bufferedMainPolygonLayer) {
     let leafletMap = this.get('leafletMap');
-    let polygonLayer = L.geoJSON().addTo(leafletMap);
-    polygonLayer.addData(workingPolygon.toGeoJSON());
+    let drawLayer = this.get('drawLayer');
 
-    this.set('polygonLayer', polygonLayer);
+    // зафиксируем workingPolygon - это либо сам нарисованный слой, либо добавленный буфер
+    // и он уже добавлен либо на карту, либо на drawLayer и он не удаляется после рисования
+    this.set('polygonLayer', workingPolygon.addTo(drawLayer));
 
+    // также зафиксируем нарисованный слой отдельно - он приходит только если был буфер
+    if (bufferedMainPolygonLayer && drawLayer) {
+      this.set('bufferedMainPolygonLayer', bufferedMainPolygonLayer.addTo(drawLayer));
+    }
+
+    // а работаем в любом случае с workingPolygon
     leafletMap.fire('flexberry-map:geomChanged', { wkt: workingPolygon.toEWKT(L.CRS.EPSG4326) });
   },
 
   _clearPolygonLayer() {
-    // Remove already drawn figure.
     let polygonLayer = this.get('polygonLayer');
     if (polygonLayer) {
       polygonLayer.remove();

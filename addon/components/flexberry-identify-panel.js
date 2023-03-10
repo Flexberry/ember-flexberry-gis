@@ -102,7 +102,8 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     'layerMode',
     'toolMode',
     'layers',
-    function() {
+    'drawLayer',
+    function () {
       let radius = typeof this.get('bufferRadius') === 'string' ? this.get('bufferRadius').replace(',', '.') : this.get('bufferRadius');
       return {
         bufferActive: this.get('isBuffer'),
@@ -110,10 +111,13 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
         bufferRadius: radius,
         layerMode: this.get('layerMode'),
         toolMode: this.get('toolMode'),
-        layers: this.get('layers')
+        layers: this.get('layers'),
+        drawLayer: this.get('drawLayer')
       };
     }
   ),
+
+  enable: true,
 
   /**
     Reference to component's template.
@@ -381,8 +385,17 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   */
   leafletMap: null,
 
+  /**
+    Layer for draw features for geom-only mode
+
+    @property drawLayer
+    @type>L.featureGroup</a>
+    @default null
+  */
+  drawLayer: null,
+
   layersButton: [],
-  toolsButton:[],
+  toolsButton: [],
 
   resultsHeightClass: null,
 
@@ -412,6 +425,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     onLayerModeChange(layerMode) {
       this.set('layerMode', layerMode);
 
+      // для режима geom-only управление нарисованными слоями передано на уровень данного компонента
+      this.clearDrawLayer();
+
       this._enableActualIdentifyTool();
     },
 
@@ -422,6 +438,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     */
     onToolModeChange(toolMode) {
       this.set('toolMode', toolMode);
+
+      // для режима geom-only управление нарисованными слоями передано на уровень данного компонента
+      this.clearDrawLayer();
 
       this._enableActualIdentifyTool();
     },
@@ -469,15 +488,10 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       @method actions.onIdentificationClear
       @param {Object} e Click event-object.
     */
-    onIdentificationClear(e) {
+    onIdentificationClear() {
+      this.clearDrawLayer();
+
       let identificationClear = this.get('identificationClear');
-      let leafletMap = this.get('leafletMap');
-      if (this.get('geomOnly')) {
-        let identifyToolName = this.get('_identifyToolName');
-        let identifyToolProperties = this.get('_identifyToolProperties');
-        leafletMap.flexberryMap.tools.disable(identifyToolName);
-        leafletMap.flexberryMap.tools.enable(identifyToolName, identifyToolProperties);
-      }
 
       if (Ember.typeOf(identificationClear) === 'function') {
         identificationClear();
@@ -506,56 +520,62 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       {
         iconClass: this.allIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.identify-all.caption').string,
-        layerMode:'all'
+        layerMode: 'all'
       },
       {
         iconClass: this.visibleIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.identify-all-visible.caption').string,
-        layerMode:'visible'
+        layerMode: 'visible'
       },
       {
         iconClass: this.topIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.identify-top-visible.caption').string,
-        layerMode:'top'
+        layerMode: 'top'
       },
     ];
     const toolsButton = [
       {
         iconClass: this.markerIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.marker.caption').string,
-        layerMode:'marker'
+        layerMode: 'marker'
       },
       {
         iconClass: this.polylineIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.polyline.caption').string,
-        layerMode:'polyline'
+        layerMode: 'polyline'
       },
       {
         iconClass: this.rectangleIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.rectangle.caption').string,
-        layerMode:'rectangle'
+        layerMode: 'rectangle'
       },
       {
         iconClass: this.polygonIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.polygon.caption').string,
-        layerMode:'polygon'
+        layerMode: 'polygon'
       },
       {
         iconClass: this.fileIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.file.caption').string,
-        layerMode:'file'
+        layerMode: 'file'
       }
     ];
+
     this.set('layersButton', layersButton);
     this.set('toolsButton', toolsButton);
   },
 
   didInsertElement() {
     this._super(...arguments);
-    if (this.get('geomOnly') && this.get('toolMode')) {
-      this._enableActualIdentifyTool();
+    if (this.get('geomOnly')) {
+      this.set('drawLayer', L.featureGroup().addTo(this.get('leafletMap')));
+
+      if (this.get('toolMode')) {
+        this._enableActualIdentifyTool();
+      }
     }
   },
+
   /**
     Destroys DOM-related component's properties.
   */
@@ -563,15 +583,23 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       leafletMap.off('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
-      leafletMap.off('flexberry-map:onGeomChanged', this.actions.onGeomChanged, this);
+      leafletMap.off('flexberry-map:geomChanged', this.actions.onGeomChanged, this);
     }
 
-    if (this.get('geomOnly')) {
-      let identifyToolName = this.get('_identifyToolName');
-      leafletMap.flexberryMap.tools.disable(identifyToolName);
+    let enabledTool = leafletMap.flexberryMap.tools.getEnabled();
+    if (enabledTool && enabledTool.name === this.get('_identifyToolName')) {
+      leafletMap.flexberryMap.tools.disable();
     }
+
+    this.clearDrawLayer();
 
     this._super(...arguments);
+  },
+
+  clearDrawLayer() {
+    if (this.get('drawLayer')) {
+      this.get('drawLayer').clearLayers();
+    }
   },
 
   /**
@@ -596,8 +624,26 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     @method _bufferSettingsDidChange
   */
-  _bufferSettingsDidChange: Ember.observer('bufferUnits', 'bufferRadius', 'isBuffer', function() {
+  _bufferSettingsDidChange: Ember.observer('bufferUnits', 'bufferRadius', 'isBuffer', function () {
     Ember.run.once(this, '_enableActualIdentifyTool');
+  }),
+
+  /**
+    Observes changes in 'enable' property
+
+    @method _enabledFlagDidChange
+    @type Observer
+    @private
+  */
+  _enabledFlagDidChange: Ember.observer('enable', function () {
+    if (this.get('enable')) {
+      Ember.run.once(this, '_enableActualIdentifyTool');
+    } else {
+      let enabledTool = leafletMap.flexberryMap.tools.getEnabled();
+      if (enabledTool && enabledTool.name === this.get('_identifyToolName')) {
+        leafletMap.flexberryMap.tools.disable();
+      }
+    }
   }),
 
   /**
@@ -618,7 +664,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   }
 
   /**
-    Component's action invoking when idenification finished and results must be handled.
+    Component's action invoking when identification finished and results must be handled.
 
     @method sendingActions.identificationFinished
   */

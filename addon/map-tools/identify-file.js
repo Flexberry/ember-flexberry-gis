@@ -32,6 +32,7 @@ export default IdentifyMapTool.extend({
       editTools = new L.Editable(leafletMap, {
         drawingCursor: this.get('cursor')
       });
+
       this.set('_editTools', editTools);
     }
 
@@ -52,7 +53,9 @@ export default IdentifyMapTool.extend({
       this.leafletMap.off('flexberry-map-loadfile:identification', this._identificationLayer, this);
     }
 
-    this._clear();
+    if (this.get('clearOnDisable')) {
+      this._clear();
+    }
   },
 
   _disableDraw() {},
@@ -83,13 +86,18 @@ export default IdentifyMapTool.extend({
     let bufferRadius = this.get('bufferRadius');
     let bufferUnits = this.get('bufferUnits');
 
+    let drawLayer = this.get('drawLayer');
+
     let _bufferLayer;
     if (isBufferActive && bufferRadius > 0) {
       let buf = buffer.default(layer.toGeoJSON(), bufferRadius, { units: bufferUnits });
-      _bufferLayer = L.geoJSON(buf).addTo(this.leafletMap);
+      _bufferLayer = L.geoJSON(buf);
+
+      _bufferLayer.addTo(drawLayer ? drawLayer : this.leafletMap);
     }
 
-    layer.addTo(this.leafletMap);
+    layer.addTo(drawLayer ? drawLayer : this.leafletMap);
+
     if (fit) {
       this.leafletMap.fitBounds(layer.getBounds());
     }

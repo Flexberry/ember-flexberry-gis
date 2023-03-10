@@ -87,6 +87,15 @@ export default BaseNonclickableMapTool.extend({
   bufferedMainPolygonLayer: null,
 
   /**
+    Flag: indicates whether to clear figure on disable or not
+
+    @property clearOnDisable
+    @type Boolean
+    @default true
+  */
+  clearOnDisable: true,
+
+  /**
     Flag: indicates whether to hide figure on drawing end or not.
 
     @property hideOnDrawingEnd
@@ -103,6 +112,15 @@ export default BaseNonclickableMapTool.extend({
     @default true
   */
   hidePreviousOnDrawingEnd: true,
+
+  /**
+    Flag: indicates whether to hide previously drawn figure on drawing start or not.
+
+    @property hidePreviousOnDrawingStart
+    @type Boolean
+    @default true
+  */
+  hidePreviousOnDrawingStart: false,
 
   /**
     Method to prepare identify result if need.
@@ -310,6 +328,12 @@ export default BaseNonclickableMapTool.extend({
 
   _additionalDrawingDidEnd() {},
 
+  _drawingStart() {
+    if (this.get('hidePreviousOnDrawingStart')) {
+      this._clearPolygonLayer();
+    }
+  },
+
   /**
     Draw buffer around selected area
 
@@ -323,7 +347,8 @@ export default BaseNonclickableMapTool.extend({
 
     let buf = buffer.default(layer, radius, { units: units });
     let leafletMap = this.get('leafletMap');
-    let _bufferLayer = L.geoJSON(buf).addTo(leafletMap);
+    let drawLayer = this.get('drawLayer');
+    let _bufferLayer = L.geoJSON(buf).addTo(drawLayer ? drawLayer : leafletMap);
     return _bufferLayer;
   },
 
@@ -345,9 +370,11 @@ export default BaseNonclickableMapTool.extend({
       editTools = new L.Editable(leafletMap, {
         drawingCursor: this.get('cursor')
       });
+
       this.set('_editTools', editTools);
     }
 
+    editTools.on('editable:drawing:mousedown', this._drawingStart, this);
     editTools.on('editable:drawing:end', this._drawingDidEnd, this);
   },
 
@@ -358,7 +385,10 @@ export default BaseNonclickableMapTool.extend({
     @private
   */
   _disable() {
-    this._clearPolygonLayer();
+    if (this.get('clearOnDisable')) {
+      this._clearPolygonLayer();
+    }
+
     this._super(...arguments);
 
     this._disableDraw();
@@ -367,6 +397,7 @@ export default BaseNonclickableMapTool.extend({
   _disableDraw() {
     let editTools = this.get('_editTools');
     if (!Ember.isNone(editTools)) {
+      editTools.off('editable:drawing:mousedown', this._drawingStart, this);
       editTools.off('editable:drawing:end', this._drawingDidEnd, this);
       editTools.stopDrawing();
     }
