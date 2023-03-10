@@ -49,6 +49,7 @@ export let Model = Ember.Mixin.create({
   scale: DS.attr('number', { defaultValue: 0 }),
   coordinateReferenceSystem: DS.attr('string', { defaultValue: '{"code":"EPSG:3857"}' }),
   boundingBox: DS.attr('json'),
+  owner: DS.attr('string'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),
   editTime: DS.attr('date'),
@@ -102,6 +103,7 @@ export let defineProjections = function (modelClass) {
     picture: Projection.attr('Изображение'),
     coordinateReferenceSystem: Projection.attr('Система координат'),
     boundingBox: Projection.attr('Граница'),
+    owner: Projection.attr('Владелец'),
     mapLayer: Projection.hasMany('new-platform-flexberry-g-i-s-map-layer', '', {
       name: Projection.attr('Наименование'),
       description: Projection.attr('Описание'),
