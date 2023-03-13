@@ -11,4 +11,5 @@ import GeomOnlyMixin from '../mixins/geom-only-map-tool';
   @extends IdentifyMapTool
 */
 export default IdentifyMapTool.extend(GeomOnlyMixin, {
+  cursor: 'default'
 });

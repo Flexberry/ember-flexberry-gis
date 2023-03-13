@@ -6,7 +6,7 @@ export default Ember.Component.extend({
     let button = this.get('items').find(b => {
       return b.layerMode === this.get('value');
     });
-    return button ? button.iconClass : '';
+    return button ? button.iconClass : 'icon-empty';
   }),
 
   actions: {

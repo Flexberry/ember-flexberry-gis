@@ -13,9 +13,11 @@ export default {
     'caption': 'Import failed',
     'message': 'Server unavailable or imported file is incorrrect'
   },
+  'create-layer-error': {
+    'message': 'Can not create multi object'
+  },
   'empty-error': {
-    'caption': 'File isn\'t contain any geometry objects',
-    'message': ''
+    'message': 'File isn\'t contain any geometry objects'
   },
   'coords-validate-error': {
     'caption': 'Coordinates of imported object exceeds allowed bounds',

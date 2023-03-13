@@ -68,7 +68,19 @@
       <label title="{{t "components.flexberry-identify-panel.clear.caption"}}" class="wrapper-exit" onClick={{action "onToolModeChange" "rectangle" }}>
         <i class="icon-guideline-cross-r "></i>
       </label>
-      {{flexberry-identify-file leafletMap=leafletMap isAuthenticated=isAuthenticated layerColor=fileLayerColor geomOnly=geomOnly systemCoordinates=systemCoordinates coordinate=coordinate}}
+      {{flexberry-identify-file 
+        leafletMap=leafletMap 
+        isAuthenticated=isAuthenticated 
+        layerColor=fileLayerColor 
+        geomOnly=geomOnly 
+        systemCoordinates=systemCoordinates 
+        coordinate=coordinate
+        
+        file=file
+        fileLoadAjax=fileLoadAjax
+        _showError=_showError
+        _errorMessage=_errorMessage
+      }}
     </div>
   {{/if}} 
 
