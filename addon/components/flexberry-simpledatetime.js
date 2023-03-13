@@ -1,6 +1,6 @@
 import SimpleDatetime from 'ember-flexberry/components/flexberry-simpledatetime';
 import layout from '../templates/components/flexberry-simpledatetime';
-
+import Ember from 'ember';
 /**
  * При встраивании компонента в Flexberry-treenode появилась проблема:
  *    клик на инпут каледаря, помимо открытия календаря, вызывал сворачивание/разворачивание самой ноды
@@ -13,6 +13,13 @@ import layout from '../templates/components/flexberry-simpledatetime';
 export default SimpleDatetime.extend({
   layout,
   _flatpickr: null,
+
+  /**
+    Namespase for page event.
+    @property eventNamespace
+    @type String
+  */
+  eventNamespace: undefined,
 
   inputClick(_this, e) {
     e.stopPropagation();
@@ -27,25 +34,26 @@ export default SimpleDatetime.extend({
     // Переопределим родительский метод, он тут не нужен. Будем вызывать событие через DOM - так оно сработает раньше
   },
 
+  willDestroyElement() {
+    this._super(...arguments);
+
+    let namespace = this.get('eventNamespace');
+    Ember.$(this.get('scrollSelectors').join()).off(`scroll.${namespace}`);
+    Ember.$(document).off(`mousedown.${namespace}`);
+  },
+
   _flatpickrCreate() {
     this._super(...arguments);
 
+    let namespace = this.elementId;
+    this.set('eventNamespace', namespace);
+    Ember.$(document).on(`mousedown.${namespace}`, e => {
+      let clicky = Ember.$(e.target);
+      if (clicky.closest('.flatpickr-calendar').length === 0 && clicky.get(0) !== this.$('.custom-flatpickr').get(0)) {
+        this.get('_flatpickr').close();
+      }
+    });
     this.$('.custom-flatpickr').on('click', (e) => { this.inputClick(this, e); });
     this.$('.button').on('click', (e) => { this.actions.remove(this, e); });
-  },
-
-  actions: {
-    remove(_this, e) {
-      e.stopPropagation();
-      if (!_this.get('readonly')) {
-        const flatpickr = _this.get('_flatpickr');
-        const value = _this.get('value') || new Date();
-
-        value.setHours(_this.get('defaultHour'), _this.get('defaultMinute'));
-        _this.set('value', value);
-        flatpickr.setDate(value, false);
-        flatpickr.clear();
-      }
-    }
   }
 });
