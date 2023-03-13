@@ -598,7 +598,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       if (enabledTool && enabledTool.name === this.get('_identifyToolName')) {
         leafletMap.flexberryMap.tools.disable();
       }
-    }    
+    }
 
     this.clearDrawLayer();
 
@@ -629,7 +629,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     if (!this.get('drawLayer')) {
       this.set('drawLayer', L.featureGroup().addTo(leafletMap));
-    }    
+    }
   })),
 
   /**

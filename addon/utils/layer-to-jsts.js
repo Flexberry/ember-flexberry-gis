@@ -3,7 +3,7 @@ import Ember from 'ember';
 import { latLngToCoords, latLngsToCoords } from './lat-lng-to-coord';
 
 let geometryFactory = new jsts.geom.GeometryFactory();
-let geometryReducer = null;
+let geometryReducer = {};
 
 // convert coordinates in jsts object
 let coordinatesFunction = function(coord, altitude) {
@@ -108,11 +108,11 @@ let coordToJsts = function(coord) {
 };
 
 let geometryPrecisionReducer = function(scale) {
-  if (geometryReducer === null) {
-    geometryReducer = new jsts.precision.GeometryPrecisionReducer(new jsts.geom.PrecisionModel(scale));
+  if (!geometryReducer[scale]) {
+    geometryReducer[scale] = new jsts.precision.GeometryPrecisionReducer(new jsts.geom.PrecisionModel(scale));
   }
 
-  return geometryReducer;
+  return geometryReducer[scale];
 };
 
 let geometryToJsts = function(geometry, scale) {

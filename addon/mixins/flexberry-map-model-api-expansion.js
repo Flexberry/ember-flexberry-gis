@@ -152,19 +152,19 @@ export default Ember.Mixin.create(rhumbOperations, {
     return this._getMulti(objects, isUnion, failIfInvalid, true, forceMulti, scale);
   },
 
-  _getMulti(objects, isUnion = false, failIfInvalid = true, isJsts = false, forceMulti = true, scale = null) {
+  _getMulti(objects, isUnion = false, failIfInvalid = true, isJsts = false, forceMulti = true, redefinedScale = null) {
     let separateObjects = [];
     let resultObject = null;
     let geometries = [];
-    scale = scale || this.get('mapApi').getFromApi('precisionScale');
+    let scale = redefinedScale ? redefinedScale : this.get('mapApi').getFromApi('precisionScale');
     objects.forEach((element, i) => {
       let g = element;
 
-      if (!g.geometry) {
-        return;
-      }
-
       if (isJsts) {
+        if (!g.geometry) {
+          return;
+        }
+
         g = geometryToJsts(element.geometry, scale);
         g.setSRID(element.crs.properties.name.split(':')[1]);
       }

@@ -1491,7 +1491,7 @@ export default Ember.Mixin.create(SnapDraw, actionsHandler, {
           }
         });
 
-        let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, isUnion, failIfInvalid, true, forceMulti) : null;
+        let resultObj = resultObjs.length > 0 ? this.createMulti(resultObjs, isUnion, failIfInvalid, forceMulti) : null;
         resolve(resultObj ? resultObj : null);
       }).catch((e) => {
         reject(e);
