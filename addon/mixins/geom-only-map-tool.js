@@ -22,17 +22,5 @@ export default Ember.Mixin.create({
 
     // а работаем в любом случае с workingPolygon
     leafletMap.fire('flexberry-map:geomChanged', { wkt: workingPolygon.toEWKT(L.CRS.EPSG4326) });
-  },
-
-  _clearPolygonLayer() {
-    let polygonLayer = this.get('polygonLayer');
-    if (polygonLayer) {
-      polygonLayer.remove();
-    }
-
-    let bufferedMainPolygon = this.get('bufferedMainPolygonLayer');
-    if (bufferedMainPolygon) {
-      bufferedMainPolygon.remove();
-    }
   }
 });

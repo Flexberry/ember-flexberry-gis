@@ -15,8 +15,8 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, CheckFileMixin,
   didInsertElement() {
     this._super(...arguments);
     this.set('systemCoordinates', this.get('systemCoordinates') || availableCoordinateReferenceSystemsCodesWithCaptions(this));
-    this.set('coordinate', 'auto');
-    this.set('filePreview', false);
+
+    this.send('clearFile');
   },
 
   willDestroyElement() {
@@ -59,6 +59,7 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, CheckFileMixin,
 
     clearFile() {
       this.set('file', null);
+      this.set('coordinate', 'auto');
       this.set('_showError', false);
 
       this.clearAjax();
@@ -83,23 +84,27 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, CheckFileMixin,
     showFileLayer() {
       if (this.get('filePreview')) {
         this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:clear');
+        this.set('filePreview', !this.get('filePreview'));
       } else {
         this.validateFileAndGetFeatures().then((response) => {
           if (response) {
             let layer = this.createLayer(response);
-            this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:render', { layer });
+            if (layer) {
+              this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:render', { layer });
+              this.set('filePreview', !this.get('filePreview'));
+            }
           }
         }, (error) => this.showError(error));
       }
-
-      this.set('filePreview', !this.get('filePreview'));
     },
 
     identificationFile() {
       this.validateFileAndGetFeatures().then((response) => {
         if (response) {
           let layer = this.createLayer(response);
-          this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:identification', { layer });
+          if (layer) {
+            this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:identification', { layer, geometryType: this.get('geometryType') });
+          }
         }
       }, (error) => this.showError(error));
     },

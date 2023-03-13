@@ -431,19 +431,26 @@ export default BaseNonclickableMapTool.extend({
     @private
   */
   _clearPolygonLayer() {
-    // Remove already drawn figure.
     let polygonLayer = this.get('polygonLayer');
     if (polygonLayer) {
       if (typeof polygonLayer.disableEdit === 'function') {
         polygonLayer.disableEdit();
       }
 
-      polygonLayer.remove();
+      if (this.get('drawLayer')) {
+        this.get('drawLayer').removeLayer(polygonLayer);
+      } else {
+        polygonLayer.remove();
+      }
     }
 
     let bufferedMainPolygon = this.get('bufferedMainPolygonLayer');
     if (bufferedMainPolygon) {
-      bufferedMainPolygon.remove();
+      if (this.get('drawLayer')) {
+        this.get('drawLayer').removeLayer(bufferedMainPolygon);
+      } else {
+        bufferedMainPolygon.remove();
+      }
     }
   }
 });

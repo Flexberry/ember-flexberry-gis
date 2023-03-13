@@ -148,17 +148,22 @@ export default Ember.Mixin.create(rhumbOperations, {
     @param {Boolean} forceMulti Flag: indicates whether to make geometries as multi.
     @returns {Object} New multi-circuit object in GeoJSO format.
   */
-  createMulti(objects, isUnion = false, failIfInvalid = true, forceMulti = true) {
-    return this._getMulti(objects, isUnion, failIfInvalid, true, forceMulti);
+  createMulti(objects, isUnion = false, failIfInvalid = true, forceMulti = true, scale = null) {
+    return this._getMulti(objects, isUnion, failIfInvalid, true, forceMulti, scale);
   },
 
-  _getMulti(objects, isUnion = false, failIfInvalid = true, isJsts = false, forceMulti = true) {
+  _getMulti(objects, isUnion = false, failIfInvalid = true, isJsts = false, forceMulti = true, scale = null) {
     let separateObjects = [];
     let resultObject = null;
     let geometries = [];
-    let scale = this.get('mapApi').getFromApi('precisionScale');
+    scale = scale || this.get('mapApi').getFromApi('precisionScale');
     objects.forEach((element, i) => {
       let g = element;
+
+      if (!g.geometry) {
+        return;
+      }
+
       if (isJsts) {
         g = geometryToJsts(element.geometry, scale);
         g.setSRID(element.crs.properties.name.split(':')[1]);
@@ -204,13 +209,18 @@ export default Ember.Mixin.create(rhumbOperations, {
       if (i === 0) {
         resultObject = element;
       } else {
-        resultObject = resultObject.union(element);
+        try {
+          resultObject = resultObject.union(element);
+        }
+        catch (ex) {
+          throw 'error: invalid geometry';
+        }
       }
     });
 
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let unionres = geojsonWriter.write(resultObject);
-    let crsResult = 'EPSG:' + (Ember.isNone(geometries) ? '' :  geometries[0].getSRID());
+    let crsResult = 'EPSG:' + (Ember.isNone(geometries) ? '' : geometries[0].getSRID());
 
     let type = unionres.type;
     let coordinates = unionres.coordinates;

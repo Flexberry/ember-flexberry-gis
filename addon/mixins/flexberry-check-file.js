@@ -15,6 +15,7 @@ export default Ember.Mixin.create({
   geometryType: null,
 
   importErrorMessage: t('components.geometry-add-modes.import.import-error.message'),
+  createLayerErrorMessage: t('components.geometry-add-modes.import.create-layer-error.message'),
   emptyErrorMessage: t('components.geometry-add-modes.import.empty-error.message'),
 
   _createLayer(response, crs) {
@@ -30,7 +31,7 @@ export default Ember.Mixin.create({
       };
     });
 
-    let multiFeature = this.get('mapApi').getFromApi('mapModel').createMulti(response.features, true);
+    let multiFeature = this.get('mapApi').getFromApi('mapModel').createMulti(response.features, true, true, true, 10000000000);
     let leafletLayer = L.geoJSON(multiFeature, {
       coordsToLatLng: coordsToLatLng.bind(this), style: {
         color: this.get('layerColor'),
@@ -42,7 +43,19 @@ export default Ember.Mixin.create({
 
   createLayer(response) {
     let crs = getLeafletCrs('{ "code": "' + this.get('coordinate') + '", "definition": "" }', this);
-    return this._createLayer(response, crs);
+
+    let layer = null;
+
+    try {
+      layer = this._createLayer(response, crs);
+    }
+    catch (ex) {
+      this.showError({
+        message: this.get('createLayerErrorMessage')
+      });
+    }
+
+    return layer;
   },
 
   getGeometryType(type) {

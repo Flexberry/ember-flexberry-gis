@@ -429,6 +429,11 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       this.clearDrawLayer();
 
       this._enableActualIdentifyTool();
+
+      let layerModeChange = this.get('layerModeChange');
+      if (Ember.typeOf(layerModeChange) === 'function') {
+        layerModeChange({ layerMode: layerMode });
+      }
     },
 
     /**
@@ -443,6 +448,11 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       this.clearDrawLayer();
 
       this._enableActualIdentifyTool();
+
+      let toolModeChange = this.get('toolModeChange');
+      if (Ember.typeOf(toolModeChange) === 'function') {
+        toolModeChange({ toolMode: toolMode });
+      }
     },
 
     /**
@@ -567,9 +577,8 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    if (this.get('geomOnly')) {
-      this.set('drawLayer', L.featureGroup().addTo(this.get('leafletMap')));
 
+    if (this.get('geomOnly')) {
       if (this.get('toolMode')) {
         this._enableActualIdentifyTool();
       }
@@ -584,12 +593,12 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     if (!Ember.isNone(leafletMap)) {
       leafletMap.off('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
       leafletMap.off('flexberry-map:geomChanged', this.actions.onGeomChanged, this);
-    }
 
-    let enabledTool = leafletMap.flexberryMap.tools.getEnabled();
-    if (enabledTool && enabledTool.name === this.get('_identifyToolName')) {
-      leafletMap.flexberryMap.tools.disable();
-    }
+      let enabledTool = leafletMap.flexberryMap.tools.getEnabled();
+      if (enabledTool && enabledTool.name === this.get('_identifyToolName')) {
+        leafletMap.flexberryMap.tools.disable();
+      }
+    }    
 
     this.clearDrawLayer();
 
@@ -617,6 +626,10 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     leafletMap.on('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
     leafletMap.on('flexberry-map:geomChanged', this.actions.onGeomChanged, this);
+
+    if (!this.get('drawLayer')) {
+      this.set('drawLayer', L.featureGroup().addTo(leafletMap));
+    }    
   })),
 
   /**
@@ -639,6 +652,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     if (this.get('enable')) {
       Ember.run.once(this, '_enableActualIdentifyTool');
     } else {
+      let leafletMap = this.get('leafletMap');
       let enabledTool = leafletMap.flexberryMap.tools.getEnabled();
       if (enabledTool && enabledTool.name === this.get('_identifyToolName')) {
         leafletMap.flexberryMap.tools.disable();

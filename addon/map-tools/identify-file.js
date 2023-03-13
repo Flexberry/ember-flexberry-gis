@@ -22,6 +22,7 @@ export default IdentifyMapTool.extend({
   layer: null,
   _bufferLayer: null,
   cursor: 'default',
+  clearOnDisable: false,
 
   _enable() {
     this._super(...arguments);
@@ -41,7 +42,7 @@ export default IdentifyMapTool.extend({
     leafletMap.on('flexberry-map-loadfile:identification', this._identificationLayer, this);
   },
 
-  _enableDraw() {},
+  _enableDraw() { },
 
   _disable() {
     this._super(...arguments);
@@ -58,7 +59,7 @@ export default IdentifyMapTool.extend({
     }
   },
 
-  _disableDraw() {},
+  _disableDraw() { },
 
   _clear() {
     if (this.get('layer')) {
@@ -106,7 +107,7 @@ export default IdentifyMapTool.extend({
     this.set('_bufferLayer', _bufferLayer);
   },
 
-  _identificationLayer({ layer }) {
+  _identificationLayer({ layer, geometryType }) {
     let workingLayer;
     let isBufferActive = this.get('bufferActive');
     let bufferRadius = this.get('bufferRadius');
@@ -115,7 +116,13 @@ export default IdentifyMapTool.extend({
       let buf = buffer.default(layer.toGeoJSON(), bufferRadius, { units: this.get('bufferUnits') });
       workingLayer = L.geoJSON(buf).getLayers()[0];
     } else {
-      workingLayer = layer;
+      // добавим небольшой буфер, чтобы нивелировать недостаток точности (например, поиск точек по точкам)
+      if (geometryType === 'point') {
+        let buf = buffer.default(layer.toGeoJSON(), 1, { units: 'meters' });
+        workingLayer = L.geoJSON(buf).getLayers()[0];
+      } else {
+        workingLayer = layer;
+      }
     }
 
     let e = {
