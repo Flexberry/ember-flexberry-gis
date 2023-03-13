@@ -38013,6 +38013,16 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/components/flexberry-simpledatetime.js",
+            "line": 17,
+            "description": "Namespase for page event.",
+            "itemtype": "property",
+            "name": "eventNamespace",
+            "type": "String",
+            "class": "FlexberryTableComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/components/flexberry-table.js",
             "line": 20,
             "description": "Computes - how many block-slots are used.",

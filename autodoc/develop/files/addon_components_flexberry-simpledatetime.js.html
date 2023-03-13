@@ -416,7 +416,7 @@
     <pre class="prettyprint linenums">
 import SimpleDatetime from &#x27;ember-flexberry/components/flexberry-simpledatetime&#x27;;
 import layout from &#x27;../templates/components/flexberry-simpledatetime&#x27;;
-
+import Ember from &#x27;ember&#x27;;
 /**
  * При встраивании компонента в Flexberry-treenode появилась проблема:
  *    клик на инпут каледаря, помимо открытия календаря, вызывал сворачивание/разворачивание самой ноды
@@ -429,6 +429,13 @@ import layout from &#x27;../templates/components/flexberry-simpledatetime&#x27;;
 export default SimpleDatetime.extend({
   layout,
   _flatpickr: null,
+
+  /**
+    Namespase for page event.
+    @property eventNamespace
+    @type String
+  */
+  eventNamespace: undefined,
 
   inputClick(_this, e) {
     e.stopPropagation();
@@ -443,26 +450,27 @@ export default SimpleDatetime.extend({
     // Переопределим родительский метод, он тут не нужен. Будем вызывать событие через DOM - так оно сработает раньше
   },
 
+  willDestroyElement() {
+    this._super(...arguments);
+
+    let namespace = this.get(&#x27;eventNamespace&#x27;);
+    Ember.$(this.get(&#x27;scrollSelectors&#x27;).join()).off(&#x60;scroll.${namespace}&#x60;);
+    Ember.$(document).off(&#x60;mousedown.${namespace}&#x60;);
+  },
+
   _flatpickrCreate() {
     this._super(...arguments);
 
+    let namespace = this.elementId;
+    this.set(&#x27;eventNamespace&#x27;, namespace);
+    Ember.$(document).on(&#x60;mousedown.${namespace}&#x60;, e =&gt; {
+      let clicky = Ember.$(e.target);
+      if (clicky.closest(&#x27;.flatpickr-calendar&#x27;).length === 0 &amp;&amp; clicky.get(0) !== this.$(&#x27;.custom-flatpickr&#x27;).get(0)) {
+        this.get(&#x27;_flatpickr&#x27;).close();
+      }
+    });
     this.$(&#x27;.custom-flatpickr&#x27;).on(&#x27;click&#x27;, (e) =&gt; { this.inputClick(this, e); });
     this.$(&#x27;.button&#x27;).on(&#x27;click&#x27;, (e) =&gt; { this.actions.remove(this, e); });
-  },
-
-  actions: {
-    remove(_this, e) {
-      e.stopPropagation();
-      if (!_this.get(&#x27;readonly&#x27;)) {
-        const flatpickr = _this.get(&#x27;_flatpickr&#x27;);
-        const value = _this.get(&#x27;value&#x27;) || new Date();
-
-        value.setHours(_this.get(&#x27;defaultHour&#x27;), _this.get(&#x27;defaultMinute&#x27;));
-        _this.set(&#x27;value&#x27;, value);
-        flatpickr.setDate(value, false);
-        flatpickr.clear();
-      }
-    }
   }
 });
 
