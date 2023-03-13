@@ -5719,6 +5719,10 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
 .flexberry-identify-panel .ui.icon.button.flexberry-identify-panel-top-visible-layers-option {
   border-radius: 0px 5px 5px 0px;
 }
+.flexberry-identify-panel .flexberry-dropdown-button .main-image i.icon-empty:before {
+  content: '.';
+  color: transparent;
+}
 .flexberry-search-panel .flexberry-search.ui.search .ui.search-button {
   position: absolute;
   right: 30px;
@@ -49712,7 +49716,8 @@ img.item-minus {
 .flexberry-identify-panel .wrapper:last-child {
   margin-bottom: 0px;
 }
-.flexberry-identify-panel .file-input {
+.flexberry-identify-panel .file-input,
+.flexberry-identify-panel .flexberry-file-filename-input {
   width: 85% !important;
   height: 32px;
 }

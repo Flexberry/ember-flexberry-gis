@@ -564,18 +564,23 @@ export default Ember.Mixin.create(rhumbOperations, {
     @param {Boolean} forceMulti Flag: indicates whether to make geometries as multi.
     @returns {Object} New multi-circuit object in GeoJSO format.
   */
-  createMulti(objects, isUnion = false, failIfInvalid = true, forceMulti = true) {
-    return this._getMulti(objects, isUnion, failIfInvalid, true, forceMulti);
+  createMulti(objects, isUnion = false, failIfInvalid = true, forceMulti = true, scale = null) {
+    return this._getMulti(objects, isUnion, failIfInvalid, true, forceMulti, scale);
   },
 
-  _getMulti(objects, isUnion = false, failIfInvalid = true, isJsts = false, forceMulti = true) {
+  _getMulti(objects, isUnion = false, failIfInvalid = true, isJsts = false, forceMulti = true, redefinedScale = null) {
     let separateObjects = [];
     let resultObject = null;
     let geometries = [];
-    let scale = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;precisionScale&#x27;);
+    let scale = redefinedScale ? redefinedScale : this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;precisionScale&#x27;);
     objects.forEach((element, i) =&gt; {
       let g = element;
+
       if (isJsts) {
+        if (!g.geometry) {
+          return;
+        }
+
         g = geometryToJsts(element.geometry, scale);
         g.setSRID(element.crs.properties.name.split(&#x27;:&#x27;)[1]);
       }
@@ -620,13 +625,18 @@ export default Ember.Mixin.create(rhumbOperations, {
       if (i === 0) {
         resultObject = element;
       } else {
-        resultObject = resultObject.union(element);
+        try {
+          resultObject = resultObject.union(element);
+        }
+        catch (ex) {
+          throw &#x27;error: invalid geometry&#x27;;
+        }
       }
     });
 
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let unionres = geojsonWriter.write(resultObject);
-    let crsResult = &#x27;EPSG:&#x27; + (Ember.isNone(geometries) ? &#x27;&#x27; :  geometries[0].getSRID());
+    let crsResult = &#x27;EPSG:&#x27; + (Ember.isNone(geometries) ? &#x27;&#x27; : geometries[0].getSRID());
 
     let type = unionres.type;
     let coordinates = unionres.coordinates;

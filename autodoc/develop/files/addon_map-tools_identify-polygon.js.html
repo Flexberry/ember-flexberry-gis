@@ -448,6 +448,14 @@ export default IdentifyMapTool.extend({
     this.get(&#x27;_editTools&#x27;).startPolygon();
   },
 
+  _drawingStart(e) {
+    let first = e.layer.getLatLngs().length === 1 &amp;&amp; e.layer.getLatLngs()[0].length === 0;
+
+    if (this.get(&#x27;hidePreviousOnDrawingStart&#x27;) &amp;&amp; first) {
+      this._clearPolygonLayer();
+    }
+  },
+
   /**
     Enables tool.
 

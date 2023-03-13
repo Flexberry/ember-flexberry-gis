@@ -438,6 +438,7 @@ export default IdentifyMapTool.extend({
   layer: null,
   _bufferLayer: null,
   cursor: &#x27;default&#x27;,
+  clearOnDisable: false,
 
   _enable() {
     this._super(...arguments);
@@ -448,6 +449,7 @@ export default IdentifyMapTool.extend({
       editTools = new L.Editable(leafletMap, {
         drawingCursor: this.get(&#x27;cursor&#x27;)
       });
+
       this.set(&#x27;_editTools&#x27;, editTools);
     }
 
@@ -456,7 +458,7 @@ export default IdentifyMapTool.extend({
     leafletMap.on(&#x27;flexberry-map-loadfile:identification&#x27;, this._identificationLayer, this);
   },
 
-  _enableDraw() {},
+  _enableDraw() { },
 
   _disable() {
     this._super(...arguments);
@@ -468,10 +470,12 @@ export default IdentifyMapTool.extend({
       this.leafletMap.off(&#x27;flexberry-map-loadfile:identification&#x27;, this._identificationLayer, this);
     }
 
-    this._clear();
+    if (this.get(&#x27;clearOnDisable&#x27;)) {
+      this._clear();
+    }
   },
 
-  _disableDraw() {},
+  _disableDraw() { },
 
   _clear() {
     if (this.get(&#x27;layer&#x27;)) {
@@ -499,13 +503,18 @@ export default IdentifyMapTool.extend({
     let bufferRadius = this.get(&#x27;bufferRadius&#x27;);
     let bufferUnits = this.get(&#x27;bufferUnits&#x27;);
 
+    let drawLayer = this.get(&#x27;drawLayer&#x27;);
+
     let _bufferLayer;
     if (isBufferActive &amp;&amp; bufferRadius &gt; 0) {
       let buf = buffer.default(layer.toGeoJSON(), bufferRadius, { units: bufferUnits });
-      _bufferLayer = L.geoJSON(buf).addTo(this.leafletMap);
+      _bufferLayer = L.geoJSON(buf);
+
+      _bufferLayer.addTo(drawLayer ? drawLayer : this.leafletMap);
     }
 
-    layer.addTo(this.leafletMap);
+    layer.addTo(drawLayer ? drawLayer : this.leafletMap);
+
     if (fit) {
       this.leafletMap.fitBounds(layer.getBounds());
     }
@@ -514,7 +523,7 @@ export default IdentifyMapTool.extend({
     this.set(&#x27;_bufferLayer&#x27;, _bufferLayer);
   },
 
-  _identificationLayer({ layer }) {
+  _identificationLayer({ layer, geometryType }) {
     let workingLayer;
     let isBufferActive = this.get(&#x27;bufferActive&#x27;);
     let bufferRadius = this.get(&#x27;bufferRadius&#x27;);
@@ -523,7 +532,13 @@ export default IdentifyMapTool.extend({
       let buf = buffer.default(layer.toGeoJSON(), bufferRadius, { units: this.get(&#x27;bufferUnits&#x27;) });
       workingLayer = L.geoJSON(buf).getLayers()[0];
     } else {
-      workingLayer = layer;
+      // добавим небольшой буфер, чтобы нивелировать недостаток точности (например, поиск точек по точкам)
+      if (geometryType === &#x27;point&#x27;) {
+        let buf = buffer.default(layer.toGeoJSON(), 1, { units: &#x27;meters&#x27; });
+        workingLayer = L.geoJSON(buf).getLayers()[0];
+      } else {
+        workingLayer = layer;
+      }
     }
 
     let e = {
