@@ -284,6 +284,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   */
   _isPreview: true,
 
+  scaleFactor: 1,
+
   /**
     Sheet of paper real height.
 

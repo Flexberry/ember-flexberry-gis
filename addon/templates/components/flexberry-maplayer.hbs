@@ -233,6 +233,7 @@
       {{#if (and layer.legendCanBeDisplayed hasBeenExpanded)}}
         {{component (concat "legends/" layer.type "-legend")
           layer=layer
+          scaleFactor=legendScaleFactor
         }}
       {{/if}}
     {{/yield-slot}}

@@ -25,6 +25,16 @@ export default BaseLegendComponent.extend({
   height: 24,
 
   /**
+   * Sometimes we need to scale image, because of extra space around content
+  */
+  scaleFactor: 1,
+
+  /**
+   * Show ? when legend does not exist
+  */
+  showOnEmpty: false,
+
+  /**
     Array of legend's for layer.
     Every legend is an object with following structure { src: ... },
     where 'src' is legend's image source (url or base64-string).
@@ -62,7 +72,9 @@ export default BaseLegendComponent.extend({
         .map((layerName) => {
           return new Ember.RSVP.Promise((resolve) => {
             const format = Ember.get(layerSettings, 'legendSettings.format') || Ember.get(layerSettings, 'imageFormat') || 'image/png';
-            let legendImageScale = this.get('defaultScale');
+            let legendImageScale = Math.round(this.get('height') * this.get('scaleFactor'));
+            let legendImageHeight = Math.round(this.get('height') * this.get('scaleFactor'));
+            let legendImageMargin = Math.round((this.get('height') * (this.get('scaleFactor') - 1) / 2));
             let parameters = {
               service: 'WMS',
               request: 'GetLegendGraphic',
@@ -78,7 +90,9 @@ export default BaseLegendComponent.extend({
               resolve([{
                 src: `${url}${L.Util.getParamString(parameters)}`,
                 layerName: layerName,
-                useLayerName: false
+                useLayerName: false,
+                style: `height: ${legendImageHeight}px;`,
+                imgStyle: `margin: -${legendImageMargin}px 0 0 -${legendImageMargin}px;`
               }]);
             } else {
               let legendUrl = `${url}${L.Util.getParamString(parameters)}`;
@@ -91,7 +105,10 @@ export default BaseLegendComponent.extend({
                     // One legend per query.
                     let legendsContainer = [];
                     response.Legend[0].rules.forEach(rule => {
-                      parameters.rule = rule.name;
+                      if (rule.name) {
+                        parameters.rule = rule.name;
+                      }
+
                       parameters.format = 'image/png';
                       parameters.width = legendImageScale;
                       parameters.height = legendImageScale;
@@ -99,10 +116,21 @@ export default BaseLegendComponent.extend({
                         src: `${url}${L.Util.getParamString(parameters)}`,
                         layerName: rule.name,
                         useLayerName: true,
-                        style: `height: ${this.get('height')}px;`
+                        style: `height: ${legendImageHeight}px;`,
+                        imgStyle: `margin: -${legendImageMargin}px 0 0 -${legendImageMargin}px;`
                       });
                     });
+
                     resolve(legendsContainer);
+                  } else {
+                    // иногда в формате json легенда падает
+                    parameters.format = 'image/png';
+                    resolve([{
+                      src: `${url}${L.Util.getParamString(parameters)}`,
+                      layerName: layerName,
+                      useLayerName: false,
+                      imgStyle: `margin: -${legendImageMargin}px 0 0 -${legendImageMargin}px;`
+                    }]);
                   }
                 });
             }

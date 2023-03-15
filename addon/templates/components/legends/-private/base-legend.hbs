@@ -7,7 +7,7 @@
   {{/if}}
   {{#each _legends as |legend|}}
     <div class="{{flexberryClassNames.imageWrapper}}" style="{{if legend.style legend.style ""}}">
-      <img class="{{flexberryClassNames.image}}" src="{{legend.src}}" onerror='this.style.display = "none"'>
+      <img class="{{flexberryClassNames.image}}" style="{{if legend.imgStyle legend.imgStyle ""}}" src="{{legend.src}}" onerror='this.style.display = "none"'>
       {{#if legend.useLayerName}}
         <label class="layer-legend-caption">{{legend.layerName}}</label>
       {{/if}}
@@ -15,7 +15,9 @@
   {{/each}}
 {{else}}
   <div class="{{flexberryClassNames.imageWrapper}}">
-    <i class="{{flexberryClassNames.image}} {{flexberryClassNames.defaultImage}} help icon"></i>
+    {{#if showOnEmpty}}
+      <i class="{{flexberryClassNames.image}} {{flexberryClassNames.defaultImage}} help icon"></i>
+    {{/if}}
     {{#if showLayerName}}
       <label class="{{flexberryClassNames.caption}}">{{layer.name}}</label>
     {{/if}}
