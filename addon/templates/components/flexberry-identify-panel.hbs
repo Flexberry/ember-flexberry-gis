@@ -1,4 +1,4 @@
-<div class="{{flexberryClassNames.wrapper}}">
+<div class="{{flexberryClassNames.wrapper}} ui form">
   <div class="d-flex h-42">
     {{#if (not geomOnly)}}
       {{flexberry-button-dropdown 
@@ -38,7 +38,7 @@
         <i class="icon-guideline-cross-r"></i>
       </label>
       <label>{{bufferRadiusCaption}}</label>
-      <div class="buffer-tools d-flex">
+      <div class="buffer-tools">
         <div class="field">
           {{input
             type="text"

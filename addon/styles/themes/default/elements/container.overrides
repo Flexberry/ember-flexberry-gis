@@ -815,27 +815,14 @@ div.measure-drag-panel {
     margin-top: 8px;
   }
   .buffer-tools {
-    margin-top: 8px;
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
     .field {
-      width: 45%;
-      display: inline-block;
-      border: none;
-      box-shadow: 0 0 4px #3c4f76;
-      border-radius: 5px;
-      vertical-align: top;
-      .item.ui.dropdown {
-        .menu.transition.visible {
-          border:  1px solid @inputBackgroundColor;
-        }
-      }
-      .input {
-        border-bottom: none;
-        height: 38px;
-      }
-      &:first-child {
-        height: 38px;
-        margin-right: 15px;
-      }
+      max-width: ~"calc(50% - 0.375rem)";
+      margin: 0 !important;
+      flex: 1;
     }
   }
 
