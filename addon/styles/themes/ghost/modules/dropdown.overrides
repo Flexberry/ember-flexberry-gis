@@ -143,6 +143,13 @@
   .ui.selection.dropdown,
   .ui.active.selection.dropdown {
     padding: @selectionPadding;
+    &:focus {
+      border-color: @graycolor;
+      .menu {
+        border: 1px @graycolor solid;
+        border-top: none;
+      }
+    }
   }
 }
 

@@ -233,7 +233,7 @@
 
   .wrapper {
     border: 1px solid @borderColor;
-    padding: 10px;
+    padding: 0.75rem;
     margin: 20px;
     box-shadow: 2px 2px 6px 0 fade(#000, 15%);
     position: relative;
@@ -249,7 +249,6 @@
     .selection.dropdown {
       height: 32px;
       font-size: 14px;
-      line-height: 24px;
     }
   }
 }
