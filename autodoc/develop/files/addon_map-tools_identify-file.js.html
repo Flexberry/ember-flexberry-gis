@@ -478,22 +478,29 @@ export default IdentifyMapTool.extend({
   _disableDraw() { },
 
   _clear() {
+    let container = this.get(&#x27;_container&#x27;);
+
     if (this.get(&#x27;layer&#x27;)) {
-      this.leafletMap.removeLayer(this.get(&#x27;layer&#x27;));
+      container.removeLayer(this.get(&#x27;layer&#x27;));
     }
 
     if (this.get(&#x27;_bufferLayer&#x27;)) {
-      this.leafletMap.removeLayer(this.get(&#x27;_bufferLayer&#x27;));
+      container.removeLayer(this.get(&#x27;_bufferLayer&#x27;));
     }
   },
 
-  bufferObserver: Ember.observer(&#x27;bufferActive&#x27;, &#x27;bufferRadius&#x27;, &#x27;bufferUnits&#x27;, function () {
+  _redrawLayer() {
     Ember.run.debounce(this, () =&gt; {
       let layer = this.get(&#x27;layer&#x27;);
-      if (!Ember.isNone(layer) &amp;&amp; this.leafletMap.hasLayer(layer)) {
+      let container = this.get(&#x27;_container&#x27;);
+      if (!Ember.isNone(layer) &amp;&amp; container.hasLayer(layer)) {
         this._renderLayer({ layer }, false);
       }
     }, 500);
+  },
+
+  bufferObserver: Ember.observer(&#x27;bufferActive&#x27;, &#x27;bufferRadius&#x27;, &#x27;bufferUnits&#x27;, function () {
+    Ember.run.once(this, &#x27;_redrawLayer&#x27;);
   }),
 
   _renderLayer({ layer }, fit = true) {
@@ -503,17 +510,17 @@ export default IdentifyMapTool.extend({
     let bufferRadius = this.get(&#x27;bufferRadius&#x27;);
     let bufferUnits = this.get(&#x27;bufferUnits&#x27;);
 
-    let drawLayer = this.get(&#x27;drawLayer&#x27;);
+    let container = this.get(&#x27;_container&#x27;);
 
     let _bufferLayer;
     if (isBufferActive &amp;&amp; bufferRadius &gt; 0) {
       let buf = buffer.default(layer.toGeoJSON(), bufferRadius, { units: bufferUnits });
       _bufferLayer = L.geoJSON(buf);
 
-      _bufferLayer.addTo(drawLayer ? drawLayer : this.leafletMap);
+      _bufferLayer.addTo(container);
     }
 
-    layer.addTo(drawLayer ? drawLayer : this.leafletMap);
+    layer.addTo(container);
 
     if (fit) {
       this.leafletMap.fitBounds(layer.getBounds());

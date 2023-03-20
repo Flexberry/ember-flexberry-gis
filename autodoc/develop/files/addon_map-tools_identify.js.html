@@ -546,6 +546,12 @@ export default BaseNonclickableMapTool.extend({
   */
   prepareIdentifyResult: null,
 
+  _container: Ember.computed(&#x27;leafletMap&#x27;, &#x27;drawLayer&#x27;, function () {
+    let drawLayer = this.get(&#x27;drawLayer&#x27;);
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    return drawLayer ? drawLayer : leafletMap;
+  }),
+
   /**
     Returns flat array of layers satisfying to current identification mode.
 
@@ -762,9 +768,8 @@ export default BaseNonclickableMapTool.extend({
     let units = this.get(&#x27;bufferUnits&#x27;);
 
     let buf = buffer.default(layer, radius, { units: units });
-    let leafletMap = this.get(&#x27;leafletMap&#x27;);
-    let drawLayer = this.get(&#x27;drawLayer&#x27;);
-    let _bufferLayer = L.geoJSON(buf).addTo(drawLayer ? drawLayer : leafletMap);
+    let container = this.get(&#x27;_container&#x27;);
+    let _bufferLayer = L.geoJSON(buf).addTo(container);
     return _bufferLayer;
   },
 
@@ -848,25 +853,18 @@ export default BaseNonclickableMapTool.extend({
   */
   _clearPolygonLayer() {
     let polygonLayer = this.get(&#x27;polygonLayer&#x27;);
+    let container = this.get(&#x27;_container&#x27;);
     if (polygonLayer) {
       if (typeof polygonLayer.disableEdit === &#x27;function&#x27;) {
         polygonLayer.disableEdit();
       }
 
-      if (this.get(&#x27;drawLayer&#x27;)) {
-        this.get(&#x27;drawLayer&#x27;).removeLayer(polygonLayer);
-      } else {
-        polygonLayer.remove();
-      }
+      container.removeLayer(polygonLayer);
     }
 
     let bufferedMainPolygon = this.get(&#x27;bufferedMainPolygonLayer&#x27;);
     if (bufferedMainPolygon) {
-      if (this.get(&#x27;drawLayer&#x27;)) {
-        this.get(&#x27;drawLayer&#x27;).removeLayer(bufferedMainPolygon);
-      } else {
-        bufferedMainPolygon.remove();
-      }
+      container.removeLayer(bufferedMainPolygon);
     }
   }
 });

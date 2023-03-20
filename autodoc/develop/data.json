@@ -32805,7 +32805,14 @@
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 420,
+            "line": 400,
+            "description": "identify-file properties block",
+            "class": "FlexberryIdentifyPanelComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-identify-panel.js",
+            "line": 431,
             "description": "Handles layer mode button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onLayerModeChange",
@@ -32814,7 +32821,7 @@
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 439,
+            "line": 450,
             "description": "Handles tool mode button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onToolModeChange",
@@ -32823,7 +32830,7 @@
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 458,
+            "line": 469,
             "description": "Handles buffer units dropdown value change.",
             "itemtype": "method",
             "name": "actions.onBufferUnitsChange",
@@ -32844,7 +32851,7 @@
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 469,
+            "line": 480,
             "description": "Handles 'flexberry-map:identificationFinished' event of leaflet map.",
             "itemtype": "method",
             "name": "onIdentificationFinished",
@@ -32860,7 +32867,7 @@
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 482,
+            "line": 493,
             "description": "Handles 'flexberry-map:onGeomChanged' event of leaflet map.",
             "itemtype": "method",
             "name": "onGeomChanged",
@@ -32876,7 +32883,7 @@
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 495,
+            "line": 506,
             "description": "Handles clear button's 'click' action.",
             "itemtype": "method",
             "name": "actions.onIdentificationClear",
@@ -32892,7 +32899,7 @@
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 511,
+            "line": 525,
             "description": "Handles input limit.",
             "itemtype": "method",
             "name": "actions.inputLimit",
@@ -32901,14 +32908,14 @@
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 588,
+            "line": 602,
             "description": "Destroys DOM-related component's properties.",
             "class": "FlexberryIdentifyPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 614,
+            "line": 628,
             "description": "Observes changes in 'leafletMap' property",
             "itemtype": "method",
             "name": "_leafletMapDidChange",
@@ -32920,7 +32927,7 @@
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 635,
+            "line": 649,
             "description": "Handles changes in buffer settings.",
             "itemtype": "method",
             "name": "_bufferSettingsDidChange",
@@ -32929,7 +32936,7 @@
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 644,
+            "line": 658,
             "description": "Observes changes in 'enable' property",
             "itemtype": "method",
             "name": "_enabledFlagDidChange",
@@ -32941,7 +32948,7 @@
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 663,
+            "line": 677,
             "description": "Enables identify tool related to actual settings.",
             "itemtype": "method",
             "name": "_enableActualIdentifyTool",
@@ -32952,7 +32959,7 @@
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 680,
+            "line": 694,
             "description": "Component's action invoking when identification finished and results must be handled.",
             "itemtype": "method",
             "name": "sendingActions.identificationFinished",
@@ -32961,7 +32968,7 @@
         },
         {
             "file": "addon/components/flexberry-identify-panel.js",
-            "line": 686,
+            "line": 700,
             "description": "Component's action invoking when idenification results must be cleared.",
             "itemtype": "method",
             "name": "sendingActions.identificationClear",
@@ -44662,7 +44669,7 @@
         },
         {
             "file": "addon/map-tools/identify.js",
-            "line": 133,
+            "line": 139,
             "description": "Returns flat array of layers satisfying to current identification mode.",
             "itemtype": "method",
             "name": "_getLayersToIdentify",
@@ -44691,7 +44698,7 @@
         },
         {
             "file": "addon/map-tools/identify.js",
-            "line": 146,
+            "line": 152,
             "description": "Starts identification by array of satisfying layers inside given polygon area.",
             "itemtype": "method",
             "name": "_startIdentification",
@@ -44726,7 +44733,7 @@
         },
         {
             "file": "addon/map-tools/identify.js",
-            "line": 206,
+            "line": 212,
             "description": "Finishes identification.",
             "itemtype": "method",
             "name": "_finishIdentification",
@@ -44775,7 +44782,7 @@
         },
         {
             "file": "addon/map-tools/identify.js",
-            "line": 258,
+            "line": 264,
             "description": "Handles map's 'editable:drawing:end' event.",
             "itemtype": "method",
             "name": "_drawingDidEnd",
@@ -44800,7 +44807,7 @@
         },
         {
             "file": "addon/map-tools/identify.js",
-            "line": 337,
+            "line": 343,
             "description": "Draw buffer around selected area",
             "itemtype": "method",
             "name": "_drawBuffer",
@@ -44818,7 +44825,7 @@
         },
         {
             "file": "addon/map-tools/identify.js",
-            "line": 355,
+            "line": 360,
             "description": "Enables tool.",
             "itemtype": "method",
             "name": "_enable",
@@ -44829,7 +44836,7 @@
         },
         {
             "file": "addon/map-tools/identify.js",
-            "line": 381,
+            "line": 386,
             "description": "Disables tool.",
             "itemtype": "method",
             "name": "_disable",
@@ -44840,14 +44847,14 @@
         },
         {
             "file": "addon/map-tools/identify.js",
-            "line": 406,
+            "line": 411,
             "description": "Destroys map-tool.",
             "class": "IdentifyMapTool",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/map-tools/identify.js",
-            "line": 427,
+            "line": 432,
             "description": "Remove already drawn figure",
             "itemtype": "method",
             "name": "_clearPolygonLayer",
@@ -52615,7 +52622,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/map-tools/identify.js:133"
+            "line": " addon/map-tools/identify.js:139"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -54038,8 +54045,12 @@
             "line": " addon/components/flexberry-identify-panel.js:127"
         },
         {
+            "message": "Missing item type\nidentify-file properties block",
+            "line": " addon/components/flexberry-identify-panel.js:400"
+        },
+        {
             "message": "Missing item type\nDestroys DOM-related component's properties.",
-            "line": " addon/components/flexberry-identify-panel.js:588"
+            "line": " addon/components/flexberry-identify-panel.js:602"
         },
         {
             "message": "Missing item type\nObject contains extra data for OData layer",
@@ -54439,7 +54450,7 @@
         },
         {
             "message": "Missing item type\nDestroys map-tool.",
-            "line": " addon/map-tools/identify.js:406"
+            "line": " addon/map-tools/identify.js:411"
         },
         {
             "message": "Missing item type\nDestroys map-tool.",
