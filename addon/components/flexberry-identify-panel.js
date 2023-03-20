@@ -397,6 +397,17 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   layersButton: [],
   toolsButton: [],
 
+  /**
+    identify-file properties block 
+  */
+  file: null,
+  fileLoadAjax: null,
+  _showError: false,
+  _errorMessage: null,
+  _filePreview: false,
+
+  clearFilePreviewOnClearIdentification: false,
+
   resultsHeightClass: null,
 
   resultsHeightClassObserver: Ember.observer('isBuffer', 'toolMode', function() {
@@ -499,7 +510,10 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       @param {Object} e Click event-object.
     */
     onIdentificationClear() {
-      this.clearDrawLayer();
+      if (this.get('clearFilePreviewOnClearIdentification')) {
+        this.clearDrawLayer();
+        this.set('_filePreview', false);
+      }
 
       let identificationClear = this.get('identificationClear');
 

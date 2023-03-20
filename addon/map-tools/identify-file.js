@@ -62,22 +62,29 @@ export default IdentifyMapTool.extend({
   _disableDraw() { },
 
   _clear() {
+    let container = this.get('_container');
+
     if (this.get('layer')) {
-      this.leafletMap.removeLayer(this.get('layer'));
+      container.removeLayer(this.get('layer'));
     }
 
     if (this.get('_bufferLayer')) {
-      this.leafletMap.removeLayer(this.get('_bufferLayer'));
+      container.removeLayer(this.get('_bufferLayer'));
     }
   },
 
-  bufferObserver: Ember.observer('bufferActive', 'bufferRadius', 'bufferUnits', function () {
+  _redrawLayer() {
     Ember.run.debounce(this, () => {
       let layer = this.get('layer');
-      if (!Ember.isNone(layer) && this.leafletMap.hasLayer(layer)) {
+      let container = this.get('_container');
+      if (!Ember.isNone(layer) && container.hasLayer(layer)) {
         this._renderLayer({ layer }, false);
       }
     }, 500);
+  },
+
+  bufferObserver: Ember.observer('bufferActive', 'bufferRadius', 'bufferUnits', function () {
+    Ember.run.once(this, '_redrawLayer');
   }),
 
   _renderLayer({ layer }, fit = true) {
@@ -87,17 +94,17 @@ export default IdentifyMapTool.extend({
     let bufferRadius = this.get('bufferRadius');
     let bufferUnits = this.get('bufferUnits');
 
-    let drawLayer = this.get('drawLayer');
+    let container = this.get('_container');
 
     let _bufferLayer;
     if (isBufferActive && bufferRadius > 0) {
       let buf = buffer.default(layer.toGeoJSON(), bufferRadius, { units: bufferUnits });
       _bufferLayer = L.geoJSON(buf);
 
-      _bufferLayer.addTo(drawLayer ? drawLayer : this.leafletMap);
+      _bufferLayer.addTo(container);
     }
 
-    layer.addTo(drawLayer ? drawLayer : this.leafletMap);
+    layer.addTo(container);
 
     if (fit) {
       this.leafletMap.fitBounds(layer.getBounds());
