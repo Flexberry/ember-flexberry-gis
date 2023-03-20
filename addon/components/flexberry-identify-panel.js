@@ -398,7 +398,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   toolsButton: [],
 
   /**
-    identify-file properties block 
+    identify-file properties block
   */
   file: null,
   fileLoadAjax: null,
