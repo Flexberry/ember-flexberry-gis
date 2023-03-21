@@ -1497,10 +1497,6 @@ lang {
   margin: 20px 5px;
   width: 250px;
 }
-.intersection-panel .close {
-  margin-left: auto;
-  margin-right: 14px;
-}
 .intersection-panel .intersections-panel-results-row {
   overflow-y: scroll;
   height: 250px;
@@ -5887,21 +5883,6 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
 .flexberry-identify-panel .ui.icon.button:not(.fluid).ml-20 {
   margin-left: 20px;
 }
-.sidebar-wrapper .ui.icon.button.flexberry-map-layers-add-button,
-.rgis-sidebar-wrapper .ui.icon.button.flexberry-map-layers-add-button,
-.sidebar-wrapper .ui.icon.button.flexberry-button.save,
-.rgis-sidebar-wrapper .ui.icon.button.flexberry-button.save,
-.sidebar-wrapper .bmrk-add-block-buttons .ui.icon.button,
-.rgis-sidebar-wrapper .bmrk-add-block-buttons .ui.icon.button,
-.sidebar-wrapper .bookmark-item-buttons .ui.icon.button,
-.rgis-sidebar-wrapper .bookmark-item-buttons .ui.icon.button {
-  border: none;
-  box-shadow: none;
-  width: 30px;
-  height: 30px;
-  padding: 7px 0;
-  margin: 0 0 0 .25em;
-}
 .sidebar-wrapper .ui.button,
 .rgis-sidebar-wrapper .ui.button {
   border: 1px solid #E5E5E5;
@@ -7436,7 +7417,7 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   left: 62px;
 }
 .layer-result-list .feature-result-item-title {
-  height: 40px;
+  min-height: 24px;
   position: relative;
 }
 .layer-result-list .feature-result-item-title .ui.checkbox {
@@ -7478,7 +7459,6 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   display: flex;
   flex-direction: row;
   width: 300px;
-  height: 100px;
   left: 28px;
 }
 .layer-result-list .feature-result-item-toolbar > .icon.item {
@@ -46068,6 +46048,27 @@ img.item-minus {
 .rgis-sidebar-wrapper.right-sidebar-wrapper {
   top: 0;
 }
+.sidebar-wrapper .ui.tab .tab-header,
+.rgis-sidebar-wrapper.right-sidebar-wrapper .ui.tab .tab-header {
+  margin-right: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.sidebar-wrapper .ui.tab .tab-header h3,
+.rgis-sidebar-wrapper.right-sidebar-wrapper .ui.tab .tab-header h3 {
+  margin-bottom: 0 !important;
+}
+.sidebar-wrapper .ui.tab .tab-header .ui.icon.close,
+.rgis-sidebar-wrapper.right-sidebar-wrapper .ui.tab .tab-header .ui.icon.close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.sidebar-wrapper .ui.tab .tab-header .ui.icon.close i.remove.icon:hover:before,
+.rgis-sidebar-wrapper.right-sidebar-wrapper .ui.tab .tab-header .ui.icon.close i.remove.icon:hover:before {
+  color: #2B7A38;
+}
 .sidebar-wrapper .main-map-tab-bar .item.tab.createOrEditObject,
 .rgis-sidebar-wrapper.right-sidebar-wrapper .main-map-tab-bar .item.tab.createOrEditObject,
 .sidebar-wrapper .main-map-tab-bar .item.tab.createOrEditObject.active,
@@ -46461,19 +46462,47 @@ img.item-minus {
   border-top: none;
 }
 .ui.right.sidebar .treeview.root.header {
-  bottom: 37px;
-  left: 247px;
   position: relative;
+  top: -42px;
+  width: 100%;
+  margin-bottom: -30px;
+  padding-right: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.ui.right.sidebar .treeview.root.header label {
+  border: none;
+  box-shadow: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  margin: 0;
 }
 .ui.right.sidebar .treeview.root.header .button:hover {
   background: #fff;
 }
-.ui.right.sidebar .treeview.root.header .button .icon.save {
-  margin-top: 1px;
-  margin-left: 1px;
+.ui.right.sidebar .treeview.root.header .more.submenu {
+  width: max-content !important;
+  margin: 2rem 0.75rem 0 0;
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background: #FFFFFF !important;
 }
-.ui.right.sidebar .treeview.root.header .button .icon.plus {
-  margin-left: 3px;
+.ui.right.sidebar .treeview.root.header .more.submenu label {
+  width: 100% !important;
+  padding: 1em 0.75em 1em 0.5em !important;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  text-align: left;
+  color: #343A32;
+}
+.ui.right.sidebar .treeview.root.header .more.submenu label i {
+  font-size: 1.25em;
 }
 .ui.right.sidebar .treeview .content .flexberry-maplayers.accordion {
   overflow-y: hidden;
@@ -47188,11 +47217,17 @@ img.item-minus {
 .ui.tab.identify {
   overflow-y: hidden !important;
   overflow-x: hidden;
+  padding: 0;
+}
+.ui.tab.identify .identify-tab {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 .ui.tab.identify .layer-result-list {
   overflow-y: auto;
   overflow-x: hidden;
-  height: calc(100vh - 210px) !important;
+  flex: 1;
 }
 .ui.tab.identify .layer-result-list.buffer {
   height: calc(100vh - 305px) !important;
@@ -47206,6 +47241,9 @@ img.item-minus {
 .ui.tab.identify .layer-result-list .nodata {
   margin-top: 15px;
 }
+.ui.tab.identify .flexberry-identify-panel {
+  padding: 0 30px 0 0 !important;
+}
 .flexberry-gis-edit-panel {
   display: flex;
   font-size: 0;
@@ -47215,15 +47253,6 @@ img.item-minus {
 }
 .ui.tab.compare {
   overflow-y: hidden !important;
-}
-.ui.tab.compare .compare-header {
-  margin-right: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-.ui.tab.compare .compare-header h3 {
-  margin-bottom: 0 !important;
 }
 .ui.tab.compare .ui.help-button {
   float: right;
