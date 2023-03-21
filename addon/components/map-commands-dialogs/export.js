@@ -284,6 +284,15 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   */
   _isPreview: true,
 
+  /**
+    Scale of preview images for layer legends.
+    Sometimes we need to scale image, because of extra space around content
+
+    @property scaleFactor
+    @type Number
+    @default 1
+    @private
+  */
   scaleFactor: 1,
 
   /**
@@ -746,7 +755,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   /**
    * Padding for sheet of paper
    */
-  mapPadding: 48,
+  mapPadding: 46,
 
   /**
    * Legend font size
