@@ -9,10 +9,6 @@
     width: 250px;
 }
 .intersection-panel {
-    .close {
-        margin-left: auto;
-        margin-right: 14px;
-    }
     .intersections-panel-results-row {
       overflow-y: scroll;
       height: 250px;

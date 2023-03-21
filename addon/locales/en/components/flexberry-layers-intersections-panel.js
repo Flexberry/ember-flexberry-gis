@@ -1,4 +1,5 @@
 export default {
+  'caption': 'Find intersections',
   'layers-list': 'Layers list',
   'square': 'Intersection area',
   'buffer': 'Buffer zone',

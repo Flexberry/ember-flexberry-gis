@@ -256,18 +256,6 @@
 // Кнопки Сохранить и добавить новый слой на дереве слоев
 .sidebar-wrapper,
 .rgis-sidebar-wrapper {
-  .ui.icon.button.flexberry-map-layers-add-button,
-  .ui.icon.button.flexberry-button.save,
-  .bmrk-add-block-buttons .ui.icon.button,
-  .bookmark-item-buttons .ui.icon.button {
-    border: none;
-    box-shadow: none;
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    margin: 0 0 0 .25em;
-  }
-
   .bookmark-item-buttons,
   .bmrk-add-block {
     .ui.button {
