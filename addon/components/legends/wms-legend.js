@@ -25,7 +25,13 @@ export default BaseLegendComponent.extend({
   height: 24,
 
   /**
-   * Sometimes we need to scale image, because of extra space around content
+    Scale of preview images for layer legends.
+    Sometimes we need to scale image, because of extra space around content
+
+    @property scaleFactor
+    @type Number
+    @default 1
+    @private
   */
   scaleFactor: 1,
 

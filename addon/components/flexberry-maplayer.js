@@ -511,6 +511,17 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     _editDialogLayer: null,
 
     /**
+      Scale of preview images for layer legends.
+      Sometimes we need to scale image, because of extra space around content
+
+      @property legendScaleFactor
+      @type Number
+      @default 1
+      @private
+    */
+    legendScaleFactor: 1,
+
+    /**
       Layer model for 'remove' dialog.
 
       @property _removeDialogLayer

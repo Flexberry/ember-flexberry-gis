@@ -324,6 +324,17 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     duration: 350,
 
     /**
+      Scale of preview images for layer legends.
+      Sometimes we need to scale image, because of extra space around content
+
+      @property legendScaleFactor
+      @type Number
+      @default 1
+      @private
+    */
+    legendScaleFactor: 1,
+
+    /**
       Nested layers hierarchy.
       This property is optional and must be used when there are too many child layers,
       and you don't want to define them explicitly in the hbs-markup,

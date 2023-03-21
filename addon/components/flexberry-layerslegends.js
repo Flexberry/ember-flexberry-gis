@@ -18,6 +18,17 @@ export default Ember.Component.extend({
   layout,
 
   /**
+    Scale of preview images for layer legends.
+    Sometimes we need to scale image, because of extra space around content
+
+    @property scaleFactor
+    @type Number
+    @default 1
+    @private
+  */
+  scaleFactor: 1,
+
+  /**
     Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
     is empty to disable component's wrapping <div>.
 
