@@ -923,7 +923,7 @@ div.measure-drag-panel {
     left: 62px;
   }
   .feature-result-item-title {
-    height: 40px;
+    min-height: 24px;
     position: relative;
     .ui.checkbox {
       margin: 0.25rem 0;
@@ -965,7 +965,6 @@ div.measure-drag-panel {
     display: flex;
     flex-direction: row;
     width: 300px;
-    height: 100px;
     left: 28px;
     &>.icon.item {
       font-size: 1.15em;
