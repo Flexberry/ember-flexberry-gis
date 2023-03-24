@@ -37,9 +37,15 @@ export default IdentifyMapTool.extend({
       this.set('_editTools', editTools);
     }
 
-    leafletMap.on('flexberry-map-loadfile:render', this._renderLayer, this);
-    leafletMap.on('flexberry-map-loadfile:clear', this._clear, this);
-    leafletMap.on('flexberry-map-loadfile:identification', this._identificationLayer, this);
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.off('flexberry-map-loadfile:render', this._renderLayer, this);
+      leafletMap.off('flexberry-map-loadfile:clear', this._clear, this);
+      leafletMap.off('flexberry-map-loadfile:identification', this._identificationLayer, this);
+
+      leafletMap.on('flexberry-map-loadfile:render', this._renderLayer, this);
+      leafletMap.on('flexberry-map-loadfile:clear', this._clear, this);
+      leafletMap.on('flexberry-map-loadfile:identification', this._identificationLayer, this);
+    }
   },
 
   _enableDraw() { },
@@ -47,16 +53,22 @@ export default IdentifyMapTool.extend({
   _disable() {
     this._super(...arguments);
 
-    let editTools = this.get('_editTools');
-    if (!Ember.isNone(editTools)) {
+    // не будем выключать подписку на события при деактивации инструмента, т.к. форма при этом остается доступной
+
+    if (this.get('clearOnDisable')) {
+      this._clear();
+    }
+  },
+
+  willDestroy() {
+    // сначала вызовем отключение подписок, поскольку в базовом методе очищается leafletMap
+    if (!Ember.isNone(this.leafletMap)) {
       this.leafletMap.off('flexberry-map-loadfile:render', this._renderLayer, this);
       this.leafletMap.off('flexberry-map-loadfile:clear', this._clear, this);
       this.leafletMap.off('flexberry-map-loadfile:identification', this._identificationLayer, this);
     }
 
-    if (this.get('clearOnDisable')) {
-      this._clear();
-    }
+    this._super(...arguments);
   },
 
   _disableDraw() { },

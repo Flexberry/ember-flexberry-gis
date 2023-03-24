@@ -1,20 +1,21 @@
 import Ember from 'ember';
 import $ from 'jquery';
 import layout from '../templates/components/flexberry-identify-file';
-import MapModelApiExpansionMixin from '../mixins/flexberry-map-model-api-expansion';
 import CheckFileMixin from '../mixins/flexberry-check-file';
 import { availableCoordinateReferenceSystemsCodesWithCaptions } from '../utils/available-coordinate-reference-systems-for-dropdown';
 
-export default Ember.Component.extend(MapModelApiExpansionMixin, CheckFileMixin, {
+export default Ember.Component.extend(CheckFileMixin, {
   layout,
   mapApi: Ember.inject.service(),
-
+  
   filePreview: false,
   systemCoordinates: null,
 
   didInsertElement() {
     this._super(...arguments);
+    
     this.set('systemCoordinates', this.get('systemCoordinates') || availableCoordinateReferenceSystemsCodesWithCaptions(this));
+    this.set('coordinate', 'auto');
 
     this.send('clearFile');
   },

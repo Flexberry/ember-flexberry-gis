@@ -443,11 +443,13 @@ export default BaseNonclickableMapTool.extend({
         polygonLayer.disableEdit();
       }
 
+      polygonLayer.remove();
       container.removeLayer(polygonLayer);
     }
 
     let bufferedMainPolygon = this.get('bufferedMainPolygonLayer');
     if (bufferedMainPolygon) {
+      bufferedMainPolygon.remove();
       container.removeLayer(bufferedMainPolygon);
     }
   }
