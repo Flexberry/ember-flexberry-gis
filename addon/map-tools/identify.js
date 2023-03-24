@@ -236,7 +236,9 @@ export default BaseNonclickableMapTool.extend({
               leafletLayer.setStyle({
                 color: 'salmon',
                 weight: 2,
-                fillOpacity: 0.3
+                fillOpacity: 0.3,
+                fillColor: 'salmon',
+                fill: true
               });
             }
 
