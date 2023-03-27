@@ -6,6 +6,7 @@ export default Ember.Mixin.create({
   hidePreviousOnDrawingStart: true,
   clearOnDisable: false,
   cursor: 'crosshair',
+  suffix: '-geom',
 
   _baseDrawingDidEnd(workingPolygon, bufferedMainPolygonLayer) {
     let leafletMap = this.get('leafletMap');
