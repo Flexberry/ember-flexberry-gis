@@ -471,7 +471,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
         switch (geometryType) {
           case 'marker':
-            editTools.featuresLayer.clearLayers(); // Clear previous marker when drawing new one
             editTools.startMarker();
             break;
           case 'polyline':
@@ -555,6 +554,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   */
   _disableDraw(e) {
     let editTools = this.get('_editTools');
+    let geometryType = this.get('geometryType');
+    let layer = this.get('layer');
     editTools.off('editable:drawing:end', this._disableDraw, this);
 
     this.$().closest('body').off('keydown');
@@ -564,49 +565,52 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
     this.sendAction('block', false);
 
-    if (!Ember.isNone(e)) {
-      let geometryType = this.get('geometryType');
-
-      if (geometryType !== 'multyPolygon' && geometryType !== 'multyLine') {
-        this.set('layer', e.layer);
-        this.sendAction('updateLayer', e.layer, false);
-      } else {
-        let layer = this.get('layer');
-        if (Ember.isNone(layer)) {
-          this.set('layer', e.layer);
-          return;
-        }
-
-        let targeLayer = layer.toJsts(L.CRS.EPSG4326);
-        let sourceLayer = e.layer.toJsts(L.CRS.EPSG4326);
-        let combinedLeaflet;
-        let newHole = sourceLayer.within(targeLayer);
-        if (newHole) {
-          combinedLeaflet = targeLayer.difference(sourceLayer);
-        } else {
-          combinedLeaflet = targeLayer.union(sourceLayer);
-        }
-
-        let geojsonWriter = new jsts.io.GeoJSONWriter();
-        let unionres = geojsonWriter.write(combinedLeaflet);
-        let geoJSON = L.geoJSON(unionres);
-
-        let latLngs = geoJSON.getLayers()[0].getLatLngs();
-        let numGeom = targeLayer.getNumGeometries();
-
-        if (newHole && numGeom === 1) {
-          latLngs = [latLngs];
-        }
-
-        layer.setLatLngs(latLngs);
-        layer.disableEdit();
-        layer.enableEdit();
-
-        e.layer.remove();
-        this.sendAction('updateLayer', layer, false);
-      }
+    if (Ember.isNone(e)) {
+      this.set('geometryType', null);
+      return;
     }
 
+    if (geometryType === 'multyPolygon' || geometryType === 'multyLine') {
+      if (Ember.isNone(layer)) {
+        this.set('layer', e.layer);
+        return;
+      }
+
+      let targeLayer = layer.toJsts(L.CRS.EPSG4326);
+      let sourceLayer = e.layer.toJsts(L.CRS.EPSG4326);
+      let combinedLeaflet;
+      let newHole = sourceLayer.within(targeLayer);
+      if (newHole) {
+        combinedLeaflet = targeLayer.difference(sourceLayer);
+      } else {
+        combinedLeaflet = targeLayer.union(sourceLayer);
+      }
+
+      let geojsonWriter = new jsts.io.GeoJSONWriter();
+      let unionres = geojsonWriter.write(combinedLeaflet);
+      let geoJSON = L.geoJSON(unionres);
+
+      let latLngs = geoJSON.getLayers()[0].getLatLngs();
+      let numGeom = targeLayer.getNumGeometries();
+
+      if (newHole && numGeom === 1) {
+        latLngs = [latLngs];
+      }
+
+      layer.setLatLngs(latLngs);
+      layer.disableEdit();
+      layer.enableEdit();
+
+      e.layer.remove();
+    } else if (geometryType === 'marker' && !Ember.isNone(layer)) {
+      layer.setLatLng(e.layer.getLatLng());
+      editTools.featuresLayer.clearLayers(); // Clear previous marker when drawing new one
+    } else {
+      layer = e.layer;
+    }
+
+    this.set('layer', layer);
+    this.sendAction('updateLayer', layer, false);
     this.set('geometryType', null);
   }
 });
