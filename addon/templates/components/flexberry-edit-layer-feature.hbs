@@ -149,9 +149,11 @@
           <label>{{fieldValue}}</label>
           {{#if (eq (get _model.fieldTypes fieldName) "date")}}
             {{flexberry-simpledatetime
-              type="date"
+              type="datetime"
               value=(mut (get dataValue fieldName))
               placeholder=placeholderDataPicker
+              defaultHour=0
+              defaultMinute=0
               readonly=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
             }}
           {{else if (eq (get _model.fieldTypes fieldName) "boolean")}}
