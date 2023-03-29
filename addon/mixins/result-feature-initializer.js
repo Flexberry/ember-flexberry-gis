@@ -14,13 +14,17 @@ export default Ember.Mixin.create({
       let value = featureProperties[prop];
       if ((type && type === 'date') && !Ember.isNone(value) && !Ember.isEmpty(value) &&
         (!Ember.isEmpty(dateFormat) || !Ember.isEmpty(dateTimeFormat))) {
-        if (!Ember.isEmpty(dateTimeFormat)) {
-          let dateValue = moment(value);
-          featureProperties[prop] = (dateValue.utc().format('HH:mm:ss') === '00:00:00') ?
-            moment(value).format(dateFormat) :
-            moment(value).format(dateTimeFormat);
-        } else {
-          featureProperties[prop] = moment(value).format(dateFormat);
+        let dateValue = moment(value);
+
+        // Если дата уже преобразована к формату, то она вероятно будет невалидной. Не будем ее трогать
+        if (dateValue.isValid()) {
+          if (!Ember.isEmpty(dateTimeFormat)) {
+            featureProperties[prop] = (dateValue.utc().format('HH:mm:ss') === '00:00:00') ?
+              moment(value).format(dateFormat) :
+              moment(value).format(dateTimeFormat);
+          } else {
+            featureProperties[prop] = moment(value).format(dateFormat);
+          }
         }
       }
 
