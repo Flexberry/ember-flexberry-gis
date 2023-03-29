@@ -344,7 +344,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     leafletMap.on('flexberry-map:edit-feature:end', this._updateFeatureResultItem, this);
     leafletMap.on('flexberry-map:edit-feature:fail', this._updateFeatureResultItem, this);
-    this.set('defaultFeatureStyle', Object.assign({}, feature.leafletLayer.options));
+    this.set('defaultFeatureStyle', Object.assign({ stroke: true, fill: true }, feature.leafletLayer.options));
 
     if (feature.geometry && feature.geometry.type &&
       (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' ||
