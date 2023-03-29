@@ -16,6 +16,8 @@ export default Ember.Mixin.create({
     // и он уже добавлен либо на карту, либо на drawLayer и он не удаляется после рисования
     this.set('polygonLayer', workingPolygon.addTo(drawLayer));
 
+    this.set('bufferedMainPolygonLayer', null);
+
     // также зафиксируем нарисованный слой отдельно - он приходит только если был буфер
     if (bufferedMainPolygonLayer && drawLayer) {
       this.set('bufferedMainPolygonLayer', bufferedMainPolygonLayer.addTo(drawLayer));

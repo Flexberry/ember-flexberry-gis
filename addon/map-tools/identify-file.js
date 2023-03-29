@@ -26,7 +26,7 @@ export default IdentifyMapTool.extend({
 
   /**
    * We need to differentiate events from different instances, because we don't turn off event subscriptions
-   * 
+   *
   */
   suffix: '',
 
@@ -69,9 +69,9 @@ export default IdentifyMapTool.extend({
   willDestroy() {
     // сначала вызовем отключение подписок, поскольку в базовом методе очищается leafletMap
     if (!Ember.isNone(this.leafletMap)) {
-      leafletMap.off(`flexberry-map-loadfile${this.get('suffix')}:render`, this._renderLayer, this);
-      leafletMap.off(`flexberry-map-loadfile${this.get('suffix')}:clear`, this._clear, this);
-      leafletMap.off(`flexberry-map-loadfile${this.get('suffix')}:identification`, this._identificationLayer, this);
+      this.leafletMap.off(`flexberry-map-loadfile${this.get('suffix')}:render`, this._renderLayer, this);
+      this.leafletMap.off(`flexberry-map-loadfile${this.get('suffix')}:clear`, this._clear, this);
+      this.leafletMap.off(`flexberry-map-loadfile${this.get('suffix')}:identification`, this._identificationLayer, this);
     }
 
     this._super(...arguments);
@@ -154,7 +154,7 @@ export default IdentifyMapTool.extend({
   },
 
   _identificationLayer({ layer, geometryType }) {
-    let workingLayer = this._getWorkingLayer({layer, geometryType});
+    let workingLayer = this._getWorkingLayer({ layer, geometryType });
 
     let e = {
       polygonLayer: workingLayer,

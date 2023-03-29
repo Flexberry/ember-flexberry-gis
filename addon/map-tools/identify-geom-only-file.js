@@ -2,6 +2,7 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
 import IdentifyMapTool from './identify-file';
 import GeomOnlyMixin from '../mixins/geom-only-map-tool';
 /**

@@ -4,6 +4,7 @@
 
 import IdentifyMapTool from './identify-polygon';
 import GeomOnlyMixin from '../mixins/geom-only-map-tool';
+import RedrawBufferMixin from '../mixins/redraw-buffer';
 
 /**
   Identify map-tool that identifies all map layers.
@@ -11,5 +12,5 @@ import GeomOnlyMixin from '../mixins/geom-only-map-tool';
   @class IdentifyAllPolygonMapTool
   @extends IdentifyMapTool
 */
-export default IdentifyMapTool.extend(GeomOnlyMixin, {
+export default IdentifyMapTool.extend(GeomOnlyMixin, RedrawBufferMixin, {
 });

@@ -10,7 +10,7 @@ let setIndexes = (rootArray, hierarchy) => {
   // Filter root array to avoid gaps in indexes.
   let index = rootArray.filter(layer => layer.get('isDeleted') === false).length;
 
-  _setIndexes(hierarchy, index);
+  _setIndexes(hierarchy, index * 2);
 };
 
 /**
@@ -27,7 +27,7 @@ let _setIndexes = (layers, index) => {
     layers.forEach((layer) => {
       if (!layer.get('isDeleted')) {
         layer.set('index', index);
-        index--;
+        index -= 2;
         if (Ember.isArray(layer.get('layers'))) {
           index = _setIndexes(layer.get('layers'), index);
         }

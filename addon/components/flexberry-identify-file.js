@@ -7,13 +7,13 @@ import { availableCoordinateReferenceSystemsCodesWithCaptions } from '../utils/a
 export default Ember.Component.extend(CheckFileMixin, {
   layout,
   mapApi: Ember.inject.service(),
-  
+
   filePreview: false,
   systemCoordinates: null,
 
   /**
    * We need to differentiate events from different instances, because we don't turn off event subscriptions
-   * 
+   *
   */
   suffix: Ember.computed('geomOnly', function () {
     let geomOnly = this.get('geomOnly');
@@ -22,7 +22,7 @@ export default Ember.Component.extend(CheckFileMixin, {
 
   didInsertElement() {
     this._super(...arguments);
-    
+
     this.set('systemCoordinates', this.get('systemCoordinates') || availableCoordinateReferenceSystemsCodesWithCaptions(this));
     this.set('coordinate', 'auto');
 
@@ -32,6 +32,7 @@ export default Ember.Component.extend(CheckFileMixin, {
   willDestroyElement() {
     this._super(...arguments);
     this.clearAjax();
+    this.set('coordinate', null);
   },
 
   sendFileToCache() {
@@ -113,7 +114,8 @@ export default Ember.Component.extend(CheckFileMixin, {
         if (response) {
           let layer = this.createLayer(response);
           if (layer) {
-            this.get('mapApi').getFromApi('leafletMap').fire(`flexberry-map-loadfile${this.get('suffix')}:identification`, { layer, geometryType: this.get('geometryType') });
+            let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+            leafletMap.fire(`flexberry-map-loadfile${this.get('suffix')}:identification`, { layer, geometryType: this.get('geometryType') });
           }
         }
       }, (error) => this.showError(error));
