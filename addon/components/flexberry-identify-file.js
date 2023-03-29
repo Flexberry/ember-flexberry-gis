@@ -1,20 +1,30 @@
 import Ember from 'ember';
 import $ from 'jquery';
 import layout from '../templates/components/flexberry-identify-file';
-import MapModelApiExpansionMixin from '../mixins/flexberry-map-model-api-expansion';
 import CheckFileMixin from '../mixins/flexberry-check-file';
 import { availableCoordinateReferenceSystemsCodesWithCaptions } from '../utils/available-coordinate-reference-systems-for-dropdown';
 
-export default Ember.Component.extend(MapModelApiExpansionMixin, CheckFileMixin, {
+export default Ember.Component.extend(CheckFileMixin, {
   layout,
   mapApi: Ember.inject.service(),
 
   filePreview: false,
   systemCoordinates: null,
 
+  /**
+   * We need to differentiate events from different instances, because we don't turn off event subscriptions
+   *
+  */
+  suffix: Ember.computed('geomOnly', function () {
+    let geomOnly = this.get('geomOnly');
+    return geomOnly ? '-geom' : '';
+  }),
+
   didInsertElement() {
     this._super(...arguments);
+
     this.set('systemCoordinates', this.get('systemCoordinates') || availableCoordinateReferenceSystemsCodesWithCaptions(this));
+    this.set('coordinate', 'auto');
 
     this.send('clearFile');
   },
@@ -22,6 +32,7 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, CheckFileMixin,
   willDestroyElement() {
     this._super(...arguments);
     this.clearAjax();
+    this.set('coordinate', null);
   },
 
   sendFileToCache() {
@@ -64,33 +75,33 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, CheckFileMixin,
 
       this.clearAjax();
       if (this.get('filePreview')) {
-        this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:clear');
+        this.get('mapApi').getFromApi('leafletMap').fire(`flexberry-map-loadfile${this.get('suffix')}:clear`);
         this.set('filePreview', false);
       }
 
       $('#fileinput').val('');
-      $('.ui.button.upload').removeClass('hidden');
-      $('.ui.button.remove').addClass('hidden');
+      this.$('.ui.button.upload').removeClass('hidden');
+      this.$('.ui.button.remove').addClass('hidden');
     },
 
     clickFile(e) {
       let file = e.target.files[0];
       this.set('file', file);
       this.clearAjax();
-      $('.ui.button.upload').addClass('hidden');
-      $('.ui.button.remove').removeClass('hidden');
+      this.$('.ui.button.upload').addClass('hidden');
+      this.$('.ui.button.remove').removeClass('hidden');
     },
 
     showFileLayer() {
       if (this.get('filePreview')) {
-        this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:clear');
+        this.get('mapApi').getFromApi('leafletMap').fire(`flexberry-map-loadfile${this.get('suffix')}:clear`);
         this.set('filePreview', !this.get('filePreview'));
       } else {
         this.validateFileAndGetFeatures().then((response) => {
           if (response) {
             let layer = this.createLayer(response);
             if (layer) {
-              this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:render', { layer });
+              this.get('mapApi').getFromApi('leafletMap').fire(`flexberry-map-loadfile${this.get('suffix')}:render`, { layer });
               this.set('filePreview', !this.get('filePreview'));
             }
           }
@@ -103,7 +114,8 @@ export default Ember.Component.extend(MapModelApiExpansionMixin, CheckFileMixin,
         if (response) {
           let layer = this.createLayer(response);
           if (layer) {
-            this.get('mapApi').getFromApi('leafletMap').fire('flexberry-map-loadfile:identification', { layer, geometryType: this.get('geometryType') });
+            let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+            leafletMap.fire(`flexberry-map-loadfile${this.get('suffix')}:identification`, { layer, geometryType: this.get('geometryType') });
           }
         }
       }, (error) => this.showError(error));
