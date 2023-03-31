@@ -1143,6 +1143,9 @@
   margin-top: -48px;
   text-align:justify;
 }
+.ui.bottom.left.popup.small.help-popup {
+  margin-top: -31px;
+}
 
 .ui.bottom.left.popup.help-popup::before {
   content: "\e945";
@@ -1161,7 +1164,7 @@
 
 .ui.bottom.left.popup.help-popup.small::before {
   font-size: 24px;
-  top: 22px;
+  top: 5px;
   left: 5px;
 }
 
