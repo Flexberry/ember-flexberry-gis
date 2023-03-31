@@ -5,7 +5,9 @@ export default Ember.Helper.extend({
   compute(args) {
     let value = args[0];
 
-    if (Ember.isNone(value)) return value;
+    if (Ember.isNone(value)) {
+      return value;
+    }
 
     let prop = args[1];
     let settings = args[2];
