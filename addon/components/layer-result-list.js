@@ -543,6 +543,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
                 Ember.get(favoriteFeature, 'objectKey') === Ember.get(feature, 'properties.primarykey') &&
                 Ember.get(favoriteFeature, 'objectLayerKey') === Ember.get(feature, 'layerModel.id'))));
               Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature, result.settings));
+
               Ember.set(feature, 'editForms', Ember.A());
               if (editForms.length === 0) {
                 return;

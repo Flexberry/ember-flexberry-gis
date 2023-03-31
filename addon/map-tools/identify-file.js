@@ -24,6 +24,12 @@ export default IdentifyMapTool.extend({
   cursor: 'default',
   clearOnDisable: false,
 
+  /**
+   * We need to differentiate events from different instances, because we don't turn off event subscriptions
+   *
+  */
+  suffix: '',
+
   _enable() {
     this._super(...arguments);
     let leafletMap = this.get('leafletMap');
@@ -37,9 +43,15 @@ export default IdentifyMapTool.extend({
       this.set('_editTools', editTools);
     }
 
-    leafletMap.on('flexberry-map-loadfile:render', this._renderLayer, this);
-    leafletMap.on('flexberry-map-loadfile:clear', this._clear, this);
-    leafletMap.on('flexberry-map-loadfile:identification', this._identificationLayer, this);
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.off(`flexberry-map-loadfile${this.get('suffix')}:render`, this._renderLayer, this);
+      leafletMap.off(`flexberry-map-loadfile${this.get('suffix')}:clear`, this._clear, this);
+      leafletMap.off(`flexberry-map-loadfile${this.get('suffix')}:identification`, this._identificationLayer, this);
+
+      leafletMap.on(`flexberry-map-loadfile${this.get('suffix')}:render`, this._renderLayer, this);
+      leafletMap.on(`flexberry-map-loadfile${this.get('suffix')}:clear`, this._clear, this);
+      leafletMap.on(`flexberry-map-loadfile${this.get('suffix')}:identification`, this._identificationLayer, this);
+    }
   },
 
   _enableDraw() { },
@@ -47,16 +59,22 @@ export default IdentifyMapTool.extend({
   _disable() {
     this._super(...arguments);
 
-    let editTools = this.get('_editTools');
-    if (!Ember.isNone(editTools)) {
-      this.leafletMap.off('flexberry-map-loadfile:render', this._renderLayer, this);
-      this.leafletMap.off('flexberry-map-loadfile:clear', this._clear, this);
-      this.leafletMap.off('flexberry-map-loadfile:identification', this._identificationLayer, this);
-    }
+    // не будем выключать подписку на события при деактивации инструмента, т.к. форма при этом остается доступной
 
     if (this.get('clearOnDisable')) {
       this._clear();
     }
+  },
+
+  willDestroy() {
+    // сначала вызовем отключение подписок, поскольку в базовом методе очищается leafletMap
+    if (!Ember.isNone(this.leafletMap)) {
+      this.leafletMap.off(`flexberry-map-loadfile${this.get('suffix')}:render`, this._renderLayer, this);
+      this.leafletMap.off(`flexberry-map-loadfile${this.get('suffix')}:clear`, this._clear, this);
+      this.leafletMap.off(`flexberry-map-loadfile${this.get('suffix')}:identification`, this._identificationLayer, this);
+    }
+
+    this._super(...arguments);
   },
 
   _disableDraw() { },
@@ -114,10 +132,10 @@ export default IdentifyMapTool.extend({
     this.set('_bufferLayer', _bufferLayer);
   },
 
-  _identificationLayer({ layer, geometryType }) {
-    let workingLayer;
+  _getWorkingLayer({ layer, geometryType }) {
     let isBufferActive = this.get('bufferActive');
     let bufferRadius = this.get('bufferRadius');
+    let workingLayer;
 
     if (isBufferActive && bufferRadius > 0) {
       let buf = buffer.default(layer.toGeoJSON(), bufferRadius, { units: this.get('bufferUnits') });
@@ -131,6 +149,12 @@ export default IdentifyMapTool.extend({
         workingLayer = layer;
       }
     }
+
+    return workingLayer;
+  },
+
+  _identificationLayer({ layer, geometryType }) {
+    let workingLayer = this._getWorkingLayer({ layer, geometryType });
 
     let e = {
       polygonLayer: workingLayer,

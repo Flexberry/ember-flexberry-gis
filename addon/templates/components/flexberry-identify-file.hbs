@@ -2,9 +2,9 @@
   <div class="field upload flexberry-file">
     <label class="label">Файл {{#if (not file.name)}}*{{/if}}</label>
     <div class="ui action input upload">
-      <input type="file" accept=".zip,.GEOJSON,.gml" class="hidden" onchange={{action "clickFile"}} id="fileinput" />
+      <input type="file" accept=".zip,.GEOJSON,.gml" class="hidden" onchange={{action "clickFile"}} id="{{idfile}}"/>
       <input class="flexberry-file-filename-input" readonly="readonly" value={{file.name}}/>
-      <label for="fileinput" class="ui icon button upload flexberry-file-add-button">
+      <label for="{{idfile}}" class="ui icon button upload flexberry-file-add-button">
         <i class="ui upload icon" title="Прикрепить файл"></i>
       </label>
       <label class="ui icon button remove flexberry-file-remove-button hidden" onclick={{action "clearFile"}}>

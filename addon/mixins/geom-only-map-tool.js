@@ -6,6 +6,7 @@ export default Ember.Mixin.create({
   hidePreviousOnDrawingStart: true,
   clearOnDisable: false,
   cursor: 'crosshair',
+  suffix: '-geom',
 
   _baseDrawingDidEnd(workingPolygon, bufferedMainPolygonLayer) {
     let leafletMap = this.get('leafletMap');
@@ -14,6 +15,8 @@ export default Ember.Mixin.create({
     // зафиксируем workingPolygon - это либо сам нарисованный слой, либо добавленный буфер
     // и он уже добавлен либо на карту, либо на drawLayer и он не удаляется после рисования
     this.set('polygonLayer', workingPolygon.addTo(drawLayer));
+
+    this.set('bufferedMainPolygonLayer', null);
 
     // также зафиксируем нарисованный слой отдельно - он приходит только если был буфер
     if (bufferedMainPolygonLayer && drawLayer) {

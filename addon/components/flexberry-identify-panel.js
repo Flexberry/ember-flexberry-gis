@@ -117,6 +117,8 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     }
   ),
 
+  controlId: '',
+
   enable: true,
 
   /**
@@ -435,9 +437,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     */
     onLayerModeChange(layerMode) {
       this.set('layerMode', layerMode);
-
-      // для режима geom-only управление нарисованными слоями передано на уровень данного компонента
-      this.clearDrawLayer();
 
       this._enableActualIdentifyTool();
 
