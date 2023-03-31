@@ -671,11 +671,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
 
         Ember.set(feature.properties, attribute, editedFeature.feature.properties[attribute]);
       });
-      Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature,
-                                                                        resultObject.settings,
-                                                                        resultObject.dateFormat,
-                                                                        resultObject.dateTimeFormat,
-                                                                        resultObject.layerModel));
+      Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature, resultObject.settings));
       feature.leafletLayer.setLatLngs(editedFeature.getLatLngs()); // Update feature geometry
       this.rerender(); // force component re-render to recalculate #each-in helper
     }

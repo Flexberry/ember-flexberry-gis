@@ -148,7 +148,7 @@
             {{#if (regex-test propertyValue '^(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?')}}
               <a target="_blank" href="{{propertyValue}}">{{propertyValue}}</a>
             {{else}}
-              {{{propertyValue}}}
+              {{{format-property propertyValue propertyName resultObject}}}
             {{/if}}
           </div>
         {{/if}}
