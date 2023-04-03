@@ -676,7 +676,12 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
         Ember.set(feature.properties, attribute, editedFeature.feature.properties[attribute]);
       });
       Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature, resultObject.settings));
-      feature.leafletLayer.setLatLngs(editedFeature.getLatLngs()); // Update feature geometry
+
+      if (typeof editedFeature.getLatLngs  === 'function') {
+        feature.leafletLayer.setLatLngs(editedFeature.getLatLngs()); // Update feature geometry
+      } else {
+        feature.leafletLayer.setLatLng(editedFeature.getLatLng());
+      }
       this.rerender(); // force component re-render to recalculate #each-in helper
     }
 
