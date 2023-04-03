@@ -151,7 +151,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     let localizedProperties = this.get(`displaySettings.localizedProperties.${currentLocale}`) || {};
     return localizedProperties;
   }),
-  
+
   _fieldTypes: Ember.computed('resultObject', function () {
     return this.get('resultObject.layerModel._leafletObject.readFormat.featureType.fieldTypes');
   }),
