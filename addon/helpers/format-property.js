@@ -2,6 +2,8 @@ import Ember from 'ember';
 import moment from 'moment';
 
 export default Ember.Helper.extend({
+  dateFormat: 'DD.MM.YYYY',
+
   compute(args) {
     let value = args[0];
 
@@ -9,15 +11,12 @@ export default Ember.Helper.extend({
       return value;
     }
 
-    let prop = args[1];
-    let settings = args[2];
-
-    let fieldTypes = settings.layerModel.get('_leafletObject.readFormat.featureType.fieldTypes');
-    let type = fieldTypes ? fieldTypes[prop] : null;
+    let type = args[1];
+    let settings = args[2] || {};
 
     switch (type) {
       case 'date':
-        let dateFormat = settings.dateFormat;
+        let dateFormat = settings.dateFormat || this.get('dateFormat');
         let dateTimeFormat = settings.dateTimeFormat;
 
         if (!Ember.isEmpty(dateFormat) || !Ember.isEmpty(dateTimeFormat)) {
@@ -39,6 +38,10 @@ export default Ember.Helper.extend({
         let no = i18n.t('components.layer-result-list.boolean.no');
 
         return (typeof (value) === 'boolean') ? (value) ? yes : no : (value === 'true') ? yes : no;
+      case 'number':
+        return value.toFixed(2).replace(/./g, function (c, i, a) {
+          return i && c !== "." && ((a.length - i) % 3 === 0) ? ' ' + c : c;
+        });
       default:
         return value;
     }
