@@ -40,7 +40,7 @@ export default Ember.Helper.extend({
         return (typeof (value) === 'boolean') ? (value) ? yes : no : (value === 'true') ? yes : no;
       case 'number':
         return value.toFixed(2).replace(/./g, function (c, i, a) {
-          return i && c !== "." && ((a.length - i) % 3 === 0) ? ' ' + c : c;
+          return i && c !== '.' && ((a.length - i) % 3 === 0) ? ' ' + c : c;
         });
       default:
         return value;
