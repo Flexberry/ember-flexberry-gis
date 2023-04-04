@@ -25,5 +25,24 @@ export default Ember.Mixin.create({
 
     // а работаем в любом случае с workingPolygon
     leafletMap.fire('flexberry-map:geomChanged', { wkt: workingPolygon.toEWKT(L.CRS.EPSG4326) });
+  },
+
+  _disableDraw() {
+    let editTools = this.get('_editTools');
+    if (!Ember.isNone(editTools)) {
+      editTools.off('editable:drawing:mousedown', this._drawingStart, this);
+      editTools.off('editable:drawing:end', this._drawingDidEnd, this);
+
+      if (editTools.drawing()) {
+        let feature = editTools._drawingEditor ? editTools._drawingEditor.feature : null;
+        if (feature) {
+          feature.disableEdit();
+          feature.remove();
+          this.get('leafletMap').fire('flexberry-map:geomChanged');
+        }
+      }
+
+      editTools.stopDrawing();
+    }
   }
 });
