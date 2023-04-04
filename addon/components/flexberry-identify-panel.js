@@ -652,7 +652,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   */
   _bufferSettingsDidChange: Ember.observer('bufferUnits', 'bufferRadius', 'isBuffer', function () {
     Ember.run.once(this, '_enableActualIdentifyTool');
-    
+
     let onBufferSetCallback = () => {
       let onBufferSet = this.get('onBufferSet');
       if (Ember.typeOf(onBufferSet) === 'function') {
@@ -662,7 +662,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
           radius: this.get('bufferRadius')
         });
       }
-    }
+    };
 
     Ember.run.once(this, onBufferSetCallback);
   }),
