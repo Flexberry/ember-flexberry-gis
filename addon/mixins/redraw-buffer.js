@@ -2,13 +2,6 @@ import Ember from 'ember';
 import * as buffer from 'npm:@turf/buffer';
 
 export default Ember.Mixin.create({
-  // не будем удалять слой после завершения рисования
-  hideOnDrawingEnd: false,
-  hidePreviousOnDrawingStart: true,
-  clearOnDisable: false,
-  cursor: 'crosshair',
-  suffix: '-geom',
-
   _redrawLayer() {
     Ember.run.debounce(this, () => {
       let polygonLayer = this.get('polygonLayer');
@@ -23,7 +16,7 @@ export default Ember.Mixin.create({
     Ember.run.once(this, '_redrawLayer');
   }),
 
-  _renderLayer({ layer }) {
+  _renderLayer() {
     let container = this.get('_container');
 
     let polygonLayer = this.get('polygonLayer');
