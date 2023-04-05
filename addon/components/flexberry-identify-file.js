@@ -79,7 +79,7 @@ export default Ember.Component.extend(CheckFileMixin, {
         this.set('filePreview', false);
       }
 
-      $('#fileinput').val('');
+      this.$('#' + this.get('idfile')).val('');
       this.$('.ui.button.upload').removeClass('hidden');
       this.$('.ui.button.remove').addClass('hidden');
     },
