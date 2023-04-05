@@ -89,8 +89,8 @@
     .item:not(.icon).feature-result-item.highlight {
       background: @highlightBackgroundColor;
       margin-left: -50px;
-      width: ~"calc(100% + 80px)";
-      padding: 0 40px;
+      width: ~"calc(100% + 90px)";
+      padding: 0 50px;
 
       .feature-result-item-title {
         font-size: 14px;
@@ -103,7 +103,7 @@
       margin: 0;
 
       .feature-result-item-title {
-        padding-top: 13px;
+        padding: 6px 0;
         align-items: center;
         a.item.title {
           align-self: center;
