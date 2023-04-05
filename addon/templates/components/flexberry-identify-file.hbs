@@ -31,7 +31,7 @@
 
 <div class="d-flex justify-content-center identify-file-buttons">
   {{flexberry-button
-    iconClass=(if filePreview 'icon-guideline-show' 'icon-guideline-hide')
+    iconClass=(if filePreview 'icon-guideline-hide' 'icon-guideline-show')
     click=(action "showFileLayer")
     readonly = (not file)
     tooltip=(t "components.flexberry-identify-panel.file.preview.caption")
