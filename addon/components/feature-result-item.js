@@ -152,6 +152,10 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     return localizedProperties;
   }),
 
+  _fieldTypes: Ember.computed('resultObject', function () {
+    return this.get('resultObject.layerModel._leafletObject.readFormat.featureType.fieldTypes');
+  }),
+
   /**
     Flag: indicates whether component is active.
 
@@ -235,7 +239,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
   */
   highlightFeatureStyle: {
     color: '#3388FF',
-    fill: false
+    fillColor: 'salmon' // When changing the main color, the fillColor is automatically changed (explicit indication)
   },
 
   /**
@@ -344,7 +348,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     leafletMap.on('flexberry-map:edit-feature:end', this._updateFeatureResultItem, this);
     leafletMap.on('flexberry-map:edit-feature:fail', this._updateFeatureResultItem, this);
-    this.set('defaultFeatureStyle', Object.assign({}, feature.leafletLayer.options));
+    this.set('defaultFeatureStyle', Object.assign({ stroke: true, fill: true }, feature.leafletLayer.options));
 
     if (feature.geometry && feature.geometry.type &&
       (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' ||
@@ -415,7 +419,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
 
       // The layer-result-list component has a zoomToAll option
       // that causes the feature.highlight state to change, which is not correct.
-      let selectedAllFeaturesInResult = !this.get('resultObject.features').find(e => e.highlight === false) &&
+      let selectedAllFeaturesInResult = !this.get('resultObject.features').find(e => !e.highlight) &&
         this.get('resultObject.features.length') > 1 ? true : false;
 
       // We can turn off the highlight if there was only one previous highlighted element
@@ -671,12 +675,14 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
 
         Ember.set(feature.properties, attribute, editedFeature.feature.properties[attribute]);
       });
-      Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature,
-                                                                        resultObject.settings,
-                                                                        resultObject.dateFormat,
-                                                                        resultObject.dateTimeFormat,
-                                                                        resultObject.layerModel));
-      feature.leafletLayer.setLatLngs(editedFeature.getLatLngs()); // Update feature geometry
+      Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature, resultObject.settings));
+
+      if (typeof editedFeature.getLatLngs  === 'function') {
+        feature.leafletLayer.setLatLngs(editedFeature.getLatLngs()); // Update feature geometry
+      } else {
+        feature.leafletLayer.setLatLng(editedFeature.getLatLng());
+      }
+
       this.rerender(); // force component re-render to recalculate #each-in helper
     }
 

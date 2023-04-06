@@ -76,7 +76,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @readOnly
   */
   _identifyToolName: Ember.computed('layerMode', 'toolMode', function () {
-    let identifyToolName = 'identify';
+    let identifyToolName = null;
     let layerMode = this.get('layerMode');
     let toolMode = this.get('toolMode');
 
@@ -116,6 +116,8 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       };
     }
   ),
+
+  controlId: '',
 
   enable: true,
 
@@ -436,9 +438,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     onLayerModeChange(layerMode) {
       this.set('layerMode', layerMode);
 
-      // для режима geom-only управление нарисованными слоями передано на уровень данного компонента
-      this.clearDrawLayer();
-
       this._enableActualIdentifyTool();
 
       let layerModeChange = this.get('layerModeChange');
@@ -653,6 +652,19 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   */
   _bufferSettingsDidChange: Ember.observer('bufferUnits', 'bufferRadius', 'isBuffer', function () {
     Ember.run.once(this, '_enableActualIdentifyTool');
+
+    let onBufferSetCallback = () => {
+      let onBufferSet = this.get('onBufferSet');
+      if (Ember.typeOf(onBufferSet) === 'function') {
+        onBufferSet({
+          active: this.get('isBuffer'),
+          units: this.get('bufferUnits'),
+          radius: this.get('bufferRadius')
+        });
+      }
+    };
+
+    Ember.run.once(this, onBufferSetCallback);
   }),
 
   /**
@@ -688,7 +700,10 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     let identifyToolName = this.get('_identifyToolName');
     let identifyToolProperties = this.get('_identifyToolProperties');
-    leafletMap.flexberryMap.tools.enable(identifyToolName, identifyToolProperties);
+
+    if (identifyToolName) {
+      leafletMap.flexberryMap.tools.enable(identifyToolName, identifyToolProperties);
+    }
   }
 
   /**
