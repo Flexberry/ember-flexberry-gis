@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import $ from 'jquery';
 import layout from '../templates/components/flexberry-identify-file';
 import CheckFileMixin from '../mixins/flexberry-check-file';
 import { availableCoordinateReferenceSystemsCodesWithCaptions } from '../utils/available-coordinate-reference-systems-for-dropdown';

@@ -682,6 +682,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       } else {
         feature.leafletLayer.setLatLng(editedFeature.getLatLng());
       }
+
       this.rerender(); // force component re-render to recalculate #each-in helper
     }
 
