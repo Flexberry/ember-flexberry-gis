@@ -987,7 +987,7 @@ div.measure-drag-panel {
   .layer-result-list-toggler {
     .title {
       display: flex;
-      align-items: end;
+      align-items: start;
       .flexberry-toggler-caption {
         margin-left: 6px;
         display: block;
