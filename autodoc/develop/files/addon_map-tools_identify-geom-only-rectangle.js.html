@@ -420,6 +420,7 @@
 
 import IdentifyMapTool from &#x27;./identify-rectangle&#x27;;
 import GeomOnlyMixin from &#x27;../mixins/geom-only-map-tool&#x27;;
+import RedrawBufferMixin from &#x27;../mixins/redraw-buffer&#x27;;
 
 /**
   Identify map-tool that identifies all map layers.
@@ -427,7 +428,7 @@ import GeomOnlyMixin from &#x27;../mixins/geom-only-map-tool&#x27;;
   @class IdentifyAllRectangleMapTool
   @extends IdentifyMapTool
 */
-export default IdentifyMapTool.extend(GeomOnlyMixin, {
+export default IdentifyMapTool.extend(GeomOnlyMixin, RedrawBufferMixin, {
 });
 
     </pre>

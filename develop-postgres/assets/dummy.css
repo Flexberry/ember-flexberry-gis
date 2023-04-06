@@ -7479,7 +7479,7 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
 }
 .layer-result-list .layer-result-list-toggler .title {
   display: flex;
-  align-items: end;
+  align-items: start;
 }
 .layer-result-list .layer-result-list-toggler .title .flexberry-toggler-caption {
   margin-left: 6px;
@@ -38812,7 +38812,6 @@ select.ui.dropdown {
   box-shadow: none;
 }
 .ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-settings-column .export-buttons {
-  padding: 20px 0;
   display: flex;
   justify-content: center;
 }
@@ -38821,6 +38820,7 @@ select.ui.dropdown {
   width: 100%;
   margin: 0;
   border: none;
+  padding-top: 0;
 }
 .ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content > .ui.form > .ui.grid .flexberry-export-map-command-dialog-settings-column .ui.segment .flexberry-dropdown.ui.selection.dropdown .menu {
   max-height: 110px;
@@ -46043,6 +46043,7 @@ img.item-minus {
 .ui.help-button {
   background: transparent;
   border: none;
+  color: #343A32;
 }
 .sidebar-wrapper,
 .rgis-sidebar-wrapper.right-sidebar-wrapper {

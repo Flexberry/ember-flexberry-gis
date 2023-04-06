@@ -492,7 +492,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @readOnly
   */
   _identifyToolName: Ember.computed(&#x27;layerMode&#x27;, &#x27;toolMode&#x27;, function () {
-    let identifyToolName = &#x27;identify&#x27;;
+    let identifyToolName = null;
     let layerMode = this.get(&#x27;layerMode&#x27;);
     let toolMode = this.get(&#x27;toolMode&#x27;);
 
@@ -532,6 +532,8 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       };
     }
   ),
+
+  controlId: &#x27;&#x27;,
 
   enable: true,
 
@@ -852,9 +854,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     onLayerModeChange(layerMode) {
       this.set(&#x27;layerMode&#x27;, layerMode);
 
-      // для режима geom-only управление нарисованными слоями передано на уровень данного компонента
-      this.clearDrawLayer();
-
       this._enableActualIdentifyTool();
 
       let layerModeChange = this.get(&#x27;layerModeChange&#x27;);
@@ -1069,6 +1068,19 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   */
   _bufferSettingsDidChange: Ember.observer(&#x27;bufferUnits&#x27;, &#x27;bufferRadius&#x27;, &#x27;isBuffer&#x27;, function () {
     Ember.run.once(this, &#x27;_enableActualIdentifyTool&#x27;);
+
+    let onBufferSetCallback = () =&gt; {
+      let onBufferSet = this.get(&#x27;onBufferSet&#x27;);
+      if (Ember.typeOf(onBufferSet) === &#x27;function&#x27;) {
+        onBufferSet({
+          active: this.get(&#x27;isBuffer&#x27;),
+          units: this.get(&#x27;bufferUnits&#x27;),
+          radius: this.get(&#x27;bufferRadius&#x27;)
+        });
+      }
+    };
+
+    Ember.run.once(this, onBufferSetCallback);
   }),
 
   /**
@@ -1104,7 +1116,10 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     let identifyToolName = this.get(&#x27;_identifyToolName&#x27;);
     let identifyToolProperties = this.get(&#x27;_identifyToolProperties&#x27;);
-    leafletMap.flexberryMap.tools.enable(identifyToolName, identifyToolProperties);
+
+    if (identifyToolName) {
+      leafletMap.flexberryMap.tools.enable(identifyToolName, identifyToolProperties);
+    }
   }
 
   /**

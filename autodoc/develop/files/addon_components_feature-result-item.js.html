@@ -568,6 +568,10 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     return localizedProperties;
   }),
 
+  _fieldTypes: Ember.computed(&#x27;resultObject&#x27;, function () {
+    return this.get(&#x27;resultObject.layerModel._leafletObject.readFormat.featureType.fieldTypes&#x27;);
+  }),
+
   /**
     Flag: indicates whether component is active.
 
@@ -651,7 +655,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
   */
   highlightFeatureStyle: {
     color: &#x27;#3388FF&#x27;,
-    fill: false
+    fillColor: &#x27;salmon&#x27; // When changing the main color, the fillColor is automatically changed (explicit indication)
   },
 
   /**
@@ -760,7 +764,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
     leafletMap.on(&#x27;flexberry-map:edit-feature:end&#x27;, this._updateFeatureResultItem, this);
     leafletMap.on(&#x27;flexberry-map:edit-feature:fail&#x27;, this._updateFeatureResultItem, this);
-    this.set(&#x27;defaultFeatureStyle&#x27;, Object.assign({}, feature.leafletLayer.options));
+    this.set(&#x27;defaultFeatureStyle&#x27;, Object.assign({ stroke: true, fill: true }, feature.leafletLayer.options));
 
     if (feature.geometry &amp;&amp; feature.geometry.type &amp;&amp;
       (feature.geometry.type === &#x27;Point&#x27; || feature.geometry.type === &#x27;MultiPoint&#x27; ||
@@ -831,7 +835,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
 
       // The layer-result-list component has a zoomToAll option
       // that causes the feature.highlight state to change, which is not correct.
-      let selectedAllFeaturesInResult = !this.get(&#x27;resultObject.features&#x27;).find(e =&gt; e.highlight === false) &amp;&amp;
+      let selectedAllFeaturesInResult = !this.get(&#x27;resultObject.features&#x27;).find(e =&gt; !e.highlight) &amp;&amp;
         this.get(&#x27;resultObject.features.length&#x27;) &gt; 1 ? true : false;
 
       // We can turn off the highlight if there was only one previous highlighted element
@@ -1087,12 +1091,14 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
 
         Ember.set(feature.properties, attribute, editedFeature.feature.properties[attribute]);
       });
-      Ember.set(feature, &#x27;displayValue&#x27;, this.getFeatureDisplayProperty(feature,
-                                                                        resultObject.settings,
-                                                                        resultObject.dateFormat,
-                                                                        resultObject.dateTimeFormat,
-                                                                        resultObject.layerModel));
-      feature.leafletLayer.setLatLngs(editedFeature.getLatLngs()); // Update feature geometry
+      Ember.set(feature, &#x27;displayValue&#x27;, this.getFeatureDisplayProperty(feature, resultObject.settings));
+
+      if (typeof editedFeature.getLatLngs  === &#x27;function&#x27;) {
+        feature.leafletLayer.setLatLngs(editedFeature.getLatLngs()); // Update feature geometry
+      } else {
+        feature.leafletLayer.setLatLng(editedFeature.getLatLng());
+      }
+
       this.rerender(); // force component re-render to recalculate #each-in helper
     }
 

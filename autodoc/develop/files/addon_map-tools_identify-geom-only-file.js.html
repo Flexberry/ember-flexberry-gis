@@ -418,6 +418,7 @@
   @module ember-flexberry-gis
 */
 
+import Ember from &#x27;ember&#x27;;
 import IdentifyMapTool from &#x27;./identify-file&#x27;;
 import GeomOnlyMixin from &#x27;../mixins/geom-only-map-tool&#x27;;
 /**
@@ -427,7 +428,32 @@ import GeomOnlyMixin from &#x27;../mixins/geom-only-map-tool&#x27;;
   @extends IdentifyMapTool
 */
 export default IdentifyMapTool.extend(GeomOnlyMixin, {
-  cursor: &#x27;default&#x27;
+  cursor: &#x27;default&#x27;,
+
+  _enable() {
+    this._super(...arguments);
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.off(&#x27;flexberry-map-loadfile-geom:getIdentifyLayer&#x27;, this._getIdentifyLayer, this);
+
+      leafletMap.on(&#x27;flexberry-map-loadfile-geom:getIdentifyLayer&#x27;, this._getIdentifyLayer, this);
+    }
+  },
+
+  willDestroy() {
+    // сначала вызовем отключение подписок, поскольку в базовом методе очищается leafletMap
+    if (!Ember.isNone(this.leafletMap)) {
+      this.leafletMap.off(&#x27;flexberry-map-loadfile-geom:getIdentifyLayer&#x27;, this._getIdentifyLayer, this);
+    }
+
+    this._super(...arguments);
+  },
+
+  _getIdentifyLayer(e) {
+    let workingLayer = this._getWorkingLayer(e);
+    e.results.push(workingLayer);
+  }
 });
 
     </pre>

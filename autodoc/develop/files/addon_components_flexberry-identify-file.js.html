@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/map-tools/identify-geom-only-marker.js - Flexberry Documentation</title>
+    <title>addon/components/flexberry-identify-file.js - Flexberry Documentation</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -409,26 +409,143 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>addon/map-tools/identify-geom-only-marker.js <small>File</small></h1>
+    <h1>addon/components/flexberry-identify-file.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
-/**
-  @module ember-flexberry-gis
-*/
+import Ember from &#x27;ember&#x27;;
+import layout from &#x27;../templates/components/flexberry-identify-file&#x27;;
+import CheckFileMixin from &#x27;../mixins/flexberry-check-file&#x27;;
+import { availableCoordinateReferenceSystemsCodesWithCaptions } from &#x27;../utils/available-coordinate-reference-systems-for-dropdown&#x27;;
 
-import IdentifyMapTool from &#x27;./identify-marker&#x27;;
-import GeomOnlyMixin from &#x27;../mixins/geom-only-map-tool&#x27;;
-import RedrawBufferMixin from &#x27;../mixins/redraw-buffer&#x27;;
+export default Ember.Component.extend(CheckFileMixin, {
+  layout,
+  mapApi: Ember.inject.service(),
 
-/**
-  Identify map-tool that identifies all map layers.
+  filePreview: false,
+  systemCoordinates: null,
 
-  @class IdentifyAllMarkerMapTool
-  @extends IdentifyMapTool
-*/
-export default IdentifyMapTool.extend(GeomOnlyMixin, RedrawBufferMixin, {
+  /**
+   * We need to differentiate events from different instances, because we don&#x27;t turn off event subscriptions
+   *
+  */
+  suffix: Ember.computed(&#x27;geomOnly&#x27;, function () {
+    let geomOnly = this.get(&#x27;geomOnly&#x27;);
+    return geomOnly ? &#x27;-geom&#x27; : &#x27;&#x27;;
+  }),
+
+  didInsertElement() {
+    this._super(...arguments);
+
+    this.set(&#x27;systemCoordinates&#x27;, this.get(&#x27;systemCoordinates&#x27;) || availableCoordinateReferenceSystemsCodesWithCaptions(this));
+    this.set(&#x27;coordinate&#x27;, &#x27;auto&#x27;);
+
+    this.send(&#x27;clearFile&#x27;);
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    this.clearAjax();
+    this.set(&#x27;coordinate&#x27;, null);
+  },
+
+  sendFileToCache() {
+    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+      this.$(&#x27;input[type=&quot;file&quot;]&#x27;);
+      let file = this.$(&#x27;input[type=&quot;file&quot;]&#x27;)[0].files[0];
+      let config = Ember.getOwner(this).resolveRegistration(&#x27;config:environment&#x27;);
+      let url = config.APP.fileCacheUrl;
+      let data = new FormData();
+      data.append(file.name, file);
+
+      Ember.$.ajax({
+        url: url,
+        type: &#x27;POST&#x27;,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false
+      }).done((response) =&gt; {
+        resolve(response);
+      }).fail((e) =&gt; {
+        let errorMessage = e.responseText || this.get(&#x27;importErrorMessage&#x27;);
+        reject({
+          message: errorMessage
+        });
+      });
+    });
+  },
+
+  actions: {
+    onCoordinateChange() {
+      this.set(&#x27;_showError&#x27;, false);
+      this.clearAjax();
+    },
+
+    clearFile() {
+      this.set(&#x27;file&#x27;, null);
+      this.set(&#x27;coordinate&#x27;, &#x27;auto&#x27;);
+      this.set(&#x27;_showError&#x27;, false);
+
+      this.clearAjax();
+      if (this.get(&#x27;filePreview&#x27;)) {
+        this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;).fire(&#x60;flexberry-map-loadfile${this.get(&#x27;suffix&#x27;)}:clear&#x60;);
+        this.set(&#x27;filePreview&#x27;, false);
+      }
+
+      this.$(&#x27;#&#x27; + this.get(&#x27;idfile&#x27;)).val(&#x27;&#x27;);
+      this.$(&#x27;.ui.button.upload&#x27;).removeClass(&#x27;hidden&#x27;);
+      this.$(&#x27;.ui.button.remove&#x27;).addClass(&#x27;hidden&#x27;);
+    },
+
+    clickFile(e) {
+      let file = e.target.files[0];
+      this.set(&#x27;file&#x27;, file);
+      this.clearAjax();
+      this.$(&#x27;.ui.button.upload&#x27;).addClass(&#x27;hidden&#x27;);
+      this.$(&#x27;.ui.button.remove&#x27;).removeClass(&#x27;hidden&#x27;);
+    },
+
+    showFileLayer() {
+      if (this.get(&#x27;filePreview&#x27;)) {
+        this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;).fire(&#x60;flexberry-map-loadfile${this.get(&#x27;suffix&#x27;)}:clear&#x60;);
+        this.set(&#x27;filePreview&#x27;, !this.get(&#x27;filePreview&#x27;));
+      } else {
+        this.validateFileAndGetFeatures().then((response) =&gt; {
+          if (response) {
+            let layer = this.createLayer(response);
+            if (layer) {
+              this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;).fire(&#x60;flexberry-map-loadfile${this.get(&#x27;suffix&#x27;)}:render&#x60;, { layer });
+              this.set(&#x27;filePreview&#x27;, !this.get(&#x27;filePreview&#x27;));
+            }
+          }
+        }, (error) =&gt; this.showError(error));
+      }
+    },
+
+    identificationFile() {
+      this.validateFileAndGetFeatures().then((response) =&gt; {
+        if (response) {
+          let layer = this.createLayer(response);
+          if (layer) {
+            let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+            leafletMap.fire(&#x60;flexberry-map-loadfile${this.get(&#x27;suffix&#x27;)}:identification&#x60;, { layer, geometryType: this.get(&#x27;geometryType&#x27;) });
+          }
+        }
+      }, (error) =&gt; this.showError(error));
+    },
+
+    createLayerByFile() {
+      let config = Ember.getOwner(this).resolveRegistration(&#x27;config:environment&#x27;);
+      this.validateFileAndGetFeatures().then(() =&gt; {
+        this.sendFileToCache().then((response) =&gt; {
+          let url = &#x60;${config.APP.createLayerFormUrl}?cacheFileId=${response.id}&amp;crs=${this.get(&#x27;coordinate&#x27;)}&amp;geometryType=${this.get(&#x27;geometryType&#x27;)}&#x60;;
+          window.open(url, &#x27;_blank&#x27;).focus();
+        }, (error) =&gt; this.showError(error));
+      }, (error) =&gt; this.showError(error));
+    }
+  }
 });
 
     </pre>
