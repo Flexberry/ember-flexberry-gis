@@ -126,7 +126,13 @@ export default BaseVectorLayer.extend({
               leafletObject.fire('save:success', { layers: featureLayer });
             });
         } else {
-          leafletObject.fire('save:success', { layers: [] });
+          // The batchUpdate method of the odata adapter from ember-flexbury-data/query/odata-adapter
+          // rolls back the edit feature attributes
+          // synchronize the feature model (variable) with the backend
+          let updatedFeatureId = new Query.SimplePredicate('id', Query.FilterOperator.Eq, updatedLayer[0].model.id);
+          this._getFeature(updatedFeatureId).then(() => {
+            leafletObject.fire('save:success', { layers: [] });
+          });
         }
       }).catch(function (e) {
         console.error('Error save: ' + e);
