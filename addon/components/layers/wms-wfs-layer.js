@@ -196,7 +196,7 @@ export default WmsLayerComponent.extend({
     }
 
     let innerWfsLayer = this.get('_wfsLayer');
-    if (!isNone(innerWfsLayer)) {
+    if (!Ember.isNone(innerWfsLayer)) {
       Ember.set(e, 'layer', Ember.get(innerWfsLayer, 'layerModel.id'));
       innerWfsLayer._getOrLoadLayerFeatures(e);
     }
