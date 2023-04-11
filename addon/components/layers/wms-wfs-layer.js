@@ -151,9 +151,10 @@ export default WmsLayerComponent.extend({
   */
   init() {
     this._super(...arguments);
+    let leafletMap = this.get('leafletMap');
 
     let innerWfsLayerProperties = {
-      leafletMap: this.get('leafletMap'),
+      leafletMap: leafletMap,
       leafletContainer: this.get('leafletContainer'),
       layerModel: this.get('layerModel'),
       index: this.get('index'),
@@ -176,6 +177,29 @@ export default WmsLayerComponent.extend({
 
     // Create inner WFS-layer which is needed for identification (always invisible, won't be added to map).
     this.set('_wfsLayer', WfsLayerComponent.create(innerWfsLayerProperties));
+
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.on('flexberry-map:getOrLoadLayerFeatures', this.loadFeaturesByInnerWfsLayer, this);
+    }
+  },
+
+  /**
+    Handles 'flexberry-map:getOrLoadLayerFeatures' event of leaflet map.
+
+    @method loadFeaturesByInnerWfsLayer
+    @param {Object} e Event object.
+    @returns {Object[]} results Objects.
+  */
+  loadFeaturesByInnerWfsLayer(e) {
+    if (this.get('layerModel.id') !== e.layer) {
+      return;
+    }
+
+    let innerWfsLayer = this.get('_wfsLayer');
+    if (!isNone(innerWfsLayer)) {
+      Ember.set(e, 'layer', Ember.get(innerWfsLayer, 'layerModel.id'));
+      innerWfsLayer._getOrLoadLayerFeatures(e);
+    }
   },
 
   /**
@@ -183,6 +207,11 @@ export default WmsLayerComponent.extend({
   */
   willDestroyElement() {
     this._super(...arguments);
+    let leafletMap = this.get('leafletMap');
+
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.off('flexberry-map:getOrLoadLayerFeatures', this.loadFeaturesByInnerWfsLayer, this);
+    }
 
     let innerWfsLayer = this.get('_wfsLayer');
     if (!Ember.isNone(innerWfsLayer)) {
