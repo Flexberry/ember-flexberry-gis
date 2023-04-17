@@ -151,10 +151,9 @@ export default WmsLayerComponent.extend({
   */
   init() {
     this._super(...arguments);
-    let leafletMap = this.get('leafletMap');
 
     let innerWfsLayerProperties = {
-      leafletMap: leafletMap,
+      leafletMap: this.get('leafletMap'),
       leafletContainer: this.get('leafletContainer'),
       layerModel: this.get('layerModel'),
       index: this.get('index'),
@@ -177,6 +176,11 @@ export default WmsLayerComponent.extend({
 
     // Create inner WFS-layer which is needed for identification (always invisible, won't be added to map).
     this.set('_wfsLayer', WfsLayerComponent.create(innerWfsLayerProperties));
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+    let leafletMap = this.get('leafletMap');
 
     if (!Ember.isNone(leafletMap)) {
       leafletMap.on('flexberry-map:getOrLoadLayerFeatures', this.loadFeaturesByInnerWfsLayer, this);
