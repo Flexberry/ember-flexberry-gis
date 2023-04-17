@@ -79,7 +79,7 @@ export default BaseVectorLayer.extend({
         return layer.state === state.insert;
       });
 
-      let updatedLayer = leafletObject.getLayers().filter(layer => {
+      let updatedLayers = leafletObject.getLayers().filter(layer => {
         return layer.state === state.update;
       });
 
@@ -88,8 +88,8 @@ export default BaseVectorLayer.extend({
       obj.adapter.batchUpdate(obj.store, modelsLayer).then((models) => {
         modelsLayer.clear();
         let insertedModelId = [];
-        if (!Ember.isNone(updatedLayer) && updatedLayer.length > 0) {
-          updatedLayer.map((layer) => {
+        if (!Ember.isNone(updatedLayers) && updatedLayers.length > 0) {
+          updatedLayers.map((layer) => {
             layer.state = state.exist;
           });
         }
@@ -125,14 +125,17 @@ export default BaseVectorLayer.extend({
               this._setLayerState();
               leafletObject.fire('save:success', { layers: featureLayer });
             });
-        } else if (!Ember.isNone(updatedLayer) && updatedLayer.length > 0) {
+        } else if (!Ember.isNone(updatedLayers) && updatedLayers.length > 0) {
           // The batchUpdate method of the odata adapter from ember-flexbury-data/query/odata-adapter
           // rolls back the edit feature attributes
           // synchronize the feature model (variable) with the backend
-          let updatedFeatureId = new Query.SimplePredicate('id', Query.FilterOperator.Eq, updatedLayer[0].model.id);
-          this._getFeature(updatedFeatureId).then(() => {
-            leafletObject.fire('save:success', { layers: [] });
+          let afterUpdateLayersPromises = [];
+          updatedLayers.forEach(updatedLayer => {
+            let updatedFeatureId = new Query.SimplePredicate('id', Query.FilterOperator.Eq, updatedLayer.model.id);
+            afterUpdateLayersPromises.pushObject(this._getFeature(updatedFeatureId));
           });
+          Ember.RSVP.allSettled(afterUpdateLayersPromises).then(() => leafletObject.fire('save:success', { layers: [] }));
+
         } else {
           leafletObject.fire('save:success', { layers: [] });
         }
