@@ -129,12 +129,19 @@ export default BaseVectorLayer.extend({
           // The batchUpdate method of the odata adapter from ember-flexbury-data/query/odata-adapter
           // rolls back the edit feature attributes
           // synchronize the feature model (variable) with the backend
-          let afterUpdateLayersPromises = [];
-          updatedLayers.forEach(updatedLayer => {
-            let updatedFeatureId = new Query.SimplePredicate('id', Query.FilterOperator.Eq, updatedLayer.model.id);
-            afterUpdateLayersPromises.pushObject(this._getFeature(updatedFeatureId));
-          });
-          Ember.RSVP.allSettled(afterUpdateLayersPromises).then(() => leafletObject.fire('save:success', { layers: [] }));
+          let updatedFeaturesPredicate = null;
+          let updatedFeaturesId = [];
+
+          if (updatedLayers.length === 1) {
+            updatedFeaturesPredicate = new Query.SimplePredicate('id', Query.FilterOperator.Eq, updatedLayers[0].model.id);
+          } else {
+            updatedLayers.forEach(updatedLayer => {
+              updatedFeaturesId.pushObject(new Query.SimplePredicate('id', Query.FilterOperator.Eq, updatedLayer.model.id));
+            });
+            updatedFeaturesPredicate = new Query.ComplexPredicate(Query.Condition.Or, ...updatedFeaturesId);
+          }
+
+          this._getFeature(updatedFeaturesPredicate).then(() => leafletObject.fire('save:success', { layers: [] }));
 
         } else {
           leafletObject.fire('save:success', { layers: [] });
