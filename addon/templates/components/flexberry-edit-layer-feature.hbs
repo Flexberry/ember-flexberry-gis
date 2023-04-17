@@ -145,8 +145,12 @@
           </div>
         {{/if}}
         {{#each-in _model.fieldNames as |fieldName fieldValue|}}
-        <div class="field {{if (get (get parsingErrors (concat '' curIndex)) fieldName) "error" ""}}">
-          <label>{{fieldValue}}</label>
+        <div class="field {{if (or (get parsingErrors (concat '' curIndex '.' fieldName '.invalidValue')) (and (get parsingErrors (concat '' curIndex '.' fieldName '.missedValue')) (is-none (get dataValue fieldName) true) )) "error" ""}}">
+          <label>{{fieldValue}}
+            {{#if (and (get _model.requiredFields fieldName) (is-none (get dataValue fieldName) true))}}
+              <span class="required">*</span>
+            {{/if}}
+          </label>
           {{#if (eq (get _model.fieldTypes fieldName) "date")}}
             {{flexberry-simpledatetime
               type="datetime"
@@ -168,9 +172,15 @@
               disabled=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
             }}
           {{/if}}
-          {{#if (get (get parsingErrors (concat '' curIndex)) fieldName)}}
+          {{#if (get parsingErrors (concat '' curIndex '.' fieldName '.invalidValue'))}}
           <div class="validation">
             {{t "components.flexberry-edit-layer-feature.validation.field-error"}}
+          </div>
+          {{/if}}
+
+          {{#if (and (get parsingErrors (concat '' curIndex '.' fieldName '.missedValue')) (is-none (get dataValue fieldName) true))}}
+          <div class="validation">
+            {{t "components.flexberry-edit-layer-feature.validation.field-required"}}
           </div>
           {{/if}}
         </div>
