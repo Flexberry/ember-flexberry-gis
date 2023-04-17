@@ -24792,20 +24792,27 @@
         {
             "file": "addon/components/map-tools/background-layers.js",
             "line": 90,
+            "description": "Changes classActive for background layer, when it choose in shateLoaction.",
+            "class": "BaseMapToolComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/map-tools/background-layers.js",
+            "line": 100,
             "description": "Initializes DOM-related component's properties  & logic.",
             "class": "BaseMapToolComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-tools/background-layers.js",
-            "line": 129,
+            "line": 139,
             "description": "Observe enabling compare mode and changing side to choose right base layer.",
             "class": "BaseMapToolComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/map-tools/background-layers.js",
-            "line": 147,
+            "line": 157,
             "description": "Refresh items",
             "params": [
                 {
@@ -24819,7 +24826,7 @@
         },
         {
             "file": "addon/components/map-tools/background-layers.js",
-            "line": 165,
+            "line": 175,
             "description": "Shows div with layers.",
             "itemtype": "method",
             "name": "actions.showBackgroundLayers",
@@ -24828,7 +24835,7 @@
         },
         {
             "file": "addon/components/map-tools/background-layers.js",
-            "line": 182,
+            "line": 192,
             "description": "Clicks on layer.",
             "itemtype": "method",
             "name": "actions.onLayerClick",
@@ -53710,16 +53717,20 @@
             "line": " addon/components/map-tools/background-layers.js:16"
         },
         {
-            "message": "Missing item type\nInitializes DOM-related component's properties  & logic.",
+            "message": "Missing item type\nChanges classActive for background layer, when it choose in shateLoaction.",
             "line": " addon/components/map-tools/background-layers.js:90"
         },
         {
+            "message": "Missing item type\nInitializes DOM-related component's properties  & logic.",
+            "line": " addon/components/map-tools/background-layers.js:100"
+        },
+        {
             "message": "Missing item type\nObserve enabling compare mode and changing side to choose right base layer.",
-            "line": " addon/components/map-tools/background-layers.js:129"
+            "line": " addon/components/map-tools/background-layers.js:139"
         },
         {
             "message": "Missing item type\nRefresh items",
-            "line": " addon/components/map-tools/background-layers.js:147"
+            "line": " addon/components/map-tools/background-layers.js:157"
         },
         {
             "message": "Missing item type\nFlag: indicates whether related map-tool is enabled or not.",

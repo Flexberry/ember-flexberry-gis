@@ -504,6 +504,16 @@ export default Ember.Component.extend(CompareLayersMixin, {
   }),
 
   /**
+    Changes classActive for background layer, when it choose in shateLoaction.
+  */
+  _backgroundLayersChangeVisibility: Ember.observer(&#x27;layers.@each.visibility&#x27;, function() {
+    let visibilityLayer = this.get(&#x27;layers&#x27;).filter((layer) =&gt; { return layer.get(&#x27;visibility&#x27;); });
+    if (visibilityLayer.length &gt; 0) {
+      this.send(&#x27;onLayerClick&#x27;, visibilityLayer[0]);
+    }
+  }),
+
+  /**
     Initializes DOM-related component&#x27;s properties  &amp; logic.
   */
   didInsertElement() {
