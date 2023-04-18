@@ -446,7 +446,7 @@ export default Ember.Component.extend(
 
         let localizedPropertiesExists = !Ember.isNone(localizedProperties) && !Ember.isNone(Ember.get(localizedProperties, 'ru'));
         if (localizedPropertiesExists && Ember.isNone(Ember.get(localizedProperties.ru, 'intersectionArea'))) {
-          Ember.$.extend(true, localizedProperties.ru, { 'intersectionArea' : 'Площадь пересечения' });
+          Ember.$.extend(true, localizedProperties.ru, { 'intersectionArea': 'Площадь пересечения' });
         }
 
         resolve({
