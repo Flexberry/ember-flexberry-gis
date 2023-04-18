@@ -444,6 +444,10 @@ export default Ember.Component.extend(
         let localizedProperties = this.get('displaySettings.featuresPropertiesSettings.localizedProperties');
         let excludedProperties = this.get('displaySettings.featuresPropertiesSettings.excludedProperties');
 
+        if (!Ember.isNone(localizedProperties) && !Ember.isNone(Ember.get(localizedProperties, 'ru')) && Ember.isNone(Ember.get(localizedProperties.ru, 'intersectionArea'))) {
+          Ember.$.extend(true, localizedProperties.ru, { "intersectionArea" : "Площадь пересечения" });
+        }
+
         resolve({
           object: this.get('_leafletObject'),
           settings: {
