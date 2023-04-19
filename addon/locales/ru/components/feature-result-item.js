@@ -9,5 +9,8 @@ export default {
   'action-object-caption': 'К объекту',
   'find-intersection-caption': 'Поиск пересечений',
   'edit-caption': 'Редактировать объект',
+  'defaultLocalizedProperties': {
+    'intersectionArea': 'Площадь пересечения'
+  },
   'search-satellite': 'Поиск космоснимков',
 };

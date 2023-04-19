@@ -443,11 +443,21 @@ export default Ember.Component.extend(
       return new Ember.RSVP.Promise((resolve, reject) => {
         let localizedProperties = this.get('displaySettings.featuresPropertiesSettings.localizedProperties');
         let excludedProperties = this.get('displaySettings.featuresPropertiesSettings.excludedProperties');
+        let currentLocale = this.get('i18n.locale');
 
-        let localizedPropertiesExists = !Ember.isNone(localizedProperties) && !Ember.isNone(Ember.get(localizedProperties, 'ru'));
-        if (localizedPropertiesExists && Ember.isNone(Ember.get(localizedProperties.ru, 'intersectionArea'))) {
-          Ember.$.extend(true, localizedProperties.ru, { 'intersectionArea': 'Площадь пересечения' });
-        }
+        let extendLocalizedProperties = (currentLocalizedProperties) => {
+          let extraLocales = Ember.A(['intersectionArea']);
+          let extraLocalesPath = 'components.feature-result-item.defaultLocalizedProperties';
+          if (!Ember.isNone(currentLocalizedProperties)) {
+            extraLocales.forEach(currentLocalizedProperty => {
+              if (Ember.isNone(Ember.get(currentLocalizedProperties, currentLocalizedProperty))) {
+                Ember.set(currentLocalizedProperties, currentLocalizedProperty, this.get('i18n').t(extraLocalesPath + `.${currentLocalizedProperty}`).string);
+              }
+            });
+          }
+        };
+
+        extendLocalizedProperties(Ember.get(localizedProperties, currentLocale));
 
         resolve({
           object: this.get('_leafletObject'),

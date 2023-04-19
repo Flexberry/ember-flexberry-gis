@@ -10,4 +10,7 @@ export default {
   'find-intersection-caption': 'Search intersections',
   'edit-caption': 'Edit object',
   'search-satellite': 'Search satellites',
+  'defaultLocalizedProperties': {
+    'intersectionArea': 'Intersection area'
+  },
 };
