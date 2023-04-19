@@ -14159,7 +14159,27 @@
         },
         {
             "file": "addon/components/layers/wms-wfs-layer.js",
-            "line": 181,
+            "line": 190,
+            "description": "Handles 'flexberry-map:getOrLoadLayerFeatures' event of leaflet map.",
+            "itemtype": "method",
+            "name": "loadFeaturesByInnerWfsLayer",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Event object.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "results Objects.",
+                "type": "Object[]"
+            },
+            "class": "WmsWfsLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers/wms-wfs-layer.js",
+            "line": 209,
             "description": "Destroys component.",
             "class": "WmsWfsLayerComponent",
             "module": "ember-flexberry-gis"
@@ -52358,6 +52378,10 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
+            "line": " addon/components/layers/wms-wfs-layer.js:190"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
             "line": " addon/components/map-commands-dialogs/export.js:1132"
         },
         {
@@ -53070,7 +53094,7 @@
         },
         {
             "message": "Missing item type\nDestroys component.",
-            "line": " addon/components/layers/wms-wfs-layer.js:181"
+            "line": " addon/components/layers/wms-wfs-layer.js:209"
         },
         {
             "message": "Missing item type\nReference to component's template.",
