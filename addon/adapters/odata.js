@@ -5,7 +5,6 @@ import { getResponseMeta, getBatchResponses, parseBatchResponse } from 'ember-fl
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
 export default Adapter.Odata.extend(Projection.AdapterMixin, {
-
   batchLoadModel(modelName, query, store) {
     if (Ember.isNone(modelName) || Ember.isNone(query)) {
       return Ember.RSVP.reject();

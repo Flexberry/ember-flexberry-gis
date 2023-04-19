@@ -119,13 +119,19 @@ export default BaseVectorLayer.extend({
           }
         });
 
-        if (insertedModelId.length > 0) {
-          this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(this.layerModel.get('id'), insertedModelId, true, true)
-            .then(([, lObject, featureLayer]) => {
-              this._setLayerState();
-              leafletObject.fire('save:success', { layers: featureLayer });
-            });
-        } else if (!Ember.isNone(updatedLayers) && updatedLayers.length > 0) {
+        let e = { layers: [] }; // resolved save action argument
+        let postLayersProcessing = [];
+
+        if (!Ember.isNone(insertedModelId) && insertedModelId.length > 0) {
+          let mapModel = this.get('mapApi').getFromApi('mapModel');
+          postLayersProcessing.push(mapModel._getModelLayerFeature(this.layerModel.get('id'), insertedModelId, true, true)
+          .then(([, lObject, featureLayer]) => {
+            this._setLayerState();
+            e.layers.push(...featureLayer);
+          }));
+        }
+
+        if (!Ember.isNone(updatedLayers) && updatedLayers.length > 0) {
           // The batchUpdate method of the odata adapter from ember-flexbury-data/query/odata-adapter
           // rolls back the edit feature attributes
           // synchronize the feature model (variable) with the backend
@@ -136,16 +142,15 @@ export default BaseVectorLayer.extend({
             updatedFeaturesPredicate = new Query.SimplePredicate('id', Query.FilterOperator.Eq, updatedLayers[0].model.id);
           } else {
             updatedLayers.forEach(updatedLayer => {
-              updatedFeaturesId.pushObject(new Query.SimplePredicate('id', Query.FilterOperator.Eq, updatedLayer.model.id));
+              updatedFeaturesId.push(new Query.SimplePredicate('id', Query.FilterOperator.Eq, updatedLayer.model.id));
             });
             updatedFeaturesPredicate = new Query.ComplexPredicate(Query.Condition.Or, ...updatedFeaturesId);
           }
 
-          this._getFeature(updatedFeaturesPredicate).then(() => leafletObject.fire('save:success', { layers: [] }));
-
-        } else {
-          leafletObject.fire('save:success', { layers: [] });
+          postLayersProcessing.push(this._getFeature(updatedFeaturesPredicate));
         }
+
+        Ember.RSVP.allSettled(postLayersProcessing).then(() => leafletObject.fire('save:success', e));
       }).catch(function (e) {
         console.error('Error save: ' + e);
         leafletObject.fire('save:failed', e);
