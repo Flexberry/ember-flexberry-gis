@@ -178,11 +178,44 @@ export default WmsLayerComponent.extend({
     this.set('_wfsLayer', WfsLayerComponent.create(innerWfsLayerProperties));
   },
 
+  didInsertElement() {
+    this._super(...arguments);
+    let leafletMap = this.get('leafletMap');
+
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.on('flexberry-map:getOrLoadLayerFeatures', this.loadFeaturesByInnerWfsLayer, this);
+    }
+  },
+
+  /**
+    Handles 'flexberry-map:getOrLoadLayerFeatures' event of leaflet map.
+
+    @method loadFeaturesByInnerWfsLayer
+    @param {Object} e Event object.
+    @returns {Object[]} results Objects.
+  */
+  loadFeaturesByInnerWfsLayer(e) {
+    if (this.get('layerModel.id') !== e.layer) {
+      return;
+    }
+
+    let innerWfsLayer = this.get('_wfsLayer');
+    if (!Ember.isNone(innerWfsLayer)) {
+      Ember.set(e, 'layer', Ember.get(innerWfsLayer, 'layerModel.id'));
+      innerWfsLayer._getOrLoadLayerFeatures(e);
+    }
+  },
+
   /**
     Destroys component.
   */
   willDestroyElement() {
     this._super(...arguments);
+    let leafletMap = this.get('leafletMap');
+
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.off('flexberry-map:getOrLoadLayerFeatures', this.loadFeaturesByInnerWfsLayer, this);
+    }
 
     let innerWfsLayer = this.get('_wfsLayer');
     if (!Ember.isNone(innerWfsLayer)) {
