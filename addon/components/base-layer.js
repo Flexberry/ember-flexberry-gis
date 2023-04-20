@@ -434,6 +434,16 @@ export default Ember.Component.extend(
     },
 
     /**
+      Returns array of default layer localized properties.
+
+      @method getExtensibleLocalizedProperties
+      @private
+    */
+    getExtensibleLocalizedProperties() {
+      return Ember.A();
+    },
+
+    /**
       Returns promise with the layer properties object.
 
       @method _getAttributesOptions
@@ -441,29 +451,30 @@ export default Ember.Component.extend(
     */
     _getAttributesOptions(source) {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        let localizedProperties = this.get('displaySettings.featuresPropertiesSettings.localizedProperties');
+        let localizedProperties = this.get('displaySettings.featuresPropertiesSettings.localizedProperties') || { 'en': {}, 'ru': {} };
         let excludedProperties = this.get('displaySettings.featuresPropertiesSettings.excludedProperties');
         let currentLocale = this.get('i18n.locale');
 
         let extendLocalizedProperties = (currentLocalizedProperties) => {
-          let extraLocales = Ember.A(['intersectionArea']);
+          let extraLocales = this.getExtensibleLocalizedProperties();
           let extraLocalesPath = 'components.feature-result-item.defaultLocalizedProperties';
-          if (!Ember.isNone(currentLocalizedProperties)) {
-            extraLocales.forEach(currentLocalizedProperty => {
-              if (Ember.isNone(Ember.get(currentLocalizedProperties, currentLocalizedProperty))) {
-                Ember.set(currentLocalizedProperties, currentLocalizedProperty, this.get('i18n').t(extraLocalesPath + `.${currentLocalizedProperty}`).string);
-              }
-            });
-          }
+
+          extraLocales.forEach(currentLocalizedProperty => {
+            if (Ember.isNone(Ember.get(currentLocalizedProperties, currentLocalizedProperty))) {
+              Ember.set(currentLocalizedProperties, currentLocalizedProperty, this.get('i18n').t(extraLocalesPath + `.${currentLocalizedProperty}`).string);
+            }
+          });
         };
 
-        extendLocalizedProperties(Ember.get(localizedProperties, currentLocale));
+        if (!Ember.isBlank(currentLocale)) {
+          extendLocalizedProperties(Ember.get(localizedProperties, currentLocale));
+        }
 
         resolve({
           object: this.get('_leafletObject'),
           settings: {
             readonly: true,
-            localizedProperties: localizedProperties ? JSON.parse(JSON.stringify(localizedProperties)) : {},
+            localizedProperties: JSON.parse(JSON.stringify(localizedProperties)),
             excludedProperties: excludedProperties ? JSON.parse(JSON.stringify(excludedProperties)) : [],
           }
         });
