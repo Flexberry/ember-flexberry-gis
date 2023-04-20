@@ -495,7 +495,7 @@ export default BaseVectorLayer.extend({
         return layer.state === state.insert;
       });
 
-      let updatedLayer = leafletObject.getLayers().filter(layer =&gt; {
+      let updatedLayers = leafletObject.getLayers().filter(layer =&gt; {
         return layer.state === state.update;
       });
 
@@ -504,8 +504,8 @@ export default BaseVectorLayer.extend({
       obj.adapter.batchUpdate(obj.store, modelsLayer).then((models) =&gt; {
         modelsLayer.clear();
         let insertedModelId = [];
-        if (!Ember.isNone(updatedLayer) &amp;&amp; updatedLayer.length &gt; 0) {
-          updatedLayer.map((layer) =&gt; {
+        if (!Ember.isNone(updatedLayers) &amp;&amp; updatedLayers.length &gt; 0) {
+          updatedLayers.map((layer) =&gt; {
             layer.state = state.exist;
           });
         }
@@ -535,15 +535,38 @@ export default BaseVectorLayer.extend({
           }
         });
 
-        if (insertedModelId.length &gt; 0) {
-          this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;)._getModelLayerFeature(this.layerModel.get(&#x27;id&#x27;), insertedModelId, true, true)
-            .then(([, lObject, featureLayer]) =&gt; {
-              this._setLayerState();
-              leafletObject.fire(&#x27;save:success&#x27;, { layers: featureLayer });
-            });
-        } else {
-          leafletObject.fire(&#x27;save:success&#x27;, { layers: [] });
+        let e = { layers: [] }; // resolved save action argument
+        let postLayersProcessing = [];
+
+        if (!Ember.isNone(insertedModelId) &amp;&amp; insertedModelId.length &gt; 0) {
+          let mapModel = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;);
+          postLayersProcessing.push(mapModel._getModelLayerFeature(this.layerModel.get(&#x27;id&#x27;), insertedModelId, true, true)
+          .then(([, lObject, featureLayer]) =&gt; {
+            this._setLayerState();
+            e.layers.push(...featureLayer);
+          }));
         }
+
+        if (!Ember.isNone(updatedLayers) &amp;&amp; updatedLayers.length &gt; 0) {
+          // The batchUpdate method of the odata adapter from ember-flexbury-data/query/odata-adapter
+          // rolls back the edit feature attributes
+          // synchronize the feature model (variable) with the backend
+          let updatedFeaturesPredicate = null;
+          let updatedFeaturesId = [];
+
+          if (updatedLayers.length === 1) {
+            updatedFeaturesPredicate = new Query.SimplePredicate(&#x27;id&#x27;, Query.FilterOperator.Eq, updatedLayers[0].model.id);
+          } else {
+            updatedLayers.forEach(updatedLayer =&gt; {
+              updatedFeaturesId.push(new Query.SimplePredicate(&#x27;id&#x27;, Query.FilterOperator.Eq, updatedLayer.model.id));
+            });
+            updatedFeaturesPredicate = new Query.ComplexPredicate(Query.Condition.Or, ...updatedFeaturesId);
+          }
+
+          postLayersProcessing.push(this._getFeature(updatedFeaturesPredicate));
+        }
+
+        Ember.RSVP.allSettled(postLayersProcessing).then(() =&gt; leafletObject.fire(&#x27;save:success&#x27;, e));
       }).catch(function (e) {
         console.error(&#x27;Error save: &#x27; + e);
         leafletObject.fire(&#x27;save:failed&#x27;, e);

@@ -12167,7 +12167,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 142,
+            "line": 165,
             "description": "Trigers after layer was edited.",
             "itemtype": "method",
             "name": "editLayer",
@@ -12182,14 +12182,14 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 175,
+            "line": 198,
             "description": "Update label's layer",
             "class": "ODataVectorLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 200,
+            "line": 223,
             "description": "Removes all the layers from the group.",
             "itemtype": "method",
             "name": "clearLayers",
@@ -12198,7 +12198,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 229,
+            "line": 252,
             "description": "Deletes model in odata layer.",
             "itemtype": "method",
             "name": "removeLayer",
@@ -12213,7 +12213,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 273,
+            "line": 296,
             "description": "Add layer in model.",
             "itemtype": "method",
             "name": "addLayer",
@@ -12228,7 +12228,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 335,
+            "line": 358,
             "description": "Set layer properties",
             "itemtype": "method",
             "name": "_setLayerProperties",
@@ -12254,7 +12254,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 407,
+            "line": 430,
             "description": "Get feature, not add to map",
             "itemtype": "method",
             "name": "_getFeature",
@@ -12277,7 +12277,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 462,
+            "line": 485,
             "description": "Handles 'flexberry-map:identify' event of leaflet map.",
             "itemtype": "method",
             "name": "identify",
@@ -12308,7 +12308,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 478,
+            "line": 501,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -12353,7 +12353,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 600,
+            "line": 623,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "_query",
@@ -12384,7 +12384,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 633,
+            "line": 656,
             "description": "Get an array of link parameter restrictions.",
             "itemtype": "method",
             "name": "getFilterParameters",
@@ -12408,7 +12408,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 665,
+            "line": 688,
             "description": "Get properties from model to be showed in attribute panel",
             "itemtype": "method",
             "name": "_getPropsfromModel",
@@ -12424,7 +12424,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 685,
+            "line": 708,
             "description": "Set properties from model to be showed in attribute panel",
             "itemtype": "method",
             "name": "_setPropsFromModel",
@@ -12440,7 +12440,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 716,
+            "line": 739,
             "description": "Adds layer object.",
             "itemtype": "method",
             "name": "addLayerObject",
@@ -12463,7 +12463,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 755,
+            "line": 778,
             "description": "Edit layer object properties",
             "itemtype": "method",
             "name": "editLayerObjectProperties",
@@ -12484,7 +12484,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 768,
+            "line": 791,
             "description": "Creates adapter for model. Need to redefine it in the application project\nif there is a specific application adapter.",
             "itemtype": "method",
             "name": "createAdapterForModel",
@@ -12497,7 +12497,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 788,
+            "line": 811,
             "description": "Creates model from mixin.",
             "itemtype": "method",
             "name": "createModel",
@@ -12517,7 +12517,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 805,
+            "line": 828,
             "description": "Creates projection from data model.",
             "itemtype": "method",
             "name": "createProjection",
@@ -12537,7 +12537,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 825,
+            "line": 848,
             "description": "Creates mixin from data model.",
             "itemtype": "method",
             "name": "createMixin",
@@ -12557,7 +12557,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 846,
+            "line": 869,
             "description": "Creates serializer from Serializer.Odata.",
             "itemtype": "method",
             "name": "createSerializer",
@@ -12570,7 +12570,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 880,
+            "line": 903,
             "description": "Creates models in recursive.",
             "itemtype": "method",
             "name": "сreateModelHierarchy",
@@ -12595,7 +12595,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 929,
+            "line": 952,
             "description": "Creates model mixin, model, projections, serializer and adapter from jsonModel and registers them.",
             "itemtype": "method",
             "name": "createDynamicModel",
@@ -12608,7 +12608,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 982,
+            "line": 1005,
             "description": "Creates leaflet layer.",
             "itemtype": "method",
             "name": "_createVectorLayer",
@@ -12621,7 +12621,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1048,
+            "line": 1071,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -12633,7 +12633,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1124,
+            "line": 1147,
             "description": "Returns promise with the layer properties object.",
             "itemtype": "method",
             "name": "_getAttributesOptions",
@@ -12644,7 +12644,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1177,
+            "line": 1200,
             "description": "Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "loadLayerFeatures",
@@ -12664,7 +12664,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1277,
+            "line": 1300,
             "description": "Get count of features.",
             "itemtype": "method",
             "name": "getCountFeatures",
@@ -12677,7 +12677,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1357,
+            "line": 1380,
             "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "getLayerFeatures",
@@ -12697,14 +12697,14 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1482,
+            "line": 1505,
             "description": "Handles zoomend",
             "class": "ODataVectorLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1600,
+            "line": 1623,
             "description": "Adds a listener function to leafletMap.",
             "itemtype": "method",
             "name": "onLeafletMapEvent",
@@ -12716,21 +12716,21 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1616,
+            "line": 1639,
             "description": "Initializes DOM-related component's properties.",
             "class": "ODataVectorLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1624,
+            "line": 1647,
             "description": "Deinitializes DOM-related component's properties.",
             "class": "ODataVectorLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1637,
+            "line": 1660,
             "description": "Clear changes.",
             "itemtype": "method",
             "name": "clearChanges",
@@ -12750,7 +12750,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1709,
+            "line": 1732,
             "description": "Handles 'flexberry-map:cancelEdit' event of leaflet map.",
             "itemtype": "method",
             "name": "cancelEdit",
@@ -12770,7 +12770,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 1733,
+            "line": 1756,
             "description": "Get nearest object.\nGets all leaflet layer objects and processes them _calcNearestObject().",
             "itemtype": "method",
             "name": "getNearObject",
@@ -52306,23 +52306,23 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:633"
+            "line": " addon/components/layers/odata-vector-layer.js:656"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:1048"
+            "line": " addon/components/layers/odata-vector-layer.js:1071"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:1177"
+            "line": " addon/components/layers/odata-vector-layer.js:1200"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:1357"
+            "line": " addon/components/layers/odata-vector-layer.js:1380"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:1709"
+            "line": " addon/components/layers/odata-vector-layer.js:1732"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -53030,19 +53030,19 @@
         },
         {
             "message": "Missing item type\nUpdate label's layer",
-            "line": " addon/components/layers/odata-vector-layer.js:175"
+            "line": " addon/components/layers/odata-vector-layer.js:198"
         },
         {
             "message": "Missing item type\nHandles zoomend",
-            "line": " addon/components/layers/odata-vector-layer.js:1482"
+            "line": " addon/components/layers/odata-vector-layer.js:1505"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/layers/odata-vector-layer.js:1616"
+            "line": " addon/components/layers/odata-vector-layer.js:1639"
         },
         {
             "message": "Missing item type\nDeinitializes DOM-related component's properties.",
-            "line": " addon/components/layers/odata-vector-layer.js:1624"
+            "line": " addon/components/layers/odata-vector-layer.js:1647"
         },
         {
             "message": "Missing item type\nPerforms 'getFeature' request to WFS-service related to layer.",
