@@ -470,6 +470,7 @@ export default Ember.Component.extend(
           if (Ember.$.isEmptyObject(localizedProperties)) {
             Ember.set(localizedProperties, currentLocale, {});
           }
+
           extendLocalizedProperties(Ember.get(localizedProperties, currentLocale));
         }
 
