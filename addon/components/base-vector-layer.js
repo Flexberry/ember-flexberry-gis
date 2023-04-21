@@ -250,7 +250,15 @@ export default BaseLayer.extend({
       setLeafletLayerOpacity({ leafletLayer: visibleLeafletLayers[i], opacity, maxGeomOpacity, maxGeomFillOpacity });
     }
   },
+  /**
+    Returns array of default layer localized properties.
 
+    @method getDefaultLocalizedProperties
+    @private
+  */
+  getDefaultLocalizedProperties() {
+    return Ember.A(['intersectionArea']);
+  },
   /**
     Returns promise with the layer properties object.
 

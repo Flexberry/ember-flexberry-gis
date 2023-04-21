@@ -434,6 +434,16 @@ export default Ember.Component.extend(
     },
 
     /**
+      Returns array of default layer localized properties.
+
+      @method getDefaultLocalizedProperties
+      @private
+    */
+    getDefaultLocalizedProperties() {
+      return Ember.A();
+    },
+
+    /**
       Returns promise with the layer properties object.
 
       @method _getAttributesOptions
@@ -441,14 +451,34 @@ export default Ember.Component.extend(
     */
     _getAttributesOptions(source) {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        let localizedProperties = this.get('displaySettings.featuresPropertiesSettings.localizedProperties');
+        let localizedProperties = this.get('displaySettings.featuresPropertiesSettings.localizedProperties') || {};
         let excludedProperties = this.get('displaySettings.featuresPropertiesSettings.excludedProperties');
+        let currentLocale = this.get('i18n.locale');
+
+        let extendLocalizedProperties = (currentLocalizedProperties) => {
+          let extraLocales = this.getDefaultLocalizedProperties();
+          let extraLocalesPath = 'components.feature-result-item.defaultLocalizedProperties';
+
+          extraLocales.forEach(currentLocalizedProperty => {
+            if (Ember.isNone(Ember.get(currentLocalizedProperties, currentLocalizedProperty))) {
+              Ember.set(currentLocalizedProperties, currentLocalizedProperty, this.get('i18n').t(extraLocalesPath + `.${currentLocalizedProperty}`).string);
+            }
+          });
+        };
+
+        if (!Ember.isBlank(currentLocale)) {
+          if (Ember.$.isEmptyObject(localizedProperties) || Ember.isNone(Ember.get(localizedProperties, currentLocale))) {
+            Ember.set(localizedProperties, currentLocale, {});
+          }
+
+          extendLocalizedProperties(Ember.get(localizedProperties, currentLocale));
+        }
 
         resolve({
           object: this.get('_leafletObject'),
           settings: {
             readonly: true,
-            localizedProperties: localizedProperties ? JSON.parse(JSON.stringify(localizedProperties)) : {},
+            localizedProperties: JSON.parse(JSON.stringify(localizedProperties)),
             excludedProperties: excludedProperties ? JSON.parse(JSON.stringify(excludedProperties)) : [],
           }
         });
