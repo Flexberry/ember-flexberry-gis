@@ -94,6 +94,11 @@ export default Ember.Component.extend({
   height: null,
 
   /**
+   * Show ? when legend does not exist
+  */
+  showOnEmpty: true,
+
+  /**
     Array of legend's for layer.
     Every legend is an object with following structure { src: ... },
     where 'src' is legend's image source (url or base64-string).
