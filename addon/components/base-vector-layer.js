@@ -253,10 +253,10 @@ export default BaseLayer.extend({
   /**
     Returns array of default layer localized properties.
 
-    @method getExtensibleLocalizedProperties
+    @method getDefaultLocalizedProperties
     @private
   */
-  getExtensibleLocalizedProperties() {
+  getDefaultLocalizedProperties() {
     return Ember.A(['intersectionArea']);
   },
   /**

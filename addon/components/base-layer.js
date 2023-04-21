@@ -436,10 +436,10 @@ export default Ember.Component.extend(
     /**
       Returns array of default layer localized properties.
 
-      @method getExtensibleLocalizedProperties
+      @method getDefaultLocalizedProperties
       @private
     */
-    getExtensibleLocalizedProperties() {
+    getDefaultLocalizedProperties() {
       return Ember.A();
     },
 
@@ -451,12 +451,12 @@ export default Ember.Component.extend(
     */
     _getAttributesOptions(source) {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        let localizedProperties = this.get('displaySettings.featuresPropertiesSettings.localizedProperties') || { 'en': {}, 'ru': {} };
+        let localizedProperties = this.get('displaySettings.featuresPropertiesSettings.localizedProperties') || {};
         let excludedProperties = this.get('displaySettings.featuresPropertiesSettings.excludedProperties');
         let currentLocale = this.get('i18n.locale');
 
         let extendLocalizedProperties = (currentLocalizedProperties) => {
-          let extraLocales = this.getExtensibleLocalizedProperties();
+          let extraLocales = this.getDefaultLocalizedProperties();
           let extraLocalesPath = 'components.feature-result-item.defaultLocalizedProperties';
 
           extraLocales.forEach(currentLocalizedProperty => {
@@ -467,6 +467,9 @@ export default Ember.Component.extend(
         };
 
         if (!Ember.isBlank(currentLocale)) {
+          if (Ember.$.isEmptyObject(localizedProperties)) {
+            Ember.set(localizedProperties, currentLocale, {});
+          }
           extendLocalizedProperties(Ember.get(localizedProperties, currentLocale));
         }
 
