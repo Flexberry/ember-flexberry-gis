@@ -23,7 +23,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   */
   sideBySide: L.control.sideBySide(),
 
-  compareService: Ember.Service.inject('compare'),
+  compareService: Ember.inject.service('compare'),
 
   /**
     Parent route.

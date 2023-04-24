@@ -70,9 +70,9 @@
 /*******************************
             DEFAULTS
 *******************************/
-@textColor: #343A32;
+@textColor: #3B4256;
 @labelColor: #8F928F;
-@primaryColor: @bluesky;
+@primaryColor: #0061D9;
 
 @buttonHoverColor: #2B7A38;
 

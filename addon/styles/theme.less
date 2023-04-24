@@ -3,7 +3,9 @@
 *******************************/
 
 @theme : @@element;
-@flexberry-theme: 'blue-sky';
+@associate-name: "@{element}-associate";
+@associate: @@associate-name;
+
 
 /*--------------------
    Site Variables
@@ -11,33 +13,33 @@
 
 /* Default */
 @import "@{themesFolder}/default/globals/site.variables";
-/* Ember-flexberry theme */
-@import "@{themesFolder}/@{flexberry-theme}/globals/site.variables";
 
 /* Packaged Theme */
 @import (optional) "@{themesFolder}/@{site}/globals/site.variables";
+
 /* Ember-flexberry-gis theme */
 @import (optional) "@{gisThemesFolder}/@{site}/globals/site.variables";
 
 /* Site Theme */
 @import (optional) "@{siteFolder}/globals/site.variables";
 
-
 /*-------------------
  Component Variables
 ---------------------*/
 
 /* Default */
-@import "@{themesFolder}/default/@{type}s/@{element}.variables";
-/* Ember-flexberry theme */
-@import (optional) "@{themesFolder}/@{flexberry-theme}/@{type}s/@{element}.variables";
+@import (optional) "@{themesFolder}/default/@{type}s/@{element}.variables";
 
-/* Packaged Theme */
+/* Default */
+@import (optional) "@{themesFolder}/@{theme}/@{associate}.variables";
+
 @import (optional) "@{themesFolder}/@{theme}/@{type}s/@{element}.variables";
+
 /* Ember-flexberry-gis theme */
 @import (optional) "@{gisThemesFolder}/@{theme}/@{type}s/@{element}.variables";
 
 /* Site Theme */
+@import (optional) "@{siteFolder}/@{associate}.variables";
 @import (optional) "@{siteFolder}/@{type}s/@{element}.variables";
 
 
@@ -58,6 +60,7 @@
 -------------------*/
 
 .loadUIOverrides() {
+  @import (optional) "@{themesFolder}/default/@{type}s/@{element}.overrides";
   @import (optional) "@{themesFolder}/@{theme}/@{type}s/@{element}.overrides";
   @import (optional) "@{gisThemesFolder}/default/@{type}s/@{element}.overrides";
   @import (optional) "@{gisThemesFolder}/@{theme}/@{type}s/@{element}.overrides";
