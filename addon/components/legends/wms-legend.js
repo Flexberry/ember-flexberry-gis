@@ -95,8 +95,8 @@ export default BaseLegendComponent.extend({
                         return;
                       }
 
-                      let textSymbolizers = rule.symbolizers.filter(symbolizer => Object.keys(symbolizer).filter(name => name !== 'Text').length > 0);
-                      if (textSymbolizers.length === 0) {
+                      let nonTextSymbolizers = rule.symbolizers.filter(symbolizer => Object.keys(symbolizer).filter(name => name !== 'Text').length > 0);
+                      if (nonTextSymbolizers.length === 0) {
                         return;
                       }
 
