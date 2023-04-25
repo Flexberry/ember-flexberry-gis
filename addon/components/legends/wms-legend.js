@@ -91,6 +91,15 @@ export default BaseLegendComponent.extend({
                     // One legend per query.
                     let legendsContainer = [];
                     response.Legend[0].rules.forEach(rule => {
+                      if (!rule || !rule.symbolizers) {
+                        return;
+                      }
+
+                      let nonTextSymbolizers = rule.symbolizers.filter(symbolizer => Object.keys(symbolizer).filter(name => name !== 'Text').length > 0);
+                      if (nonTextSymbolizers.length === 0) {
+                        return;
+                      }
+
                       parameters.rule = rule.name;
                       parameters.format = 'image/png';
                       parameters.width = legendImageScale;
