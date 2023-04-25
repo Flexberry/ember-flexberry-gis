@@ -180,24 +180,24 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   sidebar: Ember.A([{
     selector: 'treeview',
     captionPath: 'forms.map.treeviewbuttontooltip',
-    iconClass: 'list icon'
+    iconClass: 'icon-guideline-layers'
   }, {
     selector: 'search',
     captionPath: 'forms.map.searchbuttontooltip',
-    iconClass: 'search icon'
+    iconClass: 'icon-guideline-search'
   }, {
     selector: 'identify',
     captionPath: 'forms.map.identifybuttontooltip',
-    iconClass: 'info circle icon',
+    iconClass: 'icon-guideline-layers-info',
     class: 'identify'
   }, {
     selector: 'bookmarks',
     captionPath: 'forms.map.bookmarksbuttontooltip',
-    iconClass: 'bookmark icon'
+    iconClass: 'icon-guideline-bookmark'
   }, {
     selector: 'favorites',
     captionPath: 'forms.map.favoritesbuttontooltip',
-    iconClass: 'favorites icon',
+    iconClass: 'icon-guideline-chart',
     class: 'favorite'
   }, {
     selector: 'createObject',

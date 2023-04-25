@@ -1,3 +1,7 @@
+.ui.right.sidebar.tabbar {
+  width: 380px;
+}
+
 .sidebar-wrapper,
 .rgis-sidebar-wrapper.right-sidebar-wrapper {
   top: 0;

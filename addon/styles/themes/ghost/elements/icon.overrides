@@ -242,3 +242,10 @@ i.icon.checkall:before {
 i.icon.intersection-panel-exit-icon:hover::before {
   color: @buttonHoverColor;
 }
+
+[class*=" icon-guideline-"],
+[class*=" icon-guideline-"].icon,
+[class^=icon-guideline-] {
+  font-size: @iconSize;
+  vertical-align: middle;
+}
