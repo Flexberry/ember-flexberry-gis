@@ -1715,7 +1715,7 @@ export default BaseLayer.extend({
     div.style.width = 'auto';
     div.style.whiteSpace = 'nowrap';
     div.style.fontFamily = font;
-    div.style.fontSize = fontSize;
+    div.style.fontSize = fontSize + 'px';
     div.style.fontWeight = fontWeight;
     div.style.fontStyle = fontStyle;
     div.style.textDecoration = textDecoration;
@@ -1735,7 +1735,7 @@ export default BaseLayer.extend({
     @param {Object} layer
     @param {Object} svg
   */
-  _setLabelLine(layer, svg, partline) {
+  _setLabelLine(layer, svg, partline, text) {
     let leafletMap = this.get('leafletMap');
     let latlngArr = layer.getLatLngs();
     if (partline) {
@@ -1764,10 +1764,13 @@ export default BaseLayer.extend({
       rings.reverse();
     }
 
+    // зададим буферную зону вокруг path, чтобы надписи не обрезались
+    let buffer = 100;
     let minX = 10000000;
     let minY = 10000000;
     let maxX = 600;
     let maxY = 600;
+    let layerPathLength = 0;
     for (let i = 0; i < rings.length; i++) {
       if (rings[i].x < minX) {
         minX = rings[i].x;
@@ -1776,7 +1779,13 @@ export default BaseLayer.extend({
       if (rings[i].y < minY) {
         minY = rings[i].y;
       }
+
+      if (i > 0) {
+        layerPathLength += Math.sqrt(Math.pow((rings[i].x - rings[i - 1].x), 2) + Math.pow((rings[i].y - rings[i - 1].y), 2));
+      }
     }
+
+    let { textLength } = this._getPathAndTextLength(layer, text);
 
     let d = '';
     let kx = minX - 6;
@@ -1784,8 +1793,23 @@ export default BaseLayer.extend({
 
     for (let i = 0; i < rings.length; i++) {
       d += i === 0 ? 'M' : 'L';
-      let x = rings[i].x - kx;
-      let y = rings[i].y - ky;
+
+      let x, y;
+      // если это последняя точка и нам не хватает длины, то продлим
+      if (i === rings.length - 1 && layerPathLength < textLength) {
+        // но не будем продлевать больше чем на две длины
+        let extraLength = textLength > 3 * layerPathLength ?  2 * layerPathLength : textLength - layerPathLength;
+        let newPoint = this._getPoint(rings[i - 1].x, rings[i - 1].y, rings[i].x, rings[i].y, extraLength);
+        x = newPoint.x;
+        y = newPoint.y;
+      } else {
+        x = rings[i].x;
+        y = rings[i].y;
+      }
+      
+      x = x  - kx + buffer;
+      y = y  - ky + buffer;
+
       if (x > maxX) {
         maxX = x;
       }
@@ -1798,18 +1822,30 @@ export default BaseLayer.extend({
     }
 
     layer._path.setAttribute('d', d);
-    svg.setAttribute('width', maxX + 'px');
-    svg.setAttribute('height', maxY + 'px');
+    svg.setAttribute('width', maxX + buffer + 'px');
+    svg.setAttribute('height', maxY + buffer + 'px');
+
+    // компенсируем сдвиг
+    svg.setAttribute('style', 'margin: -' + buffer + 'px 0 0 -' + buffer + 'px');
   },
 
-  /**
-    Set align for line object's label
+  _getPoint(x1, y1, x2, y2, length) {
+    if (x1 === x2) {
+      return { x: x1, y: y2 + (y2 > y1 ? 1 : -1) * length };
+    }
 
-    @method _setAlignForLine
-    @param {Object} layer
-    @param {Object} svg
-  */
-  _setAlignForLine(layer, text, align, textNode) {
+    if (y1 === y2) {
+      return { x: x2 + (x2 > x1 ? 1 : -1) * length, y: y1 };
+    }
+
+    let t = Math.sqrt(Math.pow((x2-x1), 2) + Math.pow((y2-y1), 2));
+    let x = (t + length)*((x2 - x1)/t) + x1;
+    let y = (t + length)*((y2 - y1)/t) + y1;
+
+    return { x,  y };
+  },
+
+  _getPathAndTextLength(layer, text) {
     let pathLength = layer._path.getTotalLength();
     let optionsLabel = this.get('labelSettings.options');
     let textLength = this._getWidthText(
@@ -1821,6 +1857,19 @@ export default BaseLayer.extend({
       Ember.get(optionsLabel, 'captionFontDecoration')
     );
 
+    return { pathLength, textLength };
+  },
+
+  /**
+    Set align for line object's label
+
+    @method _setAlignForLine
+    @param {Object} layer
+    @param {Object} svg
+  */
+  _setAlignForLine(layer, text, align, textNode) {
+    let { pathLength, textLength } = this._getPathAndTextLength(layer, text);
+    
     if (align === 'center') {
       textNode.setAttribute('dx', ((pathLength / 2) - (textLength / 2)));
     }
@@ -1899,7 +1948,7 @@ export default BaseLayer.extend({
     textPath.appendChild(document.createTextNode(text));
     textNode.appendChild(textPath);
 
-    this._setLabelLine(layer, svg, partline);
+    this._setLabelLine(layer, svg, partline, text);
     layer._path.setAttribute('stroke-opacity', 0);
     layer._textNode = textNode;
     svg.firstChild.appendChild(layer._path);
@@ -1967,7 +2016,7 @@ export default BaseLayer.extend({
   },
 
   _updateAttributesSvg(layer, partline, svg, path) {
-    this._setLabelLine(layer, svg, partline);
+    this._setLabelLine(layer, svg, partline, layer._text);
     let d = layer._path.getAttribute('d');
     path.setAttribute('d', d);
 
