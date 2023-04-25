@@ -90,7 +90,17 @@ export default BaseLegendComponent.extend({
                   if (response && response.Legend && response.Legend[0]) {
                     // One legend per query.
                     let legendsContainer = [];
+                    debugger;
                     response.Legend[0].rules.forEach(rule => {
+                      if (!rule || !rule.symbolizers) {
+                        return;
+                      }
+
+                      let textSymbolizers = rule.symbolizers.filter(symbolizer => Object.keys(symbolizer).filter(name => name !== 'Text').length > 0);
+                      if (textSymbolizers.length === 0) {
+                        return;
+                      }
+
                       parameters.rule = rule.name;
                       parameters.format = 'image/png';
                       parameters.width = legendImageScale;
