@@ -141,7 +141,7 @@ export default FlexberryDropdown.extend({
         return Ember.Object.create({ key, value, isVisible: false });
       });
 
-    this.set('state', state);
+    this.set('state', Ember.A(state));
   })),
 
   actions: {
