@@ -107,7 +107,7 @@ export default BaseLegendComponent.extend({
                       legendsContainer.push({
                         src: `${url}${L.Util.getParamString(parameters)}`,
                         layerName: rule.name,
-                        useLayerName: true,
+                        useLayerName: response.Legend[0].rules.length > 1,
                         style: `height: ${this.get('height')}px;`
                       });
                     });
