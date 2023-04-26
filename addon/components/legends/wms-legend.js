@@ -118,6 +118,8 @@ export default BaseLegendComponent.extend({
                     }
 
                     resolve(legendsContainer);
+                  } else {
+                    resolve(null);
                   }
                 });
             }
