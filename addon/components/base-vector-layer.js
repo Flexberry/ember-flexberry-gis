@@ -1794,7 +1794,9 @@ export default BaseLayer.extend({
     for (let i = 0; i < rings.length; i++) {
       d += i === 0 ? 'M' : 'L';
 
-      let x, y;
+      let x;
+      let y;
+
       // если это последняя точка и нам не хватает длины, то продлим
       if (i === rings.length - 1 && layerPathLength < textLength) {
         // но не будем продлевать больше чем на две длины
@@ -1806,9 +1808,9 @@ export default BaseLayer.extend({
         x = rings[i].x;
         y = rings[i].y;
       }
-      
-      x = x  - kx + buffer;
-      y = y  - ky + buffer;
+
+      x = x - kx + buffer;
+      y = y - ky + buffer;
 
       if (x > maxX) {
         maxX = x;
@@ -1838,9 +1840,9 @@ export default BaseLayer.extend({
       return { x: x2 + (x2 > x1 ? 1 : -1) * length, y: y1 };
     }
 
-    let t = Math.sqrt(Math.pow((x2-x1), 2) + Math.pow((y2-y1), 2));
-    let x = (t + length)*((x2 - x1)/t) + x1;
-    let y = (t + length)*((y2 - y1)/t) + y1;
+    let t = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
+    let x = (t + length) * ((x2 - x1) / t) + x1;
+    let y = (t + length) * ((y2 - y1) / t) + y1;
 
     return { x,  y };
   },
@@ -1869,7 +1871,7 @@ export default BaseLayer.extend({
   */
   _setAlignForLine(layer, text, align, textNode) {
     let { pathLength, textLength } = this._getPathAndTextLength(layer, text);
-    
+
     if (align === 'center') {
       textNode.setAttribute('dx', ((pathLength / 2) - (textLength / 2)));
     }
