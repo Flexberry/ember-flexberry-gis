@@ -107,10 +107,16 @@ export default BaseLegendComponent.extend({
                       legendsContainer.push({
                         src: `${url}${L.Util.getParamString(parameters)}`,
                         layerName: rule.name,
-                        useLayerName: response.Legend[0].rules.length > 1,
+                        useLayerName: true,
                         style: `height: ${this.get('height')}px;`
                       });
                     });
+
+                    // hide legend rule name if only one is available
+                    if (legendsContainer.length === 1) {
+                      Ember.set(legendsContainer[0], 'useLayerName', false);
+                    }
+
                     resolve(legendsContainer);
                   }
                 });
