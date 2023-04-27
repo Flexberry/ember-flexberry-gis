@@ -336,10 +336,11 @@
           position: absolute;
           top: 10px;
           z-index: 100;
-          background: @whitecolor;
-          border: 1px solid #E5E5E5;
+          background-color: @inputBackground;
+          border: none;
           border-radius: 3.5px;
           box-sizing: border-box;
+          box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.1);
           &.reversed {
             div {
               padding-top: 16px;
@@ -361,6 +362,7 @@
               top: -25px;
               right: 10px;
               background-color: rgba(255,255,255,0);
+              box-shadow: none;
               border: none;
               margin: 0;
             }

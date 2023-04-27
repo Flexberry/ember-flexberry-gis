@@ -260,7 +260,7 @@
     width: 0px;
     /* элементы меню */
     a.item {
-        color: @darkbluecolor;
+        color: @primaryColor;
         font-size: 0px;
         background: @whitecolor;
         box-shadow: @defaultBoxShadow;

@@ -6,6 +6,7 @@ export default function openCloseSubmenu(context, moreButton, elements, incTop, 
 
   if (!isHidden) {
     const element = elements[0];
+    const { top: mapTop, left: mapLeft } = window.document.getElementsByClassName('flexberry-map')[0].getBoundingClientRect();
     const topMainButtons = window.document.getElementsByClassName('main-map-tab-bar')[0].getBoundingClientRect().top;
     Ember.run.next(() => {
       // Устанавливаем фиксированное позиционирование для подменю, чтобы не зависеть от внешнего контенера.
@@ -18,8 +19,8 @@ export default function openCloseSubmenu(context, moreButton, elements, incTop, 
       }
 
       element.style.position = 'fixed';
-      element.style.left = `${left - (Ember.isNone(decLeft) ? 0 : decLeft)}px`;
-      element.style.top = `${top + incTop}px`;
+      element.style.left = `${left - (Ember.isNone(decLeft) ? 0 : decLeft) - mapLeft}px`;
+      element.style.top = `${top + incTop - mapTop}px`;
     });
   }
 }

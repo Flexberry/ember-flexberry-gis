@@ -25,27 +25,27 @@
     <button type="submit" class="ui button close-button" {{action "close"}}>{{t "forms.edit-form.close-button-text"}}--></button>
   </div>
   <div class="map-container">
-    {{flexberry-search-panel
-      querySearch=(action "querySearch")
-      clearSearch=(action "clearSearch")
-      leafletMap=leafletMap
-      layers=model.hierarchy
-      searchInProcess=searchInProcess
-      maxResultsCount=10
-      attrVisible=attrVisible
-      isSearch=isSearch
-      class="outer-search"
-      searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
-      attrSearch=(action "attrSearch")
-      placeholder=placeholderSearch
-    }}
     <div class="sidebar-wrapper">
       {{flexberry-tab-bar
         class="main-map-tab-bar"
         change=(action "toggleSidebar")
         items=_sidebarFiltered
       }}
-      <div class="ui right sidebar pushable tabbar">
+        {{flexberry-search-panel
+          querySearch=(action "querySearch")
+          clearSearch=(action "clearSearch")
+          leafletMap=leafletMap
+          layers=model.hierarchy
+          searchInProcess=searchInProcess
+          maxResultsCount=10
+          attrVisible=attrVisible
+          isSearch=isSearch
+          class="outer-search"
+          searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
+          attrSearch=(action "attrSearch")
+          placeholder=placeholderSearch
+        }}
+      <div class="ui right sidebar treeview pushable tabbar">
         <div data-tab="treeview" class="ui tab treeview">
           <h3>{{t "forms.map.tabbar.treeview.caption"}}</h3>
           {{#if showTree}}

@@ -243,9 +243,18 @@ i.icon.intersection-panel-exit-icon:hover::before {
   color: @buttonHoverColor;
 }
 
+[class^="icon-guideline-"],
 [class*=" icon-guideline-"],
-[class*=" icon-guideline-"].icon,
-[class^=icon-guideline-] {
+[class*=" icon-guideline-"].icon {
   font-size: @iconSize;
   vertical-align: middle;
+
+  .ui.button:not(.icon) & {
+    margin-right: 10px;
+  }
+
+  .ui.button.next & {
+    float: right;
+    margin: 0 0 0 10px;
+  }
 }

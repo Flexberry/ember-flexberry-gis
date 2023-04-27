@@ -44,16 +44,16 @@ export default Ember.Controller.extend({
       @method actions.toggleSidebar
     */
     toggleSidebar() {
-      let sidebar = $('.ui.sidebar.main.menu');
+      let sidebar = Ember.$('.ui.sidebar.main.menu');
       sidebar.sidebar('toggle');
       sidebar.toggleClass('sidebar-mini');
 
-      $('.full.height').toggleClass('content-opened');
+      Ember.$('.full.height').toggleClass('content-opened');
 
-      $('.sidebar.icon .text_menu').toggleClass('hidden');
-      $('.sidebar.icon').toggleClass('text-menu-show');
-      $('.sidebar.icon').toggleClass('text-menu-hide');
-      $('.bgw-opacity').toggleClass('hidden');
+      Ember.$('.sidebar.icon .text_menu').toggleClass('hidden');
+      Ember.$('.sidebar.icon').toggleClass('text-menu-show');
+      Ember.$('.sidebar.icon').toggleClass('text-menu-hide');
+      Ember.$('.bgw-opacity').toggleClass('hidden');
 
       // For reinit overflowed tabs.
       $(window).trigger('resize');
