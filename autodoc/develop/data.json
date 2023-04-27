@@ -29427,7 +29427,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1805,
+            "line": 1865,
             "description": "Set align for line object's label",
             "itemtype": "method",
             "name": "_setAlignForLine",
@@ -29448,7 +29448,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1837,
+            "line": 1888,
             "description": "Add text for line object",
             "itemtype": "method",
             "name": "_addTextForLine",
@@ -29479,7 +29479,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1916,
+            "line": 1967,
             "description": "Update position for line object's label",
             "itemtype": "method",
             "name": "_updatePositionLabelForLine",
@@ -29488,7 +29488,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1997,
+            "line": 2048,
             "description": "Show lables",
             "itemtype": "method",
             "name": "_showLabels",
@@ -29509,7 +29509,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2096,
+            "line": 2147,
             "description": "Adds labels to it's leaflet container.",
             "itemtype": "method",
             "name": "_addLabelsToLeafletContainer",
@@ -29532,7 +29532,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2155,
+            "line": 2206,
             "description": "Create pane for additional labels.",
             "itemtype": "method",
             "name": "_additionalZoomLabelPane",
@@ -29543,7 +29543,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2180,
+            "line": 2231,
             "description": "Removes labels from it's leaflet container.",
             "itemtype": "method",
             "name": "_removeLabelsFromLeafletContainer",
@@ -29554,7 +29554,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2202,
+            "line": 2253,
             "description": "Sets leaflet layer's visibility.",
             "itemtype": "method",
             "name": "_setLayerVisibility",

@@ -527,7 +527,15 @@ export default BaseLegendComponent.extend({
                         style: &#x60;height: ${this.get(&#x27;height&#x27;)}px;&#x60;
                       });
                     });
+
+                    // hide legend rule name if only one is available
+                    if (legendsContainer.length === 1) {
+                      Ember.set(legendsContainer[0], &#x27;useLayerName&#x27;, false);
+                    }
+
                     resolve(legendsContainer);
+                  } else {
+                    resolve(null);
                   }
                 });
             }
