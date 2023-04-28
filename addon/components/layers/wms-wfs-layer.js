@@ -37,7 +37,7 @@ export default WmsLayerComponent.extend({
         let excluded = Ember.get(resultingAttributesOptions, 'settings.excludedProperties');
         let wfsExcluded = Ember.get(wfsAttributesOptions, 'settings.excludedProperties');
 
-        if (Ember.isNone(excluded)) {
+        if (Ember.isNone(excluded) || excluded.length === 0) {
           excluded = Ember.A();
         }
 
