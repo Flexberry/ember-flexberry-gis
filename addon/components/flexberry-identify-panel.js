@@ -603,7 +603,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   */
   willDestroyElement() {
     let leafletMap = this.get('leafletMap');
-    if (!Ember.isNone(leafletMap)) {
+    if (!Ember.isNone(leafletMap) && !Ember.isNone(leafletMap.flexberryMap)) {
       leafletMap.off('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
       leafletMap.off('flexberry-map:geomChanged', this.actions.onGeomChanged, this);
 
