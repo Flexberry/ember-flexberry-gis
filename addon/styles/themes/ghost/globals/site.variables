@@ -1,4 +1,11 @@
 
+@fontName          : 'GOSTUI2';
+
+@headerFont        : @fontName, 'Helvetica Neue', helvetica, arial, verdana, sans-serif;
+@pageFont          : @fontName, 'Helvetica Neue', helvetica, arial, verdana, sans-serif;
+
+@importGoogleFonts : false;
+
 /*******************************
       Components colors
 *******************************/
@@ -66,6 +73,11 @@
 
 @controlBorderColor: @defaultBorderColor;
 
+/*-------------------
+        Grid
+--------------------*/
+
+@columnCount: 16;
 
 /*******************************
             DEFAULTS
