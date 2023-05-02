@@ -1,0 +1,4 @@
+// TODO:
+.ui.secondary.menu.nav-bar .ui.basic.buttons .ui.button {
+  padding: @verticalPadding @horizontalPadding !important;
+}
