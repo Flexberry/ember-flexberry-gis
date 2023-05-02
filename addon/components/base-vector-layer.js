@@ -278,7 +278,7 @@ export default BaseLayer.extend({
 
       let excluded = Ember.get(attributesOptions, 'settings.excludedProperties');
 
-      if (Ember.isNone(excluded) || excluded.length === 0) {
+      if (Ember.isEmpty(excluded) || Ember.isBlank(excluded)) {
         excluded = Ember.A();
       }
 
