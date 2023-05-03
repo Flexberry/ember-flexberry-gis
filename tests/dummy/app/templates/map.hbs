@@ -26,6 +26,9 @@
   </div>
   <div class="map-container">
     <div class="sidebar-wrapper">
+      {{#if showSpinner}}
+        <div class="ui form loading" style="height: 100%;"></div>
+      {{/if}}
       {{flexberry-tab-bar
         class="main-map-tab-bar"
         change=(action "toggleSidebar")

@@ -340,6 +340,15 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   editedLayersPanelSettings: null,
 
   /**
+    Flag that indicates whether or not show spinner.
+
+    @property showSpinner
+    @type Boolean
+    @default false
+  */
+  showSpinner: false,
+
+  /**
     Initializes 'flexberry-layers-attributes-panel'.
 
     @method initializeEditPanel
@@ -593,6 +602,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this._super(...arguments);
 
       this.initializeEditPanel();
+      this.set('showSpinner', false);
     },
 
     /**
