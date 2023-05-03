@@ -38,7 +38,6 @@ export default Ember.Mixin.create({
         if (feature) {
           feature.disableEdit();
           feature.remove();
-          this.get('leafletMap').fire('flexberry-map:geomChanged');
         }
       }
 
