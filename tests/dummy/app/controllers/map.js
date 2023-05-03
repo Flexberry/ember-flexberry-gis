@@ -191,7 +191,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     iconClass: 'icon-guideline-layers-info',
     class: 'identify'
   }, {
-    selector: 'bookmarks',
+    selector: 'bookmarksAndFavorites',
     captionPath: 'forms.map.bookmarksbuttontooltip',
     iconClass: 'icon-guideline-bookmark'
   }, {

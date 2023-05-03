@@ -188,12 +188,40 @@
             accessibleMap=access.map
           }}
         </div>
-        <div data-tab="bookmarks" class="ui tab bookmarks">
-          <h3>{{t "forms.map.tabbar.bookmarks.caption"}}</h3>
-          {{spatial-bookmark
-            leafletMap=leafletMap
-            storageKey=model.id
+        <div data-tab="bookmarksAndFavorites" class="ui tab bookmarks-favorites">
+          {{flexberry-tab-bar
+            class="bookmarks-tab-bar"
+            items=(array
+              (hash
+                selector="bookmarks"
+                caption="Закладки"
+                class="active"
+              )
+              (hash
+                selector="favorites"
+                caption="Избранное"
+              )
+            )
           }}
+          <div data-tab="bookmarks" class="ui tab active bookmarks over">
+            {{spatial-bookmark
+              leafletMap=leafletMap
+              storageKey=model.id
+            }}
+          </div>
+          <div data-tab="favorites" class="ui tab favorites over">
+            {{favorites-list
+              features=result
+              compareBtnDisabled=compareBtnDisabled
+              serviceLayer=serviceLayer
+              leafletMap=leafletMap
+              _showFavorites=_showFavorites
+              showIntersectionPanel=(action 'onIntersectionPanel')
+              compareTwoGeometries=(action 'OnCompareTwoGeometries')
+              addToFavorite=(action "addToFavorite")
+              addToCompareGeometries=(action 'addToCompareGeometries')
+            }}
+          </div>
         </div>
         <div data-tab="createObject" class="ui tab createObject">
           <h3>{{t "forms.map.tabbar.createObject.caption"}}</h3>

@@ -32,7 +32,6 @@
     .bookmark-item,
     .bmrk-add-block {
       border: none;
-      box-shadow: @lightBoxShadow;
       border-radius: 5px;
       height: 35px;
       .ember-text-field {
@@ -70,7 +69,7 @@
       padding: 0px;
       margin-bottom: 15px;
       .bmrk-add-block-buttons .ui.icon.button {
-        padding-top: 8px;
+        padding-top: 0;
       }
       .error+.bmrk-add-block-buttons .ui.icon.button &:nth-child(1) {
         color: @bmrkAddBlockButtonsColor;
@@ -121,7 +120,6 @@
     top: 0;
     .ui.icon.button {
       box-shadow: none;
-      border-left: 1px solid #b7bfcd;
     }
   }
 }

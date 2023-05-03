@@ -848,7 +848,6 @@
       }
 
       .bmrk-add-block {
-        padding: 15px 0;
         .ui.input input {
           border-radius: @defaultBorderRadius;
           border: 1px solid @controlBorderColor;
@@ -1193,4 +1192,66 @@
 
 .sidebar-wrapper:not(.visible) .ui.search > .prompt {
   background: #fff
+}
+
+/************************************
+        Bookmark Block
+*************************************/
+.sidebar-wrapper,
+.rgis-sidebar-wrapper {
+  .sidebar > div.ui.tab.bookmarks-favorites {
+    overflow-y: hidden;
+    .ui.tab.bookmarks,
+    .ui.tab.favorites {
+      height: ~"calc(100% - 60px)";
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    .feature-result-item-title .feature-result-item-toolbar a.icon.item {
+      position: static;
+      line-height: 1.5;
+      &.more {
+        top: 0;
+        i.icon {
+          font-size: 26px;
+          line-height: 0;
+        }
+      }
+
+    }
+    .feature-result-item-title .feature-result-item-toolbar .more.submenu p {
+      font-size: 26px;
+      font-family: 'Icons';
+    }
+    .layer-result-list .feature-result-item-caption {
+      padding: 0;
+    }
+  }
+  .ui.tabular.menu.bookmarks-tab-bar {
+    height: 50px !important;
+    .tab.item {
+      color: @labelColor;
+      margin: 10px 20px 0px 0px;
+      padding: 0;
+      font-weight: normal;
+      font-size: 1.5rem;
+      height: 23px;
+
+      &.active {
+        color: @textColor;
+      }
+    }
+  }
+
+  .ui.tabular.menu.flexberry-tab-bar {
+    &.bookmarks-tab-bar {
+      float: none;
+      border: none;
+      min-height: 40px;
+
+      .tab.item {
+        border: none;
+      }
+    }
+  }
 }
