@@ -196,27 +196,23 @@
           }}
         </div>
         <div data-tab="createObject" class="ui tab createObject">
-        <h3>{{t "forms.map.tabbar.createObject.caption"}}</h3>
-        {{#each createItems as |createItem|}}
-          {{flexberry-create-object-geometry
-            createItem=createItem
-            leafletMap=leafletMap
-          }}
-        {{/each}}
+          <h3>{{t "forms.map.tabbar.createObject.caption"}}</h3>
+          {{#each createItems as |createItem|}}
+            {{flexberry-create-object-geometry
+              createItem=createItem
+              leafletMap=leafletMap
+            }}
+          {{/each}}
         </div>
-        <div data-tab="favorites" class="ui tab bookmarks">
-          <h3>{{t "forms.map.tabbar.favorites.caption"}}</h3>
-          {{favorites-list
-            features=result
-            compareBtnDisabled=compareBtnDisabled
-            serviceLayer=serviceLayer
-            leafletMap=leafletMap
-            _showFavorites=_showFavorites
-            showIntersectionPanel=(action 'onIntersectionPanel')
-            compareTwoGeometries=(action 'OnCompareTwoGeometries')
-            addToFavorite=(action "addToFavorite")
-            addToCompareGeometries=(action 'addToCompareGeometries')
-          }}
+        <div data-tab="analytics" class="ui tab analytics history satellite-search">
+          <h3>Инструменты аналитики</h3>
+          <div class="analytics-tools compare-layers-tools ui basic primary button">
+            {{map-tools/compare
+              leafletMap=leafletMap
+              caption="Сравнение слоев"
+              showCompareSideBar=(action "showCompareSideBar")
+            }}
+          </div>
         </div>
         <div data-tab="createOrEditObject" class="ui tab createOrEditObject">
         <h3>{{t "forms.map.tabbar.createOrEditObject.caption"}}</h3>
@@ -233,7 +229,9 @@
           }}
         </div>
         <div data-tab="compare" class="ui tab compare">
-        <h3>{{t "forms.map.tabbar.compare.caption"}}</h3>
+          <div class="tab-header">
+            <h3>{{t "forms.map.tabbar.compare.caption"}}</h3>
+          </div>
           {{flexberry-maplayers
             class="styled"
             leafletMap=leafletMap
@@ -241,6 +239,8 @@
             layers=(get-with-dynamic-actions this "model.hierarchy"
                 hierarchyPropertyName="layers"
                 pathKeyword="layerPath")
+            selectedBaseLayer=selectedBaseLayer
+            backgroundLayers=model.backgroundLayers
           }}
         </div>
       </div>
@@ -255,6 +255,7 @@
         loading=editedLayersPanelLoading
         leafletMap=leafletMap
         editFeature=(action 'onCreateOrEditFeature')
+        pageSize=25
       }}
     </div>
     <div class="ui tab bottompanel-wrapper intersection-panel">

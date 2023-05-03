@@ -195,10 +195,10 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     captionPath: 'forms.map.bookmarksbuttontooltip',
     iconClass: 'icon-guideline-bookmark'
   }, {
-    selector: 'favorites',
-    captionPath: 'forms.map.favoritesbuttontooltip',
+    selector: 'analytics',
+    caption: 'Инструменты аналитики',
     iconClass: 'icon-guideline-chart',
-    class: 'favorite'
+    class: 'analytics'
   }, {
     selector: 'createObject',
     captionPath: 'forms.map.createobjectbuttontooltip',
