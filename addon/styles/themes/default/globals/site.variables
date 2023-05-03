@@ -26,6 +26,7 @@
 @darkBoxShadow: 0 0 4px @darkbluecolor;
 
 @erroneousFieldColor: #E0B4B4;
+@red: #DC3545;
 
 @inputBackgroundColor: #F4F7FB;
 @borderColor: #c5c7ca;
