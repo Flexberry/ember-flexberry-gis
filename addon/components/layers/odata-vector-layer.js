@@ -859,7 +859,7 @@ export default BaseVectorLayer.extend({
 
     let mixin = {};
     jsonModel.attrs.forEach((attr) => {
-      mixin[attr.name] = DS.attr(attr.type);
+      mixin[attr.name] = DS.attr(attr.type, { required: attr.notNull });
     });
 
     let modelMixin = Ember.Mixin.create(mixin);
@@ -1133,7 +1133,7 @@ export default BaseVectorLayer.extend({
 
     layerProperties.forEach((property) => {
       if (property.name !== geometryField) {
-        readFormat.featureType.appendField(property.name, property.type);
+        readFormat.featureType.appendField(property.name, property.type, property.options && property.options.required);
       }
     });
 

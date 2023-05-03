@@ -364,6 +364,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       fieldTypes: Ember.get(leafletObject, 'readFormat.featureType.fieldTypes'),
       fieldParsers: Ember.get(leafletObject, 'readFormat.featureType.fields'),
       fieldValidators: Ember.get(leafletObject, 'readFormat.featureType.fieldValidators'),
+      requiredFields: Ember.get(leafletObject, 'readFormat.featureType.requiredFields'),
       readOnlyFields: Ember.get(leafletObject, 'readFormat.excludedProperties'),
       fieldNames: getHeader()
     };
@@ -477,6 +478,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     let fieldParsers = this.get('_model.fieldParsers');
     let fieldValidators = this.get('_model.fieldValidators');
     let fieldTypes = this.get('_model.fieldTypes');
+    let requiredFields = this.get('_model.requiredFields');
 
     let parsingErrors = {};
     let dataIsValid = true;
@@ -501,7 +503,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       }
 
       dataIsValid = dataIsValid && valueIsValid;
-      Ember.set(parsingErrors, fieldName, !valueIsValid);
+
+      // хочется отделить ошибки обязательности от непосредственно некорректных значений
+      // валидацию обязательных полей будем делать интерактивную, но показывать только если пытались сохранить
+      // звездочку у поля будем показывать в любое время
+      let missedValue = requiredFields[fieldName] && !text && !valueIsValid;
+      Ember.set(parsingErrors, fieldName, { invalidValue: !valueIsValid && !missedValue, missedValue });
     }
 
     this.set(`parsingErrors.${index}`, parsingErrors);

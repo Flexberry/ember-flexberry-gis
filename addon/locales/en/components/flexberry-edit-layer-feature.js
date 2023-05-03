@@ -14,6 +14,7 @@ export default {
     'no-layer': 'No layer',
     'data-errors': 'Validation errors',
     'field-error': 'Validation error',
+    'field-required': 'Required error',
     'save-fail': 'Save failed'
   }
 };
