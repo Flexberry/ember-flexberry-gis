@@ -589,7 +589,7 @@
 
     .ui.tab {
       padding: 10px;
-      color: @darkbluecolor;
+      color: @primaryColor;
       &.bottompanel-tab-data-panel {
         padding: 0px;
         .layers-attributes-tab-container {
@@ -610,17 +610,6 @@
     &.folded {
       bottom: 0;
       height: 40px;
-    }
-
-    &.sidebarOpened {
-      width: ~"calc(100% - 430px)";
-    }
-
-    &.withToolbar {
-      width: ~"calc(100% - 70px)";
-      &.sidebarOpened {
-        width: ~"calc(100% - 480px)";
-      }
     }
   }
 

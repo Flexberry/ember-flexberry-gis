@@ -426,7 +426,8 @@ div.bottompanel-wrapper {
           margin-bottom: 10px;
           .ui.button.flexberry-button,
           .flexberry-geometry-buffer {
-            border: @defaultGrayBorder;
+            background-color: @inputBackground;
+            border: none;
             box-shadow: @defaultBoxShadow;
             border-radius: @defaultBorderRadius !important;
             font-size: 1rem;
@@ -525,8 +526,6 @@ div.bottompanel-wrapper {
             }
 
           .flexberry-geometry-buffer {
-            border: @defaultGrayBorder;
-            background-color: @inputBackground;
 
             i.icon.erase {
               margin-left: -3px;
@@ -613,13 +612,22 @@ div.bottompanel-wrapper {
           height: ~"calc(100% - 65px)";
       }
 
+      &:not(.withToolbar) .flexberry-table-wrapper {
+        height: ~"calc(100% - 120px)";
+      }
+      &.withToolbar .flexberry-table-wrapper {
+        height: ~"calc(100% - 700px)";
+      }
       .flexberry-table-wrapper {
-          height: ~"calc(100% - 120px)";
           padding: 0 10px 10px 0;
 
           tbody {
             box-shadow: @defaultBoxShadow;
-            border: 1px solid #e5e5e5;
+            border: 1px solid @defaultBorderColor;
+          }
+          .table tr td {
+            border-left: 1px solid @defaultBorderColor;
+            border-top: 1px solid @defaultBorderColor;
           }
       }
 

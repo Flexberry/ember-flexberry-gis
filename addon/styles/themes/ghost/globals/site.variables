@@ -86,7 +86,8 @@
 @labelColor: #8F928F;
 @primaryColor: #0061D9;
 
-@buttonHoverColor: #2B7A38;
+@buttonHoverColor: saturate(darken(@primaryColor, 5), 10, relative);
+@buttonHoveredBoxShadow: none;
 
 @defaultBorderColor: @graycolor;
 @defaultBoxShadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.15);
@@ -95,7 +96,7 @@
 
 @labelFontSize: 13px;
 
-@inputBackgroundColor: #F4F7FB
+@inputBackgroundColor: #F4F7FB;
 @borderColor: #c5c7ca;
 @headerTextColor: #0C49CD;
 @activeItemColor: #3B4256;
