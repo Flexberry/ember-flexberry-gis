@@ -1,5 +1,5 @@
 ﻿<h3 class="ui header">{{t "forms.map.caption"}}</h3>
-<form class="ui form flexberry-vertical-form" role="form">
+<form class="ui form flexberry-vertical-form {{if showSpinner "loading"}}" role="form">
   {{ui-message
     type="success"
     closeable=true
@@ -26,9 +26,6 @@
   </div>
   <div class="map-container">
     <div class="sidebar-wrapper">
-      {{#if showSpinner}}
-        <div class="ui form loading" style="height: 100%;"></div>
-      {{/if}}
       {{flexberry-tab-bar
         class="main-map-tab-bar"
         change=(action "toggleSidebar")

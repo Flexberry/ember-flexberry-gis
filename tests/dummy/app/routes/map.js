@@ -30,15 +30,14 @@ export default EditMapRoute.extend(EditFormRouteOperationsIndicationMixin, {
 
   actions: {
     willTransition(transition) {
-        if (!this.controller.get("showSpinner")) {
-        this.controller.set('showSpinner', true);
+      this.controller.toggleProperty('showSpinner');
+      if (this.controller.get('showSpinner')) {
         transition.abort();
         Ember.run.later(() => {
           transition.retry();
         });
       }
       else {
-        this.controller.set('showSpinner', false);
         return true;
       }
     }
