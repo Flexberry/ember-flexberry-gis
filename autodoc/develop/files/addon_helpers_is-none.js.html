@@ -436,8 +436,8 @@ export default Ember.Helper.extend({
     @param {any} value Value which must be checked.
     @return {Boolen} Flag: indicates whether the specified item contains in the given array or not.
   */
-  compute([value]) {
-    return Ember.isNone(value);
+  compute([value, checkEmpty]) {
+    return checkEmpty ? Ember.isEmpty(value) : Ember.isNone(value);
   }
 });
 

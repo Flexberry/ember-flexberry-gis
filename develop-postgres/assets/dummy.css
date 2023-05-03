@@ -49420,6 +49420,9 @@ img.item-minus {
     Prevent ui messages from being hided inside <form>.
   */
 }
+.ui.form .field .required {
+  color: #DC3545;
+}
 .ui.form .success.message,
 .ui.form .warning.message,
 .ui.form .error.message {

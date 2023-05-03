@@ -31540,14 +31540,14 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 372,
+            "line": 373,
             "description": "Whether or not layer's properties are readonly.",
             "class": "FlexberryEditLayerDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 387,
+            "line": 388,
             "description": "Name of the selected group value.",
             "itemtype": "property",
             "name": "choiceValue",
@@ -31558,7 +31558,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 396,
+            "line": 397,
             "description": "List of groups value.",
             "itemtype": "property",
             "name": "choiceItems",
@@ -31569,7 +31569,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 405,
+            "line": 406,
             "description": "Array editing objects value.",
             "itemtype": "property",
             "name": "choiceValueData",
@@ -31580,7 +31580,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 414,
+            "line": 415,
             "description": "Observes and handles changes in choiceValue.\nСomputes editing object.",
             "itemtype": "method",
             "name": "choiceValueObserver",
@@ -31591,7 +31591,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 435,
+            "line": 436,
             "description": "Observes and handles changes in choiceValueData.\nСomputes list 'choiceItems' name editing objects.",
             "itemtype": "method",
             "name": "choiceValueDataObserver",
@@ -31602,7 +31602,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 459,
+            "line": 460,
             "description": "Hash containing parsing errors related to field names.",
             "itemtype": "property",
             "name": "parsingErrors",
@@ -31613,7 +31613,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 468,
+            "line": 469,
             "description": "Parses data.",
             "itemtype": "method",
             "name": "parseData",
@@ -31626,7 +31626,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 512,
+            "line": 519,
             "description": "Copy layer latlngs",
             "itemtype": "method",
             "name": "copy",
@@ -31646,7 +31646,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 533,
+            "line": 540,
             "description": "Returns the available drawing tools according to the type of layer geometry.",
             "params": [
                 {
@@ -31660,7 +31660,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 560,
+            "line": 567,
             "description": "Return geometry type.",
             "params": [
                 {
@@ -31674,7 +31674,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 587,
+            "line": 594,
             "description": "Initializes snapping for edited vertex.",
             "itemtype": "method",
             "name": "_startSnapping",
@@ -31692,21 +31692,21 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 626,
+            "line": 633,
             "description": "Deinitializes DOM-related component's properties.",
             "class": "FlexberryEditLayerDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 679,
+            "line": 686,
             "description": "Initializes component.",
             "class": "FlexberryEditLayerDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 688,
+            "line": 695,
             "itemtype": "method",
             "name": "cancelEdit",
             "access": "private",
@@ -31716,7 +31716,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 809,
+            "line": 816,
             "itemtype": "method",
             "name": "restoreLayers",
             "access": "private",
@@ -31726,7 +31726,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 864,
+            "line": 871,
             "description": "Sends request to trancate GeoWebCache for layer by boundingBox.",
             "itemtype": "method",
             "name": "trancateGeoWebCache",
@@ -31742,7 +31742,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 1248,
+            "line": 1255,
             "description": "Handles a new geometry draw start.",
             "params": [
                 {
@@ -52472,7 +52472,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/flexberry-edit-layer-feature.js:512"
+            "line": " addon/components/flexberry-edit-layer-feature.js:519"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -54080,27 +54080,27 @@
         },
         {
             "message": "Missing item type\nWhether or not layer's properties are readonly.",
-            "line": " addon/components/flexberry-edit-layer-feature.js:372"
+            "line": " addon/components/flexberry-edit-layer-feature.js:373"
         },
         {
             "message": "Missing item type\nReturns the available drawing tools according to the type of layer geometry.",
-            "line": " addon/components/flexberry-edit-layer-feature.js:533"
+            "line": " addon/components/flexberry-edit-layer-feature.js:540"
         },
         {
             "message": "Missing item type\nReturn geometry type.",
-            "line": " addon/components/flexberry-edit-layer-feature.js:560"
+            "line": " addon/components/flexberry-edit-layer-feature.js:567"
         },
         {
             "message": "Missing item type\nDeinitializes DOM-related component's properties.",
-            "line": " addon/components/flexberry-edit-layer-feature.js:626"
+            "line": " addon/components/flexberry-edit-layer-feature.js:633"
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/flexberry-edit-layer-feature.js:679"
+            "line": " addon/components/flexberry-edit-layer-feature.js:686"
         },
         {
             "message": "Missing item type\nHandles a new geometry draw start.",
-            "line": " addon/components/flexberry-edit-layer-feature.js:1248"
+            "line": " addon/components/flexberry-edit-layer-feature.js:1255"
         },
         {
             "message": "Missing item type\nReference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
