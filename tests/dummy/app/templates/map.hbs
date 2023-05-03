@@ -350,7 +350,13 @@
     {{/flexberry-maptoolbar}}
 
     {{#flexberry-maptoolbar class="background-layers"}}
-      {{map-tools/background-layers layers=model.hierarchy leafletMap=leafletMap iconClass="icon-guideline-grid"}}
+      {{map-tools/background-layers
+      layers=model.hierarchy
+      leafletMap=leafletMap
+      iconClass="icon-guideline-grid"
+      selectedLayer=selectedBaseLayer
+      sideBySide=sideBySide
+    }}
     {{/flexberry-maptoolbar}}
     <div class="mappanel">
       <div class="pusher">
