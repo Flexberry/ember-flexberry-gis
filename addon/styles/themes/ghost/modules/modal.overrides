@@ -812,3 +812,7 @@
     }
   }
 }
+
+body > .ui.dimmer > .ui.modal {
+  top: auto;
+}

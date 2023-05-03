@@ -1,5 +1,36 @@
-<div class="ui message">
-  <div class="header">
-    {{t "forms.index.greeting"}}
+<div class="flexberry-container">
+  <div class="ui stackable doubling grid">
+    <div class="row"><h2>{{t "forms.index.greeting"}}</h2></div>
+    <div class="row">
+      <div class="eight wide middle computer four wide large screen four wide widescreen column need-pd-computer">
+        <div class="ui card">
+          <div class="content">
+            <i class="icon-guideline-earth card-icon icon" ></i>
+            <div class="header">{{t "forms.application.sitemap.gis.caption"}}</div>
+            <div class="description">
+              <ul>
+                <li>{{#link-to "maps"}}{{t "forms.application.sitemap.gis.maps.caption"}}{{/link-to}}</li>
+                <li>{{#link-to "new-platform-flexberry-g-i-s-layer-metadata-l"}}{{t "forms.application.sitemap.gis.map-metadata.caption"}}{{/link-to}}</li>
+                <li>{{#link-to "gis-search-form"}}{{t "forms.application.sitemap.gis.gis-search-form.caption"}}{{/link-to}}</li>
+                <li>{{#link-to "new-platform-flexberry-g-i-s-map-object-setting-l"}}{{t "forms.application.sitemap.map-object-setting.caption"}}{{/link-to}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="eight wide middle computer four wide large screen four wide widescreen column need-pd-computer">
+        <div class="ui card">
+          <div class="content">
+            <i class="icon-guideline-date card-icon icon" ></i>
+            <div class="header">{{t "forms.application.sitemap.components-examples.caption"}}</div>
+            <div class="description">
+              <ul>
+                <li>{{#link-to "components-examples/flexberry-boundingbox/settings-example"}}{{t "forms.application.sitemap.components-examples.flexberry-boundingbox.caption"}}{{/link-to}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

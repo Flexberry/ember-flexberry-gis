@@ -180,36 +180,43 @@ export default Ember.Controller.extend({
         link: 'index',
         caption: i18n.t('forms.application.sitemap.index.caption'),
         title: i18n.t('forms.application.sitemap.index.title'),
+        icon: 'icon-guideline-user',
         children: null
       }, {
         link: null,
         caption: i18n.t('forms.application.sitemap.gis.caption'),
         title: i18n.t('forms.application.sitemap.gis.title'),
+        icon: 'icon-guideline-earth',
         children: [{
           link: 'maps',
           caption: i18n.t('forms.application.sitemap.gis.maps.caption'),
           title: i18n.t('forms.application.sitemap.gis.maps.title'),
+          icon: 'icon-guideline-map',
           children: null
         }, {
           link: 'new-platform-flexberry-g-i-s-layer-metadata-l',
           caption: i18n.t('forms.application.sitemap.gis.map-metadata.caption'),
           title: i18n.t('forms.application.sitemap.gis.map-metadata.title'),
+          icon: 'icon-guideline-edit-note',
           children: null
         }, {
           link: 'gis-search-form',
           caption: i18n.t('forms.application.sitemap.gis.gis-search-form.caption'),
           title: i18n.t('forms.application.sitemap.gis.gis-search-form.title'),
+          icon: 'icon-guideline-search',
           children: null
         }, {
           link: 'new-platform-flexberry-g-i-s-map-object-setting-l',
           caption: i18n.t('forms.application.sitemap.map-object-setting.caption'),
           title: i18n.t('forms.application.sitemap.map-object-setting.title'),
+          icon: 'icon-guideline-setting',
           children: null
         }]
       }, {
         link: null,
         caption: i18n.t('forms.application.sitemap.components-examples.caption'),
         title: i18n.t('forms.application.sitemap.components-examples.title'),
+        icon: 'icon-guideline-date',
         children: [{
           link: 'components-examples/flexberry-boundingbox/settings-example',
           caption: i18n.t('forms.application.sitemap.components-examples.flexberry-boundingbox.caption'),
