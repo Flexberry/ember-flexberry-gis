@@ -500,7 +500,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
     });
 
     let store = this.get('store');
-    store.findAll('i-i-s-r-g-i-s-p-k-favorite-features').then((idsFavorite) => {
+    store.findAll('new-platform-flexberry-g-i-s-favorite-features').then((idsFavorite) => {
       Ember.RSVP.allSettled(promises).finally(() => {
         let order = 1;
         displayResults.forEach((result) => {
