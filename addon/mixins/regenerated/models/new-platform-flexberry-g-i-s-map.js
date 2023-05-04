@@ -82,7 +82,7 @@ export let defineProjections = function (modelClass) {
     lng: Projection.attr('Центр карты (долгота)'),
     zoom: Projection.attr('Зум карты'),
     public: Projection.attr('Публичная карта'),
-    coordinateReferenceSystem: attr('Система координат'),
+    coordinateReferenceSystem: Projection.attr('Система координат'),
     picture: Projection.attr('Изображение'),
     creator: Projection.attr('Создатель'),
     createTime: Projection.attr('Время создания'),
