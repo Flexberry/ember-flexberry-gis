@@ -58,7 +58,7 @@
 *******************************/
 @absoluteBorderRadius: 0;
 @defaultBorderRadius: 3.5px;
-@buttonMenuBoxShadow: @defaultBoxShadow;
+@buttonMenuBoxShadow: none;
 @buttonMenuBorder: @defaultGrayBorder;
 @buttonMenuHoveredBoxShadow: none;
 // @buttonMenuHoveredBorder: @primaryColor;
@@ -89,10 +89,10 @@
 @buttonHoverColor: saturate(darken(@primaryColor, 5), 10, relative);
 @buttonHoveredBoxShadow: none;
 
-@defaultBorderColor: @graycolor;
+@defaultBorderColor: transparent;
 @defaultBoxShadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.15);
 @defaultFieldBoxShadow: none;
-@defaultGrayBorder: 1px solid @graycolor;
+@defaultGrayBorder: 1px solid transparent;
 
 @labelFontSize: 13px;
 
