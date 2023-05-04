@@ -1,1 +1,1 @@
-export { default } from 'ember-flexberry-gis/models/new-platform-flexberry-g-i-s-favorite-features';
+export { default } from 'ember-flexberry-gis/models/new-platform-flexberry-g-i-s-favorite-feature';

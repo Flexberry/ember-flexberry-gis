@@ -1,7 +1,7 @@
 ﻿{
-  "name": "NewPlatformFlexberryGISFavoriteFeatures",
-  "modelName": "new-platform-flexberry-g-i-s-favorite-features",
-  "className": "FavoriteFeatures",
+  "name": "NewPlatformFlexberryGISFavoriteFeature",
+  "modelName": "new-platform-flexberry-g-i-s-favorite-feature",
+  "className": "FavoriteFeature",
   "nameSpace": "NewPlatform.Flexberry.GIS",
   "parentModelName": null,
   "parentClassName": null,
@@ -75,7 +75,7 @@
   "projections": [
     {
       "name": "AuditView",
-      "modelName": "new-platform-flexberry-g-i-s-favorite-features",
+      "modelName": "new-platform-flexberry-g-i-s-favorite-feature",
       "attrs": [
         {
           "name": "createTime",

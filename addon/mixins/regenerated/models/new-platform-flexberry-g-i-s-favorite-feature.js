@@ -27,7 +27,7 @@ export let Model = Ember.Mixin.create({
 });
 
 export let defineProjections = function (modelClass) {
-  modelClass.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-favorite-features', {
+  modelClass.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-favorite-feature', {
     createTime: Projection.attr('Время создания объекта', { index: 0 }),
     creator: Projection.attr('Создатель объекта', { index: 1 }),
     editTime: Projection.attr('Время последнего редактирования объекта', { index: 2 }),
