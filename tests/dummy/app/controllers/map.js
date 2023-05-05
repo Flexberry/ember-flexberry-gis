@@ -229,8 +229,10 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
   _sidebarFiltered: Ember.computed('sidebar', 'createObject', 'createOrEditObject', 'compareObjects', 'showIntersectionPanel', function () {
     let result = Ember.A();
+    let i18n = this.get('i18n');
     let sidebar = this.get('sidebar');
     sidebar.forEach((item) => {
+      item.caption = i18n.t('forms.map.tabbar.' + item.selector + '.caption');
       if ((item.selector !== 'createObject' || this.get('createObject')) &&
         (item.selector !== 'createOrEditObject' || this.get('createOrEditObject')) &&
         (item.selector !== 'intersectionObjects' || this.get('showIntersectionPanel')) &&
