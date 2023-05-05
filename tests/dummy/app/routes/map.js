@@ -28,6 +28,11 @@ export default EditMapRoute.extend(EditFormRouteOperationsIndicationMixin, {
     this._super(...arguments);
   },
 
+  setupController: function setupController(controller, model) {
+    this._super(...arguments);
+    controller.set('access', this.get('access'));
+  },
+
   actions: {
     willTransition(transition) {
       this.controller.toggleProperty('showSpinner');
