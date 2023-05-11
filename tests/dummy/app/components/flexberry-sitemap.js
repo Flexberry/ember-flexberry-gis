@@ -96,6 +96,7 @@ export default Ember.Component.extend({
           if (selectedItem.length > 0) {
             selectedItem.removeClass('active selected');
           }
+
           Ember.$(this.element).dropdown('hide');
         }
       });

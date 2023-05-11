@@ -41,8 +41,7 @@ export default EditMapRoute.extend(EditFormRouteOperationsIndicationMixin, {
         Ember.run.later(() => {
           transition.retry();
         });
-      }
-      else {
+      } else {
         return true;
       }
     }
