@@ -160,8 +160,7 @@
         Containers with controls inside
 *********************************************/
 
-.mappanel,
-.sidebar-wrapper {
+.mappanel {
     /* Table */
     .ui.table {
         color: #6f9be3;

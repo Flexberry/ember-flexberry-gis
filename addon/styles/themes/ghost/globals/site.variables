@@ -56,12 +56,9 @@
 /*******************************
     Map buttons menu variables
 *******************************/
-@absoluteBorderRadius: 0;
-@defaultBorderRadius: 3.5px;
 @buttonMenuBoxShadow: none;
 @buttonMenuBorder: @defaultGrayBorder;
 @buttonMenuHoveredBoxShadow: none;
-// @buttonMenuHoveredBorder: @primaryColor;
 @buttonMenuColor: @primaryColor;
 @buttonMenuHoveredBackground: #fff;
 @buttonMenuHoveredBorder: 1px solid @primaryColor;

@@ -45,8 +45,7 @@
             Flexberry-map dropdown
 *********************************************/
 
-.mappanel,
-.sidebar-wrapper {
+.mappanel {
     .dropdown {
         /* стрелка раскрытия */
         &.icon:not(.flexberry-treenode-expand-collapse-icon) {

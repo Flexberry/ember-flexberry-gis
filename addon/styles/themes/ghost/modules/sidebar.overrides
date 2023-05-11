@@ -2,7 +2,7 @@
   width: 380px;
 }
 
-.sidebar-wrapper,
+.sidebar-wrapper.right-sidebar-wrapper,
 .rgis-sidebar-wrapper.right-sidebar-wrapper {
   top: 0;
 
@@ -36,7 +36,7 @@
 
   .ui.right.sidebar.tabbar {
     .ui.tab.createOrEditObject {
-      padding: 10px 0px;
+      padding: 10px 0px 10px 20px;
 
       .create-edit-block-attributes {
         padding-top: 20px;

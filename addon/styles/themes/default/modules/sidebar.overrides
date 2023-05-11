@@ -384,7 +384,7 @@
 /************************************
           Create/Edit Block
 *************************************/
-
+.sidebar-wrapper,
 .right-sidebar-wrapper {
   .ui.right.sidebar {
     .ui.tab.createOrEditObject {

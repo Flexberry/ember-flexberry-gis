@@ -25,7 +25,7 @@
     <button type="submit" class="ui button close-button" {{action "close"}}>{{t "forms.edit-form.close-button-text"}}--></button>
   </div>
   <div class="map-container">
-    <div class="sidebar-wrapper">
+    <div class="sidebar-wrapper right-sidebar-wrapper">
       {{flexberry-tab-bar
         class="main-map-tab-bar"
         change=(action "toggleSidebar")
@@ -62,6 +62,10 @@
                 hierarchyPropertyName="layers"
                 pathKeyword="layerPath"
                 dynamicActions=(array
+                  (hash
+                    on="layerInit"
+                    actionName="onLayerInit"
+                  )
                   (hash
                     on="add"
                     actionName="onMapLayerAdd"
@@ -243,7 +247,6 @@
           </div>
         </div>
         <div data-tab="createOrEditObject" class="ui tab createOrEditObject">
-        <h3>{{t "forms.map.tabbar.createOrEditObject.caption"}}</h3>
           {{flexberry-edit-layer-feature
             isFavorite=createOrEditedFeature.isFavorite
             dataItems=createOrEditedFeature.dataItems
