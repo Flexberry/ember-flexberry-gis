@@ -79,7 +79,10 @@ test('it renders', function (assert) {
   assert.equal($tab1.find('label[title="Find an item on the map"]').length, 1, 'Find item on map button available on tab1');
   assert.equal($tab1.find('label[title="Clear the found items"]').length, 1, 'Clear found items button available on tab1');
   assert.equal($tab1.find('label[title="Delete the selected items"]').length, 0, 'Delete button unavailable on tab1');
-  assert.equal($tab1.find('.flexberry-geometry-tools').length, 0, 'Edit geometry tools unavailable on tab1');
+  assert.equal($tab1.find('label[title="Union polygon"]').length, 0, 'Union polygon button unavailable on tab2');
+  assert.equal($tab1.find('label[title="Difference polygon"]').length, 0, 'Difference polygon button unavailable on tab2');
+  assert.equal($tab1.find('label[title="Split geometry"]').length, 0, 'Split geometry button unavailable on tab2');
+  assert.equal($tab1.find('label[title="Find intersecting polygons"]').length, 0, 'Find intersecting polygons button unavailable on tab2');
 
   let $tab2 = this.$().find('div[data-tab="test layer 2"]');
   assert.equal($tab2.length, 1, 'Test layer 2 tab was rendered');
