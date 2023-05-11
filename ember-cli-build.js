@@ -68,6 +68,11 @@ module.exports = function(defaults) {
   app.import('vendor/api-tests/api-test-map.html', { destDir: 'assets/api-tests' });
   app.import('vendor/api-tests/api-test-odata-layer.html', { destDir: 'assets/api-tests' });
 
+  app.import('vendor/map/files/google_cosmos.png', { destDir: 'map/files' });
+  app.import('vendor/map/files/opentopomap.png', { destDir: 'map/files' });
+  app.import('vendor/map/files/osm.png', { destDir: 'map/files' });
+  app.import('vendor/map/files/roskosmos2021.png', { destDir: 'map/files' });
+
   // GOSTUI2
   const ghostThemeAssetsDir = 'vendor';
   app.import(`${ghostThemeAssetsDir}/fonts.css`);
