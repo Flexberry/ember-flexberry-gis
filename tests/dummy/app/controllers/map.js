@@ -15,6 +15,9 @@ import sideBySide from 'npm:leaflet-side-by-side';
   @uses EditFormControllerOperationsIndicationMixin
 */
 export default EditMapController.extend(EditFormControllerOperationsIndicationMixin, {
+
+  mapApi: Ember.inject.service(),
+
   /**
     Property contatining sideBySide component.
     @property sideBySide

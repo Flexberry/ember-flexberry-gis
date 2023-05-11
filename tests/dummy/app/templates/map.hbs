@@ -157,40 +157,43 @@
           }}
         </div>
         <div data-tab="identify" class="ui tab identify">
-          <h3>{{t "forms.map.tabbar.identify.caption"}}</h3>
-          {{flexberry-identify-panel
-            layerMode=identifyToolLayerMode
-            toolMode=identifyToolToolMode
-            bufferActive=identifyToolBufferActive
-            bufferUnits=identifyToolBufferUnits
-            bufferRadius=identifyToolBufferRadius
-            layers=model.hierarchy
-            leafletMap=leafletMap
-            identificationFinished=(action "onIdentificationFinished")
-            identificationClear=(action "onIdentificationClear")
-            allIconClass="icon-guideline-layer-all"
-            visibleIconClass="icon-guideline-layer-visible"
-            topIconClass="icon-guideline-layer-first"
-            markerIconClass="icon-guideline-marker"
-            polylineIconClass="icon-guideline-minus"
-            rectangleIconClass="icon-guideline-rectangle"
-            polygonIconClass="icon-guideline-polygone"
-            clearIconClass="icon-guideline-delete"
-          }}
-          {{layer-result-list
-            results=identifyToolResults
-            serviceLayer=serviceLayer
-            leafletMap=leafletMap
-            serviceRenderer=serviceRenderer
-            showIntersectionPanel=(action 'onIntersectionPanel')
-            featureSelected=(action "onLayerFeatureSelected")
-            addToFavorite=(action "addToFavorite")
-            availableCRS=availableCRS
-            editFeature=(action 'onCreateOrEditFeature')
-            availableEdit=true
-            accessibleData=access.mapLayerData
-            accessibleMap=access.map
-          }}
+          <div class="identify-tab">
+            <h3>{{t "forms.map.tabbar.identify.caption"}}</h3>
+            {{flexberry-identify-panel
+              layerMode=identifyToolLayerMode
+              toolMode=identifyToolToolMode
+              bufferActive=identifyToolBufferActive
+              bufferUnits=identifyToolBufferUnits
+              bufferRadius=identifyToolBufferRadius
+              layers=model.hierarchy
+              leafletMap=leafletMap
+              identificationFinished=(action "onIdentificationFinished")
+              identificationClear=(action "onIdentificationClear")
+              allIconClass="icon-guideline-layer-all"
+              visibleIconClass="icon-guideline-layer-visible"
+              topIconClass="icon-guideline-layer-first"
+              markerIconClass="icon-guideline-marker"
+              polylineIconClass="icon-guideline-minus"
+              rectangleIconClass="icon-guideline-rectangle"
+              polygonIconClass="icon-guideline-polygone"
+              clearIconClass="icon-guideline-delete"
+            }}
+            {{layer-result-list
+              results=identifyToolResults
+              serviceLayer=serviceLayer
+              leafletMap=leafletMap
+              serviceRenderer=serviceRenderer
+              showIntersectionPanel=(action 'onIntersectionPanel')
+              featureSelected=(action "onLayerFeatureSelected")
+              addToFavorite=(action "addToFavorite")
+              allowFavorite=true
+              availableCRS=availableCRS
+              editFeature=(action 'onCreateOrEditFeature')
+              availableEdit=true
+              accessibleData=access.mapLayerData
+              accessibleMap=access.map
+            }}
+          </div>
         </div>
         <div data-tab="bookmarksAndFavorites" class="ui tab bookmarks-favorites">
           {{flexberry-tab-bar
