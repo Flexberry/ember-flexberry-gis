@@ -25,6 +25,23 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
   compareService: Ember.inject.service('compare'),
 
+  access: Ember.computed('model', 'model.mapLayer.[]', function () {
+    const mapLayer = this.get('model.mapLayer');
+    const result = {
+      map: true,
+      mapLayerModel: [],
+      mapLayerData: [],
+      presenceLayerInGeoportal: []
+    };
+
+    if (Ember.isArray(mapLayer)) {
+      Ember.set(result, 'mapLayerModel', mapLayer.map((r) => { return r.id; }));
+      Ember.set(result, 'mapLayerData', mapLayer.map((r) => { return r.id; }));
+    }
+
+    return result;
+  }),
+
   /**
     Parent route.
 

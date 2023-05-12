@@ -14,25 +14,6 @@ import EditFormRouteOperationsIndicationMixin from 'ember-flexberry/mixins/edit-
   @uses EditFormRouteOperationsIndicationMixin, MapRouteCswLoaderMixin
 */
 export default EditMapRoute.extend(EditFormRouteOperationsIndicationMixin, {
-  access: {
-    map: true,
-    mapLayerModel: [],
-    mapLayerData: [],
-    presenceLayerInGeoportal: []
-  },
-
-  afterModel(model) {
-    this.set('access.mapLayerModel', model.get('mapLayer').map((r) => { return r.id; }));
-    this.set('access.mapLayerData', model.get('mapLayer').map((r) => { return r.id; }));
-
-    this._super(...arguments);
-  },
-
-  setupController: function setupController(controller, model) {
-    this._super(...arguments);
-    controller.set('access', this.get('access'));
-  },
-
   actions: {
     willTransition(transition) {
       this.controller.toggleProperty('showSpinner');
@@ -41,8 +22,7 @@ export default EditMapRoute.extend(EditFormRouteOperationsIndicationMixin, {
         Ember.run.later(() => {
           transition.retry();
         });
-      }
-      else {
+      } else {
         return true;
       }
     }
