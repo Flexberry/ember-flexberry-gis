@@ -464,13 +464,17 @@ let FlexberryMapComponent = Ember.Component.extend(
     let i18n = this.get('i18n');
     let $leafletContainer = this.get('_$leafletContainer');
 
-    if (this.get('zoomControl') && $leafletContainer) {
-      let $zoomControl = $leafletContainer.find('.leaflet-control-container .leaflet-control-zoom');
-      let $zoomInButton = $zoomControl.find('.leaflet-control-zoom-in');
-      let $zoomOutButton = $zoomControl.find('.leaflet-control-zoom-out');
+    if ($leafletContainer) {
+      $leafletContainer.find('.leaflet-control-container .leaflet-control-attribution').hide();
 
-      $zoomInButton.attr('title', i18n.t('components.flexberry-map.zoom-control.zoom-in-button.title'));
-      $zoomOutButton.attr('title', i18n.t('components.flexberry-map.zoom-control.zoom-out-button.title'));
+      if (this.get('zoomControl')) {
+        let $zoomControl = $leafletContainer.find('.leaflet-control-container .leaflet-control-zoom');
+        let $zoomInButton = $zoomControl.find('.leaflet-control-zoom-in');
+        let $zoomOutButton = $zoomControl.find('.leaflet-control-zoom-out');
+
+        $zoomInButton.attr('title', i18n.t('components.flexberry-map.zoom-control.zoom-in-button.title'));
+        $zoomOutButton.attr('title', i18n.t('components.flexberry-map.zoom-control.zoom-out-button.title'));
+      }
     }
   }),
 
