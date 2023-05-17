@@ -160,6 +160,9 @@
     display: inline-block;
     z-index: 1;
     border-radius: 3.5px;
+    box-shadow: @defaultBoxShadow;
+    border: @defaultGrayBorder;
+    height: 40px;
     font-size: 14px;
     background: @inputBackgroundColor;
     &.ml-18 {
@@ -196,7 +199,7 @@
       border-radius: 3.5px;
       border:solid 1px transparent;
       box-shadow: 2px 2px 6px 0  fade(#000, 15%);
-      height: 42px;
+      height: 40px;
       background: @inputBackgroundColor;
 
       &:hover{
