@@ -55,8 +55,6 @@ export let Model = Ember.Mixin.create({
   editTime: DS.attr('date'),
   editor: DS.attr('string'),
   picture: DS.attr('string'),
-  editTimeMapLayers: DS.attr('date'),
-  settings: DS.attr('string'),
   mapLayer: DS.hasMany('new-platform-flexberry-g-i-s-map-layer', { inverse: 'map', async: false }),
 
   getValidations: function () {
@@ -77,19 +75,11 @@ export let Model = Ember.Mixin.create({
 export let defineProjections = function (modelClass) {
   modelClass.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-map', {
     name: Projection.attr('Наименование'),
-    description: Projection.attr('Описание'),
-    lat: Projection.attr('Центр карты (широта)'),
-    lng: Projection.attr('Центр карты (долгота)'),
-    zoom: Projection.attr('Зум карты'),
-    public: Projection.attr('Публичная карта'),
-    coordinateReferenceSystem: Projection.attr('Система координат'),
-    picture: Projection.attr('Изображение'),
     creator: Projection.attr('Создатель'),
     createTime: Projection.attr('Время создания'),
     editor: Projection.attr('Редактор'),
     editTime: Projection.attr('Время редактирования'),
-    editTimeMapLayers: Projection.attr(''),
-    settings: Projection.attr('Настройки карты')
+    picture: Projection.attr('Изображение')
   });
 
   modelClass.defineProjection('Map', 'new-platform-flexberry-g-i-s-map', {
@@ -98,8 +88,7 @@ export let defineProjections = function (modelClass) {
     lng: Projection.attr('Долгота', { hidden: true }),
     zoom: Projection.attr('Зум', { hidden: true }),
     public: Projection.attr('Общая', { hidden: true }),
-    coordinateReferenceSystem: Projection.attr('Система координат', { hidden: true }),
-    settings: Projection.attr('Настройки карты')
+    coordinateReferenceSystem: Projection.attr('Система координат', { hidden: true })
   });
 
   modelClass.defineProjection('MapE', 'new-platform-flexberry-g-i-s-map', {
@@ -160,8 +149,7 @@ export let defineProjections = function (modelClass) {
     lng: Projection.attr('Долгота'),
     zoom: Projection.attr('Зум'),
     public: Projection.attr('Общая'),
-    picture: Projection.attr('Изображение'),
-    settings: Projection.attr('Настройки карты', { hidden: true })
+    picture: Projection.attr('Изображение')
   });
 
   modelClass.defineProjection('MapGisSearchFormL', 'new-platform-flexberry-g-i-s-map', {
