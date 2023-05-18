@@ -464,11 +464,10 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     this.set('identifyToolPolygonLayer', e.polygonLayer);
     this.set('identifyToolBufferedMainPolygonLayer', e.bufferedMainPolygonLayer);
 
-    let _this = this;
-    e.results.forEach(function (identificationResult) {
-      identificationResult.features.then(function (features) {
-        features.forEach(function (feature) {
-          let favModel = _this.get('store').peekAll('new-platform-flexberry-g-i-s-favorite-feature').findBy('objectKey', feature.properties.primarykey);
+    e.results.forEach((identificationResult) => {
+      identificationResult.features.then((features) => {
+        features.forEach((feature) => {
+          let favModel = this.get('store').peekAll('new-platform-flexberry-g-i-s-favorite-feature').findBy('objectKey', feature.properties.primarykey);
           if (favModel) {
             Ember.set(feature, 'properties.isFavorite', true);
           }
