@@ -7,8 +7,8 @@ export let Model = Ember.Mixin.create({
   creator: DS.attr('string'),
   editTime: DS.attr('date'),
   editor: DS.attr('string'),
-  objectKey: DS.attr('string'),
-  objectLayerKey: DS.attr('string'),
+  objectKey: DS.attr('guid'),
+  objectLayerKey: DS.attr('guid'),
   userKey: DS.attr('string'),
 
   getValidations: function () {

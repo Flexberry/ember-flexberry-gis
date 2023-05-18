@@ -219,6 +219,7 @@
           <div data-tab="favorites" class="ui tab favorites over">
             {{favorites-list
               features=result
+              class="favorites-block"
               compareBtnDisabled=compareBtnDisabled
               serviceLayer=serviceLayer
               leafletMap=leafletMap
@@ -227,6 +228,9 @@
               compareTwoGeometries=(action 'OnCompareTwoGeometries')
               addToFavorite=(action "addToFavorite")
               addToCompareGeometries=(action 'addToCompareGeometries')
+              clear=(action "clearFavourites")
+              availableCRS=availableModes
+              accessibleData=access.mapLayerData
             }}
           </div>
         </div>
