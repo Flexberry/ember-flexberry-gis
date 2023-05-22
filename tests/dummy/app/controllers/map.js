@@ -197,53 +197,61 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @property sidebar
     @type Object[]
   */
-  sidebar: Ember.A([{
-    selector: 'treeview',
-    captionPath: 'forms.map.treeviewbuttontooltip',
-    iconClass: 'icon-guideline-layers'
-  }, {
-    selector: 'search',
-    captionPath: 'forms.map.searchbuttontooltip',
-    iconClass: 'icon-guideline-search'
-  }, {
-    selector: 'identify',
-    captionPath: 'forms.map.identifybuttontooltip',
-    iconClass: 'icon-guideline-layers-info',
-    class: 'identify'
-  }, {
-    selector: 'bookmarksAndFavorites',
-    captionPath: 'forms.map.bookmarksbuttontooltip',
-    iconClass: 'icon-guideline-bookmark'
-  }, {
-    selector: 'analytics',
-    caption: 'Инструменты аналитики',
-    iconClass: 'icon-guideline-chart',
-    class: 'analytics'
-  }, {
-    selector: 'createObject',
-    captionPath: 'forms.map.createobjectbuttontooltip',
-    iconClass: 'createObject icon'
-  }, {
-    selector: 'createOrEditObject',
-    captionPath: 'forms.map.createoreditobjectbuttontooltip',
-    iconClass: 'createOrEditObject icon',
-    class: 'createOrEditObject'
-  }, {
-    selector: 'compare',
-    captionPath: 'forms.map.comparebuttontooltip',
-    iconClass: 'compare icon',
-    class: 'compare'
-  }, {
-    selector: 'compareObjects',
-    caption: 'Сравнение объектов',
-    iconClass: 'compareObjects icon',
-    class: 'compareObjects'
-  }, {
-    selector: 'intersectionObjects',
-    caption: 'Сравнение объектов',
-    iconClass: 'intersectionObjects icon',
-    class: 'intersectionObjects'
-  }]),
+  sidebar: Ember.computed('i18n.locale', function() {
+    let i18n = this.get('i18n');
+
+    return Ember.A([{
+      selector: 'treeview',
+      caption: i18n.t('forms.map.tabbar.treeview.caption'),
+      captionPath: 'forms.map.treeviewbuttontooltip',
+      iconClass: 'icon-guideline-layers'
+    }, {
+      selector: 'search',
+      caption: i18n.t('forms.map.tabbar.search.caption'),
+      captionPath: 'forms.map.searchbuttontooltip',
+      iconClass: 'icon-guideline-search'
+    }, {
+      selector: 'identify',
+      caption: i18n.t('forms.map.tabbar.identify.caption'),
+      captionPath: 'forms.map.identifybuttontooltip',
+      iconClass: 'icon-guideline-layers-info',
+      class: 'identify'
+    }, {
+      selector: 'bookmarksAndFavorites',
+      caption: i18n.t('forms.map.tabbar.bookmarksAndFavorites.caption'),
+      captionPath: 'forms.map.bookmarksbuttontooltip',
+      iconClass: 'icon-guideline-bookmark'
+    }, {
+      selector: 'analytics',
+      caption: i18n.t('forms.map.tabbar.analytics.caption'),
+      iconClass: 'icon-guideline-chart',
+      class: 'analytics'
+    }, {
+      selector: 'createObject',
+      captionPath: 'forms.map.createobjectbuttontooltip',
+      iconClass: 'createObject icon'
+    }, {
+      selector: 'createOrEditObject',
+      captionPath: 'forms.map.createoreditobjectbuttontooltip',
+      iconClass: 'createOrEditObject icon',
+      class: 'createOrEditObject'
+    }, {
+      selector: 'compare',
+      captionPath: 'forms.map.comparebuttontooltip',
+      iconClass: 'compare icon',
+      class: 'compare'
+    }, {
+      selector: 'compareObjects',
+      caption: 'Сравнение объектов',
+      iconClass: 'compareObjects icon',
+      class: 'compareObjects'
+    }, {
+      selector: 'intersectionObjects',
+      caption: 'Сравнение объектов',
+      iconClass: 'intersectionObjects icon',
+      class: 'intersectionObjects'
+    }]);
+  }),
 
   _showFavorites: false,
 

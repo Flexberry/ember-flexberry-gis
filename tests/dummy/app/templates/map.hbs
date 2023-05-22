@@ -201,12 +201,12 @@
             items=(array
               (hash
                 selector="bookmarks"
-                caption="Закладки"
+                caption=(t 'forms.map.tabbar.bookmarksAndFavorites.caption')
                 class="active"
               )
               (hash
                 selector="favorites"
-                caption="Избранное"
+                caption=(t 'forms.map.tabbar.bookmarksAndFavorites.favorites')
               )
             )
           }}
@@ -240,11 +240,11 @@
           {{/each}}
         </div>
         <div data-tab="analytics" class="ui tab analytics history satellite-search">
-          <h3>Инструменты аналитики</h3>
+          <h3>{{t "forms.map.tabbar.analytics.caption"}}</h3>
           <div class="analytics-tools compare-layers-tools ui basic primary button">
             {{map-tools/compare
               leafletMap=leafletMap
-              caption="Сравнение слоев"
+              caption=(t 'forms.map.tabbar.compare.caption')
               showCompareSideBar=(action "showCompareSideBar")
             }}
           </div>
@@ -339,7 +339,7 @@
       }}
         {{#block-slot "submenu"}}
           {{map-tools/measure
-            caption="Измерения на карте"
+            caption=(t 'forms.map.tabbar.submenu.measure')
             iconClass="icon-guideline-measure"
             leafletMap=leafletMap
             addHaArea=true
@@ -352,13 +352,13 @@
             measureHideIconClass="icon-guideline-hide"
           }}
           {{map-commands/locate
-            caption="Мое местоположение"
+            caption=(t 'forms.map.tabbar.submenu.locate')
             iconClass="icon-guideline-marker"
             leafletMap=leafletMap
           }}
           {{map-commands/export
             timeout=30000
-            caption="Печать карты"
+            caption=(t 'forms.map.tabbar.submenu.export')
             defaultMapCaption=model.name
             leafletMap=leafletMap
             layers=model.hierarchy
