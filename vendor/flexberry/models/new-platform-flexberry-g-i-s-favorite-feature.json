@@ -44,7 +44,7 @@
     },
     {
       "name": "objectKey",
-      "type": "string",
+      "type": "guid",
       "flexberryType": "GUID",
       "notNull": true,
       "defaultValue": "",
@@ -53,7 +53,7 @@
     },
     {
       "name": "objectLayerKey",
-      "type": "string",
+      "type": "guid",
       "flexberryType": "GUID",
       "notNull": true,
       "defaultValue": "",

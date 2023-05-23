@@ -128,7 +128,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
           let records = store.peekAll('new-platform-flexberry-g-i-s-favorite-feature')
             .filterBy('objectKey', feature.properties.primarykey)
             .filterBy('objectLayerKey', feature.layerModel.id);
-          let record = records.objectAt(0);
+          let record = Ember.A(records).objectAt(0);
           record.deleteRecord();
           Ember.set(feature.properties, 'favUpdating', true);
           savePromise = record.save().then(() => {
