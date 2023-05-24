@@ -2,6 +2,7 @@
   "name": "NewPlatformFlexberryGISLinkMetadata",
   "modelName": "new-platform-flexberry-g-i-s-link-metadata",
   "className": "LinkMetadata",
+  "nameSpace": "NewPlatform.Flexberry.GIS",
   "parentModelName": null,
   "parentClassName": null,
   "attrs": [
@@ -10,35 +11,45 @@
       "type": "boolean",
       "flexberryType": "bool",
       "notNull": false,
-      "defaultValue": "false"
+      "defaultValue": "false",
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "createTime",
-      "type": "string",
+      "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "creator",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
-    },
-    {
-      "name": "editTime",
-      "type": "string",
-      "flexberryType": "AuditNullableDateTime",
-      "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "editor",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "editTime",
+      "type": "date",
+      "flexberryType": "AuditNullableDateTime",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
     }
   ],
   "belongsTo": [
@@ -85,6 +96,7 @@
           "hidden": false,
           "attrs": [],
           "index": 1,
+          "type": "default",
           "caption": "Слой",
           "name": "layer",
           "relatedTo": "new-platform-flexberry-g-i-s-layer-metadata",
@@ -98,6 +110,7 @@
           "hidden": false,
           "attrs": [],
           "index": 2,
+          "type": "default",
           "caption": "Настройка",
           "name": "mapObjectSetting",
           "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
@@ -141,6 +154,7 @@
             }
           ],
           "index": 0,
+          "type": "standard",
           "caption": "Слой",
           "name": "layer",
           "relatedTo": "new-platform-flexberry-g-i-s-layer-metadata",
@@ -161,6 +175,7 @@
             }
           ],
           "index": 2,
+          "type": "standard",
           "caption": "Настройка",
           "name": "mapObjectSetting",
           "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
@@ -179,5 +194,6 @@
     }
   ],
   "stored": true,
-  "offline": true
+  "offline": true,
+  "external": false
 }

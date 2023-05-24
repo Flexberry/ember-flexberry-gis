@@ -2,6 +2,7 @@
   "name": "NewPlatformFlexberryGISDataLink",
   "modelName": "new-platform-flexberry-g-i-s-data-link",
   "className": "DataLink",
+  "nameSpace": "NewPlatform.Flexberry.GIS",
   "parentModelName": null,
   "parentClassName": null,
   "attrs": [
@@ -11,7 +12,17 @@
       "flexberryType": "bool",
       "notNull": false,
       "defaultValue": "false",
-      "stored": true
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "createObject",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": false,
+      "defaultValue": "false",
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "layerTable",
@@ -19,15 +30,8 @@
       "flexberryType": "string",
       "notNull": true,
       "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "createObject",
-      "type": "boolean",
-      "flexberryType": "bool",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     }
   ],
   "belongsTo": [
@@ -56,6 +60,12 @@
           "caption": "Таблица в геоданных",
           "hidden": false,
           "index": 1
+        },
+        {
+          "name": "createObject",
+          "caption": "Триггер на создание",
+          "hidden": false,
+          "index": 2
         }
       ],
       "belongsTo": [
@@ -67,6 +77,7 @@
           "hidden": true,
           "attrs": [],
           "index": 0,
+          "type": "default",
           "caption": "",
           "name": "mapObjectSetting",
           "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
@@ -90,6 +101,12 @@
           "caption": "Очищать, если нет данных",
           "hidden": false,
           "index": 2
+        },
+        {
+          "name": "createObject",
+          "caption": "Триггер на создание",
+          "hidden": false,
+          "index": 3
         }
       ],
       "belongsTo": [
@@ -101,6 +118,7 @@
           "hidden": true,
           "attrs": [],
           "index": 0,
+          "type": "default",
           "caption": "",
           "name": "mapObjectSetting",
           "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
@@ -119,5 +137,6 @@
     }
   ],
   "stored": true,
-  "offline": true
+  "offline": true,
+  "external": false
 }

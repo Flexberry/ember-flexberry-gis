@@ -4,7 +4,8 @@ export let OfflineSerializer = Ember.Mixin.create({
   getAttrs: function () {
     let parentAttrs = this._super();
     let attrs = {
-      mapLayer: { serialize: 'ids', deserialize: 'records' }
+      mapObjectSetting: { serialize: 'id', deserialize: 'records' },
+      dataLinkParameter: { serialize: 'ids', deserialize: 'records' }
     };
 
     return Ember.$.extend(true, {}, parentAttrs, attrs);
