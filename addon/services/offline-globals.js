@@ -2,10 +2,6 @@ import OfflineGlobals from 'ember-flexberry/services/offline-globals';
 import Ember from 'ember';
 
 export default OfflineGlobals.extend({
-  init() {
-    this._super(...arguments);
-    this.setOnlineAvailable(false);
-  },
   getOfflineSchema() {
     let parentSchema = this._super(...arguments);
     let returnedSchema = Ember.merge(parentSchema, {

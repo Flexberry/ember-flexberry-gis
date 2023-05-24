@@ -1,6 +1,21 @@
-/**
-  @module ember-flexberry-gis-dummy
-*/
+import { Projection, Offline } from 'ember-flexberry-data';
+import config from '../config/environment';
+import Ember from 'ember';
 
-import { Projection } from 'ember-flexberry-data';
-export default Projection.OnlineStore.reopen(Projection.StoreMixin);
+export default Offline.Store.reopen(Projection.StoreMixin, {
+  /**
+   Service that return offline schemas.
+   @property objectlistviewEventsService
+   @type {Class}
+   @default OfflineGlobalsService
+  */
+  offlineGlobals: Ember.inject.service('offline-globals'),
+
+  init() {
+    config.APP.offline.offlineEnabled = true;
+    this.set('offlineSchema', {
+      [config.APP.offline.dbName]: { 1: this.get('offlineGlobals').getOfflineSchema() },
+    });
+    return this._super(...arguments);
+  }
+});
