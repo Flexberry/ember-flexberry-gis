@@ -217,6 +217,14 @@
       display: none;
       background: @inputBackgroundColor;
       width: 170px;
+
+      &-separator {
+        position: inherit;
+        width: 40%;
+        height: 3px;
+        margin-top: -2px;
+        background: @inputBackgroundColor;
+      }
       ul {
         margin: 5px 0;
       }
