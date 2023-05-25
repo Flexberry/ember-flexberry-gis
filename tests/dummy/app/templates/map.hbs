@@ -31,6 +31,7 @@
         change=(action "toggleSidebar")
         items=_sidebarFiltered
       }}
+      {{#if showSearchPanel}}
         {{flexberry-search-panel
           querySearch=(action "querySearch")
           clearSearch=(action "clearSearch")
@@ -45,6 +46,7 @@
           attrSearch=(action "attrSearch")
           placeholder=placeholderSearch
         }}
+      {{/if}}
       <div class="ui right sidebar treeview pushable tabbar">
         <div data-tab="treeview" class="ui tab treeview">
           <h3>{{t "forms.map.tabbar.treeview.caption"}}</h3>

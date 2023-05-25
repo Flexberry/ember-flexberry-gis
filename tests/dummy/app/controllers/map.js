@@ -172,6 +172,15 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   showTree: false,
 
   /**
+    Flag: indicates whether to show search panel or not.
+
+    @property showSearchPanel
+    @type Boolean
+    @default false
+  */
+  showSearchPanel: false,
+
+  /**
     Set of scales for map's switch scale control.
 
     @property switchScaleControlScales
@@ -709,9 +718,11 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         // push left map controls to right for sidebar width
         if (sidebarOpened) {
           Ember.$('.sidebar-wrapper').addClass('visible');
+          this.set("showSearchPanel", true);
         } else {
           Ember.$('.sidebar-wrapper').removeClass('visible');
           this.set('attrVisible', false);
+          this.set("showSearchPanel", false);
         }
       }
 
