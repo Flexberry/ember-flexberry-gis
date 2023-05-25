@@ -12,7 +12,6 @@ export default Offline.Store.reopen(Projection.StoreMixin, {
   offlineGlobals: Ember.inject.service('offline-globals'),
 
   init() {
-    config.APP.offline.offlineEnabled = true;
     this.set('offlineSchema', {
       [config.APP.offline.dbName]: { 1: this.get('offlineGlobals').getOfflineSchema() },
     });
