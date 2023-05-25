@@ -186,11 +186,7 @@ div.measure-drag-panel {
   }
   .flexberry-dropdown-button-list {
     border-radius: 0px 3.5px 3.5px 3.5px;
-  }
-  .flexberry-dropdown-button-selected {
-    height: 38px;
-    padding: 6px;
-    box-shadow: none;
+    border:@defaultGrayBorder;
   }
 
   .flexberry-identify-panel-tools-options,
