@@ -2,10 +2,6 @@
   @module ember-flexberry
 */
 
-// import $ from 'jquery';
-// import { translationMacro as t } from 'ember-i18n';
-// import { get } from '@ember/object';
-// import FlexberrySitemapGuidelineComponent from '../flexberry-sitemap-guideline';
 import { translationMacro as t } from 'ember-i18n';
 import FlexberrySitemapComponent from '../flexberry-sitemap';
 import Ember from 'ember';
@@ -65,7 +61,7 @@ export default FlexberrySitemapComponent.extend({
       if (Ember.get(this, 'isDropDown')) {
         Ember.$(this.element).dropdown('hide');
       } else {
-        this.Ember.$('> .menu.visible', this.element).transition('slide left');
+        Ember.$('> .menu.visible', this.element).transition('slide left');
       }
     }
   },
