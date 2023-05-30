@@ -31,7 +31,7 @@
         change=(action "toggleSidebar")
         items=_sidebarFiltered
       }}
-      {{#if showSearchPanel}}
+      {{#if sidebarOpened}}
         {{flexberry-search-panel
           querySearch=(action "querySearch")
           clearSearch=(action "clearSearch")
