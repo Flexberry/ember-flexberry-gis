@@ -175,6 +175,18 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     _requiredActionNames: ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds'],
 
     /**
+      Flag: indicates type device is mobile or not.
+
+      @property isMobile
+      @type boolean
+      @readOnly
+    */
+    isMobile: Ember.computed(function () {
+      let device = this.get('device');
+      return device.mobile() || device.tablet();
+    }),
+
+    /**
       Used to identify this component on the page by component name.
       @property componentName
       @type String
@@ -714,7 +726,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         this.set('disabled', 'disabled');
       }
 
-      if (!this.get('readonly')) {
+      if (!this.get('readonly') && !this.get('isMobile')) {
         let _this = this;
         let $captionBlock = Ember.$('.ui.tab.treeview .flexberry-treenode-caption-block');
         if ($captionBlock.length > 0) {
