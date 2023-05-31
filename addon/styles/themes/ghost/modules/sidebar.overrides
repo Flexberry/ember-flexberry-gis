@@ -1255,3 +1255,13 @@
     }
   }
 }
+
+.mobile .ui.right.sidebar.tabbar {
+  width: 100%;
+}
+
+.mobile .ui.right.sidebar.treeview .flexberry-maplayers .flexberry-treenode-buttons-block {
+  text-align: right;
+  right: 0;
+  left: auto;
+}
