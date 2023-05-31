@@ -12,7 +12,7 @@ import Ember from 'ember';
   @example
     templates/my-form.hbs
     ```handlebars
-    {{flexberry-sitemap-guideline sitemap=sitemap}}
+    {{flexberry-sitemap sitemap=sitemap}}
     ```
 
   @class FlexberrySitemapComponent
@@ -25,9 +25,9 @@ export default FlexberrySitemapComponent.extend({
 
     @property parent
     @type String
-    @default t('components.flexberry-sitemap-guideline.main-menu-caption')
+    @default t('forms.application.sitemap.main-menu.caption')
   */
-  parent: t('components.flexberry-sitemap-guideline.main-menu-caption'),
+  parent: t('forms.application.sitemap.main-menu.caption'),
 
   /**
     Called when the element of the view has been inserted into the DOM or after the view was re-rendered.
